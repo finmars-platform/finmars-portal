@@ -1,0 +1,65 @@
+<md-dialog aria-label="Mango (Fruit)" ng-cloak>
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h2>Add portfolio</h2>
+                <span flex></span>
+                <md-menu>
+                    <md-button aria-label="Open phone interactions menu" class="md-icon-button" ng-click="vm.openMenu($mdOpenMenu, $event)">
+                        <ng-md-icon icon="settings"></ng-md-icon>
+                    </md-button>
+                    <md-menu-content width="4">
+                        <md-menu-item style="padding-left: 20px">
+                            <md-checkbox ng-model="data.cb1">
+                                Country
+                            </md-checkbox>
+                        </md-menu-item>
+                        <md-menu-item style="padding-left: 20px">
+                            <md-checkbox ng-model="data.cb2">
+                                Industry
+                            </md-checkbox>
+                        </md-menu-item>
+                        <md-menu-item style="padding-left: 20px">
+                            <md-checkbox ng-model="data.cb3">
+                                Account
+                            </md-checkbox>
+                        </md-menu-item>
+                        <md-menu-item style="padding-left: 20px">
+                            <md-checkbox ng-model="data.cb4">
+                                Strategy
+                            </md-checkbox>
+                        </md-menu-item>
+                    </md-menu-content>
+                </md-menu>
+            </div>
+        </md-toolbar>
+        <md-dialog-content>
+            <form name="portfolioAddForm" layout="row">
+                <md-input-container class="md-block" flex="33">
+                    <label>Name</label>
+                    <input required name="name" data-ng-model="vm.portfolio.name">
+                    <div ng-messages="portfolioAddForm.name.$error">
+                        <div ng-message="required">This is required.</div>
+                    </div>
+                </md-input-container>
+                <md-input-container class="md-block" flex="33">
+                    <label>Short name</label>
+                    <input required name="shortName" data-ng-model="vm.portfolio.shortName">
+                    <div ng-messages="portfolioAddForm.shortName.$error">
+                        <div ng-message="required">This is required.</div>
+                    </div>
+                </md-input-container>
+                <md-input-container class="md-block" flex="33">
+                    <label>Notes</label>
+                    <textarea name="notes" id="" cols="30" data-ng-model="vm.portfolio.notes" rows="10"></textarea>
+                </md-input-container>
+            </form>
+        </md-dialog-content>
+        <md-dialog-actions layout="row">
+            <md-button ng-click="vm.cancel()">
+                Cancel
+            </md-button>
+            <md-button ng-click="vm.save()" style="margin-right:20px;">
+                Add
+            </md-button>
+        </md-dialog-actions>
+</md-dialog>

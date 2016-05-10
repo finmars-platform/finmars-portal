@@ -1,0 +1,159 @@
+.g-wrapper {
+  overflow: hidden;
+  .g-workarea {
+    float: left;
+    width: calc(~"100% - 240px");
+  }
+  .g-sidebar {
+    float: right;
+    width: 240px;
+  }
+  .g-cell {
+    float: left;
+    padding: 20px;
+  }
+  .g-thead {
+    &:after{
+      content: '';
+      clear: both;
+      display: block;
+    }
+  }
+  .g-group-holder {
+    background: #DCDCDC;
+    &:after{
+      content: '';
+      clear: both;
+      display: block;
+    }
+    padding-left: 20px;
+  }
+  .g-group {
+    float: left;
+    text-transform: uppercase;
+    color: #4C334D;
+    margin-right: .5em;
+    &:after{
+      display: inline-block;
+      margin-left: .5em;
+      content: '>'
+    }
+    &:last-child:after {
+      content: ''
+    }
+  }
+  .g-row {
+    &:after{
+      content: '';
+      clear: both;
+      display: block;
+    }
+  }
+  .g-grouping-section {
+    background: #DCDCDC;
+  }
+  .g-drag-section-title {
+    margin: 0;
+  }
+  .g-settings-btn {
+    float: right;
+  }
+  .groups-holder {
+    width: calc(~"100% - 120px");
+    float: left;
+  }
+  .g-columns-component.g-thead {
+    background: #4C334D;
+  }
+  .g-second-line {
+    overflow: hidden;
+  }
+  .group-item {
+    float: left;
+    display: block;
+    overflow: hidden;
+
+    .add {
+      .md-button {
+        background: #C6C6C6;
+        border-radius: 50%;
+        fill: #767676;
+      }
+    }
+    .sort {
+      .md-button {
+        background: #C6C6C6;
+        border-radius: 50%;
+        fill: #767676;
+      }
+    }
+    .settings-btn {
+      .md-button {
+        fill: #767676;
+      }
+    }
+    .caption {
+      color: #0C0C0C;
+      margin-right: 1em;
+      margin-left: 1em;
+      padding-top: .8em;
+    }
+    .md-button {
+      min-width: auto;
+      line-height: 1;
+      margin-left: 3px;
+      margin-right: 3px;
+    }
+    &>div {
+      float: left;
+    }
+  }
+  .g-columns-component {
+    .g-cell {
+      display: block;
+      padding: 0;
+      height:40px;
+      .caption {
+        color: #0C0C0C;
+        padding-top: .5em;
+      }
+      .md-button {
+        min-width: auto;
+        line-height: 1;
+        margin-top: .2em;
+        fill: #767676;
+        margin-bottom: 0;
+      }
+      &>div {
+        display: block;
+        float: left;
+      }
+    }
+
+  }
+  
+  .drop-new-group {
+    float: left;
+    height: 48px;
+    padding-top: .8em;
+    padding-left: 1em;
+    padding-right: 1em;
+    box-sizing: border-box;
+    margin: 8px;
+    color: #575757;
+    border: 1px dotted #575757;
+  }
+
+  .drop-new-field {
+    float: left;
+    height: 40px;
+    padding-top: 1em;
+    padding-left: 2em;
+    font-size: .8em;
+    padding-right: 2em;
+    box-sizing: border-box;
+    margin: 8px;
+    color: #999199;
+    border: 1px dotted #999199;
+  }
+}

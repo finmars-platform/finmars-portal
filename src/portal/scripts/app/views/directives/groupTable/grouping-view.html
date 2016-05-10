@@ -1,0 +1,32 @@
+<div class="g-grouping-component">
+    <div><p class="g-drag-section-title">GROUPING AREA</p></div>
+    <div class="g-second-line">
+        <div class="groups-holder">
+            <md-card data-ng-repeat="item in items" class="group-item card">
+                <div class="add">
+                    <md-button class="" data-ng-click="add()">
+                        <ng-md-icon icon="add"></ng-md-icon>
+                    </md-button>
+                </div>
+                <div class="sort">
+                    <md-button class="" data-ng-click="openGroupSettings()">
+                        <ng-md-icon icon="keyboard_arrow_down"></ng-md-icon>
+                    </md-button>
+                </div>
+                <div class="caption">{{item}}</div>
+                <div class="settings-btn">
+                    <md-button class="" data-ng-click="openGroupSettings()">
+                        <ng-md-icon icon="settings"></ng-md-icon>
+                    </md-button>
+                </div>
+            </md-card>
+            <div class="drop-new-group">
+                Drop level {{items.length + 1}} Group
+            </div>
+        </div>
+
+        <md-button class="md-fab g-settings-btn" data-ng-click="openModalSettings()">
+            <ng-md-icon icon="view_week"></ng-md-icon>
+        </md-button>
+    </div>
+</div>

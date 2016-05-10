@@ -1,0 +1,20 @@
+<div class="g-columns-component g-thead">
+    <md-card data-ng-repeat="column in columns" class="g-cell">
+        <div class="sort">
+            <md-button class="" data-ng-click="openGroupSettings()">
+                <ng-md-icon icon="keyboard_arrow_down"></ng-md-icon>
+            </md-button>
+        </div>
+        <div class="caption">
+            {{column}}
+        </div>
+        <div class="settings-btn">
+            <md-button class="" data-ng-click="openGroupSettings()">
+                <ng-md-icon icon="settings"></ng-md-icon>
+            </md-button>
+        </div>
+    </md-card>
+    <div class="drop-new-field">
+        Drop New Field
+    </div>
+</div>
