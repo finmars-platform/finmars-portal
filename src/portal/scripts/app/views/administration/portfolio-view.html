@@ -1,0 +1,14 @@
+<md-button class="md-fab md-fab-bottom-right" data-ng-click="vm.addPortfolio($event)">
+    <ng-md-icon icon="add"></ng-md-icon>
+</md-button>
+<div data-ng-if="vm.groupTableService.projection().length">
+    <group-table items="vm.groupTableService.projection()" columns="vm.columns" grouping="vm.grouping"></group-table>
+</div>
+<hr>
+<div>
+    <h1>API TESTING (console output)</h1>
+    <button class="md-button" data-ng-click="vm.getNodeList()">Get Classifier Node List</button><br/>
+    <button class="md-button" data-ng-click="vm.getClassifierNodeByKey()">Get Classifier Node Instance</button><br/>
+    <button class="md-button" data-ng-click="vm.getClassifierList()">Get Classifier List</button><br/>
+    <button class="md-button" data-ng-click="vm.getClassifierByKey()">Get Classifier Instance</button>
+</div>

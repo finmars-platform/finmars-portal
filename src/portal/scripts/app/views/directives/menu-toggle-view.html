@@ -1,0 +1,9 @@
+<md-button class="md-button-toggle" ng-click="toggle()"
+           aria-controls="side-menu-{{section.title}}" flex layout="row" aria-expanded="{{isOpen()}}">{{section.title}}
+    <span aria-hidden="true" class="pull-right fa fa-chevron-down md-toggle-icon" data-ng-class="{'toggled' : isOpen()}"></span>
+</md-button>
+<ul data-ng-show="isOpen()" id="side-menu-{{section.title}}" class="menu-toggle-list">
+    <li data-ng-repeat="page in section.pages">
+        <menu-link section="page"></menu-link>
+    </li>
+</ul>
