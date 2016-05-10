@@ -1,4 +1,8 @@
 .g-wrapper {
+  .g-drag-section-title {
+    padding-left: .5em;
+    padding-top: 1em;
+  }
   overflow: hidden;
   .g-workarea {
     float: left;
@@ -57,6 +61,7 @@
   }
   .g-settings-btn {
     float: right;
+    margin-top: -1.5em;
   }
   .groups-holder {
     width: calc(~"100% - 120px");
@@ -66,43 +71,62 @@
     background: #4C334D;
   }
   .g-second-line {
-    overflow: hidden;
+    &:after {
+      display: block;
+      clear: both;
+      content: '';
+    }
   }
   .group-item {
     float: left;
     display: block;
+    height: 2em;
     overflow: hidden;
 
     .add {
       .md-button {
-        background: #C6C6C6;
-        border-radius: 50%;
+        //background: #C6C6C6 ;
+        //border-radius: 50%;
         fill: #767676;
       }
     }
     .sort {
       .md-button {
-        background: #C6C6C6;
-        border-radius: 50%;
+        //background: #C6C6C6;
+        //border-radius: 50%;
         fill: #767676;
       }
     }
     .settings-btn {
       .md-button {
+
         fill: #767676;
+        svg {
+          background: transparent;
+        }
       }
     }
     .caption {
       color: #0C0C0C;
       margin-right: 1em;
       margin-left: 1em;
-      padding-top: .8em;
+      padding-top: .6em;
+      font-size: .8em;
     }
     .md-button {
       min-width: auto;
       line-height: 1;
-      margin-left: 3px;
-      margin-right: 3px;
+      //margin-left: 3px;
+      //margin-right: 3px;
+      margin-right: 0px;
+      margin-left: 0px;
+      margin-top: -.1em;
+      svg {
+        border-radius: 50%;
+        background: #C6C6C6;
+        height: 1.5em;
+        width: 1.5em;
+      }
     }
     &>div {
       float: left;
@@ -112,17 +136,24 @@
     .g-cell {
       display: block;
       padding: 0;
-      height:40px;
+      height: 2em;
       .caption {
         color: #0C0C0C;
-        padding-top: .5em;
+        padding-top: .6em;
+        font-size: .8em;
       }
       .md-button {
         min-width: auto;
         line-height: 1;
-        margin-top: .2em;
+        margin-top: -.1em;
+        margin-right: 0;
+        margin-left: 0;
         fill: #767676;
         margin-bottom: 0;
+        svg {
+          height: 1.5em;
+          width: 1.5em;
+        }
       }
       &>div {
         display: block;
@@ -134,8 +165,9 @@
   
   .drop-new-group {
     float: left;
-    height: 48px;
-    padding-top: .8em;
+    height: 2.5em;
+    padding-top: .6em;
+    font-size: .8em;
     padding-left: 1em;
     padding-right: 1em;
     box-sizing: border-box;
@@ -146,8 +178,8 @@
 
   .drop-new-field {
     float: left;
-    height: 40px;
-    padding-top: 1em;
+    height: 2.5em;
+    padding-top: .6em;
     padding-left: 2em;
     font-size: .8em;
     padding-right: 2em;
