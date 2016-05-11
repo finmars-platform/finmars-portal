@@ -11,6 +11,7 @@
     module.exports = function ($scope, $mdDialog, filters, columns, grouping, callback) {
         console.log('Group table modal controller initialized...');
 
+
         var vm = this;
         vm.general = [];
         vm.attrs = [];

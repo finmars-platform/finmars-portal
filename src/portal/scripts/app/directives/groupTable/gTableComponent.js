@@ -18,7 +18,6 @@
             },
             link: function(scope, elem, attrs) {
                 console.log('Group table initialized...');
-                console.log('directive', scope.items);
             }
         }
     }

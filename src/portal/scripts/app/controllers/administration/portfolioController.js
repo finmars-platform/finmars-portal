@@ -39,6 +39,7 @@
         });
 
         vm.updateTable = function(){
+            console.log('update table!', vm.grouping);
             vm.groupTableService.setItems(vm.portfolio);
             vm.groupTableService.columns.setColumns(vm.columns);
             vm.groupTableService.filtering.setFilters(vm.filters);

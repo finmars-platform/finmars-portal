@@ -98,7 +98,10 @@
 
     gulp.task(appName + '-dragula-js-min', function(){
 
-        var pathToJS = ['node_modules/dragula/dist/dragula.js'];
+        var pathToJS = [
+            'node_modules/dragula/dist/dragula.js',
+            'node_modules/angular-dragula/dist/angular-dragula.js'
+        ];
 
         return gulp.src(pathToJS)
             .pipe(concat('dragula.js'))
