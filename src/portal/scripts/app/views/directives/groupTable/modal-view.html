@@ -1,0 +1,57 @@
+<md-dialog aria-label="Mango (Fruit)" ng-cloak class="g-modal-dialog">
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            <h2>Add portfolio</h2>
+            <span flex></span>
+        </div>
+    </md-toolbar>
+    <md-dialog-content>
+        <md-tabs md-dynamic-height md-border-bottom>
+            <md-tab label="GENERAL">
+                <md-content class="md-padding">
+                    <div class="g-th-checkbox-row">
+                        <span class="g-meta-circle green">G</span>
+                        <span class="g-meta-circle blue">F</span>
+                        <span class="g-meta-circle red">C</span>
+                    </div>
+                    <div class="g-checkbox-row" data-ng-repeat="item in vm.general">
+                        <md-checkbox ng-model="item.groups" class="md-g-green" data-ng-change="vm.updateAttrs()">
+                        </md-checkbox>
+                        <md-checkbox ng-model="item.filters" class="md-primary" data-ng-change="vm.updateAttrs()">
+                        </md-checkbox>
+                        <md-checkbox ng-model="item.columns" data-ng-change="vm.updateAttrs()">
+                        </md-checkbox>
+                        <md-card>{{item.caption}}</md-card>
+                    </div>
+                </md-content>
+            </md-tab>
+            <md-tab label="ATTRIBUTES">
+                <md-content class="md-padding">
+                    <div class="g-th-checkbox-row">
+                        <span class="g-meta-circle green">G</span>
+                        <span class="g-meta-circle blue">F</span>
+                        <span class="g-meta-circle red">C</span>
+                    </div>
+                    <div class="g-checkbox-row" data-ng-repeat="item in vm.attrs">
+                        <md-checkbox ng-model="item.groups" class="md-g-green" data-ng-change="vm.updateAttrs()">
+                        </md-checkbox>
+                        <md-checkbox ng-model="item.filters" class="md-primary" data-ng-change="vm.updateAttrs()">
+                        </md-checkbox>
+                        <md-checkbox ng-model="item.columns" data-ng-change="vm.updateAttrs()">
+                        </md-checkbox>
+                        <md-card>{{item.name}}</md-card>
+                    </div>
+                </md-content>
+            </md-tab>
+            <md-tab label="CUSTOM">
+                <md-content class="md-padding">
+                </md-content>
+            </md-tab>
+        </md-tabs>
+    </md-dialog-content>
+    <md-dialog-actions layout="row">
+        <md-button ng-click="vm.cancel()">
+            Cancel
+        </md-button>
+    </md-dialog-actions>
+</md-dialog>

@@ -11,8 +11,10 @@
             templateUrl: 'views/directives/groupTable/group-table-shell-view.html',
             scope: {
                 items: '=',
+                filters: '=',
                 columns: '=',
-                grouping: '='
+                grouping: '=',
+                externalCallback: '&'
             },
             link: function(scope, elem, attrs) {
                 console.log('Group table initialized...');

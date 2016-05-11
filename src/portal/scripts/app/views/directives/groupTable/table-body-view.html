@@ -1,11 +1,11 @@
 <div class="g-table-body-component">
-    <div data-ng-repeat="item in items" class="g-row">
+    <div data-ng-repeat="item in items">
         <div data-ng-if="item.groups.length" class="g-group-holder">
             <div data-ng-repeat="group in item.groups" class="g-group">
                 {{group}}
             </div>
         </div>
-        <div data-ng-repeat="groupedItem in item.items">
+        <div data-ng-repeat="groupedItem in item.items" class="g-row">
             <div data-ng-repeat="column in columns" class="g-cell">
                 {{groupedItem[column]}}
             </div>

@@ -2,7 +2,11 @@
     <ng-md-icon icon="add"></ng-md-icon>
 </md-button>
 <div data-ng-if="vm.groupTableService.projection().length">
-    <group-table items="vm.groupTableService.projection()" columns="vm.columns" grouping="vm.grouping"></group-table>
+    <group-table items="vm.groupTableService.projection()"
+                 columns="vm.columns"
+                 filters="vm.filters"
+                 external-callback="vm.updateTable()"
+                 grouping="vm.grouping"></group-table>
 </div>
 <hr>
 <div>

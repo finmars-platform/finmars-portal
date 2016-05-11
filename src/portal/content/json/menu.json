@@ -12,22 +12,22 @@
     "type": "toggle",
     "pages": [
       {
-        "state" : "app.dashboard",
+        "state" : "",
         "title": "New Balance",
         "icon": "dashboard"
       },
       {
-        "state" : "app.dashboard",
+        "state" : "",
         "title": "New Performance",
         "icon": "dashboard"
       },
       {
-        "state" : "app.dashboard",
+        "state" : "",
         "title": "New Cash flow",
         "icon": "dashboard"
       },
       {
-        "state" : "app.dashboard",
+        "state" : "",
         "title": "New Transaction",
         "icon": "dashboard"
       }
@@ -35,113 +35,44 @@
   },
   {
     "state": "",
-    "title": "Administration",
+    "title": "Data",
     "icon": "message",
     "type": "toggle",
     "pages": [
       {
         "state" : "app.administration.portfolio",
-        "title": "Portfolio",
-        "icon": "dashboard"
+        "title": "Portfolios",
+        "icon": ""
       },
       {
-        "state" : "app.dashboard",
-        "title": "New Performance",
-        "icon": "dashboard"
+        "state" : "",
+        "title": "Accounts",
+        "icon": ""
       },
       {
-        "state" : "app.dashboard",
-        "title": "New Cash flow",
-        "icon": "dashboard"
+        "state" : "",
+        "title": "Counterparties",
+        "icon": ""
       },
       {
-        "state" : "app.dashboard",
-        "title": "New Transaction",
-        "icon": "dashboard"
-      }
-    ]
-  },
-  {
-    "state": "",
-    "title": "INSTRUMENTS",
-    "icon": "message",
-    "type": "toggle",
-    "pages": [
-      {
-        "state" : "app.dashboard",
-        "title": "New Balance",
-        "icon": "dashboard"
+        "state" : "",
+        "title": "Responsibles",
+        "icon": ""
       },
       {
-        "state" : "app.dashboard",
-        "title": "New Performance",
-        "icon": "dashboard"
+        "state" : "",
+        "title": "Instruments",
+        "icon": ""
       },
       {
-        "state" : "app.dashboard",
-        "title": "New Cash flow",
-        "icon": "dashboard"
+        "state" : "",
+        "title": "Transactions",
+        "icon": ""
       },
       {
-        "state" : "app.dashboard",
-        "title": "New Transaction",
-        "icon": "dashboard"
-      }
-    ]
-  },
-  {
-    "state": "",
-    "title": "PRICES",
-    "icon": "message",
-    "type": "toggle",
-    "pages": [
-      {
-        "state" : "app.dashboard",
-        "title": "New Balance",
-        "icon": "dashboard"
-      },
-      {
-        "state" : "app.dashboard",
-        "title": "New Performance",
-        "icon": "dashboard"
-      },
-      {
-        "state" : "app.dashboard",
-        "title": "New Cash flow",
-        "icon": "dashboard"
-      },
-      {
-        "state" : "app.dashboard",
-        "title": "New Transaction",
-        "icon": "dashboard"
-      }
-    ]
-  },
-  {
-    "state": "",
-    "title": "TRANSACTIONS",
-    "icon": "message",
-    "type": "toggle",
-    "pages": [
-      {
-        "state" : "app.dashboard",
-        "title": "New Balance",
-        "icon": "dashboard"
-      },
-      {
-        "state" : "app.dashboard",
-        "title": "New Performance",
-        "icon": "dashboard"
-      },
-      {
-        "state" : "app.dashboard",
-        "title": "New Cash flow",
-        "icon": "dashboard"
-      },
-      {
-        "state" : "app.dashboard",
-        "title": "New Transaction",
-        "icon": "dashboard"
+        "state" : "",
+        "title": "Prcing",
+        "icon": ""
       }
     ]
   },
@@ -152,24 +83,57 @@
     "type": "toggle",
      "pages": [
       {
-        "state" : "app.dashboard",
-        "title": "New Balance",
-        "icon": "dashboard"
+        "state" : "",
+        "title": "Portfolio form",
+        "icon": ""
       },
       {
-        "state" : "app.dashboard",
-        "title": "New Performance",
-        "icon": "dashboard"
+        "state" : "",
+        "title": "Account form",
+        "icon": ""
       },
       {
-        "state" : "app.dashboard",
-        "title": "New Cash flow",
-        "icon": "dashboard"
+        "state" : "",
+        "title": "Counterparty form",
+        "icon": ""
       },
       {
-        "state" : "app.dashboard",
-        "title": "New Transaction",
-        "icon": "dashboard"
+        "state" : "",
+        "title": "Instrument form",
+        "icon": ""
+      },
+      {
+        "state" : "",
+        "title": "Transaction form",
+        "icon": ""
+      },
+      {
+        "state" : "",
+        "title": "Instrument types",
+        "icon": ""
+      },
+      {
+        "state" : "",
+        "title": "Complex transactions",
+        "icon": ""
+      }
+    ]
+  },
+  {
+    "state": "",
+    "title": "SYSTEM",
+    "icon": "message",
+    "type": "toggle",
+     "pages": [
+       {
+         "state" : "",
+         "title": "Notifications",
+         "icon": ""
+       },
+      {
+        "state" : "",
+        "title": "Logging",
+        "icon": ""
       }
     ]
   }

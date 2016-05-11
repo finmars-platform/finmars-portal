@@ -38,6 +38,15 @@
             })
         });
 
+        vm.updateTable = function(){
+            vm.groupTableService.setItems(vm.portfolio);
+            vm.groupTableService.columns.setColumns(vm.columns);
+            vm.groupTableService.filtering.setFilters(vm.filters);
+            vm.groupTableService.grouping.setGroups(vm.grouping);
+            vm.groupTableService.sorting.group.sort(vm.sorting.group);
+            vm.groupTableService.sorting.column.sort(vm.sorting.column);
+        };
+
 
         $scope.customFullscreen = $mdMedia('xs') || $mdMedia('sm');
 

@@ -39,9 +39,11 @@ app.directive('groupTableBody', [require('./app/directives/groupTable/gTableBody
 app.directive('groupSidebarFilter', [require('./app/directives/groupTable/gSidebarFilterComponent')]);
 app.directive('groupRowSelection', [require('./app/directives/groupTable/gRowSelectionComponent')]);
 app.directive('groupReportSettings', [require('./app/directives/groupTable/gReportSettingsComponent')]);
-app.directive('groupModal', [require('./app/directives/groupTable/gModalComponent')]);
-app.directive('groupGrouping', [require('./app/directives/groupTable/gGroupingComponent')]);
+app.directive('groupGrouping', ['$mdDialog', '$mdMedia', require('./app/directives/groupTable/gGroupingComponent')]);
 app.directive('groupColumns', [require('./app/directives/groupTable/gColumnsComponent')]);
+app.directive('groupAligner', [require('./app/directives/groupTable/gGroupAlignerComponent')]);
+
+app.controller('gModalController', ['$scope', '$mdDialog', 'filters', 'columns', 'grouping', 'callback', require('./app/directives/groupTable/gModalComponent')]);
 
 // GROUP TABLE END
 

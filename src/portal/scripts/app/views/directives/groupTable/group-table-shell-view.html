@@ -1,13 +1,13 @@
 <div class="g-wrapper">
     <div class="g-workarea">
         <div class="g-grouping-section">
-            <group-grouping items="grouping"></group-grouping>
+            <group-grouping grouping="grouping" filters="filters" columns="columns" external-callback="externalCallback()"></group-grouping>
         </div>
         <div class="g-table-section">
-            <div class="g-row-selection" style="display: none;">
+            <div class="g-row-selection">
                 <group-row-selection items="items"></group-row-selection>
             </div>
-            <div class="g-table-wrap">
+            <div class="g-table-wrap" group-aligner items="items">
                 <group-columns columns="columns"></group-columns>
                 <group-table-body items="items" columns="columns"></group-table-body>
             </div>

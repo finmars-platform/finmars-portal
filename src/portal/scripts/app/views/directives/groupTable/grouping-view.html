@@ -2,7 +2,7 @@
     <div><p class="g-drag-section-title">GROUPING AREA</p></div>
     <div class="g-second-line">
         <div class="groups-holder">
-            <md-card data-ng-repeat="item in items" class="group-item card">
+            <md-card data-ng-repeat="item in grouping" class="group-item card">
                 <div class="add">
                     <md-button class="" data-ng-click="add()">
                         <ng-md-icon icon="add"></ng-md-icon>
@@ -25,7 +25,7 @@
             </div>
         </div>
 
-        <md-button class="md-fab g-settings-btn" data-ng-click="openModalSettings()">
+        <md-button class="md-fab g-settings-btn" data-ng-click="openModalSettings($event)">
             <ng-md-icon icon="view_week"></ng-md-icon>
         </md-button>
     </div>
