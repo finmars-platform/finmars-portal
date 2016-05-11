@@ -13,14 +13,22 @@
     float: right;
     width: 240px;
   }
+  .g-row-selection-component {
+    background-color: #eee;
+  }
   .g-cell {
     float: left;
-    padding: 10px 8px;
+    padding: 6px 8px;
+    height: 18px;
     //box-sizing: border-box;
     border: 1px solid #B3B3B3;
+
     border-right: 0;
     &:last-child {
       border-right: 1px solid #B3B3B3;
+    }
+    &:first-child {
+      border-left: 0;
     }
   }
   .g-thead {
@@ -28,6 +36,12 @@
       content: '';
       clear: both;
       display: block;
+    }
+    .settings-btn {
+      ng-md-icon {
+        position: relative;
+        top: -3px;
+      }
     }
     .g-cell {
       position: relative;
@@ -45,6 +59,7 @@
       }
     }
   }
+
   .g-group-holder {
     background: #DCDCDC;
     &:after{
@@ -84,6 +99,7 @@
   .g-settings-btn {
     float: right;
     margin-top: -1.5em;
+
   }
   .groups-holder {
     width: calc(~"100% - 120px");
@@ -184,6 +200,10 @@
     }
 
   }
+  .g-cell-select {
+    height: 31px;
+    border-bottom: 1px solid #B3B3B3;
+  }
   
   .drop-new-group {
     float: left;
@@ -221,7 +241,10 @@
     float: left;
   }
   .g-cell-select.all {
-    height: 48px;
+    height: 47px;
+    line-height: 1.6;
+    text-align: center;
+    font-size: 2.5em;
   }
   .g-group-holder {
     height: 32px;
@@ -248,4 +271,36 @@ md-backdrop {
       background-color: #58BF64;
     }
   }
+}
+.g-settings-option-btn {
+  ng-md-icon {
+    position: relative;
+    top: 6px;
+    margin-right: 10px;
+  }
+}
+.g-meta-circle {
+  width: 18px;
+  height: 18px;
+  color: #fff;
+  text-align: center;
+  display: inline-block;
+  border-radius: 50%;
+  &.green {
+    background-color: #58BF64;
+  }
+  &.blue {
+    background-color: rgba(63,81,181,0.87);
+  }
+  &.red {
+    background-color: rgba(255,64,129,0.87);
+  }
+}
+.g-th-checkbox-row {
+  .g-meta-circle {
+    margin-right: 24px;
+  }
+}
+md-dialog {
+  position: absolute;
 }

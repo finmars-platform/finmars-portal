@@ -1,8 +1,9 @@
 <div class="g-grouping-component">
-    <div><p class="g-drag-section-title">GROUPING AREA</p></div>
+    <div><p class="g-drag-section-title"><span class="g-meta-circle green">G</span>ROUPING AREA</p></div>
     <div class="g-second-line">
         <div class="groups-holder">
-            <md-card data-ng-repeat="item in grouping" class="group-item card">
+            <div dragula="'group-bag'">
+                <md-card data-ng-repeat="item in grouping" class="group-item card">
                 <div class="add">
                     <md-button class="" data-ng-click="add()">
                         <ng-md-icon icon="add"></ng-md-icon>
@@ -15,11 +16,26 @@
                 </div>
                 <div class="caption">{{item}}</div>
                 <div class="settings-btn">
-                    <md-button class="" data-ng-click="openGroupSettings()">
-                        <ng-md-icon icon="settings"></ng-md-icon>
-                    </md-button>
+                    <md-menu>
+                        <md-button aria-label="Open phone interactions menu" class="md-icon-button" ng-click="openGroupSettings($mdOpenMenu, $event)">
+                            <ng-md-icon icon="settings"></ng-md-icon>
+                        </md-button>
+                        <md-menu-content width="4">
+                            <md-menu-item>
+                                <md-button ng-click="removeGroup(item)" class="g-settings-option-btn">
+                                    <ng-md-icon icon="visibility_off"></ng-md-icon>
+                                    <span>Remove</span>
+                                </md-button><br/>
+                                <md-button ng-click="" class="g-settings-option-btn">
+                                    <ng-md-icon icon="undo"></ng-md-icon>
+                                    <span>Cancel</span>
+                                </md-button>
+                            </md-menu-item>
+                        </md-menu-content>
+                    </md-menu>
                 </div>
             </md-card>
+            </div>
             <div class="drop-new-group">
                 Drop level {{items.length + 1}} Group
             </div>

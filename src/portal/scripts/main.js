@@ -10,7 +10,8 @@ var app = angular.module('app', [
     'ngMdIcons',
     'ngResource',
     'ngSanitize',
-    'ui.router'
+    'ui.router',
+    angularDragula(angular)
 ]);
 
 
@@ -42,6 +43,7 @@ app.directive('groupReportSettings', [require('./app/directives/groupTable/gRepo
 app.directive('groupGrouping', ['$mdDialog', '$mdMedia', require('./app/directives/groupTable/gGroupingComponent')]);
 app.directive('groupColumns', [require('./app/directives/groupTable/gColumnsComponent')]);
 app.directive('groupAligner', [require('./app/directives/groupTable/gGroupAlignerComponent')]);
+app.directive('gDialogDraggable', [require('./app/directives/groupTable/gDialogDraggableComponent')]);
 
 app.controller('gModalController', ['$scope', '$mdDialog', 'filters', 'columns', 'grouping', 'callback', require('./app/directives/groupTable/gModalComponent')]);
 

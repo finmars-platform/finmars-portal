@@ -6,28 +6,28 @@
     "icon": "dashboard"
   },
   {
-    "state" : "",
+    "state" : "app",
     "title": "Reports",
     "icon": "group",
     "type": "toggle",
     "pages": [
       {
-        "state" : "",
+        "state" : "app",
         "title": "New Balance",
         "icon": "dashboard"
       },
       {
-        "state" : "",
+        "state" : "app",
         "title": "New Performance",
         "icon": "dashboard"
       },
       {
-        "state" : "",
+        "state" : "app",
         "title": "New Cash flow",
         "icon": "dashboard"
       },
       {
-        "state" : "",
+        "state" : "app",
         "title": "New Transaction",
         "icon": "dashboard"
       }
@@ -45,32 +45,32 @@
         "icon": ""
       },
       {
-        "state" : "",
+        "state" : "app",
         "title": "Accounts",
         "icon": ""
       },
       {
-        "state" : "",
+        "state" : "app",
         "title": "Counterparties",
         "icon": ""
       },
       {
-        "state" : "",
+        "state" : "app",
         "title": "Responsibles",
         "icon": ""
       },
       {
-        "state" : "",
+        "state" : "app",
         "title": "Instruments",
         "icon": ""
       },
       {
-        "state" : "",
+        "state" : "app",
         "title": "Transactions",
         "icon": ""
       },
       {
-        "state" : "",
+        "state" : "app",
         "title": "Prcing",
         "icon": ""
       }
@@ -83,37 +83,37 @@
     "type": "toggle",
      "pages": [
       {
-        "state" : "",
+        "state" : "app",
         "title": "Portfolio form",
         "icon": ""
       },
       {
-        "state" : "",
+        "state" : "app",
         "title": "Account form",
         "icon": ""
       },
       {
-        "state" : "",
+        "state" : "app",
         "title": "Counterparty form",
         "icon": ""
       },
       {
-        "state" : "",
+        "state" : "app",
         "title": "Instrument form",
         "icon": ""
       },
       {
-        "state" : "",
+        "state" : "app",
         "title": "Transaction form",
         "icon": ""
       },
       {
-        "state" : "",
+        "state" : "app",
         "title": "Instrument types",
         "icon": ""
       },
       {
-        "state" : "",
+        "state" : "app",
         "title": "Complex transactions",
         "icon": ""
       }
@@ -126,12 +126,12 @@
     "type": "toggle",
      "pages": [
        {
-         "state" : "",
+         "state" : "app",
          "title": "Notifications",
          "icon": ""
        },
       {
-        "state" : "",
+        "state" : "app",
         "title": "Logging",
         "icon": ""
       }
