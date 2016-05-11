@@ -9,8 +9,13 @@
         return metaRepository.getMenu();
     };
 
+    var getGeneralAttrs = function(){
+        return metaRepository.getGeneralAttrs();
+    };
+
     module.exports = {
-        getMenu: getMenu
+        getMenu: getMenu,
+        getGeneralAttrs: getGeneralAttrs
     }
 
 }());

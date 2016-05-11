@@ -6,7 +6,8 @@
   overflow: hidden;
   .g-workarea {
     float: left;
-    width: calc(~"100% - 240px");
+    width: calc(~"100% - 246px");
+    border-right: 6px solid #4C334D;
   }
   .g-sidebar {
     float: right;
@@ -14,13 +15,34 @@
   }
   .g-cell {
     float: left;
-    padding: 20px;
+    padding: 10px 8px;
+    //box-sizing: border-box;
+    border: 1px solid #B3B3B3;
+    border-right: 0;
+    &:last-child {
+      border-right: 1px solid #B3B3B3;
+    }
   }
   .g-thead {
     &:after{
       content: '';
       clear: both;
       display: block;
+    }
+    .g-cell {
+      position: relative;
+      .caption {
+        user-select: none;
+      }
+      .resize-slider {
+        width: 2px;
+        height: 24px;
+        background: #928493;
+        position: absolute;
+        right: -10px;
+        top: 2px;
+        cursor: move;
+      }
     }
   }
   .g-group-holder {
@@ -169,6 +191,7 @@
     padding-top: .6em;
     font-size: .8em;
     padding-left: 1em;
+    user-select: none;
     padding-right: 1em;
     box-sizing: border-box;
     margin: 8px;
@@ -178,6 +201,7 @@
 
   .drop-new-field {
     float: left;
+    user-select: none;
     height: 2.5em;
     padding-top: .6em;
     padding-left: 2em;
@@ -187,5 +211,41 @@
     margin: 8px;
     color: #999199;
     border: 1px dotted #999199;
+  }
+  .g-row-selection {
+    width: 40px;
+    float: left;
+  }
+  .g-table-wrap {
+    width: calc(~"100% - 40px");
+    float: left;
+  }
+  .g-cell-select.all {
+    height: 48px;
+  }
+  .g-group-holder {
+    height: 32px;
+    line-height: 2;
+  }
+  .g-sidebar {
+      background-color: #DCDCDC;
+  }
+}
+
+md-backdrop {
+  display: none;
+}
+.g-modal-dialog {
+  .g-checkbox-row {
+    md-card {
+      display: inline-block;
+      padding-left: 1em;
+      padding-right: 1em;
+      padding-top: .5em;
+      padding-bottom: .5em;
+    }
+    md-checkbox.md-g-green.md-checked .md-icon {
+      background-color: #58BF64;
+    }
   }
 }

@@ -59,7 +59,18 @@ md-sidenav {
   height:100%;
 }
 .sidenav-wrapper {
-  width: 250px;
+  width: 200px;
+  menu-toggle {
+    ul {
+      padding-left: 0;
+      .sidemenu-btn {
+        padding-left: 40px;
+        &.active {
+          background: rgba(255,255,255,.1);
+        }
+      }
+    }
+  }
 }
 .side-menu {
   padding-left: 0;
@@ -71,13 +82,18 @@ md-sidenav {
   width: 100%;
   display: block;
   text-align: left;
+  padding-left: 1em;
   margin-left: 0;
   .dropdown-icon {
     float: right;
+    fill: #fff;
   }
 }
 .to-small-btn {
   position: absolute;
   bottom: 5em;
   right: 0em;
+}
+.g-modal-dialog {
+  width: 400px;
 }

@@ -11,8 +11,15 @@
         });
     };
 
+    var getGeneralAttrs = function(){
+        return window.fetch('portal/content/json/general-attrs.json').then(function(data){
+            return data.json();
+        });
+    };
+
     module.exports = {
-        getMenu: getMenu
+        getMenu: getMenu,
+        getGeneralAttrs: getGeneralAttrs
     }
 
 
