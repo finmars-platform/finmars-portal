@@ -2,44 +2,45 @@
     <div><p class="g-drag-section-title"><span class="g-meta-circle green">G</span>ROUPING AREA</p></div>
     <div class="g-second-line">
         <div class="groups-holder">
-            <div dragula="'group-bag'">
+            <div dragula="'group-bag'" dragula-model="grouping">
                 <md-card data-ng-repeat="item in grouping" class="group-item card">
-                <div class="add">
-                    <md-button class="" data-ng-click="add()">
-                        <ng-md-icon icon="add"></ng-md-icon>
-                    </md-button>
-                </div>
-                <div class="sort">
-                    <md-button class="" data-ng-click="openGroupSettings()">
-                        <ng-md-icon icon="keyboard_arrow_down"></ng-md-icon>
-                    </md-button>
-                </div>
-                <div class="caption">{{item}}</div>
-                <div class="settings-btn">
-                    <md-menu>
-                        <md-button aria-label="Open phone interactions menu" class="md-icon-button" ng-click="openGroupSettings($mdOpenMenu, $event)">
-                            <ng-md-icon icon="settings"></ng-md-icon>
+                    <div class="add">
+                        <md-button class="" data-ng-click="add()">
+                            <ng-md-icon icon="add"></ng-md-icon>
                         </md-button>
-                        <md-menu-content width="4">
-                            <md-menu-item>
-                                <md-button ng-click="removeGroup(item)" class="g-settings-option-btn">
-                                    <ng-md-icon icon="visibility_off"></ng-md-icon>
-                                    <span>Remove</span>
-                                </md-button>
-                            </md-menu-item>
-                            <md-menu-item>
-                                <md-button ng-click="" class="g-settings-option-btn">
-                                    <ng-md-icon icon="undo"></ng-md-icon>
-                                    <span>Cancel</span>
-                                </md-button>
-                            </md-menu-item>
-                        </md-menu-content>
-                    </md-menu>
-                </div>
-            </md-card>
+                    </div>
+                    <div class="sort">
+                        <md-button class="" data-ng-click="openGroupSettings()">
+                            <ng-md-icon icon="keyboard_arrow_down"></ng-md-icon>
+                        </md-button>
+                    </div>
+                    <div class="caption">{{item.caption}}</div>
+                    <div class="settings-btn">
+                        <md-menu>
+                            <md-button aria-label="Open phone interactions menu" class="md-icon-button"
+                                       ng-click="openGroupSettings($mdOpenMenu, $event)">
+                                <ng-md-icon icon="settings"></ng-md-icon>
+                            </md-button>
+                            <md-menu-content width="4">
+                                <md-menu-item>
+                                    <md-button ng-click="removeGroup(item)" class="g-settings-option-btn">
+                                        <ng-md-icon icon="visibility_off"></ng-md-icon>
+                                        <span>Remove</span>
+                                    </md-button>
+                                </md-menu-item>
+                                <md-menu-item>
+                                    <md-button ng-click="" class="g-settings-option-btn">
+                                        <ng-md-icon icon="undo"></ng-md-icon>
+                                        <span>Cancel</span>
+                                    </md-button>
+                                </md-menu-item>
+                            </md-menu-content>
+                        </md-menu>
+                    </div>
+                </md-card>
             </div>
             <div class="drop-new-group">
-                Drop level {{items.length + 1}} Group
+                Drop level {{grouping.length + 1}} Group
             </div>
         </div>
 

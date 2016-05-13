@@ -7,12 +7,14 @@
 
     var transformToArray = function (groupedObject) {
 
+        //console.log('groupedObject', groupedObject);
         var items = [];
         var i;
         var keys = Object.keys(groupedObject);
         for (i = 0; i < keys.length; i = i + 1) {
             items.push(groupedObject[keys[i]]);
         }
+        //console.log('grooouping', items);
         return items;
     };
 
@@ -20,29 +22,63 @@
 
         var itemsGrouped = [];
         var itemsGroupedArray = [];
-        var i, g, c;
+        var i, c, a;
 
         var hasGroups = true;
         var groupName = '';
         var groupsForResult = [];
 
-        for (i = 0; i < items.length; i = i + 1) {
+        function checkEntityForGroupExist(item, groups){
+            var g, a;
+
             for (g = 0; g < groups.length; g = g + 1) {
-                if (!items[i].hasOwnProperty(groups[g])) {
-                    hasGroups = false;
+                for(a = 0; a < item.attributes.length; i = i + 1) {
+                    if(groups.id === item.attributes['attribute_type'] || groups.caption === item.attributes['attirbute_name']) {
+                        return true;
+                    }
                 }
             }
+            return false;
+        }
+        function returnValue(attribute) {
+            if(attribute['classifier']) {
+                return attribute['classifier']
+            } else {
+                if(attribute['value_date']) {
+                    return attribute['value_date'];
+                } else {
+                    if(attribute['value_float']) {
+                        return attribute['value_float'];
+                    } else {
+                        return attribute['value_string'];
+                    }
+                }
+            }
+
+        }
+
+        for (i = 0; i < items.length; i = i + 1) {
+            hasGroups = checkEntityForGroupExist(items[i], groups);
             if (hasGroups) {
                 groupName = '';
                 groupsForResult = [];
                 for (c = 0; c < groups.length; c = c + 1) {
-                    groupsForResult.push(items[i][groups[c]]);
-                    if (c == groups.length - 1) {
-                        groupName = groupName + items[i][groups[c]];
-                    } else {
-                        groupName = groupName + items[i][groups[c]] + '_';
+                    for(a = 0; a < items[i].attributes.length; a = a + 1) {
+                        if(groups[c].id === items[i].attributes[a]['attribute_type']) {
+                            groupsForResult.push(returnValue(items[i].attributes[a]));
+                        }
+                        if (c == groups.length - 1) {
+                            if(groups[c].id === items[i].attributes[a]['attribute_type']) {
+                                groupName = groupName + returnValue(items[i].attributes[a]);
+                            }
+                        } else {
+                            if(groups[c].id === items[i].attributes[a]['attribute_type']) {
+                                groupName = groupName + returnValue(items[i].attributes[a]) + '_';
+                            }
+                        }
                     }
                 }
+                //console.log('groupsForResult', groupsForResult);
                 if (!itemsGrouped[groupName]) {
                     itemsGrouped[groupName] = {
                         groups: groupsForResult,
@@ -54,7 +90,7 @@
         }
 
         itemsGroupedArray = transformToArray(itemsGrouped);
-        console.log('Items grouped', itemsGroupedArray);
+        //console.log('Items grouped', itemsGroupedArray);
         return itemsGroupedArray;
     };
 

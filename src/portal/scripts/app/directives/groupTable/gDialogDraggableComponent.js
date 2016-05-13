@@ -9,33 +9,46 @@
         return {
             restrict: 'A',
             link: function (scope, elem, attrs) {
-                console.log('elem resizeble');
+                //console.log('elem resizeble');
 
-                var header = $(elem).find('.md-toolbar-tools');
+                var dragger = $(elem).find('.md-toolbar-tools');
+                var parent = $(elem).parent();
 
-                header.on('mousedown', function(e){
-                    var posY = e.clientY,
-                        posX = e.clientX;
-                    header.on('mousemove', function(e){
-                        console.log(e.pageX, e.pageY);
+                var posY = 0, posX = 0;
+                var elemLeft = 0, elemTop = 0;
 
-                        var elemLeft = elem.offset().left;
-                        var elemTop = elem.offset().top;
+                $(parent).width(400);
+                $(parent).height($(elem).height());
+                $(parent).css({left: "65%"});
 
-                        elem.css({
-                            'left': elemLeft + e.clientX - posX + 'px',
-                            'top': elemTop + e.clientY - posY + 'px'
-                        })
+                function mousemove(e) {
+
+                    posX = document.all ? window.event.clientX : e.pageX;
+                    posY = document.all ? window.event.clientY : e.pageY;
+
+                    //console.log('posX', posX);
+                    //console.log('elemLeft', elemLeft);
+                    //console.log(posX - elemLeft);
+                    //console.log(posY - elemTop);
+
+                    parent[0].style.left = (posX - elemLeft - $(elem).width() + 8) + 'px';
+                    parent[0].style.top = (posY - elemTop - 8 - 150) + 'px';
+
+                }
+
+                dragger.bind('mousedown', function (e) {
+                    if (elemLeft !== 0) {
+                        elemLeft = posX - parent[0].offsetLeft;
+                        elemTop = posY - parent[0].offsetTop;
+                    }
+                    //console.log(elemLeft, elemTop);
+                    $(window).bind('mousemove', mousemove);
+
+                    $(window).bind('mouseup', function (e) {
+                        console.log('unbind');
+                        $(window).unbind('mousemove');
                     });
-
-                    $(window).on('mouseup', function (e) {
-                        header.unbind('mousemove');
-                    })
-
-                    header.on('mouseleave', function(e){
-                        header.unbind('mousemove');
-                    })
-
+                    return false;
                 })
             }
         }

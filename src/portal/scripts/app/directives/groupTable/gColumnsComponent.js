@@ -19,8 +19,9 @@
                     $mdOpenMenu(ev);
                 };
 
+
                 scope.removeColumn = function (column) {
-                    console.log('remove', column);
+                    //console.log('remove', column);
                     scope.columns = scope.columns.map(function (item) {
                         if (item === column) {
                             return undefined

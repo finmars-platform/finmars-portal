@@ -22,9 +22,14 @@
                     $mdOpenMenu(ev);
                 };
 
+                scope.$watchCollection('grouping', function () {
+                    console.log('change');
+                    scope.externalCallback();
+                });
+
                 scope.removeGroup = function (group) {
-                    console.log('grouping', scope.grouping);
-                    console.log('remove', group);
+                    //console.log('grouping', scope.grouping);
+                    //console.log('remove', group);
                     scope.grouping = scope.grouping.map(function (item) {
                         if (item === group) {
                             return undefined
@@ -33,7 +38,7 @@
                     }).filter(function (item) {
                         return !!item;
                     });
-                    console.log('grouping after', scope.grouping);
+                    //console.log('grouping after', scope.grouping);
                     setTimeout(function () {
                         scope.externalCallback();
                     }, 0)
@@ -49,9 +54,7 @@
                         targetEvent: ev,
                         locals: {
                             callback: scope.externalCallback,
-                            filters: scope.filters,
-                            columns: scope.columns,
-                            grouping: scope.grouping
+                            parentScope: scope
                         },
                         fullscreen: useFullScreen
                     }).then(function (answer) {

@@ -15,7 +15,7 @@
             templateUrl: 'views/directives/groupTable/table-body-view.html',
             link: function (scope, elem, attrs) {
                 console.log('Table component');
-                console.log('scope columns', scope.columns);
+                //console.log('scope columns', scope.columns);
             }
         }
     }

@@ -45,7 +45,7 @@ app.directive('groupColumns', [require('./app/directives/groupTable/gColumnsComp
 app.directive('groupAligner', [require('./app/directives/groupTable/gGroupAlignerComponent')]);
 app.directive('gDialogDraggable', [require('./app/directives/groupTable/gDialogDraggableComponent')]);
 
-app.controller('gModalController', ['$scope', '$mdDialog', 'filters', 'columns', 'grouping', 'callback', require('./app/directives/groupTable/gModalComponent')]);
+app.controller('gModalController', ['$scope', '$mdDialog', 'parentScope', 'callback', require('./app/directives/groupTable/gModalComponent')]);
 
 // GROUP TABLE END
 
