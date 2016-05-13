@@ -21,7 +21,10 @@
                         </md-checkbox>
                         <md-checkbox ng-model="item.columns" data-ng-change="vm.updateAttrs()">
                         </md-checkbox>
-                        <md-card>{{item.caption}}</md-card>
+                        <span flex></span>
+                        <div dragula="'columns-bag'" style="display: inline-block">
+                            <md-card>{{item.caption}}</md-card>
+                        </div>
                     </div>
                 </md-content>
             </md-tab>
@@ -39,7 +42,10 @@
                         </md-checkbox>
                         <md-checkbox ng-model="item.columns" data-ng-change="vm.updateAttrs()">
                         </md-checkbox>
-                        <md-card>{{item.name}}</md-card>
+                        <span flex></span>
+                        <div dragula="'columns-bag'" style="display: inline-block">
+                            <md-card>{{item.name}}</md-card>
+                        </div>
                     </div>
                 </md-content>
             </md-tab>
