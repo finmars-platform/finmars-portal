@@ -11,11 +11,12 @@
             link: function (scope, elem, attrs) {
                 console.log('elem resizeble');
 
+                var header = $(elem).find('.md-toolbar-tools');
 
-                elem.on('mousedown', function(e){
+                header.on('mousedown', function(e){
                     var posY = e.clientY,
                         posX = e.clientX;
-                    elem.on('mousemove', function(e){
+                    header.on('mousemove', function(e){
                         console.log(e.pageX, e.pageY);
 
                         var elemLeft = elem.offset().left;
@@ -28,11 +29,11 @@
                     });
 
                     $(window).on('mouseup', function (e) {
-                        elem.unbind('mousemove');
+                        header.unbind('mousemove');
                     })
 
-                    elem.on('mouseleave', function(e){
-                        elem.unbind('mousemove');
+                    header.on('mouseleave', function(e){
+                        header.unbind('mousemove');
                     })
 
                 })

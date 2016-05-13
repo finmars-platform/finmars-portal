@@ -16,21 +16,7 @@
   .g-row-selection-component {
     background-color: #eee;
   }
-  .g-cell {
-    float: left;
-    padding: 6px 8px;
-    height: 18px;
-    //box-sizing: border-box;
-    border: 1px solid #B3B3B3;
 
-    border-right: 0;
-    &:last-child {
-      border-right: 1px solid #B3B3B3;
-    }
-    &:first-child {
-      border-left: 0;
-    }
-  }
   .g-thead {
     &:after{
       content: '';
@@ -171,33 +157,7 @@
     }
   }
   .g-columns-component {
-    .g-cell {
-      display: block;
-      padding: 0;
-      height: 2em;
-      .caption {
-        color: #0C0C0C;
-        padding-top: .6em;
-        font-size: .8em;
-      }
-      .md-button {
-        min-width: auto;
-        line-height: 1;
-        margin-top: -.1em;
-        margin-right: 0;
-        margin-left: 0;
-        fill: #767676;
-        margin-bottom: 0;
-        svg {
-          height: 1.5em;
-          width: 1.5em;
-        }
-      }
-      &>div {
-        display: block;
-        float: left;
-      }
-    }
+
 
   }
   .g-cell-select {
@@ -259,6 +219,11 @@ md-backdrop {
   display: none;
 }
 .g-modal-dialog {
+  .md-toolbar-tools {
+    -webkit-user-select: none;
+    user-select: none;
+    cursor: move;
+  }
   .g-checkbox-row {
     md-card {
       display: inline-block;
@@ -303,4 +268,49 @@ md-backdrop {
 }
 md-dialog {
   position: absolute;
+}
+.g-cell {
+  float: left;
+  padding: 6px 8px;
+  height: 18px;
+  //box-sizing: border-box;
+  border: 1px solid #B3B3B3;
+
+  border-right: 0;
+  &:last-child {
+    border-right: 1px solid #B3B3B3;
+  }
+  &:first-child {
+    border-left: 0;
+  }
+}
+.g-cell.g-column {
+  display: block;
+  padding: 0;
+  height: 2em;
+  .caption {
+    color: #0C0C0C;
+    padding-top: .6em;
+    font-size: .8em;
+  }
+  .settings-btn {
+    float: right;
+  }
+  .md-button {
+    min-width: auto;
+    line-height: 1;
+    margin-top: -.1em;
+    margin-right: 0;
+    margin-left: 0;
+    fill: #767676;
+    margin-bottom: 0;
+    svg {
+      height: 1.5em;
+      width: 1.5em;
+    }
+  }
+  &>div {
+    display: block;
+    float: left;
+  }
 }
