@@ -15,7 +15,13 @@
         var vm = this;
         vm.portfolio = [];
         vm.columns = ['name', 'short_name', 'Country'];
-        vm.grouping = ['Country', 'Industry'];
+        vm.grouping = [{
+            id: 5,
+            caption: 'Country'
+        }, {
+            id: 1,
+            caption: 'Industry'
+        }];
         vm.filters = [];
         vm.sorting = [];
 
@@ -38,7 +44,7 @@
             })
         });
 
-        vm.updateTable = function(){
+        vm.updateTable = function () {
             console.log('update table!', vm.grouping);
             vm.groupTableService.setItems(vm.portfolio);
             vm.groupTableService.columns.setColumns(vm.columns);

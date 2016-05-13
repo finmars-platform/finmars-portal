@@ -67,7 +67,7 @@
                         resizeCells();
                     }, 100);
 
-                    console.log('th', th);
+                    //console.log('th', th);
                 }
 
                 scope.$watchCollection('items', function () {
