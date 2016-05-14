@@ -14,13 +14,55 @@
 
         var vm = this;
         vm.portfolio = [];
-        vm.columns = ['name', 'short_name', 'Country'];
+        vm.columns = [
+            {
+                name: "Name",
+                notes: "",
+                order: 0,
+                is_hidden: false,
+                short_name: "Name",
+                value_type: 10
+            }, {
+                name: "Short name",
+                notes: "",
+                order: 0,
+                is_hidden: false,
+                short_name: "short name",
+                value_type: 10
+            }, {
+                classifier_root: null,
+                id: 5,
+                is_hidden: false,
+                name: "Country",
+                notes: "",
+                order: 0,
+                short_name: "Country",
+                url: "https://dev.finmars.com/api/v1/portfolios/portfolio-attribute-type/5/",
+                user_code: "T2",
+                value_type: 10
+            }];
         vm.grouping = [{
-            id: 5,
-            caption: 'Country'
+            classifier_root: null,
+            id: 7,
+            is_hidden: false,
+            name: "Strategy",
+            notes: "",
+            order: 0,
+            short_name: "Strategy",
+            url: "https://dev.finmars.com/api/v1/portfolios/portfolio-attribute-type/7/",
+            user_code: "T4",
+            value_type: 10
         }, {
+            classifier_root: null,
             id: 1,
-            caption: 'Industry'
+            is_hidden: false,
+            name: "Industry",
+            notes: "",
+            order: 0,
+            short_name: "Industry",
+            url: "https://dev.finmars.com/api/v1/portfolios/portfolio-attribute-type/1/",
+            user_code: "T1",
+            value_type: 10
         }];
         vm.filters = [];
         vm.sorting = [];

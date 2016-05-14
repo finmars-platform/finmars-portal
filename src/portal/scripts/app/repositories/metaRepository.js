@@ -11,7 +11,7 @@
         });
     };
 
-    var getGeneralAttrs = function(){
+    var getReservedKeys = function(){
         return window.fetch('portal/content/json/general-attrs.json').then(function(data){
             return data.json();
         });
@@ -19,7 +19,7 @@
 
     module.exports = {
         getMenu: getMenu,
-        getGeneralAttrs: getGeneralAttrs
+        getReservedKeys: getReservedKeys
     }
 
 

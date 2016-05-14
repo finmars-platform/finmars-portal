@@ -1,14 +1,16 @@
-[
-  {
-    "key": "name",
-    "caption": "Name"
-  },
-  {
-    "key": "short_name",
-    "caption": "Short name"
-  },
-  {
-    "key": "notes",
-    "caption": "Notes"
-  }
-]
+{
+  "portfolio": [
+    {
+      "key": "name",
+      "caption": "Name"
+    },
+    {
+      "key": "short_name",
+      "caption": "Short name"
+    },
+    {
+      "key": "notes",
+      "caption": "Notes"
+    }
+  ]
+}

@@ -9,13 +9,13 @@
         return metaRepository.getMenu();
     };
 
-    var getGeneralAttrs = function(){
-        return metaRepository.getGeneralAttrs();
+    var getReservedKeys = function(){
+        return metaRepository.getReservedKeys();
     };
 
     module.exports = {
         getMenu: getMenu,
-        getGeneralAttrs: getGeneralAttrs
+        getReservedKeys: getReservedKeys
     }
 
 }());
