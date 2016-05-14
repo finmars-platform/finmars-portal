@@ -31,7 +31,7 @@
                     //console.log('grouping', scope.grouping);
                     //console.log('remove', group);
                     scope.grouping = scope.grouping.map(function (item) {
-                        if (item === group) {
+                        if (item.id === group.id || item.name === group.name) {
                             return undefined
                         }
                         return item

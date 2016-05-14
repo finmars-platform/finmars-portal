@@ -1,13 +1,13 @@
-<div class="g-table-body-component">
+<div class="g-table-body-component" data-ng-if="keywordsReady">
     <div data-ng-repeat="item in items">
         <div data-ng-if="item.groups.length" class="g-group-holder">
-            <div data-ng-repeat="group in item.groups" class="g-group">
+            <div data-ng-repeat="group in item.groups track by $index" class="g-group">
                 {{group}}
             </div>
         </div>
         <div data-ng-repeat="groupedItem in item.items" class="g-row">
             <div data-ng-repeat="column in columns" class="g-cell">
-                {{groupedItem[column]}}
+                <span data-ng-bind="bindCell(groupedItem, column)"></span>
             </div>
         </div>
     </div>

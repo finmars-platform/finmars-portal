@@ -23,7 +23,7 @@
                 scope.removeColumn = function (column) {
                     //console.log('remove', column);
                     scope.columns = scope.columns.map(function (item) {
-                        if (item === column) {
+                        if (item.id === column.id || item.name === column.name) {
                             return undefined
                         }
                         return item
