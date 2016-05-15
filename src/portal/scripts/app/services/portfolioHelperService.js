@@ -13,7 +13,7 @@
             portfolioService.getAttributeTypeList().then(function(data){
                 var attrs = data.results;
                 var i, x;
-                console.log('attrs', attrs);
+                //console.log('attrs', attrs);
                 transformedItems = items.map(function(item){
                     for(i = 0; i < attrs.length; i = i + 1) {
                         for(x = 0; x < item.attributes.length; x = x + 1) {
@@ -25,7 +25,7 @@
                     }
                     return item;
                 });
-                console.log('Items transformed', transformedItems);
+                //console.log('Items transformed', transformedItems);
                 resolve(transformedItems);
             })
         });

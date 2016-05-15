@@ -76,7 +76,7 @@
             if (hasGroups) {
                 groupName = '';
                 groupsForResult = [];
-                console.log('groups', groups);
+                //console.log('groups', groups);
                 for (c = 0; c < groups.length; c = c + 1) {
                     for (a = 0; a < items[i].attributes.length; a = a + 1) {
                         if (groups[c].hasOwnProperty('id')) {
@@ -135,7 +135,7 @@
         }
 
         itemsGroupedArray = transformToArray(itemsGrouped);
-        console.log('Items grouped', itemsGroupedArray);
+        //console.log('Items grouped', itemsGroupedArray);
         return itemsGroupedArray;
     };
 

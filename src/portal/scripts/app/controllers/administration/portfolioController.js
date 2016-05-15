@@ -41,31 +41,23 @@
                 user_code: "T2",
                 value_type: 10
             }];
-        vm.grouping = [{
-            classifier_root: null,
-            id: 7,
-            is_hidden: false,
-            name: "Strategy",
-            notes: "",
-            order: 0,
-            short_name: "Strategy",
-            url: "https://dev.finmars.com/api/v1/portfolios/portfolio-attribute-type/7/",
-            user_code: "T4",
-            value_type: 10
-        }, {
-            classifier_root: null,
-            id: 1,
-            is_hidden: false,
-            name: "Industry",
-            notes: "",
-            order: 0,
-            short_name: "Industry",
-            url: "https://dev.finmars.com/api/v1/portfolios/portfolio-attribute-type/1/",
-            user_code: "T1",
-            value_type: 10
-        }];
+        vm.grouping = [
+            {
+                classifier_root: null,
+                id: 7,
+                is_hidden: false,
+                name: "Strategy",
+                notes: "",
+                order: 0,
+                short_name: "Strategy",
+                url: "https://dev.finmars.com/api/v1/portfolios/portfolio-attribute-type/7/",
+                user_code: "T4",
+                value_type: 10
+            }];
         vm.filters = [];
         vm.sorting = [];
+
+        vm.dialIsOpen = true;
 
         console.log('Portfolio controller initialized...');
         portfolioService.getList().then(function (data) {

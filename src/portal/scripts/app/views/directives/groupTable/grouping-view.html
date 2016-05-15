@@ -5,12 +5,12 @@
             <div dragula="'group-bag'" dragula-model="grouping">
                 <md-card data-ng-repeat="item in grouping" class="group-item card">
                     <div class="add">
-                        <md-button class="" data-ng-click="add()">
+                        <md-button class="" aria="hide/show grouping" data-ng-click="toggleGroup()">
                             <ng-md-icon icon="add"></ng-md-icon>
                         </md-button>
                     </div>
                     <div class="sort">
-                        <md-button class="" data-ng-click="openGroupSettings()">
+                        <md-button class="" aria="open settings" data-ng-click="openGroupSettings()">
                             <ng-md-icon icon="keyboard_arrow_down"></ng-md-icon>
                         </md-button>
                     </div>
@@ -28,18 +28,12 @@
                                         <span>Remove</span>
                                     </md-button>
                                 </md-menu-item>
-                                <md-menu-item>
-                                    <md-button ng-click="" class="g-settings-option-btn">
-                                        <ng-md-icon icon="undo"></ng-md-icon>
-                                        <span>Cancel</span>
-                                    </md-button>
-                                </md-menu-item>
                             </md-menu-content>
                         </md-menu>
                     </div>
                 </md-card>
             </div>
-            <div class="drop-new-group">
+            <div class="drop-new-group" id="groupsbag">
                 Drop level {{grouping.length + 1}} Group
             </div>
         </div>

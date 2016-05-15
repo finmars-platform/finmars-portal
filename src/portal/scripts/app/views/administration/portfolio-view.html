@@ -1,18 +1,28 @@
 <md-button class="md-fab md-fab-bottom-right" data-ng-click="vm.addPortfolio($event)">
     <ng-md-icon icon="add"></ng-md-icon>
 </md-button>
+<div class="lock-size" layout="row" layout-align="center center">
+    <md-fab-speed-dial md-open="vm.dialIsOpen" md-direction="up"
+                       class="g-table-dial">
+        <md-fab-trigger>
+            <md-button aria-label="menu" class="md-fab">
+                <ng-md-icon icon="menu"></ng-md-icon>
+            </md-button>
+        </md-fab-trigger>
+        <md-fab-actions>
+            <md-button aria-label="" class="md-fab md-raised md-mini">
+                <ng-md-icon icon="view_stream"></ng-md-icon>
+            </md-button>
+            <md-button aria-label="" class="md-fab md-raised md-mini">
+                <ng-md-icon icon="work"></ng-md-icon>
+            </md-button>
+        </md-fab-actions>
+    </md-fab-speed-dial>
+</div>
 <div data-ng-if="vm.groupTableService.projection().length">
     <group-table items="vm.groupTableService.projection()"
                  columns="vm.columns"
                  filters="vm.filters"
                  external-callback="vm.updateTable()"
                  grouping="vm.grouping"></group-table>
-</div>
-<hr style="margin-top: 0">
-<div>
-    <h1>API TESTING (console output)</h1>
-    <button class="md-button" data-ng-click="vm.getNodeList()">Get Classifier Node List</button><br/>
-    <button class="md-button" data-ng-click="vm.getClassifierNodeByKey()">Get Classifier Node Instance</button><br/>
-    <button class="md-button" data-ng-click="vm.getClassifierList()">Get Classifier List</button><br/>
-    <button class="md-button" data-ng-click="vm.getClassifierByKey()">Get Classifier Instance</button>
 </div>
