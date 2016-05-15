@@ -24,12 +24,21 @@
         var filters = parentScope.filters;
         var grouping = parentScope.grouping;
 
+        var attrsList = [];
+
+        $('body').addClass('drag-dialog'); // hide backdrop
+
         //console.log('12323232', parentScope);
 
         demoPortfolioService.getTabList().then(function (data) {
             vm.tabs = data;
             syncAttrs(vm.tabs);
             callback();
+            $scope.$apply();
+        });
+
+        portfolioService.getAttributeTypeList().then(function (data) {
+            attrsList = data.results;
             $scope.$apply();
         });
 
@@ -54,7 +63,7 @@
         var syncAttrs = function (tabs) {
             var i, t;
             var attrs;
-            console.log('columns 123322', columns);
+            //console.log('columns 123322', columns);
             for (t = 0; t < tabs.length; t = t + 1) {
                 attrs = tabs[t].attrs;
                 for (i = 0; i < attrs.length; i = i + 1) {
@@ -136,6 +145,7 @@
         };
 
         vm.cancel = function () {
+            $('body').removeClass('drag-dialog');
             $mdDialog.cancel();
         };
 
@@ -149,24 +159,59 @@
             eventListeners: function () {
                 var that = this;
                 var exist = false;
+                this.dragula.on('over', function (elem, container, source) {
+                    console.log('container', container);
+                    $(container).addClass('active');
+                    $(container).on('mouseleave', function(){
+                        $(this).removeClass('active');
+                    })
+
+                });
                 this.dragula.on('drop', function (elem, target) {
                     console.log('here?', target); //TODO fallback to ids instead of name/key
+                    $(target).removeClass('active');
                     var name = $(elem).html();
                     var i;
                     exist = false;
-                    for (i = 0; i < columns.length; i = i + 1) {
-                        if (columns[i] === name) {
-                            exist = true;
+                    if (target === document.querySelector('#columnsbag')) {
+                        for (i = 0; i < columns.length; i = i + 1) {
+                            if (columns[i].name === name) {
+                                exist = true;
+                            }
                         }
                     }
-                    console.log('name', name);
-                    console.log('columns', columns);
+                    if (target === document.querySelector('#groupsbag')) {
+                        for (i = 0; i < grouping.length; i = i + 1) {
+                            if (grouping[i].name === name) {
+                                exist = true;
+                            }
+                        }
+                    }
                     if (!exist) {
-                        columns.push(name);
-                        syncGeneralAttrs(vm.general);
-                        syncAttrs(vm.attrs);
-                        callback();
-                        console.log('updated');
+                        console.log('target', target);
+                        var a;
+                        if (target === document.querySelector('#columnsbag')) {
+                            for (a = 0; a < attrsList.length; a = a + 1) {
+                                if (attrsList[a].name === name) {
+                                    columns.push(attrsList[a]);
+                                }
+                            }
+                            syncAttrs(vm.tabs);
+                            callback();
+                            console.log('updated');
+                        }
+                        if (target === document.querySelector('#groupsbag')) {
+
+                            for (a = 0; a < attrsList.length; a = a + 1) {
+                                if (attrsList[a].name === name) {
+                                    grouping.push(attrsList[a]);
+                                }
+                            }
+                            syncAttrs(vm.tabs);
+                            callback();
+                            console.log('updated');
+                        }
+                        $scope.$apply();
                     }
                 });
 
@@ -178,7 +223,7 @@
             dragula: function () {
                 console.log('draguula!');
 
-                var items = [document.querySelector('#columnsbag')];
+                var items = [document.querySelector('#columnsbag'), document.querySelector('#groupsbag')];
                 var i;
                 var itemsElem = document.querySelectorAll('#dialogbag .g-modal-draggable-card');
                 for (i = 0; i < itemsElem.length; i = i + 1) {

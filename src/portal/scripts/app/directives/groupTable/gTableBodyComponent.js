@@ -30,6 +30,10 @@
                     scope.$apply();
                 });
 
+                scope.openEntityMenu = function($mdOpenMenu, ev){
+                    $mdOpenMenu(ev);
+                };
+
                 scope.bindCell = function (groupedItem, column) {
                     if (column.hasOwnProperty('id')) {
                         return groupedItem[column.name];

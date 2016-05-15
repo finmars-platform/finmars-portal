@@ -9,6 +9,25 @@
             <div data-ng-repeat="column in columns" class="g-cell">
                 <span data-ng-bind="bindCell(groupedItem, column)"></span>
             </div>
+            <div class="g-row-right-misc">
+                <md-button ng-click="deleteEntity(groupedItem)" class="g-delete-btn md-icon-button">
+                    <ng-md-icon icon="delete"></ng-md-icon>
+                </md-button>
+                <md-menu>
+                    <md-button aria-label="Open phone interactions menu" class="md-icon-button g-entity-menu"
+                               ng-click="$mdOpenMenu($event)">
+                        <ng-md-icon icon="more_vert"></ng-md-icon>
+                    </md-button>
+                    <md-menu-content width="4">
+                        <md-menu-item>
+                            <md-button ng-click="editEntity(groupedItem)" class="g-settings-option-btn">
+                                <ng-md-icon icon="pencil"></ng-md-icon>
+                                <span>Edit</span>
+                            </md-button>
+                        </md-menu-item>
+                    </md-menu-content>
+                </md-menu>
+            </div>
         </div>
     </div>
 </div>

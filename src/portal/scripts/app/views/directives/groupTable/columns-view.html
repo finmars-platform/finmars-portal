@@ -2,7 +2,7 @@
     <div dragula="'columns-bag'" dragula-model="columns">
         <md-card data-ng-repeat="column in columns" class="g-cell g-column" >
             <div class="sort">
-                <md-button class="" data-ng-click="openGroupSettings()">
+                <md-button class="" aria="open settings" data-ng-click="openGroupSettings()">
                     <ng-md-icon icon="keyboard_arrow_down"></ng-md-icon>
                 </md-button>
             </div>
@@ -19,12 +19,6 @@
                             <md-button ng-click="removeColumn(column)" class="g-settings-option-btn">
                                 <ng-md-icon icon="visibility_off"></ng-md-icon>
                                 <span>Remove</span>
-                            </md-button>
-                        </md-menu-item>
-                        <md-menu-item>
-                            <md-button ng-click="" class="g-settings-option-btn">
-                                <ng-md-icon icon="undo"></ng-md-icon>
-                                <span>Cancel</span>
                             </md-button>
                         </md-menu-item>
                     </md-menu-content>
