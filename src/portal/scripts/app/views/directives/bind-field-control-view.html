@@ -1,0 +1,17 @@
+<div>
+    <div data-ng-if="fieldType['display_name'] === 'Number'">
+        <span>Number is not ready</span>
+    </div>
+    <div data-ng-if="fieldType['display_name'] === 'String'">
+        <md-input-container class="md-block">
+            <label>{{item.name}}</label>
+            <input data-ng-model="portfolio[getModelKey()]">
+        </md-input-container>
+    </div>
+    <div data-ng-if="fieldType['display_name'] === 'Date'">
+        <span>Date is not ready</span>
+    </div>
+    <div data-ng-if="fieldType['display_name'] === 'Classifier'">
+        <span>Classifier is not ready</span>
+    </div>
+</div>

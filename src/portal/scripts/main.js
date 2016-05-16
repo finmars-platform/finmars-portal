@@ -28,19 +28,23 @@ app.controller('SideNavController', ['$scope', require('./app/controllers/sideNa
 app.controller('DashboardController', ['$scope', require('./app/controllers/dashboardController')]);
 
 app.controller('PortfolioController', ['$scope', '$mdDialog', '$mdMedia', require('./app/controllers/administration/portfolioController')]);
-app.controller('PortfolioAddDialogController', ['$scope', '$mdDialog', require('./app/controllers/administration/portfolioAddDialogController')]);
+app.controller('PortfolioAddDialogController', ['$scope', '$mdDialog', 'parentScope', require('./app/controllers/administration/portfolioAddDialogController')]);
+app.controller('PortfolioEditDialogController', ['$scope', '$mdDialog', 'parentScope', 'portfolio', require('./app/controllers/administration/portfolioEditDialogController')]);
+app.controller('PortfolioDeleteDialogController', ['$scope', '$mdDialog', 'portfolio', require('./app/controllers/administration/PortfolioDeleteDialogController')]);
 
 app.directive('menuToggle', [require('./app/directives/menuToggleDirective')]);
 app.directive('menuLink', [require('./app/directives/menuLinkDirective')]);
 
+app.directive('bindFieldControl', [require('./app/directives/bindFieldControlDirective')]);
+
 // GROUP TABLE START
 
 app.directive('groupTable', [require('./app/directives/groupTable/gTableComponent')]);
-app.directive('groupTableBody', [require('./app/directives/groupTable/gTableBodyComponent')]);
+app.directive('groupTableBody', ['$mdDialog', require('./app/directives/groupTable/gTableBodyComponent')]);
 app.directive('groupSidebarFilter', [require('./app/directives/groupTable/gSidebarFilterComponent')]);
 app.directive('groupRowSelection', [require('./app/directives/groupTable/gRowSelectionComponent')]);
 app.directive('groupReportSettings', [require('./app/directives/groupTable/gReportSettingsComponent')]);
-app.directive('groupGrouping', ['$mdDialog', '$mdMedia', require('./app/directives/groupTable/gGroupingComponent')]);
+app.directive('groupGrouping', ['$mdDialog', require('./app/directives/groupTable/gGroupingComponent')]);
 app.directive('groupColumns', [require('./app/directives/groupTable/gColumnsComponent')]);
 app.directive('groupAligner', [require('./app/directives/groupTable/gGroupAlignerComponent')]);
 app.directive('gDialogDraggable', [require('./app/directives/groupTable/gDialogDraggableComponent')]);

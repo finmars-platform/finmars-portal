@@ -7,11 +7,13 @@
 
     var metaService = require('../../services/metaService');
 
-    module.exports = function () {
+    module.exports = function ($mdDialog) {
         return {
             restrict: 'AE',
             scope: {
                 items: '=',
+                grouping: '=',
+                tabs: '=',
                 columns: '='
             },
             templateUrl: 'views/directives/groupTable/table-body-view.html',
@@ -45,7 +47,35 @@
                             }
                         }
                     }
-                }
+                };
+
+
+                scope.deleteEntity = function (ev, portfolio) {
+                    $mdDialog.show({
+                        controller: 'PortfolioDeleteDialogController as vm',
+                        templateUrl: 'views/administration/portfolio-delete-dialog-view.html',
+                        parent: angular.element(document.body),
+                        targetEvent: ev,
+                        clickOutsideToClose: true,
+                        locals: {
+                            portfolio: portfolio
+                        }
+                    });
+                };
+
+                scope.editEntity = function (ev, portfolio) {
+                    $mdDialog.show({
+                        controller: 'PortfolioEditDialogController as vm',
+                        templateUrl: 'views/administration/portfolio-edit-dialog-view.html',
+                        parent: angular.element(document.body),
+                        targetEvent: ev,
+                        clickOutsideToClose: true,
+                        locals: {
+                            parentScope: scope,
+                            portfolio: portfolio
+                        }
+                    });
+                };
             }
         }
     }

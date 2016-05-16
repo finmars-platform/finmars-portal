@@ -11,6 +11,24 @@
             {
                 id: 1,
                 name: 'General',
+                layout: {
+                    columns: 2,
+                    rows: 1,
+                    fields: [
+                        {
+                            name: 'Name',
+                            row: 1,
+                            column: 1,
+                            colspan: 1
+                        },
+                        {
+                            name: 'Short name',
+                            row: 1,
+                            column: 2,
+                            colspan: 2
+                        }
+                    ]
+                },
                 attrs: [
                     {
                         name: "Name",
@@ -33,6 +51,36 @@
             {
                 id: 2,
                 name: 'Attributes',
+                layout: {
+                    columns: 2,
+                    rows: 2,
+                    fields: [
+                        {
+                            fieldId: 6,
+                            row: 1,
+                            column: 1,
+                            colspan: 1
+                        },
+                        {
+                            fieldId: 5,
+                            row: 1,
+                            column: 2,
+                            colspan: 1
+                        },
+                        {
+                            fieldId: 1,
+                            row: 2,
+                            column: 1,
+                            colspan: 1
+                        },
+                        {
+                            fieldId: 7,
+                            row: 2,
+                            column: 2,
+                            colspan: 2
+                        }
+                    ]
+                },
                 attrs: [
                     {
                         classifier_root: null,
@@ -87,6 +135,24 @@
             {
                 id: 3,
                 name: 'Custom',
+                layout: {
+                    columns: 1,
+                    rows: 2,
+                    fields: [
+                        {
+                            name: 'Notes',
+                            row: 1,
+                            column: 1,
+                            colspan: 3
+                        },
+                        {
+                            fieldId: 8,
+                            row: 2,
+                            column: 1,
+                            colspan: 1
+                        }
+                    ]
+                },
                 attrs: [
                     {
                         name: "Notes",
@@ -113,6 +179,18 @@
             {
                 id: 4,
                 name: 'Any',
+                layout: {
+                    columns: 1,
+                    rows: 1,
+                    fields: [
+                        {
+                            fieldId: 9,
+                            row: 1,
+                            column: 1,
+                            colspan: 3
+                        }
+                    ]
+                },
                 attrs: [
                     {
                         classifier_root: null,
@@ -130,7 +208,7 @@
             }
         ]
 
-        return new Promise(function(resolve, reject){
+        return new Promise(function (resolve, reject) {
             resolve(data);
         })
 

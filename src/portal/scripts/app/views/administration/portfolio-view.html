@@ -1,20 +1,22 @@
 <md-button class="md-fab md-fab-bottom-right" data-ng-click="vm.addPortfolio($event)">
     <ng-md-icon icon="add"></ng-md-icon>
 </md-button>
-<div class="lock-size" layout="row" layout-align="center center">
-    <md-fab-speed-dial md-open="vm.dialIsOpen" md-direction="up"
-                       class="g-table-dial">
+<div class="lock-size g-table-dial" layout="row" layout-align="center center">
+    <md-fab-speed-dial md-direction="up"
+                       class="md-fling">
         <md-fab-trigger>
             <md-button aria-label="menu" class="md-fab">
-                <ng-md-icon icon="menu"></ng-md-icon>
+                <ng-md-icon icon="keyboard_arrow_up"></ng-md-icon>
             </md-button>
         </md-fab-trigger>
         <md-fab-actions>
-            <md-button aria-label="" class="md-fab md-raised md-mini">
+            <md-button aria-label="" class="md-fab md-raised md-mini" data-ng-click="vm.openDataViewPanel()">
                 <ng-md-icon icon="view_stream"></ng-md-icon>
+                <md-tooltip md-direction="right">Open data view panel</md-tooltip>
             </md-button>
             <md-button aria-label="" class="md-fab md-raised md-mini">
                 <ng-md-icon icon="work"></ng-md-icon>
+                <md-tooltip md-direction="right">Open editor split panel</md-tooltip>
             </md-button>
         </md-fab-actions>
     </md-fab-speed-dial>
@@ -23,6 +25,7 @@
     <group-table items="vm.groupTableService.projection()"
                  columns="vm.columns"
                  filters="vm.filters"
+                 tabs="vm.tabs"
                  external-callback="vm.updateTable()"
                  grouping="vm.grouping"></group-table>
 </div>

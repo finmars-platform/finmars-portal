@@ -1,16 +1,44 @@
 <div class="g-table-body-component" data-ng-if="keywordsReady">
-    <div data-ng-repeat="item in items">
-        <div data-ng-if="item.groups.length" class="g-group-holder">
-            <div data-ng-repeat="group in item.groups track by $index" class="g-group">
-                {{group}}
+    <div data-ng-if="grouping.length">
+        <div data-ng-repeat="item in items">
+            <div class="g-group-holder">
+                <div data-ng-repeat="group in item.groups track by $index" class="g-group">
+                    {{group}}
+                </div>
+            </div>
+            <div data-ng-repeat="groupedItem in item.items" class="g-row">
+                <div data-ng-repeat="column in columns" class="g-cell">
+                    <span data-ng-bind="bindCell(groupedItem, column)"></span>
+                </div>
+                <div class="g-row-right-misc">
+                    <md-button ng-click="deleteEntity($event, groupedItem)" class="g-delete-btn md-icon-button">
+                        <ng-md-icon icon="delete"></ng-md-icon>
+                    </md-button>
+                    <md-menu>
+                        <md-button aria-label="Open phone interactions menu" class="md-icon-button g-entity-menu"
+                                   ng-click="$mdOpenMenu($event)">
+                            <ng-md-icon icon="more_vert"></ng-md-icon>
+                        </md-button>
+                        <md-menu-content width="4">
+                            <md-menu-item>
+                                <md-button ng-click="editEntity($event, groupedItem)" class="g-settings-option-btn">
+                                    <ng-md-icon icon="mode_edit"></ng-md-icon>
+                                    <span>Edit</span>
+                                </md-button>
+                            </md-menu-item>
+                        </md-menu-content>
+                    </md-menu>
+                </div>
             </div>
         </div>
-        <div data-ng-repeat="groupedItem in item.items" class="g-row">
+    </div>
+    <div data-ng-if="!grouping.length">
+        <div data-ng-repeat="item in items" class="g-row">
             <div data-ng-repeat="column in columns" class="g-cell">
-                <span data-ng-bind="bindCell(groupedItem, column)"></span>
+                <span data-ng-bind="bindCell(item, column)"></span>
             </div>
             <div class="g-row-right-misc">
-                <md-button ng-click="deleteEntity(groupedItem)" class="g-delete-btn md-icon-button">
+                <md-button ng-click="deleteEntity($event, item)" class="g-delete-btn md-icon-button">
                     <ng-md-icon icon="delete"></ng-md-icon>
                 </md-button>
                 <md-menu>
@@ -20,8 +48,8 @@
                     </md-button>
                     <md-menu-content width="4">
                         <md-menu-item>
-                            <md-button ng-click="editEntity(groupedItem)" class="g-settings-option-btn">
-                                <ng-md-icon icon="pencil"></ng-md-icon>
+                            <md-button ng-click="editEntity($event, item)" class="g-settings-option-btn">
+                                <ng-md-icon icon="mode_edit"></ng-md-icon>
                                 <span>Edit</span>
                             </md-button>
                         </md-menu-item>

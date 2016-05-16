@@ -13,6 +13,7 @@
                 items: '=',
                 filters: '=',
                 columns: '=',
+                tabs: '=',
                 grouping: '=',
                 externalCallback: '&'
             },

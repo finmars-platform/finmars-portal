@@ -1,26 +1,31 @@
 md-content.md-default-theme {
   background-color: #eee;
 }
+
 md-card {
   background-color: #fff;
   h2:first-of-type {
     margin-top: 0;
   }
 }
+
 md-toolbar {
   .md-button.md-default-theme {
     border-radius: 99%; // round toolbar buttons
   }
 }
+
 h2 {
   font-weight: 400;
 }
+
 .md-toolbar-tools-bottom {
   font-size: small;
   & :last-child {
     opacity: 0.8;
   }
 }
+
 md-toolbar:not(.md-hue-1),
 .md-fab {
   fill: #fff;
@@ -55,10 +60,12 @@ md-sidenav {
 .user-avatar {
   border-radius: 99%;
 }
+
 .min-height {
   min-height: 100%;
-  height:100%;
+  height: 100%;
 }
+
 .sidenav-wrapper {
   width: 200px;
   menu-toggle {
@@ -67,18 +74,21 @@ md-sidenav {
       .sidemenu-btn {
         padding-left: 40px;
         &.active {
-          background: rgba(255,255,255,.1);
+          background: rgba(255, 255, 255, .1);
         }
       }
     }
   }
 }
+
 .side-menu {
   padding-left: 0;
 }
+
 .md-button.md-fab {
   line-height: 1;
 }
+
 .sidemenu-btn {
   width: 100%;
   display: block;
@@ -90,11 +100,13 @@ md-sidenav {
     fill: #fff;
   }
 }
+
 .to-small-btn {
   position: absolute;
   bottom: 5em;
   right: 0em;
 }
+
 .g-modal-dialog {
   width: 400px;
 }
@@ -102,20 +114,31 @@ md-sidenav {
 a.md-button.md-default-theme.md-fab:not([disabled]):hover, a.md-button.md-fab:not([disabled]):hover, .md-button.md-default-theme.md-fab:not([disabled]):hover, .md-button.md-fab:not([disabled]):hover {
   background-color: #3B283B;
 }
+
 a.md-button.md-default-theme.md-fab, a.md-button.md-fab, .md-button.md-default-theme.md-fab, .md-button.md-fab {
   background-color: #4C334D;
 }
+
 .md-open-menu-container.md-active {
   z-index: 10001;
 }
+
 .md-dialog-container {
   z-index: 11000;
 }
-.drag-dialog {
-  .md-dialog-backdrop {
-    display: none;
-  }
+
+.md-dialog-backdrop {
+  display: none;
 }
+
 .md-button.md-fab.md-mini {
   line-height: 1;
+}
+.add-portfolio-dialog, .edit-portfolio-dialog {
+  width: 70%;
+}
+.delete-portfolio-dialog {
+  .warning-text {
+    padding: 1em;
+  }
 }
