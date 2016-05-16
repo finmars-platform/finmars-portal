@@ -11,6 +11,7 @@
             scope: {
                 filters: '=',
                 columns: '=',
+                tabs: '=',
                 grouping: '=',
                 externalCallback: '&'
             },

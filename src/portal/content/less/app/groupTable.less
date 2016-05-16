@@ -191,37 +191,39 @@
   }
 }
 
-.g-modal-dialog {
-  left: 0;
-  top: 0;
-  margin-top: 150px;
-  &.md-transition-in {
-    transition: none;
-    transform: none;
-    overflow: hidden;
-  }
-  .draggable-dialog {
-    -webkit-user-select: none;
-    user-select: none;
-    cursor: move;
-    transform: rotate(-140deg);
-    right: -5px;
-    position: absolute;
-    top: -7px;
-  }
-  .md-toolbar-tools {
-    cursor: move;
-  }
-  .g-checkbox-row {
-    md-card {
-      display: inline-block;
-      padding-left: 1em;
-      padding-right: 1em;
-      padding-top: .5em;
-      padding-bottom: .5em;
+.drag-dialog {
+  .g-modal-dialog {
+    left: 0;
+    top: 0;
+    margin-top: 150px;
+    &.md-transition-in {
+      transition: none;
+      transform: none;
+      overflow: hidden;
     }
-    md-checkbox.md-g-green.md-checked .md-icon {
-      background-color: #58BF64;
+    .draggable-dialog {
+      -webkit-user-select: none;
+      user-select: none;
+      cursor: move;
+      transform: rotate(-140deg);
+      right: -5px;
+      position: absolute;
+      top: -7px;
+    }
+    .md-toolbar-tools {
+      cursor: move;
+    }
+    .g-checkbox-row {
+      md-card {
+        display: inline-block;
+        padding-left: 1em;
+        padding-right: 1em;
+        padding-top: .5em;
+        padding-bottom: .5em;
+      }
+      md-checkbox.md-g-green.md-checked .md-icon {
+        background-color: #58BF64;
+      }
     }
   }
 }
@@ -258,8 +260,10 @@
   }
 }
 
-md-dialog {
-  position: absolute;
+.drag-dialog {
+  md-dialog {
+    position: absolute;
+  }
 }
 
 .g-cell {
@@ -308,8 +312,10 @@ md-dialog {
   }
 }
 
-.md-scroll-mask {
-  display: none;
+.drag-dialog {
+  .md-scroll-mask {
+    display: none;
+  }
 }
 
 body.md-dialog-is-showing {
@@ -397,6 +403,9 @@ body.md-dialog-is-showing {
       padding-right: 10px;
       visibility: hidden;
       .md-icon-button {
+        line-height: 1;
+      }
+      .md-icon-button {
         min-width: 0;
         margin: 0;
         position: relative;
@@ -417,8 +426,10 @@ body.md-dialog-is-showing {
     }
   }
 }
+
 .g-table-dial {
   position: absolute;
-  left: 5%;
-  bottom: 40px;
+  //left: 5%;
+  left: 20px;
+  bottom: 20px;
 }

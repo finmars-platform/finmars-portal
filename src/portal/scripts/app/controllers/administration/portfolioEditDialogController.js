@@ -5,15 +5,15 @@
 
     'use strict';
 
-    module.exports = function ($scope, $mdDialog, parentScope) {
+    module.exports = function ($scope, $mdDialog, parentScope, portfolio) {
 
         console.log('Portfolio add dialog controller initialized...');
-        console.log('parentScope', parentScope);
+        console.log('parentScope', portfolio);
 
         var vm = this;
-        vm.tabs = parentScope.vm.tabs;
+        vm.tabs = parentScope.tabs;
 
-        vm.portfolio = {};
+        vm.portfolio = portfolio;
 
         var originatorEv;
 

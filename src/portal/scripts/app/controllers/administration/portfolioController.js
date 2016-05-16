@@ -10,7 +10,9 @@
 
     var GroupTableService = require('../../services/groupTable/groupTableService');
 
-    module.exports = function ($scope, $mdDialog, $mdMedia) {
+    var demoPortfolioService = require('../../services/demoPortfolioService');
+
+    module.exports = function ($scope, $mdDialog) {
 
         var vm = this;
         vm.portfolio = [];
@@ -54,10 +56,15 @@
                 user_code: "T4",
                 value_type: 10
             }];
+        vm.tabs = [];
         vm.filters = [];
         vm.sorting = [];
 
-        vm.dialIsOpen = true;
+        demoPortfolioService.getTabList().then(function (data) {
+            vm.tabs = data;
+            console.log('vm tabs!', vm.tabs);
+            $scope.$apply();
+        });
 
         console.log('Portfolio controller initialized...');
         portfolioService.getList().then(function (data) {
@@ -89,46 +96,22 @@
         };
 
 
-        $scope.customFullscreen = $mdMedia('xs') || $mdMedia('sm');
 
         vm.addPortfolio = function (ev) {
-            var useFullScreen = ($mdMedia('sm') || $mdMedia('xs')) && $scope.customFullscreen;
             $mdDialog.show({
                 controller: 'PortfolioAddDialogController as vm',
                 templateUrl: 'views/administration/portfolio-add-dialog-view.html',
                 parent: angular.element(document.body),
                 targetEvent: ev,
                 clickOutsideToClose: true,
-                fullscreen: useFullScreen
-            }).then(function (answer) {
-                $scope.status = 'You said the information was "' + answer + '".';
-            }, function () {
-                $scope.status = 'You cancelled the dialog.';
+                locals: {
+                    parentScope: $scope
+                }
             });
         };
 
-        vm.getNodeList = function () {
-            portfolioService.getClassifierNodeList().then(function (data) {
-                console.log('Portfolio Classifier Node List!', data);
-            });
-        };
+        vm.openDataViewPanel = function(){
 
-        vm.getClassifierNodeByKey = function () {
-            portfolioService.getClassifierNodeByKey(1).then(function (data) {
-                console.log('Portfolio Classifier Node Instance!', data);
-            });
-        };
-
-        vm.getClassifierList = function () {
-            portfolioService.getClassifierList().then(function (data) {
-                console.log('Portfolio Classifier List!', data);
-            });
-        };
-
-        vm.getClassifierByKey = function () {
-            portfolioService.getClassifierByKey(1).then(function (data) {
-                console.log('Portfolio Classifier Instance!', data);
-            });
         }
 
 

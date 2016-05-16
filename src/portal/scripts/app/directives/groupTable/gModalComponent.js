@@ -8,14 +8,12 @@
     var metaService = require('../../services/metaService');
     var portfolioService = require('../../services/portfolioService');
 
-    var demoPortfolioService = require('../../services/demoPortfolioService');
-
     module.exports = function ($scope, $mdDialog, parentScope, callback) {
         console.log('Group table modal controller initialized...');
 
         var vm = this;
 
-        vm.tabs = [];
+        vm.tabs = parentScope.tabs;
         vm.general = [];
         vm.attrs = [];
         vm.custom = [];
@@ -29,13 +27,6 @@
         $('body').addClass('drag-dialog'); // hide backdrop
 
         //console.log('12323232', parentScope);
-
-        demoPortfolioService.getTabList().then(function (data) {
-            vm.tabs = data;
-            syncAttrs(vm.tabs);
-            callback();
-            $scope.$apply();
-        });
 
         portfolioService.getAttributeTypeList().then(function (data) {
             attrsList = data.results;

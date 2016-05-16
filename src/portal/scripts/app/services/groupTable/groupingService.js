@@ -71,72 +71,76 @@
 
         }
 
-        for (i = 0; i < items.length; i = i + 1) {
-            hasGroups = checkEntityForGroupExist(items[i], groups);
-            if (hasGroups) {
-                groupName = '';
-                groupsForResult = [];
-                //console.log('groups', groups);
-                for (c = 0; c < groups.length; c = c + 1) {
-                    for (a = 0; a < items[i].attributes.length; a = a + 1) {
-                        if (groups[c].hasOwnProperty('id')) {
-                            if (groups[c].id === items[i].attributes[a]['attribute_type']) {
-                                groupsForResult.push(returnValue(items[i].attributes[a]));
-                            }
-                        } else {
-                            for (k = 0; k < keywords.length; k = k + 1) {
-                                if (groups[c].name === keywords[k].caption) {
-                                    if (groupsForResult.indexOf(items[i][keywords[k].key]) === -1) {
-                                        groupsForResult.push(items[i][keywords[k].key]);
-                                    }
-                                }
-                            }
-                        }
-                        if (c == groups.length - 1) {
+        if (groups.length) {
+            for (i = 0; i < items.length; i = i + 1) {
+                hasGroups = checkEntityForGroupExist(items[i], groups);
+                if (hasGroups) {
+                    groupName = '';
+                    groupsForResult = [];
+                    //console.log('groups', groups);
+                    for (c = 0; c < groups.length; c = c + 1) {
+                        for (a = 0; a < items[i].attributes.length; a = a + 1) {
                             if (groups[c].hasOwnProperty('id')) {
                                 if (groups[c].id === items[i].attributes[a]['attribute_type']) {
-                                    groupName = groupName + returnValue(items[i].attributes[a]);
-                                }
-                            } else {
-                                for (k = 0; k < keywords.length; k = k + 1) {
-                                    if (c == groups.length - 1) {
-                                        if (groups[c].name === keywords[k].caption) {
-                                            groupName = groupName + keywords[k].caption;
-                                        }
-                                    }
-                                }
-                            }
-                        } else {
-                            if (groups[c].hasOwnProperty('id')) {
-                                if (groups[c].id === items[i].attributes[a]['attribute_type']) {
-                                    groupName = groupName + returnValue(items[i].attributes[a]) + '_';
+                                    groupsForResult.push(returnValue(items[i].attributes[a]));
                                 }
                             } else {
                                 for (k = 0; k < keywords.length; k = k + 1) {
                                     if (groups[c].name === keywords[k].caption) {
-                                        groupName = groupName + keywords[k].caption + '_';
+                                        if (groupsForResult.indexOf(items[i][keywords[k].key]) === -1) {
+                                            groupsForResult.push(items[i][keywords[k].key]);
+                                        }
+                                    }
+                                }
+                            }
+                            if (c == groups.length - 1) {
+                                if (groups[c].hasOwnProperty('id')) {
+                                    if (groups[c].id === items[i].attributes[a]['attribute_type']) {
+                                        groupName = groupName + returnValue(items[i].attributes[a]);
+                                    }
+                                } else {
+                                    for (k = 0; k < keywords.length; k = k + 1) {
+                                        if (c == groups.length - 1) {
+                                            if (groups[c].name === keywords[k].caption) {
+                                                groupName = groupName + keywords[k].caption;
+                                            }
+                                        }
+                                    }
+                                }
+                            } else {
+                                if (groups[c].hasOwnProperty('id')) {
+                                    if (groups[c].id === items[i].attributes[a]['attribute_type']) {
+                                        groupName = groupName + returnValue(items[i].attributes[a]) + '_';
+                                    }
+                                } else {
+                                    for (k = 0; k < keywords.length; k = k + 1) {
+                                        if (groups[c].name === keywords[k].caption) {
+                                            groupName = groupName + keywords[k].caption + '_';
+                                        }
                                     }
                                 }
                             }
                         }
-                    }
 
 
-                }
-                //console.log('groupsForResult', groupsForResult);
-                if (!itemsGrouped[groupName]) {
-                    itemsGrouped[groupName] = {
-                        groups: groupsForResult,
-                        items: []
                     }
+                    //console.log('groupsForResult', groupsForResult);
+                    if (!itemsGrouped[groupName]) {
+                        itemsGrouped[groupName] = {
+                            groups: groupsForResult,
+                            items: []
+                        }
+                    }
+                    itemsGrouped[groupName].items.push(items[i]);
                 }
-                itemsGrouped[groupName].items.push(items[i]);
             }
+            itemsGroupedArray = transformToArray(itemsGrouped);
+            console.log('Items grouped', itemsGroupedArray);
+            return itemsGroupedArray;
+        } else {
+            console.log('items', items);
+            return items;
         }
-
-        itemsGroupedArray = transformToArray(itemsGrouped);
-        //console.log('Items grouped', itemsGroupedArray);
-        return itemsGroupedArray;
     };
 
     module.exports = {
