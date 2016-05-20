@@ -5,6 +5,8 @@
 
     'use strict';
 
+    var portfolioService = require('../../services/portfolioService');
+
     module.exports = function ($scope, $mdDialog, parentScope) {
 
         console.log('Portfolio add dialog controller initialized...');
@@ -65,13 +67,16 @@
             $mdDialog.cancel();
         };
 
-        vm.selectFields = function(){
+        vm.selectFields = function () {
 
         };
 
         vm.save = function () {
-            console.log('saved!', vm.portfolio);
-            $mdDialog.hide();
+            console.log('portfolio!', vm.portfolio);
+            portfolioService.create(vm.portfolio).then(function (data) {
+                console.log('saved!', data);
+                $mdDialog.hide();
+            })
         };
 
     }

@@ -1,21 +1,47 @@
-<div class="g-wrapper">
-    <div class="g-workarea">
+<div class="g-wrapper" group-height-aligner additions-status="additionsStatus">
+    <div class="g-workarea main-area">
         <div class="g-grouping-section">
             <group-grouping tabs="tabs" grouping="grouping" filters="filters" columns="columns" external-callback="externalCallback()"></group-grouping>
         </div>
         <div class="g-table-section">
-            <div class="g-row-selection">
-                <group-row-selection items="items"></group-row-selection>
-            </div>
             <div class="g-table-wrap" group-aligner items="items">
-                <group-columns columns="columns"></group-columns>
-                <group-table-body items="items" tabs="tabs" grouping="grouping" columns="columns"></group-table-body>
+                <group-columns columns="columns" is-item-addition="false"></group-columns>
+                <group-table-body items="items"
+                                  tabs="tabs"
+                                  class="group-table-body"
+                                  entity-type="portfolio"
+                                  grouping="grouping"
+                                  columns="columns"></group-table-body>
             </div>
         </div>
     </div>
-    <div class="g-sidebar">
+    <div class="g-sidebar main-sidebar">
         <div class="g-filter">
             <group-sidebar-filter></group-sidebar-filter>
+        </div>
+    </div>
+    <div class="g-additions" data-ng-if="showAdditions()">
+        <div class="g-height-slider"></div>
+        <div class="g-additions-data-editor">
+
+        </div>
+        <div class="g-additions-workarea">
+            <div class="g-workarea">
+                <div class="g-table-section">
+                    <div class="g-table-wrap" group-aligner items="itemAdditions">
+                        <group-columns columns="itemAdditionsColumns" is-item-addition="true"></group-columns>
+                        <group-table-body items="itemAdditions"
+                                          class="group-table-body"
+                                          entity-type="transaction"
+                                          columns="itemAdditionsColumns"></group-table-body>
+                    </div>
+                </div>
+            </div>
+            <div class="g-sidebar additions-sidebar">
+                <div class="g-filter">
+                    <group-sidebar-filter></group-sidebar-filter>
+                </div>
+            </div>
         </div>
     </div>
 </div>

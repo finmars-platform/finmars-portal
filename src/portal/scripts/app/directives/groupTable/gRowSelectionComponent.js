@@ -1,29 +1,35 @@
 /**
  * Created by szhitenev on 05.05.2016.
  */
-(function(){
+(function () {
 
     'use strict';
 
-    module.exports = function() {
+    module.exports = function () {
         return {
             restrict: 'AE',
             scope: {
-              items: '='
+                items: '='
             },
             templateUrl: 'views/directives/groupTable/row-selection-view.html',
-            link: function(scope, elem, attrs) {
-                console.log('Row selection component');
+            link: function (scope, elem, attrs) {
+                console.log('Row selection component', scope.items);
                 scope.rowItems = [];
 
-                scope.items.map(function(item){
-                    console.log('2132132', item);
-                    scope.rowItems.push({type: 'group'});
-                    item.items.map(function(subitem){
-                        scope.rowItems.push({type: 'row'})
+                if (scope.items.length && scope.items[0].hasOwnProperty('groups')) {
+                    scope.items.map(function (item) {
+                        console.log('2132132', item);
+                        scope.rowItems.push({type: 'group'});
+                        item.items.map(function (subitem) {
+                            scope.rowItems.push({type: 'row'})
+                        })
                     })
-                })
-
+                } else {
+                    scope.items.map(function (item) {
+                        console.log('2132132', item);
+                        scope.rowItems.push({type: 'row'});
+                    })
+                }
             }
         }
     }

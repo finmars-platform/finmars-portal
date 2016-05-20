@@ -22,10 +22,27 @@
     </md-fab-speed-dial>
 </div>
 <div data-ng-if="vm.groupTableService.projection().length">
-    <group-table items="vm.groupTableService.projection()"
+    <group-table
+                 tabs="vm.tabs"
+
+                 items="vm.groupTableService.projection()"
                  columns="vm.columns"
                  filters="vm.filters"
-                 tabs="vm.tabs"
+                 grouping="vm.grouping"
+                 sorting="vm.sorting"
+
+                 item-additions="vm.groupTableService.additions.projection()"
+                 item-additions-columns="vm.portfolioAdditionsColumns"
+                 item-additions-filters="vm.portfolioAdditionsFilters"
+                 item-additions-sorting="vm.portfolioAdditionsSorting"
+
+                 external-get-additions="vm.getPortfolioTransactions(id)"
                  external-callback="vm.updateTable()"
-                 grouping="vm.grouping"></group-table>
+                 external-additions-callback="vm.updateAdditionsTable()"
+                 external-update-item="vm.updateItem()"
+                 external-update-item-additions="vm.updateItemAddition()"
+
+                 additions-status="vm.additionsStatus"
+
+                 ></group-table>
 </div>

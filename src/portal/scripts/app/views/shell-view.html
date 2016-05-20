@@ -1,7 +1,7 @@
 <div layout="row" class="min-height">
     <div layout="row" class="sidenav-wrapper" data-ng-controller="SideNavController as vm" data-ng-include="'views/side-nav-view.html'"></div>
     <div layout="column" class="relative" layout-fill role="main">
-        <md-toolbar ng-show="!showSearch">
+        <md-toolbar ng-show="!showSearch" class="header">
             <div class="md-toolbar-tools">
                 <md-button ng-click="toggleSidenav('left')" hide-gt-md aria-label="Menu">
                     <ng-md-icon icon="menu"></ng-md-icon>

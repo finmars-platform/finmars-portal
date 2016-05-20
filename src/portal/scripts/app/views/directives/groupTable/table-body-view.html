@@ -2,11 +2,13 @@
     <div data-ng-if="grouping.length">
         <div data-ng-repeat="item in items">
             <div class="g-group-holder">
+                <div class="g-row-selection"></div>
                 <div data-ng-repeat="group in item.groups track by $index" class="g-group">
                     {{group}}
                 </div>
             </div>
-            <div data-ng-repeat="groupedItem in item.items" class="g-row">
+            <div data-ng-repeat="groupedItem in item.items" class="g-row" data-ng-click="rowCallback(groupedItem)">
+                <div class="g-row-selection"></div>
                 <div data-ng-repeat="column in columns" class="g-cell">
                     <span data-ng-bind="bindCell(groupedItem, column)"></span>
                 </div>
@@ -33,7 +35,8 @@
         </div>
     </div>
     <div data-ng-if="!grouping.length">
-        <div data-ng-repeat="item in items" class="g-row">
+        <div data-ng-repeat="item in items" class="g-row" data-ng-click="rowCallback(item)">
+            <div class="g-row-selection"></div>
             <div data-ng-repeat="column in columns" class="g-cell">
                 <span data-ng-bind="bindCell(item, column)"></span>
             </div>

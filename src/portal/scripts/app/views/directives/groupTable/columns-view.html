@@ -1,5 +1,8 @@
 <div class="g-columns-component g-thead">
-    <div dragula="'columns-bag'" dragula-model="columns">
+    <div class="g-cell-select all">
+        *
+    </div>
+    <div dragula="'columns-bag'" dragula-model="columns" class="g-columns-holder">
         <md-card data-ng-repeat="column in columns" class="g-cell g-column" >
             <div class="sort">
                 <md-button class="" aria="open settings" data-ng-click="openGroupSettings()">
@@ -27,7 +30,7 @@
             <div class="resize-slider"></div>
         </md-card>
     </div>
-    <div class="drop-new-field" id="columnsbag">
+    <div class="drop-new-field" id="columnsbag" data-ng-if="!isItemAddition">
         Drop New Field
     </div>
 </div>

@@ -14,14 +14,15 @@
                 items: '=',
                 grouping: '=',
                 tabs: '=',
-                columns: '='
+                columns: '=',
+                entityType: '@'
             },
             templateUrl: 'views/directives/groupTable/table-body-view.html',
             link: function (scope, elem, attrs) {
-                console.log('Table component');
+                console.log('Table component', scope.items);
                 //console.log('scope columns', scope.columns);
 
-                var entityType = 'portfolio';
+                var entityType = scope.entityType;
                 var keywords = [];
                 scope.keywordsReady = false;
 
@@ -32,7 +33,7 @@
                     scope.$apply();
                 });
 
-                scope.openEntityMenu = function($mdOpenMenu, ev){
+                scope.openEntityMenu = function ($mdOpenMenu, ev) {
                     $mdOpenMenu(ev);
                 };
 
@@ -49,6 +50,15 @@
                     }
                 };
 
+                scope.rowCallback = function (item) {
+                    console.log('open additions!', item);
+                    if (scope.entityType === 'portfolio') {
+                        scope.$parent.externalGetAdditions({id: item.id}).then(function () {
+                            scope.$parent.additionsStatus.additionsWorkArea = true;
+                            console.log('work?', scope);
+                        });
+                    }
+                };
 
                 scope.deleteEntity = function (ev, portfolio) {
                     $mdDialog.show({
