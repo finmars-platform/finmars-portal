@@ -42,12 +42,12 @@ app.directive('bindFieldControl', [require('./app/directives/bindFieldControlDir
 app.directive('groupTable', [require('./app/directives/groupTable/gTableComponent')]);
 app.directive('groupTableBody', ['$mdDialog', require('./app/directives/groupTable/gTableBodyComponent')]);
 app.directive('groupSidebarFilter', [require('./app/directives/groupTable/gSidebarFilterComponent')]);
-app.directive('groupRowSelection', [require('./app/directives/groupTable/gRowSelectionComponent')]);
 app.directive('groupReportSettings', [require('./app/directives/groupTable/gReportSettingsComponent')]);
 app.directive('groupGrouping', ['$mdDialog', require('./app/directives/groupTable/gGroupingComponent')]);
 app.directive('groupColumns', [require('./app/directives/groupTable/gColumnsComponent')]);
 app.directive('groupAligner', [require('./app/directives/groupTable/gGroupAlignerComponent')]);
 app.directive('gDialogDraggable', [require('./app/directives/groupTable/gDialogDraggableComponent')]);
+app.directive('groupHeightAligner', [require('./app/directives/groupTable/gHeightAlignerComponent')]);
 
 app.controller('gModalController', ['$scope', '$mdDialog', 'parentScope', 'callback', require('./app/directives/groupTable/gModalComponent')]);
 

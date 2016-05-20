@@ -5,7 +5,7 @@
 
     'use strict';
 
-    module.exports = function ($mdDialog, $mdMedia) {
+    module.exports = function ($mdDialog) {
         return {
             restrict: 'AE',
             scope: {
@@ -46,8 +46,6 @@
                 };
 
                 scope.openModalSettings = function (ev) {
-                    var useFullScreen = ($mdMedia('sm') || $mdMedia('xs')) && scope.customFullscreen;
-
                     $mdDialog.show({
                         controller: 'gModalController as vm', // ../directives/gTable/gModalComponents
                         templateUrl: 'views/directives/groupTable/modal-view.html',
@@ -56,8 +54,7 @@
                         locals: {
                             callback: scope.externalCallback,
                             parentScope: scope
-                        },
-                        fullscreen: useFullScreen
+                        }
                     }).then(function (answer) {
                         scope.status = 'You said the information was "' + answer + '".';
                     }, function () {

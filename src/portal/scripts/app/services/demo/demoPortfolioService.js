@@ -5,7 +5,7 @@
 
     'use strict';
 
-    var demoPortfolioRepository = require('../repositories/demoPortfolioRepository');
+    var demoPortfolioRepository = require('../../repositories/demo/demoPortfolioRepository');
 
     var getTabList = function(){
         return demoPortfolioRepository.getTabList();

@@ -10,12 +10,16 @@
 
     var GroupTableService = require('../../services/groupTable/groupTableService');
 
-    var demoPortfolioService = require('../../services/demoPortfolioService');
+    var demoPortfolioService = require('../../services/demo/demoPortfolioService');
+    var demoTransactionsService = require('../../services/demo/demoTransactionsService');
 
     module.exports = function ($scope, $mdDialog) {
 
         var vm = this;
         vm.portfolio = [];
+
+        vm.tabs = [];
+
         vm.columns = [
             {
                 name: "Name",
@@ -56,9 +60,36 @@
                 user_code: "T4",
                 value_type: 10
             }];
-        vm.tabs = [];
         vm.filters = [];
         vm.sorting = [];
+
+        vm.portfolioAdditions = [];
+
+        vm.portfolioAdditionsColumns = [
+            {
+                name: "Class",
+                notes: "",
+                order: 0,
+                is_hidden: false,
+                short_name: "transaction class",
+                value_type: 10
+            },
+            {
+                name: "Currency",
+                notes: "",
+                order: 0,
+                is_hidden: false,
+                short_name: "transaction currency",
+                value_type: 10
+            }
+        ];
+        vm.portfolioAdditionsFilters = [];
+        vm.portfolioAdditionsSorting = [];
+
+        vm.additionsStatus = {
+            dataEditor: false,
+            additionsWorkArea: false
+        };
 
         demoPortfolioService.getTabList().then(function (data) {
             vm.tabs = data;
@@ -74,12 +105,7 @@
                 vm.portfolio = data;
                 vm.groupTableService = GroupTableService.getInstance();
 
-                vm.groupTableService.setItems(vm.portfolio);
-                vm.groupTableService.columns.setColumns(vm.columns);
-                vm.groupTableService.filtering.setFilters(vm.filters);
-                vm.groupTableService.grouping.setGroups(vm.grouping);
-                vm.groupTableService.sorting.group.sort(vm.sorting.group);
-                vm.groupTableService.sorting.column.sort(vm.sorting.column);
+                vm.updateTable();
 
                 $scope.$apply();
             })
@@ -95,7 +121,23 @@
             vm.groupTableService.sorting.column.sort(vm.sorting.column);
         };
 
+        vm.updateAdditions = function () {
+            vm.groupTableService.additions.setItems(vm.portfolioAdditions);
+            vm.groupTableService.additions.columns.setColumns(vm.portfolioAdditionsColumns);
+            vm.groupTableService.additions.filtering.setFilters(vm.portfolioAdditionsFilters);
+            vm.groupTableService.additions.sorting.column.sort(vm.portfolioAdditionsSorting.column);
+            console.log('projection!!!!!!', vm.groupTableService.additions.projection());
+        };
 
+        vm.getPortfolioTransactions = function (portfolioId) {
+            console.log('vm.getPortfolioTransaction', portfolioId);
+            return demoTransactionsService.getList(portfolioId).then(function (data) {
+                console.log('data', data);
+                vm.portfolioAdditions = data;
+                vm.updateAdditions();
+                $scope.$apply();
+            });
+        };
 
         vm.addPortfolio = function (ev) {
             $mdDialog.show({
@@ -110,7 +152,7 @@
             });
         };
 
-        vm.openDataViewPanel = function(){
+        vm.openDataViewPanel = function () {
 
         }
 

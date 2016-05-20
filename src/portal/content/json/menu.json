@@ -12,22 +12,22 @@
     "type": "toggle",
     "pages": [
       {
-        "state" : "app",
+        "state" : "app.add-balance",
         "title": "New Balance",
         "icon": "dashboard"
       },
       {
-        "state" : "app",
+        "state" : "app.add-performance",
         "title": "New Performance",
         "icon": "dashboard"
       },
       {
-        "state" : "app",
+        "state" : "app.add-cash-flow",
         "title": "New Cash flow",
         "icon": "dashboard"
       },
       {
-        "state" : "app",
+        "state" : "app.add-transaction",
         "title": "New Transaction",
         "icon": "dashboard"
       }
@@ -40,37 +40,37 @@
     "type": "toggle",
     "pages": [
       {
-        "state" : "app.administration.portfolio",
+        "state" : "app.portfolio",
         "title": "Portfolios",
         "icon": ""
       },
       {
-        "state" : "app",
+        "state" : "app.accounts",
         "title": "Accounts",
         "icon": ""
       },
       {
-        "state" : "app",
+        "state" : "app.counterparties",
         "title": "Counterparties",
         "icon": ""
       },
       {
-        "state" : "app",
+        "state" : "app.responsibles",
         "title": "Responsibles",
         "icon": ""
       },
       {
-        "state" : "app",
+        "state" : "app.instruments",
         "title": "Instruments",
         "icon": ""
       },
       {
-        "state" : "app",
+        "state" : "app.transcations",
         "title": "Transactions",
         "icon": ""
       },
       {
-        "state" : "app",
+        "state" : "app.pricing",
         "title": "Prcing",
         "icon": ""
       }
@@ -83,37 +83,37 @@
     "type": "toggle",
      "pages": [
       {
-        "state" : "app",
+        "state" : "app.portfolio-form",
         "title": "Portfolio form",
         "icon": ""
       },
       {
-        "state" : "app",
+        "state" : "app.account-form",
         "title": "Account form",
         "icon": ""
       },
       {
-        "state" : "app",
+        "state" : "app.counterparty-form",
         "title": "Counterparty form",
         "icon": ""
       },
       {
-        "state" : "app",
+        "state" : "app.instrument-form",
         "title": "Instrument form",
         "icon": ""
       },
       {
-        "state" : "app",
+        "state" : "app.transaction-form",
         "title": "Transaction form",
         "icon": ""
       },
       {
-        "state" : "app",
+        "state" : "app.instrument-types",
         "title": "Instrument types",
         "icon": ""
       },
       {
-        "state" : "app",
+        "state" : "app.complex-transactions",
         "title": "Complex transactions",
         "icon": ""
       }
@@ -126,12 +126,12 @@
     "type": "toggle",
      "pages": [
        {
-         "state" : "app",
+         "state" : "app.notifications",
          "title": "Notifications",
          "icon": ""
        },
       {
-        "state" : "app",
+        "state" : "app.logging",
         "title": "Logging",
         "icon": ""
       }

@@ -9,11 +9,12 @@
         return {
             restrict: 'AE',
             scope: {
-                columns: '='
+                columns: '=',
+                isItemAddition: '='
             },
             templateUrl: 'views/directives/groupTable/columns-view.html',
             link: function (scope, elem, attrs) {
-                console.log('Columns component');
+                console.log('Columns component', scope.columns);
 
                 scope.openColumnSettings = function ($mdOpenMenu, ev) {
                     $mdOpenMenu(ev);

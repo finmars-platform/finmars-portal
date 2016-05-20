@@ -21,7 +21,7 @@
             url: '',
             abstract: true,
             template: '<div data-ui-view></div>'
-        }).state('app.administration.portfolio', {
+        }).state('app.portfolio', {
             url: '/portfolio',
             templateUrl: 'views/administration/portfolio-view.html',
             controller: 'PortfolioController as vm'

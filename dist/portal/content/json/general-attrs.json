@@ -12,5 +12,15 @@
       "key": "notes",
       "caption": "Notes"
     }
+  ],
+  "transaction": [
+    {
+      "key": "transaction_class",
+      "caption": "Class"
+    },
+    {
+      "key": "transaction_currency",
+      "caption": "Currency"
+    }
   ]
 }

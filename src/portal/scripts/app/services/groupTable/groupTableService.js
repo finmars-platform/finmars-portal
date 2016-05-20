@@ -13,52 +13,86 @@
     var GroupTableService = (function () {
 
         var items = [];
+        var itemsAdditions = [];
 
         var columnsServiceExt = {
-            setColumns: function(columns) {
+            setColumns: function (columns) {
                 console.log('setColumns', items);
                 items = columnsService.setColumns(items, columns)
             }
         };
 
         var groupingServiceExt = {
-            setGroups: function(groups) {
+            setGroups: function (groups) {
                 items = groupingService.setGroups(items, groups);
             }
         };
 
         var filteringServiceExt = {
-            setFilters: function(filters) {
+            setFilters: function (filters) {
                 items = filteringService.setFilters(items, filters);
             }
         };
 
         var sortingServiceExt = {
             group: {
-                sort: function(sort){
+                sort: function (sort) {
                     items = sortingService.group.sort(items, sort);
                 }
             },
             column: {
-                sort: function(sort){
-                    items = sortingService.column.sort(items, sort);
+                sort: function (sort) {
+                    itemsAdditions = sortingService.column.sort(items, sort);
+                }
+            }
+        };
+
+        // ADDITIONS
+
+        var columnsAdditionsServiceExt = {
+            setColumns: function (columns) {
+                console.log('setColumns', items);
+                itemsAdditions = columnsService.setColumns(itemsAdditions, columns)
+            }
+        };
+
+        var filteringAdditionsServiceExt = {
+            setFilters: function (filters) {
+                itemsAdditions = filteringService.setFilters(itemsAdditions, filters);
+            }
+        };
+
+        var sortingAdditionsServiceExt = {
+            column: {
+                sort: function (sort) {
+                    itemsAdditions = sortingService.column.sort(itemsAdditions, sort);
                 }
             }
         };
 
 
-
-        function GroupTableService(){
+        function GroupTableService() {
             console.log('instance created');
-            this.setItems = function(itemsSource){
+            this.setItems = function (itemsSource) {
                 items = itemsSource;
             };
             this.columns = columnsServiceExt;
             this.grouping = groupingServiceExt;
             this.filtering = filteringServiceExt;
             this.sorting = sortingServiceExt;
-            this.projection = function(){
+            this.projection = function () {
                 return items;
+            };
+            this.additions = {
+                setItems: function (itemsAdditionsSource) {
+                    itemsAdditions = itemsAdditionsSource;
+                },
+                columns: columnsAdditionsServiceExt,
+                filtering: filteringAdditionsServiceExt,
+                sorting: sortingAdditionsServiceExt,
+                projection: function () {
+                    return itemsAdditions;
+                }
             }
         }
 
