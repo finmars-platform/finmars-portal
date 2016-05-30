@@ -19,14 +19,14 @@
             },
             templateUrl: 'views/directives/groupTable/table-body-view.html',
             link: function (scope, elem, attrs) {
-                console.log('Table component', scope.items);
+                console.log('Table body component', scope.items);
                 //console.log('scope columns', scope.columns);
 
                 var entityType = scope.entityType;
                 var keywords = [];
                 scope.keywordsReady = false;
 
-                metaService.getReservedKeys().then(function (data) {
+                metaService.getBaseAttrs().then(function (data) {
                     keywords = data[entityType];
                     scope.keywordsReady = true;
                     console.log('keywords', keywords);
@@ -43,7 +43,7 @@
                     } else {
                         var i;
                         for (i = 0; i < keywords.length; i = i + 1) {
-                            if (keywords[i].caption === column.name) {
+                            if (keywords[i].name === column.name) {
                                 return groupedItem[keywords[i].key];
                             }
                         }

@@ -5,6 +5,8 @@
 
     'use strict';
 
+    var gridHelperService = require('../../services/gridHelperService');
+
     module.exports = function ($scope, $mdDialog, parentScope, portfolio) {
 
         console.log('Portfolio add dialog controller initialized...');
@@ -17,14 +19,7 @@
 
         var originatorEv;
 
-        vm.range = function (rowsCount) {
-            var i;
-            var rows = [];
-            for (i = 1; i <= rowsCount; i = i + 1) {
-                rows.push(i);
-            }
-            return rows;
-        };
+        vm.range = gridHelperService.range;
 
         vm.bindFlex = function (tab, row, field) {
             var totalColspans = 0;
@@ -65,8 +60,17 @@
             $mdDialog.cancel();
         };
 
-        vm.selectFields = function(){
-
+        vm.editLayout = function(ev){
+            $mdDialog.show({
+                controller: 'EntityDataConstructorController as vm',
+                templateUrl: 'views/entity-data-constructor-view.html',
+                parent: angular.element(document.body),
+                targetEvent: ev,
+                clickOutsideToClose: true,
+                locals: {
+                    parentScope: $scope
+                }
+            });
         };
 
         vm.save = function () {

@@ -1,0 +1,28 @@
+<div>
+    <div data-ng-if="attribute">
+        <md-card class="ec-attr-card">
+            <div layout="row">
+                <p class="name-holder" flex="60">
+                    <b><span data-ng-bind="attribute.name"></span></b> (<span data-ng-bind="bindType()"></span>)
+                </p>
+                <div class="options-holder" flex="40">
+                    <md-button aria-label="delete attribute">
+                        <ng-md-icon icon="delete"></ng-md-icon>
+                    </md-button>
+                    <md-button aria-label="edit attribute">
+                        <ng-md-icon icon="mode_edit"></ng-md-icon>
+                    </md-button>
+
+                </div>
+            </div>
+        </md-card>
+    </div>
+    <div data-ng-if="!attribute">
+        <md-card class="ec-attr-card">
+            <md-button aria-label="add field">
+                <ng-md-icon icon="add_circle"></ng-md-icon>
+            </md-button>
+        </md-card>
+    </div>
+
+</div>

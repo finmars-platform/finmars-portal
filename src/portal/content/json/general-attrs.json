@@ -2,25 +2,30 @@
   "portfolio": [
     {
       "key": "name",
-      "caption": "Name"
+      "name": "Name",
+      "value_type": 10
     },
     {
       "key": "short_name",
-      "caption": "Short name"
+      "name": "Short name",
+      "value_type": 10
     },
     {
       "key": "notes",
-      "caption": "Notes"
+      "name": "Notes",
+      "value_type": 10
     }
   ],
   "transaction": [
     {
       "key": "transaction_class",
-      "caption": "Class"
+      "name": "Class",
+      "value_type": 10
     },
     {
       "key": "transaction_currency",
-      "caption": "Currency"
+      "name": "Currency",
+      "value_type": 10
     }
   ]
 }
