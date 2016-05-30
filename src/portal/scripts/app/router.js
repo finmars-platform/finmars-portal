@@ -27,6 +27,12 @@
             controller: 'PortfolioController as vm'
         });
 
+        $stateProvider.state('app.data-constructor', {
+            url: '/layout/:entityName',
+            templateUrl: 'views/entity-data-constructor-view.html',
+            controller: 'EntityDataConstructorController as vm'
+        });
+
         $urlRouterProvider.otherwise('/');
 
     }

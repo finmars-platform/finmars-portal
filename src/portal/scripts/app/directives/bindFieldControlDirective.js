@@ -5,6 +5,8 @@
 
     'use strict';
 
+    var metaService = require('../services/metaService');
+
     module.exports = function () {
         return {
             restrict: 'AE',
@@ -16,20 +18,7 @@
 
                 scope.portfolio = scope.$parent.vm.portfolio;
 
-                //Warning hardcode!
-                var choices = [{
-                    "value": 20,
-                    "display_name": "Number"
-                }, {
-                    "value": 10,
-                    "display_name": "String"
-                }, {
-                    "value": 40,
-                    "display_name": "Date"
-                }, {
-                    "value": 30,
-                    "display_name": "Classifier"
-                }];
+                var choices = metaService.getValueTypes();
 
                 var baseAttrs = [{
                     "key": "name",
