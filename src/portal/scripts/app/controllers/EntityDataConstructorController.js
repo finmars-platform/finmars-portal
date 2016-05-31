@@ -15,15 +15,12 @@
 
     module.exports = function ($scope) {
 
-        console.log('Entity data constructor controller intialized...');
         var vm = this;
 
         vm.boxColumns = [1,2,3,4,5,6];
 
 
         vm.entityType = "portfolio";
-
-
 
         demoPortfolioService.getTabList().then(function (data) {
             vm.tabs = data;
@@ -83,6 +80,13 @@
                 }
             }
             return field;
+        };
+
+        vm.saveLayout = function(){
+            demoPortfolioService.save(vm.tabs).then(function () {
+                console.log('layout saved');
+                $scope.$apply();
+            });
         };
 
         vm.bindFlex = function (tab, row, column) {

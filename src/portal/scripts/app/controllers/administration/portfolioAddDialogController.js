@@ -43,9 +43,9 @@
 
         vm.bindField = function (tab, field) {
             var i;
-            if (field.hasOwnProperty('fieldId')) {
+            if (field.hasOwnProperty('id')) {
                 for (i = 0; i < tab.attrs.length; i = i + 1) {
-                    if (field.fieldId === tab.attrs[i].id) {
+                    if (field.id === tab.attrs[i].id) {
                         return tab.attrs[i];
                     }
                 }

@@ -26,9 +26,10 @@
                         </div>
                         <div layout="row">
                             <div data-ng-repeat="column in vm.range(tab.layout.columns)"
-                                 flex="{{vm.bindFlex(tab, row, column)}}">
+                                 flex="{{vm.bindFlex(tab, tab.layout.rows + 1, column)}}">
                                 <layout-constructor-field tab="tab"
                                                           item="vm.bindField(tab, row, column)"></layout-constructor-field>
+
                             </div>
                         </div>
                     </div>

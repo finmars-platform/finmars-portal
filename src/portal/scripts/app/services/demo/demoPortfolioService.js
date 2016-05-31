@@ -11,8 +11,13 @@
         return demoPortfolioRepository.getTabList();
     };
 
+    var save = function(tabs){
+        return demoPortfolioRepository.save(tabs);
+    };
+
     module.exports = {
-        getTabList: getTabList
+        getTabList: getTabList,
+        save: save
     }
 
 }());

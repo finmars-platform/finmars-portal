@@ -1,28 +1,55 @@
 <div>
-    <div data-ng-if="attribute">
-        <md-card class="ec-attr-card">
-            <div layout="row">
-                <p class="name-holder" flex="60">
-                    <b><span data-ng-bind="attribute.name"></span></b> (<span data-ng-bind="bindType()"></span>)
-                </p>
-                <div class="options-holder" flex="40">
-                    <md-button aria-label="delete attribute">
-                        <ng-md-icon icon="delete"></ng-md-icon>
-                    </md-button>
-                    <md-button aria-label="edit attribute">
-                        <ng-md-icon icon="mode_edit"></ng-md-icon>
-                    </md-button>
+    <div data-ng-if="!editMode">
+        <div data-ng-if="attribute">
+            <md-card class="ec-attr-card">
+                <div layout="row">
+                    <p class="name-holder" flex="60">
+                        <b><span data-ng-bind="attribute.name"></span></b> (<span data-ng-bind="bindType()"></span>)
+                    </p>
+                    <div class="options-holder" flex="40">
+                        <md-button aria-label="delete attribute">
+                            <ng-md-icon icon="delete"></ng-md-icon>
+                        </md-button>
+                        <md-button aria-label="edit attribute" data-ng-click="toggleEditMode()">
+                            <ng-md-icon icon="mode_edit"></ng-md-icon>
+                        </md-button>
 
+                    </div>
                 </div>
-            </div>
-        </md-card>
+            </md-card>
+        </div>
+        <div data-ng-if="!attribute">
+            <md-card class="ec-attr-card">
+                <md-button aria-label="add field" data-ng-click="toggleEditMode()">
+                    <ng-md-icon icon="add_circle"></ng-md-icon>
+                </md-button>
+            </md-card>
+        </div>
     </div>
-    <div data-ng-if="!attribute">
+    <div data-ng-if="editMode">
         <md-card class="ec-attr-card">
-            <md-button aria-label="add field">
-                <ng-md-icon icon="add_circle"></ng-md-icon>
+            <md-input-container class="md-block" flex-gt-sm>
+                <label>Attribute</label>
+                <md-select ng-model="attribute" ng-change="changeModel(attribute)">
+                    <md-option ng-repeat="attr in attrsLeft" ng-value="attr">
+                        {{attr.name}}
+                    </md-option>
+                </md-select>
+            </md-input-container>
+            <md-input-container class="md-block" flex-gt-sm>
+                <label>Colspan</label>
+                <md-select ng-model="item.colspan">
+                    <md-option ng-repeat="colspan in getCols()" value="{{colspan}}">
+                        Fit {{colspan}} column
+                    </md-option>
+                </md-select>
+            </md-input-container>
+            <md-button aria-label="cancel" data-ng-click="toggleEditMode()">
+                Cancel
+            </md-button>
+            <md-button aria-label="save layout" data-ng-click="saveLayout()">
+                Ok
             </md-button>
         </md-card>
     </div>
-
 </div>
