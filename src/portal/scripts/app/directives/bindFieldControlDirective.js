@@ -33,6 +33,7 @@
 
 
                 scope.fieldType = null;
+                console.log(scope.item);
                 scope.attribute = scope.item;
 
                 var i;

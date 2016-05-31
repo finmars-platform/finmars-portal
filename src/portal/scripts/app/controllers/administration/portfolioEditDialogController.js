@@ -6,14 +6,32 @@
     'use strict';
 
     var gridHelperService = require('../../services/gridHelperService');
+    var portfolioService = require('../../services/portfolioService');
+    var metaService = require('../../services/metaService');
 
-    module.exports = function ($scope, $mdDialog, parentScope, portfolio) {
+    module.exports = function ($scope, $mdDialog, parentScope, portfolio, $state) {
 
         console.log('Portfolio add dialog controller initialized...');
         console.log('parentScope', portfolio);
 
         var vm = this;
+        vm.entityType = 'portfolio';
         vm.tabs = parentScope.tabs;
+
+        vm.attrs = [];
+        vm.baseAttrs = [];
+
+        portfolioService.getAttributeTypeList().then(function(data){
+            vm.attrs = data.results;
+            console.log('vm.attrs', vm.attrs);
+            $scope.$apply();
+        });
+
+        metaService.getBaseAttrs().then(function(data){
+            vm.baseAttrs = data[vm.entityType];
+            console.log('vm.baseAttrs', vm.baseAttrs);
+            $scope.$apply();
+        });
 
         vm.portfolio = portfolio;
 
@@ -37,15 +55,15 @@
         vm.bindField = function (tab, field) {
             var i;
             if (field.hasOwnProperty('id')) {
-                for (i = 0; i < tab.attrs.length; i = i + 1) {
-                    if (field.id === tab.attrs[i].id) {
-                        return tab.attrs[i];
+                for (i = 0; i < vm.attrs.length; i = i + 1) {
+                    if (field.id === vm.attrs[i].id) {
+                        return vm.attrs[i];
                     }
                 }
             } else {
-                for (i = 0; i < tab.attrs.length; i = i + 1) {
-                    if (field.name === tab.attrs[i].name) {
-                        return tab.attrs[i];
+                for (i = 0; i < vm.baseAttrs.length; i = i + 1) {
+                    if (field.name === vm.baseAttrs[i].name) {
+                        return vm.baseAttrs[i];
                     }
                 }
             }
@@ -61,16 +79,8 @@
         };
 
         vm.editLayout = function(ev){
-            $mdDialog.show({
-                controller: 'EntityDataConstructorController as vm',
-                templateUrl: 'views/entity-data-constructor-view.html',
-                parent: angular.element(document.body),
-                targetEvent: ev,
-                clickOutsideToClose: true,
-                locals: {
-                    parentScope: $scope
-                }
-            });
+            $state.go('app.data-constructor', {entityName: 'portfolio'});
+            $mdDialog.hide();
         };
 
         vm.save = function () {

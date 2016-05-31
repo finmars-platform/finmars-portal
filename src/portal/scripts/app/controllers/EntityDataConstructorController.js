@@ -13,11 +13,11 @@
 
     var gridHelperService = require('../services/gridHelperService');
 
-    module.exports = function ($scope) {
+    module.exports = function ($scope, $stateParams, $state) {
 
         var vm = this;
 
-        vm.boxColumns = [1,2,3,4,5,6];
+        vm.boxColumns = [1,2,3];
 
 
         vm.entityType = "portfolio";
@@ -63,28 +63,16 @@
 
         vm.range = gridHelperService.range;
 
-
         vm.setLayoutColumns = function (tab, columns) {
             tab.layout.columns = columns;
-            console.log('change columns count ', vm.tabs);
-        };
-
-        vm.bindField = function (tab, row, column) {
-            var i;
-            var field;
-            for (i = 0; i < tab.layout.fields.length; i = i + 1) {
-                if (tab.layout.fields[i].row === row) {
-                    if (tab.layout.fields[i].column === column) {
-                        field = tab.layout.fields[i];
-                    }
-                }
-            }
-            return field;
+            console.log('change columns count ', columns);
+            console.log('vm.tab', tab);
         };
 
         vm.saveLayout = function(){
             demoPortfolioService.save(vm.tabs).then(function () {
                 console.log('layout saved');
+                $state.go('app.portfolio');
                 $scope.$apply();
             });
         };
@@ -102,7 +90,7 @@
                     totalColspans = totalColspans + tab.layout.fields[i].colspan;
                 }
             }
-            var flexUnit = 100 / totalColspans;
+            var flexUnit = 100 / tab.layout.columns;
             if (field) {
                 return Math.floor(field.colspan * flexUnit);
             }
