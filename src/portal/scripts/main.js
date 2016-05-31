@@ -28,11 +28,11 @@ app.controller('SideNavController', ['$scope', require('./app/controllers/sideNa
 app.controller('DashboardController', ['$scope', require('./app/controllers/dashboardController')]);
 
 app.controller('PortfolioController', ['$scope', '$mdDialog', '$mdMedia', require('./app/controllers/administration/portfolioController')]);
-app.controller('PortfolioAddDialogController', ['$scope', '$mdDialog', 'parentScope', require('./app/controllers/administration/portfolioAddDialogController')]);
-app.controller('PortfolioEditDialogController', ['$scope', '$mdDialog', 'parentScope', 'portfolio', require('./app/controllers/administration/portfolioEditDialogController')]);
+app.controller('PortfolioAddDialogController', ['$scope', '$mdDialog', 'parentScope', '$state', require('./app/controllers/administration/portfolioAddDialogController')]);
+app.controller('PortfolioEditDialogController', ['$scope', '$mdDialog', 'parentScope', 'portfolio', '$state', require('./app/controllers/administration/portfolioEditDialogController')]);
 app.controller('PortfolioDeleteDialogController', ['$scope', '$mdDialog', 'portfolio', require('./app/controllers/administration/PortfolioDeleteDialogController')]);
 
-app.controller('EntityDataConstructorController', ['$scope', '$stateParams', require('./app/controllers/entityDataConstructorController')]);
+app.controller('EntityDataConstructorController', ['$scope', '$stateParams', '$state', require('./app/controllers/entityDataConstructorController')]);
 app.controller('EntityDataConstructorDialogController', ['$scope', '$mdDialog', 'parentScope', require('./app/controllers/entityDataConstructorDialogController')]);
 
 app.directive('menuToggle', [require('./app/directives/menuToggleDirective')]);

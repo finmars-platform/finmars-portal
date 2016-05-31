@@ -6,14 +6,37 @@
     'use strict';
 
     var portfolioService = require('../../services/portfolioService');
+    var metaService = require('../../services/metaService');
+    var demoPortfolioService = require('../../services/demo/demoPortfolioService');
 
-    module.exports = function ($scope, $mdDialog, parentScope) {
+    module.exports = function ($scope, $mdDialog, parentScope, $state) {
 
         console.log('Portfolio add dialog controller initialized...');
         console.log('parentScope', parentScope);
 
         var vm = this;
-        vm.tabs = parentScope.vm.tabs;
+        vm.entityType = 'portfolio';
+
+        demoPortfolioService.getTabList().then(function (data) {
+            vm.tabs = data;
+            console.log('vm tabs!', vm.tabs);
+            $scope.$apply();
+        });
+
+        vm.attrs = [];
+        vm.baseAttrs = [];
+
+        portfolioService.getAttributeTypeList().then(function(data){
+            vm.attrs = data.results;
+            console.log('vm.attrs', vm.attrs);
+            $scope.$apply();
+        });
+
+        metaService.getBaseAttrs().then(function(data){
+            vm.baseAttrs = data[vm.entityType];
+            console.log('vm.baseAttrs', vm.baseAttrs);
+            $scope.$apply();
+        });
 
         vm.portfolio = {};
 
@@ -36,7 +59,7 @@
                     totalColspans = totalColspans + tab.layout.fields[i].colspan;
                 }
             }
-            var flexUnit = 100 / totalColspans;
+            var flexUnit = 100 / tab.layout.columns;
             return Math.floor(field.colspan * flexUnit);
 
         };
@@ -44,15 +67,15 @@
         vm.bindField = function (tab, field) {
             var i;
             if (field.hasOwnProperty('id')) {
-                for (i = 0; i < tab.attrs.length; i = i + 1) {
-                    if (field.id === tab.attrs[i].id) {
-                        return tab.attrs[i];
+                for (i = 0; i < vm.attrs.length; i = i + 1) {
+                    if (field.id === vm.attrs[i].id) {
+                        return vm.attrs[i];
                     }
                 }
             } else {
-                for (i = 0; i < tab.attrs.length; i = i + 1) {
-                    if (field.name === tab.attrs[i].name) {
-                        return tab.attrs[i];
+                for (i = 0; i < vm.baseAttrs.length; i = i + 1) {
+                    if (field.name === vm.baseAttrs[i].name) {
+                        return vm.baseAttrs[i];
                     }
                 }
             }
@@ -67,8 +90,9 @@
             $mdDialog.cancel();
         };
 
-        vm.selectFields = function () {
-
+        vm.editLayout = function () {
+            $state.go('app.data-constructor', {entityName: 'portfolio'});
+            $mdDialog.hide();
         };
 
         vm.save = function () {

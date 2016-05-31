@@ -39,31 +39,7 @@
                                 colspan: 2
                             }
                         ]
-                    },
-                    attrs: [
-                        {
-                            name: "Name",
-                            key: "name",
-                            value_type: 10
-                        },
-                        {
-                            name: "Short name",
-                            key: "short_name",
-                            value_type: 10
-                        },
-                        {
-                            classifier_root: null,
-                            id: 6,
-                            is_hidden: false,
-                            name: "Account",
-                            notes: "",
-                            order: 0,
-                            short_name: "Account",
-                            url: "https://dev.finmars.com/api/v1/portfolios/portfolio-attribute-type/6/",
-                            user_code: "T3",
-                            value_type: 10
-                        }
-                    ]
+                    }
                 },
                 {
                     id: 2,
@@ -85,33 +61,7 @@
                                 colspan: 1
                             }
                         ]
-                    },
-                    attrs: [
-                        {
-                            classifier_root: null,
-                            id: 1,
-                            is_hidden: false,
-                            name: "Industry",
-                            notes: "",
-                            order: 0,
-                            short_name: "Industry",
-                            url: "https://dev.finmars.com/api/v1/portfolios/portfolio-attribute-type/1/",
-                            user_code: "T1",
-                            value_type: 10
-                        },
-                        {
-                            classifier_root: null,
-                            id: 7,
-                            is_hidden: false,
-                            name: "Strategy",
-                            notes: "",
-                            order: 0,
-                            short_name: "Strategy",
-                            url: "https://dev.finmars.com/api/v1/portfolios/portfolio-attribute-type/7/",
-                            user_code: "T4",
-                            value_type: 10
-                        }
-                    ]
+                    }
                 },
                 {
                     id: 3,
@@ -127,14 +77,7 @@
                                 colspan: 3
                             }
                         ]
-                    },
-                    attrs: [
-                        {
-                            name: "Notes",
-                            key: "notes",
-                            value_type: 10
-                        }
-                    ]
+                    }
                 },
                 {
                     id: 4,
@@ -143,28 +86,9 @@
                         columns: 1,
                         rows: 1,
                         fields: [
-                            {
-                                id: 9,
-                                row: 1,
-                                column: 1,
-                                colspan: 3
-                            }
+
                         ]
-                    },
-                    attrs: [
-                        {
-                            classifier_root: null,
-                            id: 9,
-                            is_hidden: false,
-                            name: "Stagnation",
-                            notes: "",
-                            order: 0,
-                            short_name: "Stagnation",
-                            url: "https://dev.finmars.com/api/v1/portfolios/portfolio-attribute-type/9/",
-                            user_code: "T4",
-                            value_type: 10
-                        }
-                    ]
+                    }
                 }
             ];
             localStorage.setItem('tabs', JSON.stringify(data));

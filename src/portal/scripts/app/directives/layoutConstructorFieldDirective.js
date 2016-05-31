@@ -12,11 +12,35 @@
             restrict: 'AE',
             templateUrl: 'views/directives/layout-constructor-field-view.html',
             scope: {
-                item: '=',
-                tab: '='
+                tab: '=',
+                row: '=',
+                column: '='
             },
             link: function (scope, elem, attr) {
+                console.log('elem', elem);
+                console.log('row', scope.row);
+                console.log('column', scope.column);
+
                 var choices = metaService.getValueTypes();
+                scope.item = {
+                    column: scope.column,
+                    row: scope.row,
+                    colspan: 1
+                };
+
+                function findItem() {
+                    var i;
+
+                    for (i = 0; i < scope.tab.layout.fields.length; i = i + 1) {
+                        if (scope.tab.layout.fields[i].row === scope.row) {
+                            if (scope.tab.layout.fields[i].column === scope.column) {
+                                scope.item = scope.tab.layout.fields[i];
+                            }
+                        }
+                    }
+                }
+
+                findItem();
 
                 scope.fieldType = null;
                 scope.editMode = false;
@@ -31,10 +55,28 @@
                 };
 
                 scope.saveLayout = function () {
-
                     console.log('scope.attribute', scope.attribute);
+                    var row;
+                    var bottomLevel = false;
+                    console.log('scope.row', scope.row);
+                    if(!scope.row) {
+                        row = scope.tab.layout.rows + 1;
+                        scope.tab.layout.rows = scope.tab.layout.rows + 1;
+                        bottomLevel = true;
+                    } else {
+                        row = scope.row;
+                    }
+                    console.log(scope.tab.layout);
+                    scope.tab.layout.fields.push({
+                        row: row,
+                        column: scope.column,
+                        id: scope.attribute.id,
+                        colspan: scope.item.colspan
+                    });
+                    if(bottomLevel) {
+                        scope.attribute = null;
+                    }
                     scope.editMode = false;
-                    scope.$parent.vm.saveLayout();
                 };
 
                 scope.getCols = function () {
@@ -48,22 +90,33 @@
                     scope.attribute = item;
                 };
 
-                if (scope.item) {
-                    var i, b;
-                    for (i = 0; i < attrs.length; i = i + 1) {
-                        if (attrs[i].id && scope.item.id) {
-                            if (attrs[i].id === scope.item.id) {
-                                scope.attribute = attrs[i];
-                            }
-                        } else {
-                            for (b = 0; b < baseAttrs.length; b = b + 1) {
-                                if (baseAttrs[b].name === scope.item.name) {
-                                    scope.attribute = baseAttrs[b];
-                                }
+                scope.deleteAttribute = function () {
+                    var i;
+                    for (i = 0; i < scope.tab.layout.fields.length; i = i + 1) {
+                        if (scope.tab.layout.fields[i].row == scope.row && scope.tab.layout.fields[i].column == scope.column) {
+                            scope.tab.layout.fields.splice(i, 1);
+                            break;
+                        }
+                    }
+                    scope.attribute = null;
+                    console.log(scope.tab.layout.fields);
+                };
+
+                var i, b;
+                for (i = 0; i < attrs.length; i = i + 1) {
+                    if (attrs[i].id && scope.item.id) {
+                        if (attrs[i].id === scope.item.id) {
+                            scope.attribute = attrs[i];
+                        }
+                    } else {
+                        for (b = 0; b < baseAttrs.length; b = b + 1) {
+                            if (baseAttrs[b].name === scope.item.name) {
+                                scope.attribute = baseAttrs[b];
                             }
                         }
                     }
                 }
+
 
                 function findAttrsLeft() {
                     var i, x, t;
@@ -72,7 +125,12 @@
                             for (x = 0; x < scope.attrsLeft.length; x = x + 1) {
                                 if (tabs[t].layout.fields[i].id && scope.attrsLeft[x].id) {
                                     if (tabs[t].layout.fields[i].id === scope.attrsLeft[x].id) {
-                                        if (scope.attribute.id !== scope.attrsLeft[x].id) {
+                                        if (scope.attribute) {
+                                            if (scope.attribute.id !== scope.attrsLeft[x].id) {
+                                                scope.attrsLeft.splice(x, 1);
+                                                x = x - 1;
+                                            }
+                                        } else {
                                             scope.attrsLeft.splice(x, 1);
                                             x = x - 1;
                                         }
@@ -80,7 +138,12 @@
                                 }
                                 else {
                                     if (tabs[t].layout.fields[i].name === scope.attrsLeft[x].name) {
-                                        if (scope.attribute.name !== scope.attrsLeft[x].name) {
+                                        if (scope.attribute) {
+                                            if (scope.attribute.name !== scope.attrsLeft[x].name) {
+                                                scope.attrsLeft.splice(x, 1);
+                                                x = x - 1;
+                                            }
+                                        } else {
                                             scope.attrsLeft.splice(x, 1);
                                             x = x - 1;
                                         }

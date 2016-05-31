@@ -7,7 +7,7 @@
                         <b><span data-ng-bind="attribute.name"></span></b> (<span data-ng-bind="bindType()"></span>)
                     </p>
                     <div class="options-holder" flex="40">
-                        <md-button aria-label="delete attribute">
+                        <md-button aria-label="delete attribute" data-ng-click="deleteAttribute()">
                             <ng-md-icon icon="delete"></ng-md-icon>
                         </md-button>
                         <md-button aria-label="edit attribute" data-ng-click="toggleEditMode()">

@@ -21,14 +21,18 @@
                                  flex="{{vm.bindFlex(tab, row, column)}}"
                                  data-ng-if="vm.checkColspan(tab, row, column)">
                                 <layout-constructor-field tab="tab"
-                                                          item="vm.bindField(tab, row, column)"></layout-constructor-field>
+                                                          row="row"
+                                                          column="column"
+                                                          ></layout-constructor-field>
                             </div>
                         </div>
                         <div layout="row">
                             <div data-ng-repeat="column in vm.range(tab.layout.columns)"
-                                 flex="{{vm.bindFlex(tab, tab.layout.rows + 1, column)}}">
+                                 flex="{{vm.bindFlex(tab, 0, column)}}">
                                 <layout-constructor-field tab="tab"
-                                                          item="vm.bindField(tab, row, column)"></layout-constructor-field>
+                                                          row="row"
+                                                          column="column"
+                                                          ></layout-constructor-field>
 
                             </div>
                         </div>
@@ -42,7 +46,7 @@
         <md-button ng-click="vm.cancel()">
             Cancel
         </md-button>
-        <md-button ng-click="vm.save()">
+        <md-button ng-click="vm.saveLayout()">
             Save & Return
         </md-button>
     </div>
