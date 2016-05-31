@@ -16,18 +16,43 @@
                 tab: '='
             },
             link: function (scope, elem, attr) {
-
                 var choices = metaService.getValueTypes();
 
                 scope.fieldType = null;
+                scope.editMode = false;
                 var attrs = scope.$parent.vm.attrs;
                 var baseAttrs = scope.$parent.vm.baseAttrs[scope.$parent.vm.entityType];
+                var tabs = scope.$parent.vm.tabs;
+
+                scope.attrsLeft = attrs.concat(baseAttrs);
+
+                scope.toggleEditMode = function () {
+                    scope.editMode = !scope.editMode;
+                };
+
+                scope.saveLayout = function () {
+
+                    console.log('scope.attribute', scope.attribute);
+                    scope.editMode = false;
+                    scope.$parent.vm.saveLayout();
+                };
+
+                scope.getCols = function () {
+                    return [
+                        1,
+                        2
+                    ]
+                };
+
+                scope.changeModel = function (item) {
+                    scope.attribute = item;
+                };
 
                 if (scope.item) {
                     var i, b;
                     for (i = 0; i < attrs.length; i = i + 1) {
-                        if (attrs[i].id && scope.item.fieldId) {
-                            if (attrs[i].id === scope.item.fieldId) {
+                        if (attrs[i].id && scope.item.id) {
+                            if (attrs[i].id === scope.item.id) {
                                 scope.attribute = attrs[i];
                             }
                         } else {
@@ -39,6 +64,34 @@
                         }
                     }
                 }
+
+                function findAttrsLeft() {
+                    var i, x, t;
+                    for (t = 0; t < tabs.length; t = t + 1) {
+                        for (i = 0; i < tabs[t].layout.fields.length; i = i + 1) {
+                            for (x = 0; x < scope.attrsLeft.length; x = x + 1) {
+                                if (tabs[t].layout.fields[i].id && scope.attrsLeft[x].id) {
+                                    if (tabs[t].layout.fields[i].id === scope.attrsLeft[x].id) {
+                                        if (scope.attribute.id !== scope.attrsLeft[x].id) {
+                                            scope.attrsLeft.splice(x, 1);
+                                            x = x - 1;
+                                        }
+                                    }
+                                }
+                                else {
+                                    if (tabs[t].layout.fields[i].name === scope.attrsLeft[x].name) {
+                                        if (scope.attribute.name !== scope.attrsLeft[x].name) {
+                                            scope.attrsLeft.splice(x, 1);
+                                            x = x - 1;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
+                findAttrsLeft();
 
 
                 scope.bindType = function () {

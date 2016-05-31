@@ -14,6 +14,6 @@ proxyOptions.cookieRewrite = true;
 
 app.use('/', proxy(proxyOptions));
 
-app.listen(3000, function(){
+app.listen(3000, '0.0.0.0', function(){
   console.info('Express server start at 3000 port');
 });

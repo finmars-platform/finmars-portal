@@ -9,7 +9,7 @@
 
         var data;
 
-        if(localStorage.getItem('tabs')) {
+        if (localStorage.getItem('tabs')) {
             data = JSON.parse(localStorage.getItem('tabs'));
         } else {
             data = [
@@ -33,7 +33,7 @@
                                 colspan: 1
                             },
                             {
-                                fieldId: 6,
+                                id: 6,
                                 row: 2,
                                 column: 1,
                                 colspan: 2
@@ -43,18 +43,12 @@
                     attrs: [
                         {
                             name: "Name",
-                            notes: "",
-                            order: 0,
-                            is_hidden: false,
-                            short_name: "Name",
+                            key: "name",
                             value_type: 10
                         },
                         {
                             name: "Short name",
-                            notes: "",
-                            order: 0,
-                            is_hidden: false,
-                            short_name: "short name",
+                            key: "short_name",
                             value_type: 10
                         },
                         {
@@ -76,41 +70,23 @@
                     name: 'Attributes',
                     layout: {
                         columns: 2,
-                        rows: 2,
+                        rows: 1,
                         fields: [
                             {
-                                fieldId: 5,
+                                id: 1,
                                 row: 1,
-                                column: 2,
-                                colspan: 1
-                            },
-                            {
-                                fieldId: 1,
-                                row: 2,
                                 column: 1,
                                 colspan: 1
                             },
                             {
-                                fieldId: 7,
-                                row: 2,
+                                id: 7,
+                                row: 1,
                                 column: 2,
                                 colspan: 1
                             }
                         ]
                     },
                     attrs: [
-                        {
-                            classifier_root: null,
-                            id: 5,
-                            is_hidden: false,
-                            name: "Country",
-                            notes: "",
-                            order: 0,
-                            short_name: "Country",
-                            url: "https://dev.finmars.com/api/v1/portfolios/portfolio-attribute-type/5/",
-                            user_code: "T2",
-                            value_type: 10
-                        },
                         {
                             classifier_root: null,
                             id: 1,
@@ -142,41 +118,20 @@
                     name: 'Custom',
                     layout: {
                         columns: 1,
-                        rows: 2,
+                        rows: 1,
                         fields: [
                             {
                                 name: 'Notes',
                                 row: 1,
                                 column: 1,
                                 colspan: 3
-                            },
-                            {
-                                fieldId: 8,
-                                row: 2,
-                                column: 1,
-                                colspan: 1
                             }
                         ]
                     },
                     attrs: [
                         {
                             name: "Notes",
-                            notes: "",
-                            order: 0,
-                            is_hidden: false,
-                            short_name: "notes",
-                            value_type: 10
-                        },
-                        {
-                            classifier_root: null,
-                            id: 8,
-                            is_hidden: false,
-                            name: "Influence",
-                            notes: "",
-                            order: 0,
-                            short_name: "Influence",
-                            url: "https://dev.finmars.com/api/v1/portfolios/portfolio-attribute-type/8/",
-                            user_code: "T4",
+                            key: "notes",
                             value_type: 10
                         }
                     ]
@@ -189,7 +144,7 @@
                         rows: 1,
                         fields: [
                             {
-                                fieldId: 9,
+                                id: 9,
                                 row: 1,
                                 column: 1,
                                 colspan: 3
@@ -211,7 +166,7 @@
                         }
                     ]
                 }
-            ]
+            ];
             localStorage.setItem('tabs', JSON.stringify(data));
         }
 
@@ -221,8 +176,17 @@
 
     };
 
+    var save = function (tabs) {
+        return new Promise(function (resolve, reject) {
+            localStorage.setItem('tabs', JSON.stringify(tabs));
+            resolve(undefined);
+        })
+
+    };
+
     module.exports = {
-        getTabList: getTabList
+        getTabList: getTabList,
+        save: save
     }
 
 }());

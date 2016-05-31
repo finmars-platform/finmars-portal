@@ -8,6 +8,10 @@
 
     var baseUrl = '/api/v1/';
 
+    var handleError = function(methodName){
+        console.log('Method: '+ methodName+ '. Cannot get data from server');
+    };
+
     var login = function(login, password){
         return window.fetch(baseUrl + 'users/login/', {
             method: 'POST',
@@ -19,6 +23,9 @@
             body: JSON.stringify({username: login, password: password})
         }).then(function(data){
             return data.json();
+        }).catch(function(){
+            handleError('login');
+            return [];
         })
     };
 
