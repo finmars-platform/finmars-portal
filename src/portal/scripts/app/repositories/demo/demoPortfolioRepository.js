@@ -30,13 +30,13 @@
                                 name: 'Notes',
                                 row: 1,
                                 column: 2,
-                                colspan: 3
+                                colspan: 1
                             },
                             {
                                 id: 6,
                                 row: 2,
                                 column: 3,
-                                colspan: 2
+                                colspan: 1
                             }
                         ]
                     }
