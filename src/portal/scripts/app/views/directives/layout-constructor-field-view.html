@@ -44,6 +44,9 @@
                     </md-option>
                 </md-select>
             </md-input-container>
+            <div data-ng-if="checkForSpecialOptions()">
+                <div data-ng-include="specialOptionTemplate"></div>
+            </div>
             <md-button aria-label="cancel" data-ng-click="toggleEditMode()">
                 Cancel
             </md-button>
