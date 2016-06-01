@@ -16,7 +16,61 @@
         vm.tabs = parentScope.tabs;
         vm.general = [];
         vm.attrs = [];
+        vm.baseAttrs = metaService.getBaseAttrs();
         vm.custom = [];
+
+        // refactore this block
+        function restoreAttrs() {
+            var i,x;
+            for(i = 0; i < vm.tabs.length; i = i + 1) {
+                for(x = 0; x < vm.tabs[i].layout.fields.length; x = x + 1) {
+                    if(!vm.tabs[i].attrs) {
+                        vm.tabs[i].attrs = [];
+                    }
+                    if(vm.tabs[i].layout.fields[x].hasOwnProperty('id')) {
+                        vm.tabs[i].attrs.push({
+                            id: vm.tabs[i].layout.fields[x].id
+                        })
+                    } else {
+                        console.log('пыщ', vm.tabs[i].layout.fields[x]);
+                        console.log(vm.tabs[i].layout.fields[x].name != 'Labeled Line');
+                        if(vm.tabs[i].layout.fields[x].name != 'Labeled Line' && vm.tabs[i].layout.fields[x].name != 'Line') {
+                            console.log(vm.tabs[i].layout.fields[x]);
+                            vm.tabs[i].attrs.push({
+                                name: vm.tabs[i].layout.fields[x].name
+                            })
+                        }
+                    }
+                }
+            }
+
+            var a, t, c, b;
+
+            for(t = 0; t < vm.tabs.length; t = t + 1) {
+                for(c = 0; c < vm.tabs[t].attrs.length; c = c + 1) {
+                    if(vm.tabs[t].attrs[c].hasOwnProperty('id')) {
+                        for(a = 0; a < vm.attrs.length; a = a + 1) {
+                            if(vm.tabs[t].attrs[c].id === vm.attrs[a].id) {
+                                vm.tabs[t].attrs[c] = vm.attrs[a];
+                            }
+                        }
+
+                    } else {
+                        for(b = 0; b < vm.baseAttrs.length; b = b + 1) {
+                            if(vm.tabs[t].attrs[c].name === vm.baseAttrs[b].name) {
+                                vm.tabs[t].attrs[c] = vm.baseAttrs[b];
+                            }
+                        }
+                    }
+                }
+            }
+
+            console.log('vm.tabs111111111', vm.tabs);
+
+        }
+
+        // end refactore
+
 
         var columns = parentScope.columns;
         var filters = parentScope.filters;
@@ -30,6 +84,8 @@
 
         portfolioService.getAttributeTypeList().then(function (data) {
             attrsList = data.results;
+            vm.attrs = data.results;
+            restoreAttrs();
             $scope.$apply();
         });
 
@@ -54,7 +110,7 @@
         var syncAttrs = function (tabs) {
             var i, t;
             var attrs;
-            //console.log('columns 123322', columns);
+            console.log('tabs.length', tabs);
             for (t = 0; t < tabs.length; t = t + 1) {
                 attrs = tabs[t].attrs;
                 for (i = 0; i < attrs.length; i = i + 1) {

@@ -5,7 +5,7 @@
             <span flex></span>
         </div>
     </md-toolbar>
-    <md-dialog-content>
+    <md-dialog-content data-ng-if="vm.attrs.length">
         <md-tabs md-dynamic-height md-border-bottom id="dialogbag">
             <md-tab label="{{tab.name}}" data-ng-repeat="tab in vm.tabs">
                 <md-content class="md-padding">

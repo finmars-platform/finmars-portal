@@ -2,7 +2,9 @@
     <div layout="row" class="sidenav-wrapper" data-ng-controller="SideNavController as vm" data-ng-include="'views/side-nav-view.html'"></div>
     <div layout="column" class="relative" layout-fill role="main">
         <md-toolbar ng-show="!showSearch" class="header">
+
             <div class="md-toolbar-tools">
+                <h1>{{vm.currentState()}}</h1>
                 <md-button ng-click="toggleSidenav('left')" hide-gt-md aria-label="Menu">
                     <ng-md-icon icon="menu"></ng-md-icon>
                 </md-button>

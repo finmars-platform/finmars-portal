@@ -7,7 +7,7 @@
 
     var usersService = require('../services/usersService');
 
-    module.exports = function ($scope) {
+    module.exports = function ($scope, $state) {
 
         console.log('Shell controller initialized...');
 
@@ -21,6 +21,10 @@
         usersService.login('dev1', 'Uethohk0').then(function () {
             $scope.$apply();
         })
+
+        vm.currentState = function(){
+            return '';
+        }
     }
 
 }());

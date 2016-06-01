@@ -22,7 +22,7 @@ app.run(function(){
 });
 
 
-app.controller('ShellController', ['$scope', require('./app/controllers/shellController')]);
+app.controller('ShellController', ['$scope', '$state', require('./app/controllers/shellController')]);
 app.controller('SideNavController', ['$scope', require('./app/controllers/sideNavController')]);
 
 app.controller('DashboardController', ['$scope', require('./app/controllers/dashboardController')]);
