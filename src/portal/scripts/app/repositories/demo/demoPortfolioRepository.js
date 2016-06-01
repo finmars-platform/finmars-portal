@@ -17,7 +17,7 @@
                     id: 1,
                     name: 'General',
                     layout: {
-                        columns: 2,
+                        columns: 3,
                         rows: 2,
                         fields: [
                             {
