@@ -1,0 +1,10 @@
+<div>
+    <md-input-container class="md-block">
+        <label>Copy text from</label>
+        <md-select ng-model="attr.options.copyFrom">
+            <md-option data-ng-repeat="item in attrs" ng-value="item">
+                {{item.name}}
+            </md-option>
+        </md-select>
+    </md-input-container>
+</div>

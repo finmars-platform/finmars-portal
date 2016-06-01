@@ -1,6 +1,9 @@
 <div>
     <div data-ng-if="fieldType['display_name'] === 'Number'">
-        <span>Number is not ready</span>
+        <md-input-container class="md-block">
+            <label>{{item.name}}</label>
+            <input data-ng-model="portfolio[getModelKey()]" type="number">
+        </md-input-container>
     </div>
     <div data-ng-if="fieldType['display_name'] === 'String'">
         <md-input-container class="md-block">

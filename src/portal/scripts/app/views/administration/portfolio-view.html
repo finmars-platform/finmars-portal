@@ -3,19 +3,23 @@
 </md-button>
 <div class="lock-size g-table-dial" layout="row" layout-align="center center">
     <md-fab-speed-dial md-direction="up"
-                       class="md-fling">
+                       md-open="false"
+                       class="md-scale">
         <md-fab-trigger>
-            <md-button aria-label="menu" class="md-fab">
+            <md-button aria-label="menu" class="md-fab" data-ng-if="vm.checkAdditionStatus()">
                 <ng-md-icon icon="keyboard_arrow_up"></ng-md-icon>
+            </md-button>
+            <md-button aria-label="menu" class="md-fab" data-ng-if="!vm.checkAdditionStatus()" data-ng-click="vm.hideAdditions()">
+                <ng-md-icon icon="keyboard_arrow_down"></ng-md-icon>
             </md-button>
         </md-fab-trigger>
         <md-fab-actions>
             <md-button aria-label="" class="md-fab md-raised md-mini" data-ng-click="vm.openDataViewPanel()">
-                <ng-md-icon icon="view_stream"></ng-md-icon>
+                <ng-md-icon icon="work"></ng-md-icon>
                 <md-tooltip md-direction="right">Open data view panel</md-tooltip>
             </md-button>
-            <md-button aria-label="" class="md-fab md-raised md-mini">
-                <ng-md-icon icon="work"></ng-md-icon>
+            <md-button aria-label="" class="md-fab md-raised md-mini" data-ng-click="vm.openEditorViewPanel()">
+                <ng-md-icon icon="view_stream"></ng-md-icon>
                 <md-tooltip md-direction="right">Open editor split panel</md-tooltip>
             </md-button>
         </md-fab-actions>

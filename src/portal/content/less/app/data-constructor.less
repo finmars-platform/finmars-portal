@@ -16,6 +16,11 @@
 }
 .ec-layout-box {
   overflow: hidden;
+  padding-left: 15px;
+}
+.select-layout-caption {
+  position: relative;
+  top:-5px;
 }
 .ec-md-content {
   background: #E5E5E5;
@@ -34,5 +39,51 @@
       padding: 0;
       min-width: 36px;
     }
+  }
+}
+.ec-tabs-holder md-tab-item {
+  padding-right: 0;
+  padding-left: 0;
+}
+.ec-tab-item-name {
+  display: inline-block;
+  padding-left: 20px;
+  margin-right: 10px;
+}
+.ec-tab-item-edit {
+  margin: 0;
+  width: 100px;
+  display: inline-block;
+  height:36px;
+  &.md-input-has-value label:not(.md-no-float) {
+    -webkit-transform: translate3d(0,16px,0) scale(.75);
+    transform: translate3d(0,16px,0) scale(.75);
+  }
+}
+.ec-tab-add-btn {
+  fill: #898989;
+  min-width: 30px;
+  margin: 0;
+  padding: 0;
+  position: absolute;
+  top: 13px;
+  margin-left: 10px;
+  min-height: 30px;
+  height:30px;
+}
+.ec-tab-btn {
+  fill: #898989;
+  min-width: 30px;
+  margin: 0;
+  padding: 0;
+  opacity: .4;
+  min-height: 30px;
+  height:30px;
+  &:hover {
+    opacity: 1;
+  }
+  svg {
+    width: 16px;
+    height: 16px;
   }
 }

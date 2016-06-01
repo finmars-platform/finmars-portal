@@ -40,6 +40,7 @@ app.directive('menuLink', [require('./app/directives/menuLinkDirective')]);
 
 app.directive('bindFieldControl', [require('./app/directives/bindFieldControlDirective')]);
 app.directive('layoutConstructorField', [require('./app/directives/layoutConstructorFieldDirective')]);
+app.directive('addTabEc', ['$compile', require('./app/directives/addTabEcDirective')]);
 
 // GROUP TABLE START
 

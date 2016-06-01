@@ -1,11 +1,39 @@
 <div class="entity-constructor">
-    <div data-ng-if="vm.attrs.length">
+    <div data-ng-if="vm.attrs.length" class="ec-tabs-holder" data-add-tab-ec data-tabs="vm.tabs">
         <md-tabs md-border-bottom md-dynamic-height>
-            <md-tab label="{{tab.name}}" data-ng-repeat="tab in vm.tabs">
-                <div class="ec-md-content ec-layout-tab">
+            <md-tab data-ng-repeat="tab in vm.tabs">
+                <md-tab-label>
+                    <div data-ng-if="!tab.editState">
+                        <span class="ec-tab-item-name">{{tab.name}}</span>
+                        <md-button class="ec-tab-btn"
+                                   data-ng-click="vm.toggleEditTab(tab)">
+                            <ng-md-icon icon="edit"></ng-md-icon>
+                        </md-button>
+                        <md-button class="ec-tab-btn"
+                                   data-ng-click="vm.deleteTab(tab)">
+                            <ng-md-icon icon="delete"></ng-md-icon>
+                        </md-button>
+                    </div>
+                    <div data-ng-if="tab.editState">
+                        <md-input-container class="ec-tab-item-edit">
+                            <label>Tab name</label>
+                            <input ng-model="tab.captionName">
+                        </md-input-container>
+                        <md-button class="ec-tab-btn"
+                                   data-ng-click="vm.saveEditedTab(tab)">
+                            <ng-md-icon icon="save"></ng-md-icon>
+                        </md-button>
+                        <md-button class="ec-tab-btn"
+                                   data-ng-click="vm.toggleEditTab(tab, 'back', $index)">
+                            <ng-md-icon icon="cancel"></ng-md-icon>
+                        </md-button>
+                    </div>
+                </md-tab-label>
+                <md-tab-body>
+                    <div class="ec-md-content ec-layout-tab">
                     <div class="ec-layout-box">
 
-                        <span>Select layout</span>
+                        <span class="select-layout-caption">Select layout</span>
 
                         <md-button class="{{tab.layout.columns === item ? 'active' : '' }} ec-layout-btn"
                                    data-ng-click="vm.setLayoutColumns(tab, item)"
@@ -40,6 +68,7 @@
 
 
                 </div>
+                </md-tab-body>
             </md-tab>
         </md-tabs>
 

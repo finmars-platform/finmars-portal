@@ -27,15 +27,15 @@
                                 colspan: 1
                             },
                             {
-                                name: 'Short name',
+                                name: 'Notes',
                                 row: 1,
                                 column: 2,
-                                colspan: 1
+                                colspan: 3
                             },
                             {
                                 id: 6,
                                 row: 2,
-                                column: 1,
+                                column: 3,
                                 colspan: 2
                             }
                         ]
@@ -71,22 +71,11 @@
                         rows: 1,
                         fields: [
                             {
-                                name: 'Notes',
+                                name: 'Short name',
                                 row: 1,
                                 column: 1,
-                                colspan: 3
+                                colspan: 1
                             }
-                        ]
-                    }
-                },
-                {
-                    id: 4,
-                    name: 'Any',
-                    layout: {
-                        columns: 1,
-                        rows: 1,
-                        fields: [
-
                         ]
                     }
                 }

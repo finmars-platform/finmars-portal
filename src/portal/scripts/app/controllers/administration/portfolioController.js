@@ -154,6 +154,23 @@
 
         vm.openDataViewPanel = function () {
 
+        };
+
+        vm.openEditorViewPanel = function(){
+            console.log('split panel');
+            vm.additionsStatus.additionsWorkArea = true;
+        };
+
+        vm.checkAdditionStatus = function(){
+            if(!vm.additionsStatus.additionsWorkArea && !vm.additionsStatus.dataEditor) {
+                return true;
+            }
+            return false;
+        };
+
+        vm.hideAdditions = function(){
+            vm.additionsStatus.additionsWorkArea = false;
+            vm.additionsStatus.dataEditor = false;
         }
 
 
