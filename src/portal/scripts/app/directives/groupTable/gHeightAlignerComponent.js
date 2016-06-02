@@ -13,7 +13,6 @@
             },
             link: function (scope, elem, attrs) {
                 scope.$watchCollection('additionsStatus', function () {
-                    console.log('changed?!!!!!!!!!!!!!!!!', scope.additionsStatus);
 
                     var workAreaHeight;
                     var workAreaWithoutGrouping;
@@ -82,7 +81,7 @@
                         })
                     }
 
-                    if (scope.additionsStatus.additionsWorkArea || scope.additionsStatus.dataEditor) {
+                    if (scope.additionsStatus.table || scope.additionsStatus.editor) {
                         setTimeout(function () {
                             setSplitHeights()
                         }, 0);

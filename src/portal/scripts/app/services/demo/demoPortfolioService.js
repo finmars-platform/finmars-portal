@@ -7,8 +7,8 @@
 
     var demoPortfolioRepository = require('../../repositories/demo/demoPortfolioRepository');
 
-    var getTabList = function(){
-        return demoPortfolioRepository.getTabList();
+    var getView = function(){
+        return demoPortfolioRepository.getView();
     };
 
     var save = function(tabs){
@@ -16,7 +16,7 @@
     };
 
     module.exports = {
-        getTabList: getTabList,
+        getView: getView,
         save: save
     }
 

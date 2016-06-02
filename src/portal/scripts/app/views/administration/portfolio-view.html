@@ -1,4 +1,4 @@
-<md-button class="md-fab md-fab-bottom-right" data-ng-click="vm.addPortfolio($event)">
+<md-button class="md-fab md-fab-bottom-right" data-ng-click="vm.addEntity($event)">
     <ng-md-icon icon="add"></ng-md-icon>
 </md-button>
 <div class="lock-size g-table-dial" layout="row" layout-align="center center">
@@ -25,7 +25,7 @@
         </md-fab-actions>
     </md-fab-speed-dial>
 </div>
-<div data-ng-if="vm.groupTableService.projection().length">
+<div data-ng-if="vm.tableIsReady">
     <group-table
                  tabs="vm.tabs"
 
@@ -36,11 +36,11 @@
                  sorting="vm.sorting"
 
                  item-additions="vm.groupTableService.additions.projection()"
-                 item-additions-columns="vm.portfolioAdditionsColumns"
-                 item-additions-filters="vm.portfolioAdditionsFilters"
-                 item-additions-sorting="vm.portfolioAdditionsSorting"
+                 item-additions-columns="vm.entityAdditionsColumns"
+                 item-additions-filters="vm.entityAdditionsFilters"
+                 item-additions-sorting="vm.entityAdditionsSorting"
 
-                 external-get-additions="vm.getPortfolioTransactions(id)"
+                 external-get-additions="vm.getEntityAdditions(id)"
                  external-callback="vm.updateTable()"
                  external-additions-callback="vm.updateAdditionsTable()"
                  external-update-item="vm.updateItem()"

@@ -16,13 +16,14 @@
     module.exports = function ($scope, $stateParams, $state) {
 
         var vm = this;
-
+        vm.view = {};
         vm.boxColumns = [1, 2, 3, 4, 5, 6];
 
         vm.entityType = "portfolio";
 
-        demoPortfolioService.getTabList().then(function (data) {
-            vm.tabs = data;
+        demoPortfolioService.getView().then(function (data) {
+            vm.view = data;
+            vm.tabs = data.tabs;
             console.log('vm tabs!', vm.tabs);
             $scope.$apply();
         });
@@ -88,7 +89,8 @@
         };
 
         vm.saveLayout = function () {
-            demoPortfolioService.save(vm.tabs).then(function () {
+            vm.view.tabs = vm.tabs;
+            demoPortfolioService.save(vm.view).then(function () {
                 console.log('layout saved');
                 $state.go('app.portfolio');
                 $scope.$apply();

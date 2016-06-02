@@ -35,7 +35,7 @@
                 console.log('itemAdditions', scope.itemAdditions);
 
                 scope.showAdditions = function () {
-                    if (scope.additionsStatus.dataEditor || scope.additionsStatus.additionsWorkArea) {
+                    if (scope.additionsStatus.editor || scope.additionsStatus.table) {
                         return true;
                     }
                     return false;
