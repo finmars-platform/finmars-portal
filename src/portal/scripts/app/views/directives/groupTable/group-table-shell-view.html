@@ -17,7 +17,7 @@
     </div>
     <div class="g-sidebar main-sidebar">
         <div class="g-filter">
-            <group-sidebar-filter></group-sidebar-filter>
+            <group-sidebar-filter filters="filters" external-callback="externalCallback()"></group-sidebar-filter>
         </div>
     </div>
     <div class="g-additions" data-ng-if="showAdditions()">
@@ -39,7 +39,7 @@
             </div>
             <div class="g-sidebar additions-sidebar">
                 <div class="g-filter">
-                    <group-sidebar-filter></group-sidebar-filter>
+                    <group-sidebar-filter filters="itemAdditionsFilters" external-callback="externalAdditionsCallback()"></group-sidebar-filter>
                 </div>
             </div>
         </div>

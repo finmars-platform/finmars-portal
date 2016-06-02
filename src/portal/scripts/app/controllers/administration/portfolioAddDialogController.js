@@ -17,8 +17,8 @@
         var vm = this;
         vm.entityType = 'portfolio';
 
-        demoPortfolioService.getTabList().then(function (data) {
-            vm.tabs = data;
+        demoPortfolioService.getView().then(function (data) {
+            vm.tabs = data.tabs;
             console.log('vm tabs!', vm.tabs);
             $scope.$apply();
         });

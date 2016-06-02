@@ -14,63 +14,74 @@
         var vm = this;
 
         vm.tabs = parentScope.tabs;
+        vm.entityType = 'portfolio';
         vm.general = [];
         vm.attrs = [];
-        vm.baseAttrs = metaService.getBaseAttrs();
+        vm.baseAttrs = [];
         vm.custom = [];
+
+        vm.tabAttrsReady = false;
 
         // refactore this block
         function restoreAttrs() {
-            var i,x;
-            for(i = 0; i < vm.tabs.length; i = i + 1) {
-                for(x = 0; x < vm.tabs[i].layout.fields.length; x = x + 1) {
+            function fillTabWithAttrs() {
+                var i,x;
+                for(i = 0; i < vm.tabs.length; i = i + 1) {
                     if(!vm.tabs[i].attrs) {
                         vm.tabs[i].attrs = [];
-                    }
-                    if(vm.tabs[i].layout.fields[x].hasOwnProperty('id')) {
-                        vm.tabs[i].attrs.push({
-                            id: vm.tabs[i].layout.fields[x].id
-                        })
-                    } else {
-                        console.log('пыщ', vm.tabs[i].layout.fields[x]);
-                        console.log(vm.tabs[i].layout.fields[x].name != 'Labeled Line');
-                        if(vm.tabs[i].layout.fields[x].name != 'Labeled Line' && vm.tabs[i].layout.fields[x].name != 'Line') {
-                            console.log(vm.tabs[i].layout.fields[x]);
-                            vm.tabs[i].attrs.push({
-                                name: vm.tabs[i].layout.fields[x].name
-                            })
-                        }
-                    }
-                }
-            }
 
-            var a, t, c, b;
-
-            for(t = 0; t < vm.tabs.length; t = t + 1) {
-                for(c = 0; c < vm.tabs[t].attrs.length; c = c + 1) {
-                    if(vm.tabs[t].attrs[c].hasOwnProperty('id')) {
-                        for(a = 0; a < vm.attrs.length; a = a + 1) {
-                            if(vm.tabs[t].attrs[c].id === vm.attrs[a].id) {
-                                vm.tabs[t].attrs[c] = vm.attrs[a];
-                            }
-                        }
-
-                    } else {
-                        for(b = 0; b < vm.baseAttrs.length; b = b + 1) {
-                            if(vm.tabs[t].attrs[c].name === vm.baseAttrs[b].name) {
-                                vm.tabs[t].attrs[c] = vm.baseAttrs[b];
+                        for(x = 0; x < vm.tabs[i].layout.fields.length; x = x + 1) {
+                            if(vm.tabs[i].layout.fields[x].hasOwnProperty('id')) {
+                                vm.tabs[i].attrs.push({
+                                    id: vm.tabs[i].layout.fields[x].id
+                                })
+                            } else {
+                                if(vm.tabs[i].layout.fields[x].name != 'Labeled Line' && vm.tabs[i].layout.fields[x].name != 'Line') {
+                                    vm.tabs[i].attrs.push({
+                                        name: vm.tabs[i].layout.fields[x].name
+                                    })
+                                }
                             }
                         }
                     }
                 }
             }
 
-            console.log('vm.tabs111111111', vm.tabs);
+            function fillTabAttrs(){
 
+                var a, t, c, b;
+                var tab, tabAttr, attr, baseAttr;
+                console.log('METHOD: restoreAttrs, data: vm.tabs, value: ', vm.tabs);
+                console.log('METHOD: restoreAttrs, data: vm.attrs, value: ', vm.attrs);
+                for(t = 0; t < vm.tabs.length; t = t + 1) {
+                    tab = vm.tabs[t];
+                    for(c = 0; c < tab.attrs.length; c = c + 1) {
+                        tabAttr = tab.attrs[c];
+                        if(tabAttr.hasOwnProperty('id')) {
+                            for(a = 0; a < vm.attrs.length; a = a + 1) {
+                                attr = vm.attrs[a];
+                                if(tabAttr.id === attr.id) {
+                                    vm.tabs[t].attrs[c] = attr;
+                                }
+                            }
+                        } else {
+                            for(b = 0; b < vm.baseAttrs.length; b = b + 1) {
+                                baseAttr = vm.baseAttrs[b];
+                                if(tabAttr.name === baseAttr.name) {
+                                    vm.tabs[t].attrs[c] = baseAttr;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            fillTabWithAttrs();
+            fillTabAttrs();
+            vm.tabAttrsReady = true;
         }
 
         // end refactore
-
 
         var columns = parentScope.columns;
         var filters = parentScope.filters;
@@ -79,38 +90,50 @@
         var attrsList = [];
 
         $('body').addClass('drag-dialog'); // hide backdrop
+        vm.getAttributes = function () {
+            return portfolioService.getAttributeTypeList().then(function (data) {
+                vm.attrs = data.results;
+                return metaService.getBaseAttrs().then(function(data){
+                    vm.baseAttrs = data[vm.entityType];
+                    console.log('CLASS: MODAL, METHOD: getAttributes' + 'data: vm.attrs', 'values:', vm.attrs);
+                    console.log('CLASS: MODAL, METHOD: getAttributes' + 'data: vm.baseAttrs', 'values:', vm.baseAttrs);
+                    attrsList = vm.attrs.concat(vm.baseAttrs);
+                    restoreAttrs();
+                    syncAttrs(vm.tabs);
+                    $scope.$apply();
+                });
 
-        //console.log('12323232', parentScope);
 
-        portfolioService.getAttributeTypeList().then(function (data) {
-            attrsList = data.results;
-            vm.attrs = data.results;
-            restoreAttrs();
-            $scope.$apply();
-        });
+            })
+        };
+        vm.getAttributes();
 
         parentScope.$watch('columns', function () {
-            columns = parentScope.columns;
-            syncAttrs(vm.tabs);
-            callback();
+            if(vm.tabAttrsReady) {
+                columns = parentScope.columns;
+                syncAttrs(vm.tabs);
+                callback();
+            }
         });
-
         parentScope.$watch('filters', function () {
-            filters = parentScope.filters;
-            syncAttrs(vm.tabs);
-            callback();
+            if(vm.tabAttrsReady) {
+                filters = parentScope.filters;
+                syncAttrs(vm.tabs);
+                callback();
+            }
         });
         parentScope.$watch('grouping', function () {
-            grouping = parentScope.grouping;
-            syncAttrs(vm.tabs);
-            callback();
+            if(vm.tabAttrsReady) {
+                grouping = parentScope.grouping;
+                syncAttrs(vm.tabs);
+                callback();
+            }
         });
-
 
         var syncAttrs = function (tabs) {
             var i, t;
             var attrs;
-            console.log('tabs.length', tabs);
+            console.log('METHOD: syncAttrs, data: tabs, value: ', tabs);
             for (t = 0; t < tabs.length; t = t + 1) {
                 attrs = tabs[t].attrs;
                 for (i = 0; i < attrs.length; i = i + 1) {
@@ -135,7 +158,6 @@
                         }
                         return item;
                     });
-
                 }
             }
 
@@ -143,7 +165,7 @@
         };
 
         var updateAttrs = function () {
-            var i, c, g, t;
+            var i, c, g, t, f;
             var columnExist, groupExist, filterExist;
             for (t = 0; t < vm.tabs.length; t = t + 1) {
 
@@ -182,6 +204,23 @@
                             grouping.push(vm.tabs[t].attrs[i]);
                         }
                     }
+
+                    /////// FILTERING
+
+                    for (f = 0; f < filters.length; f = f + 1) {
+                        if (vm.tabs[t].attrs[i].name === filters[f].name) {
+                            filterExist = true;
+                            if (vm.tabs[t].attrs[i].groups === false) {
+                                filters.splice(f, 1);
+                                f = f - 1;
+                            }
+                        }
+                    }
+                    if (!filterExist) {
+                        if (vm.tabs[t].attrs[i].filters === true) {
+                            filters.push(vm.tabs[t].attrs[i]);
+                        }
+                    }
                 }
             }
         };
@@ -207,7 +246,6 @@
                 var that = this;
                 var exist = false;
                 this.dragula.on('over', function (elem, container, source) {
-                    console.log('container', container);
                     $(container).addClass('active');
                     $(container).on('mouseleave', function(){
                         $(this).removeClass('active');
@@ -215,7 +253,7 @@
 
                 });
                 this.dragula.on('drop', function (elem, target) {
-                    console.log('here?', target); //TODO fallback to ids instead of name/key
+                    //console.log('here?', target); //TODO fallback to ids instead of name/key
                     $(target).removeClass('active');
                     var name = $(elem).html();
                     var i;
@@ -235,7 +273,6 @@
                         }
                     }
                     if (!exist) {
-                        console.log('target', target);
                         var a;
                         if (target === document.querySelector('#columnsbag')) {
                             for (a = 0; a < attrsList.length; a = a + 1) {
@@ -245,7 +282,6 @@
                             }
                             syncAttrs(vm.tabs);
                             callback();
-                            console.log('updated');
                         }
                         if (target === document.querySelector('#groupsbag')) {
 
@@ -256,7 +292,6 @@
                             }
                             syncAttrs(vm.tabs);
                             callback();
-                            console.log('updated');
                         }
                         $scope.$apply();
                     }
@@ -268,8 +303,6 @@
             },
 
             dragula: function () {
-                console.log('draguula!');
-
                 var items = [document.querySelector('#columnsbag'), document.querySelector('#groupsbag')];
                 var i;
                 var itemsElem = document.querySelectorAll('#dialogbag .g-modal-draggable-card');
