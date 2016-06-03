@@ -125,6 +125,36 @@
 
     });
 
+    gulp.task(appName + '-plugins-js-min', function(){
+
+        var pathToJS = [
+            'node_modules/malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.js'
+        ];
+
+        return gulp.src(pathToJS)
+            .pipe(concat('plugins.js'))
+            .pipe(uglify())
+            .pipe(rename('plugins.min.js'))
+            .pipe(gulp.dest('dist/' + appName + '/scripts/'));
+
+    });
+
+    gulp.task(appName + '-plugins-css-min', function(){
+
+        var pathToCSS = [
+            'node_modules/malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.css'
+        ];
+
+        return gulp.src(pathToCSS)
+            .pipe(concat('plugins.css'))
+            .pipe(minifyCSS())
+            .pipe(rename('plugins.min.css'))
+            .pipe(gulp.dest('dist/' + appName + '/content/css'));
+
+    });
+
+
+
     gulp.task(appName + '-min-All', [
         appName + '-angular-js-min',
         appName + '-angular-css-min',

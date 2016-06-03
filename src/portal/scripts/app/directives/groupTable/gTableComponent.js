@@ -34,12 +34,17 @@
 
                 console.log('itemAdditions', scope.itemAdditions);
 
-                scope.showAdditions = function () {
+                scope.additionsState = false;
+
+                $('.app-md-content').addClass('g-table-overflow');
+
+                scope.$watchCollection('additionsStatus', function(){
+                    scope.additionsState = false;
                     if (scope.additionsStatus.editor || scope.additionsStatus.table) {
-                        return true;
+                        scope.additionsState = true;
                     }
-                    return false;
-                }
+                });
+
             }
         }
     }

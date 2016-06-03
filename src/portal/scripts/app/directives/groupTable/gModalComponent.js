@@ -312,15 +312,9 @@
 
                 this.dragula = dragula(items,
                     {
-                        moves: this.canMove.bind(this),
                         copy: true
                     });
-            },
-
-            canMove: function () {
-                return true;
             }
-
         };
 
         setTimeout(function () {

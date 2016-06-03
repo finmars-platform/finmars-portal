@@ -2,35 +2,40 @@
     <div class="g-cell-select all">
         <ng-md-icon icon="signal_cellular_0_bar"></ng-md-icon>
     </div>
-    <div dragula="'columns-bag'" dragula-model="columns" class="g-columns-holder">
-        <md-card data-ng-repeat="column in columns" class="g-cell g-column" >
-            <div class="sort">
-                <md-button class="" aria="open settings" data-ng-click="openGroupSettings()">
-                    <ng-md-icon icon="keyboard_arrow_down"></ng-md-icon>
-                </md-button>
-            </div>
-            <div class="caption">
-                {{column.name}}
-            </div>
-            <div class="settings-btn">
-                <md-menu>
-                    <md-button aria-label="Open phone interactions menu" class="md-icon-button" ng-click="openColumnSettings($mdOpenMenu, $event)">
-                        <ng-md-icon icon="settings"></ng-md-icon>
-                    </md-button>
-                    <md-menu-content width="3">
-                        <md-menu-item>
-                            <md-button ng-click="removeColumn(column)" class="g-settings-option-btn">
-                                <ng-md-icon icon="visibility_off"></ng-md-icon>
-                                <span>Remove</span>
+    <div class="g-scroll-wrapper">
+        <div class="g-scrollable-area">
+            <div dragula="'columns-bag'" dragula-model="columns" class="g-columns-holder">
+                <md-card data-ng-repeat="column in columns" class="g-cell g-column">
+                    <div class="sort">
+                        <md-button class="" aria="open settings" data-ng-click="openGroupSettings()">
+                            <ng-md-icon icon="keyboard_arrow_down"></ng-md-icon>
+                        </md-button>
+                    </div>
+                    <div class="caption">
+                        {{column.name}}
+                    </div>
+                    <div class="settings-btn">
+                        <md-menu>
+                            <md-button aria-label="Open phone interactions menu" class="md-icon-button"
+                                       ng-click="openColumnSettings($mdOpenMenu, $event)">
+                                <ng-md-icon icon="settings"></ng-md-icon>
                             </md-button>
-                        </md-menu-item>
-                    </md-menu-content>
-                </md-menu>
+                            <md-menu-content width="3">
+                                <md-menu-item>
+                                    <md-button ng-click="removeColumn(column)" class="g-settings-option-btn">
+                                        <ng-md-icon icon="visibility_off"></ng-md-icon>
+                                        <span>Remove</span>
+                                    </md-button>
+                                </md-menu-item>
+                            </md-menu-content>
+                        </md-menu>
+                    </div>
+                    <div class="resize-slider"></div>
+                </md-card>
             </div>
-            <div class="resize-slider"></div>
-        </md-card>
-    </div>
-    <div class="drop-new-field" id="columnsbag" data-ng-if="!isItemAddition">
-        Drop New Field
+            <div class="drop-new-field" id="columnsbag" data-ng-if="!isItemAddition">
+                Drop New Field
+            </div>
+        </div>
     </div>
 </div>

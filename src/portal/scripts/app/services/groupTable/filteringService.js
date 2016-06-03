@@ -6,7 +6,6 @@
     'use strict';
 
     var setFilters = function (items, filters) {
-        console.log('FILTERING', items, filters);
 
         if (filters.length) {
             var itemsFiltered = [];
@@ -21,7 +20,6 @@
                     if(!filter.options) {
                         filter.options = {enabled: true, query: ''};
                     }
-                    console.log('filter', filter);
                     if (filter.options.enabled) {
                         if(filter.options.query) {
                             if(filter.key) {
@@ -40,9 +38,6 @@
                     itemsFiltered.push(item);
                 }
             }
-
-            console.log('itemsFiltered', itemsFiltered);
-
             return itemsFiltered;
         } else {
             return items;

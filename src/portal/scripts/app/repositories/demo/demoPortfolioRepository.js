@@ -32,7 +32,7 @@
                     ]
                 },
                 tableAdditions: {
-                    additionsType: '', //editor, table
+                    additionsType: 'table', //editor, table
                     foreignEntityId: 1,
                     entityType: 'transaction',
                     table: {
