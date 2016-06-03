@@ -62,14 +62,14 @@
 
 
 
-                                console.log('mouseMoveY', mouseMoveY);
-                                console.log('spaceLeft', spaceLeft);
-
-                                console.log('Main area box height', mouseMoveY - headerBoxHeight);
-                                console.log('Main sidebar box height', mouseMoveY + groupingSectionBoxHeight - headerBoxHeight);
-
-                                console.log('additions area box height', spaceLeft - mouseMoveY);
-                                console.log('additions sidebar box height', spaceLeft - mouseMoveY);
+                                //console.log('mouseMoveY', mouseMoveY);
+                                //console.log('spaceLeft', spaceLeft);
+                                //
+                                //console.log('Main area box height', mouseMoveY - headerBoxHeight);
+                                //console.log('Main sidebar box height', mouseMoveY + groupingSectionBoxHeight - headerBoxHeight);
+                                //
+                                //console.log('additions area box height', spaceLeft - mouseMoveY);
+                                //console.log('additions sidebar box height', spaceLeft - mouseMoveY);
 
 
                             });

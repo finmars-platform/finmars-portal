@@ -40,6 +40,7 @@
 
         vm.entityAdditions = [];
         vm.additionsType = '';
+        vm.additionsEntityType = ''
 
         vm.entityAdditionsColumns = [];
         vm.entityAdditionsFilters = [];
@@ -58,7 +59,7 @@
             table: false
         };
 
-        function returnFullAttributes(items, attrs, baseAttrs) {
+        function returnFullAttributes(items, attrs, baseAttrs, entityType) {
             var fullItems = [];
             if (!items) {
                 return [];
@@ -79,8 +80,8 @@
                         }
                     }
                 } else {
-                    for (b = 0; b < baseAttrs.length; b = b + 1) {
-                        baseAttr = baseAttrs[b];
+                    for (b = 0; b < baseAttrs[entityType].length; b = b + 1) {
+                        baseAttr = baseAttrs[entityType][b];
                         if (item.key === baseAttr.key) {
                             if(item.options) {
                                 attrOptions = JSON.parse(JSON.stringify(item.options));
@@ -110,10 +111,12 @@
 
                 vm.additionsType = data.tableAdditions.additionsType;
 
+                vm.additionsEntityType = data.tableAdditions.entityType;
+
                 vm.tableAdditions = data.tableAdditions;
-                vm.entityAdditionsColumns = data.tableAdditions.columns;
-                vm.entityAdditionsFilters = data.tableAdditions.filters;
-                vm.entityAdditionsSorting = data.tableAdditions.sorting;
+                vm.entityAdditionsColumns = data.tableAdditions.table.columns;
+                vm.entityAdditionsFilters = data.tableAdditions.table.filters;
+                vm.entityAdditionsSorting = data.tableAdditions.table.sorting;
 
                 vm.additionsStatus[data.tableAdditions.additionsType] = true;
 
@@ -124,14 +127,14 @@
 
         vm.transformViewAttributes = function(){
 
-            vm.columns = returnFullAttributes(vm.columns, vm.attrs, vm.baseAttrs);
-            vm.grouping = returnFullAttributes(vm.grouping, vm.attrs, vm.baseAttrs);
-            vm.filters = returnFullAttributes(vm.filters, vm.attrs, vm.baseAttrs);
-            vm.sorting = returnFullAttributes(vm.sorting, vm.attrs, vm.baseAttrs);
+            vm.columns = returnFullAttributes(vm.columns, vm.attrs, vm.baseAttrs, vm.entityType);
+            vm.grouping = returnFullAttributes(vm.grouping, vm.attrs, vm.baseAttrs, vm.entityType);
+            vm.filters = returnFullAttributes(vm.filters, vm.attrs, vm.baseAttrs, vm.entityType);
+            vm.sorting = returnFullAttributes(vm.sorting, vm.attrs, vm.baseAttrs, vm.entityType);
 
-            vm.entityAdditionsColumns = returnFullAttributes(vm.entityAdditionsColumns, vm.attrs, vm.baseAttrs);
-            vm.entityAdditionsFilters = returnFullAttributes(vm.entityAdditionsFilters, vm.attrs, vm.baseAttrs);
-            vm.entityAdditionsSorting = returnFullAttributes(vm.entityAdditionsSorting, vm.attrs, vm.baseAttrs);
+            vm.entityAdditionsColumns = returnFullAttributes(vm.entityAdditionsColumns, vm.attrs, vm.baseAttrs, vm.additionsEntityType);
+            vm.entityAdditionsFilters = returnFullAttributes(vm.entityAdditionsFilters, vm.attrs, vm.baseAttrs, vm.additionsEntityType);
+            vm.entityAdditionsSorting = returnFullAttributes(vm.entityAdditionsSorting, vm.attrs, vm.baseAttrs, vm.additionsEntityType);
 
         };
 
@@ -152,7 +155,7 @@
             return portfolioService.getAttributeTypeList().then(function (data) {
                 vm.attrs = data.results;
                 return metaService.getBaseAttrs().then(function(data){
-                    vm.baseAttrs = data[vm.entityType];
+                    vm.baseAttrs = data;
                     console.log('METHOD: getAttributes' + 'data: vm.attrs', 'values:', vm.attrs);
                     console.log('METHOD: getAttributes' + 'data: vm.baseAttrs', 'values:', vm.baseAttrs);
                     $scope.$apply();

@@ -4,7 +4,7 @@
             <group-grouping tabs="tabs" grouping="grouping" filters="filters" columns="columns" external-callback="externalCallback()"></group-grouping>
         </div>
         <div class="g-table-section">
-            <div class="g-table-wrap" group-aligner items="items">
+            <div class="g-table-wrap" group-column-resizer items="items">
                 <group-columns columns="columns" is-item-addition="false"></group-columns>
                 <group-table-body items="items"
                                   tabs="tabs"
@@ -20,7 +20,7 @@
             <group-sidebar-filter filters="filters" external-callback="externalCallback()"></group-sidebar-filter>
         </div>
     </div>
-    <div class="g-additions" data-ng-if="showAdditions()">
+    <div class="g-additions" data-ng-if="additionsState">
         <div class="g-height-slider"></div>
         <div class="g-additions-data-editor">
 
@@ -28,7 +28,7 @@
         <div class="g-additions-workarea">
             <div class="g-workarea">
                 <div class="g-table-section">
-                    <div class="g-table-wrap" group-aligner items="itemAdditions">
+                    <div class="g-table-wrap" group-column-resizer items="itemAdditions">
                         <group-columns columns="itemAdditionsColumns" is-item-addition="true"></group-columns>
                         <group-table-body items="itemAdditions"
                                           class="group-table-body"
