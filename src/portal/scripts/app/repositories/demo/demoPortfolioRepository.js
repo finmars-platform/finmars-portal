@@ -25,11 +25,20 @@
                         {id: 5, options: {query: 'russia', enabled: false}}
                     ],
                     grouping: [
-                        {id: 7, options: {styles: {width: 178}, sort: 'DESC'}}
+                        {id: 7, options: {styles: {width: 178}, sort: 'DESC', isFolded: false}}
                     ],
-                    sorting: [
-
-                    ]
+                    sorting: {
+                        group: {
+                            id: 5,
+                            key: null,
+                            sort: 'DESC'
+                        },
+                        column: {
+                            id: null,
+                            key: 'name',
+                            sort: 'ASC'
+                        }
+                    }
                 },
                 tableAdditions: {
                     additionsType: 'table', //editor, table
@@ -40,12 +49,13 @@
                             {key: 'transaction_class', options: {styles: {width: 108}, sort: 'ASC'}},
                             {key: 'transaction_currency', options: {styles: {width: 140}, sort: null}}
                         ],
-                        filters: [
-
-                        ],
-                        sorting: [
-
-                        ]
+                        filters: [],
+                        sorting: {
+                            column: {
+                                key: 'transaction_class',
+                                sort: 'ASC'
+                            }
+                        }
                     }
                 },
                 tabs: [

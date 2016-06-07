@@ -17,7 +17,7 @@
 
         var columnsServiceExt = {
             setColumns: function (columns) {
-                console.log('setColumns', items);
+                //console.log('setColumns', items);
                 items = columnsService.setColumns(items, columns)
             }
         };
@@ -51,7 +51,7 @@
 
         var columnsAdditionsServiceExt = {
             setColumns: function (columns) {
-                console.log('setColumns', items);
+                //console.log('setColumns', items);
                 itemsAdditions = columnsService.setColumns(itemsAdditions, columns)
             }
         };
@@ -72,7 +72,7 @@
 
 
         function GroupTableService() {
-            console.log('instance created');
+            //console.log('instance created');
             this.setItems = function (itemsSource) {
                 items = itemsSource;
             };

@@ -51,12 +51,19 @@
                                 spaceLeft = $(window).height() - headerBoxHeight;
                                 mouseMoveY = e.clientY;
 
+                                $(elem).find('.mCSB_scrollTools_vertical').css({
+                                    position: 'absolute',
+                                    top: 0,
+                                    left: 'auto'
+                                });
+
 
                                 // WTF IS 88???
 
-                                additionsBox.height(spaceLeft - mouseMoveY + 88);
+                                additionsBox.height(spaceLeft - mouseMoveY + 88 - 15);
                                 additionsBoxSidebarBox.height(spaceLeft - mouseMoveY + 88);
                                 $('.g-workarea.main-area .group-table-body').height(mouseMoveY - $('.header').height() - $('.g-columns-component.g-thead').height() - 88);
+                                $('.g-additions-workarea .group-table-body').height($(window).height() - mouseMoveY - $('.g-additions-workarea .g-columns-component.g-thead').height());
                                 mainAreaBox.height(mouseMoveY - headerBoxHeight - 88);
                                 mainAreaSidebarBox.height(mouseMoveY + groupingSectionBoxHeight - headerBoxHeight - 88);
 

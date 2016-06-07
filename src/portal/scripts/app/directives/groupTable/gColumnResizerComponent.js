@@ -22,8 +22,6 @@
                 $('.g-scroll-wrapper').width(wrapperWidth);
                 $('.g-scrollable-area').width(wrapperWidth);
 
-                $(elem).mCustomScrollbar({axis:"x"});
-
                 function resizeScrollableArea() {
                     var columns;
                     var i;
@@ -34,10 +32,13 @@
                     for(i = 0; i < columns.length; i = i + 1) {
                         areaWidth = areaWidth + $(columns[i]).width() + columnMargins;
                     }
+                    wrapperWidth = $('.g-columns-component.g-thead').width() - $('.g-cell-select.all').width();
                     if(wrapperWidth < areaWidth + dropNewFieldWidth) {
                         $('.g-scrollable-area').width(areaWidth + dropNewFieldWidth);
+                        scope.$apply();
+                    } else {
                     }
-                }
+                };
 
                 function resize() {
                     var tHead = $(elem).find('.g-thead');
@@ -59,6 +60,7 @@
                     $(thSliders).bind('mousedown', function (e) {
                         e.preventDefault();
                         e.stopPropagation();
+
                         var parent = $(this).parent();
                         var width = parent.width();
                         var minWidth = parent.attr('min-width');
@@ -69,6 +71,7 @@
                             newWidth = e.clientX - mouseDownLeft;
                             resizeScrollableArea();
                             resizeCells();
+                            resizeScrollableArea();
                             if (newWidth + width > minWidth) {
                                 parent.width(width + newWidth);
                             }

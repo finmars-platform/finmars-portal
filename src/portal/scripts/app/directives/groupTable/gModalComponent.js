@@ -272,6 +272,13 @@
                             }
                         }
                     }
+                    if (target === document.querySelector('#filtersbag')) {
+                        for (i = 0; i < grouping.length; i = i + 1) {
+                            if (filters[i].name === name) {
+                                exist = true;
+                            }
+                        }
+                    }
                     if (!exist) {
                         var a;
                         if (target === document.querySelector('#columnsbag')) {
@@ -288,6 +295,16 @@
                             for (a = 0; a < attrsList.length; a = a + 1) {
                                 if (attrsList[a].name === name) {
                                     grouping.push(attrsList[a]);
+                                }
+                            }
+                            syncAttrs(vm.tabs);
+                            callback();
+                        }
+                        if (target === document.querySelector('#filters')) {
+
+                            for (a = 0; a < attrsList.length; a = a + 1) {
+                                if (attrsList[a].name === name) {
+                                    filters.push(attrsList[a]);
                                 }
                             }
                             syncAttrs(vm.tabs);

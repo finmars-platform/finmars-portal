@@ -40,6 +40,7 @@
   }
   .g-row {
     background-color: #fff;
+    max-width: none;
   }
   .g-table-section {
     background-color: #fff;
@@ -368,10 +369,13 @@
     }
 
   }
+  .column-sort-up {
+    top: -8px;
+  }
   .sort {
     .md-button {
       position: relative;
-      top: -5px;
+      top: -7px;
     }
   }
   .md-button {
@@ -430,9 +434,20 @@ body.md-dialog-is-showing {
   }
   .sort {
     .md-button {
+      min-width: 33px;
       //background: #C6C6C6;
       //border-radius: 50%;
       fill: #767676;
+    }
+     .c-up {
+      position: absolute;
+      top: 0px;
+      left: 5px;
+    }
+    .c-down {
+      position: absolute;
+      top: 10px;
+      left: 5px;
     }
   }
   .settings-btn {
@@ -606,18 +621,31 @@ body.md-dialog-is-showing {
   overflow: hidden;
 }
 
+.column-both-sorted {
+  .c-up {
+    position: absolute;
+    top: -4px;
+    left: 0;
+  }
+  .c-down {
+    position: absolute;
+    left: 0;
+    top: 3px;
+  }
+}
 
 .group-table-body {
   .mCSB_container {
     margin-right: 0;
+    padding-bottom: 5px;
   }
 }
 
 // horizontal scroll
-.g-table-wrap {
+.g-table-section {
   .mCSB_scrollTools.mCSB_scrollTools_horizontal {
     position: absolute;
-    bottom: 15px;
+    bottom: 0;
     opacity: 1;
     .mCSB_draggerRail {
       opacity: 0;
@@ -632,7 +660,19 @@ body.md-dialog-is-showing {
   }
 }
 
-.g-table-wrap {
+.g-table-section {
+  -webkit-backface-visibility: hidden;
+  clip: rect(auto, auto, auto, auto);;
+  -moz-backface-visibility: hidden;
+  backface-visibility: hidden;
+  .mCSB_scrollTools_vertical {
+    opacity: 1;
+    will-change: scroll-position, height, top;
+    .mCSB_draggerContainer {
+      background: #DCDCDC;
+      border-left: 1px solid #000;
+    }
+  }
   .mCSB_horizontal.mCSB_inside>.mCSB_container {
     margin-bottom: 15px;
   }

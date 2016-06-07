@@ -5,13 +5,23 @@
             <div dragula="'group-bag'" dragula-model="grouping">
                 <md-card data-ng-repeat="item in grouping" class="group-item card">
                     <div class="add">
-                        <md-button class="" aria="hide/show grouping" data-ng-click="toggleGroup()">
+                        <md-button data-ng-if="item.options.isFolded" class="" aria="hide/show grouping" data-ng-click="toggleGroupFold(item)">
                             <ng-md-icon icon="add"></ng-md-icon>
+                        </md-button>
+                        <md-button class="" data-ng-if="!item.options.isFolded" aria="hide/show grouping" data-ng-click="toggleGroupFold(item)">
+                            <ng-md-icon icon="remove"></ng-md-icon>
                         </md-button>
                     </div>
                     <div class="sort">
-                        <md-button class="" aria="open settings" data-ng-click="openGroupSettings()">
+                        <md-button class="group-sort" data-ng-show="item.options.sort === 'ASC'" aria="open settings" data-ng-click="sortHandler(item, 'DESC')">
                             <ng-md-icon icon="keyboard_arrow_down"></ng-md-icon>
+                        </md-button>
+                        <md-button class="group-sort-up" data-ng-show="item.options.sort === 'DESC'" aria="open settings" data-ng-click="sortHandler(item, 'ASC')">
+                            <ng-md-icon icon="keyboard_arrow_up"></ng-md-icon>
+                        </md-button>
+                        <md-button class="group-sort group-both-sorted" data-ng-show="!item.options.sort" aria="open settings" data-ng-click="sortHandler(item, 'DESC')">
+                            <ng-md-icon class="c-up" icon="keyboard_arrow_up"></ng-md-icon>
+                            <ng-md-icon class="c-down"  icon="keyboard_arrow_down"></ng-md-icon>
                         </md-button>
                     </div>
                     <div class="caption">{{item.name}}</div>

@@ -12,18 +12,25 @@
             scope: {},
             link: function (scope, elem, attrs) {
 
-                setTimeout(function () {
-                    $(elem).mCustomScrollbar({axis: "y"});
-                    var offsetLeft = $(elem).parents('.g-table-wrap').width() + $('md-sidenav').width() - 15;
+                function setVerticalScrolFixed() {
+                    var offsetLeft = $(elem).parents('.g-table-section').width() + $('md-sidenav').width() - 15;
                     var offsetTop = $(elem).offset().top;
-                    console.log('VERTICAL SCROLL BAR TABLE', elem);
-                    $('#mCSB_2_scrollbar_vertical').css({
+                    //console.log('VERTICAL SCROLL BAR TABLE', elem);
+                    $(elem).find('.mCSB_scrollTools_vertical').css({
                         height: $(elem).height() + 'px',
                         position: 'fixed',
                         top: offsetTop + 'px',
                         left: offsetLeft + 'px'
                     });
-                }, 100);
+                }
+
+                $(elem).mCustomScrollbar({
+                    axis: "y", callbacks: {
+                        onInit: setVerticalScrolFixed,
+                        onBeforeUpdate: setVerticalScrolFixed
+                    }
+                });
+
 
             }
         }

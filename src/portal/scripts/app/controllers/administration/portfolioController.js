@@ -95,6 +95,19 @@
             }
             return fullItems;
         }
+        function findFullAttributeForItem(item, attrs) {
+            if(item.hasOwnProperty('id')) {
+                var i;
+                for(i = 0; i < attrs.length; i = i + 1) {
+                    var sort = item.sort;
+                    if(item.id === attrs[i].id) {
+                        item = attrs[i];
+                        item.sort = sort;
+                    }
+                }
+            }
+            return item;
+        }
 
         vm.getView = function () {
             return demoPortfolioService.getView().then(function (data) {
@@ -120,7 +133,7 @@
 
                 vm.additionsStatus[data.tableAdditions.additionsType] = true;
 
-                console.log('vm tabs!', vm.tabs);
+                //console.log('vm tabs!', vm.tabs);
                 $scope.$apply();
             });
         };
@@ -130,12 +143,12 @@
             vm.columns = returnFullAttributes(vm.columns, vm.attrs, vm.baseAttrs, vm.entityType);
             vm.grouping = returnFullAttributes(vm.grouping, vm.attrs, vm.baseAttrs, vm.entityType);
             vm.filters = returnFullAttributes(vm.filters, vm.attrs, vm.baseAttrs, vm.entityType);
-            vm.sorting = returnFullAttributes(vm.sorting, vm.attrs, vm.baseAttrs, vm.entityType);
-
+            vm.sorting.group = findFullAttributeForItem(vm.sorting.group, vm.attrs);
+            vm.sorting.column = findFullAttributeForItem(vm.sorting.column, vm.attrs);
+            //console.log('vm.sorting.column', vm.sorting.column);
             vm.entityAdditionsColumns = returnFullAttributes(vm.entityAdditionsColumns, vm.attrs, vm.baseAttrs, vm.additionsEntityType);
             vm.entityAdditionsFilters = returnFullAttributes(vm.entityAdditionsFilters, vm.attrs, vm.baseAttrs, vm.additionsEntityType);
-            vm.entityAdditionsSorting = returnFullAttributes(vm.entityAdditionsSorting, vm.attrs, vm.baseAttrs, vm.additionsEntityType);
-
+            vm.entityAdditionsSorting.column = findFullAttributeForItem(vm.entityAdditionsSorting.column, vm.attrs);
         };
 
         vm.getEntityData = function () {
@@ -156,8 +169,8 @@
                 vm.attrs = data.results;
                 return metaService.getBaseAttrs().then(function(data){
                     vm.baseAttrs = data;
-                    console.log('METHOD: getAttributes' + 'data: vm.attrs', 'values:', vm.attrs);
-                    console.log('METHOD: getAttributes' + 'data: vm.baseAttrs', 'values:', vm.baseAttrs);
+                    //console.log('METHOD: getAttributes' + 'data: vm.attrs', 'values:', vm.attrs);
+                    //console.log('METHOD: getAttributes' + 'data: vm.baseAttrs', 'values:', vm.baseAttrs);
                     $scope.$apply();
                 });
 
@@ -170,6 +183,8 @@
             vm.groupTableService.columns.setColumns(vm.columns);
             vm.groupTableService.filtering.setFilters(vm.filters);
             vm.groupTableService.grouping.setGroups(vm.grouping);
+            vm.sorting.group = findFullAttributeForItem(vm.sorting.group, vm.attrs);
+            vm.sorting.column = findFullAttributeForItem(vm.sorting.column, vm.attrs);
             vm.groupTableService.sorting.group.sort(vm.sorting.group);
             vm.groupTableService.sorting.column.sort(vm.sorting.column);
             vm.tableIsReady = true;

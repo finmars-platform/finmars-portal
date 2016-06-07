@@ -18,7 +18,7 @@
                     for(i = 0; i < attrs.length; i = i + 1) {
                         for(x = 0; x < item.attributes.length; x = x + 1) {
                             if(item.attributes[x]['attribute_type'] === attrs[i].id) {
-                                item.attributes[x]['attirbute_name'] = attrs[i].name;
+                                item.attributes[x]['attribute_name'] = attrs[i].name;
                                 item[attrs[i].name] = item.attributes[x]['value_string']; //TODO Add value checker
                             }
                         }

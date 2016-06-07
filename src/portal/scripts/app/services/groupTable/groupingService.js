@@ -42,7 +42,6 @@
 
         function checkEntityForGroupExist(item, groups) {
             var g, a;
-
             for (g = 0; g < groups.length; g = g + 1) {
                 for (a = 0; a < item.attributes.length; i = i + 1) {
                     if (groups.id === item.attributes['attribute_type']
@@ -74,6 +73,8 @@
         if (groups.length) {
             for (i = 0; i < items.length; i = i + 1) {
                 hasGroups = checkEntityForGroupExist(items[i], groups);
+                groupName = '';
+                groupsForResult = [];
                 if (hasGroups) {
                     groupName = '';
                     groupsForResult = [];
@@ -82,13 +83,25 @@
                         for (a = 0; a < items[i].attributes.length; a = a + 1) {
                             if (groups[c].hasOwnProperty('id')) {
                                 if (groups[c].id === items[i].attributes[a]['attribute_type']) {
-                                    groupsForResult.push(returnValue(items[i].attributes[a]));
+                                    groupsForResult.push({
+                                        key: items[i].attributes[a]['attribute_name'],
+                                        value: returnValue(items[i].attributes[a])
+                                    });
                                 }
                             } else {
                                 for (k = 0; k < keywords.length; k = k + 1) {
-                                    if (groups[c].name === keywords[k].caption) {
-                                        if (groupsForResult.indexOf(items[i][keywords[k].key]) === -1) {
-                                            groupsForResult.push(items[i][keywords[k].key]);
+                                    var n, nExist = false;
+                                    if (groups[c].key === keywords[k].key) {
+                                        for (n = 0; n < groupsForResult.length; n = n + 1) {
+                                            if (groupsForResult[n].value.indexOf(items[i][keywords[k].key]) !== -1) {
+                                                nExist = true;
+                                            }
+                                        }
+                                        if (!nExist) {
+                                            groupsForResult.push({
+                                                key: keywords[k].key,
+                                                value: items[i][keywords[k].key]
+                                            });
                                         }
                                     }
                                 }
@@ -97,12 +110,14 @@
                                 if (groups[c].hasOwnProperty('id')) {
                                     if (groups[c].id === items[i].attributes[a]['attribute_type']) {
                                         groupName = groupName + returnValue(items[i].attributes[a]);
+                                        console.log('groupName', groupName);
                                     }
                                 } else {
                                     for (k = 0; k < keywords.length; k = k + 1) {
                                         if (c == groups.length - 1) {
-                                            if (groups[c].name === keywords[k].caption) {
-                                                groupName = groupName + keywords[k].caption;
+                                            console.log('groups[c]', groups[c]);
+                                            if (groups[c].key === keywords[k].key) {
+                                                groupName = groupName + keywords[k].key;
                                             }
                                         }
                                     }
@@ -114,8 +129,9 @@
                                     }
                                 } else {
                                     for (k = 0; k < keywords.length; k = k + 1) {
-                                        if (groups[c].name === keywords[k].caption) {
-                                            groupName = groupName + keywords[k].caption + '_';
+
+                                        if (groups[c].key === keywords[k].key) {
+                                            groupName = groupName + keywords[k].key + '_';
                                         }
                                     }
                                 }
@@ -124,7 +140,7 @@
 
 
                     }
-                    //console.log('groupsForResult', groupsForResult);
+                    console.log('groupsForResult', groupsForResult);
                     if (!itemsGrouped[groupName]) {
                         itemsGrouped[groupName] = {
                             groups: groupsForResult,
@@ -132,13 +148,15 @@
                         }
                     }
                     itemsGrouped[groupName].items.push(items[i]);
+                    console.log('itemsGrouped', itemsGrouped);
+                    itemsGroupedArray = transformToArray(itemsGrouped);
                 }
             }
-            itemsGroupedArray = transformToArray(itemsGrouped);
-            console.log('Items grouped', itemsGroupedArray);
+
+            //console.log('Items grouped', itemsGroupedArray);
             return itemsGroupedArray;
         } else {
-            console.log('items', items);
+            //console.log('items', items);
             return items;
         }
     };

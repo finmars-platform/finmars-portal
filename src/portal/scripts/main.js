@@ -54,6 +54,7 @@ app.directive('groupColumnResizer', [require('./app/directives/groupTable/gColum
 app.directive('gDialogDraggable', [require('./app/directives/groupTable/gDialogDraggableComponent')]);
 app.directive('groupHeightAligner', [require('./app/directives/groupTable/gHeightAlignerComponent')]);
 app.directive('groupVerticalScroll', [require('./app/directives/groupTable/gVerticalScrollComponent')]);
+app.directive('groupHorizontalScroll', [require('./app/directives/groupTable/gHorizontalScrollComponent')]);
 
 app.controller('gModalController', ['$scope', '$mdDialog', 'parentScope', 'callback', require('./app/directives/groupTable/gModalComponent')]);
 

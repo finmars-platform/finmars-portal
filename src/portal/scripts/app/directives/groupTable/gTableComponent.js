@@ -15,6 +15,7 @@
                 filters: '=',
                 columns: '=',
                 grouping: '=',
+                sorting: '=',
 
                 itemAdditions: '=',
                 itemAdditionsColumns: '=',
@@ -31,8 +32,6 @@
             },
             link: function (scope, elem, attrs) {
                 console.log('Group table initialized...');
-
-                console.log('itemAdditions', scope.itemAdditions);
 
                 scope.additionsState = false;
 
