@@ -7,8 +7,15 @@
             <div dragula="'columns-bag'" dragula-model="columns" class="g-columns-holder">
                 <md-card data-ng-repeat="column in columns" class="g-cell g-column">
                     <div class="sort">
-                        <md-button class="" aria="open settings" data-ng-click="openGroupSettings()">
+                        <md-button class="column-sort" data-ng-show="column.options.sort === 'ASC'" aria="open settings" data-ng-click="sortHandler(column, 'DESC')">
                             <ng-md-icon icon="keyboard_arrow_down"></ng-md-icon>
+                        </md-button>
+                        <md-button class="column-sort-up" data-ng-show="column.options.sort === 'DESC'" aria="open settings" data-ng-click="sortHandler(column, 'ASC')">
+                            <ng-md-icon icon="keyboard_arrow_up"></ng-md-icon>
+                        </md-button>
+                        <md-button class="column-sort column-both-sorted" data-ng-show="!column.options.sort" aria="open settings" data-ng-click="sortHandler(column, 'DESC')">
+                            <ng-md-icon class="c-up" icon="keyboard_arrow_up"></ng-md-icon>
+                            <ng-md-icon class="c-down"  icon="keyboard_arrow_down"></ng-md-icon>
                         </md-button>
                     </div>
                     <div class="caption">

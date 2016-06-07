@@ -29,7 +29,6 @@
                 metaService.getBaseAttrs().then(function (data) {
                     keywords = data[entityType];
                     scope.keywordsReady = true;
-                    console.log('keywords', keywords);
                     scope.$apply();
                 });
 

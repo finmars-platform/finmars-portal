@@ -4,7 +4,7 @@
             <div class="g-group-holder">
                 <div class="g-row-selection"></div>
                 <div data-ng-repeat="group in item.groups track by $index" class="g-group">
-                    {{group}}
+                    {{group.value}}
                 </div>
             </div>
             <div data-ng-repeat="groupedItem in item.items" class="g-row" data-ng-click="rowCallback(groupedItem)">
