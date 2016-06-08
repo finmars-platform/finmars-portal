@@ -9,6 +9,7 @@
     var filteringService = require('./filteringService');
     var sortingService = require('./sortingService');
     var columnsService = require('./columnsService');
+    var foldingService = require('./foldingService');
 
     var GroupTableService = (function () {
 
@@ -25,6 +26,12 @@
         var groupingServiceExt = {
             setGroups: function (groups) {
                 items = groupingService.setGroups(items, groups);
+            }
+        };
+
+        var foldingServiceExt = {
+            setFolds: function(folding) {
+                items = foldingService.setFolds(items, folding);
             }
         };
 
@@ -79,6 +86,7 @@
             this.columns = columnsServiceExt;
             this.grouping = groupingServiceExt;
             this.filtering = filteringServiceExt;
+            this.folding = foldingServiceExt;
             this.sorting = sortingServiceExt;
             this.projection = function () {
                 return items;

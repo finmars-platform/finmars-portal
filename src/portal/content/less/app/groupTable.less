@@ -486,6 +486,68 @@ body.md-dialog-is-showing {
     float: left;
   }
 }
+.group-row-fold-holder {
+  width: 16px;
+  height: 16px;
+  float: left;
+  margin: 4px 5px 0 0;
+  md-card {
+    margin: 0;
+    width: 100%;
+  }
+  .md-button {
+    min-width: auto;
+    margin-right: 0;
+    margin-left: 0;
+    width: 16px;
+    padding: 0;
+    line-height: 1;
+    height: 16px;
+    min-height: 0;
+    margin: 0;
+    fill: #767676;
+    position: relative;
+    top: -5px;
+  }
+  svg {
+    height: 16px;
+    width: 16px;
+  }
+}
+.group-folding-holder {
+  width: 64px;
+  float: left;
+  margin-right: 10px;
+  md-card {
+    width: 100%;
+  }
+  .fold-btn-wrap {
+    float: left;
+    &.disabled {
+      opacity: .5;
+      cursor: not-allowed;
+      .md-button {
+        pointer-events: none;
+        background: rgba(158,158,158,0.2);
+      }
+    }
+  }
+  .md-button {
+    min-width: auto;
+    margin-right: 0;
+    margin-left: 0;
+    width: 32px;
+    line-height: 1;
+    height: 32px;
+    min-height: 0;
+    margin: 0;
+
+  }
+  svg {
+    height: 1.5em;
+    width: 1.5em;
+  }
+}
 
 .modal-dialog-card {
   display: inline-block;

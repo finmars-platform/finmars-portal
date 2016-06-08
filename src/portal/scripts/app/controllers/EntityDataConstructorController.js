@@ -13,7 +13,7 @@
 
     var gridHelperService = require('../services/gridHelperService');
 
-    module.exports = function ($scope, $stateParams, $state) {
+    module.exports = function ($scope, $stateParams, $state, $mdDialog) {
 
         var vm = this;
         vm.view = {};
@@ -68,8 +68,8 @@
                 if (keys[x] === column) {
                     return true;
                 } else {
-                    for(z = 1; z < rowMap[keys[x]].length; z = z + 1) {
-                        if(column == rowMap[keys[x]][z]) {
+                    for (z = 1; z < rowMap[keys[x]].length; z = z + 1) {
+                        if (column == rowMap[keys[x]][z]) {
                             return false;
                         }
                     }
@@ -82,10 +82,48 @@
 
         vm.range = gridHelperService.range;
 
-        vm.setLayoutColumns = function (tab, columns) {
-            tab.layout.columns = columns;
-            console.log('change columns count ', columns);
-            console.log('vm.tab', tab);
+        vm.setLayoutColumns = function (tab, columns, ev) {
+
+            if (columns < tab.layout.columns) {
+                var losedColumns = [];
+                var i;
+                for (i = columns; i < tab.layout.columns; i = i + 1) {
+                    losedColumns.push(i + 1);
+                }
+                var description;
+                if(losedColumns.length > 1) {
+                    description = 'If you switch to less number of columns you lose data of ' + losedColumns.join(', ') + ' columns'
+                } else {
+                    description = 'If you switch to less number of columns you lose data of ' + losedColumns.join(', ') + ' column'
+                }
+                $mdDialog.show({
+                    controller: 'WarningDialogController as vm',
+                    templateUrl: 'views/warning-dialog-view.html',
+                    parent: angular.element(document.body),
+                    targetEvent: ev,
+                    clickOutsideToClose: true,
+                    locals: {
+                        warning: {
+                            title: 'Warning',
+                            description: description
+                        }
+                    }
+                }).then(function(res){
+                    console.log(res);
+                    if(res.status === 'agree') {
+                        tab.layout.columns = columns;
+                        console.log('change columns count ', columns);
+                        console.log('vm.tab', tab);
+                    }
+                });
+            } else {
+                tab.layout.columns = columns;
+                console.log('change columns count ', columns);
+                console.log('vm.tab', tab);
+            }
+
+
+
         };
 
         vm.saveLayout = function () {

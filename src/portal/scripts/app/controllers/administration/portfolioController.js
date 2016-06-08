@@ -119,6 +119,7 @@
                 vm.table = data.table;
                 vm.columns = data.table.columns;
                 vm.grouping = data.table.grouping;
+                vm.folding = data.table.folding;
                 vm.filters = data.table.filters;
                 vm.sorting = data.table.sorting;
 
@@ -183,6 +184,8 @@
             vm.groupTableService.columns.setColumns(vm.columns);
             vm.groupTableService.filtering.setFilters(vm.filters);
             vm.groupTableService.grouping.setGroups(vm.grouping);
+            console.log("EXTERNAL CALLBACK ", vm.folding);
+            vm.groupTableService.folding.setFolds(vm.folding);
             vm.sorting.group = findFullAttributeForItem(vm.sorting.group, vm.attrs);
             vm.sorting.column = findFullAttributeForItem(vm.sorting.column, vm.attrs);
             vm.groupTableService.sorting.group.sort(vm.sorting.group);

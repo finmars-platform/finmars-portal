@@ -106,10 +106,14 @@
                 };
 
                 scope.getCols = function () {
-                    return [
-                        1,
-                        2
-                    ]
+
+                    var i;
+                    var colsLeft = [1];
+                    for(i = scope.column; i < scope.tab.layout.columns ; i = i + 1) {
+                        colsLeft.push(i + 1);
+                    }
+
+                    return colsLeft;
                 };
 
                 scope.changeModel = function (item) {
