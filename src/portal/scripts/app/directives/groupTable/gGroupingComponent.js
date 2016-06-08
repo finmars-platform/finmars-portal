@@ -13,6 +13,7 @@
                 columns: '=',
                 tabs: '=',
                 sorting: '=',
+                folding: '=',
                 grouping: '=',
                 externalCallback: '&'
             },
@@ -21,6 +22,7 @@
                 console.log('Grouping component');
 
                 console.log('grouping', scope.grouping);
+
 
                 scope.sortHandler = function (group, sort) {
                     console.log('group', group);
@@ -32,7 +34,8 @@
                         scope.grouping[i].options.sort = null;
                     }
                     group.options.sort = sort;
-                    if(group.hasOwnProperty('id')) {
+                    if (group.hasOwnProperty('id')) {
+                        scope.sorting.group = {};
                         scope.sorting.group.id = group.id;
                         scope.sorting.group.key = null;
                         scope.sorting.group.sort = sort;
@@ -42,7 +45,10 @@
                         scope.sorting.group.key = group.key;
                         scope.sorting.group.sort = sort;
                     }
-                    scope.externalCallback();
+                    setTimeout(function(){
+                        scope.externalCallback();
+                        scope.$apply();
+                    }, 0)
                 };
 
                 scope.openGroupSettings = function ($mdOpenMenu, ev) {
@@ -54,9 +60,13 @@
                     scope.externalCallback();
                 });
 
-                scope.toggleGroupFold = function(item){
-                    item.options.isFolded = !item.options.isFolded;
-                    scope.externalCallback();
+                scope.toggleGroupFold = function () {
+                    scope.folding = !scope.folding;
+                    console.log('scope.folding', scope.folding);
+                    setTimeout(function(){
+                        scope.externalCallback();
+                        scope.$apply();
+                    }, 0)
                 };
 
                 scope.removeGroup = function (group) {

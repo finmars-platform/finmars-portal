@@ -39,7 +39,7 @@
                         <span class="select-layout-caption">Select layout</span>
 
                         <md-button class="{{tab.layout.columns === item ? 'active' : '' }} ec-layout-btn"
-                                   data-ng-click="vm.setLayoutColumns(tab, item)"
+                                   data-ng-click="vm.setLayoutColumns(tab, item, $event)"
                                    data-ng-repeat="item in vm.boxColumns">
                             <ng-md-icon icon="stop" data-ng-repeat="icon in vm.range(item)"></ng-md-icon>
                         </md-button>

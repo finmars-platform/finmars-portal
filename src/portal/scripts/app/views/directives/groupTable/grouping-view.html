@@ -2,16 +2,24 @@
     <div><p class="g-drag-section-title"><span class="g-meta-circle green">G</span>ROUPING AREA</p></div>
     <div class="g-second-line">
         <div class="groups-holder">
+            <div class="group-folding-holder">
+                <md-card>
+                    <div>
+                        <div class="fold-btn-wrap {{folding ? '' : 'disabled'}}">
+                            <md-button class="" aria="hide/show grouping" data-ng-click="toggleGroupFold()">
+                                <ng-md-icon icon="add"></ng-md-icon>
+                            </md-button>
+                        </div>
+                        <div class="fold-btn-wrap {{folding ? 'disabled' : ''}}">
+                            <md-button class="" aria="hide/show grouping" data-ng-click="toggleGroupFold()">
+                                <ng-md-icon icon="remove"></ng-md-icon>
+                            </md-button>
+                        </div>
+                    </div>
+                </md-card>
+            </div>
             <div dragula="'group-bag'" dragula-model="grouping">
                 <md-card data-ng-repeat="item in grouping" class="group-item card">
-                    <div class="add">
-                        <md-button data-ng-if="item.options.isFolded" class="" aria="hide/show grouping" data-ng-click="toggleGroupFold(item)">
-                            <ng-md-icon icon="add"></ng-md-icon>
-                        </md-button>
-                        <md-button class="" data-ng-if="!item.options.isFolded" aria="hide/show grouping" data-ng-click="toggleGroupFold(item)">
-                            <ng-md-icon icon="remove"></ng-md-icon>
-                        </md-button>
-                    </div>
                     <div class="sort">
                         <md-button class="group-sort" data-ng-show="item.options.sort === 'ASC'" aria="open settings" data-ng-click="sortHandler(item, 'DESC')">
                             <ng-md-icon icon="keyboard_arrow_down"></ng-md-icon>

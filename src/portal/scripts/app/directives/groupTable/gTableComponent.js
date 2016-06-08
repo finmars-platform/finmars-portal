@@ -15,6 +15,7 @@
                 filters: '=',
                 columns: '=',
                 grouping: '=',
+                folding: '=',
                 sorting: '=',
 
                 itemAdditions: '=',
@@ -32,7 +33,6 @@
             },
             link: function (scope, elem, attrs) {
                 console.log('Group table initialized...');
-
                 scope.additionsState = false;
 
                 $('.app-md-content').addClass('g-table-overflow');

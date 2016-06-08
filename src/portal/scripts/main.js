@@ -32,8 +32,10 @@ app.controller('PortfolioAddDialogController', ['$scope', '$mdDialog', 'parentSc
 app.controller('PortfolioEditDialogController', ['$scope', '$mdDialog', 'parentScope', 'portfolio', '$state', require('./app/controllers/administration/portfolioEditDialogController')]);
 app.controller('PortfolioDeleteDialogController', ['$scope', '$mdDialog', 'portfolio', require('./app/controllers/administration/PortfolioDeleteDialogController')]);
 
-app.controller('EntityDataConstructorController', ['$scope', '$stateParams', '$state', require('./app/controllers/entityDataConstructorController')]);
+app.controller('EntityDataConstructorController', ['$scope', '$stateParams', '$state', '$mdDialog', require('./app/controllers/entityDataConstructorController')]);
 app.controller('EntityDataConstructorDialogController', ['$scope', '$mdDialog', 'parentScope', require('./app/controllers/entityDataConstructorDialogController')]);
+
+app.controller('WarningDialogController', ['$scope', '$mdDialog', 'warning', require('./app/controllers/warningDialogController')]);
 
 app.directive('menuToggle', [require('./app/directives/menuToggleDirective')]);
 app.directive('menuLink', [require('./app/directives/menuLinkDirective')]);

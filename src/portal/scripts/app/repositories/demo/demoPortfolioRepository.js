@@ -24,6 +24,7 @@
                     filters: [
                         {id: 5, options: {query: 'russia', enabled: false}}
                     ],
+                    folding: false,
                     grouping: [
                         {id: 7, options: {styles: {width: 178}, sort: 'DESC', isFolded: false}}
                     ],

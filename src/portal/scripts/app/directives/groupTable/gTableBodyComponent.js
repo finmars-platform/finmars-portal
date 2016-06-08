@@ -32,6 +32,11 @@
                     scope.$apply();
                 });
 
+                scope.toggleGroupFold = function (item) {
+                    console.log('item.isFolded', item.isFolded);
+                    item.isFolded = !item.isFolded;
+                };
+
                 scope.openEntityMenu = function ($mdOpenMenu, ev) {
                     $mdOpenMenu(ev);
                 };
