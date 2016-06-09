@@ -1,24 +1,23 @@
 <div>
-    <div data-ng-if="!editMode">
-        <div data-ng-if="attribute">
+    <div data-ng-if="!item.editMode">
+        <div data-ng-if="item.attribute">
             <md-card class="ec-attr-card">
                 <div layout="row">
                     <p class="name-holder" flex="60">
-                        <b><span data-ng-bind="attribute.name"></span></b> (<span data-ng-bind="bindType()"></span>)
+                        <b><span data-ng-bind="item.attribute.name"></span></b> (<span data-ng-bind="bindType()"></span>)
                     </p>
                     <div class="options-holder" flex="40">
-                        <md-button aria-label="delete attribute" data-ng-click="deleteAttribute()">
+                        <md-button aria-label="delete attribute" data-ng-click="deleteField()">
                             <ng-md-icon icon="delete"></ng-md-icon>
                         </md-button>
                         <md-button aria-label="edit attribute" data-ng-click="toggleEditMode()">
                             <ng-md-icon icon="mode_edit"></ng-md-icon>
                         </md-button>
-
                     </div>
                 </div>
             </md-card>
         </div>
-        <div data-ng-if="!attribute">
+        <div data-ng-if="!item.attribute">
             <md-card class="ec-attr-card">
                 <md-button aria-label="add field" data-ng-click="toggleEditMode()">
                     <ng-md-icon icon="add_circle"></ng-md-icon>
@@ -26,11 +25,11 @@
             </md-card>
         </div>
     </div>
-    <div data-ng-if="editMode">
+    <div data-ng-if="item.editMode">
         <md-card class="ec-attr-card">
             <md-input-container class="md-block" flex-gt-sm>
                 <label>Field</label>
-                <md-select ng-model="attribute" ng-change="changeModel(attribute)">
+                <md-select ng-model="item.attribute" ng-change="changeModel(item.attribute)">
                     <md-option ng-repeat="attr in attrsLeft" ng-value="attr">
                         {{attr.name}}
                     </md-option>
@@ -47,10 +46,10 @@
             <div data-ng-if="checkForSpecialOptions()">
                 <div data-ng-include="specialOptionTemplate"></div>
             </div>
-            <md-button aria-label="cancel" data-ng-click="toggleEditMode()">
+            <md-button aria-label="cancel" data-ng-click="cancel()">
                 Cancel
             </md-button>
-            <md-button aria-label="save layout" data-ng-click="saveLayout()">
+            <md-button aria-label="save layout" data-ng-click="saveField()">
                 Ok
             </md-button>
         </md-card>

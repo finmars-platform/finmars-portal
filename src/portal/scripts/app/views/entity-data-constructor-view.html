@@ -35,15 +35,12 @@
                 <md-tab-body>
                     <div class="ec-md-content ec-layout-tab">
                     <div class="ec-layout-box">
-
                         <span class="select-layout-caption">Select layout</span>
-
                         <md-button class="{{tab.layout.columns === item ? 'active' : '' }} ec-layout-btn"
                                    data-ng-click="vm.setLayoutColumns(tab, item, $event)"
                                    data-ng-repeat="item in vm.boxColumns">
                             <ng-md-icon icon="stop" data-ng-repeat="icon in vm.range(item)"></ng-md-icon>
                         </md-button>
-
                     </div>
 
                     <div class="ec-layout">
@@ -57,24 +54,11 @@
                                                           ></layout-constructor-field>
                             </div>
                         </div>
-                        <div layout="row">
-                            <div data-ng-repeat="column in vm.range(tab.layout.columns)"
-                                 flex="{{vm.bindFlex(tab, 0, column)}}">
-                                <layout-constructor-field tab="tab"
-                                                          row="row"
-                                                          column="column"
-                                                          ></layout-constructor-field>
-
-                            </div>
-                        </div>
                     </div>
-
-
                 </div>
                 </md-tab-body>
             </md-tab>
         </md-tabs>
-
         <md-button ng-click="vm.cancel()">
             Cancel
         </md-button>
