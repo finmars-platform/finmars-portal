@@ -24,12 +24,17 @@
         demoPortfolioService.getView().then(function (data) {
             vm.view = data;
             vm.tabs = data.tabs;
+            addRowForTab();
             console.log('vm tabs!', vm.tabs);
             $scope.$apply();
         });
 
         vm.attrs = [];
         vm.baseAttrs = [];
+
+        vm.cancel = function(){
+            $state.go('app.portfolio');
+        };
 
         portfolioService.getAttributeTypeList().then(function (data) {
             vm.attrs = data.results;
@@ -82,6 +87,26 @@
 
         vm.range = gridHelperService.range;
 
+        function addRowForTab() {
+            var i;
+            for(i = 0; i < vm.tabs.length; i = i + 1) {
+                addRow(vm.tabs[i]);
+            }
+        }
+
+        function addRow(tab) {
+            var c;
+            tab.layout.rows = tab.layout.rows + 1;
+            for(c = 0; c < tab.layout.columns; c = c + 1) {
+                console.log('tab', tab);
+                tab.layout.fields.push({
+                    row: tab.layout.rows,
+                    column: c + 1,
+                    type: 'empty'
+                })
+            }
+        }
+
         vm.setLayoutColumns = function (tab, columns, ev) {
 
             if (columns < tab.layout.columns) {
@@ -109,28 +134,44 @@
                         }
                     }
                 }).then(function(res){
-                    console.log(res);
                     if(res.status === 'agree') {
+                        var i, r, c;
+                        for(i = 0; i < tab.layout.fields.length; i = i + 1) {
+                            for(r = 0; r < tab.layout.rows; r = r + 1) {
+                                for(c = columns; c < tab.layout.columns; c = c + 1) {
+                                    if(tab.layout.fields[i].row == r + 1 && tab.layout.fields[i].column == c + 1) {
+                                        tab.layout.fields.splice(i, 1);
+                                    }
+                                }
+                            }
+                        }
+
                         tab.layout.columns = columns;
-                        console.log('change columns count ', columns);
-                        console.log('vm.tab', tab);
                     }
                 });
             } else {
+
+                var r, c;
+
+                for(r = 1; r <= tab.layout.rows; r = r + 1) {
+                    for(c = tab.layout.columns; c <= columns; c = c + 1) {
+                        tab.layout.fields.push({
+                            row: r,
+                            column: c,
+                            type: 'empty'
+                        })
+                    }
+                }
                 tab.layout.columns = columns;
-                console.log('change columns count ', columns);
-                console.log('vm.tab', tab);
             }
-
-
 
         };
 
         vm.saveLayout = function () {
             vm.view.tabs = vm.tabs;
             demoPortfolioService.save(vm.view).then(function () {
-                console.log('layout saved');
-                $state.go('app.portfolio');
+                console.log('layout saved', vm.view);
+                //$state.go('app.portfolio');
                 $scope.$apply();
             });
         };
@@ -145,7 +186,7 @@
                         field = tab.layout.fields[i];
                     }
 
-                    totalColspans = totalColspans + tab.layout.fields[i].colspan;
+                    totalColspans = totalColspans + parseInt(tab.layout.fields[i].colspan, 10);
                 }
             }
             var flexUnit = 100 / tab.layout.columns;
@@ -154,7 +195,6 @@
             }
             return Math.floor(flexUnit);
         };
-
 
         vm.deleteTab = function (tab) {
             var i;

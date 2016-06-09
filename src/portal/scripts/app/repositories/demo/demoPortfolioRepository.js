@@ -71,19 +71,37 @@
                                     name: 'Name',
                                     row: 1,
                                     column: 1,
-                                    colspan: 1
+                                    colspan: 1,
+                                    type: 'field'
                                 },
                                 {
                                     name: 'Notes',
                                     row: 1,
                                     column: 2,
-                                    colspan: 1
+                                    colspan: 1,
+                                    type: 'field'
+                                },
+                                {
+                                    row: 1,
+                                    column: 3,
+                                    type: 'empty'
+                                },
+                                {
+                                    row: 2,
+                                    column: 1,
+                                    type: 'empty'
+                                },
+                                {
+                                    row: 2,
+                                    column: 2,
+                                    type: 'empty'
                                 },
                                 {
                                     id: 6,
                                     row: 2,
                                     column: 3,
-                                    colspan: 1
+                                    colspan: 1,
+                                    type: 'field'
                                 }
                             ]
                         }
