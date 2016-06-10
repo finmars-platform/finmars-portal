@@ -84,16 +84,19 @@
                                 {
                                     row: 1,
                                     column: 3,
+                                    colspan: 1,
                                     type: 'empty'
                                 },
                                 {
                                     row: 2,
                                     column: 1,
+                                    colspan: 1,
                                     type: 'empty'
                                 },
                                 {
                                     row: 2,
                                     column: 2,
+                                    colspan: 1,
                                     type: 'empty'
                                 },
                                 {
