@@ -61,6 +61,7 @@
                         scope.tab.layout.fields.push({
                             row: scope.tab.layout.rows,
                             column: c + 1,
+                            colspan: 1,
                             type: 'empty'
                         });
                         console.log('tab', scope.tab);
