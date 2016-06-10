@@ -49,8 +49,8 @@
             <md-button aria-label="cancel" data-ng-click="cancel()">
                 Cancel
             </md-button>
-            <md-button aria-label="save layout" data-ng-click="saveField()">
-                Ok
+            <md-button class="ec-field-btn {{item.attribute ? '' : 'disabled'}}" aria-label="save layout" data-ng-click="saveField()">
+                <span>Ok</span>
             </md-button>
         </md-card>
     </div>

@@ -107,6 +107,18 @@
             }
         }
 
+        function removeLastRow(tab){
+            var f;
+            for(f = 0; f < tab.layout.fields.length; f = f + 1) {
+                if(tab.layout.fields[f].row === tab.layout.rows) {
+                    tab.layout.fields.splice(f, 1);
+                    f = f - 1;
+                }
+            }
+
+            tab.layout.rows = tab.layout.rows - 1;
+        }
+
         vm.setLayoutColumns = function (tab, columns, ev) {
 
             if (columns < tab.layout.columns) {
@@ -169,9 +181,13 @@
 
         vm.saveLayout = function () {
             vm.view.tabs = vm.tabs;
+            var i;
+            for(i = 0; i < vm.tabs.length; i = i + 1) {
+                removeLastRow(vm.tabs[i]);
+            }
             demoPortfolioService.save(vm.view).then(function () {
                 console.log('layout saved', vm.view);
-                //$state.go('app.portfolio');
+                $state.go('app.portfolio');
                 $scope.$apply();
             });
         };

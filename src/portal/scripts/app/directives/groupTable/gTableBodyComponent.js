@@ -80,7 +80,7 @@
                 scope.editEntity = function (ev, portfolio) {
                     $mdDialog.show({
                         controller: 'PortfolioEditDialogController as vm',
-                        templateUrl: 'views/administration/portfolio-edit-dialog-view.html',
+                        templateUrl: 'views/administration/entity-dialog-view.html',
                         parent: angular.element(document.body),
                         targetEvent: ev,
                         clickOutsideToClose: true,

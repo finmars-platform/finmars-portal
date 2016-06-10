@@ -8,6 +8,7 @@
     var gridHelperService = require('../../services/gridHelperService');
     var portfolioService = require('../../services/portfolioService');
     var metaService = require('../../services/metaService');
+    var layoutService = require('../../services/layoutService');
 
     module.exports = function ($scope, $mdDialog, parentScope, portfolio, $state) {
 
@@ -20,6 +21,7 @@
 
         vm.attrs = [];
         vm.baseAttrs = [];
+        vm.layoutAttrs = layoutService.getLayoutAttrs();
 
         portfolioService.getAttributeTypeList().then(function(data){
             vm.attrs = data.results;
@@ -47,13 +49,13 @@
                     totalColspans = totalColspans + tab.layout.fields[i].colspan;
                 }
             }
-            var flexUnit = 100 / totalColspans;
+            var flexUnit = 100 / tab.layout.columns;
             return Math.floor(field.colspan * flexUnit);
 
         };
 
         vm.bindField = function (tab, field) {
-            var i;
+            var i, l;
             if (field.hasOwnProperty('id')) {
                 for (i = 0; i < vm.attrs.length; i = i + 1) {
                     if (field.id === vm.attrs[i].id) {
@@ -66,6 +68,12 @@
                         return vm.baseAttrs[i];
                     }
                 }
+                for (l = 0; l < vm.layoutAttrs.length; l = l + 1) {
+                    if (field.name === vm.layoutAttrs[l].name) {
+                        return vm.layoutAttrs[l];
+                    }
+                }
+
             }
         };
 

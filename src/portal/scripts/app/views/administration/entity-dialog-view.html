@@ -1,4 +1,4 @@
-<md-dialog aria-label="" ng-cloak class="edit-portfolio-dialog">
+<md-dialog aria-label="" ng-cloak class="add-portfolio-dialog">
     <md-toolbar>
         <div class="md-toolbar-tools">
             <h2>Add portfolio</h2>
@@ -10,7 +10,7 @@
             <md-tab label="{{tab.name}}" data-ng-repeat="tab in vm.tabs">
                 <md-content class="md-padding">
                     <div layout="row" data-ng-repeat="row in vm.range(tab.layout.rows)">
-                        <div data-ng-repeat="field in tab.layout.fields" flex="{{vm.bindFlex(tab, row, field)}}" data-ng-if="row === field.row">
+                        <div class="ev-data-field" data-ng-repeat="field in tab.layout.fields" flex="{{vm.bindFlex(tab, row, field)}}" data-ng-if="row === field.row">
                             <bind-field-control item="vm.bindField(tab, field)"></bind-field-control>
                         </div>
                     </div>

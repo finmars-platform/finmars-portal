@@ -8,6 +8,7 @@
     var portfolioService = require('../../services/portfolioService');
     var metaService = require('../../services/metaService');
     var demoPortfolioService = require('../../services/demo/demoPortfolioService');
+    var layoutService = require('../../services/layoutService');
 
     module.exports = function ($scope, $mdDialog, parentScope, $state) {
 
@@ -25,6 +26,7 @@
 
         vm.attrs = [];
         vm.baseAttrs = [];
+        vm.layoutAttrs = layoutService.getLayoutAttrs();
 
         portfolioService.getAttributeTypeList().then(function(data){
             vm.attrs = data.results;
@@ -65,17 +67,25 @@
         };
 
         vm.bindField = function (tab, field) {
-            var i;
-            if (field.hasOwnProperty('id')) {
-                for (i = 0; i < vm.attrs.length; i = i + 1) {
-                    if (field.id === vm.attrs[i].id) {
-                        return vm.attrs[i];
+            var i, l;
+            //console.log('FIELD', field);
+            if(field.type === 'field') {
+                if (field.hasOwnProperty('id')) {
+                    for (i = 0; i < vm.attrs.length; i = i + 1) {
+                        if (field.id === vm.attrs[i].id) {
+                            return vm.attrs[i];
+                        }
                     }
-                }
-            } else {
-                for (i = 0; i < vm.baseAttrs.length; i = i + 1) {
-                    if (field.name === vm.baseAttrs[i].name) {
-                        return vm.baseAttrs[i];
+                } else {
+                    for (i = 0; i < vm.baseAttrs.length; i = i + 1) {
+                        if (field.name === vm.baseAttrs[i].name) {
+                            return vm.baseAttrs[i];
+                        }
+                    }
+                    for (l = 0; l < vm.layoutAttrs.length; l = l + 1) {
+                        if (field.name === vm.layoutAttrs[l].name) {
+                            return vm.layoutAttrs[l];
+                        }
                     }
                 }
             }

@@ -25,49 +25,53 @@
         // refactore this block
         function restoreAttrs() {
             function fillTabWithAttrs() {
-                var i,x;
-                for(i = 0; i < vm.tabs.length; i = i + 1) {
-                    if(!vm.tabs[i].attrs) {
+                var i, x;
+                for (i = 0; i < vm.tabs.length; i = i + 1) {
+                    if (!vm.tabs[i].attrs) {
                         vm.tabs[i].attrs = [];
 
-                        for(x = 0; x < vm.tabs[i].layout.fields.length; x = x + 1) {
-                            if(vm.tabs[i].layout.fields[x].hasOwnProperty('id')) {
+                        for (x = 0; x < vm.tabs[i].layout.fields.length; x = x + 1) {
+                            if (vm.tabs[i].layout.fields[x].hasOwnProperty('id')) {
                                 vm.tabs[i].attrs.push({
                                     id: vm.tabs[i].layout.fields[x].id
                                 })
                             } else {
-                                if(vm.tabs[i].layout.fields[x].name != 'Labeled Line' && vm.tabs[i].layout.fields[x].name != 'Line') {
-                                    vm.tabs[i].attrs.push({
-                                        name: vm.tabs[i].layout.fields[x].name
-                                    })
+                                console.log('vm.tabs[i].layout.fields[x]', vm.tabs[i].layout.fields[x]);
+                                if (vm.tabs[i].layout.fields[x].type === 'field') {
+                                    if (vm.tabs[i].layout.fields[x].name != 'Labeled Line' && vm.tabs[i].layout.fields[x].name != 'Line') {
+                                        vm.tabs[i].attrs.push({
+                                            name: vm.tabs[i].layout.fields[x].name
+                                        })
+                                    }
                                 }
                             }
                         }
                     }
                 }
+                console.log('vm.tabs[i].attrs', vm.tabs[0].attrs)
             }
 
-            function fillTabAttrs(){
+            function fillTabAttrs() {
 
                 var a, t, c, b;
                 var tab, tabAttr, attr, baseAttr;
                 console.log('METHOD: restoreAttrs, data: vm.tabs, value: ', vm.tabs);
                 console.log('METHOD: restoreAttrs, data: vm.attrs, value: ', vm.attrs);
-                for(t = 0; t < vm.tabs.length; t = t + 1) {
+                for (t = 0; t < vm.tabs.length; t = t + 1) {
                     tab = vm.tabs[t];
-                    for(c = 0; c < tab.attrs.length; c = c + 1) {
+                    for (c = 0; c < tab.attrs.length; c = c + 1) {
                         tabAttr = tab.attrs[c];
-                        if(tabAttr.hasOwnProperty('id')) {
-                            for(a = 0; a < vm.attrs.length; a = a + 1) {
+                        if (tabAttr.hasOwnProperty('id')) {
+                            for (a = 0; a < vm.attrs.length; a = a + 1) {
                                 attr = vm.attrs[a];
-                                if(tabAttr.id === attr.id) {
+                                if (tabAttr.id === attr.id) {
                                     vm.tabs[t].attrs[c] = attr;
                                 }
                             }
                         } else {
-                            for(b = 0; b < vm.baseAttrs.length; b = b + 1) {
+                            for (b = 0; b < vm.baseAttrs.length; b = b + 1) {
                                 baseAttr = vm.baseAttrs[b];
-                                if(tabAttr.name === baseAttr.name) {
+                                if (tabAttr.name === baseAttr.name) {
                                     vm.tabs[t].attrs[c] = baseAttr;
                                 }
                             }
@@ -93,7 +97,7 @@
         vm.getAttributes = function () {
             return portfolioService.getAttributeTypeList().then(function (data) {
                 vm.attrs = data.results;
-                return metaService.getBaseAttrs().then(function(data){
+                return metaService.getBaseAttrs().then(function (data) {
                     vm.baseAttrs = data[vm.entityType];
                     console.log('CLASS: MODAL, METHOD: getAttributes' + 'data: vm.attrs', 'values:', vm.attrs);
                     console.log('CLASS: MODAL, METHOD: getAttributes' + 'data: vm.baseAttrs', 'values:', vm.baseAttrs);
@@ -109,21 +113,21 @@
         vm.getAttributes();
 
         parentScope.$watch('columns', function () {
-            if(vm.tabAttrsReady) {
+            if (vm.tabAttrsReady) {
                 columns = parentScope.columns;
                 syncAttrs(vm.tabs);
                 callback();
             }
         });
         parentScope.$watch('filters', function () {
-            if(vm.tabAttrsReady) {
+            if (vm.tabAttrsReady) {
                 filters = parentScope.filters;
                 syncAttrs(vm.tabs);
                 callback();
             }
         });
         parentScope.$watch('grouping', function () {
-            if(vm.tabAttrsReady) {
+            if (vm.tabAttrsReady) {
                 grouping = parentScope.grouping;
                 syncAttrs(vm.tabs);
                 callback();
@@ -247,7 +251,7 @@
                 var exist = false;
                 this.dragula.on('over', function (elem, container, source) {
                     $(container).addClass('active');
-                    $(container).on('mouseleave', function(){
+                    $(container).on('mouseleave', function () {
                         $(this).removeClass('active');
                     })
 

@@ -7,27 +7,33 @@
     fill: #fff;
   }
 }
+
 .entity-constructor {
   min-height: 100%;
-  height:100%;
+  height: 100%;
   md-tabs {
-    height:100%;
+    height: 100%;
   }
 }
+
 .ec-layout-box {
   overflow: hidden;
   padding-left: 15px;
 }
+
 .select-layout-caption {
   position: relative;
-  top:-5px;
+  top: -5px;
 }
+
 .ec-md-content {
   background: #E5E5E5;
 }
+
 .ec-layout {
   overflow: hidden;
 }
+
 .ec-attr-card {
   padding-left: 1em;
   overflow: hidden;
@@ -43,25 +49,29 @@
     }
   }
 }
+
 .ec-tabs-holder md-tab-item {
   padding-right: 0;
   padding-left: 0;
 }
+
 .ec-tab-item-name {
   display: inline-block;
   padding-left: 20px;
   margin-right: 10px;
 }
+
 .ec-tab-item-edit {
   margin: 0;
   width: 100px;
   display: inline-block;
-  height:36px;
+  height: 36px;
   &.md-input-has-value label:not(.md-no-float) {
-    -webkit-transform: translate3d(0,16px,0) scale(.75);
-    transform: translate3d(0,16px,0) scale(.75);
+    -webkit-transform: translate3d(0, 16px, 0) scale(.75);
+    transform: translate3d(0, 16px, 0) scale(.75);
   }
 }
+
 .ec-tab-add-btn {
   fill: #898989;
   min-width: 30px;
@@ -71,8 +81,9 @@
   top: 13px;
   margin-left: 10px;
   min-height: 30px;
-  height:30px;
+  height: 30px;
 }
+
 .ec-tab-btn {
   fill: #898989;
   min-width: 30px;
@@ -80,7 +91,7 @@
   padding: 0;
   opacity: .4;
   min-height: 30px;
-  height:30px;
+  height: 30px;
   &:hover {
     opacity: 1;
   }
@@ -89,10 +100,43 @@
     height: 16px;
   }
 }
+
 .ec-breadcrumbs {
   padding-left: 20px;
   margin-bottom: 10px;
   span {
     color: #8B8B8B;
+  }
+}
+
+.ec-field-btn {
+  &.disabled {
+    background: #eee;
+    pointer-events: none;
+    opacity: .5;
+  }
+}
+
+.ev-data-field {
+  //padding: 0 20px;
+  min-height: 94px;
+  position: relative;
+  box-sizing: border-box;
+  md-input-container {
+    margin: 18px 10px;
+  }
+  md-input-container.md-default-theme .md-input, md-input-container .md-input {
+    border-color: #4C334D;
+  }
+}
+
+.ec-decoration {
+  &.line {
+    position: absolute;
+    width: 100%;
+    top: 50%;
+    height: 4px;
+    background: #4C334D;
+    display: block;
   }
 }
