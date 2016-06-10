@@ -54,16 +54,16 @@
                 scope.attrsLeft = scope.attrs.concat(scope.baseAttrs);
                 scope.attrsLeft = scope.attrsLeft.concat(scope.layoutAttrs);
 
-                function addRow(tab) {
+                function addRow() {
                     var c;
-                    tab.layout.rows = tab.layout.rows + 1;
-                    for(c = 0; c < tab.layout.columns; c = c + 1) {
-                        console.log('tab', tab);
-                        tab.layout.fields.push({
-                            row: tab.layout.rows,
+                    scope.tab.layout.rows = scope.tab.layout.rows + 1;
+                    for(c = 0; c < scope.tab.layout.columns; c = c + 1) {
+                        scope.tab.layout.fields.push({
+                            row: scope.tab.layout.rows,
                             column: c + 1,
                             type: 'empty'
-                        })
+                        });
+                        console.log('tab', scope.tab);
                     }
                 }
 
@@ -74,7 +74,7 @@
                         scope.item = scope.backupItem;
                         scope.item.colspan = scope.backupItem.colspan;
                     } else {
-                        scope.item.attribute = null;
+                        scope.item.attr = null;
                         scope.item.colspan = 1;
                     }
                     console.log('scope.item', scope.item);
@@ -96,17 +96,17 @@
                     for (i = 0; i < scope.tab.layout.fields.length; i = i + 1) {
                         console.log('scope.tab.layout', scope.tab.layout.fields[i]);
                         if (scope.tab.layout.fields[i].row === scope.item.row && scope.tab.layout.fields[i].column === scope.item.column) {
-                            if (scope.tab.layout.fields[i].hasOwnProperty('id')) {
+                            if (scope.item.attribute.hasOwnProperty('id')) {
                                 scope.tab.layout.fields[i].id = scope.item.attribute.id;
                             } else {
                                 scope.tab.layout.fields[i].name = scope.item.attribute.name;
                             }
                             scope.tab.layout.fields[i].type = 'field';
                             scope.tab.layout.fields[i].colspan = scope.item.colspan;
-                            console.log('scope.tab.layout.fields[i]', scope.tab.layout.fields[i]);
+                            scope.tab.layout.fields[i].attribute = scope.item.attribute;
                             console.log('scope.tab.layout', scope.tab.layout);
                             if(scope.tab.layout.fields[i].row == scope.tab.layout.rows) {
-                                addRow(scope.tab);
+                                addRow();
                             } else {
                                 //findEmptyRows();
                             }
@@ -117,7 +117,8 @@
 
                 function findEmptyRows() {
                     var i, r, columnsIsEmpty;
-                    for (r = scope.tab.layout.rows; r > 0; r = r - 1) {
+                    var emptyRows = [];
+                    for (r = 1; r <= scope.tab.layout.rows; r = r + 1) {
                         columnsIsEmpty = true;
                         for (i = 0; i < scope.tab.layout.fields.length; i = i + 1) {
                             if (scope.tab.layout.fields[i].row == r) {
@@ -127,12 +128,34 @@
                                 }
                             }
                         }
-                        console.log('columnsIsEmpty', columnsIsEmpty);
-                        if (columnsIsEmpty) {
-                            scope.tab.layout.rows = scope.tab.layout.rows - 1;
-                            for (i = 0; i < scope.tab.layout.fields.length; i = i + 1) {
-                                if (scope.tab.layout.fields[i].row == r) {
-                                    scope.tab.layout.fields.splice(i, 1);
+                        if(columnsIsEmpty) {
+                            emptyRows.push(r);
+                        }
+                    }
+
+                    deleteEmptyRows(emptyRows);
+                }
+
+                function deleteEmptyRows(emptyRows) {
+                    var i, e;
+                    //console.log('emptyRows', emptyRows);
+                    for(i = scope.tab.layout.rows; i > 0; i = i - 1) {
+                        for(e = emptyRows.length; e > 0; e = e - 1) {
+                            //console.log('e', e);
+                            //console.log('emptyRows[e]', emptyRows[e]);
+                            //console.log('i', i);
+                            //console.log('------------------------------------------');
+                            if(i === emptyRows[e]) {
+                                if(i - 1 === emptyRows[e - 1] && i !== emptyRows[0]) {
+                                    var f;
+                                    for (f = 0; f < scope.tab.layout.fields.length; f = f + 1) {
+                                        if (scope.tab.layout.fields[f].row == scope.tab.layout.rows) {
+                                            scope.tab.layout.fields.splice(f, 1);
+                                            f = f -1;
+                                        }
+                                    }
+                                    //console.log('scope.tab.layout', scope.tab.layout);
+                                    scope.tab.layout.rows = scope.tab.layout.rows - 1;
                                 }
                             }
                         }
@@ -141,10 +164,11 @@
 
                 scope.getCols = function () {
 
-                    var i;
+                    var i, c = 1;
                     var colsLeft = [1];
                     for (i = scope.column; i < scope.tab.layout.columns; i = i + 1) {
-                        colsLeft.push(i + 1);
+                        c = c + 1;
+                        colsLeft.push(c);
                     }
 
                     return colsLeft;

@@ -193,7 +193,7 @@
             vm.tableIsReady = true;
         };
 
-        vm.updateAdditions = function () {
+        vm.updateAdditionsTable = function () {
             vm.groupTableService.additions.setItems(vm.entityAdditions);
             vm.groupTableService.additions.columns.setColumns(vm.entityAdditionsColumns);
             vm.groupTableService.additions.filtering.setFilters(vm.entityAdditionsFilters);
@@ -205,7 +205,7 @@
             return demoTransactionsService.getList(portfolioId).then(function (data) {
                 console.log('data', data);
                 vm.entityAdditions = data;
-                vm.updateAdditions();
+                vm.updateAdditionsTable();
                 $scope.$apply();
             });
         };
@@ -213,7 +213,7 @@
         vm.addEntity = function (ev) {
             $mdDialog.show({
                 controller: 'PortfolioAddDialogController as vm',
-                templateUrl: 'views/administration/portfolio-add-dialog-view.html',
+                templateUrl: 'views/administration/entity-dialog-view.html',
                 parent: angular.element(document.body),
                 targetEvent: ev,
                 clickOutsideToClose: true,

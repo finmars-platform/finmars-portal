@@ -72,7 +72,7 @@
         var sortingAdditionsServiceExt = {
             column: {
                 sort: function (sort) {
-                    itemsAdditions = sortingService.column.sort(itemsAdditions, sort);
+                    itemsAdditions = sortingService.column.additions.sort(itemsAdditions, sort);
                 }
             }
         };

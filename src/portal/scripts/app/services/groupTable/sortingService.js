@@ -17,14 +17,14 @@
         var i, g, valA, valB;
         if (items[0].groups) {
             //console.log('sort ID', sort);
-            items = items.sort(function(a, b) {
-                for(i = 0; i < b.groups.length; i = i + 1) {
-                    for(g = 0; g < a.groups.length; g = g + 1) {
-                        if(b.groups[i].key === sort.key || b.groups[i].key === sort.name
+            items = items.sort(function (a, b) {
+                for (i = 0; i < b.groups.length; i = i + 1) {
+                    for (g = 0; g < a.groups.length; g = g + 1) {
+                        if (b.groups[i].key === sort.key || b.groups[i].key === sort.name
                             && a.groups[g].key === sort.key || a.groups[g].key === sort.name) {
                             valA = a.groups[g].value.toLowerCase();
                             valB = b.groups[i].value.toLowerCase();
-                            if(sort.sort === 'DESC') {
+                            if (sort.sort === 'DESC') {
                                 if (valA < valB) {
                                     return -1;
                                 }
@@ -36,7 +36,7 @@
                                 return 0;
                             }
 
-                            if(sort.sort === 'ASC') {
+                            if (sort.sort === 'ASC') {
                                 if (valA > valB) {
                                     return -1;
                                 }
@@ -96,8 +96,17 @@
 
     function sortBaseOnKey(items, sort) {
         return items.sort(function (a, b) {
-            var nameA = a[sort.key].toLowerCase();
-            var nameB = b[sort.key].toLowerCase();
+            var nameA;
+            var nameB;
+            if (typeof a === 'number') {
+                nameA = a[sort.key];
+                nameB = b[sort.key];
+            }
+            if (typeof a === 'string') {
+                nameA = a[sort.key].toLowerCase();
+                nameB = b[sort.key].toLowerCase();
+            }
+
 
             if (sort.sort === 'DESC') {
                 if (nameA < nameB) {
@@ -128,7 +137,23 @@
     }
 
 
+    var columnAdditionsSort = function (items, sort) {
+        var g;
+        if (sort.id) {
+            //console.log('sort ID', sort);
+            items = sortBasedOnId(items, sort)
+        }
+        if (sort.key) {
+            items = sortBaseOnKey(items, sort)
+        }
+        //console.log('items', items);
+        //console.log('sort', sort);
+
+        return items;
+    };
+
     var columnSort = function (items, sort) {
+        console.log('items', items);
         var g;
         if (items[0].groups) {
             if (sort.id) {
@@ -164,6 +189,9 @@
             sort: groupSort
         },
         column: {
+            additions: {
+                sort: columnAdditionsSort
+            },
             sort: columnSort
         }
     }

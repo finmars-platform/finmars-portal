@@ -117,13 +117,15 @@
                                     id: 1,
                                     row: 1,
                                     column: 1,
-                                    colspan: 1
+                                    colspan: 1,
+                                    type: 'field'
                                 },
                                 {
                                     id: 7,
                                     row: 1,
                                     column: 2,
-                                    colspan: 1
+                                    colspan: 1,
+                                    type: 'field'
                                 }
                             ]
                         }
@@ -139,7 +141,8 @@
                                     name: 'Short name',
                                     row: 1,
                                     column: 1,
-                                    colspan: 1
+                                    colspan: 1,
+                                    type: 'field'
                                 }
                             ]
                         }
