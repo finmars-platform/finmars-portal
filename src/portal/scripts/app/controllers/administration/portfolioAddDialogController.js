@@ -28,13 +28,13 @@
         vm.baseAttrs = [];
         vm.layoutAttrs = layoutService.getLayoutAttrs();
 
-        portfolioService.getAttributeTypeList().then(function(data){
+        portfolioService.getAttributeTypeList().then(function (data) {
             vm.attrs = data.results;
             console.log('vm.attrs', vm.attrs);
             $scope.$apply();
         });
 
-        metaService.getBaseAttrs().then(function(data){
+        metaService.getBaseAttrs().then(function (data) {
             vm.baseAttrs = data[vm.entityType];
             console.log('vm.baseAttrs', vm.baseAttrs);
             $scope.$apply();
@@ -66,10 +66,39 @@
 
         };
 
+        vm.checkFieldRender = function (tab, row, field) {
+            if (field.row === row) {
+                if (field.type === 'field') {
+                    return true;
+                } else {
+                    var i, c, x;
+                    var spannedCols = [];
+                    for (i = 0; i < tab.layout.fields.length; i = i + 1) {
+                        if (tab.layout.fields[i].row === row) {
+
+                            if (tab.layout.fields[i].type === 'field') {
+                                for(c = tab.layout.fields[i].column; c <= (tab.layout.fields[i].column + tab.layout.fields[i].colspan - 1); c = c + 1) {
+                                    spannedCols.push(c);
+                                }
+                            }
+                        }
+                    }
+                    for(x = 0; x < spannedCols.length; x = x + 1) {
+                        if(spannedCols[x] === field.column) {
+                            return false;
+                        }
+                    }
+
+                    return true;
+                }
+            }
+            return false;
+        };
+
         vm.bindField = function (tab, field) {
             var i, l;
             //console.log('FIELD', field);
-            if(field.type === 'field') {
+            if (field.type === 'field') {
                 if (field.hasOwnProperty('id')) {
                     for (i = 0; i < vm.attrs.length; i = i + 1) {
                         if (field.id === vm.attrs[i].id) {
