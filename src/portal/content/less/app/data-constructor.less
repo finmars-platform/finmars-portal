@@ -35,9 +35,14 @@
 }
 
 .ec-attr-card {
-  padding-left: 1em;
   overflow: hidden;
   fill: #898989;
+  padding-left: 1em;
+  padding-right: 1em;
+  &.active {
+    box-shadow: 0 0 30px rgba(255,187,0, .5);
+    padding-top: 2em;
+  }
   .options-holder {
     button {
       float: right;

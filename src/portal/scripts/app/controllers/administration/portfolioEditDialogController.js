@@ -77,6 +77,13 @@
             }
         };
 
+        vm.checkFieldRender = function(row, field){
+            if(field.row === row && field.type === 'field') {
+                return true;
+            }
+            return false;
+        };
+
         vm.openMenu = function ($mdOpenMenu, ev) {
             originatorEv = ev;
             $mdOpenMenu(ev);
