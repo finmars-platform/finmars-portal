@@ -72,8 +72,8 @@
 
         function fingGroupsForResult(group, item, attribute) {
             if (group.hasOwnProperty('id')) {
-                console.log('group', group);
-                console.log('attribute[k]', attribute);
+                //console.log('group', group);
+                //console.log('attribute[k]', attribute);
                 if (group.id === attribute['attribute_type']) {
                     groupsForResult.push({
                         key: attribute['attribute_name'],
@@ -118,18 +118,18 @@
                     for (a = 0; a < items[i].attributes.length; a = a + 1) {
 
                         fingGroupsForResult(groups[c], items[i], items[i].attributes[a]);
-                        console.log('groupsForResult', groupsForResult);
+                        //console.log('groupsForResult', groupsForResult);
 
                         if (c == groups.length - 1) {
                             if (groups[c].hasOwnProperty('id')) {
                                 if (groups[c].id === items[i].attributes[a]['attribute_type']) {
                                     groupName = groupName + returnValue(items[i].attributes[a]);
-                                    console.log('groupName', groupName);
+                                    //console.log('groupName', groupName);
                                 }
                             } else {
                                 for (k = 0; k < keywords.length; k = k + 1) {
                                     if (c == groups.length - 1) {
-                                        console.log('groups[c]', groups[c]);
+                                        //console.log('groups[c]', groups[c]);
                                         if (groups[c].key === keywords[k].key) {
                                             groupName = groupName + keywords[k].key;
                                         }
@@ -162,7 +162,7 @@
                     }
                 }
                 itemsGrouped[groupName].items.push(items[i]);
-                console.log('itemsGrouped', itemsGrouped);
+                //console.log('itemsGrouped', itemsGrouped);
                 itemsGroupedArray = transformToArray(itemsGrouped);
 
             }

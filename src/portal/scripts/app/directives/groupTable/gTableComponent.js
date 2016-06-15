@@ -5,12 +5,15 @@
 
     'use strict';
 
+    var logService = require('../../services/logService');
+
     module.exports = function () {
         return {
             restrict: 'AE',
             templateUrl: 'views/directives/groupTable/group-table-shell-view.html',
             scope: {
                 tabs: '=',
+                entityType: '=',
                 items: '=',
                 filters: '=',
                 columns: '=',
@@ -32,7 +35,9 @@
                 additionsStatus: '='
             },
             link: function (scope, elem, attrs) {
-                console.log('Group table initialized...');
+
+                logService.component('groupTable', 'initialized');
+
                 scope.additionsState = false;
 
                 $('.app-md-content').addClass('g-table-overflow');

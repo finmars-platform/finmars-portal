@@ -63,35 +63,6 @@
         })
     };
 
-    var getAttributeTypeList = function () {
-        return window.fetch(baseUrl + 'portfolios/portfolio-attribute-type/',
-            {
-                method: 'GET',
-                credentials: 'include',
-                headers: {
-                    Accept: 'application/json',
-                    'Content-type': 'application/json'
-                }
-            }).then(function (data) {
-                return data.json();
-            })
-    };
-
-    var getAttributeTypeByKey = function (id) {
-        return window.fetch(baseUrl + 'portfolios/portfolio-attribute-type/' + id + '/',
-            {
-                method: 'GET',
-                credentials: 'include',
-                headers: {
-                    Accept: 'application/json',
-                    'Content-type': 'application/json'
-                }
-            }).then(function (data) {
-            return data.json();
-        })
-    };
-
-
     var getList = function () {
         return window.fetch(baseUrl + 'portfolios/portfolio/',
             {
@@ -171,9 +142,6 @@
 
         getClassifierList: getClassifierList,
         getClassifierByKey: getClassifierByKey,
-
-        getAttributeTypeList: getAttributeTypeList,
-        getAttributeTypeByKey: getAttributeTypeByKey,
 
         getList: getList,
         getByKey: getByKey,

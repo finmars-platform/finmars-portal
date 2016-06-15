@@ -5,6 +5,8 @@
 
     'use strict';
 
+    var logService = require('../../services/logService');
+
     module.exports = function () {
         return {
             restrict: 'A',
@@ -12,7 +14,8 @@
                 items: '='
             },
             link: function (scope, elem, attr) {
-                console.log('Aligner component initialized...', elem);
+
+                logService.component('groupColumnResizer', 'initialized');
 
                 var workAreaElem = elem.parents('.g-workarea');
                 var filterSidebarWidth = 246;

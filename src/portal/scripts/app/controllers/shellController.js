@@ -5,11 +5,13 @@
 
     'use strict';
 
+    var logService = require('../services/logService');
+
     var usersService = require('../services/usersService');
 
     module.exports = function ($scope, $state) {
 
-        console.log('Shell controller initialized...');
+        logService.controller('ShellController', 'initialized');
 
         var vm = this;
 

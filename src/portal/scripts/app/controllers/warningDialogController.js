@@ -5,8 +5,12 @@
 
     'use strict';
 
+    var logService = require('../services/logService');
+
     module.exports = function($scope, $mdDialog, warning){
-        console.log('warning', warning);
+
+        logService.controller('WarningDialogController', 'initialized');
+
         var vm = this;
 
         vm.warning = warning;

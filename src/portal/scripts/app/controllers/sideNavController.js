@@ -5,16 +5,20 @@
 
     'use strict';
 
+    var logService = require('../services/logService');
+
     var metaService = require('../services/metaService');
 
     module.exports = function($scope){
+
+        logService.controller('SideNavController', 'initialized');
 
         var vm = this;
         vm.sections = [];
 
         metaService.getMenu().then(function (data) {
             vm.sections = data;
-            console.log('vm.sections', vm.sections);
+            //console.log('vm.sections', vm.sections);
             $scope.$apply();
         });
 

@@ -5,9 +5,13 @@
 
     'use strict';
 
+    var logService = require('../../services/logService');
+
     var portfolioService = require('../../services/portfolioService');
 
     module.exports = function ($scope, $mdDialog, portfolio) {
+
+        logService.controller('EntityViewerDeleteDialogController', 'initialized');
 
         var vm = this;
         vm.portfolio = portfolio;

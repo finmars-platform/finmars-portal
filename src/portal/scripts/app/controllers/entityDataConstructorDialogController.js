@@ -5,10 +5,12 @@
 
     'use strict';
 
+    var logService = require('../services/logService');
+
     module.exports = function ($scope, $mdDialog, parentScope) {
 
-        console.log('Entity data constructor controller intialized...');
-        console.log('parentScope', parentScope);
+        logService.controller('EntityDataConstructorDialogController', 'initialized');
+
         var vm = this;
         vm.tabs = parentScope.vm.tabs;
 

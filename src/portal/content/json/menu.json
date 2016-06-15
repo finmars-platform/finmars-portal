@@ -40,37 +40,37 @@
     "type": "toggle",
     "pages": [
       {
-        "state" : "app.portfolio",
+        "state" : "app.data.portfolios",
         "title": "Portfolios",
         "icon": ""
       },
       {
-        "state" : "app.accounts",
+        "state" : "app.data.accounts",
         "title": "Accounts",
         "icon": ""
       },
       {
-        "state" : "app.counterparties",
+        "state" : "app.data.counterparties",
         "title": "Counterparties",
         "icon": ""
       },
       {
-        "state" : "app.responsibles",
+        "state" : "app.data.responsibles",
         "title": "Responsibles",
         "icon": ""
       },
       {
-        "state" : "app.instruments",
+        "state" : "app.data.instruments",
         "title": "Instruments",
         "icon": ""
       },
       {
-        "state" : "app.transcations",
+        "state" : "app.data.transactions",
         "title": "Transactions",
         "icon": ""
       },
       {
-        "state" : "app.pricing",
+        "state" : "app.data.pricing",
         "title": "Prcing",
         "icon": ""
       }

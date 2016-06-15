@@ -1,0 +1,34 @@
+<div class="attributes-manager-view">
+    <div>
+        <h2 class="am-header"><span data-ng-bind="vm.entityType"></span><ng-md-icon icon="keyboard_arrow_right"></ng-md-icon> MANAGE ATTRIBUTES</h2>
+    </div>
+    <div>
+        <md-button class="md-raised">
+            <a href="" data-ui-sref="app.dashboard">
+                RETURN TO FORM EDITOR
+            </a>
+        </md-button>
+    </div>
+    <div data-ng-if="vm.attrs.length">
+        <md-card data-ng-repeat="item in vm.attrs" class="am-attr-card">
+            <div>
+                <b data-ng-bind="item.name"></b> (<span data-ng-bind="vm.bindType(item)"></span>)
+                <div class="am-attr-misc">
+                    <md-button class="am-attr-btn"
+                               data-ng-click="vm.editAttr(item, $event)">
+                        <ng-md-icon icon="edit"></ng-md-icon>
+                    </md-button>
+                    <md-button class="am-attr-btn"
+                               data-ng-click="vm.deleteAttr(item, $event)">
+                        <ng-md-icon icon="delete"></ng-md-icon>
+                    </md-button>
+                </div>
+            </div>
+        </md-card>
+    </div>
+    <div data-ng-if="!vm.attrs.length">
+        <div layout="row" layout-sm="column" layout-align="space-around">
+            <md-progress-circular md-mode="indeterminate"></md-progress-circular>
+        </div>
+    </div>
+</div>

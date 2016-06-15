@@ -5,8 +5,11 @@
 
     'use strict';
 
-    var portfolioService = require('../../services/portfolioService');
-    var portfolioHelperService = require('../../services/portfolioHelperService');
+    var logService = require('../../services/logService');
+
+    var attributeTypeService = require('../../services/attributeTypeService');
+
+    var entityViewerHelperService = require('../../services/entityViewerHelperService');
     var metaService = require('../../services/metaService');
 
     var GroupTableService = require('../../services/groupTable/groupTableService');
@@ -16,7 +19,9 @@
 
     module.exports = function ($scope, $mdDialog) {
 
-        console.log('Portfolio controller initialized...');
+        logService.controller('EntityViewerController', 'initialized');
+
+        //console.log('$scope', $scope);
 
         var vm = this;
 
@@ -28,8 +33,9 @@
 
         // ENTITY STUFF START
 
+        vm.entityRaw = $scope.$parent.vm.entityRaw;
         vm.entity = [];
-        vm.entityType = '';
+        vm.entityType = $scope.$parent.vm.entityType;
 
         vm.columns = [];
         vm.grouping = [];
@@ -40,7 +46,7 @@
 
         vm.entityAdditions = [];
         vm.additionsType = '';
-        vm.additionsEntityType = ''
+        vm.additionsEntityType = '';
 
         vm.entityAdditionsColumns = [];
         vm.entityAdditionsFilters = [];
@@ -153,20 +159,18 @@
         };
 
         vm.getEntityData = function () {
-            portfolioService.getList().then(function (data) {
-                portfolioHelperService.transformItems(data.results).then(function (data) {
-                    vm.entity = data;
-                    vm.groupTableService = GroupTableService.getInstance();
+            entityViewerHelperService.transformItems(vm.entityRaw, vm.attrs).then(function (data) {
+                vm.entity = data;
+                vm.groupTableService = GroupTableService.getInstance();
 
-                    vm.updateTable();
+                vm.updateTable();
 
-                    $scope.$apply();
-                })
-            });
+                $scope.$apply();
+            })
         };
 
         vm.getAttributes = function () {
-            return portfolioService.getAttributeTypeList().then(function (data) {
+            return attributeTypeService.getList(vm.entityType).then(function (data) {
                 vm.attrs = data.results;
                 return metaService.getBaseAttrs().then(function(data){
                     vm.baseAttrs = data;
@@ -184,7 +188,7 @@
             vm.groupTableService.columns.setColumns(vm.columns);
             vm.groupTableService.filtering.setFilters(vm.filters);
             vm.groupTableService.grouping.setGroups(vm.grouping);
-            console.log("EXTERNAL CALLBACK ", vm.folding);
+            //console.log("EXTERNAL CALLBACK ", vm.folding);
             vm.groupTableService.folding.setFolds(vm.folding);
             vm.sorting.group = findFullAttributeForItem(vm.sorting.group, vm.attrs);
             vm.sorting.column = findFullAttributeForItem(vm.sorting.column, vm.attrs);

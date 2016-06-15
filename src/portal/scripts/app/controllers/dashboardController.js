@@ -5,8 +5,10 @@
 
     'use strict';
 
+    var logService = require('../services/logService');
+
     module.exports = function ($scope) {
-        console.log('Dashboard controller initialized...');
+        logService.controller('DashboardController', 'initialized');
     }
 
 }());
