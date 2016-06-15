@@ -153,7 +153,7 @@
     };
 
     var columnSort = function (items, sort) {
-        console.log('items', items);
+        //console.log('items', items);
         var g;
         if (items[0].groups) {
             if (sort.id) {

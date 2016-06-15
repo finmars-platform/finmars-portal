@@ -5,16 +5,19 @@
 
     'use strict';
 
+    var logService = require('../../services/logService');
+
     var metaService = require('../../services/metaService');
-    var portfolioService = require('../../services/portfolioService');
+    var attributeTypeService = require('../../services/attributeTypeService');
 
     module.exports = function ($scope, $mdDialog, parentScope, callback) {
-        console.log('Group table modal controller initialized...');
+
+        logService.controller('gModalController', 'initialized');
 
         var vm = this;
 
         vm.tabs = parentScope.tabs;
-        vm.entityType = 'portfolio';
+        vm.entityType = parentScope.entityType;
         vm.general = [];
         vm.attrs = [];
         vm.baseAttrs = [];
@@ -95,7 +98,7 @@
 
         $('body').addClass('drag-dialog'); // hide backdrop
         vm.getAttributes = function () {
-            return portfolioService.getAttributeTypeList().then(function (data) {
+            return attributeTypeService.getList(vm.entityType).then(function (data) {
                 vm.attrs = data.results;
                 return metaService.getBaseAttrs().then(function (data) {
                     vm.baseAttrs = data[vm.entityType];

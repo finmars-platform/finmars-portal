@@ -6,11 +6,15 @@
 
     'use strict';
 
+    var logService = require('../../services/logService');
+
     module.exports = function () {
         return {
             restrict: 'A',
             scope: {},
             link: function (scope, elem, attrs) {
+
+                logService.component('groupVerticalScroll', 'initialized');
 
                 function setVerticalScrolFixed() {
                     var offsetLeft = $(elem).parents('.g-table-section').width() + $('md-sidenav').width() - 15;

@@ -27,10 +27,23 @@ app.controller('SideNavController', ['$scope', require('./app/controllers/sideNa
 
 app.controller('DashboardController', ['$scope', require('./app/controllers/dashboardController')]);
 
-app.controller('PortfolioController', ['$scope', '$mdDialog', '$mdMedia', require('./app/controllers/administration/portfolioController')]);
-app.controller('PortfolioAddDialogController', ['$scope', '$mdDialog', 'parentScope', '$state', require('./app/controllers/administration/portfolioAddDialogController')]);
-app.controller('PortfolioEditDialogController', ['$scope', '$mdDialog', 'parentScope', 'portfolio', '$state', require('./app/controllers/administration/portfolioEditDialogController')]);
-app.controller('PortfolioDeleteDialogController', ['$scope', '$mdDialog', 'portfolio', require('./app/controllers/administration/PortfolioDeleteDialogController')]);
+app.controller('NotificationsController', ['$scope', require('./app/controllers/notificationsController')]);
+app.controller('AttributesManagerController', ['$scope', '$state', '$stateParams', '$mdDialog', require('./app/controllers/attributesManagerController')]);
+app.controller('AttributesManagerDialogController', ['$scope', '$mdDialog', 'attribute', require('./app/controllers/attributesManagerDialogController')]);
+
+app.controller('EntityViewerController', ['$scope', '$mdDialog', '$mdMedia', require('./app/controllers/entityViewer/entityViewerController')]);
+app.controller('EntityViewerAddDialogController', ['$scope', '$mdDialog', 'parentScope', '$state', require('./app/controllers/entityViewer/entityViewerAddDialogController')]);
+app.controller('EntityViewerEditDialogController', ['$scope', '$mdDialog', 'parentScope', 'entity', '$state', require('./app/controllers/entityViewer/entityViewerEditDialogController')]);
+app.controller('EntityViewerDeleteDialogController', ['$scope', '$mdDialog', 'entity', require('./app/controllers/entityViewer/entityViewerDeleteDialogController')]);
+
+app.controller('DataPortfolioController', ['$scope', require('./app/controllers/data/dataPortfolioController')]);
+app.controller('DataAccountController', ['$scope', require('./app/controllers/data/dataAccountController')]);
+app.controller('DataCounterpartyController', ['$scope', require('./app/controllers/data/dataCounterpartyController')]);
+app.controller('DataResponsibleController', ['$scope', require('./app/controllers/data/dataResponsibleController')]);
+app.controller('DataInstrumentController', ['$scope', require('./app/controllers/data/dataInstrumentController')]);
+app.controller('DataTransactionController', ['$scope', require('./app/controllers/data/dataTransactionController')]);
+app.controller('DataPricingController', ['$scope', require('./app/controllers/data/dataPricingController')]);
+
 
 app.controller('EntityDataConstructorController', ['$scope', '$stateParams', '$state', '$mdDialog', require('./app/controllers/entityDataConstructorController')]);
 app.controller('EntityDataConstructorDialogController', ['$scope', '$mdDialog', 'parentScope', require('./app/controllers/entityDataConstructorDialogController')]);

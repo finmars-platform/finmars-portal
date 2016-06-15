@@ -5,6 +5,8 @@
 
     'use strict';
 
+    var logService = require('../../services/logService');
+
     module.exports = function () {
         return {
             restrict: 'AE',
@@ -16,7 +18,8 @@
             },
             templateUrl: 'views/directives/groupTable/columns-view.html',
             link: function (scope, elem, attrs) {
-                console.log('Columns component', scope.columns);
+
+                logService.component('groupColumnResizer', 'initialized');
 
                 scope.sortHandler = function (column, sort) {
                     var i;

@@ -5,10 +5,13 @@
 
     'use strict';
 
+    var logService = require('../../services/logService');
+
     module.exports = function ($mdDialog) {
         return {
             restrict: 'AE',
             scope: {
+                entityType: '=',
                 filters: '=',
                 columns: '=',
                 tabs: '=',
@@ -19,13 +22,10 @@
             },
             templateUrl: 'views/directives/groupTable/grouping-view.html',
             link: function (scope, elem, attrs) {
-                console.log('Grouping component');
 
-                console.log('grouping', scope.grouping);
-
+                logService.component('groupGrouping', 'initialized');
 
                 scope.sortHandler = function (group, sort) {
-                    console.log('group', group);
                     var i;
                     for (i = 0; i < scope.grouping.length; i = i + 1) {
                         if (!scope.grouping[i].options) {
@@ -56,7 +56,6 @@
                 };
 
                 scope.$watchCollection('grouping', function () {
-                    //console.log('change');
                     scope.externalCallback();
                 });
 

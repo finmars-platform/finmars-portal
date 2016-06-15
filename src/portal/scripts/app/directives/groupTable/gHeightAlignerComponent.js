@@ -5,6 +5,8 @@
 
     'use strict';
 
+    var logService = require('../../services/logService');
+
     module.exports = function () {
         return {
             restrict: 'A',
@@ -12,6 +14,9 @@
                 additionsStatus: '='
             },
             link: function (scope, elem, attrs) {
+
+                logService.component('groupHeightAligner', 'initialized');
+
                 scope.$watchCollection('additionsStatus', function () {
 
                     var workAreaHeight;

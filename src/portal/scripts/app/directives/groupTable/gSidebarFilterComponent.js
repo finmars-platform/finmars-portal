@@ -5,6 +5,8 @@
 
     'use strict';
 
+    var logService = require('../../services/logService');
+
     module.exports = function() {
         return {
             restrict: 'AE',
@@ -14,7 +16,8 @@
             },
             templateUrl: 'views/directives/groupTable/sidebar-filter-view.html',
             link: function(scope, elem, attrs) {
-                console.log('Sidebar filter component', scope.filters);
+
+                logService.component('groupSidebarFilter', 'initialized');
 
                 scope.$watchCollection('filters', function () {
                     scope.externalCallback();

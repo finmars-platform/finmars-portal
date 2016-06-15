@@ -5,11 +5,14 @@
 
     'use strict';
 
+    var logService = require('../../services/logService');
+
     module.exports = function () {
         return {
             restrict: 'A',
             link: function (scope, elem, attrs) {
-                //console.log('elem resizeble');
+
+                logService.component('gDialogDraggable', 'initialized');
 
                 var dragger = $(elem).find('.md-toolbar-tools');
                 var parent = $(elem).parent();

@@ -4,6 +4,7 @@
 (function () {
 
     'use strict';
+    var logService = require('../../services/logService');
 
     var gridHelperService = require('../../services/gridHelperService');
     var portfolioService = require('../../services/portfolioService');
@@ -12,7 +13,8 @@
 
     module.exports = function ($scope, $mdDialog, parentScope, portfolio, $state) {
 
-        console.log('Portfolio add dialog controller initialized...');
+        logService.controller('EntityViewerEditDialogController', 'initialized');
+
         console.log('parentScope', portfolio);
 
         var vm = this;

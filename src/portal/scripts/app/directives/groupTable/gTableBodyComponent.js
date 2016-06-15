@@ -5,6 +5,7 @@
 
     'use strict';
 
+    var logService = require('../../services/logService');
     var metaService = require('../../services/metaService');
 
     module.exports = function ($mdDialog) {
@@ -19,7 +20,9 @@
             },
             templateUrl: 'views/directives/groupTable/table-body-view.html',
             link: function (scope, elem, attrs) {
-                console.log('Table body component', scope.items);
+
+                logService.component('groupTableBody', 'initialized');
+
                 //console.log('scope columns', scope.columns);
 
                 var entityType = scope.entityType;

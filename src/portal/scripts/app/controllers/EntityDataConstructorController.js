@@ -5,6 +5,8 @@
 
     'use strict';
 
+    var logService = require('../services/logService');
+
     var demoPortfolioService = require('../services/demo/demoPortfolioService');
     var demoTransactionsService = require('../services/demo/demoTransactionsService');
 
@@ -14,6 +16,8 @@
     var gridHelperService = require('../services/gridHelperService');
 
     module.exports = function ($scope, $stateParams, $state, $mdDialog) {
+
+        logService.controller('EntityDataConstructorController', 'initialized');
 
         var vm = this;
         vm.view = {};

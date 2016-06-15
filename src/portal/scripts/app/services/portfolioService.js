@@ -21,14 +21,6 @@
         return portfolioRepository.getClassifierByKey(id);
     };
 
-    var getAttributeTypeList = function () {
-        return portfolioRepository.getAttributeTypeList();
-    };
-
-    var getAttributeTypeByKey = function (id) {
-        return portfolioRepository.getAttributeTypeByKey(id);
-    };
-
     var getList = function () {
         return portfolioRepository.getList();
     };
@@ -56,9 +48,6 @@
 
         getClassifierList: getClassifierList,
         getClassifierByKey: getClassifierByKey,
-
-        getAttributeTypeList: getAttributeTypeList,
-        getAttributeTypeByKey: getAttributeTypeByKey,
 
         getList: getList,
         getByKey: getByKey,

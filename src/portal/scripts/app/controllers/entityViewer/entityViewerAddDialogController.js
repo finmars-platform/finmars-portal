@@ -5,6 +5,8 @@
 
     'use strict';
 
+    var logService = require('../../services/logService');
+
     var portfolioService = require('../../services/portfolioService');
     var metaService = require('../../services/metaService');
     var demoPortfolioService = require('../../services/demo/demoPortfolioService');
@@ -12,8 +14,9 @@
 
     module.exports = function ($scope, $mdDialog, parentScope, $state) {
 
-        console.log('Portfolio add dialog controller initialized...');
-        console.log('parentScope', parentScope);
+        logService.controller('EntityViewerAddDialogController', 'initialized');
+
+        logService.property('parentScope', parentScope);
 
         var vm = this;
         vm.entityType = 'portfolio';

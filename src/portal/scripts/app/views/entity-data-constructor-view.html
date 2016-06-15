@@ -34,36 +34,42 @@
                 </md-tab-label>
                 <md-tab-body>
                     <div class="ec-md-content ec-layout-tab">
-                    <div class="ec-layout-box">
-                        <span class="select-layout-caption">Select layout</span>
-                        <md-button class="{{tab.layout.columns === item ? 'active' : '' }} ec-layout-btn"
-                                   data-ng-click="vm.setLayoutColumns(tab, item, $event)"
-                                   data-ng-repeat="item in vm.boxColumns">
-                            <ng-md-icon icon="stop" data-ng-repeat="icon in vm.range(item)"></ng-md-icon>
-                        </md-button>
-                    </div>
+                        <div class="ec-layout-box">
+                            <span class="select-layout-caption">Select layout</span>
+                            <md-button class="{{tab.layout.columns === item ? 'active' : '' }} ec-layout-btn"
+                                       data-ng-click="vm.setLayoutColumns(tab, item, $event)"
+                                       data-ng-repeat="item in vm.boxColumns">
+                                <ng-md-icon icon="stop" data-ng-repeat="icon in vm.range(item)"></ng-md-icon>
+                            </md-button>
+                        </div>
 
-                    <div class="ec-layout">
-                        <div layout="row" data-ng-repeat="row in vm.range(tab.layout.rows)">
-                            <div data-ng-repeat="column in vm.range(tab.layout.columns)"
-                                 flex="{{vm.bindFlex(tab, row, column)}}"
-                                 data-ng-if="vm.checkColspan(tab, row, column)">
-                                <layout-constructor-field tab="tab"
-                                                          row="row"
-                                                          column="column"
-                                                          ></layout-constructor-field>
+                        <div class="ec-layout">
+                            <div layout="row" data-ng-repeat="row in vm.range(tab.layout.rows)">
+                                <div data-ng-repeat="column in vm.range(tab.layout.columns)"
+                                     flex="{{vm.bindFlex(tab, row, column)}}"
+                                     data-ng-if="vm.checkColspan(tab, row, column)">
+                                    <layout-constructor-field tab="tab"
+                                                              row="row"
+                                                              column="column"
+                                    ></layout-constructor-field>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
                 </md-tab-body>
             </md-tab>
         </md-tabs>
-        <md-button ng-click="vm.cancel()">
+        <md-button ng-click="vm.cancel()" class="md-raised">
             Cancel
         </md-button>
-        <md-button ng-click="vm.saveLayout()">
+        <md-button ng-click="vm.saveLayout()" class="md-raised md-primary">
             Save & Return
+        </md-button>
+
+        <md-button class="md-raised manage-attrs-btn">
+            <a href="" data-ui-sref="app.attributesManager({entityType: vm.entityType})">
+                Manage attributes
+            </a>
         </md-button>
     </div>
 </div>
