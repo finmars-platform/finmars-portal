@@ -86,8 +86,8 @@
                         }
                     }
                 } else {
-                    for (b = 0; b < baseAttrs[entityType].length; b = b + 1) {
-                        baseAttr = baseAttrs[entityType][b];
+                    for (b = 0; b < baseAttrs.length; b = b + 1) {
+                        baseAttr = baseAttrs[b];
                         if (item.key === baseAttr.key) {
                             if(item.options) {
                                 attrOptions = JSON.parse(JSON.stringify(item.options));
@@ -118,7 +118,7 @@
         vm.getView = function () {
             return demoPortfolioService.getView().then(function (data) {
 
-                vm.entityType = data.entityType;
+                //vm.entityType = data.entityType;
 
                 vm.tabs = data.tabs;
 
@@ -156,6 +156,8 @@
             vm.entityAdditionsColumns = returnFullAttributes(vm.entityAdditionsColumns, vm.attrs, vm.baseAttrs, vm.additionsEntityType);
             vm.entityAdditionsFilters = returnFullAttributes(vm.entityAdditionsFilters, vm.attrs, vm.baseAttrs, vm.additionsEntityType);
             vm.entityAdditionsSorting.column = findFullAttributeForItem(vm.entityAdditionsSorting.column, vm.attrs);
+
+            logService.collection('vm.grouping', vm.grouping);
         };
 
         vm.getEntityData = function () {
@@ -172,14 +174,8 @@
         vm.getAttributes = function () {
             return attributeTypeService.getList(vm.entityType).then(function (data) {
                 vm.attrs = data.results;
-                return metaService.getBaseAttrs().then(function(data){
-                    vm.baseAttrs = data;
-                    //console.log('METHOD: getAttributes' + 'data: vm.attrs', 'values:', vm.attrs);
-                    //console.log('METHOD: getAttributes' + 'data: vm.baseAttrs', 'values:', vm.baseAttrs);
-                    $scope.$apply();
-                });
-
-
+                vm.baseAttrs = metaService.getBaseAttrs();
+                $scope.$apply();
             })
         };
 
@@ -216,8 +212,8 @@
 
         vm.addEntity = function (ev) {
             $mdDialog.show({
-                controller: 'PortfolioAddDialogController as vm',
-                templateUrl: 'views/administration/entity-dialog-view.html',
+                controller: 'EntityViewerAddDialogController as vm',
+                templateUrl: 'views/entity-viewer/entity-viewer-dialog-view.html',
                 parent: angular.element(document.body),
                 targetEvent: ev,
                 clickOutsideToClose: true,

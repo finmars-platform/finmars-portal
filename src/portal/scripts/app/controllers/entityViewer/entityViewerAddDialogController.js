@@ -7,9 +7,12 @@
 
     var logService = require('../../services/logService');
 
-    var portfolioService = require('../../services/portfolioService');
+    var attributeTypeService = require('../../services/attributeTypeService');
+    var entityResolverService = require('../../services/entityResolverService');
+
+    var uiService = require('../../services/uiService');
+
     var metaService = require('../../services/metaService');
-    var demoPortfolioService = require('../../services/demo/demoPortfolioService');
     var layoutService = require('../../services/layoutService');
 
     module.exports = function ($scope, $mdDialog, parentScope, $state) {
@@ -19,31 +22,31 @@
         logService.property('parentScope', parentScope);
 
         var vm = this;
-        vm.entityType = 'portfolio';
+        vm.readyStatus = {content: false};
+        vm.entityType = parentScope.vm.entityType;
 
-        demoPortfolioService.getView().then(function (data) {
-            vm.tabs = data.tabs;
-            console.log('vm tabs!', vm.tabs);
+        uiService.getEditLayout(vm.entityType).then(function (data) {
+            vm.tabs = data.results[0].data;
+            logService.collection('vm.tabs', vm.tabs);
             $scope.$apply();
         });
 
         vm.attrs = [];
         vm.baseAttrs = [];
+        vm.entityAttrs = [];
+        vm.layoutAttrs = [];
+
+        attributeTypeService.getList(vm.entityType).then(function (data) {
+            vm.attrs = data.results;
+            vm.readyStatus.content = true;
+            $scope.$apply();
+        });
+
+        vm.baseAttrs = metaService.getBaseAttrs();
+        vm.entityAttrs = metaService.getEntityAttrs(vm.entityType);
         vm.layoutAttrs = layoutService.getLayoutAttrs();
 
-        portfolioService.getAttributeTypeList().then(function (data) {
-            vm.attrs = data.results;
-            console.log('vm.attrs', vm.attrs);
-            $scope.$apply();
-        });
-
-        metaService.getBaseAttrs().then(function (data) {
-            vm.baseAttrs = data[vm.entityType];
-            console.log('vm.baseAttrs', vm.baseAttrs);
-            $scope.$apply();
-        });
-
-        vm.portfolio = {};
+        vm.entity = {};
 
         var originatorEv;
 
@@ -99,7 +102,7 @@
         };
 
         vm.bindField = function (tab, field) {
-            var i, l;
+            var i, l, e;
             //console.log('FIELD', field);
             if (field.type === 'field') {
                 if (field.hasOwnProperty('id')) {
@@ -112,6 +115,11 @@
                     for (i = 0; i < vm.baseAttrs.length; i = i + 1) {
                         if (field.name === vm.baseAttrs[i].name) {
                             return vm.baseAttrs[i];
+                        }
+                    }
+                    for (e = 0; e < vm.entityAttrs.length; e = e + 1) {
+                        if (field.name === vm.entityAttrs[e].name) {
+                            return vm.entityAttrs[e];
                         }
                     }
                     for (l = 0; l < vm.layoutAttrs.length; l = l + 1) {
@@ -133,13 +141,14 @@
         };
 
         vm.editLayout = function () {
-            $state.go('app.data-constructor', {entityName: 'portfolio'});
+            $state.go('app.data-constructor', {entityType: vm.entityType});
             $mdDialog.hide();
         };
 
         vm.save = function () {
-            console.log('portfolio!', vm.portfolio);
-            portfolioService.create(vm.portfolio).then(function (data) {
+            logService.property('vm.entity', vm.entity);
+            console.log(entityResolverService);
+            entityResolverService.create(vm.entityType, vm.entity).then(function (data) {
                 console.log('saved!', data);
                 $mdDialog.hide();
             })

@@ -5,6 +5,8 @@
 
     'use strict';
 
+    var logService = require('../services/logService');
+
     var metaService = require('../services/metaService');
     var layoutService = require('../services/layoutService');
 
@@ -47,11 +49,14 @@
                 scope.fieldType = null;
                 scope.editMode = false;
                 scope.attrs = scope.$parent.vm.attrs;
-                scope.baseAttrs = scope.$parent.vm.baseAttrs[scope.$parent.vm.entityType];
+                scope.baseAttrs = scope.$parent.vm.baseAttrs;
+                scope.entityAttrs = scope.$parent.vm.entityAttrs;
                 scope.layoutAttrs = layoutService.getLayoutAttrs();
+
                 var tabs = scope.$parent.vm.tabs;
 
                 scope.attrsLeft = scope.attrs.concat(scope.baseAttrs);
+                scope.attrsLeft = scope.attrsLeft.concat(scope.entityAttrs);
                 scope.attrsLeft = scope.attrsLeft.concat(scope.layoutAttrs);
 
                 function addRow() {
@@ -78,8 +83,8 @@
                         scope.item.attr = null;
                         scope.item.colspan = 1;
                     }
-                    console.log('scope.item', scope.item);
-                    console.log('scope.backupItem', scope.backupItem);
+                    //console.log('scope.item', scope.item);
+                    //console.log('scope.backupItem', scope.backupItem);
                     scope.item.editMode = false;
                 };
 
@@ -95,7 +100,7 @@
                     var i;
 
                     for (i = 0; i < scope.tab.layout.fields.length; i = i + 1) {
-                        console.log('scope.tab.layout', scope.tab.layout.fields[i]);
+                        //console.log('scope.tab.layout', scope.tab.layout.fields[i]);
                         if (scope.tab.layout.fields[i].row === scope.item.row && scope.tab.layout.fields[i].column === scope.item.column) {
                             if (scope.item.attribute.hasOwnProperty('id')) {
                                 scope.tab.layout.fields[i].id = scope.item.attribute.id;
@@ -105,7 +110,7 @@
                             scope.tab.layout.fields[i].type = 'field';
                             scope.tab.layout.fields[i].colspan = scope.item.colspan;
                             scope.tab.layout.fields[i].attribute = scope.item.attribute;
-                            console.log('scope.tab.layout', scope.tab.layout);
+                            //console.log('scope.tab.layout', scope.tab.layout);
                             if(scope.tab.layout.fields[i].row == scope.tab.layout.rows) {
                                 addRow();
                             } else {
@@ -191,6 +196,7 @@
                                 scope.tab.layout.fields[i].id = null;
                                 scope.tab.layout.fields[i].key = null;
                                 scope.tab.layout.fields[i].colspan = 1;
+                                scope.tab.layout.fields[i].name = '';
                                 scope.tab.layout.fields[i].type = 'empty';
                                 findEmptyRows();
                                 break;
@@ -201,7 +207,7 @@
                 };
 
                 function findAttribute() {
-                    var i, b, l;
+                    var i, b, l, e;
                     for (i = 0; i < scope.attrs.length; i = i + 1) {
                         if (scope.attrs[i].id && scope.item.id) {
                             if (scope.attrs[i].id === scope.item.id) {
@@ -213,6 +219,12 @@
                                 if (scope.baseAttrs[b].name === scope.item.name) {
                                     scope.item.attribute = scope.baseAttrs[b];
                                     scope.backupItem.attribute = scope.baseAttrs[b];
+                                }
+                            }
+                            for (e = 0; e < scope.entityAttrs.length; e = e + 1) {
+                                if (scope.entityAttrs[e].name === scope.item.name) {
+                                    scope.item.attribute = scope.entityAttrs[e];
+                                    scope.backupItem.attribute = scope.entityAttrs[e];
                                 }
                             }
                             if (!scope.item.attribute) {
@@ -278,7 +290,7 @@
                             }
                         }
                         if (!isLayoutAttributeExist) {
-                            console.log('scope.attrsLeft', scope.attrsLeft);
+                            //console.log('scope.attrsLeft', scope.attrsLeft);
                             scope.attrsLeft.push(scope.layoutAttrs[l]);
                         }
                     }

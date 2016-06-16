@@ -5,6 +5,8 @@
 
     'use strict';
 
+    var cookieService = require('../services/cookieService');
+
     var baseUrl = '/api/v1/';
 
     var getList = function () {

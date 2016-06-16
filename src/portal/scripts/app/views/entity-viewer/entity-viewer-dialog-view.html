@@ -1,11 +1,11 @@
 <md-dialog aria-label="" ng-cloak class="add-portfolio-dialog">
     <md-toolbar>
         <div class="md-toolbar-tools">
-            <h2>Add portfolio</h2>
+            <h2>Add {{vm.entityType}}</h2>
             <span flex></span>
         </div>
     </md-toolbar>
-    <md-dialog-content data-ng-if="vm.attrs.length">
+    <md-dialog-content data-ng-if="vm.readyStatus.content">
         <md-tabs md-dynamic-height md-border-bottom>
             <md-tab label="{{tab.name}}" data-ng-repeat="tab in vm.tabs">
                 <md-content class="md-padding">

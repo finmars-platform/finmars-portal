@@ -1,7 +1,7 @@
 <div class="entity-constructor">
-    <div data-ng-if="vm.attrs.length" class="ec-tabs-holder" data-add-tab-ec data-tabs="vm.tabs">
+    <div data-ng-if="vm.readyStatus.constructor" class="ec-tabs-holder" data-add-tab-ec data-tabs="vm.tabs">
         <h1 class="ec-breadcrumbs">
-            <span>PORTFOLIO ></span> INPUT FORM EDITOR
+            <span class="ec-entity-type">{{vm.entityType}} ></span> INPUT FORM EDITOR
         </h1>
         <md-tabs md-border-bottom md-dynamic-height>
             <md-tab data-ng-repeat="tab in vm.tabs">

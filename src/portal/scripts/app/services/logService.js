@@ -7,7 +7,7 @@
 
     var property = function(name, value, styles){
         var css = styles || 'color: #81C784';
-        console.log('%c{"property": "' + name +'", "value": "' + value + '"}', css);
+        console.log('%c{"property": "' + name +'", "value": "', css, value, '"}');
     };
 
     var collection = function(name, value, styles){

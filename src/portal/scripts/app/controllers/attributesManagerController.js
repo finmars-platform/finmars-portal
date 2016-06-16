@@ -1,15 +1,16 @@
 /**
  * Created by szhitenev on 14.06.2016.
  */
-(function(){
+(function () {
 
     'use strict';
     var logService = require('../services/logService');
 
-    var portfolioService = require('../services/portfolioService');
+    var attributeTypeService = require('../services/attributeTypeService');
+
     var metaService = require('../services/metaService');
 
-    module.exports = function($scope, $state, $stateParams, $mdDialog) {
+    module.exports = function ($scope, $state, $stateParams, $mdDialog) {
 
         logService.controller('AttributesManagerController', 'initialized');
 
@@ -20,20 +21,28 @@
 
         vm.entityType = $stateParams.entityType;
 
-        function getList() {
-            if(vm.entityType === 'portfolio') {
-                portfolioService.getAttributeTypeList().then(function(data){
-                    vm.attrs = data.results;
-                    $scope.$apply();
-                });
-            }
-        }
-
-        function deleteAttribute() {
-
-        }
+        var getList = function(){
+            attributeTypeService.getList(vm.entityType).then(function (data) {
+                vm.attrs = data.results;
+                $scope.$apply();
+            });
+        };
 
         getList();
+
+        vm.addAttribute = function (ev) {
+            $mdDialog.show({
+                controller: 'AttributesManagerAddDialogController as vm',
+                templateUrl: 'views/attribute-manager-dialog-view.html',
+                parent: angular.element(document.body),
+                targetEvent: ev
+            }).then(function (res) {
+                if (res.status === 'agree') {
+                    console.log("res", res.data);
+                    attributeTypeService.create(vm.entityType, res.data.attribute).then(getList);
+                }
+            });
+        };
 
         vm.bindType = function (item) {
             var i;
@@ -44,9 +53,9 @@
             }
         };
 
-        vm.editAttr = function(item, ev) {
+        vm.editAttr = function (item, ev) {
             $mdDialog.show({
-                controller: 'AttributesManagerDialogController as vm',
+                controller: 'AttributesManagerEditDialogController as vm',
                 templateUrl: 'views/attribute-manager-dialog-view.html',
                 parent: angular.element(document.body),
                 targetEvent: ev,
@@ -54,11 +63,14 @@
                     attribute: item
                 }
             }).then(function (res) {
-
+                if (res.status === 'agree') {
+                    console.log("res", res.data);
+                    attributeTypeService.update(vm.entityType, res.data.attribute.id, res.data.attribute).then(getList);
+                }
             });
         };
 
-        vm.deleteAttr = function(item, ev) {
+        vm.deleteAttr = function (item, ev) {
 
             var description = 'Are you sure to delete attribute ' + item.name + ' ?';
 
@@ -76,7 +88,8 @@
                 }
             }).then(function (res) {
                 if (res.status === 'agree') {
-                    deleteAttribute();
+                    attributeTypeService.deleteByKey(vm.entityType, item.id);
+                    getList();
                 }
             });
         };
