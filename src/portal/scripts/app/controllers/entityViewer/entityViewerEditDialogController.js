@@ -6,38 +6,48 @@
     'use strict';
     var logService = require('../../services/logService');
 
+    var attributeTypeService = require('../../services/attributeTypeService');
+    var entityResolverService = require('../../services/entityResolverService');
+
+    var uiService = require('../../services/uiService');
+
     var gridHelperService = require('../../services/gridHelperService');
-    var portfolioService = require('../../services/portfolioService');
     var metaService = require('../../services/metaService');
     var layoutService = require('../../services/layoutService');
 
-    module.exports = function ($scope, $mdDialog, parentScope, portfolio, $state) {
+    module.exports = function ($scope, $mdDialog, parentScope, entity, $state) {
 
         logService.controller('EntityViewerEditDialogController', 'initialized');
 
-        console.log('parentScope', portfolio);
-
         var vm = this;
-        vm.entityType = 'portfolio';
-        vm.tabs = parentScope.tabs;
+        vm.readyStatus = {content: false};
+        vm.entityType = parentScope.entityType;
+
+        logService.property('entity', entity);
+        logService.property('entityType', vm.entityType);
+
+        uiService.getEditLayout(vm.entityType).then(function (data) {
+            vm.tabs = data.results[0].data;
+            logService.collection('vm.tabs', vm.tabs);
+            $scope.$apply();
+        });
 
         vm.attrs = [];
         vm.baseAttrs = [];
+        vm.entityAttrs = [];
         vm.layoutAttrs = layoutService.getLayoutAttrs();
 
-        portfolioService.getAttributeTypeList().then(function(data){
+        attributeTypeService.getList(vm.entityType).then(function (data) {
             vm.attrs = data.results;
-            console.log('vm.attrs', vm.attrs);
+            vm.readyStatus.content = true;
             $scope.$apply();
         });
 
-        metaService.getBaseAttrs().then(function(data){
-            vm.baseAttrs = data[vm.entityType];
-            console.log('vm.baseAttrs', vm.baseAttrs);
-            $scope.$apply();
-        });
+        vm.baseAttrs = metaService.getBaseAttrs();
+        vm.entityAttrs = metaService.getEntityAttrs(vm.entityType);
+        vm.layoutAttrs = layoutService.getLayoutAttrs();
 
-        vm.portfolio = portfolio;
+        vm.entity = entity;
 
         var originatorEv;
 
@@ -57,31 +67,60 @@
         };
 
         vm.bindField = function (tab, field) {
-            var i, l;
-            if (field.hasOwnProperty('id')) {
-                for (i = 0; i < vm.attrs.length; i = i + 1) {
-                    if (field.id === vm.attrs[i].id) {
-                        return vm.attrs[i];
+            var i, l, e;
+            //console.log('FIELD', field);
+            if (field.type === 'field') {
+                if (field.hasOwnProperty('id')) {
+                    for (i = 0; i < vm.attrs.length; i = i + 1) {
+                        if (field.id === vm.attrs[i].id) {
+                            return vm.attrs[i];
+                        }
+                    }
+                } else {
+                    for (i = 0; i < vm.baseAttrs.length; i = i + 1) {
+                        if (field.name === vm.baseAttrs[i].name) {
+                            return vm.baseAttrs[i];
+                        }
+                    }
+                    for (e = 0; e < vm.entityAttrs.length; e = e + 1) {
+                        if (field.name === vm.entityAttrs[e].name) {
+                            return vm.entityAttrs[e];
+                        }
+                    }
+                    for (l = 0; l < vm.layoutAttrs.length; l = l + 1) {
+                        if (field.name === vm.layoutAttrs[l].name) {
+                            return vm.layoutAttrs[l];
+                        }
                     }
                 }
-            } else {
-                for (i = 0; i < vm.baseAttrs.length; i = i + 1) {
-                    if (field.name === vm.baseAttrs[i].name) {
-                        return vm.baseAttrs[i];
-                    }
-                }
-                for (l = 0; l < vm.layoutAttrs.length; l = l + 1) {
-                    if (field.name === vm.layoutAttrs[l].name) {
-                        return vm.layoutAttrs[l];
-                    }
-                }
-
             }
         };
 
-        vm.checkFieldRender = function(row, field){
-            if(field.row === row && field.type === 'field') {
-                return true;
+        vm.checkFieldRender = function (tab, row, field) {
+            if (field.row === row) {
+                if (field.type === 'field') {
+                    return true;
+                } else {
+                    var i, c, x;
+                    var spannedCols = [];
+                    for (i = 0; i < tab.layout.fields.length; i = i + 1) {
+                        if (tab.layout.fields[i].row === row) {
+
+                            if (tab.layout.fields[i].type === 'field') {
+                                for(c = tab.layout.fields[i].column; c <= (tab.layout.fields[i].column + tab.layout.fields[i].colspan - 1); c = c + 1) {
+                                    spannedCols.push(c);
+                                }
+                            }
+                        }
+                    }
+                    for(x = 0; x < spannedCols.length; x = x + 1) {
+                        if(spannedCols[x] === field.column) {
+                            return false;
+                        }
+                    }
+
+                    return true;
+                }
             }
             return false;
         };
@@ -96,13 +135,17 @@
         };
 
         vm.editLayout = function(ev){
-            $state.go('app.data-constructor', {entityName: 'portfolio'});
+            $state.go('app.data-constructor', {entityType: vm.entityType});
             $mdDialog.hide();
         };
 
         vm.save = function () {
-            console.log('saved!', vm.portfolio);
-            $mdDialog.hide();
+            logService.property('vm.entity', vm.entity);
+            console.log(entityResolverService);
+            entityResolverService.update(vm.entityType, vm.entity.id, vm.entity).then(function (data) {
+                console.log('saved!', data);
+                $mdDialog.hide();
+            })
         };
 
     }

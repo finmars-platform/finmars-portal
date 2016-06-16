@@ -5,6 +5,8 @@
 
     'use strict';
 
+    var cookieService = require('../services/cookieService');
+
     var baseUrl = '/api/v1/';
 
     var getClassifierNodeList = function () {
@@ -97,6 +99,7 @@
                 method: 'POST',
                 credentials: 'include',
                 headers: {
+                    'X-CSRFToken': cookieService.getCookie('csrftoken'),
                     Accept: 'application/json',
                     'Content-type': 'application/json'
                 },
@@ -112,6 +115,7 @@
                 method: 'PUT',
                 credentials: 'include',
                 headers: {
+                    'X-CSRFToken': cookieService.getCookie('csrftoken'),
                     Accept: 'application/json',
                     'Content-type': 'application/json'
                 },
@@ -127,6 +131,7 @@
                 method: 'DELETE',
                 credentials: 'include',
                 headers: {
+                    'X-CSRFToken': cookieService.getCookie('csrftoken'),
                     Accept: 'application/json',
                     'Content-type': 'application/json'
                 }

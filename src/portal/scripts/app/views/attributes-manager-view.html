@@ -1,10 +1,13 @@
 <div class="attributes-manager-view">
+    <md-button class="md-fab md-fab-bottom-right" data-ng-click="vm.addAttribute($event)">
+        <ng-md-icon icon="add"></ng-md-icon>
+    </md-button>
     <div>
         <h2 class="am-header"><span data-ng-bind="vm.entityType"></span><ng-md-icon icon="keyboard_arrow_right"></ng-md-icon> MANAGE ATTRIBUTES</h2>
     </div>
     <div>
-        <md-button class="md-raised">
-            <a href="" data-ui-sref="app.dashboard">
+        <md-button class="md-raised" data-ui-sref="{{'app.data.' + vm.entityType}}">
+            <a href="" >
                 RETURN TO FORM EDITOR
             </a>
         </md-button>

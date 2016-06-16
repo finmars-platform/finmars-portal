@@ -100,17 +100,11 @@
         vm.getAttributes = function () {
             return attributeTypeService.getList(vm.entityType).then(function (data) {
                 vm.attrs = data.results;
-                return metaService.getBaseAttrs().then(function (data) {
-                    vm.baseAttrs = data[vm.entityType];
-                    console.log('CLASS: MODAL, METHOD: getAttributes' + 'data: vm.attrs', 'values:', vm.attrs);
-                    console.log('CLASS: MODAL, METHOD: getAttributes' + 'data: vm.baseAttrs', 'values:', vm.baseAttrs);
-                    attrsList = vm.attrs.concat(vm.baseAttrs);
-                    restoreAttrs();
-                    syncAttrs(vm.tabs);
-                    $scope.$apply();
-                });
-
-
+                vm.baseAttrs = metaService.getBaseAttrs();
+                attrsList = vm.attrs.concat(vm.baseAttrs);
+                restoreAttrs();
+                syncAttrs(vm.tabs);
+                $scope.$apply();
             })
         };
         vm.getAttributes();

@@ -17,27 +17,19 @@
             },
             link: function (scope, elem, attr) {
 
-                scope.portfolio = scope.$parent.vm.portfolio;
+                scope.entityType = scope.$parent.vm.entityType;
+
+                scope.entity = scope.$parent.vm.entity;
 
                 var choices = metaService.getValueTypes();
-
-                var baseAttrs = [{
-                    "key": "name",
-                    "caption": "Name"
-                }, {
-                    "key": "short_name",
-                    "caption": "Short name"
-                }, {
-                    "key": "notes",
-                    "caption": "Notes"
-                }];
+                var baseAttrs = metaService.getBaseAttrs();
+                var entityAttrs = metaService.getEntityAttrs(scope.entityType);
 
                 scope.layoutAttrs = layoutService.getLayoutAttrs();
 
-                console.log('12321321x',scope.item);
                 if(scope.item) {
                     scope.fieldType = null;
-                    console.log(scope.item);
+                    //console.log(scope.item);
                     scope.attribute = scope.item;
 
                     var i;
@@ -49,18 +41,23 @@
                 }
 
                 scope.getModelKey = function () {
-                    if (scope.item.hasOwnProperty('id')) {
+                    if (scope.item.hasOwnProperty('id') && scope.item.id !== null) {
                         return scope.item.name
                     } else {
-                        var i, l;
+                        var i, l, e;
                         for(i = 0; i < baseAttrs.length; i = i + 1) {
-                            if(scope.item.name === baseAttrs[i].caption) {
+                            if(scope.item.name === baseAttrs[i].name) {
                                 return baseAttrs[i].key;
                             }
                         }
                         for(l = 0; l < scope.layoutAttrs.length; l = l + 1) {
                             if(scope.item.name === scope.layoutAttrs[l].name) {
                                 return scope.layoutAttrs[l].key;
+                            }
+                        }
+                        for(e = 0; e < entityAttrs.length; e = e + 1) {
+                            if(scope.item.name === entityAttrs[e].name) {
+                                return entityAttrs[e].key;
                             }
                         }
                     }

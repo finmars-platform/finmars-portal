@@ -29,7 +29,8 @@ app.controller('DashboardController', ['$scope', require('./app/controllers/dash
 
 app.controller('NotificationsController', ['$scope', require('./app/controllers/notificationsController')]);
 app.controller('AttributesManagerController', ['$scope', '$state', '$stateParams', '$mdDialog', require('./app/controllers/attributesManagerController')]);
-app.controller('AttributesManagerDialogController', ['$scope', '$mdDialog', 'attribute', require('./app/controllers/attributesManagerDialogController')]);
+app.controller('AttributesManagerEditDialogController', ['$scope', '$mdDialog', 'attribute', require('./app/controllers/attributesManagerEditDialogController')]);
+app.controller('AttributesManagerAddDialogController', ['$scope', '$mdDialog', require('./app/controllers/attributesManagerAddDialogController')]);
 
 app.controller('EntityViewerController', ['$scope', '$mdDialog', '$mdMedia', require('./app/controllers/entityViewer/entityViewerController')]);
 app.controller('EntityViewerAddDialogController', ['$scope', '$mdDialog', 'parentScope', '$state', require('./app/controllers/entityViewer/entityViewerAddDialogController')]);
@@ -43,7 +44,6 @@ app.controller('DataResponsibleController', ['$scope', require('./app/controller
 app.controller('DataInstrumentController', ['$scope', require('./app/controllers/data/dataInstrumentController')]);
 app.controller('DataTransactionController', ['$scope', require('./app/controllers/data/dataTransactionController')]);
 app.controller('DataPricingController', ['$scope', require('./app/controllers/data/dataPricingController')]);
-
 
 app.controller('EntityDataConstructorController', ['$scope', '$stateParams', '$state', '$mdDialog', require('./app/controllers/entityDataConstructorController')]);
 app.controller('EntityDataConstructorDialogController', ['$scope', '$mdDialog', 'parentScope', require('./app/controllers/entityDataConstructorDialogController')]);

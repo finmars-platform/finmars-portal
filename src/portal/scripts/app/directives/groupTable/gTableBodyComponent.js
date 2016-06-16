@@ -16,7 +16,7 @@
                 grouping: '=',
                 tabs: '=',
                 columns: '=',
-                entityType: '@'
+                entityType: '='
             },
             templateUrl: 'views/directives/groupTable/table-body-view.html',
             link: function (scope, elem, attrs) {
@@ -27,13 +27,8 @@
 
                 var entityType = scope.entityType;
                 var keywords = [];
-                scope.keywordsReady = false;
 
-                metaService.getBaseAttrs().then(function (data) {
-                    keywords = data[entityType];
-                    scope.keywordsReady = true;
-                    scope.$apply();
-                });
+                keywords = metaService.getBaseAttrs();
 
                 scope.toggleGroupFold = function (item) {
                     console.log('item.isFolded', item.isFolded);
@@ -67,29 +62,29 @@
                     }
                 };
 
-                scope.deleteEntity = function (ev, portfolio) {
+                scope.deleteEntity = function (ev, entity) {
                     $mdDialog.show({
-                        controller: 'PortfolioDeleteDialogController as vm',
-                        templateUrl: 'views/administration/portfolio-delete-dialog-view.html',
+                        controller: 'EntityViewerDeleteDialogController as vm',
+                        templateUrl: 'views/entity-viewer/entity-viewer-delete-dialog-view.html',
                         parent: angular.element(document.body),
                         targetEvent: ev,
                         clickOutsideToClose: true,
                         locals: {
-                            portfolio: portfolio
+                            entity: entity
                         }
                     });
                 };
 
-                scope.editEntity = function (ev, portfolio) {
+                scope.editEntity = function (ev, entity) {
                     $mdDialog.show({
-                        controller: 'PortfolioEditDialogController as vm',
-                        templateUrl: 'views/administration/entity-dialog-view.html',
+                        controller: 'EntityViewerEditDialogController as vm',
+                        templateUrl: 'views/entity-viewer/entity-viewer-dialog-view.html',
                         parent: angular.element(document.body),
                         targetEvent: ev,
                         clickOutsideToClose: true,
                         locals: {
                             parentScope: scope,
-                            portfolio: portfolio
+                            entity: entity
                         }
                     });
                 };

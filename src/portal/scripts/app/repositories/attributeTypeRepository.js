@@ -6,10 +6,26 @@
 
     'use strict';
 
+    var cookieService = require('../services/cookieService');
+
     var baseUrl = '/api/v1/';
 
+    function endPointResolver(entity) {
+        switch (entity){
+            case 'counterparty':
+                return 'counterparties/' + entity + '-attribute-type/';
+                break;
+            case 'responsible':
+                return 'counterparties/' + entity + '-attribute-type/';
+                break;
+            default:
+                return entity + 's/' + entity + '-attribute-type/';
+        }
+    }
+
     var getList = function (entity) {
-        return window.fetch(baseUrl + entity + 's/' + entity + '-attribute-type/',
+
+        return window.fetch(baseUrl + endPointResolver(entity),
             {
                 method: 'GET',
                 credentials: 'include',
@@ -23,7 +39,7 @@
     };
 
     var getByKey = function (entity, id) {
-        return window.fetch(baseUrl + entity + '/' + entity + '-attribute-type/' + id + '/',
+        return window.fetch(baseUrl + endPointResolver(entity) + id + '/',
             {
                 method: 'GET',
                 credentials: 'include',
@@ -37,11 +53,12 @@
     };
 
     var create = function (entity, attributeType) {
-        return window.fetch(baseUrl + entity + '/' + entity + '-attribute-type/',
+        return window.fetch(baseUrl + endPointResolver(entity),
             {
                 method: 'POST',
                 credentials: 'include',
                 headers: {
+                    'X-CSRFToken': cookieService.getCookie('csrftoken'),
                     Accept: 'application/json',
                     'Content-type': 'application/json'
                 },
@@ -52,11 +69,12 @@
     };
 
     var update = function (entity, id, attributeType) {
-        return window.fetch(baseUrl + entity + '/' + entity + '-attribute-type/' + id + '/',
+        return window.fetch(baseUrl + endPointResolver(entity) + id + '/',
             {
                 method: 'PUT',
                 credentials: 'include',
                 headers: {
+                    'X-CSRFToken': cookieService.getCookie('csrftoken'),
                     Accept: 'application/json',
                     'Content-type': 'application/json'
                 },
@@ -67,11 +85,12 @@
     };
 
     var deleteByKey = function (entity, id) {
-        return window.fetch(baseUrl + entity + '/' + entity + '-attribute-type/' + id + '/',
+        return window.fetch(baseUrl + endPointResolver(entity) + id + '/',
             {
                 method: 'DELETE',
                 credentials: 'include',
                 headers: {
+                    'X-CSRFToken': cookieService.getCookie('csrftoken'),
                     Accept: 'application/json',
                     'Content-type': 'application/json'
                 }

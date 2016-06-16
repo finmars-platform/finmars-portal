@@ -2,13 +2,13 @@
     <div data-ng-if="fieldType['display_name'] === 'Number'">
         <md-input-container class="md-block">
             <label>{{item.name}}</label>
-            <input data-ng-model="portfolio[getModelKey()]" type="number">
+            <input data-ng-model="entity[getModelKey()]" type="number">
         </md-input-container>
     </div>
     <div data-ng-if="fieldType['display_name'] === 'String'">
         <md-input-container class="md-block">
             <label>{{item.name}}</label>
-            <input data-ng-model="portfolio[getModelKey()]">
+            <input data-ng-model="entity[getModelKey()]">
         </md-input-container>
     </div>
     <div data-ng-if="fieldType['display_name'] === 'Date'">
