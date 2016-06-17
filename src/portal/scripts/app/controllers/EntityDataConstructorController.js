@@ -44,7 +44,7 @@
         vm.entityAttrs = [];
 
         vm.cancel = function () {
-            $state.go('app.portfolio');
+            $state.go('app.data.' + vm.entityType);
         };
 
         attributeTypeService.getList(vm.entityType).then(function (data) {

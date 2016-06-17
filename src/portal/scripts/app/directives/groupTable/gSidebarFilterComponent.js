@@ -1,13 +1,13 @@
 /**
  * Created by szhitenev on 05.05.2016.
  */
-(function(){
+(function () {
 
     'use strict';
 
     var logService = require('../../services/logService');
 
-    module.exports = function() {
+    module.exports = function () {
         return {
             restrict: 'AE',
             scope: {
@@ -15,7 +15,7 @@
                 externalCallback: '&'
             },
             templateUrl: 'views/directives/groupTable/sidebar-filter-view.html',
-            link: function(scope, elem, attrs) {
+            link: function (scope, elem, attrs) {
 
                 logService.component('groupSidebarFilter', 'initialized');
 
@@ -27,12 +27,26 @@
                     $mdOpenMenu(ev);
                 };
 
-                scope.toggleFilterState = function(){
+                scope.toggleFilterState = function () {
                     scope.externalCallback();
                 };
 
-                scope.filterChange = function(filter) {
+                scope.filterChange = function (filter) {
                     console.log('filterChange', filter);
+                    scope.externalCallback();
+                };
+
+                scope.selectAll = function () {
+                    scope.filters.forEach(function (item) {
+                        item.options.enabled = true;
+                    });
+                    scope.externalCallback();
+                };
+
+                scope.deselectAll = function () {
+                    scope.filters.forEach(function (item) {
+                        item.options.enabled = false;
+                    });
                     scope.externalCallback();
                 };
 

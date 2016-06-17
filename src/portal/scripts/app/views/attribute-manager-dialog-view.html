@@ -12,14 +12,26 @@
                 <input data-ng-model="vm.attribute.name">
             </md-input-container>
 
-            <md-input-container class="md-block" flex-gt-sm>
-                <label>Attribute type</label>
-                <md-select ng-model="vm.attribute['value_type']">
-                    <md-option ng-repeat="valueType in vm.valueTypes" value="{{valueType.value}}">
-                        {{valueType['display_name']}}
-                    </md-option>
-                </md-select>
-            </md-input-container>
+            <div data-ng-if="vm.editRestriction" flex-gt-sm>
+                <md-input-container class="md-block">
+                    <label>Attribute type</label>
+                    <md-select ng-model="vm.attribute['value_type']" disabled>
+                        <md-option ng-repeat="valueType in vm.valueTypes" value="{{valueType.value}}">
+                            {{valueType['display_name']}}
+                        </md-option>
+                    </md-select>
+                </md-input-container>
+            </div>
+            <div data-ng-if="!vm.editRestriction" flex-gt-sm>
+                <md-input-container class="md-block">
+                    <label>Attribute type</label>
+                    <md-select ng-model="vm.attribute['value_type']">
+                        <md-option ng-repeat="valueType in vm.valueTypes" value="{{valueType.value}}">
+                            {{valueType['display_name']}}
+                        </md-option>
+                    </md-select>
+                </md-input-container>
+            </div>
         </div>
     </md-dialog-content>
     <md-dialog-actions layout="row">

@@ -5,8 +5,8 @@
             <span flex></span>
         </div>
     </md-toolbar>
-    <md-dialog-content >
-        <div data-ng-if="vm.attrs.length">
+    <md-dialog-content>
+        <div data-ng-if="vm.readyStatus.content">
             <md-tabs md-dynamic-height md-border-bottom id="dialogbag">
                 <md-tab label="{{tab.name}}" data-ng-repeat="tab in vm.tabs">
                     <md-content class="md-padding">
@@ -31,7 +31,7 @@
                 </md-tab>
             </md-tabs>
         </div>
-        <div data-ng-if="!vm.attrs.length" class="dialog-loader">
+        <div data-ng-if="!vm.readyStatus.content" class="dialog-loader">
             <div layout="row" layout-sm="column" layout-align="space-around">
                 <md-progress-circular md-mode="indeterminate"></md-progress-circular>
             </div>

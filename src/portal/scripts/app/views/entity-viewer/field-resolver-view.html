@@ -1,0 +1,18 @@
+<div>
+    <div data-ng-if="readyStatus.content">
+        <md-input-container class="md-block">
+            <label>{{item.name}}</label>
+            <md-select data-ng-model="entity[getModelKey()]">
+                <md-option data-ng-repeat="field in fields" value="{{field.value}}">
+                    {{field.name}}
+                </md-option>
+            </md-select>
+        </md-input-container>
+    </div>
+    <div data-ng-if="!readyStatus.content">
+        <div layout="row" layout-sm="column" layout-align="space-around">
+            <md-progress-circular md-mode="indeterminate"></md-progress-circular>
+        </div>
+    </div>
+
+</div>

@@ -23,7 +23,7 @@
       width: 25px;
       top: 4px;
       height: 3px;
-      cursor:row-resize;
+      cursor: row-resize;
       background: #fff;
       z-index: 1000;
     }
@@ -160,8 +160,8 @@
     padding-left: 1em;
     user-select: none;
     padding-right: 1em;
-    //z-index: 10000;
-    z-index: 60;
+    z-index: 10000;
+    //z-index: 60;
     position: relative;
     box-sizing: border-box;
     margin: 8px;
@@ -172,7 +172,7 @@
     }
     &.active {
       box-shadow: 0 0 6px #363636 inset;
-      background: rgba(0,0,0,.3);
+      background: rgba(0, 0, 0, .3);
       color: #363636;
       div {
         display: none;
@@ -180,6 +180,47 @@
       .gu-transit {
         display: none;
       }
+    }
+  }
+
+  .drop-new-filter {
+    display: none;
+    height: 58px;
+    padding-top: 17px;
+    font-size: 1em;
+    padding-left: 1em;
+    user-select: none;
+    text-align: center;
+    padding-right: 1em;
+    z-index: 10000;
+    //z-index: 60;
+    position: relative;
+    box-sizing: border-box;
+    margin: 8px;
+    color: #575757;
+    border: 1px dotted #575757;
+    .gu-transit {
+      display: none;
+    }
+    &.active {
+      box-shadow: 0 0 6px #363636 inset;
+      background: rgba(0, 0, 0, .3);
+      color: #363636;
+      div {
+        display: none;
+      }
+      .gu-transit {
+        display: none;
+      }
+    }
+  }
+
+  #filtersbag .drop-new-filter {
+    display: block;
+  }
+  .filters-control-btn {
+    button {
+      min-width: 100px;
     }
   }
 
@@ -195,8 +236,8 @@
     padding-right: 2em;
     box-sizing: border-box;
     margin: 3px 8px 0;
-    //z-index: 10000;
-    z-index: 60;
+    z-index: 10000;
+    //z-index: 60;
     position: relative;
     color: #999199;
     border: 1px dotted #999199;
@@ -207,7 +248,7 @@
       box-shadow: 0 0 6px #fff;
       border: 1px dotted #fff;
       color: #fff;
-      background: rgba(255,255,255,.2);
+      background: rgba(255, 255, 255, .2);
       div {
         display: none;
       }
@@ -441,7 +482,7 @@ body.md-dialog-is-showing {
       //border-radius: 50%;
       fill: #767676;
     }
-     .c-up {
+    .c-up {
       position: absolute;
       top: 0px;
       left: 5px;
@@ -488,6 +529,7 @@ body.md-dialog-is-showing {
     float: left;
   }
 }
+
 .group-row-fold-holder {
   width: 16px;
   height: 16px;
@@ -516,6 +558,7 @@ body.md-dialog-is-showing {
     width: 16px;
   }
 }
+
 .group-folding-holder {
   width: 64px;
   float: left;
@@ -530,7 +573,7 @@ body.md-dialog-is-showing {
       cursor: not-allowed;
       .md-button {
         pointer-events: none;
-        background: rgba(158,158,158,0.2);
+        background: rgba(158, 158, 158, 0.2);
       }
     }
   }
@@ -558,7 +601,7 @@ body.md-dialog-is-showing {
 
 .g-table-body-component {
   overflow: hidden;
-  height:100%;
+  height: 100%;
   .g-row {
     border-bottom: 1px solid #363636;
     &:nth-last-of-type {
@@ -617,8 +660,8 @@ body.md-dialog-is-showing {
     content: '';
     position: absolute;
     top: 0;
-    left:0;
-    height:4px;
+    left: 0;
+    height: 4px;
     width: 100%;
     background-color: #4C334D;
   }
@@ -632,13 +675,13 @@ body.md-dialog-is-showing {
 
 .g-filter-item {
   &.f-disabled {
-    background-color: rgba(255,255,255, .3);
+    background-color: rgba(255, 255, 255, .3);
     md-checkbox .md-icon {
       background: #fff;
     }
     input {
       opacity: .5;
-      pointer-events:none;
+      pointer-events: none;
     }
     .settings-btn {
       opacity: .2;
@@ -659,11 +702,12 @@ body.md-dialog-is-showing {
     }
   }
   md-input-container {
-    height:30px;
+    height: 30px;
     margin-bottom: 10px;
   }
 
 }
+
 .g-scroll-wrapper {
   //width:100%;
   display: inline-block;
@@ -671,16 +715,17 @@ body.md-dialog-is-showing {
   max-height: 28px;
   padding-left: 23px;
 }
+
 .g-scrollable-area {
-  height:100%;
+  height: 100%;
   //width: 10000000px;
 }
-
 
 .g-group-table-holder {
   overflow: hidden;
   max-width: 100%;
 }
+
 .app-md-content.g-table-overflow {
   overflow: hidden;
 }
@@ -737,7 +782,7 @@ body.md-dialog-is-showing {
       border-left: 1px solid #000;
     }
   }
-  .mCSB_horizontal.mCSB_inside>.mCSB_container {
+  .mCSB_horizontal.mCSB_inside > .mCSB_container {
     margin-bottom: 15px;
   }
   .mCSB_scrollTools .mCSB_dragger .mCSB_dragger_bar {

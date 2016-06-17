@@ -105,7 +105,7 @@
             var i, l, e;
             //console.log('FIELD', field);
             if (field.type === 'field') {
-                if (field.hasOwnProperty('id')) {
+                if (field.hasOwnProperty('id') && field.id !== null) {
                     for (i = 0; i < vm.attrs.length; i = i + 1) {
                         if (field.id === vm.attrs[i].id) {
                             return vm.attrs[i];
