@@ -43,10 +43,10 @@ app.controller('DataCounterpartyController', ['$scope', require('./app/controlle
 app.controller('DataResponsibleController', ['$scope', require('./app/controllers/data/dataResponsibleController')]);
 app.controller('DataInstrumentController', ['$scope', require('./app/controllers/data/dataInstrumentController')]);
 app.controller('DataTransactionController', ['$scope', require('./app/controllers/data/dataTransactionController')]);
-app.controller('DataPricingController', ['$scope', require('./app/controllers/data/dataPricingController')]);
+app.controller('DataPriceHistoryController', ['$scope', require('./app/controllers/data/dataPriceHistoryController')]);
+app.controller('DataCurrencyHistoryController', ['$scope', require('./app/controllers/data/dataCurrencyHistoryController')]);
 
 app.controller('EntityDataConstructorController', ['$scope', '$stateParams', '$state', '$mdDialog', require('./app/controllers/entityDataConstructorController')]);
-app.controller('EntityDataConstructorDialogController', ['$scope', '$mdDialog', 'parentScope', require('./app/controllers/entityDataConstructorDialogController')]);
 
 app.controller('WarningDialogController', ['$scope', '$mdDialog', 'warning', require('./app/controllers/warningDialogController')]);
 

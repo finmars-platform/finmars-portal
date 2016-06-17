@@ -61,15 +61,15 @@
                 templateUrl: 'views/data/data-transaction-view.html',
                 controller: 'DataTransactionController as vm'
             })
-            .state('app.data.currency', {
+            .state('app.data.currency-history', {
                 url: '/currencies',
-                templateUrl: 'views/data/data-currency-view.html',
-                controller: 'DataCurrencyController as vm'
+                templateUrl: 'views/data/data-currency-history-view.html',
+                controller: 'DataCurrencyHistoryController as vm'
             })
-            .state('app.data.tag', {
-                url: '/tags',
-                templateUrl: 'views/data/data-tag-view.html',
-                controller: 'DataTagController as vm'
+            .state('app.data.price-history', {
+                url: '/pricing',
+                templateUrl: 'views/data/data-price-history-view.html',
+                controller: 'DataPriceHistoryController as vm'
             })
             .state('app.data.pricing', {
                 url: '/pricing',

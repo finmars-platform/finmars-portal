@@ -1,8 +1,7 @@
 /**
- * Created by szhitenev on 15.06.2016.
+ * Created by szhitenev on 04.05.2016.
  */
-
-(function(){
+(function () {
 
     'use strict';
 
@@ -10,26 +9,8 @@
 
     var baseUrl = '/api/v1/';
 
-    function endPointResolver(entity) {
-        switch (entity){
-            case 'counterparty':
-                return 'counterparties/' + entity + '-attribute-type/';
-                break;
-            case 'responsible':
-                return 'counterparties/' + entity + '-attribute-type/';
-                break;
-            default:
-                return entity + 's/' + entity + '-attribute-type/';
-        }
-    }
-
-    var getList = function (entity) {
-
-        if(entity === 'price-history' || entity === 'currency-history') {
-            return new Promise(function(resolve){resolve({results: []})})
-        }
-
-        return window.fetch(baseUrl + endPointResolver(entity),
+    var getList = function () {
+        return window.fetch(baseUrl + 'instruments/price-history/',
             {
                 method: 'GET',
                 credentials: 'include',
@@ -42,8 +23,8 @@
         })
     };
 
-    var getByKey = function (entity, id) {
-        return window.fetch(baseUrl + endPointResolver(entity) + id + '/',
+    var getByKey = function (id) {
+        return window.fetch(baseUrl + 'instruments/price-history/' + id + '/',
             {
                 method: 'GET',
                 credentials: 'include',
@@ -56,8 +37,8 @@
         })
     };
 
-    var create = function (entity, attributeType) {
-        return window.fetch(baseUrl + endPointResolver(entity),
+    var create = function (price) {
+        return window.fetch(baseUrl + 'instruments/price-history/',
             {
                 method: 'POST',
                 credentials: 'include',
@@ -66,14 +47,14 @@
                     Accept: 'application/json',
                     'Content-type': 'application/json'
                 },
-                body: JSON.stringify(attributeType)
+                body: JSON.stringify(price)
             }).then(function (data) {
             return data.json();
         })
     };
 
-    var update = function (entity, id, attributeType) {
-        return window.fetch(baseUrl + endPointResolver(entity) + id + '/',
+    var update = function (id, price) {
+        return window.fetch(baseUrl + 'instruments/price-history/' + id + '/',
             {
                 method: 'PUT',
                 credentials: 'include',
@@ -82,14 +63,14 @@
                     Accept: 'application/json',
                     'Content-type': 'application/json'
                 },
-                body: JSON.stringify(attributeType)
+                body: JSON.stringify(price)
             }).then(function (data) {
             return data.json();
         })
     };
 
-    var deleteByKey = function (entity, id) {
-        return window.fetch(baseUrl + endPointResolver(entity) + id + '/',
+    var deleteByKey = function (id) {
+        return window.fetch(baseUrl + 'instruments/price-history/' + id + '/',
             {
                 method: 'DELETE',
                 credentials: 'include',
@@ -103,11 +84,14 @@
         })
     };
 
+
     module.exports = {
+
         getList: getList,
         getByKey: getByKey,
         create: create,
         update: update,
         deleteByKey: deleteByKey
     }
+
 }());

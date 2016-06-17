@@ -68,6 +68,16 @@
         "state" : "app.data.transaction",
         "title": "Transactions",
         "icon": ""
+      },
+      {
+        "state" : "app.data.price-history",
+        "title": "Price history",
+        "icon": ""
+      },
+      {
+        "state" : "app.data.currency-history",
+        "title": "Currency history",
+        "icon": ""
       }
     ]
   },

@@ -19,9 +19,10 @@
         var vm = this;
         vm.readyStatus = {content: false};
 
-
         vm.tabs = parentScope.tabs;
         vm.entityType = parentScope.entityType;
+
+        logService.property('vm.entityType', vm.entityType);
 
         uiService.getEditLayout(vm.entityType).then(function(data){
             logService.collection('DATA', data);

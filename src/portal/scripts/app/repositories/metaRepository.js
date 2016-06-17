@@ -150,16 +150,6 @@
                     "value_type": 20
                 },
                 {
-                    "key": "complex_transaction",
-                    "name": "Complex transaction",
-                    "value_type": "field"
-                },
-                {
-                    "key": "complex_transaction_order",
-                    "name": "Complex transaction order",
-                    "value_type": 20
-                },
-                {
                     "key": "transaction_class",
                     "name": "Transaction class",
                     "value_type": "field"
@@ -313,6 +303,55 @@
                     "key": "counterparty",
                     "name": "Counterparty",
                     "value_type": 'field'
+                }
+            ],
+            "currency-history": [
+                {
+                    "key": "currency",
+                    "name": "Currency",
+                    "value_type": "field"
+                },
+                {
+                    "key": "date",
+                    "name": "Date",
+                    "value_type": 40
+                },
+                {
+                    "key": "fx_rate",
+                    "name": "Fx rate",
+                    "value_type": "float"
+                },
+                {
+                    "key": "fx_rate_expr",
+                    "name": "fx_rate_expr",
+                    "value_type": 10
+                }
+            ],
+            "price-history": [
+                {
+                    "key": "instrument",
+                    "name": "Instrument",
+                    "value_type": "field"
+                },
+                {
+                    "key": "date",
+                    "name": "Date",
+                    "value_type": 40
+                },
+                {
+                    "key": "principal_price",
+                    "name": "Principal price",
+                    "value_type": "float"
+                },
+                {
+                    "key": "accrued_price",
+                    "name": "Accrued price",
+                    "value_type": "float"
+                },
+                {
+                    "key": "factor",
+                    "name": "Factor",
+                    "value_type": "float"
                 }
             ]
         };
