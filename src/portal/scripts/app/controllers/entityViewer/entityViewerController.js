@@ -180,6 +180,7 @@
         };
 
         vm.updateTable = function () {
+
             vm.groupTableService.setItems(vm.entity);
             vm.groupTableService.columns.setColumns(vm.columns);
             vm.groupTableService.filtering.setFilters(vm.filters);

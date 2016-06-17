@@ -22,6 +22,7 @@
         var vm = this;
         vm.readyStatus = {content: false};
         vm.entityType = parentScope.entityType;
+        vm.evAction = 'update';
 
         logService.property('entity', entity);
         logService.property('entityType', vm.entityType);
@@ -143,7 +144,7 @@
             logService.property('vm.entity', vm.entity);
             entityResolverService.update(vm.entityType, vm.entity.id, vm.entity).then(function (data) {
                 console.log('saved!', data);
-                $mdDialog.hide();
+                $mdDialog.hide({res: 'agree'});
             })
         };
 
