@@ -35,6 +35,12 @@
             case 'transaction':
                 contentType = 'transactions.transaction';
                 break;
+            case 'price-history':
+                contentType = 'instruments.pricehistory';
+                break;
+            case 'currency-history':
+                contentType = 'currencies.currencyhistory';
+                break;
         }
 
 

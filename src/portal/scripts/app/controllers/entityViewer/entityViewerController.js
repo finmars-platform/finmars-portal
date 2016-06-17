@@ -30,6 +30,7 @@
         vm.attrs = [];
         vm.baseAttrs = [];
         vm.layoutAttrs = [];
+        vm.entityAttrs = [];
 
         // ENTITY STUFF START
 
