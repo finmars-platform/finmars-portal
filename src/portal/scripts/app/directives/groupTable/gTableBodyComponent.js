@@ -65,7 +65,7 @@
                 scope.deleteEntity = function (ev, entity) {
                     $mdDialog.show({
                         controller: 'EntityViewerDeleteDialogController as vm',
-                        templateUrl: 'views/entity-viewer/entity-viewer-delete-dialog-view.html',
+                        templateUrl: 'views/entity-viewer/entity-viewer-entity-delete-dialog-view.html',
                         parent: angular.element(document.body),
                         targetEvent: ev,
                         clickOutsideToClose: true,

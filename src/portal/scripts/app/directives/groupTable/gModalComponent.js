@@ -32,6 +32,7 @@
         vm.general = [];
         vm.attrs = [];
         vm.baseAttrs = [];
+        vm.entityAttrs = [];
         vm.custom = [];
 
         vm.tabAttrsReady = false;
@@ -69,8 +70,8 @@
 
             function fillTabAttrs() {
 
-                var a, t, c, b;
-                var tab, tabAttr, attr, baseAttr, attributeIsExist;
+                var a, t, c, b, e;
+                var tab, tabAttr, attr, baseAttr, attributeIsExist, entityAttr;
                 console.log('METHOD: restoreAttrs, data: vm.tabs, value: ', vm.tabs);
                 console.log('METHOD: restoreAttrs, data: vm.attrs, value: ', vm.attrs);
                 for (t = 0; t < vm.tabs.length; t = t + 1) {
@@ -98,6 +99,14 @@
                                     attributeIsExist = true;
                                 }
                             }
+                            for (e = 0; e < vm.entityAttrs.length; e = e + 1) {
+                                entityAttr = vm.entityAttrs[e];
+                                if (tabAttr.name === entityAttr.name) {
+                                    vm.tabs[t].attrs[c] = entityAttr;
+                                    attributeIsExist = true;
+                                }
+                            }
+
                             if(!attributeIsExist) {
                                 vm.tabs[t].attrs.splice(c, 1);
                                 c = c - 1;
@@ -125,10 +134,12 @@
             return attributeTypeService.getList(vm.entityType).then(function (data) {
                 vm.attrs = data.results;
                 vm.baseAttrs = metaService.getBaseAttrs();
+                vm.entityAttrs = metaService.getEntityAttrs(vm.entityType);
                 attrsList = vm.attrs.concat(vm.baseAttrs);
+                attrsList = attrsList.concat(vm.entityAttrs);
                 restoreAttrs();
                 syncAttrs(vm.tabs);
-                logService.collection('vm.tabs', vm.tabs);
+                logService.collection('attrsList!!!!!!!!!', attrsList);
                 vm.readyStatus.content = true;
                 $scope.$apply();
             })

@@ -141,7 +141,6 @@
 
         vm.save = function () {
             logService.property('vm.entity', vm.entity);
-            console.log(entityResolverService);
             entityResolverService.update(vm.entityType, vm.entity.id, vm.entity).then(function (data) {
                 console.log('saved!', data);
                 $mdDialog.hide();
