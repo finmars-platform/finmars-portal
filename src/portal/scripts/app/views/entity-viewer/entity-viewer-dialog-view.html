@@ -1,7 +1,11 @@
 <md-dialog aria-label="" ng-cloak class="add-portfolio-dialog">
     <md-toolbar>
-        <div class="md-toolbar-tools">
+        <div class="md-toolbar-tools" data-ng-if="vm.evAction === 'create'">
             <h2>Add {{vm.entityType}}</h2>
+            <span flex></span>
+        </div>
+        <div class="md-toolbar-tools" data-ng-if="vm.evAction === 'update'">
+            <h2>Edit {{vm.entityType}}</h2>
             <span flex></span>
         </div>
     </md-toolbar>
@@ -26,7 +30,12 @@
             Cancel
         </md-button>
         <md-button ng-click="vm.save()" style="margin-right:20px;">
-            Add
+            <span data-ng-if="vm.evAction === 'create'">
+                Add
+            </span>
+            <span data-ng-if="vm.evAction === 'update'">
+                Save
+            </span>
         </md-button>
     </md-dialog-actions>
 </md-dialog>

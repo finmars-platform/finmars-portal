@@ -15,6 +15,7 @@
                 items: '=',
                 grouping: '=',
                 tabs: '=',
+                externalCallback: '&',
                 columns: '=',
                 entityType: '='
             },
@@ -56,7 +57,7 @@
                     console.log('open additions!', item);
                     if (scope.entityType === 'portfolio') {
                         scope.$parent.externalGetAdditions({id: item.id}).then(function () {
-                            scope.$parent.additionsStatus.additionsWorkArea = true;
+                            //scope.$parent.additionsStatus.additionsWorkArea = true;
                             console.log('work?', scope);
                         });
                     }
@@ -72,7 +73,11 @@
                         locals: {
                             entity: entity
                         }
-                    });
+                    }).then(function(res){
+                        if(res === 'agree') {
+                            scope.externalCallback();
+                        }
+                    })
                 };
 
                 scope.editEntity = function (ev, entity) {
@@ -85,6 +90,10 @@
                         locals: {
                             parentScope: scope,
                             entity: entity
+                        }
+                    }).then(function(res){
+                        if(res === 'agree') {
+                            scope.externalCallback();
                         }
                     });
                 };

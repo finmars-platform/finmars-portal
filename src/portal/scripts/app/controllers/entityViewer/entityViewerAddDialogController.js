@@ -24,6 +24,7 @@
         var vm = this;
         vm.readyStatus = {content: false};
         vm.entityType = parentScope.vm.entityType;
+        vm.evAction = 'create';
 
         uiService.getEditLayout(vm.entityType).then(function (data) {
             vm.tabs = data.results[0].data;

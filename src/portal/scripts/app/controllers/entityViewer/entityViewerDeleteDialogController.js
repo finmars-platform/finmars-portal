@@ -21,13 +21,9 @@
         };
 
         vm.delete = function () {
-            portfolioService.deleteByKey(vm.portfolio.id).then(function () {
-                $mdDialog.hide();
-            });
+            portfolioService.deleteByKey(vm.portfolio.id);
+            $mdDialog.hide({res: 'agree'});
         };
-
-
-
 
     }
 
