@@ -9,6 +9,21 @@
 
     var baseUrl = '/api/v1/';
 
+
+    var getTypeList = function() {
+        return window.fetch(baseUrl + 'accounts/account-type/',
+            {
+                method: 'GET',
+                credentials: 'include',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-type': 'application/json'
+                }
+            }).then(function (data) {
+            return data.json();
+        })
+    };
+
     var getList = function () {
         return window.fetch(baseUrl + 'accounts/account/',
             {
@@ -86,6 +101,9 @@
 
 
     module.exports = {
+
+        getTypeList: getTypeList,
+
         getList: getList,
         getByKey: getByKey,
         create: create,

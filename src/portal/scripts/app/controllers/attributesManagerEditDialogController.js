@@ -16,6 +16,8 @@
         var vm = this;
         vm.attribute = JSON.parse(JSON.stringify(attribute));
 
+        vm.editRestriction = true;
+
         console.log('vm.attribute', vm.attribute);
 
         vm.valueTypes = metaService.getValueTypes().filter(function(item){

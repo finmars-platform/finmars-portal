@@ -75,6 +75,8 @@ app.controller('gModalController', ['$scope', '$mdDialog', 'parentScope', 'callb
 
 // GROUP TABLE END
 
+app.directive('evFieldResolver', [require('./app/directives/entityViewerFieldResolverDirective')]);
+
 
 
 

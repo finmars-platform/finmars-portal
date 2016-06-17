@@ -13,7 +13,7 @@
 
         var vm = this;
 
-        vm.entityType = 'portfolio';
+        vm.entityType = 'transaction';
         vm.entityRaw = [];
 
         transactionService.getList().then(function(data){

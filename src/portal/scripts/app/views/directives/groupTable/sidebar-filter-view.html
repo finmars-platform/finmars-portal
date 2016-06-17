@@ -1,5 +1,13 @@
 <div class="g-sidebar-filter-component">
     <p class="area-title"><span class="g-meta-circle blue">F</span>ILTER AREA</p>
+    <div layout="row" class="filters-control-btn">
+        <md-button class="md-raised" data-ng-click="selectAll()">
+            Select all
+        </md-button>
+        <md-button class="md-raised" data-ng-click="deselectAll()">
+            Deselect all
+        </md-button>
+    </div>
     <div dragula="'filters-bag'" dragula-model="filters">
         <md-card data-ng-repeat="filter in filters"
                  class="{{filter.options.enabled ? '' : 'f-disabled' }} g-filter-item" layout="row">
@@ -28,6 +36,9 @@
                 </md-menu>
             </div>
         </md-card>
+    </div>
+    <div class="drop-new-filter">
+        Drop new Filter
     </div>
 
 </div>

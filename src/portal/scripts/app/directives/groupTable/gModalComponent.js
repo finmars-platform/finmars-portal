@@ -7,6 +7,8 @@
 
     var logService = require('../../services/logService');
 
+    var uiService = require('../../services/uiService');
+
     var metaService = require('../../services/metaService');
     var attributeTypeService = require('../../services/attributeTypeService');
 
@@ -15,9 +17,18 @@
         logService.controller('gModalController', 'initialized');
 
         var vm = this;
+        vm.readyStatus = {content: false};
+
 
         vm.tabs = parentScope.tabs;
         vm.entityType = parentScope.entityType;
+
+        uiService.getEditLayout(vm.entityType).then(function(data){
+            logService.collection('DATA', data);
+            vm.tabs = data.results[0].data;
+            vm.getAttributes();
+            $scope.$apply();
+        });
         vm.general = [];
         vm.attrs = [];
         vm.baseAttrs = [];
@@ -34,17 +45,19 @@
                         vm.tabs[i].attrs = [];
 
                         for (x = 0; x < vm.tabs[i].layout.fields.length; x = x + 1) {
-                            if (vm.tabs[i].layout.fields[x].hasOwnProperty('id')) {
-                                vm.tabs[i].attrs.push({
-                                    id: vm.tabs[i].layout.fields[x].id
-                                })
-                            } else {
-                                console.log('vm.tabs[i].layout.fields[x]', vm.tabs[i].layout.fields[x]);
-                                if (vm.tabs[i].layout.fields[x].type === 'field') {
-                                    if (vm.tabs[i].layout.fields[x].name != 'Labeled Line' && vm.tabs[i].layout.fields[x].name != 'Line') {
-                                        vm.tabs[i].attrs.push({
-                                            name: vm.tabs[i].layout.fields[x].name
-                                        })
+                           ;
+                            if(vm.tabs[i].layout.fields[x].type === 'field') {
+                                if (vm.tabs[i].layout.fields[x].hasOwnProperty('id')) {
+                                    vm.tabs[i].attrs.push({
+                                        id: vm.tabs[i].layout.fields[x].id
+                                    })
+                                } else {
+                                    if (vm.tabs[i].layout.fields[x].type === 'field') {
+                                        if (vm.tabs[i].layout.fields[x].name != 'Labeled Line' && vm.tabs[i].layout.fields[x].name != 'Line') {
+                                            vm.tabs[i].attrs.push({
+                                                name: vm.tabs[i].layout.fields[x].name
+                                            })
+                                        }
                                     }
                                 }
                             }
@@ -57,26 +70,37 @@
             function fillTabAttrs() {
 
                 var a, t, c, b;
-                var tab, tabAttr, attr, baseAttr;
+                var tab, tabAttr, attr, baseAttr, attributeIsExist;
                 console.log('METHOD: restoreAttrs, data: vm.tabs, value: ', vm.tabs);
                 console.log('METHOD: restoreAttrs, data: vm.attrs, value: ', vm.attrs);
                 for (t = 0; t < vm.tabs.length; t = t + 1) {
                     tab = vm.tabs[t];
                     for (c = 0; c < tab.attrs.length; c = c + 1) {
                         tabAttr = tab.attrs[c];
+                        attributeIsExist = false;
                         if (tabAttr.hasOwnProperty('id')) {
                             for (a = 0; a < vm.attrs.length; a = a + 1) {
                                 attr = vm.attrs[a];
                                 if (tabAttr.id === attr.id) {
                                     vm.tabs[t].attrs[c] = attr;
+                                    attributeIsExist = true;
                                 }
+                            }
+                            if(!attributeIsExist) {
+                                vm.tabs[t].attrs.splice(c, 1);
+                                c = c - 1;
                             }
                         } else {
                             for (b = 0; b < vm.baseAttrs.length; b = b + 1) {
                                 baseAttr = vm.baseAttrs[b];
                                 if (tabAttr.name === baseAttr.name) {
                                     vm.tabs[t].attrs[c] = baseAttr;
+                                    attributeIsExist = true;
                                 }
+                            }
+                            if(!attributeIsExist) {
+                                vm.tabs[t].attrs.splice(c, 1);
+                                c = c - 1;
                             }
                         }
                     }
@@ -104,10 +128,12 @@
                 attrsList = vm.attrs.concat(vm.baseAttrs);
                 restoreAttrs();
                 syncAttrs(vm.tabs);
+                logService.collection('vm.tabs', vm.tabs);
+                vm.readyStatus.content = true;
                 $scope.$apply();
             })
         };
-        vm.getAttributes();
+
 
         parentScope.$watch('columns', function () {
             if (vm.tabAttrsReady) {
@@ -273,7 +299,7 @@
                             }
                         }
                     }
-                    if (target === document.querySelector('#filtersbag')) {
+                    if (target === document.querySelector('#filtersbag .drop-new-filter')) {
                         for (i = 0; i < grouping.length; i = i + 1) {
                             if (filters[i].name === name) {
                                 exist = true;
@@ -301,7 +327,7 @@
                             syncAttrs(vm.tabs);
                             callback();
                         }
-                        if (target === document.querySelector('#filters')) {
+                        if (target === document.querySelector('#filtersbag .drop-new-filter')) {
 
                             for (a = 0; a < attrsList.length; a = a + 1) {
                                 if (attrsList[a].name === name) {
@@ -321,7 +347,7 @@
             },
 
             dragula: function () {
-                var items = [document.querySelector('#columnsbag'), document.querySelector('#groupsbag')];
+                var items = [document.querySelector('#columnsbag'), document.querySelector('#groupsbag'), document.querySelector('#filtersbag .drop-new-filter')];
                 var i;
                 var itemsElem = document.querySelectorAll('#dialogbag .g-modal-draggable-card');
                 for (i = 0; i < itemsElem.length; i = i + 1) {

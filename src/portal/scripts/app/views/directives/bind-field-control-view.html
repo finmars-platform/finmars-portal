@@ -11,6 +11,9 @@
             <input data-ng-model="entity[getModelKey()]">
         </md-input-container>
     </div>
+    <div data-ng-if="fieldType['display_name'] === 'Field'">
+        <div data-ev-field-resolver data-item="item" data-entity="entity"></div>
+    </div>
     <div data-ng-if="fieldType['display_name'] === 'Date'">
         <span>Date is not ready</span>
     </div>

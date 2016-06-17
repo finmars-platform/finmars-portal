@@ -16,6 +16,8 @@
         var vm = this;
         vm.attribute = {name: '', 'value_type': ''};
 
+        vm.editRestriction = false;
+
         console.log('vm.attribute', vm.attribute);
 
         vm.valueTypes = metaService.getValueTypes().filter(function(item){
