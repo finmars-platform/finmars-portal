@@ -108,14 +108,14 @@
                         if (tab.layout.fields[i].row === row) {
 
                             if (tab.layout.fields[i].type === 'field') {
-                                for(c = tab.layout.fields[i].column; c <= (tab.layout.fields[i].column + tab.layout.fields[i].colspan - 1); c = c + 1) {
+                                for (c = tab.layout.fields[i].column; c <= (tab.layout.fields[i].column + tab.layout.fields[i].colspan - 1); c = c + 1) {
                                     spannedCols.push(c);
                                 }
                             }
                         }
                     }
-                    for(x = 0; x < spannedCols.length; x = x + 1) {
-                        if(spannedCols[x] === field.column) {
+                    for (x = 0; x < spannedCols.length; x = x + 1) {
+                        if (spannedCols[x] === field.column) {
                             return false;
                         }
                     }
@@ -135,13 +135,59 @@
             $mdDialog.cancel();
         };
 
-        vm.editLayout = function(ev){
+        vm.editLayout = function (ev) {
             $state.go('app.data-constructor', {entityType: vm.entityType});
             $mdDialog.hide();
         };
 
         vm.save = function () {
-            logService.property('vm.entity', vm.entity);
+
+            function updateValue(entityAttr, attr, value) {
+                console.log(entityAttr, attr, value);
+
+                if (attr['value_type'] === 10) {
+                    entityAttr['value_string'] = value;
+                }
+
+                return entityAttr;
+            }
+
+            function appendAttribute(attr, value) {
+                var attribute =  {
+                    attribute_name: attr.name,
+                    attribute_type: attr.id,
+                    classifier: null,
+                    value_date: null,
+                    value_float: null,
+                    value_string: null
+                };
+
+                if(attr['value_type'] === 10) {
+                    attribute['value_string'] = value;
+                }
+
+                return attribute;
+            }
+
+            var i, a, c;
+            var keys = Object.keys(vm.entity), attrExist;
+            for (i = 0; i < vm.attrs.length; i = i + 1) {
+                for (a = 0; a < keys.length; a = a + 1) {
+                    if (vm.attrs[i].name === keys[a]) {
+                        attrExist = false;
+                        for (c = 0; c < vm.entity.attributes.length; c = c + 1) {
+                            if (vm.entity.attributes[c]['attribute_type'] === vm.attrs[i].id) {
+                                attrExist = true;
+                                vm.entity.attributes[c] = updateValue(vm.entity.attributes[c], vm.attrs[i], vm.entity[keys[a]]);
+                            }
+                        }
+                        if (!attrExist) {
+                            vm.entity.attributes.push(appendAttribute(vm.attrs[i], vm.entity[keys[a]]));
+                        }
+                    }
+                }
+            }
+
             entityResolverService.update(vm.entityType, vm.entity.id, vm.entity).then(function (data) {
                 console.log('saved!', data);
                 $mdDialog.hide({res: 'agree'});
