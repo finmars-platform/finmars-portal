@@ -52,6 +52,7 @@
                         }
                         for(l = 0; l < scope.layoutAttrs.length; l = l + 1) {
                             if(scope.item.name === scope.layoutAttrs[l].name) {
+
                                 return scope.layoutAttrs[l].key;
                             }
                         }

@@ -147,8 +147,57 @@
         };
 
         vm.save = function () {
-            logService.property('vm.entity', vm.entity);
-            console.log(entityResolverService);
+
+            function updateValue(entityAttr, attr, value) {
+                console.log(entityAttr, attr, value);
+
+                if (attr['value_type'] === 10) {
+                    entityAttr['value_string'] = value;
+                }
+
+                return entityAttr;
+            }
+
+            function appendAttribute(attr, value) {
+                var attribute =  {
+                    attribute_name: attr.name,
+                    attribute_type: attr.id,
+                    classifier: null,
+                    value_date: null,
+                    value_float: null,
+                    value_string: null
+                };
+
+                if(attr['value_type'] === 10) {
+                    attribute['value_string'] = value;
+                }
+
+                return attribute;
+            }
+
+            var i, a, c;
+            var keys = Object.keys(vm.entity), attrExist;
+            for (i = 0; i < vm.attrs.length; i = i + 1) {
+                for (a = 0; a < keys.length; a = a + 1) {
+                    if (vm.attrs[i].name === keys[a]) {
+                        attrExist = false;
+                        if(vm.entity.attributes) {
+                            for (c = 0; c < vm.entity.attributes.length; c = c + 1) {
+                                if (vm.entity.attributes[c]['attribute_type'] === vm.attrs[i].id) {
+                                    attrExist = true;
+                                    vm.entity.attributes[c] = updateValue(vm.entity.attributes[c], vm.attrs[i], vm.entity[keys[a]]);
+                                }
+                            }
+                        }
+                        if (!attrExist) {
+                            console.log('vm.entity[keys[a]]', vm.entity[keys[a]]);
+                            if(!vm.entity.attributes) vm.entity.attributes = [];
+                            vm.entity.attributes.push(appendAttribute(vm.attrs[i], vm.entity[keys[a]]));
+                        }
+                    }
+                }
+            }
+
             entityResolverService.create(vm.entityType, vm.entity).then(function (data) {
                 console.log('saved!', data);
                 $mdDialog.hide();
