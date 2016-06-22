@@ -21,11 +21,21 @@
         return metaRepository.getValueTypes();
     };
 
+    var getEntitiesWithoutBaseAttrsList = function () {
+        return metaRepository.getEntitiesWithoutBaseAttrsList();
+    };
+
+    var getRestrictedEntitiesWithTypeField = function(){
+        return metaRepository.getRestrictedEntitiesWithTypeField();
+    };
+
     module.exports = {
         getMenu: getMenu,
         getBaseAttrs: getBaseAttrs,
         getEntityAttrs: getEntityAttrs,
-        getValueTypes: getValueTypes
+        getValueTypes: getValueTypes,
+        getEntitiesWithoutBaseAttrsList: getEntitiesWithoutBaseAttrsList,
+        getRestrictedEntitiesWithTypeField: getRestrictedEntitiesWithTypeField
     }
 
 }());

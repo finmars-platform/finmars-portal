@@ -27,12 +27,14 @@
                 //console.log('scope columns', scope.columns);
 
                 var entityType = scope.entityType;
-                var keywords = [];
+                var baseAttrs = [];
+                var entityAttrs = [];
 
-                keywords = metaService.getBaseAttrs();
+                baseAttrs = metaService.getBaseAttrs();
+                entityAttrs = metaService.getEntityAttrs(entityType);
 
                 scope.toggleGroupFold = function (item) {
-                    console.log('item.isFolded', item.isFolded);
+                    //console.log('item.isFolded', item.isFolded);
                     item.isFolded = !item.isFolded;
                 };
 
@@ -41,20 +43,28 @@
                 };
 
                 scope.bindCell = function (groupedItem, column) {
+                    //console.log('entityAttrs', entityAttrs);
                     if (column.hasOwnProperty('id')) {
-                        return groupedItem[column.name];
+                        return groupedItem[column.key];
                     } else {
-                        var i;
-                        for (i = 0; i < keywords.length; i = i + 1) {
-                            if (keywords[i].name === column.name) {
-                                return groupedItem[keywords[i].key];
+                        var i, e;
+                        for (i = 0; i < baseAttrs.length; i = i + 1) {
+                            if (baseAttrs[i].key === column.key) {
+                                return groupedItem[baseAttrs[i].key];
+                            }
+                        }
+                        //console.log('entityAttrs', entityAttrs);
+                        for (e = 0; e < entityAttrs.length; e = e + 1) {
+
+                            if (entityAttrs[e].key === column.key) {
+                                return groupedItem[entityAttrs[e].key];
                             }
                         }
                     }
                 };
 
                 scope.rowCallback = function (item) {
-                    console.log('open additions!', item);
+                    //console.log('open additions!', item);
                     if (scope.entityType === 'portfolio') {
                         scope.$parent.externalGetAdditions({id: item.id}).then(function () {
                             //scope.$parent.additionsStatus.additionsWorkArea = true;

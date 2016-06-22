@@ -10,6 +10,8 @@
     var responsibleService = require('./responsibleService');
     var counterpartyService = require('./counterpartyService');
     var instrumentService = require('./instrumentService');
+    var priceHistoryService = require('./priceHistoryService');
+    var currencyHistoryService = require('./currencyHistoryService');
 
     var create = function(entityType, entity) {
         switch (entityType) {
@@ -27,6 +29,12 @@
                 break;
             case 'instrument':
                 return instrumentService.create(entity);
+                break;
+            case 'price-history':
+                return priceHistoryService.create(entity);
+                break;
+            case 'currency-history':
+                return priceHistoryService.create(entity);
                 break;
         }
     };

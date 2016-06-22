@@ -13,8 +13,6 @@
             data = JSON.parse(localStorage.getItem('view'));
         } else {
             data = {
-                id: 1,
-                entityType: 'portfolio',
                 table: {
                     columns: [
                         {key: 'name', options: {styles: {width: 108}, sort: 'ASC'}},

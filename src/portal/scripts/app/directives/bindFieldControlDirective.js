@@ -21,13 +21,14 @@
 
                 scope.entity = scope.$parent.vm.entity;
 
+                var attrs = scope.$parent.vm.attrs;
                 var choices = metaService.getValueTypes();
                 var baseAttrs = metaService.getBaseAttrs();
                 var entityAttrs = metaService.getEntityAttrs(scope.entityType);
 
                 scope.layoutAttrs = layoutService.getLayoutAttrs();
 
-                if(scope.item) {
+                if (scope.item) {
                     scope.fieldType = null;
                     //console.log(scope.item);
                     scope.attribute = scope.item;
@@ -40,24 +41,54 @@
                     }
                 }
 
+                scope.getName = function(){
+                    if(scope.item.options && scope.item.options.fieldName) {
+                        return scope.item.options.fieldName;
+                    }
+                    return scope.item.name
+                };
+
+                scope.copyFromField = function(attr){
+                    var attrObj = JSON.parse(attr);
+
+                    if(attrObj.key) {
+                        scope.entity[scope.getModelKey()] = scope.entity[attrObj.key];
+                        console.log(scope.entity[scope.getModelKey()]);
+                    }
+                    if(attrObj.id) {
+                        var resAttr = null;
+                        attrs.forEach(function(item){
+                            if(item.id === attrObj.id) {
+                                resAttr = item;
+                            }
+                        });
+                        scope.entity[scope.getModelKey()] = scope.entity[resAttr.name];
+                    }
+                };
+
+
+                scope.dateFormatter = function () {
+                    scope.entity[scope.getModelKey()] = moment(new Date(scope.entity[scope.getModelKey()])).format('YYYY-MM-DD');
+                };
+
                 scope.getModelKey = function () {
                     if (scope.item.hasOwnProperty('id') && scope.item.id !== null) {
                         return scope.item.name
                     } else {
                         var i, l, e;
-                        for(i = 0; i < baseAttrs.length; i = i + 1) {
-                            if(scope.item.name === baseAttrs[i].name) {
+                        for (i = 0; i < baseAttrs.length; i = i + 1) {
+                            if (scope.item.name === baseAttrs[i].name) {
                                 return baseAttrs[i].key;
                             }
                         }
-                        for(l = 0; l < scope.layoutAttrs.length; l = l + 1) {
-                            if(scope.item.name === scope.layoutAttrs[l].name) {
+                        for (l = 0; l < scope.layoutAttrs.length; l = l + 1) {
+                            if (scope.item.name === scope.layoutAttrs[l].name) {
 
                                 return scope.layoutAttrs[l].key;
                             }
                         }
-                        for(e = 0; e < entityAttrs.length; e = e + 1) {
-                            if(scope.item.name === entityAttrs[e].name) {
+                        for (e = 0; e < entityAttrs.length; e = e + 1) {
+                            if (scope.item.name === entityAttrs[e].name) {
                                 return entityAttrs[e].key;
                             }
                         }

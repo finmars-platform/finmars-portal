@@ -16,6 +16,11 @@ var app = angular.module('app', [
 
 
 app.config(['$stateProvider', '$urlRouterProvider', require('./app/router.js')]);
+app.config(['$mdDateLocaleProvider', function($mdDateLocaleProvider) {
+    $mdDateLocaleProvider.formatDate = function(date) {
+        return moment(date).format('YYYY-MM-DD');
+    };
+}]);
 
 app.run(function(){
     console.log('App initialized');

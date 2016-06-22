@@ -48,6 +48,7 @@
 
                 scope.fieldType = null;
                 scope.editMode = false;
+                scope.entityType = scope.$parent.vm.entityType;
                 scope.attrs = scope.$parent.vm.attrs;
                 scope.baseAttrs = scope.$parent.vm.baseAttrs;
                 scope.entityAttrs = scope.$parent.vm.entityAttrs;
@@ -62,7 +63,7 @@
                 function addRow() {
                     var c;
                     scope.tab.layout.rows = scope.tab.layout.rows + 1;
-                    for(c = 0; c < scope.tab.layout.columns; c = c + 1) {
+                    for (c = 0; c < scope.tab.layout.columns; c = c + 1) {
                         scope.tab.layout.fields.push({
                             row: scope.tab.layout.rows,
                             column: c + 1,
@@ -111,7 +112,7 @@
                             scope.tab.layout.fields[i].colspan = scope.item.colspan;
                             scope.tab.layout.fields[i].attribute = scope.item.attribute;
                             //console.log('scope.tab.layout', scope.tab.layout);
-                            if(scope.tab.layout.fields[i].row == scope.tab.layout.rows) {
+                            if (scope.tab.layout.fields[i].row == scope.tab.layout.rows) {
                                 addRow();
                             } else {
                                 //findEmptyRows();
@@ -134,7 +135,7 @@
                                 }
                             }
                         }
-                        if(columnsIsEmpty) {
+                        if (columnsIsEmpty) {
                             emptyRows.push(r);
                         }
                     }
@@ -145,19 +146,19 @@
                 function deleteEmptyRows(emptyRows) {
                     var i, e;
                     //console.log('emptyRows', emptyRows);
-                    for(i = scope.tab.layout.rows; i > 0; i = i - 1) {
-                        for(e = emptyRows.length; e > 0; e = e - 1) {
+                    for (i = scope.tab.layout.rows; i > 0; i = i - 1) {
+                        for (e = emptyRows.length; e > 0; e = e - 1) {
                             //console.log('e', e);
                             //console.log('emptyRows[e]', emptyRows[e]);
                             //console.log('i', i);
                             //console.log('------------------------------------------');
-                            if(i === emptyRows[e]) {
-                                if(i - 1 === emptyRows[e - 1] && i !== emptyRows[0]) {
+                            if (i === emptyRows[e]) {
+                                if (i - 1 === emptyRows[e - 1] && i !== emptyRows[0]) {
                                     var f;
                                     for (f = 0; f < scope.tab.layout.fields.length; f = f + 1) {
                                         if (scope.tab.layout.fields[f].row == scope.tab.layout.rows) {
                                             scope.tab.layout.fields.splice(f, 1);
-                                            f = f -1;
+                                            f = f - 1;
                                         }
                                     }
                                     //console.log('scope.tab.layout', scope.tab.layout);
@@ -311,8 +312,58 @@
                     }
                 };
 
+                scope.findSelected = function (fields, val) {
+                    //console.log(fields, val);
+
+                    if (fields && val) {
+                        if (fields.join(' ') === val.join(' ')) {
+                            return true;
+                        }
+                    }
+
+                    return false;
+                };
+
+                scope.copyFromValue = function (attr) {
+                    if(attr.id) {
+                        return JSON.stringify({id: attr.id});
+                    }
+                    return JSON.stringify({key: attr.key});
+                };
+
+                scope.findStringAttributes = function () {
+                    var b, a, e;
+                    var stringAttrs = [];
+
+                    for (a = 0; a < scope.attrs.length; a = a + 1) {
+                        if (scope.attrs[a]['value_type'] === 10) {
+                            stringAttrs.push(scope.attrs[a]);
+                        }
+                    }
+                    if (metaService.getEntitiesWithoutBaseAttrsList().indexOf(scope.entityType) === -1) {
+                        for (b = 0; b < scope.baseAttrs.length; b = b + 1) {
+                            if (scope.baseAttrs[b]['value_type'] === 10) {
+                                stringAttrs.push(scope.baseAttrs[b]);
+                            }
+                        }
+                    }
+
+                    for (e = 0; e < scope.entityAttrs.length; e = e + 1) {
+                        if (scope.entityAttrs[e]['value_type'] === 10) {
+                            stringAttrs.push(scope.entityAttrs[e]);
+                        }
+                    }
+
+                    //console.log('stringAttrs', stringAttrs);
+
+                    return stringAttrs;
+
+                };
+
                 scope.checkForSpecialOptions = function () {
+
                     if (scope.item.attribute) {
+
                         if (scope.item.attribute.hasOwnProperty('id')) {
 
                             if (scope.item.attribute['value_type'] == 10) {
@@ -320,7 +371,8 @@
                                 return true;
                             }
 
-                        } else {
+
+                        } else { // entity && base attrs
 
                             if (scope.item.attribute.name === 'Notes') {
                                 scope.specialOptionTemplate = 'views/attribute-options/notes.html';
@@ -329,6 +381,12 @@
 
                             if (scope.item.attribute['value_type'] == 10) {
                                 scope.specialOptionTemplate = 'views/attribute-options/string.html';
+                                return true;
+                            }
+                            //console.log('scope.item.attribute', scope.item.attribute);
+                            if (scope.item.attribute['value_type'] === 'field'
+                                && metaService.getRestrictedEntitiesWithTypeField().indexOf(scope.item.attribute.key) === -1) {
+                                scope.specialOptionTemplate = 'views/attribute-options/field.html';
                                 return true;
                             }
 

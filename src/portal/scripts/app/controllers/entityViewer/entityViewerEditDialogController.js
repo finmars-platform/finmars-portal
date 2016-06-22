@@ -74,22 +74,26 @@
                 if (field.hasOwnProperty('id') && field.id !== null) {
                     for (i = 0; i < vm.attrs.length; i = i + 1) {
                         if (field.id === vm.attrs[i].id) {
+                            vm.attrs[i].options = field.options;
                             return vm.attrs[i];
                         }
                     }
                 } else {
                     for (i = 0; i < vm.baseAttrs.length; i = i + 1) {
                         if (field.name === vm.baseAttrs[i].name) {
+                            vm.baseAttrs[i].options = field.options;
                             return vm.baseAttrs[i];
                         }
                     }
                     for (e = 0; e < vm.entityAttrs.length; e = e + 1) {
                         if (field.name === vm.entityAttrs[e].name) {
+                            vm.entityAttrs[e].options = field.options;
                             return vm.entityAttrs[e];
                         }
                     }
                     for (l = 0; l < vm.layoutAttrs.length; l = l + 1) {
                         if (field.name === vm.layoutAttrs[l].name) {
+                            vm.layoutAttrs[l].options = field.options;
                             return vm.layoutAttrs[l];
                         }
                     }

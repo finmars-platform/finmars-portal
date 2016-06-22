@@ -21,15 +21,74 @@
                 logService.component('EntityViewerFieldResolverController', 'initialized');
 
                 scope.readyStatus = {content: false};
+                scope.type = '';
 
                 logService.property('field scope', scope.item);
 
-                fieldResolverService.getFields(scope.item.key).then(function (data) {
-                    logService.collection('DATA', data);
-                    scope.fields = data;
+                fieldResolverService.getFields(scope.item.key).then(function (res) {
+                    logService.collection('DATA', res);
+                    scope.type = res.type
+                    scope.fields = res.data;
                     scope.readyStatus.content = true;
                     scope.$apply();
                 });
+
+                scope.getName = function () {
+                    if (scope.item.options && scope.item.options.fieldName) {
+                        return scope.item.options.fieldName;
+                    }
+                    return scope.item.name
+                };
+
+                scope.bindFormFields = function () {
+
+                    var id = scope.entity[scope.getModelKey()];
+                    if (id) {
+                        var i;
+                        var attr;
+
+                        for (i = 0; i < scope.fields.length; i = i + 1) {
+                            if (id == scope.fields[i].id) {
+                                attr = scope.fields[i]
+                            }
+                        }
+
+                        if (scope.item.options && scope.item.options.fieldsForm) {
+                            var resultCaption = '';
+                            scope.item.options.fieldsForm.forEach(function (item, index) {
+                                if (index + 1 === scope.item.options.fieldsForm.length) {
+                                    resultCaption = resultCaption + attr[item];
+                                } else {
+                                    resultCaption = resultCaption + attr[item] + ' / ';
+                                }
+                            });
+
+                            return resultCaption
+                        }
+
+                        return attr.name
+                    } else {
+                        return scope.getName();
+                    }
+                };
+
+                scope.bindListFields = function (field) {
+                    //console.log('scope.item.options', scope.item.options);
+                    if (scope.item.options && scope.item.options.fieldsList) {
+                        var resultCaption = '';
+                        scope.item.options.fieldsList.forEach(function (item, index) {
+                            if (index + 1 === scope.item.options.fieldsList.length) {
+                                resultCaption = resultCaption + field[item];
+                            } else {
+                                resultCaption = resultCaption + field[item] + ' / ';
+                            }
+                        });
+
+                        return resultCaption
+                    }
+
+                    return field.name
+                };
 
 
                 scope.getModelKey = scope.$parent.getModelKey;
