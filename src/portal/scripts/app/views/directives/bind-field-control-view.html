@@ -1,13 +1,30 @@
 <div>
     <div data-ng-if="fieldType['display_name'] === 'Number'">
         <md-input-container class="md-block">
-            <label>{{item.name}}</label>
+            <label data-ng-bind="getName()"></label>
             <input data-ng-model="entity[getModelKey()]" type="number">
         </md-input-container>
     </div>
     <div data-ng-if="fieldType['display_name'] === 'String'">
+        <div data-ng-if="getModelKey() === 'notes' ">
+            <md-input-container class="md-block textarea-bind-field">
+                <label data-ng-bind="getName()"></label>
+                <textarea class="{{item.options.frame == 1 ? 'bordered' : '' }}" data-ng-model="entity[getModelKey()]" cols="30" rows="{{item.options.rowCount}}"></textarea>
+            </md-input-container>
+        </div>
+        <div data-ng-if="getModelKey() !== 'notes' ">
+            <md-input-container class="md-block bind-field-input {{item.options.copyFrom ? 'with-button' : ''}}">
+                <label data-ng-bind="getName()"></label>
+                <input data-ng-model="entity[getModelKey()]">
+                <md-button data-ng-if="item.options.copyFrom" class="bf-copy-btn" data-ng-click="copyFromField(item.options.copyFrom)">
+                    <ng-md-icon icon="content_copy"></ng-md-icon>
+                </md-button>
+            </md-input-container>
+        </div>
+    </div>
+    <div data-ng-if="fieldType['display_name'] === 'Float'">
         <md-input-container class="md-block">
-            <label>{{item.name}}</label>
+            <label data-ng-bind="getName()"></label>
             <input data-ng-model="entity[getModelKey()]">
         </md-input-container>
     </div>
@@ -15,10 +32,13 @@
         <div data-ev-field-resolver data-item="item" data-entity="entity"></div>
     </div>
     <div data-ng-if="fieldType['display_name'] === 'Date'">
-        <span>Date is not ready</span>
+        <label data-ng-bind="getName()"></label>
+        <md-datepicker ng-model="entity[getModelKey()]" md-placeholder="Enter date" data-ng-change="dateFormatter()"></md-datepicker>
     </div>
-    <div data-ng-if="fieldType['display_name'] === 'Classifier'">
-        <span>Classifier is not ready</span>
+    <div data-ng-if="fieldType['display_name'] === 'Boolean'">
+        <md-checkbox data-ng-model="entity[getModelKey()]" aria-label="checkbox">
+            <label data-ng-bind="getName()"></label>
+        </md-checkbox>
     </div>
     <div data-ng-if="fieldType['display_name'] === 'Classifier'">
         <span>Classifier is not ready</span>

@@ -37,9 +37,11 @@
 .ec-attr-card {
   overflow: hidden;
   fill: #898989;
+
   padding-left: 1em;
   padding-right: 1em;
   &.active {
+    background: #f3d074;
     box-shadow: 0 0 30px rgba(255,187,0, .5);
     padding-top: 2em;
   }
@@ -123,6 +125,26 @@
     pointer-events: none;
     opacity: .5;
   }
+}
+
+.bind-field-input {
+  &.with-button {
+    input {
+      width: 80%;
+    }
+    .bf-copy-btn {
+      min-width: 0;
+    }
+  }
+}
+
+textarea.bordered {
+  border: 1px solid #4C334D;
+  position: relative;
+  width: 98%;
+}
+.textarea-bind-field label:not(.md-container-ignore) {
+  left: 5px;
 }
 
 .ev-data-field {

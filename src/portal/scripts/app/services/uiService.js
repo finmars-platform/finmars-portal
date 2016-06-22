@@ -15,9 +15,14 @@
         return uiRepository.updateEditLayout(id, ui);
     };
 
+    var getListLayout = function(entity, name) {
+        return uiRepository.getListLayout(entity, name);
+    };
+
     module.exports = {
         getEditLayout: getEditLayout,
-        updateEditLayout: updateEditLayout
+        updateEditLayout: updateEditLayout,
+        getListLayout: getListLayout
     }
 
 }());

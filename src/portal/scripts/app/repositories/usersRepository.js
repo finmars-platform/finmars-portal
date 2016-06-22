@@ -6,6 +6,8 @@
 
     'use strict';
 
+    var cookieService = require('../services/cookieService');
+
     var baseUrl = '/api/v1/';
 
     var handleError = function(methodName){
@@ -17,6 +19,7 @@
             method: 'POST',
             credentials: 'include',
             headers: {
+                'X-CSRFToken': cookieService.getCookie('csrftoken'),
                 Accept: 'application/json',
                 'Content-type': 'application/json'
             },

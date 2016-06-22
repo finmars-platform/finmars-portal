@@ -1,10 +1,13 @@
 <div>
     <md-input-container class="md-block">
         <label>Copy text from</label>
-        <md-select ng-model="attr.options.copyFrom">
-            <md-option data-ng-repeat="item in attrs" ng-value="item">
-                {{item.name}}
+        <md-select ng-model="item.options.copyFrom">
+            <md-option data-ng-repeat="attr in findStringAttributes()" ng-value="copyFromValue(attr)">
+                {{attr.name}}
             </md-option>
         </md-select>
     </md-input-container>
+    <md-checkbox data-ng-model="item.options.notNull" aria-label="checkbox">
+        Not null
+    </md-checkbox>
 </div>

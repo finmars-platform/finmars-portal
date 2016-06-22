@@ -31,6 +31,10 @@
         ];
     };
 
+    var getEntitiesWithoutBaseAttrsList = function(){
+        return ['price-history', 'currency-history'];
+    };
+
     var getEntityAttrs = function (entity) {
         var entityAttrs = {
             "portfolio": [
@@ -339,6 +343,11 @@
                     "value_type": 40
                 },
                 {
+                    "key": "pricing_policy",
+                    "name": "Pricing policy",
+                    "value_type": "field"
+                },
+                {
                     "key": "principal_price",
                     "name": "Principal price",
                     "value_type": "float"
@@ -388,11 +397,18 @@
         ];
     };
 
+    var getRestrictedEntitiesWithTypeField = function(){
+        return ['daily_pricing_model', 'payment_size_detail', 'accrued_currency', 'pricing_currency'];
+    };
+
+
     module.exports = {
         getMenu: getMenu,
         getBaseAttrs: getBaseAttrs,
         getEntityAttrs: getEntityAttrs,
-        getValueTypes: getValueTypes
+        getValueTypes: getValueTypes,
+        getEntitiesWithoutBaseAttrsList: getEntitiesWithoutBaseAttrsList,
+        getRestrictedEntitiesWithTypeField: getRestrictedEntitiesWithTypeField
     }
 
 

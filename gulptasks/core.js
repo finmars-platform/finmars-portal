@@ -96,6 +96,18 @@
 
     });
 
+    gulp.task(appName + '-moment-js-min', function(){
+
+        var pathToJS = ['node_modules/moment/moment.js'];
+
+        return gulp.src(pathToJS)
+            .pipe(concat('moment.js'))
+            .pipe(uglify())
+            .pipe(rename('moment.min.js'))
+            .pipe(gulp.dest('dist/' + appName + '/scripts/'));
+
+    });
+
     gulp.task(appName + '-dragula-js-min', function(){
 
         var pathToJS = [
@@ -160,6 +172,7 @@
         appName + '-angular-css-min',
         appName + '-core-js-min',
         appName + '-min-Angular-UI-JS',
+        appName + '-moment-js-min',
         appName + '-fetch-js-min',
         appName + '-jquery-js-min',
         appName + '-dragula-js-min',

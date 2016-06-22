@@ -52,7 +52,11 @@
             vm.attrs = data.results;
 
             logService.collection('vm attrs', vm.attrs);
-            vm.baseAttrs = metaService.getBaseAttrs();
+
+            if(metaService.getEntitiesWithoutBaseAttrsList().indexOf(vm.entityType) === -1 ) {
+                console.log('1111111111111111111111');
+                vm.baseAttrs = metaService.getBaseAttrs();
+            }
             logService.collection('vm.baseAttrs', vm.baseAttrs);
             vm.entityAttrs = metaService.getEntityAttrs(vm.entityType);
             logService.collection('vm.entityAttrs', vm.entityAttrs);

@@ -1,12 +1,21 @@
 <div>
     <div data-ng-if="readyStatus.content">
         <md-input-container class="md-block">
-            <label>{{item.name}}</label>
-            <md-select data-ng-model="entity[getModelKey()]">
-                <md-option data-ng-repeat="field in fields" value="{{field.value}}">
-                    {{field.name}}
-                </md-option>
-            </md-select>
+            <label data-ng-bind="getName()"></label>
+            <div data-ng-if="type === 'key-value'">
+                <md-select data-ng-model="entity[getModelKey()]">
+                    <md-option data-ng-repeat="field in fields track by $index" value="{{field.value}}">
+                        {{field.name}}
+                    </md-option>
+                </md-select>
+            </div>
+            <div data-ng-if="type === 'id'">
+                <md-select data-ng-model="entity[getModelKey()]" md-selected-text="bindFormFields()" >
+                    <md-option data-ng-repeat="field in fields track by $index" value="{{field.id}}">
+                        {{bindListFields(field)}}
+                    </md-option>
+                </md-select>
+            </div>
         </md-input-container>
     </div>
     <div data-ng-if="!readyStatus.content">

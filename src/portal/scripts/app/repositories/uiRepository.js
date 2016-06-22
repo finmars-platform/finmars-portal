@@ -73,10 +73,62 @@
         })
     };
 
+
+    var getListLayout = function(entity, name){
+
+        var contentType;
+
+        switch (entity) {
+            case 'portfolio':
+                contentType = 'portfolios.portfolio';
+                break;
+            case 'account':
+                contentType = 'accounts.account';
+                break;
+            case 'currency':
+                contentType = 'currencies.currency';
+                break;
+            case 'instrument':
+                contentType = 'instruments.instrument';
+                break;
+            case 'counterparty':
+                contentType = 'counterparties.counterparty';
+                break;
+            case 'responsible':
+                contentType = 'counterparties.responsible';
+                break;
+            case 'transaction':
+                contentType = 'transactions.transaction';
+                break;
+            case 'price-history':
+                contentType = 'instruments.pricehistory';
+                break;
+            case 'currency-history':
+                contentType = 'currencies.currencyhistory';
+                break;
+        }
+
+        return window.fetch(baseUrl + 'ui/list-layout/?content_type=' + contentType,
+            {
+                method: 'GET',
+                credentials: 'include',
+                headers: {
+                    'X-CSRFToken': cookieService.getCookie('csrftoken'),
+                    Accept: 'application/json',
+                    'Content-type': 'application/json'
+                }
+            }).then(function (data) {
+            return data.json();
+        })
+    };
+
+
     module.exports = {
 
         getEditLayout: getEditLayout,
-        updateEditLayout: updateEditLayout
+        updateEditLayout: updateEditLayout,
+
+        getListLayout: getListLayout
 
     }
 

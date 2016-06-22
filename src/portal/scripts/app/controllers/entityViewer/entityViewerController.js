@@ -14,6 +14,8 @@
 
     var GroupTableService = require('../../services/groupTable/groupTableService');
 
+    var uiService = require('../../services/uiService');
+
     var demoPortfolioService = require('../../services/demo/demoPortfolioService');
     var demoTransactionsService = require('../../services/demo/demoTransactionsService');
 
@@ -66,12 +68,12 @@
             table: false
         };
 
-        function returnFullAttributes(items, attrs, baseAttrs, entityType) {
+        function returnFullAttributes(items, attrs, baseAttrs, entityAttrs, entityType) {
             var fullItems = [];
             if (!items) {
                 return [];
             }
-            var i, a, b, item, attr, baseAttr, attrOptions;
+            var i, a, b, e, item, attr, baseAttr, attrOptions, entityAttr;
             for (i = 0; i < items.length; i = i + 1) {
                 item = items[i];
                 if (item.hasOwnProperty('id')) {
@@ -98,6 +100,18 @@
                             fullItems.push(item);
                         }
                     }
+
+                    for (e = 0; e < entityAttrs.length; e = e + 1) {
+                        entityAttr = entityAttrs[e];
+                        if (item.key === entityAttr.key) {
+                            if(item.options) {
+                                attrOptions = JSON.parse(JSON.stringify(item.options));
+                            }
+                            item.options = attrOptions;
+                            item = entityAttr;
+                            fullItems.push(item);
+                        }
+                    }
                 }
             }
             return fullItems;
@@ -117,29 +131,34 @@
         }
 
         vm.getView = function () {
-            return demoPortfolioService.getView().then(function (data) {
+            return uiService.getListLayout(vm.entityType, 'default').then(function (res) {
 
                 //vm.entityType = data.entityType;
 
-                vm.tabs = data.tabs;
+                //vm.tabs = res.data.tabs;
 
-                vm.table = data.table;
-                vm.columns = data.table.columns;
-                vm.grouping = data.table.grouping;
-                vm.folding = data.table.folding;
-                vm.filters = data.table.filters;
-                vm.sorting = data.table.sorting;
+                console.log('res', res);
+                console.log('res.results', res.results[0]);
 
-                vm.additionsType = data.tableAdditions.additionsType;
+                vm.table = res.results[0].data.table;
+                vm.columns = res.results[0].data.table.columns;
+                vm.grouping = res.results[0].data.table.grouping;
+                vm.folding = res.results[0].data.table.folding;
+                vm.filters = res.results[0].data.table.filters;
+                vm.sorting = res.results[0].data.table.sorting;
 
-                vm.additionsEntityType = data.tableAdditions.entityType;
+                logService.collection('vm.columns', vm.columns);
 
-                vm.tableAdditions = data.tableAdditions;
-                vm.entityAdditionsColumns = data.tableAdditions.table.columns;
-                vm.entityAdditionsFilters = data.tableAdditions.table.filters;
-                vm.entityAdditionsSorting = data.tableAdditions.table.sorting;
+                vm.additionsType = res.results[0].data.tableAdditions.additionsType;
 
-                vm.additionsStatus[data.tableAdditions.additionsType] = true;
+                vm.additionsEntityType = res.results[0].data.tableAdditions.entityType;
+
+                vm.tableAdditions = res.results[0].data.tableAdditions;
+                vm.entityAdditionsColumns = res.results[0].data.tableAdditions.table.columns;
+                vm.entityAdditionsFilters = res.results[0].data.tableAdditions.table.filters;
+                vm.entityAdditionsSorting = res.results[0].data.tableAdditions.table.sorting;
+
+                vm.additionsStatus[res.results[0].data.tableAdditions.additionsType] = true;
 
                 //console.log('vm tabs!', vm.tabs);
                 $scope.$apply();
@@ -148,14 +167,14 @@
 
         vm.transformViewAttributes = function(){
 
-            vm.columns = returnFullAttributes(vm.columns, vm.attrs, vm.baseAttrs, vm.entityType);
-            vm.grouping = returnFullAttributes(vm.grouping, vm.attrs, vm.baseAttrs, vm.entityType);
-            vm.filters = returnFullAttributes(vm.filters, vm.attrs, vm.baseAttrs, vm.entityType);
+            vm.columns = returnFullAttributes(vm.columns, vm.attrs, vm.baseAttrs, vm.entityAttrs, vm.entityType);
+            vm.grouping = returnFullAttributes(vm.grouping, vm.attrs, vm.baseAttrs, vm.entityAttrs, vm.entityType);
+            vm.filters = returnFullAttributes(vm.filters, vm.attrs, vm.baseAttrs, vm.entityAttrs, vm.entityType);
             vm.sorting.group = findFullAttributeForItem(vm.sorting.group, vm.attrs);
             vm.sorting.column = findFullAttributeForItem(vm.sorting.column, vm.attrs);
             //console.log('vm.sorting.column', vm.sorting.column);
-            vm.entityAdditionsColumns = returnFullAttributes(vm.entityAdditionsColumns, vm.attrs, vm.baseAttrs, vm.additionsEntityType);
-            vm.entityAdditionsFilters = returnFullAttributes(vm.entityAdditionsFilters, vm.attrs, vm.baseAttrs, vm.additionsEntityType);
+            vm.entityAdditionsColumns = returnFullAttributes(vm.entityAdditionsColumns, vm.attrs, vm.baseAttrs, vm.entityAttrs, vm.additionsEntityType);
+            vm.entityAdditionsFilters = returnFullAttributes(vm.entityAdditionsFilters, vm.attrs, vm.baseAttrs, vm.entityAttrs, vm.additionsEntityType);
             vm.entityAdditionsSorting.column = findFullAttributeForItem(vm.entityAdditionsSorting.column, vm.attrs);
 
             logService.collection('vm.grouping', vm.grouping);
@@ -176,6 +195,7 @@
             return attributeTypeService.getList(vm.entityType).then(function (data) {
                 vm.attrs = data.results;
                 vm.baseAttrs = metaService.getBaseAttrs();
+                vm.entityAttrs = metaService.getEntityAttrs(vm.entityType);
                 $scope.$apply();
             })
         };
