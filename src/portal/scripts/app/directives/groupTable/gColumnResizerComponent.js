@@ -110,7 +110,10 @@
 
                 scope.$watchCollection('items', function () {
                     resizeScrollableArea();
-                    resize();
+                    setTimeout(function () {
+                        resize();
+                    }, 100);
+                    //resize();
                 });
                 setTimeout(function () {
                     resize();

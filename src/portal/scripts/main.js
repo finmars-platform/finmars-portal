@@ -11,6 +11,7 @@ var app = angular.module('app', [
     'ngResource',
     'ngSanitize',
     'ui.router',
+    'mdPickers',
     angularDragula(angular)
 ]);
 

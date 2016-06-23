@@ -29,8 +29,10 @@
         <md-card class="ec-attr-card {{item.editMode ? 'active' : ''}}">
             <md-input-container class="md-block" flex-gt-sm>
                 <label>Field</label>
-                <md-select ng-model="item.attribute" ng-change="changeModel(item.attribute)">
+                <!--{{item.attribute}}-->
+                <md-select ng-model="item.attribute"  ng-change="changeModel(item.attribute)">
                     <md-option ng-repeat="attr in attrsLeft" ng-value="attr">
+                        <!--{{attr}}-->
                         {{attr.name}}
                     </md-option>
                 </md-select>

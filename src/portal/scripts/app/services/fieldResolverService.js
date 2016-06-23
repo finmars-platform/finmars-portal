@@ -8,7 +8,9 @@
     var entityFieldsRepository = require('../repositories/entityFieldsRepository');
     var accountRepository = require('../repositories/accountRepository');
     var instrumentRepository = require('../repositories/instrumentRepository');
+    var instrumentTypeRepository = require('../repositories/instrumentTypeRepository');
     var pricingPolicyRepository = require('../repositories/pricingPolicyRepository');
+    var currencyRepository = require('../repositories/currencyRepository');
 
     var getFields = function (fieldKey) {
 
@@ -31,6 +33,26 @@
                     break;
                 case 'pricing_policy':
                     pricingPolicyRepository.getList().then(function(data){
+                        resolve({type: 'id', data: data.results});
+                    });
+                    break;
+                case 'instrument_type':
+                    instrumentTypeRepository.getList().then(function(data){
+                        resolve({type: 'id', data: data.results});
+                    });
+                    break;
+                case 'accrued_currency':
+                    currencyRepository.getList().then(function(data){
+                        resolve({type: 'id', data: data.results});
+                    });
+                    break;
+                case 'pricing_currency':
+                    currencyRepository.getList().then(function(data){
+                        resolve({type: 'id', data: data.results});
+                    });
+                    break;
+                case 'currency':
+                    currencyRepository.getList().then(function(data){
                         resolve({type: 'id', data: data.results});
                     });
                     break;

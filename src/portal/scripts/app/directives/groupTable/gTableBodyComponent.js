@@ -24,7 +24,8 @@
 
                 logService.component('groupTableBody', 'initialized');
 
-                //console.log('scope columns', scope.columns);
+
+                console.log('scope columns', scope.columns);
 
                 var entityType = scope.entityType;
                 var baseAttrs = [];
@@ -45,7 +46,7 @@
                 scope.bindCell = function (groupedItem, column) {
                     //console.log('entityAttrs', entityAttrs);
                     if (column.hasOwnProperty('id')) {
-                        return groupedItem[column.key];
+                        return groupedItem[column.name];
                     } else {
                         var i, e;
                         for (i = 0; i < baseAttrs.length; i = i + 1) {

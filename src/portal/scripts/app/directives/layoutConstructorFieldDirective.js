@@ -21,6 +21,7 @@
             },
             link: function (scope, elem, attr) {
 
+
                 var choices = metaService.getValueTypes();
                 scope.item = {
                     column: scope.column,
@@ -94,6 +95,7 @@
                     for (i = 0; i < scope.tab.layout.fields.length; i = i + 1) {
                         scope.tab.layout.fields[i].editMode = false;
                     }
+                    console.log('ite55555555555555555555555555m', scope.item);
                     scope.item.editMode = true;
                 };
 
@@ -325,7 +327,7 @@
                 };
 
                 scope.copyFromValue = function (attr) {
-                    if(attr.id) {
+                    if (attr.id) {
                         return JSON.stringify({id: attr.id});
                     }
                     return JSON.stringify({key: attr.key});
@@ -390,11 +392,18 @@
                                 return true;
                             }
 
+
+                            if (scope.item.attribute['value_type'] === 40) {
+                                scope.specialOptionTemplate = 'views/attribute-options/date.html';
+                                return true;
+                            }
+
                         }
                     }
 
                     return false;
-                }
+                };
+
             }
         }
     }

@@ -25,6 +25,7 @@
             'node_modules/angular-sanitize/angular-sanitize.js',
             'node_modules/angular-material/angular-material.js',
             'node_modules/angular-carousel/dist/angular-carousel.js',
+            'bower_components/mdPickers/dist/mdPickers.js',
             'node_modules/angular-material-icons/angular-material-icons.js'];
 
         return gulp.src(pathToJS)
@@ -50,6 +51,7 @@
 
         var pathToCSS = [
             'node_modules/angular-material/angular-material.css',
+            'bower_components/mdPickers/dist/mdPickers.css',
             'node_modules/angular-carousel/dist/angular-carousel.css'
         ];
 
