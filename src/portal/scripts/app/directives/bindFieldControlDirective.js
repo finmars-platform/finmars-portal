@@ -68,7 +68,9 @@
 
 
                 scope.dateFormatter = function () {
-                    scope.entity[scope.getModelKey()] = moment(new Date(scope.entity[scope.getModelKey()])).format('YYYY-MM-DD');
+                    console.log('scope.entity[scope.getModelKey()]', scope.entity[scope.getModelKey()]);
+
+                    //scope.entity[scope.getModelKey()] = moment(new Date(scope.entity[scope.getModelKey()])).format('YYYY-MM-DD');
                 };
 
                 scope.getModelKey = function () {
@@ -93,7 +95,21 @@
                             }
                         }
                     }
-                }
+                };
+
+                scope.setDateToday = function () {
+                    console.log('1232', scope.entity[scope.getModelKey()])
+                    scope.entity[scope.getModelKey()] = new Date();
+                    console.log('1232', scope.entity[scope.getModelKey()])
+                };
+
+                scope.setDatePlus = function () {
+                    scope.entity[scope.getModelKey()] = new Date(new Date().setDate(new Date(scope.entity[scope.getModelKey()]).getDate() + 1));
+                };
+
+                scope.setDateMinus = function () {
+                    scope.entity[scope.getModelKey()] =  new Date(new Date().setDate(new Date(scope.entity[scope.getModelKey()]).getDate() - 1));
+                };
 
             }
         }

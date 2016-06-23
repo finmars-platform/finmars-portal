@@ -172,7 +172,6 @@
         var syncAttrs = function (tabs) {
             var i, t;
             var attrs;
-            console.log('METHOD: syncAttrs, data: tabs, value: ', tabs);
             for (t = 0; t < tabs.length; t = t + 1) {
                 attrs = tabs[t].attrs;
                 for (i = 0; i < attrs.length; i = i + 1) {
@@ -351,9 +350,11 @@
                         }
                         $scope.$apply();
                     }
+                    $scope.$apply();
                 });
 
                 this.dragula.on('dragend', function (el) {
+                    $scope.$apply();
                     $(el).remove();
                 })
             },
