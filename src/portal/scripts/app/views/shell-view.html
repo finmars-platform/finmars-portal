@@ -3,9 +3,9 @@
     <div layout="column" class="relative" layout-fill role="main">
         <md-toolbar ng-show="!showSearch" class="header">
 
-            <div class="md-toolbar-tools">
-                <div flex="80"></div>
-                <div class="header-misc" layout="row" layout-align="right" flex="20">
+            <div class="md-toolbar-tools" layout-align="end end">
+
+                <div class="header-misc" layout="row" >
                     <md-button ng-click="toggleSidenav('left')" hide-gt-md aria-label="Menu">
                         <ng-md-icon icon="menu"></ng-md-icon>
                     </md-button>
@@ -19,7 +19,7 @@
 
                     <div class="header-profile">
                         <ng-md-icon icon="account_circle" size="48"></ng-md-icon>
-                        <span class="header-profile-name">Alexander</span>
+                        <span class="header-profile-name" data-ng-bind="vm.user.username"></span>
                     </div>
                 </div>
 

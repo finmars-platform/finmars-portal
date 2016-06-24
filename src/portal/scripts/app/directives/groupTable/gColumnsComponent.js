@@ -7,6 +7,8 @@
 
     var logService = require('../../services/logService');
 
+    var metaService = require('../../services/metaService');
+
     module.exports = function () {
         return {
             restrict: 'AE',
@@ -14,12 +16,20 @@
                 columns: '=',
                 sorting: '=',
                 isItemAddition: '=',
+                entityType: '=',
                 externalCallback: '&'
             },
             templateUrl: 'views/directives/groupTable/columns-view.html',
             link: function (scope, elem, attrs) {
 
                 logService.component('groupColumnResizer', 'initialized');
+
+                var baseAttrs = [];
+                var entityAttrs = [];
+                if (metaService.getEntitiesWithoutBaseAttrsList().indexOf(scope.entityType) === -1) {
+                    baseAttrs = metaService.getBaseAttrs();
+                }
+                entityAttrs = metaService.getEntityAttrs(scope.entityType);
 
                 scope.sortHandler = function (column, sort) {
                     var i;
@@ -47,10 +57,23 @@
                     $mdOpenMenu(ev);
                 };
 
+                scope.isSortable = function (column) {
+                    var b, e;
+                    for (b = 0; b < baseAttrs.length; b = b + 1) {
+                        if (baseAttrs[b].key === column.key && baseAttrs[b].key !== 'notes') {
+                            return true;
+                        }
+                    }
+                    for (e = 0; e < entityAttrs.length; e = e + 1) {
+                        if (entityAttrs[e].key === column.key) {
+                            return true;
+                        }
+                    }
+
+                    return false;
+                };
 
                 scope.removeColumn = function (column) {
-                    //console.log('remove', column);
-                    //console.log('remove', scope.columns);
                     if (column.id) {
                         scope.columns = scope.columns.map(function (item) {
                             if (item.id === column.id || item.key === column.key) {
