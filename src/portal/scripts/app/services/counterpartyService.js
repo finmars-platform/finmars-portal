@@ -5,8 +5,8 @@
 
     var counterpartyRepository = require('../repositories/counterpartyRepository');
 
-    var getList = function () {
-        return counterpartyRepository.getList();
+    var getList = function (options) {
+        return counterpartyRepository.getList(options);
     };
 
     var getByKey = function (id) {

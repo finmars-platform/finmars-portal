@@ -5,8 +5,8 @@
 
     var accountRepository = require('../repositories/accountRepository');
 
-    var getList = function () {
-        return accountRepository.getList();
+    var getList = function (options) {
+        return accountRepository.getList(options);
     };
 
     var getByKey = function (id) {

@@ -20,7 +20,13 @@
             vm.entityRaw = data.results;
             console.log('vm.entityRaw', vm.entityRaw);
             $scope.$apply();
-        })
+        });
+
+        vm.getList = function(options){
+            return accountService.getList(options).then(function(data){
+                return data.results;
+            })
+        }
 
     }
 

@@ -5,8 +5,8 @@
 
     var priceHistoryRepository = require('../repositories/priceHistoryRepository');
 
-    var getList = function() {
-        return priceHistoryRepository.getList();
+    var getList = function(options) {
+        return priceHistoryRepository.getList(options);
     };
 
     var getByKey = function (id) {

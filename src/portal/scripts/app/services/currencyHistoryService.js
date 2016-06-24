@@ -5,8 +5,8 @@
 
     var currencyHistoryRepository = require('../repositories/currencyHistoryRepository');
 
-    var getList = function() {
-        return currencyHistoryRepository.getList();
+    var getList = function(options) {
+        return currencyHistoryRepository.getList(options);
     };
 
     var getByKey = function (id) {

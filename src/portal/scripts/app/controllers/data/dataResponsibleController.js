@@ -19,7 +19,13 @@
         responsibleService.getList().then(function(data){
             vm.entityRaw = data.results;
             $scope.$apply();
-        })
+        });
+
+        vm.getList = function(options){
+            return responsibleService.getList(options).then(function(data){
+                return data.results;
+            })
+        }
 
     }
 
