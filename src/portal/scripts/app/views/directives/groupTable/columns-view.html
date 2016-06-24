@@ -6,7 +6,7 @@
         <div class="g-scrollable-area">
             <div dragula="'columns-bag'" dragula-model="columns" class="g-columns-holder">
                 <md-card data-ng-repeat="column in columns" class="g-cell g-column">
-                    <div class="sort">
+                    <div class="sort" data-ng-if="isSortable(column)">
                         <md-button class="column-sort" data-ng-show="column.options.sort === 'ASC'" aria-label="open settings" data-ng-click="sortHandler(column, 'DESC')">
                             <ng-md-icon icon="keyboard_arrow_down"></ng-md-icon>
                         </md-button>

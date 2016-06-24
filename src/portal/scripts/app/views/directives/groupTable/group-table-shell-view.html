@@ -5,7 +5,7 @@
         </div>
         <div class="g-table-section" group-horizontal-scroll>
             <div class="g-table-wrap" group-column-resizer items="items">
-                <group-columns columns="columns" sorting="sorting" external-callback="externalCallback()" is-item-addition="false"></group-columns>
+                <group-columns entity-type="entityType" columns="columns" sorting="sorting" external-callback="externalCallback()" is-item-addition="false"></group-columns>
                 <group-table-body items="items"
                                   tabs="tabs"
                                   external-callback="externalCallback()"
@@ -30,7 +30,7 @@
             <div class="g-workarea">
                 <div class="g-table-section" group-horizontal-scroll>
                     <div class="g-table-wrap" group-column-resizer items="itemAdditions">
-                        <group-columns columns="itemAdditionsColumns" external-callback="externalAdditionsCallback()" sorting="sorting" is-item-addition="true"></group-columns>
+                        <group-columns entity-type="entityType" columns="itemAdditionsColumns" external-callback="externalAdditionsCallback()" sorting="sorting" is-item-addition="true"></group-columns>
                         <group-table-body items="itemAdditions"
                                           class="group-table-body"
                                           entity-type="additionsEntityType"

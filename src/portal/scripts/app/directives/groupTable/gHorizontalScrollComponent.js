@@ -19,8 +19,8 @@
                 $(elem).mCustomScrollbar({axis: "x", callbacks: {
                     onInit: function(){},
                     onOverflowX: function(){
-                        console.log("HORIZONTAL SCROLL");
-                        console.log('test');
+                        //console.log("HORIZONTAL SCROLL");
+                        //console.log('test');
                     },
                     whileScrolling: function(){
 
