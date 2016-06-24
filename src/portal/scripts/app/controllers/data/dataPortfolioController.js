@@ -19,8 +19,13 @@
         portfolioService.getList().then(function(data){
             vm.entityRaw = data.results;
             $scope.$apply();
-        })
+        });
 
+        vm.getList = function(options){
+            return portfolioService.getList(options).then(function(data){
+                return data.results;
+            })
+        }
     }
 
 }());

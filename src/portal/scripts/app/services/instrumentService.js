@@ -5,8 +5,8 @@
 
     var instrumentRepository = require('../repositories/instrumentRepository');
 
-    var getList = function () {
-        return instrumentRepository.getList();
+    var getList = function (options) {
+        return instrumentRepository.getList(options);
     };
 
     var getByKey = function (id) {

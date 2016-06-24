@@ -5,8 +5,8 @@
 
     var responsibleRepository = require('../repositories/responsibleRepository');
 
-    var getList = function () {
-        return responsibleRepository.getList();
+    var getList = function (options) {
+        return responsibleRepository.getList(options);
     };
 
     var getByKey = function (id) {

@@ -7,6 +7,8 @@
 
     var cookieService = require('../services/cookieService');
 
+    var configureRepositoryUrlService = require('../services/configureRepositoryUrlService');
+
     var baseUrl = '/api/v1/';
 
     var getClassifierNodeList = function () {
@@ -65,8 +67,8 @@
         })
     };
 
-    var getList = function () {
-        return window.fetch(baseUrl + 'portfolios/portfolio/',
+    var getList = function (options) {
+        return window.fetch(configureRepositoryUrlService.configureUrl(baseUrl + 'portfolios/portfolio/', options),
             {
                 method: 'GET',
                 credentials: 'include',

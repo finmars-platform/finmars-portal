@@ -21,8 +21,8 @@
         return portfolioRepository.getClassifierByKey(id);
     };
 
-    var getList = function () {
-        return portfolioRepository.getList();
+    var getList = function (options) {
+        return portfolioRepository.getList(options);
     };
 
     var getByKey = function (id) {

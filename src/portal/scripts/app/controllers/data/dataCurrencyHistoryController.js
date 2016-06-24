@@ -19,7 +19,13 @@
         currencyHistoryService.getList().then(function(data){
             vm.entityRaw = data.results;
             $scope.$apply();
-        })
+        });
+
+        vm.getList = function(options){
+            return currencyHistoryService.getList(options).then(function(data){
+                return data.results;
+            })
+        }
 
     }
 

@@ -80,7 +80,7 @@
                     for (a = 0; a < attrs.length; a = a + 1) {
                         attr = attrs[a];
                         if (item.id === attr.id) {
-                            if(item.options) {
+                            if (item.options) {
                                 attrOptions = JSON.parse(JSON.stringify(item.options));
                             }
                             item = attr;
@@ -92,7 +92,7 @@
                     for (b = 0; b < baseAttrs.length; b = b + 1) {
                         baseAttr = baseAttrs[b];
                         if (item.key === baseAttr.key) {
-                            if(item.options) {
+                            if (item.options) {
                                 attrOptions = JSON.parse(JSON.stringify(item.options));
                             }
                             item.options = attrOptions;
@@ -104,7 +104,7 @@
                     for (e = 0; e < entityAttrs.length; e = e + 1) {
                         entityAttr = entityAttrs[e];
                         if (item.key === entityAttr.key) {
-                            if(item.options) {
+                            if (item.options) {
                                 attrOptions = JSON.parse(JSON.stringify(item.options));
                             }
                             item.options = attrOptions;
@@ -116,12 +116,13 @@
             }
             return fullItems;
         }
+
         function findFullAttributeForItem(item, attrs) {
-            if(item.hasOwnProperty('id')) {
+            if (item.hasOwnProperty('id')) {
                 var i;
-                for(i = 0; i < attrs.length; i = i + 1) {
+                for (i = 0; i < attrs.length; i = i + 1) {
                     var sort = item.sort;
-                    if(item.id === attrs[i].id) {
+                    if (item.id === attrs[i].id) {
                         item = attrs[i];
                         item.sort = sort;
                     }
@@ -165,7 +166,7 @@
             });
         };
 
-        vm.transformViewAttributes = function(){
+        vm.transformViewAttributes = function () {
 
             vm.columns = returnFullAttributes(vm.columns, vm.attrs, vm.baseAttrs, vm.entityAttrs, vm.entityType);
             vm.grouping = returnFullAttributes(vm.grouping, vm.attrs, vm.baseAttrs, vm.entityAttrs, vm.entityType);
@@ -202,17 +203,34 @@
 
         vm.updateTable = function () {
 
-            vm.groupTableService.setItems(vm.entity);
-            vm.groupTableService.columns.setColumns(vm.columns);
-            vm.groupTableService.filtering.setFilters(vm.filters);
-            vm.groupTableService.grouping.setGroups(vm.grouping);
-            //console.log("EXTERNAL CALLBACK ", vm.folding);
-            vm.groupTableService.folding.setFolds(vm.folding);
-            vm.sorting.group = findFullAttributeForItem(vm.sorting.group, vm.attrs);
-            vm.sorting.column = findFullAttributeForItem(vm.sorting.column, vm.attrs);
-            vm.groupTableService.sorting.group.sort(vm.sorting.group);
-            vm.groupTableService.sorting.column.sort(vm.sorting.column);
-            vm.tableIsReady = true;
+            var options = {
+                sort: {
+                    key: vm.sorting.column.key,
+                    direction: vm.sorting.column.sort
+                },
+                filters: {}
+            };
+
+            console.log('options', options);
+
+            $scope.$parent.vm.getList(options).then(function (data) {
+                entityViewerHelperService.transformItems(data, vm.attrs).then(function (data) {
+                    vm.entity = data;
+                    vm.groupTableService.setItems(vm.entity);
+                    vm.groupTableService.columns.setColumns(vm.columns);
+                    vm.groupTableService.filtering.setFilters(vm.filters);
+                    vm.groupTableService.grouping.setGroups(vm.grouping);
+                    //console.log("EXTERNAL CALLBACK ", vm.folding);
+                    vm.groupTableService.folding.setFolds(vm.folding);
+                    vm.sorting.group = findFullAttributeForItem(vm.sorting.group, vm.attrs);
+                    //vm.sorting.column = findFullAttributeForItem(vm.sorting.column, vm.attrs);
+                    //vm.groupTableService.sorting.group.sort(vm.sorting.group);
+                    //vm.groupTableService.sorting.column.sort(vm.sorting.column);
+                    vm.tableIsReady = true;
+
+                    $scope.$apply();
+                });
+            })
         };
 
         vm.updateAdditionsTable = function () {
@@ -266,7 +284,7 @@
         }
 
         vm.getView().then(function () {
-            vm.getAttributes().then(function(){
+            vm.getAttributes().then(function () {
                 vm.transformViewAttributes();
                 vm.getEntityData();
             });

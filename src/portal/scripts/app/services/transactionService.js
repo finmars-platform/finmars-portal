@@ -5,8 +5,8 @@
 
     var transactionRepository = require('../repositories/transactionRepository');
 
-    var getList = function () {
-        return transactionRepository.getList();
+    var getList = function (options) {
+        return transactionRepository.getList(options);
     };
 
     var getByKey = function (id) {
