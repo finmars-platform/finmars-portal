@@ -398,6 +398,11 @@
                                 return true;
                             }
 
+                            if (scope.item.attribute['value_type'] === 20 || scope.item.attribute['value_type'] === 'float') {
+                                scope.specialOptionTemplate = 'views/attribute-options/number.html';
+                                return true;
+                            }
+
                         }
                     }
 

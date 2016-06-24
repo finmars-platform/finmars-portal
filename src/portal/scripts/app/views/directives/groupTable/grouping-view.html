@@ -6,12 +6,12 @@
                 <md-card>
                     <div>
                         <div class="fold-btn-wrap {{folding ? '' : 'disabled'}}">
-                            <md-button class="" aria="hide/show grouping" data-ng-click="toggleGroupFold()">
+                            <md-button class="" aria-label="hide/show grouping" data-ng-click="toggleGroupFold()">
                                 <ng-md-icon icon="add"></ng-md-icon>
                             </md-button>
                         </div>
                         <div class="fold-btn-wrap {{folding ? 'disabled' : ''}}">
-                            <md-button class="" aria="hide/show grouping" data-ng-click="toggleGroupFold()">
+                            <md-button class="" aria-label="hide/show grouping" data-ng-click="toggleGroupFold()">
                                 <ng-md-icon icon="remove"></ng-md-icon>
                             </md-button>
                         </div>
@@ -21,13 +21,13 @@
             <div dragula="'group-bag'" dragula-model="grouping">
                 <md-card data-ng-repeat="item in grouping" class="group-item card">
                     <div class="sort">
-                        <md-button class="group-sort" data-ng-show="item.options.sort === 'ASC'" aria="open settings" data-ng-click="sortHandler(item, 'DESC')">
+                        <md-button class="group-sort" data-ng-show="item.options.sort === 'ASC'" aria-label="open settings" data-ng-click="sortHandler(item, 'DESC')">
                             <ng-md-icon icon="keyboard_arrow_down"></ng-md-icon>
                         </md-button>
-                        <md-button class="group-sort-up" data-ng-show="item.options.sort === 'DESC'" aria="open settings" data-ng-click="sortHandler(item, 'ASC')">
+                        <md-button class="group-sort-up" data-ng-show="item.options.sort === 'DESC'" aria-label="open settings" data-ng-click="sortHandler(item, 'ASC')">
                             <ng-md-icon icon="keyboard_arrow_up"></ng-md-icon>
                         </md-button>
-                        <md-button class="group-sort group-both-sorted" data-ng-show="!item.options.sort" aria="open settings" data-ng-click="sortHandler(item, 'DESC')">
+                        <md-button class="group-sort group-both-sorted" data-ng-show="!item.options.sort" aria-label="open settings" data-ng-click="sortHandler(item, 'DESC')">
                             <ng-md-icon class="c-up" icon="keyboard_arrow_up"></ng-md-icon>
                             <ng-md-icon class="c-down"  icon="keyboard_arrow_down"></ng-md-icon>
                         </md-button>
@@ -56,7 +56,7 @@
             </div>
         </div>
 
-        <md-button class="md-fab g-settings-btn" data-ng-click="openModalSettings($event)">
+        <md-button class="md-fab g-settings-btn" aria-label="drag modal" data-ng-click="openModalSettings($event)">
             <ng-md-icon icon="view_week"></ng-md-icon>
         </md-button>
     </div>

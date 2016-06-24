@@ -5,10 +5,12 @@
                 <div class="g-row-selection"></div>
                 <md-card class="group-row-fold-holder">
                     <div>
-                        <md-button class="" aria="hide/show grouping" data-ng-show="item.isFolded" data-ng-click="toggleGroupFold(item)">
+                        <md-button class="" aria-label="hide/show grouping" data-ng-show="item.isFolded"
+                                   data-ng-click="toggleGroupFold(item)">
                             <ng-md-icon icon="add"></ng-md-icon>
                         </md-button>
-                        <md-button class="" aria="hide/show grouping" data-ng-show="!item.isFolded" data-ng-click="toggleGroupFold(item)">
+                        <md-button class="" aria-label="hide/show grouping" data-ng-show="!item.isFolded"
+                                   data-ng-click="toggleGroupFold(item)">
                             <ng-md-icon icon="remove"></ng-md-icon>
                         </md-button>
                     </div>
@@ -17,15 +19,14 @@
                     {{group.value}}
                 </div>
             </div>
-            <div data-ng-repeat="groupedItem in item.items" data-ng-show="!item.isFolded" class="g-row" data-ng-click="rowCallback(groupedItem)">
+            <div data-ng-repeat="groupedItem in item.items" data-ng-show="!item.isFolded" class="g-row"
+                 data-ng-click="rowCallback(groupedItem)">
                 <div class="g-row-selection"></div>
                 <div data-ng-repeat="column in columns" class="g-cell">
-                    <span data-ng-bind="bindCell(groupedItem, column)"></span>
+                    <span data-ng-bind-html="bindCell(groupedItem, column) | trustAsHtml"></span>
                 </div>
                 <div class="g-row-right-misc">
-                    <md-button ng-click="deleteEntity($event, groupedItem)" class="g-delete-btn md-icon-button">
-                        <ng-md-icon icon="delete"></ng-md-icon>
-                    </md-button>
+
                     <md-menu>
                         <md-button aria-label="Open phone interactions menu" class="md-icon-button g-entity-menu"
                                    ng-click="$mdOpenMenu($event)">
@@ -38,6 +39,13 @@
                                     <span>Edit</span>
                                 </md-button>
                             </md-menu-item>
+                            <md-menu-item>
+                                <md-button ng-click="deleteEntity($event, groupedItem)"
+                                           class="g-settings-option-btn">
+                                    <ng-md-icon icon="delete"></ng-md-icon>
+                                    <span>Delete</span>
+                                </md-button>
+                            </md-menu-item>
                         </md-menu-content>
                     </md-menu>
                 </div>
@@ -48,12 +56,10 @@
         <div data-ng-repeat="item in items" class="g-row" data-ng-click="rowCallback(item)">
             <div class="g-row-selection"></div>
             <div data-ng-repeat="column in columns" class="g-cell">
-                <span data-ng-bind="bindCell(item, column)"></span>
+                <span data-ng-bind-html="bindCell(item, column) | trustAsHtml"></span>
             </div>
             <div class="g-row-right-misc">
-                <md-button ng-click="deleteEntity($event, item)" class="g-delete-btn md-icon-button">
-                    <ng-md-icon icon="delete"></ng-md-icon>
-                </md-button>
+
                 <md-menu>
                     <md-button aria-label="Open phone interactions menu" class="md-icon-button g-entity-menu"
                                ng-click="$mdOpenMenu($event)">
@@ -64,6 +70,12 @@
                             <md-button ng-click="editEntity($event, item)" class="g-settings-option-btn">
                                 <ng-md-icon icon="mode_edit"></ng-md-icon>
                                 <span>Edit</span>
+                            </md-button>
+                        </md-menu-item>
+                        <md-menu-item>
+                            <md-button ng-click="deleteEntity($event, item)" class="g-settings-option-btn">
+                                <ng-md-icon icon="delete"></ng-md-icon>
+                                <span>Delete</span>
                             </md-button>
                         </md-menu-item>
                     </md-menu-content>

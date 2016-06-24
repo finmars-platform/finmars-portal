@@ -157,7 +157,7 @@
             }
 
             function appendAttribute(attr, value) {
-                var attribute =  {
+                var attribute = {
                     attribute_name: attr.name,
                     attribute_type: attr.id,
                     classifier: null,
@@ -166,7 +166,7 @@
                     value_string: null
                 };
 
-                if(attr['value_type'] === 10) {
+                if (attr['value_type'] === 10) {
                     attribute['value_string'] = value;
                 }
 
@@ -191,6 +191,29 @@
                     }
                 }
             }
+
+            function checkEntityAttrTypes() {
+                var i;
+                for (i = 0; i < vm.entityAttrs.length; i = i + 1) {
+                    if (vm.entityAttrs[i]['value_type'] === 40) {
+                        vm.entity[vm.entityAttrs[i].key] = moment(new Date(vm.entity[vm.entityAttrs[i].key])).format('YYYY-MM-DD');
+                    }
+                    if (vm.entityAttrs[i]['value_type'] === 20 || vm.entityAttrs[i]['value_type'] === 'float') {
+                        //console.log('vm.entity[vm.entityAttrs[i].key]', vm.entity[vm.entityAttrs[i].key]);
+                        var withotSpaces = (vm.entity[vm.entityAttrs[i].key] + '').replace(' ', '');
+                        var res;
+                        if (withotSpaces.indexOf(',') !== -1) {
+                            res = withotSpaces.replace(',', '.');
+                        } else {
+                            res = withotSpaces;
+                        }
+                        vm.entity[vm.entityAttrs[i].key] = parseFloat(res);
+                        //console.log('vm.entity[vm.entityAttrs[i].key]', vm.entity[vm.entityAttrs[i].key]);
+                    }
+                }
+            }
+
+            checkEntityAttrTypes();
 
             entityResolverService.update(vm.entityType, vm.entity.id, vm.entity).then(function (data) {
                 console.log('saved!', data);

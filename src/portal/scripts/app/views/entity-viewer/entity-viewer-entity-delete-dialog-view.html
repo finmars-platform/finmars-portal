@@ -1,13 +1,13 @@
 <md-dialog aria-label="" ng-cloak class="delete-portfolio-dialog">
     <md-toolbar>
         <div class="md-toolbar-tools">
-            <h2>Delete {{vm.portfolio.name}}</h2>
+            <h2>Delete {{vm.displayCaption()}}</h2>
             <span flex></span>
         </div>
     </md-toolbar>
     <md-dialog-content>
         <div class="warning-text">
-            <p>Are you sure to delete this portfolio <b>{{vm.portfolio.name}}?</b></p>
+            <p>Are you sure to delete this  <b>{{vm.displayCaption()}}?</b></p>
         </div>
     </md-dialog-content>
     <md-dialog-actions layout="row">

@@ -2,7 +2,8 @@
     <div data-ng-if="fieldType['display_name'] === 'Number'">
         <md-input-container class="md-block">
             <label data-ng-bind="getName()"></label>
-            <input data-ng-model="entity[getModelKey()]" type="number">
+            <input data-ng-model="entity[getModelKey()]" type="number" data-ng-if="!item.options.onlyPositive">
+            <input data-ng-model="entity[getModelKey()]" type="number" min="0" data-ng-if="item.options.onlyPositive">
         </md-input-container>
     </div>
     <div data-ng-if="fieldType['display_name'] === 'String'">
@@ -25,7 +26,8 @@
     <div data-ng-if="fieldType['display_name'] === 'Float'">
         <md-input-container class="md-block">
             <label data-ng-bind="getName()"></label>
-            <input data-ng-model="entity[getModelKey()]">
+            <input data-ng-model="entity[getModelKey()]" data-float-numbers data-ng-if="!item.options.onlyPositive">
+            <input data-ng-model="entity[getModelKey()]" data-float-numbers data-only-positive="true" data-ng-if="item.options.onlyPositive">
         </md-input-container>
     </div>
     <div data-ng-if="fieldType['display_name'] === 'Field'">
