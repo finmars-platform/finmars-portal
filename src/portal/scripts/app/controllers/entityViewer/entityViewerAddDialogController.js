@@ -84,14 +84,14 @@
                         if (tab.layout.fields[i].row === row) {
 
                             if (tab.layout.fields[i].type === 'field') {
-                                for(c = tab.layout.fields[i].column; c <= (tab.layout.fields[i].column + tab.layout.fields[i].colspan - 1); c = c + 1) {
+                                for (c = tab.layout.fields[i].column; c <= (tab.layout.fields[i].column + tab.layout.fields[i].colspan - 1); c = c + 1) {
                                     spannedCols.push(c);
                                 }
                             }
                         }
                     }
-                    for(x = 0; x < spannedCols.length; x = x + 1) {
-                        if(spannedCols[x] === field.column) {
+                    for (x = 0; x < spannedCols.length; x = x + 1) {
+                        if (spannedCols[x] === field.column) {
                             return false;
                         }
                     }
@@ -163,7 +163,7 @@
             }
 
             function appendAttribute(attr, value) {
-                var attribute =  {
+                var attribute = {
                     attribute_name: attr.name,
                     attribute_type: attr.id,
                     classifier: null,
@@ -172,7 +172,7 @@
                     value_string: null
                 };
 
-                if(attr['value_type'] === 10) {
+                if (attr['value_type'] === 10) {
                     attribute['value_string'] = value;
                 }
 
@@ -185,7 +185,7 @@
                 for (a = 0; a < keys.length; a = a + 1) {
                     if (vm.attrs[i].name === keys[a]) {
                         attrExist = false;
-                        if(vm.entity.attributes) {
+                        if (vm.entity.attributes) {
                             for (c = 0; c < vm.entity.attributes.length; c = c + 1) {
                                 if (vm.entity.attributes[c]['attribute_type'] === vm.attrs[i].id) {
                                     attrExist = true;
@@ -195,12 +195,24 @@
                         }
                         if (!attrExist) {
                             console.log('vm.entity[keys[a]]', vm.entity[keys[a]]);
-                            if(!vm.entity.attributes) vm.entity.attributes = [];
+                            if (!vm.entity.attributes) vm.entity.attributes = [];
                             vm.entity.attributes.push(appendAttribute(vm.attrs[i], vm.entity[keys[a]]));
                         }
                     }
                 }
             }
+
+
+            function checkEntityAttrTypes() {
+                var i;
+                for (i = 0; i < vm.entityAttrs.length; i = i + 1) {
+                    if(vm.entityAttrs[i]['value_type'] === 40) {
+                        vm.entity[vm.entityAttrs[i].key] = moment(new Date(vm.entity[vm.entityAttrs[i].key])).format('YYYY-MM-DD');
+                    }
+                }
+            }
+
+            checkEntityAttrTypes();
 
             entityResolverService.create(vm.entityType, vm.entity).then(function (data) {
                 console.log('saved!', data);

@@ -43,6 +43,13 @@
                     scope.externalCallback();
                 };
 
+                scope.clearAll = function(){
+                    scope.filters.forEach(function (item) {
+                        item.options.query = '';
+                    });
+                    scope.externalCallback();
+                };
+
                 scope.deselectAll = function () {
                     scope.filters.forEach(function (item) {
                         item.options.enabled = false;

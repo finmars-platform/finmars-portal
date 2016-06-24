@@ -17,13 +17,13 @@ var app = angular.module('app', [
 
 
 app.config(['$stateProvider', '$urlRouterProvider', require('./app/router.js')]);
-app.config(['$mdDateLocaleProvider', function($mdDateLocaleProvider) {
-    $mdDateLocaleProvider.formatDate = function(date) {
+app.config(['$mdDateLocaleProvider', function ($mdDateLocaleProvider) {
+    $mdDateLocaleProvider.formatDate = function (date) {
         return moment(date).format('YYYY-MM-DD');
     };
 }]);
 
-app.run(function(){
+app.run(function () {
     console.log('App initialized');
 });
 
@@ -41,7 +41,7 @@ app.controller('AttributesManagerAddDialogController', ['$scope', '$mdDialog', r
 app.controller('EntityViewerController', ['$scope', '$mdDialog', '$mdMedia', require('./app/controllers/entityViewer/entityViewerController')]);
 app.controller('EntityViewerAddDialogController', ['$scope', '$mdDialog', 'parentScope', '$state', require('./app/controllers/entityViewer/entityViewerAddDialogController')]);
 app.controller('EntityViewerEditDialogController', ['$scope', '$mdDialog', 'parentScope', 'entity', '$state', require('./app/controllers/entityViewer/entityViewerEditDialogController')]);
-app.controller('EntityViewerDeleteDialogController', ['$scope', '$mdDialog', 'entity', require('./app/controllers/entityViewer/entityViewerDeleteDialogController')]);
+app.controller('EntityViewerDeleteDialogController', ['$scope', '$mdDialog', 'entity', 'entityType', require('./app/controllers/entityViewer/entityViewerDeleteDialogController')]);
 
 app.controller('DataPortfolioController', ['$scope', require('./app/controllers/data/dataPortfolioController')]);
 app.controller('DataAccountController', ['$scope', require('./app/controllers/data/dataAccountController')]);
@@ -82,9 +82,9 @@ app.controller('gModalController', ['$scope', '$mdDialog', 'parentScope', 'callb
 // GROUP TABLE END
 
 app.directive('evFieldResolver', [require('./app/directives/entityViewerFieldResolverDirective')]);
+app.directive('floatNumbers', [require('./app/directives/floatNumbersDirective')]);
 
-
-
+app.filter('trustAsHtml', ['$sce', require('./app/filters/trustAsHtmlFilter')]);
 
 
 require('./templates.min.js');

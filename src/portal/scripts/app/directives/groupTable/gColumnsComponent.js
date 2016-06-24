@@ -31,7 +31,7 @@
                     }
                     column.options.sort = sort;
 
-                    if(column.hasOwnProperty('id')) {
+                    if (column.hasOwnProperty('id')) {
                         scope.sorting.column.id = column.id;
                         scope.sorting.column.key = null;
                         scope.sorting.column.sort = sort;
@@ -50,14 +50,28 @@
 
                 scope.removeColumn = function (column) {
                     //console.log('remove', column);
-                    scope.columns = scope.columns.map(function (item) {
-                        if (item.id === column.id || item.name === column.name) {
-                            return undefined
-                        }
-                        return item
-                    }).filter(function (item) {
-                        return !!item;
-                    })
+                    //console.log('remove', scope.columns);
+                    if (column.id) {
+                        scope.columns = scope.columns.map(function (item) {
+                            if (item.id === column.id || item.key === column.key) {
+                                return undefined
+                            }
+                            return item
+                        }).filter(function (item) {
+                            return !!item;
+                        });
+                    }
+                    if (column.key) {
+                        scope.columns = scope.columns.map(function (item) {
+                            if (item.key === column.key) {
+                                return undefined
+                            }
+                            return item
+                        }).filter(function (item) {
+                            return !!item;
+                        });
+                    }
+                    //console.log('remove', scope.columns);
                 }
             }
         }

@@ -7,22 +7,33 @@
 
     var logService = require('../../services/logService');
 
-    var portfolioService = require('../../services/portfolioService');
+    var entityResolverService = require('../../services/entityResolverService');
 
-    module.exports = function ($scope, $mdDialog, portfolio) {
+    module.exports = function ($scope, $mdDialog, entity, entityType) {
 
         logService.controller('EntityViewerDeleteDialogController', 'initialized');
 
         var vm = this;
-        vm.portfolio = portfolio;
+        console.log('vm.entity', entity);
+        vm.entity = entity;
+        vm.entityType = entityType;
+
+        vm.displayCaption = function () {
+            if (vm.entity.name) {
+                return vm.entity.name;
+            }
+            return 'item';
+        };
 
         vm.cancel = function () {
             $mdDialog.cancel();
         };
 
         vm.delete = function () {
-            portfolioService.deleteByKey(vm.portfolio.id);
-            $mdDialog.hide({res: 'agree'});
+            entityResolverService.deleteByKey(vm.entityType, vm.entity.id).then(function (data) {
+                console.log('deleted!', data);
+                $mdDialog.hide({res: 'agree'});
+            });
         };
 
     }

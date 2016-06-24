@@ -7,6 +7,7 @@
 
     var logService = require('../../services/logService');
     var metaService = require('../../services/metaService');
+    var bindCellService = require('../../services/bindCellService');
 
     module.exports = function ($mdDialog) {
         return {
@@ -24,12 +25,18 @@
 
                 logService.component('groupTableBody', 'initialized');
 
+                console.log('bindCellService', bindCellService);
+
 
                 console.log('scope columns', scope.columns);
+
+                scope.readyStatus = {cellsReady: false};
 
                 var entityType = scope.entityType;
                 var baseAttrs = [];
                 var entityAttrs = [];
+
+                var entityFieldsArray = {};
 
                 baseAttrs = metaService.getBaseAttrs();
                 entityAttrs = metaService.getEntityAttrs(entityType);
@@ -43,9 +50,37 @@
                     $mdOpenMenu(ev);
                 };
 
+                var getFieldDisplayNamesArray = function () {
+                    var i;
+                    var promises = [];
+                    for (i = 0; i < scope.columns.length; i = i + 1) {
+                        console.log(scope.columns[i]);
+                        if (scope.columns[i]['value_type'] === 'field') {
+                            promises.push(bindCellService.findEntities(scope.columns[i].key));
+                        }
+                    }
+                    Promise.all(promises).then(function (results) {
+                        //console.log('results', results);
+                        results.forEach(function (item) {
+                            entityFieldsArray[item.key] = item.data;
+                        });
+                        scope.readyStatus.cellsReady = true;
+                    });
+
+                    //console.log('entityFieldsArray', entityFieldsArray);
+                };
+
+                scope.$watchCollection('columns', function () {
+                    console.log('AAAAAAAAAAAAAAAA');
+                    scope.readyStatus.cellsReady = false;
+                    getFieldDisplayNamesArray();
+                });
+
                 scope.bindCell = function (groupedItem, column) {
                     //console.log('entityAttrs', entityAttrs);
+                    //console.log('column', column);
                     if (column.hasOwnProperty('id')) {
+
                         return groupedItem[column.name];
                     } else {
                         var i, e;
@@ -58,7 +93,27 @@
                         for (e = 0; e < entityAttrs.length; e = e + 1) {
 
                             if (entityAttrs[e].key === column.key) {
-                                return groupedItem[entityAttrs[e].key];
+                                if (column['value_type'] === 'field') {
+                                    var _groupedItemVal = groupedItem[entityAttrs[e].key];
+                                    if (scope.readyStatus.cellsReady) {
+                                        //console.log('entityFieldsArray', entityFieldsArray);
+                                        var result = entityFieldsArray[column.key].filter(function (item) {
+                                            return item.id === _groupedItemVal;
+                                        })[0];
+                                        if (result) {
+                                            if (result['display_name']) {
+                                                return result['display_name'];
+                                            }
+                                            return result['name'];
+                                        }
+                                        return '';
+                                    } else {
+                                        return '<div class="zh-loader"></div>';
+                                    }
+                                } else {
+                                    //console.log('groupedItem[entityAttrs[e].key]', groupedItem[entityAttrs[e].key]);
+                                    return groupedItem[entityAttrs[e].key];
+                                }
                             }
                         }
                     }
@@ -82,10 +137,11 @@
                         targetEvent: ev,
                         clickOutsideToClose: true,
                         locals: {
-                            entity: entity
+                            entity: entity,
+                            entityType: scope.entityType
                         }
-                    }).then(function(res){
-                        if(res === 'agree') {
+                    }).then(function (res) {
+                        if (res === 'agree') {
                             scope.externalCallback();
                         }
                     })
@@ -102,8 +158,8 @@
                             parentScope: scope,
                             entity: entity
                         }
-                    }).then(function(res){
-                        if(res === 'agree') {
+                    }).then(function (res) {
+                        if (res === 'agree') {
                             scope.externalCallback();
                         }
                     });

@@ -1,6 +1,7 @@
 md-content.md-default-theme {
   background-color: #eee;
 }
+
 .md-select-menu-container.md-active md-select-menu {
   background: #fff;
 }
@@ -9,15 +10,18 @@ md-content.md-default-theme {
   height: 38px;
   width: 38px;
 }
+
 body {
   //background: #4C334D;
 }
+
 md-card {
   background-color: #fff;
   h2:first-of-type {
     margin-top: 0;
   }
 }
+
 md-content {
   background: transparent;
 }
@@ -144,6 +148,7 @@ a.md-button.md-default-theme.md-fab, a.md-button.md-fab, .md-button.md-default-t
   z-index: 11000;
   overflow: visible;
 }
+
 .md-select-menu-container {
   z-index: 11010;
 }
@@ -155,19 +160,23 @@ a.md-button.md-default-theme.md-fab, a.md-button.md-fab, .md-button.md-default-t
 .md-button.md-fab.md-mini {
   line-height: 1;
 }
+
 .add-portfolio-dialog, .edit-portfolio-dialog {
   width: 70%;
 }
+
 .delete-portfolio-dialog {
   .warning-text {
     padding: 1em;
   }
 }
+
 .warning-dialog {
   .warning-text {
     padding: 0 20px;
   }
 }
+
 .header-misc {
   .md-button {
     min-width: 0;
@@ -189,6 +198,26 @@ a.md-button.md-default-theme.md-fab, a.md-button.md-fab, .md-button.md-default-t
     margin-left: 10px;
   }
 }
+
 .e-data-loader {
   padding-top: 10em;
+}
+
+.zh-loader {
+  border: 2px solid #fff; /* Light grey */
+  border-top: 2px solid #3B283B; /* Blue */
+  border-bottom: 2px solid #3B283B;
+  border-radius: 50%;
+  width: 10px;
+  height: 10px;
+  animation: spin 2s linear infinite;
+
+  @keyframes spin {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
 }

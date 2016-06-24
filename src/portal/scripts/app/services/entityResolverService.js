@@ -56,6 +56,12 @@
             case 'instrument':
                 return instrumentService.update(id, entity);
                 break;
+            case 'price-history':
+                return priceHistoryService.update(id, entity);
+                break;
+            case 'currency-history':
+                return priceHistoryService.update(id, entity);
+                break;
         }
     };
 
@@ -75,6 +81,12 @@
                 break;
             case 'instrument':
                 return instrumentService.deleteByKey(id);
+                break;
+            case 'price-history':
+                return priceHistoryService.deleteByKey(id);
+                break;
+            case 'currency-history':
+                return priceHistoryService.deleteByKey(id);
                 break;
         }
     };

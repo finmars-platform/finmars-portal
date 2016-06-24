@@ -8,10 +8,15 @@
             Deselect all
         </md-button>
     </div>
+    <div layout="row" class="filters-control-btn">
+        <md-button class="md-raised clear-all full-width" data-ng-click="clearAll()">
+            Clear all
+        </md-button>
+    </div>
     <div dragula="'filters-bag'" dragula-model="filters">
         <md-card data-ng-repeat="filter in filters"
                  class="{{filter.options.enabled ? '' : 'f-disabled' }} g-filter-item" layout="row">
-            <md-checkbox ng-model="filter.options.enabled" aria="filters" class="md-primary"
+            <md-checkbox ng-model="filter.options.enabled" aria-label="filters" class="md-primary"
                          ng-change="toggleFilterState(filter)" flex="15">
             </md-checkbox>
             <md-input-container flex="65">
