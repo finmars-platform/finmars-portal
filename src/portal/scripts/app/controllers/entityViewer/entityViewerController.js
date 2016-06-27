@@ -211,6 +211,14 @@
                 filters: {}
             };
 
+            console.log('vm.filters', vm.filters);
+
+            vm.filters.forEach(function(item){
+               if(item.options && item.options.enabled === true) {
+                   options.filters[item.key] = item.options.query;
+               }
+            });
+
             console.log('options', options);
 
             $scope.$parent.vm.getList(options).then(function (data) {
@@ -218,7 +226,7 @@
                     vm.entity = data;
                     vm.groupTableService.setItems(vm.entity);
                     vm.groupTableService.columns.setColumns(vm.columns);
-                    vm.groupTableService.filtering.setFilters(vm.filters);
+                    //vm.groupTableService.filtering.setFilters(vm.filters);
                     vm.groupTableService.grouping.setGroups(vm.grouping);
                     //console.log("EXTERNAL CALLBACK ", vm.folding);
                     vm.groupTableService.folding.setFolds(vm.folding);
