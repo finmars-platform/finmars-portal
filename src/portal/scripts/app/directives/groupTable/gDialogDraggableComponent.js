@@ -34,7 +34,7 @@
                     //console.log(posX - elemLeft);
                     //console.log(posY - elemTop);
 
-                    parent[0].style.left = (posX - elemLeft - $(elem).width() + 8) + 'px';
+                    parent[0].style.left = (posX - elemLeft + 8) + 'px';
                     parent[0].style.top = (posY - elemTop - 8 - 150) + 'px';
 
                 }

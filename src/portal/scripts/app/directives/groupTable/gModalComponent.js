@@ -19,14 +19,15 @@
         var vm = this;
         vm.readyStatus = {content: false};
 
-        vm.tabs = parentScope.tabs;
+        vm.tabs = [];
         vm.entityType = parentScope.entityType;
 
         logService.property('vm.entityType', vm.entityType);
 
-        uiService.getEditLayout(vm.entityType).then(function(data){
+        uiService.getListLayout(vm.entityType).then(function (data) {
             logService.collection('DATA', data);
-            vm.tabs = data.results[0].data;
+            vm.tabs = data.results[0].data.modalDrag;
+            logService.collection('vm.tabs!!!!!!!!!!!!!', vm.tabs);
             vm.getAttributes();
             $scope.$apply();
         });
@@ -47,8 +48,8 @@
                         vm.tabs[i].attrs = [];
 
                         for (x = 0; x < vm.tabs[i].layout.fields.length; x = x + 1) {
-                           ;
-                            if(vm.tabs[i].layout.fields[x].type === 'field') {
+                            ;
+                            if (vm.tabs[i].layout.fields[x].type === 'field') {
                                 if (vm.tabs[i].layout.fields[x].hasOwnProperty('id')) {
                                     vm.tabs[i].attrs.push({
                                         id: vm.tabs[i].layout.fields[x].id
@@ -88,7 +89,7 @@
                                     attributeIsExist = true;
                                 }
                             }
-                            if(!attributeIsExist) {
+                            if (!attributeIsExist) {
                                 vm.tabs[t].attrs.splice(c, 1);
                                 c = c - 1;
                             }
@@ -108,7 +109,7 @@
                                 }
                             }
 
-                            if(!attributeIsExist) {
+                            if (!attributeIsExist) {
                                 vm.tabs[t].attrs.splice(c, 1);
                                 c = c - 1;
                             }
@@ -132,136 +133,182 @@
 
         $('body').addClass('drag-dialog'); // hide backdrop
         vm.getAttributes = function () {
+            if (metaService.getEntitiesWithoutBaseAttrsList().indexOf(vm.entityType) === -1) {
+                vm.baseAttrs = metaService.getBaseAttrs();
+            }
+            vm.entityAttrs = metaService.getEntityAttrs(vm.entityType);
             return attributeTypeService.getList(vm.entityType).then(function (data) {
                 vm.attrs = data.results;
-                vm.baseAttrs = metaService.getBaseAttrs();
-                vm.entityAttrs = metaService.getEntityAttrs(vm.entityType);
                 attrsList = vm.attrs.concat(vm.baseAttrs);
                 attrsList = attrsList.concat(vm.entityAttrs);
                 restoreAttrs();
-                syncAttrs(vm.tabs);
+                syncAttrs();
                 logService.collection('attrsList!!!!!!!!!', attrsList);
                 vm.readyStatus.content = true;
                 $scope.$apply();
             })
         };
 
-
         parentScope.$watch('columns', function () {
             if (vm.tabAttrsReady) {
                 columns = parentScope.columns;
-                syncAttrs(vm.tabs);
+                syncAttrs();
                 callback();
             }
         });
         parentScope.$watch('filters', function () {
             if (vm.tabAttrsReady) {
                 filters = parentScope.filters;
-                syncAttrs(vm.tabs);
+                syncAttrs();
                 callback();
             }
         });
         parentScope.$watch('grouping', function () {
             if (vm.tabAttrsReady) {
                 grouping = parentScope.grouping;
-                syncAttrs(vm.tabs);
+                syncAttrs();
                 callback();
             }
         });
 
-        var syncAttrs = function (tabs) {
-            var i, t;
-            var attrs;
-            for (t = 0; t < tabs.length; t = t + 1) {
-                attrs = tabs[t].attrs;
-                for (i = 0; i < attrs.length; i = i + 1) {
-                    attrs[i].columns = false;
-                    attrs[i].filters = false;
-                    attrs[i].groups = false;
-                    columns.map(function (item) {
-                        if (attrs[i].name === item.name) {
-                            attrs[i].columns = true;
+        var syncAttrs = function () {
+            syncTypeAttrs(vm.baseAttrs);
+            syncTypeAttrs(vm.entityAttrs);
+            syncTypeAttrs(vm.attrs);
+        };
+
+
+        var updateAttrs = function () {
+
+            updateTypeAttrs(vm.baseAttrs);
+            updateTypeAttrs(vm.entityAttrs);
+            updateTypeAttrs(vm.attrs);
+
+        };
+
+        function syncTypeAttrs(attrs) {
+            var i;
+            for (i = 0; i < attrs.length; i = i + 1) {
+                attrs[i].columns = false;
+                attrs[i].filters = false;
+                attrs[i].groups = false;
+                columns.map(function (item) {
+                    //console.log('item', item);
+                    //console.log('attrs[i]', attrs[i]);
+                    if (attrs[i].name === item.name) {
+                        attrs[i].columns = true;
+                    }
+                    return item;
+                });
+                filters.map(function (item) {
+                    if (attrs[i].name === item.name) {
+                        attrs[i].filters = true;
+                    }
+                    return item;
+                });
+                grouping.map(function (item) {
+                    if(item.hasOwnProperty('key')) {
+                        if (attrs[i].key === item.key) {
+                            attrs[i].groups = true;
                         }
-                        return item;
-                    });
-                    filters.map(function (item) {
-                        if (attrs[i].name === item.name) {
-                            attrs[i].filters = true;
-                        }
-                        return item;
-                    });
-                    grouping.map(function (item) {
+                    } else {
                         if (attrs[i].name === item.name) {
                             attrs[i].groups = true;
                         }
-                        return item;
-                    });
-                }
+                    }
+                    return item;
+                });
             }
+        }
 
-            return attrs;
-        };
-
-        var updateAttrs = function () {
-            var i, c, g, t, f;
+        function updateTypeAttrs(typeAttrs) {
+            var i, c, g, f;
             var columnExist, groupExist, filterExist;
-            for (t = 0; t < vm.tabs.length; t = t + 1) {
 
-                for (i = 0; i < vm.tabs[t].attrs.length; i = i + 1) {
-                    columnExist = false;
-                    groupExist = false;
-                    filterExist = false;
-                    for (c = 0; c < columns.length; c = c + 1) {
-                        if (vm.tabs[t].attrs[i].name === columns[c].name) {
+            for (i = 0; i < typeAttrs.length; i = i + 1) {
+                columnExist = false;
+                groupExist = false;
+                filterExist = false;
+                for (c = 0; c < columns.length; c = c + 1) {
+                    if (typeAttrs[i].hasOwnProperty('key')) {
+                        if (typeAttrs[i].key === columns[c].key) {
                             columnExist = true;
-                            if (vm.tabs[t].attrs[i].columns === false) {
+                            if (typeAttrs[i].columns === false) {
+                                columns.splice(c, 1);
+                                c = c - 1;
+                            }
+                        }
+                    } else {
+                        if (typeAttrs[i].name === columns[c].name) {
+                            columnExist = true;
+                            if (typeAttrs[i].columns === false) {
                                 columns.splice(c, 1);
                                 c = c - 1;
                             }
                         }
                     }
-                    if (!columnExist) {
-                        if (vm.tabs[t].attrs[i].columns === true) {
-                            columns.push(vm.tabs[t].attrs[i]);
-                        }
+                }
+                if (!columnExist) {
+                    if (typeAttrs[i].columns === true) {
+                        columns.push(typeAttrs[i]);
                     }
+                }
 
-                    /////// GROUPING
+                /////// GROUPING
 
-                    for (g = 0; g < grouping.length; g = g + 1) {
-                        if (vm.tabs[t].attrs[i].name === grouping[g].name) {
+                for (g = 0; g < grouping.length; g = g + 1) {
+                    if (typeAttrs[i].hasOwnProperty('key')) {
+                        if (typeAttrs[i].key === grouping[g].key) {
                             groupExist = true;
-                            if (vm.tabs[t].attrs[i].groups === false) {
+                            if (typeAttrs[i].groups === false) {
+                                grouping.splice(g, 1);
+                                g = g - 1;
+                            }
+                        }
+                    } else {
+                        if (typeAttrs[i].id === grouping[g].id) {
+                            groupExist = true;
+                            if (typeAttrs[i].groups === false) {
                                 grouping.splice(g, 1);
                                 g = g - 1;
                             }
                         }
                     }
-                    if (!groupExist) {
-                        if (vm.tabs[t].attrs[i].groups === true) {
-                            grouping.push(vm.tabs[t].attrs[i]);
-                        }
+                }
+                if (!groupExist) {
+                    if (typeAttrs[i].groups === true) {
+                        grouping.push(typeAttrs[i]);
                     }
+                }
 
-                    /////// FILTERING
+                /////// FILTERING
 
-                    for (f = 0; f < filters.length; f = f + 1) {
-                        if (vm.tabs[t].attrs[i].name === filters[f].name) {
+                for (f = 0; f < filters.length; f = f + 1) {
+                    if (typeAttrs[i].hasOwnProperty('key')) {
+                        if (typeAttrs[i].key === filters[f].key) {
                             filterExist = true;
-                            if (vm.tabs[t].attrs[i].groups === false) {
+                            if (typeAttrs[i].filters === false) {
+                                filters.splice(f, 1);
+                                f = f - 1;
+                            }
+                        }
+                    } else {
+                        if (typeAttrs[i].name === filters[f].name) {
+                            filterExist = true;
+                            if (typeAttrs[i].filters === false) {
                                 filters.splice(f, 1);
                                 f = f - 1;
                             }
                         }
                     }
-                    if (!filterExist) {
-                        if (vm.tabs[t].attrs[i].filters === true) {
-                            filters.push(vm.tabs[t].attrs[i]);
-                        }
+                }
+                if (!filterExist) {
+                    if (typeAttrs[i].filters === true) {
+                        filters.push(typeAttrs[i]);
                     }
                 }
             }
-        };
+        }
 
         vm.updateAttrs = function () {
             updateAttrs();
@@ -295,6 +342,12 @@
                     $(target).removeClass('active');
                     var name = $(elem).html();
                     var i;
+
+                    console.log('elem111111111111111111111111111111', elem);
+                    console.log('columns111111111111111111111111111111', columns);
+                    console.log('grouping111111111111111111111111111111', grouping);
+                    console.log('filters111111111111111111111111111111', filters);
+
                     exist = false;
                     if (target === document.querySelector('#columnsbag')) {
                         for (i = 0; i < columns.length; i = i + 1) {
@@ -311,7 +364,7 @@
                         }
                     }
                     if (target === document.querySelector('#filtersbag .drop-new-filter')) {
-                        for (i = 0; i < grouping.length; i = i + 1) {
+                        for (i = 0; i < filters.length; i = i + 1) {
                             if (filters[i].name === name) {
                                 exist = true;
                             }
@@ -325,7 +378,7 @@
                                     columns.push(attrsList[a]);
                                 }
                             }
-                            syncAttrs(vm.tabs);
+                            syncAttrs();
                             callback();
                         }
                         if (target === document.querySelector('#groupsbag')) {
@@ -335,7 +388,7 @@
                                     grouping.push(attrsList[a]);
                                 }
                             }
-                            syncAttrs(vm.tabs);
+                            syncAttrs();
                             callback();
                         }
                         if (target === document.querySelector('#filtersbag .drop-new-filter')) {
@@ -345,7 +398,7 @@
                                     filters.push(attrsList[a]);
                                 }
                             }
-                            syncAttrs(vm.tabs);
+                            syncAttrs();
                             callback();
                         }
                         $scope.$apply();
