@@ -12,6 +12,7 @@ var app = angular.module('app', [
     'ngSanitize',
     'ui.router',
     'mdPickers',
+    'io.dennis.contextmenu',
     angularDragula(angular)
 ]);
 
@@ -55,6 +56,7 @@ app.controller('DataCurrencyHistoryController', ['$scope', require('./app/contro
 app.controller('EntityDataConstructorController', ['$scope', '$stateParams', '$state', '$mdDialog', require('./app/controllers/entityDataConstructorController')]);
 
 app.controller('WarningDialogController', ['$scope', '$mdDialog', 'warning', require('./app/controllers/warningDialogController')]);
+app.controller('InstrumentSelectDialogController', ['$scope', '$mdDialog',  require('./app/controllers/instrumentSelectDialogController')]);
 
 app.directive('menuToggle', [require('./app/directives/menuToggleDirective')]);
 app.directive('menuLink', [require('./app/directives/menuLinkDirective')]);
@@ -83,8 +85,22 @@ app.controller('gModalController', ['$scope', '$mdDialog', 'parentScope', 'callb
 
 app.directive('evFieldResolver', [require('./app/directives/entityViewerFieldResolverDirective')]);
 app.directive('floatNumbers', [require('./app/directives/floatNumbersDirective')]);
+app.directive('instrumentModalResolver', ['$mdDialog', require('./app/directives/instrumentModalResolverDirective')]);
 
 app.filter('trustAsHtml', ['$sce', require('./app/filters/trustAsHtmlFilter')]);
+app.filter('strLimit', ['$filter', require('./app/filters/strLimitFilter')]);
+
+app.directive('ngRightClick', ['$parse', function($parse) {
+    return function(scope, element, attrs) {
+        var fn = $parse(attrs.ngRightClick);
+        element.bind('contextmenu', function(event) {
+            scope.$apply(function() {
+                event.preventDefault();
+                fn(scope, {$event:event});
+            });
+        });
+    };
+}]);
 
 
 require('./templates.min.js');

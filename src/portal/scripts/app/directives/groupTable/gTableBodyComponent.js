@@ -25,11 +25,6 @@
 
                 logService.component('groupTableBody', 'initialized');
 
-                console.log('bindCellService', bindCellService);
-
-
-                console.log('scope columns', scope.columns);
-
                 scope.readyStatus = {cellsReady: false};
 
                 var entityType = scope.entityType;
@@ -70,8 +65,12 @@
                     //console.log('entityFieldsArray', entityFieldsArray);
                 };
 
+                scope.toggleSelectRow = function(item){
+                    console.log('item111111111111111111', item);
+                    item.selectedRow = !item.selectedRow;
+                };
+
                 scope.$watchCollection('columns', function () {
-                    console.log('AAAAAAAAAAAAAAAA');
                     scope.readyStatus.cellsReady = false;
                     getFieldDisplayNamesArray();
                 });
@@ -124,7 +123,6 @@
                     if (scope.entityType === 'portfolio') {
                         scope.$parent.externalGetAdditions({id: item.id}).then(function () {
                             //scope.$parent.additionsStatus.additionsWorkArea = true;
-                            console.log('work?', scope);
                         });
                     }
                 };

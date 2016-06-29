@@ -9,22 +9,31 @@
             <span flex></span>
         </div>
     </md-toolbar>
-    <md-dialog-content data-ng-if="vm.readyStatus.content">
-        <md-tabs md-dynamic-height md-border-bottom>
-            <md-tab label="{{tab.name}}" data-ng-repeat="tab in vm.tabs">
-                <md-content class="md-padding">
-                    <div layout="row" data-ng-repeat="row in vm.range(tab.layout.rows)">
-                        <div class="ev-data-field" data-ng-repeat="field in tab.layout.fields" flex="{{vm.bindFlex(tab, row, field)}}" data-ng-if="vm.checkFieldRender(tab, row, field)">
-                            <bind-field-control item="vm.bindField(tab, field)"></bind-field-control>
+    <md-dialog-content>
+        <div data-ng-if="vm.readyStatus.content">
+            <md-tabs md-dynamic-height md-border-bottom>
+                <md-tab label="{{tab.name}}" data-ng-repeat="tab in vm.tabs">
+                    <md-content class="md-padding">
+                        <div layout="row" data-ng-repeat="row in vm.range(tab.layout.rows)">
+                            <div class="ev-data-field" data-ng-repeat="field in tab.layout.fields"
+                                 flex="{{vm.bindFlex(tab, row, field)}}"
+                                 data-ng-if="vm.checkFieldRender(tab, row, field)">
+                                <bind-field-control item="vm.bindField(tab, field)"></bind-field-control>
+                            </div>
                         </div>
-                    </div>
-                </md-content>
-            </md-tab>
-        </md-tabs>
+                    </md-content>
+                </md-tab>
+            </md-tabs>
+        </div>
+        <div data-ng-if="!vm.readyStatus.content">
+            <div layout="row" layout-sm="column" layout-align="space-around" class="m-large">
+                <md-progress-circular md-mode="indeterminate" md-diameter="96"></md-progress-circular>
+            </div>
+        </div>
     </md-dialog-content>
     <md-dialog-actions layout="row">
-        <md-button ng-click="vm.editLayout()">
-            Select fields
+        <md-button ng-click="vm.editLayout()" class="md-raised md-primary">
+            Edit Form
         </md-button>
         <md-button ng-click="vm.cancel()">
             Cancel

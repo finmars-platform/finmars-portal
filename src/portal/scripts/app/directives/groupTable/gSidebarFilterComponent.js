@@ -6,6 +6,7 @@
     'use strict';
 
     var logService = require('../../services/logService');
+    var fieldResolverService = require('../../services/fieldResolverService');
 
     module.exports = function () {
         return {
@@ -19,8 +20,30 @@
 
                 logService.component('groupSidebarFilter', 'initialized');
 
+                scope.fields = {};
+
+
                 scope.$watchCollection('filters', function () {
+                    console.log('scope3222222222222222.filters', scope.filters);
                     scope.externalCallback();
+
+                    var promises = [];
+
+                    scope.filters.forEach(function (item) {
+                        if (!scope.fields.hasOwnProperty(item.key)) {
+
+                            promises.push(fieldResolverService.getFields(item.key));
+                        }
+                    });
+
+                    Promise.all(promises).then(function (data) {
+                        data.forEach(function(item){
+                            scope.fields[item.key] = item.data;
+                        });
+                        scope.$apply();
+                    });
+
+                    console.log('scope.fields', scope.fields);
                 });
 
                 scope.openFilterSettings = function ($mdOpenMenu, ev) {
@@ -43,7 +66,7 @@
                     scope.externalCallback();
                 };
 
-                scope.clearAll = function(){
+                scope.clearAll = function () {
                     scope.filters.forEach(function (item) {
                         item.options.query = '';
                     });

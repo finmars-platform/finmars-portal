@@ -13,7 +13,7 @@
             Clear all
         </md-button>
     </div>
-    <div dragula="'filters-bag'" dragula-model="filters">
+    <div dragula="'filters-bag'" dragula-model="filters" class="filters-holder">
         <md-card data-ng-repeat="filter in filters"
                  class="{{filter.options.enabled ? '' : 'f-disabled' }} g-filter-item" layout="row">
             <md-checkbox ng-model="filter.options.enabled" aria-label="filters" class="md-primary"
@@ -21,8 +21,24 @@
             </md-checkbox>
             <md-input-container flex="65">
                 <label data-ng-bind="filter.name"></label>
-                <input data-ng-model="filter.options.query" data-ng-change="filterChange(filter)"
-                       data-ng-model-options="{debounce: 1000}">
+                <div data-ng-if="filter['value_type'] === 'field'">
+                    <div data-ng-if="fields[filter.key]">
+                        <md-select data-ng-model="filter.options.query" data-ng-change="filterChange(filter)">
+                            <md-option data-ng-repeat="field in fields[filter.key] track by $index" value="{{field.id}}">
+                                {{field.name}}
+                            </md-option>
+                        </md-select>
+                    </div>
+                    <div data-ng-if="!fields[filter.key]">
+                        <div layout="row" layout-sm="column" layout-align="space-around">
+                            <md-progress-circular md-mode="indeterminate"></md-progress-circular>
+                        </div>
+                    </div>
+                </div>
+                <div data-ng-if="filter['value_type'] !== 'field'">
+                    <input data-ng-model="filter.options.query" data-ng-change="filterChange(filter)"
+                           data-ng-model-options="{debounce: 1000}">
+                </div>
             </md-input-container>
             <div class="settings-btn" flex="20">
                 <md-menu>

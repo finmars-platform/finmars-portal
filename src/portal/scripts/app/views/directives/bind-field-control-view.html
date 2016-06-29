@@ -56,6 +56,7 @@
         <span>Classifier is not ready</span>
     </div>
     <div data-ng-if="fieldType['display_name'] === 'Decoration'">
-        <span class="ec-decoration line"></span>
+        <span class="ec-decoration line" data-ng-if="!item.options.labelText"></span>
+        <span class="ec-decoration labeled" data-ng-if="item.options.labelText"><span class="w-rp" data-ng-bind="item.options.labelText"></span></span>
     </div>
 </div>

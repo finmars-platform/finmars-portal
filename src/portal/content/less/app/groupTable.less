@@ -84,6 +84,13 @@
   .g-group-holder {
     background: #DCDCDC;
     border-bottom: 1px solid #363636;
+    &.selected-row {
+      .g-row-selection {
+        background-color: rgba(205,136,99, .4);
+      }
+      background-color: rgba(205,136,99, .4);
+      outline: 1px solid rgb(205,136,99);
+    }
     &:after {
       content: '';
       clear: both;
@@ -386,6 +393,9 @@
   height: 12px;
   font-size: 14px;
   border-left: 1px solid #363636;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
   &:last-child {
     border-right: 1px solid #363636;
   }
@@ -404,6 +414,7 @@
   height: 24px;
   margin-bottom: 0;
   margin-top: 3px;
+  overflow: visible;
   cursor: grab;
   .caption {
     color: #0C0C0C;
@@ -609,6 +620,13 @@ body.md-dialog-is-showing {
   overflow: hidden;
   height: 100%;
   .g-row {
+    &.selected-row {
+      .g-row-selection {
+        background-color: rgba(205,136,99, .2);
+      }
+      background-color: rgba(205,136,99, .2);
+      outline: 1px solid rgb(205,136,99);
+    }
     border-bottom: 1px solid #363636;
     &:nth-last-of-type {
       border-bottom: 1px solid #fff;
@@ -796,5 +814,13 @@ body.md-dialog-is-showing {
   }
   .mCSB_scrollTools .mCSB_dragger:hover .mCSB_dragger_bar {
     background-color: #4C334D;
+  }
+}
+
+.g-sidebar-filter-component {
+  .filters-holder {
+    md-select {
+      margin: 0;
+    }
   }
 }

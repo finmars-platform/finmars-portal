@@ -24,8 +24,8 @@
         };
 
         var groupingServiceExt = {
-            setGroups: function (groups) {
-                items = groupingService.setGroups(items, groups);
+            setGroups: function (groups, entityType) {
+                items = groupingService.setGroups(items, groups, entityType);
             }
         };
 
