@@ -50,16 +50,13 @@
                 scope.fieldType = null;
                 scope.editMode = false;
                 scope.entityType = scope.$parent.vm.entityType;
+
                 scope.attrs = scope.$parent.vm.attrs;
                 scope.baseAttrs = scope.$parent.vm.baseAttrs;
                 scope.entityAttrs = scope.$parent.vm.entityAttrs;
                 scope.layoutAttrs = layoutService.getLayoutAttrs();
 
                 var tabs = scope.$parent.vm.tabs;
-
-                scope.attrsLeft = scope.attrs.concat(scope.baseAttrs);
-                scope.attrsLeft = scope.attrsLeft.concat(scope.entityAttrs);
-                scope.attrsLeft = scope.attrsLeft.concat(scope.layoutAttrs);
 
                 function addRow() {
                     var c;
@@ -244,63 +241,43 @@
 
                 findAttribute();
 
-                function findAttrsLeft() {
-                    var i, x, t;
-                    for (t = 0; t < tabs.length; t = t + 1) {
-                        for (i = 0; i < tabs[t].layout.fields.length; i = i + 1) {
-                            for (x = 0; x < scope.attrsLeft.length; x = x + 1) {
-                                if (tabs[t].layout.fields[i].id && scope.attrsLeft[x].id) {
-                                    if (tabs[t].layout.fields[i].id === scope.attrsLeft[x].id) {
-                                        if (scope.item.attribute) {
-                                            if (scope.item.attribute.id !== scope.attrsLeft[x].id) {
-                                                scope.attrsLeft.splice(x, 1);
-                                                x = x - 1;
-                                            }
-                                        } else {
-                                            scope.attrsLeft.splice(x, 1);
-                                            x = x - 1;
-                                        }
+                scope.findAttrsLeft = function() {
+                    scope.attrs.forEach(function(attr){
+                        tabs.forEach(function(tab){
+                            tab.layout.fields.forEach(function(item){
+                                if(item.type === 'field') {
+                                    if (attr.id === item.id) {
+                                        attr.disabled = true;
                                     }
                                 }
-                                else {
-                                    if (tabs[t].layout.fields[i].name === scope.attrsLeft[x].name) {
-                                        if (scope.item.attribute) {
-                                            if (scope.item.attribute.name !== scope.attrsLeft[x].name) {
-                                                scope.attrsLeft.splice(x, 1);
-                                                x = x - 1;
-                                            }
-                                        } else {
-
-                                            scope.attrsLeft.splice(x, 1);
-                                            x = x - 1;
-                                        }
+                            })
+                        })
+                    });
+                    scope.baseAttrs.forEach(function(baseAttr){
+                        tabs.forEach(function(tab){
+                            tab.layout.fields.forEach(function(item){
+                                if(item.type === 'field') {
+                                    if (baseAttr.key === item.attribute.key) {
+                                        baseAttr.disabled = true;
                                     }
                                 }
-                            }
-                        }
-                    }
-                }
+                            })
+                        })
+                    });
 
-                findAttrsLeft();
-
-                function appendDecoration() {
-                    var i, l, isLayoutAttributeExist;
-                    for (l = 0; l < scope.layoutAttrs.length; l = l + 1) {
-                        isLayoutAttributeExist = false;
-                        for (i = 0; i < scope.attrsLeft.length; i = i + 1) {
-                            if (scope.attrsLeft[i].name === scope.layoutAttrs[l].name) {
-                                isLayoutAttributeExist = true;
-                            }
-                        }
-                        if (!isLayoutAttributeExist) {
-                            //console.log('scope.attrsLeft', scope.attrsLeft);
-                            scope.attrsLeft.push(scope.layoutAttrs[l]);
-                        }
-                    }
+                    scope.entityAttrs.forEach(function(entityAttr){
+                        tabs.forEach(function(tab){
+                            tab.layout.fields.forEach(function(item){
+                                if(item.type === 'field'){
+                                    if(entityAttr.key === item.attribute.key) {
+                                        entityAttr.disabled = true;
+                                    }
+                                }
+                            })
+                        })
+                    })
 
                 }
-
-                appendDecoration();
 
                 scope.bindType = function () {
                     var i;
@@ -402,6 +379,12 @@
                                 scope.specialOptionTemplate = 'views/attribute-options/number.html';
                                 return true;
                             }
+
+                            if (scope.item.attribute['value_type'] === 'decoration' && scope.item.attribute.key === 'layoutLineWithLabel') {
+                                scope.specialOptionTemplate = 'views/attribute-options/labeled-line.html';
+                                return true;
+                            }
+
 
                         }
                     }

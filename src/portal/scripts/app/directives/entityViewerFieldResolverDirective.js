@@ -27,7 +27,7 @@
 
                 fieldResolverService.getFields(scope.item.key).then(function (res) {
                     logService.collection('DATA', res);
-                    scope.type = res.type
+                    scope.type = res.type;
                     scope.fields = res.data;
                     scope.readyStatus.content = true;
                     scope.$apply();

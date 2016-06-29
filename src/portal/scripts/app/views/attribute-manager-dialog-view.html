@@ -17,7 +17,7 @@
                     <label>Attribute type</label>
                     <md-select ng-model="vm.attribute['value_type']" disabled>
                         <md-option ng-repeat="valueType in vm.valueTypes" value="{{valueType.value}}">
-                            {{valueType['display_name']}}
+                            {{valueType['caption_name']}}
                         </md-option>
                     </md-select>
                 </md-input-container>
@@ -27,7 +27,7 @@
                     <label>Attribute type</label>
                     <md-select ng-model="vm.attribute['value_type']">
                         <md-option ng-repeat="valueType in vm.valueTypes" value="{{valueType.value}}">
-                            {{valueType['display_name']}}
+                            {{valueType['caption_name']}}
                         </md-option>
                     </md-select>
                 </md-input-container>

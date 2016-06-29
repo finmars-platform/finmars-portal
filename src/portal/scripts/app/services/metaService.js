@@ -29,6 +29,7 @@
         return metaRepository.getRestrictedEntitiesWithTypeField();
     };
 
+
     module.exports = {
         getMenu: getMenu,
         getBaseAttrs: getBaseAttrs,

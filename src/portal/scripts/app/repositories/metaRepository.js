@@ -220,7 +220,7 @@
                 },
                 {
                     "key": "account_cash",
-                    "name": "Account_cash",
+                    "name": "Account cash",
                     "value_type": 'field'
                 },
                 {
@@ -400,6 +400,8 @@
     var getRestrictedEntitiesWithTypeField = function(){
         return ['daily_pricing_model', 'payment_size_detail', 'accrued_currency', 'pricing_currency'];
     };
+
+
 
 
     module.exports = {

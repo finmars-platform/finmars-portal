@@ -3,6 +3,8 @@
  */
 (function () {
 
+    var metaService = require('../metaService');
+
     'use strict';
 
     var transformToArray = function (groupedObject) {
@@ -18,29 +20,31 @@
         return items;
     };
 
-    var setGroups = function (items, groups) {
+    var setGroups = function (items, groups, entityType) {
 
         var itemsGrouped = [];
         var itemsGroupedArray = [];
         var i, c, a, k;
-        var keywords = [{
-            "key": "name",
-            "caption": "Name"
-        },
-            {
-                "key": "short_name",
-                "caption": "Short name"
-            },
-            {
-                "key": "notes",
-                "caption": "Notes"
-            }];
+
+        var baseAttrs = [];
+        var entityAttrs = [];
+        if (metaService) {
+            if (metaService.getEntitiesWithoutBaseAttrsList().indexOf(entityType) === -1) {
+                baseAttrs = metaService.getBaseAttrs();
+            }
+            entityAttrs = metaService.getEntityAttrs(entityType);
+        }
+        var keywords = [];
+        keywords = keywords.concat(baseAttrs);
+        keywords = keywords.concat(entityAttrs);
+
 
         var hasGroups = true;
         var groupName = '';
         var groupsForResult = [];
 
         function checkEntityForGroupExist(item, groups) {
+            return true;
             var g, a;
             for (g = 0; g < groups.length; g = g + 1) {
                 for (a = 0; a < item.attributes.length; i = i + 1) {
@@ -76,22 +80,27 @@
                 //console.log('attribute[k]', attribute);
                 if (group.id === attribute['attribute_type']) {
                     groupsForResult.push({
+                        comparePattern: '&[' + attribute['attribute_type'] + '}-{' + returnValue(attribute) + ']',
                         key: attribute['attribute_name'],
                         value: returnValue(attribute)
                     });
                 }
             } else {
+                //console.log('keywords', keywords);
                 for (k = 0; k < keywords.length; k = k + 1) {
                     var n, nExist = false;
                     if (group.key === keywords[k].key) {
 
+                        //console.log('groupsForResult', groupsForResult);
                         for (n = 0; n < groupsForResult.length; n = n + 1) {
-                            if (groupsForResult[n].value.indexOf(item[keywords[k].key]) !== -1) {
+                            //console.log('groupsForResult[n]', groupsForResult[n]);
+                            if (groupsForResult[n].comparePattern.indexOf('&[' + keywords[k].key + '}-{' + item[keywords[k].key] + ']') !== -1) {
                                 nExist = true;
                             }
                         }
                         if (!nExist) {
                             groupsForResult.push({
+                                comparePattern: '&[' + keywords[k].key + '}-{' + item[keywords[k].key] + ']',
                                 key: keywords[k].key,
                                 value: item[keywords[k].key]
                             });
@@ -101,59 +110,38 @@
             }
         }
 
-        function createGroupName() {
-
-        }
-
         if (groups.length) {
+            var group, item;
             for (i = 0; i < items.length; i = i + 1) {
-                hasGroups = checkEntityForGroupExist(items[i], groups);
-                groupName = '';
+                item = items[i];
                 groupsForResult = [];
-
-                groupName = '';
-                groupsForResult = [];
-                //console.log('groups', groups);
+                groupName = ''; // create groupName of each item
+                //console.log('groups111111111111111111111111', groups);
                 for (c = 0; c < groups.length; c = c + 1) {
-                    for (a = 0; a < items[i].attributes.length; a = a + 1) {
-
-                        fingGroupsForResult(groups[c], items[i], items[i].attributes[a]);
-                        //console.log('groupsForResult', groupsForResult);
-
-                        if (c == groups.length - 1) {
-                            if (groups[c].hasOwnProperty('id')) {
-                                if (groups[c].id === items[i].attributes[a]['attribute_type']) {
-                                    groupName = groupName + returnValue(items[i].attributes[a]);
-                                    //console.log('groupName', groupName);
-                                }
-                            } else {
-                                for (k = 0; k < keywords.length; k = k + 1) {
-                                    if (c == groups.length - 1) {
-                                        //console.log('groups[c]', groups[c]);
-                                        if (groups[c].key === keywords[k].key) {
-                                            groupName = groupName + keywords[k].key;
-                                        }
-                                    }
-                                }
+                    //console.log('items[i]', items[i]);
+                    group = groups[c];
+                    if(group.hasOwnProperty('key')) {
+                        fingGroupsForResult(group, item);
+                        var keys = Object.keys(items[i]);
+                        for (a = 0; a < keys.length; a = a + 1) {
+                            if (groupName.indexOf('&[' + group.key + '}-{' + item[group.key] + ']') === -1) {
+                                groupName = groupName + '&[' + group.key + '}-{' + item[group.key] + ']';
                             }
-                        } else {
-                            if (groups[c].hasOwnProperty('id')) {
-                                if (groups[c].id === items[i].attributes[a]['attribute_type']) {
-                                    groupName = groupName + returnValue(items[i].attributes[a]) + '_';
-                                }
-                            } else {
-                                for (k = 0; k < keywords.length; k = k + 1) {
-
-                                    if (groups[c].key === keywords[k].key) {
-                                        groupName = groupName + keywords[k].key + '_';
-                                    }
+                        }
+                    } else {
+                        if (item.hasOwnProperty('attributes')) {
+                            //console.log('item.attributes', item.attributes);
+                            for (a = 0; a < item.attributes.length; a = a + 1) {
+                                fingGroupsForResult(group, item, item['attributes'][a]);
+                                if (groupName.indexOf('&[' + item.attributes[a]['attribute_type'] + '}-{' + returnValue(item.attributes[a]) + ']') === -1) {
+                                    groupName = groupName + '&[' + item.attributes[a]['attribute_type'] + '}-{' + returnValue(item.attributes[a]) + ']';
                                 }
                             }
                         }
                     }
 
-
                 }
+                //console.log('groupName', groupName);
 
                 if (!itemsGrouped[groupName]) {
                     itemsGrouped[groupName] = {
@@ -161,11 +149,13 @@
                         items: []
                     }
                 }
-                itemsGrouped[groupName].items.push(items[i]);
+                itemsGrouped[groupName].items.push(item);
+                //console.log('itemsGrouped[groupName]', itemsGrouped[groupName]);
                 //console.log('itemsGrouped', itemsGrouped);
                 itemsGroupedArray = transformToArray(itemsGrouped);
-
             }
+
+            console.log('------------------------');
 
             //console.log('Items grouped', itemsGroupedArray);
             return itemsGroupedArray;

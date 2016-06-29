@@ -227,7 +227,7 @@
                     vm.groupTableService.setItems(vm.entity);
                     vm.groupTableService.columns.setColumns(vm.columns);
                     //vm.groupTableService.filtering.setFilters(vm.filters);
-                    vm.groupTableService.grouping.setGroups(vm.grouping);
+                    vm.groupTableService.grouping.setGroups(vm.grouping, vm.entityType);
                     //console.log("EXTERNAL CALLBACK ", vm.folding);
                     vm.groupTableService.folding.setFolds(vm.folding);
                     vm.sorting.group = findFullAttributeForItem(vm.sorting.group, vm.attrs);

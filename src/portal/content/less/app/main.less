@@ -221,3 +221,43 @@ a.md-button.md-default-theme.md-fab, a.md-button.md-fab, .md-button.md-default-t
     }
   }
 }
+.instrument-select-dialog-view {
+  md-dialog-content {
+    padding: 25px;
+  }
+}
+.h-instrument-select {
+  display: none !important;
+}
+.instrument-table-results {
+  .instrument-table-row {
+    cursor: pointer;
+    &.active {
+      background: #eee;
+    }
+    &:hover {
+      background: #eee;
+    }
+  }
+}
+.dropdown.contextmenu {
+  md-menu-content {
+    border: 1px solid #DCDCDC;
+    padding: 0;
+    md-menu-item {
+      border-bottom: 1px solid #DCDCDC;
+      &:last-child {
+        border-bottom: 0;
+      }
+    }
+  }
+}
+
+.m-large {
+  margin-top: 200px;
+  margin-bottom: 200px;
+}
+md-option.disabled {
+  pointer-events: none;
+  opacity: .5;
+}

@@ -21,6 +21,7 @@
             'node_modules/angular-aria/angular-aria.js',
             'node_modules/angular-messages/angular-messages.js',
             'node_modules/angular-touch/angular-touch.js',
+            'node_modules/angular-contextmenu/dist/contextmenu.js',
             'node_modules/angular-resource/angular-resource.js',
             'node_modules/angular-sanitize/angular-sanitize.js',
             'node_modules/angular-material/angular-material.js',
@@ -52,6 +53,7 @@
         var pathToCSS = [
             'node_modules/angular-material/angular-material.css',
             'bower_components/mdPickers/dist/mdPickers.css',
+            'node_modules/angular-contextmenu/dist/style.css',
             'node_modules/angular-carousel/dist/angular-carousel.css'
         ];
 

@@ -27,13 +27,10 @@
                 keys = Object.keys(options.filters);
                 keys.forEach(function (item, i) {
                     if (i === 0) {
-                        if (options.filters[item]) {
-                            url = url + '?' + item + '=' + options.filters[item];
-                        }
+                        console.log('options.filters[item]', options.filters[item]);
+                        url = url + '?' + item + '=' + options.filters[item];
                     } else {
-                        if (options.filters[item]) {
-                            url = url + '&' + item + '=' + options.filters[item];
-                        }
+                        url = url + '&' + item + '=' + options.filters[item];
                     }
                 })
             }
