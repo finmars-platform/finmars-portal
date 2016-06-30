@@ -63,6 +63,8 @@
 
         vm.tableIsReady = false;
 
+        vm.editorTemplate = 'views/additions-editor-view.html';
+
         vm.additionsStatus = {
             editor: false,
             table: false
@@ -138,8 +140,8 @@
 
                 //vm.tabs = res.data.tabs;
 
-                console.log('res', res);
-                console.log('res.results', res.results[0]);
+                //console.log('res', res);
+                //console.log('res.results', res.results[0]);
 
                 vm.table = res.results[0].data.table;
                 vm.columns = res.results[0].data.table.columns;
@@ -211,7 +213,7 @@
                 filters: {}
             };
 
-            console.log('vm.filters', vm.filters);
+            //console.log('vm.filters', vm.filters);
 
             vm.filters.forEach(function(item){
                if(item.options && item.options.enabled === true) {
@@ -219,7 +221,7 @@
                }
             });
 
-            console.log('options', options);
+            //console.log('options', options);
 
             $scope.$parent.vm.getList(options).then(function (data) {
                 entityViewerHelperService.transformItems(data, vm.attrs).then(function (data) {
@@ -230,9 +232,10 @@
                     vm.groupTableService.grouping.setGroups(vm.grouping, vm.entityType);
                     //console.log("EXTERNAL CALLBACK ", vm.folding);
                     vm.groupTableService.folding.setFolds(vm.folding);
+                    console.log('UPDATE TABLE scope.sorting.group', vm.sorting.group);
                     vm.sorting.group = findFullAttributeForItem(vm.sorting.group, vm.attrs);
                     //vm.sorting.column = findFullAttributeForItem(vm.sorting.column, vm.attrs);
-                    //vm.groupTableService.sorting.group.sort(vm.sorting.group);
+                    vm.groupTableService.sorting.group.sort(vm.sorting.group);
                     //vm.groupTableService.sorting.column.sort(vm.sorting.column);
                     vm.tableIsReady = true;
 
@@ -249,9 +252,9 @@
         };
 
         vm.getEntityAdditions = function (portfolioId) {
-            console.log('vm.getPortfolioTransaction', portfolioId);
+            //console.log('vm.getPortfolioTransaction', portfolioId);
             return demoTransactionsService.getList(portfolioId).then(function (data) {
-                console.log('data', data);
+                //console.log('data', data);
                 vm.entityAdditions = data;
                 vm.updateAdditionsTable();
                 $scope.$apply();
@@ -272,15 +275,17 @@
         };
 
         vm.openDataViewPanel = function () {
-
+            vm.additionsStatus.editor = true;
         };
 
         vm.openEditorViewPanel = function () {
+            vm.editorEntityId = undefined;
             vm.additionsStatus.table = true;
         };
 
         vm.checkAdditionStatus = function () {
             if (!vm.additionsStatus.table && !vm.additionsStatus.editor) {
+                vm.editorEntityId = undefined;
                 return true;
             }
             return false;
@@ -289,7 +294,8 @@
         vm.hideAdditions = function () {
             vm.additionsStatus.table = false;
             vm.additionsStatus.editor = false;
-        }
+            vm.editorEntityId = undefined;
+        };
 
         vm.getView().then(function () {
             vm.getAttributes().then(function () {

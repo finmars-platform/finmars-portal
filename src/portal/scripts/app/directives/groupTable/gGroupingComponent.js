@@ -45,10 +45,8 @@
                         scope.sorting.group.key = group.key;
                         scope.sorting.group.sort = sort;
                     }
-                    setTimeout(function(){
-                        scope.externalCallback();
-                        scope.$apply();
-                    }, 0)
+                    console.log('external??', scope.sorting.group);
+                    scope.externalCallback();
                 };
 
                 scope.openGroupSettings = function ($mdOpenMenu, ev) {
@@ -62,7 +60,7 @@
                 scope.toggleGroupFold = function () {
                     scope.folding = !scope.folding;
                     console.log('scope.folding', scope.folding);
-                    setTimeout(function(){
+                    setTimeout(function () {
                         scope.externalCallback();
                         scope.$apply();
                     }, 0)

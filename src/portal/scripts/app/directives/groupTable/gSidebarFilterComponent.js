@@ -22,9 +22,7 @@
 
                 scope.fields = {};
 
-
                 scope.$watchCollection('filters', function () {
-                    console.log('scope3222222222222222.filters', scope.filters);
                     scope.externalCallback();
 
                     var promises = [];
@@ -42,8 +40,6 @@
                         });
                         scope.$apply();
                     });
-
-                    console.log('scope.fields', scope.fields);
                 });
 
                 scope.openFilterSettings = function ($mdOpenMenu, ev) {
@@ -55,7 +51,6 @@
                 };
 
                 scope.filterChange = function (filter) {
-                    console.log('filterChange', filter);
                     scope.externalCallback();
                 };
 
@@ -83,8 +78,6 @@
                 scope.removeFilter = function (filter) {
 
                     scope.filters = scope.filters.map(function (item) {
-                        console.log('item', item);
-
                         if (item.id === filter.id || item.name === filter.name) {
                             return undefined
                         }

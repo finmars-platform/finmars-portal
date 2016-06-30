@@ -15,9 +15,10 @@
             scope: {
                 items: '=',
                 grouping: '=',
-                tabs: '=',
                 externalCallback: '&',
                 columns: '=',
+                itemAdditionsEditorEntityId: '=',
+                isAllSelected: '=',
                 entityType: '='
             },
             templateUrl: 'views/directives/groupTable/table-body-view.html',
@@ -49,7 +50,7 @@
                     var i;
                     var promises = [];
                     for (i = 0; i < scope.columns.length; i = i + 1) {
-                        console.log(scope.columns[i]);
+                        //console.log(scope.columns[i]);
                         if (scope.columns[i]['value_type'] === 'field') {
                             promises.push(bindCellService.findEntities(scope.columns[i].key));
                         }
@@ -68,6 +69,31 @@
                 scope.toggleSelectRow = function(item){
                     console.log('item111111111111111111', item);
                     item.selectedRow = !item.selectedRow;
+                    if(scope.isAllSelected === true && item.selectedRow === false) {
+                        scope.isAllSelected = false;
+                    }
+
+                    var allSelected = true;
+                    scope.items.forEach(function(item){
+                        if(item.hasOwnProperty('groups')){
+                            if(!!item.selectedRow === false) {
+                                allSelected = false;
+                            }
+                            item.items.forEach(function(row){
+                                if(!!row.selectedRow === false) {
+                                    allSelected = false;
+                                }
+                            })
+                        } else {
+                            if(!!item.selectedRow === false) {
+                                allSelected = false;
+                            }
+                        }
+                    });
+
+                    if(allSelected) {
+                        scope.isAllSelected = true;
+                    }
                 };
 
                 scope.$watchCollection('columns', function () {
@@ -120,11 +146,7 @@
 
                 scope.rowCallback = function (item) {
                     //console.log('open additions!', item);
-                    if (scope.entityType === 'portfolio') {
-                        scope.$parent.externalGetAdditions({id: item.id}).then(function () {
-                            //scope.$parent.additionsStatus.additionsWorkArea = true;
-                        });
-                    }
+                    scope.itemAdditionsEditorEntityId = item.id;
                 };
 
                 scope.deleteEntity = function (ev, entity) {

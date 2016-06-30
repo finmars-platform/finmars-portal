@@ -17,7 +17,9 @@
                 sorting: '=',
                 isItemAddition: '=',
                 entityType: '=',
-                externalCallback: '&'
+                items: '=',
+                externalCallback: '&',
+                isAllSelected: '='
             },
             templateUrl: 'views/directives/groupTable/columns-view.html',
             link: function (scope, elem, attrs) {
@@ -30,6 +32,23 @@
                     baseAttrs = metaService.getBaseAttrs();
                 }
                 entityAttrs = metaService.getEntityAttrs(scope.entityType);
+
+                scope.isAllSelected = false;
+
+
+                scope.selectAllRows = function(){
+                    scope.isAllSelected = !scope.isAllSelected;
+                    scope.items.forEach(function(item){
+                        if(item.hasOwnProperty('groups')) {
+                            item.selectedRow = scope.isAllSelected;
+                            item.items.forEach(function(row){
+                                row.selectedRow = scope.isAllSelected;
+                            })
+                        } else {
+                            item.selectedRow = scope.isAllSelected;
+                        }
+                    })
+                };
 
                 scope.sortHandler = function (column, sort) {
                     var i;

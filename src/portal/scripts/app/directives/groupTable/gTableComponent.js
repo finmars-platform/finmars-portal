@@ -21,6 +21,9 @@
                 folding: '=',
                 sorting: '=',
 
+                itemAdditionsEditorEntityId: '=',
+                itemAdditionsEditorTemplate: '=',
+
                 itemAdditions: '=',
                 itemAdditionsColumns: '=',
                 itemAdditionsFilters: '=',

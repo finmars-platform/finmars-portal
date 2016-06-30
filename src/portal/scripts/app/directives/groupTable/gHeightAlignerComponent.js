@@ -25,6 +25,8 @@
                     workAreaWithoutGrouping = workAreaHeight - $('.g-wrapper .g-grouping-section').height(); // margin 4px
                     $('.g-sidebar').height(workAreaHeight);
                     $('.g-wrapper .g-table-section').height(workAreaWithoutGrouping);
+                    $('.g-additions').height($(window).height() - workAreaHeight);
+
                 }
 
                 function setSplitHeights() {
@@ -34,6 +36,7 @@
                     $('.g-wrapper .g-table-section').height(workAreaWithoutGrouping);
 
 
+                    $('.g-additions').height(workAreaHeight);
                     $('.g-additions-workarea .g-table-section').height(workAreaHeight);
                     $('.g-additions-workarea .group-table-body').height(workAreaHeight);
 
@@ -46,7 +49,8 @@
                         var mainAreaSidebarBox = $('.g-sidebar.main-sidebar');
                         var groupingSectionBoxHeight = $('.g-wrapper .g-grouping-section').height();
 
-                        var additionsBox = $('.g-additions-workarea .g-table-section');
+                        var additionsBox = $('.g-additions');
+                        var additionsBoxTableSection = $('.g-additions-workarea .g-table-section');
                         var additionsBoxSidebarBox = $('.g-sidebar.additions-sidebar');
 
                         $(window).bind('mousemove', function (e) {
@@ -64,6 +68,7 @@
                             // WTF IS 88???
 
                             additionsBox.height(spaceLeft - mouseMoveY + 88 - 15);
+                            additionsBoxTableSection.height(spaceLeft - mouseMoveY + 88);
                             additionsBoxSidebarBox.height(spaceLeft - mouseMoveY + 88);
                             $('.g-workarea.main-area .group-table-body').height(mouseMoveY - $('.header').height() - $('.g-columns-component.g-thead').height() - 88);
                             $('.g-additions-workarea .group-table-body').height($(window).height() - mouseMoveY - $('.g-additions-workarea .g-columns-component.g-thead').height());

@@ -29,7 +29,6 @@
     </div>
     <div data-ng-if="vm.tableIsReady" class="g-group-table-holder">
         <group-table
-                tabs="vm.tabs"
                 entity-type="vm.entityType"
 
                 items="vm.groupTableService.projection()"
@@ -38,6 +37,9 @@
                 grouping="vm.grouping"
                 folding="vm.folding"
                 sorting="vm.sorting"
+
+                item-additions-editor-entity-id="vm.editorEntityId"
+                item-additions-editor-template="vm.editorTemplate"
 
                 item-additions="vm.groupTableService.additions.projection()"
                 item-additions-columns="vm.entityAdditionsColumns"
