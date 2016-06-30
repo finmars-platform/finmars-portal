@@ -1,17 +1,31 @@
 <div class="g-wrapper" group-height-aligner additions-status="additionsStatus">
-    <div class="g-workarea main-area">
+    <div class="g-workarea main-area" group-clipboard-handler items="items" columns="columns">
         <div class="g-grouping-section">
-            <group-grouping entity-type="entityType" tabs="tabs" folding="folding" sorting="sorting" grouping="grouping" filters="filters" columns="columns" external-callback="externalCallback()"></group-grouping>
+            <group-grouping entity-type="entityType"
+                            tabs="tabs"
+                            folding="folding"
+                            sorting="sorting"
+                            grouping="grouping"
+                            filters="filters"
+                            columns="columns"
+                            external-callback="externalCallback()"></group-grouping>
         </div>
         <div class="g-table-section" group-horizontal-scroll>
             <div class="g-table-wrap" group-column-resizer items="items">
-                <group-columns entity-type="entityType" columns="columns" sorting="sorting" external-callback="externalCallback()" is-item-addition="false"></group-columns>
-                <group-table-body items="items"
-                                  tabs="tabs"
+                <group-columns entity-type="entityType"
+                               columns="columns"
+                               sorting="sorting"
+                               items="items"
+                               is-all-selected="isAllSelected"
+                               external-callback="externalCallback()"
+                               is-item-addition="false"></group-columns>
+                <group-table-body class="group-table-body"
+                                  items="items"
                                   external-callback="externalCallback()"
-                                  class="group-table-body"
                                   entity-type="entityType"
                                   grouping="grouping"
+                                  item-additions-editor-entity-id="itemAdditionsEditorEntityId"
+                                  is-all-selected="isAllSelected"
                                   columns="columns"></group-table-body>
             </div>
         </div>
@@ -23,16 +37,29 @@
     </div>
     <div class="g-additions" data-ng-if="additionsState">
         <div class="g-height-slider"></div>
-        <div class="g-additions-data-editor">
-
+        <div class="g-additions-data-editor min-height" data-ng-show="additionsStatus.editor">
+            <div data-ng-show="!itemAdditionsEditorEntityId">
+                <div class="g-additions-editor-caption">
+                    Select row to start
+                </div>
+            </div>
+            <div data-ng-show="itemAdditionsEditorEntityId" class="min-height">
+                <group-editor-binder entity-type="entityType" item-id="itemAdditionsEditorEntityId" template="itemAdditionsEditorTemplate"></group-editor-binder>
+            </div>
         </div>
-        <div class="g-additions-workarea">
-            <div class="g-workarea">
+        <div class="g-additions-workarea" data-ng-show="additionsStatus.table">
+            <div class="g-workarea" group-clipboard-handler items="itemAdditions" columns="columns">
                 <div class="g-table-section" group-horizontal-scroll>
                     <div class="g-table-wrap" group-column-resizer items="itemAdditions">
-                        <group-columns entity-type="entityType" columns="itemAdditionsColumns" external-callback="externalAdditionsCallback()" sorting="sorting" is-item-addition="true"></group-columns>
+                        <group-columns entity-type="entityType"
+                                       columns="itemAdditionsColumns"
+                                       is-all-selected="isAllAdditionsSelected"
+                                       external-callback="externalAdditionsCallback()"
+                                       sorting="sorting"
+                                       is-item-addition="true"></group-columns>
                         <group-table-body items="itemAdditions"
                                           class="group-table-body"
+                                          is-all-selected="isAllAdditionsSelected"
                                           entity-type="additionsEntityType"
                                           columns="itemAdditionsColumns"></group-table-body>
                     </div>
@@ -40,7 +67,8 @@
             </div>
             <div class="g-sidebar additions-sidebar">
                 <div class="g-filter">
-                    <group-sidebar-filter filters="itemAdditionsFilters" external-callback="externalAdditionsCallback()"></group-sidebar-filter>
+                    <group-sidebar-filter filters="itemAdditionsFilters"
+                                          external-callback="externalAdditionsCallback()"></group-sidebar-filter>
                 </div>
             </div>
         </div>

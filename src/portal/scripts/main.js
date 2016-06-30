@@ -55,6 +55,8 @@ app.controller('DataCurrencyHistoryController', ['$scope', require('./app/contro
 
 app.controller('EntityDataConstructorController', ['$scope', '$stateParams', '$state', '$mdDialog', require('./app/controllers/entityDataConstructorController')]);
 
+app.controller('AdditionsEditorEntityEditController', ['$scope', '$state', require('./app/controllers/additionsEditorEntityEditController')]);
+
 app.controller('WarningDialogController', ['$scope', '$mdDialog', 'warning', require('./app/controllers/warningDialogController')]);
 app.controller('InstrumentSelectDialogController', ['$scope', '$mdDialog',  require('./app/controllers/instrumentSelectDialogController')]);
 
@@ -73,11 +75,13 @@ app.directive('groupSidebarFilter', [require('./app/directives/groupTable/gSideb
 app.directive('groupReportSettings', [require('./app/directives/groupTable/gReportSettingsComponent')]);
 app.directive('groupGrouping', ['$mdDialog', require('./app/directives/groupTable/gGroupingComponent')]);
 app.directive('groupColumns', [require('./app/directives/groupTable/gColumnsComponent')]);
+app.directive('groupClipboardHandler', [require('./app/directives/groupTable/gClipboardHandlerComponent')]);
 app.directive('groupColumnResizer', [require('./app/directives/groupTable/gColumnResizerComponent')]);
 app.directive('gDialogDraggable', [require('./app/directives/groupTable/gDialogDraggableComponent')]);
 app.directive('groupHeightAligner', [require('./app/directives/groupTable/gHeightAlignerComponent')]);
 app.directive('groupVerticalScroll', [require('./app/directives/groupTable/gVerticalScrollComponent')]);
 app.directive('groupHorizontalScroll', [require('./app/directives/groupTable/gHorizontalScrollComponent')]);
+app.directive('groupEditorBinder', ['$templateCache', '$compile', require('./app/directives/groupTable/groupEditorBinderComponent')]);
 
 app.controller('gModalController', ['$scope', '$mdDialog', 'parentScope', 'callback', require('./app/directives/groupTable/gModalComponent')]);
 

@@ -14,14 +14,52 @@
   .g-additions {
     position: relative;
     display: block;
-    //width: 100%;
+    width: 100%;
     float: left;
+    &::after {
+      content: '';
+      display: block;
+      top: 0;
+      position: absolute;
+      left: 0;
+      background: #4C334D;
+      height: 6px;
+      width: 100%;
+    }
+    group-editor-binder {
+      width: 100%;
+      display: inline-block;
+      height: 100%;
+      overflow: hidden;
+      .mCSB_scrollTools_vertical {
+        opacity: 1;
+        will-change: scroll-position, height, top;
+        .mCSB_draggerContainer {
+          background: #DCDCDC;
+          border-left: 1px solid #000;
+        }
+      }
+      .mCSB_horizontal.mCSB_inside > .mCSB_container {
+        margin-bottom: 15px;
+      }
+      .mCSB_scrollTools .mCSB_dragger .mCSB_dragger_bar {
+        background-color: #4C334D;
+      }
+      .mCSB_scrollTools .mCSB_dragger:hover .mCSB_dragger_bar {
+        background-color: #4C334D;
+      }
+    }
+    .g-additions-editor-caption {
+      font-size: 3em;
+      margin-top: 150px;
+      text-align: center;
+    }
     .g-height-slider {
       position: absolute;
       left: 50%;
       margin-left: -235px;
       width: 25px;
-      top: 4px;
+      top: 2px;
       height: 3px;
       cursor: row-resize;
       background: #fff;
@@ -272,7 +310,13 @@
     float: left;
     height: 24px;
     background: #fff;
+    fill: #f5f5f5;
     border-right: 1px solid #000;
+    text-align: center;
+    svg {
+      width: 20px;
+      height: 20px;
+    }
   }
   .g-table-wrap {
     //width: calc(~"100% - 40px");
@@ -292,6 +336,15 @@
     background: #fff;
     margin-top: 7px;
     width: 25px;
+    &.active {
+      background-color: #DFB29A;
+      fill: #fff;
+      svg {
+        path {
+          fill-opacity: 1
+        }
+      }
+    }
   }
   .g-group-holder {
     height: 24px;
