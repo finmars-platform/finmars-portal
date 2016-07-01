@@ -13,6 +13,7 @@
     "tests"
   ],
   "dependencies": {
-    "mdPickers": "^0.7.5"
+    "mdPickers": "^0.7.5",
+    "pickmeup": "^2.9.1"
   }
 }
