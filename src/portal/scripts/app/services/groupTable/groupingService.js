@@ -116,7 +116,7 @@
                 item = items[i];
                 groupsForResult = [];
                 groupName = ''; // create groupName of each item
-                //console.log('groups111111111111111111111111', groups);
+                console.log('groups111111111111111111111111', groups);
                 for (c = 0; c < groups.length; c = c + 1) {
                     //console.log('items[i]', items[i]);
                     group = groups[c];
@@ -133,15 +133,15 @@
                             //console.log('item.attributes', item.attributes);
                             for (a = 0; a < item.attributes.length; a = a + 1) {
                                 fingGroupsForResult(group, item, item['attributes'][a]);
-                                if (groupName.indexOf('&[' + item.attributes[a]['attribute_type'] + '}-{' + returnValue(item.attributes[a]) + ']') === -1) {
-                                    groupName = groupName + '&[' + item.attributes[a]['attribute_type'] + '}-{' + returnValue(item.attributes[a]) + ']';
+                                if (groupName.indexOf('&[' + group.name + '}-{' + item[group.name] + ']') === -1) {
+                                    groupName = groupName + '&[' + group.name + '}-{' + item[group.name] + ']';
                                 }
                             }
                         }
                     }
 
                 }
-                //console.log('groupName', groupName);
+                console.log('groupName', groupName);
 
                 if (!itemsGrouped[groupName]) {
                     itemsGrouped[groupName] = {
@@ -150,12 +150,12 @@
                     }
                 }
                 itemsGrouped[groupName].items.push(item);
-                //console.log('itemsGrouped[groupName]', itemsGrouped[groupName]);
-                //console.log('itemsGrouped', itemsGrouped);
+                console.log('itemsGrouped[groupName]', itemsGrouped[groupName]);
+                console.log('itemsGrouped', itemsGrouped);
                 itemsGroupedArray = transformToArray(itemsGrouped);
             }
 
-            console.log('------------------------');
+            //console.log('------------------------');
 
             //console.log('Items grouped', itemsGroupedArray);
             return itemsGroupedArray;
