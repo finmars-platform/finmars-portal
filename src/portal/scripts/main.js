@@ -90,6 +90,7 @@ app.controller('gModalController', ['$scope', '$mdDialog', 'parentScope', 'callb
 app.directive('evFieldResolver', [require('./app/directives/entityViewerFieldResolverDirective')]);
 app.directive('floatNumbers', [require('./app/directives/floatNumbersDirective')]);
 app.directive('instrumentModalResolver', ['$mdDialog', require('./app/directives/instrumentModalResolverDirective')]);
+app.directive('zhDatePicker', ['$mdDialog', require('./app/directives/zhDatePickerDirective')]);
 
 app.filter('trustAsHtml', ['$sce', require('./app/filters/trustAsHtmlFilter')]);
 app.filter('strLimit', ['$filter', require('./app/filters/strLimitFilter')]);

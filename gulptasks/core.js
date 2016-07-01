@@ -144,7 +144,8 @@
     gulp.task(appName + '-plugins-js-min', function(){
 
         var pathToJS = [
-            'node_modules/malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.js'
+            'node_modules/malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.js',
+            'bower_components/pickmeup/js/jquery.pickmeup.js'
         ];
 
         return gulp.src(pathToJS)
@@ -158,7 +159,8 @@
     gulp.task(appName + '-plugins-css-min', function(){
 
         var pathToCSS = [
-            'node_modules/malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.css'
+            'node_modules/malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.css',
+            'bower_components/pickmeup/css/pickmeup.css'
         ];
 
         return gulp.src(pathToCSS)

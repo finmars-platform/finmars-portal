@@ -261,3 +261,36 @@ md-option.disabled {
   pointer-events: none;
   opacity: .5;
 }
+.pickmeup {
+  z-index: 12000;
+  background: #4C334D;
+}
+.pick-me-up {
+  input {
+    border: 0;
+    margin-top: 10px;
+    border-bottom: 1px solid #4C334D;
+  }
+}
+.field-date-pick {
+  .md-button {
+    padding: 0;
+    background: #4C334D;
+    min-width: 34px;
+    color: #fff;
+    font-size: 10px;
+    min-height: 0;
+    height: 34px;
+    margin: 4px;
+    &:hover {
+      background: #4C334D;
+      opacity: .9;
+    }
+  }
+  .field-date-pick-holder {
+    zh-date-picker {
+      display: inline-block;
+      margin-right: 4px;
+    }
+  }
+}
