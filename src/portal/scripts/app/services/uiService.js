@@ -19,10 +19,15 @@
         return uiRepository.getListLayout(entity, name);
     };
 
+    var updateListLayout = function(id, ui){
+        return uiRepository.updateListLayout(id, ui)
+    };
+
     module.exports = {
         getEditLayout: getEditLayout,
         updateEditLayout: updateEditLayout,
-        getListLayout: getListLayout
+        getListLayout: getListLayout,
+        updateListLayout: updateListLayout
     }
 
 }());

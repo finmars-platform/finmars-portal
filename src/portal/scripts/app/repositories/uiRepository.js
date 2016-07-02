@@ -122,13 +122,30 @@
         })
     };
 
+    var updateListLayout = function(id, ui){
+        return window.fetch(baseUrl + 'ui/list-layout/' + id + '/',
+            {
+                method: 'PUT',
+                credentials: 'include',
+                headers: {
+                    'X-CSRFToken': cookieService.getCookie('csrftoken'),
+                    Accept: 'application/json',
+                    'Content-type': 'application/json'
+                },
+                body: JSON.stringify(ui)
+            }).then(function (data) {
+            return data.json();
+        })
+    };
+
 
     module.exports = {
 
         getEditLayout: getEditLayout,
         updateEditLayout: updateEditLayout,
 
-        getListLayout: getListLayout
+        getListLayout: getListLayout,
+        updateListLayout: updateListLayout
 
     }
 
