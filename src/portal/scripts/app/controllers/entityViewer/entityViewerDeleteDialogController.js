@@ -32,7 +32,8 @@
         vm.delete = function () {
             entityResolverService.deleteByKey(vm.entityType, vm.entity.id).then(function (data) {
                 console.log('deleted!', data);
-                $mdDialog.hide({res: 'agree'});
+
+                $mdDialog.hide({status: 'agree'});
             });
         };
 
