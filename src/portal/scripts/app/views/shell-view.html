@@ -1,7 +1,11 @@
 <div layout="row" class="min-height">
     <div layout="row" class="sidenav-wrapper" data-ng-controller="SideNavController as vm" data-ng-include="'views/side-nav-view.html'"></div>
     <div layout="column" class="relative" layout-fill role="main">
-        <md-toolbar ng-show="!showSearch" class="header">
+        <md-toolbar ng-show="!showSearch" class="header" layout="columns">
+
+            <div class="md-toolbar-tools" layout="start center">
+                <md-button class="save-layout-btn">Save layout</md-button>
+            </div>
 
             <div class="md-toolbar-tools" layout-align="end end">
 

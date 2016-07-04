@@ -25,6 +25,33 @@
 
         //console.log('$scope', $scope);
 
+        $('.save-layout-btn').click(function(){
+
+            vm.listView.data.table = vm.table;
+            vm.listView.data.table.columns = vm.columns;
+            console.log('---------vm.grouping-------', vm.grouping);
+            vm.listView.data.table.grouping = vm.grouping;
+            vm.listView.data.table.folding = vm.folding;
+            vm.listView.data.table.filters = vm.filters;
+            vm.listView.data.table.sorting = vm.sorting;
+
+            vm.listView.data.additionsType = vm.additionsType;
+
+            vm.listView.data.tableAdditions.entityType = vm.additionsEntityType;
+
+            vm.listView.data.tableAdditions = vm.tableAdditions;
+            vm.listView.data.tableAdditions.table.columns = vm.entityAdditionsColumns;
+            vm.listView.data.tableAdditions.table.filters = vm.entityAdditionsFilters;
+            vm.listView.data.tableAdditions.table.sorting = vm.entityAdditionsSorting;
+            //vm.listView.data.tableAdditions.additionsType =
+
+            //vm.additionsStatus[res.results[0].data.tableAdditions.additionsType] = true;
+
+            uiService.updateListLayout(vm.listView.id, vm.listView).then(function(){
+               console.log('saved');
+            });
+        });
+
         var vm = this;
 
         // ATTRIBUTE STUFF START
@@ -140,8 +167,9 @@
 
                 //vm.tabs = res.data.tabs;
 
-                //console.log('res', res);
+                console.log('re1233333s', res);
                 //console.log('res.results', res.results[0]);
+                vm.listView = res.results[0];
 
                 vm.table = res.results[0].data.table;
                 vm.columns = res.results[0].data.table.columns;
@@ -168,7 +196,7 @@
             });
         };
 
-        vm.transformViewAttributes = function () {
+        vm.transformViewAttributes = function () { //deprecated
 
             vm.columns = returnFullAttributes(vm.columns, vm.attrs, vm.baseAttrs, vm.entityAttrs, vm.entityType);
             vm.grouping = returnFullAttributes(vm.grouping, vm.attrs, vm.baseAttrs, vm.entityAttrs, vm.entityType);
@@ -181,6 +209,7 @@
             vm.entityAdditionsSorting.column = findFullAttributeForItem(vm.entityAdditionsSorting.column, vm.attrs);
 
             logService.collection('vm.grouping', vm.grouping);
+            logService.collection('vm.columns', vm.columns);
         };
 
         vm.getEntityData = function () {
