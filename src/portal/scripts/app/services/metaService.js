@@ -29,14 +29,40 @@
         return metaRepository.getRestrictedEntitiesWithTypeField();
     };
 
+    var getTypeCaptions = function() {
+        var filteredValueTypes = getValueTypes().filter(function (item) {
+            return item.value !==30 && item.value !== 'decoration';
+        });
+        var typeCaptions = filteredValueTypes.map(function (item) {
+            switch (item['display_name']){
+                case 'Number':
+                    item['caption_name'] = 'Integer';
+                    break;
+                case 'Float':
+                    item['caption_name'] = 'Number with decimals';
+                    break;
+                case 'Field':
+                    item['caption_name'] = 'Classification';
+                    break;
+                default:
+                    item['caption_name'] = item['display_name'];
+                    break;
+            }
 
+            return item;
+        });
+        console.log(typeCaptions);
+        return typeCaptions;
+    };
+ 
     module.exports = {
         getMenu: getMenu,
         getBaseAttrs: getBaseAttrs,
         getEntityAttrs: getEntityAttrs,
         getValueTypes: getValueTypes,
         getEntitiesWithoutBaseAttrsList: getEntitiesWithoutBaseAttrsList,
-        getRestrictedEntitiesWithTypeField: getRestrictedEntitiesWithTypeField
+        getRestrictedEntitiesWithTypeField: getRestrictedEntitiesWithTypeField,
+        getTypeCaptions: getTypeCaptions
     }
 
 }());

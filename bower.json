@@ -15,5 +15,8 @@
   "dependencies": {
     "mdPickers": "^0.7.5",
     "pickmeup": "^2.9.1"
+  },
+  "resolutions": {
+    "angular": "1.5.7"
   }
 }

@@ -216,6 +216,7 @@
 
             entityResolverService.create(vm.entityType, vm.entity).then(function (data) {
                 console.log('saved!', data);
+                parentScope.vm.updateTable();
                 $mdDialog.hide();
             })
         };
