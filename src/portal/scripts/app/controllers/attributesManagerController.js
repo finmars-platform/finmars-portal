@@ -87,10 +87,30 @@
                     }
                 }
             }).then(function (res) {
+                console.log('res', res);
                 if (res.status === 'agree') {
-                    attributeTypeService.deleteByKey(vm.entityType, item.id);
-                    getList();
+                    attributeTypeService.deleteByKey(vm.entityType, item.id).then(function(data){
+                        if(data.status === 'conflict') {
+                            $mdDialog.show({
+                                controller: 'InfoDialogController as vm',
+                                templateUrl: 'views/info-dialog-view.html',
+                                parent: angular.element(document.body),
+                                targetEvent: ev,
+                                clickOutsideToClose: true,
+                                locals: {
+                                    info: {
+                                        title: 'Notification',
+                                        description: "You can not delete attributed that already in use"
+                                    }
+                                }
+                            })
+                        } else {
+                            getList();
+                        }
+                    });
+
                 }
+
             });
         };
 
