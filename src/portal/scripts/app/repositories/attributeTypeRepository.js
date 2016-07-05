@@ -100,7 +100,13 @@
                     'Content-type': 'application/json'
                 }
             }).then(function (data) {
-            return data.json();
+            return new Promise(function(resolve,reject) {
+                console.log('data', data);
+                if(data.status === 409) {
+                    resolve({status: 'conflict'});
+                }
+
+            });
         })
     };
 

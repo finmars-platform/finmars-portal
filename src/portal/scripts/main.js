@@ -58,6 +58,7 @@ app.controller('EntityDataConstructorController', ['$scope', '$stateParams', '$s
 app.controller('AdditionsEditorEntityEditController', ['$scope', '$state', require('./app/controllers/additionsEditorEntityEditController')]);
 
 app.controller('WarningDialogController', ['$scope', '$mdDialog', 'warning', require('./app/controllers/warningDialogController')]);
+app.controller('InfoDialogController', ['$scope', '$mdDialog', 'info', require('./app/controllers/infoDialogController')]);
 app.controller('InstrumentSelectDialogController', ['$scope', '$mdDialog',  require('./app/controllers/instrumentSelectDialogController')]);
 
 app.directive('menuToggle', [require('./app/directives/menuToggleDirective')]);

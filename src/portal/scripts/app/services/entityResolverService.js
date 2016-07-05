@@ -43,9 +43,14 @@
     var create = function(entityType, entity) {
         switch (entityType) {
             case 'portfolio':
+                entity.counterparties = entity.counterparties || [];
+                entity.accounts = entity.accounts || [];
+                entity.responsibles = entity.responsibles || [];
+                entity.transaction_types = entity.transaction_types || [];
                 return portfolioService.create(entity);
                 break;
             case 'account':
+                entity.portfolios = entity.portfolios || [];
                 return accountService.create(entity);
                 break;
             case 'responsible':

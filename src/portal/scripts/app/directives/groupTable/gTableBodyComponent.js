@@ -161,7 +161,7 @@
                             entityType: scope.entityType
                         }
                     }).then(function (res) {
-                        if (res === 'agree') {
+                        if (res.status === 'agree') {
                             scope.externalCallback();
                         }
                     })
