@@ -8,11 +8,13 @@
                         <div class="fold-btn-wrap {{folding ? '' : 'disabled'}}">
                             <md-button class="" aria-label="hide/show grouping" data-ng-click="toggleGroupFold()">
                                 <ng-md-icon icon="add"></ng-md-icon>
+                                <md-tooltip md-direction="top">Expand</md-tooltip>
                             </md-button>
                         </div>
                         <div class="fold-btn-wrap {{folding ? 'disabled' : ''}}">
                             <md-button class="" aria-label="hide/show grouping" data-ng-click="toggleGroupFold()">
                                 <ng-md-icon icon="remove"></ng-md-icon>
+                                <md-tooltip md-direction="top">Collapse</md-tooltip>
                             </md-button>
                         </div>
                     </div>
@@ -52,7 +54,8 @@
                 </md-card>
             </div>
             <div class="drop-new-group" id="groupsbag">
-                Drop level {{grouping.length + 1}} Group
+                <!-- Drop level {{grouping.length + 1}} Group -->
+                Drop New Grouping Level
             </div>
         </div>
 
