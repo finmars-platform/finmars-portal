@@ -34,15 +34,22 @@
             return item.value !==30 && item.value !== 'decoration';
         });
         var typeCaptions = filteredValueTypes.map(function (item) {
-            switch (item['display_name']){
+            switch (item['display_name']) {
                 case 'Number':
-                    item['caption_name'] = 'Integer';
+                    // item['caption_name'] = 'Integer';
+                    item['caption_name'] = 'Whole number';
                     break;
                 case 'Float':
                     item['caption_name'] = 'Number with decimals';
                     break;
                 case 'Field':
                     item['caption_name'] = 'Classification';
+                    break;
+                case 'String':
+                    item['caption_name'] = 'Text';
+                    break;
+                case 'Boolean':
+                    item['caption_name'] = 'True/False';
                     break;
                 default:
                     item['caption_name'] = item['display_name'];

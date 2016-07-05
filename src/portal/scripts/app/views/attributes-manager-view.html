@@ -5,9 +5,12 @@
     <div>
         <h2 class="am-header"><span data-ng-bind="vm.entityType"></span><ng-md-icon icon="keyboard_arrow_right"></ng-md-icon> MANAGE ATTRIBUTES</h2>
     </div>
-    <div>
+    <div layout="row" layout-align="start center">
         <md-button class="md-raised" data-ui-sref="app.data-constructor({entityType: vm.entityType})">
             RETURN TO FORM EDITOR
+        </md-button>
+        <md-button class="md-raised" data-ng-click="vm.addAttribute($event)">
+            ADD NEW
         </md-button>
     </div>
     <div data-ng-if="vm.attrs.length">
