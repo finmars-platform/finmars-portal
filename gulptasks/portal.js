@@ -34,6 +34,11 @@
 
         return gulp.src(pathToLess)
             .pipe(less())
+            .on('error', function (err) {
+                console.error('Error in Browserify: \n', err.message);
+                this.emit('end');
+            })
+            .pipe(plumber())
             .pipe(postcss([ autoprefixer({ browsers: ['last 2 versions']})]))
             .pipe(minifyCSS())
             .pipe(rename('main.min.css'))
