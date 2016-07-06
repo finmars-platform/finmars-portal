@@ -27,7 +27,7 @@
 
                 <div class="g-row-selection" data-ng-click="toggleSelectRow(groupedItem)"><ng-md-icon icon="done" data-ng-show="groupedItem.selectedRow"></ng-md-icon></div>
                 <div data-ng-repeat="column in columns" class="g-cell">
-                    <span data-ng-bind-html="bindCell(groupedItem, column) | trustAsHtml"></span>
+                    <span title="{{bindCellTitle(groupedItem, column)}}" data-ng-bind-html="bindCell(groupedItem, column) | trustAsHtml"></span>
                 </div>
             </div>
         </div>
@@ -36,7 +36,7 @@
         <div data-ng-repeat="item in items" class="{{item.selectedRow ? 'selected-row' : ''}} g-row" contextmenu-item="item" data-ng-click="rowCallback(item)">
             <div class="g-row-selection" data-ng-click="toggleSelectRow(item)"><ng-md-icon icon="done" data-ng-show="item.selectedRow"></ng-md-icon></div>
             <div data-ng-repeat="column in columns" class="g-cell">
-                <span data-ng-bind-html="bindCell(item, column) | trustAsHtml"></span>
+                <span title="{{bindCellTitle(item, column)}}" data-ng-bind-html="bindCell(item, column) | trustAsHtml"></span>
             </div>
         </div>
     </div>

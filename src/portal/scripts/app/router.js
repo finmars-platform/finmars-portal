@@ -16,7 +16,10 @@
         }).state('app.attributesManager', {
             url: '/attributes/:entityType',
             templateUrl: 'views/attributes-manager-view.html',
-            controller: 'AttributesManagerController as vm'
+            controller: 'AttributesManagerController as vm',
+            params: {
+                prevState: ''
+            }
         });
 
         $stateProvider.state('app.dashboard', {
