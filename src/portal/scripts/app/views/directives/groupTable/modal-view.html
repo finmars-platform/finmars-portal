@@ -1,8 +1,15 @@
 <md-dialog aria-label="Mango (Fruit)" ng-cloak class="g-modal-dialog drag" g-dialog-draggable>
     <md-toolbar>
-        <div class="md-toolbar-tools">
+        <div class="md-toolbar-tools" layout="row" layout-align="start center">
             <h2 style="user-select: none;">View Constructor</h2>
-            <span flex></span>
+            <!-- <div flex="5" layout layout-align="center">
+                <span>i</span>
+                <md-tooltip md-direction="top">choose or drag-drop elements to add to the view</md-tooltip>
+            </div> -->
+            <span class="tooltips-sign white">
+                (i)
+                <md-tooltip md-direction="top">tooltip text</md-tooltip>
+            </span>
         </div>
     </md-toolbar>
     <md-dialog-content>
@@ -11,16 +18,16 @@
                 <md-tab label="System">
                     <md-content class="md-padding">
                         <div class="g-th-checkbox-row">
-                            <span class="g-meta-circle green">G</span>
                             <span class="g-meta-circle red">C</span>
+                            <span class="g-meta-circle green">G</span>
                             <span class="g-meta-circle blue">F</span>
                         </div>
                         <div class="g-checkbox-row" data-ng-repeat="item in vm.baseAttrs">
+                            <md-checkbox ng-model="item.columns" aria="columns" data-ng-change="vm.updateAttrs()">
+                            </md-checkbox>
                             <md-checkbox ng-style="item.name === 'Notes' ? {'visibility': 'hidden'} : {}"
                                          ng-model="item.groups" aria="groups" class="md-g-green"
                                          data-ng-change="vm.updateAttrs()">
-                            </md-checkbox>
-                            <md-checkbox ng-model="item.columns" aria="columns" data-ng-change="vm.updateAttrs()">
                             </md-checkbox>
                             <md-checkbox ng-style="item.name === 'Notes' ? {'visibility': 'hidden'} : {}"
                                          ng-model="item.filters" aria="filters" class="md-primary"
@@ -32,10 +39,10 @@
                             </div>
                         </div>
                         <div class="g-checkbox-row" data-ng-repeat="item in vm.entityAttrs">
+                            <md-checkbox ng-model="item.columns" aria="columns" data-ng-change="vm.updateAttrs()">
+                            </md-checkbox>
                             <md-checkbox ng-model="item.groups" aria="groups" class="md-g-green"
                                          data-ng-change="vm.updateAttrs()">
-                            </md-checkbox>
-                            <md-checkbox ng-model="item.columns" aria="columns" data-ng-change="vm.updateAttrs()">
                             </md-checkbox>
                             <md-checkbox ng-model="item.filters" aria="filters" class="md-primary"
                                          data-ng-change="vm.updateAttrs()">
@@ -51,15 +58,15 @@
                 <md-tab label="User Attributes">
                     <md-content class="md-padding">
                         <div class="g-th-checkbox-row">
-                            <span class="g-meta-circle green">G</span>
                             <span class="g-meta-circle red">C</span>
+                            <span class="g-meta-circle green">G</span>
                             <span class="g-meta-circle blue">F</span>
                         </div>
                         <div class="g-checkbox-row" data-ng-repeat="item in vm.attrs">
+                            <md-checkbox ng-model="item.columns" aria="columns" data-ng-change="vm.updateAttrs()">
+                            </md-checkbox>
                             <md-checkbox ng-model="item.groups" aria="groups" class="md-g-green"
                                          data-ng-change="vm.updateAttrs()">
-                            </md-checkbox>
-                            <md-checkbox ng-model="item.columns" aria="columns" data-ng-change="vm.updateAttrs()">
                             </md-checkbox>
                             <md-checkbox style="visibility: hidden" ng-model="item.filters" aria="filters"
                                          class="md-primary" data-ng-change="vm.updateAttrs()">
