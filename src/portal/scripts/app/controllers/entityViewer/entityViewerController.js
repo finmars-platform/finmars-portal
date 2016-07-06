@@ -216,6 +216,7 @@
             entityViewerHelperService.transformItems(vm.entityRaw, vm.attrs).then(function (data) {
                 vm.entity = data;
                 vm.groupTableService = GroupTableService.getInstance();
+                console.log("Column text ", vm.groupTableService);
 
                 vm.updateTable();
 

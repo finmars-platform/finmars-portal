@@ -144,6 +144,10 @@
                     }
                 };
 
+                scope.bindCellTitle = function (item, column) {
+                    return item[column.key];
+                };
+
                 scope.rowCallback = function (item) {
                     //console.log('open additions!', item);
                     scope.itemAdditionsEditorEntityId = item.id;
