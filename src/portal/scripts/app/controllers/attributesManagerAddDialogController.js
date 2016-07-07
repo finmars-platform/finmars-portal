@@ -45,6 +45,7 @@
         //     return item;
         // });
         vm.valueTypes = metaService.getTypeCaptions();
+        console.log("Value type is ", vm.valueTypes);
 
         vm.agree = function () {
             console.log('vm.attr', vm.attribute);

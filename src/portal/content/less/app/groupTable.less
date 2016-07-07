@@ -270,9 +270,9 @@
     .full-width {
       width: 100%;
     }
-    button {
-      min-width: 100px;
-    }
+    // button {
+    //   min-width: 100px;
+    // }
   }
 
   .drop-new-field {
@@ -357,6 +357,7 @@
   }
   .g-sidebar {
     background-color: #DCDCDC;
+    overflow: hidden;
   }
 }
 
@@ -485,8 +486,14 @@
     }
 
   }
+  .column-sort {
+    min-width: 0;
+    width: 20px;
+  }
   .column-sort-up {
     top: -8px;
+    min-width: 0;
+    width: 20px;
   }
   .sort {
     .md-button {
@@ -647,9 +654,12 @@ body.md-dialog-is-showing {
       .md-button {
         pointer-events: none;
         background: rgba(158, 158, 158, 0.2);
-        // width: 32px;
       }
     }
+  }
+  .grouping-fold-btn {
+    min-width: 0;
+    width: 32px;
   }
   .md-button {
     min-width: auto;
