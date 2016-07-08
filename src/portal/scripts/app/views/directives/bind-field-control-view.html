@@ -34,8 +34,9 @@
         <div data-ev-field-resolver data-item="item" data-entity="entity"></div>
     </div>
     <div data-ng-if="fieldType['display_name'] === 'Date'" class="field-date-pick">
-        <label data-ng-bind="getName()"></label>
-        <div class="field-date-pick-holder">
+        <!-- <label data-ng-bind="getName()"></label> -->
+        <md-input-container class="field-date-pick-holder">
+            <label data-ng-bind="getName()"></label>
             <zh-date-picker ng-model="entity[getModelKey()]" ></zh-date-picker>
             <!--<mdp-date-picker mdp-placeholder="Enter date" ng-model="entity[getModelKey()]" mdp-format="YYYY/MM/DD" data-ng-change="dateFormatter()"></mdp-date-picker>-->
             <!--<md-datepicker ng-model="entity[getModelKey()]" md-placeholder="Enter date" data-ng-change="dateFormatter()"></md-datepicker>-->
@@ -48,7 +49,7 @@
             <md-button data-ng-if="item.options.dateTodayMinus" data-ng-click="setDateMinus()">
                 T - 1
             </md-button>
-        </div>
+        </md-input-container>
     </div>
     <div data-ng-if="fieldType['display_name'] === 'Boolean'">
         <md-checkbox data-ng-model="entity[getModelKey()]" aria-label="checkbox">

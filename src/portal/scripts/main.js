@@ -4,28 +4,28 @@
 'use strict';
 
 var app = angular.module('app', [
-    'ngAria',
-    'ngMaterial',
-    'ngMessages',
-    'ngMdIcons',
-    'ngResource',
-    'ngSanitize',
-    'ui.router',
-    'mdPickers',
-    'io.dennis.contextmenu',
-    angularDragula(angular)
+	'ngAria',
+	'ngMaterial',
+	'ngMessages',
+	'ngMdIcons',
+	'ngResource',
+	'ngSanitize',
+	'ui.router',
+	'mdPickers',
+	'io.dennis.contextmenu',
+	angularDragula(angular)
 ]);
 
 
 app.config(['$stateProvider', '$urlRouterProvider', require('./app/router.js')]);
 app.config(['$mdDateLocaleProvider', function ($mdDateLocaleProvider) {
-    $mdDateLocaleProvider.formatDate = function (date) {
-        return moment(date).format('YYYY-MM-DD');
-    };
+	$mdDateLocaleProvider.formatDate = function (date) {
+		return moment(date).format('YYYY-MM-DD');
+	};
 }]);
 
 app.run(function () {
-    console.log('App initialized');
+	console.log('App initialized');
 });
 
 
@@ -97,15 +97,15 @@ app.filter('trustAsHtml', ['$sce', require('./app/filters/trustAsHtmlFilter')]);
 app.filter('strLimit', ['$filter', require('./app/filters/strLimitFilter')]);
 
 app.directive('ngRightClick', ['$parse', function($parse) {
-    return function(scope, element, attrs) {
-        var fn = $parse(attrs.ngRightClick);
-        element.bind('contextmenu', function(event) {
-            scope.$apply(function() {
-                event.preventDefault();
-                fn(scope, {$event:event});
-            });
-        });
-    };
+	return function(scope, element, attrs) {
+		var fn = $parse(attrs.ngRightClick);
+		element.bind('contextmenu', function(event) {
+			scope.$apply(function() {
+				event.preventDefault();
+				fn(scope, {$event:event});
+			});
+		});
+	};
 }]);
 
 
