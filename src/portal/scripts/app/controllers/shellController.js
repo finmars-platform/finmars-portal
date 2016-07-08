@@ -74,6 +74,7 @@
 		}
 
 		console.log("Curent state is ", $state.current);
+
 	}
 
 }());

@@ -108,6 +108,9 @@
         </div>
     </md-dialog-content>
     <md-dialog-actions layout="row">
+        <md-button data-ui-sref="app.attributesManager({entityType: vm.entityType})" data-ng-click="vm.cancel()">
+            Manage attributes
+        </md-button>
         <md-button ng-click="vm.cancel()">
             OK
         </md-button>
