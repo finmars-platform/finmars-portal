@@ -26,15 +26,27 @@
 		//console.log('$scope', $scope);
 
 		$('.save-layout-btn').click(function(){
+			// saving columns widths
+			var tHead = $('.g-columns-component');
+			var th = $('.g-columns-component.g-thead').find('.g-cell');
+			var thWidths = [];
+			for (var i = 0; i < th.length; i = i + 1) {
+				var thWidth = $(th[i]).width();
+				thWidths.push(thWidth);
+			}
+			vm.listView.data.table.columnsWidth = thWidths;
 
 			console.log("View data is ", vm.listView.data);
 			vm.listView.data.table = vm.table;
 			vm.listView.data.table.columns = vm.columns;
+			// vm.listView.data.table.columns['cellWidth']
 			console.log('---------vm.grouping-------', vm.grouping);
 			vm.listView.data.table.grouping = vm.grouping;
 			vm.listView.data.table.folding = vm.folding;
 			vm.listView.data.table.filters = vm.filters;
 			vm.listView.data.table.sorting = vm.sorting;
+
+			// vm.listView.data.table.cellWidth = 200;
 
 			vm.listView.data.additionsType = vm.additionsType;
 
@@ -53,6 +65,10 @@
 			});
 		});
 
+		$('.header-add-new-btn').click(function(e) {
+			vm.addEntity(e);
+		});
+
 		var vm = this;
 
 		// ATTRIBUTE STUFF START
@@ -69,6 +85,7 @@
 		vm.entityType = $scope.$parent.vm.entityType;
 
 		vm.columns = [];
+		vm.columnsWidth = [];
 		vm.grouping = [];
 		vm.filters = [];
 		vm.sorting = [];
@@ -174,6 +191,7 @@
 
 				vm.table = res.results[0].data.table;
 				vm.columns = res.results[0].data.table.columns;
+				vm.columnsWidth = res.results[0].data.table.columnsWidth;
 				vm.grouping = res.results[0].data.table.grouping;
 				vm.folding = res.results[0].data.table.folding;
 				vm.filters = res.results[0].data.table.filters;
@@ -214,6 +232,7 @@
 		};
 
 		vm.getEntityData = function () {
+			console.log('entityRaw is ', vm.entityRaw);
 			entityViewerHelperService.transformItems(vm.entityRaw, vm.attrs).then(function (data) {
 				vm.entity = data;
 				vm.groupTableService = GroupTableService.getInstance();
@@ -293,6 +312,7 @@
 		};
 
 		vm.addEntity = function (ev) {
+			console.log('Add entity dialog have been activated');
 			$mdDialog.show({
 				controller: 'EntityViewerAddDialogController as vm',
 				templateUrl: 'views/entity-viewer/entity-viewer-dialog-view.html',
@@ -334,6 +354,7 @@
 				vm.getEntityData();
 			});
 		})
+
 	}
 
 }());

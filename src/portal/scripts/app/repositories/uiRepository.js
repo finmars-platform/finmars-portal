@@ -74,7 +74,7 @@
     };
 
 
-    var getListLayout = function(entity, name){
+    var getListLayout = function(entity, name) {
 
         var contentType;
 

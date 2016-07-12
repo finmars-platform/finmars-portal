@@ -70,6 +70,7 @@
 	.g-sidebar {
 		float: left;
 		width: 240px;
+		// min-width: 235px;
 		&:first-child {
 			border-bottom: 6px solid #4C334D;
 		}
@@ -159,6 +160,15 @@
 		}
 	}
 	.g-row {
+		.g-cell {
+			text-align: left;
+		}
+		.g-cell.cell-center-align {
+			text-align: center;
+		}
+		.g-cell.cell-right-align {
+			text-align: right;
+		}
 		&:after {
 			content: '';
 			clear: both;
