@@ -3,135 +3,150 @@
  */
 (function () {
 
-    'use strict';
+	'use strict';
 
-    var logService = require('../../services/logService');
+	var logService = require('../../services/logService');
+	// var uiService = require('../../services/uiService');
 
-    module.exports = function () {
-        return {
-            restrict: 'A',
-            scope: {
-                items: '='
-            },
-            link: function (scope, elem, attr) {
+	module.exports = function () {
+		return {
+			restrict: 'A',
+			scope: {
+				items: '=',
+				columnsWidth: '='
+			},
+			link: function (scope, elem, attr) {
 
-                logService.component('groupColumnResizer', 'initialized');
+				logService.component('groupColumnResizer', 'initialized');
 
-                var workAreaElem = elem.parents('.g-workarea');
-                var filterSidebarWidth = 246;
+				// set columns to saved width
+				// console.log('Parent scope is ', scope.$parent.columns);
+				function setColumnsWidth () {
+					var columns = elem.find('.g-column');
+					var savedWidths = scope.columnsWidth;
+					for (var i = 0; i < columns.length; i = i + 1) {
+						$(columns[i]).width(savedWidths[i]);
+					}
+				};
 
-                workAreaElem.width($(window).width() - filterSidebarWidth - $('md-sidenav').width());
+				var workAreaElem = elem.parents('.g-workarea');
+				var filterSidebarWidth = 246;
 
-                var wrapperWidth = $('.g-columns-component.g-thead').width() - $('.g-cell-select.all').width();
-                $('.g-scroll-wrapper').width(wrapperWidth);
-                $('.g-scrollable-area').width(wrapperWidth);
+				workAreaElem.width($(window).width() - filterSidebarWidth - $('md-sidenav').width());
 
-                $(window).on('resize', function(){
-                    workAreaElem.width($(window).width() - filterSidebarWidth - $('md-sidenav').width());
-                    var wrapperWidth = $('.g-columns-component.g-thead').width() - $('.g-cell-select.all').width();
-                    $('.g-scroll-wrapper').width(wrapperWidth);
-                    $('.g-scrollable-area').width(wrapperWidth);
+				var wrapperWidth = $('.g-columns-component.g-thead').width() - $('.g-cell-select.all').width();
+				$('.g-scroll-wrapper').width(wrapperWidth);
+				$('.g-scrollable-area').width(wrapperWidth);
 
-                    resizeScrollableArea();
-                    resize();
-                });
+				$(window).on('resize', function(){
+					workAreaElem.width($(window).width() - filterSidebarWidth - $('md-sidenav').width());
+					var wrapperWidth = $('.g-columns-component.g-thead').width() - $('.g-cell-select.all').width();
+					$('.g-scroll-wrapper').width(wrapperWidth);
+					$('.g-scrollable-area').width(wrapperWidth);
 
-                function resizeScrollableArea() {
-                    var columns;
-                    var i;
-                    var areaWidth = 0;
-                    var columnMargins = 16;
-                    var dropNewFieldWidth = 400;
-                    columns = elem.find('.g-column');
-                    for(i = 0; i < columns.length; i = i + 1) {
-                        areaWidth = areaWidth + $(columns[i]).width() + columnMargins;
-                    }
-                    wrapperWidth = $('.g-columns-component.g-thead').width() - $('.g-cell-select.all').width();
-                    if(wrapperWidth < areaWidth + dropNewFieldWidth) {
-                        $('.g-scrollable-area').width(areaWidth + dropNewFieldWidth);
-                        scope.$apply();
-                    } else {
-                    }
-                };
+					resizeScrollableArea();
+					resize();
+				});
 
-                function resize() {
-                    var tHead = $(elem).find('.g-thead');
-                    var th = tHead.find('.g-cell');
-                    var tr = $(elem).find('.g-row');
-                    var thSliders = th.find('.resize-slider');
-                    var td;
+				function resizeScrollableArea() {
+					var columns;
+					var i;
+					var areaWidth = 0;
+					var columnMargins = 16;
+					var dropNewFieldWidth = 400;
+					columns = elem.find('.g-column');
 
-                    var setThMinWidths = function () {
-                        var i;
-                        for (i = 0; i < th.length; i = i + 1) {
-                            if(!$(th[i]).attr('min-width')) {
-                                $(th[i]).attr('min-width', $(th[i]).width());
-                            }
-                        }
-                    };
-                    setThMinWidths();
+					for(i = 0; i < columns.length; i = i + 1) {
+						areaWidth = areaWidth + $(columns[i]).width() + columnMargins;
+					}
+					wrapperWidth = $('.g-columns-component.g-thead').width() - $('.g-cell-select.all').width();
+					if(wrapperWidth < areaWidth + dropNewFieldWidth) {
+						$('.g-scrollable-area').width(areaWidth + dropNewFieldWidth);
+						// scope.$apply();
+					} else {
+					}
+				};
 
-                    $(thSliders).bind('mousedown', function (e) {
-                        e.preventDefault();
-                        e.stopPropagation();
+				function resize() {
+					var tHead = $(elem).find('.g-thead');
+					var th = tHead.find('.g-cell');
+					var tr = $(elem).find('.g-row');
+					var thSliders = th.find('.resize-slider');
+					var td;
 
-                        var parent = $(this).parent();
-                        var width = parent.width();
-                        var minWidth = parent.attr('min-width');
-                        var newWidth;
-                        var mouseDownLeft = e.clientX;
+					var setThMinWidths = function () {
+						var i;
+						for (i = 0; i < th.length; i = i + 1) {
+							if(!$(th[i]).attr('min-width')) {
+								$(th[i]).attr('min-width', $(th[i]).width());
+							}
+						}
+					};
+					setThMinWidths();
 
-                        $(window).bind('mousemove', function (e) {
-                            newWidth = e.clientX - mouseDownLeft;
-                            resizeScrollableArea();
-                            resizeCells();
-                            resizeScrollableArea();
-                            if (newWidth + width > minWidth) {
-                                parent.width(width + newWidth);
-                            }
+					$(thSliders).bind('mousedown', function (e) {
+						e.preventDefault();
+						e.stopPropagation();
 
-                        });
-                        $(window).bind('mouseup', function () {
-                            $(window).unbind('mousemove')
-                        });
-                    });
+						var parent = $(this).parent();
+						var width = parent.width();
+						var minWidth = parent.attr('min-width');
+						var newWidth;
+						var mouseDownLeft = e.clientX;
 
-                    function resizeCells() {
-                        var tHead = $(elem).find('.g-thead');
-                        var th = tHead.find('.g-cell');
-                        var tr = $(elem).find('.g-row');
+						$(window).bind('mousemove', function (e) {
+							newWidth = e.clientX - mouseDownLeft;
+							resizeScrollableArea();
+							resizeCells();
+							resizeScrollableArea();
+							if (newWidth + width > minWidth) {
+								parent.width(width + newWidth);
+							}
 
-                        var i, x;
-                        for (i = 0; i < tr.length; i = i + 1) {
-                            td = $(tr[i]).find('.g-cell');
-                            for (x = 0; x < th.length; x = x + 1) {
-                                (function (x) {
-                                    $(td[x]).css({width: $(th[x]).width() + 'px'});
-                                }(x))
-                            }
-                        }
-                    }
+						});
+						$(window).bind('mouseup', function () {
+							$(window).unbind('mousemove');
+						});
+					});
 
-                    setTimeout(function () {
-                        resizeCells();
-                    }, 100);
+					function resizeCells() {
+						var tHead = $(elem).find('.g-thead');
+						var th = tHead.find('.g-cell');
+						var tr = $(elem).find('.g-row');
 
-                    //console.log('th', th);
-                }
+						var i, x;
+						for (i = 0; i < tr.length; i = i + 1) {
+							td = $(tr[i]).find('.g-cell');
+							for (x = 0; x < th.length; x = x + 1) {
+								(function (x) {
+									$(td[x]).css({width: $(th[x]).width() + 'px'});
+								}(x))
+							}
+						}
+					}
 
-                scope.$watchCollection('items', function () {
-                    resizeScrollableArea();
-                    setTimeout(function () {
-                        resize();
-                    }, 100);
-                    //resize();
-                });
-                setTimeout(function () {
-                    resize();
-                }, 100)
+					setTimeout(function () {
+						resizeCells();
+					}, 100);
 
-            }
-        }
-    }
+					//console.log('th', th);
+				}
+				setTimeout(function () {
+					setColumnsWidth();
+				}, 110);
+				scope.$watchCollection('items', function () {
+					resizeScrollableArea();
+					setTimeout(function () {
+						resize();
+					}, 100);
+					//resize();
+				});
+				setTimeout(function () {
+					resize();
+				}, 100)
+
+			}
+		}
+	}
 
 }());

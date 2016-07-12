@@ -188,6 +188,8 @@
                         }
                     });
                 };
+            
+                console.log('Table body component columns ', scope.columns);
             }
         }
     }

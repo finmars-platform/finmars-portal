@@ -10,7 +10,7 @@
 
 	var usersService = require('../services/usersService');
 
-	module.exports = function ($scope, $state) {
+	module.exports = function ($scope, $state, $rootScope, $mdDialog) {
 
 		logService.controller('ShellController', 'initialized');
 
@@ -73,6 +73,10 @@
 			}
 		}
 
+		$rootScope.$on('$stateChangeSuccess', function () {
+			$mdDialog.cancel();
+		})
+		// console.log('root scope is ', $rootScope);
 		console.log("Curent state is ", $state.current);
 
 	}

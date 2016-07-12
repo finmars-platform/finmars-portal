@@ -149,7 +149,7 @@
             function updateValue(entityAttr, attr, value) {
                 console.log(entityAttr, attr, value);
 
-                if (attr['value_type'] === 10) {
+                if (attr['value_type'] === 10 || attr['value_type'] === 40) {
                     entityAttr['value_string'] = value;
                 }
 

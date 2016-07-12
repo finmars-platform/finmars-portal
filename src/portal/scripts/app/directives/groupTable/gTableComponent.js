@@ -17,6 +17,7 @@
                 items: '=',
                 filters: '=',
                 columns: '=',
+                columnsWidth: '=',
                 grouping: '=',
                 folding: '=',
                 sorting: '=',
