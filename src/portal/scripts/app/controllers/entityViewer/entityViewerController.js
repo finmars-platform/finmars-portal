@@ -353,7 +353,7 @@
 				vm.transformViewAttributes();
 				vm.getEntityData();
 			});
-		})
+		});
 
 	}
 

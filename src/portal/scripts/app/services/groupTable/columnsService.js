@@ -8,6 +8,7 @@
     var reservedProps = ['id', 'url', 'tags', 'user_code'];
 
     var setColumns = function (items, columns) {
+        // console.log('items in set columns is ', items);
         //var itemsColumned = items.map(function(item){
         //    var i, x, z;
         //    var keys = Object.keys(item);

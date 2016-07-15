@@ -21,7 +21,7 @@
                 }
                 return item;
             });
-            //console.log('Items transformed', transformedItems);
+            // console.log('Items transformed', transformedItems);
             resolve(transformedItems);
 
         });
