@@ -7,9 +7,9 @@
 	<div class="g-cell-select all {{isAllSelected ? 'active' : ''}}" data-ng-click="selectAllRows()">
 		<ng-md-icon icon="signal_cellular_0_bar"></ng-md-icon>
 	</div>
-	<div class="g-scroll-wrapper">
+	<div class="g-scroll-wrapper" group-column-width-set init-width="">
 		<div class="g-scrollable-area">
-			<div dragula="'columns-bag'" dragula-model="columns" class="g-columns-holder">
+			<div dragula="'columns-bag'" dragula-model="columns" class="g-columns-holder" >
 				<md-card data-ng-repeat="column in columns" class="g-cell g-column">
 					<div class="sort" data-ng-if="isSortable(column)">
 						<md-button class="column-sort" data-ng-show="column.options.sort === 'ASC'" aria-label="open settings" data-ng-click="sortHandler(column, 'DESC')">

@@ -13,11 +13,19 @@
 			restrict: 'A',
 			scope: {
 				items: '=',
-				columnsWidth: '='
+				columnsWidth: '=',
+				// columns: '='
 			},
 			link: function (scope, elem, attr) {
 
 				logService.component('groupColumnResizer', 'initialized');
+
+				// var columnsWidthGroups = {
+				// 	groupOne: '400px',
+				// 	groupTwo: '600px',
+				// 	groupThree: '200px',
+				// 	groupFour: '500px'
+				// }
 
 				// set columns to saved width
 				// console.log('Parent scope is ', scope.$parent.columns);
@@ -75,7 +83,9 @@
 					var td;
 
 					var setThMinWidths = function () {
-						var i;
+						var i,a;
+						// var lastColumn = th.length - 1;
+						// console.log('min width seted ', th.length, 'resizer columns ', [scope.columns]);
 						for (i = 0; i < th.length; i = i + 1) {
 							if(!$(th[i]).attr('min-width')) {
 								$(th[i]).attr('min-width', $(th[i]).width());
@@ -135,6 +145,7 @@
 					setColumnsWidth();
 				}, 110);
 				scope.$watchCollection('items', function () {
+					console.log('items added for resize');
 					resizeScrollableArea();
 					setTimeout(function () {
 						resize();
@@ -144,6 +155,8 @@
 				setTimeout(function () {
 					resize();
 				}, 100)
+
+				console.log('resizer items is ', scope.items);
 
 			}
 		}

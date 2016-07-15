@@ -83,6 +83,7 @@ app.directive('groupHeightAligner', [require('./app/directives/groupTable/gHeigh
 app.directive('groupVerticalScroll', [require('./app/directives/groupTable/gVerticalScrollComponent')]);
 app.directive('groupHorizontalScroll', [require('./app/directives/groupTable/gHorizontalScrollComponent')]);
 app.directive('groupEditorBinder', ['$templateCache', '$compile', require('./app/directives/groupTable/groupEditorBinderComponent')]);
+// app.directive('groupColumnWidthSet', [require('./app/directives/groupTable/gColumnWidthComponent.js')]);
 
 app.controller('gModalController', ['$scope', '$mdDialog', 'parentScope', 'callback', require('./app/directives/groupTable/gModalComponent')]);
 
