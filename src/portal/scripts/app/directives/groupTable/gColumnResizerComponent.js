@@ -13,19 +13,11 @@
 			restrict: 'A',
 			scope: {
 				items: '=',
-				columnsWidth: '=',
-				// columns: '='
+				columnsWidth: '='
 			},
 			link: function (scope, elem, attr) {
 
 				logService.component('groupColumnResizer', 'initialized');
-
-				// var columnsWidthGroups = {
-				// 	groupOne: '400px',
-				// 	groupTwo: '600px',
-				// 	groupThree: '200px',
-				// 	groupFour: '500px'
-				// }
 
 				// set columns to saved width
 				// console.log('Parent scope is ', scope.$parent.columns);
