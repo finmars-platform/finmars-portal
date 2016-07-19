@@ -105,6 +105,7 @@
                 if(data.status === 409) {
                     resolve({status: 'conflict'});
                 }
+                resolve({status: 'success'});
 
             });
         })
