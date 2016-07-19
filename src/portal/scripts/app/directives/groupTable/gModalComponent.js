@@ -126,6 +126,7 @@
 		// end refactore
 
 		var columns = parentScope.columns;
+		var currentColumnsWidth = parentScope.columns.length;
 		var filters = parentScope.filters;
 		var grouping = parentScope.grouping;
 
@@ -179,10 +180,13 @@
 
 
 		var updateAttrs = function () {
+			console.log('gModalComponents columns ', columns);
 
 			updateTypeAttrs(vm.baseAttrs);
 			updateTypeAttrs(vm.entityAttrs);
 			updateTypeAttrs(vm.attrs);
+
+			addColumn();
 
 		};
 
@@ -426,6 +430,15 @@
 					{
 						copy: true
 					});
+			}
+		};
+
+		var addColumn = function () {
+			if (currentColumnsWidth < columns.length) {
+				metaService.columnsWidthGroups(true);
+			}
+			else {
+				metaService.columnsWidthGroups(false);
 			}
 		};
 

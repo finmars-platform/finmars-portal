@@ -272,7 +272,7 @@
 			});
 
 			//console.log('options', options);
-
+			console.log('entityViewerController parent scope ', $scope.$parent);
 			$scope.$parent.vm.getList(options).then(function (data) {
 				entityViewerHelperService.transformItems(data, vm.attrs).then(function (data) {
 					vm.entity = data;
