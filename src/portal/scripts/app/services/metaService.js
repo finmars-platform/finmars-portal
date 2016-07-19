@@ -3,73 +3,92 @@
  */
 (function () {
 
-    var metaRepository = require('../repositories/metaRepository');
+	var metaRepository = require('../repositories/metaRepository');
 
-    var getMenu = function () {
-        return metaRepository.getMenu();
-    };
+	var getMenu = function () {
+		return metaRepository.getMenu();
+	};
 
-    var getBaseAttrs = function () {
-        return metaRepository.getBaseAttrs();
-    };
+	var getBaseAttrs = function () {
+		return metaRepository.getBaseAttrs();
+	};
 
-    var getEntityAttrs = function (entity) {
-        return metaRepository.getEntityAttrs(entity);
-    };
+	var getEntityAttrs = function (entity) {
+		return metaRepository.getEntityAttrs(entity);
+	};
 
-    var getValueTypes = function () {
-        return metaRepository.getValueTypes();
-    };
+	var getValueTypes = function () {
+		return metaRepository.getValueTypes();
+	};
 
-    var getEntitiesWithoutBaseAttrsList = function () {
-        return metaRepository.getEntitiesWithoutBaseAttrsList();
-    };
+	var getEntitiesWithoutBaseAttrsList = function () {
+		return metaRepository.getEntitiesWithoutBaseAttrsList();
+	};
 
-    var getRestrictedEntitiesWithTypeField = function(){
-        return metaRepository.getRestrictedEntitiesWithTypeField();
-    };
+	var getRestrictedEntitiesWithTypeField = function(){
+		return metaRepository.getRestrictedEntitiesWithTypeField();
+	};
 
-    var getTypeCaptions = function() {
-        var filteredValueTypes = getValueTypes().filter(function (item) {
-            return item.value !==30 && item.value !== 'decoration';
-        });
-        var typeCaptions = filteredValueTypes.map(function (item) {
-            switch (item['display_name']) {
-                case 'Number':
-                    // item['caption_name'] = 'Integer';
-                    item['caption_name'] = 'Whole number';
-                    break;
-                case 'Float':
-                    item['caption_name'] = 'Number with decimals';
-                    break;
-                case 'Field':
-                    item['caption_name'] = 'Classification';
-                    break;
-                case 'String':
-                    item['caption_name'] = 'Text';
-                    break;
-                case 'Boolean':
-                    item['caption_name'] = 'True/False';
-                    break;
-                default:
-                    item['caption_name'] = item['display_name'];
-                    break;
-            }
+	var getTypeCaptions = function() {
+		var filteredValueTypes = getValueTypes().filter(function (item) {
+			return item.value !==30 && item.value !== 'decoration';
+		});
+		var typeCaptions = filteredValueTypes.map(function (item) {
+			switch (item['display_name']) {
+				case 'Number':
+					// item['caption_name'] = 'Integer';
+					item['caption_name'] = 'Whole number';
+					break;
+				case 'Float':
+					item['caption_name'] = 'Number with decimals';
+					break;
+				case 'Field':
+					item['caption_name'] = 'Classification';
+					break;
+				case 'String':
+					item['caption_name'] = 'Text';
+					break;
+				case 'Boolean':
+					item['caption_name'] = 'True/False';
+					break;
+				default:
+					item['caption_name'] = item['display_name'];
+					break;
+			}
 
-            return item;
-        });
-        console.log(typeCaptions);
-        return typeCaptions;
-    };
+			return item;
+		});
+		console.log(typeCaptions);
+		return typeCaptions;
+	};
+
+	var groups = {
+		"groupOne": "400px",
+		"groupTwo": "600px",
+		"groupThree": "300px",
+		"groupFour": "450px",
+		"groupFive": "200px",
+		"newColumnAdded": false
+	};
+	var columnsWidthGroups = function (newColumn) {
+
+		if (typeof newColumn === "boolean") {
+			groups["newColumnAdded"] = newColumn;
+		}
+		else {
+			return groups;
+		}
+	};
  
-    module.exports = {
-        getMenu: getMenu,
-        getBaseAttrs: getBaseAttrs,
-        getEntityAttrs: getEntityAttrs,
-        getValueTypes: getValueTypes,
-        getEntitiesWithoutBaseAttrsList: getEntitiesWithoutBaseAttrsList,
-        getRestrictedEntitiesWithTypeField: getRestrictedEntitiesWithTypeField,
-        getTypeCaptions: getTypeCaptions
-    }
+	module.exports = {
+		getMenu: getMenu,
+		getBaseAttrs: getBaseAttrs,
+		getEntityAttrs: getEntityAttrs,
+		getValueTypes: getValueTypes,
+		getEntitiesWithoutBaseAttrsList: getEntitiesWithoutBaseAttrsList,
+		getRestrictedEntitiesWithTypeField: getRestrictedEntitiesWithTypeField,
+		getTypeCaptions: getTypeCaptions,
+		columnsWidthGroups: columnsWidthGroups
+	}
 
 }());
