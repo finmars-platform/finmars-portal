@@ -18,6 +18,10 @@
             <div>
                 <b data-ng-bind="item.name"></b> (<span data-ng-bind="vm.bindType(item)"></span>)
                 <div class="am-attr-misc">
+                    <md-button data-ng-if="item['value_type'] === 30" class="am-attr-btn"
+                               data-ng-click="vm.editTreeAttr(item, $event)">
+                        <ng-md-icon icon="format_align_right"></ng-md-icon>
+                    </md-button>
                     <md-button class="am-attr-btn"
                                data-ng-click="vm.editAttr(item, $event)">
                         <ng-md-icon icon="edit"></ng-md-icon>

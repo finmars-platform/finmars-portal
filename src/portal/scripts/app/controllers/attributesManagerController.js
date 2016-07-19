@@ -16,7 +16,7 @@
 
 		var vm = this;
 
-		var choices = metaService.getValueTypes();
+		var choices = metaService.getTypeCaptions();
 		vm.attrs = [];
 
 		vm.entityType = $stateParams.entityType;
@@ -49,9 +49,26 @@
 			var i;
 			for (i = 0; i < choices.length; i = i + 1) {
 				if (item["value_type"] === choices[i].value) {
-					return choices[i]["display_name"];
+					return choices[i]["caption_name"];
 				}
 			}
+		};
+
+		vm.editTreeAttr = function(item, ev) {
+			$mdDialog.show({
+				controller: 'ClassificationEditorDialogController as vm',
+				templateUrl: 'views/classification-editor-dialog-view.html',
+				parent: angular.element(document.body),
+				targetEvent: ev,
+				locals: {
+					classifier: item
+				}
+			}).then(function (res) {
+				if (res.status === 'agree') {
+					console.log("res", res.data);
+					attributeTypeService.update(vm.entityType, res.data.attribute.id, res.data.attribute).then(getList);
+				}
+			});
 		};
 
 		vm.editAttr = function (item, ev) {

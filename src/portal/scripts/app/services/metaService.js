@@ -31,7 +31,7 @@
 
     var getTypeCaptions = function() {
         var filteredValueTypes = getValueTypes().filter(function (item) {
-            return item.value !==30 && item.value !== 'decoration';
+            return item.value !== 'field' && item.value !== 'decoration';
         });
         var typeCaptions = filteredValueTypes.map(function (item) {
             switch (item['display_name']) {
@@ -43,6 +43,9 @@
                     item['caption_name'] = 'Number with decimals';
                     break;
                 case 'Field':
+                    item['caption_name'] = 'Reference';
+                    break;
+                case 'Classifier':
                     item['caption_name'] = 'Classification';
                     break;
                 case 'String':
