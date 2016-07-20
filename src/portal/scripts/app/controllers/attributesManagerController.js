@@ -61,12 +61,34 @@
 				parent: angular.element(document.body),
 				targetEvent: ev,
 				locals: {
-					classifier: item
+					data: {
+						classifier: item,
+						entityType: vm.entityType
+					}
 				}
 			}).then(function (res) {
 				if (res.status === 'agree') {
 					console.log("res", res.data);
-					attributeTypeService.update(vm.entityType, res.data.attribute.id, res.data.attribute).then(getList);
+
+					function setName(item) {
+						item.name = item.text;
+						if(item.id.indexOf('j') !== -1) {
+							delete item['li_attr'];
+							delete item['state'];
+							delete item['icon'];
+							delete item['a_attr'];
+							delete item['data'];
+							delete item['text'];
+							delete item['type'];
+							delete item.id;
+						}
+						item.children = item.children.map(setName);
+						return item
+					}
+
+					res.data.classifier.children = res.data.classifier.children.map(setName);
+
+					attributeTypeService.update(vm.entityType, res.data.classifier.id, res.data.classifier).then(getList);
 				}
 			});
 		};

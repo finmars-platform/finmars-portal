@@ -59,16 +59,28 @@
                 </md-tab-body>
             </md-tab>
         </md-tabs>
-        <md-button ng-click="vm.cancel()" class="md-raised">
-            Cancel
-        </md-button>
-        <md-button ng-click="vm.saveLayout()" class="md-raised md-primary">
-            Save & Return
-        </md-button>
 
-        <md-button class="md-raised manage-attrs-btn" data-ui-sref="app.attributesManager({entityType: vm.entityType})">
-            Manage attributes
-        </md-button>
+        <div layout="row" layout-align="space-between center">
+
+            <div>
+                <md-button class="md-raised md-primary manage-attrs-btn"
+                           data-ui-sref="app.attributesManager({entityType: vm.entityType})">
+                    Manage attributes
+                </md-button>
+            </div>
+
+            <div style="padding-right: 10px">
+
+                <md-button ng-click="vm.cancel()" class="md-raised">
+                    Cancel
+                </md-button>
+                <md-button ng-click="vm.saveLayout()" class="md-raised">
+                    Save & Return
+                </md-button>
+            </div>
+        </div>
+
+
     </div>
     <div data-ng-if="!vm.readyStatus.constructor">
         <div layout="row" layout-sm="column" layout-align="space-around" class="m-large">

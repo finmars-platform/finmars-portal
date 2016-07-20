@@ -2,7 +2,7 @@
     <md-toolbar>
         <div class="md-toolbar-tools" layout="row" layout-align="start center">
             <h2 style="user-select: none; position: relative;">View Constructor
-                <ng-md-icon class="tooltips-sign" icon="info" size="20" style="fill: #777777"><md-tooltip md-direction="top">tooltip text</md-tooltip></ng-md-icon>
+                <ng-md-icon class="tooltips-sign" icon="info" size="20" style="fill: #fff"><md-tooltip md-direction="top">tooltip text</md-tooltip></ng-md-icon>
             </h2>
             <!-- <span class="tooltips-sign white">
                 (i)
@@ -107,11 +107,11 @@
             </div>
         </div>
     </md-dialog-content>
-    <md-dialog-actions layout="row">
-        <md-button data-ui-sref="app.attributesManager({entityType: vm.entityType})" data-ng-click="vm.cancel()">
+    <md-dialog-actions layout="row" layout-align="space-between center">
+        <md-button class="md-raised md-primary" style="margin: 0;" data-ui-sref="app.attributesManager({entityType: vm.entityType})" data-ng-click="vm.cancel()">
             Manage attributes
         </md-button>
-        <md-button ng-click="vm.cancel()">
+        <md-button class="md-raised" ng-click="vm.cancel()">
             OK
         </md-button>
     </md-dialog-actions>
