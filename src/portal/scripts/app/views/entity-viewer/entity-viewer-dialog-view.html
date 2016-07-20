@@ -31,17 +31,17 @@
 			</div>
 		</div>
 	</md-dialog-content>
-	<md-dialog-actions layout="row" layout-align="start">
-		<div flex="75">   
+	<md-dialog-actions layout="row" layout-align="space-between center">
+		<div>
 			<md-button ng-click="vm.editLayout()" class="md-raised md-primary">
 				Edit Form
 			</md-button>
 		</div>
-		<div flex="25">
-			<md-button ng-click="vm.cancel()">
+		<div>
+			<md-button class="md-raised" ng-click="vm.cancel()">
 				Cancel
 			</md-button>
-			<md-button ng-click="vm.save()" style="margin-right:20px;">
+			<md-button class="md-raised" ng-click="vm.save()" style="margin-right:20px;">
 				<span data-ng-if="vm.evAction === 'create'">
 					Add
 				</span>

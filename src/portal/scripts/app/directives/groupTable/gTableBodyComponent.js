@@ -153,6 +153,24 @@
                     scope.itemAdditionsEditorEntityId = item.id;
                 };
 
+                scope.getAlign = function(column) {
+
+                    switch (column['value_type']) {
+                        case 20:
+                            return 'cell-right-align';
+                            break;
+                        case 'float':
+                            return 'cell-right-align';
+                            break;
+                        case 40:
+                            return 'cell-center-align';
+                            break;
+                        default:
+                            return '';
+                            break;
+                    }
+                };
+
                 scope.deleteEntity = function (ev, entity) {
                     $mdDialog.show({
                         controller: 'EntityViewerDeleteDialogController as vm',

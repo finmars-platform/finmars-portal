@@ -145,6 +145,7 @@
 
         var pathToJS = [
             'node_modules/malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.js',
+            'node_modules/jstree/dist/jstree.js',
             'bower_components/pickmeup/js/jquery.pickmeup.js'
         ];
 
@@ -160,6 +161,7 @@
 
         var pathToCSS = [
             'node_modules/malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.css',
+            'node_modules/jstree/dist/themes/default/style.css',
             'bower_components/pickmeup/css/pickmeup.css'
         ];
 

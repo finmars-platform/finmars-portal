@@ -6,7 +6,20 @@
         </div>
     </md-toolbar>
     <md-dialog-content>
-        <div id="jstree_demo"></div>
+        <div layout="row">
+            <md-button data-ng-click="vm.createNode()">
+                Add node
+            </md-button>
+            <md-button data-ng-click="vm.renameNode()">
+                Rename node
+            </md-button>
+            <md-button data-ng-click="vm.deleteNode()">
+                Delete node
+            </md-button>
+        </div>
+        <div layout="row">
+            <div id="jstree_demo"></div>
+        </div>
     </md-dialog-content>
     <md-dialog-actions layout="row">
         <md-button class="md-raised" ng-click="vm.cancel()">
