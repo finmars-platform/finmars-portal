@@ -24,7 +24,7 @@
 
 				// var choices = metaService.getValueTypes();
 				var choices = metaService.getTypeCaptions();
-				console.log('Choices information type ', choices);
+				//console.log('Choices information type ', choices);
 				scope.item = {
 					column: scope.column,
 					row: scope.row,
@@ -75,8 +75,8 @@
 				}
 
 				scope.cancel = function () {
-					console.log('scope.item', scope.item);
-					console.log('scope.backupItem', scope.backupItem);
+					//console.log('scope.item', scope.item);
+					//console.log('scope.backupItem', scope.backupItem);
 					if (scope.item.name || scope.item.id) {
 						scope.item = scope.backupItem;
 						scope.item.colspan = scope.backupItem.colspan;
@@ -94,7 +94,7 @@
 					for (i = 0; i < scope.tab.layout.fields.length; i = i + 1) {
 						scope.tab.layout.fields[i].editMode = false;
 					}
-					console.log('ite55555555555555555555555555m', scope.item);
+					//console.log('ite55555555555555555555555555m', scope.item);
 					scope.item.editMode = true;
 				};
 
@@ -278,7 +278,7 @@
 						})
 					})
 
-				}
+				};
 
 				scope.bindType = function () {
 					var i;
