@@ -1,21 +1,16 @@
 /**
- * Created by szhitenev on 19.07.2016.
+ * Created by szhitenev on 28.06.2016.
  */
-(function () {
+(function(){
 
     'use strict';
 
+    var logService = require('../services/logService');
     var attributeTypeService = require('../services/attributeTypeService');
 
-    var logService = require('../services/logService');
-
-    module.exports = function ($scope, $mdDialog, data) {
+    module.exports =  function($scope, $mdDialog, data){
 
         var vm = this;
-
-        logService.controller('ClassificationEditorDialogController', 'initialized');
-
-        vm.classifier = data.classifier;
 
         attributeTypeService.getByKey(data.entityType, data.classifier.id).then(function (data) {
 
@@ -31,11 +26,13 @@
 
             var tree = data.classifiers.map(setText);
 
+            console.log('atatatata');
+
             $('#jstree_demo').jstree({
                 "core": {
                     "animation": 0,
                     "check_callback": true,
-                    "themes": {"stripes": true},
+                    "themes": {"stripes": true, "dots": true},
                     'data': [
                         {
                             'text': 'Root',
@@ -66,52 +63,24 @@
                     "state", "types", "wholerow"
                 ]
             });
+            $('#jstree_demo').jstree(true).show_dots();
             $scope.$apply();
+
         });
 
-        vm.createNode = function () {
-            var ref = $('#jstree_demo').jstree(true),
-                sel = ref.get_selected();
-            ref.set_type(sel, 'folder');
-            sel = sel[0];
-            sel = ref.create_node(sel, {"type": "default"});
-            if (sel) {
-                ref.edit(sel);
-            }
-        };
-        vm.renameNode = function () {
-            var ref = $('#jstree_demo').jstree(true),
-                sel = ref.get_selected();
-            if (!sel.length) {
-                return false;
-            }
-            sel = sel[0];
-            ref.edit(sel);
-        };
 
-        vm.deleteNode = function () {
-            var ref = $('#jstree_demo').jstree(true),
-                sel = ref.get_selected();
-            if (!sel.length) {
-                return false;
-            }
-            ref.delete_node(sel);
-        };
-
-        vm.agree = function () {
-            console.log('vm.attr', vm.classifier);
-            var ref = $('#jstree_demo').jstree(true);
-            var data = ref.get_json('#');
-            console.log('ref', data);
-            console.log('classifier', vm.classifier);
-
-            vm.classifier.children = data[0].children;
-            $mdDialog.hide({status: 'agree', data: {classifier: vm.classifier}});
+        vm.agree = function(){
+            var item = $('#jstree_demo').jstree(true).get_selected();
+            //console.log('item', item);
+            $mdDialog.hide({status: 'agree', data: {item: item[0]}});
         };
 
         vm.cancel = function () {
             $mdDialog.cancel();
         };
-    }
+
+
+
+    };
 
 }());

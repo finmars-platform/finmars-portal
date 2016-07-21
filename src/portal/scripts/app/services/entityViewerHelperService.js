@@ -15,7 +15,21 @@
                     for (x = 0; x < item.attributes.length; x = x + 1) {
                         if (item.attributes[x]['attribute_type'] === attrs[i].id) {
                             item.attributes[x]['attribute_name'] = attrs[i].name;
-                            item[attrs[i].name] = item.attributes[x]['value_string']; //TODO Add value checker
+                            if (item.attributes[x]['classifier'] !== null) {
+                                item[attrs[i].name] = item.attributes[x]['classifier'];
+                            } else {
+                                if (item.attributes[x]['value_date'] !== null) {
+                                    item[attrs[i].name] = item.attributes[x]['value_date'];
+                                } else {
+                                    if (item.attributes[x]['value_float'] !== null) {
+                                        item[attrs[i].name] = item.attributes[x]['value_float'];
+                                    } else {
+                                        item[attrs[i].name] = item.attributes[x]['value_string'];
+                                    }
+                                }
+
+                            }
+
                         }
                     }
                 }

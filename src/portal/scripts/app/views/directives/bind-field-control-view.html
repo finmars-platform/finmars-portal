@@ -10,14 +10,16 @@
         <div data-ng-if="getModelKey() === 'notes' ">
             <md-input-container class="md-block textarea-bind-field">
                 <label data-ng-bind="getName()"></label>
-                <textarea class="{{item.options.frame == 1 ? 'bordered' : '' }}" data-ng-model="entity[getModelKey()]" cols="30" rows="{{item.options.rowCount}}"></textarea>
+                <textarea class="{{item.options.frame == 1 ? 'bordered' : '' }}" data-ng-model="entity[getModelKey()]"
+                          cols="30" rows="{{item.options.rowCount}}"></textarea>
             </md-input-container>
         </div>
         <div data-ng-if="getModelKey() !== 'notes' ">
             <md-input-container class="md-block bind-field-input {{item.options.copyFrom ? 'with-button' : ''}}">
                 <label data-ng-bind="getName()"></label>
                 <input data-ng-model="entity[getModelKey()]">
-                <md-button data-ng-if="item.options.copyFrom" class="bf-copy-btn" data-ng-click="copyFromField(item.options.copyFrom)">
+                <md-button data-ng-if="item.options.copyFrom" class="bf-copy-btn"
+                           data-ng-click="copyFromField(item.options.copyFrom)">
                     <ng-md-icon icon="content_copy"></ng-md-icon>
                 </md-button>
             </md-input-container>
@@ -27,7 +29,8 @@
         <md-input-container class="md-block">
             <label data-ng-bind="getName()"></label>
             <input data-ng-model="entity[getModelKey()]" data-float-numbers data-ng-if="!item.options.onlyPositive">
-            <input data-ng-model="entity[getModelKey()]" data-float-numbers data-only-positive="true" data-ng-if="item.options.onlyPositive">
+            <input data-ng-model="entity[getModelKey()]" data-float-numbers data-only-positive="true"
+                   data-ng-if="item.options.onlyPositive">
         </md-input-container>
     </div>
     <div data-ng-if="fieldType['display_name'] === 'Field'">
@@ -37,7 +40,7 @@
         <!-- <label data-ng-bind="getName()"></label> -->
         <md-input-container class="field-date-pick-holder">
             <label data-ng-bind="getName()"></label>
-            <zh-date-picker ng-model="entity[getModelKey()]" ></zh-date-picker>
+            <zh-date-picker ng-model="entity[getModelKey()]"></zh-date-picker>
             <!--<mdp-date-picker mdp-placeholder="Enter date" ng-model="entity[getModelKey()]" mdp-format="YYYY/MM/DD" data-ng-change="dateFormatter()"></mdp-date-picker>-->
             <!--<md-datepicker ng-model="entity[getModelKey()]" md-placeholder="Enter date" data-ng-change="dateFormatter()"></md-datepicker>-->
             <md-button data-ng-if="item.options.dateToday" data-ng-click="setDateToday()">
@@ -57,10 +60,23 @@
         </md-checkbox>
     </div>
     <div data-ng-if="fieldType['display_name'] === 'Classifier'">
-        <span>Classifier is not ready</span>
+        <md-input-container class="md-block">
+            <label data-ng-bind="getName()"></label>
+            <md-select data-ng-model="entity[getModelKey()]"
+                       data-classifier-modal-resolver
+                       data-classifier-attr="item"
+                       data-ng-change="changeClassifier()"
+                       md-container-class="h-classifier-select"
+                       data-entity-type="entityType">
+                <md-option ng-value="node.id" selected="selected">
+                    {{node.name}}
+                </md-option>
+            </md-select>
+        </md-input-container>
     </div>
     <div data-ng-if="fieldType['display_name'] === 'Decoration'">
         <span class="ec-decoration line" data-ng-if="!item.options.labelText"></span>
-        <span class="ec-decoration labeled" data-ng-if="item.options.labelText"><span class="w-rp" data-ng-bind="item.options.labelText"></span></span>
+        <span class="ec-decoration labeled" data-ng-if="item.options.labelText"><span class="w-rp"
+                                                                                      data-ng-bind="item.options.labelText"></span></span>
     </div>
 </div>

@@ -11,7 +11,10 @@
             </div>
             <div data-ng-if="type === 'id'">
                 <div data-ng-if="getModelKey() === 'instrument' ">
-                    <md-select data-ng-model="entity[getModelKey()]" md-container-class="h-instrument-select"	 data-instrument-modal-resolver md-selected-text="bindFormFields()" >
+                    <md-select data-ng-model="entity[getModelKey()]"
+                               md-container-class="h-instrument-select"
+                               data-instrument-modal-resolver
+                               md-selected-text="bindFormFields()">
                         <md-option data-ng-repeat="field in fields track by $index" value="{{field.id}}">
                             {{bindListFields(field)}}
                         </md-option>
