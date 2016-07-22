@@ -22,8 +22,6 @@
 
                 scope.entity = scope.$parent.vm.entity;
 
-                //console.log('entity22222222222222222222', scope.entity);
-
                 var attrs = scope.$parent.vm.attrs;
                 var choices = metaService.getValueTypes();
                 var baseAttrs = metaService.getBaseAttrs();
@@ -92,7 +90,6 @@
                             }
                         }
                         for (e = 0; e < entityAttrs.length; e = e + 1) {
-                            console.log(entityAttrs[e]);
                             if (scope.item.name === entityAttrs[e].name) {
                                 return entityAttrs[e].key;
                             }
@@ -114,7 +111,7 @@
                     scope.entity[scope.getModelKey()] = new Date(new Date().setDate(new Date(scope.entity[scope.getModelKey()]).getDate() - 1));
                 };
 
-                scope.node = null;
+                scope.node = scope.node || null;
 
                 function findNodeInChildren(item) {
                     if (scope.classifierId == item.id) {
@@ -130,7 +127,6 @@
 
                 function getNode() {
                     return attributeTypeService.getByKey(scope.entityType, scope.item.id).then(function (data) {
-                        console.log('data!!!!!!!!!!!!!!!!!!!!!!!!', data);
                         classifierTree = data;
                         classifierTree.classifiers.forEach(findNodeInChildren);
                         return scope.node;
@@ -143,22 +139,17 @@
 
                     getNode().then(function (data) {
                         scope.node = data;
-                        console.log('scope.node???????????', scope.node);
+                        scope.entity[scope.getModelKey()] = scope.classifierId;
                         scope.$apply();
                     });
                 }
 
                 scope.changeClassifier = function () {
                     if (classifierTree) {
-                        console.log('change!??');
                         scope.classifierId = scope.entity[scope.getModelKey()];
                         classifierTree.classifiers.forEach(findNodeInChildren);
-                        console.log('scope.node', scope.node);
                     }
                 };
-
-                //console.log('scope.fieldType', scope.fieldType);
-
 
             }
         }

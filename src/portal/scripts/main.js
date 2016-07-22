@@ -12,6 +12,7 @@ var app = angular.module('app', [
     'ngSanitize',
     'ui.router',
     'mdPickers',
+    'bw.paging',
     'io.dennis.contextmenu',
     angularDragula(angular)
 ]);
@@ -63,6 +64,8 @@ app.controller('WarningDialogController', ['$scope', '$mdDialog', 'warning', req
 app.controller('InfoDialogController', ['$scope', '$mdDialog', 'info', require('./app/controllers/infoDialogController')]);
 app.controller('InstrumentSelectDialogController', ['$scope', '$mdDialog', require('./app/controllers/instrumentSelectDialogController')]);
 app.controller('ClassifierSelectDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/classifierSelectDialogController')]);
+
+app.controller('AuditController', ['$scope', require('./app/controllers/auditController')]);
 
 app.directive('menuToggle', [require('./app/directives/menuToggleDirective')]);
 app.directive('menuLink', [require('./app/directives/menuLinkDirective')]);

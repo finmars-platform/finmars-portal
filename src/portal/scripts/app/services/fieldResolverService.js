@@ -143,6 +143,26 @@
                         resolve({type: 'id', key: 'strategy3_cash', data: data.results});
                     });
                     break;
+                case 'portfolios':
+                    portfolioRepository.getList().then(function(data){
+                        resolve({type: 'multiple-ids', key: 'portfolios', data: data.results});
+                    });
+                    break;
+                case 'counterparties':
+                    counterpartyRepository.getList().then(function(data){
+                        resolve({type: 'multiple-ids', key: 'counterparties', data: data.results});
+                    });
+                    break;
+                case 'responsibles':
+                    responsibleRepository.getList().then(function(data){
+                        resolve({type: 'multiple-ids', key: 'responsibles', data: data.results});
+                    });
+                    break;
+                case 'accounts':
+                    accountRepository.getList().then(function(data){
+                        resolve({type: 'multiple-ids', key: 'accounts', data: data.results});
+                    });
+                    break;
 
 
             }

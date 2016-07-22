@@ -36,6 +36,9 @@
     <div data-ng-if="fieldType['display_name'] === 'Field'">
         <div data-ev-field-resolver data-item="item" data-entity="entity"></div>
     </div>
+    <div data-ng-if="fieldType['display_name'] === 'Multiple choice field'">
+        <div data-ev-field-resolver data-item="item" data-entity="entity"></div>
+    </div>
     <div data-ng-if="fieldType['display_name'] === 'Date'" class="field-date-pick">
         <!-- <label data-ng-bind="getName()"></label> -->
         <md-input-container class="field-date-pick-holder">
