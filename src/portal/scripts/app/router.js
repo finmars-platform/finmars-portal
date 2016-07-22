@@ -78,6 +78,16 @@
                 url: '/pricing',
                 templateUrl: 'views/data/data-pricing-view.html',
                 controller: 'DataPortfolioController as vm'
+            })
+            .state('app.system', {
+                abstract: true,
+                url: '/system',
+                template: '<div data-ui-view></div>'
+            })
+            .state('app.system.audit', {
+                url: '/audit',
+                templateUrl: 'views/system/audit-view.html',
+                controller: 'AuditController as vm'
             });
 
         $stateProvider.state('app.data-constructor', {

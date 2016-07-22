@@ -17,6 +17,7 @@
                             item.attributes[x]['attribute_name'] = attrs[i].name;
                             if (item.attributes[x]['classifier'] !== null) {
                                 item[attrs[i].name] = item.attributes[x]['classifier'];
+                                //console.log('item!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!', item);
                             } else {
                                 if (item.attributes[x]['value_date'] !== null) {
                                     item[attrs[i].name] = item.attributes[x]['value_date'];

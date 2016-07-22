@@ -144,10 +144,17 @@
 				attrsList = attrsList.concat(vm.entityAttrs);
 				restoreAttrs();
 				syncAttrs();
-				logService.collection('attrsList!!!!!!!!!', attrsList);
+				//logService.collection('attrsList!!!!!!!!!', attrsList);
 				vm.readyStatus.content = true;
 				$scope.$apply();
 			})
+		};
+
+		vm.checkAreaAccessibility = function(item){
+			if(['notes', 'accounts', 'responsibles', 'counterparties', 'transaction_types', 'portfolios'].indexOf(item.key) !== -1) {
+				return true;
+			}
+			return false;
 		};
 
 		parentScope.$watch('columns', function () {

@@ -42,6 +42,23 @@
 					"key": "user_code",
 					"name": "User code",
 					"value_type": 10
+				},
+				{	"key": "accounts",
+					"name": "Accounts",
+					"value_type": "mc_field"
+
+				},
+				{	"key": "responsibles",
+					"name": "Responsibles",
+					"value_type": "mc_field"
+				},
+				{	"key": "counterparties",
+					"name": "Counterparties",
+					"value_type": "mc_field"
+				},
+				{	"key": "transaction_types",
+					"name": "Transaction types",
+					"value_type": "mc_field"
 				}
 			],
 			"account": [
@@ -49,6 +66,11 @@
 					"key": "user_code",
 					"name": "User code",
 					"value_type": 10
+				},
+				{	"key": "portfolios",
+					"name": "Portfolios",
+					"value_type": "mc_field"
+
 				},
 				{
 					"key": "type",
@@ -66,6 +88,11 @@
 					"key": "user_code",
 					"name": "User code",
 					"value_type": 10
+				},
+				{	"key": "portfolios",
+					"name": "Portfolios",
+					"value_type": "mc_field"
+
 				}
 			],
 			"responsible": [
@@ -73,6 +100,11 @@
 					"key": "user_code",
 					"name": "User code",
 					"value_type": 10
+				},
+				{	"key": "portfolios",
+					"name": "Portfolios",
+					"value_type": "mc_field"
+
 				}
 			],
 			"instrument": [
@@ -388,6 +420,9 @@
 			"value": "field",
 			"display_name": "Field"
 		}, {
+			"value": "mc_field",
+			"display_name": "Multiple choice field"
+		},{
 			"value": "boolean",
 			"display_name": "Boolean"
 		}, {

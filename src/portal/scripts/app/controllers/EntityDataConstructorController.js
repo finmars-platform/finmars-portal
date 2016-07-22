@@ -34,6 +34,11 @@
             //console.log(data['json_data']);
             vm.ui = data.results[0];
             vm.tabs = vm.ui.data;
+            vm.tabs.forEach(function(tab){
+                tab.layout.fields.forEach(function(field){
+                    field.editMode = false;
+                })
+            });
             addRowForTab();
             //logService.collection('vm tabs', vm.tabs);
             $scope.$apply();

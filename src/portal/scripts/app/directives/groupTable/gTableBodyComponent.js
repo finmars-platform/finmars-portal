@@ -64,7 +64,7 @@
                     Promise.all(promises).then(function (results) {
                         console.log('results', results);
                         results.forEach(function (item) {
-                            if(item.key) {
+                            if (item.key) {
                                 entityFieldsArray[item.key] = item.data;
                             } else {
                                 entityFieldsArray['classifier_' + item.id] = item;
@@ -110,7 +110,6 @@
                     scope.readyStatus.cellsReady = false;
                     getFieldDisplayNamesArray();
                 });
-
 
 
                 scope.bindCell = function (groupedItem, column) {
@@ -172,7 +171,17 @@
                                         return '<div class="zh-loader"></div>';
                                     }
                                 } else {
-                                    return groupedItem[entityAttrs[e].key];
+                                    if (column['value_type'] === 'mc_field') {
+                                        if(groupedItem[entityAttrs[e].key].length == 1) {
+                                            return 'linked with ' + groupedItem[entityAttrs[e].key].length + ' entity'
+                                        } else {
+                                            if(groupedItem[entityAttrs[e].key].length > 1) {
+                                                return 'linked with ' + groupedItem[entityAttrs[e].key].length + ' entities'
+                                            }
+                                        }
+                                    } else {
+                                        return groupedItem[entityAttrs[e].key];
+                                    }
                                 }
                             }
                         }
@@ -212,7 +221,7 @@
                         templateUrl: 'views/entity-viewer/entity-viewer-entity-delete-dialog-view.html',
                         parent: angular.element(document.body),
                         targetEvent: ev,
-                        clickOutsideToClose: true,
+                        //clickOutsideToClose: true,
                         locals: {
                             entity: entity,
                             entityType: scope.entityType
@@ -230,7 +239,7 @@
                         templateUrl: 'views/entity-viewer/entity-viewer-dialog-view.html',
                         parent: angular.element(document.body),
                         targetEvent: ev,
-                        clickOutsideToClose: true,
+                        //clickOutsideToClose: true,
                         locals: {
                             parentScope: scope,
                             entity: entity

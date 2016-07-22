@@ -318,7 +318,7 @@
 				templateUrl: 'views/entity-viewer/entity-viewer-dialog-view.html',
 				parent: angular.element(document.body),
 				targetEvent: ev,
-				clickOutsideToClose: true,
+				//clickOutsideToClose: true,
 				locals: {
 					parentScope: $scope
 				}
