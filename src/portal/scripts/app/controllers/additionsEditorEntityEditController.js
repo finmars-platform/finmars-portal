@@ -26,6 +26,7 @@
         //console.log('scope', $scope);
 
         var vm = this;
+
         vm.readyStatus = {content: false};
         vm.entityType = $scope.$parent.entityType;
 
@@ -158,16 +159,28 @@
         vm.save = function () {
 
             function updateValue(entityAttr, attr, value) {
-                console.log(entityAttr, attr, value);
 
                 if (attr['value_type'] === 10) {
                     entityAttr['value_string'] = value;
+                }
+
+                if (attr['value_type'] === 20) {
+                    entityAttr['value_float'] = value;
+                }
+
+                if (attr['value_type'] === 30) {
+                    entityAttr['classifier'] = value;
+                }
+
+                if (attr['value_type'] === 40) {
+                    entityAttr['value_date'] = value;
                 }
 
                 return entityAttr;
             }
 
             function appendAttribute(attr, value) {
+
                 var attribute = {
                     attribute_name: attr.name,
                     attribute_type: attr.id,
@@ -179,6 +192,17 @@
 
                 if (attr['value_type'] === 10) {
                     attribute['value_string'] = value;
+                }
+
+                if (attr['value_type'] === 20) {
+                    attribute['value_float'] = value;
+                }
+
+                if (attr['value_type'] === 30) {
+                    attribute['classifier'] = value;
+                }
+                if (attr['value_type'] === 40) {
+                    attribute['value_date'] = value;
                 }
 
                 return attribute;
@@ -206,6 +230,7 @@
             function checkEntityAttrTypes() {
                 var i;
                 for (i = 0; i < vm.entityAttrs.length; i = i + 1) {
+                    console.log('vm.entityAttrs[i]', vm.entityAttrs[i]);
                     if (vm.entityAttrs[i]['value_type'] === 40) {
                         vm.entity[vm.entityAttrs[i].key] = moment(new Date(vm.entity[vm.entityAttrs[i].key])).format('YYYY-MM-DD');
                     }

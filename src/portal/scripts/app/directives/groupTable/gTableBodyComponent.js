@@ -7,6 +7,7 @@
 
     var logService = require('../../services/logService');
     var metaService = require('../../services/metaService');
+    var attributeTypeService = require('../../services/attributeTypeService');
     var bindCellService = require('../../services/bindCellService');
 
     module.exports = function ($mdDialog) {
@@ -54,11 +55,20 @@
                         if (scope.columns[i]['value_type'] === 'field') {
                             promises.push(bindCellService.findEntities(scope.columns[i].key));
                         }
+                        if (scope.columns[i]['value_type'] === 30) {
+                            console.log('scope.columns[i]', scope.columns[i]);
+                            promises.push(attributeTypeService.getByKey(entityType, scope.columns[i].id));
+                        }
                     }
+
                     Promise.all(promises).then(function (results) {
-                        //console.log('results', results);
+                        console.log('results', results);
                         results.forEach(function (item) {
-                            entityFieldsArray[item.key] = item.data;
+                            if (item.key) {
+                                entityFieldsArray[item.key] = item.data;
+                            } else {
+                                entityFieldsArray['classifier_' + item.id] = item;
+                            }
                         });
                         scope.readyStatus.cellsReady = true;
                     });
@@ -66,32 +76,32 @@
                     //console.log('entityFieldsArray', entityFieldsArray);
                 };
 
-                scope.toggleSelectRow = function(item){
+                scope.toggleSelectRow = function (item) {
                     console.log('item111111111111111111', item);
                     item.selectedRow = !item.selectedRow;
-                    if(scope.isAllSelected === true && item.selectedRow === false) {
+                    if (scope.isAllSelected === true && item.selectedRow === false) {
                         scope.isAllSelected = false;
                     }
 
                     var allSelected = true;
-                    scope.items.forEach(function(item){
-                        if(item.hasOwnProperty('groups')){
-                            if(!!item.selectedRow === false) {
+                    scope.items.forEach(function (item) {
+                        if (item.hasOwnProperty('groups')) {
+                            if (!!item.selectedRow === false) {
                                 allSelected = false;
                             }
-                            item.items.forEach(function(row){
-                                if(!!row.selectedRow === false) {
+                            item.items.forEach(function (row) {
+                                if (!!row.selectedRow === false) {
                                     allSelected = false;
                                 }
                             })
                         } else {
-                            if(!!item.selectedRow === false) {
+                            if (!!item.selectedRow === false) {
                                 allSelected = false;
                             }
                         }
                     });
 
-                    if(allSelected) {
+                    if (allSelected) {
                         scope.isAllSelected = true;
                     }
                 };
@@ -101,12 +111,37 @@
                     getFieldDisplayNamesArray();
                 });
 
-                scope.bindCell = function (groupedItem, column) {
-                    //console.log('entityAttrs', entityAttrs);
-                    //console.log('column', column);
-                    if (column.hasOwnProperty('id')) {
 
-                        return groupedItem[column.name];
+                scope.bindCell = function (groupedItem, column) {
+
+                    function findNodeInChildren(item) {
+                        if (groupedItem[column.name] == item.id) {
+                            classifierNode = item;
+                        } else {
+                            if (item.children.length) {
+                                item.children.forEach(findNodeInChildren);
+                            }
+                        }
+                    }
+
+                    if (column.hasOwnProperty('id')) {
+                        if (column['value_type'] === 30) {
+                            if (scope.readyStatus.cellsReady) {
+                                var classifierNode;
+                                entityFieldsArray['classifier_' + column.id].classifiers.forEach(findNodeInChildren);
+                                if (classifierNode) {
+                                    if (classifierNode['display_name']) {
+                                        return classifierNode['display_name'];
+                                    }
+                                    return classifierNode['name'];
+                                }
+                                return '';
+                            } else {
+                                return '<div class="zh-loader"></div>';
+                            }
+                        } else {
+                            return groupedItem[column.name];
+                        }
                     } else {
                         var i, e;
                         for (i = 0; i < baseAttrs.length; i = i + 1) {
@@ -114,7 +149,7 @@
                                 return groupedItem[baseAttrs[i].key];
                             }
                         }
-                        //console.log('entityAttrs', entityAttrs);
+
                         for (e = 0; e < entityAttrs.length; e = e + 1) {
 
                             if (entityAttrs[e].key === column.key) {
@@ -136,8 +171,17 @@
                                         return '<div class="zh-loader"></div>';
                                     }
                                 } else {
-                                    //console.log('groupedItem[entityAttrs[e].key]', groupedItem[entityAttrs[e].key]);
-                                    return groupedItem[entityAttrs[e].key];
+                                    if (column['value_type'] === 'mc_field') {
+                                        if(groupedItem[entityAttrs[e].key].length == 1) {
+                                            return 'linked with ' + groupedItem[entityAttrs[e].key].length + ' entity'
+                                        } else {
+                                            if(groupedItem[entityAttrs[e].key].length > 1) {
+                                                return 'linked with ' + groupedItem[entityAttrs[e].key].length + ' entities'
+                                            }
+                                        }
+                                    } else {
+                                        return groupedItem[entityAttrs[e].key];
+                                    }
                                 }
                             }
                         }
@@ -153,7 +197,7 @@
                     scope.itemAdditionsEditorEntityId = item.id;
                 };
 
-                scope.getAlign = function(column) {
+                scope.getAlign = function (column) {
 
                     switch (column['value_type']) {
                         case 20:
@@ -177,7 +221,7 @@
                         templateUrl: 'views/entity-viewer/entity-viewer-entity-delete-dialog-view.html',
                         parent: angular.element(document.body),
                         targetEvent: ev,
-                        clickOutsideToClose: true,
+                        //clickOutsideToClose: true,
                         locals: {
                             entity: entity,
                             entityType: scope.entityType
@@ -195,7 +239,7 @@
                         templateUrl: 'views/entity-viewer/entity-viewer-dialog-view.html',
                         parent: angular.element(document.body),
                         targetEvent: ev,
-                        clickOutsideToClose: true,
+                        //clickOutsideToClose: true,
                         locals: {
                             parentScope: scope,
                             entity: entity
@@ -206,7 +250,7 @@
                         }
                     });
                 };
-            
+
                 console.log('Table body component columns ', scope.columns);
             }
         }

@@ -58,7 +58,7 @@
 
 			return item;
 		});
-		console.log(typeCaptions);
+		//console.log(typeCaptions);
 		return typeCaptions;
 	};
 
