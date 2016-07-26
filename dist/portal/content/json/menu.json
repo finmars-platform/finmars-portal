@@ -131,15 +131,20 @@
     "type": "toggle",
      "pages": [
        {
-         "state" : "app.notifications",
+         "state" : "app.system.notifications",
          "title": "Notifications",
          "icon": ""
        },
       {
-        "state" : "app.logging",
+        "state" : "app.system.logging",
         "title": "Logging",
         "icon": ""
-      }
+      },
+       {
+         "state" : "app.system.audit",
+         "title": "Audit",
+         "icon": ""
+       }
     ]
   }
 ]

@@ -1,0 +1,109 @@
+<md-tabs md-dynamic-height md-border-bottom id="dialogbag">
+    <md-tab label="Transaction" md-active="vm.checkActiveTab('transaction')" data-ng-click="vm.setActiveTab('transaction')">
+        <md-content class="md-padding">
+            <div data-ng-if="vm.readyStatus.transaction" class="audit-wrapper">
+                <div layout="column">
+                    <div flex layout="row">
+                        <div flex layout="row" class="audit-cell">
+                            <span class="no-select">Date</span>
+                        </div>
+                        <md-divider></md-divider>
+                        <div flex layout="row" class="audit-cell" layout-align="center center">
+                            <span class="no-select">Member</span>
+                        </div>
+                        <md-divider></md-divider>
+                        <div flex layout="row" class="audit-cell" layout-align="center center">
+                            <span class="no-select">Action</span>
+                        </div>
+                    </div>
+                    <md-divider></md-divider>
+                </div>
+                <div layout="column" data-ng-repeat="item in vm.transactions">
+                    <div layout="row">
+                        <div flex layout="row">
+                            <div flex layout="row" class="audit-cell">
+                                <span class="no-select" data-ng-bind="item.dateFormatted"></span>
+                            </div>
+                            <md-divider></md-divider>
+                            <div flex layout="row" class="audit-cell" layout-align="center center">
+                                <span class="no-select" data-ng-bind="item.member"></span>
+                            </div>
+                            <md-divider></md-divider>
+                            <div flex layout="row" class="audit-cell" layout-align="center center">
+                                <span class="no-select" data-ng-bind="item.comment"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <md-divider></md-divider>
+                </div>
+                <div layout="row">
+                    <div paging
+                         page="vm.transactionCurrent"
+                         page-size="vm.itemPerPage"
+                         total="vm.transactionTotal"
+                         paging-action="vm.changePage('transaction', page)">
+                    </div>
+                </div>
+            </div>
+            <div data-ng-if="!vm.readyStatus.transaction" class="dialog-loader">
+                <div layout="row" layout-sm="column" layout-align="space-around">
+                    <md-progress-circular md-mode="indeterminate"></md-progress-circular>
+                </div>
+            </div>
+        </md-content>
+    </md-tab>
+    <md-tab label="Instrument" md-active="vm.checkActiveTab('instrument')" data-ng-click="vm.setActiveTab('instrument')">
+        <md-content class="md-padding">
+            <div data-ng-if="vm.readyStatus.instrument" class="audit-wrapper">
+                <div layout="column">
+                    <div flex layout="row">
+                        <div flex="10" layout="row" class="audit-cell">
+                            <span class="no-select">Date</span>
+                        </div>
+                        <md-divider></md-divider>
+                        <div flex layout="row" class="audit-cell" layout-align="center center">
+                            <span class="no-select">Member</span>
+                        </div>
+                        <md-divider></md-divider>
+                        <div flex layout="row" class="audit-cell" layout-align="center center">
+                            <span class="no-select">Action</span>
+                        </div>
+                    </div>
+                    <md-divider></md-divider>
+                </div>
+                <div layout="column" data-ng-repeat="item in vm.instruments">
+                    <div layout="row">
+                        <div flex layout="row">
+                            <div flex="10" layout="row" class="audit-cell">
+                                <span class="no-select" data-ng-bind="item.dateFormatted"></span>
+                            </div>
+                            <md-divider></md-divider>
+                            <div flex layout="row" class="audit-cell" layout-align="center center">
+                                <span class="no-select" data-ng-bind="item.member"></span>
+                            </div>
+                            <md-divider></md-divider>
+                            <div flex layout="row" class="audit-cell" layout-align="center center">
+                                <span class="no-select" data-ng-bind="item.comment"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <md-divider></md-divider>
+                </div>
+                <div layout="row">
+                    {{vm.instrumentTotal}}
+                    <div paging
+                         page="vm.instrumentCurrent"
+                         page-size="vm.itemPerPage"
+                         total="vm.instrumentTotal"
+                         paging-action="vm.changePage('instrument', page)">
+                    </div>
+                </div>
+            </div>
+            <div data-ng-if="!vm.readyStatus.instrument" class="dialog-loader">
+                <div layout="row" layout-sm="column" layout-align="space-around">
+                    <md-progress-circular md-mode="indeterminate"></md-progress-circular>
+                </div>
+            </div>
+        </md-content>
+    </md-tab>
+</md-tabs>

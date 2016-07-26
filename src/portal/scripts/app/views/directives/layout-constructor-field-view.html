@@ -31,19 +31,23 @@
                 <label>Field</label>
                 <!--{{item.attribute}}-->
                 <md-select ng-model="item.attribute" ng-change="changeModel(item.attribute)" ng-focus="findAttrsLeft()">
-                    <md-optgroup label="General">
+                    <md-optgroup label="System">
                         <md-option ng-repeat="attr in baseAttrs" ng-value="attr" class="{{attr.disabled ? 'disabled' : ''}}">
                             <!--{{attr}}-->
                             {{attr.name}}
                         </md-option>
-                    </md-optgroup>
-                    <md-optgroup label="Specific">
                         <md-option ng-repeat="attr in entityAttrs" ng-value="attr" class="{{attr.disabled ? 'disabled' : ''}}">
                             <!--{{attr}}-->
                             {{attr.name}}
                         </md-option>
                     </md-optgroup>
-                    <md-optgroup label="Attributes">
+                    <!--<md-optgroup label="Specific">-->
+                        <!--<md-option ng-repeat="attr in entityAttrs" ng-value="attr" class="{{attr.disabled ? 'disabled' : ''}}">-->
+                            <!--&lt;!&ndash;{{attr}}&ndash;&gt;-->
+                            <!--{{attr.name}}-->
+                        <!--</md-option>                        -->
+                    <!--</md-optgroup>-->
+                    <md-optgroup label="User attributes">
                         <md-option ng-repeat="attr in attrs" ng-value="attr" class="{{attr.disabled ? 'disabled' : ''}}">
                             <!--{{attr}}-->
                             {{attr.name}}

@@ -7,6 +7,7 @@
 
     var metaService = require('../services/metaService');
     var layoutService = require('../services/layoutService');
+    var attributeTypeService = require('../services/attributeTypeService');
 
     module.exports = function () {
         return {
@@ -41,24 +42,24 @@
                     }
                 }
 
-                scope.getName = function(){
-                    if(scope.item.options && scope.item.options.fieldName) {
+                scope.getName = function () {
+                    if (scope.item.options && scope.item.options.fieldName) {
                         return scope.item.options.fieldName;
                     }
                     return scope.item.name
                 };
 
-                scope.copyFromField = function(attr){
+                scope.copyFromField = function (attr) {
                     var attrObj = JSON.parse(attr);
 
-                    if(attrObj.key) {
+                    if (attrObj.key) {
                         scope.entity[scope.getModelKey()] = scope.entity[attrObj.key];
                         console.log(scope.entity[scope.getModelKey()]);
                     }
-                    if(attrObj.id) {
+                    if (attrObj.id) {
                         var resAttr = null;
-                        attrs.forEach(function(item){
-                            if(item.id === attrObj.id) {
+                        attrs.forEach(function (item) {
+                            if (item.id === attrObj.id) {
                                 resAttr = item;
                             }
                         });
@@ -66,9 +67,8 @@
                     }
                 };
 
-
                 scope.dateFormatter = function () {
-                    console.log('scope.entity[scope.getModelKey()]', scope.entity[scope.getModelKey()]);
+                    //console.log('scope.entity[scope.getModelKey()]', scope.entity[scope.getModelKey()]);
 
                     //scope.entity[scope.getModelKey()] = moment(new Date(scope.entity[scope.getModelKey()])).format('YYYY-MM-DD');
                 };
@@ -108,7 +108,47 @@
                 };
 
                 scope.setDateMinus = function () {
-                    scope.entity[scope.getModelKey()] =  new Date(new Date().setDate(new Date(scope.entity[scope.getModelKey()]).getDate() - 1));
+                    scope.entity[scope.getModelKey()] = new Date(new Date().setDate(new Date(scope.entity[scope.getModelKey()]).getDate() - 1));
+                };
+
+                scope.node = scope.node || null;
+
+                function findNodeInChildren(item) {
+                    if (scope.classifierId == item.id) {
+                        scope.node = item;
+                    } else {
+                        if (item.children.length) {
+                            item.children.forEach(findNodeInChildren);
+                        }
+                    }
+                }
+
+                var classifierTree;
+
+                function getNode() {
+                    return attributeTypeService.getByKey(scope.entityType, scope.item.id).then(function (data) {
+                        classifierTree = data;
+                        classifierTree.classifiers.forEach(findNodeInChildren);
+                        return scope.node;
+                    });
+                }
+
+                if (scope.fieldType && scope.fieldType.value === 30) {
+
+                    scope.classifierId = scope.entity[scope.getModelKey()];
+
+                    getNode().then(function (data) {
+                        scope.node = data;
+                        scope.entity[scope.getModelKey()] = scope.classifierId;
+                        scope.$apply();
+                    });
+                }
+
+                scope.changeClassifier = function () {
+                    if (classifierTree) {
+                        scope.classifierId = scope.entity[scope.getModelKey()];
+                        classifierTree.classifiers.forEach(findNodeInChildren);
+                    }
                 };
 
             }

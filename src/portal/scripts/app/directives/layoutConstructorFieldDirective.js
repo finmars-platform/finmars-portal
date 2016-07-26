@@ -24,7 +24,7 @@
 
 				// var choices = metaService.getValueTypes();
 				var choices = metaService.getTypeCaptions();
-				console.log('Choices information type ', choices);
+				//console.log('Choices information type ', choices);
 				scope.item = {
 					column: scope.column,
 					row: scope.row,
@@ -75,8 +75,8 @@
 				}
 
 				scope.cancel = function () {
-					console.log('scope.item', scope.item);
-					console.log('scope.backupItem', scope.backupItem);
+					//console.log('scope.item', scope.item);
+					//console.log('scope.backupItem', scope.backupItem);
 					if (scope.item.name || scope.item.id) {
 						scope.item = scope.backupItem;
 						scope.item.colspan = scope.backupItem.colspan;
@@ -94,7 +94,7 @@
 					for (i = 0; i < scope.tab.layout.fields.length; i = i + 1) {
 						scope.tab.layout.fields[i].editMode = false;
 					}
-					console.log('ite55555555555555555555555555m', scope.item);
+					//console.log('ite55555555555555555555555555m', scope.item);
 					scope.item.editMode = true;
 				};
 
@@ -191,12 +191,15 @@
 					scope.item.id = null;
 					scope.item.key = null;
 					scope.item.attribute = null;
+					scope.item.disabled = false;
+					scope.item.options = null;
 					scope.item.colspan = 1;
 					for (i = 0; i < scope.tab.layout.fields.length; i = i + 1) {
 						if (scope.tab.layout.fields[i].row == scope.item.row) {
 							if (scope.tab.layout.fields[i].column == scope.item.column) {
 								scope.tab.layout.fields[i].id = null;
 								scope.tab.layout.fields[i].key = null;
+								scope.tab.layout.fields[i].disabled = false;
 								scope.tab.layout.fields[i].colspan = 1;
 								scope.tab.layout.fields[i].name = '';
 								scope.tab.layout.fields[i].type = 'empty';
@@ -243,6 +246,9 @@
 				findAttribute();
 
 				scope.findAttrsLeft = function() {
+
+					console.log('executed???');
+
 					scope.attrs.forEach(function(attr){
 						tabs.forEach(function(tab){
 							tab.layout.fields.forEach(function(item){
@@ -278,7 +284,7 @@
 						})
 					})
 
-				}
+				};
 
 				scope.bindType = function () {
 					var i;
@@ -345,49 +351,35 @@
 
 					if (scope.item.attribute) {
 
-						if (scope.item.attribute.hasOwnProperty('id')) {
+						if (scope.item.attribute.name === 'Notes') {
+							scope.specialOptionTemplate = 'views/attribute-options/notes.html';
+							return true;
+						}
 
-							if (scope.item.attribute['value_type'] == 10) {
-								scope.specialOptionTemplate = 'views/attribute-options/string.html';
-								return true;
-							}
+						if (scope.item.attribute['value_type'] == 10) {
+							scope.specialOptionTemplate = 'views/attribute-options/string.html';
+							return true;
+						}
+						//console.log('scope.item.attribute', scope.item.attribute);
+						if (scope.item.attribute['value_type'] === 'field'
+							&& metaService.getRestrictedEntitiesWithTypeField().indexOf(scope.item.attribute.key) === -1) {
+							scope.specialOptionTemplate = 'views/attribute-options/field.html';
+							return true;
+						}
 
+						if (scope.item.attribute['value_type'] == 40) {
+							scope.specialOptionTemplate = 'views/attribute-options/date.html';
+							return true;
+						}
 
-						} else { // entity && base attrs
+						if (scope.item.attribute['value_type'] === 20 || scope.item.attribute['value_type'] === 'float') {
+							scope.specialOptionTemplate = 'views/attribute-options/number.html';
+							return true;
+						}
 
-							if (scope.item.attribute.name === 'Notes') {
-								scope.specialOptionTemplate = 'views/attribute-options/notes.html';
-								return true;
-							}
-
-							if (scope.item.attribute['value_type'] == 10) {
-								scope.specialOptionTemplate = 'views/attribute-options/string.html';
-								return true;
-							}
-							//console.log('scope.item.attribute', scope.item.attribute);
-							if (scope.item.attribute['value_type'] === 'field'
-								&& metaService.getRestrictedEntitiesWithTypeField().indexOf(scope.item.attribute.key) === -1) {
-								scope.specialOptionTemplate = 'views/attribute-options/field.html';
-								return true;
-							}
-
-
-							if (scope.item.attribute['value_type'] === 40) {
-								scope.specialOptionTemplate = 'views/attribute-options/date.html';
-								return true;
-							}
-
-							if (scope.item.attribute['value_type'] === 20 || scope.item.attribute['value_type'] === 'float') {
-								scope.specialOptionTemplate = 'views/attribute-options/number.html';
-								return true;
-							}
-
-							if (scope.item.attribute['value_type'] === 'decoration' && scope.item.attribute.key === 'layoutLineWithLabel') {
-								scope.specialOptionTemplate = 'views/attribute-options/labeled-line.html';
-								return true;
-							}
-
-
+						if (scope.item.attribute['value_type'] === 'decoration' && scope.item.attribute.key === 'layoutLineWithLabel') {
+							scope.specialOptionTemplate = 'views/attribute-options/labeled-line.html';
+							return true;
 						}
 					}
 

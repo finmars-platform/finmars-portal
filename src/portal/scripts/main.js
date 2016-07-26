@@ -4,28 +4,29 @@
 'use strict';
 
 var app = angular.module('app', [
-	'ngAria',
-	'ngMaterial',
-	'ngMessages',
-	'ngMdIcons',
-	'ngResource',
-	'ngSanitize',
-	'ui.router',
-	'mdPickers',
-	'io.dennis.contextmenu',
-	angularDragula(angular)
+    'ngAria',
+    'ngMaterial',
+    'ngMessages',
+    'ngMdIcons',
+    'ngResource',
+    'ngSanitize',
+    'ui.router',
+    'mdPickers',
+    'bw.paging',
+    'io.dennis.contextmenu',
+    angularDragula(angular)
 ]);
 
 
 app.config(['$stateProvider', '$urlRouterProvider', require('./app/router.js')]);
 app.config(['$mdDateLocaleProvider', function ($mdDateLocaleProvider) {
-	$mdDateLocaleProvider.formatDate = function (date) {
-		return moment(date).format('YYYY-MM-DD');
-	};
+    $mdDateLocaleProvider.formatDate = function (date) {
+        return moment(date).format('YYYY-MM-DD');
+    };
 }]);
 
 app.run(function () {
-	console.log('App initialized');
+    console.log('App initialized');
 });
 
 
@@ -39,8 +40,6 @@ app.controller('AttributesManagerController', ['$scope', '$state', '$stateParams
 app.controller('AttributesManagerEditDialogController', ['$scope', '$mdDialog', 'attribute', require('./app/controllers/attributesManagerEditDialogController')]);
 app.controller('AttributesManagerAddDialogController', ['$scope', '$mdDialog', require('./app/controllers/attributesManagerAddDialogController')]);
 app.controller('ClassificationEditorDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/classificationEditorDialogController')]);
-
-
 
 
 app.controller('EntityViewerController', ['$scope', '$mdDialog', '$mdMedia', require('./app/controllers/entityViewer/entityViewerController')]);
@@ -63,7 +62,10 @@ app.controller('AdditionsEditorEntityEditController', ['$scope', '$state', requi
 
 app.controller('WarningDialogController', ['$scope', '$mdDialog', 'warning', require('./app/controllers/warningDialogController')]);
 app.controller('InfoDialogController', ['$scope', '$mdDialog', 'info', require('./app/controllers/infoDialogController')]);
-app.controller('InstrumentSelectDialogController', ['$scope', '$mdDialog',  require('./app/controllers/instrumentSelectDialogController')]);
+app.controller('InstrumentSelectDialogController', ['$scope', '$mdDialog', require('./app/controllers/instrumentSelectDialogController')]);
+app.controller('ClassifierSelectDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/classifierSelectDialogController')]);
+
+app.controller('AuditController', ['$scope', require('./app/controllers/auditController')]);
 
 app.directive('menuToggle', [require('./app/directives/menuToggleDirective')]);
 app.directive('menuLink', [require('./app/directives/menuLinkDirective')]);
@@ -97,21 +99,22 @@ app.controller('gModalController', ['$scope', '$mdDialog', 'parentScope', 'callb
 app.directive('evFieldResolver', [require('./app/directives/entityViewerFieldResolverDirective')]);
 app.directive('floatNumbers', [require('./app/directives/floatNumbersDirective')]);
 app.directive('instrumentModalResolver', ['$mdDialog', require('./app/directives/instrumentModalResolverDirective')]);
+app.directive('classifierModalResolver', ['$mdDialog', require('./app/directives/classifierModalResolverDirective')]);
 app.directive('zhDatePicker', ['$mdDialog', require('./app/directives/zhDatePickerDirective')]);
 
 app.filter('trustAsHtml', ['$sce', require('./app/filters/trustAsHtmlFilter')]);
 app.filter('strLimit', ['$filter', require('./app/filters/strLimitFilter')]);
 
-app.directive('ngRightClick', ['$parse', function($parse) {
-	return function(scope, element, attrs) {
-		var fn = $parse(attrs.ngRightClick);
-		element.bind('contextmenu', function(event) {
-			scope.$apply(function() {
-				event.preventDefault();
-				fn(scope, {$event:event});
-			});
-		});
-	};
+app.directive('ngRightClick', ['$parse', function ($parse) {
+    return function (scope, element, attrs) {
+        var fn = $parse(attrs.ngRightClick);
+        element.bind('contextmenu', function (event) {
+            scope.$apply(function () {
+                event.preventDefault();
+                fn(scope, {$event: event});
+            });
+        });
+    };
 }]);
 
 

@@ -34,6 +34,10 @@
                     }
                 })
             }
+
+            if(options.page) {
+                url = url + '&page=' + options.page;
+            }
         }
         return url
     }

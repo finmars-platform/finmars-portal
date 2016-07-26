@@ -159,6 +159,18 @@
                     entityAttr['value_string'] = value;
                 }
 
+                if (attr['value_type'] === 20) {
+                    entityAttr['value_float'] = value;
+                }
+
+                if (attr['value_type'] === 30) {
+                    entityAttr['classifier'] = value;
+                }
+
+                if (attr['value_type'] === 40) {
+                    entityAttr['value_date'] = value;
+                }
+
                 return entityAttr;
             }
 
@@ -174,6 +186,17 @@
 
                 if (attr['value_type'] === 10) {
                     attribute['value_string'] = value;
+                }
+
+                if (attr['value_type'] === 20) {
+                    attribute['value_float'] = value;
+                }
+
+                if (attr['value_type'] === 30) {
+                    attribute['classifier'] = value;
+                }
+                if (attr['value_type'] === 40) {
+                    attribute['value_date'] = value;
                 }
 
                 return attribute;
