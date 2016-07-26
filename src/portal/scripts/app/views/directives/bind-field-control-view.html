@@ -40,15 +40,17 @@
             <zh-date-picker ng-model="entity[getModelKey()]" ></zh-date-picker>
             <!--<mdp-date-picker mdp-placeholder="Enter date" ng-model="entity[getModelKey()]" mdp-format="YYYY/MM/DD" data-ng-change="dateFormatter()"></mdp-date-picker>-->
             <!--<md-datepicker ng-model="entity[getModelKey()]" md-placeholder="Enter date" data-ng-change="dateFormatter()"></md-datepicker>-->
-            <md-button data-ng-if="item.options.dateToday" data-ng-click="setDateToday()">
-                T
-            </md-button>
-            <md-button data-ng-if="item.options.dateTodayPlus" data-ng-click="setDatePlus()">
-                T + 1
-            </md-button>
-            <md-button data-ng-if="item.options.dateTodayMinus" data-ng-click="setDateMinus()">
-                T - 1
-            </md-button>
+            <div class="date-pick-buttons-block">
+                <md-button data-ng-if="item.options.dateToday" data-ng-click="setDateToday()">
+                    T
+                </md-button>
+                <md-button data-ng-if="item.options.dateTodayPlus" data-ng-click="setDatePlus()">
+                    T + 1
+                </md-button>
+                <md-button data-ng-if="item.options.dateTodayMinus" data-ng-click="setDateMinus()">
+                    T - 1
+                </md-button>
+            </div>
         </md-input-container>
     </div>
     <div data-ng-if="fieldType['display_name'] === 'Boolean'">
