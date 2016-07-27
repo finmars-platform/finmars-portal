@@ -2,22 +2,22 @@
     <div data-ng-if="fieldType['display_name'] === 'Number'">
         <md-input-container class="md-block">
             <label data-ng-bind="getName()"></label>
-            <input data-ng-model="entity[getModelKey()]" type="number" data-ng-if="!item.options.onlyPositive">
-            <input data-ng-model="entity[getModelKey()]" type="number" min="0" data-ng-if="item.options.onlyPositive">
+            <input data-ng-change="changeWatcher()" data-ng-model="entity[getModelKey()]" type="number" data-ng-if="!item.options.onlyPositive">
+            <input data-ng-change="changeWatcher()" data-ng-model="entity[getModelKey()]" type="number" min="0" data-ng-if="item.options.onlyPositive">
         </md-input-container>
     </div>
     <div data-ng-if="fieldType['display_name'] === 'String'">
         <div data-ng-if="getModelKey() === 'notes' ">
             <md-input-container class="md-block textarea-bind-field">
                 <label data-ng-bind="getName()"></label>
-                <textarea class="{{item.options.frame == 1 ? 'bordered' : '' }}" data-ng-model="entity[getModelKey()]"
+                <textarea data-ng-change="changeWatcher()" class="{{item.options.frame == 1 ? 'bordered' : '' }}" data-ng-model="entity[getModelKey()]"
                           cols="30" rows="{{item.options.rowCount}}"></textarea>
             </md-input-container>
         </div>
         <div data-ng-if="getModelKey() !== 'notes' ">
             <md-input-container class="md-block bind-field-input {{item.options.copyFrom ? 'with-button' : ''}}">
                 <label data-ng-bind="getName()"></label>
-                <input data-ng-model="entity[getModelKey()]">
+                <input data-ng-change="changeWatcher()" data-ng-model="entity[getModelKey()]">
                 <md-button data-ng-if="item.options.copyFrom" class="bf-copy-btn"
                            data-ng-click="copyFromField(item.options.copyFrom)">
                     <ng-md-icon icon="content_copy"></ng-md-icon>
@@ -28,8 +28,8 @@
     <div data-ng-if="fieldType['display_name'] === 'Float'">
         <md-input-container class="md-block">
             <label data-ng-bind="getName()"></label>
-            <input data-ng-model="entity[getModelKey()]" data-float-numbers data-ng-if="!item.options.onlyPositive">
-            <input data-ng-model="entity[getModelKey()]" data-float-numbers data-only-positive="true"
+            <input data-ng-change="changeWatcher()" data-ng-model="entity[getModelKey()]" data-float-numbers data-ng-if="!item.options.onlyPositive">
+            <input data-ng-change="changeWatcher()" data-ng-model="entity[getModelKey()]" data-float-numbers data-only-positive="true"
                    data-ng-if="item.options.onlyPositive">
         </md-input-container>
     </div>
@@ -43,7 +43,7 @@
         <!-- <label data-ng-bind="getName()"></label> -->
         <md-input-container class="field-date-pick-holder">
             <label data-ng-bind="getName()"></label>
-            <zh-date-picker ng-model="entity[getModelKey()]"></zh-date-picker>
+            <zh-date-picker data-ng-change="changeWatcher()" ng-model="entity[getModelKey()]"></zh-date-picker>
             <!--<mdp-date-picker mdp-placeholder="Enter date" ng-model="entity[getModelKey()]" mdp-format="YYYY/MM/DD" data-ng-change="dateFormatter()"></mdp-date-picker>-->
             <!--<md-datepicker ng-model="entity[getModelKey()]" md-placeholder="Enter date" data-ng-change="dateFormatter()"></md-datepicker>-->
             <div class="date-pick-buttons-block">
@@ -60,7 +60,7 @@
         </md-input-container>
     </div>
     <div data-ng-if="fieldType['display_name'] === 'Boolean'">
-        <md-checkbox data-ng-model="entity[getModelKey()]" aria-label="checkbox">
+        <md-checkbox data-ng-change="changeWatcher()" data-ng-model="entity[getModelKey()]" aria-label="checkbox">
             <label data-ng-bind="getName()"></label>
         </md-checkbox>
     </div>

@@ -74,33 +74,35 @@
                 };
 
                 scope.getModelKey = function () {
-                    if (scope.item.hasOwnProperty('id') && scope.item.id !== null) {
-                        return scope.item.name
-                    } else {
-                        var i, l, e;
-                        for (i = 0; i < baseAttrs.length; i = i + 1) {
-                            if (scope.item.name === baseAttrs[i].name) {
-                                return baseAttrs[i].key;
+                    if (scope.item) {
+                        if (scope.item.hasOwnProperty('id') && scope.item.id !== null) {
+                            return scope.item.name
+                        } else {
+                            var i, l, e;
+                            for (i = 0; i < baseAttrs.length; i = i + 1) {
+                                if (scope.item.name === baseAttrs[i].name) {
+                                    return baseAttrs[i].key;
+                                }
                             }
-                        }
-                        for (l = 0; l < scope.layoutAttrs.length; l = l + 1) {
-                            if (scope.item.name === scope.layoutAttrs[l].name) {
+                            for (l = 0; l < scope.layoutAttrs.length; l = l + 1) {
+                                if (scope.item.name === scope.layoutAttrs[l].name) {
 
-                                return scope.layoutAttrs[l].key;
+                                    return scope.layoutAttrs[l].key;
+                                }
                             }
-                        }
-                        for (e = 0; e < entityAttrs.length; e = e + 1) {
-                            if (scope.item.name === entityAttrs[e].name) {
-                                return entityAttrs[e].key;
+                            for (e = 0; e < entityAttrs.length; e = e + 1) {
+                                if (scope.item.name === entityAttrs[e].name) {
+                                    return entityAttrs[e].key;
+                                }
                             }
                         }
                     }
                 };
 
                 scope.setDateToday = function () {
-                    console.log('1232', scope.entity[scope.getModelKey()])
+                    //console.log('1232', scope.entity[scope.getModelKey()])
                     scope.entity[scope.getModelKey()] = new Date();
-                    console.log('1232', scope.entity[scope.getModelKey()])
+                    //console.log('1232', scope.entity[scope.getModelKey()])
                 };
 
                 scope.setDatePlus = function () {
@@ -144,8 +146,14 @@
                     });
                 }
 
+
+                scope.changeWatcher = function(){
+                    localStorage.setItem('entityIsChanged', true);
+                };
+
                 scope.changeClassifier = function () {
                     if (classifierTree) {
+                        localStorage.setItem('entityIsChanged', true);
                         scope.classifierId = scope.entity[scope.getModelKey()];
                         classifierTree.classifiers.forEach(findNodeInChildren);
                     }
