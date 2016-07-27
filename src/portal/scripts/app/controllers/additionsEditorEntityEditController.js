@@ -74,6 +74,7 @@
 
         vm.bindFlex = function (tab, row, field) {
             var totalColspans = 0;
+            // console.log('additionsEditor tab is', tab, field);
             var i;
             for (i = 0; i < tab.layout.fields.length; i = i + 1) {
                 if (tab.layout.fields[i].row === row) {
@@ -82,7 +83,6 @@
             }
             var flexUnit = 100 / tab.layout.columns;
             return Math.floor(field.colspan * flexUnit);
-
         };
 
         vm.bindField = function (tab, field) {

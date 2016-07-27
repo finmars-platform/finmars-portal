@@ -90,12 +90,12 @@
                     <md-divider></md-divider>
                 </div>
                 <div layout="row">
-                    {{vm.instrumentTotal}}
                     <div paging
                          page="vm.instrumentCurrent"
                          page-size="vm.itemPerPage"
                          total="vm.instrumentTotal"
-                         paging-action="vm.changePage('instrument', page)">
+                         paging-action="vm.changePage('instrument', page)"
+                         class="audit-pagination-div">
                     </div>
                 </div>
             </div>

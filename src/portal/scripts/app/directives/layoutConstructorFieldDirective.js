@@ -288,9 +288,6 @@
 
 				scope.bindType = function () {
 					var i;
-					if (scope.item.attribute["value_type"] == 'decoration') {
-						return scope.item.attribute["value_type"];
-					}
 					for (i = 0; i < choices.length; i = i + 1) {
 						if (scope.item.attribute["value_type"] === choices[i].value) {
 							// return choices[i]["display_name"];
