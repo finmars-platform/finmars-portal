@@ -150,11 +150,19 @@
 			})
 		};
 
-		vm.checkAreaAccessibility = function(item){
-			if(['notes', 'accounts', 'responsibles', 'counterparties', 'transaction_types', 'portfolios'].indexOf(item.key) !== -1) {
-				return true;
+		vm.checkAreaAccessibility = function(item, type){
+			if (type === 'group') {
+				if(['notes', 'accounts', 'responsibles', 'counterparties', 'transaction_types', 'portfolios'].indexOf(item.key) !== -1) {
+					return true;
+				}
+				return false;
 			}
-			return false;
+			else {
+				if(['notes'].indexOf(item.key) !== -1) {
+					return true;
+				}
+				return false;
+			}
 		};
 
 		parentScope.$watch('columns', function () {
