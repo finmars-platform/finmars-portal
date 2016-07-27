@@ -19,7 +19,7 @@
 
     // codemonkey
 
-    module.exports = function ($scope, $state) {
+    module.exports = function ($scope, $state, $mdDialog) {
 
         logService.controller('AdditionsEditorEntityEditController', 'initialized');
 
@@ -29,6 +29,8 @@
 
         vm.readyStatus = {content: false};
         vm.entityType = $scope.$parent.entityType;
+
+        vm.entityIsChanged = false;
 
         $scope.$parent.$watch('itemId', function(newItemId){
             console.log('what1');
@@ -44,7 +46,6 @@
             }
 
         });
-
 
         uiService.getEditLayout(vm.entityType).then(function (data) {
             vm.tabs = data.results[0].data;
