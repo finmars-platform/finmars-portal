@@ -15,9 +15,10 @@
 				<md-tab label="{{tab.name}}" data-ng-repeat="tab in vm.tabs">
 					<md-content class="md-padding">
 						<div layout="row" data-ng-repeat="row in vm.range(tab.layout.rows)">
-							<div class="ev-data-field" data-ng-repeat="field in tab.layout.fields"
-								 flex="{{vm.bindFlex(tab, row, field)}}"
-								 data-ng-if="vm.checkFieldRender(tab, row, field)">
+							<div class="ev-data-field
+								{{field.attribute['value_type'] === 'decoration' ? 'decoration-label-line' : ''}}" data-ng-repeat="field in tab.layout.fields"
+								flex="{{vm.bindFlex(tab, row, field)}}"
+								data-ng-if="vm.checkFieldRender(tab, row, field)">
 								<bind-field-control item="vm.bindField(tab, field)"></bind-field-control>
 							</div>
 						</div>

@@ -29,33 +29,36 @@
 		return metaRepository.getRestrictedEntitiesWithTypeField();
 	};
 
-    var getTypeCaptions = function() {
+	var getTypeCaptions = function() {
 		var filteredValueTypes = getValueTypes().filter(function (item) {
-			return item.value !== 'field' && item.value !== 'decoration';
+			// return item.value !== 'field' && item.value !== 'decoration';
+			return item.value !== 'field';
 		});
-        var typeCaptions = filteredValueTypes.map(function (item) {
-            switch (item['display_name']) {
-                case 'Number':
-                    // item['caption_name'] = 'Integer';
-                    item['caption_name'] = 'Whole number';
-                    break;
-                case 'Float':
-                    item['caption_name'] = 'Number with decimals';
-                    break;
-                case 'Field':
-                    item['caption_name'] = 'Classification';
-                    break;
-                case 'String':
-                    item['caption_name'] = 'Text';
-                    break;
-                case 'Boolean':
-                    item['caption_name'] = 'True/False';
-                    break;
-                default:
-                    item['caption_name'] = item['display_name'];
-                    break;
-            }
-
+		var typeCaptions = filteredValueTypes.map(function (item) {
+			switch (item['display_name']) {
+				case 'Number':
+					// item['caption_name'] = 'Integer';
+					item['caption_name'] = 'Whole number';
+					break;
+				case 'Float':
+					item['caption_name'] = 'Number with decimals';
+					break;
+				case 'Field':
+					item['caption_name'] = 'Classification';
+					break;
+				case 'String':
+					item['caption_name'] = 'Text';
+					break;
+				case 'Boolean':
+					item['caption_name'] = 'True/False';
+					break;
+				case 'Decoration':
+					item['caption_name'] = 'Decoration';
+					break;
+				default:
+					item['caption_name'] = item['display_name'];
+					break;
+			}
 			return item;
 		});
 		//console.log(typeCaptions);

@@ -63,6 +63,7 @@
         vm.bindFlex = function (tab, row, field) {
             var totalColspans = 0;
             var i;
+            // console.log("tab is", tab, field);
             for (i = 0; i < tab.layout.fields.length; i = i + 1) {
                 if (tab.layout.fields[i].row === row) {
                     totalColspans = totalColspans + tab.layout.fields[i].colspan;
