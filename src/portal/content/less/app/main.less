@@ -314,9 +314,41 @@ md-option.disabled {
 	margin-left: 9px;
 	bottom: -15%;
 }
-
-md-tooltip .md-content.md-show {
-	background: rgba(0,0,0,0.78);
+md-tooltip.tooltip_1 .md-content.md-show {
+	background-color: rgba(0,0,0,0.78);
+}
+.column-name-tooltip-wrap {
+	position: absolute;
+	left: 50%;
+	transition: opacity 0.4s cubic-bezier(.25,.8,.25,1) 0s;
+	opacity: 0;
+	pointer-events: none;
+}
+.column-name-tooltip-content {
+	position: relative;
+	background-color: rgba(0,0,0,.78);
+	height: 22px;
+	line-height: 22px;
+	padding-left: 8px;
+	padding-right: 8px;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	font-size: 10px;
+	font-weight: 500;
+	color: #ffffff;
+	z-index: 100;
+	border-radius: 4px;
+	left: 0px;
+	bottom: 30px;
+	left: -50%;
+	// pointer-events: none;
+}
+md-card.small-width:hover {
+	.column-name-tooltip-wrap {
+		opacity: 1;
+		transition: opacity 0.4s cubic-bezier(.25,.8,.25,1) 0s;
+	}
 }
 .jstree-default .jstree-anchor, .jstree-default .jstree-wholerow {
 	background: #fff;
