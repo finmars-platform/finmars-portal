@@ -3,6 +3,8 @@
  */
 'use strict';
 
+require('../forum/scripts/main.js');
+
 var app = angular.module('app', [
     'ngAria',
     'ngMaterial',
@@ -14,7 +16,9 @@ var app = angular.module('app', [
     'mdPickers',
     'bw.paging',
     'io.dennis.contextmenu',
-    angularDragula(angular)
+    angularDragula(angular),
+
+    'forum'
 ]);
 
 
