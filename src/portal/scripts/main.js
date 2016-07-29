@@ -88,7 +88,7 @@ app.directive('gDialogDraggable', [require('./app/directives/groupTable/gDialogD
 app.directive('groupHeightAligner', [require('./app/directives/groupTable/gHeightAlignerComponent')]);
 app.directive('groupVerticalScroll', [require('./app/directives/groupTable/gVerticalScrollComponent')]);
 app.directive('groupHorizontalScroll', [require('./app/directives/groupTable/gHorizontalScrollComponent')]);
-app.directive('groupCustomScroll', [require('./app/directives/groupTable/gCustomScrollComponent')]);
+app.directive('groupSecondVerticalScroll', [require('./app/directives/groupTable/gSecondVerticalScrollComponent')]);
 app.directive('groupEditorBinder', ['$templateCache', '$compile', require('./app/directives/groupTable/groupEditorBinderComponent')]);
 app.directive('groupColumnInitWidth', [require('./app/directives/groupTable/gColumnInitWidthComponent.js')]);
 
