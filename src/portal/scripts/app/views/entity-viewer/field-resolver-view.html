@@ -3,7 +3,7 @@
         <div data-ng-if="type === 'key-value'">
             <md-input-container class="md-block">
                 <label data-ng-bind="getName()"></label>
-                <md-select data-ng-model="entity[getModelKey()]">
+                <md-select data-ng-model="entity[getModelKey()]" data-ng-change="changeWatcher()">
                     <md-option data-ng-repeat="field in fields track by $index" value="{{field.value}}">
                         {{field.name}}
                     </md-option>
@@ -15,6 +15,7 @@
                 <md-input-container class="md-block">
                     <label data-ng-bind="getName()"></label>
                     <md-select data-ng-model="entity[getModelKey()]"
+                               data-ng-change="changeWatcher()"
                                md-container-class="h-instrument-select"
                                data-instrument-modal-resolver
                                md-selected-text="bindFormFields()">
@@ -27,7 +28,7 @@
             <div data-ng-if="getModelKey() !== 'instrument'">
                 <md-input-container class="md-block">
                     <label data-ng-bind="getName()"></label>
-                    <md-select data-ng-model="entity[getModelKey()]" md-selected-text="bindFormFields()">
+                    <md-select data-ng-change="changeWatcher()" data-ng-model="entity[getModelKey()]" md-selected-text="bindFormFields()">
                         <md-option data-ng-repeat="field in fields track by $index" value="{{field.id}}">
                             {{bindListFields(field)}}
                         </md-option>
@@ -38,7 +39,7 @@
         <div data-ng-if="type === 'multiple-ids'">
             <md-input-container class="md-block">
                 <label data-ng-bind="getName()"></label>
-                <md-select data-ng-model="entity[getModelKey()]" multiple="true">
+                <md-select data-ng-change="changeWatcher()" data-ng-model="entity[getModelKey()]" multiple="true">
                     <md-option data-ng-repeat="field in fields track by $index" value="{{field.id}}">
                         {{bindListFields(field)}}
                     </md-option>

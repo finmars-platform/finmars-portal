@@ -27,6 +27,7 @@ app.config(['$mdDateLocaleProvider', function ($mdDateLocaleProvider) {
 
 app.run(function () {
     console.log('App initialized');
+    localStorage.setItem('entityIsChanged', false);
 });
 
 
@@ -58,7 +59,7 @@ app.controller('DataCurrencyHistoryController', ['$scope', require('./app/contro
 
 app.controller('EntityDataConstructorController', ['$scope', '$stateParams', '$state', '$mdDialog', require('./app/controllers/entityDataConstructorController')]);
 
-app.controller('AdditionsEditorEntityEditController', ['$scope', '$state', require('./app/controllers/additionsEditorEntityEditController')]);
+app.controller('AdditionsEditorEntityEditController', ['$scope', '$state', '$mdDialog', require('./app/controllers/additionsEditorEntityEditController')]);
 
 app.controller('WarningDialogController', ['$scope', '$mdDialog', 'warning', require('./app/controllers/warningDialogController')]);
 app.controller('InfoDialogController', ['$scope', '$mdDialog', 'info', require('./app/controllers/infoDialogController')]);
