@@ -23,7 +23,6 @@
 				function toggleColumnNameTooltip (column, columnWidth) {
 					console.log(column, columnWidth, minWidth);
 					if (columnWidth <= minWidth && !column.hasClass('small-width')) {
-						// console.log('toggleColumnNameTooltip width lesser than 50');
 						column.addClass('small-width');
 					}
 					else if (columnWidth > minWidth && column.hasClass('small-width')) {
@@ -43,7 +42,7 @@
 								// if width small enough, show tooltip
 								console.log(savedWidths[i], minWidth);
 								if (savedWidths[i] <= minWidth) {
-									$(columns[i]).removeClass('small-width');
+									$(columns[i]).addClass('small-width');
 								}
 							}
 						}
