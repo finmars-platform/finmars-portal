@@ -192,9 +192,31 @@
                     return item[column.key];
                 };
 
-                scope.rowCallback = function (item) {
+                scope.rowCallback = function (item, ev) {
                     //console.log('open additions!', item);
-                    scope.itemAdditionsEditorEntityId = item.id;
+                    if(localStorage.getItem('entityIsChanged') === "true") { // wow such shitcode
+                        $mdDialog.show({
+                            controller: 'WarningDialogController as vm',
+                            templateUrl: 'views/warning-dialog-view.html',
+                            parent: angular.element(document.body),
+                            targetEvent: ev,
+                            clickOutsideToClose: true,
+                            locals: {
+                                warning: {
+                                    title: 'Warning',
+                                    description: 'Unsaved data will be lost'
+                                }
+                            }
+                        }).then(function (res) {
+                            if (res.status === 'agree') {
+                                scope.itemAdditionsEditorEntityId = item.id;
+                                localStorage.setItem('entityIsChanged', false);
+                            }
+                        });
+                    } else {
+                        scope.itemAdditionsEditorEntityId = item.id;
+                        localStorage.setItem('entityIsChanged', false);
+                    }
                 };
 
                 scope.getAlign = function (column) {

@@ -40,6 +40,10 @@
                     return scope.item.name
                 };
 
+                scope.changeWatcher = function(){
+                    localStorage.setItem('entityIsChanged', true);
+                };
+
                 scope.bindFormFields = function () {
 
                     var id = scope.entity[scope.getModelKey()];
