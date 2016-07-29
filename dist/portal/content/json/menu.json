@@ -6,6 +6,12 @@
     "icon": "dashboard"
   },
   {
+    "state" : "app.forum.thread-groups",
+    "title": "Forum",
+    "type": "link",
+    "icon": "dashboard"
+  },
+  {
     "state" : "app",
     "title": "Reports",
     "icon": "group",

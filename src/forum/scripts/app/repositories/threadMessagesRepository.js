@@ -1,17 +1,16 @@
 /**
- * Created by szhitenev on 04.05.2016.
+ * Created by sergey on 29.07.16.
  */
-(function () {
+(function(){
 
     'use strict';
 
     var cookieService = require('../../../../core/services/cookieService');
-    var configureRepositoryUrlService = require('../services/configureRepositoryUrlService');
 
     var baseUrl = '/api/v1/';
 
     var getList = function (options) {
-        return window.fetch(configureRepositoryUrlService.configureUrl(baseUrl + 'currencies/currency-history/', options),
+        return window.fetch(baseUrl + 'chats/message/', options,
             {
                 method: 'GET',
                 credentials: 'include',
@@ -25,7 +24,7 @@
     };
 
     var getByKey = function (id) {
-        return window.fetch(baseUrl + 'currencies/currency-history/' + id + '/',
+        return window.fetch(baseUrl + 'chats/message/' + id + '/',
             {
                 method: 'GET',
                 credentials: 'include',
@@ -38,8 +37,8 @@
         })
     };
 
-    var create = function (currency) {
-        return window.fetch(baseUrl + 'currencies/currency-history/',
+    var create = function (thread) {
+        return window.fetch(baseUrl + 'chats/message/',
             {
                 method: 'POST',
                 credentials: 'include',
@@ -48,14 +47,14 @@
                     Accept: 'application/json',
                     'Content-type': 'application/json'
                 },
-                body: JSON.stringify(currency)
+                body: JSON.stringify(thread)
             }).then(function (data) {
             return data.json();
         })
     };
 
-    var update = function (id, currency) {
-        return window.fetch(baseUrl + 'currencies/currency-history/' + id + '/',
+    var update = function (id, thread) {
+        return window.fetch(baseUrl + 'chats/message/' + id + '/',
             {
                 method: 'PUT',
                 credentials: 'include',
@@ -64,14 +63,14 @@
                     Accept: 'application/json',
                     'Content-type': 'application/json'
                 },
-                body: JSON.stringify(currency)
+                body: JSON.stringify(thread)
             }).then(function (data) {
             return data.json();
         })
     };
 
     var deleteByKey = function (id) {
-        return window.fetch(baseUrl + 'currencies/currency-history/' + id + '/',
+        return window.fetch(baseUrl + 'chats/message/' + id + '/',
             {
                 method: 'DELETE',
                 credentials: 'include',
@@ -88,9 +87,7 @@
         })
     };
 
-
     module.exports = {
-
         getList: getList,
         getByKey: getByKey,
         create: create,
