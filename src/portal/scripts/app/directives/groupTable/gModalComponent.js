@@ -5,7 +5,7 @@
 
 	'use strict';
 
-	var logService = require('../../services/logService');
+	var logService = require('../../../../../core/services/logService');
 
 	var uiService = require('../../services/uiService');
 

@@ -1,0 +1,85 @@
+/**
+ * Created by sergey on 30.07.16.
+ */
+(function () {
+
+    'use strict';
+
+    var logService = require('../../../../core/services/logService');
+    var threadMessagesService = require('../services/threadMessagesService');
+    var threadService = require('../services/threadService');
+
+    module.exports = function ($scope, $stateParams, $mdDialog) {
+
+        logService.controller('ForumThreadGroupListController', 'initialized');
+
+        var vm = this;
+
+        vm.readyStatus = {content: false};
+
+        vm.threadId = $stateParams.threadId;
+        vm.threadPageCurrent = 1;
+        vm.itemPerPage = 20;
+
+        threadService.getByKey(vm.threadId).then(function(data){
+            vm.thread = data;
+            $scope.$apply();
+        });
+
+        vm.getList = function (params) {
+
+            vm.readyStatus.content = false;
+
+            console.log('vm.threadPageCurrent', vm.threadPageCurrent);
+
+            if(params && params.position == 'last-page') {
+                if(vm.threadMessagesTotal % vm.itemPerPage !== 0) {
+                    vm.threadPageCurrent =  Math.round(vm.threadMessagesTotal / vm.itemPerPage) + 1;
+                } else {
+                    vm.threadPageCurrent =  Math.round(vm.threadMessagesTotal / vm.itemPerPage);
+                }
+            }
+
+            var options = {page: vm.threadPageCurrent, thread: vm.threadId};
+
+            console.log('OPTIONS', options);
+            console.log('params', params);
+
+            threadMessagesService.getList(options).then(function (data) {
+
+                vm.messages = data.results;
+                vm.threadMessagesTotal = data.count;
+                vm.readyStatus.content = true;
+                $scope.$apply();
+
+            });
+        };
+
+        vm.changePage = function (page) {
+            console.log('PAGE', page);
+            vm.threadPageCurrent = page;
+            vm.getList();
+        };
+
+        vm.write = function (ev) {
+            $mdDialog.show({
+                controller: 'ForumWriteMessageDialogController as vm',
+                templateUrl: 'views/forum-message-dialog-view.html',
+                parent: angular.element(document.body),
+                targetEvent: ev
+            }).then(function (res) {
+                if (res.status === 'agree') {
+                    threadMessagesService.create({thread: vm.threadId, text: res.data.message}).then(function () {
+                        //console.log('Message created!');
+                        vm.getList({position: 'last-page'});
+                    })
+                }
+            });
+        };
+
+        vm.getList();
+
+
+    }
+
+}());
