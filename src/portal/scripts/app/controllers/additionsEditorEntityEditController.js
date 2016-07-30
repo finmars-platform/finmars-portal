@@ -5,7 +5,7 @@
 
     'use strict';
 
-    var logService = require('../services/logService');
+    var logService = require('../../../../core/services/logService');
 
     var attributeTypeService = require('../services/attributeTypeService');
     var entityResolverService = require('../services/entityResolverService');

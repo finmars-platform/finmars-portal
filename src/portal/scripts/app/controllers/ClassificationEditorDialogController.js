@@ -7,7 +7,7 @@
 
     var attributeTypeService = require('../services/attributeTypeService');
 
-    var logService = require('../services/logService');
+    var logService = require('../../../../core/services/logService');
 
     module.exports = function ($scope, $mdDialog, data) {
 

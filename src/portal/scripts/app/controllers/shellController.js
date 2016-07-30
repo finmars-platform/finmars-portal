@@ -5,8 +5,8 @@
 
 	'use strict';
 
-	var logService = require('../services/logService');
-	var cookiesService = require('../services/cookieService');
+	var logService = require('../../../../core/services/logService');
+	var cookiesService = require('../../../../core/services/cookieService');
 
 	var usersService = require('../services/usersService');
 
