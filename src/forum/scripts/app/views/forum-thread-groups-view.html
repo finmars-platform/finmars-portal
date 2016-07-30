@@ -1,3 +1,25 @@
 <div>
-    thread groups
+    <md-content>
+        <h2>Thread groups list</h2>
+        <div data-ng-if="vm.readyStatus.content">
+
+            <md-list flex>
+
+                <md-list-item class="group-forum-list-item" class="md-3-line" ng-repeat="item in vm.threadGroups"
+                >
+                    <a href=""  data-ui-sref="app.forum.threads-list({groupId: item.id})">
+                        <span data-ng-bind="item.name"></span>
+                    </a>
+                    <md-divider></md-divider>
+                </md-list-item>
+
+            </md-list>
+
+        </div>
+        <div data-ng-if="!vm.readyStatus.content">
+            <div layout="row" layout-sm="column" layout-align="space-around" class="m-large">
+                <md-progress-circular md-mode="indeterminate" md-diameter="96"></md-progress-circular>
+            </div>
+        </div>
+    </md-content>
 </div>

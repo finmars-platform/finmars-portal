@@ -10,11 +10,12 @@
     var baseUrl = '/api/v1/';
 
     var getList = function (options) {
-        return window.fetch(baseUrl + 'chats/thread/', options,
+        return window.fetch(baseUrl + 'chats/thread/?ordering=created&page=' + options.page,
             {
                 method: 'GET',
                 credentials: 'include',
                 headers: {
+                    'X-CSRFToken': cookieService.getCookie('csrftoken'),
                     Accept: 'application/json',
                     'Content-type': 'application/json'
                 }
@@ -29,6 +30,7 @@
                 method: 'GET',
                 credentials: 'include',
                 headers: {
+                    'X-CSRFToken': cookieService.getCookie('csrftoken'),
                     Accept: 'application/json',
                     'Content-type': 'application/json'
                 }

@@ -14,6 +14,7 @@
     "express": "^4.13.4",
     "gulp": "^3.9.1",
     "gulp-concat": "^2.6.0",
+    "gulp-group": "^1.0.0",
     "gulp-htmlmin": "^1.3.0",
     "gulp-less": "^3.0.5",
     "gulp-livereload": "^3.8.1",

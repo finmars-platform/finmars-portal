@@ -78,7 +78,7 @@
                 this.emit('end');
             })
             .pipe(ngHtml2Js({
-                moduleName: 'app'
+                moduleName: appName
             }))
             .pipe(concat('templates.min.js'))
             .pipe(uglify())
