@@ -112,7 +112,7 @@
         </div>
     </md-dialog-content>
     <md-dialog-actions layout="row" layout-align="space-between center">
-        <md-button class="md-raised md-primary" style="margin: 0;"
+        <md-button data-ng-if="vm.MABtnVisibility(vm.entityType)" class="md-raised md-primary" style="margin: 0;"
                    data-ui-sref="app.attributesManager({entityType: vm.entityType})" data-ng-click="vm.cancel()">
             Manage attributes
         </md-button>

@@ -63,7 +63,7 @@
         <div layout="row" layout-align="space-between center">
 
             <div>
-                <md-button class="md-raised md-primary manage-attrs-btn"
+                <md-button data-ng-if="vm.MABtnVisibility(vm.entityType)" class="md-raised md-primary manage-attrs-btn"
                            data-ui-sref="app.attributesManager({entityType: vm.entityType})">
                     Manage attributes
                 </md-button>

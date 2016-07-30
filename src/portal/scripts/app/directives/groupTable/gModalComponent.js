@@ -461,6 +461,9 @@
 			dragAndDrop.init()
 		}, 500);
 
+		vm.MABtnVisibility = function (entityType) {
+			return metaService.checkRestrictedEntityTypesForAM(entityType);
+		}
 	}
 
 

@@ -82,6 +82,22 @@
 			return groups;
 		}
 	};
+
+	var checkRestrictedEntityTypesForAM = function (entityType) {
+		switch(entityType) {
+			case "portfolio":
+			case "account":
+			case "counterparty":
+			case "responsible":
+			case "instrument":
+			case "transaction":
+			case "strategies":
+				return true;
+				break;
+			default:
+				return false;
+		}
+	}
  
 	module.exports = {
 		getMenu: getMenu,
@@ -91,7 +107,8 @@
 		getEntitiesWithoutBaseAttrsList: getEntitiesWithoutBaseAttrsList,
 		getRestrictedEntitiesWithTypeField: getRestrictedEntitiesWithTypeField,
 		getTypeCaptions: getTypeCaptions,
-		columnsWidthGroups: columnsWidthGroups
+		columnsWidthGroups: columnsWidthGroups,
+		checkRestrictedEntityTypesForAM: checkRestrictedEntityTypesForAM
 	}
 
 }());
