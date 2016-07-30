@@ -21,7 +21,6 @@
 				
 				var minWidth = 20;	// width value for showing tooltip
 				function toggleColumnNameTooltip (column, columnWidth) {
-					console.log(column, columnWidth, minWidth);
 					if (columnWidth <= minWidth && !column.hasClass('small-width')) {
 						column.addClass('small-width');
 					}
@@ -31,7 +30,6 @@
 				}
 
 				// set columns to saved width
-				// console.log('Parent scope is ', scope.$parent.columns);
 				function setColumnsWidthAndNameTooltip() {
 					var columns = elem.find('.g-column');
 					if (scope.columnsWidth) {
@@ -40,7 +38,6 @@
 							if (savedWidths[i]) {
 								$(columns[i]).width(savedWidths[i]);
 								// if width small enough, show tooltip
-								console.log(savedWidths[i], minWidth);
 								if (savedWidths[i] <= minWidth) {
 									$(columns[i]).addClass('small-width');
 								}

@@ -289,6 +289,10 @@
             }
         }
 
+        vm.MABtnVisibility = function (entityType) {
+            return metaService.checkRestrictedEntityTypesForAM(entityType);
+        }
+
     }
 
 }());
