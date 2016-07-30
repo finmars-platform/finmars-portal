@@ -3,9 +3,9 @@
  */
 'use strict';
 
-require('../forum/scripts/main.js');
+require('../../forum/scripts/main.js');
 
-var app = angular.module('app', [
+var app = angular.module('portal', [
     'ngAria',
     'ngMaterial',
     'ngMessages',
