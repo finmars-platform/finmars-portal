@@ -25,6 +25,7 @@
     var buffer = require('vinyl-buffer');
     var browserify = require('browserify');
 
+    var forumTasks = require('./forum.js');
 
     var appName = 'portal';
 
@@ -86,6 +87,10 @@
 
     });
 
+    gulp.task('portal-forum-HTML-to-JS', function() {
+        forumTasks.forumHtmlToJs();
+    });
+
     gulp.task(appName + '-js-min', function(){
 
         var pathToJS = ['src/' + appName + '/scripts/main.js'];
@@ -135,6 +140,11 @@
         gulp.watch('src/' + appName + '/**/*.html', [appName + '-HTML-to-JS', appName + '-js-min']);
         gulp.watch('src/index.html', [appName + '-html-min']);
     });
+    gulp.task('forum-watch-All', function () {
+        gulp.watch('src/' + appName + '/**/*.less', [appName + '-less-to-css-min']);
+        gulp.watch('src/forum/**/*.js', [appName + '-js-min']);
+        gulp.watch('src/forum/**/*.html', ['portal-forum-HTML-to-JS', appName + '-js-min']);
+    });
 
     gulp.task(appName + '-min-All', [
         appName + '-HTML-to-JS',
@@ -144,5 +154,4 @@
         appName + '-json-min',
         appName + '-img-copy',
         appName + '-fonts-copy']);
-
 }());

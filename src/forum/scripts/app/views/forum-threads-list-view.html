@@ -1,25 +1,34 @@
 <div>
-    <md-content>
-        <h2>Threads list</h2>
-        <div data-ng-if="vm.readyStatus.content">
+	<md-content class="forum-content-padding">
+		<h2 data-ng-bind="vm.threadGroupName"></h2>
+		<h3 class="forum-section-header">Threads list</h3>
+		<div data-ng-if="vm.readyStatus.content">
 
-            <md-list flex>
+			<md-list flex>
 
-                <md-list-item class="thread-forum-list-item" class="md-3-line" ng-repeat="item in vm.threads"
-                >
-                    <a href=""  data-ui-sref="app.forum.thread({groupId: vm.threadGroupId, threadId: item.id})">
-                        <span data-ng-bind="item.subject"></span>
-                    </a>
-                    <md-divider></md-divider>
-                </md-list-item>
+				<md-list-item class="thread-forum-list-item" class="md-3-line" ng-repeat="item in vm.threads"
+				>
+					<a data-ui-sref="app.forum.thread({groupId: vm.threadGroupId, threadId: item.id})">
+						<span data-ng-bind="item.subject"></span>
+					</a>
+					<md-divider></md-divider>
+				</md-list-item>
 
-            </md-list>
+			</md-list>
 
-        </div>
-        <div data-ng-if="!vm.readyStatus.content">
-            <div layout="row" layout-sm="column" layout-align="space-around" class="m-large">
-                <md-progress-circular md-mode="indeterminate" md-diameter="96"></md-progress-circular>
-            </div>
-        </div>
-    </md-content>
+		</div>
+		<div data-ng-if="!vm.readyStatus.content">
+			<div layout="row" layout-sm="column" layout-align="space-around" class="m-large">
+				<md-progress-circular md-mode="indeterminate" md-diameter="96"></md-progress-circular>
+			</div>
+		</div>
+		<div layout="row">
+			<div layout="row" flex="50">
+				<md-button ui-sref="app.forum.thread-groups" class="md-raised forum-back-btn" data-ng-click="vm.forumGoBackBtn()">Back</md-button>
+			</div>
+			<div layout="row" layout-align="end center" flex="50">
+				<md-button class="md-raised md-primary" data-ng-click="vm.createThredsList($event)">Create thread</md-button>
+			</div>
+		</div>
+	</md-content>
 </div>
