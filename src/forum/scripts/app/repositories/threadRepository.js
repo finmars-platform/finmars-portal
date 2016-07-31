@@ -10,7 +10,7 @@
     var baseUrl = '/api/v1/';
 
     var getList = function (options) {
-        return window.fetch(baseUrl + 'chats/thread/?ordering=created&page=' + options.page,
+        return window.fetch(baseUrl + 'chats/thread/?ordering=created&page=' + options.page + '&thread_group=' + options.threadGroup,
             {
                 method: 'GET',
                 credentials: 'include',

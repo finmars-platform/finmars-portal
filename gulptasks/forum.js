@@ -23,8 +23,7 @@
 
     var appName = 'forum';
 
-    gulp.task(appName + '-HTML-to-JS', function () {
-
+    function forumHtmlToJs () {
         console.log('Executing task index-HTML-templateCache...');
 
         var pathToHtml = ['src/' + appName + '/scripts/app/**/*.html'];
@@ -41,8 +40,15 @@
             .pipe(concat('templates.min.js'))
             .pipe(uglify())
             .pipe(gulp.dest('src/' + appName + '/scripts/'));
+    }
 
+    gulp.task(appName + '-HTML-to-JS', function () {
+        forumHtmlToJs();
     });
+
+    module.exports = {
+        forumHtmlToJs: forumHtmlToJs
+    }
 
 }());
 
