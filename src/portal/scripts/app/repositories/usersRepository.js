@@ -97,6 +97,19 @@
         })
     };
 
+    var getMe = function(){
+        return window.fetch(baseUrl + 'users/user/me', {
+            method: 'GET',
+            credentials: 'include',
+            headers: {
+                Accept: 'application/json',
+                'Content-type': 'application/json'
+            }
+        }).then(function(data){
+            return data.json();
+        })
+    };
+
     var update = function(id, user){
         return window.fetch(baseUrl + 'users/user/' + id, {
             method: 'PUT',
@@ -294,6 +307,7 @@
 
         getList: getList,
         getByKey: getByKey,
+        getMe: getMe,
         update: update,
         patch: patch,
         deleteByKey: deleteByKey,

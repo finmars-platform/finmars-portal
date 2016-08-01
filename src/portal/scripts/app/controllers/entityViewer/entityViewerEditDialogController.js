@@ -9,22 +9,24 @@
     var attributeTypeService = require('../../services/attributeTypeService');
     var entityResolverService = require('../../services/entityResolverService');
 
+    var usersService = require('../../services/usersService');
+
     var uiService = require('../../services/uiService');
 
     var gridHelperService = require('../../services/gridHelperService');
     var metaService = require('../../services/metaService');
     var layoutService = require('../../services/layoutService');
 
-    module.exports = function ($scope, $mdDialog, parentScope, entity, $state) {
+    module.exports = function ($scope, $mdDialog, parentScope, entityId, $state) {
 
         logService.controller('EntityViewerEditDialogController', 'initialized');
 
         var vm = this;
-        vm.readyStatus = {content: false};
+        vm.readyStatus = {content: false, permissions: false, entity: false, me: false};
         vm.entityType = parentScope.entityType;
         vm.evAction = 'update';
 
-        logService.property('entity', entity);
+
         logService.property('entityType', vm.entityType);
 
         uiService.getEditLayout(vm.entityType).then(function (data) {
@@ -48,9 +50,72 @@
         vm.entityAttrs = metaService.getEntityAttrs(vm.entityType);
         vm.layoutAttrs = layoutService.getLayoutAttrs();
 
-        vm.entity = entity;
+
+        entityResolverService.getByKey(vm.entityType, entityId).then(function (data) {
+            vm.entity = data;
+            logService.property('entity', vm.entity);
+            vm.readyStatus.entity = true;
+            vm.getMemberList();
+            //$scope.$apply();
+        });
 
         var originatorEv;
+
+        usersService.getMe().then(function(data){
+            vm.user = data;
+            vm.readyStatus.me = true;
+            $scope.$apply();
+        });
+
+
+        vm.getMemberList = function () {
+            usersService.getMemberList().then(function (data) {
+                vm.members = data.results;
+                vm.readyStatus.permissions = true;
+
+                vm.members.forEach(function (member) {
+
+                    if (vm.entity["user_object_permissions"]) {
+                        vm.entity["user_object_permissions"].forEach(function (permission) {
+
+                            if (permission.member == member.id) {
+                                if (!member.hasOwnProperty('objectPermissions')) {
+                                    member.objectPermissions = {};
+                                }
+                                if (permission.permission === "manage_" + vm.entityType) {
+                                    member.objectPermissions.manage = true;
+                                }
+                                if (permission.permission === "change_" + vm.entityType) {
+                                    member.objectPermissions.change = true;
+                                }
+                            }
+                        })
+                    }
+
+                });
+
+
+            });
+        };
+
+        vm.checkPermissions = function(){
+            var i;
+            for(i = 0; i < vm.members.length; i = i + 1) {
+                if(vm.user.id === vm.members[i].id) {
+                    if(vm.members[i].objectPermissions.manage == true) {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        };
+
+        vm.checkReadyStatus = function () {
+            if (vm.readyStatus.content && vm.readyStatus.entity && vm.readyStatus.me && vm.readyStatus.permissions) {
+                return true
+            }
+            return false;
+        };
 
         vm.range = gridHelperService.range;
 
@@ -138,10 +203,6 @@
         vm.cancel = function () {
             $mdDialog.cancel();
         };
-
-        $scope.$watch('vm.entity.ClassifierTest', function(){
-            console.log(vm.entity);
-        });
 
         vm.editLayout = function (ev) {
             $state.go('app.data-constructor', {entityType: vm.entityType});
@@ -239,14 +300,34 @@
                     }
                 }
 
-                vm.entity.attributes.forEach(function(item){
-                    if(item['value_date'] !== null) {
+                vm.entity.attributes.forEach(function (item) {
+                    if (item['value_date'] !== null) {
                         item['value_date'] = moment(new Date(item['value_date'])).format('YYYY-MM-DD');
                     }
                 })
             }
 
             checkEntityAttrTypes();
+
+            vm.entity["user_object_permissions"] = [];
+
+            vm.members.forEach(function (member) {
+
+                if (member.objectPermissions && member.objectPermissions.manage == true) {
+                    vm.entity["user_object_permissions"].push({
+                        "member": member.id,
+                        "permission": "manage_" + vm.entityType
+                    })
+                }
+
+                if (member.objectPermissions && member.objectPermissions.change == true) {
+                    vm.entity["user_object_permissions"].push({
+                        "member": member.id,
+                        "permission": "change_" + vm.entityType
+                    })
+                }
+
+            });
 
             entityResolverService.update(vm.entityType, vm.entity.id, vm.entity).then(function (data) {
                 console.log('saved!', data);

@@ -26,6 +26,7 @@
 		}).then(function (data) {
 			setTimeout(function () {
 				usersService.login('dev1', 'Uethohk0').then(function () {
+				//usersService.login('dev11', 'cheeL1ei').then(function () {
 					console.log('after login', cookiesService.getCookie('csrftoken'));
 					$scope.$apply();
 				});
@@ -39,7 +40,7 @@
 
 		vm.currentState = function () {
 			return '';
-		}
+		};
 
 		vm.currentLocation = function () {
 			switch ($state.current.name) {
