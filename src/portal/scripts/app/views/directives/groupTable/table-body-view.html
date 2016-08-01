@@ -27,9 +27,11 @@
 				 data-ng-click="rowCallback(groupedItem, $event)">
 
 				<div class="g-row-selection" data-ng-click="toggleSelectRow(groupedItem)"><ng-md-icon icon="done" data-ng-show="groupedItem.selectedRow"></ng-md-icon></div>
-
-				<div data-ng-repeat="column in columns" class="g-cell {{getAlign(column)}}">
-					<span title="{{bindCellTitle(groupedItem, column)}}" data-ng-bind-html="bindCell(groupedItem, column) | trustAsHtml"></span>
+				
+				<div class="g-cell-wrap" data-ng-repeat="column in columns">
+					<div class="g-cell {{getAlign(column)}}">
+						<span title="{{bindCellTitle(groupedItem, column)}}" data-ng-bind-html="bindCell(groupedItem, column) | trustAsHtml"></span>
+					</div>
 				</div>
 			</div>
 		</div>

@@ -19,7 +19,7 @@
 
 				logService.component('groupColumnResizer', 'initialized');
 				
-				var minWidth = 20;	// width value for showing tooltip
+				var minWidth = 60;	// width value for showing tooltip
 				function toggleColumnNameTooltip (column, columnWidth) {
 					if (columnWidth <= minWidth && !column.hasClass('small-width')) {
 						column.addClass('small-width');
@@ -107,7 +107,7 @@
 						e.preventDefault();
 						e.stopPropagation();
 
-						var parent = $(this).parent();
+						var parent = $(this).parents('md-card.g-cell.g-column');
 						var width = parent.width();
 						var minWidth = parent.attr('min-width');
 						var newWidth;
@@ -133,11 +133,12 @@
 					function resizeCells() {
 						var tHead = $(elem).find('.g-thead');
 						var th = tHead.find('.g-cell');
+						// var th = tHead.find('.g-column-content');
 						var tr = $(elem).find('.g-row');
 
 						var i, x;
 						for (i = 0; i < tr.length; i = i + 1) {
-							td = $(tr[i]).find('.g-cell');
+							td = $(tr[i]).find('.g-cell-wrap');
 							for (x = 0; x < th.length; x = x + 1) {
 								(function (x) {
 									$(td[x]).css({width: $(th[x]).width() + 'px'});
