@@ -102,7 +102,7 @@
 			}
 		}
 		.g-cell {
-			position: relative;
+			// position: relative;
 			font-size: 14px;
 			.caption {
 				user-select: none;
@@ -457,6 +457,13 @@
 	}
 }
 
+.g-cell-wrap {
+	float: left;
+	overflow: hidden;
+	.g-cell {
+		float: none;
+	}
+}
 .g-cell {
 	float: left;
 	padding: 4px 15px 8px;
@@ -476,17 +483,28 @@
 		border-left: 0;
 	}
 }
-
+.g-column-content {
+	padding: 4px 21px 4px 8px;
+	height: 16px;
+	margin: 0 8px;
+	overflow: visible;
+	position: relative;
+	background-color: #ffffff;
+	border-radius: 2px;
+	cursor: grab;
+	&:after {
+		content: '';
+		display: block;
+		clear: both;
+	}
+}
 .g-cell.g-column {
 	display: block;
-	padding: 4px 21px 4px 8px;
-	height: 24px;
-	margin-bottom: 0;
-	margin-top: 3px;
+	margin: 3px 0 0 0;
 	overflow: visible;
-	cursor: grab;
-	min-width: 40px;
-	// white-space: nowrap;
+	background-color: transparent;
+	height: auto;
+	padding: 0;
 	.column-left-content {
 		float: left;
 		overflow: hidden;
@@ -611,7 +629,6 @@
 	// 	}
 	// }
 }
-
 .drag-dialog {
 	.md-scroll-mask {
 		display: none;
