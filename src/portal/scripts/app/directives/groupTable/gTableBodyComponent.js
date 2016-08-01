@@ -245,7 +245,7 @@
                         targetEvent: ev,
                         //clickOutsideToClose: true,
                         locals: {
-                            entity: entity,
+                            entityId: entity.id,
                             entityType: scope.entityType
                         }
                     }).then(function (res) {
@@ -264,7 +264,7 @@
                         //clickOutsideToClose: true,
                         locals: {
                             parentScope: scope,
-                            entity: entity
+                            entityId: entity.id
                         }
                     }).then(function (res) {
                         if (res === 'agree') {

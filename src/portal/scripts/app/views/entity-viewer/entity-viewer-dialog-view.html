@@ -1,55 +1,112 @@
 <md-dialog aria-label="" ng-cloak class="add-portfolio-dialog">
-	<md-toolbar>
-		<div class="md-toolbar-tools" data-ng-if="vm.evAction === 'create'">
-			<h2>Add {{vm.entityType}}</h2>
-			<span flex></span>
-		</div>
-		<div class="md-toolbar-tools" data-ng-if="vm.evAction === 'update'">
-			<h2>Edit {{vm.entityType}}</h2>
-			<span flex></span>
-		</div>
-	</md-toolbar>
-	<md-dialog-content>
-		<div data-ng-if="vm.readyStatus.content">
-			<md-tabs md-dynamic-height md-border-bottom>
-				<md-tab label="{{tab.name}}" data-ng-repeat="tab in vm.tabs">
-					<md-content class="md-padding">
-						<div layout="row" data-ng-repeat="row in vm.range(tab.layout.rows)">
-							<div class="ev-data-field
-								{{field.attribute['value_type'] === 'decoration' ? 'decoration-label-line' : ''}}" data-ng-repeat="field in tab.layout.fields"
-								flex="{{vm.bindFlex(tab, row, field)}}"
-								data-ng-if="vm.checkFieldRender(tab, row, field)">
-								<bind-field-control item="vm.bindField(tab, field)"></bind-field-control>
-							</div>
-						</div>
-					</md-content>
-				</md-tab>
-			</md-tabs>
-		</div>
-		<div data-ng-if="!vm.readyStatus.content">
-			<div layout="row" layout-sm="column" layout-align="space-around" class="m-large">
-				<md-progress-circular md-mode="indeterminate" md-diameter="96"></md-progress-circular>
-			</div>
-		</div>
-	</md-dialog-content>
-	<md-dialog-actions layout="row" layout-align="space-between center">
-		<div>
-			<md-button ng-click="vm.editLayout()" class="md-raised md-primary">
-				Edit Form
-			</md-button>
-		</div>
-		<div>
-			<md-button class="md-raised" ng-click="vm.cancel()">
-				Cancel
-			</md-button>
-			<md-button class="md-raised" ng-click="vm.save()" style="margin-right:20px;">
+    <md-toolbar>
+        <div class="md-toolbar-tools" data-ng-if="vm.evAction === 'create'">
+            <h2>Add {{vm.entityType}}</h2>
+            <span flex></span>
+        </div>
+        <div class="md-toolbar-tools" data-ng-if="vm.evAction === 'update'">
+            <h2>Edit {{vm.entityType}}</h2>
+            <span flex></span>
+        </div>
+    </md-toolbar>
+    <md-dialog-content>
+        <div data-ng-if="vm.checkReadyStatus()">
+            <md-tabs md-dynamic-height md-border-bottom>
+                <md-tab label="{{tab.name}}" data-ng-repeat="tab in vm.tabs">
+                    <md-content class="md-padding">
+                        <div layout="row" data-ng-repeat="row in vm.range(tab.layout.rows)">
+                            <div class="ev-data-field
+								{{field.attribute['value_type'] === 'decoration' ? 'decoration-label-line' : ''}}"
+                                 data-ng-repeat="field in tab.layout.fields"
+                                 flex="{{vm.bindFlex(tab, row, field)}}"
+                                 data-ng-if="vm.checkFieldRender(tab, row, field)">
+                                <bind-field-control item="vm.bindField(tab, field)"></bind-field-control>
+                            </div>
+                        </div>
+                    </md-content>
+                </md-tab>
+                <md-tab label="Permissions" data-ng-if="vm.checkPermissions()">
+                    <md-content class="md-padding">
+                        <div data-ng-if="vm.readyStatus.permissions">
+                            <md-tabs md-dynamic-height md-border-bottom>
+                                <md-tab label="Object permissions">
+                                    <md-content>
+                                        <div>
+                                            <div layout="column">
+                                                <div layout="row" layout-align="space-between center"
+                                                     class="permissions-table-header">
+                                                    <div>
+                                                        <div>User name</div>
+                                                    </div>
+                                                    <div layout="row" class="permissions-checkbox-holder" flex="15"
+                                                         layout-align="space-between center">
+                                                        <div flex="50">Manage</div>
+                                                        <div flex="50">Change</div>
+                                                    </div>
+                                                </div>
+                                                <md-divider></md-divider>
+                                            </div>
+                                            <div data-ng-repeat="member in vm.members" layout="column">
+                                                <div layout="row" layout-align="space-between center"
+                                                     class="permissions-table-row">
+                                                    <div>
+                                                        <p> {{ member["display_name"] }} </p>
+                                                    </div>
+                                                    <div layout="row" class="permissions-checkbox-holder" flex="15"
+                                                         layout-align="space-between center">
+                                                        <div flex="50" layout="center center">
+                                                            <md-checkbox class="md-secondary"
+                                                                         ng-model="member.objectPermissions.manage"></md-checkbox>
+                                                        </div>
+                                                        <div flex="50" layout="center center">
+                                                            <md-checkbox class="md-secondary"
+                                                                         ng-model="member.objectPermissions.change"></md-checkbox>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <md-divider></md-divider>
+                                            </div>
+                                        </div>
+                                    </md-content>
+                                </md-tab>
+                                <md-tab label="Group permissions">
+
+                                </md-tab>
+                            </md-tabs>
+                        </div>
+                        <div data-ng-if="!vm.readyStatus.permissions">
+                            <div layout="row" layout-sm="column" layout-align="space-around" class="m-large">
+                                <md-progress-circular md-mode="indeterminate" md-diameter="96"></md-progress-circular>
+                            </div>
+                        </div>
+                    </md-content>
+                </md-tab>
+            </md-tabs>
+        </div>
+        <div data-ng-if="!vm.checkReadyStatus()">
+            <div layout="row" layout-sm="column" layout-align="space-around" class="m-large">
+                <md-progress-circular md-mode="indeterminate" md-diameter="96"></md-progress-circular>
+            </div>
+        </div>
+    </md-dialog-content>
+    <md-dialog-actions layout="row" layout-align="space-between center">
+        <div>
+            <md-button ng-click="vm.editLayout()" class="md-raised md-primary">
+                Edit Form
+            </md-button>
+        </div>
+        <div>
+            <md-button class="md-raised" ng-click="vm.cancel()">
+                Cancel
+            </md-button>
+            <md-button class="md-raised" ng-click="vm.save()" style="margin-right:20px;">
 				<span data-ng-if="vm.evAction === 'create'">
 					Add
 				</span>
 				<span data-ng-if="vm.evAction === 'update'">
 					Save
 				</span>
-			</md-button>
-		</div>
-	</md-dialog-actions>
+            </md-button>
+        </div>
+    </md-dialog-actions>
 </md-dialog>
