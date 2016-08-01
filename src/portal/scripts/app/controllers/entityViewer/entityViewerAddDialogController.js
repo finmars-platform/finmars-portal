@@ -22,7 +22,7 @@
         logService.property('parentScope', parentScope);
 
         var vm = this;
-        vm.readyStatus = {content: false};
+        vm.readyStatus = {content: false, entity: true};
         vm.entityType = parentScope.vm.entityType;
         vm.evAction = 'create';
 
@@ -58,6 +58,17 @@
                 rows.push(i);
             }
             return rows;
+        };
+
+        vm.checkReadyStatus = function () {
+            if (vm.readyStatus.content && vm.readyStatus.entity) {
+                return true
+            }
+            return false;
+        };
+
+        vm.checkPermissions = function(){
+            return true; // Haha shit code (look at edit controller, because single view for two controllers)
         };
 
         vm.bindFlex = function (tab, row, field) {
