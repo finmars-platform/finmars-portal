@@ -1,39 +1,39 @@
 [
   {
-    "state" : "app.dashboard",
+    "state": "app.dashboard",
     "title": "Dashboard",
     "type": "link",
     "icon": "dashboard"
   },
   {
-    "state" : "app.forum.thread-groups",
+    "state": "app.forum.thread-groups",
     "title": "Forum",
     "type": "link",
     "icon": "dashboard"
   },
   {
-    "state" : "app",
+    "state": "app",
     "title": "Reports",
     "icon": "group",
     "type": "toggle",
     "pages": [
       {
-        "state" : "app.add-balance",
+        "state": "app.add-balance",
         "title": "New Balance",
         "icon": "dashboard"
       },
       {
-        "state" : "app.add-performance",
+        "state": "app.add-performance",
         "title": "New Performance",
         "icon": "dashboard"
       },
       {
-        "state" : "app.add-cash-flow",
+        "state": "app.add-cash-flow",
         "title": "New Cash flow",
         "icon": "dashboard"
       },
       {
-        "state" : "app.add-transaction",
+        "state": "app.add-transaction",
         "title": "New Transaction",
         "icon": "dashboard"
       }
@@ -46,42 +46,42 @@
     "type": "toggle",
     "pages": [
       {
-        "state" : "app.data.portfolio",
+        "state": "app.data.portfolio",
         "title": "Portfolios",
         "icon": ""
       },
       {
-        "state" : "app.data.account",
+        "state": "app.data.account",
         "title": "Accounts",
         "icon": ""
       },
       {
-        "state" : "app.data.counterparty",
+        "state": "app.data.counterparty",
         "title": "Counterparties",
         "icon": ""
       },
       {
-        "state" : "app.data.responsible",
+        "state": "app.data.responsible",
         "title": "Responsibles",
         "icon": ""
       },
       {
-        "state" : "app.data.instrument",
+        "state": "app.data.instrument",
         "title": "Instruments",
         "icon": ""
       },
       {
-        "state" : "app.data.transaction",
+        "state": "app.data.transaction",
         "title": "Transactions",
         "icon": ""
       },
       {
-        "state" : "app.data.price-history",
+        "state": "app.data.price-history",
         "title": "Price history",
         "icon": ""
       },
       {
-        "state" : "app.data.currency-history",
+        "state": "app.data.currency-history",
         "title": "Currency history",
         "icon": ""
       }
@@ -92,40 +92,15 @@
     "title": "SETTINGS",
     "icon": "message",
     "type": "toggle",
-     "pages": [
+    "pages": [
       {
-        "state" : "app.portfolio-form",
-        "title": "Portfolio form",
+        "state": "app.settings.general",
+        "title": "General",
         "icon": ""
       },
       {
-        "state" : "app.account-form",
-        "title": "Account form",
-        "icon": ""
-      },
-      {
-        "state" : "app.counterparty-form",
-        "title": "Counterparty form",
-        "icon": ""
-      },
-      {
-        "state" : "app.instrument-form",
-        "title": "Instrument form",
-        "icon": ""
-      },
-      {
-        "state" : "app.transaction-form",
-        "title": "Transaction form",
-        "icon": ""
-      },
-      {
-        "state" : "app.instrument-types",
-        "title": "Instrument types",
-        "icon": ""
-      },
-      {
-        "state" : "app.complex-transactions",
-        "title": "Complex transactions",
+        "state": "app.settings.form-design",
+        "title": "Form Design",
         "icon": ""
       }
     ]
@@ -135,22 +110,22 @@
     "title": "SYSTEM",
     "icon": "message",
     "type": "toggle",
-     "pages": [
-       {
-         "state" : "app.system.notifications",
-         "title": "Notifications",
-         "icon": ""
-       },
+    "pages": [
       {
-        "state" : "app.system.logging",
+        "state": "app.system.notifications",
+        "title": "Notifications",
+        "icon": ""
+      },
+      {
+        "state": "app.system.logging",
         "title": "Logging",
         "icon": ""
       },
-       {
-         "state" : "app.system.audit",
-         "title": "Audit",
-         "icon": ""
-       }
+      {
+        "state": "app.system.audit",
+        "title": "Audit",
+        "icon": ""
+      }
     ]
   }
 ]
