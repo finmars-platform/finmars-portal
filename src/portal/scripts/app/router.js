@@ -9,10 +9,6 @@
             url: '',
             templateUrl: 'views/shell-view.html',
             controller: 'ShellController as vm'
-        }).state('app.notifications', {
-            url: '/notifications',
-            templateUrl: 'views/notifications-view.html',
-            controller: 'NotificationsController as vm'
         }).state('app.attributesManager', {
             url: '/attributes/:entityType',
             templateUrl: 'views/attributes-manager-view.html',
@@ -79,10 +75,30 @@
                 templateUrl: 'views/data/data-pricing-view.html',
                 controller: 'DataPortfolioController as vm'
             })
+            .state('app.settings', {
+                abstract: true,
+                url: '/settings',
+                template: '<div data-ui-view></div>'
+            })
+            .state('app.settings.general', {
+                url: '/general',
+                templateUrl: 'views/settings/general-view.html',
+                controller: 'SettingsGeneralController as vm'
+            })
+            .state('app.settings.form-design', {
+                url: '/form',
+                templateUrl: 'views/settings/form-design-view.html',
+                controller: 'SettingsFormDesignController as vm'
+            })
             .state('app.system', {
                 abstract: true,
                 url: '/system',
                 template: '<div data-ui-view></div>'
+            })
+            .state('app.system.notifications', {
+                url: '/notifications',
+                templateUrl: 'views/system/notifications-view.html',
+                controller: 'NotificationsController as vm'
             })
             .state('app.system.audit', {
                 url: '/audit',
