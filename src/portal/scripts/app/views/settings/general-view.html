@@ -1,3 +1,49 @@
 <div>
-    general settings
+    <md-tabs md-dynamic-height md-border-bottom>
+        <md-tab label="Profile">
+            <md-content class="md-padding">
+                <div flex="50" data-ng-if="vm.readyStatus.user">
+                    <md-input-container class="md-block">
+                        <label>First name</label>
+                        <input data-ng-model="vm.user['first_name']">
+                    </md-input-container>
+                    <md-input-container class="md-block">
+                        <label>First name</label>
+                        <input data-ng-model="vm.user['last_name']">
+                    </md-input-container>
+                    <md-input-container class="md-block">
+                        <label>Email</label>
+                        <input data-ng-model="vm.user.email" type="email">
+                    </md-input-container>
+                    <md-input-container class="md-block">
+                        <label>Language</label>
+                        <md-select data-ng-model="vm.user.profile.language">
+                            <md-option value="ru">Russian</md-option>
+                            <md-option value="en">English</md-option>
+                            <md-option value="es">Spanish</md-option>
+                            <md-option value="de">Deutsch</md-option>
+                        </md-select>
+                    </md-input-container>
+                    <md-input-container class="md-block">
+                        <label>Timezone</label>
+                        <md-select data-ng-model="vm.user.profile.timezone">
+                            <md-option data-ng-repeat="item in vm.timeZones" ng-value="item.name">{{item.name}}</md-option>
+                        </md-select>
+
+                    </md-input-container>
+                    <md-button class="md-primary md-raised" data-ng-click="vm.save()">Save</md-button>
+                </div>
+                <div data-ng-if="!vm.readyStatus.user">
+                    <div layout="row" layout-sm="column" layout-align="space-around" class="m-large">
+                        <md-progress-circular md-mode="indeterminate" md-diameter="96"></md-progress-circular>
+                    </div>
+                </div>
+            </md-content>
+        </md-tab>
+        <md-tab label="Bloomberg">
+            <md-content class="md-padding">
+
+            </md-content>
+        </md-tab>
+    </md-tabs>
 </div>
