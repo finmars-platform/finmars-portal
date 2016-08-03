@@ -117,13 +117,8 @@
         "icon": ""
       },
       {
-        "state": "app.system.logging",
-        "title": "Logging",
-        "icon": ""
-      },
-      {
         "state": "app.system.audit",
-        "title": "Audit",
+        "title": "Logging",
         "icon": ""
       }
     ]
