@@ -267,7 +267,7 @@
                             entityId: entity.id
                         }
                     }).then(function (res) {
-                        if (res === 'agree') {
+                        if (res.res === 'agree') {
                             scope.externalCallback();
                         }
                     });
