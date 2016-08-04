@@ -80,6 +80,9 @@
 		// console.log('root scope is ', $rootScope);
 		console.log("Curent state is ", $state.current);
 
+		// vm.logOutDialog = function (ev) {
+		// 	$mdDialog.
+		// }
 	}
 
 }());
