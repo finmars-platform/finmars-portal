@@ -1,6 +1,6 @@
 <div>
 	<md-content class="forum-content-padding">
-		<h2 class="forum-section-header" data-ng-bind="::vm.thread.subject"></h2>
+		<h2 class="forum-section-header" >Thread name: <span data-ng-bind="::vm.thread.subject"></span></h2>
 		<div data-ng-if="vm.readyStatus.content">
 
 			<!-- <md-list flex> -->
@@ -11,14 +11,17 @@
 					<p class="thread-message-text" data-ng-bind="item.text"></p>
 					<md-divider></md-divider>
 				</md-list-item> -->
-				<div class="thread-forum-list-item" data-ng-repeat="item in vm.messages">
+				<md-card class="thread-forum-list-item" data-ng-repeat="item in vm.messages">
 					<div class="thread-message-content">
-						<h4 class="author-username" data-ng-bind="item.sender_object.username"></h4>
+						<div layout="row" layout-align="start center" style="margin-bottom: 10px">
+							<h4 class="author-username" data-ng-bind="item.sender_object.username"></h4>
+							<p class="thread-message-create-data" data-ng-bind="item.created | date:'HH:mm dd/MM/yyyy'"></p>
+						</div>
 						<p class="thread-message-text" data-ng-bind="item.text"></p>
-						<p class="thread-message-create-data" data-ng-bind="item.created | date:'HH:mm dd/MM/yyyy'"></p>
+
 					</div>
 					<md-divider class="thread-message-divider"></md-divider>
-				</div>
+				</md-card>
 
 			<!-- </md-list> -->
 

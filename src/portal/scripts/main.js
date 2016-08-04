@@ -75,6 +75,7 @@ app.controller('NotificationsController', ['$scope', require('./app/controllers/
 
 app.controller('SettingsGeneralController', ['$scope', require('./app/controllers/settings/settingsGeneralController')]);
 app.controller('SettingsFormDesignController', ['$scope', '$state', require('./app/controllers/settings/settingsFormDesignController')]);
+app.controller('SettingBloombergImportInstrumentController', ['$scope', '$state', require('./app/controllers/settings/settingBloombergImportInstrumentController')]);
 
 app.directive('menuToggle', [require('./app/directives/menuToggleDirective')]);
 app.directive('menuLink', [require('./app/directives/menuLinkDirective')]);

@@ -97,11 +97,11 @@
 						// console.log('min width seted ', th.length, 'resizer columns ', [scope.columns]);
 						for (i = 0; i < th.length; i = i + 1) {
 							if (!$(th[i]).attr('min-width')) {
-								$(th[i]).attr('min-width', $(th[i]).width());
+								$(th[i]).attr('min-width', '20');
 							}
 						}
 					};
-					// setThMinWidths();
+					 setThMinWidths();
 
 					$(thSliders).bind('mousedown', function (e) {
 						e.preventDefault();
@@ -119,9 +119,9 @@
 							resizeCells();
 							resizeScrollableArea();
 							parent.width(width + newWidth);
-							// if (newWidth + width > minWidth) {
-							//     parent.width(width + newWidth);
-							// }
+							 if (newWidth + width > minWidth) {
+							     parent.width(width + newWidth);
+							 }
 							toggleColumnNameTooltip(parent, parent.width());
 
 						});
@@ -167,7 +167,7 @@
 				});
 				setTimeout(function () {
 					resize();
-				}, 100)
+				}, 100);
 
 				console.log('resizer items is ', scope.items);
 
