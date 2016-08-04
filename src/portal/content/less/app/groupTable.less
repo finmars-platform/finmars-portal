@@ -465,7 +465,6 @@
 	}
 }
 .g-cell {
-	float: left;
 	padding: 4px 15px 8px;
 	height: 12px;
 	font-size: 14px;
@@ -499,12 +498,14 @@
 	}
 }
 .g-cell.g-column {
+	float: left;
 	display: block;
 	margin: 3px 0 0 0;
 	overflow: visible;
 	background-color: transparent;
 	height: auto;
 	padding: 0;
+	min-width: 50px;
 	.column-left-content {
 		float: left;
 		overflow: hidden;
