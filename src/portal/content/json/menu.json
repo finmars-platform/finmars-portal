@@ -118,7 +118,7 @@
       },
       {
         "state": "app.system.audit",
-        "title": "Logging",
+        "title": "Audit",
         "icon": ""
       }
     ]
