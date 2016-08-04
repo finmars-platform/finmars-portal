@@ -5,8 +5,10 @@
 
             <div class="md-toolbar-tools" layout="start center">
                 <h2 data-ng-if="vm.currentLocation().length > 0" data-ng-bind="vm.currentLocation()"></h2>
-                <md-button class="header-buttons save-layout-btn">Save layout</md-button>
-                <md-button class="header-buttons header-add-new-btn">Add new</md-button>
+                <div data-ng-if="vm.currentLocation() != ''">
+                    <md-button class="header-buttons save-layout-btn">Save layout</md-button>
+                    <md-button class="header-buttons header-add-new-btn">Add new</md-button>
+                </div>
             </div>
 
             <div class="md-toolbar-tools" layout-align="end end">
@@ -24,8 +26,8 @@
                     </md-button>
 
                     <div class="header-profile">
-                        <ng-md-icon icon="account_circle" size="48"></ng-md-icon>
-                        <span class="header-profile-name" data-ng-bind="vm.user.username"></span>
+                            <ng-md-icon icon="account_circle" size="48"></ng-md-icon>
+                            <span class="header-profile-name" data-ng-bind="vm.user.username"></span>
                     </div>
                 </div>
 

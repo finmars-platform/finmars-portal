@@ -19,7 +19,7 @@
 
 				logService.component('groupColumnResizer', 'initialized');
 				
-				var minWidth = 60;	// width value for showing tooltip
+				var minWidth = 65;	// width value for showing tooltip
 				function toggleColumnNameTooltip (column, columnWidth) {
 					if (columnWidth <= minWidth && !column.hasClass('small-width')) {
 						column.addClass('small-width');
@@ -133,7 +133,6 @@
 					function resizeCells() {
 						var tHead = $(elem).find('.g-thead');
 						var th = tHead.find('.g-cell');
-						// var th = tHead.find('.g-column-content');
 						var tr = $(elem).find('.g-row');
 
 						var i, x;
