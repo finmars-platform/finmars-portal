@@ -40,7 +40,7 @@ app.controller('SideNavController', ['$scope', require('./app/controllers/sideNa
 
 app.controller('DashboardController', ['$scope', require('./app/controllers/dashboardController')]);
 
-app.controller('NotificationsController', ['$scope', require('./app/controllers/notificationsController')]);
+
 app.controller('AttributesManagerController', ['$scope', '$state', '$stateParams', '$mdDialog', require('./app/controllers/attributesManagerController')]);
 app.controller('AttributesManagerEditDialogController', ['$scope', '$mdDialog', 'attribute', require('./app/controllers/attributesManagerEditDialogController')]);
 app.controller('AttributesManagerAddDialogController', ['$scope', '$mdDialog', require('./app/controllers/attributesManagerAddDialogController')]);
@@ -70,7 +70,11 @@ app.controller('InfoDialogController', ['$scope', '$mdDialog', 'info', require('
 app.controller('InstrumentSelectDialogController', ['$scope', '$mdDialog', require('./app/controllers/instrumentSelectDialogController')]);
 app.controller('ClassifierSelectDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/classifierSelectDialogController')]);
 
-app.controller('AuditController', ['$scope', require('./app/controllers/auditController')]);
+app.controller('AuditController', ['$scope', require('./app/controllers/system/auditController')]);
+app.controller('NotificationsController', ['$scope', require('./app/controllers/system/notificationsController')]);
+
+app.controller('SettingsGeneralController', ['$scope', require('./app/controllers/settings/settingsGeneralController')]);
+app.controller('SettingsFormDesignController', ['$scope', '$state', require('./app/controllers/settings/settingsFormDesignController')]);
 
 app.directive('menuToggle', [require('./app/directives/menuToggleDirective')]);
 app.directive('menuLink', [require('./app/directives/menuLinkDirective')]);

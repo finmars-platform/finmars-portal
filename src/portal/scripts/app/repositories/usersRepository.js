@@ -98,7 +98,7 @@
     };
 
     var getMe = function(){
-        return window.fetch(baseUrl + 'users/user/me', {
+        return window.fetch(baseUrl + 'users/user/0', {
             method: 'GET',
             credentials: 'include',
             headers: {
@@ -115,6 +115,7 @@
             method: 'PUT',
             credentials: 'include',
             headers: {
+                'X-CSRFToken': cookieService.getCookie('csrftoken'),
                 Accept: 'application/json',
                 'Content-type': 'application/json'
             },

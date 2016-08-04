@@ -5,8 +5,8 @@
 
     'use strict';
 
-    var logService = require('../../../../core/services/logService');
-    var auditService = require('../services/auditService');
+    var logService = require('../../../../../core/services/logService');
+    var auditService = require('../../services/auditService');
 
     module.exports = function ($scope) {
 
