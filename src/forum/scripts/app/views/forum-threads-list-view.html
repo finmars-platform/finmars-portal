@@ -1,20 +1,18 @@
 <div>
 	<md-content class="forum-content-padding">
-		<h2 data-ng-bind="vm.threadGroupName"></h2>
+		<h2>Thread group: <span data-ng-bind="vm.threadGroupName"></span></h2>
 		<h3 class="forum-section-header">Threads list</h3>
 		<div data-ng-if="vm.readyStatus.content">
 
-			<md-list flex>
 
-				<md-list-item class="thread-forum-list-item" class="md-3-line" ng-repeat="item in vm.threads"
+
+				<md-card class="thread-forum-list-item" class="md-3-line" ng-repeat="item in vm.threads"
 				>
 					<a data-ui-sref="app.forum.thread({groupId: vm.threadGroupId, threadId: item.id})">
 						<span data-ng-bind="item.subject"></span>
 					</a>
 					<md-divider></md-divider>
-				</md-list-item>
-
-			</md-list>
+				</md-card>
 
 		</div>
 		<div data-ng-if="!vm.readyStatus.content">
