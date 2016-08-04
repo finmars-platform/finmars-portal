@@ -191,6 +191,7 @@
         };
 
         vm.cancel = function () {
+            localStorage.setItem('entityIsChanged', false);
             $mdDialog.cancel();
         };
 
@@ -308,6 +309,7 @@
 
             entityResolverService.create(vm.entityType, vm.entity).then(function (data) {
                 console.log('saved!', data);
+                localStorage.setItem('entityIsChanged', false);
                 parentScope.vm.updateTable();
                 $mdDialog.hide();
             })
