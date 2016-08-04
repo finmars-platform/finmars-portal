@@ -44,7 +44,7 @@
 
                 scope.additionsState = false;
 
-                $('.app-md-content').addClass('g-table-overflow');
+                //$('.app-md-content').addClass('g-table-overflow');
 
                 scope.$watchCollection('additionsStatus', function(){
                     scope.additionsState = false;
