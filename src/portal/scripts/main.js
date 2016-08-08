@@ -50,7 +50,7 @@ app.controller('ClassificationEditorDialogController', ['$scope', '$mdDialog', '
 app.controller('EntityViewerController', ['$scope', '$mdDialog', '$mdMedia', require('./app/controllers/entityViewer/entityViewerController')]);
 app.controller('EntityViewerAddDialogController', ['$scope', '$mdDialog', 'parentScope', '$state', require('./app/controllers/entityViewer/entityViewerAddDialogController')]);
 app.controller('EntityViewerEditDialogController', ['$scope', '$mdDialog', 'parentScope', 'entityId', '$state', require('./app/controllers/entityViewer/entityViewerEditDialogController')]);
-app.controller('EntityViewerDeleteDialogController', ['$scope', '$mdDialog', 'entityId', 'entityType', require('./app/controllers/entityViewer/entityViewerDeleteDialogController')]);
+app.controller('EntityViewerDeleteDialogController', ['$scope', '$mdDialog', 'entity', 'entityType', require('./app/controllers/entityViewer/entityViewerDeleteDialogController')]);
 
 app.controller('DataPortfolioController', ['$scope', require('./app/controllers/data/dataPortfolioController')]);
 app.controller('DataAccountController', ['$scope', require('./app/controllers/data/dataAccountController')]);

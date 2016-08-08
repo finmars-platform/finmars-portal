@@ -8,6 +8,7 @@
 
     var attributeTypeService = require('../../services/attributeTypeService');
     var entityResolverService = require('../../services/entityResolverService');
+    var entityViewerHelperService = require('../../services/entityViewerHelperService');
 
     var usersService = require('../../services/usersService');
 
@@ -40,28 +41,31 @@
         vm.entityAttrs = [];
         vm.layoutAttrs = layoutService.getLayoutAttrs();
 
+        vm.baseAttrs = metaService.getBaseAttrs();
+        vm.entityAttrs = metaService.getEntityAttrs(vm.entityType);
+
         attributeTypeService.getList(vm.entityType).then(function (data) {
             vm.attrs = data.results;
             vm.readyStatus.content = true;
-            $scope.$apply();
-        });
-
-        vm.baseAttrs = metaService.getBaseAttrs();
-        vm.entityAttrs = metaService.getEntityAttrs(vm.entityType);
-        vm.layoutAttrs = layoutService.getLayoutAttrs();
-
-
-        entityResolverService.getByKey(vm.entityType, entityId).then(function (data) {
-            vm.entity = data;
-            logService.property('entity', vm.entity);
-            vm.readyStatus.entity = true;
-            vm.getMemberList();
             //$scope.$apply();
+            //
+
+            entityResolverService.getByKey(vm.entityType, entityId).then(function (data) {
+                vm.entity = data;
+                entityViewerHelperService.transformItems([vm.entity], vm.attrs).then(function (data) {
+                    vm.entity = data[0];
+                    logService.property('entity111111111111111111111111111111111111', vm.entity);
+                    vm.readyStatus.entity = true;
+                    vm.getMemberList();
+                });
+
+                //$scope.$apply();
+            });
         });
 
         var originatorEv;
 
-        usersService.getMe().then(function(data){
+        usersService.getMe().then(function (data) {
             vm.user = data;
             vm.readyStatus.me = true;
             $scope.$apply();
@@ -98,11 +102,11 @@
             });
         };
 
-        vm.checkPermissions = function(){
+        vm.checkPermissions = function () {
             var i;
-            for(i = 0; i < vm.members.length; i = i + 1) {
-                if(vm.user.id === vm.members[i].id) {
-                    if(vm.members[i].objectPermissions.manage == true) {
+            for (i = 0; i < vm.members.length; i = i + 1) {
+                if (vm.user.id === vm.members[i].id) {
+                    if (vm.members[i].objectPermissions.manage == true) {
                         return true;
                     }
                 }
