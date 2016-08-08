@@ -238,6 +238,7 @@
                 };
 
                 scope.deleteEntity = function (ev, entity) {
+
                     $mdDialog.show({
                         controller: 'EntityViewerDeleteDialogController as vm',
                         templateUrl: 'views/entity-viewer/entity-viewer-entity-delete-dialog-view.html',
@@ -245,7 +246,7 @@
                         targetEvent: ev,
                         //clickOutsideToClose: true,
                         locals: {
-                            entityId: entity.id,
+                            entity: entity,
                             entityType: scope.entityType
                         }
                     }).then(function (res) {

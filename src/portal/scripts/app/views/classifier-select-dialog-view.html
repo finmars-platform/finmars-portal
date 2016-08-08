@@ -7,14 +7,18 @@
     </md-toolbar>
     <md-dialog-content>
         <div layout="row">
-            <div id="jstree_demo" style="width: 100%; overflow: hidden"></div>
+            <div id="js-tree-select-wrapper" class="js-tree-select" style="width: 100%; overflow: hidden"></div>
         </div>
+
     </md-dialog-content>
     <md-dialog-actions layout="row">
+        <md-button class="md-raised md-primary" ng-click="vm.edit($event)">
+            Edit
+        </md-button>
         <md-button class="md-raised" ng-click="vm.cancel()">
             Cancel
         </md-button>
-        <md-button class="md-raised md-primary" ng-click="vm.agree()" style="margin-right:20px;">
+        <md-button class="md-raised" ng-click="vm.agree()" style="margin-right:20px;">
             Save
         </md-button>
     </md-dialog-actions>
