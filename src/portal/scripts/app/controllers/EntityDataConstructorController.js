@@ -17,6 +17,7 @@
     var metaService = require('../services/metaService');
 
     var gridHelperService = require('../services/gridHelperService');
+    var routeResolver = require('../services/routeResolverService');
 
     module.exports = function ($scope, $stateParams, $state, $mdDialog) {
 
@@ -215,7 +216,9 @@
             vm.ui.data = vm.tabs;
             uiService.updateEditLayout(vm.ui.id, vm.ui).then(function () {
                 console.log('layout saved');
-                $state.go('app.data.' + vm.entityType);
+
+                var route = routeResolver.findExistingState('app.data.', vm.entityType);
+                $state.go(route.state, route.options);
                 $scope.$apply();
             });
         };

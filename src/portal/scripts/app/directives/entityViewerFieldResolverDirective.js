@@ -13,7 +13,8 @@
         return {
             scope: {
                 item: '=',
-                entity: '='
+                entity: '=',
+                options: '='
             },
             templateUrl: 'views/entity-viewer/field-resolver-view.html',
             link: function (scope, elem, attrs) {
@@ -24,8 +25,10 @@
                 scope.type = '';
 
                 logService.property('field scope', scope.item);
+                logService.property('field scope', scope.entity);
+                logService.property('field scope', scope.options);
 
-                fieldResolverService.getFields(scope.item.key).then(function (res) {
+                fieldResolverService.getFields(scope.item.key, scope.options).then(function (res) {
                     logService.collection('DATA', res);
                     scope.type = res.type;
                     scope.fields = res.data;

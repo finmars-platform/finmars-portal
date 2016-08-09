@@ -53,7 +53,7 @@
                     for (i = 0; i < scope.columns.length; i = i + 1) {
                         //console.log(scope.columns[i]);
                         if (scope.columns[i]['value_type'] === 'field') {
-                            promises.push(bindCellService.findEntities(scope.columns[i].key));
+                            promises.push(bindCellService.findEntities(scope.columns[i].key, {entityType: entityType}));
                         }
                         if (scope.columns[i]['value_type'] === 30) {
                             console.log('scope.columns[i]', scope.columns[i]);
@@ -77,7 +77,7 @@
                 };
 
                 scope.toggleSelectRow = function (item) {
-                    console.log('item111111111111111111', item);
+
                     item.selectedRow = !item.selectedRow;
                     if (scope.isAllSelected === true && item.selectedRow === false) {
                         scope.isAllSelected = false;
