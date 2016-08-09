@@ -17,6 +17,8 @@
     var metaService = require('../../services/metaService');
     var layoutService = require('../../services/layoutService');
 
+    var metaPermissionsService = require('../../services/metaPermissionsService');
+
     module.exports = function ($scope, $mdDialog, parentScope, $state) {
 
         logService.controller('EntityViewerAddDialogController', 'initialized');
@@ -70,6 +72,9 @@
         };
 
         vm.checkPermissions = function(){
+            if(metaPermissionsService.getEntitiesWithDisabledPermissions().indexOf(vm.entityType) !== -1) {
+                return false;
+            }
             return true; // Haha shit code (look at edit controller, because single view for two controllers)
         };
 

@@ -41,6 +41,33 @@
             case 'currency-history':
                 contentType = 'currencies.currencyhistory';
                 break;
+            case 'strategy-1':
+                contentType = 'strategies.strategy1';
+                break;
+            case 'strategy-2':
+                contentType = 'strategies.strategy2';
+                break;
+            case 'strategy-3':
+                contentType = 'strategies.strategy3';
+                break;
+            case 'strategy-1-group':
+                contentType = 'strategies.strategy2group';
+                break;
+            case 'strategy-2-group':
+                contentType = 'strategies.strategy2group';
+                break;
+            case 'strategy-3-group':
+                contentType = 'strategies.strategy2group';
+                break;
+            case 'strategy-1-subgroup':
+                contentType = 'strategies.strategy1subgroup';
+                break;
+            case 'strategy-2-subgroup':
+                contentType = 'strategies.strategy2subgroup';
+                break;
+            case 'strategy-3-subgroup':
+                contentType = 'strategies.strategy3subgroup';
+                break;
         }
 
 
@@ -105,6 +132,33 @@
                 break;
             case 'currency-history':
                 contentType = 'currencies.currencyhistory';
+                break;
+            case 'strategy-1':
+                contentType = 'strategies.strategy1';
+                break;
+            case 'strategy-2':
+                contentType = 'strategies.strategy2';
+                break;
+            case 'strategy-3':
+                contentType = 'strategies.strategy3';
+                break;
+            case 'strategy-1-group':
+                contentType = 'strategies.strategy2group';
+                break;
+            case 'strategy-2-group':
+                contentType = 'strategies.strategy2group';
+                break;
+            case 'strategy-3-group':
+                contentType = 'strategies.strategy2group';
+                break;
+            case 'strategy-1-subgroup':
+                contentType = 'strategies.strategy1subgroup';
+                break;
+            case 'strategy-2-subgroup':
+                contentType = 'strategies.strategy2subgroup';
+                break;
+            case 'strategy-3-subgroup':
+                contentType = 'strategies.strategy3subgroup';
                 break;
         }
 

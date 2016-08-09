@@ -1,6 +1,9 @@
 <div>
 	<md-content class="forum-content-padding">
 		<h2 class="forum-section-header list">Thread groups list</h2>
+		<div layout="row" layout-align="end center">
+			<md-button class="md-raised md-primary" data-ng-click="vm.createThredsGroup($event)">Create thread group</md-button>
+		</div>
 		<div data-ng-if="vm.readyStatus.content">
 
 				<md-card class="group-forum-list-item" class="md-3-line" ng-repeat="item in vm.threadGroups"

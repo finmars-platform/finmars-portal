@@ -48,42 +48,128 @@
       {
         "state": "app.data.portfolio",
         "title": "Portfolios",
+        "type": "link",
         "icon": ""
       },
       {
         "state": "app.data.account",
         "title": "Accounts",
+        "type": "link",
         "icon": ""
       },
       {
         "state": "app.data.counterparty",
         "title": "Counterparties",
+        "type": "link",
         "icon": ""
       },
       {
         "state": "app.data.responsible",
         "title": "Responsibles",
+        "type": "link",
         "icon": ""
       },
       {
         "state": "app.data.instrument",
         "title": "Instruments",
+        "type": "link",
         "icon": ""
       },
       {
         "state": "app.data.transaction",
         "title": "Transactions",
+        "type": "link",
         "icon": ""
       },
       {
         "state": "app.data.price-history",
         "title": "Price history",
+        "type": "link",
         "icon": ""
       },
       {
         "state": "app.data.currency-history",
         "title": "Currency history",
+        "type": "link",
         "icon": ""
+      },
+      {
+        "state": "",
+        "title": "Strategy 1",
+        "icon": "",
+        "type": "toggle",
+        "pages": [
+          {
+            "state": "app.data.strategy-group({strategyNumber: 1})",
+            "title": "Group",
+            "type": "link",
+            "icon": ""
+          },
+          {
+            "state": "app.data.strategy-subgroup({strategyNumber: 1})",
+            "title": "Subgroup",
+            "type": "link",
+            "icon": ""
+          },
+          {
+            "state": "app.data.strategy({strategyNumber: 1})",
+            "title": "Strategies",
+            "type": "link",
+            "icon": ""
+          }
+        ]
+      },
+      {
+        "state": "",
+        "title": "Strategy 2",
+        "icon": "",
+        "type": "toggle",
+        "pages": [
+          {
+            "state": "app.data.strategy-group({strategyNumber: 2})",
+            "title": "Group",
+            "type": "link",
+            "icon": ""
+          },
+          {
+            "state": "app.data.strategy-subgroup({strategyNumber: 2})",
+            "title": "Subgroup",
+            "type": "link",
+            "icon": ""
+          },
+          {
+            "state": "app.data.strategy({strategyNumber: 3})",
+            "title": "Strategies",
+            "type": "link",
+            "icon": ""
+          }
+        ]
+      },
+      {
+        "state": "",
+        "title": "Strategy 3",
+        "icon": "",
+        "type": "toggle",
+        "pages": [
+          {
+            "state": "app.data.strategy-group({strategyNumber: 3})",
+            "title": "Group",
+            "type": "link",
+            "icon": ""
+          },
+          {
+            "state": "app.data.strategy-subgroup({strategyNumber: 3})",
+            "title": "Subgroup",
+            "type": "link",
+            "icon": ""
+          },
+          {
+            "state": "app.data.strategy({strategyNumber: 3})",
+            "title": "Strategies",
+            "type": "link",
+            "icon": ""
+          }
+        ]
       }
     ]
   },

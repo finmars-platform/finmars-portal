@@ -10,8 +10,8 @@
 
     var baseUrl = '/api/v1/';
 
-    var getList = function (options) {
-        return window.fetch(configureRepositoryUrlService.configureUrl(baseUrl + 'strategies/strategy3/', options),
+    var getList = function (strategyNumber, options) {
+        return window.fetch(configureRepositoryUrlService.configureUrl(baseUrl + 'strategies/' + strategyNumber + '/strategy', options),
             {
                 method: 'GET',
                 credentials: 'include',
@@ -24,8 +24,8 @@
         })
     };
 
-    var getByKey = function (id) {
-        return window.fetch(baseUrl + 'strategies/strategy3/' + id + '/',
+    var getByKey = function (strategyNumber, id) {
+        return window.fetch(baseUrl + 'strategies/' + strategyNumber + '/strategy' + id + '/',
             {
                 method: 'GET',
                 credentials: 'include',
@@ -38,8 +38,8 @@
         })
     };
 
-    var create = function (account) {
-        return window.fetch(baseUrl + 'strategies/strategy3/',
+    var create = function (strategyNumber, strategy) {
+        return window.fetch(baseUrl + 'strategies/' + strategyNumber + '/strategy',
             {
                 method: 'POST',
                 credentials: 'include',
@@ -48,14 +48,14 @@
                     Accept: 'application/json',
                     'Content-type': 'application/json'
                 },
-                body: JSON.stringify(account)
+                body: JSON.stringify(strategy)
             }).then(function (data) {
             return data.json();
         })
     };
 
-    var update = function (id, account) {
-        return window.fetch(baseUrl + 'strategies/strategy3/' + id + '/',
+    var update = function (strategyNumber, id, strategy) {
+        return window.fetch(baseUrl + 'strategies/' + strategyNumber + '/strategy' + id + '/',
             {
                 method: 'PUT',
                 credentials: 'include',
@@ -64,14 +64,14 @@
                     Accept: 'application/json',
                     'Content-type': 'application/json'
                 },
-                body: JSON.stringify(account)
+                body: JSON.stringify(strategy)
             }).then(function (data) {
             return data.json();
         })
     };
 
-    var deleteByKey = function (id) {
-        return window.fetch(baseUrl + 'strategies/strategy3/' + id + '/',
+    var deleteByKey = function (strategyNumber, id) {
+        return window.fetch(baseUrl + 'strategies/' + strategyNumber + '/strategy' + id + '/',
             {
                 method: 'DELETE',
                 credentials: 'include',
@@ -81,10 +81,12 @@
                     'Content-type': 'application/json'
                 }
             }).then(function (data) {
-            return data.json();
+            return new Promise(function(resolve,reject) {
+                resolve({status: 'deleted'});
+            });
+            //return data.json();
         })
     };
-
 
     module.exports = {
 
@@ -93,6 +95,7 @@
         create: create,
         update: update,
         deleteByKey: deleteByKey
+
     }
 
 }());

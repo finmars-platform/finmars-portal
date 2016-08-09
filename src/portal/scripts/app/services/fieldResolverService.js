@@ -15,9 +15,9 @@
     var counterpartyRepository = require('../repositories/counterpartyRepository');
     var responsibleRepository = require('../repositories/responsibleRepository');
 
-    var strategyOneRepository = require('../repositories/strategyOneRepository');
-    var strategyTwoRepository = require('../repositories/strategyTwoRepository');
-    var strategyThreeRepository = require('../repositories/strategyThreeRepository');
+    var strategyRepository = require('../repositories/strategyRepository');
+    var strategyGroupRepository = require('../repositories/strategyGroupRepository');
+    var strategySubgroupRepository = require('../repositories/strategySubgroupRepository');
 
     var getFields = function (fieldKey) {
 
@@ -114,32 +114,32 @@
                     });
                     break;
                 case 'strategy1_position':
-                    strategyOneRepository.getList().then(function(data){
+                    strategyRepository.getList(1).then(function(data){
                         resolve({type: 'id', key: 'strategy1_position' ,data: data.results});
                     });
                     break;
                 case 'strategy1_cash':
-                    strategyOneRepository.getList().then(function(data){
+                    strategyRepository.getList(1).then(function(data){
                         resolve({type: 'id', key: 'strategy1_cash', data: data.results});
                     });
                     break;
                 case 'strategy2_position':
-                    strategyTwoRepository.getList().then(function(data){
+                    strategyRepository.getList(2).then(function(data){
                         resolve({type: 'id', key: 'strategy2_position', data: data.results});
                     });
                     break;
                 case 'strategy2_cash':
-                    strategyTwoRepository.getList().then(function(data){
+                    strategyRepository.getList(2).then(function(data){
                         resolve({type: 'id', key: 'strategy2_cash', data: data.results});
                     });
                     break;
                 case 'strategy3_position':
-                    strategyThreeRepository.getList().then(function(data){
+                    strategyRepository.getList(3).then(function(data){
                         resolve({type: 'id', key: 'strategy3_position', data: data.results});
                     });
                     break;
                 case 'strategy3_cash':
-                    strategyThreeRepository.getList().then(function(data){
+                    strategyRepository.getList(3).then(function(data){
                         resolve({type: 'id', key: 'strategy3_cash', data: data.results});
                     });
                     break;

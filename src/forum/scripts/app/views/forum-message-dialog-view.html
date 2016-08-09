@@ -1,4 +1,4 @@
-<md-dialog aria-label="" ng-cloak class="attribute-manager-dialog-view">
+<md-dialog aria-label="" ng-cloak class="forum-send-message-dialog">
     <md-toolbar>
         <div class="md-toolbar-tools">
             <h2>Write a message</h2>
@@ -6,10 +6,12 @@
         </div>
     </md-toolbar>
     <md-dialog-content>
-        <md-input-container style="margin-bottom: 0">
-            <label>Message</label>
-            <textarea data-ng-model="vm.message" cols="30" rows="10"></textarea>
-        </md-input-container>
+        <div layout="row">
+            <md-input-container flex="100" style="margin-bottom: 0">
+                <label>Message</label>
+                <div data-ng-model="vm.message" contenteditable="true" cols="30" rows="10" data-ng-bind-html="vm.message | trustAsHtml"></div>
+            </md-input-container>
+        </div>
     </md-dialog-content>
     <md-dialog-actions layout="row">
         <md-button class="md-raised" ng-click="vm.cancel()">
