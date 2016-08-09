@@ -15,7 +15,7 @@
     var groupSort = function (items, sort) {
 
         var i, g, valA, valB;
-        if (items[0].groups) {
+        if (items.length && items[0].groups) {
             //console.log('sort ID', sort);
             items = items.sort(function (a, b) {
                 for (i = 0; i < b.groups.length; i = i + 1) {
@@ -155,7 +155,7 @@
     var columnSort = function (items, sort) {
         //console.log('items', items);
         var g;
-        if (items[0].groups) {
+        if (items.length && items[0].groups) {
             if (sort.id) {
                 //console.log('sort ID', sort);
                 for (g = 0; g < items.length; g = g + 1) {

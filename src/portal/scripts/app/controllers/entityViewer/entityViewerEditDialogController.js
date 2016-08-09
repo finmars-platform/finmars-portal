@@ -18,6 +18,8 @@
     var metaService = require('../../services/metaService');
     var layoutService = require('../../services/layoutService');
 
+    var metaPermissionsService = require('../../services/metaPermissionsService');
+
     module.exports = function ($scope, $mdDialog, parentScope, entityId, $state) {
 
         logService.controller('EntityViewerEditDialogController', 'initialized');
@@ -103,6 +105,9 @@
         };
 
         vm.checkPermissions = function () {
+            if(metaPermissionsService.getEntitiesWithDisabledPermissions().indexOf(vm.entityType) !== -1) {
+                return false;
+            }
             var i;
             for (i = 0; i < vm.members.length; i = i + 1) {
                 if (vm.user.id === vm.members[i].id) {

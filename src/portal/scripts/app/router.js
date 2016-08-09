@@ -75,6 +75,21 @@
                 templateUrl: 'views/data/data-pricing-view.html',
                 controller: 'DataPortfolioController as vm'
             })
+            .state('app.data.strategy-group', {
+                url: '/strategy/:strategyNumber/group',
+                templateUrl: 'views/data/data-strategy-group-view.html',
+                controller: 'DataStrategyGroupController as vm'
+            })
+            .state('app.data.strategy-subgroup', {
+                url: '/strategy/:strategyNumber/subgroup',
+                templateUrl: 'views/data/data-strategy-subgroup-view.html',
+                controller: 'DataStrategySubgroupController as vm'
+            })
+            .state('app.data.strategy', {
+                url: '/strategy/:strategyNumber',
+                templateUrl: 'views/data/data-strategy-view.html',
+                controller: 'DataStrategyController as vm'
+            })
             .state('app.settings', {
                 abstract: true,
                 url: '/settings',

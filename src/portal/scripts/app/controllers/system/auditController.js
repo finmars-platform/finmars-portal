@@ -50,6 +50,7 @@
             auditService.getList({filters: {'content_type': 'instruments.instrument'}, page: vm.instrumentCurrent}).then(function (data) {
                 vm.instruments = data.results.map(function (item) {
                     item.dateFormatted = moment(new Date(item.created)).format('DD/MM/YYYY');
+                    item.timeFormatted = moment(new Date(item.created)).format('HH:ss');
                     return item
                 });
 
