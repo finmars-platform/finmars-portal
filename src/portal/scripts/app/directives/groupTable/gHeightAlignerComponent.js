@@ -23,7 +23,7 @@
                 function setDefaultHeights() {
                     workAreaHeight = $(window).height() - $('.header').height();
                     workAreaWithoutGrouping = workAreaHeight - $('.g-wrapper .g-grouping-section').height(); // margin 4px
-                    $('.g-sidebar').height(workAreaHeight);
+                    $('.g-filter-sidebar').height(workAreaHeight);
                     $('.g-wrapper .g-table-section').height(workAreaWithoutGrouping);
                     $('.g-additions').height($(window).height() - workAreaHeight);
 
@@ -32,7 +32,7 @@
                 function setSplitHeights() {
                     workAreaHeight = Math.floor(($(window).height() - $('.header').height()) / 2);
                     workAreaWithoutGrouping = Math.floor((workAreaHeight - $('.g-wrapper .g-grouping-section').height()));
-                    $('.g-sidebar').height(workAreaHeight);
+                    $('.g-filter-sidebar').height(workAreaHeight);
                     $('.g-wrapper .g-table-section').height(workAreaWithoutGrouping);
 
 
@@ -46,12 +46,12 @@
                         var spaceLeft;
                         var headerBoxHeight = $('.header').height();
                         var mainAreaBox = $('.g-workarea.main-area .g-table-section');
-                        var mainAreaSidebarBox = $('.g-sidebar.main-sidebar');
+                        var mainAreaSidebarBox = $('.g-filter-sidebar.main-sidebar');
                         var groupingSectionBoxHeight = $('.g-wrapper .g-grouping-section').height();
 
                         var additionsBox = $('.g-additions');
                         var additionsBoxTableSection = $('.g-additions-workarea .g-table-section');
-                        var additionsBoxSidebarBox = $('.g-sidebar.additions-sidebar');
+                        var additionsBoxSidebarBox = $('.g-filter-sidebar.additions-sidebar');
 
                         $(window).bind('mousemove', function (e) {
 

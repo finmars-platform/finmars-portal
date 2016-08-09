@@ -1,15 +1,32 @@
 <md-tabs md-dynamic-height md-border-bottom id="dialogbag">
-    <md-tab label="Transaction" md-active="vm.checkActiveTab('transaction')" data-ng-click="vm.setActiveTab('transaction')">
+    <md-tab label="Transaction" md-active="vm.checkActiveTab('transaction')"
+            data-ng-click="vm.setActiveTab('transaction')">
         <md-content class="md-padding">
             <div data-ng-if="vm.readyStatus.transaction" class="audit-wrapper">
                 <div layout="column">
                     <div flex layout="row">
-                        <div flex layout="row" class="audit-cell">
+                        <div flex="10" layout="row" class="audit-cell" layout-align="center center">
                             <span class="no-select">Date</span>
                         </div>
                         <md-divider></md-divider>
-                        <div flex layout="row" class="audit-cell" layout-align="center center">
+                        <div flex="10" layout="row" class="audit-cell" layout-align="center center">
+                            <span class="no-select">Time</span>
+                        </div>
+                        <md-divider></md-divider>
+                        <div flex="10" layout="row" class="audit-cell" layout-align="center center">
                             <span class="no-select">Member</span>
+                        </div>
+                        <md-divider></md-divider>
+                        <div flex="10" layout="row" class="audit-cell" layout-align="center center">
+                            <span class="no-select">Field</span>
+                        </div>
+                        <md-divider></md-divider>
+                        <div flex="10" layout="row" class="audit-cell" layout-align="center center">
+                            <span class="no-select">Old value</span>
+                        </div>
+                        <md-divider></md-divider>
+                        <div flex="10" layout="row" class="audit-cell" layout-align="center center">
+                            <span class="no-select">New value</span>
                         </div>
                         <md-divider></md-divider>
                         <div flex layout="row" class="audit-cell" layout-align="center center">
@@ -21,16 +38,32 @@
                 <div layout="column" data-ng-repeat="item in vm.transactions">
                     <div layout="row">
                         <div flex layout="row">
-                            <div flex layout="row" class="audit-cell">
+                            <div flex="10" layout="row" class="audit-cell" layout-align="center center">
                                 <span class="no-select" data-ng-bind="item.dateFormatted"></span>
                             </div>
                             <md-divider></md-divider>
-                            <div flex layout="row" class="audit-cell" layout-align="center center">
+                            <div flex="10" layout="row" class="audit-cell" layout-align="center center">
+                                <span class="no-select" data-ng-bind="item.timeFormatted"></span>
+                            </div>
+                            <md-divider></md-divider>
+                            <div flex="10" layout="row" class="audit-cell" layout-align="center center">
                                 <span class="no-select" data-ng-bind="item.member.username"></span>
                             </div>
                             <md-divider></md-divider>
+                            <div flex="10" layout="row" class="audit-cell" layout-align="center center">
+                                <span class="no-select" data-ng-bind="item['field_name']"></span>
+                            </div>
+                            <md-divider></md-divider>
+                            <div flex="10" layout="row" class="audit-cell" layout-align="center center">
+                                <span class="no-select" data-ng-bind="item['old_value']"></span>
+                            </div>
+                            <md-divider></md-divider>
+                            <div flex="10" layout="row" class="audit-cell" layout-align="center center">
+                                <span class="no-select" data-ng-bind="item['value']"></span>
+                            </div>
+                            <md-divider></md-divider>
                             <div flex layout="row" class="audit-cell" layout-align="center center">
-                                <span class="no-select" data-ng-bind="item.comment"></span>
+                                <span class="no-select" data-ng-bind="item.message"></span>
                             </div>
                         </div>
                     </div>
@@ -52,7 +85,8 @@
             </div>
         </md-content>
     </md-tab>
-    <md-tab label="Instrument" md-active="vm.checkActiveTab('instrument')" data-ng-click="vm.setActiveTab('instrument')">
+    <md-tab label="Instrument" md-active="vm.checkActiveTab('instrument')"
+            data-ng-click="vm.setActiveTab('instrument')">
         <md-content class="md-padding">
             <div data-ng-if="vm.readyStatus.instrument" class="audit-wrapper">
                 <div layout="column">
@@ -61,8 +95,24 @@
                             <span class="no-select">Date</span>
                         </div>
                         <md-divider></md-divider>
-                        <div flex layout="row" class="audit-cell" layout-align="center center">
+                        <div flex="10" layout="row" class="audit-cell">
+                            <span class="no-select">Time</span>
+                        </div>
+                        <md-divider></md-divider>
+                        <div flex="10" flex layout="row" class="audit-cell" layout-align="center center">
                             <span class="no-select">Member</span>
+                        </div>
+                        <md-divider></md-divider>
+                        <div flex="10" flex layout="row" class="audit-cell" layout-align="center center">
+                            <span class="no-select">Field</span>
+                        </div>
+                        <md-divider></md-divider>
+                        <div flex="10" flex layout="row" class="audit-cell" layout-align="center center">
+                            <span class="no-select">Old value</span>
+                        </div>
+                        <md-divider></md-divider>
+                        <div flex="10" flex layout="row" class="audit-cell" layout-align="center center">
+                            <span class="no-select">New value</span>
                         </div>
                         <md-divider></md-divider>
                         <div flex layout="row" class="audit-cell" layout-align="center center">
@@ -78,12 +128,28 @@
                                 <span class="no-select" data-ng-bind="item.dateFormatted"></span>
                             </div>
                             <md-divider></md-divider>
-                            <div flex layout="row" class="audit-cell" layout-align="center center">
+                            <div flex="10" layout="row" class="audit-cell">
+                                <span class="no-select" data-ng-bind="item.timeFormatted"></span>
+                            </div>
+                            <md-divider></md-divider>
+                            <div flex="10" layout="row" class="audit-cell" layout-align="center center">
                                 <span class="no-select" data-ng-bind="item.member.username"></span>
                             </div>
                             <md-divider></md-divider>
+                            <div flex="10" layout="row" class="audit-cell" layout-align="center center">
+                                <span class="no-select" data-ng-bind="item['field_name']"></span>
+                            </div>
+                            <md-divider></md-divider>
+                            <div flex="10" layout="row" class="audit-cell" layout-align="center center">
+                                <span class="no-select" data-ng-bind="item['old_value']"></span>
+                            </div>
+                            <md-divider></md-divider>
+                            <div flex="10" layout="row" class="audit-cell" layout-align="center center">
+                                <span class="no-select" data-ng-bind="item['value']"></span>
+                            </div>
+                            <md-divider></md-divider>
                             <div flex layout="row" class="audit-cell" layout-align="center center">
-                                <span class="no-select" data-ng-bind="item.comment"></span>
+                                <span class="no-select" data-ng-bind="item.message"></span>
                             </div>
                         </div>
                     </div>

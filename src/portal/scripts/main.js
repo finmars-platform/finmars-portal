@@ -49,7 +49,7 @@ app.controller('ClassificationEditorDialogController', ['$scope', '$mdDialog', '
 app.controller('EntityViewerController', ['$scope', '$mdDialog', '$mdMedia', require('./app/controllers/entityViewer/entityViewerController')]);
 app.controller('EntityViewerAddDialogController', ['$scope', '$mdDialog', 'parentScope', '$state', require('./app/controllers/entityViewer/entityViewerAddDialogController')]);
 app.controller('EntityViewerEditDialogController', ['$scope', '$mdDialog', 'parentScope', 'entityId', '$state', require('./app/controllers/entityViewer/entityViewerEditDialogController')]);
-app.controller('EntityViewerDeleteDialogController', ['$scope', '$mdDialog', 'entityId', 'entityType', require('./app/controllers/entityViewer/entityViewerDeleteDialogController')]);
+app.controller('EntityViewerDeleteDialogController', ['$scope', '$mdDialog', 'entity', 'entityType', require('./app/controllers/entityViewer/entityViewerDeleteDialogController')]);
 
 app.controller('DataPortfolioController', ['$scope', require('./app/controllers/data/dataPortfolioController')]);
 app.controller('DataAccountController', ['$scope', require('./app/controllers/data/dataAccountController')]);
@@ -59,6 +59,9 @@ app.controller('DataInstrumentController', ['$scope', require('./app/controllers
 app.controller('DataTransactionController', ['$scope', require('./app/controllers/data/dataTransactionController')]);
 app.controller('DataPriceHistoryController', ['$scope', require('./app/controllers/data/dataPriceHistoryController')]);
 app.controller('DataCurrencyHistoryController', ['$scope', require('./app/controllers/data/dataCurrencyHistoryController')]);
+app.controller('DataStrategyController', ['$scope', '$stateParams', require('./app/controllers/data/dataStrategyController')]);
+app.controller('DataStrategyGroupController', ['$scope', '$stateParams', require('./app/controllers/data/dataStrategyGroupController')]);
+app.controller('DataStrategySubgroupController', ['$scope', '$stateParams', require('./app/controllers/data/dataStrategySubgroupController')]);
 
 app.controller('EntityDataConstructorController', ['$scope', '$stateParams', '$state', '$mdDialog', require('./app/controllers/entityDataConstructorController')]);
 
@@ -74,6 +77,7 @@ app.controller('NotificationsController', ['$scope', require('./app/controllers/
 
 app.controller('SettingsGeneralController', ['$scope', require('./app/controllers/settings/settingsGeneralController')]);
 app.controller('SettingsFormDesignController', ['$scope', '$state', require('./app/controllers/settings/settingsFormDesignController')]);
+app.controller('SettingBloombergImportInstrumentController', ['$scope', '$state', require('./app/controllers/settings/settingBloombergImportInstrumentController')]);
 
 app.directive('menuToggle', [require('./app/directives/menuToggleDirective')]);
 app.directive('menuLink', [require('./app/directives/menuLinkDirective')]);

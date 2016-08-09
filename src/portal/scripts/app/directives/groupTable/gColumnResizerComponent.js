@@ -50,31 +50,53 @@
 				}
 
 				// View workarea width
-				var filterSidebarWidth = 246;
-				var setWorkareaWidth = function () {
-					var workAreaElem = elem.parents('.g-workarea');
+				// var filterSidebarWidth = 246;
+				var filterSidebarWidth = $('.g-filter-sidebar.main-sidebar').width();
 
+				var workAreaElem = elem.parents('.g-workarea-wrap');
+
+				workAreaElem.width($(window).width() - filterSidebarWidth - $('md-sidenav').width());
+
+				var wrapperWidth = $('.g-columns-component.g-thead').width() - $('.g-cell-select.all').width();
+				$('.g-scroll-wrapper').width(wrapperWidth);
+				$('.g-scrollable-area').width(wrapperWidth);
+
+				var resizeWorkarea = function () {
 					workAreaElem.width($(window).width() - filterSidebarWidth - $('md-sidenav').width());
-
 					var wrapperWidth = $('.g-columns-component.g-thead').width() - $('.g-cell-select.all').width();
 					$('.g-scroll-wrapper').width(wrapperWidth);
 					$('.g-scrollable-area').width(wrapperWidth);
 
-					$(window).on('resize', function () {
-						workAreaElem.width($(window).width() - filterSidebarWidth - $('md-sidenav').width());
-						var wrapperWidth = $('.g-columns-component.g-thead').width() - $('.g-cell-select.all').width();
-						$('.g-scroll-wrapper').width(wrapperWidth);
-						$('.g-scrollable-area').width(wrapperWidth);
+					resizeScrollableArea();
+					resize();
+				}
 
-						resizeScrollableArea();
-						resize();
-					});
-				};
-				setWorkareaWidth();
+				$(window).on('resize', function () {
+					// workAreaElem.width($(window).width() - filterSidebarWidth - $('md-sidenav').width());
+					// var wrapperWidth = $('.g-columns-component.g-thead').width() - $('.g-cell-select.all').width();
+					// $('.g-scroll-wrapper').width(wrapperWidth);
+					// $('.g-scrollable-area').width(wrapperWidth);
+
+					// resizeScrollableArea();
+					// resize();
+					resizeWorkarea();
+				});
 
 				// Close filter area button
 				var toggleFilterArea = function () {
-					
+					var filterArea = $('.g-filter-sidebar.main-sidebar');
+					if (filterArea.hasClass('min-filter')) {
+						filterArea.attr({'min-width': '20px',
+										'width': '20px'});
+						resizeWorkarea();
+						filterArea.addClass('min-filter');
+					}
+					else {
+						filterArea.attr({'min-width': '239px',
+										'width': '235px'});
+						resizeWorkarea();
+						filterArea.removeClass('min-filter');
+					}
 				};
 				//						******************************
 
@@ -110,11 +132,11 @@
 						// console.log('min width seted ', th.length, 'resizer columns ', [scope.columns]);
 						for (i = 0; i < th.length; i = i + 1) {
 							if (!$(th[i]).attr('min-width')) {
-								$(th[i]).attr('min-width', $(th[i]).width());
+								$(th[i]).attr('min-width', '20');
 							}
 						}
 					};
-					// setThMinWidths();
+					 setThMinWidths();
 
 					$(thSliders).bind('mousedown', function (e) {
 						e.preventDefault();
@@ -132,9 +154,9 @@
 							resizeCells();
 							resizeScrollableArea();
 							parent.width(width + newWidth);
-							// if (newWidth + width > minWidth) {
-							//     parent.width(width + newWidth);
-							// }
+							 if (newWidth + width > minWidth) {
+							     parent.width(width + newWidth);
+							 }
 							toggleColumnNameTooltip(parent, parent.width());
 
 						});
@@ -179,7 +201,7 @@
 				});
 				setTimeout(function () {
 					resize();
-				}, 100)
+				}, 100);
 
 				console.log('resizer items is ', scope.items);
 

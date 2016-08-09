@@ -5,8 +5,12 @@
 		padding-top: 1em;
 	}
 	overflow: hidden;
-	.g-workarea {
+	.g-workarea-wrap {
 		float: left;
+		overflow: hidden;
+	}
+	.g-workarea {
+		width: calc(100% - border-right);
 		//width: calc(~"100% - 246px");
 		border-right: 6px solid #4C334D;
 		background: #4C334D;
@@ -67,8 +71,10 @@
 			z-index: 1000;
 		}
 	}
-	.g-sidebar {
-		float: left;
+	.g-filter-sidebar {
+		position: absolute;
+		right: 0;
+		z-index: 0;
 		width: 239px;
 		min-width: 235px;
 		&:first-child {
@@ -368,7 +374,7 @@
 		overflow: hidden;
 		line-height: 2;
 	}
-	.g-sidebar {
+	.g-filter-sidebar {
 		background-color: #DCDCDC;
 		overflow: hidden;
 	}
@@ -848,7 +854,7 @@ body.md-dialog-is-showing {
 	bottom: 20px;
 }
 
-.g-sidebar.additions-sidebar {
+.g-filter-sidebar.additions-sidebar {
 	&::before {
 		display: block;
 		content: '';
