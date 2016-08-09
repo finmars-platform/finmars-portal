@@ -39,7 +39,7 @@
     };
 
     var create = function (strategyNumber, strategy) {
-        return window.fetch(baseUrl + 'strategies/' + strategyNumber + '/strategy',
+        return window.fetch(baseUrl + 'strategies/' + strategyNumber + '/strategy/',
             {
                 method: 'POST',
                 credentials: 'include',

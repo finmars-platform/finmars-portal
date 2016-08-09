@@ -247,8 +247,6 @@
 
 				scope.findAttrsLeft = function() {
 
-					console.log('executed???');
-
 					scope.attrs.forEach(function(attr){
 						tabs.forEach(function(tab){
 							tab.layout.fields.forEach(function(item){
