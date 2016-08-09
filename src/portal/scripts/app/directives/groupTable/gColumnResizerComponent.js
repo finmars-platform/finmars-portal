@@ -42,28 +42,41 @@
 									$(columns[i]).addClass('small-width');
 								}
 							}
+							// if (i == columns.length - 1) {
+							// 	groupTableReadinessCheckservice.checkTableCondition(true) 
+							// }
 						}
 					}
 				}
 
-				var workAreaElem = elem.parents('.g-workarea');
+				// View workarea width
 				var filterSidebarWidth = 246;
+				var setWorkareaWidth = function () {
+					var workAreaElem = elem.parents('.g-workarea');
 
-				workAreaElem.width($(window).width() - filterSidebarWidth - $('md-sidenav').width());
-
-				var wrapperWidth = $('.g-columns-component.g-thead').width() - $('.g-cell-select.all').width();
-				$('.g-scroll-wrapper').width(wrapperWidth);
-				$('.g-scrollable-area').width(wrapperWidth);
-
-				$(window).on('resize', function () {
 					workAreaElem.width($(window).width() - filterSidebarWidth - $('md-sidenav').width());
+
 					var wrapperWidth = $('.g-columns-component.g-thead').width() - $('.g-cell-select.all').width();
 					$('.g-scroll-wrapper').width(wrapperWidth);
 					$('.g-scrollable-area').width(wrapperWidth);
 
-					resizeScrollableArea();
-					resize();
-				});
+					$(window).on('resize', function () {
+						workAreaElem.width($(window).width() - filterSidebarWidth - $('md-sidenav').width());
+						var wrapperWidth = $('.g-columns-component.g-thead').width() - $('.g-cell-select.all').width();
+						$('.g-scroll-wrapper').width(wrapperWidth);
+						$('.g-scrollable-area').width(wrapperWidth);
+
+						resizeScrollableArea();
+						resize();
+					});
+				};
+				setWorkareaWidth();
+
+				// Close filter area button
+				var toggleFilterArea = function () {
+					
+				};
+				//						******************************
 
 				function resizeScrollableArea() {
 					var columns;
@@ -76,7 +89,7 @@
 					for (i = 0; i < columns.length; i = i + 1) {
 						areaWidth = areaWidth + $(columns[i]).width() + columnMargins;
 					}
-					wrapperWidth = $('.g-columns-component.g-thead').width() - $('.g-cell-select.all').width();
+					var wrapperWidth = $('.g-columns-component.g-thead').width() - $('.g-cell-select.all').width();
 					if (wrapperWidth < areaWidth + dropNewFieldWidth) {
 						$('.g-scrollable-area').width(areaWidth + dropNewFieldWidth);
 						// scope.$apply();

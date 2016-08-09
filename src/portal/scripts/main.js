@@ -40,7 +40,6 @@ app.controller('SideNavController', ['$scope', require('./app/controllers/sideNa
 
 app.controller('DashboardController', ['$scope', require('./app/controllers/dashboardController')]);
 
-
 app.controller('AttributesManagerController', ['$scope', '$state', '$stateParams', '$mdDialog', require('./app/controllers/attributesManagerController')]);
 app.controller('AttributesManagerEditDialogController', ['$scope', '$mdDialog', 'attribute', require('./app/controllers/attributesManagerEditDialogController')]);
 app.controller('AttributesManagerAddDialogController', ['$scope', '$mdDialog', require('./app/controllers/attributesManagerAddDialogController')]);

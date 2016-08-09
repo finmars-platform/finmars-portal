@@ -1,35 +1,44 @@
 <div class="notifications-view">
-    <div data-ng-if="vm.notifications.length">
-        <md-card class="nf-head-card">
-            <div layout="row">
-                <div flex="15">
-                    Date
-                </div>
-                <div flex="10">
-                    From
-                </div>
-                <div flex="75">
-                    Notification
-                </div>
-            </div>
-        </md-card>
-        <md-card data-ng-repeat="item in vm.notifications">
-            <div layout="row">
-                <div flex="15">
-                    {{item['create_date'] | date:'dd/MM/yyyy HH:mm'}}
-                </div>
-                <div flex="10">
-                    System
-                </div>
-                <div flex="75">
-                    {{item.message}}
-                </div>
-            </div>
-        </md-card>
-    </div>
-    <div data-ng-if="!vm.notifications.length">
-        <div layout="row" layout-sm="column" layout-align="space-around">
-            <md-progress-circular md-mode="indeterminate"></md-progress-circular>
-        </div>
-    </div>
+	<div data-ng-if="vm.notifications.length && vm.notificationsReady">
+		<md-card class="nf-head-card">
+			<div layout="row">
+				<div flex="15">
+					Date
+				</div>
+				<div flex="10">
+					From
+				</div>
+				<div flex="75">
+					Notification
+				</div>
+			</div>
+		</md-card>
+		<md-card data-ng-repeat="item in vm.notifications">
+			<div layout="row">
+				<div flex="15">
+					{{item['create_date'] | date:'dd/MM/yyyy HH:mm'}}
+				</div>
+				<div flex="10">
+					System
+				</div>
+				<div flex="75">
+					{{item.message}}
+				</div>
+			</div>
+		</md-card>
+		<div layout="row">
+			<div paging
+				 page="vm.notificationsCurrent"
+				 page-size="vm.itemPerPage"
+				 total="vm.notificationsTotal"
+				 paging-action="vm.changePage(page)"
+				 class="global-pagination-div">
+			</div>
+		</div>
+	</div>
+	<div data-ng-if="!vm.notifications.length && !vm.notificationsReady">
+		<div layout="row" layout-sm="column" layout-align="space-around">
+			<md-progress-circular md-mode="indeterminate"></md-progress-circular>
+		</div>
+	</div>
 </div>

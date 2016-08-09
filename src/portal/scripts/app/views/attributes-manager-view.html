@@ -1,45 +1,52 @@
 <div class="attributes-manager-view">
-    <!--<md-button class="md-fab md-fab-bottom-right" data-ng-click="vm.addAttribute($event)">-->
-        <!--<ng-md-icon icon="add"></ng-md-icon>-->
-    <!--</md-button>-->
-    <div>
-        <h2 class="am-header"><span data-ng-bind="vm.entityType"></span><ng-md-icon icon="keyboard_arrow_right"></ng-md-icon> MANAGE ATTRIBUTES</h2>
-    </div>
-    <div layout="row" layout-align="start center">
-        <md-button class="md-raised" data-ui-sref="app.data-constructor({entityType: vm.entityType})">
-            RETURN TO FORM EDITOR
-        </md-button>
-        <md-button class="md-raised md-primary" data-ng-click="vm.addAttribute($event)">
-            ADD NEW
-        </md-button>
-    </div>
-    <div data-ng-if="vm.attrs.length">
-        <md-card data-ng-repeat="item in vm.attrs" class="am-attr-card">
-            <div>
-                <b data-ng-bind="item.name"></b> (<span data-ng-bind="vm.bindType(item)"></span>)
-                <div class="am-attr-misc">
-                    <md-button data-ng-if="item['value_type'] === 30" class="am-attr-btn"
-                               data-ng-click="vm.editTreeAttr(item, $event)">
-                        <ng-md-icon icon="format_align_right"></ng-md-icon>
-                    </md-button>
-                    <md-button class="am-attr-btn"
-                               data-ng-click="vm.editAttr(item, $event)">
-                        <ng-md-icon icon="edit"></ng-md-icon>
-                    </md-button>
-                    <md-button class="am-attr-btn"
-                               data-ng-click="vm.deleteAttr(item, $event)">
-                        <ng-md-icon icon="delete"></ng-md-icon>
-                    </md-button>
-                </div>
-            </div>
-        </md-card>
-    </div>
-    <div data-ng-if="!vm.attrs.length">
-        <!-- <div layout="row" layout-sm="column" layout-align="space-around">
-            <md-progress-circular md-mode="indeterminate"></md-progress-circular>
-        </div> -->
-        <div layout="row" class="add-more-tip" layout-sm="column" layout-align="center center">
-            <h1>You could add new user attributes here</h1>
-        </div>
-    </div>
+	<!--<md-button class="md-fab md-fab-bottom-right" data-ng-click="vm.addAttribute($event)">-->
+		<!--<ng-md-icon icon="add"></ng-md-icon>-->
+	<!--</md-button>-->
+	<div>
+		<h2 class="am-header"><span data-ng-bind="vm.entityType"></span><ng-md-icon icon="keyboard_arrow_right"></ng-md-icon> MANAGE ATTRIBUTES</h2>
+	</div>
+	<div layout="row">
+		<div layout="row" flex="50" layout-align="start center">
+			<md-button class="md-raised" data-ng-click="vm.addAttribute($event)">
+				ADD NEW
+			</md-button>
+		</div>
+		<div layout="row" flex="50" layout-align="end center">
+			<md-button class="md-raised md-primary" data-ui-sref="app.data.{{vm.entityType}}">
+				RETURN TO VIEW
+			</md-button>
+			<md-button class="md-raised md-primary" data-ui-sref="app.data-constructor({entityType: vm.entityType})">
+				RETURN TO FORM EDITOR
+			</md-button>
+		</div>
+	</div>
+	<div data-ng-if="vm.attrs.length">
+		<md-card data-ng-repeat="item in vm.attrs" class="am-attr-card">
+			<div>
+				<b data-ng-bind="item.name"></b> (<span data-ng-bind="vm.bindType(item)"></span>)
+				<div class="am-attr-misc">
+					<md-button data-ng-if="item['value_type'] === 30" class="am-attr-btn"
+							   data-ng-click="vm.editTreeAttr(item, $event)">
+						<ng-md-icon icon="format_align_right"></ng-md-icon>
+					</md-button>
+					<md-button class="am-attr-btn"
+							   data-ng-click="vm.editAttr(item, $event)">
+						<ng-md-icon icon="edit"></ng-md-icon>
+					</md-button>
+					<md-button class="am-attr-btn"
+							   data-ng-click="vm.deleteAttr(item, $event)">
+						<ng-md-icon icon="delete"></ng-md-icon>
+					</md-button>
+				</div>
+			</div>
+		</md-card>
+	</div>
+	<div data-ng-if="!vm.attrs.length">
+		<!-- <div layout="row" layout-sm="column" layout-align="space-around">
+			<md-progress-circular md-mode="indeterminate"></md-progress-circular>
+		</div> -->
+		<div layout="row" class="add-more-tip" layout-sm="column" layout-align="center center">
+			<h1>You could add new user attributes here</h1>
+		</div>
+	</div>
 </div>

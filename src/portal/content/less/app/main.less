@@ -192,6 +192,7 @@ a.md-button.md-default-theme.md-fab, a.md-button.md-fab, .md-button.md-default-t
 		fill: #fff;
 	}
 	.header-profile {
+		position: relative;
 		padding-top: 5px;
 	}
 	.header-profile-name {
@@ -200,6 +201,9 @@ a.md-button.md-default-theme.md-fab, a.md-button.md-fab, .md-button.md-default-t
 		top: -16px;
 		display: inline-block;
 		margin-left: 10px;
+		font-weight: 400;
+    	font-size: 20px;
+    	color: #ffffff;
 	}
 }
 
@@ -402,4 +406,32 @@ md-backdrop.md-select-backdrop {
 .permissions-checkbox-holder>div {
 	margin-right: 10px;
 	text-align: center;
+}
+button.header-account-btn.md-button {
+    height: auto;
+    margin: 0;
+    padding: 0;
+    font-weight: inherit;
+    text-transform: none;
+}
+md-menu-bar.header-logout-menu {
+	.md-menu:hover {
+		background: none;
+	}
+	.md-menu {
+		button {
+			height: auto;
+			&:hover {
+				background: none;
+			}
+		}
+	}
+	.md-menu.md-open  {
+		button {
+			background: none;
+			&:hover {
+				background: none;
+			}
+		}
+	}
 }

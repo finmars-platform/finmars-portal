@@ -1,5 +1,4 @@
-<!-- <div class="g-table-body-component" data-group-vertical-scroll> -->
-<div class="g-table-body-component" group-custom-scroll>
+<div class="g-table-body-component" data-group-vertical-scroll>
 	<div data-ng-if="grouping.length" contextmenu-container="gtbody.contextmenu">
 		<div data-ng-repeat="item in items">
 			<div class="g-group-holder {{item.selectedRow ? 'selected-row' : ''}}">
@@ -46,6 +45,7 @@
 			</div>
 		</div>
 	</div>
+	<div class="table-end-row"></div>
 </div>
 <div contextmenu="gtbody.contextmenu" class="dropdown contextmenu ng-hide">
 	<md-menu-content width="4">
