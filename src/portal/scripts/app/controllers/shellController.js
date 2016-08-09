@@ -45,28 +45,37 @@
 		vm.currentLocation = function () {
 			switch ($state.current.name) {
 				case 'app.data.portfolio':
-					return "PORTFOLIO"
+					return "PORTFOLIO";
 					break;
 				case 'app.data.account':
-					return "ACCOUNT"
+					return "ACCOUNT";
 					break;
 				case 'app.data.counterparty':
-					return "COUNTERPARTY"
+					return "COUNTERPARTY";
 					break;
 				case 'app.data.responsible':
-					return "RESPONSIBLE"
+					return "RESPONSIBLE";
 					break;
 				case 'app.data.instrument':
-					return "INSTRUMENT"
+					return "INSTRUMENT";
 					break;
 				case 'app.data.transaction':
-					return "TRANSACTION"
+					return "TRANSACTION";
 					break;
 				case 'app.data.price-history':
-					return "PRICE HISTORY"
+					return "PRICE HISTORY";
 					break;
 				case 'app.data.currency-history':
-					return "CURRENCY HISTORY"
+					return "CURRENCY HISTORY";
+					break;
+				case 'app.data.strategy':
+					return "STRATEGY";
+					break;
+				case 'app.data.strategy-subgroup':
+					return "STRATEGY SUBGROUP";
+					break;
+				case 'app.data.strategy-group':
+					return "STRATEGY GROUP";
 					break;
 				default:
 					return "";

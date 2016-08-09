@@ -99,6 +99,13 @@
                     }
                 };
 
+                var fieldKey = scope.getModelKey();
+
+                scope.options = {
+                    entityType: scope.entityType,
+                    key: fieldKey
+                };
+
                 scope.setDateToday = function () {
                     //console.log('1232', scope.entity[scope.getModelKey()])
                     scope.entity[scope.getModelKey()] = new Date();
@@ -145,7 +152,6 @@
                         scope.$apply();
                     });
                 }
-
 
                 scope.changeWatcher = function(){
                     localStorage.setItem('entityIsChanged', true);

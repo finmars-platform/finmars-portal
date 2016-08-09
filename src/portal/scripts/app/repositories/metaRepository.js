@@ -394,6 +394,99 @@
 					"name": "Factor",
 					"value_type": "float"
 				}
+			],
+			"strategy-1": [
+				{
+					"key": "user_code",
+					"name": "User code",
+					"value_type": 10
+				},
+				{
+					"key": "subgroup",
+					"name": "Sub Group",
+					"value_type": "field"
+				}
+			],
+			"strategy-2": [
+				{
+					"key": "user_code",
+					"name": "User code",
+					"value_type": 10
+				},
+				{
+					"key": "subgroup",
+					"name": "Sub Group",
+					"value_type": "field"
+				}
+			],
+			"strategy-3": [
+				{
+					"key": "user_code",
+					"name": "User code",
+					"value_type": 10
+				},
+				{
+					"key": "subgroup",
+					"name": "Sub Group",
+					"value_type": "field"
+				}
+			],
+			"strategy-1-subgroup": [
+				{
+					"key": "user_code",
+					"name": "User code",
+					"value_type": 10
+				},
+				{
+					"key": "group",
+					"name": "Group",
+					"value_type": "field"
+				}
+			],
+			"strategy-2-subgroup": [
+				{
+					"key": "user_code",
+					"name": "User code",
+					"value_type": 10
+				},
+				{
+					"key": "group",
+					"name": "Group",
+					"value_type": "field"
+				}
+			],
+			"strategy-3-subgroup": [
+				{
+					"key": "user_code",
+					"name": "User code",
+					"value_type": 10
+				},
+				{
+					"key": "group",
+					"name": "Group",
+					"value_type": "field"
+				}
+			],
+			"strategy-1-group": [
+				{
+					"key": "user_code",
+					"name": "User code",
+					"value_type": 10
+				}
+			],
+			"strategy-2-group": [
+				{
+					"key": "user_code",
+					"name": "User code",
+					"value_type": 10
+				}
+			],
+			"strategy-3-group": [
+				{
+					"key": "user_code",
+					"name": "User code",
+					"value_type": 10
+				}
 			]
 		};
 

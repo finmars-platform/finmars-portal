@@ -13,6 +13,10 @@
     var priceHistoryService = require('./priceHistoryService');
     var currencyHistoryService = require('./currencyHistoryService');
 
+    var strategyService = require('./strategyService');
+    var strategyGroupService = require('./strategyGroupService');
+    var strategySubgroupService = require('./strategySubgroupService');
+
 
     var getByKey = function(entityType, id) {
         switch (entityType) {
@@ -36,6 +40,33 @@
                 break;
             case 'currency-history':
                 return priceHistoryService.getByKey(id);
+                break;
+            case 'strategy-1':
+                return strategyService.getByKey(1, id);
+                break;
+            case 'strategy-2':
+                return strategyService.getByKey(2, id);
+                break;
+            case 'strategy-3':
+                return strategyService.getByKey(3, id);
+                break;
+            case 'strategy-1-group':
+                return strategyGroupService.getByKey(1, id);
+                break;
+            case 'strategy-2-group':
+                return strategyGroupService.getByKey(2, id);
+                break;
+            case 'strategy-3-group':
+                return strategyGroupService.getByKey(3, id);
+                break;
+            case 'strategy-1-subgroup':
+                return strategySubgroupService.getByKey(1, id);
+                break;
+            case 'strategy-2-subgroup':
+                return strategySubgroupService.getByKey(2, id);
+                break;
+            case 'strategy-3-subgroup':
+                return strategySubgroupService.getByKey(3, id);
                 break;
         }
     };
@@ -68,6 +99,34 @@
             case 'currency-history':
                 return priceHistoryService.create(entity);
                 break;
+            case 'strategy-1':
+                return strategyService.create(1, entity);
+                break;
+            case 'strategy-2':
+                return strategyService.create(2, entity);
+                break;
+            case 'strategy-3':
+                return strategyService.create(3, entity);
+                break;
+            case 'strategy-1-group':
+                return strategyGroupService.create(1, entity);
+                break;
+            case 'strategy-2-group':
+                return strategyGroupService.create(2, entity);
+                break;
+            case 'strategy-3-group':
+                return strategyGroupService.create(3, entity);
+                break;
+            case 'strategy-1-subgroup':
+                return strategySubgroupService.create(1, entity);
+                break;
+            case 'strategy-2-subgroup':
+                return strategySubgroupService.create(2, entity);
+                break;
+            case 'strategy-3-subgroup':
+                return strategySubgroupService.create(3, entity);
+                break;
+
         }
     };
 
@@ -94,6 +153,33 @@
             case 'currency-history':
                 return priceHistoryService.update(id, entity);
                 break;
+            case 'strategy-1':
+                return strategyService.getByKey(1, id, entity);
+                break;
+            case 'strategy-2':
+                return strategyService.getByKey(2, id, entity);
+                break;
+            case 'strategy-3':
+                return strategyService.getByKey(3, id, entity);
+                break;
+            case 'strategy-1-group':
+                return strategyGroupService.getByKey(1, id, entity);
+                break;
+            case 'strategy-2-group':
+                return strategyGroupService.getByKey(2, id, entity);
+                break;
+            case 'strategy-3-group':
+                return strategyGroupService.getByKey(3, id, entity);
+                break;
+            case 'strategy-1-subgroup':
+                return strategySubgroupService.getByKey(1, id, entity);
+                break;
+            case 'strategy-2-subgroup':
+                return strategySubgroupService.getByKey(2, id, entity);
+                break;
+            case 'strategy-3-subgroup':
+                return strategySubgroupService.getByKey(3, id, entity);
+                break;
         }
     };
 
@@ -119,6 +205,33 @@
                 break;
             case 'currency-history':
                 return priceHistoryService.deleteByKey(id);
+                break;
+            case 'strategy-1':
+                return strategyService.deleteByKey(1, id);
+                break;
+            case 'strategy-2':
+                return strategyService.deleteByKey(2, id);
+                break;
+            case 'strategy-3':
+                return strategyService.deleteByKey(3, id);
+                break;
+            case 'strategy-1-group':
+                return strategyGroupService.deleteByKey(1, id);
+                break;
+            case 'strategy-2-group':
+                return strategyGroupService.deleteByKey(2, id);
+                break;
+            case 'strategy-3-group':
+                return strategyGroupService.deleteByKey(3, id);
+                break;
+            case 'strategy-1-subgroup':
+                return strategySubgroupService.deleteByKey(1, id);
+                break;
+            case 'strategy-2-subgroup':
+                return strategySubgroupService.deleteByKey(2, id);
+                break;
+            case 'strategy-3-subgroup':
+                return strategySubgroupService.deleteByKey(3, id);
                 break;
         }
     };
