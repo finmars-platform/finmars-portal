@@ -9,6 +9,8 @@
     var cookieService = require('../../../../core/services/cookieService');
     var configureRepositoryUrlService = require('../services/configureRepositoryUrlService');
 
+    var metaRestrictionsService = require('../services/metaRestrictionsService');
+
     var baseUrl = '/api/v1/';
 
     function endPointResolver(entity) {
@@ -26,7 +28,7 @@
 
     var getList = function (entity) {
 
-        if(entity === 'price-history' || entity === 'currency-history') {
+        if(metaRestrictionsService.getEntitiesWithoutDynamicAttrsList().indexOf(entity) !== -1) {
             return new Promise(function(resolve){resolve({results: []})})
         }
 

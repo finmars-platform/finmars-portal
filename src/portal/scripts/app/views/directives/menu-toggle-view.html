@@ -6,7 +6,8 @@
     <!--<span aria-hidden="true" class="pull-right fa fa-chevron-down md-toggle-icon" data-ng-class="{'toggled' : isOpen()}"></span>-->
 </md-button>
 <ul data-ng-show="isOpen()" id="side-menu-{{section.title}}" class="menu-toggle-list">
-    <li data-ng-repeat="page in section.pages">
-        <menu-link section="page"></menu-link>
+    <li data-ng-repeat="section in section.pages">
+        <menu-link section="section" ng-if="section.type === 'link'"></menu-link>
+        <menu-toggle section="section" ng-if="section.type === 'toggle'"></menu-toggle>
     </li>
 </ul>
