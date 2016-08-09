@@ -7,8 +7,8 @@
 
     var notificationsRepository = require('../repositories/notificationsRepository');
 
-    var getList = function() {
-        return notificationsRepository.getList();
+    var getList = function(page) {
+        return notificationsRepository.getList(page);
     };
 
     module.exports = {

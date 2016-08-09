@@ -3,23 +3,38 @@
  */
 (function(){
 
-    'use strict';
+	'use strict';
 
-    var logService = require('../../../../../core/services/logService');
+	var logService = require('../../../../../core/services/logService');
 
-    var notificationsService = require('../../services/notificationsService');
+	var notificationsService = require('../../services/notificationsService');
 
-    module.exports = function($scope){
+	module.exports = function($scope){
 
-        logService.controller('NotificationsController', 'initialized');
+		logService.controller('NotificationsController', 'initialized');
 
-        var vm = this;
+		var vm = this;
 
-        notificationsService.getList().then(function(data){
-            vm.notifications = data.results;
-            $scope.$apply();
-        })
+		vm.itemPerPage = 20;
+		vm.notificationsReady = true;
 
-    }
+		vm.changePage = function (page) {
+			vm.notificationsCurrent = page;
+			vm.getNotifications();
+		}
+		vm.getNotifications = function () {
+			vm.notificationsCurrent = vm.notificationsCurrent || 1;
+			vm.notificationsReady = false;
+
+			notificationsService.getList(vm.notificationsCurrent).then(function(data){
+				vm.notificationsTotal = data.count;
+				vm.notifications = data.results;
+				vm.notificationsReady = true;
+				$scope.$apply();
+			});
+		}
+		vm.getNotifications();
+
+	}
 
 }());

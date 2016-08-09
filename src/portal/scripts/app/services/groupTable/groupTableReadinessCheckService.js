@@ -1,12 +1,10 @@
 (function() {
 
-	var tableReady = false;
-
-	var checkTableCondition = function (condition) {
+	var checkTableCondition = function () {
+		var tableReady = false;
 		return new Promise(function (resolve) {
-			if (tableReady) {
-				resolve(tableReady);
-			}
+			var tableReady = true;
+			resolve(tableReady);
 		});
 	};
 
