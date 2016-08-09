@@ -30,10 +30,11 @@
 	};
 
 	var getTypeCaptions = function() {
-		var filteredValueTypes = getValueTypes().filter(function (item) {
-			// return item.value !== 'field' && item.value !== 'decoration';
-			return item.value !== 'field';
-		});
+		var filteredValueTypes = getValueTypes();
+		//var filteredValueTypes = getValueTypes().filter(function (item) {
+		//	// return item.value !== 'field' && item.value !== 'decoration';
+		//	return item.value !== 'field';
+		//});
 		var typeCaptions = filteredValueTypes.map(function (item) {
 			switch (item['display_name']) {
 				case 'Number':
@@ -43,8 +44,11 @@
 				case 'Float':
 					item['caption_name'] = 'Number with decimals';
 					break;
-				case 'Field':
+				case 'Classifier':
 					item['caption_name'] = 'Classification';
+					break;
+				case 'Field':
+					item['caption_name'] = 'Reference';
 					break;
 				case 'String':
 					item['caption_name'] = 'Text';
