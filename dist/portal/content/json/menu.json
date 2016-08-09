@@ -20,21 +20,25 @@
       {
         "state": "app.add-balance",
         "title": "New Balance",
+        "type": "link",
         "icon": "dashboard"
       },
       {
         "state": "app.add-performance",
         "title": "New Performance",
+        "type": "link",
         "icon": "dashboard"
       },
       {
         "state": "app.add-cash-flow",
         "title": "New Cash flow",
+        "type": "link",
         "icon": "dashboard"
       },
       {
         "state": "app.add-transaction",
         "title": "New Transaction",
+        "type": "link",
         "icon": "dashboard"
       }
     ]
@@ -182,11 +186,13 @@
       {
         "state": "app.settings.general",
         "title": "General",
+        "type": "link",
         "icon": ""
       },
       {
         "state": "app.settings.form-design",
         "title": "Form Design",
+        "type": "link",
         "icon": ""
       }
     ]
@@ -200,11 +206,13 @@
       {
         "state": "app.system.notifications",
         "title": "Notifications",
+        "type": "link",
         "icon": ""
       },
       {
         "state": "app.system.audit",
         "title": "Audit",
+        "type": "link",
         "icon": ""
       }
     ]
