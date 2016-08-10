@@ -4,7 +4,7 @@
             <md-card class="ec-attr-card">
                 <div layout="row">
                     <p class="name-holder" flex="60">
-                        <b><span data-ng-bind="item.attribute.name"></span></b> (<span data-ng-bind="bindType()"></span>)
+                        <b><span data-ng-bind="item.attribute.name"></span></b> (<span data-ng-bind="bindTypeByValueType(item.attribute['value_type'])"></span>)
                     </p>
                     <div class="options-holder" flex="40">
                         <md-button aria-label="delete attribute" data-ng-click="deleteField()">
@@ -31,14 +31,13 @@
                 <label>Please select Element</label>
                 <!--{{item.attribute}}-->
                 <md-select ng-model="item.attribute" ng-change="changeModel(item.attribute)" ng-focus="findAttrsLeft()">
-                    <md-optgroup label="System">
+                    <md-optgroup label="System" class="bold-field-select">
                         <md-option ng-repeat="attr in baseAttrs" ng-value="attr" class="{{attr.disabled ? 'disabled' : ''}}">
-                            <!--{{attr}}-->
-                            {{attr.name}}
+                            {{attr.name}} ({{bindTypeByValueType(attr['value_type'])}})
                         </md-option>
                         <md-option ng-repeat="attr in entityAttrs" ng-value="attr" class="{{attr.disabled ? 'disabled' : ''}}">
                             <!--{{attr}}-->
-                            {{attr.name}}
+                            {{attr.name}} ({{bindTypeByValueType(attr['value_type'])}})
                         </md-option>
                     </md-optgroup>
                     <!--<md-optgroup label="Specific">-->
@@ -47,24 +46,25 @@
                             <!--{{attr.name}}-->
                         <!--</md-option>                        -->
                     <!--</md-optgroup>-->
-                    <md-optgroup label="User attributes">
+                    <md-optgroup label="User attributes" class="bold-field-select">
                         <md-option ng-repeat="attr in attrs" ng-value="attr" class="{{attr.disabled ? 'disabled' : ''}}">
                             <!--{{attr}}-->
-                            {{attr.name}}
+                            {{attr.name}} ({{bindTypeByValueType(attr['value_type'])}})
                         </md-option>
                     </md-optgroup>
-                    <md-optgroup label="Layout">
+                    <md-optgroup label="Layout" class="bold-field-select">
                         <md-option ng-repeat="attr in layoutAttrs" ng-value="attr">
-                            {{attr.name}}
+                            {{attr.name}} ({{bindTypeByValueType(attr['value_type'])}})
                         </md-option>
                     </md-optgroup>
                 </md-select>
             </md-input-container>
             <md-input-container class="md-block" flex-gt-sm>
-                <label>Colspan</label>
+                <!--<label>Colspan</label>-->
+                <label>Element width</label>
                 <md-select ng-model="item.colspan">
                     <md-option ng-repeat="colspan in getCols()" value="{{colspan}}">
-                        Fit {{colspan}} column
+                        {{colspan}} column(s)
                     </md-option>
                 </md-select>
             </md-input-container>
@@ -75,12 +75,15 @@
             <div data-ng-if="checkForSpecialOptions()">
                 <div data-ng-include="specialOptionTemplate"></div>
             </div>
-            <md-button aria-label="cancel" data-ng-click="cancel()">
-                Cancel
-            </md-button>
-            <md-button class="ec-field-btn {{item.attribute ? '' : 'disabled'}}" aria-label="save layout" data-ng-click="saveField()">
-                <span>Ok</span>
-            </md-button>
+            <md-divider></md-divider>
+            <div layout="row" layout-align="space-between center" class="constructor-card-actions">
+                <md-button aria-label="cancel" data-ng-click="cancel()">
+                    Cancel
+                </md-button>
+                <md-button class="ec-field-btn {{item.attribute ? '' : 'disabled'}}" aria-label="save layout" data-ng-click="saveField()">
+                    <span>Ok</span>
+                </md-button>
+            </div>
         </md-card>
     </div>
 </div>
