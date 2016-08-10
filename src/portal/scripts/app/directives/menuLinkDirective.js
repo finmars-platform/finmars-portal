@@ -15,6 +15,7 @@
                 var controller = elem.parent().controller();
 
                 scope.focusSection = function(){
+                    $('.side-nav-dropdown').remove();
                     controller.autoFocusContent = true;
                 }
             }

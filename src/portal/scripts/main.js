@@ -29,10 +29,16 @@ app.config(['$mdDateLocaleProvider', function ($mdDateLocaleProvider) {
     };
 }]);
 
-app.run(function () {
+app.run(['$rootScope', function ($rootScope) {
     console.log('App initialized');
     localStorage.setItem('entityIsChanged', false);
-});
+
+    $rootScope.$on('$stateChangeStart', function () {
+        setTimeout(function () {
+            $(window).trigger('resize');
+        }, 300);
+    })
+}]);
 
 
 app.controller('ShellController', ['$scope', '$state', '$rootScope', '$mdDialog', require('./app/controllers/shellController')]);
