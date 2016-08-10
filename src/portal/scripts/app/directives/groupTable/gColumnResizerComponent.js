@@ -83,7 +83,9 @@
 				});
 
 				// Close filter area button
-				var toggleFilterArea = function () {
+				console.log('filter toggle button is ', $('.filter-area-size-btn'));
+				$('.filter-area-size-btn').click(function () {
+					console.log('filter toggle working');
 					var filterArea = $('.g-filter-sidebar.main-sidebar');
 					if (filterArea.hasClass('min-filter')) {
 						filterArea.attr({'min-width': '20px',
@@ -97,7 +99,7 @@
 						resizeWorkarea();
 						filterArea.removeClass('min-filter');
 					}
-				};
+				});
 				//						******************************
 
 				function resizeScrollableArea() {
