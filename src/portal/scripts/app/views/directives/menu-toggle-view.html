@@ -1,5 +1,9 @@
-<md-button class="md-button-toggle sidemenu-btn" ng-click="toggle()"
-           aria-controls="side-menu-{{section.title}}" flex layout="row" aria-expanded="{{isOpen()}}">{{section.title}}
+<md-button class="md-button-toggle sidemenu-btn" ng-click="toggle($event)"
+           aria-controls="side-menu-{{section.title}}" flex layout="row" aria-expanded="{{isOpen()}}">
+    <span data-ng-if="section.icon" class="side-nav-icon">
+        <ng-md-icon icon="{{section.icon}}" size="24"></ng-md-icon>
+    </span>
+    <span class="side-nav-title">{{section.title}}</span>
 
     <ng-md-icon icon="expand_more" class="dropdown-icon" data-ng-if="!isOpen()"></ng-md-icon>
     <ng-md-icon icon="expand_less" class="dropdown-icon" data-ng-if="isOpen()"></ng-md-icon>

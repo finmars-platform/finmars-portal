@@ -1,7 +1,8 @@
 <md-sidenav class="md-sidenav-left md-whiteframe-z1" md-component-id="left" md-is-locked-open="$mdMedia('gt-sm')">
     <md-toolbar md-scroll-shrink>
         <div class="md-toolbar-tools">
-            <img src="portal/content/img/finmars_logo.png" alt="" height="40" style="margin: 0 auto;">
+            <img src="portal/content/img/finmars_logo.png" alt="" height="40"
+                 style="position: absolute; left: 7px; margin: 0 auto;">
         </div>
     </md-toolbar>
     <md-content flex role="navigation">
@@ -12,8 +13,15 @@
                 <menu-toggle section="section" ng-if="section.type === 'toggle'"></menu-toggle>
             </li>
         </ul>
-        <md-button hide-gt-md aria-label="resize" class="to-small-btn fab">
-            <ng-md-icon icon="chevron_left"></ng-md-icon>
-        </md-button>
+        <div class="side-nav-btn-resize-holder">
+            <md-button data-ng-show="vm.sideNavStatus == 'expand'" aria-label="resize" class="to-small-btn fab md-raised"
+                       data-ng-click="vm.resizeSideNav('collapse')">
+                <ng-md-icon icon="chevron_left"></ng-md-icon>
+            </md-button>
+            <md-button data-ng-show="vm.sideNavStatus == 'collapse'" aria-label="resize"
+                       class="to-small-btn fab md-raised" data-ng-click="vm.resizeSideNav('expand')">
+                <ng-md-icon icon="chevron_right"></ng-md-icon>
+            </md-button>
+        </div>
     </md-content>
 </md-sidenav>
