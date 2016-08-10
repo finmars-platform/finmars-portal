@@ -77,7 +77,7 @@
         vm.getMemberList = function () {
             usersService.getMemberList().then(function (data) {
                 vm.members = data.results;
-                vm.readyStatus.permissions = true;
+
 
                 vm.members.forEach(function (member) {
 
@@ -100,6 +100,10 @@
 
                 });
 
+                vm.readyStatus.permissions = true;
+
+                $scope.$apply();
+
 
             });
         };
@@ -111,7 +115,7 @@
             var i;
             for (i = 0; i < vm.members.length; i = i + 1) {
                 if (vm.user.id === vm.members[i].id) {
-                    if (vm.members[i].objectPermissions.manage == true) {
+                    if (vm.members[i].objectPermissions && vm.members[i].objectPermissions.manage == true) {
                         return true;
                     }
                 }
@@ -120,6 +124,7 @@
         };
 
         vm.checkReadyStatus = function () {
+
             if (vm.readyStatus.content && vm.readyStatus.entity && vm.readyStatus.me && vm.readyStatus.permissions) {
                 return true
             }

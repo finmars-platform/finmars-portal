@@ -23,6 +23,8 @@
 
         return new Promise(function (resolve, reject) {
 
+            console.log('options', options);
+
             if (options && options.hasOwnProperty('entityType')) {
 
                 var entityTypePieces = options.entityType.split('-');
@@ -48,6 +50,7 @@
                     }
                 }
             } else {
+
                 switch (fieldKey) {
                     case 'daily_pricing_model':
                         entityFieldsRepository.getDailyPricingModelChoices().then(function (data) {

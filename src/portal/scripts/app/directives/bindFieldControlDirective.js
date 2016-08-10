@@ -101,10 +101,13 @@
 
                 var fieldKey = scope.getModelKey();
 
-                scope.options = {
-                    entityType: scope.entityType,
-                    key: fieldKey
-                };
+                if(scope.entityType.split('-')[0] === 'strategy') {
+                    scope.options = {
+                        entityType: scope.entityType,
+                        key: fieldKey
+                    };
+                } else {scope.options = {}}
+
 
                 scope.setDateToday = function () {
                     //console.log('1232', scope.entity[scope.getModelKey()])

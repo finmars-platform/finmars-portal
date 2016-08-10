@@ -9,44 +9,44 @@
     "state": "app.forum.thread-groups",
     "title": "Forum",
     "type": "link",
-    "icon": "dashboard"
+    "icon": "forum"
   },
   {
     "state": "app",
     "title": "Reports",
-    "icon": "group",
+    "icon": "assessment",
     "type": "toggle",
     "pages": [
       {
         "state": "app.add-balance",
         "title": "New Balance",
         "type": "link",
-        "icon": "dashboard"
+        "icon": ""
       },
       {
         "state": "app.add-performance",
         "title": "New Performance",
         "type": "link",
-        "icon": "dashboard"
+        "icon": ""
       },
       {
         "state": "app.add-cash-flow",
         "title": "New Cash flow",
         "type": "link",
-        "icon": "dashboard"
+        "icon": ""
       },
       {
         "state": "app.add-transaction",
         "title": "New Transaction",
         "type": "link",
-        "icon": "dashboard"
+        "icon": ""
       }
     ]
   },
   {
     "state": "",
     "title": "Data",
-    "icon": "message",
+    "icon": "view_compact",
     "type": "toggle",
     "pages": [
       {
@@ -180,7 +180,7 @@
   {
     "state": "",
     "title": "SETTINGS",
-    "icon": "message",
+    "icon": "settings",
     "type": "toggle",
     "pages": [
       {
@@ -200,7 +200,7 @@
   {
     "state": "",
     "title": "SYSTEM",
-    "icon": "message",
+    "icon": "settings_system_daydream",
     "type": "toggle",
     "pages": [
       {
