@@ -12,20 +12,20 @@
 
 				logService.component('groupVerticalScroll', 'initialized');
 
-				function decreaseScrollBarMargin() {
-					console.log("scroll margin decreased");
-					$(elem).find('#mCSB_2_container').css({
-						'margin-right': '8px'
-					});
-				}
-
-				$(elem).mCustomScrollbar({
-					axis: "y",
-					callbacks: {
-						onInit: decreaseScrollBarMargin,
-						onBeforeUpdate: decreaseScrollBarMargin
-					}
-				});
+				//function decreaseScrollBarMargin() {
+				//	console.log("scroll margin decreased");
+				//	$(elem).find('#mCSB_2_container').css({
+				//		'margin-right': '8px'
+				//	});
+				//}
+                //
+				//$(elem).mCustomScrollbar({
+				//	axis: "y",
+				//	callbacks: {
+				//		onInit: decreaseScrollBarMargin,
+				//		onBeforeUpdate: decreaseScrollBarMargin
+				//	}
+				//});
 
 
 			}

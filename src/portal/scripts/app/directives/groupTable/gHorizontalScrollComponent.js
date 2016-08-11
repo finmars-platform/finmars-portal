@@ -16,17 +16,17 @@
 
                 logService.component('groupHorizontalScroll', 'initialized');
 
-                $(elem).mCustomScrollbar({axis: "x", callbacks: {
-                    onInit: function(){},
-                    onOverflowX: function(){
-                        //console.log("HORIZONTAL SCROLL");
-                        //console.log('test');
-                    },
-                    whileScrolling: function(){
-
-                    }
-
-                }});
+                //$(elem).mCustomScrollbar({axis: "x", callbacks: {
+                //    onInit: function(){},
+                //    onOverflowX: function(){
+                //        //console.log("HORIZONTAL SCROLL");
+                //        //console.log('test');
+                //    },
+                //    whileScrolling: function(){
+                //
+                //    }
+                //
+                //}});
 
             }
         }
