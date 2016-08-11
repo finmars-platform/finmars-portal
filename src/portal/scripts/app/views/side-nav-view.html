@@ -3,25 +3,30 @@
         <div class="md-toolbar-tools">
             <img src="portal/content/img/finmars_logo.png" alt="" height="40"
                  style="position: absolute; left: 7px; margin: 0 auto;">
+            <div class="side-nav-btn-resize-holder">
+                <md-button data-ng-show="vm.sideNavStatus == 'expand'" aria-label="resize"
+                           class="to-small-btn fab md-raised"
+                           data-ng-click="vm.resizeSideNav('collapse')">
+                    <ng-md-icon icon="chevron_left"></ng-md-icon>
+                </md-button>
+                <md-button data-ng-show="vm.sideNavStatus == 'collapse'" aria-label="resize"
+                           class="to-small-btn fab md-raised" data-ng-click="vm.resizeSideNav('expand')">
+                    <ng-md-icon icon="chevron_right"></ng-md-icon>
+                </md-button>
+            </div>
         </div>
     </md-toolbar>
     <md-content flex role="navigation">
-        <ul class="side-menu">
-            <li data-ng-repeat="section in vm.sections" class="parent-list-item"
-                data-ng-class="{'parentActive' : vm.isSectionSelected(section)}">
-                <menu-link section="section" ng-if="section.type === 'link'"></menu-link>
-                <menu-toggle section="section" ng-if="section.type === 'toggle'"></menu-toggle>
-            </li>
-        </ul>
-        <div class="side-nav-btn-resize-holder">
-            <md-button data-ng-show="vm.sideNavStatus == 'expand'" aria-label="resize" class="to-small-btn fab md-raised"
-                       data-ng-click="vm.resizeSideNav('collapse')">
-                <ng-md-icon icon="chevron_left"></ng-md-icon>
-            </md-button>
-            <md-button data-ng-show="vm.sideNavStatus == 'collapse'" aria-label="resize"
-                       class="to-small-btn fab md-raised" data-ng-click="vm.resizeSideNav('expand')">
-                <ng-md-icon icon="chevron_right"></ng-md-icon>
-            </md-button>
+        <div style="overflow: hidden; height: 100%; display: block">
+            <div data-custom-scroll class="custom-scrollbar">
+                <ul class="side-menu">
+                    <li data-ng-repeat="section in vm.sections" class="parent-list-item"
+                        data-ng-class="{'parentActive' : vm.isSectionSelected(section)}">
+                        <menu-link section="section" ng-if="section.type === 'link'"></menu-link>
+                        <menu-toggle section="section" ng-if="section.type === 'toggle'"></menu-toggle>
+                    </li>
+                </ul>
+            </div>
         </div>
     </md-content>
 </md-sidenav>
