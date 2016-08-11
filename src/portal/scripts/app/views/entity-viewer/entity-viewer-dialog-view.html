@@ -29,19 +29,19 @@
                     <md-content class="md-padding">
                         <div data-ng-if="vm.readyStatus.permissions">
                             <md-tabs md-dynamic-height md-border-bottom>
-                                <md-tab label="Object permissions">
+                                <md-tab label="User permissions">
                                     <md-content>
                                         <div>
                                             <div layout="column">
                                                 <div layout="row" layout-align="space-between center"
                                                      class="permissions-table-header">
                                                     <div>
-                                                        <div>User name</div>
+                                                        <div class="permissions-columns">User name</div>
                                                     </div>
                                                     <div layout="row" class="permissions-checkbox-holder" flex="15"
                                                          layout-align="space-between center">
-                                                        <div flex="50">Delegate</div>
-                                                        <div flex="50">Read/Write</div>
+                                                        <div class="permissions-columns" flex="50">Delegate</div>
+                                                        <div class="permissions-columns" flex="50">Read/Write</div>
                                                     </div>
                                                 </div>
                                                 <md-divider></md-divider>
