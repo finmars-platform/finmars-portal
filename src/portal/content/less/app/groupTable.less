@@ -12,9 +12,20 @@
 	.g-workarea {
 		width: calc(100% - border-right);
 		//width: calc(~"100% - 246px");
-		border-right: 6px solid #4C334D;
+		//border-right: 6px solid #4C334D;
 		background: #4C334D;
 		overflow: auto;
+		position: relative;
+		&:after {
+			display: block;
+			content: '';
+			height: 100%;
+			width: 6px;
+			background: #4C334D;
+			right: 0;
+			top: 0;
+			position: absolute;
+		}
 	}
 	.g-additions {
 		position: relative;

@@ -81,6 +81,7 @@ md-sidenav {
 .min-height {
   min-height: 100%;
   height: 100%;
+  overflow: hidden;
 }
 
 .sidenav-wrapper {
@@ -504,6 +505,7 @@ md-menu-bar.header-logout-menu {
   }
 
 }
+
 .sidenav-wrapper {
   menu-toggle ul .sidemenu-btn {
     padding-left: 61px;
@@ -518,15 +520,17 @@ md-menu-bar.header-logout-menu {
   }
   transition: width ease .3s;
 }
+
 .side-nav-btn-resize-holder {
   //position: absolute;
   //bottom: 70px;
   width: 100%;
 }
+
 .md-button.md-raised.to-small-btn {
   fill: #fff;
   position: relative;
-  left: -2px2;
+  left: -2px;
   float: right;
   min-width: 20px;
   background-color: #AD725D;
@@ -534,3 +538,28 @@ md-menu-bar.header-logout-menu {
     background-color: #F4AF8B;
   }
 }
+
+.custom-scrollbar {
+  position: relative;
+  height: 100%;
+  &:hover>.ps-scrollbar-y-rail:hover>.ps-scrollbar-y {
+    background: #4C334D;
+  }
+  .ps-scrollbar-y-rail>.ps-scrollbar-y {
+    background: #4C334D;
+  }
+}
+//.custom-scrollbar {
+//  position: absolute;
+//  right: 10px;
+//  width: 2px;
+//  height: 100%;
+//  background: #ccc;
+//  line-height: 0;
+//  .handle {
+//    width: 100%;
+//    height: 100px;
+//    background: #292a33;
+//    cursor: pointer;
+//  }
+//}
