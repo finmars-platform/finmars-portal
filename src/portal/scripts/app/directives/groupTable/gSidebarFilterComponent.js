@@ -28,17 +28,17 @@
 					var promises = [];
 
 					scope.filters.forEach(function (item) {
-						console.log("filter's item ", item);
+						//console.log("filter's item ", item);
 						if (!scope.fields.hasOwnProperty(item.key)) {
 							if (item['value_type'] == "mc_field" || item['value_type'] == "field") {
 								promises.push(fieldResolverService.getFields(item.key));
 							}
-							console.log("filter's promises ", promises);
+							//console.log("filter's promises ", promises);
 						}
 					});
 
 					Promise.all(promises).then(function (data) {
-						console.log("filter's data ", data);
+						//console.log("filter's data ", data);
 						data.forEach(function(item){
 							scope.fields[item.key] = item.data;
 						});
@@ -104,7 +104,7 @@
 							break;
 					}
 				};
-				console.log('filter fields', scope.filters);
+				//console.log('filter fields', scope.filters);
 			}
 		}
 	}

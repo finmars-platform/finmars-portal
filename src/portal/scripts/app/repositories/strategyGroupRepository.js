@@ -25,7 +25,7 @@
     };
 
     var getByKey = function (strategyNumber, id) {
-        return window.fetch(baseUrl + 'strategies/' + strategyNumber + '/group' + id + '/',
+        return window.fetch(baseUrl + 'strategies/' + strategyNumber + '/group/' + id + '/',
             {
                 method: 'GET',
                 credentials: 'include',
@@ -55,7 +55,7 @@
     };
 
     var update = function (strategyNumber, id, strategy) {
-        return window.fetch(baseUrl + 'strategies/' + strategyNumber + '/group' + id + '/',
+        return window.fetch(baseUrl + 'strategies/' + strategyNumber + '/group/' + id + '/',
             {
                 method: 'PUT',
                 credentials: 'include',
@@ -71,7 +71,7 @@
     };
 
     var deleteByKey = function (strategyNumber, id) {
-        return window.fetch(baseUrl + 'strategies/' + strategyNumber + '/group' + id + '/',
+        return window.fetch(baseUrl + 'strategies/' + strategyNumber + '/group/' + id + '/',
             {
                 method: 'DELETE',
                 credentials: 'include',

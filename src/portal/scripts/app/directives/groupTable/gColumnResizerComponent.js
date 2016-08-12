@@ -118,7 +118,7 @@
 						$('.g-scrollable-area').width(areaWidth + dropNewFieldWidth);
 						// scope.$apply();
 						$(elem).width(areaWidth + dropNewFieldWidth + 24);
-						console.log(areaWidth + dropNewFieldWidth);
+						//console.log(areaWidth + dropNewFieldWidth);
 					} else {
 						//$(elem).width(wrapperWidth);
 					}
@@ -197,7 +197,7 @@
 					setColumnsWidthAndNameTooltip();
 				}, 110);
 				scope.$watchCollection('items', function () {
-					console.log('items added for resize');
+					//console.log('items added for resize');
 					resizeScrollableArea();
 					setTimeout(function () {
 						resize();
@@ -208,7 +208,7 @@
 					resize();
 				}, 100);
 
-				console.log('resizer items is ', scope.items);
+				//console.log('resizer items is ', scope.items);
 
 			}
 		}

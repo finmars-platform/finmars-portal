@@ -33,6 +33,7 @@
 
                 $('.sidenav-wrapper').bind('mouseenter', function () {
                     $('.sidenav-wrapper').width(200);
+                    $(".md-button.md-raised.to-small-btn ").show();
                     $('.menu-toggle-list').show();
                 });
 
@@ -45,6 +46,7 @@
 
                 $('.sidenav-wrapper').bind('mouseleave', function () {
                     $('.sidenav-wrapper').width(55);
+                    $(".md-button.md-raised.to-small-btn ").hide();
                     $('.menu-toggle-list').hide();
                 });
 
