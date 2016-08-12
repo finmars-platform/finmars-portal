@@ -77,6 +77,7 @@ app.controller('WarningDialogController', ['$scope', '$mdDialog', 'warning', req
 app.controller('InfoDialogController', ['$scope', '$mdDialog', 'info', require('./app/controllers/infoDialogController')]);
 app.controller('InstrumentSelectDialogController', ['$scope', '$mdDialog', require('./app/controllers/instrumentSelectDialogController')]);
 app.controller('ClassifierSelectDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/classifierSelectDialogController')]);
+app.controller('SaveLayoutDialogController', ['$scope', '$mdDialog', require('./app/controllers/saveLayoutDialogController')]);
 
 app.controller('AuditController', ['$scope', require('./app/controllers/system/auditController')]);
 app.controller('NotificationsController', ['$scope', require('./app/controllers/system/notificationsController')]);
