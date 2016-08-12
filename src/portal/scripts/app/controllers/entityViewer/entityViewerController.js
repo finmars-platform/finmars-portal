@@ -37,11 +37,11 @@
 			}
 			vm.listView.data.table.columnsWidth = thWidths;
 
-			console.log("View data is ", vm.listView.data);
+			//console.log("View data is ", vm.listView.data);
 			vm.listView.data.table = vm.table;
 			vm.listView.data.table.columns = vm.columns;
 			// vm.listView.data.table.columns['cellWidth']
-			console.log('---------vm.grouping-------', vm.grouping);
+			//console.log('---------vm.grouping-------', vm.grouping);
 			vm.listView.data.table.grouping = vm.grouping;
 			vm.listView.data.table.folding = vm.folding;
 			vm.listView.data.table.filters = vm.filters;
@@ -192,7 +192,7 @@
 
 				//vm.tabs = res.data.tabs;
 
-				console.log('re1233333s', res);
+				//console.log('re1233333s', res);
 				//console.log('res.results', res.results[0]);
 				vm.listView = res.results[0];
 
@@ -239,11 +239,11 @@
 		};
 
 		vm.getEntityData = function () {
-			console.log('entityRaw is ', vm.entityRaw);
+			//console.log('entityRaw is ', vm.entityRaw);
 			entityViewerHelperService.transformItems(vm.entityRaw, vm.attrs).then(function (data) {
 				vm.entity = data;
 				vm.groupTableService = GroupTableService.getInstance();
-				console.log("Column text ", vm.groupTableService);
+				//console.log("Column text ", vm.groupTableService);
 
 				vm.updateTable();
 
@@ -279,7 +279,7 @@
 			});
 
 			//console.log('options', options);
-			console.log('entityViewerController parent scope ', $scope.$parent);
+			//console.log('entityViewerController parent scope ', $scope.$parent);
 			$scope.$parent.vm.getList(options).then(function (data) {
 				entityViewerHelperService.transformItems(data, vm.attrs).then(function (data) {
 					vm.entity = data;
@@ -289,7 +289,7 @@
 					vm.groupTableService.grouping.setGroups(vm.grouping, vm.entityType);
 					//console.log("EXTERNAL CALLBACK ", vm.folding);
 					vm.groupTableService.folding.setFolds(vm.folding);
-					console.log('UPDATE TABLE scope.sorting.group', vm.sorting.group);
+					//console.log('UPDATE TABLE scope.sorting.group', vm.sorting.group);
 					vm.sorting.group = findFullAttributeForItem(vm.sorting.group, vm.attrs);
 					//vm.sorting.column = findFullAttributeForItem(vm.sorting.column, vm.attrs);
 					vm.groupTableService.sorting.group.sort(vm.sorting.group);
@@ -319,7 +319,7 @@
 		};
 
 		vm.addEntity = function (ev) {
-			console.log('Add entity dialog have been activated');
+			//console.log('Add entity dialog have been activated');
 			$mdDialog.show({
 				controller: 'EntityViewerAddDialogController as vm',
 				templateUrl: 'views/entity-viewer/entity-viewer-dialog-view.html',

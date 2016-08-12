@@ -148,6 +148,7 @@
             //'node_modules/malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.js',
             //'node_modules/nanoscroller/bin/javascripts/jquery.nanoscroller.js',
             'node_modules/perfect-scrollbar/dist/js/perfect-scrollbar.jquery.min.js',
+            'node_modules/fancy-logger/dist/js/fancy-logger.js',
             'node_modules/jstree/dist/jstree.js',
             'bower_components/pickmeup/js/jquery.pickmeup.js'
         ];

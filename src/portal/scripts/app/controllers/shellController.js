@@ -12,7 +12,7 @@
 
 	module.exports = function ($scope, $state, $rootScope, $mdDialog) {
 
-		logService.controller('ShellController', 'initialized');
+		logService.controller('ShellController', 'initialized', 1);
 
 		var vm = this;
 
@@ -27,7 +27,7 @@
 			setTimeout(function () {
 				usersService.login('dev1', 'Uethohk0').then(function () {
 				//usersService.login('dev11', 'cheeL1ei').then(function () {
-					console.log('after login', cookiesService.getCookie('csrftoken'));
+				//	console.log('after login', cookiesService.getCookie('csrftoken'));
 					$scope.$apply();
 				});
 			}, 1000)

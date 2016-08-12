@@ -25,7 +25,7 @@
             templateUrl: 'views/directives/groupTable/table-body-view.html',
             link: function (scope, elem, attrs) {
 
-                logService.component('groupTableBody', 'initialized');
+                logService.component('groupTableBody', 'initialized', 1);
 
                 scope.readyStatus = {cellsReady: false};
 
@@ -56,13 +56,13 @@
                             promises.push(bindCellService.findEntities(scope.columns[i].key, {entityType: entityType}));
                         }
                         if (scope.columns[i]['value_type'] === 30) {
-                            console.log('scope.columns[i]', scope.columns[i]);
+                            //console.log('scope.columns[i]', scope.columns[i]);
                             promises.push(attributeTypeService.getByKey(entityType, scope.columns[i].id));
                         }
                     }
 
                     Promise.all(promises).then(function (results) {
-                        console.log('results', results);
+                        //console.log('results', results);
                         results.forEach(function (item) {
                             if (item.key) {
                                 entityFieldsArray[item.key] = item.data;
@@ -274,7 +274,7 @@
                     });
                 };
 
-                console.log('Table body component columns ', scope.columns);
+                //console.log('Table body component columns ', scope.columns);
             }
         }
     }

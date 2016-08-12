@@ -117,7 +117,10 @@
 					if (wrapperWidth < areaWidth + dropNewFieldWidth) {
 						$('.g-scrollable-area').width(areaWidth + dropNewFieldWidth);
 						// scope.$apply();
+						$(elem).width(areaWidth + dropNewFieldWidth + 24);
+						//console.log(areaWidth + dropNewFieldWidth);
 					} else {
+						//$(elem).width(wrapperWidth);
 					}
 				};
 
@@ -154,7 +157,7 @@
 							newWidth = e.clientX - mouseDownLeft;
 							resizeScrollableArea();
 							resizeCells();
-							resizeScrollableArea();
+							//resizeScrollableArea();
 							parent.width(width + newWidth);
 							 if (newWidth + width > minWidth) {
 							     parent.width(width + newWidth);
@@ -194,7 +197,7 @@
 					setColumnsWidthAndNameTooltip();
 				}, 110);
 				scope.$watchCollection('items', function () {
-					console.log('items added for resize');
+					//console.log('items added for resize');
 					resizeScrollableArea();
 					setTimeout(function () {
 						resize();
@@ -205,7 +208,7 @@
 					resize();
 				}, 100);
 
-				console.log('resizer items is ', scope.items);
+				//console.log('resizer items is ', scope.items);
 
 			}
 		}

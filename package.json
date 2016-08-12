@@ -47,6 +47,7 @@
     "angular-ui-router": "^0.2.18",
     "core-js": "^2.1.4",
     "dragula": "^3.6.8",
+    "fancy-logger": "^1.0.0",
     "gulp-postcss": "^6.1.0",
     "jquery": "^2.2.1",
     "jstree": "^3.3.1",

@@ -41,7 +41,7 @@
 			}
 
 
-			console.log('URL------------------', url);
+			//console.log('URL------------------', url);
 		}
 		return url
 	}
