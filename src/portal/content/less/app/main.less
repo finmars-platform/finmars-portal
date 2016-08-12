@@ -491,6 +491,9 @@ md-menu-bar.header-logout-menu {
 }
 
 .sidenav-collapsed {
+  .md-button.md-raised.to-small-btn {
+    //display: none;
+  }
   .sidenav-wrapper {
     width: 55px;
     position: absolute;
@@ -531,10 +534,17 @@ md-menu-bar.header-logout-menu {
   width: 100%;
 }
 
+.sidenav-logo {
+  width: 140px;
+  position: absolute;
+  left: 10px;
+  margin: 0 auto;
+}
+
 .md-button.md-raised.to-small-btn {
   fill: #fff;
   position: relative;
-  left: -2px;
+  left: 15px;
   float: right;
   min-width: 20px;
   background-color: #AD725D;
@@ -546,13 +556,14 @@ md-menu-bar.header-logout-menu {
 .custom-scrollbar {
   position: relative;
   height: 100%;
-  &:hover>.ps-scrollbar-y-rail:hover>.ps-scrollbar-y {
+  &:hover > .ps-scrollbar-y-rail:hover > .ps-scrollbar-y {
     background: #4C334D;
   }
-  .ps-scrollbar-y-rail>.ps-scrollbar-y {
+  .ps-scrollbar-y-rail > .ps-scrollbar-y {
     background: #4C334D;
   }
 }
+
 //.custom-scrollbar {
 //  position: absolute;
 //  right: 10px;

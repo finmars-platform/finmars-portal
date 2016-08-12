@@ -24,6 +24,7 @@
         return new Promise(function (resolve, reject) {
 
             console.log('options', options);
+            console.log('fieldKey', fieldKey);
 
             if (options && options.hasOwnProperty('entityType')) {
 
@@ -50,7 +51,7 @@
                     }
                 }
             } else {
-
+                console.log('here', fieldKey);
                 switch (fieldKey) {
                     case 'daily_pricing_model':
                         entityFieldsRepository.getDailyPricingModelChoices().then(function (data) {
@@ -180,6 +181,11 @@
                     case 'counterparties':
                         counterpartyRepository.getList().then(function (data) {
                             resolve({type: 'multiple-ids', key: 'counterparties', data: data.results});
+                        });
+                        break;
+                    case 'accounts':
+                        accountRepository.getList().then(function (data) {
+                            resolve({type: 'multiple-ids', key: 'accounts', data: data.results});
                         });
                         break;
                     case 'responsibles':

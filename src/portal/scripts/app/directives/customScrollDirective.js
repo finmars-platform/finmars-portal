@@ -13,10 +13,6 @@
                 scrollSticky: '@'
             },
             link: function (scope, elem) {
-
-                console.log('custom scroll!!!', elem);
-                console.log('custom scroll!!!', scope.scrollY);
-
                 //baron($(elem));
                 if (scope.scrollY && scope.scrollY == 'false') {
                     $(elem).perfectScrollbar({
@@ -28,7 +24,6 @@
                     var scrollBarLeft;
 
                     $(elem).on('ps-scroll-x', function (e) {
-                        //console.log('check x', e);
                         if ($('.ps-scrollbar-y-rail.sticky')) {
                             scrollBar = $('.ps-scrollbar-y-rail.sticky');
                             scrollBarX = $(elem).find('> .ps-scrollbar-x-rail');
