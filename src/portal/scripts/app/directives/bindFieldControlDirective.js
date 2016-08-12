@@ -101,12 +101,14 @@
 
                 var fieldKey = scope.getModelKey();
 
-                if(scope.entityType.split('-')[0] === 'strategy') {
+                if (scope.entityType.split('-')[0] === 'strategy') {
                     scope.options = {
                         entityType: scope.entityType,
                         key: fieldKey
                     };
-                } else {scope.options = {}}
+                } else {
+                    scope.options = {}
+                }
 
 
                 scope.setDateToday = function () {
@@ -147,16 +149,19 @@
 
                 if (scope.fieldType && scope.fieldType.value === 30) {
 
-                    scope.classifierId = scope.entity[scope.getModelKey()];
+                    if (scope.entity) {
+                        
+                        scope.classifierId = scope.entity[scope.getModelKey()];
 
-                    getNode().then(function (data) {
-                        scope.node = data;
-                        scope.entity[scope.getModelKey()] = scope.classifierId;
-                        scope.$apply();
-                    });
+                        getNode().then(function (data) {
+                            scope.node = data;
+                            scope.entity[scope.getModelKey()] = scope.classifierId;
+                            scope.$apply();
+                        });
+                    }
                 }
 
-                scope.changeWatcher = function(){
+                scope.changeWatcher = function () {
                     localStorage.setItem('entityIsChanged', true);
                 };
 

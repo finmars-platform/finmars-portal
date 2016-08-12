@@ -93,10 +93,18 @@
       },
       {
         "state": "app.data.currency-history",
-        "title": "Currency history",
+        "title": "FX history",
         "type": "link",
         "icon": ""
-      },
+      }
+    ]
+  },
+  {
+    "state": "",
+    "title": "REFERENCE",
+    "icon": "view_compact",
+    "type": "toggle",
+    "pages": [
       {
         "state": "",
         "title": "Strategy 1",
