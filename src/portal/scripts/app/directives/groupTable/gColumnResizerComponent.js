@@ -117,7 +117,10 @@
 					if (wrapperWidth < areaWidth + dropNewFieldWidth) {
 						$('.g-scrollable-area').width(areaWidth + dropNewFieldWidth);
 						// scope.$apply();
+						$(elem).width(areaWidth + dropNewFieldWidth + 24);
+						console.log(areaWidth + dropNewFieldWidth);
 					} else {
+						//$(elem).width(wrapperWidth);
 					}
 				};
 
@@ -154,7 +157,7 @@
 							newWidth = e.clientX - mouseDownLeft;
 							resizeScrollableArea();
 							resizeCells();
-							resizeScrollableArea();
+							//resizeScrollableArea();
 							parent.width(width + newWidth);
 							 if (newWidth + width > minWidth) {
 							     parent.width(width + newWidth);
