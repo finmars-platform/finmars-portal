@@ -26,7 +26,7 @@
 
 		//console.log('$scope', $scope);
 
-		$('.save-layout-btn').click(function(){
+		$('.save-layout-btn').click(function(e){
 			// saving columns widths
 			var tHead = $('.g-columns-component');
 			var th = $('.g-columns-component.g-thead').find('.g-cell');
@@ -63,6 +63,12 @@
 
 			uiService.updateListLayout(vm.listView.id, vm.listView).then(function(){
 				console.log('saved');
+			});
+			$mdDialog.show({
+				controller: 'SaveLayoutDialogController as vm',
+				templateUrl: 'views/save-layout-dialog-view.html',
+				targetEvent: e,
+				clickOutsideToClose: true
 			});
 		});
 
