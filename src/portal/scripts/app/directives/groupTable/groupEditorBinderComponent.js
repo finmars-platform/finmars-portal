@@ -17,7 +17,7 @@
                 var tpl = $templateCache.get(scope.template);
                 var ctrl = $compile(tpl)(scope);
                 $(elem).append(ctrl);
-                $(elem).mCustomScrollbar({axis: 'y'});
+                //$(elem).mCustomScrollbar({axis: 'y'});
             }
         }
     }
