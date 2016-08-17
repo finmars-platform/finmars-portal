@@ -96,9 +96,46 @@
                 template: '<div data-ui-view></div>'
             })
             .state('app.settings.general', {
+                abstract: true,
                 url: '/general',
                 templateUrl: 'views/settings/general-view.html',
                 controller: 'SettingsGeneralController as vm'
+            })
+            .state('app.settings.general.profile', {
+                url: '/profile',
+                views: {
+                    profile: {
+                        templateUrl: 'views/settings/profile-settings-view.html',
+                        controller: 'SettingsGeneralProfileController as vm'
+                    }
+                }
+            })
+            .state('app.settings.general.data-providers', {
+                url: '/data-providers',
+                views: {
+                    'data-providers': {
+                        templateUrl: 'views/settings/data-providers-settings-view.html',
+                        controller: 'SettingsGeneralDataProvidersController as vm'
+                    }
+                }
+            })
+            .state('app.settings.general.data-providers-config', {
+                url: '/data-providers/:dataProviderId',
+                views: {
+                    'data-providers': {
+                        templateUrl: 'views/settings/data-providers-config-settings-view.html',
+                        controller: 'SettingsGeneralDataProvidersConfigController as vm'
+                    }
+                }
+            })
+            .state('app.settings.general.instrument-import', {
+                url: '/instrument-import',
+                views: {
+                    'instrument-import': {
+                        templateUrl: 'views/settings/instrument-import-settings-view.html',
+                        controller: 'SettingsGeneralInstrumentImportController as vm'
+                    }
+                }
             })
             .state('app.settings.form-design', {
                 url: '/form',

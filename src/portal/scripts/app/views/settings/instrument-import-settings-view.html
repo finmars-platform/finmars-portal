@@ -1,0 +1,20 @@
+<div>
+    <div data-ng-if="vm.readyStatus.instrumentSchemes">
+        <div layout="row" layout-align="end center">
+            <md-button class="md-raised" data-ng-click="vm.addScheme($event)">
+                Create scheme
+            </md-button>
+        </div>
+        <div layout="row" data-ng-if="vm.instrumentSchemes.length">
+
+        </div>
+        <div layout="row" data-ng-if="!vm.instrumentSchemes.length" layout-align="center center">
+            <h3>Import schemes do not exist</h3>
+        </div>
+    </div>
+    <div data-ng-if="!vm.readyStatus.instrumentSchemes">
+        <div layout="row" layout-sm="column" layout-align="space-around" class="m-large">
+            <md-progress-circular md-mode="indeterminate" md-diameter="96"></md-progress-circular>
+        </div>
+    </div>
+</div>

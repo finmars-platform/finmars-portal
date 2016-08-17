@@ -1,0 +1,78 @@
+<md-dialog aria-label="" ng-cloak class="instrument-scheme-manager-dialog-view">
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            <h2>Instrument scheme manager</h2>
+            <span flex></span>
+        </div>
+    </md-toolbar>
+    <md-dialog-content>
+        <div layout="row" layout-align="center center">
+            <md-input-container>
+                <label for="">Scheme name</label>
+                <input type="text">
+            </md-input-container>
+        </div>
+        <div layout="row">
+            <div layout="column" flex="50" class="i-p-20">
+                <div layout="row">
+                    <h4>Fields to load</h4>
+                </div>
+                <div layout="row">
+                    <div class="fields-holder">
+                        <div class="iscm-item" data-ng-repeat="item in vm.providerFields">
+                            <md-input-container>
+                                <label for="">Field</label>
+                                <input type="text">
+                            </md-input-container>
+                        </div>
+                    </div>
+                </div>
+                <div layout="row">
+                    <md-button class="md-raised">
+                        Add field
+                    </md-button>
+                </div>
+            </div>
+            <div layout="column" flex="50" class="i-p-20">
+                <div layout="row">
+                    <h4>Map on instrument fields:</h4>
+                </div>
+                <div layout="column">
+                    <div data-ng-repeat="item in vm.mapFields" layout="row">
+                        <div flex="50">
+                            <md-input-container>
+                                <md-select data-ng-model="item.key">
+                                    <md-option data-ng-repeat="item in vm.baseAttrs" ng-value="item.key">{{item.name}}</md-option>
+                                    <md-option data-ng-repeat="item in vm.entityAttrs" ng-value="item.key">{{item.name}}</md-option>
+                                    <md-option data-ng-repeat="item in vm.attrs" ng-value="item.key">{{item.name}}</md-option>
+                                </md-select>
+                            </md-input-container>
+                        </div>
+                        <div flex="40">
+                            <md-input-container>
+                                <label for="">Expression</label>
+                                <input type="text">
+                            </md-input-container>
+                        </div>
+                        <div flex="10">
+                            <div data-ng-if="!item.required">
+                                <md-button class="md-raised">x</md-button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div layout="row">
+                    <md-button class="md-raised">Add field</md-button>
+                </div>
+            </div>
+        </div>
+    </md-dialog-content>
+    <md-dialog-actions layout="row">
+        <md-button class="md-raised" ng-click="vm.cancel()">
+            Cancel
+        </md-button>
+        <md-button class="md-raised md-primary" ng-click="vm.agree()" style="margin-right:20px;">
+            Save
+        </md-button>
+    </md-dialog-actions>
+</md-dialog>
