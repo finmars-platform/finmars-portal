@@ -5,9 +5,9 @@
 
     'use strict';
 
-    var logService = require('../../../../core/services/logService');
+    var logService = require('../../../../../core/services/logService');
 
-    var metaService = require('../services/metaService');
+    var metaService = require('../../services/metaService');
 
     module.exports = function ($scope, $mdDialog, attribute) {
 

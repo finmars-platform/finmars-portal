@@ -5,15 +5,15 @@
 
     'use strict';
 
-    var logService = require('../../../../core/services/logService');
+    var logService = require('../../../../../core/services/logService');
 
-    module.exports = function($scope, $mdDialog, info){
+    module.exports = function($scope, $mdDialog, warning){
 
         logService.controller('WarningDialogController', 'initialized');
 
         var vm = this;
 
-        vm.info = info;
+        vm.warning = warning;
 
         vm.cancel = function () {
             $mdDialog.cancel();

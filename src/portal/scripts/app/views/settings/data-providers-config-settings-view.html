@@ -1,0 +1,28 @@
+<div>
+    <div data-ng-if="vm.readyStatus.provider">
+        <md-card>
+            <md-card-content>
+                <md-input-container class="md-block">
+                    <label>Certificate</label>
+                    <input type="file" data-ng-model="vm.provider.p12cert">
+                </md-input-container>
+                <md-input-container class="md-block">
+                    <label>Password</label>
+                    <input type="password" data-ng-model="vm.provider.password">
+                </md-input-container>
+            </md-card-content>
+            <md-card-actions>
+                <div layout="row" layout-align="end center">
+                    <md-button class="md-raised">
+                        Save
+                    </md-button>
+                </div>
+            </md-card-actions>
+        </md-card>
+    </div>
+    <div data-ng-if="!vm.readyStatus.provider">
+        <div layout="row" layout-sm="column" layout-align="space-around" class="m-large">
+            <md-progress-circular md-mode="indeterminate" md-diameter="96"></md-progress-circular>
+        </div>
+    </div>
+</div>

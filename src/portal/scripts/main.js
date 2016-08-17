@@ -47,10 +47,12 @@ app.controller('SideNavController', ['$scope', require('./app/controllers/sideNa
 app.controller('DashboardController', ['$scope', require('./app/controllers/dashboardController')]);
 
 app.controller('AttributesManagerController', ['$scope', '$state', '$stateParams', '$mdDialog', require('./app/controllers/attributesManagerController')]);
-app.controller('AttributesManagerEditDialogController', ['$scope', '$mdDialog', 'attribute', require('./app/controllers/attributesManagerEditDialogController')]);
-app.controller('AttributesManagerAddDialogController', ['$scope', '$mdDialog', require('./app/controllers/attributesManagerAddDialogController')]);
-app.controller('ClassificationEditorDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/classificationEditorDialogController')]);
+app.controller('AttributesManagerEditDialogController', ['$scope', '$mdDialog', 'attribute', require('./app/controllers/dialogs/attributesManagerEditDialogController')]);
+app.controller('AttributesManagerAddDialogController', ['$scope', '$mdDialog', require('./app/controllers/dialogs/attributesManagerAddDialogController')]);
+app.controller('ClassificationEditorDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/classificationEditorDialogController')]);
 
+
+app.controller('InstrumentMappingDialogController', ['$scope', '$mdDialog', require('./app/controllers/dialogs/instrumentMappingDialogController')]);
 
 app.controller('EntityViewerController', ['$scope', '$mdDialog', '$mdMedia', require('./app/controllers/entityViewer/entityViewerController')]);
 app.controller('EntityViewerAddDialogController', ['$scope', '$mdDialog', 'parentScope', '$state', require('./app/controllers/entityViewer/entityViewerAddDialogController')]);
@@ -73,16 +75,21 @@ app.controller('EntityDataConstructorController', ['$scope', '$stateParams', '$s
 
 app.controller('AdditionsEditorEntityEditController', ['$scope', '$state', '$mdDialog', require('./app/controllers/additionsEditorEntityEditController')]);
 
-app.controller('WarningDialogController', ['$scope', '$mdDialog', 'warning', require('./app/controllers/warningDialogController')]);
-app.controller('InfoDialogController', ['$scope', '$mdDialog', 'info', require('./app/controllers/infoDialogController')]);
-app.controller('InstrumentSelectDialogController', ['$scope', '$mdDialog', require('./app/controllers/instrumentSelectDialogController')]);
-app.controller('ClassifierSelectDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/classifierSelectDialogController')]);
-app.controller('SaveLayoutDialogController', ['$scope', '$mdDialog', require('./app/controllers/saveLayoutDialogController')]);
+app.controller('WarningDialogController', ['$scope', '$mdDialog', 'warning', require('./app/controllers/dialogs/warningDialogController')]);
+app.controller('InfoDialogController', ['$scope', '$mdDialog', 'info', require('./app/controllers/dialogs/infoDialogController')]);
+app.controller('InstrumentSelectDialogController', ['$scope', '$mdDialog', require('./app/controllers/dialogs/instrumentSelectDialogController')]);
+app.controller('ClassifierSelectDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/classifierSelectDialogController')]);
+app.controller('SaveLayoutDialogController', ['$scope', '$mdDialog', require('./app/controllers/dialogs/saveLayoutDialogController')]);
 
 app.controller('AuditController', ['$scope', require('./app/controllers/system/auditController')]);
 app.controller('NotificationsController', ['$scope', require('./app/controllers/system/notificationsController')]);
 
-app.controller('SettingsGeneralController', ['$scope', require('./app/controllers/settings/settingsGeneralController')]);
+app.controller('SettingsGeneralController', ['$scope', '$state', require('./app/controllers/settings/settingsGeneralController')]);
+app.controller('SettingsGeneralProfileController', ['$scope', require('./app/controllers/settings/general/settingsGeneralProfileController')]);
+app.controller('SettingsGeneralDataProvidersController', ['$scope', require('./app/controllers/settings/general/settingsGeneralDataProvidersController')]);
+app.controller('SettingsGeneralDataProvidersConfigController', ['$scope', '$stateParams', require('./app/controllers/settings/general/settingsGeneralDataProvidersConfigController')]);
+app.controller('SettingsGeneralInstrumentImportController', ['$scope', '$mdDialog', require('./app/controllers/settings/general/settingsGeneralInstrumentImportController')]);
+
 app.controller('SettingsFormDesignController', ['$scope', '$state', require('./app/controllers/settings/settingsFormDesignController')]);
 app.controller('SettingBloombergImportInstrumentController', ['$scope', '$state', require('./app/controllers/settings/settingBloombergImportInstrumentController')]);
 

@@ -487,6 +487,63 @@
 					"name": "User code",
 					"value_type": 10
 				}
+			],
+			"instrument-scheme": [
+				{
+					key: 'reference_for_pricing',
+					name: 'Reference for pricing',
+					"value_type": 10
+				},
+				{
+					"key": "user_code",
+					"name": "User code",
+					"value_type": 10
+				},
+				{
+					"key": "public_name",
+					"name": "User code",
+					"value_type": 10
+				},
+				{
+					"key": "instrument_type",
+					"name": "Instrument type",
+					"value_type": 10
+				},
+				{
+					"key": "price_multiplier",
+					"name": "Pricing currency",
+					"value_type": 10
+				},
+				{
+					"key": "price_multiplier",
+					"name": "Price multiplier",
+					"value_type": 10
+				},
+				{
+					"key": "accrued_currency",
+					"name": "Accrued currency",
+					"value_type": 10
+				},
+				{
+					"key": "accrued_multiplier",
+					"name": "Accrued multiplier",
+					"value_type": 10
+				},
+				{
+					"key": "user_text_1",
+					"name": "User text 1",
+					"value_type": 10
+				},
+				{
+					"key": "user_text_2",
+					"name": "User text 2",
+					"value_type": 10
+				},
+				{
+					"key": "user_text_3",
+					"name": "User text 3",
+					"value_type": 10
+				}
 			]
 		};
 

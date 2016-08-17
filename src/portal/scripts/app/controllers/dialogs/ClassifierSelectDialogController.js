@@ -5,8 +5,8 @@
 
     'use strict';
 
-    var logService = require('../../../../core/services/logService');
-    var attributeTypeService = require('../services/attributeTypeService');
+    var logService = require('../../../../../core/services/logService');
+    var attributeTypeService = require('../../services/attributeTypeService');
 
     module.exports = function ($scope, $mdDialog, data) {
 

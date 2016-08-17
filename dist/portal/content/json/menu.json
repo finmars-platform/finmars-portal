@@ -192,7 +192,7 @@
     "type": "toggle",
     "pages": [
       {
-        "state": "app.settings.general",
+        "state": "app.settings.general.profile",
         "title": "General",
         "type": "link",
         "icon": ""
