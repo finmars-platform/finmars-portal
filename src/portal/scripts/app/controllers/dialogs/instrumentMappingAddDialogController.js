@@ -20,7 +20,7 @@
 
         vm.readyStatus = {dataProviders: false, scheme: true};
 
-        dataProvidersService.getList().then(function(data){
+        dataProvidersService.getList().then(function (data) {
             vm.dataProviders = data;
             vm.readyStatus.dataProviders = true;
             $scope.$apply();
@@ -31,14 +31,14 @@
 
         vm.scheme = {};
 
-        var createEmptyScheme = function(){
+        var createEmptyScheme = function () {
             vm.scheme.attributes = [];
             var b;
-            for(b = 0; b < vm.baseAttrs.length; b = b + 1) {
+            for (b = 0; b < vm.baseAttrs.length; b = b + 1) {
                 vm.scheme[vm.baseAttrs[b].key] = ''
             }
             var i;
-            for(i = 0; i < vm.entityAttrs.length; i = i + 1) {
+            for (i = 0; i < vm.entityAttrs.length; i = i + 1) {
                 vm.scheme[vm.entityAttrs[i].key] = ''
             }
         };
@@ -105,25 +105,31 @@
             })
         };
 
-        vm.removeProviderField = function(item, $index) {
-            vm.providerFields.splice(1, $index);
+        vm.removeProviderField = function (item, $index) {
+            console.log('$index', $index);
+
+            vm.providerFields.splice($index,1);
+
+            //$scope.$apply();
+            console.log('vm.providerFields', vm.providerFields);
         };
 
-        vm.removeMappingField = function(item, $index) {
-          vm.mapFields.splice(1, $index);
+        vm.removeMappingField = function (item, $index) {
+            vm.mapFields.splice($index, 1);
         };
 
         vm.cancel = function () {
             $mdDialog.cancel();
         };
 
-        vm.agree = function() {
+        vm.agree = function () {
 
             vm.scheme['scheme_name'] = vm.schemeName;
             vm.scheme['provider'] = vm.schemeProvider;
+            vm.scheme.attributes = [];
             var i;
-            for(i = 0; i < vm.mapFields.length; i = i + 1) {
-               vm.scheme[vm.mapFields[i].key] = vm.mapFields[i].expression
+            for (i = 0; i < vm.mapFields.length; i = i + 1) {
+                vm.scheme[vm.mapFields[i].key] = vm.mapFields[i].expression
             }
 
             vm.scheme.inputs = vm.providerFields;

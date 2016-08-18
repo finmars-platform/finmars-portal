@@ -1,7 +1,7 @@
 <md-dialog aria-label="" ng-cloak class="instrument-scheme-manager-dialog-view">
     <md-toolbar>
         <div class="md-toolbar-tools">
-            <h2 style="margin: 0">Instrument scheme manager</h2>
+            <h2>Instrument scheme manager</h2>
             <span flex></span>
         </div>
     </md-toolbar>
@@ -36,22 +36,18 @@
             </div>
             <div layout="row">
                 <div layout="column" flex="50">
-
                     <div layout="row">
-                        <md-card flex="100">
-                            <md-card-content>
-                                <h4 style="margin: 0">Fields to load</h4>
-                            </md-card-content>
-                        </md-card>
+                        <h4 style="padding-left: 10px">Fields to load</h4>
                     </div>
                     <div layout="column">
-                        <md-card data-ng-repeat="item in vm.providerFields" flex="100">
+
+                        <md-card data-ng-repeat="item in vm.providerFields track by $index" flex="100">
                             <md-card-content>
                                 <div class="fields-holder" layout="row">
                                     <div class="iscm-item">
                                         <md-input-container>
                                             <label for="">Field</label>
-                                            <input type="text">
+                                            <input type="text" data-ng-model="item.name">
                                         </md-input-container>
                                     </div>
                                     <div>
@@ -73,11 +69,7 @@
                 </div>
                 <div layout="column" flex="50">
                     <div layout="row">
-                        <md-card flex="100">
-                            <md-card-content>
-                                <h4>Map on instrument fields:</h4>
-                            </md-card-content>
-                        </md-card>
+                        <h4 style="padding-left: 10px">Map on instrument fields:</h4>
                     </div>
                     <div layout="column">
                         <div data-ng-repeat="item in vm.mapFields" layout="row">
@@ -122,6 +114,29 @@
                     <div layout="row">
                         <md-button class="md-raised" data-ng-click="vm.addMapField()">Add field</md-button>
                     </div>
+                </div>
+            </div>
+            <md-divider style="margin: 20px"></md-divider>
+            <div layout="column">
+                <div layout="row">
+                    <md-card flex="50">
+                        <md-card-content>
+                            <md-input-container style="width: 100%">
+                                <label for="">Factor upload method</label>
+                                <md-select></md-select>
+                            </md-input-container>
+                        </md-card-content>
+                    </md-card>
+                </div>
+                <div layout="row">
+                    <md-card flex="50">
+                        <md-card-content>
+                            <md-input-container style="width: 100%">
+                                <label for="">Accrual schedule upload</label>
+                                <md-select></md-select>
+                            </md-input-container>
+                        </md-card-content>
+                    </md-card>
                 </div>
             </div>
         </div>
