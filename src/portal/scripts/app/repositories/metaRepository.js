@@ -510,7 +510,7 @@
 					"value_type": 10
 				},
 				{
-					"key": "price_multiplier",
+					"key": "pricing_currency",
 					"name": "Pricing currency",
 					"value_type": 10
 				},
