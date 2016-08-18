@@ -31,7 +31,7 @@
 
         vm.dataProviders = [];
 
-        dataProvidersService.getList().then(function(data){
+        dataProvidersService.getList().then(function (data) {
             vm.dataProviders = data;
             vm.readyStatus.dataProviders = true;
             $scope.$apply();
@@ -78,7 +78,6 @@
 
         vm.providerFields = [
             {
-                id: 0,
                 name: '',
                 field: ''
             }
@@ -91,8 +90,8 @@
 
             var findKeyCaption = function (key) {
                 var i;
-                for(i = 0; i < vm.entityAttrs.length; i = i + 1) {
-                    if(vm.entityAttrs[i].key == key) {
+                for (i = 0; i < vm.entityAttrs.length; i = i + 1) {
+                    if (vm.entityAttrs[i].key == key) {
                         return vm.entityAttrs[i].caption;
                     }
                 }
@@ -116,19 +115,29 @@
             vm.mapFields = [];
             for (i = 0; i < keys.length; i = i + 1) {
 
-                var caption = findKeyCaption(keys[i]);
-                var required = checkRequired(keys[i]);
+                if (['factor_schedule_method',
+                        'accrual_calculation_schedule_method',
+                        'provider',
+                        'url',
+                        'scheme_name',
+                        'id',
+                        'attributes',
+                        'inputs'].indexOf(keys[i]) === -1) {
 
-                vm.mapFields.push({
-                    caption: caption,
-                    require: required,
-                    key: keys[i],
-                    expression: vm.scheme[keys[i]]
-                })
+                    var caption = findKeyCaption(keys[i]);
+                    var required = checkRequired(keys[i]);
+
+                    vm.mapFields.push({
+                        caption: caption,
+                        require: required,
+                        key: keys[i],
+                        expression: vm.scheme[keys[i]]
+                    })
+                }
             }
 
             var a;
-            for(a = 0; a < vm.scheme.attributes.length; a = a + 1) {
+            for (a = 0; a < vm.scheme.attributes.length; a = a + 1) {
                 vm.mapFields.push(vm.scheme.attributes[a]);
             }
 
@@ -137,7 +146,6 @@
 
         vm.addProviderField = function () {
             vm.providerFields.push({
-                id: 0,
                 name: '',
                 field: ''
             })
@@ -150,12 +158,12 @@
             })
         };
 
-        vm.removeProviderField = function(item, $index) {
-            vm.providerFields.splice(1, $index);
+        vm.removeProviderField = function (item, $index) {
+            vm.providerFields.splice($index, 1);
         };
 
-        vm.removeMappingField = function(item, $index) {
-            vm.mapFields.splice(1, $index);
+        vm.removeMappingField = function (item, $index) {
+            vm.mapFields.splice($index, 1);
         };
 
         vm.cancel = function () {
@@ -163,18 +171,20 @@
         };
 
         vm.agree = function () {
-
-            vm.scheme['scheme_name'] = vm.schemeName;
+            vm.schemeUpdated = {};
+            vm.schemeUpdated['scheme_name'] = vm.schemeName;
+            vm.schemeUpdated['provider'] = vm.schemeProvider;
+            vm.schemeUpdated.attributes = [];
             var i;
             for (i = 0; i < vm.mapFields.length; i = i + 1) {
-                vm.scheme[vm.mapFields[i].key] = vm.mapFields[i].expression
+                vm.schemeUpdated[vm.mapFields[i].key] = vm.mapFields[i].expression
             }
 
-            vm.scheme.inputs = vm.providerFields;
+            vm.schemeUpdated.inputs = vm.providerFields;
 
             $mdDialog.hide({
                 status: 'agree',
-                data: vm.scheme
+                data: vm.schemeUpdated
             })
         }
     };

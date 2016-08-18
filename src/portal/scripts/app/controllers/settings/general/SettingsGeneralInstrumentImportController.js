@@ -79,7 +79,9 @@
                 if (res.status === 'agree') {
                     console.log('res', res.data);
                     instrumentSchemeService.deleteByKey(item.id);
-                    vm.getList();
+                    setTimeout(function () {
+                        vm.getList();
+                    }, 100)
                 }
             });
 
