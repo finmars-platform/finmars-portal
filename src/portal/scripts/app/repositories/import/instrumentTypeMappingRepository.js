@@ -1,17 +1,17 @@
 /**
- * Created by szhitenev on 17.08.2016.
+ * Created by szhitenev on 19.08.2016.
  */
 (function () {
 
     'use strict';
 
-    var cookieService = require('../../../../core/services/cookieService');
-    var configureRepositoryUrlService = require('../services/configureRepositoryUrlService');
+    var cookieService = require('../../../../../core/services/cookieService');
+    var configureRepositoryUrlService = require('../../services/configureRepositoryUrlService');
 
     var baseUrl = '/api/v1/';
 
     var getList = function () {
-        return window.fetch(baseUrl + 'import/instrument-scheme/',
+        return window.fetch(baseUrl + 'import/instrument-type-mapping/',
             {
                 method: 'GET',
                 credentials: 'include',
@@ -23,9 +23,8 @@
             return data.json();
         })
     };
-
-    var create = function (scheme) {
-        return window.fetch(baseUrl + 'import/instrument-scheme/',
+    var create = function (map) {
+        return window.fetch(baseUrl + 'import/instrument-type-mapping/',
             {
                 method: 'POST',
                 credentials: 'include',
@@ -34,14 +33,14 @@
                     Accept: 'application/json',
                     'Content-type': 'application/json'
                 },
-                body: JSON.stringify(scheme)
+                body: JSON.stringify(map)
             }).then(function (data) {
             return data.json();
         })
     };
 
     var getByKey = function (id) {
-        return window.fetch(baseUrl + 'import/instrument-scheme/' + id + '/',
+        return window.fetch(baseUrl + 'import/instrument-type-mapping/' + id + '/',
             {
                 method: 'GET',
                 credentials: 'include',
@@ -55,8 +54,8 @@
         })
     };
 
-    var update = function (id, scheme) {
-        return window.fetch(baseUrl + 'import/instrument-scheme/' + id + '/',
+    var update = function (id, map) {
+        return window.fetch(baseUrl + 'import/instrument-type-mapping/' + id + '/',
             {
                 method: 'PUT',
                 credentials: 'include',
@@ -65,14 +64,14 @@
                     Accept: 'application/json',
                     'Content-type': 'application/json'
                 },
-                body: JSON.stringify(scheme)
+                body: JSON.stringify(map)
             }).then(function (data) {
             return data.json();
         })
     };
 
     var deleteByKey = function (id) {
-        return window.fetch(baseUrl + 'import/instrument-scheme/' + id + '/',
+        return window.fetch(baseUrl + 'import/instrument-type-mapping/' + id + '/',
             {
                 method: 'DELETE',
                 credentials: 'include',
@@ -88,8 +87,8 @@
 
     module.exports = {
         getList: getList,
-        create: create,
         getByKey: getByKey,
+        create: create,
         update: update,
         deleteByKey: deleteByKey
     }

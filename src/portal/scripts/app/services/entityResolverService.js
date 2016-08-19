@@ -13,10 +13,23 @@
     var priceHistoryService = require('./priceHistoryService');
     var currencyHistoryService = require('./currencyHistoryService');
 
+    var currencyService = require('./currencyService');
+    var instrumentTypeService = require('./instrumentTypeService');
+
     var strategyService = require('./strategyService');
     var strategyGroupService = require('./strategyGroupService');
     var strategySubgroupService = require('./strategySubgroupService');
 
+    var getList = function(entityType) {
+        switch (entityType) {
+            case 'currency':
+                return currencyService.getList();
+                break;
+            case 'instrument_type':
+                return instrumentTypeService.getList();
+                break;
+        }
+    };
 
     var getByKey = function(entityType, id) {
         switch (entityType) {
@@ -237,6 +250,7 @@
     };
 
     module.exports = {
+        getList: getList,
         getByKey: getByKey,
         create: create,
         update: update,

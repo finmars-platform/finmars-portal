@@ -1,0 +1,40 @@
+<md-dialog aria-label="" ng-cloak class="entity-type-mapping-dialog-view" style="width: 50%">
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            <h2>Entity type mapping</h2>
+            <span flex></span>
+        </div>
+    </md-toolbar>
+    <md-dialog-content style="background: #E5E5E5;">
+        <div data-ng-if="vm.readyStatus.content">
+            <md-card data-ng-repeat="item in vm.entityItems">
+                <md-card-content>
+                    <div layout="row">
+                        <div flex="50">
+                            <md-input-container>
+                                <label for="">Value</label>
+                                <input type="text" data-ng-model="item.mapping.value">
+                            </md-input-container>
+                        </div>
+                        <div flex="50">
+                            <p data-ng-bind="item.name"></p>
+                        </div>
+                    </div>
+                </md-card-content>
+            </md-card>
+        </div>
+        <div data-ng-if="!vm.readyStatus.content">
+            <div layout="row" layout-sm="column" layout-align="space-around" class="m-large">
+                <md-progress-circular md-mode="indeterminate" md-diameter="96"></md-progress-circular>
+            </div>
+        </div>
+    </md-dialog-content>
+    <md-dialog-actions layout="row">
+        <md-button class="md-raised" ng-click="vm.cancel()">
+            Cancel
+        </md-button>
+        <md-button class="md-raised md-primary" ng-click="vm.agree()" style="margin-right:20px;">
+            Save
+        </md-button>
+    </md-dialog-actions>
+</md-dialog>

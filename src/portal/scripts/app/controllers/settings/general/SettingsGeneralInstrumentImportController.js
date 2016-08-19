@@ -5,7 +5,7 @@
 
     var logService = require('../../../../../../core/services/logService');
 
-    var instrumentSchemeService = require('../../../services/instrumentSchemeService');
+    var instrumentSchemeService = require('../../../services/import/instrumentSchemeService');
 
     module.exports = function ($scope, $mdDialog) {
 

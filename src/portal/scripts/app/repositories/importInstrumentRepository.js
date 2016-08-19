@@ -11,7 +11,7 @@
     var baseUrl = '/api/v1/';
 
     var getInstrumentMappingList = function () {
-        return window.fetch(baseUrl + 'import/instuments/instrument/mapping/',
+        return window.fetch(baseUrl + 'import/instruments/instrument/mapping/',
             {
                 method: 'GET',
                 credentials: 'include',

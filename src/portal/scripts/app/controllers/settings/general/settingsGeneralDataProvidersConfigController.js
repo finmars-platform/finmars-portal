@@ -5,7 +5,7 @@
 
     var logService = require('../../../../../../core/services/logService');
 
-    var dataProvidersService = require('../../../services/dataProvidersService');
+    var dataProvidersService = require('../../../services/import/dataProvidersService');
 
     module.exports = function ($scope, $stateParams) {
 
