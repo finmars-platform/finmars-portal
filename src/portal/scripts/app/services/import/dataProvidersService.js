@@ -5,7 +5,7 @@
 
     'use strict';
 
-    var dataProvidersRepository = require('../repositories/dataProvidersRepository');
+    var dataProvidersRepository = require('../../repositories/import/dataProvidersRepository');
 
     var getList = function () {
         return dataProvidersRepository.getList();

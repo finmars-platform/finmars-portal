@@ -495,13 +495,23 @@
 					"value_type": 10
 				},
 				{
+					key: 'factor_schedule_method',
+					name: 'Factor schedule method',
+					type: 'field'
+				},
+				{
+					key: 'accrual_calculation_schedule_method',
+					name: 'Accrual calculation schedule method',
+					type: 'field'
+				},
+				{
 					"key": "user_code",
 					"name": "User code",
 					"value_type": 10
 				},
 				{
 					"key": "public_name",
-					"name": "User code",
+					"name": "Public name",
 					"value_type": 10
 				},
 				{

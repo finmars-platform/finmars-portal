@@ -1,17 +1,17 @@
 /**
- * Created by szhitenev on 17.08.2016.
+ * Created by szhitenev on 19.08.2016.
  */
 (function () {
 
     'use strict';
 
-    var cookieService = require('../../../../core/services/cookieService');
-    var configureRepositoryUrlService = require('../services/configureRepositoryUrlService');
+    var cookieService = require('../../../../../core/services/cookieService');
+    var configureRepositoryUrlService = require('../../services/configureRepositoryUrlService');
 
     var baseUrl = '/api/v1/';
 
-    var getList = function () {
-        return window.fetch(baseUrl + 'import/provider/',
+    var getAccrualScheduleDownloadMethodList = function () {
+        return window.fetch(baseUrl + 'import/accrual-schedule-download-method/',
             {
                 method: 'GET',
                 credentials: 'include',
@@ -24,8 +24,8 @@
         })
     };
 
-    var getConfig = function (providerId) {
-        return window.fetch(baseUrl + 'import/config/' + providerId,
+    var getFactorScheduleDownloadMethodList = function () {
+        return window.fetch(baseUrl + 'import/factor-schedule-download-method/',
             {
                 method: 'GET',
                 credentials: 'include',
@@ -39,8 +39,8 @@
     };
 
     module.exports = {
-        getList: getList,
-        getConfig: getConfig
+        getAccrualScheduleDownloadMethodList: getAccrualScheduleDownloadMethodList,
+        getFactorScheduleDownloadMethodList: getFactorScheduleDownloadMethodList
     }
 
 }());

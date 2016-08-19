@@ -5,7 +5,7 @@
 
     'use strict';
 
-    var instrumentSchemeRepository = require('../repositories/instrumentSchemeRepository');
+    var instrumentSchemeRepository = require('../../repositories/import/instrumentSchemeRepository');
 
     var getList = function () {
         return instrumentSchemeRepository.getList();
