@@ -186,6 +186,12 @@
     ]
   },
   {
+    "state": "app.actions",
+    "title": "Actions",
+    "type": "link",
+    "icon": "assignment"
+  },
+  {
     "state": "",
     "title": "SETTINGS",
     "icon": "settings",

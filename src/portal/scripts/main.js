@@ -45,12 +45,15 @@ app.controller('ShellController', ['$scope', '$state', '$rootScope', '$mdDialog'
 app.controller('SideNavController', ['$scope', require('./app/controllers/sideNavController')]);
 
 app.controller('DashboardController', ['$scope', require('./app/controllers/dashboardController')]);
+app.controller('ActionsController', ['$scope', '$mdDialog', require('./app/controllers/actionsController')]);
+app.controller('ImportInstrumentDialogController', ['$scope', '$mdDialog', require('./app/controllers/dialogs/importInstrumentDialogController')]);
+app.controller('AutomatedUploadsHistoryDialogController', ['$scope', '$mdDialog', require('./app/controllers/dialogs/automatedUploadsHistoryDialogController')]);
+app.controller('FillPriceHistoryDialogController', ['$scope', '$mdDialog', require('./app/controllers/dialogs/fillPriceHistoryDialogController')]);
 
 app.controller('AttributesManagerController', ['$scope', '$state', '$stateParams', '$mdDialog', require('./app/controllers/attributesManagerController')]);
 app.controller('AttributesManagerEditDialogController', ['$scope', '$mdDialog', 'attribute', require('./app/controllers/dialogs/attributesManagerEditDialogController')]);
 app.controller('AttributesManagerAddDialogController', ['$scope', '$mdDialog', require('./app/controllers/dialogs/attributesManagerAddDialogController')]);
 app.controller('ClassificationEditorDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/classificationEditorDialogController')]);
-
 
 app.controller('InstrumentMappingAddDialogController', ['$scope', '$mdDialog', require('./app/controllers/dialogs/instrumentMappingAddDialogController')]);
 app.controller('InstrumentMappingEditDialogController', ['$scope', '$mdDialog', 'schemeId', require('./app/controllers/dialogs/instrumentMappingEditDialogController')]);

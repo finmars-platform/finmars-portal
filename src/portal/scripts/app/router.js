@@ -24,6 +24,12 @@
             controller: 'DashboardController as vm'
         });
 
+        $stateProvider.state('app.actions', {
+            url: '/actions',
+            templateUrl: 'views/actions-view.html',
+            controller: 'ActionsController as vm'
+        });
+
         $stateProvider
             .state('app.data', {
                 url: '/data',

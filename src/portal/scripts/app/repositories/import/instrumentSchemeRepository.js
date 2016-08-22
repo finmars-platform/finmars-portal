@@ -10,8 +10,8 @@
 
     var baseUrl = '/api/v1/';
 
-    var getList = function () {
-        return window.fetch(baseUrl + 'import/instrument-scheme/',
+    var getList = function (providerId) {
+        return window.fetch(baseUrl + 'import/instrument-scheme/?provider' + providerId,
             {
                 method: 'GET',
                 credentials: 'include',
