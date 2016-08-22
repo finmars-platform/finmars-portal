@@ -1,0 +1,146 @@
+<md-dialog aria-label="" ng-cloak class="instrument-import-manager-dialog-view">
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            <h2>Instrument import manager</h2>
+            <span flex></span>
+        </div>
+    </md-toolbar>
+    <md-dialog-content style="background: #E5E5E5;">
+        <div data-ng-if="vm.readyStatus.mapping" layout="column">
+            <div layout="row">
+                <md-card style="width: 100%">
+                    <md-card-content>
+                        <div layout="row">
+                            <div layout="column">
+                                <md-input-container flex="40" style="margin-bottom: 0">
+                                    <label for="">ESIN</label>
+                                    <input type="text" data-ng-model="vm.config.instrument_code">
+                                </md-input-container>
+                                <div layout="row">
+                                    <md-button class="md-raised">yellow key 1</md-button>
+                                    <md-button class="md-raised">yellow key 2</md-button>
+                                    <md-button class="md-raised">yellow key 3</md-button>
+                                </div>
+                                <div layout="row">
+                                    <md-button class="md-raised">yellow key 4</md-button>
+                                    <md-button class="md-raised">yellow key 5</md-button>
+                                    <md-button class="md-raised">yellow key 6</md-button>
+                                </div>
+                            </div>
+                            <md-input-container flex="40">
+                                <label for="">Import scheme</label>
+                                <md-select data-ng-model="vm.config.scheme">
+                                    <md-option data-ng-repeat="item in vm.instrumentSchemes" ng-value="item.id">
+                                        {{item.scheme_name}}
+                                    </md-option>
+                                </md-select>
+                            </md-input-container>
+                            <div layout="row">
+                                <md-button class="md-raised" data-ng-click="vm.load()" style="height: 32px">
+                                    Load
+                                </md-button>
+                                <div data-ng-if="vm.readyStatus.processing">
+                                    <md-progress-circular md-mode="indeterminate"
+                                                          md-diameter="48"></md-progress-circular>
+                                </div>
+                            </div>
+                        </div>
+                    </md-card-content>
+                </md-card>
+            </div>
+            <div layout="row">
+                <div flex="50">
+                    <h2 class="title-padding">Received data</h2>
+                    <md-card class="{{vm.dataIsImported ? '' : 'card-opacity'}}">
+                        <md-card-content>
+                            <div data-ng-repeat="item in vm.mappedFields" layout="row">
+                                <div flex="50">
+                                    <p data-ng-bind="item.key"></p>
+                                </div>
+                                <div flex="50">
+                                    <md-input-container>
+                                        <label for="">Value</label>
+                                        <input type="text" data-ng-model="item.value">
+                                    </md-input-container>
+                                </div>
+                            </div>
+
+                        </md-card-content>
+                    </md-card>
+                </div>
+                <div flex="50">
+                    <h2 class="title-padding">Instrument data</h2>
+                    <md-card class="{{vm.dataIsImported ? '' : 'card-opacity'}}">
+                        <md-card-content>
+                            <md-input-container class="md-block">
+                                <label for="">Name</label>
+                                <input type="text" data-ng-model="vm.config.instrument.name">
+                            </md-input-container>
+                            <md-input-container class="md-block">
+                                <label for="">User code</label>
+                                <input type="text" data-ng-model="vm.config.instrument.user_code">
+                            </md-input-container>
+                            <md-input-container class="md-block">
+                                <label for="">Instrument type</label>
+                                <input type="text" data-ng-model="vm.config.instrument.instrument_type">
+                            </md-input-container>
+                            <md-input-container class="md-block">
+                                <label for="">Instrument type</label>
+                                <input type="text" data-ng-model="vm.config.instrument.reference_for_pricing">
+                            </md-input-container>
+
+                            <div class="bordered">
+                                <md-input-container class="md-block">
+                                    <label for="">Pricing model</label>
+                                    <input type="text" data-ng-model="vm.config.instrument.instrument_type">
+                                </md-input-container>
+                                <md-input-container class="md-block">
+                                    <label for="">Price download mode</label>
+                                    <input type="text" data-ng-model="vm.config.instrument.instrument_type">
+                                </md-input-container>
+                                <md-input-container class="md-block">
+                                    <label for="">Default price</label>
+                                    <input type="text" data-ng-model="vm.config.instrument.default_price">
+                                </md-input-container>
+                                <md-input-container class="md-block">
+                                    <label for="">Default accrued</label>
+                                    <input type="text" data-ng-model="vm.config.instrument.default_accrued">
+                                </md-input-container>
+                                <md-input-container class="md-block">
+                                    <label for="">Payment size default</label>
+                                    <input type="text" data-ng-model="vm.config.instrument.instrument_type">
+                                </md-input-container>
+                            </div>
+
+                            <md-input-container class="md-block">
+                                <label for="">Short name</label>
+                                <input type="text" data-ng-model="vm.config.instrument.short_name">
+                            </md-input-container>
+                            <md-input-container class="md-block">
+                                <label for="">Public name</label>
+                                <input type="text" data-ng-model="vm.config.instrument.public_name">
+                            </md-input-container>
+
+                        </md-card-content>
+                    </md-card>
+                </div>
+            </div>
+        </div>
+        <div data-ng-if="!vm.readyStatus.mapping">
+            <div layout="row" layout-sm="column" layout-align="space-around" class="m-large">
+                <md-progress-circular md-mode="indeterminate" md-diameter="96"></md-progress-circular>
+            </div>
+        </div>
+    </md-dialog-content>
+    <md-dialog-actions layout="row">
+        <md-button class="md-raised" ng-click="vm.cancel()">
+            Cancel
+        </md-button>
+        <md-button class="md-raised" data-ng-click="vm.openEditMapping($event)">
+            Edit mapping
+        </md-button>
+        <md-button class="md-raised md-primary" ng-click="vm.agree()" style="margin-right:20px;">
+            Save
+        </md-button>
+    </md-dialog-actions>
+</md-dialog>

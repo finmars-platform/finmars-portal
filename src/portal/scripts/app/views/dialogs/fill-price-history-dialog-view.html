@@ -1,0 +1,36 @@
+<md-dialog aria-label="" ng-cloak class="fill-price-history-manager-dialog-view">
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            <h2>Price history manager</h2>
+            <span flex></span>
+        </div>
+    </md-toolbar>
+    <md-dialog-content style="background: #E5E5E5;">
+        <div data-ng-if="vm.readyStatus.mapping" layout="column">
+            <md-tabs md-dynamic-height md-border-bottom>
+                <md-tab label="Prices">
+
+                </md-tab>
+                <md-tab label="Accruals">
+
+                </md-tab>
+            </md-tabs>
+        </div>
+        <div data-ng-if="!vm.readyStatus.mapping">
+            <div layout="row" layout-sm="column" layout-align="space-around" class="m-large">
+                <md-progress-circular md-mode="indeterminate" md-diameter="96"></md-progress-circular>
+            </div>
+        </div>
+    </md-dialog-content>
+    <md-dialog-actions layout="row">
+        <md-button class="md-raised" ng-click="vm.cancel()">
+            Cancel
+        </md-button>
+        <md-button class="md-raised" data-ng-click="vm.openEditMapping($event)">
+            Edit mapping
+        </md-button>
+        <md-button class="md-raised md-primary" ng-click="vm.agree()" style="margin-right:20px;">
+            Save
+        </md-button>
+    </md-dialog-actions>
+</md-dialog>
