@@ -16,6 +16,8 @@
         vm.entityType = 'portfolio';
         vm.entityRaw = [];
 
+        vm.entityViewer = {extraFeatures: []};
+
         portfolioService.getList().then(function(data){
             vm.entityRaw = data.results;
             $scope.$apply();
