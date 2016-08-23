@@ -16,6 +16,8 @@
         vm.entityType = 'counterparty';
         vm.entityRaw = [];
 
+        vm.entityViewer = {extraFeatures: []};
+
         counterpartyService.getList().then(function(data){
             vm.entityRaw = data.results;
             $scope.$apply();

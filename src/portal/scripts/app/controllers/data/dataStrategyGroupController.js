@@ -24,6 +24,8 @@
         vm.entityType = 'strategy-' + vm.strategyNumber + '-group';
         vm.entityRaw = [];
 
+        vm.entityViewer = {extraFeatures: []};
+
         strategyGroupService.getList(vm.strategyNumber).then(function(data){
             vm.entityRaw = data.results;
             vm.readyStatus.entityRaw = true;

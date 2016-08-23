@@ -16,6 +16,8 @@
         vm.entityType = 'price-history';
         vm.entityRaw = [];
 
+        vm.entityViewer = {extraFeatures: []};
+
         priceHistoryService.getList().then(function(data){
             vm.entityRaw = data.results;
             $scope.$apply();

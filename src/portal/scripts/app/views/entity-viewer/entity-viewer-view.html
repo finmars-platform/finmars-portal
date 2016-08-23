@@ -24,6 +24,13 @@
                     <ng-md-icon icon="view_stream"></ng-md-icon>
                     <md-tooltip md-direction="right">Open editor split panel</md-tooltip>
                 </md-button>
+                <md-button aria-label=""
+                           data-ng-repeat="customButton in vm.customButtons"
+                           class="md-fab md-raised md-mini"
+                           data-ng-click="vm.openCustomAdditionsView($event, customButton)">
+                    <ng-md-icon icon="{{customButton.icon}}"></ng-md-icon>
+                    <md-tooltip md-direction="right">{{customButton.caption}}</md-tooltip>
+                </md-button>
             </md-fab-actions>
         </md-fab-speed-dial>
     </div>
@@ -54,6 +61,7 @@
                 external-update-item-additions="vm.updateItemAddition()"
 
                 additions-status="vm.additionsStatus"
+                additions-state="vm.additionsState"
 
         ></group-table>
     </div>

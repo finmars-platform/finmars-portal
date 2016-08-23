@@ -16,6 +16,8 @@
         vm.entityType = 'responsible';
         vm.entityRaw = [];
 
+        vm.entityViewer = {extraFeatures: []};
+
         responsibleService.getList().then(function(data){
             vm.entityRaw = data.results;
             $scope.$apply();

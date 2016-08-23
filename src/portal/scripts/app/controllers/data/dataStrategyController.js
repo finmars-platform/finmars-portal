@@ -24,6 +24,8 @@
         vm.entityType = 'strategy-' + vm.strategyNumber;
         vm.entityRaw = [];
 
+        vm.entityViewer = {extraFeatures: []};
+
         strategyService.getList(vm.strategyNumber).then(function(data){
             vm.entityRaw = data.results;
             vm.readyStatus.entityRaw = true;

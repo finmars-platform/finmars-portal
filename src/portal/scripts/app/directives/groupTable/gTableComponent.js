@@ -36,22 +36,27 @@
                 externalUpdateItem: '&',
                 externalUpdateItemAdditions: '&',
 
-                additionsStatus: '='
+                additionsStatus: '=',
+                additionsState: '='
             },
             link: function (scope, elem, attrs) {
 
                 logService.component('groupTable', 'initialized');
 
-                scope.additionsState = false;
-
                 //$('.app-md-content').addClass('g-table-overflow');
 
-                scope.$watchCollection('additionsStatus', function(){
-                    scope.additionsState = false;
-                    if (scope.additionsStatus.editor || scope.additionsStatus.table) {
-                        scope.additionsState = true;
-                    }
-                });
+                scope.findSelectedFeature = function () {
+                    var selected = {isOpened: false, templateUrl: ''};
+                    console.log('additionsStatus', scope.additionsStatus);
+                    scope.additionsStatus.extraFeatures.forEach(function (item) {
+                        if (item.isOpened == true) {
+                            selected = item;
+                        }
+                    });
+                    console.log(selected);
+
+                    return selected;
+                }
 
             }
         }

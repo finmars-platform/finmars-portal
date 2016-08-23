@@ -82,5 +82,8 @@
                 </div>
             </div>
         </div>
+        <div class="g-extra-features" data-ng-if="findSelectedFeature().isOpened">
+            <div data-ng-include="{{findSelectedFeature().templateUrl}}"></div>
+        </div>
     </div>
 </div>

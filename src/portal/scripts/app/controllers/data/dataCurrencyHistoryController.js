@@ -16,6 +16,8 @@
         vm.entityType = 'currency-history';
         vm.entityRaw = [];
 
+        vm.entityViewer = {extraFeatures: []};
+
         currencyHistoryService.getList().then(function(data){
             vm.entityRaw = data.results;
             $scope.$apply();
