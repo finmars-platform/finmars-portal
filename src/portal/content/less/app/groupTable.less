@@ -98,8 +98,21 @@
 	.g-row {
 		background-color: #fff;
 		max-width: none;
+		position: relative;
+		height: 24px;
 		&:focus {
-			outline-color: rgba(255, 62, 129, 1);
+			//outline-color: rgba(255, 62, 129, 1);
+			outline: none;
+			&:after {
+				display: block;
+				position: absolute;
+				left: 0;
+				top: 0;
+				content: '';
+				width: 100%;
+				height: 22px;
+				border: 1px solid rgba(255, 62, 129, 1);
+			}
 		}
 	}
 	.g-table-section {
@@ -820,7 +833,7 @@ body.md-dialog-is-showing {
 			border-bottom: 1px solid #fff;
 		}
 		&:hover {
-			background: #DCDCDC;
+			//background: #DCDCDC;
 			.g-row-right-misc {
 				padding-top: 4px;
 				visibility: visible;

@@ -139,7 +139,7 @@ a.md-button.md-default-theme.md-fab, a.md-button.md-fab, .md-button.md-default-t
 }
 
 .md-open-menu-container.md-active {
-  z-index: 10001;
+  z-index: 11001;
 }
 
 .md-datepicker-calendar-pane {
@@ -340,6 +340,7 @@ md-option.disabled {
 md-tooltip.tooltip_1 .md-content.md-show {
   background-color: rgba(0, 0, 0, 0.78);
 }
+
 md-tooltip.tooltip_2 {
   z-index: 11100;
 }
@@ -591,10 +592,66 @@ md-menu-bar.header-logout-menu {
 .i-p-20 {
   padding: 20px;
 }
+
 .card-opacity {
   opacity: .5;
 }
 
 .title-padding {
   padding-left: 10px;
+}
+
+md-progress-linear .md-container {
+  background: #4C334D;
+}
+
+md-progress-linear .md-container .md-bar {
+  background-color: #F4AF8B;
+}
+
+table {
+  width: 100%;
+  display: table
+}
+
+table.bordered > thead > tr, table.bordered > tbody > tr {
+  border-bottom: 1px solid #d0d0d0
+}
+
+table.striped > tbody > tr:nth-child(odd) {
+  background-color: #f2f2f2
+}
+
+table.striped > tbody > tr > td {
+  border-radius: 0
+}
+
+table.highlight > tbody > tr {
+  transition: background-color .25s ease
+}
+
+table.highlight > tbody > tr:hover {
+  background-color: #f2f2f2
+}
+
+table.centered thead tr th, table.centered tbody tr td {
+  text-align: center
+}
+
+thead {
+  border-bottom: 1px solid #d0d0d0
+}
+
+td, th {
+  padding: 15px 5px;
+  display: table-cell;
+  text-align: left;
+  vertical-align: middle;
+  border-radius: 2px
+}
+
+.factor-schedule-tab-view {
+  md-input-container {
+    margin: 0;
+  }
 }

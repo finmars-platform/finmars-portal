@@ -1,0 +1,84 @@
+<div data-ng-controller="EntityEditorController as vm">
+    <div data-ng-if="vm.checkReadyStatus()">
+        <md-tabs md-dynamic-height md-border-bottom>
+            <md-tab label="{{tab.name}}" data-ng-repeat="tab in vm.tabs">
+                <md-content class="md-padding">
+                    <div layout="row" data-ng-repeat="row in vm.range(tab.layout.rows)">
+                        <div class="ev-data-field
+								{{field.attribute['value_type'] === 'decoration' ? 'decoration-label-line' : ''}}"
+                             data-ng-repeat="field in tab.layout.fields"
+                             flex="{{vm.bindFlex(tab, row, field)}}"
+                             data-ng-if="vm.checkFieldRender(tab, row, field)">
+                            <bind-field-control item="vm.bindField(tab, field)"></bind-field-control>
+                        </div>
+                    </div>
+                </md-content>
+            </md-tab>
+            <md-tab label="{{tab.label}}" data-ng-repeat="tab in vm.entityTabs">
+                <div data-ng-include="tab.templateUrl"></div>
+            </md-tab>
+            <md-tab label="Permissions" data-ng-if="vm.checkPermissions()">
+                <md-content class="md-padding">
+                    <div data-ng-if="vm.readyStatus.permissions">
+                        <md-tabs md-dynamic-height md-border-bottom>
+                            <md-tab label="User permissions">
+                                <md-content>
+                                    <div>
+                                        <div layout="column">
+                                            <div layout="row" layout-align="space-between center"
+                                                 class="permissions-table-header">
+                                                <div>
+                                                    <div class="permissions-columns">User name</div>
+                                                </div>
+                                                <div layout="row" class="permissions-checkbox-holder" flex="15"
+                                                     layout-align="space-between center">
+                                                    <div class="permissions-columns" flex="50">Delegate</div>
+                                                    <div class="permissions-columns" flex="50">Read/Write</div>
+                                                    <ng-md-icon class="tooltips-sign-position-1" icon="info" size="20" style="fill: #777777"><md-tooltip class="tooltip_2" md-direction="top">tooltip text</md-tooltip></ng-md-icon>
+                                                </div>
+                                            </div>
+                                            <md-divider></md-divider>
+                                        </div>
+                                        <div data-ng-repeat="member in vm.members" layout="column">
+                                            <div layout="row" layout-align="space-between center"
+                                                 class="permissions-table-row">
+                                                <div>
+                                                    <p> {{ member["display_name"] }} </p>
+                                                </div>
+                                                <div layout="row" class="permissions-checkbox-holder" flex="15"
+                                                     layout-align="space-between center">
+                                                    <div flex="50" layout="center center">
+                                                        <md-checkbox class="md-secondary"
+                                                                     ng-model="member.objectPermissions.manage"></md-checkbox>
+                                                    </div>
+                                                    <div flex="50" layout="center center">
+                                                        <md-checkbox class="md-secondary"
+                                                                     ng-model="member.objectPermissions.change"></md-checkbox>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <md-divider></md-divider>
+                                        </div>
+                                    </div>
+                                </md-content>
+                            </md-tab>
+                            <md-tab label="Group permissions">
+
+                            </md-tab>
+                        </md-tabs>
+                    </div>
+                    <div data-ng-if="!vm.readyStatus.permissions">
+                        <div layout="row" layout-sm="column" layout-align="space-around" class="m-large">
+                            <md-progress-circular md-mode="indeterminate" md-diameter="96"></md-progress-circular>
+                        </div>
+                    </div>
+                </md-content>
+            </md-tab>
+        </md-tabs>
+    </div>
+    <div data-ng-if="!vm.checkReadyStatus()">
+        <div layout="row" layout-sm="column" layout-align="space-around" class="m-large">
+            <md-progress-circular md-mode="indeterminate" md-diameter="96"></md-progress-circular>
+        </div>
+    </div>
+</div>

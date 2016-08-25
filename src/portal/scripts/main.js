@@ -47,7 +47,7 @@ app.controller('SideNavController', ['$scope', require('./app/controllers/sideNa
 app.controller('DashboardController', ['$scope', require('./app/controllers/dashboardController')]);
 app.controller('ActionsController', ['$scope', '$mdDialog', require('./app/controllers/actionsController')]);
 app.controller('ImportInstrumentDialogController', ['$scope', '$mdDialog', require('./app/controllers/dialogs/importInstrumentDialogController')]);
-app.controller('AutomatedUploadsHistoryDialogController', ['$scope', '$mdDialog', require('./app/controllers/dialogs/automatedUploadsHistoryDialogController')]);
+app.controller('AutomatedUploadsHistoryDialogController', ['$scope', '$mdDialog', '$mdpTimePicker', require('./app/controllers/dialogs/automatedUploadsHistoryDialogController')]);
 app.controller('FillPriceHistoryDialogController', ['$scope', '$mdDialog', require('./app/controllers/dialogs/fillPriceHistoryDialogController')]);
 
 app.controller('AttributesManagerController', ['$scope', '$state', '$stateParams', '$mdDialog', require('./app/controllers/attributesManagerController')]);
@@ -63,6 +63,12 @@ app.controller('EntityViewerController', ['$scope', '$mdDialog', '$mdMedia', req
 app.controller('EntityViewerAddDialogController', ['$scope', '$mdDialog', 'parentScope', '$state', require('./app/controllers/entityViewer/entityViewerAddDialogController')]);
 app.controller('EntityViewerEditDialogController', ['$scope', '$mdDialog', 'parentScope', 'entityId', '$state', require('./app/controllers/entityViewer/entityViewerEditDialogController')]);
 app.controller('EntityViewerDeleteDialogController', ['$scope', '$mdDialog', 'entity', 'entityType', require('./app/controllers/entityViewer/entityViewerDeleteDialogController')]);
+
+app.controller('EntityEditorController', ['$scope',  require('./app/controllers/entityEditorController')]);
+
+app.controller('AccrualCalculationSchedulesTabController', ['$scope',  require('./app/controllers/tabs/accrualCalculationSchedulesController')]);
+app.controller('FactorScheduleTabController', ['$scope',  require('./app/controllers/tabs/factorScheduleTabController')]);
+app.controller('ManualPricingFormulasTabController', ['$scope',  require('./app/controllers/tabs/manualPricingFormulasTabController')]);
 
 app.controller('DataPortfolioController', ['$scope', require('./app/controllers/data/dataPortfolioController')]);
 app.controller('DataAccountController', ['$scope', require('./app/controllers/data/dataAccountController')]);

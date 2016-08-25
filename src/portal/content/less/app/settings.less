@@ -27,12 +27,28 @@
     margin: 0;
   }
 }
+
 .instrument-import-manager-dialog-view {
   min-width: 75%;
 }
+
 .automated-uploads-manager-dialog-view {
   min-width: 50%;
 }
+
 .fill-price-history-manager-dialog-view {
   min-width: 50%;
+  md-tabs-canvas {
+    background: #fff;
+  }
+}
+
+.automated-uploads-manager-dialog-view {
+  md-input-container {
+    width: 60%;
+  }
+}
+
+md-input-container:not(.md-input-has-value) input:not(:focus), md-input-container:not(.md-input-has-value) input:not(:focus)::-webkit-datetime-edit-ampm-field, md-input-container:not(.md-input-has-value) input:not(:focus)::-webkit-datetime-edit-day-field, md-input-container:not(.md-input-has-value) input:not(:focus)::-webkit-datetime-edit-hour-field, md-input-container:not(.md-input-has-value) input:not(:focus)::-webkit-datetime-edit-millisecond-field, md-input-container:not(.md-input-has-value) input:not(:focus)::-webkit-datetime-edit-minute-field, md-input-container:not(.md-input-has-value) input:not(:focus)::-webkit-datetime-edit-month-field, md-input-container:not(.md-input-has-value) input:not(:focus)::-webkit-datetime-edit-second-field, md-input-container:not(.md-input-has-value) input:not(:focus)::-webkit-datetime-edit-text, md-input-container:not(.md-input-has-value) input:not(:focus)::-webkit-datetime-edit-week-field, md-input-container:not(.md-input-has-value) input:not(:focus)::-webkit-datetime-edit-year-field {
+  color: #000;
 }

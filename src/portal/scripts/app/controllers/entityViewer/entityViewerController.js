@@ -334,7 +334,9 @@
                 locals: {
                     parentScope: $scope
                 }
-            });
+            }).then(function(){
+                vm.updateTable();
+            })
         };
 
         vm.openCustomAdditionsView = function ($event, customButton) {
