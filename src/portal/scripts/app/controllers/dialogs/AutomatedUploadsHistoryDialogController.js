@@ -15,28 +15,86 @@
     var instrumentService = require('../../services/instrumentService');
 
     var importInstrumentService = require('../../services/import/importInstrumentService');
+    var pricingAutomatedScheduleService = require('../../services/import/pricingAutomatedScheduleService');
 
 
-    module.exports = function ($scope, $mdDialog) {
+    module.exports = function ($scope, $mdDialog, $mdpTimePicker) {
 
         logService.controller('AutomatedUploadsHistoryDialogController', 'initialized');
 
         var vm = this;
 
-        vm.readyStatus = {timetable: false};
-        vm.readyStatus.timetable = true;
+        vm.readyStatus = {schedule: false};
 
+        vm.days = [];
+        vm.schedule = {};
 
+        vm.cron = {
+            periodicity: 1
+        };
+        vm.cron.time = new Date();
+
+        vm.setDay = function (day) {
+            vm.cron.day = day;
+        };
+
+        pricingAutomatedScheduleService.getSchedule().then(function (data) {
+            vm.schedule = data;
+            vm.readyStatus.schedule = true;
+
+            var values = vm.schedule.cron_expr.split(' ');
+
+            vm.cron.time = new Date();
+            vm.cron.time.setMinutes(values[0]);
+            vm.cron.time.setHours(values[1]);
+
+            console.log('value', values);
+
+            if (values[4] == '*' && values[3] == '*') {
+                vm.cron.periodicity = 1
+            }
+            if (values[3] == '*') {
+                vm.cron.periodicity = 2;
+                vm.cron.day = values[4];
+                vm.days[vm.cron.day - 1] = {status: true};
+            }
+            if (values[4] != '*' && values[3] != '*') {
+                vm.cron.periodicity = 3;
+                vm.cron.day = values[4];
+                vm.cron.month = values[3];
+            }
+
+            console.log('vm.periodicity', vm.periodicity);
+
+            $scope.$apply();
+        });
 
         vm.cancel = function () {
             $mdDialog.cancel();
         };
 
         vm.agree = function () {
-            instrumentService.create(vm.config.instrument).then(function () {
-                $mdDialog.hide({status: 'agree'});
-            });
 
+            var minutes = moment(new Date(vm.cron.time)).format('mm');
+            var hours = moment(new Date(vm.cron.time)).format('hh');
+
+            if (vm.cron.periodicity == 1) {
+                console.log(minutes + ' ' + parseInt(hours) + ' * * *');
+                vm.schedule.cron_expr = minutes + ' ' + parseInt(hours) + ' * * *';
+            }
+            if (vm.cron.periodicity == 2) {
+                //console.log(minutes + ' ' + parseInt(hours) + ' * * ' + vm.cron.day);
+                vm.schedule.cron_expr = minutes + ' ' + parseInt(hours) + ' * * ' + vm.cron.day;
+            }
+            if (vm.cron.periodicity == 3) {
+                //console.log(minutes + ' ' + parseInt(hours) + ' * ' + vm.cron.month + ' ' + vm.cron.day);
+                vm.schedule.cron_expr = minutes + ' ' + parseInt(hours) + ' * ' + vm.cron.month + ' ' + vm.cron.day
+            }
+
+            pricingAutomatedScheduleService.updateSchedule(vm.schedule).then(function () {
+                console.log('here?');
+                $scope.$apply();
+            })
         };
 
     };

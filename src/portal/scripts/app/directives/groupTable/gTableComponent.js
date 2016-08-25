@@ -47,13 +47,13 @@
 
                 scope.findSelectedFeature = function () {
                     var selected = {isOpened: false, templateUrl: ''};
-                    console.log('additionsStatus', scope.additionsStatus);
+                    //console.log('additionsStatus', scope.additionsStatus);
                     scope.additionsStatus.extraFeatures.forEach(function (item) {
                         if (item.isOpened == true) {
                             selected = item;
                         }
                     });
-                    console.log(selected);
+                    //console.log(selected);
 
                     return selected;
                 }

@@ -70,7 +70,10 @@
                                 entityFieldsArray['classifier_' + item.id] = item;
                             }
                         });
-                        scope.readyStatus.cellsReady = true;
+                        setTimeout(function () {
+                            scope.readyStatus.cellsReady = true;
+                            scope.$apply();
+                        }, 500)
                     });
 
                     //console.log('entityFieldsArray', entityFieldsArray);
@@ -109,6 +112,15 @@
                 scope.$watchCollection('columns', function () {
                     scope.readyStatus.cellsReady = false;
                     getFieldDisplayNamesArray();
+                });
+
+                scope.$watchCollection('items', function(){
+                    //console.log('test?111111111111111111111111111');
+                    scope.readyStatus.cellsReady = false;
+                    setTimeout(function () {
+                        scope.readyStatus.cellsReady = true;
+                        scope.$apply();
+                    }, 500)
                 });
 
 
@@ -172,10 +184,10 @@
                                     }
                                 } else {
                                     if (column['value_type'] === 'mc_field') {
-                                        if(groupedItem[entityAttrs[e].key].length == 1) {
+                                        if (groupedItem[entityAttrs[e].key].length == 1) {
                                             return 'linked with ' + groupedItem[entityAttrs[e].key].length + ' entity'
                                         } else {
-                                            if(groupedItem[entityAttrs[e].key].length > 1) {
+                                            if (groupedItem[entityAttrs[e].key].length > 1) {
                                                 return 'linked with ' + groupedItem[entityAttrs[e].key].length + ' entities'
                                             }
                                         }
@@ -194,7 +206,7 @@
 
                 scope.rowCallback = function (item, ev) {
                     //console.log('open additions!', item);
-                    if(localStorage.getItem('entityIsChanged') === "true") { // wow such shitcode
+                    if (localStorage.getItem('entityIsChanged') === "true") { // wow such shitcode
                         $mdDialog.show({
                             controller: 'WarningDialogController as vm',
                             templateUrl: 'views/warning-dialog-view.html',
@@ -215,7 +227,7 @@
                         });
                     } else {
                         scope.itemAdditionsEditorEntityId = item.id;
-                        localStorage.setItem('entityIsChanged', false);
+                        //localStorage.setItem('entityIsChanged', false);
                     }
                 };
 

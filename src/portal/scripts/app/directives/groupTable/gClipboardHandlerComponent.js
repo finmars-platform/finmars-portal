@@ -43,7 +43,7 @@
 
                     //console.log(copiedItems);
 
-                    var result = '';
+                    var result = '<table>';
                     copiedItems.forEach(function (item) {
                         var row = '<tr>';
 
@@ -65,10 +65,11 @@
                         row = row + '</tr>';
                         result = result + row;
                     });
+                    result = result + '</table';
 
-                    //console.log('result', result);
+                    console.log('result', result);
                     e.clipboardData.setData('text/html', result);
-                    //console.log('e', e);
+                    console.log('e', e);
                     e.preventDefault(); // We want our data, not data from any selection, to be written to the clipboard
                 });
             }

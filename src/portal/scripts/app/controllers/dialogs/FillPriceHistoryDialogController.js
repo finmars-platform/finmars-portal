@@ -15,6 +15,7 @@
     var instrumentService = require('../../services/instrumentService');
 
     var importInstrumentService = require('../../services/import/importInstrumentService');
+    var importPricingService = require('../../services/import/importPricingService');
 
 
     module.exports = function ($scope, $mdDialog) {
@@ -25,15 +26,51 @@
 
         vm.readyStatus = {mapping: false, processing: false};
 
+        var d = new Date();
+        d = new Date(d.setDate(d.getDate() - 1));
+
+        vm.price = {
+            date_from: d,
+            date_to: d
+        };
+
         vm.cancel = function () {
             $mdDialog.cancel();
         };
 
-        vm.agree = function () {
-            instrumentService.create(vm.config.instrument).then(function () {
-                $mdDialog.hide({status: 'agree'});
-            });
+        vm.automatedUploads = function ($event) {
+            $mdDialog.show({
+                controller: 'AutomatedUploadsHistoryDialogController as vm',
+                templateUrl: 'views/dialogs/automated-uploads-history-dialog-view.html',
+                targetEvent: $event,
+                preserveScope: true,
+                autoWrap: true,
+                skipHide: true,
+            }).then(function (res) {
+                if (res.status === 'agree') {
+                    console.log('res', res.data);
 
+                }
+            });
+        };
+
+        vm.uploadPrice = function(){
+            vm.processing = true;
+
+            var price = {
+                date_from: moment(new Date(vm.price.date_from)).format('YYYY-MM-DD'),
+                date_to: moment(new Date(vm.price.date_to)).format('YYYY-MM-DD'),
+                balance_date: moment(new Date(vm.price.balance_date)).format('YYYY-MM-DD'),
+                fill_days: vm.price.fill_days,
+                override_existed: vm.price.override_existed
+            };
+
+            importPricingService.create(price).then(function(){
+                vm.processing = false;
+            })
+        };
+
+        vm.agree = function () {
         };
 
     };

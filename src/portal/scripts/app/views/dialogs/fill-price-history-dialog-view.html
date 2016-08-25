@@ -6,31 +6,67 @@
         </div>
     </md-toolbar>
     <md-dialog-content style="background: #E5E5E5;">
-        <div data-ng-if="vm.readyStatus.mapping" layout="column">
+        <div layout="column">
             <md-tabs md-dynamic-height md-border-bottom>
                 <md-tab label="Prices">
-
+                    <md-card>
+                        <md-card-content>
+                            <div>
+                                <md-checkbox ng-model="vm.price.isRange" aria-label="override">
+                                    Date range
+                                </md-checkbox>
+                            </div>
+                            <div data-ng-if="vm.price.isRange">
+                                <md-input-container>
+                                    <label for="">Date from</label>
+                                    <zh-date-picker data-ng-model="vm.price.date_from"></zh-date-picker>
+                                </md-input-container>
+                                <md-input-container>
+                                    <label for="">Date to</label>
+                                    <zh-date-picker data-ng-model="vm.price.date_to"></zh-date-picker>
+                                </md-input-container>
+                            </div>
+                            <md-input-container>
+                                <label for="">Portfolio balance date</label>
+                                <zh-date-picker data-ng-model="vm.price.balance_date"></zh-date-picker>
+                            </md-input-container>
+                            <div style="border: 1px solid #ccc; padding: 10px">
+                                <md-input-container style="width: 60%">
+                                    <label for="">Roll prices for N days forward</label>
+                                    <input type="text" data-ng-model="vm.price.fill_days" placeholder="days">
+                                </md-input-container>
+                                <div>
+                                    <md-checkbox ng-model="vm.price.override_existed" aria-label="override">
+                                        Override old prices
+                                    </md-checkbox>
+                                </div>
+                            </div>
+                            <div>
+                                <md-button class="md-raised" data-ng-click="vm.uploadPrice()">
+                                    Upload
+                                </md-button>
+                                <md-button class="md-raised" data-ng-click="vm.automatedUploads($event)">
+                                    Automatic uploads
+                                </md-button>
+                                <md-progress-circular data-ng-if="vm.readyStatus.processing" md-mode="indeterminate" md-diameter="32"></md-progress-circular>
+                            </div>
+                        </md-card-content>
+                    </md-card>
                 </md-tab>
                 <md-tab label="Accruals">
 
                 </md-tab>
             </md-tabs>
         </div>
-        <div data-ng-if="!vm.readyStatus.mapping">
-            <div layout="row" layout-sm="column" layout-align="space-around" class="m-large">
-                <md-progress-circular md-mode="indeterminate" md-diameter="96"></md-progress-circular>
-            </div>
-        </div>
+        <!--<div data-ng-if="!vm.readyStatus.mapping">-->
+        <!--<div layout="row" layout-sm="column" layout-align="space-around" class="m-large">-->
+        <!--<md-progress-circular md-mode="indeterminate" md-diameter="96"></md-progress-circular>-->
+        <!--</div>-->
+        <!--</div>-->
     </md-dialog-content>
     <md-dialog-actions layout="row">
         <md-button class="md-raised" ng-click="vm.cancel()">
             Cancel
-        </md-button>
-        <md-button class="md-raised" data-ng-click="vm.openEditMapping($event)">
-            Edit mapping
-        </md-button>
-        <md-button class="md-raised md-primary" ng-click="vm.agree()" style="margin-right:20px;">
-            Save
         </md-button>
     </md-dialog-actions>
 </md-dialog>

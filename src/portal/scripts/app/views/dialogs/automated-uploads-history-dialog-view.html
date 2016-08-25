@@ -6,120 +6,120 @@
         </div>
     </md-toolbar>
     <md-dialog-content style="background: #E5E5E5;">
-        <div data-ng-if="vm.readyStatus.timetable" layout="column">
+        <div data-ng-if="vm.readyStatus.schedule" layout="column">
             <md-card>
                 <md-card-content>
                     <div>
                         <md-input-container>
                             <label for="">Upload periodicity</label>
-                            <md-select data-ng-model="vm.config.periodicity">
+                            <md-select data-ng-model="vm.cron.periodicity">
                                 <md-option value="1">Daily</md-option>
                                 <md-option value="2">Weekly</md-option>
                                 <md-option value="3">Monthly</md-option>
                             </md-select>
                         </md-input-container>
                     </div>
-                    <div data-ng-show="vm.config.periodicity == 2">
+                    <div data-ng-show="vm.cron.periodicity == 2">
                         <div>
                             <p><b>Weekly</b></p>
                             <div>
-                                <md-checkbox ng-model="vm.days[0].status" data-ng-click="vm.setDay('monday')"
+                                <md-checkbox ng-model="vm.days[0].status" data-ng-click="vm.setDay(1)"
                                              aria-label="monday">
                                     Monday
                                 </md-checkbox>
-                                <md-checkbox ng-model="vm.days[1].status" data-ng-click="vm.setDay('tuesday')"
+                                <md-checkbox ng-model="vm.days[1].status" data-ng-click="vm.setDay(2)"
                                              aria-label="tuesday">
                                     Tuesday
                                 </md-checkbox>
-                                <md-checkbox ng-model="vm.days[2].status" data-ng-click="vm.setDay('wednesday')"
+                                <md-checkbox ng-model="vm.days[2].status" data-ng-click="vm.setDay(3)"
                                              aria-label="wednesday">
                                     Wednesday
                                 </md-checkbox>
-                                <md-checkbox ng-model="vm.days[3].status" data-ng-click="vm.setDay('thursday')"
+                                <md-checkbox ng-model="vm.days[3].status" data-ng-click="vm.setDay(4)"
                                              aria-label="thursday">
                                     Thursday
                                 </md-checkbox>
-                                <md-checkbox ng-model="vm.days[4].status" data-ng-click="vm.setDay('friday')"
+                                <md-checkbox ng-model="vm.days[4].status" data-ng-click="vm.setDay(5)"
                                              aria-label="friday">
                                     Friday
                                 </md-checkbox>
-                                <md-checkbox ng-model="vm.days[5].status" data-ng-click="vm.setDay('sat')"
+                                <md-checkbox ng-model="vm.days[5].status" data-ng-click="vm.setDay(6)"
                                              aria-label="sat">
                                     Sat
                                 </md-checkbox>
-                                <md-checkbox ng-model="vm.days[6].status" data-ng-click="vm.setDay('sun')"
+                                <md-checkbox ng-model="vm.days[6].status" data-ng-click="vm.setDay(7)"
                                              aria-label="sun">
                                     Sun
                                 </md-checkbox>
                             </div>
                         </div>
                     </div>
-                    <div data-ng-show="vm.config.periodicity == 3">
+                    <div data-ng-show="vm.cron.periodicity == 3">
                         <div layout="row">
                             <md-input-container>
                                 <label for="">Month</label>
-                                <md-select data-ng-model="vm.config.monthly.month">
-                                    <md-option>January</md-option>
-                                    <md-option>February</md-option>
-                                    <md-option>March</md-option>
-                                    <md-option>April</md-option>
-                                    <md-option>May</md-option>
-                                    <md-option>June</md-option>
-                                    <md-option>Jule</md-option>
-                                    <md-option>August</md-option>
-                                    <md-option>September</md-option>
-                                    <md-option>November</md-option>
-                                    <md-option>October</md-option>
-                                    <md-option>December</md-option>
+                                <md-select data-ng-model="vm.cron.month">
+                                    <md-option value="1">January</md-option>
+                                    <md-option value="2">February</md-option>
+                                    <md-option value="3">March</md-option>
+                                    <md-option value="4">April</md-option>
+                                    <md-option value="5">May</md-option>
+                                    <md-option value="6">June</md-option>
+                                    <md-option value="7">Jule</md-option>
+                                    <md-option value="8">August</md-option>
+                                    <md-option value="9">September</md-option>
+                                    <md-option value="10">November</md-option>
+                                    <md-option value="11">October</md-option>
+                                    <md-option value="12">December</md-option>
                                 </md-select>
                             </md-input-container>
                             <md-input-container>
                                 <label for="">Day</label>
-                                <md-select data-ng-model="vm.config.monthly.day">
-                                    <md-option>Monday</md-option>
-                                    <md-option>Tuesday</md-option>
-                                    <md-option>Wednesday</md-option>
-                                    <md-option>Thursday</md-option>
-                                    <md-option>Friday</md-option>
-                                    <md-option>Saturday</md-option>
-                                    <md-option>Sunday</md-option>
+                                <md-select data-ng-model="vm.cron.day">
+                                    <md-option value="1">Monday</md-option>
+                                    <md-option value="2">Tuesday</md-option>
+                                    <md-option value="3">Wednesday</md-option>
+                                    <md-option value="4">Thursday</md-option>
+                                    <md-option value="5">Friday</md-option>
+                                    <md-option value="6">Saturday</md-option>
+                                    <md-option value="7">Sunday</md-option>
                                 </md-select>
                             </md-input-container>
                         </div>
                     </div>
                     <div>
-                        <md-input-container>
+                        <md-input-container style="padding-left: 0">
                             <label for="">Time</label>
-                            <zh-date-picker data-ng-model="vm.config.time"></zh-date-picker>
+                            <mdp-time-picker data-ng-model="vm.cron.time"></mdp-time-picker>
                         </md-input-container>
                     </div>
                     <div>
                         <md-input-container>
                             <label for="">Days to load</label>
-                            <input type="text" data-ng-model="vm.config.days">
+                            <input type="text" data-ng-model="vm.schedule.load_days">
                         </md-input-container>
                     </div>
                     <div>
                         <md-input-container>
                             <label for="">Portfolio balance days</label>
-                            <input type="text" data-ng-model="vm.config.balance_days" placeholder="days">
+                            <input type="text" data-ng-model="vm.schedule.balance_day" placeholder="days">
                         </md-input-container>
                     </div>
                     <div>
-                        <md-checkbox ng-model="vm.config.override" aria-label="override">
+                        <md-checkbox ng-model="vm.schedule.override_existed" aria-label="override">
                             Override old prices
                         </md-checkbox>
                     </div>
                     <div>
                         <md-input-container>
                             <label for="">Roll prices for N days forward</label>
-                            <input type="text" data-ng-model="vm.config.roll_prices" placeholder="days">
+                            <input type="text" data-ng-model="vm.schedule.fill_days" placeholder="days">
                         </md-input-container>
                     </div>
                 </md-card-content>
             </md-card>
         </div>
-        <div data-ng-if="!vm.readyStatus.timetable">
+        <div data-ng-if="!vm.readyStatus.schedule">
             <div layout="row" layout-sm="column" layout-align="space-around" class="m-large">
                 <md-progress-circular md-mode="indeterminate" md-diameter="96"></md-progress-circular>
             </div>
