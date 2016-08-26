@@ -15,18 +15,27 @@
 
     var currencyService = require('./currencyService');
     var instrumentTypeService = require('./instrumentTypeService');
+    var accrualCalculationModelService = require('./accrualCalculationModelService');
+    var instrumentPeriodicityService = require('./instrumentPeriodicityService');
 
     var strategyService = require('./strategyService');
     var strategyGroupService = require('./strategyGroupService');
     var strategySubgroupService = require('./strategySubgroupService');
 
     var getList = function(entityType) {
+
         switch (entityType) {
             case 'currency':
                 return currencyService.getList();
                 break;
             case 'instrument_type':
                 return instrumentTypeService.getList();
+                break;
+            case 'accrual_calculation_model':
+                return accrualCalculationModelService.getList();
+                break;
+            case 'periodicity':
+                return instrumentPeriodicityService.getList();
                 break;
         }
     };

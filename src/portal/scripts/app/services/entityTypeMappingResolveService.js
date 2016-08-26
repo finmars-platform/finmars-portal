@@ -7,6 +7,8 @@
 
     var currencyMappingService = require('./import/currencyMappingService');
     var instrumentTypeMappingService = require('./import/instrumentTypeMappingService');
+    var accrualCalculationModelService = require('./import/accrualCalculationModelMappingService');
+    var instrumentPeriodicityService = require('./import/instrumentPeriodicityMappingService');
 
     var getList = function (entityType) {
 
@@ -16,6 +18,12 @@
                 break;
             case 'instrument_type':
                 return instrumentTypeMappingService.getList();
+                break;
+            case 'accrual_calculation_model':
+                return accrualCalculationModelService.getList();
+                break;
+            case 'periodicity':
+                return instrumentPeriodicityService.getList();
                 break;
         }
 
@@ -27,7 +35,13 @@
                 return currencyMappingService.getByKey(id);
                 break;
             case 'instrument_type':
-                return currencyMappingService.getList();
+                return instrumentTypeMappingService.getByKey(id);
+                break;
+            case 'accrual_calculation_model':
+                return accrualCalculationModelService.getByKey(id);
+                break;
+            case 'periodicity':
+                return instrumentPeriodicityService.getByKey(id);
                 break;
         }
 
@@ -39,7 +53,13 @@
                 return currencyMappingService.create(map);
                 break;
             case 'instrument_type':
-                return currencyMappingService.getList();
+                return instrumentTypeMappingService.create(map);
+                break;
+            case 'accrual_calculation_model':
+                return accrualCalculationModelService.create(map);
+                break;
+            case 'periodicity':
+                return instrumentPeriodicityService.create(map);
                 break;
         }
 
@@ -51,7 +71,13 @@
                 return currencyMappingService.update(id, map);
                 break;
             case 'instrument_type':
-                return currencyMappingService.getList();
+                return instrumentTypeMappingService.update(id, map);
+                break;
+            case 'accrual_calculation_model':
+                return accrualCalculationModelService.update(id, map);
+                break;
+            case 'periodicity':
+                return instrumentPeriodicityService.update(id, map);
                 break;
         }
 
@@ -63,7 +89,13 @@
                 return currencyMappingService.deleteByKey(id);
                 break;
             case 'instrument_type':
-                return currencyMappingService.getList();
+                return instrumentTypeMappingService.deleteByKey(id);
+                break;
+            case 'accrual_calculation_model':
+                return accrualCalculationModelService.deleteByKey(id);
+                break;
+            case 'periodicity':
+                return instrumentPeriodicityService.deleteByKey(id);
                 break;
         }
 
@@ -78,4 +110,4 @@
         deleteByKey: deleteByKey
     }
 
-}())
+}());
