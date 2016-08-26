@@ -1,5 +1,5 @@
 <div data-ng-controller="AccrualCalculationSchedulesTabController as vm">
-    <div class="i-p-20">
+    <div class="i-p-20" data-ng-if="vm.readyStatus.accrualModals">
         <table class="bordered">
             <thead>
             <tr>
@@ -66,8 +66,11 @@
                 </td>
                 <td data-ng-if="item.editStatus">
                     <md-input-container>
-                        <label for="">Accural calculation model</label>
-                        <input type="text" data-ng-model="item.accrual_calculation_model">
+                        <label for="">Accrual calculation model</label>
+                        <md-select data-ng-model="vm.item.accrual_calculation_model">
+                            <md-option data-ng-repeat="model in vm.accrualModels" ng-value="model.id">{{model.name}}
+                            </md-option>
+                        </md-select>
                     </md-input-container>
                 </td>
                 <td data-ng-if="item.editStatus">
@@ -115,8 +118,11 @@
                 </td>
                 <td>
                     <md-input-container>
-                        <label for="">Accural calculation model</label>
-                        <input type="text" data-ng-model="vm.newItem.accrual_calculation_model">
+                        <label for="">Accrual calculation model</label>
+                        <md-select data-ng-model="vm.newItem.accrual_calculation_model">
+                            <md-option data-ng-repeat="model in vm.accrualModels" ng-value="model.id">{{model.name}}
+                            </md-option>
+                        </md-select>
                     </md-input-container>
                 </td>
                 <td>
@@ -146,5 +152,10 @@
 
             </tbody>
         </table>
+    </div>
+    <div data-ng-if="!vm.readyStatus.accrualModals">
+        <div layout="row" layout-sm="column" layout-align="space-around">
+            <md-progress-circular md-mode="indeterminate"></md-progress-circular>
+        </div>
     </div>
 </div>

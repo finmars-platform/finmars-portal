@@ -51,6 +51,25 @@
             });
         };
 
+        vm.openMapping = function($event, mapEntityType){
+            $mdDialog.show({
+                controller: 'EntityTypeMappingDialogController as vm',
+                templateUrl: 'views/dialogs/entity-type-mapping-dialog-view.html',
+                parent: angular.element(document.body),
+                targetEvent: $event,
+                preserveScope: true,
+                autoWrap: true,
+                skipHide: true,
+                locals: {
+                    mapEntityType: mapEntityType
+                }
+            }).then(function (res) {
+                if (res.status === 'agree') {
+                    console.log("res", res.data);
+                }
+            });
+        };
+
     }
 
 }());
