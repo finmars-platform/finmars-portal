@@ -30,7 +30,7 @@
             instrument_code: "USP16394AG62 Corp",
             mode: 1,
             provider: 1,
-            scheme: 19 // remove that
+            instrument_download_scheme: 19 // remove that
         };
 
         var providerId = 1; //TODO HARD REFACTOR CODE BLOOMBERG PROVIDER
@@ -41,12 +41,17 @@
             $scope.$apply();
         });
 
+        vm.appendString = function (string) {
+            var code = vm.config.instrument_code.split(' ')[0];
+            vm.config.instrument_code = code + ' ' + string;
+        };
+
         vm.load = function () {
             vm.readyStatus.processing = true;
             importInstrumentService.startImport(vm.config).then(function (data) {
                 console.log('data', data);
                 vm.config = data;
-                if (data.mode == 1 && data.instrument !== null) {
+                if (data.task_object.status == 'D' && data.instrument !== null) {
                     vm.readyStatus.processing = false;
                     vm.dataIsImported = true;
 
