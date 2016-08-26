@@ -611,7 +611,9 @@ md-progress-linear .md-container .md-bar {
 
 table {
   width: 100%;
-  display: table
+  display: table;
+  border-collapse: collapse;
+  border-spacing: 0;
 }
 
 table.bordered > thead > tr, table.bordered > tbody > tr {
@@ -653,5 +655,33 @@ td, th {
 .factor-schedule-tab-view {
   md-input-container {
     margin: 0;
+  }
+}
+
+.entity-type-mapping-dialog-view {
+  md-input-container {
+    margin: 0;
+  }
+}
+
+.tab-input-row {
+  background: rgb(255, 238, 232);
+}
+
+.colored-tab {
+  background: rgb(255, 238, 232);
+}
+
+.table-misc-cell {
+  width: 5%;
+}
+
+.tabs-colored {
+  md-tab-item {
+    padding: 0;
+  }
+  span {
+    display: inline-block;
+    padding: 12px 24px;
   }
 }

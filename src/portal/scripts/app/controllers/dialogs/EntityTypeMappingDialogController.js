@@ -19,6 +19,10 @@
 
         console.log('mapEntityType', mapEntityType);
 
+        vm.fancyEntity = function () {
+            return mapEntityType.replace('_', ' ');
+        };
+
         entityResolverService.getList(mapEntityType).then(function (data) {
             vm.entityItems = data.results;
             entityTypeMappingResolveService.getList(mapEntityType).then(function (data) {

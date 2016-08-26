@@ -77,6 +77,13 @@
             })
         };
 
+        vm.recalculate = function () {
+            vm.mappedFields.forEach(function (item) {
+                vm.config.task_result_overrides[item.key] = item.value;
+            });
+            vm.load();
+        };
+
         vm.openEditMapping = function ($event) {
             $mdDialog.show({
                 controller: 'InstrumentMappingEditDialogController as vm',
@@ -86,7 +93,7 @@
                 autoWrap: true,
                 skipHide: true,
                 locals: {
-                    schemeId: vm.config.scheme
+                    schemeId: vm.config.instrument_download_scheme
                 }
             }).then(function (res) {
                 if (res.status === 'agree') {
