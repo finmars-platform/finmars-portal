@@ -1,7 +1,7 @@
 <div data-ng-controller="ManualPricingFormulasTabController as vm">
     <div class="i-p-20">
         <div data-ng-if="vm.readyStatus.content">
-            <table>
+            <table class="bordered">
                 <thead>
                 <tr>
                     <th>Pricing policy</th>
@@ -14,7 +14,7 @@
                     <td data-ng-if="!item.editStatus" data-ng-bind="vm.bindPricingPolicy(item)"></td>
                     <td data-ng-if="!item.editStatus" data-ng-bind="item.expr"></td>
                     <td data-ng-if="!item.editStatus" data-ng-bind="item.notes"></td>
-                    <td data-ng-if="!item.editStatus">
+                    <td data-ng-if="!item.editStatus" class="table-misc-cell">
                         <md-menu>
                             <!-- Trigger element is a md-button with an icon -->
                             <md-button ng-click="$mdOpenMenu($event)" class="md-icon-button"
@@ -68,7 +68,7 @@
                         </md-button>
                     </td>
                 </tr>
-                <tr>
+                <tr class="tab-input-row">
                     <td>
                         <md-input-container>
                             <label for="">Pricing policy</label>

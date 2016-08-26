@@ -1,6 +1,6 @@
 <div data-ng-controller="FactorScheduleTabController as vm">
     <div class="i-p-20 factor-schedule-tab-view">
-        <table>
+        <table class="bordered">
             <thead>
             <tr>
                 <th>Value</th>
@@ -12,7 +12,7 @@
             <tr data-ng-repeat="item in vm.entity.factor_schedules">
                 <td data-ng-bind="item.factor_value" data-ng-if="!item.editStatus"></td>
                 <td data-ng-bind="item.effective_date" data-ng-if="!item.editStatus"></td>
-                <td data-ng-if="!item.editStatus">
+                <td data-ng-if="!item.editStatus" class="table-misc-cell">
                     <md-menu>
                         <!-- Trigger element is a md-button with an icon -->
                         <md-button ng-click="$mdOpenMenu($event)" class="md-icon-button" aria-label="Open sample menu">
@@ -56,7 +56,7 @@
                     </md-button>
                 </td>
             </tr>
-            <tr>
+            <tr class="tab-input-row">
                 <td>
                     <md-input-container>
                         <label for="">Value</label>

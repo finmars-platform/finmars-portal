@@ -1,6 +1,6 @@
 <div data-ng-controller="AccrualCalculationSchedulesTabController as vm">
     <div class="i-p-20">
-        <table>
+        <table class="bordered">
             <thead>
             <tr>
                 <th>Accrual start date</th>
@@ -22,7 +22,7 @@
                 <td data-ng-if="!item.editStatus" data-ng-bind="item.periodicity"></td>
                 <td data-ng-if="!item.editStatus" data-ng-bind="item.periodicity_n"></td>
                 <td data-ng-if="!item.editStatus" data-ng-bind="item.notes"></td>
-                <td data-ng-if="!item.editStatus"><md-menu>
+                <td data-ng-if="!item.editStatus" class="table-misc-cell"><md-menu>
                     <!-- Trigger element is a md-button with an icon -->
                     <md-button ng-click="$mdOpenMenu($event)" class="md-icon-button" aria-label="Open sample menu">
                         <ng-md-icon icon="settings"></ng-md-icon>
@@ -94,7 +94,7 @@
                     </md-button>
                 </td>
             </tr>
-            <tr>
+            <tr class="tab-input-row">
                 <td>
                     <md-input-container>
                         <label for="">Accrual start date</label>

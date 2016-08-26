@@ -7,6 +7,10 @@
     </md-toolbar>
     <md-dialog-content style="background: #E5E5E5;">
         <div data-ng-if="vm.readyStatus.content">
+            <div layout="row">
+                <div flex="50" style="padding: 10px">Your value</div>
+                <div flex="50" style="padding: 10px">Map on {{vm.fancyEntity()}}</div>
+            </div>
             <md-card data-ng-repeat="item in vm.entityItems">
                 <md-card-content>
                     <div layout="row">

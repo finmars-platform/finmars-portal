@@ -17,7 +17,6 @@
                                     <input type="text" data-ng-model="vm.config.instrument_code">
                                 </md-input-container>
                                 <div layout="row" layout-align="begin center">
-                                    <md-button class="md-raised" data-ng-click="vm.appendString('Yellow_key')">Yellow Key</md-button>
                                     <md-button class="md-raised" data-ng-click="vm.appendString('Equity')">Equity</md-button>
                                     <md-button class="md-raised" data-ng-click="vm.appendString('Corp')">Corp</md-button>
                                     <md-button class="md-raised" data-ng-click="vm.appendString('Index')">Index</md-button>
@@ -124,6 +123,7 @@
 
                         </md-card-content>
                     </md-card>
+                    <md-button class="md-raised" data-ng-click="vm.recalculate()">Recalculate</md-button>
                 </div>
             </div>
         </div>
