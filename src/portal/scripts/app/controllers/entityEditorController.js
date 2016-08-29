@@ -57,11 +57,13 @@
             //
 
             if (vm.entityId) {
+                console.log('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
                 entityResolverService.getByKey(vm.entityType, vm.entityId).then(function (data) {
                     vm.entity = data;
                     entityViewerHelperService.transformItems([vm.entity], vm.attrs).then(function (data) {
                         vm.entity = data[0];
                         vm.readyStatus.entity = true;
+                        console.log('1231231231312?');
                         vm.getMemberList();
                     });
 

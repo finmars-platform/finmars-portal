@@ -60,7 +60,7 @@
         </md-input-container>
     </div>
     <div data-ng-if="fieldType['display_name'] === 'Boolean'">
-        <md-checkbox data-ng-change="changeWatcher()" data-ng-model="entity[getModelKey()]" aria-label="checkbox">
+        <md-checkbox class="checkbox-bind-field" data-ng-change="changeWatcher()" data-ng-model="entity[getModelKey()]" aria-label="checkbox">
             <label data-ng-bind="getName()"></label>
         </md-checkbox>
     </div>

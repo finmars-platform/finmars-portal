@@ -344,6 +344,9 @@ md-tooltip.tooltip_1 .md-content.md-show {
 md-tooltip.tooltip_2 {
   z-index: 11100;
 }
+md-tooltip.tooltip_1 {
+  z-index: 12000;
+}
 
 .column-name-tooltip-wrap {
   position: absolute;
@@ -645,7 +648,8 @@ thead {
 }
 
 td, th {
-  padding: 15px 5px;
+  //padding: 15px 5px;
+  padding: 0 5px;
   display: table-cell;
   text-align: left;
   vertical-align: middle;
@@ -683,5 +687,39 @@ td, th {
       display: inline-block;
       padding: 12px 24px;
     }
+  }
+}
+
+md-input-container {
+  margin: 0 10px;
+  max-height: 64px;
+}
+.p-t-26 {
+  padding-top: 26px;
+}
+
+.md-sm-btn {
+  min-height: 24px;
+  min-width: 70px;
+  padding: 0 3px;
+  line-height: 24px;
+  font-size: 12px;
+  margin: 3px 4px;
+}
+
+button.md-raised.md-button.colored-btn{
+  //background: rgb(255, 238, 232);
+  background-color: rgb(255, 238, 232);
+}
+.tooltip-inline-block {
+  display: inline-block;
+  margin-left: 5px;
+  position: relative;
+  top: 3px;
+  cursor: pointer;
+}
+.tab-input-row {
+  td {
+    padding-top: 20px;
   }
 }

@@ -21,32 +21,32 @@
         return new Promise(function (resolve) {
 
             // Forgive me pls
-
+            //console.log('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
             if (!entities[entity]) {
 
-                if (options && options.hasOwnProperty("entityType")) {
+                if (options.entityType.indexOf('strategy') !== -1) {
 
-                    if (options.entityType.indexOf('strategy') !== -1) {
-                        var entityTypePieces = options.entityType.split('-');
+                    var entityTypePieces = options.entityType.split('-');
 
-                        var strategyNumber = entityTypePieces[1];
+                    var strategyNumber = entityTypePieces[1];
 
-                        if (entity === 'group') {
-                            return strategyGroupService.getList(strategyNumber).then(function (data) {
-                                entities[entity] = data.results;
-                                resolve({key: entity, data: entities[entity]});
-                            });
-                        }
-                        if (entity === 'subgroup') {
-                            return strategySubgroupService.getList(strategyNumber).then(function (data) {
-                                entities[entity] = data.results;
-                                resolve({key: entity, data: entities[entity]});
-                            });
-                        }
+                    if (entity === 'group') {
+                        return strategyGroupService.getList(strategyNumber).then(function (data) {
+                            entities[entity] = data.results;
+                            resolve({key: entity, data: entities[entity]});
+                        });
+                    }
+                    if (entity === 'subgroup') {
+                        return strategySubgroupService.getList(strategyNumber).then(function (data) {
+                            entities[entity] = data.results;
+                            resolve({key: entity, data: entities[entity]});
+                        });
                     }
                 } else {
+                    //console.log('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
                     switch (entity) {
                         case 'instrument':
+                            console.log('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
                             return instrumentRepository.getList().then(function (data) {
                                 entities[entity] = data.results;
                                 resolve({key: entity, data: entities[entity]});

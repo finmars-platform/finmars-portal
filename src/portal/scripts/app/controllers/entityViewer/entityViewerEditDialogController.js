@@ -26,7 +26,7 @@
 
         var vm = this;
 
-        vm.readyStatus = {content: false, permissions: false, entity: false, me: false};
+        //vm.readyStatus = {content: false, permissions: false, entity: false, me: false};
         vm.entityType = parentScope.entityType;
         vm.evAction = 'update';
         vm.entityId = entityId;

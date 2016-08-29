@@ -9,7 +9,7 @@
         <div data-ng-if="vm.readyStatus.mapping" layout="column">
             <div layout="row">
                 <md-card style="width: 100%">
-                    <md-card-content>
+                    <md-card-content class="p-t-26">
                         <div layout="row">
                             <div layout="column">
                                 <md-input-container flex="40" style="margin-bottom: 0">
@@ -17,26 +17,38 @@
                                     <input type="text" data-ng-model="vm.config.instrument_code">
                                 </md-input-container>
                                 <div layout="row" layout-align="begin center">
-                                    <md-button class="md-raised" data-ng-click="vm.appendString('Equity')">Equity</md-button>
-                                    <md-button class="md-raised" data-ng-click="vm.appendString('Corp')">Corp</md-button>
-                                    <md-button class="md-raised" data-ng-click="vm.appendString('Index')">Index</md-button>
+                                    <md-button class="md-raised md-sm-btn" data-ng-click="vm.appendString('Equity')">Equity
+                                    </md-button>
+                                    <md-button class="md-raised md-sm-btn" data-ng-click="vm.appendString('Corp')">Corp
+                                    </md-button>
+                                    <md-button class="md-raised md-sm-btn" data-ng-click="vm.appendString('Index')">Index
+                                    </md-button>
                                 </div>
                                 <div layout="row" layout-align="begin center">
-                                    <md-button class="md-raised" data-ng-click="vm.appendString('Govt')">Govt</md-button>
-                                    <md-button class="md-raised" data-ng-click="vm.appendString('Curncy')">Curncy</md-button>
-                                    <md-button class="md-raised" data-ng-click="vm.appendString('Comdty')">Comdty</md-button>
+                                    <md-button class="md-raised md-sm-btn" data-ng-click="vm.appendString('Govt')">Govt
+                                    </md-button>
+                                    <md-button class="md-raised md-sm-btn" data-ng-click="vm.appendString('Curncy')">Curncy
+                                    </md-button>
+                                    <md-button class="md-raised md-sm-btn" data-ng-click="vm.appendString('Comdty')">Comdty
+                                    </md-button>
                                 </div>
                             </div>
-                            <md-input-container flex="40">
-                                <label for="">Import scheme</label>
-                                <md-select data-ng-model="vm.config.instrument_download_scheme">
-                                    <md-option data-ng-repeat="item in vm.instrumentSchemes" ng-value="item.id">
-                                        {{item.scheme_name}}
-                                    </md-option>
-                                </md-select>
-                            </md-input-container>
+                            <div layout="column">
+                                <md-input-container flex="40">
+                                    <label for="">Import scheme</label>
+                                    <md-select style="width: 200px"
+                                               data-ng-model="vm.config.instrument_download_scheme">
+                                        <md-option data-ng-repeat="item in vm.instrumentSchemes" ng-value="item.id">
+                                            {{item.scheme_name}}
+                                        </md-option>
+                                    </md-select>
+                                </md-input-container>
+                                <md-button class="md-raised" data-ng-click="vm.openEditMapping($event)">
+                                    Edit mapping
+                                </md-button>
+                            </div>
                             <div layout="row">
-                                <md-button class="md-raised" data-ng-click="vm.load()" style="height: 32px">
+                                <md-button class="md-raised colored-btn" data-ng-click="vm.load()" style="height: 32px">
                                     Load
                                 </md-button>
                                 <div data-ng-if="vm.readyStatus.processing">
@@ -69,9 +81,17 @@
                     </md-card>
                 </div>
                 <div flex="50">
-                    <h2 class="title-padding">Instrument data</h2>
+                    <div layout="column">
+                        <h2 class="title-padding">Instrument data</h2>
+                        <div layout="row">
+                            <md-button class="md-raised" data-ng-click="vm.recalculate()">Recalculate</md-button>
+                            <md-button class="md-raised" ng-click="vm.agree()" style="margin-right:20px;">
+                                Add to database
+                            </md-button>
+                        </div>
+                    </div>
                     <md-card class="{{vm.dataIsImported ? '' : 'card-opacity'}}">
-                        <md-card-content>
+                        <md-card-content class="p-t-26">
                             <md-input-container class="md-block">
                                 <label for="">Name</label>
                                 <input type="text" data-ng-model="vm.config.instrument.name">
@@ -80,23 +100,29 @@
                                 <label for="">User code</label>
                                 <input type="text" data-ng-model="vm.config.instrument.user_code">
                             </md-input-container>
-                            <md-input-container class="md-block">
+                            <md-input-container class="md-block" style="min-height: 64px">
                                 <label for="">Instrument type</label>
-                                <input type="text" data-ng-model="vm.config.instrument.instrument_type">
+                                <md-select data-ng-model="vm.config.instrument.instrument_type">
+                                    <md-option data-ng-repeat="item in vm.instrumentTypes" ng-value="item.id">{{item.name}}</md-option>
+                                </md-select>
                             </md-input-container>
                             <md-input-container class="md-block">
-                                <label for="">Instrument type</label>
+                                <label for="">Reference for pricing</label>
                                 <input type="text" data-ng-model="vm.config.instrument.reference_for_pricing">
                             </md-input-container>
 
                             <div class="bordered">
-                                <md-input-container class="md-block">
+                                <md-input-container class="md-block" style="min-height: 64px">
                                     <label for="">Pricing model</label>
-                                    <input type="text" data-ng-model="vm.config.instrument.instrument_type">
+                                    <md-select data-ng-model="vm.config.instrument.daily_pricing_model">
+                                        <md-option data-ng-repeat="item in vm.dailyModels" ng-value="item.id">{{item.name}}</md-option>
+                                    </md-select>
                                 </md-input-container>
-                                <md-input-container class="md-block">
+                                <md-input-container class="md-block" style="min-height: 64px">
                                     <label for="">Price download mode</label>
-                                    <input type="text" data-ng-model="vm.config.instrument.instrument_type">
+                                    <md-select data-ng-model="vm.config.instrument.priceDownloadScheme">
+                                        <md-option data-ng-repeat="item in vm.priceDownloadSchemes" ng-value="item.id">{{item.name}}</md-option>
+                                    </md-select>
                                 </md-input-container>
                                 <md-input-container class="md-block">
                                     <label for="">Default price</label>
@@ -108,9 +134,22 @@
                                 </md-input-container>
                                 <md-input-container class="md-block">
                                     <label for="">Payment size default</label>
-                                    <input type="text" data-ng-model="vm.config.instrument.instrument_type">
+                                    <input type="text" data-ng-model="vm.config.instrument.payment_size_detail">
                                 </md-input-container>
                             </div>
+
+                            <md-input-container class="md-block" style="min-height: 64px">
+                                <label for="">Pricing currency</label>
+                                <md-select data-ng-model="vm.config.instrument.pricing_currency">
+                                    <md-option data-ng-repeat="item in vm.currencies" ng-value="item.id">{{item.name}}</md-option>
+                                </md-select>
+                            </md-input-container>
+                            <md-input-container class="md-block" style="min-height: 64px">
+                                <label for="">Accrued currency</label>
+                                <md-select data-ng-model="vm.config.instrument.accrued_currency">
+                                    <md-option data-ng-repeat="item in vm.currencies" ng-value="item.id">{{item.name}}</md-option>
+                                </md-select>
+                            </md-input-container>
 
                             <md-input-container class="md-block">
                                 <label for="">Short name</label>
@@ -123,7 +162,6 @@
 
                         </md-card-content>
                     </md-card>
-                    <md-button class="md-raised" data-ng-click="vm.recalculate()">Recalculate</md-button>
                 </div>
             </div>
         </div>
@@ -136,12 +174,6 @@
     <md-dialog-actions layout="row">
         <md-button class="md-raised" ng-click="vm.cancel()">
             Cancel
-        </md-button>
-        <md-button class="md-raised" data-ng-click="vm.openEditMapping($event)">
-            Edit mapping
-        </md-button>
-        <md-button class="md-raised md-primary" ng-click="vm.agree()" style="margin-right:20px;">
-            Save
         </md-button>
     </md-dialog-actions>
 </md-dialog>

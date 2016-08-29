@@ -11,7 +11,7 @@
         <label>Email</label>
         <input data-ng-model="vm.user.email" type="email">
     </md-input-container>
-    <md-input-container class="md-block">
+    <md-input-container class="md-block" style="height: 64px">
         <label>Language</label>
         <md-select data-ng-model="vm.user.profile.language">
             <md-option value="ru">Russian</md-option>
@@ -20,7 +20,7 @@
             <md-option value="de">Deutsch</md-option>
         </md-select>
     </md-input-container>
-    <md-input-container class="md-block">
+    <md-input-container class="md-block" style="height: 64px">
         <label>Timezone</label>
         <md-select data-ng-model="vm.user.profile.timezone">
             <md-option data-ng-repeat="item in vm.timeZones" ng-value="item.name">{{item.name}}</md-option>
