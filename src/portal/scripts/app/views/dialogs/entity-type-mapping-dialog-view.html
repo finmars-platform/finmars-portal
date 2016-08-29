@@ -7,21 +7,35 @@
     </md-toolbar>
     <md-dialog-content style="background: #E5E5E5;">
         <div data-ng-if="vm.readyStatus.content">
-            <div layout="row">
-                <div flex="50" style="padding: 10px">Your value</div>
-                <div flex="50" style="padding: 10px">Map on {{vm.fancyEntity()}}</div>
-            </div>
-            <md-card data-ng-repeat="item in vm.entityItems">
+            <md-card>
                 <md-card-content style="padding-top: 16px; padding-bottom: 0">
-                    <div layout="row">
+                    <div layout="row" style="margin-bottom: 20px">
                         <div flex="50">
                             <md-input-container>
-                                <label for="">Value</label>
-                                <input type="text" data-ng-model="item.mapping.value">
+                                <input type="text" data-ng-model="vm.query.mapping.value">
                             </md-input-container>
                         </div>
                         <div flex="50">
-                            <p data-ng-bind="item.name"></p>
+                            <md-input-container>
+                                <input type="text" data-ng-model="vm.query.name">
+                            </md-input-container>
+                        </div>
+                    </div>
+                    <div layout="row" style="margin-bottom: 20px">
+                        <div flex="50">Your value</div>
+                        <div flex="50">Map on {{vm.fancyEntity()}}</div>
+                    </div>
+                    <div data-ng-repeat="item in vm.entityItems | filter:vm.query">
+                        <div layout="row">
+                            <div flex="50">
+                                <md-input-container>
+                                    <label for="">Value</label>
+                                    <input type="text" data-ng-model="item.mapping.value">
+                                </md-input-container>
+                            </div>
+                            <div flex="50">
+                                <p data-ng-bind="item.name"></p>
+                            </div>
                         </div>
                     </div>
                 </md-card-content>

@@ -57,13 +57,24 @@
         vm.uploadPrice = function(){
             vm.processing = true;
 
-            var price = {
-                date_from: moment(new Date(vm.price.date_from)).format('YYYY-MM-DD'),
-                date_to: moment(new Date(vm.price.date_to)).format('YYYY-MM-DD'),
-                balance_date: moment(new Date(vm.price.balance_date)).format('YYYY-MM-DD'),
-                fill_days: vm.price.fill_days,
-                override_existed: vm.price.override_existed
-            };
+            var price = {};
+            if(vm.price.isRange) {
+                price = {
+                    date_from: moment(new Date(vm.price.date_from)).format('YYYY-MM-DD'),
+                    date_to: moment(new Date(vm.price.date_to)).format('YYYY-MM-DD'),
+                    balance_date: moment(new Date(vm.price.balance_date)).format('YYYY-MM-DD'),
+                    fill_days: vm.price.fill_days,
+                    override_existed: vm.price.override_existed
+                };
+            } else {
+                price = {
+                    date_from: moment(new Date(vm.price.date_both)).format('YYYY-MM-DD'),
+                    date_to: moment(new Date(vm.price.date_both)).format('YYYY-MM-DD'),
+                    balance_date: moment(new Date(vm.price.balance_date)).format('YYYY-MM-DD'),
+                    fill_days: vm.price.fill_days,
+                    override_existed: vm.price.override_existed
+                };
+            }
 
             importPricingService.create(price).then(function(){
                 vm.processing = false;

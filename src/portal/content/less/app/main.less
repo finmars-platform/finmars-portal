@@ -344,6 +344,7 @@ md-tooltip.tooltip_1 .md-content.md-show {
 md-tooltip.tooltip_2 {
   z-index: 11100;
 }
+
 md-tooltip.tooltip_1 {
   z-index: 12000;
 }
@@ -675,6 +676,9 @@ td, th {
 .colored-tab {
   background: rgb(255, 238, 232);
 }
+.grey-tab {
+  background: #f5f5f5;
+}
 
 .table-misc-cell {
   width: 5%;
@@ -694,6 +698,7 @@ md-input-container {
   margin: 0 10px;
   max-height: 64px;
 }
+
 .p-t-26 {
   padding-top: 26px;
 }
@@ -707,10 +712,11 @@ md-input-container {
   margin: 3px 4px;
 }
 
-button.md-raised.md-button.colored-btn{
+button.md-raised.md-button.colored-btn {
   //background: rgb(255, 238, 232);
   background-color: rgb(255, 238, 232);
 }
+
 .tooltip-inline-block {
   display: inline-block;
   margin-left: 5px;
@@ -718,8 +724,31 @@ button.md-raised.md-button.colored-btn{
   top: 3px;
   cursor: pointer;
 }
+
 .tab-input-row {
   td {
     padding-top: 20px;
+  }
+}
+
+.bordered-with-color {
+  background: #ffeee8;
+}
+
+md-input-container.md-input-focused label:not(.md-no-float), md-input-container.md-input-has-placeholder label:not(.md-no-float), md-input-container.md-input-has-value label:not(.md-no-float) {
+  -webkit-transform: translate3d(0, 8px, 0) scale(.75);
+  transform: translate3d(0, 8px, 0) scale(.75);
+}
+
+mdp-time-picker.custom-time-picker {
+  .md-button.md-icon-button {
+    margin-top: 0;
+    padding-left: 0;
+  }
+  md-input-container {
+    position: relative;
+    top: 6px;
+    left: -15px;
+
   }
 }

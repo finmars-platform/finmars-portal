@@ -2,6 +2,19 @@
     <div class="factor-schedule-tab-view">
         <table class="bordered">
             <thead>
+            <tr style="border: 0">
+                <th>
+                    <md-input-container>
+                        <input type="text" data-ng-model="vm.query.factor_value">
+                    </md-input-container>
+                </th>
+                <th>
+                    <md-input-container>
+                        <input type="text" data-ng-model="vm.query.effective_date">
+                    </md-input-container>
+                </th>
+                <th></th>
+            </tr>
             <tr>
                 <th>Value</th>
                 <th>Date</th>
@@ -9,7 +22,7 @@
             </tr>
             </thead>
             <tbody>
-            <tr data-ng-repeat="item in vm.entity.factor_schedules">
+            <tr data-ng-repeat="item in vm.entity.factor_schedules | filter:vm.query">
                 <td data-ng-bind="item.factor_value" data-ng-if="!item.editStatus"></td>
                 <td data-ng-bind="item.effective_date" data-ng-if="!item.editStatus"></td>
                 <td data-ng-if="!item.editStatus" class="table-misc-cell">
@@ -59,13 +72,13 @@
             <tr class="tab-input-row">
                 <td>
                     <md-input-container>
-                        <label for="">Value</label>
+                        <!--<label for="">Value</label>-->
                         <input type="text" data-ng-model="vm.newItem.value">
                     </md-input-container>
                 </td>
                 <td>
                     <md-input-container>
-                        <label for="">Date</label>
+                        <!--<label for="">Date</label>-->
                         <zh-date-picker data-ng-model="vm.newItem.date"></zh-date-picker>
                     </md-input-container>
                 </td>

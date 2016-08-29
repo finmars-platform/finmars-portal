@@ -1,15 +1,17 @@
 <div data-ng-controller="AdditionsEditorEntityEditController as vm" class="min-height">
-    <div data-ng-if="vm.readyStatus.entityId" data-ng-include="'views/entity-editor-view.html'"></div>
+    <div data-custom-scroll class="custom-scrollbar">
+        <div data-ng-if="vm.readyStatus.entityId" data-ng-include="'views/entity-editor-view.html'"></div>
 
-    <div layout="row">
-        <md-button ng-click="vm.editLayout()" class="md-raised md-primary"
-                   style="margin-left: 27px; height: 36px;">
-            Edit Form
-        </md-button>
+        <div layout="row">
+            <md-button ng-click="vm.editLayout()" class="md-raised md-primary"
+                       style="margin-left: 27px; height: 36px;">
+                Edit Form
+            </md-button>
 
-        <md-button ng-click="vm.save()" style=" margin-right:20px; margin-bottom: 80px"
-                   class="md-raised">
-            Save
-        </md-button>
+            <md-button ng-click="vm.save()" style=" margin-right:20px; margin-bottom: 80px"
+                       class="md-raised">
+                Save
+            </md-button>
+        </div>
     </div>
 </div>

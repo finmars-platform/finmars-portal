@@ -10,6 +10,7 @@
     var currencyRepository = require('../repositories/currencyRepository');
     var accountRepository = require('../repositories/accountRepository');
     var instrumentTypeRepository = require('../repositories/instrumentTypeRepository');
+    var transactionTypeRepository = require('../repositories/transactionTypeRepository');
 
     var strategyService = require('./strategyService');
     var strategyGroupService = require('./strategyGroupService');
@@ -20,8 +21,6 @@
     var findEntities = function (entity, options) {
         return new Promise(function (resolve) {
 
-            // Forgive me pls
-            //console.log('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
             if (!entities[entity]) {
 
                 if (options.entityType.indexOf('strategy') !== -1) {
@@ -43,10 +42,8 @@
                         });
                     }
                 } else {
-                    //console.log('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
                     switch (entity) {
                         case 'instrument':
-                            console.log('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
                             return instrumentRepository.getList().then(function (data) {
                                 entities[entity] = data.results;
                                 resolve({key: entity, data: entities[entity]});
@@ -78,6 +75,13 @@
                             break;
                         case 'instrument_type':
                             return instrumentTypeRepository.getList().then(function (data) {
+                                entities[entity] = data.results;
+                                resolve({key: entity, data: entities[entity]});
+                            });
+                            break;
+                        case 'transaction_types':
+                            console.log('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!', entity);
+                            return transactionTypeRepository.getList().then(function (data) {
                                 entities[entity] = data.results;
                                 resolve({key: entity, data: entities[entity]});
                             });

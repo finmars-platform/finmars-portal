@@ -41,20 +41,22 @@
                     </div>
                     <div layout="column">
 
-                        <md-card data-ng-repeat="item in vm.providerFields track by $index" flex="100">
+                        <md-card>
                             <md-card-content>
-                                <div class="fields-holder" layout="row">
-                                    <div class="iscm-item">
-                                        <md-input-container>
-                                            <label for="">Field</label>
-                                            <input type="text" data-ng-model="item.name">
-                                        </md-input-container>
-                                    </div>
-                                    <div>
-                                        <md-button style="min-width: 40px;"
-                                                   data-ng-click="vm.removeProviderField(item, $index)"
-                                                   class="md-raised">x
-                                        </md-button>
+                                <div data-ng-repeat="item in vm.providerFields track by $index" flex="100">
+                                    <div class="fields-holder" layout="row">
+                                        <div class="iscm-item">
+                                            <md-input-container>
+                                                <label for="">Field</label>
+                                                <input type="text" data-ng-model="item.name">
+                                            </md-input-container>
+                                        </div>
+                                        <div>
+                                            <md-button style="min-width: 40px;"
+                                                       data-ng-click="vm.removeProviderField(item, $index)"
+                                                       class="md-raised">x
+                                            </md-button>
+                                        </div>
                                     </div>
                                 </div>
                             </md-card-content>
@@ -72,10 +74,10 @@
                         <h4 style="padding-left: 10px">Map on instrument fields:</h4>
                     </div>
                     <div layout="column">
-                        <div data-ng-repeat="item in vm.mapFields" layout="row">
-                            <md-card flex="100">
-                                <md-card-content>
-                                    <div layout="row">
+                        <md-card flex="100">
+                            <md-card-content>
+                                <div data-ng-repeat="item in vm.mapFields" layout="row" flex="100">
+                                    <div layout="row" flex="100">
                                         <div flex="40">
                                             <md-input-container>
                                                 <md-select data-ng-model="item[vm.getModelKey(item)]"
@@ -112,7 +114,10 @@
                                                     </md-input-container>
                                                 </div>
                                                 <div flex="50">
-                                                    <md-button class="md-raised" data-ng-click="vm.openMapping($event, item.complexExpressionEntity)">Edit mapping</md-button>
+                                                    <md-button class="md-raised md-primary"
+                                                               data-ng-click="vm.openMapping($event, item.complexExpressionEntity)">
+                                                        Edit mapping
+                                                    </md-button>
                                                 </div>
                                             </div>
                                         </div>
@@ -124,9 +129,9 @@
                                             </md-button>
                                         </div>
                                     </div>
-                                </md-card-content>
-                            </md-card>
-                        </div>
+                                </div>
+                            </md-card-content>
+                        </md-card>
                     </div>
                     <div layout="row">
                         <md-button class="md-raised" data-ng-click="vm.addMapField()">Add field</md-button>
@@ -136,9 +141,9 @@
             <md-divider style="margin: 20px"></md-divider>
             <div>
                 <div data-ng-if="vm.checkSchedules()">
-                    <div layout="column">
-                        <div layout="row">
-                            <md-card flex="50">
+                    <div layout="row">
+                        <div layout="row" flex="50">
+                            <md-card flex="100">
                                 <md-card-content>
                                     <md-input-container style="width: 100%">
                                         <label for="">Factor upload method</label>
@@ -151,8 +156,8 @@
                                 </md-card-content>
                             </md-card>
                         </div>
-                        <div layout="row">
-                            <md-card flex="50">
+                        <div layout="row" flex="50">
+                            <md-card flex="100">
                                 <md-card-content>
                                     <md-input-container style="width: 100%">
                                         <label for="">Accrual schedule upload</label>
