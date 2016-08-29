@@ -7,6 +7,8 @@
 
     var logService = require('../../../../core/services/logService');
 
+    var instrumentSchemeService = require('../services/import/instrumentSchemeService');
+
     module.exports = function ($scope, $mdDialog) {
         logService.controller('ActionsController', 'initialized');
 
@@ -66,6 +68,21 @@
             }).then(function (res) {
                 if (res.status === 'agree') {
                     console.log("res", res.data);
+                }
+            });
+        };
+
+        vm.addScheme = function ($event) {
+            $mdDialog.show({
+                controller: 'InstrumentMappingAddDialogController as vm',
+                templateUrl: 'views/dialogs/instrument-mapping-dialog-view.html',
+                targetEvent: $event
+            }).then(function (res) {
+                if (res.status === 'agree') {
+                    console.log('res', res.data);
+                    instrumentSchemeService.create(res.data).then(function () {
+                        vm.getList();
+                    })
                 }
             });
         };

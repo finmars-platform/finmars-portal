@@ -18,9 +18,12 @@
                                 <md-option value="3">Monthly</md-option>
                             </md-select>
                         </md-input-container>
+                        <ng-md-icon class="tooltip-inline-block" icon="info" size="20" style="fill: #777777">
+                            <md-tooltip class="tooltip_1" md-direction="top">tooltip text</md-tooltip>
+                        </ng-md-icon>
                     </div>
                     <div data-ng-show="vm.cron.periodicity == 2">
-                        <div>
+                        <div style="padding-left: 14px">
                             <p><b>Weekly</b></p>
                             <div>
                                 <md-checkbox ng-model="vm.days[0].status" data-ng-click="vm.setDay(1)"
@@ -55,7 +58,7 @@
                         </div>
                     </div>
                     <div data-ng-show="vm.cron.periodicity == 3">
-                        <div layout="row">
+                        <div layout="row" style="padding-top: 14px">
                             <md-input-container>
                                 <label for="">Month</label>
                                 <md-select data-ng-model="vm.cron.month">
@@ -88,33 +91,48 @@
                         </div>
                     </div>
                     <div>
-                        <md-input-container style="padding-left: 0">
+                        <md-input-container style="padding-left: 0; padding-top: 16px">
                             <label for="">Time</label>
-                            <mdp-time-picker data-ng-model="vm.cron.time"></mdp-time-picker>
+                            <mdp-time-picker class="custom-time-picker" data-ng-model="vm.cron.time"></mdp-time-picker>
                         </md-input-container>
+                        <ng-md-icon class="tooltip-inline-block" icon="info" size="20" style="fill: #777777; margin-left: 8px;">
+                            <md-tooltip class="tooltip_1" md-direction="top">tooltip text</md-tooltip>
+                        </ng-md-icon>
                     </div>
                     <div>
                         <md-input-container>
                             <label for="">Days to load</label>
                             <input type="text" data-ng-model="vm.schedule.load_days">
                         </md-input-container>
+                        <ng-md-icon class="tooltip-inline-block" icon="info" size="20" style="fill: #777777">
+                            <md-tooltip class="tooltip_1" md-direction="top">tooltip text</md-tooltip>
+                        </ng-md-icon>
                     </div>
                     <div>
                         <md-input-container>
                             <label for="">Portfolio balance days</label>
                             <input type="text" data-ng-model="vm.schedule.balance_day" placeholder="days">
                         </md-input-container>
+                        <ng-md-icon class="tooltip-inline-block" icon="info" size="20" style="fill: #777777">
+                            <md-tooltip class="tooltip_1" md-direction="top">tooltip text</md-tooltip>
+                        </ng-md-icon>
                     </div>
-                    <div>
-                        <md-checkbox ng-model="vm.schedule.override_existed" aria-label="override">
+                    <div style="margin-bottom: 18px">
+                        <md-checkbox style="margin-left: 12px" ng-model="vm.schedule.override_existed" aria-label="override">
                             Override old prices
                         </md-checkbox>
+                        <ng-md-icon class="tooltip-inline-block" icon="info" size="20" style="fill: #777777">
+                            <md-tooltip class="tooltip_1" md-direction="top">tooltip text</md-tooltip>
+                        </ng-md-icon>
                     </div>
                     <div>
                         <md-input-container>
                             <label for="">Roll prices for N days forward</label>
                             <input type="text" data-ng-model="vm.schedule.fill_days" placeholder="days">
                         </md-input-container>
+                        <ng-md-icon class="tooltip-inline-block" icon="info" size="20" style="fill: #777777">
+                            <md-tooltip class="tooltip_1" md-direction="top">tooltip text</md-tooltip>
+                        </ng-md-icon>
                     </div>
                 </md-card-content>
             </md-card>
@@ -130,7 +148,7 @@
             Cancel
         </md-button>
 
-        <md-button class="md-raised md-primary" ng-click="vm.agree()" style="margin-right:20px;">
+        <md-button class="md-raised" ng-click="vm.agree()" style="margin-right:20px;">
             Save
         </md-button>
     </md-dialog-actions>

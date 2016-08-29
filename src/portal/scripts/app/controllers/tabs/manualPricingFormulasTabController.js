@@ -30,6 +30,7 @@
             var name;
             vm.policies.forEach(function (item) {
                 if (policy.pricing_policy == item.id) {
+                    policy.policy_name = item.name;
                     name = item.name
                 }
             });

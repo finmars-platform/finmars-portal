@@ -1,8 +1,25 @@
 <div data-ng-controller="ManualPricingFormulasTabController as vm">
-    <div >
+    <div>
         <div data-ng-if="vm.readyStatus.content">
             <table class="bordered">
                 <thead>
+                <tr style="border: 0">
+                    <th>
+                        <md-input-container>
+                            <input type="text" data-ng-model="vm.query.policy_name">
+                        </md-input-container>
+                    </th>
+                    <th>
+                        <md-input-container>
+                            <input type="text" data-ng-model="vm.query.expr">
+                        </md-input-container>
+                    </th>
+                    <th>
+                        <md-input-container>
+                            <input type="text" data-ng-model="vm.query.notes">
+                        </md-input-container>
+                    </th>
+                </tr>
                 <tr>
                     <th>Pricing policy</th>
                     <th>Expression</th>
@@ -10,7 +27,7 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr data-ng-repeat="item in vm.entity.manual_pricing_formulas">
+                <tr data-ng-repeat="item in vm.entity.manual_pricing_formulas | filter:vm.query">
                     <td data-ng-if="!item.editStatus" data-ng-bind="vm.bindPricingPolicy(item)"></td>
                     <td data-ng-if="!item.editStatus" data-ng-bind="item.expr"></td>
                     <td data-ng-if="!item.editStatus" data-ng-bind="item.notes"></td>
@@ -71,7 +88,7 @@
                 <tr class="tab-input-row">
                     <td>
                         <md-input-container>
-                            <label for="">Pricing policy</label>
+                            <!--<label for="">Pricing policy</label>-->
                             <md-select data-ng-model="vm.newItem.pricing_policy">
                                 <md-option data-ng-repeat="policy in vm.policies" ng-value="policy.id">{{policy.name}}
                                 </md-option>
@@ -80,13 +97,13 @@
                     </td>
                     <td>
                         <md-input-container>
-                            <label for="">Expression</label>
+                            <!--<label for="">Expression</label>-->
                             <input type="text" data-ng-model="vm.newItem.expr">
                         </md-input-container>
                     </td>
                     <td>
                         <md-input-container>
-                            <label for="">Notes</label>
+                            <!--<label for="">Notes</label>-->
                             <input type="text" data-ng-model="vm.newItem.notes">
                         </md-input-container>
                     </td>

@@ -51,7 +51,6 @@
                     }
                 }
             } else {
-                console.log('here', fieldKey);
                 switch (fieldKey) {
                     case 'daily_pricing_model':
                         entityFieldsRepository.getDailyPricingModelChoices().then(function (data) {
@@ -176,6 +175,11 @@
                     case 'portfolios':
                         portfolioRepository.getList().then(function (data) {
                             resolve({type: 'multiple-ids', key: 'portfolios', data: data.results});
+                        });
+                        break;
+                    case 'transaction_types':
+                        counterpartyRepository.getList().then(function (data) {
+                            resolve({type: 'multiple-ids', key: 'transaction_types', data: data.results});
                         });
                         break;
                     case 'counterparties':
