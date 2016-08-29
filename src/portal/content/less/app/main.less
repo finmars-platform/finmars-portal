@@ -676,6 +676,7 @@ td, th {
 .colored-tab {
   background: rgb(255, 238, 232);
 }
+
 .grey-tab {
   background: #f5f5f5;
 }
@@ -750,5 +751,36 @@ mdp-time-picker.custom-time-picker {
     top: 6px;
     left: -15px;
 
+  }
+}
+
+.filter-row-holder {
+  md-input-container {
+    margin: 0;
+    position: relative;
+    height: 36px;
+    margin-top: 5px;
+    input {
+      padding-left: 28px;
+    }
+    ng-md-icon {
+      opacity: .3;
+      position: absolute;
+    }
+  }
+}
+
+.sortorder:after {
+  content: '\25b2'; // BLACK UP-POINTING TRIANGLE
+}
+
+.sortorder.reverse:after {
+  content: '\25bc'; // BLACK DOWN-POINTING TRIANGLE
+}
+
+.edit-state-td {
+  padding-top: 36px;
+  md-input-container {
+    margin: 0;
   }
 }

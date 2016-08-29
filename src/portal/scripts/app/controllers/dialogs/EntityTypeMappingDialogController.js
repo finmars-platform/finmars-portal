@@ -19,6 +19,16 @@
 
         console.log('mapEntityType', mapEntityType);
 
+        vm.toggleQuery = function () {
+            vm.queryStatus = !vm.queryStatus;
+            vm.query = {};
+        };
+
+        vm.setSort = function(propertyName) {
+            vm.direction = (vm.sort === propertyName) ? !vm.direction : false;
+            vm.sort = propertyName;
+        };
+
         vm.fancyEntity = function () {
             return mapEntityType.replace('_', ' ');
         };

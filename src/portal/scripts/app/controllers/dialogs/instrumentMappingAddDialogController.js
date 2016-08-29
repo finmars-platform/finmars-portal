@@ -73,13 +73,15 @@
                 key: 'name',
                 caption: 'Name',
                 required: true,
-                expression: ''
+                expression: '',
+                complexExpressionEntity: false
             },
             {
                 key: 'user_code',
                 caption: 'User code',
                 required: true,
-                expression: ''
+                expression: '',
+                complexExpressionEntity: false
             },
             {
                 key: 'instrument_type',
@@ -91,19 +93,22 @@
                 key: 'reference_for_pricing',
                 caption: 'Reference for pricing',
                 required: true,
-                expression: ''
+                expression: '',
+                complexExpressionEntity: false
             },
             {
                 key: 'short_name',
                 caption: 'Short name',
                 required: true,
-                expression: ''
+                expression: '',
+                complexExpressionEntity: false
             },
             {
                 key: 'public_name',
                 caption: 'Public name',
                 required: true,
-                expression: ''
+                expression: '',
+                complexExpressionEntity: false
             }
         ];
 
@@ -124,7 +129,8 @@
         vm.addMapField = function () {
             vm.mapFields.push({
                 expression: '',
-                required: false
+                required: false,
+                complexExpressionEntity: false
             })
         };
 
