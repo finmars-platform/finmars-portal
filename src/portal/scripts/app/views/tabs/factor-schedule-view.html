@@ -2,27 +2,39 @@
     <div class="factor-schedule-tab-view">
         <table class="bordered">
             <thead>
-            <tr style="border: 0">
+            <tr>
+                <th data-ng-click="vm.setSort('factor_value')">Value<span class="sortorder"
+                                                                          data-ng-show="vm.sort === 'factor_value'"
+                                                                          data-ng-class="{reverse: vm.direction}"></span>
+                </th>
+                <th data-ng-click="vm.setSort('effective_date')">Date<span class="sortorder"
+                                                                           data-ng-show="vm.sort === 'effective_date'"
+                                                                           data-ng-class="{reverse: vm.direction}"></span>
+                </th>
+                <th>
+                    <md-button class="md-icon-button">
+                        <ng-md-icon data-ng-click="vm.toggleQuery()" icon="search"></ng-md-icon>
+                    </md-button>
+                </th>
+            </tr>
+            <tr style="border: 0" data-ng-if="vm.queryStatus" class="filter-row-holder">
                 <th>
                     <md-input-container>
+                        <ng-md-icon icon="search"></ng-md-icon>
                         <input type="text" data-ng-model="vm.query.factor_value">
                     </md-input-container>
                 </th>
                 <th>
                     <md-input-container>
+                        <ng-md-icon icon="search"></ng-md-icon>
                         <input type="text" data-ng-model="vm.query.effective_date">
                     </md-input-container>
                 </th>
                 <th></th>
             </tr>
-            <tr>
-                <th>Value</th>
-                <th>Date</th>
-                <th></th>
-            </tr>
             </thead>
             <tbody>
-            <tr data-ng-repeat="item in vm.entity.factor_schedules | filter:vm.query">
+            <tr data-ng-repeat="item in vm.entity.factor_schedules | filter:vm.query | orderBy:vm.sort:vm.direction">
                 <td data-ng-bind="item.factor_value" data-ng-if="!item.editStatus"></td>
                 <td data-ng-bind="item.effective_date" data-ng-if="!item.editStatus"></td>
                 <td data-ng-if="!item.editStatus" class="table-misc-cell">
@@ -51,19 +63,19 @@
                         </md-menu-content>
                     </md-menu>
                 </td>
-                <td data-ng-if="item.editStatus">
+                <td data-ng-if="item.editStatus" class="edit-state-td">
                     <md-input-container>
                         <label for="">Value</label>
                         <input type="text" data-ng-model="item.factor_value">
                     </md-input-container>
                 </td>
-                <td data-ng-if="item.editStatus">
+                <td data-ng-if="item.editStatus" class="edit-state-td">
                     <md-input-container>
                         <label for="">Date</label>
                         <zh-date-picker data-ng-model="item.effective_date"></zh-date-picker>
                     </md-input-container>
                 </td>
-                <td data-ng-if="item.editStatus">
+                <td data-ng-if="item.editStatus" class="edit-state-td">
                     <md-button data-ng-click="vm.saveItem(item)">
                         Ok
                     </md-button>

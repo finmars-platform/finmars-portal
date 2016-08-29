@@ -206,7 +206,8 @@
         vm.addMapField = function () {
             vm.mapFields.push({
                 expression: '',
-                required: false
+                required: false,
+                complexExpressionEntity: false
             })
         };
 

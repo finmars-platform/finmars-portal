@@ -25,6 +25,26 @@
             $scope.$apply();
         });
 
+        vm.toggleQuery = function () {
+            vm.queryStatus = !vm.queryStatus;
+            vm.query = {};
+        };
+
+        vm.setSort = function(propertyName) {
+            vm.direction = (vm.sort === propertyName) ? !vm.direction : false;
+            vm.sort = propertyName;
+        };
+
+        vm.bindCalculationModel = function(calculationModel) {
+            var name;
+            vm.accrualModels.forEach(function (item) {
+                if (calculationModel.accrual_calculation_model == item.id) {
+                    calculationModel.calculation_model_name = item.name;
+                    name = item.name
+                }
+            });
+            return name;
+        };
 
         vm.newItem = {
             "accrual_start_date": new Date(),
