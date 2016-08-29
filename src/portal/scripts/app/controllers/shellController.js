@@ -20,7 +20,7 @@
             console.log('Logged out');
             window.location.pathname = '/';
             cookiesService.deleteCookie();
-            usersService.logout();
+            //usersService.logout();
         };
 
         //window.fetch('/api/v1/users/ping/').then(function (data) {
@@ -92,7 +92,10 @@
         console.log("Curent state is ", $state.current);
 
         vm.logOutMethod = function () {
-            usersService.logout();
+            console.log('Logged out');
+            window.location.pathname = '/';
+            cookiesService.deleteCookie();
+            //usersService.logout();
         }
     }
 
