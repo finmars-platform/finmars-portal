@@ -160,17 +160,27 @@ textarea.bordered {
 	position: relative;
 	width: 98%;
 }
+md-input-container textarea {
+	border-color: rgba(0,0,0,0.12);
+}
+md-checkbox.checkbox-bind-field {
+	margin-left: 12px;
+}
+.ev-data-field .textarea-bind-field {
+	margin-bottom: 30px;
+}
 .textarea-bind-field label:not(.md-container-ignore) {
 	left: 5px;
 }
 
 .ev-data-field {
 	//padding: 0 20px;
-	min-height: 94px;
+	//min-height: 94px;
 	position: relative;
 	box-sizing: border-box;
 	md-input-container {
-		margin: 18px 10px;
+		//margin: 18px 10px;
+		margin: 0px 10px;
 	}
 	md-input-container.md-default-theme .md-input, md-input-container .md-input {
 		border-color: #4C334D;
@@ -183,18 +193,20 @@ textarea.bordered {
 
 .ec-decoration {
 	&.line {
-		position: absolute;
+		//position: absolute;
 		width: 100%;
-		top: 50%;
+		//top: 50%;
 		height: 4px;
 		background: #4C334D;
 		display: block;
+		margin: 15px 0 30px;
 	}
 	&.labeled {
 		display: block;
 		position: relative;
 		width: 100%;
 		text-align: left;
+		margin: 30px 0;
 		// .w-rp {
 		// 	position: relative;
 		// 	background: #fff;

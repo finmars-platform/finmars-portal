@@ -608,16 +608,20 @@
             case 'instrument':
                 return [
                     {
-                        label: 'Factor schedule',
+                        label: 'Factors',
                         templateUrl: 'views/tabs/factor-schedule-view.html'
                     },
                     {
-                        label: 'Manual pricing formulas',
+                        label: 'Pricing',
                         templateUrl: 'views/tabs/manual-pricing-formulas-view.html'
                     },
                     {
-                        label: 'Accrual calculation schedules',
+                        label: 'Accruals',
                         templateUrl: 'views/tabs/accrual-calculation-schedules-view.html'
+                    },
+                    {
+                        label: 'Events',
+                        templateUrl: 'views/tabs/events-view.html'
                     }
                 ];
                 break;

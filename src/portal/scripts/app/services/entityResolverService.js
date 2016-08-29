@@ -12,6 +12,7 @@
     var instrumentService = require('./instrumentService');
     var priceHistoryService = require('./priceHistoryService');
     var currencyHistoryService = require('./currencyHistoryService');
+    var transactionService = require('./transactionService');
 
     var currencyService = require('./currencyService');
     var instrumentTypeService = require('./instrumentTypeService');
@@ -56,6 +57,9 @@
                 break;
             case 'instrument':
                 return instrumentService.getByKey(id);
+                break;
+            case 'transaction':
+                return transactionService.getByKey(id);
                 break;
             case 'price-history':
                 return priceHistoryService.getByKey(id);

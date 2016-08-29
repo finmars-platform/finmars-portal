@@ -13,6 +13,11 @@
     var attributeTypeService = require('../../services/attributeTypeService');
     var instrumentSchemeService = require('../../services/import/instrumentSchemeService');
     var instrumentService = require('../../services/instrumentService');
+    var currencyService = require('../../services/currencyService');
+
+    var instrumentTypeService = require('../../services/instrumentTypeService');
+    var instrumentDailyPricingModelService = require('../../services/instrument/instrumentDailyPricingModelService');
+    var importPriceDownloadSchemeService = require('../../services/import/importPriceDownloadSchemeService');
 
     var importInstrumentService = require('../../services/import/importInstrumentService');
 
@@ -23,7 +28,7 @@
 
         var vm = this;
 
-        vm.readyStatus = {mapping: false, processing: false};
+        vm.readyStatus = {mapping: false, processing: false, dailyModel: false, priceDownloadScheme: false, instrumentType: false, currency: false};
         vm.dataIsImported = false;
 
         vm.config = {
@@ -33,11 +38,40 @@
             instrument_download_scheme: 19 // remove that
         };
 
+        vm.dailyModels = [];
+        vm.priceDownloadSchemes = [];
+        vm.instrumentTypes = [];
+        vm.currencies = [];
+
         var providerId = 1; //TODO HARD REFACTOR CODE BLOOMBERG PROVIDER
 
         instrumentSchemeService.getList(providerId).then(function (data) {
             vm.instrumentSchemes = data.results;
             vm.readyStatus.mapping = true;
+            $scope.$apply();
+        });
+
+        instrumentDailyPricingModelService.getList().then(function (data) {
+            vm.dailyModels = data;
+            vm.readyStatus.dailyModel = true;
+            $scope.$apply();
+        });
+
+        importPriceDownloadSchemeService.getList().then(function (data) {
+            vm.priceDownloadSchemes = data.results;
+            vm.readyStatus.priceDownloadScheme = true;
+            $scope.$apply();
+        });
+
+        instrumentTypeService.getList().then(function(data){
+            vm.instrumentTypes = data.results;
+            vm.readyStatus.instrumentType = true;
+            $scope.$apply();
+        });
+
+        currencyService.getList().then(function(data){
+            vm.currencies = data.results;
+            vm.readyStatus.currency = true;
             $scope.$apply();
         });
 

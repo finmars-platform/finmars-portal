@@ -51,7 +51,7 @@
                     var i;
                     var promises = [];
                     for (i = 0; i < scope.columns.length; i = i + 1) {
-                        //console.log(scope.columns[i]);
+                        console.log(scope.columns[i]);
                         if (scope.columns[i]['value_type'] === 'field') {
                             promises.push(bindCellService.findEntities(scope.columns[i].key, {entityType: entityType}));
                         }
@@ -62,7 +62,7 @@
                     }
 
                     Promise.all(promises).then(function (results) {
-                        //console.log('results', results);
+                        console.log('results', results);
                         results.forEach(function (item) {
                             if (item.key) {
                                 entityFieldsArray[item.key] = item.data;
