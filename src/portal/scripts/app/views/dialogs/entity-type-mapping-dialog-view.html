@@ -10,11 +10,12 @@
             <md-card>
                 <md-card-content style="padding-top: 16px; padding-bottom: 0">
                     <div layout="row" style="margin-bottom: 20px">
-                        <div flex="50" data-ng-click="vm.setSort('mapping.value')">Your value <span class="sortorder"
-                                                                                                    data-ng-show="vm.sort === 'mapping.value'"
-                                                                                                    data-ng-class="{reverse: vm.direction}"></span>
+                        <div flex="50" data-ng-click="vm.setSort('mapping.value')"><b>Your value </b><span
+                                class="sortorder"
+                                data-ng-show="vm.sort === 'mapping.value'"
+                                data-ng-class="{reverse: vm.direction}"></span>
                         </div>
-                        <div flex="40" data-ng-click="vm.setSort('name')">Map on {{vm.fancyEntity()}} <span
+                        <div flex="40" data-ng-click="vm.setSort('name')"><b>Map on {{vm.fancyEntity()}} </b><span
                                 class="sortorder"
                                 data-ng-show="vm.sort === 'name'"
                                 data-ng-class="{reverse: vm.direction}"></span></div>

@@ -1,5 +1,5 @@
 <div data-ng-controller="AccrualCalculationSchedulesTabController as vm">
-    <div class="" data-ng-if="vm.readyStatus.accrualModals">
+    <div class="" data-ng-if="vm.checkReadyStatus()">
         <table class="bordered">
             <thead>
             <tr>
@@ -89,7 +89,7 @@
                 <td data-ng-if="!item.editStatus" data-ng-bind="item.first_payment_date"></td>
                 <td data-ng-if="!item.editStatus" data-ng-bind="item.accrual_size"></td>
                 <td data-ng-if="!item.editStatus" data-ng-bind="vm.bindCalculationModel(item)"></td>
-                <td data-ng-if="!item.editStatus" data-ng-bind="item.periodicity"></td>
+                <td data-ng-if="!item.editStatus" data-ng-bind="vm.bindPeriodicity(item)"></td>
                 <td data-ng-if="!item.editStatus" data-ng-bind="item.periodicity_n"></td>
                 <td data-ng-if="!item.editStatus" data-ng-bind="item.notes"></td>
                 <td data-ng-if="!item.editStatus" class="table-misc-cell" >
@@ -225,7 +225,7 @@
             </tbody>
         </table>
     </div>
-    <div data-ng-if="!vm.readyStatus.accrualModals">
+    <div data-ng-if="!vm.checkReadyStatus()">
         <div layout="row" layout-sm="column" layout-align="space-around">
             <md-progress-circular md-mode="indeterminate"></md-progress-circular>
         </div>

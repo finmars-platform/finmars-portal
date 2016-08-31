@@ -38,12 +38,12 @@
             'inputs'];
 
         vm.baseAttrs = metaService.getBaseAttrs();
-        vm.entityAttrs = metaService.getEntityAttrs("instrument-scheme").map(function(item){
-            if(item.key == 'factor_schedule_method' || item.key == 'accrual_calculation_schedule_method') {
+        vm.entityAttrs = metaService.getEntityAttrs("instrument-scheme").map(function (item) {
+            if (item.key == 'factor_schedule_method' || item.key == 'accrual_calculation_schedule_method') {
                 return null;
             }
             return item;
-        }).filter(function(item){
+        }).filter(function (item) {
             return !!item
         });
         vm.attrs = [];
@@ -180,7 +180,7 @@
             })
         };
 
-        vm.openMapping = function($event, mapEntityType){
+        vm.openMapping = function ($event, mapEntityType) {
             $mdDialog.show({
                 controller: 'EntityTypeMappingDialogController as vm',
                 templateUrl: 'views/dialogs/entity-type-mapping-dialog-view.html',
@@ -195,6 +195,27 @@
             }).then(function (res) {
                 if (res.status === 'agree') {
                     console.log("res", res.data);
+                }
+            });
+        };
+
+        vm.openExpressionDialog = function ($event, item) {
+            $mdDialog.show({
+                controller: 'ExpressionEditorDialogController as vm',
+                templateUrl: 'views/dialogs/expression-editor-dialog-view.html',
+                parent: angular.element(document.body),
+                targetEvent: $event,
+                preserveScope: true,
+                autoWrap: true,
+                skipHide: true,
+                locals: {
+                    item: item
+                }
+            }).then(function (res) {
+                if (res.status === 'agree') {
+                    console.log("res", res.data);
+                    item.expression = res.data.item.expression;
+                    $scope.$apply();
                 }
             });
         };
@@ -231,22 +252,22 @@
 
         vm.getSchedules();
 
-        vm.checkAttrs = function(){
+        vm.checkAttrs = function () {
 
             var b, e, a;
             var x, y, z;
-            for(b = 0; b < vm.baseAttrs.length; b = b + 1) {
+            for (b = 0; b < vm.baseAttrs.length; b = b + 1) {
                 vm.baseAttrs[b].disabled = false;
-                for(x = 0; x < vm.mapFields.length; x = x + 1) {
-                    if(vm.mapFields[x].key == vm.baseAttrs[b].key) {
+                for (x = 0; x < vm.mapFields.length; x = x + 1) {
+                    if (vm.mapFields[x].key == vm.baseAttrs[b].key) {
                         vm.baseAttrs[b].disabled = true;
                     }
                 }
             }
 
-            for(e = 0; e < vm.entityAttrs.length; e = e + 1) {
+            for (e = 0; e < vm.entityAttrs.length; e = e + 1) {
                 vm.entityAttrs[e].disabled = false;
-                for(y = 0; y < vm.mapFields.length; y = y + 1) {
+                for (y = 0; y < vm.mapFields.length; y = y + 1) {
                     if (vm.hidedEntityAttrs.indexOf(vm.entityAttrs[e].key) === -1) {
                         if (vm.mapFields[y].key == vm.entityAttrs[e].key) {
                             vm.entityAttrs[e].disabled = true;
@@ -255,9 +276,9 @@
                 }
             }
 
-            for(a = 0; a < vm.attrs.length; a = a + 1) {
+            for (a = 0; a < vm.attrs.length; a = a + 1) {
                 vm.attrs[a].disabled = false;
-                for(z = 0; z < vm.mapFields.length; z = z + 1) {
+                for (z = 0; z < vm.mapFields.length; z = z + 1) {
                     if (vm.mapFields[z].hasOwnProperty('attribute_type')) {
                         if (vm.mapFields[z].attribute_type == vm.attrs[a].id) {
                             vm.attrs[a].disabled = true;
