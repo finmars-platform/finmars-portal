@@ -45,7 +45,6 @@
                         scope.sorting.group.key = group.key;
                         scope.sorting.group.sort = sort;
                     }
-                    console.log('external??', scope.sorting.group);
                     scope.externalCallback();
                 };
 
@@ -54,12 +53,14 @@
                 };
 
                 scope.$watchCollection('grouping', function () {
-                    scope.externalCallback();
+                    setTimeout(function () {
+                        scope.externalCallback();
+                        scope.$apply();
+                    }, 0)
                 });
 
                 scope.toggleGroupFold = function () {
                     scope.folding = !scope.folding;
-                    console.log('scope.folding', scope.folding);
                     setTimeout(function () {
                         scope.externalCallback();
                         scope.$apply();

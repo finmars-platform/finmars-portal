@@ -22,6 +22,8 @@
 
     var setGroups = function (items, groups, entityType) {
 
+        console.log('GROUPING SERVICE groups', groups);
+
         var itemsGrouped = [];
         var itemsGroupedArray = [];
         var i, c, a, k;
@@ -172,14 +174,14 @@
                     }
                 }
                 itemsGrouped[groupName].items.push(item);
-                console.log('itemsGrouped[groupName]', itemsGrouped[groupName]);
-                console.log('itemsGrouped', itemsGrouped);
+                //console.log('itemsGrouped[groupName]', itemsGrouped[groupName]);
+                //console.log('itemsGrouped', itemsGrouped);
                 itemsGroupedArray = transformToArray(itemsGrouped);
             }
 
             //console.log('------------------------');
 
-            //console.log('Items grouped', itemsGroupedArray);
+            console.log('Items grouped', itemsGroupedArray);
             return itemsGroupedArray;
         } else {
             //console.log('items', items);

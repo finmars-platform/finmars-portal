@@ -32,7 +32,7 @@
     };
 
     var getEntitiesWithoutBaseAttrsList = function () {
-        return ['price-history', 'currency-history'];
+        return ['price-history', 'currency-history', 'transaction'];
     };
 
     var getEntityAttrs = function (entity) {

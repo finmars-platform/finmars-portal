@@ -17,9 +17,6 @@
 
     var uiService = require('../../services/uiService');
 
-    var demoPortfolioService = require('../../services/demo/demoPortfolioService');
-    var demoTransactionsService = require('../../services/demo/demoTransactionsService');
-
     module.exports = function ($scope, $mdDialog) {
 
         logService.controller('EntityViewerController', 'initialized');
@@ -285,10 +282,13 @@
 
             //console.log('options', options);
             //console.log('entityViewerController parent scope ', $scope.$parent);
+            console.log('ENTITY VIEWER vm.grouping', vm.grouping);
             $scope.$parent.vm.getList(options).then(function (data) {
                 entityViewerHelperService.transformItems(data, vm.attrs).then(function (data) {
+
                     vm.entity = data;
                     vm.groupTableService.setItems(vm.entity);
+
                     vm.groupTableService.columns.setColumns(vm.columns);
                     //vm.groupTableService.filtering.setFilters(vm.filters);
                     vm.groupTableService.grouping.setGroups(vm.grouping, vm.entityType);
@@ -300,7 +300,6 @@
                     vm.groupTableService.sorting.group.sort(vm.sorting.group);
                     //vm.groupTableService.sorting.column.sort(vm.sorting.column);
                     vm.tableIsReady = true;
-
                     $scope.$apply();
                 });
             })
@@ -334,7 +333,7 @@
                 locals: {
                     parentScope: $scope
                 }
-            }).then(function(){
+            }).then(function () {
                 vm.updateTable();
             })
         };
