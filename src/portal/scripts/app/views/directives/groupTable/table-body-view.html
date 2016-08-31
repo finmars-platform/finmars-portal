@@ -1,11 +1,11 @@
 <!--<div class="g-table-body-component" data-group-vertical-scroll>-->
 <div class="g-table-body-component custom-scrollbar" data-custom-scroll data-scroll-sticky="true">
-    <div data-ng-if="!readyStatus.cellsReady">
+    <div data-ng-if="!checkReady()">
         <div layout="row" layout-sm="column">
             <md-progress-linear md-mode="indeterminate"></md-progress-linear>
         </div>
     </div>
-    <div data-ng-show="readyStatus.cellsReady">
+    <div data-ng-show="checkReady()">
         <div>
             <div data-ng-if="grouping.length" contextmenu-container="gtbody.contextmenu">
                 <div data-ng-repeat="item in items">
@@ -26,7 +26,7 @@
                             </div>
                         </md-card>
                         <div data-ng-repeat="group in item.groups track by $index" class="g-group">
-                            {{group.value}}
+                            {{bindGroupValue(group)}}
                         </div>
                     </div>
                     <div data-ng-repeat="groupedItem in item.items" contextmenu-item="groupedItem"

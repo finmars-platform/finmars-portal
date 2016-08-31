@@ -58,13 +58,13 @@
         }
 
         function returnValue(attribute) {
-            if (attribute['classifier']) {
+            if (attribute['classifier'] !== null) {
                 return attribute['classifier']
             } else {
-                if (attribute['value_date']) {
+                if (attribute['value_date'] !== null) {
                     return attribute['value_date'];
                 } else {
-                    if (attribute['value_float']) {
+                    if (attribute['value_float'] !== null) {
                         return attribute['value_float'];
                     } else {
                         return attribute['value_string'];
@@ -74,16 +74,35 @@
 
         }
 
+        function returnValueType(attribute) {
+            if (attribute['classifier'] !== null) {
+                return 'classifier'
+            } else {
+                if (attribute['value_date'] !== null) {
+                    return 'value_date';
+                } else {
+                    if (attribute['value_float'] !== null) {
+                        return 'value_float';
+                    } else {
+                        return 'value_string';
+                    }
+                }
+            }
+        }
+
         function fingGroupsForResult(group, item, attribute) {
             if (group.hasOwnProperty('id')) {
                 //console.log('group', group);
                 //console.log('attribute[k]', attribute);
                 if (group.id === attribute['attribute_type']) {
-                    groupsForResult.push({
-                        comparePattern: '&[' + attribute['attribute_type'] + '}-{' + returnValue(attribute) + ']',
-                        key: attribute['attribute_name'],
-                        value: returnValue(attribute)
-                    });
+                    if (returnValue(attribute) !== null) {
+                        groupsForResult.push({
+                            comparePattern: '&[' + attribute['attribute_type'] + '}-{' + returnValue(attribute) + ']',
+                            key: attribute['attribute_name'].replace(' ', '_'),
+                            value: returnValue(attribute),
+                            value_type: returnValueType(attribute)
+                        });
+                    }
                 }
             } else {
                 //console.log('keywords', keywords);
@@ -101,8 +120,9 @@
                         if (!nExist) {
                             groupsForResult.push({
                                 comparePattern: '&[' + keywords[k].key + '}-{' + item[keywords[k].key] + ']',
-                                key: keywords[k].key,
-                                value: item[keywords[k].key]
+                                key: keywords[k].key.replace(' ', '_'),
+                                value: item[keywords[k].key],
+                                value_type: keywords[k].value_type
                             });
                         }
                     }
@@ -120,7 +140,7 @@
                 for (c = 0; c < groups.length; c = c + 1) {
                     //console.log('items[i]', items[i]);
                     group = groups[c];
-                    if(group.hasOwnProperty('key')) {
+                    if (group.hasOwnProperty('key')) {
                         fingGroupsForResult(group, item);
                         var keys = Object.keys(items[i]);
                         for (a = 0; a < keys.length; a = a + 1) {
@@ -133,8 +153,10 @@
                             //console.log('item.attributes', item.attributes);
                             for (a = 0; a < item.attributes.length; a = a + 1) {
                                 fingGroupsForResult(group, item, item['attributes'][a]);
-                                if (groupName.indexOf('&[' + group.name + '}-{' + item[group.name] + ']') === -1) {
-                                    groupName = groupName + '&[' + group.name + '}-{' + item[group.name] + ']';
+                                if (item[group.name] !== null) {
+                                    if (groupName.indexOf('&[' + group.name + '}-{' + item[group.name] + ']') === -1) {
+                                        groupName = groupName + '&[' + group.name + '}-{' + item[group.name] + ']';
+                                    }
                                 }
                             }
                         }
@@ -150,8 +172,8 @@
                     }
                 }
                 itemsGrouped[groupName].items.push(item);
-                //console.log('itemsGrouped[groupName]', itemsGrouped[groupName]);
-                //console.log('itemsGrouped', itemsGrouped);
+                console.log('itemsGrouped[groupName]', itemsGrouped[groupName]);
+                console.log('itemsGrouped', itemsGrouped);
                 itemsGroupedArray = transformToArray(itemsGrouped);
             }
 

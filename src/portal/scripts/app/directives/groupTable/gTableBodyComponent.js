@@ -8,6 +8,7 @@
     var logService = require('../../../../../core/services/logService');
     var metaService = require('../../services/metaService');
     var attributeTypeService = require('../../services/attributeTypeService');
+    var entityClassifierSingletonService = require('../../services/entityClassifierSingletonService');
     var bindCellService = require('../../services/bindCellService');
 
     module.exports = function ($mdDialog) {
@@ -27,13 +28,15 @@
 
                 logService.component('groupTableBody', 'initialized', 1);
 
-                scope.readyStatus = {cellsReady: false};
+                scope.readyStatus = {cellsReady: false, groupsReady: true}; // if groups not exist
 
                 var entityType = scope.entityType;
                 var baseAttrs = [];
                 var entityAttrs = [];
 
                 var entityFieldsArray = {};
+
+                var classifiersInstances = {};
 
                 baseAttrs = metaService.getBaseAttrs();
                 entityAttrs = metaService.getEntityAttrs(entityType);
@@ -46,6 +49,36 @@
                 scope.openEntityMenu = function ($mdOpenMenu, ev) {
                     $mdOpenMenu(ev);
                 };
+
+                if (scope.grouping.length) {
+                    scope.readyStatus.groupsReady = false; //if groups exist
+                    var i, g;
+                    var promises = [];
+                    for (i = 0; i < scope.items.length; i = i + 1) {
+                        for (g = 0; g < scope.items[i].groups.length; g = g + 1) {
+                            if (scope.items[i].groups[g]['value_type'] === 'classifier') {
+                                promises.push(entityClassifierSingletonService.getByKey(scope.entityType, scope.items[i].groups[g].value))
+                            }
+                        }
+                    }
+
+                    Promise.all(promises).then(function (data) {
+                        var i;
+                        for (i = 0; i < data.length; i = i + 1) {
+                            if (classifiersInstances[data[i].key] === undefined) {
+                                classifiersInstances[data[i].key] = {};
+                            }
+                            classifiersInstances[data[i].key]['id_' + data[i].data.id] = data[i].data
+                        }
+
+                        setTimeout(function () {
+                            scope.readyStatus.groupsReady = true;
+                            scope.$apply();
+                        }, 500)
+
+                    })
+
+                }
 
                 var getFieldDisplayNamesArray = function () {
                     var i;
@@ -109,20 +142,25 @@
                     }
                 };
 
+                scope.checkReady = function () {
+                    if (scope.readyStatus.cellsReady && scope.readyStatus.groupsReady) {
+                        return true;
+                    }
+                    return false;
+                };
+
                 scope.$watchCollection('columns', function () {
                     scope.readyStatus.cellsReady = false;
                     getFieldDisplayNamesArray();
                 });
 
-                scope.$watchCollection('items', function(){
-                    //console.log('test?111111111111111111111111111');
-                    scope.readyStatus.cellsReady = false;
-                    setTimeout(function () {
-                        scope.readyStatus.cellsReady = true;
-                        scope.$apply();
-                    }, 500)
-                });
+                scope.bindGroupValue = function (group) {
 
+                    if (group.value_type === 'classifier') {
+                        return classifiersInstances[scope.entityType]['id_' + group.value].name
+                    }
+                    return group.value;
+                };
 
                 scope.bindCell = function (groupedItem, column) {
 

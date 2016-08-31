@@ -22,30 +22,36 @@
                     for (g = 0; g < a.groups.length; g = g + 1) {
                         if (b.groups[i].key === sort.key || b.groups[i].key === sort.name
                             && a.groups[g].key === sort.key || a.groups[g].key === sort.name) {
-                            valA = a.groups[g].value.toLowerCase();
-                            valB = b.groups[i].value.toLowerCase();
-                            if (sort.sort === 'DESC') {
-                                if (valA < valB) {
-                                    return -1;
-                                }
-                                if (valA > valB) {
-                                    return 1;
+                            if (b.groups[i].value !== null && !b.groups[i].value !== null) {
+                                valA = a.groups[g].value + '';
+                                valA = valA.toLowerCase();
+
+                                valB = b.groups[i].value + '';
+                                valB = valB.toLowerCase();
+
+                                if (sort.sort === 'DESC') {
+                                    if (valA < valB) {
+                                        return -1;
+                                    }
+                                    if (valA > valB) {
+                                        return 1;
+                                    }
+
+                                    // names must be equal
+                                    return 0;
                                 }
 
-                                // names must be equal
-                                return 0;
-                            }
+                                if (sort.sort === 'ASC') {
+                                    if (valA > valB) {
+                                        return -1;
+                                    }
+                                    if (valA < valB) {
+                                        return 1;
+                                    }
 
-                            if (sort.sort === 'ASC') {
-                                if (valA > valB) {
-                                    return -1;
+                                    // names must be equal
+                                    return 0;
                                 }
-                                if (valA < valB) {
-                                    return 1;
-                                }
-
-                                // names must be equal
-                                return 0;
                             }
                         }
                     }
