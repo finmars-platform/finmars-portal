@@ -254,7 +254,7 @@
             })
         };
 
-        vm.openMapping = function($event, mapEntityType){
+        vm.openMapping = function ($event, mapEntityType) {
             $mdDialog.show({
                 controller: 'EntityTypeMappingDialogController as vm',
                 templateUrl: 'views/dialogs/entity-type-mapping-dialog-view.html',
@@ -269,6 +269,27 @@
             }).then(function (res) {
                 if (res.status === 'agree') {
                     console.log("res", res.data);
+                }
+            });
+        };
+
+        vm.openExpressionDialog = function ($event, item) {
+            $mdDialog.show({
+                controller: 'ExpressionEditorDialogController as vm',
+                templateUrl: 'views/dialogs/expression-editor-dialog-view.html',
+                parent: angular.element(document.body),
+                targetEvent: $event,
+                preserveScope: true,
+                autoWrap: true,
+                skipHide: true,
+                locals: {
+                    item: item
+                }
+            }).then(function (res) {
+                if (res.status === 'agree') {
+                    console.log("res", res.data);
+                    item.expression = res.data.item.expression;
+                    $scope.$apply();
                 }
             });
         };

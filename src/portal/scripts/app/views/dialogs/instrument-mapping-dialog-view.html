@@ -35,7 +35,7 @@
                 </md-card>
             </div>
             <div layout="row">
-                <div layout="column" flex="50">
+                <div layout="column" flex="25">
                     <div layout="row">
                         <h4 style="padding-left: 10px">Fields to load</h4>
                     </div>
@@ -69,7 +69,7 @@
                     </div>
 
                 </div>
-                <div layout="column" flex="50">
+                <div layout="column" flex="75">
                     <div layout="row">
                         <h4 style="padding-left: 10px">Map on instrument fields:</h4>
                     </div>
@@ -101,10 +101,18 @@
                                         </div>
                                         <div flex="50">
                                             <div data-ng-if="item.complexExpressionEntity == false" layout="row">
-                                                <md-input-container>
-                                                    <label for="">Expression</label>
-                                                    <input type="text" data-ng-model="item.expression">
-                                                </md-input-container>
+                                                <div flex="50">
+                                                    <md-input-container>
+                                                        <label for="">Expression</label>
+                                                        <input type="text" data-ng-model="item.expression">
+                                                    </md-input-container>
+                                                </div>
+                                                <div flex="50">
+                                                    <md-button class="md-raised md-primary expr-btn"
+                                                               data-ng-click="vm.openExpressionDialog($event, item)">
+                                                        ...
+                                                    </md-button>
+                                                </div>
                                             </div>
                                             <div data-ng-if="item.complexExpressionEntity != false" layout="row">
                                                 <div flex="50">
@@ -113,8 +121,12 @@
                                                         <input type="text" data-ng-model="item.expression">
                                                     </md-input-container>
                                                 </div>
-                                                <div flex="50">
-                                                    <md-button class="md-raised md-primary"
+                                                <div flex="50" layout="row">
+                                                    <md-button class="md-raised md-primary expr-btn"
+                                                               data-ng-click="vm.openExpressionDialog($event, item)">
+                                                        ...
+                                                    </md-button>
+                                                    <md-button class="md-raised md-primary complex-expr-btn"
                                                                data-ng-click="vm.openMapping($event, item.complexExpressionEntity)">
                                                         Edit mapping
                                                     </md-button>
@@ -122,7 +134,8 @@
                                             </div>
                                         </div>
                                         <div flex="10">
-                                            <md-button style="min-width: 40px;"
+                                            <md-button
+                                                       class="custom-small-icon-btn md-raised"
                                                        data-ng-click="vm.removeMappingField(item, $index)"
                                                        data-ng-if="!item.required"
                                                        class="md-raised">x

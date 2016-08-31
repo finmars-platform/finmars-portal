@@ -8,6 +8,7 @@
     var logService = require('../../../../../core/services/logService');
 
     var accrualCalculationModelService = require('../../services/accrualCalculationModelService');
+    var instrumentPeriodicityService = require('../../services/instrumentPeriodicityService');
 
     module.exports = function ($scope) {
 
@@ -25,21 +26,42 @@
             $scope.$apply();
         });
 
+        instrumentPeriodicityService.getList().then(function (data) {
+            vm.periodicityItems = data;
+            vm.readyStatus.periodicityItems = true;
+            $scope.$apply();
+        });
+
+        vm.checkReadyStatus = function () {
+            return vm.readyStatus.accrualModals && vm.readyStatus.periodicityItems;
+        };
+
         vm.toggleQuery = function () {
             vm.queryStatus = !vm.queryStatus;
             vm.query = {};
         };
 
-        vm.setSort = function(propertyName) {
+        vm.setSort = function (propertyName) {
             vm.direction = (vm.sort === propertyName) ? !vm.direction : false;
             vm.sort = propertyName;
         };
 
-        vm.bindCalculationModel = function(calculationModel) {
+        vm.bindCalculationModel = function (row) {
             var name;
             vm.accrualModels.forEach(function (item) {
-                if (calculationModel.accrual_calculation_model == item.id) {
-                    calculationModel.calculation_model_name = item.name;
+                if (row.accrual_calculation_model == item.id) {
+                    row.calculation_model_name = item.name;
+                    name = item.name
+                }
+            });
+            return name;
+        };
+
+        vm.bindPeriodicity = function (row) {
+            var name;
+            vm.periodicityItems.forEach(function (item) {
+                if (row.periodicity == item.id) {
+                    row.periodicity_name = item.name;
                     name = item.name
                 }
             });
