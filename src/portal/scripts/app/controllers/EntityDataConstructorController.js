@@ -8,9 +8,6 @@
     var logService = require('../../../../core/services/logService');
     var attributeTypeService = require('../services/attributeTypeService');
 
-    var demoPortfolioService = require('../services/demo/demoPortfolioService');
-    var demoTransactionsService = require('../services/demo/demoTransactionsService');
-
     var uiService = require('../services/uiService');
 
     var portfolioService = require('../services/portfolioService');

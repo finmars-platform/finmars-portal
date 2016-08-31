@@ -9,7 +9,12 @@
     var pricingPolicyRepository = require('../repositories/pricingPolicyRepository');
     var currencyRepository = require('../repositories/currencyRepository');
     var accountRepository = require('../repositories/accountRepository');
+    var portfolioRepository = require('../repositories/portfolioRepository');
+    var counterpartyRepository = require('../repositories/counterpartyRepository');
+    var responsibleRepository = require('../repositories/responsibleRepository');
     var instrumentTypeRepository = require('../repositories/instrumentTypeRepository');
+    var instrumentDailyPricingModelRepository = require('../repositories/instrument/instrumentDailyPricingModelRepository');
+    var instrumentPaymentSizeDetailRepository = require('../repositories/instrument/instrumentPaymentSizeDetailRepository');
     var transactionTypeRepository = require('../repositories/transactionTypeRepository');
 
     var strategyService = require('./strategyService');
@@ -17,6 +22,7 @@
     var strategySubgroupService = require('./strategySubgroupService');
 
     var entities = {};
+    var entitiesGetByKey = {};
 
     var findEntities = function (entity, options) {
         return new Promise(function (resolve) {
@@ -79,8 +85,13 @@
                                 resolve({key: entity, data: entities[entity]});
                             });
                             break;
+                        case 'daily_pricing_model':
+                            return instrumentDailyPricingModelRepository.getList().then(function (data) {
+                                entities[entity] = data.results;
+                                resolve({key: entity, data: entities[entity]});
+                            });
+                            break;
                         case 'transaction_types':
-                            console.log('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!', entity);
                             return transactionTypeRepository.getList().then(function (data) {
                                 entities[entity] = data.results;
                                 resolve({key: entity, data: entities[entity]});
@@ -101,8 +112,170 @@
 
     };
 
+    var getByKey = function (entity, id) {
+        return new Promise(function (resolve) {
+
+            if (!entitiesGetByKey[entity]) {
+
+                console.log('ENTITY', entity);
+
+                switch (entity) {
+                    case 'instrument':
+                        return instrumentRepository.getByKey(id).then(function (data) {
+                            entitiesGetByKey[entity] = data;
+                            resolve({key: entity, data: entitiesGetByKey[entity]});
+                        });
+                        break;
+                    case 'portfolio':
+                        return portfolioRepository.getByKey(id).then(function (data) {
+                            entitiesGetByKey[entity] = data;
+                            resolve({key: entity, data: entitiesGetByKey[entity]});
+                        });
+                        break;
+                    case 'counterparty':
+                        return counterpartyRepository.getByKey(id).then(function (data) {
+                            entitiesGetByKey[entity] = data;
+                            resolve({key: entity, data: entitiesGetByKey[entity]});
+                        });
+                        break;
+                    case 'responsible':
+                        return responsibleRepository.getByKey(id).then(function (data) {
+                            entitiesGetByKey[entity] = data;
+                            resolve({key: entity, data: entitiesGetByKey[entity]});
+                        });
+                        break;
+                    case 'account_cash':
+                        return accountRepository.getByKey(id).then(function (data) {
+                            entitiesGetByKey[entity] = data;
+                            resolve({key: entity, data: entitiesGetByKey[entity]});
+                        });
+                        break;
+                    case 'account_position':
+                        return accountRepository.getByKey(id).then(function (data) {
+                            entitiesGetByKey[entity] = data;
+                            resolve({key: entity, data: entitiesGetByKey[entity]});
+                        });
+                        break;
+                    case 'account_interim':
+                        return accountRepository.getByKey(id).then(function (data) {
+                            entitiesGetByKey[entity] = data;
+                            resolve({key: entity, data: entitiesGetByKey[entity]});
+                        });
+                        break;
+                    case 'strategy1_position':
+                        return strategyService.getByKey(1, id).then(function (data) {
+                            entitiesGetByKey[entity] = data;
+                            resolve({key: entity, data: entitiesGetByKey[entity]});
+                        });
+                        break;
+                    case 'strategy1_cash':
+                        return strategyService.getByKey(1, id).then(function (data) {
+                            entitiesGetByKey[entity] = data;
+                            resolve({key: entity, data: entitiesGetByKey[entity]});
+                        });
+                        break;
+                    case 'strategy2_position':
+                        return strategyService.getByKey(2, id).then(function (data) {
+                            entitiesGetByKey[entity] = data;
+                            resolve({key: entity, data: entitiesGetByKey[entity]});
+                        });
+                        break;
+                    case 'strategy2_cash':
+                        return strategyService.getByKey(2, id).then(function (data) {
+                            entitiesGetByKey[entity] = data;
+                            resolve({key: entity, data: entitiesGetByKey[entity]});
+                        });
+                        break;
+                    case 'strategy3_position':
+                        return strategyService.getByKey(3, id).then(function (data) {
+                            entitiesGetByKey[entity] = data;
+                            resolve({key: entity, data: entitiesGetByKey[entity]});
+                        });
+                        break;
+                    case 'strategy3_cash':
+                        return strategyService.getByKey(3, id).then(function (data) {
+                            entitiesGetByKey[entity] = data;
+                            resolve({key: entity, data: entitiesGetByKey[entity]});
+                        });
+                        break;
+                    case 'pricing_policy':
+                        return pricingPolicyRepository.getByKey(id).then(function (data) {
+                            entitiesGetByKey[entity] = data;
+                            resolve({key: entity, data: entitiesGetByKey[entity]});
+                        });
+                        break;
+                    case 'currency':
+                        return currencyRepository.getByKey(id).then(function (data) {
+                            entitiesGetByKey[entity] = data;
+                            resolve({key: entity, data: entitiesGetByKey[entity]});
+                        });
+                        break;
+                    case 'transaction_currency':
+                        return currencyRepository.getByKey(id).then(function (data) {
+                            entitiesGetByKey[entity] = data;
+                            resolve({key: entity, data: entitiesGetByKey[entity]});
+                        });
+                        break;
+                    case 'settlement_currency':
+                        return currencyRepository.getByKey(id).then(function (data) {
+                            entitiesGetByKey[entity] = data;
+                            resolve({key: entity, data: entitiesGetByKey[entity]});
+                        });
+                        break;
+                    case 'pricing_currency':
+                        return currencyRepository.getByKey(id).then(function (data) {
+                            entitiesGetByKey[entity] = data;
+                            resolve({key: entity, data: entitiesGetByKey[entity]});
+                        });
+                        break;
+                    case 'accrued_currency':
+                        return currencyRepository.getByKey(id).then(function (data) {
+                            entitiesGetByKey[entity] = data;
+                            resolve({key: entity, data: entitiesGetByKey[entity]});
+                        });
+                        break;
+                    case 'instrument_type':
+                        return instrumentTypeRepository.getByKey(id).then(function (data) {
+                            entitiesGetByKey[entity] = data;
+                            resolve({key: entity, data: entitiesGetByKey[entity]});
+                        });
+                        break;
+                    case 'transaction_types':
+                        return transactionTypeRepository.getByKey(id).then(function (data) {
+                            entitiesGetByKey[entity] = data;
+                            resolve({key: entity, data: entitiesGetByKey[entity]});
+                        });
+                        break;
+                    case 'daily_pricing_model':
+                        return instrumentDailyPricingModelRepository.getByKey(id).then(function (data) {
+                            entitiesGetByKey[entity] = data;
+                            resolve({key: entity, data: entitiesGetByKey[entity]});
+                        });
+                        break;
+                    case 'payment_size_detail':
+                        return instrumentPaymentSizeDetailRepository.getByKey(id).then(function (data) {
+                            entitiesGetByKey[entity] = data;
+                            resolve({key: entity, data: entitiesGetByKey[entity]});
+                        });
+                        break;
+                    case 'type':
+                        return accountRepository.getByKey(id).then(function (data) {
+                            entitiesGetByKey[entity] = data;
+                            resolve({key: entity, data: entitiesGetByKey[entity]});
+                        });
+                        break;
+                }
+
+            }
+            resolve({key: entity, data: entitiesGetByKey[entity]});
+        })
+
+    };
+
+
     module.exports = {
-        findEntities: findEntities
+        findEntities: findEntities,
+        getByKey: getByKey
     }
 
 }());
