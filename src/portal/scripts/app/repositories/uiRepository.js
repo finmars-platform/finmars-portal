@@ -1,7 +1,7 @@
 /**
  * Created by szhitenev on 16.06.2016.
  */
-(function(){
+(function () {
 
     'use strict';
 
@@ -9,7 +9,7 @@
 
     var baseUrl = '/api/v1/';
 
-    var getEditLayout = function(entity){
+    var getEditLayout = function (entity) {
 
         var contentType;
 
@@ -20,11 +20,20 @@
             case 'account':
                 contentType = 'accounts.account';
                 break;
+            case 'account-type':
+                contentType = 'accounts.accounttype';
+                break;
             case 'currency':
                 contentType = 'currencies.currency';
                 break;
             case 'instrument':
                 contentType = 'instruments.instrument';
+                break;
+            case 'instrument-type':
+                contentType = 'instruments.instrumenttype';
+                break;
+            case 'pricing-policy':
+                contentType = 'instruments.pricingpolicy';
                 break;
             case 'counterparty':
                 contentType = 'counterparties.counterparty';
@@ -84,7 +93,7 @@
         })
     };
 
-    var updateEditLayout = function(id, ui){
+    var updateEditLayout = function (id, ui) {
         return window.fetch(baseUrl + 'ui/edit-layout/' + id + '/',
             {
                 method: 'PUT',
@@ -101,7 +110,7 @@
     };
 
 
-    var getListLayout = function(entity, name) {
+    var getListLayout = function (entity, name) {
 
         var contentType;
 
@@ -112,11 +121,20 @@
             case 'account':
                 contentType = 'accounts.account';
                 break;
+            case 'account-type':
+                contentType = 'accounts.accounttype';
+                break;
             case 'currency':
                 contentType = 'currencies.currency';
                 break;
             case 'instrument':
                 contentType = 'instruments.instrument';
+                break;
+            case 'instrument-type':
+                contentType = 'instruments.instrumenttype';
+                break;
+            case 'pricing-policy':
+                contentType = 'instruments.pricingpolicy';
                 break;
             case 'counterparty':
                 contentType = 'counterparties.counterparty';
@@ -176,7 +194,7 @@
         })
     };
 
-    var updateListLayout = function(id, ui){
+    var updateListLayout = function (id, ui) {
         return window.fetch(baseUrl + 'ui/list-layout/' + id + '/',
             {
                 method: 'PUT',
@@ -192,8 +210,96 @@
         })
     };
 
+    var getDefaultEditLayout = function () {
+        return [
+            {
+                "name": "General",
+                "id": 1,
+                "layout": {
+                    "fields": [
+                        {
+                            "row": 1,
+                            "colspan": "1",
+                            "column": 1,
+                            "editMode": false,
+                            "id": null,
+                            "name": "Name",
+                            "disabled": false,
+                            "options": {
+                                "notNull": true
+                            },
+                            "attribute": {
+                                "value_type": 10,
+                                "name": "Name",
+                                "key": "name",
+                                "disabled": true
+                            },
+                            "type": "field",
+                            "key": null
+                        }
+                    ],
+                    "rows": 1,
+                    "columns": 1
+                }
+            }
+        ]
+    };
+
+    var getDefaultListLayout = function () {
+        return [{
+            "name": "default",
+            "data": {
+                "tableAdditions": {
+                    "foreignEntityId": null,
+                    "table": {
+                        "sorting": {
+                            "column": {
+                                "sort": null,
+                                "key": null
+                            }
+                        },
+                        "columns": [],
+                        "filters": []
+                    },
+                    "additionsType": "",
+                    "entityType": null
+                },
+                "table": {
+                    "folding": false,
+                    "sorting": {
+                        "group": {
+                            "id": null,
+                            "sort": "DESC",
+                            "key": null
+                        },
+                        "column": {
+                            "id": null,
+                            "sort": "ASC",
+                            "key": null
+                        }
+                    },
+                    "grouping": [],
+                    "columns": [
+                        {
+                            "value_type": 10,
+                            "name": "Name",
+                            "key": "name"
+                        }
+                    ],
+                    "filters": [],
+                    "columnsWidth": [
+                        238
+                    ]
+                },
+                "additionsType": ""
+            }
+        }]
+    };
 
     module.exports = {
+
+        getDefaultEditLayout: getDefaultEditLayout,
+        getDefaultListLayout: getDefaultListLayout,
 
         getEditLayout: getEditLayout,
         updateEditLayout: updateEditLayout,

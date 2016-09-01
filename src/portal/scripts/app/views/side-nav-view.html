@@ -1,16 +1,16 @@
-<md-sidenav class="md-sidenav-left md-whiteframe-z1" md-component-id="left" md-is-locked-open="$mdMedia('gt-sm')">
+<md-sidenav class="md-sidenav-left md-whiteframe-z1" md-component-id="left" md-is-locked-open="true">
     <md-toolbar md-scroll-shrink>
         <div class="md-toolbar-tools">
             <img src="portal/content/img/finmars_logo.png" alt="" height="40"
                  class="sidenav-logo">
             <div class="side-nav-btn-resize-holder">
                 <md-button data-ng-show="vm.sideNavStatus == 'expand'" aria-label="resize"
-                           class="to-small-btn fab md-raised"
+                           class="to-small-btn side-nav-btn fab md-raised"
                            data-ng-click="vm.resizeSideNav('collapse')">
                     <ng-md-icon icon="chevron_left"></ng-md-icon>
                 </md-button>
                 <md-button data-ng-show="vm.sideNavStatus == 'collapse'" aria-label="resize"
-                           class="to-small-btn fab md-raised" data-ng-click="vm.resizeSideNav('expand')">
+                           class="to-small-btn side-nav-btn fab md-raised" data-ng-click="vm.resizeSideNav('expand')">
                     <ng-md-icon icon="chevron_right"></ng-md-icon>
                 </md-button>
             </div>

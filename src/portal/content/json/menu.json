@@ -62,6 +62,12 @@
         "icon": ""
       },
       {
+        "state": "app.data.account-type",
+        "title": "Account Types",
+        "type": "link",
+        "icon": ""
+      },
+      {
         "state": "app.data.counterparty",
         "title": "Counterparties",
         "type": "link",
@@ -76,6 +82,24 @@
       {
         "state": "app.data.instrument",
         "title": "Instruments",
+        "type": "link",
+        "icon": ""
+      },
+      {
+        "state": "app.data.instrument-type",
+        "title": "Instrument Types",
+        "type": "link",
+        "icon": ""
+      },
+      {
+        "state": "app.data.pricing-policy",
+        "title": "Pricing policy",
+        "type": "link",
+        "icon": ""
+      },
+      {
+        "state": "app.data.currency",
+        "title": "Currency",
         "type": "link",
         "icon": ""
       },

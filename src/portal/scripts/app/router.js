@@ -46,6 +46,11 @@
                 templateUrl: 'views/data/data-account-view.html',
                 controller: 'DataAccountController as vm'
             })
+            .state('app.data.account-type', {
+                url: '/account-types',
+                templateUrl: 'views/data/data-account-type-view.html',
+                controller: 'DataAccountTypeController as vm'
+            })
             .state('app.data.counterparty', {
                 url: '/counterparties',
                 templateUrl: 'views/data/data-counterparty-view.html',
@@ -60,6 +65,16 @@
                 url: '/instruments',
                 templateUrl: 'views/data/data-instrument-view.html',
                 controller: 'DataInstrumentController as vm'
+            })
+            .state('app.data.instrument-type', {
+                url: '/instrument-types',
+                templateUrl: 'views/data/data-instrument-type-view.html',
+                controller: 'DataInstrumentTypeController as vm'
+            })
+            .state('app.data.pricing-policy', {
+                url: '/pricing-policy',
+                templateUrl: 'views/data/data-pricing-policy-view.html',
+                controller: 'DataPricingPolicyController as vm'
             })
             .state('app.data.transaction', {
                 url: '/transactions',
@@ -76,10 +91,15 @@
                 templateUrl: 'views/data/data-price-history-view.html',
                 controller: 'DataPriceHistoryController as vm'
             })
-            .state('app.data.pricing', {
-                url: '/pricing',
-                templateUrl: 'views/data/data-pricing-view.html',
-                controller: 'DataPortfolioController as vm'
+            //.state('app.data.pricing', {
+            //    url: '/pricing',
+            //    templateUrl: 'views/data/data-pricing-view.html',
+            //    controller: 'DataPortfolioController as vm'
+            //})
+            .state('app.data.currency', {
+                url: '/currency',
+                templateUrl: 'views/data/data-currency-view.html',
+                controller: 'DataCurrencyController as vm'
             })
             .state('app.data.strategy-group', {
                 url: '/strategy/:strategyNumber/group',
