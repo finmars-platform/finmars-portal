@@ -3,111 +3,135 @@
  */
 (function () {
 
-	'use strict';
+    'use strict';
 
-	var logService = require('../../../../../core/services/logService');
-	var fieldResolverService = require('../../services/fieldResolverService');
+    var logService = require('../../../../../core/services/logService');
+    var fieldResolverService = require('../../services/fieldResolverService');
 
-	module.exports = function () {
-		return {
-			restrict: 'AE',
-			scope: {
-				filters: '=',
-				externalCallback: '&'
-			},
-			templateUrl: 'views/directives/groupTable/sidebar-filter-view.html',
-			link: function (scope, elem, attrs) {
+    module.exports = function () {
+        return {
+            restrict: 'AE',
+            scope: {
+                filters: '=',
+                externalCallback: '&'
+            },
+            templateUrl: 'views/directives/groupTable/sidebar-filter-view.html',
+            link: function (scope, elem, attrs) {
 
-				logService.component('groupSidebarFilter', 'initialized');
+                logService.component('groupSidebarFilter', 'initialized');
 
-				scope.fields = {};
+                scope.fields = {};
 
-				scope.$watchCollection('filters', function () {
-					scope.externalCallback();
+                scope.filters.forEach(function (item) {
+                    if (!item.options) {
+                        item.options = {enabled: false};
+                    }
+                    item.options.enabled = false;
+                });
 
-					var promises = [];
+                scope.resizeFilterSideNav = function (actionType) {
+                    if (actionType === 'collapse') {
+                        $('body').addClass('filter-side-nav-collapsed');
+                        scope.sideNavCollapsed = true;
+                    } else {
+                        $('body').removeClass('filter-side-nav-collapsed');
+                        scope.sideNavCollapsed = false;
+                    }
+                    var interval = setInterval(function () {
+                        $(window).trigger('resize');
+                    }, 50);
 
-					scope.filters.forEach(function (item) {
-						//console.log("filter's item ", item);
-						if (!scope.fields.hasOwnProperty(item.key)) {
-							if (item['value_type'] == "mc_field" || item['value_type'] == "field") {
-								promises.push(fieldResolverService.getFields(item.key));
-							}
-							//console.log("filter's promises ", promises);
-						}
-					});
+                    setTimeout(function () {
+                        clearInterval(interval)
+                    }, 300);
+                };
 
-					Promise.all(promises).then(function (data) {
-						//console.log("filter's data ", data);
-						data.forEach(function(item){
-							scope.fields[item.key] = item.data;
-						});
-						scope.$apply();
-					});
-				});
+                scope.$watchCollection('filters', function () {
+                    scope.externalCallback();
 
-				scope.openFilterSettings = function ($mdOpenMenu, ev) {
-					$mdOpenMenu(ev);
-				};
+                    var promises = [];
 
-				scope.toggleFilterState = function () {
-					scope.externalCallback();
-				};
+                    scope.filters.forEach(function (item) {
+                        //console.log("filter's item ", item);
+                        if (!scope.fields.hasOwnProperty(item.key)) {
+                            if (item['value_type'] == "mc_field" || item['value_type'] == "field") {
+                                promises.push(fieldResolverService.getFields(item.key));
+                            }
+                            //console.log("filter's promises ", promises);
+                        }
+                    });
 
-				scope.filterChange = function (filter) {
-					scope.externalCallback();
-				};
+                    Promise.all(promises).then(function (data) {
+                        //console.log("filter's data ", data);
+                        data.forEach(function (item) {
+                            scope.fields[item.key] = item.data;
+                        });
+                        scope.$apply();
+                    });
+                });
 
-				scope.selectAll = function () {
-					scope.filters.forEach(function (item) {
-						item.options.enabled = true;
-					});
-					scope.externalCallback();
-				};
+                scope.openFilterSettings = function ($mdOpenMenu, ev) {
+                    $mdOpenMenu(ev);
+                };
 
-				scope.clearAll = function () {
-					scope.filters.forEach(function (item) {
-						item.options.query = '';
-					});
-					scope.externalCallback();
-				};
+                scope.toggleFilterState = function () {
+                    scope.externalCallback();
+                };
 
-				scope.deselectAll = function () {
-					scope.filters.forEach(function (item) {
-						item.options.enabled = false;
-					});
-					scope.externalCallback();
-				};
+                scope.filterChange = function (filter) {
+                    scope.externalCallback();
+                };
 
-				scope.removeFilter = function (filter) {
+                scope.selectAll = function () {
+                    scope.filters.forEach(function (item) {
+                        item.options.enabled = true;
+                    });
+                    scope.externalCallback();
+                };
 
-					scope.filters = scope.filters.map(function (item) {
-						if (item.id === filter.id || item.name === filter.name) {
-							return undefined
-						}
-						return item
-					}).filter(function (item) {
-						return !!item;
-					});
+                scope.clearAll = function () {
+                    scope.filters.forEach(function (item) {
+                        item.options.query = '';
+                    });
+                    scope.externalCallback();
+                };
 
-					scope.externalCallback();
-				}
+                scope.deselectAll = function () {
+                    scope.filters.forEach(function (item) {
+                        item.options.enabled = false;
+                    });
+                    scope.externalCallback();
+                };
 
-				scope.getFilterType = function (filterType) {
-					switch (filterType) {
-						case 'field':
-						case 'mc_field':
-							return true;
-							break;
-						default:
-							return false;
-							break;
-					}
-				};
-				//console.log('filter fields', scope.filters);
-			}
-		}
-	}
+                scope.removeFilter = function (filter) {
+
+                    scope.filters = scope.filters.map(function (item) {
+                        if (item.id === filter.id || item.name === filter.name) {
+                            return undefined
+                        }
+                        return item
+                    }).filter(function (item) {
+                        return !!item;
+                    });
+
+                    scope.externalCallback();
+                }
+
+                scope.getFilterType = function (filterType) {
+                    switch (filterType) {
+                        case 'field':
+                        case 'mc_field':
+                            return true;
+                            break;
+                        default:
+                            return false;
+                            break;
+                    }
+                };
+                //console.log('filter fields', scope.filters);
+            }
+        }
+    }
 
 
 }());

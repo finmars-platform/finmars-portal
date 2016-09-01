@@ -196,28 +196,56 @@
 
                 //console.log('re1233333s', res);
                 //console.log('res.results', res.results[0]);
-                vm.listView = res.results[0];
+                if (res.results.length) {
+                    vm.listView = res.results[0];
 
-                vm.table = res.results[0].data.table;
-                vm.columns = res.results[0].data.table.columns;
-                vm.columnsWidth = res.results[0].data.table.columnsWidth;
-                vm.grouping = res.results[0].data.table.grouping;
-                vm.folding = res.results[0].data.table.folding;
-                vm.filters = res.results[0].data.table.filters;
-                vm.sorting = res.results[0].data.table.sorting;
+                    vm.table = res.results[0].data.table;
+                    vm.columns = res.results[0].data.table.columns;
+                    vm.columnsWidth = res.results[0].data.table.columnsWidth;
+                    vm.grouping = res.results[0].data.table.grouping;
+                    vm.folding = res.results[0].data.table.folding;
+                    vm.filters = res.results[0].data.table.filters;
+                    vm.sorting = res.results[0].data.table.sorting;
 
-                logService.collection('vm.columns', vm.columns);
+                    logService.collection('vm.columns', vm.columns);
 
-                vm.additionsType = res.results[0].data.tableAdditions.additionsType;
+                    vm.additionsType = res.results[0].data.tableAdditions.additionsType;
 
-                vm.additionsEntityType = res.results[0].data.tableAdditions.entityType;
+                    vm.additionsEntityType = res.results[0].data.tableAdditions.entityType;
 
-                vm.tableAdditions = res.results[0].data.tableAdditions;
-                vm.entityAdditionsColumns = res.results[0].data.tableAdditions.table.columns;
-                vm.entityAdditionsFilters = res.results[0].data.tableAdditions.table.filters;
-                vm.entityAdditionsSorting = res.results[0].data.tableAdditions.table.sorting;
+                    vm.tableAdditions = res.results[0].data.tableAdditions;
+                    vm.entityAdditionsColumns = res.results[0].data.tableAdditions.table.columns;
+                    vm.entityAdditionsFilters = res.results[0].data.tableAdditions.table.filters;
+                    vm.entityAdditionsSorting = res.results[0].data.tableAdditions.table.sorting;
 
-                vm.additionsStatus[res.results[0].data.tableAdditions.additionsType] = true;
+                    vm.additionsStatus[res.results[0].data.tableAdditions.additionsType] = true;
+                } else {
+
+                    var defaultList = uiService.getDefaultListLayout();
+
+                    vm.listView = defaultList[0];
+
+                    vm.table = defaultList[0].data.table;
+                    vm.columns = defaultList[0].data.table.columns;
+                    vm.columnsWidth = defaultList[0].data.table.columnsWidth;
+                    vm.grouping = defaultList[0].data.table.grouping;
+                    vm.folding = defaultList[0].data.table.folding;
+                    vm.filters = defaultList[0].data.table.filters;
+                    vm.sorting = defaultList[0].data.table.sorting;
+
+                    logService.collection('vm.columns', vm.columns);
+
+                    vm.additionsType = defaultList[0].data.tableAdditions.additionsType;
+
+                    vm.additionsEntityType = defaultList[0].data.tableAdditions.entityType;
+
+                    vm.tableAdditions = defaultList[0].data.tableAdditions;
+                    vm.entityAdditionsColumns = defaultList[0].data.tableAdditions.table.columns;
+                    vm.entityAdditionsFilters = defaultList[0].data.tableAdditions.table.filters;
+                    vm.entityAdditionsSorting = defaultList[0].data.tableAdditions.table.sorting;
+
+                    vm.additionsStatus[defaultList[0].data.tableAdditions.additionsType] = true;
+                }
 
                 //console.log('vm tabs!', vm.tabs);
                 $scope.$apply();

@@ -88,6 +88,23 @@
                     "value_type": 10
                 }
             ],
+            "account-type": [
+                {
+                    "key": "public_name",
+                    "name": "Public name",
+                    "value_type": 10
+                },
+                {
+                    "key": "show_transaction_details",
+                    "name": "Show transaction details",
+                    "value_type": "boolean"
+                },
+                {
+                    "key": "transaction_details_expr",
+                    "name": "Transaction details expr",
+                    "value_type": 10
+                }
+            ],
             "counterparty": [
                 {
                     "key": "user_code",
@@ -112,6 +129,50 @@
                     "name": "Portfolios",
                     "value_type": "mc_field"
 
+                }
+            ],
+            "pricing-policy": [
+                {
+                    "key": "expr",
+                    "name": "Expression",
+                    "value_type": 10
+                },
+                {
+                    "key": "user_code",
+                    "name": "User code",
+                    "value_type": 10
+                }
+            ],
+            "instrument-type": [
+                {
+                    "key": "user_code",
+                    "name": "User code",
+                    "value_type": 10
+                },
+                {
+                    "key": "public_name",
+                    "name": "Public name",
+                    "value_type": 10
+                },
+                {
+                    "key": "is_active",
+                    "name": "Is active",
+                    "value_type": "boolean"
+                },
+                {
+                    "key": "instrument_class",
+                    "name": "Instrument type",
+                    "value_type": "field"
+                },
+                {
+                    "key": "one_off_event",
+                    "name": "One off event",
+                    "value_type": "field"
+                },
+                {
+                    "key": "regular_event",
+                    "name": "regular event",
+                    "value_type": "field"
                 }
             ],
             "instrument": [
@@ -224,7 +285,7 @@
                 },
                 {
                     "key": "cash_consideration",
-                    "name": "Sash consideration",
+                    "name": "Cash consideration",
                     "value_type": "float"
                 },
                 {
@@ -346,6 +407,23 @@
                     "key": "counterparty",
                     "name": "Counterparty",
                     "value_type": 'field'
+                }
+            ],
+            "currency": [
+                {
+                    "key": "reference_for_pricing",
+                    "name": "Reference for pricing",
+                    "value_type": 10
+                },
+                {
+                    "key": "daily_pricing_model",
+                    "name": "Daily pricing model",
+                    "value_type": "field"
+                },
+                {
+                    "key": "price_download_scheme",
+                    "name": "Price download scheme",
+                    "value_type": "field"
                 }
             ],
             "currency-history": [

@@ -532,15 +532,22 @@ md-menu-bar.header-logout-menu {
   menu-toggle ul .sidemenu-btn {
     padding-left: 61px;
   }
+  span.side-nav-title {
+    position: relative;
+    top: -4px;
+  }
   .sidemenu-btn {
-    height: 38px;
+    height: 30px;
+    min-height: 30px;
+    font-size: 12px;
+    line-height: 39px;
   }
   .side-nav-icon {
     fill: #fff;
     margin-right: 20px;
     display: inline-block;
   }
-  transition: width ease .3s;
+  transition: width ease .25s;
 }
 
 .side-nav-btn-resize-holder {
@@ -556,11 +563,14 @@ md-menu-bar.header-logout-menu {
   margin: 0 auto;
 }
 
+.md-button.md-raised.side-nav-btn {
+  left: 15px;
+  float: right;
+}
+
 .md-button.md-raised.to-small-btn {
   fill: #fff;
   position: relative;
-  left: 15px;
-  float: right;
   min-width: 20px;
   background-color: #AD725D;
   &:hover {
@@ -784,19 +794,67 @@ mdp-time-picker.custom-time-picker {
     margin: 0;
   }
 }
+
 .expr-btn {
   min-width: 30px;
   height: 30px;
   min-height: 30px;
 }
+
 .custom-small-icon-btn {
   min-width: 30px;
   height: 30px;
   min-height: 30px;
 }
+
 .complex-expr-btn {
   min-height: 30px;
   height: 30px;
   font-size: 12px;
   line-height: 1;
+}
+
+@media screen and (max-width: 740px) {
+  .header-buttons {
+    display: none;
+  }
+}
+
+#width-fallback {
+  display: none;
+  background-color: #f6f6f6 !important;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  color: #666666;
+  padding-top: 40px;
+  ng-md-icon {
+    opacity: .5;
+    color: #666666;
+  }
+  h3 {
+    width: 400px;
+    margin: 15px auto;
+    opacity: .5;
+    color: #666666;
+  }
+}
+
+@media screen and (max-width: 540px) {
+  #root {
+    display: none;
+  }
+
+  #width-fallback {
+    display: block;
+  }
+}
+
+.textarea-bind-field {
+  textarea {
+    width: 100%;
+  }
 }

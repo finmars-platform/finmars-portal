@@ -179,6 +179,7 @@
                         });
                         setTimeout(function () {
                             scope.readyStatus.cellsReady = true;
+                            scope.readyStatus.groupsReady = true;
                             scope.$apply();
                         }, 500)
                     });

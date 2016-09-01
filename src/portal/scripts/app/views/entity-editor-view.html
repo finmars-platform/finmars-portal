@@ -33,7 +33,7 @@
                 <md-tab-label>
                     <span class="colored-tab">Permissions</span>
                 </md-tab-label>
-                <md-tab-content>
+                <md-tab-body>
                     <md-content class="md-padding p-t-26">
                         <md-content class="md-padding">
                             <div data-ng-if="vm.readyStatus.permissions">
@@ -47,17 +47,29 @@
                                                         <div>
                                                             <div class="permissions-columns">User name</div>
                                                         </div>
-                                                        <div layout="row" class="permissions-checkbox-holder" flex="15"
+                                                        <div layout="row" class="permissions-checkbox-holder" flex="30"
                                                              layout-align="space-between center">
-                                                            <div class="permissions-columns" flex="50">Delegate</div>
-                                                            <div class="permissions-columns" flex="50">Read/Write</div>
-                                                            <ng-md-icon class="tooltips-sign-position-1" icon="info"
-                                                                        size="20"
-                                                                        style="fill: #777777">
-                                                                <md-tooltip class="tooltip_2" md-direction="top">tooltip
-                                                                    text
-                                                                </md-tooltip>
-                                                            </ng-md-icon>
+                                                            <div class="permissions-columns" flex="50">Delegate
+                                                                <ng-md-icon class="tooltip-inline-block" icon="info"
+                                                                            size="20"
+                                                                            style="fill: #777777">
+                                                                    <md-tooltip class="tooltip_2" md-direction="top">
+                                                                        tooltip
+                                                                        text
+                                                                    </md-tooltip>
+                                                                </ng-md-icon>
+                                                            </div>
+                                                            <div class="permissions-columns" flex="50">Read/Write
+                                                                <ng-md-icon class="tooltip-inline-block" icon="info"
+                                                                            size="20"
+                                                                            style="fill: #777777">
+                                                                    <md-tooltip class="tooltip_2" md-direction="top">
+                                                                        tooltip
+                                                                        text
+                                                                    </md-tooltip>
+                                                                </ng-md-icon>
+                                                            </div>
+
                                                         </div>
                                                     </div>
                                                     <md-divider></md-divider>
@@ -68,7 +80,7 @@
                                                         <div>
                                                             <p> {{ member["display_name"] }} </p>
                                                         </div>
-                                                        <div layout="row" class="permissions-checkbox-holder" flex="15"
+                                                        <div layout="row" class="permissions-checkbox-holder" flex="30"
                                                              layout-align="space-between center">
                                                             <div flex="50" layout="center center">
                                                                 <md-checkbox class="md-secondary"
@@ -98,7 +110,7 @@
                             </div>
                         </md-content>
                     </md-content>
-                </md-tab-content>
+                </md-tab-body>
             </md-tab>
         </md-tabs>
     </div>

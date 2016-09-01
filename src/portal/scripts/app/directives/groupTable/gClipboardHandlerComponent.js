@@ -17,8 +17,7 @@
             link: function (scope, elem, attrs) {
                 logService.component('groupClipboardHandlerComponent', 'initialized');
 
-
-                document.addEventListener('copy', function (e) {
+                var handler = function (e) {
 
                     var copiedItems = [];
 
@@ -71,7 +70,11 @@
                     e.clipboardData.setData('text/html', result);
                     console.log('e', e);
                     e.preventDefault(); // We want our data, not data from any selection, to be written to the clipboard
-                });
+                };
+
+                document.addEventListener('copy', handler);
+
+                $(document).bind('copy', handler);
             }
         }
 

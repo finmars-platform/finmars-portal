@@ -4,7 +4,7 @@
     <div layout="column" class="relative" layout-fill role="main">
         <md-toolbar ng-show="!showSearch" class="header" layout="columns">
 
-            <div class="md-toolbar-tools" layout="start center">
+            <div class="md-toolbar-tools" flex="70" layout="start center">
                 <h2 data-ng-if="vm.currentLocation().length > 0" data-ng-bind="vm.currentLocation()"></h2>
                 <div data-ng-if="vm.currentLocation() != ''">
                     <md-button class="header-buttons save-layout-btn">Save layout</md-button>
@@ -12,13 +12,9 @@
                 </div>
             </div>
 
-            <div class="md-toolbar-tools" layout-align="end end">
+            <div class="md-toolbar-tools" flex="30" layout-align="end end">
 
                 <div class="header-misc" layout="row">
-                    <md-button ng-click="toggleSidenav('left')" hide-gt-md aria-label="Menu">
-                        <ng-md-icon icon="menu"></ng-md-icon>
-                    </md-button>
-
                     <!--<md-button data-ui-sref="app.system.notifications" aria-label="Notifications">-->
                     <!--<ng-md-icon icon="mail_outline"></ng-md-icon>-->
                     <!--</md-button>-->
