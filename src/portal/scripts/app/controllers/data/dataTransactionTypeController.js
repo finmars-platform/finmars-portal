@@ -5,32 +5,33 @@
 
     'use strict';
 
-    var portfolioService = require('../../services/portfolioService');
+    var transactionTypeService = require('../../services/transactionTypeService');
 
     module.exports = function($scope){
 
-        console.log('{"controller": "DataPortfolioController", status: "initialized"}');
+        console.log('{"controller": "DataTransactionController", status: "initialized"}');
 
         var vm = this;
 
-        vm.entityType = 'portfolio';
-        vm.entityRaw = [];
-
         vm.readyStatus = {content: false};
+
+        vm.entityType = 'transaction-type';
+        vm.entityRaw = [];
 
         vm.entityViewer = {extraFeatures: []};
 
-        portfolioService.getList().then(function(data){
+        transactionTypeService.getList().then(function(data){
             vm.entityRaw = data.results;
             vm.readyStatus.content = true;
             $scope.$apply();
         });
 
         vm.getList = function(options){
-            return portfolioService.getList(options).then(function(data){
+            return transactionTypeService.getList(options).then(function(data){
                 return data.results;
             })
         }
+
     }
 
 }());

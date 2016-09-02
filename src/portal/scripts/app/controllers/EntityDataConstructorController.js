@@ -23,6 +23,7 @@
         var vm = this;
         vm.boxColumns = [1, 2, 3, 4, 5, 6];
         vm.readyStatus = {constructor: false};
+        vm.uiIsDefault = false;
 
         console.log($stateParams);
 
@@ -30,10 +31,15 @@
 
         uiService.getEditLayout(vm.entityType).then(function (data) {
             //console.log(data['json_data']);
-            vm.ui = data.results[0];
+            if (data.results.length) {
+                vm.ui = data.results[0];
+            } else {
+                vm.uiIsDefault = true;
+                vm.ui = uiService.getDefaultEditLayout()[0];
+            }
             vm.tabs = vm.ui.data;
-            vm.tabs.forEach(function(tab){
-                tab.layout.fields.forEach(function(field){
+            vm.tabs.forEach(function (tab) {
+                tab.layout.fields.forEach(function (field) {
                     field.editMode = false;
                 })
             });
@@ -56,7 +62,7 @@
 
             logService.collection('vm attrs', vm.attrs);
 
-            if(metaService.getEntitiesWithoutBaseAttrsList().indexOf(vm.entityType) === -1 ) {
+            if (metaService.getEntitiesWithoutBaseAttrsList().indexOf(vm.entityType) === -1) {
                 console.log('1111111111111111111111');
                 vm.baseAttrs = metaService.getBaseAttrs();
             }
@@ -211,13 +217,23 @@
                 removeLastRow(vm.tabs[i]);
             }
             vm.ui.data = vm.tabs;
-            uiService.updateEditLayout(vm.ui.id, vm.ui).then(function () {
-                console.log('layout saved');
+            if (vm.uiIsDefault) {
+                uiService.createEditLayout(vm.entityType, vm.ui).then(function () {
+                    console.log('layout saved');
 
-                var route = routeResolver.findExistingState('app.data.', vm.entityType);
-                $state.go(route.state, route.options);
-                $scope.$apply();
-            });
+                    var route = routeResolver.findExistingState('app.data.', vm.entityType);
+                    $state.go(route.state, route.options);
+                    $scope.$apply();
+                });
+            } else {
+                uiService.updateEditLayout(vm.ui.id, vm.ui).then(function () {
+                    console.log('layout saved');
+
+                    var route = routeResolver.findExistingState('app.data.', vm.entityType);
+                    $state.go(route.state, route.options);
+                    $scope.$apply();
+                });
+            }
         };
 
         vm.bindFlex = function (tab, row, column) {

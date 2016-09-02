@@ -16,10 +16,13 @@
         vm.entityType = 'instrument-type';
         vm.entityRaw = [];
 
+        vm.readyStatus = {content: false};
+
         vm.entityViewer = {extraFeatures: []};
 
         instrumentTypeService.getList().then(function (data) {
             vm.entityRaw = data.results;
+            vm.readyStatus.content = true;
             $scope.$apply();
         });
 

@@ -16,10 +16,13 @@
         vm.entityType = 'account';
         vm.entityRaw = [];
 
+        vm.readyStatus = {content: false};
+
         vm.entityViewer = {extraFeatures: []};
 
         accountService.getList().then(function(data){
             vm.entityRaw = data.results;
+            vm.readyStatus.content = true;
             console.log('vm.entityRaw', vm.entityRaw);
             $scope.$apply();
         });

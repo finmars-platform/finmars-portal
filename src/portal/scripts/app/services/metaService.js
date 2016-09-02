@@ -77,6 +77,38 @@
         "groupFive": "200px",
         "newColumnAdded": false
     };
+
+    var getDynamicAttrsValueTypes = function(){
+        return metaRepository.getDynamicAttrsValueTypes();
+    };
+
+    var getDynamicAttrsValueTypesCaptions = function(){
+        var filteredValueTypes = getDynamicAttrsValueTypes();
+        //var filteredValueTypes = getValueTypes().filter(function (item) {
+        //	// return item.value !== 'field' && item.value !== 'decoration';
+        //	return item.value !== 'field';
+        //});
+        var typeCaptions = filteredValueTypes.map(function (item) {
+            switch (item['display_name']) {
+                case 'Number':
+                    item['caption_name'] = 'Number with decimals';
+                    break;
+                case 'Classifier':
+                    item['caption_name'] = 'Classification';
+                    break;
+                case 'Date':
+                    item['caption_name'] = 'Date';
+                    break;
+                case 'String':
+                    item['caption_name'] = 'Text';
+                    break;
+            }
+            return item;
+        });
+        //console.log(typeCaptions);
+        return typeCaptions;
+    };
+
     var columnsWidthGroups = function (newColumn) {
 
         if (typeof newColumn === "boolean") {
@@ -112,6 +144,8 @@
         getBaseAttrs: getBaseAttrs,
         getEntityAttrs: getEntityAttrs,
         getValueTypes: getValueTypes,
+        getDynamicAttrsValueTypes: getDynamicAttrsValueTypes,
+        getDynamicAttrsValueTypesCaptions: getDynamicAttrsValueTypesCaptions,
         getEntitiesWithoutBaseAttrsList: getEntitiesWithoutBaseAttrsList,
         getRestrictedEntitiesWithTypeField: getRestrictedEntitiesWithTypeField,
         getTypeCaptions: getTypeCaptions,

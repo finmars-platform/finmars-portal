@@ -110,6 +110,12 @@
         "icon": ""
       },
       {
+        "state": "app.data.transaction-type",
+        "title": "Transaction types",
+        "type": "link",
+        "icon": ""
+      },
+      {
         "state": "app.data.price-history",
         "title": "Price history",
         "type": "link",

@@ -2,15 +2,18 @@
     <div data-ng-if="fieldType['display_name'] === 'Number'">
         <md-input-container class="md-block">
             <label data-ng-bind="getName()"></label>
-            <input data-ng-change="changeWatcher()" data-ng-model="entity[getModelKey()]" type="number" data-ng-if="!item.options.onlyPositive">
-            <input data-ng-change="changeWatcher()" data-ng-model="entity[getModelKey()]" type="number" min="0" data-ng-if="item.options.onlyPositive">
+            <input data-ng-change="changeWatcher()" data-ng-model="entity[getModelKey()]" type="number"
+                   data-ng-if="!item.options.onlyPositive">
+            <input data-ng-change="changeWatcher()" data-ng-model="entity[getModelKey()]" type="number" min="0"
+                   data-ng-if="item.options.onlyPositive">
         </md-input-container>
     </div>
     <div data-ng-if="fieldType['display_name'] === 'String'">
         <div data-ng-if="getModelKey() === 'notes' ">
             <md-input-container class="md-block textarea-bind-field">
                 <label data-ng-bind="getName()"></label>
-                <textarea data-ng-change="changeWatcher()" class="{{item.options.frame == 1 ? 'bordered' : '' }}" data-ng-model="entity[getModelKey()]"
+                <textarea data-ng-change="changeWatcher()" class="{{item.options.frame == 1 ? 'bordered' : '' }}"
+                          data-ng-model="entity[getModelKey()]"
                           cols="30" rows="{{item.options.rowCount}}"></textarea>
             </md-input-container>
         </div>
@@ -28,8 +31,10 @@
     <div data-ng-if="fieldType['display_name'] === 'Float'">
         <md-input-container class="md-block">
             <label data-ng-bind="getName()"></label>
-            <input data-ng-change="changeWatcher()" data-ng-model="entity[getModelKey()]" data-float-numbers data-ng-if="!item.options.onlyPositive">
-            <input data-ng-change="changeWatcher()" data-ng-model="entity[getModelKey()]" data-float-numbers data-only-positive="true"
+            <input data-ng-change="changeWatcher()" data-ng-model="entity[getModelKey()]" data-float-numbers
+                   data-ng-if="!item.options.onlyPositive">
+            <input data-ng-change="changeWatcher()" data-ng-model="entity[getModelKey()]" data-float-numbers
+                   data-only-positive="true"
                    data-ng-if="item.options.onlyPositive">
         </md-input-container>
     </div>
@@ -47,20 +52,21 @@
             <!--<mdp-date-picker mdp-placeholder="Enter date" ng-model="entity[getModelKey()]" mdp-format="YYYY/MM/DD" data-ng-change="dateFormatter()"></mdp-date-picker>-->
             <!--<md-datepicker ng-model="entity[getModelKey()]" md-placeholder="Enter date" data-ng-change="dateFormatter()"></md-datepicker>-->
             <div class="date-pick-buttons-block">
+                <md-button data-ng-if="item.options.dateTodayMinus" data-ng-click="setDateMinus()">
+                    T - 1
+                </md-button>
                 <md-button data-ng-if="item.options.dateToday" data-ng-click="setDateToday()">
                     T
                 </md-button>
                 <md-button data-ng-if="item.options.dateTodayPlus" data-ng-click="setDatePlus()">
                     T + 1
                 </md-button>
-                <md-button data-ng-if="item.options.dateTodayMinus" data-ng-click="setDateMinus()">
-                    T - 1
-                </md-button>
             </div>
         </md-input-container>
     </div>
     <div data-ng-if="fieldType['display_name'] === 'Boolean'">
-        <md-checkbox class="checkbox-bind-field" data-ng-change="changeWatcher()" data-ng-model="entity[getModelKey()]" aria-label="checkbox">
+        <md-checkbox class="checkbox-bind-field" data-ng-change="changeWatcher()" data-ng-model="entity[getModelKey()]"
+                     aria-label="checkbox">
             <label data-ng-bind="getName()"></label>
         </md-checkbox>
     </div>
@@ -81,6 +87,7 @@
     </div>
     <div data-ng-if="fieldType['display_name'] === 'Decoration'">
         <span class="ec-decoration line" data-ng-if="!item.options.labelText"></span>
-        <span class="ec-decoration labeled" data-ng-if="item.options.labelText"><span class="w-rp" data-ng-bind="item.options.labelText"></span></span>
+        <span class="ec-decoration labeled" data-ng-if="item.options.labelText"><span class="w-rp"
+                                                                                      data-ng-bind="item.options.labelText"></span></span>
     </div>
 </div>

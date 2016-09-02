@@ -24,13 +24,14 @@
 
 		logService.property('vm.entityType', vm.entityType);
 
-		uiService.getListLayout(vm.entityType).then(function (data) {
-			logService.collection('DATA', data);
-			vm.tabs = data.results[0].data.modalDrag;
-			logService.collection('vm.tabs!!!!!!!!!!!!!', vm.tabs);
-			vm.getAttributes();
-			$scope.$apply();
-		});
+		//uiService.getListLayout(vm.entityType).then(function (data) {
+		//	logService.collection('DATA', data);
+		//	vm.tabs = data.results[0].data.modalDrag;
+		//	logService.collection('vm.tabs!!!!!!!!!!!!!', vm.tabs);
+		//
+		//	$scope.$apply();
+		//});
+
 		vm.general = [];
 		vm.attrs = [];
 		vm.baseAttrs = [];
@@ -67,7 +68,7 @@
 						}
 					}
 				}
-				console.log('vm.tabs[i].attrs', vm.tabs[0].attrs)
+				//console.log('vm.tabs[i].attrs', vm.tabs[0].attrs)
 			}
 
 			function fillTabAttrs() {
@@ -149,6 +150,8 @@
 				$scope.$apply();
 			})
 		};
+
+		vm.getAttributes();
 
 		vm.checkAreaAccessibility = function(item, type){
 			if (type === 'group') {

@@ -44,6 +44,9 @@
             case 'transaction':
                 contentType = 'transactions.transaction';
                 break;
+            case 'transaction-type':
+                contentType = 'transactions.transactiontype';
+                break;
             case 'price-history':
                 contentType = 'instruments.pricehistory';
                 break;
@@ -88,6 +91,96 @@
                     Accept: 'application/json',
                     'Content-type': 'application/json'
                 }
+            }).then(function (data) {
+            return data.json();
+        })
+    };
+
+    var createEditLayout = function (entity, ui) {
+
+        var contentType;
+
+        switch (entity) {
+            case 'portfolio':
+                contentType = 'portfolios.portfolio';
+                break;
+            case 'account':
+                contentType = 'accounts.account';
+                break;
+            case 'account-type':
+                contentType = 'accounts.accounttype';
+                break;
+            case 'currency':
+                contentType = 'currencies.currency';
+                break;
+            case 'instrument':
+                contentType = 'instruments.instrument';
+                break;
+            case 'instrument-type':
+                contentType = 'instruments.instrumenttype';
+                break;
+            case 'pricing-policy':
+                contentType = 'instruments.pricingpolicy';
+                break;
+            case 'counterparty':
+                contentType = 'counterparties.counterparty';
+                break;
+            case 'responsible':
+                contentType = 'counterparties.responsible';
+                break;
+            case 'transaction':
+                contentType = 'transactions.transaction';
+                break;
+            case 'transaction-type':
+                contentType = 'transactions.transactiontype';
+                break;
+            case 'price-history':
+                contentType = 'instruments.pricehistory';
+                break;
+            case 'currency-history':
+                contentType = 'currencies.currencyhistory';
+                break;
+            case 'strategy-1':
+                contentType = 'strategies.strategy1';
+                break;
+            case 'strategy-2':
+                contentType = 'strategies.strategy2';
+                break;
+            case 'strategy-3':
+                contentType = 'strategies.strategy3';
+                break;
+            case 'strategy-1-group':
+                contentType = 'strategies.strategy2group';
+                break;
+            case 'strategy-2-group':
+                contentType = 'strategies.strategy2group';
+                break;
+            case 'strategy-3-group':
+                contentType = 'strategies.strategy2group';
+                break;
+            case 'strategy-1-subgroup':
+                contentType = 'strategies.strategy1subgroup';
+                break;
+            case 'strategy-2-subgroup':
+                contentType = 'strategies.strategy2subgroup';
+                break;
+            case 'strategy-3-subgroup':
+                contentType = 'strategies.strategy3subgroup';
+                break;
+        }
+
+        ui.content_type = contentType;
+
+        return window.fetch(baseUrl + 'ui/edit-layout/',
+            {
+                method: 'POST',
+                credentials: 'include',
+                headers: {
+                    'X-CSRFToken': cookieService.getCookie('csrftoken'),
+                    Accept: 'application/json',
+                    'Content-type': 'application/json'
+                },
+                body: JSON.stringify(ui)
             }).then(function (data) {
             return data.json();
         })
@@ -144,6 +237,9 @@
                 break;
             case 'transaction':
                 contentType = 'transactions.transaction';
+                break;
+            case 'transaction-type':
+                contentType = 'transactions.transactiontype';
                 break;
             case 'price-history':
                 contentType = 'instruments.pricehistory';
@@ -213,34 +309,38 @@
     var getDefaultEditLayout = function () {
         return [
             {
-                "name": "General",
-                "id": 1,
-                "layout": {
-                    "fields": [
-                        {
-                            "row": 1,
-                            "colspan": "1",
-                            "column": 1,
-                            "editMode": false,
-                            "id": null,
-                            "name": "Name",
-                            "disabled": false,
-                            "options": {
-                                "notNull": true
-                            },
-                            "attribute": {
-                                "value_type": 10,
-                                "name": "Name",
-                                "key": "name",
-                                "disabled": true
-                            },
-                            "type": "field",
-                            "key": null
+                data: [
+                    {
+                        "name": "General",
+                        "id": 1,
+                        "layout": {
+                            "fields": [
+                                {
+                                    "row": 1,
+                                    "colspan": "1",
+                                    "column": 1,
+                                    "editMode": false,
+                                    "id": null,
+                                    "name": "Name",
+                                    "disabled": false,
+                                    "options": {
+                                        "notNull": true
+                                    },
+                                    "attribute": {
+                                        "value_type": 10,
+                                        "name": "Name",
+                                        "key": "name",
+                                        "disabled": true
+                                    },
+                                    "type": "field",
+                                    "key": null
+                                }
+                            ],
+                            "rows": 1,
+                            "columns": 1
                         }
-                    ],
-                    "rows": 1,
-                    "columns": 1
-                }
+                    }
+                ]
             }
         ]
     };
@@ -302,6 +402,7 @@
         getDefaultListLayout: getDefaultListLayout,
 
         getEditLayout: getEditLayout,
+        createEditLayout: createEditLayout,
         updateEditLayout: updateEditLayout,
 
         getListLayout: getListLayout,

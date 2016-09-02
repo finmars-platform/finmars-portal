@@ -37,7 +37,11 @@
         logService.property('entityId', vm.entityId);
 
         uiService.getEditLayout(vm.entityType).then(function (data) {
-            vm.tabs = data.results[0].data;
+            if (data.results.length) {
+                vm.tabs = data.results[0].data;
+            } else {
+                vm.tabs = uiService.getDefaultEditLayout()[0].data;
+            }
             logService.collection('vm.tabs', vm.tabs);
             $scope.$apply();
         });
@@ -340,10 +344,32 @@
 
             });
 
+            console.log('vm.entity', vm.entity);
+
+            function checkForNulls(item) {
+                var i;
+                var keys = Object.keys(item);
+                var result = {};
+                for (i = 0; i < keys.length; i = i + 1) {
+                    if (item[keys[i]].length) {
+                        result[keys[i]] = item[keys[i]];
+                    } else {
+                        if (item[keys[i]] != null && !isNaN(item[keys[i]])) {
+                            result[keys[i]] = item[keys[i]];
+                        }
+                    }
+                }
+                return result;
+            }
+
+            var resultEntity = checkForNulls(vm.entity);
+
+            console.log('resultEntity', resultEntity);
+
             return new Promise(function (resolve, reject) {
                 var options = {
                     entityType: vm.entityType,
-                    entity: vm.entity
+                    entity: resultEntity
                 };
                 if (vm.entityId) {
                     options.entityId = vm.entityId

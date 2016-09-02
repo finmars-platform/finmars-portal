@@ -20,29 +20,7 @@
 
         console.log('vm.attribute', vm.attribute);
 
-        vm.valueTypes = metaService.getValueTypes().filter(function(item){
-            return item.value !== 30 && item.value !== 'decoration';
-        });
-
-        vm.valueTypes = vm.valueTypes.map(function (item) {
-
-            switch (item['display_name']){
-                case 'Number':
-                    item['caption_name'] = 'Integer';
-                    break;
-                case 'Float':
-                    item['caption_name'] = 'Number with decimals';
-                    break;
-                case 'Field':
-                    item['caption_name'] = 'Classification';
-                    break;
-                default:
-                    item['caption_name'] = item['display_name'];
-                    break;
-            }
-
-            return item;
-        });
+        vm.valueTypes = metaService.getDynamicAttrsValueTypesCaptions();
 
         vm.agree = function(){
             console.log('vm.attr', vm.attribute);
