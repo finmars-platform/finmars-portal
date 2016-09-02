@@ -16,10 +16,13 @@
         vm.entityType = 'responsible';
         vm.entityRaw = [];
 
+        vm.readyStatus = {content: false};
+
         vm.entityViewer = {extraFeatures: []};
 
         responsibleService.getList().then(function(data){
             vm.entityRaw = data.results;
+            vm.readyStatus.content = true;
             $scope.$apply();
         });
 

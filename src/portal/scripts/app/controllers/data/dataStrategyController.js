@@ -17,7 +17,7 @@
 
         var vm = this;
 
-        vm.readyStatus = {entityRaw: false};
+        vm.readyStatus = {content: false};
 
         vm.strategyNumber = $stateParams.strategyNumber;
 
@@ -28,8 +28,7 @@
 
         strategyService.getList(vm.strategyNumber).then(function(data){
             vm.entityRaw = data.results;
-            vm.readyStatus.entityRaw = true;
-            console.log('vm.entityRaw', vm.entityRaw);
+            vm.readyStatus.content = true;
             $scope.$apply();
         });
 

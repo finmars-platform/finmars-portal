@@ -7,14 +7,17 @@
 
     var portfolioService = require('./portfolioService');
     var accountService = require('./accountService');
+    var accountTypeService = require('./accountTypeService');
     var responsibleService = require('./responsibleService');
     var counterpartyService = require('./counterpartyService');
     var instrumentService = require('./instrumentService');
+    var currencyService = require('./currencyService');
     var priceHistoryService = require('./priceHistoryService');
     var currencyHistoryService = require('./currencyHistoryService');
     var transactionService = require('./transactionService');
+    var transactionTypeService = require('./transactionTypeService');
 
-    var currencyService = require('./currencyService');
+    var pricingPolicyService = require('./pricingPolicyService');
     var instrumentTypeService = require('./instrumentTypeService');
     var accrualCalculationModelService = require('./accrualCalculationModelService');
     var instrumentPeriodicityService = require('./instrumentPeriodicityService');
@@ -49,6 +52,9 @@
             case 'account':
                 return accountService.getByKey(id);
                 break;
+            case 'account-type':
+                return accountTypeService.getByKey(id);
+                break;
             case 'responsible':
                 return responsibleService.getByKey(id);
                 break;
@@ -58,8 +64,20 @@
             case 'instrument':
                 return instrumentService.getByKey(id);
                 break;
+            case 'instrument-type':
+                return instrumentTypeService.getByKey(id);
+                break;
+            case 'currency':
+                return currencyService.getByKey(id);
+                break;
+            case 'pricing-policy':
+                return pricingPolicyService.getByKey(id);
+                break;
             case 'transaction':
                 return transactionService.getByKey(id);
+                break;
+            case 'transaction-type':
+                return transactionTypeService.getByKey(id);
                 break;
             case 'price-history':
                 return priceHistoryService.getByKey(id);
@@ -110,6 +128,9 @@
                 entity.portfolios = entity.portfolios || [];
                 return accountService.create(entity);
                 break;
+            case 'account-type':
+                return accountTypeService.create(entity);
+                break;
             case 'responsible':
                 return responsibleService.create(entity);
                 break;
@@ -118,6 +139,21 @@
                 break;
             case 'instrument':
                 return instrumentService.create(entity);
+                break;
+            case 'instrument-type':
+                return instrumentTypeService.create(entity);
+                break;
+            case 'currency':
+                return currencyService.create(entity);
+                break;
+            case 'pricing-policy':
+                return pricingPolicyService.create(entity);
+                break;
+            case 'transaction':
+                return transactionTypeService.create(entity);
+                break;
+            case 'transaction-type':
+                return transactionTypeService.create(entity);
                 break;
             case 'price-history':
                 return priceHistoryService.create(entity);

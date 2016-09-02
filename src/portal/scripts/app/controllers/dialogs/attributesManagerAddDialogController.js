@@ -44,11 +44,15 @@
 
         //     return item;
         // });
-        vm.valueTypes = metaService.getTypeCaptions();
+        vm.valueTypes = metaService.getDynamicAttrsValueTypesCaptions();
         console.log("Value type is ", vm.valueTypes);
 
         vm.agree = function () {
             console.log('vm.attr', vm.attribute);
+            if (vm.attribute["value_type"] == 'float') {
+                vm.attribute["value_type"] = 20;
+            }
+
             $mdDialog.hide({status: 'agree', data: {attribute: vm.attribute}});
         };
 

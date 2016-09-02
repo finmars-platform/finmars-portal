@@ -128,7 +128,6 @@
                     "key": "portfolios",
                     "name": "Portfolios",
                     "value_type": "mc_field"
-
                 }
             ],
             "pricing-policy": [
@@ -409,6 +408,33 @@
                     "value_type": 'field'
                 }
             ],
+            "transaction-type": [
+                {
+                    "key": "user_code",
+                    "name": "User code",
+                    "value_type": 10
+                },
+                {
+                    "key": "group",
+                    "name": "Group",
+                    "value_type": "field"
+                },
+                {
+                    "key": "display_expr",
+                    "name": "Display Expression",
+                    "value_type": 10
+                },
+                {
+                    "key": "instrument_types",
+                    "name": "Instrument types",
+                    "value_type": "mc_field"
+                },
+                {
+                    "key": "portfolios",
+                    "name": "Portfolios",
+                    "value_type": "mc_field"
+                }
+            ],
             "currency": [
                 {
                     "key": "reference_for_pricing",
@@ -677,22 +703,32 @@
         ];
     };
 
+    var getDynamicAttrsValueTypes = function () {
+        return [
+            {
+                "value": 20,
+                "display_name": "Number"
+            }, {
+                "value": 10,
+                "display_name": "String"
+            }, {
+                "value": 40,
+                "display_name": "Date"
+            }, {
+                "value": 30,
+                "display_name": "Classifier"
+            }
+        ]
+    };
+
     var getRestrictedEntitiesWithTypeField = function () {
         return ['daily_pricing_model', 'payment_size_detail', 'accrued_currency', 'pricing_currency'];
     };
 
     var getEntityTabs = function (entityType) {
-        switch (entityType){
+        switch (entityType) {
             case 'instrument':
                 return [
-                    {
-                        label: 'Factors',
-                        templateUrl: 'views/tabs/factor-schedule-view.html'
-                    },
-                    {
-                        label: 'Pricing',
-                        templateUrl: 'views/tabs/manual-pricing-formulas-view.html'
-                    },
                     {
                         label: 'Accruals',
                         templateUrl: 'views/tabs/accrual-calculation-schedules-view.html'
@@ -700,6 +736,14 @@
                     {
                         label: 'Events',
                         templateUrl: 'views/tabs/events-view.html'
+                    },
+                    {
+                        label: 'Pricing',
+                        templateUrl: 'views/tabs/manual-pricing-formulas-view.html'
+                    },
+                    {
+                        label: 'Factors',
+                        templateUrl: 'views/tabs/factor-schedule-view.html'
                     }
                 ];
                 break;
@@ -711,6 +755,7 @@
         getBaseAttrs: getBaseAttrs,
         getEntityAttrs: getEntityAttrs,
         getValueTypes: getValueTypes,
+        getDynamicAttrsValueTypes: getDynamicAttrsValueTypes,
         getEntityTabs: getEntityTabs,
         getEntitiesWithoutBaseAttrsList: getEntitiesWithoutBaseAttrsList,
         getRestrictedEntitiesWithTypeField: getRestrictedEntitiesWithTypeField

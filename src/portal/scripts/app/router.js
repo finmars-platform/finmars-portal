@@ -81,6 +81,11 @@
                 templateUrl: 'views/data/data-transaction-view.html',
                 controller: 'DataTransactionController as vm'
             })
+            .state('app.data.transaction-type', {
+                url: '/transaction-types',
+                templateUrl: 'views/data/data-transaction-type-view.html',
+                controller: 'DataTransactionTypeController as vm'
+            })
             .state('app.data.currency-history', {
                 url: '/currencies',
                 templateUrl: 'views/data/data-currency-history-view.html',

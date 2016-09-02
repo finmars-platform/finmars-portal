@@ -79,6 +79,7 @@ app.controller('DataInstrumentController', ['$scope', require('./app/controllers
 app.controller('DataInstrumentTypeController', ['$scope', require('./app/controllers/data/dataInstrumentTypeController')]);
 app.controller('DataPricingPolicyController', ['$scope', require('./app/controllers/data/dataPricingPolicyController')]);
 app.controller('DataTransactionController', ['$scope', require('./app/controllers/data/dataTransactionController')]);
+app.controller('DataTransactionTypeController', ['$scope', require('./app/controllers/data/dataTransactionTypeController')]);
 app.controller('DataPriceHistoryController', ['$scope', require('./app/controllers/data/dataPriceHistoryController')]);
 app.controller('DataCurrencyHistoryController', ['$scope', require('./app/controllers/data/dataCurrencyHistoryController')]);
 app.controller('DataCurrencyController', ['$scope', require('./app/controllers/data/dataCurrencyController')]);

@@ -11,6 +11,10 @@
         return uiRepository.getEditLayout(entity);
     };
 
+    var createEditLayout = function(entity, ui) {
+        return uiRepository.createEditLayout(entity, ui);
+    };
+
     var updateEditLayout = function (id, ui) {
         return uiRepository.updateEditLayout(id, ui);
     };
@@ -35,6 +39,7 @@
         getDefaultListLayout: getDefaultListLayout,
         getDefaultEditLayout: getDefaultEditLayout,
         getEditLayout: getEditLayout,
+        createEditLayout: createEditLayout,
         updateEditLayout: updateEditLayout,
         getListLayout: getListLayout,
         updateListLayout: updateListLayout

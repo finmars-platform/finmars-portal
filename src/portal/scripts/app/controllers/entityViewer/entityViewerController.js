@@ -23,7 +23,7 @@
 
         //console.log('$scope', $scope);
 
-        $('.save-layout-btn').click(function (e) {
+        $('.save-layout-btn').bind('click', function (e) {
             // saving columns widths
             var tHead = $('.g-columns-component');
             var th = $('.g-columns-component.g-thead').find('.g-cell');
@@ -418,6 +418,13 @@
                 vm.getEntityData();
             });
         });
+
+        $scope.$on("$destroy", function (event) {
+
+            $('.save-layout-btn').unbind('click');
+            logService.controller('EntityViewerController', 'destroyed');
+        });
+
 
     }
 

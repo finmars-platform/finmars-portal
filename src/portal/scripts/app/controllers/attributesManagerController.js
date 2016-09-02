@@ -16,7 +16,7 @@
 
 		var vm = this;
 
-		var choices = metaService.getTypeCaptions();
+		var choices = metaService.getDynamicAttrsValueTypesCaptions();
 		vm.attrs = [];
 
 		vm.entityType = $stateParams.entityType;

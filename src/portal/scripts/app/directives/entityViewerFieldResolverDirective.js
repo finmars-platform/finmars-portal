@@ -28,6 +28,8 @@
                 logService.property('field scope', scope.entity);
                 logService.property('field scope', scope.options);
 
+                scope.searchTerm = {};
+
                 fieldResolverService.getFields(scope.item.key, scope.options).then(function (res) {
                     logService.collection('DATA', res);
                     scope.type = res.type;
@@ -43,7 +45,7 @@
                     return scope.item.name
                 };
 
-                scope.changeWatcher = function(){
+                scope.changeWatcher = function () {
                     localStorage.setItem('entityIsChanged', true);
                 };
 
