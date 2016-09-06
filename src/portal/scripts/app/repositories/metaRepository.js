@@ -312,11 +312,11 @@
                     "name": "Cash date",
                     "value_type": 40
                 },
-                {
-                    "key": "transaction_date",
-                    "name": "Transaction date",
-                    "value_type": 40
-                },
+                //{
+                //    "key": "transaction_date",
+                //    "name": "Transaction date",
+                //    "value_type": 40
+                //},
                 {
                     "key": "account_cash",
                     "name": "Account cash",
@@ -499,12 +499,12 @@
                     "key": "accrued_price",
                     "name": "Accrued price",
                     "value_type": "float"
-                },
-                {
-                    "key": "factor",
-                    "name": "Factor",
-                    "value_type": "float"
                 }
+                //{
+                //    "key": "factor",
+                //    "name": "Factor",
+                //    "value_type": "float"
+                //}
             ],
             "strategy-1": [
                 {

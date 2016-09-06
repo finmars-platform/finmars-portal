@@ -17,8 +17,14 @@
             <md-button ng-click="vm.editLayout()" class="md-raised md-primary">
                 Edit Form
             </md-button>
+            <md-button ng-click="vm.manageAttrs()" class="md-raised md-primary">
+                Manage attributes
+            </md-button>
         </div>
         <div>
+            <md-button data-ng-if="vm.evAction === 'update'" class="md-raised" ng-click="vm.copy()" style="margin-right: 25px">
+                Make a copy
+            </md-button>
             <md-button class="md-raised" ng-click="vm.cancel()">
                 Cancel
             </md-button>
