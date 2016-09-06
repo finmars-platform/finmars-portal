@@ -26,6 +26,8 @@
 
         logService.controller('InstrumentMappingDialogController', 'initialized');
 
+        console.log('mdDialog is ', $mdDialog);
+
         var vm = this;
 
         vm.readyStatus = {mapping: false, processing: false, dailyModel: false, priceDownloadScheme: false, instrumentType: false, currency: false};

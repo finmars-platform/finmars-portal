@@ -145,6 +145,7 @@ app.directive('instrumentModalResolver', ['$mdDialog', require('./app/directives
 app.directive('classifierModalResolver', ['$mdDialog', require('./app/directives/classifierModalResolverDirective')]);
 app.directive('zhDatePicker', ['$mdDialog', require('./app/directives/zhDatePickerDirective')]);
 app.directive('customScroll', [require('./app/directives/customScrollDirective')]);
+app.directive('dragDialog', [require('./app/directives/dragDialogDirective')]);
 
 app.filter('trustAsHtml', ['$sce', require('./app/filters/trustAsHtmlFilter')]);
 app.filter('strLimit', ['$filter', require('./app/filters/strLimitFilter')]);

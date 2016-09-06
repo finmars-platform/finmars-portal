@@ -1,43 +1,36 @@
-/**
- * Created by sergey on 11.05.16.
- */
 (function () {
 
 	'use strict';
 
-	var logService = require('../../../../../core/services/logService');
+	var logService = require('../../../../core/services/logService');
 
 	module.exports = function () {
 		return {
 			restrict: 'A',
 			link: function (scope, elem, attrs) {
 
-				logService.component('gDialogDraggable', 'initialized');
+				console.log('drag dialog working');
 
-				var dragger = $(elem).find('.md-toolbar-tools');
-				var parent = $(elem).parent();
-
-				//set md-dialog-contaner overflow to visible
-				var dialogContainer = $(elem).parent('.md-dialog-container');
-				dialogContainer.addClass('viewConstructorDialog');
+				var dragger = $(elem).find('md-toolbar');
+				// var dragger = $(elem);
+				console.log('drag element is', $(elem), dragger);
+				var parent = $(elem);
 
 				var posY = 0, posX = 0;
 				var elemLeft = 0, elemTop = 0;
 				var initMouseX = 0, initMouseY = 0;
 
-				$(parent).width(400);
-				$(parent).height($(elem).height());
-				$(parent).css({left: "65%"});
-
 				function mousemove(e) {
 
-					posX = document.all ? window.event.clientX : e.pageX;
-					posY = document.all ? window.event.clientY : e.pageY;
+					// posX = document.all ? window.event.clientX : e.pageX;
+					// posY = document.all ? window.event.clientY : e.pageY;
+					posX = e.pageX;
+					posY = e.pageY;
 					//console.log('posX', posX);
 					//console.log('elemLeft', elemLeft);
 					//console.log(posX - elemLeft);
 					//console.log(posY - elemTop);
-					console.log(initMouseX, initMouseY);
+					console.log(initMouseX, initMouseY, posX, posY, elemLeft, elemTop);
 
 					// parent[0].style.left = (posX - elemLeft + 8) + 'px';
 					// parent[0].style.top = (posY - elemTop - 8 - 150) + 'px';
