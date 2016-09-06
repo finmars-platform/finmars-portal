@@ -112,6 +112,11 @@
                     "value_type": 10
                 },
                 {
+                    "key": "group",
+                    "name": "Group",
+                    "value_type": "field"
+                },
+                {
                     "key": "portfolios",
                     "name": "Portfolios",
                     "value_type": "mc_field"
@@ -123,6 +128,11 @@
                     "key": "user_code",
                     "name": "User code",
                     "value_type": 10
+                },
+                {
+                    "key": "group",
+                    "name": "Group",
+                    "value_type": "field"
                 },
                 {
                     "key": "portfolios",
