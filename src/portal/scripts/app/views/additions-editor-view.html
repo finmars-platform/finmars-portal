@@ -7,10 +7,22 @@
                        style="margin-left: 27px; height: 36px;">
                 Edit Form
             </md-button>
+            <md-button ng-click="vm.manageAttrs()" class="md-raised md-primary" style="height: 36px;">
+                Manage attributes
+            </md-button>
 
-            <md-button ng-click="vm.save()" style=" margin-right:20px; margin-bottom: 80px"
-                       class="md-raised">
-                Save
+            <md-button data-ng-if="vm.evAction === 'update'" class="md-raised" ng-click="vm.copy()"
+                       style="margin-right: 25px; height: 36px;">
+                Make a copy
+            </md-button>
+
+            <md-button class="md-raised" ng-click="vm.save()" style="margin-bottom: 80px; margin-right:20px;">
+				<span data-ng-if="vm.evAction === 'create'">
+					Add
+				</span>
+				<span data-ng-if="vm.evAction === 'update'">
+					Save
+				</span>
             </md-button>
         </div>
     </div>

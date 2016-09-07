@@ -112,6 +112,11 @@
                     "value_type": 10
                 },
                 {
+                    "key": "group",
+                    "name": "Group",
+                    "value_type": "field"
+                },
+                {
                     "key": "portfolios",
                     "name": "Portfolios",
                     "value_type": "mc_field"
@@ -123,6 +128,11 @@
                     "key": "user_code",
                     "name": "User code",
                     "value_type": 10
+                },
+                {
+                    "key": "group",
+                    "name": "Group",
+                    "value_type": "field"
                 },
                 {
                     "key": "portfolios",
@@ -312,11 +322,11 @@
                     "name": "Cash date",
                     "value_type": 40
                 },
-                {
-                    "key": "transaction_date",
-                    "name": "Transaction date",
-                    "value_type": 40
-                },
+                //{
+                //    "key": "transaction_date",
+                //    "name": "Transaction date",
+                //    "value_type": 40
+                //},
                 {
                     "key": "account_cash",
                     "name": "Account cash",
@@ -499,12 +509,12 @@
                     "key": "accrued_price",
                     "name": "Accrued price",
                     "value_type": "float"
-                },
-                {
-                    "key": "factor",
-                    "name": "Factor",
-                    "value_type": "float"
                 }
+                //{
+                //    "key": "factor",
+                //    "name": "Factor",
+                //    "value_type": "float"
+                //}
             ],
             "strategy-1": [
                 {

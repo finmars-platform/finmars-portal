@@ -55,9 +55,17 @@
                 <div data-ng-if="getFilterType(filter['value_type'])">
                     <!-- {{fields}} -->
                     <div data-ng-if="fields[filter.key]">
-                        <md-select data-ng-model="filter.options.query" data-ng-change="filterChange(filter)"
+                        <md-select data-ng-model="filter.options.query"
+                                   md-on-close="searchTerm = null"
+                                   data-ng-change="filterChange(filter)"
                                    multiple="{{fields['value_type'] == 'mc_field' ? 'ture' : 'false'}}">
-                            <md-option data-ng-repeat="field in fields[filter.key] track by $index"
+                            <md-select-header>
+                                <input data-ng-model="searchTerm"
+                                       type="search"
+                                       placeholder="Search for a ..."
+                                       class="md-text md-select-search-pattern">
+                            </md-select-header>
+                            <md-option data-ng-repeat="field in fields[filter.key] | filter:searchTerm track by $index"
                                        value="{{field.id}}">
                                 {{field.name}}
                             </md-option>
