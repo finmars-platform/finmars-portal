@@ -66,7 +66,16 @@
                         data.forEach(function (item) {
                             scope.fields[item.key] = item.data;
                         });
-                        scope.$apply();
+                        scope.$apply(
+                            function () {
+                                setTimeout(function () {
+                                    $(elem).find('.md-select-search-pattern').on('keydown', function (ev) {
+                                        ev.stopPropagation();
+                                    });
+                                }, 100);
+                            }
+                        )
+                        ;
                     });
                 });
 

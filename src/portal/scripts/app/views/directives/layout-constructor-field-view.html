@@ -68,7 +68,7 @@
                     </md-option>
                 </md-select>
             </md-input-container>
-            <md-input-container class="md-block">
+            <md-input-container class="md-block" data-ng-if="item.attribute.value_type != 'decoration'">
                 <label>Custom label</label>
                 <input data-ng-model="item.options.fieldName">
             </md-input-container>

@@ -31,6 +31,7 @@
         vm.evAction = 'update';
         vm.entityId = entityId;
         vm.saveCallback = ''; // save callback handler in inner controller;
+        vm.copyCallback = ''; // copy callback handler in inner controller;
 
         vm.cancel = function () {
             //localStorage.setItem('entityIsChanged', false);
@@ -42,13 +43,36 @@
             $mdDialog.hide();
         };
 
-        vm.save = function () {
-            vm.saveCallback().then(function (options) {
+        vm.manageAttrs = function (ev) {
+            $state.go('app.attributesManager', {entityType: vm.entityType});
+            $mdDialog.hide();
+        };
 
-                entityResolverService.update(options.entityType, options.entityId, options.entity).then(function(){
-                    $mdDialog.hide({res: 'agree'});
-                });
-            })
+        vm.copy = function () {
+            vm.copyCallback().then(function () {
+                vm.evAction = 'create';
+                $scope.$apply();
+            }); // look at entityEditorController
+        };
+
+        vm.save = function () {
+            if (vm.evAction = 'create') {
+                vm.saveCallback().then(function (options) {
+
+                    entityResolverService.create(options.entityType, options.entity).then(function () {
+                        $mdDialog.hide({res: 'agree'});
+                    });
+
+                })
+            } else {
+                vm.saveCallback().then(function (options) {
+
+                    entityResolverService.update(options.entityType, options.entityId, options.entity).then(function () {
+                        $mdDialog.hide({res: 'agree'});
+                    });
+                })
+
+            }
         };
 
     }

@@ -1,28 +1,34 @@
 <md-dialog aria-label="" ng-cloak class="add-portfolio-dialog draggable-dialog" drag-dialog>
-	<md-toolbar>
-		<div class="md-toolbar-tools" data-ng-if="vm.evAction === 'create'">
-			<h2>Add {{vm.entityType}}</h2>
-			<span flex></span>
-		</div>
-		<div class="md-toolbar-tools" data-ng-if="vm.evAction === 'update'">
-			<h2>Edit {{vm.entityType}}</h2>
-			<span flex></span>
-		</div>
-	</md-toolbar>
-	<md-dialog-content>
-		<div data-ng-include="'views/entity-editor-view.html'"></div>
-	</md-dialog-content>
-	<md-dialog-actions layout="row" layout-align="space-between center">
-		<div>
-			<md-button ng-click="vm.editLayout()" class="md-raised md-primary">
-				Edit Form
-			</md-button>
-		</div>
-		<div>
-			<md-button class="md-raised" ng-click="vm.cancel()">
-				Cancel
-			</md-button>
-			<md-button class="md-raised" ng-click="vm.save()" style="margin-right:20px;">
+    <md-toolbar>
+        <div class="md-toolbar-tools" data-ng-if="vm.evAction === 'create'">
+            <h2>Add {{vm.entityType}}</h2>
+            <span flex></span>
+        </div>
+        <div class="md-toolbar-tools" data-ng-if="vm.evAction === 'update'">
+            <h2>Edit {{vm.entityType}}</h2>
+            <span flex></span>
+        </div>
+    </md-toolbar>
+    <md-dialog-content>
+        <div data-ng-include="'views/entity-editor-view.html'"></div>
+    </md-dialog-content>
+    <md-dialog-actions layout="row" layout-align="space-between center">
+        <div>
+            <md-button ng-click="vm.editLayout()" class="md-raised md-primary">
+                Edit Form
+            </md-button>
+            <md-button ng-click="vm.manageAttrs()" class="md-raised md-primary">
+                Manage attributes
+            </md-button>
+        </div>
+        <div>
+            <md-button data-ng-if="vm.evAction === 'update'" class="md-raised" ng-click="vm.copy()" style="margin-right: 25px">
+                Make a copy
+            </md-button>
+            <md-button class="md-raised" ng-click="vm.cancel()">
+                Cancel
+            </md-button>
+            <md-button class="md-raised" ng-click="vm.save()" style="margin-right:20px;">
 				<span data-ng-if="vm.evAction === 'create'">
 					Add
 				</span>

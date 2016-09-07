@@ -11,22 +11,8 @@
     var baseUrl = '/api/v1/';
 
 
-    var getTypeList = function() {
-        return window.fetch(baseUrl + 'accounts/account-type/',
-            {
-                method: 'GET',
-                credentials: 'include',
-                headers: {
-                    Accept: 'application/json',
-                    'Content-type': 'application/json'
-                }
-            }).then(function (data) {
-            return data.json();
-        })
-    };
-
     var getList = function (options) {
-        return window.fetch(configureRepositoryUrlService.configureUrl(baseUrl + 'accounts/account/', options),
+        return window.fetch(configureRepositoryUrlService.configureUrl(baseUrl + 'accounts/account-type/', options),
             {
                 method: 'GET',
                 credentials: 'include',
@@ -40,7 +26,7 @@
     };
 
     var getByKey = function (id) {
-        return window.fetch(baseUrl + 'accounts/account/' + id + '/',
+        return window.fetch(baseUrl + 'accounts/account-type/' + id + '/',
             {
                 method: 'GET',
                 credentials: 'include',
@@ -54,7 +40,7 @@
     };
 
     var create = function (account) {
-        return window.fetch(baseUrl + 'accounts/account/',
+        return window.fetch(baseUrl + 'accounts/account-type/',
             {
                 method: 'POST',
                 credentials: 'include',
@@ -70,7 +56,7 @@
     };
 
     var update = function (id, account) {
-        return window.fetch(baseUrl + 'accounts/account/' + id + '/',
+        return window.fetch(baseUrl + 'accounts/account-type/' + id + '/',
             {
                 method: 'PUT',
                 credentials: 'include',
@@ -86,7 +72,7 @@
     };
 
     var deleteByKey = function (id) {
-        return window.fetch(baseUrl + 'accounts/account/' + id + '/',
+        return window.fetch(baseUrl + 'accounts/account-type/' + id + '/',
             {
                 method: 'DELETE',
                 credentials: 'include',
@@ -105,8 +91,6 @@
 
 
     module.exports = {
-
-        getTypeList: getTypeList,
 
         getList: getList,
         getByKey: getByKey,

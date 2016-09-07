@@ -224,7 +224,22 @@
             $mdOpenMenu(ev);
         };
 
+        $scope.$parent.vm.copyCallback = function () {
+            return new Promise(function (resolve) {
+                vm.readyStatus.entity = false;
+                setTimeout(function () {
+                    vm.entity["user_code"] = vm.entity["user_code"] + '_copy';
+                    vm.readyStatus.entity = true;
+                    resolve(vm.entity);
+                }, 500);
+            });
+        };
+
         $scope.$parent.vm.saveCallback = function () {
+
+            if (!vm.entity.attributes) {
+                vm.entity.attributes = [];
+            }
 
             function updateValue(entityAttr, attr, value) {
 
@@ -351,7 +366,7 @@
                 var keys = Object.keys(item);
                 var result = {};
                 for (i = 0; i < keys.length; i = i + 1) {
-                    if (item[keys[i]].length) {
+                    if (item[keys[i]] && item[keys[i]].length) {
                         result[keys[i]] = item[keys[i]];
                     } else {
                         if (item[keys[i]] != null && !isNaN(item[keys[i]])) {

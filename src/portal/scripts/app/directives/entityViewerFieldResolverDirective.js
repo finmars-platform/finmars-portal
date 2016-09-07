@@ -28,15 +28,24 @@
                 logService.property('field scope', scope.entity);
                 logService.property('field scope', scope.options);
 
-                scope.searchTerm = {};
+                scope.searchTerm = '';
 
                 fieldResolverService.getFields(scope.item.key, scope.options).then(function (res) {
                     logService.collection('DATA', res);
                     scope.type = res.type;
                     scope.fields = res.data;
                     scope.readyStatus.content = true;
-                    scope.$apply();
+
+                    scope.$apply(function () {
+
+                        setTimeout(function () {
+                            $(elem).find('.md-select-search-pattern').on('keydown', function (ev) {
+                                ev.stopPropagation();
+                            });
+                        }, 100);
+                    });
                 });
+
 
                 scope.getName = function () {
                     if (scope.item.options && scope.item.options.fieldName) {
