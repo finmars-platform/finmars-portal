@@ -101,7 +101,7 @@
 
                 var fieldKey = scope.getModelKey();
 
-                if (scope.entityType.split('-')[0] === 'strategy') {
+                if (metaService.getEntitiesWithSimpleFields().indexOf(scope.entityType) !== -1 ) {
                     scope.options = {
                         entityType: scope.entityType,
                         key: fieldKey

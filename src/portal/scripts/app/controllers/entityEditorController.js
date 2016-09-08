@@ -31,7 +31,7 @@
         vm.entityTabs = metaService.getEntityTabs(vm.entityType);
         vm.evAction = 'update';
         vm.entityId = $scope.$parent.vm.entityId;
-        vm.entity = {attributes: []};
+        vm.entity = {};
 
         logService.property('entityType', vm.entityType);
         logService.property('entityId', vm.entityId);
@@ -237,9 +237,9 @@
 
         $scope.$parent.vm.saveCallback = function () {
 
-            if (!vm.entity.attributes) {
-                vm.entity.attributes = [];
-            }
+            //if (!vm.entity.attributes) {
+            //    vm.entity.attributes = [];
+            //}
 
             function updateValue(entityAttr, attr, value) {
 
@@ -290,20 +290,22 @@
                 return attribute;
             }
 
-            var i, a, c;
-            var keys = Object.keys(vm.entity), attrExist;
-            for (i = 0; i < vm.attrs.length; i = i + 1) {
-                for (a = 0; a < keys.length; a = a + 1) {
-                    if (vm.attrs[i].name === keys[a]) {
-                        attrExist = false;
-                        for (c = 0; c < vm.entity.attributes.length; c = c + 1) {
-                            if (vm.entity.attributes[c]['attribute_type'] === vm.attrs[i].id) {
-                                attrExist = true;
-                                vm.entity.attributes[c] = updateValue(vm.entity.attributes[c], vm.attrs[i], vm.entity[keys[a]]);
+            if (vm.entity.attributes) {
+                var i, a, c;
+                var keys = Object.keys(vm.entity), attrExist;
+                for (i = 0; i < vm.attrs.length; i = i + 1) {
+                    for (a = 0; a < keys.length; a = a + 1) {
+                        if (vm.attrs[i].name === keys[a]) {
+                            attrExist = false;
+                            for (c = 0; c < vm.entity.attributes.length; c = c + 1) {
+                                if (vm.entity.attributes[c]['attribute_type'] === vm.attrs[i].id) {
+                                    attrExist = true;
+                                    vm.entity.attributes[c] = updateValue(vm.entity.attributes[c], vm.attrs[i], vm.entity[keys[a]]);
+                                }
                             }
-                        }
-                        if (!attrExist) {
-                            vm.entity.attributes.push(appendAttribute(vm.attrs[i], vm.entity[keys[a]]));
+                            if (!attrExist) {
+                                vm.entity.attributes.push(appendAttribute(vm.attrs[i], vm.entity[keys[a]]));
+                            }
                         }
                     }
                 }
@@ -337,9 +339,13 @@
                 })
             }
 
-            checkEntityAttrTypes();
+            if (vm.entity.attributes) {
+                checkEntityAttrTypes();
+            }
 
-            vm.entity["user_object_permissions"] = [];
+            if (metaPermissionsService.getEntitiesWithDisabledPermissions().indexOf(vm.entityType) == -1) {
+                vm.entity["user_object_permissions"] = [];
+            }
 
             vm.members.forEach(function (member) {
 

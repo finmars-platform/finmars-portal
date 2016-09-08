@@ -1,0 +1,38 @@
+/**
+ * Created by szhitenev on 04.05.2016.
+ */
+(function () {
+
+    var counterpartyGroupRepository = require('../repositories/counterpartyGroupRepository');
+
+    var getList = function (options) {
+        return counterpartyGroupRepository.getList(options);
+    };
+
+    var getByKey = function (id) {
+        return counterpartyGroupRepository.getByKey(id);
+    };
+
+    var create = function(counterparty) {
+        return counterpartyGroupRepository.create(counterparty);
+    };
+
+    var update = function(id, counterparty) {
+        return counterpartyGroupRepository.update(id, counterparty);
+    };
+
+    var deleteByKey = function (id) {
+        return counterpartyGroupRepository.deleteByKey(id);
+    };
+
+
+    module.exports = {
+        getList: getList,
+        getByKey: getByKey,
+        create: create,
+        update: update,
+        deleteByKey: deleteByKey
+    }
+
+
+}());

@@ -5,7 +5,29 @@
 
 	'use strict';
 
+	function entityPlurarToSingular(key){
+		switch (key){
+			case 'accounts':
+				return 'account';
+				break;
+			case 'portfolios':
+				return 'portfolio';
+				break;
+			case 'responsibles':
+				return 'responsible';
+				break;
+			case 'counterparties':
+				return 'counterparty';
+				break;
+		}
+	}
+
 	function configureUrl(url, options) {
+
+		console.log('OPTIOPNS', options);
+
+
+
 		if (options) {
 
 			url = url + '?';
@@ -18,10 +40,10 @@
 					if (options.filters[keysItem]) {
 						var filterItems = options.filters[keysItem];
 						if (typeof filterItems === 'string') {
-							url = url + '&' + keysItem + '=' + filterItems;
+							url = url + '&' + entityPlurarToSingular(keysItem) + '=' + filterItems;
 						} else {
 							filterItems.map(function (filterItem, index) {
-								url = url + '&' + keysItem + '=' + filterItem;
+								url = url + '&' + entityPlurarToSingular(keysItem) + '=' + filterItem;
 							})
 						}
 					}

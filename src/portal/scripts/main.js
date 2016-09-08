@@ -74,7 +74,9 @@ app.controller('DataPortfolioController', ['$scope', require('./app/controllers/
 app.controller('DataAccountController', ['$scope', require('./app/controllers/data/dataAccountController')]);
 app.controller('DataAccountTypeController', ['$scope', require('./app/controllers/data/dataAccountTypeController')]);
 app.controller('DataCounterpartyController', ['$scope', require('./app/controllers/data/dataCounterpartyController')]);
+app.controller('DataCounterpartyGroupController', ['$scope', require('./app/controllers/data/dataCounterpartyGroupController')]);
 app.controller('DataResponsibleController', ['$scope', require('./app/controllers/data/dataResponsibleController')]);
+app.controller('DataResponsibleGroupController', ['$scope', require('./app/controllers/data/dataResponsibleGroupController')]);
 app.controller('DataInstrumentController', ['$scope', require('./app/controllers/data/dataInstrumentController')]);
 app.controller('DataInstrumentTypeController', ['$scope', require('./app/controllers/data/dataInstrumentTypeController')]);
 app.controller('DataPricingPolicyController', ['$scope', require('./app/controllers/data/dataPricingPolicyController')]);
