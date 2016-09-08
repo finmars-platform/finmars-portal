@@ -5,8 +5,10 @@
 
 	'use strict';
 
-	function entityPlurarToSingular(key){
+	function entityPluralToSingular(key){
 		switch (key){
+			case 'instruments':
+				return 'instrument';
 			case 'accounts':
 				return 'account';
 				break;
@@ -19,14 +21,15 @@
 			case 'counterparties':
 				return 'counterparty';
 				break;
+			default:
+				return key
+				break;
 		}
 	}
 
 	function configureUrl(url, options) {
 
 		console.log('OPTIOPNS', options);
-
-
 
 		if (options) {
 
@@ -40,10 +43,10 @@
 					if (options.filters[keysItem]) {
 						var filterItems = options.filters[keysItem];
 						if (typeof filterItems === 'string') {
-							url = url + '&' + entityPlurarToSingular(keysItem) + '=' + filterItems;
+							url = url + '&' + entityPluralToSingular(keysItem) + '=' + filterItems;
 						} else {
 							filterItems.map(function (filterItem, index) {
-								url = url + '&' + entityPlurarToSingular(keysItem) + '=' + filterItem;
+								url = url + '&' + entityPluralToSingular(keysItem) + '=' + filterItem;
 							})
 						}
 					}
