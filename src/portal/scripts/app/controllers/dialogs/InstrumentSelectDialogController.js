@@ -1,13 +1,13 @@
 /**
  * Created by szhitenev on 28.06.2016.
  */
-(function(){
+(function () {
 
     'use strict';
 
     var instrumentService = require('../../services/instrumentService');
 
-    module.exports =  function($scope, $mdDialog){
+    module.exports = function ($scope, $mdDialog) {
 
         var vm = this;
 
@@ -24,7 +24,7 @@
         vm.selectedItem = {};
 
 
-        vm.agree = function(){
+        vm.agree = function () {
             $mdDialog.hide({status: 'agree', data: {item: vm.selectedItem}});
         };
 
@@ -32,21 +32,25 @@
             $mdDialog.cancel();
         };
 
-        vm.selectRow = function(item) {
-            vm.instruments.forEach(function(item){
+        vm.selectRow = function (item) {
+            vm.instruments.forEach(function (item) {
                 item.active = false;
             });
             vm.selectedItem = item;
             item.active = true;
         };
 
-        instrumentService.getList({filters: vm.search}).then(function(data){
+        vm.selectAndSave = function (item) {
+            $mdDialog.hide({status: 'agree', data: {item: item}});
+        };
+
+        instrumentService.getList({filters: vm.search}).then(function (data) {
             vm.instruments = data.results;
             $scope.$apply();
         });
 
-        vm.updateTable = function(){
-            instrumentService.getList({filters: vm.search}).then(function(data){
+        vm.updateTable = function () {
+            instrumentService.getList({filters: vm.search}).then(function (data) {
                 vm.instruments = data.results;
                 $scope.$apply();
             })
