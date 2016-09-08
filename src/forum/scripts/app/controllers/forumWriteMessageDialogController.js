@@ -15,17 +15,30 @@
 
         console.log('options---------------------', options);
 
+        vm.isQuotation = false;
+
+        var message;
         if(options && options.quote) {
-            vm.message = options.quote.item.text;
+            vm.isQuotation = true;
+            vm.quotation = options.quote.item;
+            // console.log('quotation info is ', vm.quotation);
+            // var messageObj = {
+            //     message: vm.message,
+            //     quotation: vm.quotation
+            // };
+            // var message = JSON.stringify(messageObj);
         }
+        message = vm.message;
 
         vm.cancel = function () {
             $mdDialog.cancel();
         };
+        console.log(message);
 
         vm.agree = function () {
-            $mdDialog.hide({status: 'agree', data: {message: vm.message}});
+            $mdDialog.hide({status: 'agree', data: {message: message}});
         };
+
 
     };
 
