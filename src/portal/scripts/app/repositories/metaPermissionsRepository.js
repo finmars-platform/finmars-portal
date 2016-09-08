@@ -6,7 +6,8 @@
     'use strict';
 
     var getEntitiesWithDisabledPermissions = function () {
-        return ["transaction", "price-history", "currency-history"];
+        return ["transaction", "price-history", "currency-history",
+            'counterparty-group', 'responsible-group'];
     };
 
     module.exports = {

@@ -13,7 +13,9 @@
     var currencyRepository = require('../repositories/currencyRepository');
     var portfolioRepository = require('../repositories/portfolioRepository');
     var counterpartyRepository = require('../repositories/counterpartyRepository');
+    var counterpartyGroupRepository = require('../repositories/counterpartyGroupRepository');
     var responsibleRepository = require('../repositories/responsibleRepository');
+    var responsibleGroupRepository = require('../repositories/responsibleGroupRepository');
 
     var strategyRepository = require('../repositories/strategyRepository');
     var strategyGroupRepository = require('../repositories/strategyGroupRepository');
@@ -50,6 +52,23 @@
                         });
                     }
                 }
+
+                if (entity === 'counterparty') {
+                    if (options.key === 'group') {
+                        counterpartyGroupRepository.getList().then(function (data) {
+                            resolve({type: 'id', key: 'group', data: data.results});
+                        });
+                    }
+                }
+
+                if (entity === 'responsible') {
+                    if (options.key === 'group') {
+                        responsibleGroupRepository.getList().then(function (data) {
+                            resolve({type: 'id', key: 'group', data: data.results});
+                        });
+                    }
+                }
+
             } else {
                 switch (fieldKey) {
                     case 'daily_pricing_model':

@@ -38,8 +38,14 @@
             case 'counterparty':
                 contentType = 'counterparties.counterparty';
                 break;
+            case 'counterparty-group':
+                contentType = 'counterparties.counterpartygroup';
+                break;
             case 'responsible':
                 contentType = 'counterparties.responsible';
+                break;
+            case 'responsible-group':
+                contentType = 'counterparties.responsiblegroup';
                 break;
             case 'transaction':
                 contentType = 'transactions.transaction';
@@ -125,8 +131,14 @@
             case 'counterparty':
                 contentType = 'counterparties.counterparty';
                 break;
+            case 'counterparty-group':
+                contentType = 'counterparties.counterpartygroup';
+                break;
             case 'responsible':
                 contentType = 'counterparties.responsible';
+                break;
+            case 'responsible-group':
+                contentType = 'counterparties.responsiblegroup';
                 break;
             case 'transaction':
                 contentType = 'transactions.transaction';
@@ -232,8 +244,14 @@
             case 'counterparty':
                 contentType = 'counterparties.counterparty';
                 break;
+            case 'counterparty-group':
+                contentType = 'counterparties.counterpartygroup';
+                break;
             case 'responsible':
                 contentType = 'counterparties.responsible';
+                break;
+            case 'responsible-group':
+                contentType = 'counterparties.responsiblegroup';
                 break;
             case 'transaction':
                 contentType = 'transactions.transaction';
