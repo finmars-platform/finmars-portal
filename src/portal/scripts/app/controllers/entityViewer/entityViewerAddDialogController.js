@@ -45,7 +45,7 @@
 
                 entityResolverService.create(options.entityType, options.entity).then(function (data) {
                     console.log('DATA', data);
-                    if (data.status === 200) {
+                    if (data.status == 200 || data.status == 201) {
                         $mdDialog.hide({res: 'agree'});
                     }
                     if (data.status == 400) {
@@ -59,9 +59,7 @@
                             preserveScope: true,
                             autoWrap: true,
                             skipHide: true
-                        }).then(function (res) {
-                            $mdDialog.hide({res: 'agree'});
-                        });
+                        })
                     }
                 });
 
