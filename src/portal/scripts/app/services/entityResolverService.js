@@ -9,7 +9,9 @@
     var accountService = require('./accountService');
     var accountTypeService = require('./accountTypeService');
     var responsibleService = require('./responsibleService');
+    var responsibleGroupService = require('./responsibleGroupService');
     var counterpartyService = require('./counterpartyService');
+    var counterpartyGroupService = require('./counterpartyGroupService');
     var instrumentService = require('./instrumentService');
     var currencyService = require('./currencyService');
     var priceHistoryService = require('./priceHistoryService');
@@ -58,8 +60,14 @@
             case 'responsible':
                 return responsibleService.getByKey(id);
                 break;
+            case 'responsible-group':
+                return responsibleGroupService.getByKey(id);
+                break;
             case 'counterparty':
                 return counterpartyService.getByKey(id);
+                break;
+            case 'counterparty-group':
+                return counterpartyGroupService.getByKey(id);
                 break;
             case 'instrument':
                 return instrumentService.getByKey(id);
@@ -134,8 +142,14 @@
             case 'responsible':
                 return responsibleService.create(entity);
                 break;
+            case 'responsible-group':
+                return responsibleGroupService.create(entity);
+                break;
             case 'counterparty':
                 return counterpartyService.create(entity);
+                break;
+            case 'counterparty-group':
+                return counterpartyGroupService.create(entity);
                 break;
             case 'instrument':
                 return instrumentService.create(entity);
@@ -203,8 +217,14 @@
             case 'responsible':
                 return responsibleService.update(id, entity);
                 break;
+            case 'responsible-group':
+                return responsibleGroupService.update(id, entity);
+                break;
             case 'counterparty':
                 return counterpartyService.update(id, entity);
+                break;
+            case 'counterparty-group':
+                return counterpartyGroupService.update(id, entity);
                 break;
             case 'instrument':
                 return instrumentService.update(id, entity);
@@ -256,8 +276,14 @@
             case 'responsible':
                 return responsibleService.deleteByKey(id);
                 break;
+            case 'responsible-group':
+                return responsibleGroupService.deleteByKey(id);
+                break;
             case 'counterparty':
                 return counterpartyService.deleteByKey(id);
+                break;
+            case 'counterparty-group':
+                return counterpartyGroupService.deleteByKey(id);
                 break;
             case 'instrument':
                 return instrumentService.deleteByKey(id);

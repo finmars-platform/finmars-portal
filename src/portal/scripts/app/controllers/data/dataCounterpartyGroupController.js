@@ -1,0 +1,37 @@
+/**
+ * Created by szhitenev on 15.06.2016.
+ */
+(function(){
+
+    'use strict';
+
+    var counterpartyGroupService = require('../../services/counterpartyGroupService');
+
+    module.exports = function($scope){
+
+        console.log('{"controller": "DataCounterpartyGroupController", status: "initialized"}');
+
+        var vm = this;
+
+        vm.entityType = 'counterparty-group';
+        vm.entityRaw = [];
+
+        vm.readyStatus = {content: false};
+
+        vm.entityViewer = {extraFeatures: []};
+
+        counterpartyGroupService.getList().then(function(data){
+            vm.entityRaw = data.results;
+            vm.readyStatus.content = true;
+            $scope.$apply();
+        });
+
+        vm.getList = function(options){
+            return counterpartyGroupService.getList(options).then(function(data){
+                return data.results;
+            })
+        }
+
+    }
+
+}());

@@ -19,7 +19,6 @@
         return metaRestrictionsRepository.getEntitiesWithoutBaseAttrsList();
     };
 
-
     module.exports = {
         getEntitiesWithoutDynamicAttrsList: getEntitiesWithoutDynamicAttrsList,
         getEntitiesWithoutBaseAttrsList: getEntitiesWithoutBaseAttrsList,

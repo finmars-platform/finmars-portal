@@ -68,16 +68,42 @@
         "icon": ""
       },
       {
-        "state": "app.data.counterparty",
-        "title": "Counterparties",
-        "type": "link",
-        "icon": ""
+        "state": "",
+        "title": "Responsible",
+        "type": "toggle",
+        "pages": [
+          {
+            "state": "app.data.responsible-group",
+            "title": "Group",
+            "type": "link",
+            "icon": ""
+          },
+          {
+            "state": "app.data.responsible",
+            "title": "Responsibles",
+            "type": "link",
+            "icon": ""
+          }
+        ]
       },
       {
-        "state": "app.data.responsible",
-        "title": "Responsibles",
-        "type": "link",
-        "icon": ""
+        "state": "",
+        "title": "Counterparty",
+        "type": "toggle",
+        "pages": [
+          {
+            "state": "app.data.counterparty-group",
+            "title": "Group",
+            "type": "link",
+            "icon": ""
+          },
+          {
+            "state": "app.data.counterparty",
+            "title": "Counterparties",
+            "type": "link",
+            "icon": ""
+          }
+        ]
       },
       {
         "state": "app.data.instrument",

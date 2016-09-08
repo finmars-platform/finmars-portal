@@ -123,6 +123,18 @@
 
                 }
             ],
+            "counterparty-group": [
+                {
+                    "key": "user_code",
+                    "name": "User code",
+                    "value_type": 10
+                },
+                {
+                    "key": "public_name",
+                    "name": "Public name",
+                    "value_type": 10
+                }
+            ],
             "responsible": [
                 {
                     "key": "user_code",
@@ -138,6 +150,18 @@
                     "key": "portfolios",
                     "name": "Portfolios",
                     "value_type": "mc_field"
+                }
+            ],
+            "responsible-group": [
+                {
+                    "key": "user_code",
+                    "name": "User code",
+                    "value_type": 10
+                },
+                {
+                    "key": "public_name",
+                    "name": "Public name",
+                    "value_type": 10
                 }
             ],
             "pricing-policy": [
@@ -760,6 +784,15 @@
         }
     };
 
+    var getEntitiesWithSimpleFields = function () {
+        // e.g. both of responsible-group, counterparty group
+        // have save property group, so its hard to resolve proper service
+        return ["responsible", 'counterparty',
+            'strategy-1', 'strategy-2', 'strategy-3',
+            'strategy-1-group', 'strategy-2-group', 'strategy-3-group',
+            'strategy-1-subgroup', 'strategy-2-subgroup', 'strategy-3-subgroup']
+    };
+
     module.exports = {
         getMenu: getMenu,
         getBaseAttrs: getBaseAttrs,
@@ -768,7 +801,8 @@
         getDynamicAttrsValueTypes: getDynamicAttrsValueTypes,
         getEntityTabs: getEntityTabs,
         getEntitiesWithoutBaseAttrsList: getEntitiesWithoutBaseAttrsList,
-        getRestrictedEntitiesWithTypeField: getRestrictedEntitiesWithTypeField
+        getRestrictedEntitiesWithTypeField: getRestrictedEntitiesWithTypeField,
+        getEntitiesWithSimpleFields: getEntitiesWithSimpleFields
     }
 
 
