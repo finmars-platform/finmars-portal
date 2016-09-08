@@ -51,10 +51,20 @@
                 templateUrl: 'views/data/data-account-type-view.html',
                 controller: 'DataAccountTypeController as vm'
             })
+            .state('app.data.counterparty-group', {
+                url: '/counterparty-group',
+                templateUrl: 'views/data/data-counterparty-group-view.html',
+                controller: 'DataCounterpartyGroupController as vm'
+            })
             .state('app.data.counterparty', {
                 url: '/counterparties',
                 templateUrl: 'views/data/data-counterparty-view.html',
                 controller: 'DataCounterpartyController as vm'
+            })
+            .state('app.data.responsible-group', {
+                url: '/responsible-group',
+                templateUrl: 'views/data/data-responsible-group-view.html',
+                controller: 'DataResponsibleGroupController as vm'
             })
             .state('app.data.responsible', {
                 url: '/responsibles',

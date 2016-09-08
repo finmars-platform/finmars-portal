@@ -139,6 +139,10 @@
         return metaRepository.getEntityTabs(entityType);
     };
 
+    var getEntitiesWithSimpleFields = function(){
+        return metaRepository.getEntitiesWithSimpleFields();
+    };
+
     module.exports = {
         getMenu: getMenu,
         getBaseAttrs: getBaseAttrs,
@@ -151,6 +155,7 @@
         getTypeCaptions: getTypeCaptions,
         columnsWidthGroups: columnsWidthGroups,
         getEntityTabs: getEntityTabs,
+        getEntitiesWithSimpleFields: getEntitiesWithSimpleFields,
         checkRestrictedEntityTypesForAM: checkRestrictedEntityTypesForAM
     }
 
