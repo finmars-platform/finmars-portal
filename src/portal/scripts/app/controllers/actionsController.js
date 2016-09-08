@@ -87,20 +87,13 @@
             });
         };
 
-        vm.addPriceScheme = function($event){
+        vm.addPriceDownloadScheme = function ($event) {
             $mdDialog.show({
                 controller: 'PriceDownloadSchemeAddDialogController as vm',
                 templateUrl: 'views/dialogs/price-download-scheme-dialog-view.html',
                 targetEvent: $event
-            }).then(function (res) {
-                if (res.status === 'agree') {
-                    console.log('res', res.data);
-                    instrumentSchemeService.create(res.data).then(function () {
-                        vm.getList();
-                    })
-                }
-            });
-        }
+            })
+        };
 
     }
 
