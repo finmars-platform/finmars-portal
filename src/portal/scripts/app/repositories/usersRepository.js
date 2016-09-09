@@ -121,8 +121,15 @@
                 'Content-type': 'application/json'
             },
             body: JSON.stringify(user)
-        }).then(function(data){
-            return data.json();
+        }).then(function (data) {
+            return new Promise(function (resolve, reject) {
+                data.json().then(function (result) {
+                    resolve({
+                        response: result,
+                        status: data.status
+                    })
+                })
+            });
         })
     };
 

@@ -164,7 +164,7 @@
                 return pricingPolicyService.create(entity);
                 break;
             case 'transaction':
-                return transactionTypeService.create(entity);
+                return transactionService.create(entity);
                 break;
             case 'transaction-type':
                 return transactionTypeService.create(entity);
@@ -228,6 +228,12 @@
                 break;
             case 'instrument':
                 return instrumentService.update(id, entity);
+                break;
+            case 'transaction':
+                return transactionService.update(id, entity);
+                break;
+            case 'transaction-type':
+                return transactionTypeService.update(id, entity);
                 break;
             case 'price-history':
                 return priceHistoryService.update(id, entity);

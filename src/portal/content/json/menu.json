@@ -1,290 +1,296 @@
 [
-  {
-    "state": "app.dashboard",
-    "title": "Dashboard",
-    "type": "link",
-    "icon": "dashboard"
-  },
-  {
-    "state": "app.forum.thread-groups",
-    "title": "Forum",
-    "type": "link",
-    "icon": "forum"
-  },
-  {
-    "state": "app",
-    "title": "Reports",
-    "icon": "assessment",
-    "type": "toggle",
-    "pages": [
-      {
-        "state": "app.add-balance",
-        "title": "New Balance",
-        "type": "link",
-        "icon": ""
-      },
-      {
-        "state": "app.add-performance",
-        "title": "New Performance",
-        "type": "link",
-        "icon": ""
-      },
-      {
-        "state": "app.add-cash-flow",
-        "title": "New Cash flow",
-        "type": "link",
-        "icon": ""
-      },
-      {
-        "state": "app.add-transaction",
-        "title": "New Transaction",
-        "type": "link",
-        "icon": ""
-      }
-    ]
-  },
-  {
-    "state": "",
-    "title": "Data",
-    "icon": "view_compact",
-    "type": "toggle",
-    "pages": [
-      {
-        "state": "app.data.portfolio",
-        "title": "Portfolios",
-        "type": "link",
-        "icon": ""
-      },
-      {
-        "state": "app.data.account",
-        "title": "Accounts",
-        "type": "link",
-        "icon": ""
-      },
-      {
-        "state": "app.data.account-type",
-        "title": "Account Types",
-        "type": "link",
-        "icon": ""
-      },
-      {
-        "state": "",
-        "title": "Responsible",
-        "type": "toggle",
-        "pages": [
-          {
-            "state": "app.data.responsible-group",
-            "title": "Group",
-            "type": "link",
-            "icon": ""
-          },
-          {
-            "state": "app.data.responsible",
-            "title": "Responsibles",
-            "type": "link",
-            "icon": ""
-          }
-        ]
-      },
-      {
-        "state": "",
-        "title": "Counterparty",
-        "type": "toggle",
-        "pages": [
-          {
-            "state": "app.data.counterparty-group",
-            "title": "Group",
-            "type": "link",
-            "icon": ""
-          },
-          {
-            "state": "app.data.counterparty",
-            "title": "Counterparties",
-            "type": "link",
-            "icon": ""
-          }
-        ]
-      },
-      {
-        "state": "app.data.instrument",
-        "title": "Instruments",
-        "type": "link",
-        "icon": ""
-      },
-      {
-        "state": "app.data.instrument-type",
-        "title": "Instrument Types",
-        "type": "link",
-        "icon": ""
-      },
-      {
-        "state": "app.data.pricing-policy",
-        "title": "Pricing policy",
-        "type": "link",
-        "icon": ""
-      },
-      {
-        "state": "app.data.currency",
-        "title": "Currency",
-        "type": "link",
-        "icon": ""
-      },
-      {
-        "state": "app.data.transaction",
-        "title": "Transactions",
-        "type": "link",
-        "icon": ""
-      },
-      {
-        "state": "app.data.transaction-type",
-        "title": "Transaction types",
-        "type": "link",
-        "icon": ""
-      },
-      {
-        "state": "app.data.price-history",
-        "title": "Price history",
-        "type": "link",
-        "icon": ""
-      },
-      {
-        "state": "app.data.currency-history",
-        "title": "FX history",
-        "type": "link",
-        "icon": ""
-      }
-    ]
-  },
-  {
-    "state": "",
-    "title": "REFERENCE",
-    "icon": "view_compact",
-    "type": "toggle",
-    "pages": [
-      {
-        "state": "",
-        "title": "Strategy 1",
-        "icon": "",
-        "type": "toggle",
-        "pages": [
-          {
-            "state": "app.data.strategy-group({strategyNumber: 1})",
-            "title": "Group",
-            "type": "link",
-            "icon": ""
-          },
-          {
-            "state": "app.data.strategy-subgroup({strategyNumber: 1})",
-            "title": "Subgroup",
-            "type": "link",
-            "icon": ""
-          },
-          {
-            "state": "app.data.strategy({strategyNumber: 1})",
-            "title": "Strategies",
-            "type": "link",
-            "icon": ""
-          }
-        ]
-      },
-      {
-        "state": "",
-        "title": "Strategy 2",
-        "icon": "",
-        "type": "toggle",
-        "pages": [
-          {
-            "state": "app.data.strategy-group({strategyNumber: 2})",
-            "title": "Group",
-            "type": "link",
-            "icon": ""
-          },
-          {
-            "state": "app.data.strategy-subgroup({strategyNumber: 2})",
-            "title": "Subgroup",
-            "type": "link",
-            "icon": ""
-          },
-          {
-            "state": "app.data.strategy({strategyNumber: 3})",
-            "title": "Strategies",
-            "type": "link",
-            "icon": ""
-          }
-        ]
-      },
-      {
-        "state": "",
-        "title": "Strategy 3",
-        "icon": "",
-        "type": "toggle",
-        "pages": [
-          {
-            "state": "app.data.strategy-group({strategyNumber: 3})",
-            "title": "Group",
-            "type": "link",
-            "icon": ""
-          },
-          {
-            "state": "app.data.strategy-subgroup({strategyNumber: 3})",
-            "title": "Subgroup",
-            "type": "link",
-            "icon": ""
-          },
-          {
-            "state": "app.data.strategy({strategyNumber: 3})",
-            "title": "Strategies",
-            "type": "link",
-            "icon": ""
-          }
-        ]
-      }
-    ]
-  },
-  {
-    "state": "app.actions",
-    "title": "Actions",
-    "type": "link",
-    "icon": "assignment"
-  },
-  {
-    "state": "",
-    "title": "SETTINGS",
-    "icon": "settings",
-    "type": "toggle",
-    "pages": [
-      {
-        "state": "app.settings.general.profile",
-        "title": "General",
-        "type": "link",
-        "icon": ""
-      },
-      {
-        "state": "app.settings.form-design",
-        "title": "Form Design",
-        "type": "link",
-        "icon": ""
-      }
-    ]
-  },
-  {
-    "state": "",
-    "title": "SYSTEM",
-    "icon": "settings_system_daydream",
-    "type": "toggle",
-    "pages": [
-      {
-        "state": "app.system.notifications",
-        "title": "Notifications",
-        "type": "link",
-        "icon": ""
-      },
-      {
-        "state": "app.system.audit",
-        "title": "Audit",
-        "type": "link",
-        "icon": ""
-      }
-    ]
-  }
+	{
+		"state": "app.dashboard",
+		"title": "Dashboard",
+		"type": "link",
+		"icon": "dashboard"
+	},
+	{
+		"state": "app.forum.thread-groups",
+		"title": "Forum",
+		"type": "link",
+		"icon": "forum"
+	},
+	{
+		"state": "app",
+		"title": "Reports",
+		"icon": "assessment",
+		"type": "toggle",
+		"pages": [
+			{
+				"state": "app.add-balance",
+				"title": "New Balance",
+				"type": "link",
+				"icon": ""
+			},
+			{
+				"state": "app.add-performance",
+				"title": "New Performance",
+				"type": "link",
+				"icon": ""
+			},
+			{
+				"state": "app.add-cash-flow",
+				"title": "New Cash flow",
+				"type": "link",
+				"icon": ""
+			},
+			{
+				"state": "app.add-transaction",
+				"title": "New Transaction",
+				"type": "link",
+				"icon": ""
+			}
+		]
+	},
+	{
+		"state": "",
+		"title": "Data",
+		"icon": "view_compact",
+		"type": "toggle",
+		"pages": [
+			{
+				"state": "app.data.portfolio",
+				"title": "Portfolios",
+				"type": "link",
+				"icon": ""
+			},
+			{
+				"state": "app.data.account",
+				"title": "Accounts",
+				"type": "link",
+				"icon": ""
+			},
+			{
+				"state": "app.data.account-type",
+				"title": "Account Types",
+				"type": "link",
+				"icon": ""
+			},
+			{
+				"state": "",
+				"title": "Responsible",
+				"type": "toggle",
+				"pages": [
+					{
+						"state": "app.data.responsible-group",
+						"title": "Group",
+						"type": "link",
+						"icon": ""
+					},
+					{
+						"state": "app.data.responsible",
+						"title": "Responsibles",
+						"type": "link",
+						"icon": ""
+					}
+				]
+			},
+			{
+				"state": "",
+				"title": "Counterparty",
+				"type": "toggle",
+				"pages": [
+					{
+						"state": "app.data.counterparty-group",
+						"title": "Group",
+						"type": "link",
+						"icon": ""
+					},
+					{
+						"state": "app.data.counterparty",
+						"title": "Counterparties",
+						"type": "link",
+						"icon": ""
+					}
+				]
+			},
+			{
+				"state": "app.data.instrument",
+				"title": "Instruments",
+				"type": "link",
+				"icon": ""
+			},
+			{
+				"state": "app.data.instrument-type",
+				"title": "Instrument Types",
+				"type": "link",
+				"icon": ""
+			},
+			{
+				"state": "app.data.pricing-policy",
+				"title": "Pricing policy",
+				"type": "link",
+				"icon": ""
+			},
+			{
+				"state": "app.data.currency",
+				"title": "Currency",
+				"type": "link",
+				"icon": ""
+			},
+			{
+				"state": "app.data.transaction",
+				"title": "Transactions",
+				"type": "link",
+				"icon": ""
+			},
+			{
+				"state": "app.data.transaction-type",
+				"title": "Transaction types",
+				"type": "link",
+				"icon": ""
+			},
+			{
+				"state": "app.data.price-history",
+				"title": "Price history",
+				"type": "link",
+				"icon": ""
+			},
+			{
+				"state": "app.data.currency-history",
+				"title": "FX history",
+				"type": "link",
+				"icon": ""
+			}
+		]
+	},
+	{
+		"state": "",
+		"title": "REFERENCE",
+		"icon": "view_compact",
+		"type": "toggle",
+		"pages": [
+			{
+				"state": "",
+				"title": "Strategy 1",
+				"icon": "",
+				"type": "toggle",
+				"pages": [
+					{
+						"state": "app.data.strategy-group({strategyNumber: 1})",
+						"title": "Group",
+						"type": "link",
+						"icon": ""
+					},
+					{
+						"state": "app.data.strategy-subgroup({strategyNumber: 1})",
+						"title": "Subgroup",
+						"type": "link",
+						"icon": ""
+					},
+					{
+						"state": "app.data.strategy({strategyNumber: 1})",
+						"title": "Strategies",
+						"type": "link",
+						"icon": ""
+					}
+				]
+			},
+			{
+				"state": "",
+				"title": "Strategy 2",
+				"icon": "",
+				"type": "toggle",
+				"pages": [
+					{
+						"state": "app.data.strategy-group({strategyNumber: 2})",
+						"title": "Group",
+						"type": "link",
+						"icon": ""
+					},
+					{
+						"state": "app.data.strategy-subgroup({strategyNumber: 2})",
+						"title": "Subgroup",
+						"type": "link",
+						"icon": ""
+					},
+					{
+						"state": "app.data.strategy({strategyNumber: 3})",
+						"title": "Strategies",
+						"type": "link",
+						"icon": ""
+					}
+				]
+			},
+			{
+				"state": "",
+				"title": "Strategy 3",
+				"icon": "",
+				"type": "toggle",
+				"pages": [
+					{
+						"state": "app.data.strategy-group({strategyNumber: 3})",
+						"title": "Group",
+						"type": "link",
+						"icon": ""
+					},
+					{
+						"state": "app.data.strategy-subgroup({strategyNumber: 3})",
+						"title": "Subgroup",
+						"type": "link",
+						"icon": ""
+					},
+					{
+						"state": "app.data.strategy({strategyNumber: 3})",
+						"title": "Strategies",
+						"type": "link",
+						"icon": ""
+					}
+				]
+			}
+		]
+	},
+	{
+		"state": "app.actions",
+		"title": "Actions",
+		"type": "link",
+		"icon": "assignment"
+	},
+	{
+		"state": "",
+		"title": "SETTINGS",
+		"icon": "settings",
+		"type": "toggle",
+		"pages": [
+			{
+				"state": "app.settings.general.profile",
+				"title": "General",
+				"type": "link",
+				"icon": ""
+			},
+			{
+				"state": "app.settings.form-design",
+				"title": "Form Design",
+				"type": "link",
+				"icon": ""
+			},
+			{
+				"state": "app.settings.users-groups",
+				"title": "Users & Groups",
+				"type": "link",
+				"icon": ""
+			}
+		]
+	},
+	{
+		"state": "",
+		"title": "SYSTEM",
+		"icon": "settings_system_daydream",
+		"type": "toggle",
+		"pages": [
+			{
+				"state": "app.system.notifications",
+				"title": "Notifications",
+				"type": "link",
+				"icon": ""
+			},
+			{
+				"state": "app.system.audit",
+				"title": "Audit",
+				"type": "link",
+				"icon": ""
+			}
+		]
+	}
 ]
