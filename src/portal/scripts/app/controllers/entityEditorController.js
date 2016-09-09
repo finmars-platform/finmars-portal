@@ -123,15 +123,19 @@
             if (metaPermissionsService.getEntitiesWithDisabledPermissions().indexOf(vm.entityType) !== -1) {
                 return false;
             }
-            var i;
-            for (i = 0; i < vm.members.length; i = i + 1) {
-                if (vm.user.id === vm.members[i].id) {
-                    if (vm.members[i].objectPermissions && vm.members[i].objectPermissions.manage == true) {
-                        return true;
+            if (vm.entityId) {
+                var i;
+                for (i = 0; i < vm.members.length; i = i + 1) {
+                    if (vm.user.id === vm.members[i].id) {
+                        if (vm.members[i].objectPermissions && vm.members[i].objectPermissions.manage == true) {
+                            return true;
+                        }
                     }
                 }
+                return false;
+            } else {
+                return true;
             }
-            return false;
         };
 
         vm.checkReadyStatus = function () {
@@ -237,9 +241,9 @@
 
         $scope.$parent.vm.saveCallback = function () {
 
-            //if (!vm.entity.attributes) {
-            //    vm.entity.attributes = [];
-            //}
+            if (metaService.getEntitiesWithoutDynAttrsList().indexOf(vm.entityType) == -1) {
+                vm.entity.attributes = [];
+            }
 
             function updateValue(entityAttr, attr, value) {
 
@@ -339,8 +343,28 @@
                 })
             }
 
+            function clearUnusedAttributeValues() {
+                var i;
+                for (i = 0; i < vm.entity.attributes.length; i = i + 1) {
+                    if(vm.entity.attributes[i].classifier == null) {
+                        delete vm.entity.attributes[i].classifier;
+                    }
+                    if(vm.entity.attributes[i].value_date == null) {
+                        delete vm.entity.attributes[i].value_date;
+                    }
+                    if(vm.entity.attributes[i].value_float == null) {
+                        delete vm.entity.attributes[i].value_float;
+                    }
+                    if(vm.entity.attributes[i].value_string == null) {
+                        delete vm.entity.attributes[i].value_string;
+                    }
+                }
+
+            }
+
             if (vm.entity.attributes) {
                 checkEntityAttrTypes();
+                clearUnusedAttributeValues();
             }
 
             if (metaPermissionsService.getEntitiesWithDisabledPermissions().indexOf(vm.entityType) == -1) {

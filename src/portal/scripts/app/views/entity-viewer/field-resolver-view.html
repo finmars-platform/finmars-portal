@@ -10,7 +10,7 @@
                                placeholder="Search for a ..."
                                class="md-text md-select-search-pattern">
                     </md-select-header>
-                    <md-option data-ng-repeat="field in fields | filter:searchTerm track by $index" value="{{field.value}}">
+                    <md-option data-ng-repeat="field in fields | filter:searchTerm " value="{{field.value}}">
                         {{field.name}}
                     </md-option>
                 </md-select>
@@ -25,7 +25,7 @@
                                md-container-class="h-instrument-select"
                                data-instrument-modal-resolver
                                md-selected-text="bindFormFields()">
-                        <md-option data-ng-repeat="field in fields | filter:searchTerm track by $index" value="{{field.id}}">
+                        <md-option data-ng-repeat="field in fields | filter:searchTerm" value="{{field.id}}">
                             {{bindListFields(field)}}
                         </md-option>
                     </md-select>
@@ -42,7 +42,7 @@
                                    placeholder="Search for a ..."
                                    class="md-text md-select-search-pattern">
                         </md-select-header>
-                        <md-option data-ng-repeat="field in fields | filter:searchTerm track by $index" value="{{field.id}}">
+                        <md-option data-ng-repeat="field in fields | filter:searchTerm " value="{{field.id}}">
                             {{bindListFields(field)}}
                         </md-option>
                     </md-select>
@@ -59,7 +59,7 @@
                                placeholder="Search for a ..."
                                class="md-text md-select-search-pattern">
                     </md-select-header>
-                    <md-option data-ng-repeat="field in fields | filter:searchTerm track by $index" value="{{field.id}}">
+                    <md-option data-ng-repeat="field in fields | filter:searchTerm " value="{{field.id}}">
                         {{bindListFields(field)}}
                     </md-option>
                 </md-select>

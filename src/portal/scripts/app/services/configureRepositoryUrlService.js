@@ -22,7 +22,7 @@
 				return 'counterparty';
 				break;
 			default:
-				return key
+				return key;
 				break;
 		}
 	}

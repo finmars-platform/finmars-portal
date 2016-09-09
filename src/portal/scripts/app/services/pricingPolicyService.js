@@ -12,19 +12,19 @@
     };
 
     var getByKey = function (id) {
-        return pricingPolicyRepository.getByKey();
+        return pricingPolicyRepository.getByKey(id);
     };
 
     var create = function (policy) {
-        return pricingPolicyRepository.create();
+        return pricingPolicyRepository.create(policy);
     };
 
     var update = function (id, policy) {
-        return pricingPolicyRepository.update();
+        return pricingPolicyRepository.update(id, policy);
     };
 
     var deleteByKey = function (id) {
-        return pricingPolicyRepository.deleteByKey();
+        return pricingPolicyRepository.deleteByKey(id);
     };
 
     module.exports = {
