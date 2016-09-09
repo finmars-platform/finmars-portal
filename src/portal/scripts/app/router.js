@@ -183,6 +183,11 @@
                 templateUrl: 'views/settings/form-design-view.html',
                 controller: 'SettingsFormDesignController as vm'
             })
+            .state('app.settings.users-groups', {
+                url: '/users-and-groups',
+                templateUrl: 'views/settings/users-and-groups-view.html',
+                controller: 'SettingsUsersAndGroupsController as vm'
+            })
             .state('app.system', {
                 abstract: true,
                 url: '/system',

@@ -50,8 +50,15 @@
                 },
                 body: JSON.stringify(responsible)
             }).then(function (data) {
-            return data.json();
-        })
+            return new Promise(function (resolve, reject) {
+                data.json().then(function (result) {
+                    resolve({
+                        response: result,
+                        status: data.status
+                    })
+                })
+            });
+        });
     };
 
     var update = function (id, responsible) {
@@ -66,7 +73,14 @@
                 },
                 body: JSON.stringify(responsible)
             }).then(function (data) {
-            return data.json();
+            return new Promise(function (resolve, reject) {
+                data.json().then(function (result) {
+                    resolve({
+                        response: result,
+                        status: data.status
+                    })
+                })
+            });
         })
     };
 
@@ -81,7 +95,7 @@
                     'Content-type': 'application/json'
                 }
             }).then(function (data) {
-            return new Promise(function(resolve,reject) {
+            return new Promise(function (resolve, reject) {
                 resolve({status: 'deleted'});
             });
             //return data.json();

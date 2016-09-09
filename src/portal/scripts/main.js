@@ -49,6 +49,7 @@ app.controller('ActionsController', ['$scope', '$mdDialog', require('./app/contr
 app.controller('ImportInstrumentDialogController', ['$scope', '$mdDialog', require('./app/controllers/dialogs/importInstrumentDialogController')]);
 app.controller('AutomatedUploadsHistoryDialogController', ['$scope', '$mdDialog', '$mdpTimePicker', require('./app/controllers/dialogs/automatedUploadsHistoryDialogController')]);
 app.controller('FillPriceHistoryDialogController', ['$scope', '$mdDialog', require('./app/controllers/dialogs/fillPriceHistoryDialogController')]);
+app.controller('PriceDownloadSchemeAddDialogController', ['$scope', '$mdDialog', require('./app/controllers/dialogs/PriceDownloadSchemeAddDialogController')]);
 
 app.controller('AttributesManagerController', ['$scope', '$state', '$stateParams', '$mdDialog', require('./app/controllers/attributesManagerController')]);
 app.controller('AttributesManagerEditDialogController', ['$scope', '$mdDialog', 'attribute', require('./app/controllers/dialogs/attributesManagerEditDialogController')]);
@@ -94,6 +95,7 @@ app.controller('EntityDataConstructorController', ['$scope', '$stateParams', '$s
 app.controller('AdditionsEditorEntityEditController', ['$scope', '$state', '$mdDialog', require('./app/controllers/additionsEditorEntityEditController')]);
 
 app.controller('WarningDialogController', ['$scope', '$mdDialog', 'warning', require('./app/controllers/dialogs/warningDialogController')]);
+app.controller('ValidationDialogController', ['$scope', '$mdDialog', 'validationData', require('./app/controllers/dialogs/validationDialogController')]);
 app.controller('ExpressionEditorDialogController', ['$scope', '$mdDialog', 'item', require('./app/controllers/dialogs/expressionEditorDialogController')]);
 app.controller('InfoDialogController', ['$scope', '$mdDialog', 'info', require('./app/controllers/dialogs/infoDialogController')]);
 app.controller('InstrumentSelectDialogController', ['$scope', '$mdDialog', require('./app/controllers/dialogs/instrumentSelectDialogController')]);
@@ -111,6 +113,8 @@ app.controller('SettingsGeneralInstrumentImportController', ['$scope', '$mdDialo
 
 app.controller('SettingsFormDesignController', ['$scope', '$state', require('./app/controllers/settings/settingsFormDesignController')]);
 app.controller('SettingBloombergImportInstrumentController', ['$scope', '$state', require('./app/controllers/settings/settingBloombergImportInstrumentController')]);
+
+app.controller('SettingsMembersAndGroupsController', ['$scope', '$state', require('./app/controllers/settings/settingsMembersAndGroupsController')]);
 
 app.directive('menuToggle', [require('./app/directives/menuToggleDirective')]);
 app.directive('menuLink', [require('./app/directives/menuLinkDirective')]);
@@ -148,6 +152,7 @@ app.directive('classifierModalResolver', ['$mdDialog', require('./app/directives
 app.directive('zhDatePicker', ['$mdDialog', require('./app/directives/zhDatePickerDirective')]);
 app.directive('customScroll', [require('./app/directives/customScrollDirective')]);
 app.directive('dragDialog', [require('./app/directives/dragDialogDirective')]);
+app.directive('membersGroupsTable', [require('./app/directives/membersGroupsTableDirective')]);
 
 app.filter('trustAsHtml', ['$sce', require('./app/filters/trustAsHtmlFilter')]);
 app.filter('strLimit', ['$filter', require('./app/filters/strLimitFilter')]);

@@ -3,26 +3,26 @@
  */
 (function () {
 
-    var instrumentDailyPricingModelRepository = require('../../repositories/instrument/instrumentDailyPricingModelRepository');
+    var importPriceDownloadSchemeRepository = require('../../repositories/import/importPriceDownloadSchemeRepository');
 
     var getList = function (options) {
-        return instrumentDailyPricingModelRepository.getList(options);
+        return importPriceDownloadSchemeRepository.getList(options);
     };
 
     var getByKey = function (id) {
-        return instrumentDailyPricingModelRepository.getByKey(id);
+        return importPriceDownloadSchemeRepository.getByKey(id);
     };
 
     var create = function(account) {
-        return instrumentDailyPricingModelRepository.create(account);
+        return importPriceDownloadSchemeRepository.create(account);
     };
 
     var update = function(id, account) {
-        return instrumentDailyPricingModelRepository.update(id, account);
+        return importPriceDownloadSchemeRepository.update(id, account);
     };
 
     var deleteByKey = function (id) {
-        return instrumentDailyPricingModelRepository.deleteByKey(id);
+        return importPriceDownloadSchemeRepository.deleteByKey(id);
     };
 
     module.exports = {

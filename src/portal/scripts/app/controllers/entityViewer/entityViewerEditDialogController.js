@@ -55,20 +55,52 @@
             }); // look at entityEditorController
         };
 
-        vm.save = function () {
-            if (vm.evAction = 'create') {
+        vm.save = function ($event) {
+            if (vm.evAction == 'create') {
                 vm.saveCallback().then(function (options) {
 
-                    entityResolverService.create(options.entityType, options.entity).then(function () {
-                        $mdDialog.hide({res: 'agree'});
+                    entityResolverService.create(options.entityType, options.entity).then(function (data) {
+                        console.log('DATA', data);
+                        if (data.status == 200 || data.status == 201) {
+                            $mdDialog.hide({res: 'agree'});
+                        }
+                        if (data.status == 400) {
+                            $mdDialog.show({
+                                controller: 'ValidationDialogController as vm',
+                                templateUrl: 'views/dialogs/validation-dialog-view.html',
+                                targetEvent: $event,
+                                locals: {
+                                    validationData: data.response
+                                },
+                                preserveScope: true,
+                                autoWrap: true,
+                                skipHide: true
+                            })
+                        }
                     });
 
                 })
             } else {
                 vm.saveCallback().then(function (options) {
 
-                    entityResolverService.update(options.entityType, options.entityId, options.entity).then(function () {
-                        $mdDialog.hide({res: 'agree'});
+                    entityResolverService.update(options.entityType, options.entityId, options.entity).then(function (data) {
+                        console.log('DATA', data);
+                        if (data.status == 200 || data.status == 201) {
+                            $mdDialog.hide({res: 'agree'});
+                        }
+                        if (data.status == 400) {
+                            $mdDialog.show({
+                                controller: 'ValidationDialogController as vm',
+                                templateUrl: 'views/dialogs/validation-dialog-view.html',
+                                targetEvent: $event,
+                                locals: {
+                                    validationData: data.response
+                                },
+                                preserveScope: true,
+                                autoWrap: true,
+                                skipHide: true
+                            })
+                        }
                     });
                 })
 
