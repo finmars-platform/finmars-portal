@@ -34,6 +34,11 @@
     var getEntitiesWithoutBaseAttrsList = function () {
         return ['price-history', 'currency-history', 'transaction'];
     };
+    var getEntitiesWithoutDynAttrsList = function () {
+        return ['price-history', 'currency-history', 'transaction', 'pricing-policy','strategy-1', 'strategy-2', 'strategy-3',
+            'strategy-1-group', 'strategy-2-group', 'strategy-3-group',
+            'strategy-1-subgroup', 'strategy-2-subgroup', 'strategy-3-subgroup'];
+    };
 
     var getEntityAttrs = function (entity) {
         var entityAttrs = {
@@ -92,6 +97,11 @@
                 {
                     "key": "public_name",
                     "name": "Public name",
+                    "value_type": 10
+                },
+                {
+                    "key": "user_code",
+                    "name": "User code",
                     "value_type": 10
                 },
                 {
@@ -194,7 +204,7 @@
                 },
                 {
                     "key": "instrument_class",
-                    "name": "Instrument type",
+                    "name": "Instrument class",
                     "value_type": "field"
                 },
                 {
@@ -223,6 +233,11 @@
                     "key": "is_active",
                     "name": "Is active",
                     "value_type": "boolean"
+                },
+                {
+                    "key": "price_download_scheme",
+                    "name": "Price download scheme",
+                    "value_type": "field"
                 },
                 {
                     "key": "pricing_currency",
@@ -799,6 +814,7 @@
         getEntityAttrs: getEntityAttrs,
         getValueTypes: getValueTypes,
         getDynamicAttrsValueTypes: getDynamicAttrsValueTypes,
+        getEntitiesWithoutDynAttrsList: getEntitiesWithoutDynAttrsList,
         getEntityTabs: getEntityTabs,
         getEntitiesWithoutBaseAttrsList: getEntitiesWithoutBaseAttrsList,
         getRestrictedEntitiesWithTypeField: getRestrictedEntitiesWithTypeField,

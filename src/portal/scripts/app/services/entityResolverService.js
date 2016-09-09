@@ -238,6 +238,9 @@
             case 'price-history':
                 return priceHistoryService.update(id, entity);
                 break;
+            case 'pricing-policy':
+                return pricingPolicyService.update(id, entity);
+                break;
             case 'currency-history':
                 return priceHistoryService.update(id, entity);
                 break;
@@ -279,6 +282,9 @@
             case 'account':
                 return accountService.deleteByKey(id);
                 break;
+            case 'account-type':
+                return accountTypeService.deleteByKey(id);
+                break;
             case 'responsible':
                 return responsibleService.deleteByKey(id);
                 break;
@@ -294,8 +300,20 @@
             case 'instrument':
                 return instrumentService.deleteByKey(id);
                 break;
+            case 'instrument-type':
+                return instrumentTypeService.deleteByKey(id);
+                break;
+            case 'transaction':
+                return transactionService.deleteByKey(id);
+                break;
+            case 'transaction-type':
+                return transactionTypeService.deleteByKey(id);
+                break;
             case 'price-history':
                 return priceHistoryService.deleteByKey(id);
+                break;
+            case 'pricing-policy':
+                return pricingPolicyService.deleteByKey(id);
                 break;
             case 'currency-history':
                 return priceHistoryService.deleteByKey(id);

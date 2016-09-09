@@ -16,6 +16,7 @@
     var counterpartyGroupRepository = require('../repositories/counterpartyGroupRepository');
     var responsibleRepository = require('../repositories/responsibleRepository');
     var responsibleGroupRepository = require('../repositories/responsibleGroupRepository');
+    var transactionTypeRepository = require('../repositories/transactionTypeRepository');
 
     var strategyRepository = require('../repositories/strategyRepository');
     var strategyGroupRepository = require('../repositories/strategyGroupRepository');
@@ -197,7 +198,7 @@
                         });
                         break;
                     case 'transaction_types':
-                        counterpartyRepository.getList().then(function (data) {
+                        transactionTypeRepository.getList().then(function (data) {
                             resolve({type: 'multiple-ids', key: 'transaction_types', data: data.results});
                         });
                         break;
