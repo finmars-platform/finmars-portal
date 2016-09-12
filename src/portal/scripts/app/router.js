@@ -186,7 +186,7 @@
             .state('app.settings.users-groups', {
                 url: '/users-and-groups',
                 templateUrl: 'views/settings/users-and-groups-view.html',
-                controller: 'SettingsUsersAndGroupsController as vm'
+                controller: 'SettingsMembersAndGroupsController as vm'
             })
             .state('app.system', {
                 abstract: true,

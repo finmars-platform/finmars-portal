@@ -331,16 +331,21 @@
                                         return '<div class="zh-loader"></div>';
                                     }
                                 } else {
+                                    // if (column['value_type'] === 'mc_field') {
+                                    //     if (groupedItem[entityAttrs[e].key].length == 1) {
+                                    //         return 'linked with ' + groupedItem[entityAttrs[e].key].length + ' entity'
+                                    //     } else {
+                                    //         if (groupedItem[entityAttrs[e].key].length > 1) {
+                                    //             return 'linked with ' + groupedItem[entityAttrs[e].key].length + ' entities'
+                                    //         }
+                                    //     }
+                                    // } else {
+                                    //     return groupedItem[entityAttrs[e].key];
+                                    // }
                                     if (column['value_type'] === 'mc_field') {
-                                        if (groupedItem[entityAttrs[e].key].length == 1) {
-                                            return 'linked with ' + groupedItem[entityAttrs[e].key].length + ' entity'
-                                        } else {
-                                            if (groupedItem[entityAttrs[e].key].length > 1) {
-                                                return 'linked with ' + groupedItem[entityAttrs[e].key].length + ' entities'
-                                            }
+                                        if (groupedItem[entityAttrs[e].key].length >= 1) {
+                                            return '[' + groupedItem[entityAttrs[e].key].length + ']'
                                         }
-                                    } else {
-                                        return groupedItem[entityAttrs[e].key];
                                     }
                                 }
                             }
@@ -349,7 +354,12 @@
                 };
 
                 scope.bindCellTitle = function (item, column) {
-                    return item[column.key];
+                    if (column['value_type'] === 'mc_field') {
+                       return  '[' + item[column.key].length + ']'; 
+                    }
+                    else {
+                        return item[column.key];
+                    }
                 };
 
                 scope.rowCallback = function (item, ev) {

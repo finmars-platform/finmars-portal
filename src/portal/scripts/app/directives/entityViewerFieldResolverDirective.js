@@ -108,8 +108,17 @@
                     return field.name
                 };
 
+                scope.bindMCField = function (model) {
+                    if (scope.entity[scope.getModelKey()] && scope.entity[scope.getModelKey()].length > 0) {
+                       return '[' + scope.entity[scope.getModelKey()].length + '] selected';
+                    }
+                    else {
+                        return scope.getName();
+                    }
+                }
 
                 scope.getModelKey = scope.$parent.getModelKey;
+
             }
 
         }
