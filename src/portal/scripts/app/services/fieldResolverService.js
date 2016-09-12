@@ -22,6 +22,7 @@
     var transactionTypeRepository = require('../repositories/transactionTypeRepository');
     var transactionTypeGroupRepository = require('../repositories/transaction/transactionTypeGroupRepository');
     var tagRepository = require('../repositories/tagRepository');
+    var metaContentTypesRepository = require('../repositories/metaContentTypesRepository');
 
     var strategyRepository = require('../repositories/strategyRepository');
     var strategyGroupRepository = require('../repositories/strategyGroupRepository');
@@ -251,6 +252,9 @@
                     accountRepository.getList().then(function (data) {
                         resolve({type: 'multiple-ids', key: 'accounts', data: data.results});
                     });
+                    break;
+                case 'content_types':
+                    resolve({type: 'multiple-ids', key: 'content_types', data: metaContentTypesRepository.getListForTags()});
                     break;
                 case 'responsibles':
                     responsibleRepository.getList().then(function (data) {
