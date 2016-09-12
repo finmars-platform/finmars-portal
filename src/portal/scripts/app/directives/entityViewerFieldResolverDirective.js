@@ -73,6 +73,18 @@
                     });
                 });
 
+                scope.resolveSort = function(field){
+                    if(field.hasOwnProperty('name')){
+                        return field.name
+                    }
+                    if(field.hasOwnProperty('user_code')){
+                        return field.user_code
+                    }
+                    if(field.hasOwnProperty('public_name')){
+                        return field.public_name
+                    }
+                };
+
                 scope.checkComplexEntityType = function () {
                     if (metaService.getFieldsWithTagGrouping().indexOf(scope.item.key) !== -1) {
                         return true
