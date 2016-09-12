@@ -41,6 +41,11 @@
                 templateUrl: 'views/data/data-portfolio-view.html',
                 controller: 'DataPortfolioController as vm'
             })
+            .state('app.data.tag', {
+                url: '/tags',
+                templateUrl: 'views/data/data-tag-view.html',
+                controller: 'DataTagController as vm'
+            })
             .state('app.data.account', {
                 url: '/accounts',
                 templateUrl: 'views/data/data-account-view.html',
@@ -95,6 +100,11 @@
                 url: '/transaction-types',
                 templateUrl: 'views/data/data-transaction-type-view.html',
                 controller: 'DataTransactionTypeController as vm'
+            })
+            .state('app.data.transaction-type-group', {
+                url: '/transaction-type-group',
+                templateUrl: 'views/data/data-transaction-type-group-view.html',
+                controller: 'DataTransactionTypeGroupController as vm'
             })
             .state('app.data.currency-history', {
                 url: '/currencies',

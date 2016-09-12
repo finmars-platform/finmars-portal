@@ -16,14 +16,14 @@
 						for (x = 0; x < item.attributes.length; x = x + 1) {
 							if (item.attributes[x]['attribute_type'] === attrs[i].id) {
 								item.attributes[x]['attribute_name'] = attrs[i].name;
-								if (item.attributes[x]['classifier'] !== null) {
+								if (item.attributes[x]['attribute_type_object'].value_type == 30) {
 									item[attrs[i].name] = item.attributes[x]['classifier'];
 									//console.log('item!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!', item);
 								} else {
-									if (item.attributes[x]['value_date'] !== null) {
+									if (item.attributes[x]['attribute_type_object'].value_type == 40) {
 										item[attrs[i].name] = item.attributes[x]['value_date'];
 									} else {
-										if (item.attributes[x]['value_float'] !== null) {
+										if (item.attributes[x]['attribute_type_object'].value_type == 20) {
 											item[attrs[i].name] = item.attributes[x]['value_float'];
 										} else {
 											item[attrs[i].name] = item.attributes[x]['value_string'];

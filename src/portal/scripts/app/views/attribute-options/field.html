@@ -1,5 +1,5 @@
 <div data-ng-if="item">
-    <md-input-container class="md-block">
+    <md-input-container class="md-block" data-ng-if="item.attribute.key !== 'instrument'">
         <label>Display fields in list</label>
         <md-select ng-model="item.options.fieldsList">
             <md-option ng-selected="{{findSelected(item.options.fieldsList, ['name','short_name','user_code'])}}" ng-value="['name','short_name','user_code']">

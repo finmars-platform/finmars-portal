@@ -72,6 +72,7 @@ app.controller('FactorScheduleTabController', ['$scope', require('./app/controll
 app.controller('ManualPricingFormulasTabController', ['$scope', require('./app/controllers/tabs/manualPricingFormulasTabController')]);
 
 app.controller('DataPortfolioController', ['$scope', require('./app/controllers/data/dataPortfolioController')]);
+app.controller('DataTagController', ['$scope', require('./app/controllers/data/dataTagController')]);
 app.controller('DataAccountController', ['$scope', require('./app/controllers/data/dataAccountController')]);
 app.controller('DataAccountTypeController', ['$scope', require('./app/controllers/data/dataAccountTypeController')]);
 app.controller('DataCounterpartyController', ['$scope', require('./app/controllers/data/dataCounterpartyController')]);
@@ -83,6 +84,7 @@ app.controller('DataInstrumentTypeController', ['$scope', require('./app/control
 app.controller('DataPricingPolicyController', ['$scope', require('./app/controllers/data/dataPricingPolicyController')]);
 app.controller('DataTransactionController', ['$scope', require('./app/controllers/data/dataTransactionController')]);
 app.controller('DataTransactionTypeController', ['$scope', require('./app/controllers/data/dataTransactionTypeController')]);
+app.controller('DataTransactionTypeGroupController', ['$scope', require('./app/controllers/data/dataTransactionTypeGroupController')]);
 app.controller('DataPriceHistoryController', ['$scope', require('./app/controllers/data/dataPriceHistoryController')]);
 app.controller('DataCurrencyHistoryController', ['$scope', require('./app/controllers/data/dataCurrencyHistoryController')]);
 app.controller('DataCurrencyController', ['$scope', require('./app/controllers/data/dataCurrencyController')]);

@@ -101,15 +101,20 @@
 
                 var fieldKey = scope.getModelKey();
 
-                if (metaService.getEntitiesWithSimpleFields().indexOf(scope.entityType) !== -1 ) {
-                    scope.options = {
-                        entityType: scope.entityType,
-                        key: fieldKey
-                    };
-                } else {
-                    scope.options = {}
-                }
+                scope.options = {};
 
+                if (fieldKey == 'tags') {
+                    scope.options = {
+                        entityType: scope.entityType
+                    }
+                } else {
+                    if (metaService.getEntitiesWithSimpleFields().indexOf(scope.entityType) !== -1) {
+                        scope.options = {
+                            entityType: scope.entityType,
+                            key: fieldKey
+                        };
+                    }
+                }
 
                 scope.setDateToday = function () {
                     //console.log('1232', scope.entity[scope.getModelKey()])
@@ -150,7 +155,7 @@
                 if (scope.fieldType && scope.fieldType.value === 30) {
 
                     if (scope.entity) {
-                        
+
                         scope.classifierId = scope.entity[scope.getModelKey()];
 
                         getNode().then(function (data) {
