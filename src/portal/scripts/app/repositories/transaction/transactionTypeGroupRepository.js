@@ -5,13 +5,13 @@
 
     'use strict';
 
-    var cookieService = require('../../../../core/services/cookieService');
-    var configureRepositoryUrlService = require('../services/configureRepositoryUrlService');
+    var cookieService = require('../../../../../core/services/cookieService');
+    var configureRepositoryUrlService = require('../../services/configureRepositoryUrlService');
 
     var baseUrl = '/api/v1/';
 
     var getList = function (options) {
-        return window.fetch(configureRepositoryUrlService.configureUrl(baseUrl + 'transactions/transaction-type/', options),
+        return window.fetch(configureRepositoryUrlService.configureUrl(baseUrl + 'transactions/transaction-type-group/', options),
             {
                 method: 'GET',
                 credentials: 'include',
@@ -25,7 +25,7 @@
     };
 
     var getByKey = function (id) {
-        return window.fetch(baseUrl + 'transactions/transaction-type/' + id + '/',
+        return window.fetch(baseUrl + 'transactions/transaction-type-group/' + id + '/',
             {
                 method: 'GET',
                 credentials: 'include',
@@ -38,8 +38,8 @@
         })
     };
 
-    var create = function (transaction) {
-        return window.fetch(baseUrl + 'transactions/transaction-type/',
+    var create = function (account) {
+        return window.fetch(baseUrl + 'transactions/transaction-type-group/',
             {
                 method: 'POST',
                 credentials: 'include',
@@ -48,7 +48,7 @@
                     Accept: 'application/json',
                     'Content-type': 'application/json'
                 },
-                body: JSON.stringify(transaction)
+                body: JSON.stringify(account)
             }).then(function (data) {
             return new Promise(function (resolve, reject) {
                 data.json().then(function (result) {
@@ -58,11 +58,11 @@
                     })
                 })
             });
-        })
+        });
     };
 
-    var update = function (id, transaction) {
-        return window.fetch(baseUrl + 'transactions/transaction-type/' + id + '/',
+    var update = function (id, account) {
+        return window.fetch(baseUrl + 'transactions/transaction-type-group/' + id + '/',
             {
                 method: 'PUT',
                 credentials: 'include',
@@ -71,7 +71,7 @@
                     Accept: 'application/json',
                     'Content-type': 'application/json'
                 },
-                body: JSON.stringify(transaction)
+                body: JSON.stringify(account)
             }).then(function (data) {
             return new Promise(function (resolve, reject) {
                 data.json().then(function (result) {
@@ -85,11 +85,12 @@
     };
 
     var deleteByKey = function (id) {
-        return window.fetch(baseUrl + 'transactions/transaction-type/' + id + '/',
+        return window.fetch(baseUrl + 'transactions/transaction-type-group/' + id + '/',
             {
                 method: 'DELETE',
                 credentials: 'include',
                 headers: {
+                    'X-CSRFToken': cookieService.getCookie('csrftoken'),
                     Accept: 'application/json',
                     'Content-type': 'application/json'
                 }

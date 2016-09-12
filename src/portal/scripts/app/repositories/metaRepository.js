@@ -34,6 +34,11 @@
     var getEntitiesWithoutBaseAttrsList = function () {
         return ['price-history', 'currency-history', 'transaction'];
     };
+    var getEntitiesWithoutDynAttrsList = function () {
+        return ['price-history', 'currency-history', 'transaction', 'pricing-policy','strategy-1', 'strategy-2', 'strategy-3',
+            'strategy-1-group', 'strategy-2-group', 'strategy-3-group',
+            'strategy-1-subgroup', 'strategy-2-subgroup', 'strategy-3-subgroup'];
+    };
 
     var getEntityAttrs = function (entity) {
         var entityAttrs = {
@@ -88,10 +93,32 @@
                     "value_type": 10
                 }
             ],
+            "tag": [
+                {
+                    "key": "user_code",
+                    "name": "User code",
+                    "value_type": 10
+                },
+                {
+                    "key": "public_name",
+                    "name": "Public name",
+                    "value_type": 10
+                },
+                {
+                    "key": "content_types",
+                    "name": "Content Types",
+                    "value_type": 'mc_field'
+                }
+            ],
             "account-type": [
                 {
                     "key": "public_name",
                     "name": "Public name",
+                    "value_type": 10
+                },
+                {
+                    "key": "user_code",
+                    "name": "User code",
                     "value_type": 10
                 },
                 {
@@ -103,6 +130,11 @@
                     "key": "transaction_details_expr",
                     "name": "Transaction details expr",
                     "value_type": 10
+                },
+                {
+                    "key": "tags",
+                    "name": "Tags",
+                    "value_type": "mc_field"
                 }
             ],
             "counterparty": [
@@ -194,7 +226,7 @@
                 },
                 {
                     "key": "instrument_class",
-                    "name": "Instrument type",
+                    "name": "Instrument class",
                     "value_type": "field"
                 },
                 {
@@ -206,6 +238,11 @@
                     "key": "regular_event",
                     "name": "regular event",
                     "value_type": "field"
+                },
+                {
+                    "key": "tags",
+                    "name": "Tags",
+                    "value_type": "mc_field"
                 }
             ],
             "instrument": [
@@ -223,6 +260,11 @@
                     "key": "is_active",
                     "name": "Is active",
                     "value_type": "boolean"
+                },
+                {
+                    "key": "price_download_scheme",
+                    "name": "Price download scheme",
+                    "value_type": "field"
                 },
                 {
                     "key": "pricing_currency",
@@ -442,6 +484,18 @@
                     "value_type": 'field'
                 }
             ],
+            "transaction-type-group": [
+                {
+                    "key": "user_code",
+                    "name": "User code",
+                    "value_type": 10
+                },
+                {
+                    "key": "public_name",
+                    "name": "Public name",
+                    "value_type": 10
+                }
+            ],
             "transaction-type": [
                 {
                     "key": "user_code",
@@ -466,6 +520,11 @@
                 {
                     "key": "portfolios",
                     "name": "Portfolios",
+                    "value_type": "mc_field"
+                },
+                {
+                    "key": "tags",
+                    "name": "Tags",
                     "value_type": "mc_field"
                 }
             ],
@@ -501,12 +560,12 @@
                     "key": "fx_rate",
                     "name": "Fx rate",
                     "value_type": "float"
-                },
-                {
-                    "key": "fx_rate_expr",
-                    "name": "fx_rate_expr",
-                    "value_type": 10
                 }
+                //{
+                //    "key": "fx_rate_expr",
+                //    "name": "fx_rate_expr",
+                //    "value_type": 10
+                //}
             ],
             "price-history": [
                 {
@@ -789,8 +848,13 @@
         // have save property group, so its hard to resolve proper service
         return ["responsible", 'counterparty',
             'strategy-1', 'strategy-2', 'strategy-3',
+            'transaction-type', 'transaction-type-group',
             'strategy-1-group', 'strategy-2-group', 'strategy-3-group',
             'strategy-1-subgroup', 'strategy-2-subgroup', 'strategy-3-subgroup']
+    };
+
+    var getFieldsWithTagGrouping = function(){
+        return ['instrument_type', 'account_type', 'transaction_type', 'instrument_types'];
     };
 
     module.exports = {
@@ -799,10 +863,12 @@
         getEntityAttrs: getEntityAttrs,
         getValueTypes: getValueTypes,
         getDynamicAttrsValueTypes: getDynamicAttrsValueTypes,
+        getEntitiesWithoutDynAttrsList: getEntitiesWithoutDynAttrsList,
         getEntityTabs: getEntityTabs,
         getEntitiesWithoutBaseAttrsList: getEntitiesWithoutBaseAttrsList,
         getRestrictedEntitiesWithTypeField: getRestrictedEntitiesWithTypeField,
-        getEntitiesWithSimpleFields: getEntitiesWithSimpleFields
+        getEntitiesWithSimpleFields: getEntitiesWithSimpleFields,
+        getFieldsWithTagGrouping: getFieldsWithTagGrouping
     }
 
 

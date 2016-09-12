@@ -136,10 +136,23 @@
 				"icon": ""
 			},
 			{
-				"state": "app.data.transaction-type",
-				"title": "Transaction types",
-				"type": "link",
-				"icon": ""
+				"state": "",
+				"title": "Transaction Type",
+				"type": "toggle",
+				"pages": [
+					{
+						"state": "app.data.transaction-type-group",
+						"title": "Group",
+						"type": "link",
+						"icon": ""
+					},
+					{
+						"state": "app.data.transaction-type",
+						"title": "Transaction types",
+						"type": "link",
+						"icon": ""
+					}
+				]
 			},
 			{
 				"state": "app.data.price-history",
@@ -150,6 +163,12 @@
 			{
 				"state": "app.data.currency-history",
 				"title": "FX history",
+				"type": "link",
+				"icon": ""
+			},
+			{
+				"state": "app.data.tag",
+				"title": "Tags",
 				"type": "link",
 				"icon": ""
 			}
