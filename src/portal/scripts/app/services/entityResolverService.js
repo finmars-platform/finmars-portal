@@ -18,6 +18,7 @@
     var currencyHistoryService = require('./currencyHistoryService');
     var transactionService = require('./transactionService');
     var transactionTypeService = require('./transactionTypeService');
+    var transactionTypeGroupService = require('./transaction/transactionTypeGroupService');
 
     var pricingPolicyService = require('./pricingPolicyService');
     var instrumentTypeService = require('./instrumentTypeService');
@@ -86,6 +87,9 @@
                 break;
             case 'transaction-type':
                 return transactionTypeService.getByKey(id);
+                break;
+            case 'transaction-type-group':
+                return transactionTypeGroupService.getByKey(id);
                 break;
             case 'price-history':
                 return priceHistoryService.getByKey(id);
@@ -169,6 +173,9 @@
             case 'transaction-type':
                 return transactionTypeService.create(entity);
                 break;
+            case 'transaction-type-group':
+                return transactionTypeGroupService.create(entity);
+                break;
             case 'price-history':
                 return priceHistoryService.create(entity);
                 break;
@@ -214,6 +221,9 @@
             case 'account':
                 return accountService.update(id, entity);
                 break;
+            case 'account-type':
+                return accountTypeService.update(id, entity);
+                break;
             case 'responsible':
                 return responsibleService.update(id, entity);
                 break;
@@ -229,14 +239,23 @@
             case 'instrument':
                 return instrumentService.update(id, entity);
                 break;
+            case 'instrument-type':
+                return instrumentTypeService.update(id, entity);
+                break;
             case 'transaction':
                 return transactionService.update(id, entity);
                 break;
             case 'transaction-type':
                 return transactionTypeService.update(id, entity);
                 break;
+            case 'transaction-type-group':
+                return transactionTypeGroupService.update(id, entity);
+                break;
             case 'price-history':
                 return priceHistoryService.update(id, entity);
+                break;
+            case 'pricing-policy':
+                return pricingPolicyService.update(id, entity);
                 break;
             case 'currency-history':
                 return priceHistoryService.update(id, entity);
@@ -279,6 +298,9 @@
             case 'account':
                 return accountService.deleteByKey(id);
                 break;
+            case 'account-type':
+                return accountTypeService.deleteByKey(id);
+                break;
             case 'responsible':
                 return responsibleService.deleteByKey(id);
                 break;
@@ -294,8 +316,23 @@
             case 'instrument':
                 return instrumentService.deleteByKey(id);
                 break;
+            case 'instrument-type':
+                return instrumentTypeService.deleteByKey(id);
+                break;
+            case 'transaction':
+                return transactionService.deleteByKey(id);
+                break;
+            case 'transaction-type':
+                return transactionTypeService.deleteByKey(id);
+                break;
+            case 'transaction-type-group':
+                return transactionTypeGroupService.deleteByKey(id);
+                break;
             case 'price-history':
                 return priceHistoryService.deleteByKey(id);
+                break;
+            case 'pricing-policy':
+                return pricingPolicyService.deleteByKey(id);
                 break;
             case 'currency-history':
                 return priceHistoryService.deleteByKey(id);
