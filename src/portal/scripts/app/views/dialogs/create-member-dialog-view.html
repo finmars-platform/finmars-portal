@@ -1,0 +1,25 @@
+<md-dialog class="create-member draggable-dialog" drag-dialog>
+	<md-toolbar>
+		<div class="md-toolbar-tools">
+			<h2>Add new member</h2>
+		</div>
+	</md-toolbar>
+	<md-dialog-content class="create-member-dialog-content">
+		<md-input-container>
+			<label>Member</label>
+			<textarea data-ng-model="vm.memberName"></textarea>
+		</md-input-container>
+		<md-input-container>
+			<label>Email</label>
+			<textarea data-ng-model="vm.memberEmail"></textarea>
+		</md-input-container>
+	</md-dialog-content>
+	<md-dialog-actions layout="row" layout-align="start center">
+		<div flex="70">
+			<md-button class="md-raised" data-ng-click="vm.cancel()">Cancel</md-button>
+		</div>
+		<div flex="30">
+			<md-button class="md-raised md-primary" data-ng-click="vm.agree()">Create</md-button>
+		</div>
+	</md-dialog-actions>
+</md-dialog>
