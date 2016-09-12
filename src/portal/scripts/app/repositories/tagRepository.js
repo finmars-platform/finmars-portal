@@ -7,13 +7,28 @@
 
     var cookieService = require('../../../../core/services/cookieService');
     var metaContentTypesService = require('../services/metaContentTypesService');
+    var configureRepositoryUrlService = require('../services/configureRepositoryUrlService');
 
     var baseUrl = '/api/v1/';
 
-    var getList = function (entity) {
+    var getList = function (options) {
 
+        return window.fetch(configureRepositoryUrlService.configureUrl(baseUrl + 'tags/tag/', options),
+            {
+                method: 'GET',
+                credentials: 'include',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-type': 'application/json'
+                }
+            }).then(function (data) {
+            return data.json();
+        })
+
+    };
+
+    var getListByContentType = function (entity) {
         var contentType = metaContentTypesService.findContentTypeByEntity(entity, 'tag');
-
         return window.fetch(baseUrl + 'tags/tag/?content_type=' + contentType,
             {
                 method: 'GET',
@@ -98,7 +113,7 @@
                     'Content-type': 'application/json'
                 }
             }).then(function (data) {
-            return new Promise(function(resolve,reject) {
+            return new Promise(function (resolve, reject) {
                 resolve({status: 'deleted'});
             });
             //return data.json();
@@ -109,6 +124,7 @@
     module.exports = {
 
         getList: getList,
+        getListByContentType: getListByContentType,
         getByKey: getByKey,
         create: create,
         update: update,

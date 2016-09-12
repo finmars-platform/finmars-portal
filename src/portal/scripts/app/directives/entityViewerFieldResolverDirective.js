@@ -37,7 +37,7 @@
 
                     console.log('ENTITYTYPE------------------------------------------', entityType);
 
-                    tagService.getList(entityType).then(function (data) { //refactor entityType getter
+                    tagService.getListByContentType(entityType).then(function (data) { //refactor entityType getter
                         scope.tags = data.results;
 
                         scope.groups = bindFieldsHelper.groupFieldsByTagsWithDuplicates(scope.fields, scope.tags);
