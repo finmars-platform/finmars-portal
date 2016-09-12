@@ -58,14 +58,22 @@
 
             //vm.additionsStatus[res.results[0].data.tableAdditions.additionsType] = true;
 
-            uiService.updateListLayout(vm.listView.id, vm.listView).then(function () {
-                console.log('saved');
-            });
+            if(vm.listView.hasOwnProperty('id')) {
+                uiService.updateListLayout(vm.listView.id, vm.listView).then(function () {
+                    console.log('saved');
+                });
+            } else {
+                uiService.createListLayout(vm.entityType, vm.listView).then(function () {
+                    console.log('saved');
+                });
+            }
             $mdDialog.show({
                 controller: 'SaveLayoutDialogController as vm',
                 templateUrl: 'views/save-layout-dialog-view.html',
                 targetEvent: e,
                 clickOutsideToClose: true
+            }).then(function(){
+                vm.getView();
             });
         });
 
