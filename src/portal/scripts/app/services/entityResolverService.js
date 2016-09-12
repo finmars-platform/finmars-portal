@@ -24,6 +24,7 @@
     var instrumentTypeService = require('./instrumentTypeService');
     var accrualCalculationModelService = require('./accrualCalculationModelService');
     var instrumentPeriodicityService = require('./instrumentPeriodicityService');
+    var tagService = require('./tagService');
 
     var strategyService = require('./strategyService');
     var strategyGroupService = require('./strategyGroupService');
@@ -124,6 +125,9 @@
             case 'strategy-3-subgroup':
                 return strategySubgroupService.getByKey(3, id);
                 break;
+            case 'tag':
+                return tagService.getByKey(id);
+                break;
         }
     };
 
@@ -209,6 +213,9 @@
             case 'strategy-3-subgroup':
                 return strategySubgroupService.create(3, entity);
                 break;
+            case 'tag':
+                return tagService.create(entity);
+                break;
 
         }
     };
@@ -287,6 +294,9 @@
             case 'strategy-3-subgroup':
                 return strategySubgroupService.getByKey(3, id, entity);
                 break;
+            case 'tag':
+                return tagService.update(id, entity);
+                break;
         }
     };
 
@@ -363,6 +373,9 @@
                 break;
             case 'strategy-3-subgroup':
                 return strategySubgroupService.deleteByKey(3, id);
+                break;
+            case 'tag':
+                return tagService.deleteByKey(id);
                 break;
         }
     };
