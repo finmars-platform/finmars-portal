@@ -48,6 +48,17 @@
 
             });
 
+            vm.cancel = function() {
+                var entityId = vm.entityId;
+                vm.entityId = undefined;
+                vm.readyStatus.entityId = false;
+                setTimeout(function () {
+                    vm.entityId = entityId;
+                    vm.readyStatus.entityId = true;
+                    $scope.$apply();
+                }, 100)
+            };
+
             vm.editLayout = function () {
                 $state.go('app.data-constructor', {entityType: vm.entityType});
             };

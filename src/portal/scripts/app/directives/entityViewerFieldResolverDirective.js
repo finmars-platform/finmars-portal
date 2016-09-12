@@ -7,6 +7,9 @@
 
     var logService = require('../../../../core/services/logService');
     var fieldResolverService = require('../services/fieldResolverService');
+    var bindFieldsHelper = require('../helpers/bindFieldsHelper');
+    var metaService = require('../services/metaService');
+    var tagService = require('../services/tagService');
 
     module.exports = function ($scope) {
 
@@ -21,12 +24,36 @@
 
                 logService.component('EntityViewerFieldResolverController', 'initialized');
 
-                scope.readyStatus = {content: false};
+                scope.readyStatus = {content: false, tags: false};
                 scope.type = '';
 
                 logService.property('field scope', scope.item);
-                logService.property('field scope', scope.entity);
-                logService.property('field scope', scope.options);
+                logService.property('field entity', scope.entity);
+                logService.property('field options', scope.options);
+
+                if (metaService.getFieldsWithTagGrouping().indexOf(scope.item.key) !== -1) {
+
+                    var entityType = scope.item.key.replace('_', '-'); // refactor this
+
+                    console.log('ENTITYTYPE------------------------------------------', entityType);
+
+                    tagService.getList(entityType).then(function (data) { //refactor entityType getter
+                        scope.tags = data.results;
+
+                        scope.groups = bindFieldsHelper.groupFieldsByTagsWithDuplicates(scope.fields, scope.tags);
+
+                        scope.readyStatus.tags = true;
+
+                        scope.$apply(function () {
+
+                            setTimeout(function () {
+                                $(elem).find('.md-select-search-pattern').on('keydown', function (ev) {
+                                    ev.stopPropagation();
+                                });
+                            }, 100);
+                        })
+                    })
+                }
 
                 scope.searchTerm = '';
 
@@ -46,6 +73,12 @@
                     });
                 });
 
+                scope.checkComplexEntityType = function () {
+                    if (metaService.getFieldsWithTagGrouping().indexOf(scope.item.key) !== -1) {
+                        return true
+                    }
+                    return false
+                };
 
                 scope.getName = function () {
                     if (scope.item.options && scope.item.options.fieldName) {

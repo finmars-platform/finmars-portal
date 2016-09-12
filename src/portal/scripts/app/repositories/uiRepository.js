@@ -6,88 +6,12 @@
     'use strict';
 
     var cookieService = require('../../../../core/services/cookieService');
-
+    var metaContentTypesService = require('../services/metaContentTypesService');
     var baseUrl = '/api/v1/';
 
     var getEditLayout = function (entity) {
 
-        var contentType;
-
-        switch (entity) {
-            case 'portfolio':
-                contentType = 'portfolios.portfolio';
-                break;
-            case 'account':
-                contentType = 'accounts.account';
-                break;
-            case 'account-type':
-                contentType = 'accounts.accounttype';
-                break;
-            case 'currency':
-                contentType = 'currencies.currency';
-                break;
-            case 'instrument':
-                contentType = 'instruments.instrument';
-                break;
-            case 'instrument-type':
-                contentType = 'instruments.instrumenttype';
-                break;
-            case 'pricing-policy':
-                contentType = 'instruments.pricingpolicy';
-                break;
-            case 'counterparty':
-                contentType = 'counterparties.counterparty';
-                break;
-            case 'counterparty-group':
-                contentType = 'counterparties.counterpartygroup';
-                break;
-            case 'responsible':
-                contentType = 'counterparties.responsible';
-                break;
-            case 'responsible-group':
-                contentType = 'counterparties.responsiblegroup';
-                break;
-            case 'transaction':
-                contentType = 'transactions.transaction';
-                break;
-            case 'transaction-type':
-                contentType = 'transactions.transactiontype';
-                break;
-            case 'price-history':
-                contentType = 'instruments.pricehistory';
-                break;
-            case 'currency-history':
-                contentType = 'currencies.currencyhistory';
-                break;
-            case 'strategy-1':
-                contentType = 'strategies.strategy1';
-                break;
-            case 'strategy-2':
-                contentType = 'strategies.strategy2';
-                break;
-            case 'strategy-3':
-                contentType = 'strategies.strategy3';
-                break;
-            case 'strategy-1-group':
-                contentType = 'strategies.strategy2group';
-                break;
-            case 'strategy-2-group':
-                contentType = 'strategies.strategy2group';
-                break;
-            case 'strategy-3-group':
-                contentType = 'strategies.strategy2group';
-                break;
-            case 'strategy-1-subgroup':
-                contentType = 'strategies.strategy1subgroup';
-                break;
-            case 'strategy-2-subgroup':
-                contentType = 'strategies.strategy2subgroup';
-                break;
-            case 'strategy-3-subgroup':
-                contentType = 'strategies.strategy3subgroup';
-                break;
-        }
-
+        var contentType = metaContentTypesService.findContentTypeByEntity(entity, 'ui');
 
         return window.fetch(baseUrl + 'ui/edit-layout/?content_type=' + contentType,
             {
@@ -104,84 +28,7 @@
 
     var createEditLayout = function (entity, ui) {
 
-        var contentType;
-
-        switch (entity) {
-            case 'portfolio':
-                contentType = 'portfolios.portfolio';
-                break;
-            case 'account':
-                contentType = 'accounts.account';
-                break;
-            case 'account-type':
-                contentType = 'accounts.accounttype';
-                break;
-            case 'currency':
-                contentType = 'currencies.currency';
-                break;
-            case 'instrument':
-                contentType = 'instruments.instrument';
-                break;
-            case 'instrument-type':
-                contentType = 'instruments.instrumenttype';
-                break;
-            case 'pricing-policy':
-                contentType = 'instruments.pricingpolicy';
-                break;
-            case 'counterparty':
-                contentType = 'counterparties.counterparty';
-                break;
-            case 'counterparty-group':
-                contentType = 'counterparties.counterpartygroup';
-                break;
-            case 'responsible':
-                contentType = 'counterparties.responsible';
-                break;
-            case 'responsible-group':
-                contentType = 'counterparties.responsiblegroup';
-                break;
-            case 'transaction':
-                contentType = 'transactions.transaction';
-                break;
-            case 'transaction-type':
-                contentType = 'transactions.transactiontype';
-                break;
-            case 'price-history':
-                contentType = 'instruments.pricehistory';
-                break;
-            case 'currency-history':
-                contentType = 'currencies.currencyhistory';
-                break;
-            case 'strategy-1':
-                contentType = 'strategies.strategy1';
-                break;
-            case 'strategy-2':
-                contentType = 'strategies.strategy2';
-                break;
-            case 'strategy-3':
-                contentType = 'strategies.strategy3';
-                break;
-            case 'strategy-1-group':
-                contentType = 'strategies.strategy2group';
-                break;
-            case 'strategy-2-group':
-                contentType = 'strategies.strategy2group';
-                break;
-            case 'strategy-3-group':
-                contentType = 'strategies.strategy2group';
-                break;
-            case 'strategy-1-subgroup':
-                contentType = 'strategies.strategy1subgroup';
-                break;
-            case 'strategy-2-subgroup':
-                contentType = 'strategies.strategy2subgroup';
-                break;
-            case 'strategy-3-subgroup':
-                contentType = 'strategies.strategy3subgroup';
-                break;
-        }
-
-        ui.content_type = contentType;
+        ui.content_type = metaContentTypesService.findContentTypeByEntity(entity, 'ui');
 
         return window.fetch(baseUrl + 'ui/edit-layout/',
             {
@@ -217,82 +64,7 @@
 
     var getListLayout = function (entity, name) {
 
-        var contentType;
-
-        switch (entity) {
-            case 'portfolio':
-                contentType = 'portfolios.portfolio';
-                break;
-            case 'account':
-                contentType = 'accounts.account';
-                break;
-            case 'account-type':
-                contentType = 'accounts.accounttype';
-                break;
-            case 'currency':
-                contentType = 'currencies.currency';
-                break;
-            case 'instrument':
-                contentType = 'instruments.instrument';
-                break;
-            case 'instrument-type':
-                contentType = 'instruments.instrumenttype';
-                break;
-            case 'pricing-policy':
-                contentType = 'instruments.pricingpolicy';
-                break;
-            case 'counterparty':
-                contentType = 'counterparties.counterparty';
-                break;
-            case 'counterparty-group':
-                contentType = 'counterparties.counterpartygroup';
-                break;
-            case 'responsible':
-                contentType = 'counterparties.responsible';
-                break;
-            case 'responsible-group':
-                contentType = 'counterparties.responsiblegroup';
-                break;
-            case 'transaction':
-                contentType = 'transactions.transaction';
-                break;
-            case 'transaction-type':
-                contentType = 'transactions.transactiontype';
-                break;
-            case 'price-history':
-                contentType = 'instruments.pricehistory';
-                break;
-            case 'currency-history':
-                contentType = 'currencies.currencyhistory';
-                break;
-            case 'strategy-1':
-                contentType = 'strategies.strategy1';
-                break;
-            case 'strategy-2':
-                contentType = 'strategies.strategy2';
-                break;
-            case 'strategy-3':
-                contentType = 'strategies.strategy3';
-                break;
-            case 'strategy-1-group':
-                contentType = 'strategies.strategy2group';
-                break;
-            case 'strategy-2-group':
-                contentType = 'strategies.strategy2group';
-                break;
-            case 'strategy-3-group':
-                contentType = 'strategies.strategy2group';
-                break;
-            case 'strategy-1-subgroup':
-                contentType = 'strategies.strategy1subgroup';
-                break;
-            case 'strategy-2-subgroup':
-                contentType = 'strategies.strategy2subgroup';
-                break;
-            case 'strategy-3-subgroup':
-                contentType = 'strategies.strategy3subgroup';
-                break;
-        }
+        var contentType = metaContentTypesService.findContentTypeByEntity(entity, 'ui');
 
         return window.fetch(baseUrl + 'ui/list-layout/?content_type=' + contentType,
             {

@@ -147,6 +147,10 @@
         return metaRepository.getEntitiesWithSimpleFields();
     };
 
+    var getFieldsWithTagGrouping = function(){
+        return metaRepository.getFieldsWithTagGrouping();
+    };
+
     module.exports = {
         getMenu: getMenu,
         getBaseAttrs: getBaseAttrs,
@@ -161,7 +165,8 @@
         columnsWidthGroups: columnsWidthGroups,
         getEntityTabs: getEntityTabs,
         getEntitiesWithSimpleFields: getEntitiesWithSimpleFields,
-        checkRestrictedEntityTypesForAM: checkRestrictedEntityTypesForAM
+        checkRestrictedEntityTypesForAM: checkRestrictedEntityTypesForAM,
+        getFieldsWithTagGrouping: getFieldsWithTagGrouping
     }
 
 }());
