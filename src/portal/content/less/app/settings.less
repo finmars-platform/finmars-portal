@@ -52,3 +52,55 @@
 md-input-container:not(.md-input-has-value) input:not(:focus), md-input-container:not(.md-input-has-value) input:not(:focus)::-webkit-datetime-edit-ampm-field, md-input-container:not(.md-input-has-value) input:not(:focus)::-webkit-datetime-edit-day-field, md-input-container:not(.md-input-has-value) input:not(:focus)::-webkit-datetime-edit-hour-field, md-input-container:not(.md-input-has-value) input:not(:focus)::-webkit-datetime-edit-millisecond-field, md-input-container:not(.md-input-has-value) input:not(:focus)::-webkit-datetime-edit-minute-field, md-input-container:not(.md-input-has-value) input:not(:focus)::-webkit-datetime-edit-month-field, md-input-container:not(.md-input-has-value) input:not(:focus)::-webkit-datetime-edit-second-field, md-input-container:not(.md-input-has-value) input:not(:focus)::-webkit-datetime-edit-text, md-input-container:not(.md-input-has-value) input:not(:focus)::-webkit-datetime-edit-week-field, md-input-container:not(.md-input-has-value) input:not(:focus)::-webkit-datetime-edit-year-field {
   color: #000;
 }
+
+.members-groups-content {
+  padding: 0 10px;
+}
+table.members-groups-table {
+  width: 99%;
+}
+thead.members-groups-thead {
+  border-bottom: none;
+  th {
+    padding: 5px 0;
+    text-align: center;
+    color: #ffffff;
+    border-radius: 0;
+    &:not(:last-child) {
+      background-color: #4C334D;
+    }
+  }
+}
+tbody.members-groups-tbody {
+  tr:first-child {
+    td:not(:last-child) {
+      border-top: 1px solid #d0d0d0;
+    }
+  }
+  tr {
+    td {
+      text-align: center;
+      &:not(:last-child) {
+        border-left: 1px solid #d0d0d0;
+        border-right: 1px solid #d0d0d0;
+        border-bottom: 1px solid #d0d0d0;
+        padding: 5px 10px;
+      }
+      &:last-child {
+        width: 5%;
+      }
+    }
+  }
+}
+.members-groups-delete-btn {
+  width: 40px;
+  min-width: 40px;
+  border: 1px solid #d0d0d0;
+}
+.add-member-btn {
+  float: right;
+  text-transform: initial;
+}
+.create-member-dialog-content {
+  padding-top: 20px;
+}

@@ -1,7 +1,7 @@
-<div class="g-column-component g-thead">
+<!-- <div class="g-column-component g-thead">
 	<md-card data-ng-repeat="name in columnsNames">
 		<div class="g-column-content">
-			<!-- <div class="column-left-content">
+			<div class="column-left-content">
 				<div class="sort" data-ng-if="isSortable(column)">
 					<md-button class="column-sort column-btns" data-ng-show="column.options.sort === 'ASC'" aria-label="open settings" data-ng-click="sortHandler(column, 'DESC')">
 						<ng-md-icon icon="keyboard_arrow_down"></ng-md-icon>
@@ -17,7 +17,7 @@
 				<div class="caption">
 					{{name}}
 				</div>
-			</div> -->
+			</div>
 			<div class="column-left-content">
 				<div class="caption">
 					{{name}}
@@ -25,11 +25,16 @@
 			</div>
 		</div>
 	</md-card>
-</div>
-<div data-ng-repeat="row in rows">
-	<div class="g-row">
-		<div data-ng-repeat="column in columns" class="g-cell-wrap">
-			<span data-ng-bind=""></span>
-		</div>
-	</div>
+</div> -->
+<div>
+	<table class="bordered">
+		<thead>
+			<tr>
+				<th>Member name</th>
+				<th>User role</th>
+				<th>Date Joined</th>
+				<th>Assigned to groups</th>
+			</tr>
+		</thead>
+	</table>
 </div>

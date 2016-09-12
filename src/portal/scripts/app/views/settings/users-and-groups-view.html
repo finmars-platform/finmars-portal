@@ -1,0 +1,36 @@
+<!-- <div class="members-groups-content">
+	<md-tabs>
+		<md-tab label="Members">
+			<table class="members-groups-table">
+				<thead class="members-groups-thead">
+					<tr>
+						<th>Member name</th>
+						<th>User role</th>
+						<th>Date Joined</th>
+						<th>Assigned to groups</th>
+						<th></th>
+					</tr>
+				</thead>
+				<tbody class="members-groups-tbody">
+					<tr data-ng-repeat="member in vm.members">
+						<td data-ng-bind="member.username"></td>
+						<td>
+							<span data-ng-if="member.is_admin">Admin</span>
+							<span data-ng-if="!member.is_admin">Member</span>
+						</td>
+						<td data-ng-bind="member.join_date | date: 'yyyy/MM/dd'"></td>
+						<td><span data-ng-repeat="group in member.groups" data-ng-bind="group"></span></td>
+						<td class="members-groups-delete"><md-button class="members-groups-delete-btn"><ng-md-icon icon="close" style="fill:#000000;"></ng-md-icon></md-button></td>
+					</tr>
+				</tbody>
+			</table>
+			<div class="add-member-row" layout="row" layout-align="start center">
+				<div flex="95">
+					<md-button class="add-member-btn" data-ng-click="vm.createMemberDialog($event)">Add member</md-button>
+				</div>
+			</div>
+		</md-tab>
+		<md-tab label="Groups">
+		</md-tab>
+	</md-tabs>
+</div> -->
