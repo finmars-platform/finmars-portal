@@ -535,9 +535,20 @@ md-menu-bar.header-logout-menu {
 
 }
 
+.sidenav-wrapper menu-toggle ul menu-toggle ul li {
+  padding-left: 0;
+}
+
 .sidenav-wrapper {
   menu-toggle ul .sidemenu-btn {
     padding-left: 61px;
+  }
+  menu-toggle ul {
+    ul {
+      .sidemenu-btn {
+        padding-left: 81px;
+      }
+    }
   }
   span.side-nav-title {
     position: relative;
@@ -548,6 +559,7 @@ md-menu-bar.header-logout-menu {
     min-height: 30px;
     font-size: 11px;
     line-height: 39px;
+
   }
   .side-nav-icon {
     fill: #fff;
