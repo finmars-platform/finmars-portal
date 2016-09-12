@@ -103,6 +103,7 @@ app.controller('InfoDialogController', ['$scope', '$mdDialog', 'info', require('
 app.controller('InstrumentSelectDialogController', ['$scope', '$mdDialog', require('./app/controllers/dialogs/instrumentSelectDialogController')]);
 app.controller('ClassifierSelectDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/classifierSelectDialogController')]);
 app.controller('SaveLayoutDialogController', ['$scope', '$mdDialog', require('./app/controllers/dialogs/saveLayoutDialogController')]);
+app.controller('EditThreadDialogController', ['$scope', '$mdDialog', require('./app/controllers/dialogs/editThreadDialogController')]);
 
 app.controller('AuditController', ['$scope', require('./app/controllers/system/auditController')]);
 app.controller('NotificationsController', ['$scope', require('./app/controllers/system/notificationsController')]);

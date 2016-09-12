@@ -47,8 +47,7 @@
         <md-card data-ng-repeat="filter in filters"
                  class="{{filter.options.enabled ? '' : 'f-disabled' }} g-filter-item" layout="row">
             <md-tooltip data-ng-if="sideNavCollapsed" class="" md-direction="top">{{filter.name}}<span data-ng-if="!getFilterType(filter['value_type'])">: {{filter.options.query}}</span></md-tooltip>
-            <md-checkbox ng-model="filter.options.enabled" aria-label="filters" class="md-primary"
-                         ng-change="toggleFilterState(filter)" flex="15">
+            <md-checkbox ng-model="filter.options.enabled" aria-label="filters" class="md-primary" ng-change="toggleFilterState(filter)" flex="15">
             </md-checkbox>
             <md-input-container flex="65">
                 <label data-ng-bind="filter.name"></label>
