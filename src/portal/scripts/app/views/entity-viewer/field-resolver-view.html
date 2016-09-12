@@ -63,22 +63,43 @@
                     </md-input-container>
                 </div>
                 <div data-ng-if="!checkComplexEntityType()">
-                    <md-input-container class="md-block">
-                        <label data-ng-bind="getName()"></label>
-                        <md-select data-ng-change="changeWatcher()" md-on-close="searchTerm = ''"
-                                   data-ng-model="entity[getModelKey()]"
-                                   md-selected-text="bindFormFields()">
-                            <md-select-header>
-                                <input data-ng-model="searchTerm"
-                                       type="search"
-                                       placeholder="Search for a ..."
-                                       class="md-text md-select-search-pattern">
-                            </md-select-header>
-                            <md-option data-ng-repeat="field in fields | filter:searchTerm " value="{{field.id}}">
-                                {{bindListFields(field)}}
-                            </md-option>
-                        </md-select>
-                    </md-input-container>
+                    <div data-ng-if="getModelKey() !== 'price_download_scheme'">
+                        <md-input-container class="md-block">
+                            <label data-ng-bind="getName()"></label>
+                            <md-select data-ng-change="changeWatcher()" md-on-close="searchTerm = ''"
+                                       data-ng-model="entity[getModelKey()]"
+                                       md-selected-text="bindFormFields()">
+                                <md-select-header>
+                                    <input data-ng-model="searchTerm"
+                                           type="search"
+                                           placeholder="Search for a ..."
+                                           class="md-text md-select-search-pattern">
+                                </md-select-header>
+                                <md-option data-ng-repeat="field in fields | filter:searchTerm " value="{{field.id}}">
+                                    {{bindListFields(field)}}
+                                </md-option>
+                            </md-select>
+                        </md-input-container>
+                    </div>
+                    <div data-ng-if="getModelKey() == 'price_download_scheme'">
+                        <md-input-container class="md-block">
+                            <label data-ng-bind="getName()"></label>
+                            <md-select data-ng-change="changeWatcher()" md-on-close="searchTerm = ''"
+                                       data-ng-model="entity[getModelKey()]"
+                                       md-selected-text="bindFormFields()">
+                                <md-select-header>
+                                    <input data-ng-model="searchTerm"
+                                           type="search"
+                                           placeholder="Search for a ..."
+                                           class="md-text md-select-search-pattern">
+                                </md-select-header>
+                                <md-option data-ng-repeat="field in fields | filter:searchTerm " value="{{field.id}}">
+                                    {{field['scheme_name']}}
+                                </md-option>
+                            </md-select>
+                        </md-input-container>
+                    </div>
+
                 </div>
             </div>
         </div>

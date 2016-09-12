@@ -10,6 +10,7 @@
     var accountTypeRepository = require('../repositories/accountTypeRepository');
     var instrumentRepository = require('../repositories/instrumentRepository');
     var instrumentTypeRepository = require('../repositories/instrumentTypeRepository');
+    var importPriceDownloadSchemeRepository = require('../repositories/import/importPriceDownloadSchemeRepository');
     var instrumentClassRepository = require('../repositories/instrument/instrumentClassRepository');
     var pricingPolicyRepository = require('../repositories/pricingPolicyRepository');
     var currencyRepository = require('../repositories/currencyRepository');
@@ -114,6 +115,11 @@
                 case 'pricing_policy':
                     pricingPolicyRepository.getList().then(function (data) {
                         resolve({type: 'id', key: 'pricing_policy', data: data.results});
+                    });
+                    break;
+                case 'price_download_scheme':
+                    importPriceDownloadSchemeRepository.getList().then(function (data) {
+                        resolve({type: 'id', key: 'pricing_download_scheme', data: data.results});
                     });
                     break;
                 case 'instrument_type':
