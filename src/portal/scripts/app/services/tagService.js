@@ -5,8 +5,12 @@
 
     var tagRepository = require('../repositories/tagRepository');
 
-    var getList = function (entity) {
-        return tagRepository.getList(entity);
+    var getList = function (options) {
+        return tagRepository.getList(options);
+    };
+
+    var getListByContentType = function(entity) {
+        return tagRepository.getListByContentType(entity);
     };
 
     var getByKey = function (id) {
@@ -28,6 +32,7 @@
 
     module.exports = {
         getList: getList,
+        getListByContentType: getListByContentType,
         getByKey: getByKey,
         create: create,
         update: update,
