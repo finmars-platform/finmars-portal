@@ -52,7 +52,7 @@
         <div data-ng-if="type === 'multiple-ids'">
             <md-input-container class="md-block">
                 <label data-ng-bind="getName()"></label>
-                <md-select data-ng-change="changeWatcher()" md-on-close="searchTerm = null" data-ng-model="entity[getModelKey()]" multiple="true">
+                <md-select data-ng-change="changeWatcher()" md-on-close="searchTerm = null" data-ng-model="entity[getModelKey()]" md-selected-text="bindMCField()" multiple="true">
                     <md-select-header>
                         <input data-ng-model="searchTerm"
                                type="search"
