@@ -11,7 +11,7 @@
         return uiRepository.getEditLayout(entity);
     };
 
-    var createEditLayout = function(entity, ui) {
+    var createEditLayout = function (entity, ui) {
         return uiRepository.createEditLayout(entity, ui);
     };
 
@@ -21,6 +21,10 @@
 
     var getListLayout = function (entity, name) {
         return uiRepository.getListLayout(entity, name);
+    };
+
+    var createListLayout = function (entity, ui) {
+        return uiRepository.createListLayout(entity, ui);
     };
 
     var updateListLayout = function (id, ui) {
@@ -42,6 +46,7 @@
         createEditLayout: createEditLayout,
         updateEditLayout: updateEditLayout,
         getListLayout: getListLayout,
+        createListLayout: createListLayout,
         updateListLayout: updateListLayout
     }
 

@@ -80,6 +80,25 @@
         })
     };
 
+    var createListLayout = function (entity, ui) {
+
+        ui.content_type = metaContentTypesService.findContentTypeByEntity(entity, 'ui');
+
+        return window.fetch(baseUrl + 'ui/list-layout/',
+            {
+                method: 'POST',
+                credentials: 'include',
+                headers: {
+                    'X-CSRFToken': cookieService.getCookie('csrftoken'),
+                    Accept: 'application/json',
+                    'Content-type': 'application/json'
+                },
+                body: JSON.stringify(ui)
+            }).then(function (data) {
+            return data.json();
+        })
+    };
+
     var updateListLayout = function (id, ui) {
         return window.fetch(baseUrl + 'ui/list-layout/' + id + '/',
             {
@@ -196,6 +215,7 @@
         updateEditLayout: updateEditLayout,
 
         getListLayout: getListLayout,
+        createListLayout: createListLayout,
         updateListLayout: updateListLayout
 
     }

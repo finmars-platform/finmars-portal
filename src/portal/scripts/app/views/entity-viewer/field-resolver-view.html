@@ -11,7 +11,7 @@
                                placeholder="Search for a ..."
                                class="md-text md-select-search-pattern">
                     </md-select-header>
-                    <md-option data-ng-repeat="field in fields | filter:searchTerm " value="{{field.value}}">
+                    <md-option data-ng-repeat="field in fields | orderBy:'-'+field.name | filter:searchTerm " value="{{field.value}}">
                         {{field.name}}
                     </md-option>
                 </md-select>
@@ -46,9 +46,9 @@
                                            placeholder="Search for a ..."
                                            class="md-text md-select-search-pattern">
                                 </md-select-header>
-                                <md-optgroup label="{{group.name}}" data-ng-repeat="group in groups track by $index">
+                                <md-optgroup label="{{group.name}}" data-ng-repeat="group in groups | orderBy:'-'+group.name track by $index">
                                     <md-option
-                                            data-ng-repeat="field in group.fields | filter:searchTerm track by $index"
+                                            data-ng-repeat="field in group.fields | orderBy:'-'+resolveSort(field) | filter:searchTerm track by $index"
                                             ng-value="field.id">
                                         {{bindListFields(field)}}
                                     </md-option>
@@ -75,7 +75,7 @@
                                            placeholder="Search for a ..."
                                            class="md-text md-select-search-pattern">
                                 </md-select-header>
-                                <md-option data-ng-repeat="field in fields | filter:searchTerm " value="{{field.id}}">
+                                <md-option data-ng-repeat="field in fields | orderBy:'-'+resolveSort(field) | filter:searchTerm " value="{{field.id}}">
                                     {{bindListFields(field)}}
                                 </md-option>
                             </md-select>
@@ -93,7 +93,7 @@
                                            placeholder="Search for a ..."
                                            class="md-text md-select-search-pattern">
                                 </md-select-header>
-                                <md-option data-ng-repeat="field in fields | filter:searchTerm " value="{{field.id}}">
+                                <md-option data-ng-repeat="field in fields | orderBy:'-'+field.scheme_name | filter:searchTerm " value="{{field.id}}">
                                     {{field['scheme_name']}}
                                 </md-option>
                             </md-select>
@@ -115,8 +115,8 @@
                                    placeholder="Search for a ..."
                                    class="md-text md-select-search-pattern">
                         </md-select-header>
-                        <md-optgroup label="{{group.name}}" data-ng-repeat="group in groups track by $index">
-                            <md-option data-ng-repeat="field in group.fields | filter:searchTerm " value="{{field.id}}">
+                        <md-optgroup label="{{group.name}}" data-ng-repeat="group in groups | orderBy:'-'+group.name track by $index">
+                            <md-option data-ng-repeat="field in group.fields | orderBy:'-'+resolveSort(field) | filter:searchTerm " value="{{field.id}}">
                                 {{bindListFields(field)}}
                             </md-option>
                         </md-optgroup>
@@ -136,7 +136,7 @@
                                        placeholder="Search for a ..."
                                        class="md-text md-select-search-pattern">
                             </md-select-header>
-                            <md-option data-ng-repeat="field in fields | filter:searchTerm track by $index"
+                            <md-option data-ng-repeat="field in fields | orderBy:'-'+resolveSort(field) | filter:searchTerm track by $index"
                                        value="{{field.id}}">
                                 {{bindListFields(field)}}
                             </md-option>
@@ -155,7 +155,7 @@
                                        placeholder="Search for a ..."
                                        class="md-text md-select-search-pattern">
                             </md-select-header>
-                            <md-option data-ng-repeat="field in fields | filter:searchTerm track by $index"
+                            <md-option data-ng-repeat="field in fields | orderBy:'-'+field.name | filter:searchTerm track by $index"
                                        value="{{field.key}}">
                                 {{field.name}}
                             </md-option>
