@@ -69,11 +69,14 @@
                     if (attribute['value_float'] !== null) {
                         return attribute['value_float'];
                     } else {
-                        return attribute['value_string'];
+                        if(attribute['value_string'] !== null && attribute['value_string'] !== '') {
+                            return attribute['value_string'];
+                        } else {
+                            return null;
+                        }
                     }
                 }
             }
-
         }
 
         function returnValueType(attribute) {
@@ -90,6 +93,13 @@
                     }
                 }
             }
+        }
+
+        function checkIfEmptyString(item) {
+            if(item == '') {
+                return null
+            }
+            return item;
         }
 
         function fingGroupsForResult(group, item, attribute) {
@@ -115,15 +125,15 @@
                         //console.log('groupsForResult', groupsForResult);
                         for (n = 0; n < groupsForResult.length; n = n + 1) {
                             //console.log('groupsForResult[n]', groupsForResult[n]);
-                            if (groupsForResult[n].comparePattern.indexOf('&[' + keywords[k].key + '}-{' + item[keywords[k].key] + ']') !== -1) {
+                            if (groupsForResult[n].comparePattern.indexOf('&[' + keywords[k].key + '}-{' + checkIfEmptyString(item[keywords[k].key]) + ']') !== -1) {
                                 nExist = true;
                             }
                         }
                         if (!nExist) {
                             groupsForResult.push({
-                                comparePattern: '&[' + keywords[k].key + '}-{' + item[keywords[k].key] + ']',
+                                comparePattern: '&[' + keywords[k].key + '}-{' + checkIfEmptyString(item[keywords[k].key]) + ']',
                                 key: keywords[k].key.replace(' ', '_'),
-                                value: item[keywords[k].key],
+                                value: checkIfEmptyString(item[keywords[k].key]),
                                 value_type: keywords[k].value_type
                             });
                         }
@@ -146,8 +156,8 @@
                         fingGroupsForResult(group, item);
                         var keys = Object.keys(items[i]);
                         for (a = 0; a < keys.length; a = a + 1) {
-                            if (groupName.indexOf('&[' + group.key + '}-{' + item[group.key] + ']') === -1) {
-                                groupName = groupName + '&[' + group.key + '}-{' + item[group.key] + ']';
+                            if (groupName.indexOf('&[' + checkIfEmptyString(group.key) + '}-{' + checkIfEmptyString(item[group.key]) + ']') === -1) {
+                                groupName = groupName + '&[' + checkIfEmptyString(group.key) + '}-{' + checkIfEmptyString(item[group.key]) + ']';
                             }
                         }
                     } else {
@@ -156,8 +166,8 @@
                             for (a = 0; a < item.attributes.length; a = a + 1) {
                                 fingGroupsForResult(group, item, item['attributes'][a]);
                                 if (item[group.name] !== null) {
-                                    if (groupName.indexOf('&[' + group.name + '}-{' + item[group.name] + ']') === -1) {
-                                        groupName = groupName + '&[' + group.name + '}-{' + item[group.name] + ']';
+                                    if (groupName.indexOf('&[' + checkIfEmptyString(group.name) + '}-{' + checkIfEmptyString(item[group.name]) + ']') === -1) {
+                                        groupName = groupName + '&[' + checkIfEmptyString(group.name) + '}-{' + checkIfEmptyString(item[group.name]) + ']';
                                     }
                                 }
                             }

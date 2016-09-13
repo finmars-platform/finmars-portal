@@ -102,6 +102,7 @@
                             //console.log('scope.items[i].groups', scope.items[i].groups);
                             if (scope.items[i].hasOwnProperty('groups')) {
                                 for (g = 0; g < scope.items[i].groups.length; g = g + 1) {
+                                    //console.log("scope.items[i].groups[g]['value_type']", scope.items[i].groups[g]['value_type']);
                                     if (scope.items[i].groups[g]['value_type'] === 'classifier') {
                                         promisesClassifiers.push(entityClassifierSingletonService.getByKey(scope.entityType, scope.items[i].groups[g].value))
                                     }
@@ -116,11 +117,11 @@
                             }
                         }
 
-                        console.log('promisesClassifiers', promisesClassifiers);
+                        //console.log('promisesClassifiers', promisesClassifiers);
 
                         Promise.all(promisesClassifiers).then(function (data) {
 
-                            console.log('test----------------------------------------', data);
+                            //console.log('test----------------------------------------', data);
 
                             var i;
                             for (i = 0; i < data.length; i = i + 1) {
@@ -130,7 +131,7 @@
                                 classifiersInstances[data[i].key]['id_' + data[i].data.id] = data[i].data
                             }
 
-                            console.log('promisesEntityFields', promisesEntityFields);
+                            //console.log('promisesEntityFields', promisesEntityFields);
 
 
                             Promise.all(promisesEntityFields).then(function (data) {
@@ -265,7 +266,7 @@
 
                 scope.bindGroupValue = function (group) {
 
-                    //console.log('group', group);
+                    console.log('group', group);
 
                     if (group.value_type === 'classifier') {
                         if (scope.readyStatus.groupsReady) {
