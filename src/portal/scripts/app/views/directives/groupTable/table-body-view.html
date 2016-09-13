@@ -26,7 +26,7 @@
                             </div>
                         </md-card>
                         <div data-ng-repeat="group in item.groups track by $index" class="g-group">
-                            {{bindGroupValue(group)}}
+                            <span data-ng-bind="bindGroupValue(group)"></span>
                         </div>
                     </div>
                     <div data-ng-repeat="groupedItem in item.items" contextmenu-item="groupedItem"
