@@ -53,11 +53,11 @@
                 entity: 'instrument-type',
                 key: "instruments.instrumenttype"
             },
-            {
-                name: "Instrument Type",
-                entity: 'instrument-types',
-                key: "instruments.instrumenttype"
-            },
+            //{
+            //    name: "Instrument Type",
+            //    entity: 'instrument-types',
+            //    key: "instruments.instrumenttype"
+            //},
             {
                 name: "Transaction Type",
                 entity: 'transaction-type',
