@@ -155,7 +155,7 @@
                                        placeholder="Search for a ..."
                                        class="md-text md-select-search-pattern">
                             </md-select-header>
-                            <md-option data-ng-repeat="field in fields | orderBy:'-'+field.name | filter:{name: searchTerm} track by field.key"
+                            <md-option data-ng-repeat="field in fields | orderBy:'-'+field.name | filter:{name: searchTerm}"
                                        ng-value="field.key">
                                 {{field.name}}
                             </md-option>
