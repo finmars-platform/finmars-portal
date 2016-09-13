@@ -113,12 +113,15 @@
                 };
 
                 scope.removeFilter = function (filter) {
-
+                    console.log('filter to remove is ', filter);
                     scope.filters = scope.filters.map(function (item) {
-                        if (item.id === filter.id || item.name === filter.name) {
-                            return undefined
+                        // if (item.id === filter.id || item.name === filter.name) {
+                        if (item.name === filter.name) {
+                            // return undefined;
+                            item = undefined;
                         }
-                        return item
+                        console.log('filter in filters list', item);
+                        return item;
                     }).filter(function (item) {
                         return !!item;
                     });
