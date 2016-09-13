@@ -8,6 +8,7 @@
 	var logService = require('../../../../core/services/logService');
 	var threadService = require('../services/threadService');
 	var threadGroupService = require('../services/threadGroupService');
+	var tagService = require('../../../../portal/scripts/app/services/tagService');
 
 	module.exports = function($scope, $stateParams, $mdDialog) {
 
@@ -58,8 +59,26 @@
 			});
 		};
 
+		vm.editThreadDialog = function (ev) {
+			$mdDialog.show({
+				controller: 'EditThreadDialogController as vm',
+				templateUrl: 'views/dialogs/edit-thread-dialog-view.html',
+				targetEvent: ev
+			});
+		}
+
+		vm.tags = [];
+		vm.getTagsList = function () {
+			tagService.getList().then(function (data) {
+				vm.tags = data.results;
+				console.log('forum tags is', vm.tags);
+				$sope.$apply();
+			});
+		}
+
 		vm.getList();
 		vm.getThreadGroupName();
+		vm.getTagsList();
 
 	}
 
