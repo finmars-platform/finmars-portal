@@ -65,7 +65,7 @@
                                        placeholder="Search for a ..."
                                        class="md-text md-select-search-pattern">
                             </md-select-header>
-                            <md-option data-ng-repeat="field in fields[filter.key] | orderBy:'-'+field.name | filter:searchTerm track by $index"
+                            <md-option data-ng-repeat="field in fields[filter.key] | orderBy:'-'+field.name | filter:{ name:searchTerm} track by $index"
                                        value="{{field.id}}">
                                 {{field.name}}
                             </md-option>

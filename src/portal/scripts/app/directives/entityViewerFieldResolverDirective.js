@@ -73,15 +73,17 @@
                     });
                 });
 
-                scope.resolveSort = function(field){
-                    if(field.hasOwnProperty('name')){
-                        return field.name
-                    }
-                    if(field.hasOwnProperty('user_code')){
-                        return field.user_code
-                    }
-                    if(field.hasOwnProperty('public_name')){
-                        return field.public_name
+                scope.resolveSort = function (field) {
+                    if (field) {
+                        if (field.hasOwnProperty('name')) {
+                            return field.name
+                        }
+                        if (field.hasOwnProperty('user_code')) {
+                            return field.user_code
+                        }
+                        if (field.hasOwnProperty('public_name')) {
+                            return field.public_name
+                        }
                     }
                 };
 
@@ -155,7 +157,7 @@
 
                 scope.bindMCField = function (model) {
                     if (scope.entity[scope.getModelKey()] && scope.entity[scope.getModelKey()].length > 0) {
-                       return '[' + scope.entity[scope.getModelKey()].length + '] selected';
+                        return '[' + scope.entity[scope.getModelKey()].length + '] selected';
                     }
                     else {
                         return scope.getName();
