@@ -9,6 +9,7 @@
     var pricingPolicyRepository = require('../repositories/pricingPolicyRepository');
     var currencyRepository = require('../repositories/currencyRepository');
     var accountRepository = require('../repositories/accountRepository');
+    var accountTypeRepository = require('../repositories/accountTypeRepository');
     var portfolioRepository = require('../repositories/portfolioRepository');
     var counterpartyRepository = require('../repositories/counterpartyRepository');
     var responsibleRepository = require('../repositories/responsibleRepository');
@@ -98,7 +99,7 @@
                             });
                             break;
                         case 'type':
-                            return accountRepository.getTypeList().then(function (data) {
+                            return accountTypeRepository.getList().then(function (data) {
                                 entities[entity] = data.results;
                                 resolve({key: entity, data: entities[entity]});
                             });
@@ -259,7 +260,7 @@
                         });
                         break;
                     case 'type':
-                        return accountRepository.getByKey(id).then(function (data) {
+                        return accountTypeRepository.getByKey(id).then(function (data) {
                             entitiesGetByKey[entity] = data;
                             resolve({key: entity, data: entitiesGetByKey[entity]});
                         });
