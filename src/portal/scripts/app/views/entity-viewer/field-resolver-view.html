@@ -11,7 +11,7 @@
                                placeholder="Search for a ..."
                                class="md-text md-select-search-pattern">
                     </md-select-header>
-                    <md-option data-ng-repeat="field in fields | orderBy:'-'+field.name | filter:searchTerm " value="{{field.value}}">
+                    <md-option data-ng-repeat="field in fields | orderBy:'-'+field.name | filter:{name: searchTerm}" ng-value="field.value">
                         {{field.name}}
                     </md-option>
                 </md-select>
@@ -26,7 +26,7 @@
                                md-container-class="h-instrument-select"
                                data-instrument-modal-resolver
                                md-selected-text="bindFormFields()">
-                        <md-option data-ng-repeat="field in fields | filter:searchTerm" value="{{field.id}}">
+                        <md-option data-ng-repeat="field in fields | filter:{user_code: searchTerm} track by field.id" ng-value="field.id">
                             {{bindListFields(field)}}
                         </md-option>
                     </md-select>
@@ -46,9 +46,9 @@
                                            placeholder="Search for a ..."
                                            class="md-text md-select-search-pattern">
                                 </md-select-header>
-                                <md-optgroup label="{{group.name}}" data-ng-repeat="group in groups | orderBy:'-'+group.name track by $index">
+                                <md-optgroup label="{{group.name}}" data-ng-repeat="group in groups | orderBy:'-'+group.name track by group.id">
                                     <md-option
-                                            data-ng-repeat="field in group.fields | orderBy:'-'+resolveSort(field) | filter:searchTerm track by $index"
+                                            data-ng-repeat="field in group.fields | orderBy:'-'+resolveSort(field) | filter:{name: searchTerm} track by $index"
                                             ng-value="field.id">
                                         {{bindListFields(field)}}
                                     </md-option>
@@ -75,7 +75,7 @@
                                            placeholder="Search for a ..."
                                            class="md-text md-select-search-pattern">
                                 </md-select-header>
-                                <md-option data-ng-repeat="field in fields | orderBy:'-'+resolveSort(field) | filter:searchTerm " value="{{field.id}}">
+                                <md-option data-ng-repeat="field in fields | orderBy:'-'+resolveSort(field) | filter:{name: searchTerm} track by field.id " ng-value="field.id">
                                     {{bindListFields(field)}}
                                 </md-option>
                             </md-select>
@@ -93,7 +93,7 @@
                                            placeholder="Search for a ..."
                                            class="md-text md-select-search-pattern">
                                 </md-select-header>
-                                <md-option data-ng-repeat="field in fields | orderBy:'-'+field.scheme_name | filter:searchTerm " value="{{field.id}}">
+                                <md-option data-ng-repeat="field in fields | orderBy:'-'+field.scheme_name | filter:{scheme_name:searchTerm} track by field.id " ng-value="field.id">
                                     {{field['scheme_name']}}
                                 </md-option>
                             </md-select>
@@ -115,8 +115,8 @@
                                    placeholder="Search for a ..."
                                    class="md-text md-select-search-pattern">
                         </md-select-header>
-                        <md-optgroup label="{{group.name}}" data-ng-repeat="group in groups | orderBy:'-'+group.name track by $index">
-                            <md-option data-ng-repeat="field in group.fields | orderBy:'-'+resolveSort(field) | filter:searchTerm " value="{{field.id}}">
+                        <md-optgroup label="{{group.name}}" data-ng-repeat="group in groups | orderBy:'-'+group.name track by group.id">
+                            <md-option data-ng-repeat="field in group.fields | orderBy:'-'+resolveSort(field) | filter:{name: searchTerm}" ng-value="field.id">
                                 {{bindListFields(field)}}
                             </md-option>
                         </md-optgroup>
@@ -127,7 +127,7 @@
                 <div data-ng-if="getModelKey() !== 'content_types'">
                     <md-input-container class="md-block">
                         <label data-ng-bind="getName()"></label>
-                        <md-select data-ng-change="changeWatcher()" md-on-close="searchTerm = '"
+                        <md-select data-ng-change="changeWatcher()" md-on-close="searchTerm = ''"
                                    data-ng-model="entity[getModelKey()]" md-selected-text="bindMCField()"
                                    multiple="true">
                             <md-select-header>
@@ -136,8 +136,8 @@
                                        placeholder="Search for a ..."
                                        class="md-text md-select-search-pattern">
                             </md-select-header>
-                            <md-option data-ng-repeat="field in fields | orderBy:'-'+resolveSort(field) | filter:searchTerm track by $index"
-                                       value="{{field.id}}">
+                            <md-option data-ng-repeat="field in fields | orderBy:'-'+resolveSort(field) | filter:{name: searchTerm} track by field.id"
+                                       ng-value="field.id">
                                 {{bindListFields(field)}}
                             </md-option>
                         </md-select>
@@ -146,7 +146,7 @@
                 <div data-ng-if="getModelKey() === 'content_types'">
                     <md-input-container class="md-block">
                         <label data-ng-bind="getName()"></label>
-                        <md-select data-ng-change="changeWatcher()" md-on-close="searchTerm = '"
+                        <md-select data-ng-change="changeWatcher()" md-on-close="searchTerm = ''"
                                    data-ng-model="entity[getModelKey()]" md-selected-text="bindMCField()"
                                    multiple="true">
                             <md-select-header>
@@ -155,8 +155,8 @@
                                        placeholder="Search for a ..."
                                        class="md-text md-select-search-pattern">
                             </md-select-header>
-                            <md-option data-ng-repeat="field in fields | orderBy:'-'+field.name | filter:searchTerm track by $index"
-                                       value="{{field.key}}">
+                            <md-option data-ng-repeat="field in fields | orderBy:'-'+field.name | filter:{name: searchTerm} track by field.key"
+                                       ng-value="field.key">
                                 {{field.name}}
                             </md-option>
                         </md-select>
