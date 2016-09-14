@@ -24,6 +24,10 @@
                     event.preventDefault();
                     event.stopPropagation();
 
+                    setTimeout(function () {
+                        $('.md-select-backdrop')[0].dispatchEvent(new Event('click'));
+                    }, 400);
+
                     $mdDialog.show({
                         controller: 'ClassifierSelectDialogController as vm',
                         templateUrl: 'views/classifier-select-dialog-view.html',

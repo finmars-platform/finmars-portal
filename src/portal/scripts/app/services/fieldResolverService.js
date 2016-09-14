@@ -86,7 +86,7 @@
                 }
 
                 if (fieldKey == 'tags') {
-                    tagRepository.getList(options.entityType).then(function (data) {
+                    tagRepository.getListByContentType(options.entityType).then(function (data) {
                         resolve({type: 'multiple-ids', key: 'tags', data: data.results});
                     });
                 }
@@ -254,7 +254,11 @@
                     });
                     break;
                 case 'content_types':
-                    resolve({type: 'multiple-ids', key: 'content_types', data: metaContentTypesRepository.getListForTags()});
+                    resolve({
+                        type: 'multiple-ids',
+                        key: 'content_types',
+                        data: metaContentTypesRepository.getListForTags()
+                    });
                     break;
                 case 'responsibles':
                     responsibleRepository.getList().then(function (data) {

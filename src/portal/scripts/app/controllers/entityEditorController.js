@@ -83,6 +83,7 @@
         var originatorEv;
 
         usersService.getMe().then(function (data) {
+            //console.log('data user', data);
             vm.user = data;
             vm.readyStatus.me = true;
             $scope.$apply();
@@ -90,6 +91,9 @@
 
         vm.getMemberList = function () {
             usersService.getMemberList().then(function (data) {
+
+                //console.log('data MEMBERS', data);
+
                 vm.members = data.results;
 
                 vm.members.forEach(function (member) {
@@ -123,16 +127,31 @@
             if (metaPermissionsService.getEntitiesWithDisabledPermissions().indexOf(vm.entityType) !== -1) {
                 return false;
             }
+            //console.log('matbe re?');
             if (vm.entityId) {
                 var i;
-                for (i = 0; i < vm.members.length; i = i + 1) {
-                    if (vm.user.id === vm.members[i].id) {
-                        if (vm.members[i].objectPermissions && vm.members[i].objectPermissions.manage == true) {
-                            return true;
-                        }
-                    }
+                //console.log('user?', vm.user);
+                //console.log('members?', vm.members);
+                //console.log('entity?', vm.entityId);
+
+                var haveAccess = false;
+
+                if (vm.entity.granted_permissions.indexOf("manage_" + vm.entityType) !== -1){
+                    haveAccess = true;
                 }
-                return false;
+
+                //for (i = 0; i < vm.members.length; i = i + 1) {
+                //    if (vm.user.id == vm.members[i].id) {
+                //        console.log('vm.members[i]', vm.members[i]);
+                //        if (vm.members[i].objectPermissions && vm.members[i].objectPermissions.manage == true) {
+                //            haveAccess = true;
+                //        }
+                //    }
+                //}
+
+                    //console.log('have access', haveAccess);
+
+                return haveAccess;
             } else {
                 return true;
             }
@@ -346,16 +365,16 @@
             function clearUnusedAttributeValues() {
                 var i;
                 for (i = 0; i < vm.entity.attributes.length; i = i + 1) {
-                    if(vm.entity.attributes[i].classifier == null) {
+                    if (vm.entity.attributes[i].classifier == null) {
                         delete vm.entity.attributes[i].classifier;
                     }
-                    if(vm.entity.attributes[i].value_date == null) {
+                    if (vm.entity.attributes[i].value_date == null) {
                         delete vm.entity.attributes[i].value_date;
                     }
-                    if(vm.entity.attributes[i].value_float == null) {
+                    if (vm.entity.attributes[i].value_float == null) {
                         delete vm.entity.attributes[i].value_float;
                     }
-                    if(vm.entity.attributes[i].value_string == null) {
+                    if (vm.entity.attributes[i].value_string == null) {
                         delete vm.entity.attributes[i].value_string;
                     }
                 }

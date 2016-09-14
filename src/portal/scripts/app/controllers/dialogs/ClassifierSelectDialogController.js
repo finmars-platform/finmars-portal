@@ -18,6 +18,8 @@
 
             attributeTypeService.getByKey(data.entityType, data.classifier.id).then(function (data) {
 
+                console.log('DATA', data);
+
                 function setText(item) {
                     item.text = item.name;
                     item.type = 'default';
@@ -27,6 +29,8 @@
                     item.children = item.children.map(setText);
                     return item
                 }
+
+                vm.tree = data.classifiers;
 
                 var tree = data.classifiers.map(setText);
 
@@ -42,6 +46,11 @@
                                 'children': tree
                             }
                         ]
+                    },
+                    "dnd" : {
+                        "is_draggable": function (node) {
+                            return false
+                        }
                     },
                     "types": {
                         "#": {

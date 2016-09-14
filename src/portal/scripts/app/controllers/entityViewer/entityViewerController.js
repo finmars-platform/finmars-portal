@@ -318,7 +318,7 @@
 
             //console.log('options', options);
             //console.log('entityViewerController parent scope ', $scope.$parent);
-            console.log('ENTITY VIEWER vm.grouping', vm.grouping);
+            //console.log('ENTITY VIEWER vm.grouping', vm.grouping);
             $scope.$parent.vm.getList(options).then(function (data) {
                 entityViewerHelperService.transformItems(data, vm.attrs).then(function (data) {
 

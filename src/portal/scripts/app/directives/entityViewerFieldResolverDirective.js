@@ -31,29 +31,34 @@
                 logService.property('field entity', scope.entity);
                 logService.property('field options', scope.options);
 
-                if (metaService.getFieldsWithTagGrouping().indexOf(scope.item.key) !== -1) {
+                scope.getFieldsGrouped = function () {
 
-                    var entityType = scope.item.key.replace('_', '-'); // refactor this
+                    if (metaService.getFieldsWithTagGrouping().indexOf(scope.item.key) !== -1) {
 
-                    console.log('ENTITYTYPE------------------------------------------', entityType);
+                        var entityType = scope.item.key.replace('_', '-'); // refactor this
 
-                    tagService.getListByContentType(entityType).then(function (data) { //refactor entityType getter
-                        scope.tags = data.results;
+                        console.log('ENTITYTYPE------------------------------------------', entityType);
 
-                        scope.groups = bindFieldsHelper.groupFieldsByTagsWithDuplicates(scope.fields, scope.tags);
+                        tagService.getListByContentType(entityType).then(function (data) { //refactor entityType getter
+                            scope.tags = data.results;
 
-                        scope.readyStatus.tags = true;
+                            scope.groups = bindFieldsHelper.groupFieldsByTagsWithDuplicates(scope.fields, scope.tags);
 
-                        scope.$apply(function () {
+                            console.log('test?');
 
-                            setTimeout(function () {
-                                $(elem).find('.md-select-search-pattern').on('keydown', function (ev) {
-                                    ev.stopPropagation();
-                                });
-                            }, 100);
+                            scope.readyStatus.tags = true;
+
+                            scope.$apply(function () {
+
+                                setTimeout(function () {
+                                    $(elem).find('.md-select-search-pattern').on('keydown', function (ev) {
+                                        ev.stopPropagation();
+                                    });
+                                }, 100);
+                            })
                         })
-                    })
-                }
+                    }
+                };
 
                 scope.searchTerm = '';
 
@@ -62,6 +67,8 @@
                     scope.type = res.type;
                     scope.fields = res.data;
                     scope.readyStatus.content = true;
+
+                    scope.getFieldsGrouped();
 
                     scope.$apply(function () {
 

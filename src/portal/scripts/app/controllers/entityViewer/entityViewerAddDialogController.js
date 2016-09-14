@@ -40,6 +40,11 @@
             $mdDialog.hide();
         };
 
+        vm.manageAttrs = function (ev) {
+            $state.go('app.attributesManager', {entityType: vm.entityType});
+            $mdDialog.hide();
+        };
+
         vm.save = function ($event) {
             vm.saveCallback().then(function (options) {
 

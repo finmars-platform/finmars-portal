@@ -91,6 +91,11 @@
                     "key": "public_name",
                     "name": "Public name",
                     "value_type": 10
+                },
+                {
+                    "key": "tags",
+                    "name": "Tags",
+                    "value_type": "mc_field"
                 }
             ],
             "tag": [
@@ -560,6 +565,11 @@
                     "key": "fx_rate",
                     "name": "Fx rate",
                     "value_type": "float"
+                },
+                {
+                    "key": "pricing_policy",
+                    "name": "Pricing policy",
+                    "value_type": "field"
                 }
                 //{
                 //    "key": "fx_rate_expr",
