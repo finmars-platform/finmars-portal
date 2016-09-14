@@ -22,7 +22,7 @@
 
     var setGroups = function (items, groups, entityType) {
 
-        console.log('GROUPING SERVICE groups', groups);
+        //console.log('GROUPING SERVICE groups', groups);
 
         var itemsGrouped = [];
         var itemsGroupedArray = [];
@@ -60,16 +60,16 @@
         }
 
         function returnValue(attribute) {
-            if (attribute['classifier'] !== null) {
+            if (attribute['attribute_type_object'] == 30) {
                 return attribute['classifier']
             } else {
-                if (attribute['value_date'] !== null) {
+                if (attribute['attribute_type_object'] == 40) {
                     return attribute['value_date'];
                 } else {
-                    if (attribute['value_float'] !== null) {
+                    if (attribute['attribute_type_object'] == 20) {
                         return attribute['value_float'];
                     } else {
-                        if(attribute['value_string'] !== null && attribute['value_string'] !== '') {
+                        if(attribute['attribute_type_object'] == 10 && attribute['value_string'] !== '') {
                             return attribute['value_string'];
                         } else {
                             return null;
@@ -80,16 +80,18 @@
         }
 
         function returnValueType(attribute) {
-            if (attribute['classifier'] !== null) {
+            if (attribute['attribute_type_object'] == 30) {
                 return 'classifier'
             } else {
-                if (attribute['value_date'] !== null) {
+                if (attribute['attribute_type_object'] == 40) {
                     return 'value_date';
                 } else {
-                    if (attribute['value_float'] !== null) {
+                    if (attribute['attribute_type_object'] == 20) {
                         return 'value_float';
                     } else {
-                        return 'value_string';
+                        if(attribute['attribute_type_object'] == 10) {
+                            return 'value_string';
+                        }
                     }
                 }
             }
@@ -191,7 +193,7 @@
 
             //console.log('------------------------');
 
-            console.log('Items grouped', itemsGroupedArray);
+            //console.log('Items grouped', itemsGroupedArray);
             return itemsGroupedArray;
         } else {
             //console.log('items', items);
