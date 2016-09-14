@@ -20,6 +20,8 @@
                     entitiesByKey[entity] = data;
                     resolve({key: entity, data: entitiesByKey[entity]});
                 })
+            } else {
+                resolve({key: entity, data: entitiesByKey[entity]});
             }
         })
     };

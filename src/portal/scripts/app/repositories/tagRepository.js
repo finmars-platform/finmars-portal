@@ -29,6 +29,7 @@
 
     var getListByContentType = function (entity) {
         var contentType = metaContentTypesService.findContentTypeByEntity(entity, 'tag');
+        console.log('content type is', contentType);
         return window.fetch(baseUrl + 'tags/tag/?content_type=' + contentType,
             {
                 method: 'GET',

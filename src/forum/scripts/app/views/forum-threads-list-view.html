@@ -11,16 +11,16 @@
 			</div>
 		</div>
 		<div data-ng-if="vm.readyStatus.content">
-				<md-card class="thread-forum-list-item" class="md-3-line" ng-repeat="item in vm.threads"
-				>
-					<a data-ui-sref="app.forum.thread({groupId: vm.threadGroupId, threadId: item.id})">
-						<span data-ng-bind="item.subject"></span>
-						<!-- <md-button class="forum-edit-thread" data-ng-click="">
-							<ng-md-icon icon="mode_edit" style="fill:#000000;"></ng-md-icon>
-						</md-button> -->
-					</a>
-					<md-divider></md-divider>
-				</md-card>
+			<md-card class="thread-forum-list-item" class="md-3-line" ng-repeat="item in vm.threads"
+			>
+				<a data-ui-sref="app.forum.thread({groupId: vm.threadGroupId, threadId: item.id})">
+					<span data-ng-bind="item.subject"></span>
+				</a>
+				<md-divider></md-divider>
+				<md-button class="forum-edit-thread" data-ng-click="vm.editThreadDialog('$event', item.id, item.subject)">
+					<ng-md-icon icon="mode_edit" style="fill:#000000;"></ng-md-icon>
+				</md-button>
+			</md-card>
 		</div>
 		<div data-ng-if="!vm.readyStatus.content">
 			<div layout="row" layout-sm="column" layout-align="space-around" class="m-large">

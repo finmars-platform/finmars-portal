@@ -143,7 +143,8 @@
         height: 21px;
         background: #fff;
         position: absolute;
-        right: -10px;
+        // right: -10px;
+        right: -1px;
         top: 2px;
         cursor: col-resize;
       }
@@ -335,8 +336,10 @@
     z-index: 10000;
     //z-index: 60;
     position: relative;
-    color: #999199;
-    border: 1px dotted #999199;
+    // color: #999199;
+    color: #575757;
+    background-color: #DCDCDC;
+    // border: 1px dotted #999199;
     .gu-transit {
       display: none;
     }
@@ -530,11 +533,16 @@
     display: block;
     clear: both;
   }
+  &:hover .column-name-tooltip-wrap {
+    transition: opacity 0.4s cubic-bezier(.25, .8, .25, 1) 0s;
+    opacity: 1;
+  }
 }
 
 .g-cell.g-column {
   float: left;
   display: block;
+  position: relative;
   margin: 3px 0 5px 0;
   overflow: visible;
   background-color: transparent;
@@ -604,7 +612,7 @@
       width: 16px;
     }
   }
-
+  
   // **********************************
 
   // .caption {
