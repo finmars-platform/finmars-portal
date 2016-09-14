@@ -13,6 +13,7 @@
             restrict: 'AE',
             scope: {
                 filters: '=',
+                entityType: '=',
                 externalCallback: '&'
             },
             templateUrl: 'views/directives/groupTable/sidebar-filter-view.html',
@@ -55,8 +56,13 @@
                         //console.log("filter's item ", item);
                         if (!scope.fields.hasOwnProperty(item.key)) {
                             if (item['value_type'] == "mc_field" || item['value_type'] == "field") {
-                                promises.push(fieldResolverService.getFields(item.key));
+                                if (item.key == 'tags') {
+                                    promises.push(fieldResolverService.getFields(item.key, {entityType: scope.entityType}));
+                                } else {
+                                    promises.push(fieldResolverService.getFields(item.key));
+                                }
                             }
+
                             //console.log("filter's promises ", promises);
                         }
                     });

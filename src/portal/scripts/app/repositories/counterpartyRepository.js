@@ -34,14 +34,7 @@
                     'Content-type': 'application/json'
                 }
             }).then(function (data) {
-            return new Promise(function (resolve, reject) {
-                data.json().then(function (result) {
-                    resolve({
-                        response: result,
-                        status: data.status
-                    })
-                })
-            });
+            return data.json();
         })
     };
 
@@ -80,7 +73,14 @@
                 },
                 body: JSON.stringify(counterparty)
             }).then(function (data) {
-            return data.json();
+            return new Promise(function (resolve, reject) {
+                data.json().then(function (result) {
+                    resolve({
+                        response: result,
+                        status: data.status
+                    })
+                })
+            });
         })
     };
 

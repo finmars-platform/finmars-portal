@@ -9,9 +9,12 @@
     var pricingPolicyRepository = require('../repositories/pricingPolicyRepository');
     var currencyRepository = require('../repositories/currencyRepository');
     var accountRepository = require('../repositories/accountRepository');
+    var accountTypeRepository = require('../repositories/accountTypeRepository');
     var portfolioRepository = require('../repositories/portfolioRepository');
     var counterpartyRepository = require('../repositories/counterpartyRepository');
+    var counterpartyGroupRepository = require('../repositories/counterpartyGroupRepository');
     var responsibleRepository = require('../repositories/responsibleRepository');
+    var responsibleGroupRepository = require('../repositories/responsibleGroupRepository');
     var instrumentTypeRepository = require('../repositories/instrumentTypeRepository');
     var instrumentDailyPricingModelRepository = require('../repositories/instrument/instrumentDailyPricingModelRepository');
     var instrumentPaymentSizeDetailRepository = require('../repositories/instrument/instrumentPaymentSizeDetailRepository');
@@ -48,61 +51,79 @@
                         });
                     }
                 } else {
-                    switch (entity) {
-                        case 'instrument':
-                            return instrumentRepository.getList().then(function (data) {
+                    if (options.entityType.indexOf('responsible') !== -1) {
+                        if (entity === 'group') {
+                            return responsibleGroupRepository.getList().then(function (data) {
                                 entities[entity] = data.results;
                                 resolve({key: entity, data: entities[entity]});
                             });
-                            break;
-                        case 'pricing_policy':
-                            return pricingPolicyRepository.getList().then(function (data) {
-                                entities[entity] = data.results;
-                                resolve({key: entity, data: entities[entity]});
-                            });
-                            break;
-                        case 'currency':
-                            return currencyRepository.getList().then(function (data) {
-                                entities[entity] = data.results;
-                                resolve({key: entity, data: entities[entity]});
-                            });
-                            break;
-                        case 'pricing_currency':
-                            return currencyRepository.getList().then(function (data) {
-                                entities[entity] = data.results;
-                                resolve({key: entity, data: entities[entity]});
-                            });
-                            break;
-                        case 'accrued_currency':
-                            return currencyRepository.getList().then(function (data) {
-                                entities[entity] = data.results;
-                                resolve({key: entity, data: entities[entity]});
-                            });
-                            break;
-                        case 'instrument_type':
-                            return instrumentTypeRepository.getList().then(function (data) {
-                                entities[entity] = data.results;
-                                resolve({key: entity, data: entities[entity]});
-                            });
-                            break;
-                        case 'daily_pricing_model':
-                            return instrumentDailyPricingModelRepository.getList().then(function (data) {
-                                entities[entity] = data.results;
-                                resolve({key: entity, data: entities[entity]});
-                            });
-                            break;
-                        case 'transaction_types':
-                            return transactionTypeRepository.getList().then(function (data) {
-                                entities[entity] = data.results;
-                                resolve({key: entity, data: entities[entity]});
-                            });
-                            break;
-                        case 'type':
-                            return accountRepository.getTypeList().then(function (data) {
-                                entities[entity] = data.results;
-                                resolve({key: entity, data: entities[entity]});
-                            });
-                            break;
+                        }
+                    } else {
+                        if (options.entityType.indexOf('counterparty') !== -1) {
+                            if (entity === 'group') {
+                                return counterpartyGroupRepository.getList().then(function (data) {
+                                    entities[entity] = data.results;
+                                    resolve({key: entity, data: entities[entity]});
+                                });
+                            }
+                        } else {
+                            switch (entity) {
+                                case 'instrument':
+                                    return instrumentRepository.getList().then(function (data) {
+                                        entities[entity] = data.results;
+                                        resolve({key: entity, data: entities[entity]});
+                                    });
+                                    break;
+                                case 'pricing_policy':
+                                    return pricingPolicyRepository.getList().then(function (data) {
+                                        entities[entity] = data.results;
+                                        resolve({key: entity, data: entities[entity]});
+                                    });
+                                    break;
+                                case 'currency':
+                                    return currencyRepository.getList().then(function (data) {
+                                        entities[entity] = data.results;
+                                        resolve({key: entity, data: entities[entity]});
+                                    });
+                                    break;
+                                case 'pricing_currency':
+                                    return currencyRepository.getList().then(function (data) {
+                                        entities[entity] = data.results;
+                                        resolve({key: entity, data: entities[entity]});
+                                    });
+                                    break;
+                                case 'accrued_currency':
+                                    return currencyRepository.getList().then(function (data) {
+                                        entities[entity] = data.results;
+                                        resolve({key: entity, data: entities[entity]});
+                                    });
+                                    break;
+                                case 'instrument_type':
+                                    return instrumentTypeRepository.getList().then(function (data) {
+                                        entities[entity] = data.results;
+                                        resolve({key: entity, data: entities[entity]});
+                                    });
+                                    break;
+                                case 'daily_pricing_model':
+                                    return instrumentDailyPricingModelRepository.getList().then(function (data) {
+                                        entities[entity] = data.results;
+                                        resolve({key: entity, data: entities[entity]});
+                                    });
+                                    break;
+                                case 'transaction_types':
+                                    return transactionTypeRepository.getList().then(function (data) {
+                                        entities[entity] = data.results;
+                                        resolve({key: entity, data: entities[entity]});
+                                    });
+                                    break;
+                                case 'type':
+                                    return accountTypeRepository.getList().then(function (data) {
+                                        entities[entity] = data.results;
+                                        resolve({key: entity, data: entities[entity]});
+                                    });
+                                    break;
+                            }
+                        }
                     }
                 }
 
@@ -112,12 +133,27 @@
 
     };
 
-    var getByKey = function (entity, id) {
+    var getByKey = function (entity, id, options) {
         return new Promise(function (resolve) {
 
             if (!entitiesGetByKey[entity]) {
 
                 console.log('ENTITY', entity);
+
+                if (options && options.hasOwnProperty('entityType')) {
+                    if (options.entityType == 'responsible') {
+                        return responsibleGroupRepository.getByKey(id).then(function (data) {
+                            entitiesGetByKey[entity] = data;
+                            resolve({key: entity, data: entitiesGetByKey[entity]});
+                        });
+                    }
+                    if (options.entityType == 'counterparty') {
+                        return counterpartyGroupRepository.getByKey(id).then(function (data) {
+                            entitiesGetByKey[entity] = data;
+                            resolve({key: entity, data: entitiesGetByKey[entity]});
+                        });
+                    }
+                }
 
                 switch (entity) {
                     case 'instrument':
@@ -259,7 +295,7 @@
                         });
                         break;
                     case 'type':
-                        return accountRepository.getByKey(id).then(function (data) {
+                        return accountTypeRepository.getByKey(id).then(function (data) {
                             entitiesGetByKey[entity] = data;
                             resolve({key: entity, data: entitiesGetByKey[entity]});
                         });

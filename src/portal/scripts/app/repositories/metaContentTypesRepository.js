@@ -190,6 +190,11 @@
                 key: "instruments.instrumenttype"
             },
             {
+                name: "Transaction",
+                entity: 'transaction',
+                key: "transactions.transaction"
+            },
+            {
                 name: "Transaction Type",
                 entity: 'transaction-type',
                 key: "transactions.transactiontype"

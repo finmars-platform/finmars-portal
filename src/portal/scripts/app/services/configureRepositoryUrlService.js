@@ -21,6 +21,8 @@
 			case 'counterparties':
 				return 'counterparty';
 				break;
+			case 'tags':
+				return 'tag';
 			default:
 				return key;
 				break;
@@ -29,7 +31,7 @@
 
 	function configureUrl(url, options) {
 
-		console.log('OPTIOPNS', options);
+		//console.log('OPTIOPNS', options);
 
 		if (options) {
 

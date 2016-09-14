@@ -161,7 +161,7 @@
 				return false;
 			}
 			else {
-				if(['notes', 'tags'].indexOf(item.key) !== -1) {
+				if(['notes'].indexOf(item.key) !== -1) {
 					return true;
 				}
 				return false;
