@@ -1,0 +1,31 @@
+<md-dialog aria-label="" ng-cloak class="forum-dialog-padding draggable-dialog" drag-dialog>
+	<md-toolbar>
+		<div class="md-toolbar-tools">
+			<h2>Edit group</h2>
+			<span flex></span>
+		</div>
+	</md-toolbar>
+	<md-dialog-content>
+		<div layout="column">
+			<md-input-container>
+				<label>Name</label>
+				<textarea data-ng-model="vm.threadsGroupName" cols="30" rows="10"></textarea>
+			</md-input-container>		
+			<md-input-container>
+				<label>Group tags</label>
+				<md-select data-ng-model="vm.threadsGroupsTags">
+					<md-option value="">-</md-option>
+					<md-option data-ng-repeat="tag in vm.tags" data-ng-bind="tag.display_name" value="{{tag.id}}"></md-option>
+				</md-select>
+			</md-input-container>
+		</div>
+	</md-dialog-content>
+	<md-dialog-actions layout="row">
+		<md-button class="md-raised" ng-click="vm.cancel()">
+			Cancel
+		</md-button>
+		<md-button class="md-raised md-primary" ng-click="vm.agree()" style="margin-right:20px;">
+			Send
+		</md-button>
+	</md-dialog-actions>
+</md-dialog>

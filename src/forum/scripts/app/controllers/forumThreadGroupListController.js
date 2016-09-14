@@ -42,6 +42,28 @@
 			});
 		};
 
+		vm.editThreadsGroupsDialog = function (ev, threadGroupId, threadGroupName) {
+			console.log('init group name', threadGroupName);
+			$mdDialog.show({
+				controller: 'EditThreadsGroupsDialogController as vm',
+				templateUrl: 'views/dialogs/edit-threads-groups-dialog-view.html',
+				targetEvent: ev,
+				locals: {
+					threadsGroupName: threadGroupName
+				}
+			}).then(function (data) {
+				var threadsGroupTags = [];
+				if (!isNaN(data.data.tags) && data.data.tags.length > 0) {
+					threadsGroupTags = [parseInt(data.data.tags)];
+				}
+				var threadsGroupName = data.data.name;
+				threadGroupService.update(threadGroupId, {name: threadsGroupName, tags: threadsGroupTags}).then(function () {
+					console.log("thread's tags updated");
+					vm.getList();
+				});
+			});
+		}
+
 		vm.getList();
 
 	}

@@ -20,7 +20,9 @@
     app.controller('ForumThreadGroupDialogController', ['$scope', '$mdDialog', require('./app/controllers/forumThreadGroupDialogController')])
     app.controller('ForumThreadListDialogController', ['$scope', '$mdDialog', require('./app/controllers/forumThreadListDialogController')]);
     app.controller('ForumWriteMessageDialogController', ['$scope', '$mdDialog', 'options', require('./app/controllers/forumWriteMessageDialogController')]);
-
+    app.controller('EditThreadDialogController', ['$scope', '$mdDialog', 'threadName', require('./app/controllers/dialogs/editThreadDialogController')]);
+    app.controller('EditThreadsGroupsDialogController', ['$scope', '$mdDialog', 'threadsGroupName', require('./app/controllers/dialogs/editThreadsGroupsDialogController')]);
+        
     require('./templates.min.js');
 
 }());

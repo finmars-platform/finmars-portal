@@ -20,7 +20,7 @@
 		vm.itemPerPage = 20;
 
 		vm.threadGroupId = $stateParams.groupId;
-		console.log($stateParams);
+		console.log($stateParams, $scope);
 
 		vm.threadGroupName = '';
 
@@ -59,26 +59,30 @@
 			});
 		};
 
-		vm.editThreadDialog = function (ev) {
+		vm.editThreadDialog = function (ev, threadId, threadSubject) {
 			$mdDialog.show({
 				controller: 'EditThreadDialogController as vm',
 				templateUrl: 'views/dialogs/edit-thread-dialog-view.html',
-				targetEvent: ev
-			});
-		}
-
-		vm.tags = [];
-		vm.getTagsList = function () {
-			tagService.getList().then(function (data) {
-				vm.tags = data.results;
-				console.log('forum tags is', vm.tags);
-				$sope.$apply();
+				targetEvent: ev,
+				locals: {
+					threadName: threadSubject
+				}
+			}).then(function (data) {
+				var threadTags = [];
+				if (!isNaN(data.data.tags) && data.data.tags.length > 0) {
+					threadTags = [parseInt(data.data.tags)];
+				}
+				var threadName = data.data.name;
+				console.log('tags selected', threadTags, threadId);
+				threadService.update(threadId, {subject: threadName, tags: threadTags, thread_group: vm.threadGroupId}).then(function () {
+					console.log("thread's tags updated");
+					vm.getList();
+				});
 			});
 		}
 
 		vm.getList();
 		vm.getThreadGroupName();
-		vm.getTagsList();
 
 	}
 

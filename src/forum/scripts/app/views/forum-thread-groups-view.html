@@ -5,15 +5,15 @@
 			<md-button class="md-raised md-primary" data-ng-click="vm.createThredsGroup($event)">Create thread group</md-button>
 		</div>
 		<div data-ng-if="vm.readyStatus.content">
-
-				<md-card class="group-forum-list-item" class="md-3-line" ng-repeat="item in vm.threadGroups"
-				>
-					<a href=""  data-ui-sref="app.forum.threads-list({groupId: item.id})">
-						<span data-ng-bind="item.name"></span>
-					</a>
-				</md-card>
-
-
+			<md-card class="group-forum-list-item" class="md-3-line" ng-repeat="item in vm.threadGroups"
+			>
+				<a href=""  data-ui-sref="app.forum.threads-list({groupId: item.id})">
+					<span data-ng-bind="item.name"></span>
+				</a>
+				<md-button class="forum-edit-thread" data-ng-click="vm.editThreadsGroupsDialog('$event', item.id, item.name)">
+					<ng-md-icon icon="mode_edit" style="fill:#000000;"></ng-md-icon>
+				</md-button>
+			</md-card>
 		</div>
 		<div data-ng-if="!vm.readyStatus.content">
 			<div layout="row" layout-sm="column" layout-align="space-around" class="m-large">
