@@ -268,31 +268,31 @@
                 return priceHistoryService.update(id, entity);
                 break;
             case 'strategy-1':
-                return strategyService.getByKey(1, id, entity);
+                return strategyService.update(1, id, entity);
                 break;
             case 'strategy-2':
-                return strategyService.getByKey(2, id, entity);
+                return strategyService.update(2, id, entity);
                 break;
             case 'strategy-3':
-                return strategyService.getByKey(3, id, entity);
+                return strategyService.update(3, id, entity);
                 break;
             case 'strategy-1-group':
-                return strategyGroupService.getByKey(1, id, entity);
+                return strategyGroupService.update(1, id, entity);
                 break;
             case 'strategy-2-group':
-                return strategyGroupService.getByKey(2, id, entity);
+                return strategyGroupService.update(2, id, entity);
                 break;
             case 'strategy-3-group':
-                return strategyGroupService.getByKey(3, id, entity);
+                return strategyGroupService.update(3, id, entity);
                 break;
             case 'strategy-1-subgroup':
-                return strategySubgroupService.getByKey(1, id, entity);
+                return strategySubgroupService.update(1, id, entity);
                 break;
             case 'strategy-2-subgroup':
-                return strategySubgroupService.getByKey(2, id, entity);
+                return strategySubgroupService.update(2, id, entity);
                 break;
             case 'strategy-3-subgroup':
-                return strategySubgroupService.getByKey(3, id, entity);
+                return strategySubgroupService.update(3, id, entity);
                 break;
             case 'tag':
                 return tagService.update(id, entity);

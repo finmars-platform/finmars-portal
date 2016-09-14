@@ -41,6 +41,10 @@
                 baseAttrs = metaService.getBaseAttrs();
                 entityAttrs = metaService.getEntityAttrs(entityType);
 
+                setTimeout(function () {
+                    $('.g-table-section .custom-scrollbar')[0].dispatchEvent(new Event('scroll'));
+                }, 1000);
+
                 scope.toggleGroupFold = function (item) {
                     //console.log('item.isFolded', item.isFolded);
                     item.isFolded = !item.isFolded;
@@ -119,7 +123,7 @@
                                             //console.log('scope.items[i].groups[g].value', scope.items[i].groups[g].value);
                                             //console.log('scope.items[i].groups[g].value', scope.items[i].groups[g]);
                                             if (scope.items[i].groups[g].value !== null) {
-                                                promisesEntityFields.push(bindCellService.getByKey(scope.items[i].groups[g].key, scope.items[i].groups[g].value))
+                                                promisesEntityFields.push(bindCellService.getByKey(scope.items[i].groups[g].key, scope.items[i].groups[g].value, {entityType: scope.entityType}))
                                             }
                                         }
                                     }
@@ -132,24 +136,29 @@
 
                                 //console.log('test----------------------------------------', data);
 
-                                var i;
-                                for (i = 0; i < data.length; i = i + 1) {
-                                    if (classifiersInstances[data[i].key] === undefined) {
-                                        classifiersInstances[data[i].key] = {};
+                                if (data.length) {
+                                    var i;
+                                    for (i = 0; i < data.length; i = i + 1) {
+                                        if (classifiersInstances[data[i].key] === undefined) {
+                                            classifiersInstances[data[i].key] = {};
+                                        }
+                                        classifiersInstances[data[i].key]['id_' + data[i].data.id] = data[i].data
                                     }
-                                    classifiersInstances[data[i].key]['id_' + data[i].data.id] = data[i].data
                                 }
 
                                 //console.log('promisesEntityFields', promisesEntityFields);
 
 
                                 Promise.all(promisesEntityFields).then(function (data) {
-                                    var i;
-                                    for (i = 0; i < data.length; i = i + 1) {
-                                        if (entityFieldsArray[data[i].key] == undefined) {
-                                            entityFieldsArray[data[i].key] = [];
+                                    debugger;
+                                    if (data.length) {
+                                        var i;
+                                        for (i = 0; i < data.length; i = i + 1) {
+                                            if (entityFieldsArray[data[i].key] == undefined) {
+                                                entityFieldsArray[data[i].key] = [];
+                                            }
+                                            entityFieldsArray[data[i].key].push(data[i].data);
                                         }
-                                        entityFieldsArray[data[i].key].push(data[i].data);
                                     }
 
                                     resolve({status: "groups ready"});
@@ -160,6 +169,7 @@
                         }, 700);
                     })
                 }
+
 
                 function syncGroupsAndColumns() {
 
@@ -185,6 +195,7 @@
                     return new Promise(function (resolve, reject) {
                         var i, g, e;
                         var promises = [];
+
                         for (i = 0; i < scope.items.length; i = i + 1) {
                             if (scope.items[i].hasOwnProperty('groups')) {
                                 for (g = 0; g < scope.items[i].groups.length; g = g + 1) {
@@ -193,6 +204,7 @@
                                         var exist = false;
                                         var entityItem;
                                         //console.log('scope.items[i].groups[g].key', scope.items[i].groups[g].key);
+                                        //console.log('scope.items[i].groups[g].key', entityFieldsArray);
                                         if (entityFieldsArray.hasOwnProperty(scope.items[i].groups[g].key)) {
                                             for (e = 0; e < entityFieldsArray[scope.items[i].groups[g].key].length; e = e + 1) {
                                                 entityItem = entityFieldsArray[scope.items[i].groups[g].key][e];
@@ -216,7 +228,7 @@
                             results.forEach(function (item) {
                                 //console.log('-------------------------------', item);
                                 if (item.key) {
-                                    if (entityFieldsArray[item.key] == undefined || !entityFieldsArray[item.key].length) {
+                                    if (entityFieldsArray[item.key] == undefined) {
                                         entityFieldsArray[item.key] = [];
                                     }
                                     entityFieldsArray[item.key].push(item.data);
@@ -295,24 +307,21 @@
                     if (group.value_type === 'field') {
                         if (!entityFieldsArray.hasOwnProperty(group.key)) {
                             scope.readyStatus.groupsReady = false;
-                            console.log('_______________________________________________________________')
+                            //console.log('_______________________________________________________________')
                             findGroups().then(function () {
                                 scope.readyStatus.groupsReady = true;
                             });
                         }
 
                         if (scope.readyStatus.groupsReady == true) {
-                            //console.log('entityFieldsArray[group.key]', entityFieldsArray[group.key]);
+
                             var i, result;
                             for (i = 0; i < entityFieldsArray[group.key].length; i = i + 1) {
-                                //console.log('111111111111111111111111111111111111111111111111111111111111111111111111111', entityFieldsArray[group.key][i]);
-                                //console.log('111111111111111111111111111111111111111111111111111111111111111111111111111', group.value);
                                 if (entityFieldsArray[group.key][i].id === group.value) {
                                     result = entityFieldsArray[group.key][i];
                                 }
                             }
 
-                            //console.log('result', result);
                             if (result) {
                                 if (result.hasOwnProperty('display_name')) {
                                     return result.display_name;
@@ -395,9 +404,11 @@
                                     //     return groupedItem[entityAttrs[e].key];
                                     // }
                                     if (column['value_type'] === 'mc_field') {
-                                        if (groupedItem[entityAttrs[e].key].length >= 1) {
+                                        if (groupedItem[entityAttrs[e].key] && groupedItem[entityAttrs[e].key].length >= 1) {
                                             return '[' + groupedItem[entityAttrs[e].key].length + ']'
                                         }
+                                    } else {
+                                        return groupedItem[entityAttrs[e].key];
                                     }
                                 }
                             }

@@ -7,18 +7,22 @@
 
     var groupFieldsByTagsWithDuplicates = function (fields, tags) {
 
-        tags.forEach(function (tag) {
-            tag.fields = [];
+        if (tags && tags.length) {
+            tags.forEach(function (tag) {
+                tag.fields = [];
 
-            fields.forEach(function (field) {
-                field.tags.forEach(function (fieldTag) {
-                    if (fieldTag == tag.id) {
-                        tag.fields.push(field);
-                    }
-                })
-            })
+                if (fields && fields.length) {
+                    fields.forEach(function (field) {
+                        field.tags.forEach(function (fieldTag) {
+                            if (fieldTag == tag.id) {
+                                tag.fields.push(field);
+                            }
+                        })
+                    })
+                }
 
-        });
+            });
+        }
 
         return tags;
     };

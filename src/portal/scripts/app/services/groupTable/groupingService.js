@@ -60,16 +60,19 @@
         }
 
         function returnValue(attribute) {
-            if (attribute['attribute_type_object'] == 30) {
+
+            //console.log('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!', attribute);
+
+            if (attribute['attribute_type_object'].value_type == 30) {
                 return attribute['classifier']
             } else {
-                if (attribute['attribute_type_object'] == 40) {
+                if (attribute['attribute_type_object'].value_type == 40) {
                     return attribute['value_date'];
                 } else {
-                    if (attribute['attribute_type_object'] == 20) {
+                    if (attribute['attribute_type_object'].value_type == 20) {
                         return attribute['value_float'];
                     } else {
-                        if(attribute['attribute_type_object'] == 10 && attribute['value_string'] !== '') {
+                        if(attribute['attribute_type_object'].value_type == 10 && attribute['value_string'] !== '') {
                             return attribute['value_string'];
                         } else {
                             return null;
@@ -80,17 +83,22 @@
         }
 
         function returnValueType(attribute) {
-            if (attribute['attribute_type_object'] == 30) {
+
+            //console.log('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!', attribute);
+
+            if (attribute['attribute_type_object'].value_type == 30) {
                 return 'classifier'
             } else {
-                if (attribute['attribute_type_object'] == 40) {
+                if (attribute['attribute_type_object'].value_type == 40) {
                     return 'value_date';
                 } else {
-                    if (attribute['attribute_type_object'] == 20) {
+                    if (attribute['attribute_type_object'].value_type == 20) {
                         return 'value_float';
                     } else {
-                        if(attribute['attribute_type_object'] == 10) {
+                        if(attribute['attribute_type_object'].value_type == 10) {
                             return 'value_string';
+                        } else {
+                            return null;
                         }
                     }
                 }

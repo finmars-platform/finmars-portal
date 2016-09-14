@@ -1,20 +1,24 @@
 /**
  * Created by szhitenev on 28.06.2016.
  */
-(function(){
+(function () {
 
     'use strict';
 
-    module.exports = function($mdDialog){
+    module.exports = function ($mdDialog) {
         return {
             restrict: 'A',
             require: '?ngModel',
             link: function (scope, elem, attrs, ngModelCtrl) {
                 console.log('RESOLVER INSTRUMENT MODAL', ngModelCtrl);
 
-                $(elem).on('click', function(event){
+                $(elem).on('click', function (event) {
                     event.preventDefault();
                     event.stopPropagation();
+
+                    setTimeout(function () {
+                        $('.md-select-backdrop')[0].dispatchEvent(new Event('click'));
+                    }, 400);
 
                     $mdDialog.show({
                         controller: 'InstrumentSelectDialogController as vm',
@@ -29,7 +33,7 @@
                             ngModelCtrl: ngModelCtrl,
                         }
                     }).then(function (res) {
-                        if(res.status === 'agree') {
+                        if (res.status === 'agree') {
                             ngModelCtrl.$setViewValue(res.data.item.id);
                             ngModelCtrl.$render();
                             console.log('ngModelCtrl', ngModelCtrl);

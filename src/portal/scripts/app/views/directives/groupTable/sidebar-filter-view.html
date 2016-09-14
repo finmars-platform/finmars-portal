@@ -55,9 +55,9 @@
                     <!-- {{fields}} -->
                     <div data-ng-if="fields[filter.key]">
                         <md-select data-ng-model="filter.options.query"
-                                   md-on-close="searchTerm = null"
+                                   md-on-close="searchTerm = ''"
                                    data-ng-change="filterChange(filter)"
-                                   multiple="{{fields['value_type'] == 'mc_field' ? 'ture' : 'false'}}">
+                                   multiple="{{fields['value_type'] == 'mc_field' ? 'true' : 'false'}}">
                             <md-select-header>
                                 <input data-ng-model="searchTerm"
                                        type="search"

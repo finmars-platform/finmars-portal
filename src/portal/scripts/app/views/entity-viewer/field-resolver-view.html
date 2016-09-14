@@ -46,7 +46,7 @@
                                            placeholder="Search for a ..."
                                            class="md-text md-select-search-pattern">
                                 </md-select-header>
-                                <md-optgroup label="{{group.name}}" data-ng-repeat="group in groups | orderBy:'-'+group.name track by group.id">
+                                <md-optgroup data-ng-if="group.fields.length" label="{{group.name}}" data-ng-repeat="group in groups | orderBy:'-'+group.name track by group.id">
                                     <md-option
                                             data-ng-repeat="field in group.fields | orderBy:'-'+resolveSort(field) | filter:{name: searchTerm} track by $index"
                                             ng-value="field.id">
