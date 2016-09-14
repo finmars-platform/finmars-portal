@@ -28,7 +28,7 @@
 
                 logService.component('groupTableBody', 'initialized', 1);
 
-                scope.readyStatus = {cellsReady: false, groupsReady: true}; // if groups not exist
+                scope.readyStatus = {cellsReady: false, groupsReady: false}; // if groups not exist
 
                 var entityType = scope.entityType;
                 var baseAttrs = [];
@@ -40,6 +40,10 @@
 
                 baseAttrs = metaService.getBaseAttrs();
                 entityAttrs = metaService.getEntityAttrs(entityType);
+
+                setTimeout(function () {
+                    $('.g-table-section .custom-scrollbar')[0].dispatchEvent(new Event('scroll'));
+                }, 1000);
 
                 scope.toggleGroupFold = function (item) {
                     //console.log('item.isFolded', item.isFolded);
@@ -93,75 +97,93 @@
                 function findGroups() {
 
                     return new Promise(function (resolve, reject) {
-                        scope.readyStatus.groupsReady = false; //if groups exist
-                        var i, g;
-                        var promisesClassifiers = [];
-                        var promisesEntityFields = [];
+                        setTimeout(function () {
+                            scope.readyStatus.groupsReady = false; //if groups exist
+                            var i, g;
+                            var promisesClassifiers = [];
+                            var promisesEntityFields = [];
 
-                        for (i = 0; i < scope.items.length; i = i + 1) {
-                            //console.log('scope.items[i].groups', scope.items[i].groups);
-                            if (scope.items[i].hasOwnProperty('groups')) {
-                                for (g = 0; g < scope.items[i].groups.length; g = g + 1) {
-                                    //console.log("scope.items[i].groups[g]['value_type']", scope.items[i].groups[g]['value_type']);
-                                    if (scope.items[i].groups[g]['value_type'] === 'classifier') {
-                                        promisesClassifiers.push(entityClassifierSingletonService.getByKey(scope.entityType, scope.items[i].groups[g].value))
-                                    }
-                                    if (scope.items[i].groups[g]['value_type'] === 'field') {
-                                        //console.log('scope.items[i].groups[g].value', scope.items[i].groups[g].value);
-                                        console.log('scope.items[i].groups[g].value', scope.items[i].groups[g]);
-                                        if (scope.items[i].groups[g].value !== null) {
-                                            promisesEntityFields.push(bindCellService.getByKey(scope.items[i].groups[g].key, scope.items[i].groups[g].value))
+                            var items = scope.items;
+
+                            //console.log('scope.items', scope.items);
+                            //console.log('scope.items', scope);
+                            //console.log('scope.items items', items);
+                            //
+                            //console.log('scope.items items', scope.$parent.items);
+
+                            for (i = 0; i < scope.items.length; i = i + 1) {
+                                //console.log('scope.items[i].groups', scope.items[i].groups);
+                                if (scope.items[i].hasOwnProperty('groups')) {
+                                    for (g = 0; g < scope.items[i].groups.length; g = g + 1) {
+                                        //console.log("scope.items[i].groups[g]['value_type']", scope.items[i].groups[g]['value_type']);
+                                        if (scope.items[i].groups[g]['value_type'] === 'classifier') {
+                                            promisesClassifiers.push(entityClassifierSingletonService.getByKey(scope.entityType, scope.items[i].groups[g].value))
+                                        }
+                                        if (scope.items[i].groups[g]['value_type'] === 'field') {
+                                            //console.log('scope.items[i].groups[g].value', scope.items[i].groups[g].value);
+                                            //console.log('scope.items[i].groups[g].value', scope.items[i].groups[g]);
+                                            if (scope.items[i].groups[g].value !== null) {
+                                                promisesEntityFields.push(bindCellService.getByKey(scope.items[i].groups[g].key, scope.items[i].groups[g].value, {entityType: scope.entityType}))
+                                            }
                                         }
                                     }
                                 }
                             }
-                        }
 
-                        //console.log('promisesClassifiers', promisesClassifiers);
+                            //console.log('promisesClassifiers', promisesClassifiers);
 
-                        Promise.all(promisesClassifiers).then(function (data) {
+                            Promise.all(promisesClassifiers).then(function (data) {
 
-                            //console.log('test----------------------------------------', data);
+                                //console.log('test----------------------------------------', data);
 
-                            var i;
-                            for (i = 0; i < data.length; i = i + 1) {
-                                if (classifiersInstances[data[i].key] === undefined) {
-                                    classifiersInstances[data[i].key] = {};
-                                }
-                                classifiersInstances[data[i].key]['id_' + data[i].data.id] = data[i].data
-                            }
-
-                            //console.log('promisesEntityFields', promisesEntityFields);
-
-
-                            Promise.all(promisesEntityFields).then(function (data) {
-                                var i;
-                                for (i = 0; i < data.length; i = i + 1) {
-                                    if (entityFieldsArray[data[i].key] == undefined) {
-                                        entityFieldsArray[data[i].key] = [];
+                                if (data.length) {
+                                    var i;
+                                    for (i = 0; i < data.length; i = i + 1) {
+                                        if (classifiersInstances[data[i].key] === undefined) {
+                                            classifiersInstances[data[i].key] = {};
+                                        }
+                                        classifiersInstances[data[i].key]['id_' + data[i].data.id] = data[i].data
                                     }
-                                    entityFieldsArray[data[i].key].push(data[i].data);
                                 }
 
-                                resolve({status: "groups ready"});
+                                //console.log('promisesEntityFields', promisesEntityFields);
 
-                            });
 
-                        })
+                                Promise.all(promisesEntityFields).then(function (data) {
+                                    debugger;
+                                    if (data.length) {
+                                        var i;
+                                        for (i = 0; i < data.length; i = i + 1) {
+                                            if (entityFieldsArray[data[i].key] == undefined) {
+                                                entityFieldsArray[data[i].key] = [];
+                                            }
+                                            entityFieldsArray[data[i].key].push(data[i].data);
+                                        }
+                                    }
+
+                                    resolve({status: "groups ready"});
+
+                                });
+
+                            })
+                        }, 700);
                     })
                 }
 
+
                 function syncGroupsAndColumns() {
+
+                    //console.log("scope.grouping!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!", scope.grouping);
 
                     var promises = [];
 
                     promises.push(getFieldDisplayNamesArray());
                     promises.push(findGroups());
 
-                    console.log('??????????????????', promises);
+                    //console.log('??????????????????', promises);
 
                     Promise.all(promises).then(function () {
-                        console.log('test? READY STTESTEST?1111111111111111111111111111111');
+                        //console.log('test? READY STTESTEST?1111111111111111111111111111111');
                         scope.readyStatus.cellsReady = true;
                         scope.readyStatus.groupsReady = true;
                         scope.$apply();
@@ -173,6 +195,7 @@
                     return new Promise(function (resolve, reject) {
                         var i, g, e;
                         var promises = [];
+
                         for (i = 0; i < scope.items.length; i = i + 1) {
                             if (scope.items[i].hasOwnProperty('groups')) {
                                 for (g = 0; g < scope.items[i].groups.length; g = g + 1) {
@@ -181,6 +204,7 @@
                                         var exist = false;
                                         var entityItem;
                                         //console.log('scope.items[i].groups[g].key', scope.items[i].groups[g].key);
+                                        //console.log('scope.items[i].groups[g].key', entityFieldsArray);
                                         if (entityFieldsArray.hasOwnProperty(scope.items[i].groups[g].key)) {
                                             for (e = 0; e < entityFieldsArray[scope.items[i].groups[g].key].length; e = e + 1) {
                                                 entityItem = entityFieldsArray[scope.items[i].groups[g].key][e];
@@ -204,7 +228,7 @@
                             results.forEach(function (item) {
                                 //console.log('-------------------------------', item);
                                 if (item.key) {
-                                    if (entityFieldsArray[item.key] == undefined || !entityFieldsArray[item.key].length) {
+                                    if (entityFieldsArray[item.key] == undefined) {
                                         entityFieldsArray[item.key] = [];
                                     }
                                     entityFieldsArray[item.key].push(item.data);
@@ -259,41 +283,45 @@
                 });
 
                 scope.$watchCollection('grouping', function () {
-                    console.log('test??');
+                    //console.log('test??');
                     scope.readyStatus.groupsReady = false;
                     syncGroupsAndColumns();
                 });
 
                 scope.bindGroupValue = function (group) {
 
-                    console.log('group', group);
+                    //console.log('group', group);
 
                     if (group.value_type === 'classifier') {
                         if (scope.readyStatus.groupsReady) {
-                            return classifiersInstances[scope.entityType]['id_' + group.value].name
+                            //console.log('classifiersInstances', classifiersInstances);
+                            if (classifiersInstances.hasOwnProperty(scope.entityType)) {
+                                return classifiersInstances[scope.entityType]['id_' + group.value].name
+                            } else {
+                                findGroups().then(function () {
+                                    scope.readyStatus.groupsReady = true;
+                                });
+                            }
                         }
                     }
                     if (group.value_type === 'field') {
                         if (!entityFieldsArray.hasOwnProperty(group.key)) {
                             scope.readyStatus.groupsReady = false;
-                            console.log('_______________________________________________________________')
+                            //console.log('_______________________________________________________________')
                             findGroups().then(function () {
                                 scope.readyStatus.groupsReady = true;
                             });
                         }
 
-                        if (scope.readyStatus.groupsReady) {
-                            //console.log('entityFieldsArray[group.key]', entityFieldsArray[group.key]);
+                        if (scope.readyStatus.groupsReady == true) {
+
                             var i, result;
                             for (i = 0; i < entityFieldsArray[group.key].length; i = i + 1) {
-                                //console.log('111111111111111111111111111111111111111111111111111111111111111111111111111', entityFieldsArray[group.key][i]);
-                                //console.log('111111111111111111111111111111111111111111111111111111111111111111111111111', group.value);
                                 if (entityFieldsArray[group.key][i].id === group.value) {
                                     result = entityFieldsArray[group.key][i];
                                 }
                             }
 
-                            //console.log('result', result);
                             if (result) {
                                 if (result.hasOwnProperty('display_name')) {
                                     return result.display_name;
@@ -376,9 +404,11 @@
                                     //     return groupedItem[entityAttrs[e].key];
                                     // }
                                     if (column['value_type'] === 'mc_field') {
-                                        if (groupedItem[entityAttrs[e].key].length >= 1) {
+                                        if (groupedItem[entityAttrs[e].key] && groupedItem[entityAttrs[e].key].length >= 1) {
                                             return '[' + groupedItem[entityAttrs[e].key].length + ']'
                                         }
+                                    } else {
+                                        return groupedItem[entityAttrs[e].key];
                                     }
                                 }
                             }

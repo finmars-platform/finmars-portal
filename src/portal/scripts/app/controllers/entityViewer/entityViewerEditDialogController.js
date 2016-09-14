@@ -60,7 +60,7 @@
                 vm.saveCallback().then(function (options) {
 
                     entityResolverService.create(options.entityType, options.entity).then(function (data) {
-                        console.log('DATA', data);
+                        //console.log('DATA', data);
                         if (data.status == 200 || data.status == 201) {
                             $mdDialog.hide({res: 'agree'});
                         }

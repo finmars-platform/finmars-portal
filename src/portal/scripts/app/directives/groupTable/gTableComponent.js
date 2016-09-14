@@ -43,8 +43,6 @@
 
                 logService.component('groupTable', 'initialized');
 
-                //$('.app-md-content').addClass('g-table-overflow');
-
                 scope.findSelectedFeature = function () {
                     var selected = {isOpened: false, templateUrl: ''};
                     //console.log('additionsStatus', scope.additionsStatus);

@@ -7,7 +7,14 @@
     </md-toolbar>
     <md-dialog-content>
         <div layout="row">
-            <div id="js-tree-select-wrapper" class="js-tree-select" style="width: 100%; overflow: hidden"></div>
+            <div data-ng-show="vm.tree.length">
+                <div id="js-tree-select-wrapper" class="js-tree-select" style="width: 100%; overflow: hidden"></div>
+            </div>
+            <div data-ng-if="!vm.tree.length" style="width: 100%;">
+                <p style="text-align: center; width: 100%;">
+                    Press Edit to create Classification
+                </p>
+            </div>
         </div>
 
     </md-dialog-content>
