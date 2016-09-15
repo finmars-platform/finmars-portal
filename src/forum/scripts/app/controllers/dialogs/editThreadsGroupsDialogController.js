@@ -2,33 +2,38 @@
 	'use strict';
 
 	var logService = require('../../../../../core/services/logService');
+	var threadGroupService = require('../../services/threadGroupService');
 	var tagService = require('../../../../../portal/scripts/app/services/tagService');
 	
-	module.exports = function ($scope, $mdDialog, threadsGroupName) {
+	module.exports = function ($scope, $mdDialog, threadsGroupId) {
 		var vm = this;	
 
-		vm.groupName = threadsGroupName;
-		if (threadsGroupName && threadsGroupName.length) {
-			vm.threadsGroupName = threadsGroupName;
-		}
-
+		console.log('threadsGroupId is', threadsGroupId);
 		vm.tags = [];
-		vm.getTagsList = function () {
-			tagService.getListByContentType("thread-group", "tag").then(function (data) {
-				vm.tags = data.results;
-				console.log('forum group tags is', vm.tags, data);
-				$scope.$apply();
-			});
-		};
+		tagService.getListByContentType("thread-group", "tag").then(function (data) {
+			vm.tags = data.results;
+			console.log('forum group tags is', vm.tags, data);
+			$scope.$apply();
+		});
+		threadGroupService.getByKey(threadsGroupId).then(function(data) {
+			console.log('thredsGroup data', data);
+			var threadGroup = data;
+			if (threadGroup.name && threadGroup.name.length) {
+				vm.threadsGroupName = threadGroup.name;
+			}
+			if (threadGroup.tags && threadGroup.tags.length) {
+				vm.threadsGroupTags = threadGroup.tags[0];
+			}
+			$scope.$apply();
+		});
 
 		vm.cancel = function () {
 			$mdDialog.cancel();
 		};
 
 		vm.agree = function () {
-			$mdDialog.hide({status: 'agree', data: {tags: vm.threadsGroupsTags, name: vm.threadsGroupName}});
+			$mdDialog.hide({status: 'agree', data: {tags: vm.threadsGroupTags, name: vm.threadsGroupName}});
 		};
-
-		vm.getTagsList();	
+	
 	}
 }());
