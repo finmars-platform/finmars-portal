@@ -3,157 +3,173 @@
  */
 (function () {
 
-	'use strict';
-	var logService = require('../../../../core/services/logService');
+    'use strict';
+    var logService = require('../../../../core/services/logService');
 
-	var attributeTypeService = require('../services/attributeTypeService');
+    var attributeTypeService = require('../services/attributeTypeService');
 
-	var metaService = require('../services/metaService');
+    var metaService = require('../services/metaService');
 
-	module.exports = function ($scope, $state, $stateParams, $mdDialog) {
+    module.exports = function ($scope, $state, $stateParams, $mdDialog) {
 
-		logService.controller('AttributesManagerController', 'initialized');
+        logService.controller('AttributesManagerController', 'initialized');
 
-		var vm = this;
+        var vm = this;
 
-		var choices = metaService.getDynamicAttrsValueTypesCaptions();
-		vm.attrs = [];
+        vm.showHidden = false;
 
-		vm.entityType = $stateParams.entityType;
+        var choices = metaService.getDynamicAttrsValueTypesCaptions();
+        vm.attrs = [];
 
-		var getList = function(){
-			attributeTypeService.getList(vm.entityType).then(function (data) {
-				vm.attrs = data.results;
-				$scope.$apply();
-			});
-		};
+        vm.entityType = $stateParams.entityType;
 
-		getList();
+        var getList = function () {
+            attributeTypeService.getList(vm.entityType).then(function (data) {
+                vm.attrs = data.results;
+                $scope.$apply();
+            });
+        };
 
-		vm.addAttribute = function (ev) {
-			$mdDialog.show({
-				controller: 'AttributesManagerAddDialogController as vm',
-				templateUrl: 'views/attribute-manager-dialog-view.html',
-				parent: angular.element(document.body),
-				targetEvent: ev
-			}).then(function (res) {
-				if (res.status === 'agree') {
-					console.log(res.data.attribute['value_type']);
-					console.log("res", res.data);
-					attributeTypeService.create(vm.entityType, res.data.attribute).then(getList);
-				}
-			});
-		};
+        getList();
 
-		vm.bindType = function (item) {
-			var i;
-			for (i = 0; i < choices.length; i = i + 1) {
-				if (item["value_type"] === choices[i].value) {
-					return choices[i]["caption_name"];
-				}
-			}
-		};
+        vm.addAttribute = function (ev) {
+            $mdDialog.show({
+                controller: 'AttributesManagerAddDialogController as vm',
+                templateUrl: 'views/attribute-manager-dialog-view.html',
+                parent: angular.element(document.body),
+                targetEvent: ev
+            }).then(function (res) {
+                if (res.status === 'agree') {
+                    console.log(res.data.attribute['value_type']);
+                    console.log("res", res.data);
+                    attributeTypeService.create(vm.entityType, res.data.attribute).then(getList);
+                }
+            });
+        };
 
-		function setName(item) {
-			item.name = item.text;
-			if(item.id.indexOf('j') !== -1) {
-				delete item['li_attr'];
-				delete item['state'];
-				delete item['icon'];
-				delete item['a_attr'];
-				delete item['data'];
-				delete item['text'];
-				delete item['type'];
-				delete item.id;
-			}
-			item.children = item.children.map(setName);
-			return item
-		}
+        vm.bindType = function (item) {
+            var i;
+            for (i = 0; i < choices.length; i = i + 1) {
+                if (item["value_type"] === choices[i].value) {
+                    return choices[i]["caption_name"];
+                }
+            }
+        };
 
-		vm.editTreeAttr = function(item, ev) {
-			$mdDialog.show({
-				controller: 'ClassificationEditorDialogController as vm',
-				templateUrl: 'views/classification-editor-dialog-view.html',
-				parent: angular.element(document.body),
-				targetEvent: ev,
-				locals: {
-					data: {
-						classifier: item,
-						entityType: vm.entityType
-					}
-				}
-			}).then(function (res) {
-				if (res.status === 'agree') {
-					console.log("res", res.data);
+        function setName(item) {
+            item.name = item.text;
+            if (item.id.indexOf('j') !== -1) {
+                delete item['li_attr'];
+                delete item['state'];
+                delete item['icon'];
+                delete item['a_attr'];
+                delete item['data'];
+                delete item['text'];
+                delete item['type'];
+                delete item.id;
+            }
+            item.children = item.children.map(setName);
+            return item
+        }
 
-					res.data.classifier.classifiers = res.data.classifier.children.map(setName);
+        vm.editTreeAttr = function (item, ev) {
+            $mdDialog.show({
+                controller: 'ClassificationEditorDialogController as vm',
+                templateUrl: 'views/classification-editor-dialog-view.html',
+                parent: angular.element(document.body),
+                targetEvent: ev,
+                locals: {
+                    data: {
+                        classifier: item,
+                        entityType: vm.entityType
+                    }
+                }
+            }).then(function (res) {
+                if (res.status === 'agree') {
+                    console.log("res", res.data);
 
-					attributeTypeService.update(vm.entityType, res.data.classifier.id, res.data.classifier).then(getList);
-				}
-			});
-		};
+                    res.data.classifier.classifiers = res.data.classifier.children.map(setName);
 
-		vm.editAttr = function (item, ev) {
-			$mdDialog.show({
-				controller: 'AttributesManagerEditDialogController as vm',
-				templateUrl: 'views/attribute-manager-dialog-view.html',
-				parent: angular.element(document.body),
-				targetEvent: ev,
-				locals: {
-					attribute: item
-				}
-			}).then(function (res) {
-				if (res.status === 'agree') {
-					console.log("res", res.data);
-					attributeTypeService.update(vm.entityType, res.data.attribute.id, res.data.attribute).then(getList);
-				}
-			});
-		};
+                    attributeTypeService.update(vm.entityType, res.data.classifier.id, res.data.classifier).then(getList);
+                }
+            });
+        };
 
-		vm.deleteAttr = function (item, ev) {
+        vm.editAttr = function (item, ev) {
+            $mdDialog.show({
+                controller: 'AttributesManagerEditDialogController as vm',
+                templateUrl: 'views/attribute-manager-dialog-view.html',
+                parent: angular.element(document.body),
+                targetEvent: ev,
+                locals: {
+                    data: {
+                        attributeId: item.id,
+                        entityType: vm.entityType
+                    }
+                }
+            }).then(function (res) {
+                if (res.status === 'agree') {
+                    console.log("res", res.data);
+                    attributeTypeService.update(vm.entityType, res.data.attribute.id, res.data.attribute).then(getList);
+                }
+            });
+        };
 
-			var description = 'Are you sure to delete attribute ' + item.name + ' ?';
+        vm.toggleHidden = function () {
+            vm.showHidden = !vm.showHidden;
+        };
 
-			$mdDialog.show({
-				controller: 'WarningDialogController as vm',
-				templateUrl: 'views/warning-dialog-view.html',
-				parent: angular.element(document.body),
-				targetEvent: ev,
-				clickOutsideToClose: true,
-				locals: {
-					warning: {
-						title: 'Warning',
-						description: description
-					}
-				}
-			}).then(function (res) {
-				console.log('res', res);
-				if (res.status === 'agree') {
-					attributeTypeService.deleteByKey(vm.entityType, item.id).then(function(data){
-						if(data.status === 'conflict') {
-							$mdDialog.show({
-								controller: 'InfoDialogController as vm',
-								templateUrl: 'views/info-dialog-view.html',
-								parent: angular.element(document.body),
-								targetEvent: ev,
-								clickOutsideToClose: true,
-								locals: {
-									info: {
-										title: 'Notification',
-										description: "You can not delete attributed that already in use"
-									}
-								}
-							})
-						} else {
-							getList();
-						}
-					});
+        vm.checkIsHidden = function(attribute){
+            if(vm.showHidden == false && attribute.is_hidden == true) {
+                return false;
+            }
+            return true;
+        };
 
-				}
+        vm.deleteAttr = function (item, ev) {
 
-			});
-		};
+            var description = 'Are you sure to delete attribute ' + item.name + ' ?';
 
-	}
+            $mdDialog.show({
+                controller: 'WarningDialogController as vm',
+                templateUrl: 'views/warning-dialog-view.html',
+                parent: angular.element(document.body),
+                targetEvent: ev,
+                clickOutsideToClose: true,
+                locals: {
+                    warning: {
+                        title: 'Warning',
+                        description: description
+                    }
+                }
+            }).then(function (res) {
+                console.log('res', res);
+                if (res.status === 'agree') {
+                    attributeTypeService.deleteByKey(vm.entityType, item.id).then(function (data) {
+                        if (data.status === 'conflict') {
+                            $mdDialog.show({
+                                controller: 'InfoDialogController as vm',
+                                templateUrl: 'views/info-dialog-view.html',
+                                parent: angular.element(document.body),
+                                targetEvent: ev,
+                                clickOutsideToClose: true,
+                                locals: {
+                                    info: {
+                                        title: 'Notification',
+                                        description: "You can not delete attributed that already in use"
+                                    }
+                                }
+                            })
+                        } else {
+                            getList();
+                        }
+                    });
+
+                }
+
+            });
+        };
+
+    }
 
 }());
