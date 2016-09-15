@@ -52,7 +52,7 @@ app.controller('FillPriceHistoryDialogController', ['$scope', '$mdDialog', requi
 app.controller('PriceDownloadSchemeAddDialogController', ['$scope', '$mdDialog', require('./app/controllers/dialogs/PriceDownloadSchemeAddDialogController')]);
 
 app.controller('AttributesManagerController', ['$scope', '$state', '$stateParams', '$mdDialog', require('./app/controllers/attributesManagerController')]);
-app.controller('AttributesManagerEditDialogController', ['$scope', '$mdDialog', 'attribute', require('./app/controllers/dialogs/attributesManagerEditDialogController')]);
+app.controller('AttributesManagerEditDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/attributesManagerEditDialogController')]);
 app.controller('AttributesManagerAddDialogController', ['$scope', '$mdDialog', require('./app/controllers/dialogs/attributesManagerAddDialogController')]);
 app.controller('ClassificationEditorDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/classificationEditorDialogController')]);
 
