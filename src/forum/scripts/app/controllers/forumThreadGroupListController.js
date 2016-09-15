@@ -7,7 +7,8 @@
 
 	var logService = require('../../../../core/services/logService');
 	var threadGroupService = require('../services/threadGroupService');
-
+	var tagService = require('../../../../portal/scripts/app/services/tagService');
+	
 	module.exports = function($scope, $mdDialog) {
 
 		logService.controller('ForumThreadGroupListController', 'initialized');
@@ -20,9 +21,12 @@
 			threadGroupService.getList({page: 1}).then(function(data){
 				console.log('threadGroup items', data.results);
 				vm.threadGroups = data.results;
+				vm.threadGroups.forEach(function (group) {
+					group.filterTag = group.tags[0];
+				});
 				vm.readyStatus.content = true;
+				console.log('thread groups tags', vm.threadGroups);
 				$scope.$apply();
-
 			});
 		};
 
@@ -42,28 +46,48 @@
 			});
 		};
 
-		vm.editThreadsGroupsDialog = function (ev, threadGroupId, threadGroupName) {
-			console.log('init group name', threadGroupName);
+		vm.editThreadsGroupsDialog = function (ev, threadsGroupId) {
 			$mdDialog.show({
 				controller: 'EditThreadsGroupsDialogController as vm',
 				templateUrl: 'views/dialogs/edit-threads-groups-dialog-view.html',
 				targetEvent: ev,
 				locals: {
-					threadsGroupName: threadGroupName
+					threadsGroupId: threadsGroupId
 				}
 			}).then(function (data) {
 				var threadsGroupTags = [];
-				if (!isNaN(data.data.tags) && data.data.tags.length > 0) {
-					threadsGroupTags = [parseInt(data.data.tags)];
+				var parsedGroupTags = parseInt(data.data.tags);
+
+				if (parsedGroupTags !== 'NaN') {
+					if (typeof data.data.tags === 'string') {
+						threadsGroupTags = [parsedGroupTags];
+					}
+					else {
+						threadsGroupTags = [data.data.tags];
+					}
 				}
 				var threadsGroupName = data.data.name;
-				threadGroupService.update(threadGroupId, {name: threadsGroupName, tags: threadsGroupTags}).then(function () {
+				threadGroupService.update(threadsGroupId, {name: threadsGroupName, tags: threadsGroupTags}).then(function () {
 					console.log("thread's tags updated");
 					vm.getList();
 				});
 			});
 		}
 
+		vm.getTagList = function () {
+			tagService.getListByContentType("thread-group", "tag").then(function (data) {
+				vm.tags = data.results;
+				$scope.$apply();
+			});
+		}
+
+		vm.deleteThreadsGroup = function (id) {
+			threadGroupService.deleteByKey(id).then(function () {
+				vm.getList();
+			});
+		}
+
+		vm.getTagList();
 		vm.getList();
 
 	}

@@ -5,21 +5,32 @@
 		<div layout="row">
 			<div layout="row" flex="50">
 				<md-button ui-sref="app.forum.thread-groups" class="md-raised forum-back-btn" data-ng-click="vm.forumGoBackBtn()">Back</md-button>
+				<md-input-container class="forum-filter-by-tags">
+					<label>Filter by tags</label>
+					<md-select aria-label="" data-ng-model="vm.filterTags" multiple="true">
+						<md-option data-ng-repeat="tag in vm.tags" ng-value="tag.id">{{tag.display_name}}</md-option>
+					</md-select>
+				</md-input-container>
 			</div>
 			<div layout="row" layout-align="end center" flex="50">
 				<md-button class="md-raised md-primary" data-ng-click="vm.createThredsList($event)">Create thread</md-button>
 			</div>
 		</div>
 		<div data-ng-if="vm.readyStatus.content">
-			<md-card class="thread-forum-list-item" class="md-3-line" ng-repeat="item in vm.threads"
+			<md-card class="thread-forum-list-item" class="md-3-line" ng-repeat="item in vm.threads | forumFilterByTags : vm.filterTags"
 			>
 				<a data-ui-sref="app.forum.thread({groupId: vm.threadGroupId, threadId: item.id})">
 					<span data-ng-bind="item.subject"></span>
 				</a>
 				<md-divider></md-divider>
-				<md-button class="forum-edit-thread" data-ng-click="vm.editThreadDialog('$event', item.id, item.subject)">
-					<ng-md-icon icon="mode_edit" style="fill:#000000;"></ng-md-icon>
-				</md-button>
+				<div class="forum-manage-buttons">
+					<md-button aria-label="edit thread" class="forum-manage-btn" data-ng-click="vm.editThreadDialog('$event', item.id)">
+						<ng-md-icon icon="mode_edit" size="20"></ng-md-icon>
+					</md-button>
+					<md-button aria-label='delete thread' class="forum-manage-btn" data-ng-click="vm.deleteThread(item.id)">
+						<ng-md-icon icon="clear" size="20"></ng-md-icon>
+					</md-button>
+				</div>
 			</md-card>
 		</div>
 		<div data-ng-if="!vm.readyStatus.content">

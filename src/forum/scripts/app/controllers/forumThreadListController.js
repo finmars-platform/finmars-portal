@@ -37,6 +37,10 @@
 
 			});
 		};
+		tagService.getListByContentType("thread", "tag").then(function (data) {
+			vm.tags = data.results;
+			$scope.$apply();
+		});
 		vm.getThreadGroupName = function () {
 			threadGroupService.getByKey(vm.threadGroupId).then(function (data) {
 				vm.threadGroupName = data.name;
@@ -59,18 +63,25 @@
 			});
 		};
 
-		vm.editThreadDialog = function (ev, threadId, threadSubject) {
+		vm.editThreadDialog = function (ev, threadId) {
 			$mdDialog.show({
 				controller: 'EditThreadDialogController as vm',
 				templateUrl: 'views/dialogs/edit-thread-dialog-view.html',
 				targetEvent: ev,
 				locals: {
-					threadName: threadSubject
+					threadId: threadId
 				}
 			}).then(function (data) {
 				var threadTags = [];
-				if (!isNaN(data.data.tags) && data.data.tags.length > 0) {
-					threadTags = [parseInt(data.data.tags)];
+				var parsedThreadTags = parseInt(data.data.tags);
+
+				if (parsedThreadTags !== 'NaN') {
+					if (typeof data.data.tags === 'string') {
+						threadTags = [parsedThreadTags];
+					}
+					else {
+						threadTags = [data.data.tags];
+					}
 				}
 				var threadName = data.data.name;
 				console.log('tags selected', threadTags, threadId);
@@ -80,6 +91,12 @@
 				});
 			});
 		}
+
+		vm.deleteThread = function (id) {
+			threadService.deleteByKey(id).then(function () {
+				vm.getList();
+			});
+		};
 
 		vm.getList();
 		vm.getThreadGroupName();
