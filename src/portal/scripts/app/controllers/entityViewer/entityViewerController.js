@@ -54,11 +54,12 @@
             vm.listView.data.tableAdditions.table.columns = vm.entityAdditionsColumns;
             vm.listView.data.tableAdditions.table.filters = vm.entityAdditionsFilters;
             vm.listView.data.tableAdditions.table.sorting = vm.entityAdditionsSorting;
-            //vm.listView.data.tableAdditions.additionsType =
+            vm.listView.data.tableAdditions.additionsStatus = vm.additionsStatus;
+            vm.listView.data.tableAdditions.additionsState = vm.additionsState;
 
             //vm.additionsStatus[res.results[0].data.tableAdditions.additionsType] = true;
 
-            if(vm.listView.hasOwnProperty('id')) {
+            if (vm.listView.hasOwnProperty('id')) {
                 uiService.updateListLayout(vm.listView.id, vm.listView).then(function () {
                     console.log('saved');
                 });
@@ -72,7 +73,7 @@
                 templateUrl: 'views/save-layout-dialog-view.html',
                 targetEvent: e,
                 clickOutsideToClose: true
-            }).then(function(){
+            }).then(function () {
                 vm.getView();
             });
         });
@@ -122,12 +123,14 @@
         vm.tableAdditions = {};
 
         vm.tableIsReady = false;
+        vm.readyStatus = {uiView: false};
 
         vm.editorTemplate = 'views/additions-editor-view.html';
 
         vm.additionsStatus = {
             editor: false,
-            table: false
+            table: false,
+            extraFeatures: []
         };
         vm.additionsState = false;
         vm.additionsStatus.extraFeatures = vm.customButtons;
@@ -195,6 +198,13 @@
             return item;
         }
 
+        vm.checkReadyStatus = function () {
+            if (vm.tableIsReady == true && vm.readyStatus.uiView == true) {
+                return true;
+            }
+            return false;
+        };
+
         vm.getView = function () {
             return uiService.getListLayout(vm.entityType, 'default').then(function (res) {
 
@@ -220,13 +230,20 @@
                     vm.additionsType = res.results[0].data.tableAdditions.additionsType;
 
                     vm.additionsEntityType = res.results[0].data.tableAdditions.entityType;
+                    vm.additionsStatus = res.results[0].data.tableAdditions.additionsStatus || {
+                            editor: false,
+                            table: false,
+                            extraFeatures: []
+                        };
+
+                    vm.additionsState = res.results[0].data.tableAdditions.additionsState;
 
                     vm.tableAdditions = res.results[0].data.tableAdditions;
                     vm.entityAdditionsColumns = res.results[0].data.tableAdditions.table.columns;
                     vm.entityAdditionsFilters = res.results[0].data.tableAdditions.table.filters;
                     vm.entityAdditionsSorting = res.results[0].data.tableAdditions.table.sorting;
 
-                    vm.additionsStatus[res.results[0].data.tableAdditions.additionsType] = true;
+                    //vm.additionsStatus[res.results[0].data.tableAdditions.additionsType] = true;
                 } else {
 
                     var defaultList = uiService.getDefaultListLayout();
@@ -252,8 +269,11 @@
                     vm.entityAdditionsFilters = defaultList[0].data.tableAdditions.table.filters;
                     vm.entityAdditionsSorting = defaultList[0].data.tableAdditions.table.sorting;
 
-                    vm.additionsStatus[defaultList[0].data.tableAdditions.additionsType] = true;
+                    //vm.additionsStatus[defaultList[0].data.tableAdditions.additionsType] = true;
                 }
+
+
+                vm.readyStatus.uiView = true;
 
                 //console.log('vm tabs!', vm.tabs);
                 $scope.$apply();

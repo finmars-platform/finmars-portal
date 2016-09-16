@@ -767,6 +767,36 @@
                     "key": "user_text_3",
                     "name": "User text 3",
                     "value_type": 10
+                },
+                {
+                    "key": "maturity_date",
+                    "name": "Maturity date",
+                    "value_type": 10
+                },
+                {
+                    "key": "payment_size_detail",
+                    "name": "Payment size detail",
+                    "value_type": 'field'
+                },
+                {
+                    "key": "daily_pricing_model",
+                    "name": "Daily pricing model",
+                    "value_type": 'field'
+                },
+                {
+                    "key": "price_download_scheme",
+                    "name": "Price download scheme",
+                    "value_type": 'field'
+                },
+                {
+                    "key": "default_price",
+                    "name": "Default price",
+                    "value_type": 10
+                },
+                {
+                    "key": "default_accrued",
+                    "name": "Default accrued",
+                    "value_type": 10
                 }
             ]
         };

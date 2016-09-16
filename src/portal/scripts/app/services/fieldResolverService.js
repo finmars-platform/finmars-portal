@@ -95,7 +95,7 @@
             switch (fieldKey) {
                 case 'daily_pricing_model':
                     entityFieldsRepository.getDailyPricingModelChoices().then(function (data) {
-                        resolve({type: 'key-value', key: 'daily_pricing_model', data: data});
+                        resolve({type: 'id', key: 'daily_pricing_model', data: data});
                     });
                     break;
                 case 'payment_size_detail':
@@ -120,7 +120,7 @@
                     break;
                 case 'price_download_scheme':
                     importPriceDownloadSchemeRepository.getList().then(function (data) {
-                        resolve({type: 'id', key: 'pricing_download_scheme', data: data.results});
+                        resolve({type: 'id', key: 'price_download_scheme', data: data.results});
                     });
                     break;
                 case 'instrument_type':

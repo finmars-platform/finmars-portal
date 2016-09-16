@@ -68,8 +68,10 @@ app.controller('EntityViewerDeleteDialogController', ['$scope', '$mdDialog', 'en
 app.controller('EntityEditorController', ['$scope', require('./app/controllers/entityEditorController')]);
 
 app.controller('AccrualCalculationSchedulesTabController', ['$scope', require('./app/controllers/tabs/accrualCalculationSchedulesController')]);
+app.controller('EventSchedulesTabController', ['$scope', require('./app/controllers/tabs/eventSchedulesController')]);
 app.controller('FactorScheduleTabController', ['$scope', require('./app/controllers/tabs/factorScheduleTabController')]);
 app.controller('ManualPricingFormulasTabController', ['$scope', require('./app/controllers/tabs/manualPricingFormulasTabController')]);
+app.controller('InstrumentEventActionsDialogController', ['$scope', '$mdDialog', 'eventActions', require('./app/controllers/dialogs/instrumentEventActionsDialogController')]);
 
 app.controller('DataPortfolioController', ['$scope', require('./app/controllers/data/dataPortfolioController')]);
 app.controller('DataTagController', ['$scope', require('./app/controllers/data/dataTagController')]);
@@ -149,8 +151,10 @@ app.controller('gModalController', ['$scope', '$mdDialog', 'parentScope', 'callb
 // GROUP TABLE END
 
 app.directive('evFieldResolver', [require('./app/directives/entityViewerFieldResolverDirective')]);
+app.directive('ismFieldResolver', [require('./app/directives/instrumentSchemeManagerFieldResolverDirective')]);
 app.directive('floatNumbers', [require('./app/directives/floatNumbersDirective')]);
 app.directive('instrumentModalResolver', ['$mdDialog', require('./app/directives/instrumentModalResolverDirective')]);
+app.directive('instrumentEventActionResolver', ['$mdDialog', require('./app/directives/instrumentEventActionResolverDirective')]);
 app.directive('classifierModalResolver', ['$mdDialog', require('./app/directives/classifierModalResolverDirective')]);
 app.directive('zhDatePicker', ['$mdDialog', require('./app/directives/zhDatePickerDirective')]);
 app.directive('customScroll', [require('./app/directives/customScrollDirective')]);
