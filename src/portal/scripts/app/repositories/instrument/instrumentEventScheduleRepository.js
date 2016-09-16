@@ -1,5 +1,5 @@
 /**
- * Created by szhitenev on 17.08.2016.
+ * Created by szhitenev on 04.05.2016.
  */
 (function () {
 
@@ -10,8 +10,8 @@
 
     var baseUrl = '/api/v1/';
 
-    var getList = function (providerId) {
-        return window.fetch(baseUrl + 'import/instrument-scheme/?provider' + providerId,
+    var getList = function (options) {
+        return window.fetch(configureRepositoryUrlService.configureUrl(baseUrl + 'instruments/event-schedule-config/', options),
             {
                 method: 'GET',
                 credentials: 'include',
@@ -24,8 +24,22 @@
         })
     };
 
-    var create = function (scheme) {
-        return window.fetch(baseUrl + 'import/instrument-scheme/',
+    var getByKey = function (id) {
+        return window.fetch(baseUrl + 'instruments/event-schedule-config/' + id + '/',
+            {
+                method: 'GET',
+                credentials: 'include',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-type': 'application/json'
+                }
+            }).then(function (data) {
+            return data.json();
+        })
+    };
+
+    var create = function (account) {
+        return window.fetch(baseUrl + 'instruments/event-schedule-config/',
             {
                 method: 'POST',
                 credentials: 'include',
@@ -34,45 +48,30 @@
                     Accept: 'application/json',
                     'Content-type': 'application/json'
                 },
-                body: JSON.stringify(scheme)
+                body: JSON.stringify(account)
             }).then(function (data) {
             return data.json();
         })
     };
 
-    var getByKey = function (id) {
-        return window.fetch(baseUrl + 'import/instrument-scheme/' + id + '/',
+    var update = function (id, account) {
+        return window.fetch(baseUrl + 'instruments/event-schedule-config/' + id + '/',
             {
-                method: 'GET',
-                credentials: 'include',
-                headers: {
-                    'X-CSRFToken': cookieService.getCookie('csrftoken'),
-                    Accept: 'application/json',
-                    'Content-type': 'application/json'
-                }
-            }).then(function (data) {
-            return data.json();
-        })
-    };
-
-    var update = function (id, scheme) {
-        return window.fetch(baseUrl + 'import/instrument-scheme/' + id + '/',
-            {
-                method: 'PATCH',
+                method: 'PUT',
                 credentials: 'include',
                 headers: {
                     'X-CSRFToken': cookieService.getCookie('csrftoken'),
                     Accept: 'application/json',
                     'Content-type': 'application/json'
                 },
-                body: JSON.stringify(scheme)
+                body: JSON.stringify(account)
             }).then(function (data) {
             return data.json();
         })
     };
 
     var deleteByKey = function (id) {
-        return window.fetch(baseUrl + 'import/instrument-scheme/' + id + '/',
+        return window.fetch(baseUrl + 'instruments/event-schedule-config/' + id + '/',
             {
                 method: 'DELETE',
                 credentials: 'include',
@@ -82,14 +81,18 @@
                     'Content-type': 'application/json'
                 }
             }).then(function (data) {
-            return data.json();
+            return new Promise(function(resolve,reject) {
+                resolve({status: 'deleted'});
+            });
+            //return data.json();
         })
     };
 
+
     module.exports = {
         getList: getList,
-        create: create,
         getByKey: getByKey,
+        create: create,
         update: update,
         deleteByKey: deleteByKey
     }
