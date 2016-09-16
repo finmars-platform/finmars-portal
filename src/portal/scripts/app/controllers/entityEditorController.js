@@ -11,6 +11,7 @@
     var entityViewerHelperService = require('../services/entityViewerHelperService');
 
     var usersService = require('../services/usersService');
+    var usersGroupService = require('../services/usersGroupService');
 
     var uiService = require('../services/uiService');
 
@@ -68,19 +69,34 @@
                         vm.entity = data[0];
                         vm.readyStatus.entity = true;
                         console.log('1231231231312?');
-                        vm.getMemberList();
+                        vm.loadPermissions();
                     });
 
                     //$scope.$apply();
                 });
             } else {
                 vm.readyStatus.entity = true;
-                vm.getMemberList();
+                vm.loadPermissions();
             }
 
         });
 
         var originatorEv;
+
+        vm.loadPermissions = function () {
+
+            var promises = [];
+
+            promises.push(vm.getMemberList());
+            promises.push(vm.getGroupList());
+
+            Promise.all(promises).then(function (data) {
+
+                vm.readyStatus.permissions = true;
+                $scope.$apply();
+            });
+
+        };
 
         usersService.getMe().then(function (data) {
             //console.log('data user', data);
@@ -88,6 +104,37 @@
             vm.readyStatus.me = true;
             $scope.$apply();
         });
+
+        vm.getGroupList = function () {
+            return usersGroupService.getList().then(function (data) {
+
+                //console.log('data MEMBERS', data);
+
+                vm.groups = data.results;
+
+                vm.groups.forEach(function (group) {
+
+                    if (vm.entity["group_object_permissions"]) {
+                        vm.entity["group_object_permissions"].forEach(function (permission) {
+
+                            if (permission.group == group.id) {
+                                if (!group.hasOwnProperty('objectPermissions')) {
+                                    group.objectPermissions = {};
+                                }
+                                if (permission.permission === "manage_" + vm.entityType) {
+                                    group.objectPermissions.manage = true;
+                                }
+                                if (permission.permission === "change_" + vm.entityType) {
+                                    group.objectPermissions.change = true;
+                                }
+                            }
+                        })
+                    }
+
+                });
+            });
+
+        };
 
         vm.getMemberList = function () {
             usersService.getMemberList().then(function (data) {
@@ -136,7 +183,7 @@
 
                 var haveAccess = false;
 
-                if (vm.entity.granted_permissions.indexOf("manage_" + vm.entityType) !== -1){
+                if (vm.entity.granted_permissions.indexOf("manage_" + vm.entityType) !== -1) {
                     haveAccess = true;
                 }
 
@@ -149,7 +196,7 @@
                 //    }
                 //}
 
-                    //console.log('have access', haveAccess);
+                //console.log('have access', haveAccess);
 
                 return haveAccess;
             } else {
@@ -402,6 +449,26 @@
                 if (member.objectPermissions && member.objectPermissions.change == true) {
                     vm.entity["user_object_permissions"].push({
                         "member": member.id,
+                        "permission": "change_" + vm.entityType
+                    })
+                }
+
+            });
+
+            vm.entity["group_object_permissions"] = [];
+
+            vm.groups.forEach(function (group) {
+
+                if (group.objectPermissions && group.objectPermissions.manage == true) {
+                    vm.entity["group_object_permissions"].push({
+                        "group": group.id,
+                        "permission": "manage_" + vm.entityType
+                    })
+                }
+
+                if (group.objectPermissions && group.objectPermissions.change == true) {
+                    vm.entity["group_object_permissions"].push({
+                        "group": group.id,
                         "permission": "change_" + vm.entityType
                     })
                 }

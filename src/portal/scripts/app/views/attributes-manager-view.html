@@ -19,6 +19,14 @@
                 </md-button>
             </div>
             <div layout="row" flex="50" layout-align="end center">
+                <md-button class="md-raised" data-ng-click="vm.toggleHidden($event)">
+                    <span data-ng-show="!vm.showHidden">
+                        SHOW HIDDEN ATTRIBUTES
+                    </span>
+                    <span data-ng-show="vm.showHidden">
+                        HIDE ATTRIBUTES
+                    </span>
+                </md-button>
                 <md-button class="md-raised md-primary" data-ui-sref="app.data.{{vm.entityType}}">
                     RETURN TO VIEW
                 </md-button>
@@ -29,7 +37,7 @@
             </div>
         </div>
         <div data-ng-if="vm.attrs.length">
-            <md-card data-ng-repeat="item in vm.attrs" class="am-attr-card">
+            <md-card data-ng-repeat="item in vm.attrs" class="am-attr-card" data-ng-if="vm.checkIsHidden(item)">
                 <div>
                     <b data-ng-bind="item.name"></b> (<span data-ng-bind="vm.bindType(item)"></span>)
                     <div class="am-attr-misc">
