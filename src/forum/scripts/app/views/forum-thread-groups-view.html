@@ -3,20 +3,20 @@
 		<h2 class="forum-section-header list">Thread groups list</h2>
 		<div layout="row">
 			<div layout="row" flex="50">
-				<md-input-container class="forum-filter-by-tags">
+				<md-input-container class="margin-top-5">
 					<label>Filter by tags</label>
-					<md-select aria-label="" data-ng-model="vm.filterTags" multiple="true">
+					<md-select aria-label="filter by tags" data-ng-model="vm.filterTags" multiple="true">
 						<md-option data-ng-repeat="tag in vm.tags" ng-value="tag.id">{{tag.display_name}}</md-option>
 					</md-select>
 				</md-input-container>
+				<hide-by-tags tags="vm.tags"></hide-by-tags>
 			</div>
 			<div layout="row" layout-align="end center" flex="50">
 				<md-button aria-label="" class="md-raised md-primary" data-ng-click="vm.createThredsGroup($event)">Create thread group</md-button>
 			</div>
 		</div>
 		<div data-ng-if="vm.readyStatus.content">
-			<md-card class="group-forum-list-item" class="md-3-line" ng-repeat="item in vm.threadGroups | forumFilterByTags : vm.filterTags"
-			>
+			<md-card class="group-forum-list-item" class="md-3-line" ng-repeat="item in vm.threadGroups | forumFilterByTags : vm.filterTags" data-tag-id="{{item.filterTag}}">
 				<a href=""  data-ui-sref="app.forum.threads-list({groupId: item.id})">
 					<span data-ng-bind="item.name"></span>
 				</a>

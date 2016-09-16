@@ -1,27 +1,28 @@
 (function() {
 	'use strict';
 
-    var membersAndGroupsRepository = require('../repositories/membersAndGroupsRepository');
+	var membersAndGroupsRepository = require('../repositories/membersAndGroupsRepository');
 
-	var baseUrl = '/api/v1/';
+	var getList = function (type) {
+		return membersAndGroupsRepository.getList(type);
+	};
 
-	var getMembersOrGroups = function (option) {
-		var fetchUrl = '';
-		option === 'members' ? fetchUrl = 'users/member/' : fetchUrl = 'users/group/';
-		return window.fetch(baseUrl + 'users/member/',
-			{
-				method: 'GET',
-				credentials: 'include',
-				headers: {
-					Accept: 'application/json',
-					'Content-type': 'application/json'
-				}
-			}).then(function (data) {
-			return data.json();
-		})
+	var create = function (type, data) {
+		return membersAndGroupsRepository.create(type);
+	}
+
+	var update = function (type, id, data) {
+		return membersAndGroupsRepository.update(type);
+	};
+
+	var deleteByKey = function (type, id) {
+		return membersAndGroupsRepository.deleteByKey(type, id);
 	};
 
 	module.exports = {
-		getMembersOrGroups: getMembersOrGroups
+		getList: getList,
+		create: create,
+		update: update,
+		deleteByKey: deleteByKey
 	}
 }());
