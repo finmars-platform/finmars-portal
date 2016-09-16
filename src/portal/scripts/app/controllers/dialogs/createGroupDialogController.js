@@ -8,7 +8,7 @@
 		var vm = this;
 
 		vm.agree = function () {
-			$mdDialog.hide({status: 'agree', data: {username: vm.memberName, email: vm.memberEmail}});
+			$mdDialog.hide({status: 'agree', data: {name: vm.groupName}});
 		}
 
 		vm.cancel = function () {

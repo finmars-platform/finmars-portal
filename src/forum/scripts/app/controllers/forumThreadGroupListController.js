@@ -22,7 +22,7 @@
 				console.log('threadGroup items', data.results);
 				vm.threadGroups = data.results;
 				vm.threadGroups.forEach(function (group) {
-					group.filterTag = group.tags[0];
+					group.filterTag = parseInt(group.tags[0]);
 				});
 				vm.readyStatus.content = true;
 				console.log('thread groups tags', vm.threadGroups);
