@@ -120,6 +120,7 @@ app.controller('SettingBloombergImportInstrumentController', ['$scope', '$state'
 
 app.controller('SettingsMembersAndGroupsController', ['$scope', '$mdDialog', require('./app/controllers/settings/settingsMembersAndGroupsController')]);
 app.controller('CreateMemberDialogController', ['$scope', '$mdDialog', require('./app/controllers/dialogs/createMemberDialogController')]);
+app.controller('CreateGroupDialogController', ['$scope', '$mdDialog', require('./app/controllers/dialogs/createGroupDialogController')]);
 
 app.directive('menuToggle', [require('./app/directives/menuToggleDirective')]);
 app.directive('menuLink', [require('./app/directives/menuLinkDirective')]);

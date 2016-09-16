@@ -23,6 +23,8 @@
 	app.controller('EditThreadDialogController', ['$scope', '$mdDialog', 'threadId', require('./app/controllers/dialogs/editThreadDialogController')]);
 	app.controller('EditThreadsGroupsDialogController', ['$scope', '$mdDialog', 'threadsGroupId', require('./app/controllers/dialogs/editThreadsGroupsDialogController')]);
 		
+	app.directive('hideByTags', [require('./app/directives/hideByTagsDirective')]);
+
 	require('./templates.min.js');
 
 	app.filter('forumFilterByTags', function () {
