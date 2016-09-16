@@ -6,15 +6,122 @@
     'use strict';
 
     var logService = require('../../../../../core/services/logService');
+    var usersService = require('../../services/usersService');
+    var usersGroupService = require('../../services/usersGroupService');
 
     var metaService = require('../../services/metaService');
 
-    module.exports = function ($scope, $mdDialog, attribute) {
+    var attributeTypeService = require('../../services/attributeTypeService');
+
+    module.exports = function ($scope, $mdDialog, data) {
 
         logService.controller('AttributesAddDialogManagerController', 'initialized');
 
         var vm = this;
-        vm.attribute = JSON.parse(JSON.stringify(attribute));
+
+        vm.readyStatus = {attribute: false, permissions: false};
+
+        vm.entityType = data.entityType;
+        vm.attributeId = data.attributeId;
+
+        attributeTypeService.getByKey(vm.entityType, vm.attributeId).then(function (data) {
+            vm.attribute = data;
+            vm.readyStatus.attribute = true;
+            vm.loadPermissions();
+            $scope.$apply();
+        });
+
+        vm.loadPermissions = function () {
+
+            var promises = [];
+
+            promises.push(vm.getMemberList());
+            promises.push(vm.getGroupList());
+
+            Promise.all(promises).then(function (data) {
+
+                vm.readyStatus.permissions = true;
+                $scope.$apply();
+            });
+
+        };
+
+        vm.getGroupList = function () {
+            return usersGroupService.getList().then(function (data) {
+
+                //console.log('data MEMBERS', data);
+
+                vm.groups = data.results;
+
+                vm.groups.forEach(function (group) {
+
+                    if (vm.attribute["group_object_permissions"]) {
+                        vm.attribute["group_object_permissions"].forEach(function (permission) {
+
+                            if (permission.group == group.id) {
+                                if (!group.hasOwnProperty('objectPermissions')) {
+                                    group.objectPermissions = {};
+                                }
+                                if (permission.permission === "manage_" + vm.entityType + 'attributetype') {
+                                    group.objectPermissions.manage = true;
+                                }
+                                if (permission.permission === "change_" + vm.entityType + 'attributetype') {
+                                    group.objectPermissions.change = true;
+                                }
+                            }
+                        })
+                    }
+
+                });
+            });
+
+        };
+
+        vm.getMemberList = function () {
+            return usersService.getMemberList().then(function (data) {
+
+                //console.log('data MEMBERS', data);
+
+                vm.members = data.results;
+
+                vm.members.forEach(function (member) {
+
+                    if (vm.attribute["user_object_permissions"]) {
+                        vm.attribute["user_object_permissions"].forEach(function (permission) {
+
+                            if (permission.member == member.id) {
+                                if (!member.hasOwnProperty('objectPermissions')) {
+                                    member.objectPermissions = {};
+                                }
+                                if (permission.permission === "manage_" + vm.entityType + 'attributetype') {
+                                    member.objectPermissions.manage = true;
+                                }
+                                if (permission.permission === "change_" + vm.entityType + 'attributetype') {
+                                    member.objectPermissions.change = true;
+                                }
+                            }
+                        })
+                    }
+
+                });
+            });
+        };
+
+        vm.checkPermissions = function () {
+
+            if (vm.attributeId) {
+
+                var haveAccess = false;
+
+                if (vm.attribute.granted_permissions.indexOf("manage_" + vm.entityType + 'attributetype') !== -1) {
+                    haveAccess = true;
+                }
+
+                return haveAccess;
+            } else {
+                return true;
+            }
+        };
 
         vm.editRestriction = true;
 
@@ -22,8 +129,50 @@
 
         vm.valueTypes = metaService.getDynamicAttrsValueTypesCaptions();
 
-        vm.agree = function(){
+        vm.agree = function () {
             console.log('vm.attr', vm.attribute);
+
+            vm.attribute["user_object_permissions"] = [];
+
+            vm.members.forEach(function (member) {
+
+                if (member.objectPermissions && member.objectPermissions.manage == true) {
+                    vm.attribute["user_object_permissions"].push({
+                        "member": member.id,
+                        "permission": "manage_" + vm.entityType + 'attributetype'
+                    })
+                }
+
+                if (member.objectPermissions && member.objectPermissions.change == true) {
+                    vm.attribute["user_object_permissions"].push({
+                        "member": member.id,
+                        "permission": "change_" + vm.entityType + 'attributetype'
+                    })
+                }
+
+            });
+
+            vm.attribute["group_object_permissions"] = [];
+
+            vm.groups.forEach(function (group) {
+
+                if (group.objectPermissions && group.objectPermissions.manage == true) {
+                    vm.attribute["group_object_permissions"].push({
+                        "group": group.id,
+                        "permission": "manage_" + vm.entityType + 'attributetype'
+                    })
+                }
+
+                if (group.objectPermissions && group.objectPermissions.change == true) {
+                    vm.attribute["group_object_permissions"].push({
+                        "group": group.id,
+                        "permission": "change_" + vm.entityType + 'attributetype'
+                    })
+                }
+
+            });
+
+
             $mdDialog.hide({status: 'agree', data: {attribute: vm.attribute}});
         };
 

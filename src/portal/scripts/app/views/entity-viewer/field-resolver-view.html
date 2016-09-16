@@ -26,7 +26,7 @@
                                md-container-class="h-instrument-select"
                                data-instrument-modal-resolver
                                md-selected-text="bindFormFields()">
-                        <md-option data-ng-repeat="field in fields | filter:{user_code: searchTerm} track by field.id" ng-value="field.id">
+                        <md-option data-ng-repeat="field in fields track by field.id" ng-value="field.id">
                             {{bindListFields(field)}}
                         </md-option>
                     </md-select>
