@@ -32,6 +32,9 @@
 				console.log(data, data.results);
 				vm.threadMessagesTotal = data.count;
 				vm.threads = data.results;
+				vm.threads.forEach(function(thread) {
+					thread.filterTag = thread.tags[0];
+				});
 				vm.readyStatus.content = true;
 				$scope.$apply();
 

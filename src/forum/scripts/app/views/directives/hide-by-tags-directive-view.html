@@ -1,0 +1,6 @@
+<md-input-container class="margin-top-5">
+	<label>Hide by tags</label>
+	<md-select aria-label="hide" data-ng-model="tagsToHide" multiple="true" data-ng-change="hideByTags()">
+		<md-option data-ng-repeat="tag in tags" ng-value="tag.id">{{tag.display_name}}</md-option>
+	</md-select>
+</md-input-container>
