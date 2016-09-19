@@ -173,7 +173,7 @@
         };
 
         vm.addMapField = function () {
-            vm.mapFields.push({
+            vm.mappedFieldsSecond.push({
                 expression: '',
                 required: false,
                 complexExpressionEntity: false
@@ -190,7 +190,15 @@
         };
 
         vm.removeMappingField = function (item, $index) {
-            vm.mapFields.splice($index, 1);
+            vm.mappedFieldsSecond.splice($index, 1);
+        };
+
+        vm.beatufier = function (key) {
+            if (key !== undefined) {
+                var str = key.split('_').join(' ');
+                return str;
+            }
+            return key
         };
 
         vm.cancel = function () {

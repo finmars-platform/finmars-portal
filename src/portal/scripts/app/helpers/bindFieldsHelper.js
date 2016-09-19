@@ -24,7 +24,7 @@
             });
         }
 
-        return tags;
+        return [{name: 'No group', fields: fields}];
     };
 
     module.exports = {
