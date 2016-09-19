@@ -62,7 +62,8 @@
 				targetEvent: ev
 			}).then(function (data) {
 				console.log("new group's data is", data);
-				membersAndGroupsService.create('groups', {name: data.data.username}).then(function() {
+				membersAndGroupsService.create('groups', {name: data.data.name, members: data.data.members}).then(function() {
+					vm.getList();
 					console.log('group has been created');
 				});
 			});
