@@ -14,7 +14,7 @@
 					</thead>
 					<tbody class="members-groups-tbody">
 						<tr data-ng-repeat="member in vm.members">
-							<td><md-button class="members-groups-name" data-ng-bind="member.username" data-ng-click="vm.manageMemberDialog($event, member.id)"></md-button></td>
+							<td><md-button class="members-groups-name" data-ng-bind="member.display_name" data-ng-click="vm.manageMemberDialog($event, member.id)"></md-button></td>
 							<td>
 								<span data-ng-if="member.is_admin">Admin</span>
 								<span data-ng-if="!member.is_admin">Member</span>

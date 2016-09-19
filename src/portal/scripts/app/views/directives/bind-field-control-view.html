@@ -18,9 +18,11 @@
             </md-input-container>
         </div>
         <div data-ng-if="getModelKey() !== 'notes' ">
-            <md-input-container class="md-block bind-field-input {{item.options.copyFrom ? 'with-button' : ''}}">
+            <md-input-container
+                    class="md-block bind-field-input {{item.options.copyFrom ? 'with-button' : ''}} {{checkValid() ? 'mdc-error' : ''}}
+                    {{entity[getModelKey()] != '' ? 'md-input-has-value' : ''}}">
                 <label data-ng-bind="getName()"></label>
-                <input data-ng-change="changeWatcher()" data-ng-model="entity[getModelKey()]">
+                <input type="text" data-ng-change="changeWatcher()" data-ng-model="entity[getModelKey()]">
                 <md-button data-ng-if="item.options.copyFrom" class="bf-copy-btn"
                            data-ng-click="copyFromField(item.options.copyFrom)">
                     <ng-md-icon icon="content_copy"></ng-md-icon>
@@ -71,22 +73,33 @@
         </md-checkbox>
     </div>
     <div data-ng-if="fieldType['display_name'] === 'Classifier'">
-        <md-input-container class="md-block">
-            <label data-ng-bind="getName()"></label>
-            <md-select data-ng-model="entity[getModelKey()]"
-                       data-classifier-modal-resolver
-                       data-classifier-attr="item"
-                       data-ng-change="changeClassifier()"
-                       md-container-class="h-classifier-select"
-                       data-entity-type="entityType">
-                <md-option ng-value="node.id" selected="selected">
-                    {{node.name}}
-                </md-option>
-            </md-select>
-        </md-input-container>
+        <div data-ng-if="readyStatus.classifier">
+            <md-input-container class="md-block">
+                <label data-ng-bind="getName()"></label>
+                <!--{{item}}-->
+                <md-select data-ng-model="entity[getModelKey()]"
+                           data-classifier-modal-resolver
+                           data-classifier-attr="item"
+                           data-classifier-value="entity[getModelKey()]"
+                           data-ng-change="changeClassifier()"
+                           md-container-class="h-classifier-select"
+                           data-entity-type="entityType">
+
+                    <md-option ng-value="node.id" selected="selected">
+                        {{node.name}}
+                    </md-option>
+                </md-select>
+            </md-input-container>
+        </div>
+        <div data-ng-if="!readyStatus.classifier">
+            <div layout="row" layout-sm="column" layout-align="space-around">
+                <md-progress-circular md-mode="indeterminate"></md-progress-circular>
+            </div>
+        </div>
     </div>
     <div data-ng-if="fieldType['display_name'] === 'Decoration'">
         <span class="ec-decoration line" data-ng-if="!item.options.labelText"></span>
-        <span class="ec-decoration labeled" data-ng-if="item.options.labelText"><span class="w-rp" data-ng-bind="item.options.labelText"></span></span>
+        <span class="ec-decoration labeled" data-ng-if="item.options.labelText"><span class="w-rp"
+                                                                                      data-ng-bind="item.options.labelText"></span></span>
     </div>
 </div>

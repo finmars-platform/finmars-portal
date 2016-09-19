@@ -32,7 +32,7 @@
         vm.entityTabs = metaService.getEntityTabs(vm.entityType);
         vm.evAction = 'update';
         vm.entityId = $scope.$parent.vm.entityId;
-        vm.entity = {};
+        vm.entity = {$_isValid: true};
 
         logService.property('entityType', vm.entityType);
         logService.property('entityId', vm.entityId);
@@ -67,6 +67,7 @@
                     vm.entity = data;
                     entityViewerHelperService.transformItems([vm.entity], vm.attrs).then(function (data) {
                         vm.entity = data[0];
+                        vm.entity.$_isValid = true;
                         vm.readyStatus.entity = true;
                         console.log('1231231231312?');
                         vm.loadPermissions();
@@ -493,20 +494,64 @@
                 return result;
             }
 
-            var resultEntity = checkForNulls(vm.entity);
+            function checkForNotNullRestriction(item) {
+                var i, e, b, a;
+                var keys = Object.keys(item);
+                var isValid = true;
+                for (i = 0; i < keys.length; i = i + 1) {
+                    for (e = 0; e < vm.entityAttrs.length; e = e + 1) {
+                        if (keys[i] == vm.entityAttrs[e].key) {
+                            if(vm.entityAttrs[e].options && vm.entityAttrs[e].options.notNull == true) {
+                                if(item[keys[i]] == '' || item[keys[i]] == null || item[keys[i]] == undefined) {
+                                    isValid = false
+                                }
+                            }
+                        }
+                    }
 
-            console.log('resultEntity', resultEntity);
+                    for (b = 0; b < vm.baseAttrs.length; b = b + 1) {
+                        if (keys[i] == vm.baseAttrs[b].key) {
+                            if(vm.baseAttrs[b].options && vm.baseAttrs[b].options.notNull == true) {
+                                if(item[keys[i]] == '' || item[keys[i]] == null || item[keys[i]] == undefined) {
+                                    isValid = false
+                                }
+                            }
+                        }
+                    }
 
-            return new Promise(function (resolve, reject) {
-                var options = {
-                    entityType: vm.entityType,
-                    entity: resultEntity
-                };
-                if (vm.entityId) {
-                    options.entityId = vm.entityId
+                    for (a = 0; a < vm.attrs.length; a = a + 1) {
+                        if (keys[i] == vm.attrs[a].name) {
+                            if(vm.attrs[a].options && vm.attrs[a].options.notNull == true) {
+                                if(item[keys[i]] == '' || item[keys[i]] == null || item[keys[i]] == undefined) {
+                                    isValid = false
+                                }
+                            }
+                        }
+                    }
                 }
-                resolve(options);
-            });
+
+                vm.entity.$_isValid = isValid;
+
+                return isValid
+            }
+
+
+            if (checkForNotNullRestriction(vm.entity)) {
+
+                var resultEntity = checkForNulls(vm.entity);
+                console.log('resultEntity', resultEntity);
+
+                return new Promise(function (resolve, reject) {
+                    var options = {
+                        entityType: vm.entityType,
+                        entity: resultEntity
+                    };
+                    if (vm.entityId) {
+                        options.entityId = vm.entityId
+                    }
+                    resolve(options);
+                });
+            }
         };
 
     }

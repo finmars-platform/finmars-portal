@@ -13,12 +13,19 @@
         var vm = this;
 
         vm.entityType = data.entityType;
+        vm.classifierId = data.classifier.id;
+        vm.classifierValue = data.classifierId;
+
 
         vm.getTree = function () {
 
-            attributeTypeService.getByKey(data.entityType, data.classifier.id).then(function (data) {
+            $('#js-tree-select-wrapper').remove();
+
+            attributeTypeService.getByKey(vm.entityType, vm.classifierId).then(function (data) {
 
                 console.log('DATA', data);
+
+                $('.js-tree-holder-dialog-select').append('<div id="js-tree-select-wrapper" class="js-tree-select" style="width: 100%; overflow: hidden"></div>');
 
                 function setText(item) {
                     item.text = item.name;
@@ -47,7 +54,7 @@
                             }
                         ]
                     },
-                    "dnd" : {
+                    "dnd": {
                         "is_draggable": function (node) {
                             return false
                         }
@@ -75,7 +82,15 @@
                     ]
                 });
                 $('#js-tree-select-wrapper').jstree(true).show_dots();
-                $scope.$apply();
+                $scope.$apply(function () {
+                    setTimeout(function () {
+                        $('#js-tree-select-wrapper').jstree("deselect_all");
+                    }, 300); // idk, wtf is this
+                    setTimeout(function () {
+                        console.log('vm.classifierId', vm.classifierValue);
+                        $('#js-tree-select-wrapper').jstree("select_node", "#" + vm.classifierValue);
+                    }, 301); // idk, wtf is this
+                });
 
             });
         };
@@ -119,7 +134,9 @@
 
                     res.data.classifier.classifiers = res.data.classifier.children.map(setName);
                     $('#js-tree-select-wrapper').jstree(true).destroy();
-                    attributeTypeService.update(vm.entityType, res.data.classifier.id, res.data.classifier).then(vm.getTree);
+                    attributeTypeService.update(vm.entityType, res.data.classifier.id, res.data.classifier).then(function () {
+                        vm.getTree();
+                    });
                 }
             });
         };

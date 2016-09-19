@@ -11,19 +11,6 @@
 			},
 			templateUrl: 'views/directives/two-fields-options-view.html',
 			link: function (scope, elem, attr) {
-				// var getAvailableOptions = function () {
-				// 	if (scope.selectedOptions && selectedOptions.length > 0) {
-				// 		var sOptionsId = scope.selectedOptions['id'];
-				// 		scope.selectedOptions.map(function(sOption) {
-				// 			scope.allOptions.map(function(option) {
-				// 				if (sOption !== option['id']) {
-				// 					scope.allOptions.push(option);
-				// 				}
-				// 			});
-				// 		});
-				// 	}
-				// }
-				console.log('two columns directive', scope.allOptions, scope.selectedOptions);
 				
 				scope.highlightOption = function (ev) {
 					var clickedOption = ev.currentTarget;
