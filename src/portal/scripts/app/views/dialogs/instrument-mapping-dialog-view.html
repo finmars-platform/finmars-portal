@@ -135,10 +135,128 @@
                                         </div>
                                         <div flex="10">
                                             <md-button
-                                                       class="custom-small-icon-btn md-raised"
-                                                       data-ng-click="vm.removeMappingField(item, $index)"
-                                                       data-ng-if="!item.required"
-                                                       class="md-raised">x
+                                                    class="custom-small-icon-btn md-raised"
+                                                    data-ng-click="vm.removeMappingField(item, $index)"
+                                                    data-ng-if="!item.required"
+                                                    class="md-raised">x
+                                            </md-button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div style="background: #ffeee8; padding: 10px; margin-bottom: 20px;">
+                                    <div data-ng-repeat="item in vm.mappedFieldsDefaults" layout="row" flex="100">
+                                        <div layout="row" flex="100">
+                                            <div flex="40">
+                                                <md-input-container>
+                                                    <md-select data-ng-model="item[vm.getModelKey(item)]"
+                                                               data-ng-focus="vm.checkAttrs()">
+                                                        <md-option data-ng-repeat="item in vm.baseAttrs"
+                                                                   ng-value="item.key"
+                                                                   class="{{item.disabled ? 'disabled' : ''}}">
+                                                            {{item.name}}
+                                                        </md-option>
+                                                        <md-option data-ng-repeat="item in vm.entityAttrs"
+                                                                   ng-value="item.key"
+                                                                   class="{{item.disabled ? 'disabled' : ''}}">
+                                                            {{item.name}}
+                                                        </md-option>
+                                                        <md-option data-ng-repeat="item in vm.attrs" ng-value="item.id"
+                                                                   class="{{item.disabled ? 'disabled' : ''}}">
+                                                            {{item.name}}
+                                                        </md-option>
+                                                    </md-select>
+                                                </md-input-container>
+                                            </div>
+                                            <div flex="50">
+                                                <div layout="row">
+                                                    <div flex="50">
+                                                        <div data-ng-if="item.value_type == 10">
+                                                            <md-input-container>
+                                                                <label for="">Default value</label>
+                                                                <input type="text" data-ng-model="item.expression">
+                                                            </md-input-container>
+                                                        </div>
+                                                        <div data-ng-if="item.value_type == 'field'">
+                                                            <div data-ism-field-resolver data-item="item"
+                                                                 data-options="options"></div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div flex="10">
+                                                <md-button
+                                                        class="custom-small-icon-btn md-raised"
+                                                        data-ng-click="vm.removeMappingField(item, $index)"
+                                                        data-ng-if="!item.required"
+                                                        class="md-raised">x
+                                                </md-button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div data-ng-repeat="item in vm.mappedFieldsSecond" layout="row" flex="100">
+                                    <div layout="row" flex="100">
+                                        <div flex="40">
+                                            <md-input-container>
+                                                <md-select data-ng-model="item[vm.getModelKey(item)]"
+                                                           data-ng-focus="vm.checkAttrs()">
+                                                    <md-option data-ng-repeat="item in vm.baseAttrs"
+                                                               ng-value="item.key"
+                                                               class="{{item.disabled ? 'disabled' : ''}}">
+                                                        {{item.name}}
+                                                    </md-option>
+                                                    <md-option data-ng-repeat="item in vm.entityAttrs"
+                                                               ng-value="item.key"
+                                                               class="{{item.disabled ? 'disabled' : ''}}">
+                                                        {{item.name}}
+                                                    </md-option>
+                                                    <md-option data-ng-repeat="item in vm.attrs" ng-value="item.id"
+                                                               class="{{item.disabled ? 'disabled' : ''}}">
+                                                        {{item.name}}
+                                                    </md-option>
+                                                </md-select>
+                                            </md-input-container>
+                                        </div>
+                                        <div flex="50">
+                                            <div data-ng-if="item.complexExpressionEntity == false" layout="row">
+                                                <div flex="50">
+                                                    <md-input-container>
+                                                        <label for="">Expression</label>
+                                                        <input type="text" data-ng-model="item.expression">
+                                                    </md-input-container>
+                                                </div>
+                                                <div flex="50">
+                                                    <md-button class="md-raised md-primary expr-btn"
+                                                               data-ng-click="vm.openExpressionDialog($event, item)">
+                                                        ...
+                                                    </md-button>
+                                                </div>
+                                            </div>
+                                            <div data-ng-if="item.complexExpressionEntity != false" layout="row">
+                                                <div flex="50">
+                                                    <md-input-container>
+                                                        <label for="">Expression</label>
+                                                        <input type="text" data-ng-model="item.expression">
+                                                    </md-input-container>
+                                                </div>
+                                                <div flex="50" layout="row">
+                                                    <md-button class="md-raised md-primary expr-btn"
+                                                               data-ng-click="vm.openExpressionDialog($event, item)">
+                                                        ...
+                                                    </md-button>
+                                                    <md-button class="md-raised md-primary complex-expr-btn"
+                                                               data-ng-click="vm.openMapping($event, item.complexExpressionEntity)">
+                                                        Edit mapping
+                                                    </md-button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div flex="10">
+                                            <md-button
+                                                    class="custom-small-icon-btn md-raised"
+                                                    data-ng-click="vm.removeMappingField(item, $index)"
+                                                    data-ng-if="!item.required"
+                                                    class="md-raised">x
                                             </md-button>
                                         </div>
                                     </div>

@@ -38,6 +38,15 @@
             vm.cron.day = day;
         };
 
+        vm.getRange = function (num) {
+            var res = [];
+            var i;
+            for (i = 0; i < num; i = i + 1) {
+                res.push(i);
+            }
+            return res;
+        };
+
         pricingAutomatedScheduleService.getSchedule().then(function (data) {
             vm.schedule = data;
             vm.readyStatus.schedule = true;
@@ -61,7 +70,12 @@
             if (values[4] != '*' && values[3] != '*') {
                 vm.cron.periodicity = 3;
                 vm.cron.day = values[4];
-                vm.cron.month = values[3];
+                if(values[3].length > 1) {
+                    vm.cron.month = values[3].split(',');
+                } else {
+                    vm.cron.month = [values[3]];
+                }
+
             }
 
             console.log('vm.periodicity', vm.periodicity);
@@ -77,6 +91,10 @@
 
             var minutes = moment(new Date(vm.cron.time)).format('mm');
             var hours = moment(new Date(vm.cron.time)).format('hh');
+
+            //console.log('cron.time', vm.cron.time);
+            //console.log('minutes', minutes);
+            //console.log('hours', hours);
 
             if (vm.cron.periodicity == 1) {
                 console.log(minutes + ' ' + parseInt(hours) + ' * * *');

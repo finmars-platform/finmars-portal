@@ -67,13 +67,15 @@
                 key: 'name',
                 caption: 'Name',
                 required: true,
-                expression: ''
+                expression: '',
+                complexExpressionEntity: false
             },
             {
                 key: 'user_code',
                 caption: 'User code',
                 required: true,
-                expression: ''
+                expression: '',
+                complexExpressionEntity: false
             },
             {
                 key: 'instrument_type',
@@ -85,19 +87,68 @@
                 key: 'reference_for_pricing',
                 caption: 'Reference for pricing',
                 required: true,
-                expression: ''
+                expression: '',
+                complexExpressionEntity: false
+            }
+        ];
+
+        vm.mappedFieldsDefaults = [
+            {
+                key: 'daily_pricing_model',
+                caption: 'Daily pricing model',
+                required: false,
+                value_type: "field",
+                expression: '',
+                complexExpressionEntity: false
             },
+            {
+                key: 'price_download_scheme',
+                caption: 'Price download scheme',
+                required: false,
+                value_type: "field",
+                expression: '',
+                complexExpressionEntity: false
+            },
+            {
+                key: 'default_price',
+                caption: 'Default price',
+                value_type: 10,
+                required: false,
+                expression: '',
+                complexExpressionEntity: false
+            },
+            {
+                key: 'default_accrued',
+                caption: 'Default accrued',
+                value_type: 10,
+                required: false,
+                expression: '',
+                complexExpressionEntity: false
+            },
+            {
+                key: 'payment_size_detail',
+                caption: 'Payment size detail',
+                value_type: "field",
+                required: false,
+                expression: '',
+                complexExpressionEntity: false
+            }
+        ];
+
+        vm.mappedFieldsSecond = [
             {
                 key: 'short_name',
                 caption: 'Short name',
                 required: true,
-                expression: ''
+                expression: '',
+                complexExpressionEntity: false
             },
             {
                 key: 'public_name',
                 caption: 'Public name',
                 required: true,
-                expression: ''
+                expression: '',
+                complexExpressionEntity: false
             }
         ];
 
@@ -154,26 +205,91 @@
 
             };
 
-            var keys = Object.keys(vm.scheme);
-            var i;
-            vm.mapFields = [];
-            for (i = 0; i < keys.length; i = i + 1) {
+            function syncMapFields() {
+                var keys = Object.keys(vm.scheme);
+                var i;
+                var m;
+                //vm.mapFields = [];
+                for (i = 0; i < keys.length; i = i + 1) {
 
-                if (vm.hidedEntityAttrs.indexOf(keys[i]) === -1) {
+                    if (vm.hidedEntityAttrs.indexOf(keys[i]) === -1) {
 
-                    var caption = findKeyCaption(keys[i]);
-                    var required = checkRequired(keys[i]);
-                    var complexExpressionEntity = findEntityWithComplexExpression(keys[i]);
+                        var caption = findKeyCaption(keys[i]);
+                        var required = checkRequired(keys[i]);
+                        var complexExpressionEntity = findEntityWithComplexExpression(keys[i]);
 
-                    vm.mapFields.push({
-                        caption: caption,
-                        required: required,
-                        complexExpressionEntity: complexExpressionEntity,
-                        key: keys[i],
-                        expression: vm.scheme[keys[i]]
-                    })
+                        for (m = 0; m < vm.mapFields.length; m = m + 1) {
+                            if (vm.mapFields[m].key == keys[i]) {
+                                vm.mapFields[m].caption = caption;
+                                vm.mapFields[m].required = required;
+                                vm.mapFields[m].complexExpressionEntity = complexExpressionEntity;
+                                vm.mapFields[m].expression = vm.scheme[keys[i]];
+                            }
+
+                        }
+
+                    }
                 }
             }
+
+            function syncMappedFieldsDefaults() {
+                var keys = Object.keys(vm.scheme);
+                var i;
+                var m;
+                //vm.mapFields = [];
+                for (i = 0; i < keys.length; i = i + 1) {
+
+                    if (vm.hidedEntityAttrs.indexOf(keys[i]) === -1) {
+
+                        var caption = findKeyCaption(keys[i]);
+                        var required = checkRequired(keys[i]);
+                        var complexExpressionEntity = findEntityWithComplexExpression(keys[i]);
+
+                        for (m = 0; m < vm.mappedFieldsDefaults.length; m = m + 1) {
+                            if (vm.mappedFieldsDefaults[m].key == keys[i]) {
+                                vm.mappedFieldsDefaults[m].caption = caption;
+                                vm.mappedFieldsDefaults[m].required = required;
+                                vm.mappedFieldsDefaults[m].complexExpressionEntity = complexExpressionEntity;
+                                vm.mappedFieldsDefaults[m].expression = vm.scheme[keys[i]];
+                            }
+
+                        }
+
+                    }
+                }
+            }
+
+            function syncMappedFieldsSecond() {
+                var keys = Object.keys(vm.scheme);
+                var i;
+                var m;
+                //vm.mapFields = [];
+                for (i = 0; i < keys.length; i = i + 1) {
+
+                    if (vm.hidedEntityAttrs.indexOf(keys[i]) === -1) {
+
+                        var caption = findKeyCaption(keys[i]);
+                        var required = checkRequired(keys[i]);
+                        var complexExpressionEntity = findEntityWithComplexExpression(keys[i]);
+
+                        for (m = 0; m < vm.mappedFieldsSecond.length; m = m + 1) {
+                            if (vm.mappedFieldsSecond[m].key == keys[i]) {
+                                vm.mappedFieldsSecond[m].caption = caption;
+                                vm.mappedFieldsSecond[m].required = required;
+                                vm.mappedFieldsSecond[m].complexExpressionEntity = complexExpressionEntity;
+                                vm.mappedFieldsSecond[m].expression = vm.scheme[keys[i]];
+                            }
+
+                        }
+
+                    }
+                }
+            }
+
+            syncMapFields();
+            syncMappedFieldsDefaults();
+            syncMappedFieldsSecond();
+
 
             var a;
             for (a = 0; a < vm.scheme.attributes.length; a = a + 1) {

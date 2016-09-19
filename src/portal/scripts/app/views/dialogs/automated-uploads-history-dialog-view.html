@@ -61,7 +61,7 @@
                         <div layout="row" style="padding-top: 14px">
                             <md-input-container>
                                 <label for="">Month</label>
-                                <md-select data-ng-model="vm.cron.month">
+                                <md-select data-ng-model="vm.cron.month" multiple>
                                     <md-option value="1">January</md-option>
                                     <md-option value="2">February</md-option>
                                     <md-option value="3">March</md-option>
@@ -79,13 +79,7 @@
                             <md-input-container>
                                 <label for="">Day</label>
                                 <md-select data-ng-model="vm.cron.day">
-                                    <md-option value="1">Monday</md-option>
-                                    <md-option value="2">Tuesday</md-option>
-                                    <md-option value="3">Wednesday</md-option>
-                                    <md-option value="4">Thursday</md-option>
-                                    <md-option value="5">Friday</md-option>
-                                    <md-option value="6">Saturday</md-option>
-                                    <md-option value="7">Sunday</md-option>
+                                    <md-option value="{{item + 1}}" data-ng-repeat="item in vm.getRange(30)">{{item + 1}}</md-option>
                                 </md-select>
                             </md-input-container>
                         </div>

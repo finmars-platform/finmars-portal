@@ -5,23 +5,20 @@
 
     'use strict';
 
+    var baseUrl = '/api/v1/';
+
     var getDailyPricingModelChoices = function () {
-        return new Promise(function(resolve, reject){
-            resolve([
-                {
-                    "value": "1",
-                    "name": "Skip"
-                },
-                {
-                    "value": "2",
-                    "name": "Manual"
-                },
-                {
-                    "value": "3",
-                    "name": "Bloomberg"
+        return window.fetch(baseUrl + 'instruments/daily-pricing-model/',
+            {
+                method: 'GET',
+                credentials: 'include',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-type': 'application/json'
                 }
-            ])
-        });
+            }).then(function (data) {
+            return data.json();
+        })
     };
 
     var getPaymentSizeDetailChoices = function () {
