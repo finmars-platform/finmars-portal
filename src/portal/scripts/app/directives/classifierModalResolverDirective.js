@@ -14,7 +14,8 @@
             require: '?ngModel',
             scope: {
                 classifierAttr: '=',
-                entityType: '='
+                entityType: '=',
+                classifierValue: '='
             },
             link: function (scope, elem, attr, ngModelCtrl) {
 
@@ -40,6 +41,7 @@
                             data: {
                                 ngModelCtrl: ngModelCtrl,
                                 classifier: scope.classifierAttr,
+                                classifierId: scope.classifierValue,
                                 entityType: scope.entityType
                             }
                         }

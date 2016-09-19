@@ -19,7 +19,7 @@
             link: function (scope, elem, attr) {
 
                 scope.entityType = scope.$parent.vm.entityType;
-
+                scope.readyStatus = {classifier: false};
                 scope.entity = scope.$parent.vm.entity;
 
                 var attrs = scope.$parent.vm.attrs;
@@ -65,6 +65,19 @@
                         });
                         scope.entity[scope.getModelKey()] = scope.entity[resAttr.name];
                     }
+                };
+
+                scope.checkValid = function () {
+
+                    if (scope.entity.$_isValid == false) {
+                        var item = scope.entity[scope.getModelKey()];
+                        if (item == null || item == '' || item == undefined) {
+                            return true
+                        }
+                    }
+
+                    return false
+
                 };
 
                 scope.dateFormatter = function () {
@@ -152,17 +165,27 @@
                     });
                 }
 
-                if (scope.fieldType && scope.fieldType.value === 30) {
+                scope.findNodeItem = function () {
+                    scope.readyStatus.classifier = false;
+                    return new Promise(function (resolve) {
+                        getNode().then(function (data) {
+                            scope.readyStatus.classifier = true;
+                            scope.node = data;
+                            scope.entity[scope.getModelKey()] = scope.classifierId;
+                            resolve(undefined)
+                        });
+                    })
+                }
+
+                if (scope.fieldType && scope.fieldType.value == 30) {
 
                     if (scope.entity) {
 
                         scope.classifierId = scope.entity[scope.getModelKey()];
 
-                        getNode().then(function (data) {
-                            scope.node = data;
-                            scope.entity[scope.getModelKey()] = scope.classifierId;
+                        scope.findNodeItem().then(function () {
                             scope.$apply();
-                        });
+                        })
                     }
                 }
 
@@ -172,9 +195,13 @@
 
                 scope.changeClassifier = function () {
                     if (classifierTree) {
-                        localStorage.setItem('entityIsChanged', true);
+                        //localStorage.setItem('entityIsChanged', true);
                         scope.classifierId = scope.entity[scope.getModelKey()];
-                        classifierTree.classifiers.forEach(findNodeInChildren);
+
+                        scope.findNodeItem().then(function () {
+                            classifierTree.classifiers.forEach(findNodeInChildren);
+                            scope.$apply();
+                        })
                     }
                 };
 
