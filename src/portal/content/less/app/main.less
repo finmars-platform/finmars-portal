@@ -901,6 +901,17 @@ md-select-header input {
     cursor: pointer;
   }
   tr:hover {
-    background: rgba(0,0,0,.1);
+    background: rgba(0, 0, 0, .1);
+  }
+}
+
+.ev-data-field {
+  md-input-container.mdc-error {
+    & .md-input {
+      border-color: rgb(221, 44, 0);
+    }
+    & label {
+      color: rgb(221, 44, 0);
+    }
   }
 }
