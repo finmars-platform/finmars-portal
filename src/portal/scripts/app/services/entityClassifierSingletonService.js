@@ -15,13 +15,13 @@
 
     var getByKey = function (entity, id) {
         return new Promise(function (resolve) {
-            if (!entitiesByKey[entity]) {
+            if (!entitiesByKey[entity + '_' + id]) {
                 entityClassifierService.getByKey(entity, id).then(function (data) {
-                    entitiesByKey[entity] = data;
-                    resolve({key: entity, data: entitiesByKey[entity]});
+                    entitiesByKey[entity + '_' + id] = data;
+                    resolve({key: entity + '_' + id, data: entitiesByKey[entity + '_' + id]});
                 })
             } else {
-                resolve({key: entity, data: entitiesByKey[entity]});
+                resolve({key: entity + '_' + id, data: entitiesByKey[entity + '_' + id]});
             }
         })
     };
