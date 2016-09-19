@@ -95,7 +95,53 @@
                 required: true,
                 expression: '',
                 complexExpressionEntity: false
+            }
+        ];
+
+        vm.mappedFieldsDefaults = [
+            {
+                key: 'daily_pricing_model',
+                caption: 'Daily pricing model',
+                required: false,
+                value_type: "field",
+                expression: '',
+                complexExpressionEntity: false
             },
+            {
+                key: 'price_download_scheme',
+                caption: 'Price download scheme',
+                required: false,
+                value_type: "field",
+                expression: '',
+                complexExpressionEntity: false
+            },
+            {
+                key: 'default_price',
+                caption: 'Default price',
+                value_type: 10,
+                required: false,
+                expression: '',
+                complexExpressionEntity: false
+            },
+            {
+                key: 'default_accrued',
+                caption: 'Default accrued',
+                value_type: 10,
+                required: false,
+                expression: '',
+                complexExpressionEntity: false
+            },
+            {
+                key: 'payment_size_detail',
+                caption: 'Payment size detail',
+                value_type: "field",
+                required: false,
+                expression: '',
+                complexExpressionEntity: false
+            }
+        ];
+
+        vm.mappedFieldsSecond = [
             {
                 key: 'short_name',
                 caption: 'Short name',
@@ -160,17 +206,53 @@
 
             vm.scheme.attributes = [];
 
-            var i;
-            for (i = 0; i < vm.mapFields.length; i = i + 1) {
-                if (vm.mapFields[i].hasOwnProperty('attribute_type')) {
-                    vm.scheme.attributes.push({
-                        attribute_type: vm.mapFields[i]['attribute_type'],
-                        value: vm.mapFields[i].expression
-                    })
-                } else {
-                    vm.scheme[vm.mapFields[i].key] = vm.mapFields[i].expression;
+
+            function syncMapFields() {
+                var i;
+                for (i = 0; i < vm.mapFields.length; i = i + 1) {
+                    if (vm.mapFields[i].hasOwnProperty('attribute_type')) {
+                        vm.scheme.attributes.push({
+                            attribute_type: vm.mapFields[i]['attribute_type'],
+                            value: vm.mapFields[i].expression
+                        })
+                    } else {
+                        vm.scheme[vm.mapFields[i].key] = vm.mapFields[i].expression;
+                    }
                 }
             }
+
+            function syncMappedFieldsDefaults() {
+                var i;
+                for (i = 0; i < vm.mappedFieldsDefaults.length; i = i + 1) {
+                    if (vm.mappedFieldsDefaults[i].hasOwnProperty('attribute_type')) {
+                        vm.scheme.attributes.push({
+                            attribute_type: vm.mappedFieldsDefaults[i]['attribute_type'],
+                            value: vm.mappedFieldsDefaults[i].expression
+                        })
+                    } else {
+                        vm.scheme[vm.mappedFieldsDefaults[i].key] = vm.mappedFieldsDefaults[i].expression;
+                    }
+                }
+            }
+
+            function syncMappedFieldsSecond() {
+                var i;
+                for (i = 0; i < vm.mappedFieldsSecond.length; i = i + 1) {
+                    if (vm.mappedFieldsSecond[i].hasOwnProperty('attribute_type')) {
+                        vm.scheme.attributes.push({
+                            attribute_type: vm.mappedFieldsSecond[i]['attribute_type'],
+                            value: vm.mappedFieldsSecond[i].expression
+                        })
+                    } else {
+                        vm.scheme[vm.mappedFieldsSecond[i].key] = vm.mappedFieldsSecond[i].expression;
+                    }
+                }
+            }
+
+            syncMapFields();
+            syncMappedFieldsDefaults();
+            syncMappedFieldsSecond();
+
 
             vm.scheme.inputs = vm.providerFields;
 
