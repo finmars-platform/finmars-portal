@@ -10,34 +10,28 @@
 		var vm = this;
 
 		vm.membersList = [];
-		vm.asignedMembersList = [];
+		vm.assignedMembersList = [];
 		vm.groups = [];
 
 		membersAndGroupsService.getList('members').then(function (data) {
-			var allMembersList = data.results;
+			vm.membersList = data.results;
 
 			membersAndGroupsService.getMemberOrGroupByKey('groups', groupId).then(function (data) {
 				vm.groups = data;
 				console.log('groups is', data);
-				var asignedMembersIds = vm.groups.members;
-				// divise groups on selected and not
-				if (asignedMembersIds && asignedMembersIds.length > 0) {
-					asignedMembersIds.map(function(asignedId) {
-						allMembersList.map(function(member) {
+				var assignedMembersIds = vm.groups.members;
+				// separate assinged members from available
+				if (assignedMembersIds && assignedMembersIds.length > 0) {
+					assignedMembersIds.map(function(assignedId) {
+						// allMembersList.map(function(member, memberIndex) {
+						vm.membersList.map(function(member, memberIndex) {
 							var memberId = member['id'];
-							if (memberId === asignedId) {
-								vm.asignedMembersList.push(member);
-								console.log('asigned member is', member, vm.asignedMembersList);
-							}
-							else {
-								vm.membersList.push(member);
+							if (memberId === assignedId) {
+								vm.membersList.splice(memberIndex, 1);
+								vm.assignedMembersList.push(member);
 							}
 						});
 					});
-				}
-				else {
-					vm.membersList = allMembersList;
-					console.log('vm.membersList is', vm.membersList);
 				}
 				$scope.$apply();
 			});
@@ -49,13 +43,13 @@
 		};
 
 		vm.agree = function () {
-			var asignedMembersIds = [];
-			if (vm.asignedMembersList && vm.asignedMembersList.length > 0) {
-				vm.asignedMembersList.map(function(group) {
-					asignedMembersIds.push(group['id']);
+			var assignedMembersIds = [];
+			if (vm.assignedMembersList && vm.assignedMembersList.length > 0) {
+				vm.assignedMembersList.map(function(group) {
+					assignedMembersIds.push(group['id']);
 				});
 			}
-			$mdDialog.hide({status: 'agree', data: {members: asignedMembersIds, name: vm.groups.name}});
+			$mdDialog.hide({status: 'agree', data: {members: assignedMembersIds, name: vm.groups.name}});
 		};
 	}
 
