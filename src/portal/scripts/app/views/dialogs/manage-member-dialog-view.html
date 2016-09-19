@@ -1,0 +1,25 @@
+<md-dialog aria-label="" class="draggable-dialog manage-member-group" drag-dialog>
+	<md-toolbar>
+		<div class="md-toolbar-tools">
+			<h2>Edit member "{{vm.members.display_name}}"</h2>
+		</div>
+	</md-toolbar>
+	<md-dialog-content class="manage-member-dialog-content">
+		<div layout="column">
+			<two-fields-options all-options="vm.groupsList" selected-options="vm.asignedGroupsList"></two-fields-options>
+			<md-checkbox data-ng-model="vm.memberIsAdmin" aria-label="member permission">This member is Admin</md-checkbox>
+		</div>
+	</md-dialog-content>
+	<md-dialog-actions layout="row">
+		<div flex="75">
+			<md-button class="md-raised" ng-click="vm.cancel()">
+				Cancel
+			</md-button>
+		</div>
+		<div flex>
+			<md-button class="md-raised" ng-click="vm.agree()" style="margin-right:20px;">
+				Save
+			</md-button>
+		</div>
+	</md-dialog-actions>
+</md-dialog>

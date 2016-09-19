@@ -21,6 +21,22 @@
 		})
 	};
 
+	var getMemberOrGroupByKey = function (type, id) {
+		var fetchUrl = '';
+		type === 'members' ? fetchUrl = 'users/member/' : fetchUrl = 'users/group/';
+		return window.fetch(baseUrl + fetchUrl + id + '/', 
+			{
+				method: 'GET',
+				credentials: 'include',
+				headers: {
+					Accept: 'application/json',
+					'Content-type': 'application/json'
+				}
+			}).then(function (data) {
+				return data.json();
+			});
+	}
+
 	var create = function (type, data) {
 		var fetchUrl = '';
 		type === 'members' ? fetchUrl = 'users/member/' : fetchUrl = 'users/group/';
@@ -59,7 +75,7 @@
 					Accept: 'application/json',
 					'Content-type': 'application/json'
 				},
-				body: JSON.stringify(member)
+				body: JSON.stringify(data)
 			}).then(function (data) {
 			return new Promise(function (resolve, reject) {
 				data.json().then(function (result) {
@@ -94,6 +110,7 @@
 
 	module.exports = {
 		getList: getList,
+		getMemberOrGroupByKey: getMemberOrGroupByKey,
 		create: create,
 		update: update,
 		deleteByKey: deleteByKey

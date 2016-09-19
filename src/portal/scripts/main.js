@@ -118,6 +118,8 @@ app.controller('SettingBloombergImportInstrumentController', ['$scope', '$state'
 
 app.controller('SettingsMembersAndGroupsController', ['$scope', '$mdDialog', require('./app/controllers/settings/settingsMembersAndGroupsController')]);
 app.controller('CreateMemberDialogController', ['$scope', '$mdDialog', require('./app/controllers/dialogs/createMemberDialogController')]);
+app.controller('ManageMemberDialogController', ['$scope', '$mdDialog', 'memberId', require('./app/controllers/dialogs/manageMemberDialogController')])
+app.controller('ManageGroupDialogController', ['$scope', '$mdDialog', 'groupId', require('./app/controllers/dialogs/manageGroupDialogController')])
 app.controller('CreateGroupDialogController', ['$scope', '$mdDialog', require('./app/controllers/dialogs/createGroupDialogController')]);
 
 app.directive('menuToggle', [require('./app/directives/menuToggleDirective')]);
@@ -157,6 +159,7 @@ app.directive('zhDatePicker', ['$mdDialog', require('./app/directives/zhDatePick
 app.directive('customScroll', [require('./app/directives/customScrollDirective')]);
 app.directive('dragDialog', [require('./app/directives/dragDialogDirective')]);
 app.directive('membersGroupsTable', [require('./app/directives/membersGroupsTableDirective')]);
+app.directive('twoFieldsOptions', [require('./app/directives/twoFieldsOptionsDirective')]);
 
 app.filter('trustAsHtml', ['$sce', require('./app/filters/trustAsHtmlFilter')]);
 app.filter('strLimit', ['$filter', require('./app/filters/strLimitFilter')]);
