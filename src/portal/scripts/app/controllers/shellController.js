@@ -46,6 +46,7 @@
         };
 
         vm.currentLocation = function () {
+            vm.currentLocationShowBtns = true;
             switch ($state.current.name) {
                 case 'app.data.portfolio':
                     return "PORTFOLIO";
@@ -92,10 +93,16 @@
                 case 'app.data.currency':
                     return "CURRENCY";
                     break;
+                case 'app.settings.users-groups':
+                    vm.currentLocationShowBtns = false;
+                    return 'USERS & GROUPS';
+                    break;
                 default:
+                    vm.currentLocationShowBtns = false;
                     return "";
                     break;
             }
+
         };
 
         $rootScope.$on('$stateChangeSuccess', function () {

@@ -10,32 +10,26 @@
 		var vm = this;
 
 		vm.groupsList = [];
-		vm.asignedGroupsList = [];
+		vm.assignedGroupsList = [];
 		vm.members = [];
 
 		membersAndGroupsService.getList('groups').then(function (data) {
-			var allGroupsList = data.results;
+			vm.groupsList = data.results;
 
 			membersAndGroupsService.getMemberOrGroupByKey('members', memberId).then(function (data) {
 				vm.members = data;
-				var asignedGroupsIds = vm.members.groups;
-				// divise groups on selected and not
-				if (asignedGroupsIds && asignedGroupsIds.length > 0) {
-					asignedGroupsIds.map(function(asignedId) {
-						allGroupsList.map(function(group) {
+				var assignedGroupsIds = vm.members.groups;
+				// separate assigned groups from available
+				if (assignedGroupsIds && assignedGroupsIds.length > 0) {
+					assignedGroupsIds.map(function(assignedId) {
+						vm.groupsList.map(function(group, groupIndex) {
 							var groupId = group['id'];
-							if (groupId === asignedId) {
-								vm.asignedGroupsList.push(group);
-								console.log('asigned group is', group, vm.asignedGroupsList);
-							}
-							else {
-								vm.groupsList.push(group);
+							if (groupId === assignedId) {
+								vm.groupsList.splice(groupIndex, 1);
+								vm.assignedGroupsList.push(group);
 							}
 						});
 					});
-				}
-				else {
-					vm.groupsList = allGroupsList;
 				}
 				$scope.$apply();
 			});
@@ -47,13 +41,13 @@
 		};
 
 		vm.agree = function () {
-			var asignedGroupsIds = [];
-			if (vm.asignedGroupsList && vm.asignedGroupsList.length > 0) {
-				vm.asignedGroupsList.map(function(group) {
-					asignedGroupsIds.push(group['id']);
+			var assignedGroupsIds = [];
+			if (vm.assignedGroupsList && vm.assignedGroupsList.length > 0) {
+				vm.assignedGroupsList.map(function(group) {
+					assignedGroupsIds.push(group['id']);
 				});
 			}
-			$mdDialog.hide({status: 'agree', data: {isAdmin: vm.memberIsAdmin, groups: asignedGroupsIds, join_date: vm.members.join_date}});
+			$mdDialog.hide({status: 'agree', data: {isAdmin: vm.memberIsAdmin, groups: assignedGroupsIds, join_date: vm.members.join_date}});
 		};
 	}
 
