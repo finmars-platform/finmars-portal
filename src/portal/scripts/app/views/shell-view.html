@@ -6,7 +6,7 @@
 
             <div class="md-toolbar-tools" flex="70" layout="start center">
                 <h2 data-ng-if="vm.currentLocation().length > 0" data-ng-bind="vm.currentLocation()"></h2>
-                <div data-ng-if="vm.currentLocation() != ''">
+                <div data-ng-if="vm.currentLocationShowBtns">
                     <md-button class="header-buttons save-layout-btn">Save layout</md-button>
                     <md-button class="header-buttons header-add-new-btn">Add new</md-button>
                 </div>
