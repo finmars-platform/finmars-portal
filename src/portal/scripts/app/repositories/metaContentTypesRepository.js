@@ -10,7 +10,7 @@
         return [
             {
                 name: "Account Type",
-                entity: 'account-type',
+                entity: 'type',
                 key: "accounts.accounttype"
             },
             {

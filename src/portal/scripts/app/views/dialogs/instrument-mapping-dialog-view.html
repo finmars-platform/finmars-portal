@@ -79,25 +79,27 @@
                                 <div data-ng-repeat="item in vm.mapFields" layout="row" flex="100">
                                     <div layout="row" flex="100">
                                         <div flex="40">
-                                            <md-input-container>
-                                                <md-select data-ng-model="item[vm.getModelKey(item)]"
-                                                           data-ng-focus="vm.checkAttrs()">
-                                                    <md-option data-ng-repeat="item in vm.baseAttrs"
-                                                               ng-value="item.key"
-                                                               class="{{item.disabled ? 'disabled' : ''}}">
-                                                        {{item.name}}
-                                                    </md-option>
-                                                    <md-option data-ng-repeat="item in vm.entityAttrs"
-                                                               ng-value="item.key"
-                                                               class="{{item.disabled ? 'disabled' : ''}}">
-                                                        {{item.name}}
-                                                    </md-option>
-                                                    <md-option data-ng-repeat="item in vm.attrs" ng-value="item.id"
-                                                               class="{{item.disabled ? 'disabled' : ''}}">
-                                                        {{item.name}}
-                                                    </md-option>
-                                                </md-select>
-                                            </md-input-container>
+                                            <!--{{vm.beatufier(item[vm.getModelKey(item)])}}-->
+                                            {{item[vm.getModelKey(item)]}}
+                                            <!--<md-input-container>-->
+                                                <!--<md-select data-ng-model="item[vm.getModelKey(item)]"-->
+                                                           <!--data-ng-focus="vm.checkAttrs()">-->
+                                                    <!--<md-option data-ng-repeat="item in vm.baseAttrs"-->
+                                                               <!--ng-value="item.key"-->
+                                                               <!--class="{{item.disabled ? 'disabled' : ''}}">-->
+                                                        <!--{{item.name}}-->
+                                                    <!--</md-option>-->
+                                                    <!--<md-option data-ng-repeat="item in vm.entityAttrs"-->
+                                                               <!--ng-value="item.key"-->
+                                                               <!--class="{{item.disabled ? 'disabled' : ''}}">-->
+                                                        <!--{{item.name}}-->
+                                                    <!--</md-option>-->
+                                                    <!--<md-option data-ng-repeat="item in vm.attrs" ng-value="item.id"-->
+                                                               <!--class="{{item.disabled ? 'disabled' : ''}}">-->
+                                                        <!--{{item.name}}-->
+                                                    <!--</md-option>-->
+                                                <!--</md-select>-->
+                                            <!--</md-input-container>-->
                                         </div>
                                         <div flex="50">
                                             <div data-ng-if="item.complexExpressionEntity == false" layout="row">
@@ -147,25 +149,27 @@
                                     <div data-ng-repeat="item in vm.mappedFieldsDefaults" layout="row" flex="100">
                                         <div layout="row" flex="100">
                                             <div flex="40">
-                                                <md-input-container>
-                                                    <md-select data-ng-model="item[vm.getModelKey(item)]"
-                                                               data-ng-focus="vm.checkAttrs()">
-                                                        <md-option data-ng-repeat="item in vm.baseAttrs"
-                                                                   ng-value="item.key"
-                                                                   class="{{item.disabled ? 'disabled' : ''}}">
-                                                            {{item.name}}
-                                                        </md-option>
-                                                        <md-option data-ng-repeat="item in vm.entityAttrs"
-                                                                   ng-value="item.key"
-                                                                   class="{{item.disabled ? 'disabled' : ''}}">
-                                                            {{item.name}}
-                                                        </md-option>
-                                                        <md-option data-ng-repeat="item in vm.attrs" ng-value="item.id"
-                                                                   class="{{item.disabled ? 'disabled' : ''}}">
-                                                            {{item.name}}
-                                                        </md-option>
-                                                    </md-select>
-                                                </md-input-container>
+                                                <!--{{vm.beatufier(item[vm.getModelKey(item)])}}-->
+                                                {{item[vm.getModelKey(item)]}}
+                                                <!--<md-input-container>-->
+                                                    <!--<md-select data-ng-model="item[vm.getModelKey(item)]"-->
+                                                               <!--data-ng-focus="vm.checkAttrs()">-->
+                                                        <!--<md-option data-ng-repeat="item in vm.baseAttrs"-->
+                                                                   <!--ng-value="item.key"-->
+                                                                   <!--class="{{item.disabled ? 'disabled' : ''}}">-->
+                                                            <!--{{item.name}}-->
+                                                        <!--</md-option>-->
+                                                        <!--<md-option data-ng-repeat="item in vm.entityAttrs"-->
+                                                                   <!--ng-value="item.key"-->
+                                                                   <!--class="{{item.disabled ? 'disabled' : ''}}">-->
+                                                            <!--{{item.name}}-->
+                                                        <!--</md-option>-->
+                                                        <!--<md-option data-ng-repeat="item in vm.attrs" ng-value="item.id"-->
+                                                                   <!--class="{{item.disabled ? 'disabled' : ''}}">-->
+                                                            <!--{{item.name}}-->
+                                                        <!--</md-option>-->
+                                                    <!--</md-select>-->
+                                                <!--</md-input-container>-->
                                             </div>
                                             <div flex="50">
                                                 <div layout="row">
@@ -184,12 +188,7 @@
                                                 </div>
                                             </div>
                                             <div flex="10">
-                                                <md-button
-                                                        class="custom-small-icon-btn md-raised"
-                                                        data-ng-click="vm.removeMappingField(item, $index)"
-                                                        data-ng-if="!item.required"
-                                                        class="md-raised">x
-                                                </md-button>
+
                                             </div>
                                         </div>
                                     </div>
@@ -197,6 +196,8 @@
                                 <div data-ng-repeat="item in vm.mappedFieldsSecond" layout="row" flex="100">
                                     <div layout="row" flex="100">
                                         <div flex="40">
+                                            <!--{{vm.beatufier(item[vm.getModelKey(item)])}}-->
+                                            <!--{{item[vm.getModelKey(item)]}}-->
                                             <md-input-container>
                                                 <md-select data-ng-model="item[vm.getModelKey(item)]"
                                                            data-ng-focus="vm.checkAttrs()">

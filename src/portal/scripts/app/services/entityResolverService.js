@@ -1,7 +1,7 @@
 /**
  * Created by szhitenev on 16.06.2016.
  */
-(function(){
+(function () {
 
     'use strict';
 
@@ -30,7 +30,7 @@
     var strategyGroupService = require('./strategyGroupService');
     var strategySubgroupService = require('./strategySubgroupService');
 
-    var getList = function(entityType) {
+    var getList = function (entityType) {
 
         switch (entityType) {
             case 'currency':
@@ -48,7 +48,7 @@
         }
     };
 
-    var getByKey = function(entityType, id) {
+    var getByKey = function (entityType, id) {
         switch (entityType) {
             case 'portfolio':
                 return portfolioService.getByKey(id);
@@ -131,7 +131,7 @@
         }
     };
 
-    var create = function(entityType, entity) {
+    var create = function (entityType, entity) {
         switch (entityType) {
             case 'portfolio':
                 entity.counterparties = entity.counterparties || [];
@@ -163,6 +163,23 @@
                 return instrumentService.create(entity);
                 break;
             case 'instrument-type':
+
+                if (entity["one_off_event"]) {
+                    entity["one_off_event"] = entity["one_off_event"][0];
+                }
+                if (entity["regular_event"]) {
+                    entity["regular_event"] = entity["regular_event"][0];
+                }
+                if (entity["factor_same"]) {
+                    entity["factor_same"] = entity["factor_same"][0];
+                }
+                if (entity["factor_up"]) {
+                    entity["factor_up"] = entity["factor_up"][0];
+                }
+                if (entity["factor_down"]) {
+                    entity["factor_down"] = entity["factor_down"][0];
+                }
+
                 return instrumentTypeService.create(entity);
                 break;
             case 'currency':
@@ -220,10 +237,13 @@
         }
     };
 
-    var update = function(entityType, id, entity) {
+    var update = function (entityType, id, entity) {
         switch (entityType) {
             case 'portfolio':
                 return portfolioService.update(id, entity);
+                break;
+            case 'currency':
+                return currencyService.update(id, entity);
                 break;
             case 'account':
                 return accountService.update(id, entity);
@@ -247,6 +267,23 @@
                 return instrumentService.update(id, entity);
                 break;
             case 'instrument-type':
+
+                if (entity["one_off_event"]) {
+                    entity["one_off_event"] = entity["one_off_event"][0];
+                }
+                if (entity["regular_event"]) {
+                    entity["regular_event"] = entity["regular_event"][0];
+                }
+                if (entity["factor_same"]) {
+                    entity["factor_same"] = entity["factor_same"][0];
+                }
+                if (entity["factor_up"]) {
+                    entity["factor_up"] = entity["factor_up"][0];
+                }
+                if (entity["factor_down"]) {
+                    entity["factor_down"] = entity["factor_down"][0];
+                }
+
                 return instrumentTypeService.update(id, entity);
                 break;
             case 'transaction':
@@ -300,7 +337,7 @@
         }
     };
 
-    var deleteByKey = function(entityType, id) {
+    var deleteByKey = function (entityType, id) {
         switch (entityType) {
             case 'portfolio':
                 return portfolioService.deleteByKey(id);

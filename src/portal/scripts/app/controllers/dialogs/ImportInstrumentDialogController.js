@@ -84,6 +84,7 @@
 
         vm.load = function () {
             vm.readyStatus.processing = true;
+            //vm.config.task = 81;
             importInstrumentService.startImport(vm.config).then(function (data) {
                 console.log('data', data);
                 vm.config = data;
@@ -93,12 +94,20 @@
 
                     vm.mappedFields = [];
 
-                    var keys = Object.keys(vm.config["task_object"]["result_object"]);
+                    var keysDict = [];
+
+                    if(Object.keys(vm.config["task_result_overrides"]).length > 0) {
+                        keysDict = vm.config["task_result_overrides"];
+                    } else {
+                        keysDict = vm.config["task_result"]
+                    }
+
+                    var keys = Object.keys(keysDict);
                     var i;
                     for (i = 0; i < keys.length; i = i + 1) {
                         vm.mappedFields.push({
                             key: keys[i],
-                            value: vm.config["task_object"]["result_object"][keys[i]]
+                            value: keysDict[keys[i]]
                         })
                     }
                     $scope.$apply();
@@ -134,8 +143,8 @@
             }).then(function (res) {
                 if (res.status === 'agree') {
                     console.log('res', res.data);
-                    instrumentSchemeService.update(item.id, res.data).then(function () {
-                        vm.getList();
+                    instrumentSchemeService.update(vm.config.instrument_download_scheme, res.data).then(function () {
+                        //vm.getList();
                         $scope.$apply();
                     })
                 }

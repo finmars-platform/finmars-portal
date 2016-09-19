@@ -319,8 +319,17 @@
             })
         };
 
+        vm.beatufier = function (key) {
+            console.log('KEY', key);
+            if (key !== undefined) {
+                var str = key.split('_').join(' ');
+                return str;
+            }
+            return key
+        };
+
         vm.addMapField = function () {
-            vm.mapFields.push({
+            vm.mappedFieldsSecond.push({
                 expression: '',
                 required: false,
                 complexExpressionEntity: false
@@ -332,7 +341,7 @@
         };
 
         vm.removeMappingField = function (item, $index) {
-            vm.mapFields.splice($index, 1);
+            vm.mappedFieldsSecond.splice($index, 1);
         };
 
         vm.cancel = function () {
@@ -404,7 +413,9 @@
             }).then(function (res) {
                 if (res.status === 'agree') {
                     console.log("res", res.data);
-                    item.expression = res.data.item.expression;
+                    if (res.data) {
+                        item.expression = res.data.item.expression;
+                    }
                     $scope.$apply();
                 }
             });
