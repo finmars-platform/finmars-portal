@@ -7,8 +7,9 @@
 	module.exports = function ($scope, $mdDialog) {
 		var vm = this;
 
+
 		vm.agree = function () {
-			$mdDialog.hide({status: 'agree', data: {name: vm.groupName}});
+			$mdDialog.hide({status: 'agree', data: {name: vm.groupName, members: []}});
 		}
 
 		vm.cancel = function () {
