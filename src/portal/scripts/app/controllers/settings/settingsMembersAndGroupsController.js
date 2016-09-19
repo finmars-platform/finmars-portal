@@ -13,6 +13,7 @@
 		vm.getList = function () {
 			membersAndGroupsService.getList('members').then(function (data) {
 				console.log('members is', data);
+				vm.members = [];
 				vm.members = data.results;
 
 				membersAndGroupsService.getList('groups').then(function (data) {
@@ -33,13 +34,31 @@
 							});
 						};
 					})
+					$scope.$apply();
 				});
 			});
+		};
+		vm.getGroupsList = function () {
+			membersAndGroupsService.getList('groups').then(function (data) {
+				vm.groups = data.results;
+			});
+			$scope.$apply();
 		};
 		// membersAndGroupsService.getList('groups').then(function (data) {
 		// 	console.log('groups is', data);
 		// 	vm.groups = data.results;
 		// });
+		vm.deleteMemberGroupByKey = function (type, id) {
+			membersAndGroupsService.deleteByKey(type, id).then(function() {
+				if (type === 'members') {
+					vm.getList();
+				}
+				else if (type === 'groups') {
+					vm.getGroupsList();
+				}
+			});
+		}
+
 		vm.createMemberDialog = function (ev) {
 			$mdDialog.show({
 				controller: 'CreateMemberDialogController as vm',
@@ -50,6 +69,7 @@
 				console.log('new members data is', data);
 				membersAndGroupsService.create('members', {username: data.data.username, email: data.data.email}).then(function() {
 					console.log('member has been created');
+					vm.getList();
 				});
 			});
 		};
@@ -63,7 +83,7 @@
 			}).then(function (data) {
 				console.log("new group's data is", data);
 				membersAndGroupsService.create('groups', {name: data.data.name, members: data.data.members}).then(function() {
-					vm.getList();
+					vm.getGroupsList();
 					console.log('group has been created');
 				});
 			});
