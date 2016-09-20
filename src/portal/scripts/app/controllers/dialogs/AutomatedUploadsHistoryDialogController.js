@@ -70,7 +70,7 @@
             if (values[4] != '*' && values[3] != '*') {
                 vm.cron.periodicity = 3;
                 vm.cron.day = values[4];
-                if(values[3].length > 1) {
+                if (values[3].length > 1) {
                     vm.cron.month = values[3].split(',');
                 } else {
                     vm.cron.month = [values[3]];
@@ -91,6 +91,8 @@
 
             var minutes = moment(new Date(vm.cron.time)).format('mm');
             var hours = moment(new Date(vm.cron.time)).format('hh');
+
+            vm.schedule.is_enabled = true;
 
             //console.log('cron.time', vm.cron.time);
             //console.log('minutes', minutes);
