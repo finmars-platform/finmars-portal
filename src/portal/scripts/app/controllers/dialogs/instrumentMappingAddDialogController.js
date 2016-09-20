@@ -11,6 +11,7 @@
     var dataProvidersService = require('../../services/import/dataProvidersService');
     var scheduleService = require('../../services/import/scheduleService');
     var attributeTypeService = require('../../services/attributeTypeService');
+    var instrumentSchemeService = require('../../services/import/instrumentSchemeService');
 
     module.exports = function ($scope, $mdDialog) {
 
@@ -158,6 +159,8 @@
             }
         ];
 
+        vm.mappedDynamic = [];
+
         vm.providerFields = [
             {
                 name: '',
@@ -173,7 +176,7 @@
         };
 
         vm.addMapField = function () {
-            vm.mappedFieldsSecond.push({
+            vm.mappedDynamic.push({
                 expression: '',
                 required: false,
                 complexExpressionEntity: false
@@ -190,7 +193,7 @@
         };
 
         vm.removeMappingField = function (item, $index) {
-            vm.mappedFieldsSecond.splice($index, 1);
+            vm.mappedDynamic.splice($index, 1);
         };
 
         vm.beatufier = function (key) {
@@ -205,7 +208,7 @@
             $mdDialog.cancel();
         };
 
-        vm.agree = function () {
+        vm.agree = function ($event) {
 
             vm.scheme['scheme_name'] = vm.schemeName;
             vm.scheme['provider'] = vm.schemeProvider;
@@ -257,17 +260,109 @@
                 }
             }
 
+            function syncMappedDynamic() {
+                var a, x, b, i, e;
+
+                for (b = 0; b < vm.baseAttrs.length; b = b + 1) {
+                    if (vm.baseAttrs[b].key == 'notes') {
+                        if (vm.scheme.notes != null || vm.scheme.notes != '') {
+                            vm.mappedDynamic.push({
+                                key: 'notes',
+                                caption: 'Notes',
+                                required: false,
+                                value: vm.baseAttrs[b],
+                                complexExpressionEntity: false,
+                                expression: vm.scheme.notes
+                            })
+                        }
+                    }
+                }
+
+                var keys = Object.keys(vm.scheme);
+
+                var usedEntityAttrs = ['user_code', 'instrument_type', 'reference_for_pricing', 'daily_pricing_model',
+                    'price_download_scheme', 'default_price', 'default_accrued', 'payment_size_detail', 'public_name'];
+
+                for (i = 0; i < keys.length; i = i + 1) {
+                    if (vm.hidedEntityAttrs.indexOf(keys[i]) === -1) {
+
+                        if (usedEntityAttrs.indexOf(keys[i]) === -1) {
+
+                            for (e = 0; e < vm.entityAttrs.length; e = e + 1) {
+                                if (vm.entityAttrs[e].key == keys[i]) {
+                                    if (vm.scheme[keys[i]] != "" && vm.scheme[keys[i]] != null && vm.scheme[keys[i]] != undefined) {
+                                        vm.mappedDynamic.push({
+                                            key: keys[i],
+                                            required: false,
+                                            value: vm.entityAttrs[e],
+                                            complexExpressionEntity: false,
+                                            expression: vm.scheme[keys[i]]
+                                        })
+                                    }
+                                }
+                            }
+                        }
+
+
+                    }
+                }
+
+                for (a = 0; a < vm.scheme.attributes.length; a = a + 1) {
+                    console.log('vm.scheme.attributes[a]', vm.scheme.attributes[a]);
+                    console.log('vm.attrs', vm.attrs);
+
+                    for (x = 0; x < vm.attrs.length; x = x + 1) {
+                        if (vm.attrs[x].id == vm.scheme.attributes[a].attribute_type) {
+
+                            var hasComplexExpression = false;
+
+                            if (vm.attrs[x].value_type == 30) {
+                                hasComplexExpression = true;
+                            }
+
+                            vm.mappedDynamic.push({
+                                id: vm.scheme.attributes[a]['id'],
+                                complexExpressionEntity: hasComplexExpression,
+                                expression: vm.scheme.attributes[a].value,
+                                attribute_name: vm.scheme.attributes[a]['name'],
+                                attribute_type: vm.scheme.attributes[a]['attribute_type'],
+                                value: vm.attrs[x],
+                                attr: vm.scheme.attributes[a]
+                            });
+                        }
+                    }
+                }
+            }
+
             syncMapFields();
             syncMappedFieldsDefaults();
             syncMappedFieldsSecond();
+            syncMappedDynamic();
 
 
             vm.scheme.inputs = vm.providerFields;
 
-            $mdDialog.hide({
-                status: 'agree',
-                data: vm.scheme
-            })
+
+            instrumentSchemeService.create(vm.scheme).then(function (data) {
+                console.log('DATA', data);
+                if (data.status == 200 || data.status == 201) {
+                    $mdDialog.hide({res: 'agree'});
+                }
+                if (data.status == 400) {
+                    $mdDialog.show({
+                        controller: 'ValidationDialogController as vm',
+                        templateUrl: 'views/dialogs/validation-dialog-view.html',
+                        targetEvent: $event,
+                        locals: {
+                            validationData: data.response
+                        },
+                        preserveScope: true,
+                        autoWrap: true,
+                        skipHide: true
+                    })
+                }
+            });
+
         };
 
         vm.openMapping = function ($event, mapEntityType) {
@@ -345,11 +440,26 @@
         vm.checkAttrs = function () {
 
             var b, e, a;
-            var x, y, z;
+            var x, y, z, x1, y1, z1, x2, y2, z2, x3, y3, z3;
             for (b = 0; b < vm.baseAttrs.length; b = b + 1) {
                 vm.baseAttrs[b].disabled = false;
                 for (x = 0; x < vm.mapFields.length; x = x + 1) {
                     if (vm.mapFields[x].key == vm.baseAttrs[b].key) {
+                        vm.baseAttrs[b].disabled = true;
+                    }
+                }
+                for (x1 = 0; x1 < vm.mappedFieldsDefaults.length; x1 = x1 + 1) {
+                    if (vm.mappedFieldsDefaults[x1].key == vm.baseAttrs[b].key) {
+                        vm.baseAttrs[b].disabled = true;
+                    }
+                }
+                for (x2 = 0; x2 < vm.mappedFieldsSecond.length; x2 = x2 + 1) {
+                    if (vm.mappedFieldsSecond[x2].key == vm.baseAttrs[b].key) {
+                        vm.baseAttrs[b].disabled = true;
+                    }
+                }
+                for (x3 = 0; x3 < vm.mappedDynamic.length; x3 = x3 + 1) {
+                    if (vm.mappedDynamic[x3].key == vm.baseAttrs[b].key) {
                         vm.baseAttrs[b].disabled = true;
                     }
                 }
@@ -364,6 +474,27 @@
                         }
                     }
                 }
+                for (y1 = 0; y1 < vm.mappedFieldsDefaults.length; y1 = y1 + 1) {
+                    if (vm.hidedEntityAttrs.indexOf(vm.entityAttrs[e].key) === -1) {
+                        if (vm.mappedFieldsDefaults[y1].key == vm.entityAttrs[e].key) {
+                            vm.entityAttrs[e].disabled = true;
+                        }
+                    }
+                }
+                for (y2 = 0; y2 < vm.mappedFieldsSecond.length; y2 = y2 + 1) {
+                    if (vm.hidedEntityAttrs.indexOf(vm.entityAttrs[e].key) === -1) {
+                        if (vm.mappedFieldsSecond[y2].key == vm.entityAttrs[e].key) {
+                            vm.entityAttrs[e].disabled = true;
+                        }
+                    }
+                }
+                for (y3 = 0; y3 < vm.mappedDynamic.length; y3 = y3 + 1) {
+                    if (vm.hidedEntityAttrs.indexOf(vm.entityAttrs[e].key) === -1) {
+                        if (vm.mappedDynamic[y3].key == vm.entityAttrs[e].key) {
+                            vm.entityAttrs[e].disabled = true;
+                        }
+                    }
+                }
             }
 
             for (a = 0; a < vm.attrs.length; a = a + 1) {
@@ -371,6 +502,27 @@
                 for (z = 0; z < vm.mapFields.length; z = z + 1) {
                     if (vm.mapFields[z].hasOwnProperty('attribute_type')) {
                         if (vm.mapFields[z].attribute_type == vm.attrs[a].id) {
+                            vm.attrs[a].disabled = true;
+                        }
+                    }
+                }
+                for (z1 = 0; z1 < vm.mappedFieldsDefaults.length; z1 = z1 + 1) {
+                    if (vm.mappedFieldsDefaults[z1].hasOwnProperty('attribute_type')) {
+                        if (vm.mappedFieldsDefaults[z1].attribute_type == vm.attrs[a].id) {
+                            vm.attrs[a].disabled = true;
+                        }
+                    }
+                }
+                for (z2 = 0; z2 < vm.mappedFieldsSecond.length; z2 = z2 + 1) {
+                    if (vm.mappedFieldsSecond[z2].hasOwnProperty('attribute_type')) {
+                        if (vm.mappedFieldsSecond[z2].attribute_type == vm.attrs[a].id) {
+                            vm.attrs[a].disabled = true;
+                        }
+                    }
+                }
+                for (z3 = 0; z3 < vm.mappedDynamic.length; z3 = z3 + 1) {
+                    if (vm.mappedDynamic[z3].hasOwnProperty('attribute_type')) {
+                        if (vm.mappedDynamic[z3].attribute_type == vm.attrs[a].id) {
                             vm.attrs[a].disabled = true;
                         }
                     }

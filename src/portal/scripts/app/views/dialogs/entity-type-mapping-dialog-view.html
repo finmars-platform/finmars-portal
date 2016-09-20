@@ -1,4 +1,5 @@
-<md-dialog aria-label="" ng-cloak class="entity-type-mapping-dialog-view draggable-dialog" style="width: 50%" drag-dialog>
+<md-dialog aria-label="" ng-cloak class="entity-type-mapping-dialog-view draggable-dialog" style="width: 50%"
+           drag-dialog>
     <md-toolbar>
         <div class="md-toolbar-tools">
             <h2>Entity type mapping</h2>
@@ -9,44 +10,91 @@
         <div data-ng-if="vm.readyStatus.content">
             <md-card>
                 <md-card-content style="padding-top: 16px; padding-bottom: 0">
-                    <div layout="row" style="margin-bottom: 20px">
-                        <div flex="50" data-ng-click="vm.setSort('mapping.value')"><b>Your value </b><span
-                                class="sortorder"
-                                data-ng-show="vm.sort === 'mapping.value'"
-                                data-ng-class="{reverse: vm.direction}"></span>
+                    <div data-ng-if="vm.mapEntityType == 'classifier'">
+                        <div layout="row" style="margin-bottom: 20px">
+                            <div flex="50" data-ng-click="vm.setSort('mapping.value')"><b>Your value </b><span
+                                    class="sortorder"
+                                    data-ng-show="vm.sort === 'mapping.value'"
+                                    data-ng-class="{reverse: vm.direction}"></span>
+                            </div>
+                            <div flex="40" data-ng-click="vm.setSort('name')"><b>Map on {{vm.fancyEntity()}} </b><span
+                                    class="sortorder"
+                                    data-ng-show="vm.sort === 'name'"
+                                    data-ng-class="{reverse: vm.direction}"></span></div>
+                            <div flex="10">
+                                <ng-md-icon data-ng-click="vm.toggleQuery()" icon="search"></ng-md-icon>
+                            </div>
                         </div>
-                        <div flex="40" data-ng-click="vm.setSort('name')"><b>Map on {{vm.fancyEntity()}} </b><span
-                                class="sortorder"
-                                data-ng-show="vm.sort === 'name'"
-                                data-ng-class="{reverse: vm.direction}"></span></div>
-                        <div flex="10">
-                            <ng-md-icon data-ng-click="vm.toggleQuery()" icon="search"></ng-md-icon>
-                        </div>
-                    </div>
-                    <div layout="row" style="margin-bottom: 20px" data-ng-if="vm.queryStatus" class="filter-row-holder">
-                        <div flex="50">
-                            <md-input-container>
-                                <ng-md-icon icon="search"></ng-md-icon>
-                                <input type="text" data-ng-model="vm.query.mapping.value">
-                            </md-input-container>
-                        </div>
-                        <div flex="50">
-                            <md-input-container>
-                                <ng-md-icon icon="search"></ng-md-icon>
-                                <input type="text" data-ng-model="vm.query.name">
-                            </md-input-container>
-                        </div>
-                    </div>
-                    <div data-ng-repeat="item in vm.entityItems | filter:vm.query | orderBy:vm.sort:vm.direction">
-                        <div layout="row">
+                        <div layout="row" style="margin-bottom: 20px" data-ng-if="vm.queryStatus"
+                             class="filter-row-holder">
                             <div flex="50">
                                 <md-input-container>
-                                    <label for="">Value</label>
-                                    <input type="text" data-ng-model="item.mapping.value">
+                                    <ng-md-icon icon="search"></ng-md-icon>
+                                    <input type="text" data-ng-model="vm.query.mapping.value">
                                 </md-input-container>
                             </div>
                             <div flex="50">
-                                <p data-ng-bind="item.name"></p>
+                                <md-input-container>
+                                    <ng-md-icon icon="search"></ng-md-icon>
+                                    <input type="text" data-ng-model="vm.query.name">
+                                </md-input-container>
+                            </div>
+                        </div>
+                        <div data-ng-repeat="item in vm.entityItems | filter:vm.query | orderBy:vm.sort:vm.direction">
+                            <div layout="row">
+                                <div flex="50">
+                                    <md-input-container>
+                                        <label for="">Value</label>
+                                        <input type="text" data-ng-model="item.mapping.value">
+                                    </md-input-container>
+                                </div>
+                                <div flex="50">
+                                    <p data-ng-bind="item.name"></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div data-ng-if="vm.mapEntityType != 'classifier'">
+                        <div layout="row" style="margin-bottom: 20px">
+                            <div flex="50" data-ng-click="vm.setSort('mapping.value')"><b>Your value </b><span
+                                    class="sortorder"
+                                    data-ng-show="vm.sort === 'mapping.value'"
+                                    data-ng-class="{reverse: vm.direction}"></span>
+                            </div>
+                            <div flex="40" data-ng-click="vm.setSort('name')"><b>Map on {{vm.fancyEntity()}} </b><span
+                                    class="sortorder"
+                                    data-ng-show="vm.sort === 'name'"
+                                    data-ng-class="{reverse: vm.direction}"></span></div>
+                            <div flex="10">
+                                <ng-md-icon data-ng-click="vm.toggleQuery()" icon="search"></ng-md-icon>
+                            </div>
+                        </div>
+                        <div layout="row" style="margin-bottom: 20px" data-ng-if="vm.queryStatus"
+                             class="filter-row-holder">
+                            <div flex="50">
+                                <md-input-container>
+                                    <ng-md-icon icon="search"></ng-md-icon>
+                                    <input type="text" data-ng-model="vm.query.mapping.value">
+                                </md-input-container>
+                            </div>
+                            <div flex="50">
+                                <md-input-container>
+                                    <ng-md-icon icon="search"></ng-md-icon>
+                                    <input type="text" data-ng-model="vm.query.name">
+                                </md-input-container>
+                            </div>
+                        </div>
+                        <div data-ng-repeat="item in vm.entityItems | filter:vm.query | orderBy:vm.sort:vm.direction">
+                            <div layout="row">
+                                <div flex="50">
+                                    <md-input-container>
+                                        <label for="">Value</label>
+                                        <input type="text" data-ng-model="item.mapping.value">
+                                    </md-input-container>
+                                </div>
+                                <div flex="50">
+                                    <p data-ng-bind="item.name"></p>
+                                </div>
                             </div>
                         </div>
                     </div>
