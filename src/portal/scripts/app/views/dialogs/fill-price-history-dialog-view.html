@@ -82,7 +82,35 @@
                     </md-card>
                 </md-tab>
                 <md-tab label="Accruals">
-
+                    <md-card>
+                        <md-card-content style="padding-top: 20px">
+                            <div>
+                                <md-input-container>
+                                    <label for="">Date from</label>
+                                    <zh-date-picker data-ng-model="vm.recalculate.date_from"></zh-date-picker>
+                                </md-input-container>
+                                <md-input-container>
+                                    <label for="">Date to</label>
+                                    <zh-date-picker data-ng-model="vm.recalculate.date_to"></zh-date-picker>
+                                </md-input-container>
+                            </div>
+                            <div layout="row">
+                                <md-button class="md-raised" data-ng-click="vm.startRecalculation()">
+                                    Recalculate
+                                </md-button>
+                                <div data-ng-if="vm.readyStatus.recalculationProcessing">
+                                    <md-progress-circular md-mode="indeterminate"
+                                                          md-diameter="48"></md-progress-circular>
+                                </div>
+                                 <span data-ng-if="vm.readyStatus.recalculationDone" style="padding-top: 12px;fill: green;">
+                                    <ng-md-icon icon="check_circle"></ng-md-icon>
+                                </span>
+                                <span data-ng-if="vm.readyStatus.recalculationError" style="padding-top: 12px;fill: red;">
+                                    <ng-md-icon icon="block"></ng-md-icon>
+                                </span>
+                            </div>
+                        </md-card-content>
+                    </md-card>
                 </md-tab>
             </md-tabs>
         </div>
