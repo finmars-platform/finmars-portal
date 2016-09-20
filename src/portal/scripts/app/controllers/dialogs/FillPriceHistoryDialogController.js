@@ -17,6 +17,7 @@
     var importInstrumentService = require('../../services/import/importInstrumentService');
     var importPricingService = require('../../services/import/importPricingService');
 
+    var instrumentRecalculateAccruedPriceService = require('../../services/instrument/instrumentRecalculateAccruedPriceService');
 
     module.exports = function ($scope, $mdDialog) {
 
@@ -24,7 +25,7 @@
 
         var vm = this;
 
-        vm.readyStatus = {mapping: false, processing: false};
+        vm.readyStatus = {mapping: false, processing: false, recalculationProcessing: false, recalculationDone: false};
 
         var d = new Date();
         d = new Date(d.setDate(d.getDate() - 1));
@@ -54,11 +55,11 @@
             });
         };
 
-        vm.uploadPrice = function(){
+        vm.uploadPrice = function () {
             vm.processing = true;
 
             var price = {};
-            if(vm.price.isRange) {
+            if (vm.price.isRange) {
                 price = {
                     date_from: moment(new Date(vm.price.date_from)).format('YYYY-MM-DD'),
                     date_to: moment(new Date(vm.price.date_to)).format('YYYY-MM-DD'),
@@ -76,13 +77,37 @@
                 };
             }
 
-            importPricingService.create(price).then(function(){
+            importPricingService.create(price).then(function () {
                 vm.processing = false;
             })
         };
 
         vm.agree = function () {
         };
+
+        vm.startRecalculation = function () {
+
+            vm.readyStatus.recalculationProcessing = true;
+            vm.readyStatus.recalculationDone = false;
+            vm.readyStatus.recalculationError = false;
+            var dateFrom;
+
+            var dateTo;
+            try {
+                dateFrom = moment(new Date(vm.recalculate.date_from)).format('YYYY-MM-DD');
+                dateTo = moment(new Date(vm.recalculate.date_to)).format('YYYY-MM-DD');
+                instrumentRecalculateAccruedPriceService.recalculate(dateFrom, dateTo).then(function () {
+
+                    vm.readyStatus.recalculationDone = true;
+                    vm.readyStatus.recalculationProcessing = false;
+                    $scope.$apply();
+                })
+            } catch (err) {
+                vm.readyStatus.recalculationProcessing = false;
+                vm.readyStatus.recalculationError = true;
+            }
+
+        }
 
     };
 
