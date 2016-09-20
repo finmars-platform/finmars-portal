@@ -121,12 +121,12 @@
             {
                 name: "Strategy 2 subgroup",
                 entity: 'strategy-2-subgroup',
-                key: "strategies.strategy1subgroup"
+                key: "strategies.strategy2subgroup"
             },
             {
                 name: "Strategy 3 subgroup",
                 entity: 'strategy-3-subgroup',
-                key: "strategies.strategy1subgroup"
+                key: "strategies.strategy3subgroup"
             }
         ]
 
