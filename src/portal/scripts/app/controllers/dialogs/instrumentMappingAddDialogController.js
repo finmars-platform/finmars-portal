@@ -291,11 +291,15 @@
                             for (e = 0; e < vm.entityAttrs.length; e = e + 1) {
                                 if (vm.entityAttrs[e].key == keys[i]) {
                                     if (vm.scheme[keys[i]] != "" && vm.scheme[keys[i]] != null && vm.scheme[keys[i]] != undefined) {
+                                        var complexExpressionEntity = false;
+                                        if(keys[i] == 'accrued_currency' || keys[i] == 'pricing_currency') {
+                                            complexExpressionEntity = 'currency';
+                                        }
                                         vm.mappedDynamic.push({
                                             key: keys[i],
                                             required: false,
                                             value: vm.entityAttrs[e],
-                                            complexExpressionEntity: false,
+                                            complexExpressionEntity: complexExpressionEntity,
                                             expression: vm.scheme[keys[i]]
                                         })
                                     }
@@ -403,6 +407,27 @@
                     $scope.$apply();
                 }
             });
+        };
+
+        vm.resolveFieldType = function (field) {
+
+            console.log('field', field);
+
+            if (field.value.hasOwnProperty('key')) {
+                field.key = field.value.key;
+
+                if(field.key == 'accrued_currency' || field.key == 'pricing_currency') {
+                    field.complexExpressionEntity = 'currency';
+                }
+            }
+
+            if (field.value.hasOwnProperty('value_type') && field.value.hasOwnProperty('id')) {
+                field.attribute_type = field.value.id;
+                if (field.value.value_type == 30) {
+                    field.complexExpressionEntity = 'classifier';
+                }
+            }
+
         };
 
         vm.getModelKey = function (item) {
