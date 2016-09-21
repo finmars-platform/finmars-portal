@@ -32,7 +32,10 @@
 
         vm.price = {
             date_from: d,
-            date_to: d
+            date_to: d,
+            date_both: d,
+            balance_date: d,
+            override_existed: false
         };
 
         vm.cancel = function () {
@@ -55,34 +58,48 @@
             });
         };
 
-        vm.uploadPrice = function () {
-            vm.processing = true;
+        vm.uploadPrice = function ($event) {
+            vm.readyStatus.processing = true;
 
-            var price = {};
-            if (vm.price.isRange) {
-                price = {
-                    date_from: moment(new Date(vm.price.date_from)).format('YYYY-MM-DD'),
-                    date_to: moment(new Date(vm.price.date_to)).format('YYYY-MM-DD'),
-                    balance_date: moment(new Date(vm.price.balance_date)).format('YYYY-MM-DD'),
-                    fill_days: vm.price.fill_days,
-                    override_existed: vm.price.override_existed
-                };
-            } else {
-                price = {
-                    date_from: moment(new Date(vm.price.date_both)).format('YYYY-MM-DD'),
-                    date_to: moment(new Date(vm.price.date_both)).format('YYYY-MM-DD'),
-                    balance_date: moment(new Date(vm.price.balance_date)).format('YYYY-MM-DD'),
-                    fill_days: vm.price.fill_days,
-                    override_existed: vm.price.override_existed
-                };
+            if (!vm.price.date_both) {
+                vm.price.date_both = vm.price.date_from;
             }
 
-            importPricingService.create(price).then(function () {
-                vm.processing = false;
-            })
-        };
+            if (vm.price.isRange) {
+                vm.price.date_from = moment(new Date(vm.price.date_from)).format('YYYY-MM-DD');
+                vm.price.date_to = moment(new Date(vm.price.date_to)).format('YYYY-MM-DD');
+                vm.price.balance_date = moment(new Date(vm.price.balance_date)).format('YYYY-MM-DD');
+            } else {
+                vm.price.date_from = moment(new Date(vm.price.date_both)).format('YYYY-MM-DD');
+                vm.price.date_to = moment(new Date(vm.price.date_both)).format('YYYY-MM-DD');
+                vm.price.balance_date = moment(new Date(vm.price.balance_date)).format('YYYY-MM-DD');
+            }
 
-        vm.agree = function () {
+            importPricingService.create(vm.price).then(function (data) {
+                vm.price = data;
+                if (vm.price.task_object.status == 'P' || vm.price.task_object.status == 'S' || vm.price.task_object.status == 'W') {
+                    setTimeout(function () {
+                        vm.uploadPrice()
+                    }, 5000)
+                } else {
+                    $mdDialog.show({
+                        controller: 'FillPriceManuallyInstrumentDialogController as vm',
+                        templateUrl: 'views/dialogs/fill-price-manually-instrument-dialog-view.html',
+                        targetEvent: $event,
+                        locals: {
+                            data: {
+                                instruments: vm.price.instrument_price_missed,
+                                currencies: vm.price.currency_price_missed
+                            }
+                        },
+                        preserveScope: true,
+                        autoWrap: true,
+                        skipHide: true
+                    });
+                    vm.readyStatus.processing = false;
+                }
+                $scope.$apply();
+            })
         };
 
         vm.startRecalculation = function () {

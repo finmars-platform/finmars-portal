@@ -17,19 +17,23 @@
                                     <input type="text" data-ng-model="vm.config.instrument_code">
                                 </md-input-container>
                                 <div layout="row" layout-align="begin center">
-                                    <md-button class="md-raised md-sm-btn" data-ng-click="vm.appendString('Equity')">Equity
+                                    <md-button class="md-raised md-sm-btn" data-ng-click="vm.appendString('Equity')">
+                                        Equity
                                     </md-button>
                                     <md-button class="md-raised md-sm-btn" data-ng-click="vm.appendString('Corp')">Corp
                                     </md-button>
-                                    <md-button class="md-raised md-sm-btn" data-ng-click="vm.appendString('Index')">Index
+                                    <md-button class="md-raised md-sm-btn" data-ng-click="vm.appendString('Index')">
+                                        Index
                                     </md-button>
                                 </div>
                                 <div layout="row" layout-align="begin center">
                                     <md-button class="md-raised md-sm-btn" data-ng-click="vm.appendString('Govt')">Govt
                                     </md-button>
-                                    <md-button class="md-raised md-sm-btn" data-ng-click="vm.appendString('Curncy')">Curncy
+                                    <md-button class="md-raised md-sm-btn" data-ng-click="vm.appendString('Curncy')">
+                                        Curncy
                                     </md-button>
-                                    <md-button class="md-raised md-sm-btn" data-ng-click="vm.appendString('Comdty')">Comdty
+                                    <md-button class="md-raised md-sm-btn" data-ng-click="vm.appendString('Comdty')">
+                                        Comdty
                                     </md-button>
                                 </div>
                             </div>
@@ -60,8 +64,8 @@
                     </md-card-content>
                 </md-card>
             </div>
-            <div layout="row">
-                <div flex="50">
+            <div layout="row" data-ng-if="vm.dataIsImported">
+                <div flex="40">
                     <h2 class="title-padding">Received data</h2>
                     <md-card class="{{vm.dataIsImported ? '' : 'card-opacity'}}">
                         <md-card-content>
@@ -80,7 +84,7 @@
                         </md-card-content>
                     </md-card>
                 </div>
-                <div flex="50">
+                <div flex="60">
                     <div layout="column">
                         <h2 class="title-padding">Instrument data</h2>
                         <div layout="row">
@@ -90,7 +94,7 @@
                             </md-button>
                         </div>
                     </div>
-                    <md-card class="{{vm.dataIsImported ? '' : 'card-opacity'}}">
+                    <md-card>
                         <md-card-content class="p-t-26">
                             <md-input-container class="md-block">
                                 <label for="">Name</label>
@@ -103,7 +107,9 @@
                             <md-input-container class="md-block" style="min-height: 64px">
                                 <label for="">Instrument type</label>
                                 <md-select data-ng-model="vm.config.instrument.instrument_type">
-                                    <md-option data-ng-repeat="item in vm.instrumentTypes" ng-value="item.id">{{item.name}}</md-option>
+                                    <md-option data-ng-repeat="item in vm.instrumentTypes" ng-value="item.id">
+                                        {{item.name}}
+                                    </md-option>
                                 </md-select>
                             </md-input-container>
                             <md-input-container class="md-block">
@@ -111,17 +117,22 @@
                                 <input type="text" data-ng-model="vm.config.instrument.reference_for_pricing">
                             </md-input-container>
 
-                            <div class="bordered-with-color" style="padding-top: 30px; padding-bottom: 30px; margin-bottom: 20px">
+                            <div class="bordered-with-color"
+                                 style="padding-top: 30px; padding-bottom: 30px; margin-bottom: 20px">
                                 <md-input-container class="md-block" style="min-height: 64px">
                                     <label for="">Pricing model</label>
                                     <md-select data-ng-model="vm.config.instrument.daily_pricing_model">
-                                        <md-option data-ng-repeat="item in vm.dailyModels" ng-value="item.id">{{item.name}}</md-option>
+                                        <md-option data-ng-repeat="item in vm.dailyModels" ng-value="item.id">
+                                            {{item.name}}
+                                        </md-option>
                                     </md-select>
                                 </md-input-container>
                                 <md-input-container class="md-block" style="min-height: 64px">
                                     <label for="">Price download mode</label>
                                     <md-select data-ng-model="vm.config.instrument.price_download_scheme">
-                                        <md-option data-ng-repeat="item in vm.priceDownloadSchemes" ng-value="item.id">{{item.scheme_name}}</md-option>
+                                        <md-option data-ng-repeat="item in vm.priceDownloadSchemes" ng-value="item.id">
+                                            {{item.scheme_name}}
+                                        </md-option>
                                     </md-select>
                                 </md-input-container>
                                 <md-input-container class="md-block">
@@ -135,7 +146,9 @@
                                 <md-input-container class="md-block">
                                     <label for="">Payment size default</label>
                                     <md-select data-ng-model="vm.config.instrument.payment_size_detail">
-                                        <md-option data-ng-repeat="item in vm.paymentSizeDefaults" ng-value="item.id">{{item.name}}</md-option>
+                                        <md-option data-ng-repeat="item in vm.paymentSizeDefaults" ng-value="item.id">
+                                            {{item.name}}
+                                        </md-option>
                                     </md-select>
                                 </md-input-container>
                             </div>
@@ -143,13 +156,15 @@
                             <md-input-container class="md-block" style="min-height: 64px">
                                 <label for="">Pricing currency</label>
                                 <md-select data-ng-model="vm.config.instrument.pricing_currency">
-                                    <md-option data-ng-repeat="item in vm.currencies" ng-value="item.id">{{item.name}}</md-option>
+                                    <md-option data-ng-repeat="item in vm.currencies" ng-value="item.id">{{item.name}}
+                                    </md-option>
                                 </md-select>
                             </md-input-container>
                             <md-input-container class="md-block" style="min-height: 64px">
                                 <label for="">Accrued currency</label>
                                 <md-select data-ng-model="vm.config.instrument.accrued_currency">
-                                    <md-option data-ng-repeat="item in vm.currencies" ng-value="item.id">{{item.name}}</md-option>
+                                    <md-option data-ng-repeat="item in vm.currencies" ng-value="item.id">{{item.name}}
+                                    </md-option>
                                 </md-select>
                             </md-input-container>
 
@@ -161,6 +176,73 @@
                                 <label for="">Public name</label>
                                 <input type="text" data-ng-model="vm.config.instrument.public_name">
                             </md-input-container>
+
+                            <md-input-container class="md-block" data-ng-if="vm.config.instrument.notes != ''">
+                                <label for="">Notes</label>
+                                <input type="text" data-ng-model="vm.config.instrument.notes">
+                            </md-input-container>
+                            <md-input-container class="md-block" data-ng-if="vm.config.instrument.maturity_date != ''">
+                                <label for="">Maturity date</label>
+                                <input type="text" data-ng-model="vm.config.instrument.maturity_date">
+                            </md-input-container>
+                            <md-input-container class="md-block" data-ng-if="vm.config.instrument.user_text_1 != ''">
+                                <label for="">User text 1</label>
+                                <input type="text" data-ng-model="vm.config.instrument.user_text_1">
+                            </md-input-container>
+                            <md-input-container class="md-block" data-ng-if="vm.config.instrument.user_text_2 != ''">
+                                <label for="">User text 2</label>
+                                <input type="text" data-ng-model="vm.config.instrument.user_text_2">
+                            </md-input-container>
+                            <md-input-container class="md-block" data-ng-if="vm.config.instrument.user_text_3 != ''">
+                                <label for="">User text 3</label>
+                                <input type="text" data-ng-model="vm.config.instrument.user_text_3">
+                            </md-input-container>
+                            <md-input-container class="md-block"
+                                                data-ng-if="vm.config.instrument.price_multiplier != ''">
+                                <label for="">Price multiplier</label>
+                                <input type="text" data-ng-model="vm.config.instrument.price_multiplier">
+                            </md-input-container>
+                            <md-input-container class="md-block"
+                                                data-ng-if="vm.config.instrument.accrued_multiplier != ''">
+                                <label for="">Accrued multiplier</label>
+                                <input type="text" data-ng-model="vm.config.instrument.accrued_multiplier">
+                            </md-input-container>
+
+                            <div data-ng-repeat="item in vm.config.instrument.attributes">
+                                <div data-ng-if="item.attribute_type_object.value_type == 10">
+                                    <md-input-container class="md-block">
+                                        <label for="">{{item.attribute_type_object.name}}</label>
+                                        <input type="text" data-ng-model="item.value_string">
+                                    </md-input-container>
+                                </div>
+                                <div data-ng-if="item.attribute_type_object.value_type == 20">
+                                    <md-input-container class="md-block">
+                                        <label for="">{{item.attribute_type_object.name}}</label>
+                                        <input type="text" data-ng-model="item.value_float">
+                                    </md-input-container>
+                                </div>
+                                <div data-ng-if="item.attribute_type_object.value_type == 30">
+                                    <md-input-container class="md-block" style="margin-bottom: 20px;">
+                                        <label for="">{{item.attribute_type_object.name}}</label>
+                                        <md-select data-ng-model="item.classifier"
+                                                   data-classifier-modal-resolver
+                                                   data-classifier-attr="item.attribute_type_object"
+                                                   data-classifier-value="item.classifier"
+                                                   md-container-class="h-classifier-select"
+                                                   data-entity-type="'instrument'">
+                                            <md-option ng-value="item.classifier" selected="selected">
+                                                {{vm.resolveAttributeNode(item)}}
+                                            </md-option>
+                                        </md-select>
+                                    </md-input-container>
+                                </div>
+                                <div data-ng-if="item.attribute_type_object.value_type == 40">
+                                    <md-input-container class="md-block">
+                                        <label for="">{{item.attribute_type_object.name}}</label>
+                                        <zh-date-picker data-ng-model="item.value_date"></zh-date-picker>
+                                    </md-input-container>
+                                </div>
+                            </div>
 
                         </md-card-content>
                     </md-card>

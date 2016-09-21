@@ -345,7 +345,9 @@
 
 
             vm.scheme.inputs = vm.providerFields;
-
+            vm.scheme.inputs.forEach(function(item){
+                item.field = item.name;
+            });
 
             instrumentSchemeService.create(vm.scheme).then(function (data) {
                 console.log('DATA', data);
