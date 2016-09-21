@@ -1,5 +1,5 @@
 /**
- * Created by szhitenev on 17.08.2016.
+ * Created by szhitenev on 19.08.2016.
  */
 (function () {
 
@@ -10,12 +10,13 @@
 
     var baseUrl = '/api/v1/';
 
-    var getList = function (providerId) {
-        return window.fetch(baseUrl + 'import/instrument-scheme/?provider' + providerId,
+    var getList = function () {
+        return window.fetch(baseUrl + 'import/instrument-attribute-value-mapping/',
             {
                 method: 'GET',
                 credentials: 'include',
                 headers: {
+                    'X-CSRFToken': cookieService.getCookie('csrftoken'),
                     Accept: 'application/json',
                     'Content-type': 'application/json'
                 }
@@ -23,9 +24,8 @@
             return data.json();
         })
     };
-
-    var create = function (scheme) {
-        return window.fetch(baseUrl + 'import/instrument-scheme/',
+    var create = function (map) {
+        return window.fetch(baseUrl + 'import/instrument-attribute-value-mapping/',
             {
                 method: 'POST',
                 credentials: 'include',
@@ -34,21 +34,14 @@
                     Accept: 'application/json',
                     'Content-type': 'application/json'
                 },
-                body: JSON.stringify(scheme)
+                body: JSON.stringify(map)
             }).then(function (data) {
-            return new Promise(function (resolve, reject) {
-                data.json().then(function (result) {
-                    resolve({
-                        response: result,
-                        status: data.status
-                    })
-                })
-            });
+            return data.json();
         })
     };
 
     var getByKey = function (id) {
-        return window.fetch(baseUrl + 'import/instrument-scheme/' + id + '/',
+        return window.fetch(baseUrl + 'import/instrument-attribute-value-mapping/' + id + '/',
             {
                 method: 'GET',
                 credentials: 'include',
@@ -62,31 +55,24 @@
         })
     };
 
-    var update = function (id, scheme) {
-        return window.fetch(baseUrl + 'import/instrument-scheme/' + id + '/',
+    var update = function (id, map) {
+        return window.fetch(baseUrl + 'import/instrument-attribute-value-mapping/' + id + '/',
             {
-                method: 'PATCH',
+                method: 'PUT',
                 credentials: 'include',
                 headers: {
                     'X-CSRFToken': cookieService.getCookie('csrftoken'),
                     Accept: 'application/json',
                     'Content-type': 'application/json'
                 },
-                body: JSON.stringify(scheme)
+                body: JSON.stringify(map)
             }).then(function (data) {
-            return new Promise(function (resolve, reject) {
-                data.json().then(function (result) {
-                    resolve({
-                        response: result,
-                        status: data.status
-                    })
-                })
-            });
+            return data.json();
         })
     };
 
     var deleteByKey = function (id) {
-        return window.fetch(baseUrl + 'import/instrument-scheme/' + id + '/',
+        return window.fetch(baseUrl + 'import/instrument-attribute-value-mapping/' + id + '/',
             {
                 method: 'DELETE',
                 credentials: 'include',
@@ -102,8 +88,8 @@
 
     module.exports = {
         getList: getList,
-        create: create,
         getByKey: getByKey,
+        create: create,
         update: update,
         deleteByKey: deleteByKey
     }

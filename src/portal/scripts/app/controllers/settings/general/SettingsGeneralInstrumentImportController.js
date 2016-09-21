@@ -35,9 +35,7 @@
             }).then(function (res) {
                 if (res.status === 'agree') {
                     console.log('res', res.data);
-                    instrumentSchemeService.create(res.data).then(function () {
-                        vm.getList();
-                    })
+                    vm.getList();
                 }
             });
         };
