@@ -10,7 +10,7 @@
     var entityResolverService = require('../../services/entityResolverService');
     var instrumentAttributeTypeService = require('../../services/instrument/instrumentAttributeTypeService');
 
-    module.exports = function ($scope, $mdDialog, mapEntityType) {
+    module.exports = function ($scope, $mdDialog, mapItem) {
 
         logService.controller('EntityTypeMappingDialogController', 'initialized');
 
@@ -18,9 +18,10 @@
 
         vm.readyStatus = {content: false};
         vm.entityItems = [];
-        vm.mapEntityType = mapEntityType;
+        vm.mapItem = mapItem;
+        vm.mapEntityType = mapItem.complexExpressionEntity;
 
-        console.log('mapEntityType', mapEntityType);
+        console.log('mapEntityType', vm.mapEntityType);
 
         vm.toggleQuery = function () {
             vm.queryStatus = !vm.queryStatus;
@@ -33,10 +34,10 @@
         };
 
         vm.fancyEntity = function () {
-            return mapEntityType.replace('_', ' ');
+            return vm.mapEntityType.replace('_', ' ');
         };
 
-        console.log(entityResolverService.getList(mapEntityType));
+        console.log(entityResolverService.getList(vm.mapEntityType));
 
         var classifier_value_type = 30;
 
@@ -55,10 +56,10 @@
             }
         }
 
-        if (mapEntityType == 'classifier') {
-            instrumentAttributeTypeService.getListByAttributeType([classifier_value_type]).then(function (data) {
+        if (vm.mapEntityType == 'classifier') {
+            instrumentAttributeTypeService.getByKey(vm.mapItem.attribute_type).then(function (data) {
 
-                data.results.forEach(function (classifier) {
+                [data].forEach(function (classifier) {
                     classifier.classifiers.forEach(function (item) {
 
                         addChilds(classifier, item);
@@ -66,7 +67,7 @@
                     })
                 });
 
-                entityTypeMappingResolveService.getList(mapEntityType).then(function (data) {
+                entityTypeMappingResolveService.getList(vm.mapEntityType).then(function (data) {
                     if (data.hasOwnProperty('results')) {
                         vm.items = data.results;
                     } else {
@@ -76,7 +77,7 @@
                     var i, e;
                     for (e = 0; e < vm.entityItems.length; e = e + 1) {
                         for (i = 0; i < vm.items.length; i = i + 1) {
-                            if (vm.items[i][mapEntityType] == vm.entityItems[e].id) {
+                            if (vm.items[i][vm.mapEntityType] == vm.entityItems[e].id) {
                                 vm.entityItems[e].mapping = vm.items[i]
                             }
                         }
@@ -90,13 +91,13 @@
             })
         } else {
 
-            entityResolverService.getList(mapEntityType).then(function (data) {
+            entityResolverService.getList(vm.mapEntityType).then(function (data) {
                 if (data.hasOwnProperty('results')) {
                     vm.entityItems = data.results;
                 } else {
                     vm.entityItems = data;
                 }
-                entityTypeMappingResolveService.getList(mapEntityType).then(function (data) {
+                entityTypeMappingResolveService.getList(vm.mapEntityType).then(function (data) {
                     if (data.hasOwnProperty('results')) {
                         vm.items = data.results;
                     } else {
@@ -105,7 +106,7 @@
                     var i, e;
                     for (e = 0; e < vm.entityItems.length; e = e + 1) {
                         for (i = 0; i < vm.items.length; i = i + 1) {
-                            if (vm.items[i][mapEntityType] == vm.entityItems[e].id) {
+                            if (vm.items[i][vm.mapEntityType] == vm.entityItems[e].id) {
                                 vm.entityItems[e].mapping = vm.items[i]
                             }
                         }
@@ -139,7 +140,7 @@
                     }
                     if (vm.entityItems[i].hasOwnProperty('mapping') && !vm.entityItems[i].mapping.hasOwnProperty('id')) {
                         vm.entityItems[i].mapping.provider = 1; //TODO FIND PROVIDER ID?
-                        if (mapEntityType == 'classifier') {
+                        if (vm.mapEntityType == 'classifier') {
 
                             vm.entityItems[i].mapping['attribute_type'] = vm.entityItems[i].classifier;
 
@@ -148,16 +149,16 @@
                             }
 
                         } else {
-                            vm.entityItems[i].mapping[mapEntityType] = vm.entityItems[i].id;
+                            vm.entityItems[i].mapping[vm.mapEntityType] = vm.entityItems[i].id;
                         }
 
-                        return entityTypeMappingResolveService.create(mapEntityType, vm.entityItems[i].mapping).then(function () {
+                        return entityTypeMappingResolveService.create(vm.mapEntityType, vm.entityItems[i].mapping).then(function () {
                             i = i + 1;
                             updateRow();
                             return false;
                         })
                     }
-                    return entityTypeMappingResolveService.update(mapEntityType, vm.entityItems[i].mapping.id, vm.entityItems[i].mapping).then(function () {
+                    return entityTypeMappingResolveService.update(vm.mapEntityType, vm.entityItems[i].mapping.id, vm.entityItems[i].mapping).then(function () {
                         i = i + 1;
                         updateRow();
                         return false;
