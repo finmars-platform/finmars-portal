@@ -111,7 +111,7 @@
                                 <input type="text" data-ng-model="vm.config.instrument.reference_for_pricing">
                             </md-input-container>
 
-                            <div class="bordered-with-color" style="margin-bottom: 20px">
+                            <div class="bordered-with-color" style="padding-top: 30px; padding-bottom: 30px; margin-bottom: 20px">
                                 <md-input-container class="md-block" style="min-height: 64px">
                                     <label for="">Pricing model</label>
                                     <md-select data-ng-model="vm.config.instrument.daily_pricing_model">
@@ -120,8 +120,8 @@
                                 </md-input-container>
                                 <md-input-container class="md-block" style="min-height: 64px">
                                     <label for="">Price download mode</label>
-                                    <md-select data-ng-model="vm.config.instrument.priceDownloadScheme">
-                                        <md-option data-ng-repeat="item in vm.priceDownloadSchemes" ng-value="item.id">{{item.name}}</md-option>
+                                    <md-select data-ng-model="vm.config.instrument.price_download_scheme">
+                                        <md-option data-ng-repeat="item in vm.priceDownloadSchemes" ng-value="item.id">{{item.scheme_name}}</md-option>
                                     </md-select>
                                 </md-input-container>
                                 <md-input-container class="md-block">
@@ -134,7 +134,9 @@
                                 </md-input-container>
                                 <md-input-container class="md-block">
                                     <label for="">Payment size default</label>
-                                    <input type="text" data-ng-model="vm.config.instrument.payment_size_detail">
+                                    <md-select data-ng-model="vm.config.instrument.payment_size_detail">
+                                        <md-option data-ng-repeat="item in vm.paymentSizeDefaults" ng-value="item.id">{{item.name}}</md-option>
+                                    </md-select>
                                 </md-input-container>
                             </div>
 

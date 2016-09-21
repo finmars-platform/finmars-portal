@@ -20,6 +20,7 @@
     var importPriceDownloadSchemeService = require('../../services/import/importPriceDownloadSchemeService');
 
     var importInstrumentService = require('../../services/import/importInstrumentService');
+    var instrumentPaymentSizeDetailService = require('../../services/instrument/instrumentPaymentSizeDetailService');
 
 
     module.exports = function ($scope, $mdDialog) {
@@ -30,7 +31,14 @@
 
         var vm = this;
 
-        vm.readyStatus = {mapping: false, processing: false, dailyModel: false, priceDownloadScheme: false, instrumentType: false, currency: false};
+        vm.readyStatus = {
+            mapping: false,
+            processing: false,
+            dailyModel: false,
+            priceDownloadScheme: false,
+            instrumentType: false,
+            currency: false
+        };
         vm.dataIsImported = false;
 
         vm.config = {
@@ -65,13 +73,18 @@
             $scope.$apply();
         });
 
-        instrumentTypeService.getList().then(function(data){
+        instrumentPaymentSizeDetailService.getList().then(function (data) {
+            vm.paymentSizeDefaults = data;
+            $scope.$apply();
+        });
+
+        instrumentTypeService.getList().then(function (data) {
             vm.instrumentTypes = data.results;
             vm.readyStatus.instrumentType = true;
             $scope.$apply();
         });
 
-        currencyService.getList().then(function(data){
+        currencyService.getList().then(function (data) {
             vm.currencies = data.results;
             vm.readyStatus.currency = true;
             $scope.$apply();
@@ -96,7 +109,7 @@
 
                     var keysDict = [];
 
-                    if(Object.keys(vm.config["task_result_overrides"]).length > 0) {
+                    if (Object.keys(vm.config["task_result_overrides"]).length > 0) {
                         keysDict = vm.config["task_result_overrides"];
                     } else {
                         keysDict = vm.config["task_result"]
