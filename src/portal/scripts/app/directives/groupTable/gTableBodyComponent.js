@@ -81,6 +81,8 @@
                                 }
                             });
 
+                            console.log('entityFieldsArray', entityFieldsArray);
+
                             findEntityFields().then(function () {
                                 resolve({status: "columns ready"})
                             });
@@ -336,7 +338,7 @@
                             }
                         }
                     }
-
+                    console.log('column value_type', column, column['value_type']);
                     if (column.hasOwnProperty('id')) {
                         if (column['value_type'] === 30) {
                             if (scope.readyStatus.cellsReady) {
@@ -374,7 +376,10 @@
                                             return item.id === _groupedItemVal;
                                         })[0];
                                         if (result) {
-                                            if (result['display_name']) {
+                                            if (column['key'] === 'instrument' && result['user_code']) {
+                                                return result['user_code'];
+                                            }
+                                            else if (result['display_name']) {
                                                 return result['display_name'];
                                             }
                                             return result['name'];

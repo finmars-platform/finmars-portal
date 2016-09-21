@@ -9,7 +9,7 @@
 	var threadService = require('../services/threadService');
 	var threadGroupService = require('../services/threadGroupService');
 	var tagService = require('../../../../portal/scripts/app/services/tagService');
-
+	
 	module.exports = function($scope, $stateParams, $mdDialog) {
 
 		logService.controller('ForumThreadListController', 'initialized');
@@ -75,10 +75,11 @@
 					threadId: threadId
 				}
 			}).then(function (data) {
+
 				var threadTags = [];
 				var parsedThreadTags = parseInt(data.data.tags);
 
-				if (parsedThreadTags !== 'NaN') {
+				if (!isNaN(parsedThreadTags)) {
 					if (typeof data.data.tags === 'string') {
 						threadTags = [parsedThreadTags];
 					}
@@ -87,8 +88,9 @@
 					}
 				}
 				var threadName = data.data.name;
-				console.log('tags selected', threadTags, threadId);
-				threadService.update(threadId, {subject: threadName, tags: threadTags, thread_group: vm.threadGroupId}).then(function () {
+				// console.log('tags selected', threadTags, threadId);
+				console.log('thread user permissions', data.data.users_permissions, 'thread groups permissions', data.data.groups_permissions);
+				threadService.update(threadId, {subject: threadName, tags: threadTags, thread_group: vm.threadGroupId, group_object_permissions: data.data.groups_permissions, user_object_permissions: data.data.users_permissions}).then(function () {
 					console.log("thread's tags updated");
 					vm.getList();
 				});

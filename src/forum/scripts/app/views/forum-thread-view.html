@@ -3,7 +3,7 @@
         <h2 class="forum-section-header">Thread name: <span data-ng-bind="::vm.thread.subject"></span></h2>
         <div layout="row">
             <div layout="row" flex="50" layout-align="start center">
-                <md-button ui-sref="app.forum.threads-list({groupId: vm.threadGroupId})"
+                <md-button aria-label="back" ui-sref="app.forum.threads-list({groupId: vm.threadGroupId})"
                            class="md-raised forum-back-btn" data-ng-click="vm.forumGoBackBtn()">Back
                 </md-button>
                 <div paging
@@ -15,7 +15,7 @@
                 </div>
             </div>
             <div layout="row" flex="50" layout-align="end center">
-                <md-button data-ng-click="vm.write($event)" class="md-raised md-primary">
+                <md-button aria-label="write" data-ng-click="vm.write($event)" class="md-raised md-primary">
                     Write
                 </md-button>
             </div>
@@ -40,7 +40,7 @@
                         <p class="thread-message-text" data-ng-bind-html="item.text | trustAsHtml"></p>
                     </div>
                     <div layout="row" layout-align="end center">
-                        <md-button class="md-raised message-reply-btn" data-ng-click="vm.replyToMessage($event, item)">Reply</md-button>
+                        <md-button aria-label="reply" class="md-raised message-reply-btn" data-ng-click="vm.replyToMessage($event, item)">Reply</md-button>
                     </div>
                 </div>
                 <md-divider class="thread-message-divider"></md-divider>
@@ -50,7 +50,7 @@
 
             <div layout="row">
                 <div layout="row" flex="50" layout-align="start center">
-                    <md-button ui-sref="app.forum.threads-list({groupId: vm.threadGroupId})"
+                    <md-button aria-label="back" ui-sref="app.forum.threads-list({groupId: vm.threadGroupId})"
                                class="md-raised forum-back-btn" data-ng-click="vm.forumGoBackBtn()">Back
                     </md-button>
                     <div paging
@@ -62,7 +62,7 @@
                     </div>
                 </div>
                 <div layout="row" flex="50" layout-align="end center">
-                    <md-button data-ng-click="vm.write($event)" class="md-raised md-primary">
+                    <md-button aria-label="write" data-ng-click="vm.write($event)" class="md-raised md-primary">
                         Write
                     </md-button>
                 </div>
