@@ -21,7 +21,7 @@
 
             var result = '';
 
-            result = key.replace('_', ' ');
+            result = key.split('_').join(' ');
 
             return result.charAt(0).toUpperCase() + result.slice(1);
 

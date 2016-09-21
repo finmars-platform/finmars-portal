@@ -21,6 +21,7 @@
 
     var importInstrumentService = require('../../services/import/importInstrumentService');
     var instrumentPaymentSizeDetailService = require('../../services/instrument/instrumentPaymentSizeDetailService');
+    var instrumentAttributeTypeService = require('../../services/instrument/instrumentAttributeTypeService');
 
 
     module.exports = function ($scope, $mdDialog) {
@@ -52,6 +53,8 @@
         vm.priceDownloadSchemes = [];
         vm.instrumentTypes = [];
         vm.currencies = [];
+
+        vm.dynAttributes = {};
 
         var providerId = 1; //TODO HARD REFACTOR CODE BLOOMBERG PROVIDER
 
@@ -95,6 +98,16 @@
             vm.config.instrument_code = code + ' ' + string;
         };
 
+        vm.resolveAttributeNode = function (item) {
+            var result = '';
+            vm.dynAttributes['id_' + item.attribute_type].classifiers.forEach(function (classifier) {
+                if (classifier.id == item.classifier) {
+                    result = classifier.name;
+                }
+            });
+            return result;
+        };
+
         vm.load = function () {
             vm.readyStatus.processing = true;
             //vm.config.task = 81;
@@ -123,7 +136,25 @@
                             value: keysDict[keys[i]]
                         })
                     }
-                    $scope.$apply();
+
+                    var promises = [];
+
+                    vm.config.instrument.attributes.forEach(function (attribute) {
+                        if (attribute.attribute_type_object.value_type == 30) {
+                            promises.push(instrumentAttributeTypeService.getByKey(attribute.attribute_type));
+                        }
+                    });
+
+
+                    Promise.all(promises).then(function (data) {
+
+                        data.forEach(function (item) {
+                            vm.dynAttributes['id_' + item.id] = item;
+                        });
+
+                        $scope.$apply();
+                    })
+
 
                 } else {
                     setTimeout(function () {
@@ -168,9 +199,25 @@
             $mdDialog.cancel();
         };
 
-        vm.agree = function () {
-            instrumentService.create(vm.config.instrument).then(function () {
-                $mdDialog.hide({status: 'agree'});
+        vm.agree = function ($event) {
+            instrumentService.create(vm.config.instrument).then(function (data) {
+                console.log('DATA', data);
+                if (data.status == 200 || data.status == 201) {
+                    $mdDialog.hide({res: 'agree'});
+                }
+                if (data.status == 400) {
+                    $mdDialog.show({
+                        controller: 'ValidationDialogController as vm',
+                        templateUrl: 'views/dialogs/validation-dialog-view.html',
+                        targetEvent: $event,
+                        locals: {
+                            validationData: data.response
+                        },
+                        preserveScope: true,
+                        autoWrap: true,
+                        skipHide: true
+                    })
+                }
             });
 
         };

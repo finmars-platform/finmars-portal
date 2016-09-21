@@ -513,6 +513,9 @@
             }
 
             vm.schemeUpdated.inputs = vm.providerFields;
+            vm.schemeUpdated.inputs.forEach(function(item){
+                item.field = item.name;
+            });
 
             instrumentSchemeService.update(vm.scheme.id, vm.schemeUpdated).then(function (data) {
                 console.log('DATA', data);

@@ -5,6 +5,8 @@
 
     var instrumentAttributeTypeRepository = require('../../repositories/instrument/instrumentAttributeTypeRepository');
 
+    var getByKeyItems = {};
+
     var getList = function (options) {
         return instrumentAttributeTypeRepository.getList(options);
     };
@@ -15,6 +17,16 @@
 
     var getByKey = function (id) {
         return instrumentAttributeTypeRepository.getByKey(id);
+    };
+
+    var getByKeyAttr = function (id) {
+        if (!getByKeyItems['id_' + id]) {
+            return instrumentAttributeTypeRepository.getByKey(id);
+        } else {
+            return Promise(function (resolve, reject) {
+                resolve(getByKeyItems['id_' + id]);
+            })
+        }
     };
 
     var create = function (account) {
@@ -35,7 +47,10 @@
         getByKey: getByKey,
         create: create,
         update: update,
-        deleteByKey: deleteByKey
+        deleteByKey: deleteByKey,
+        singleton: {
+            getByKeyAttr: getByKeyAttr
+        }
     }
 
 
