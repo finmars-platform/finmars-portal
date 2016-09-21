@@ -17,7 +17,7 @@
 
         vm.isQuotation = false;
 
-        var message;
+        // var message = '';
         if(options && options.quote) {
             vm.isQuotation = true;
             vm.quotation = options.quote.item;
@@ -28,15 +28,14 @@
             // };
             // var message = JSON.stringify(messageObj);
         }
-        message = vm.message;
+        // message = vm.message;
 
         vm.cancel = function () {
             $mdDialog.cancel();
         };
-        console.log(message);
 
         vm.agree = function () {
-            $mdDialog.hide({status: 'agree', data: {message: message}});
+            $mdDialog.hide({status: 'agree', data: {message: vm.message}});
         };
 
 

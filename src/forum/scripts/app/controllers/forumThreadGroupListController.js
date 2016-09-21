@@ -7,6 +7,7 @@
 
 	var logService = require('../../../../core/services/logService');
 	var threadGroupService = require('../services/threadGroupService');
+	var threadService = require('../services/threadService');
 	var tagService = require('../../../../portal/scripts/app/services/tagService');
 	
 	module.exports = function($scope, $mdDialog) {
@@ -58,7 +59,7 @@
 				var threadsGroupTags = [];
 				var parsedGroupTags = parseInt(data.data.tags);
 
-				if (parsedGroupTags !== 'NaN') {
+				if (!isNaN(parsedGroupTags)) {
 					if (typeof data.data.tags === 'string') {
 						threadsGroupTags = [parsedGroupTags];
 					}
@@ -67,10 +68,11 @@
 					}
 				}
 				var threadsGroupName = data.data.name;
+				
 				threadGroupService.update(threadsGroupId, {name: threadsGroupName, tags: threadsGroupTags}).then(function () {
-					console.log("thread's tags updated");
 					vm.getList();
 				});
+
 			});
 		}
 

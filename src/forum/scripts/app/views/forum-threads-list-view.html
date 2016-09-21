@@ -4,7 +4,7 @@
 		<h3 class="forum-section-header">Threads list</h3>
 		<div layout="row">
 			<div layout="row" flex="50">
-				<md-button ui-sref="app.forum.thread-groups" class="md-raised forum-back-btn" data-ng-click="vm.forumGoBackBtn()">Back</md-button>
+				<md-button aria-label="back" ui-sref="app.forum.thread-groups" class="md-raised forum-back-btn" data-ng-click="vm.forumGoBackBtn()">Back</md-button>
 				<md-input-container class="margin-top-5">
 					<label>Filter by tags</label>
 					<md-select aria-label="" data-ng-model="vm.filterTags" multiple="true">
@@ -14,7 +14,7 @@
 				<hide-by-tags tags="vm.tags"></hide-by-tags>
 			</div>
 			<div layout="row" layout-align="end center" flex="50">
-				<md-button class="md-raised md-primary" data-ng-click="vm.createThredsList($event)">Create thread</md-button>
+				<md-button aria-lable="create thread" class="md-raised md-primary" data-ng-click="vm.createThredsList($event)">Create thread</md-button>
 			</div>
 		</div>
 		<div data-ng-if="vm.readyStatus.content">
@@ -40,10 +40,10 @@
 		</div>
 		<div layout="row">
 			<div layout="row" flex="50">
-				<md-button ui-sref="app.forum.thread-groups" class="md-raised forum-back-btn" data-ng-click="vm.forumGoBackBtn()">Back</md-button>
+				<md-button aria-label="back" ui-sref="app.forum.thread-groups" class="md-raised forum-back-btn" data-ng-click="vm.forumGoBackBtn()">Back</md-button>
 			</div>
 			<div layout="row" layout-align="end center" flex="50">
-				<md-button class="md-raised md-primary" data-ng-click="vm.createThredsList($event)">Create thread</md-button>
+				<md-button aria-label="create" class="md-raised md-primary" data-ng-click="vm.createThredsList($event)">Create thread</md-button>
 			</div>
 		</div>
 	</md-content>

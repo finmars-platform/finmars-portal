@@ -10,7 +10,15 @@
 	var baseUrl = '/api/v1/';
 
 	var getList = function (options) {
-		return window.fetch(baseUrl + 'chats/thread/?ordering=created&page=' + options.page + '&thread_group=' + options.threadGroup,
+		var fetchUrl = '';
+		if (options.page && options.page.length) {
+			fetchUrl = 'chats/thread/?ordering=created&page=' + options.page + '&thread_group=' + options.threadGroup;
+		}
+		else {
+			fetchUrl = 'chats/thread/?ordering=created' + '&thread_group=' + options.threadGroup;
+		}
+		// return window.fetch(baseUrl + 'chats/thread/?ordering=created&page=' + options.page + '&thread_group=' + options.threadGroup,
+		return window.fetch(baseUrl + fetchUrl,
 			{
 				method: 'GET',
 				credentials: 'include',

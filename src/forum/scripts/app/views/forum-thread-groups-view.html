@@ -12,19 +12,19 @@
 				<hide-by-tags tags="vm.tags"></hide-by-tags>
 			</div>
 			<div layout="row" layout-align="end center" flex="50">
-				<md-button aria-label="" class="md-raised md-primary" data-ng-click="vm.createThredsGroup($event)">Create thread group</md-button>
+				<md-button aria-label="create group" class="md-raised md-primary" data-ng-click="vm.createThredsGroup($event)">Create thread group</md-button>
 			</div>
 		</div>
 		<div data-ng-if="vm.readyStatus.content">
 			<md-card class="group-forum-list-item" class="md-3-line" ng-repeat="item in vm.threadGroups | forumFilterByTags : vm.filterTags" data-tag-id="{{item.filterTag}}">
-				<a href=""  data-ui-sref="app.forum.threads-list({groupId: item.id})">
+				<a href="" data-ui-sref="app.forum.threads-list({groupId: item.id})">
 					<span data-ng-bind="item.name"></span>
 				</a>
 				<div class="forum-manage-buttons">
-					<md-button aria-label="" class="forum-manage-btn" data-ng-click="vm.editThreadsGroupsDialog('$event', item.id)">
+					<md-button aria-label="edit group" class="forum-manage-btn" data-ng-click="vm.editThreadsGroupsDialog('$event', item.id)">
 						<ng-md-icon icon="mode_edit" size="20"></ng-md-icon>
 					</md-button>
-					<md-button class="forum-manage-btn" data-ng-click="vm.deleteThreadsGroup(item.id)">
+					<md-button aria-label="delete group" class="forum-manage-btn" data-ng-click="vm.deleteThreadsGroup(item.id)">
 						<ng-md-icon icon="clear" size="20"></ng-md-icon>
 					</md-button>
 				</div>
@@ -36,7 +36,7 @@
 			</div>
 		</div>
 		<div layout="row" layout-align="end center">
-			<md-button aria-label="" class="md-raised md-primary" data-ng-click="vm.createThredsGroup($event)">Create thread group</md-button>
+			<md-button aria-label="create group" class="md-raised md-primary" data-ng-click="vm.createThredsGroup($event)">Create thread group</md-button>
 		</div>
 	</md-content>
 </div>

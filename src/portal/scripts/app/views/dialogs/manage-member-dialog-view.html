@@ -4,7 +4,7 @@
 			<h2>Edit member "{{vm.members.display_name}}"</h2>
 		</div>
 	</md-toolbar>
-	<md-dialog-content class="manage-member-dialog-content">
+	<md-dialog-content data-custom-scroll class="manage-member-dialog-content custom-scrollbar">
 		<div layout="column">
 			<two-fields-options all-options="vm.groupsList" selected-options="vm.assignedGroupsList"></two-fields-options>
 			<md-checkbox data-ng-model="vm.memberIsAdmin" aria-label="member permission">This member is Admin</md-checkbox>
