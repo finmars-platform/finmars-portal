@@ -20,6 +20,8 @@
     var importPriceDownloadSchemeService = require('../../services/import/importPriceDownloadSchemeService');
 
     var importInstrumentService = require('../../services/import/importInstrumentService');
+    var instrumentPaymentSizeDetailService = require('../../services/instrument/instrumentPaymentSizeDetailService');
+    var instrumentAttributeTypeService = require('../../services/instrument/instrumentAttributeTypeService');
 
 
     module.exports = function ($scope, $mdDialog) {
@@ -30,7 +32,14 @@
 
         var vm = this;
 
-        vm.readyStatus = {mapping: false, processing: false, dailyModel: false, priceDownloadScheme: false, instrumentType: false, currency: false};
+        vm.readyStatus = {
+            mapping: false,
+            processing: false,
+            dailyModel: false,
+            priceDownloadScheme: false,
+            instrumentType: false,
+            currency: false
+        };
         vm.dataIsImported = false;
 
         vm.config = {
@@ -44,6 +53,8 @@
         vm.priceDownloadSchemes = [];
         vm.instrumentTypes = [];
         vm.currencies = [];
+
+        vm.dynAttributes = {};
 
         var providerId = 1; //TODO HARD REFACTOR CODE BLOOMBERG PROVIDER
 
@@ -65,13 +76,18 @@
             $scope.$apply();
         });
 
-        instrumentTypeService.getList().then(function(data){
+        instrumentPaymentSizeDetailService.getList().then(function (data) {
+            vm.paymentSizeDefaults = data;
+            $scope.$apply();
+        });
+
+        instrumentTypeService.getList().then(function (data) {
             vm.instrumentTypes = data.results;
             vm.readyStatus.instrumentType = true;
             $scope.$apply();
         });
 
-        currencyService.getList().then(function(data){
+        currencyService.getList().then(function (data) {
             vm.currencies = data.results;
             vm.readyStatus.currency = true;
             $scope.$apply();
@@ -82,8 +98,19 @@
             vm.config.instrument_code = code + ' ' + string;
         };
 
+        vm.resolveAttributeNode = function (item) {
+            var result = '';
+            vm.dynAttributes['id_' + item.attribute_type].classifiers.forEach(function (classifier) {
+                if (classifier.id == item.classifier) {
+                    result = classifier.name;
+                }
+            });
+            return result;
+        };
+
         vm.load = function () {
             vm.readyStatus.processing = true;
+            //vm.config.task = 81;
             importInstrumentService.startImport(vm.config).then(function (data) {
                 console.log('data', data);
                 vm.config = data;
@@ -93,15 +120,41 @@
 
                     vm.mappedFields = [];
 
-                    var keys = Object.keys(vm.config["task_object"]["result_object"]);
+                    var keysDict = [];
+
+                    if (Object.keys(vm.config["task_result_overrides"]).length > 0) {
+                        keysDict = vm.config["task_result_overrides"];
+                    } else {
+                        keysDict = vm.config["task_result"]
+                    }
+
+                    var keys = Object.keys(keysDict);
                     var i;
                     for (i = 0; i < keys.length; i = i + 1) {
                         vm.mappedFields.push({
                             key: keys[i],
-                            value: vm.config["task_object"]["result_object"][keys[i]]
+                            value: keysDict[keys[i]]
                         })
                     }
-                    $scope.$apply();
+
+                    var promises = [];
+
+                    vm.config.instrument.attributes.forEach(function (attribute) {
+                        if (attribute.attribute_type_object.value_type == 30) {
+                            promises.push(instrumentAttributeTypeService.getByKey(attribute.attribute_type));
+                        }
+                    });
+
+
+                    Promise.all(promises).then(function (data) {
+
+                        data.forEach(function (item) {
+                            vm.dynAttributes['id_' + item.id] = item;
+                        });
+
+                        $scope.$apply();
+                    })
+
 
                 } else {
                     setTimeout(function () {
@@ -134,8 +187,8 @@
             }).then(function (res) {
                 if (res.status === 'agree') {
                     console.log('res', res.data);
-                    instrumentSchemeService.update(item.id, res.data).then(function () {
-                        vm.getList();
+                    instrumentSchemeService.update(vm.config.instrument_download_scheme, res.data).then(function () {
+                        //vm.getList();
                         $scope.$apply();
                     })
                 }
@@ -146,9 +199,25 @@
             $mdDialog.cancel();
         };
 
-        vm.agree = function () {
-            instrumentService.create(vm.config.instrument).then(function () {
-                $mdDialog.hide({status: 'agree'});
+        vm.agree = function ($event) {
+            instrumentService.create(vm.config.instrument).then(function (data) {
+                console.log('DATA', data);
+                if (data.status == 200 || data.status == 201) {
+                    $mdDialog.hide({res: 'agree'});
+                }
+                if (data.status == 400) {
+                    $mdDialog.show({
+                        controller: 'ValidationDialogController as vm',
+                        templateUrl: 'views/dialogs/validation-dialog-view.html',
+                        targetEvent: $event,
+                        locals: {
+                            validationData: data.response
+                        },
+                        preserveScope: true,
+                        autoWrap: true,
+                        skipHide: true
+                    })
+                }
             });
 
         };

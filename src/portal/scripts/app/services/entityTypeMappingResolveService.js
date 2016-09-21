@@ -9,6 +9,7 @@
     var instrumentTypeMappingService = require('./import/instrumentTypeMappingService');
     var accrualCalculationModelService = require('./import/accrualCalculationModelMappingService');
     var instrumentPeriodicityService = require('./import/instrumentPeriodicityMappingService');
+    var instrumentAttributeTypeService = require('./import/instrumentAttributeTypeMappingService');
 
     var getList = function (entityType) {
 
@@ -24,6 +25,9 @@
                 break;
             case 'periodicity':
                 return instrumentPeriodicityService.getList();
+                break;
+            case 'classifier':
+                return instrumentAttributeTypeService.getList();
                 break;
         }
 
@@ -43,6 +47,9 @@
             case 'periodicity':
                 return instrumentPeriodicityService.getByKey(id);
                 break;
+            case 'classifier':
+                return instrumentAttributeTypeService.getByKey(id);
+                break;
         }
 
     };
@@ -60,6 +67,9 @@
                 break;
             case 'periodicity':
                 return instrumentPeriodicityService.create(map);
+                break;
+            case 'classifier':
+                return instrumentAttributeTypeService.create(map);
                 break;
         }
 
@@ -79,6 +89,9 @@
             case 'periodicity':
                 return instrumentPeriodicityService.update(id, map);
                 break;
+            case 'classifier':
+                return instrumentAttributeTypeService.update(id, map);
+                break;
         }
 
     };
@@ -96,6 +109,9 @@
                 break;
             case 'periodicity':
                 return instrumentPeriodicityService.deleteByKey(id);
+                break;
+            case 'classifier':
+                return instrumentAttributeTypeService.deleteByKey(id);
                 break;
         }
 

@@ -241,7 +241,22 @@
                 },
                 {
                     "key": "regular_event",
-                    "name": "regular event",
+                    "name": "Regular event",
+                    "value_type": "field"
+                },
+                {
+                    "key": "factor_same",
+                    "name": "Factor same",
+                    "value_type": "field"
+                },
+                {
+                    "key": "factor_up",
+                    "name": "Factor up",
+                    "value_type": "field"
+                },
+                {
+                    "key": "factor_down",
+                    "name": "Factor down",
                     "value_type": "field"
                 },
                 {
@@ -894,7 +909,7 @@
     };
 
     var getFieldsWithTagGrouping = function(){
-        return ['instrument_type', 'account_type', 'transaction_type', 'instrument_types'];
+        return ['instrument_type', 'type', 'transaction_type', 'instrument_types',  'transaction_types', 'account_types'];
     };
 
     module.exports = {

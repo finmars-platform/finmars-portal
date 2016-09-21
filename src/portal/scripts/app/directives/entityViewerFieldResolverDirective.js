@@ -39,6 +39,10 @@
 
                         console.log('ENTITYTYPE------------------------------------------', entityType);
 
+                        if(entityType === 'transaction-types'){
+                            entityType = 'transaction-type'
+                        }
+
                         tagService.getListByContentType(entityType).then(function (data) { //refactor entityType getter
                             scope.tags = data.results;
 

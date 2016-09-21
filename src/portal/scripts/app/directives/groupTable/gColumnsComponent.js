@@ -96,7 +96,7 @@
                     if (column.id) {
                         scope.columns = scope.columns.map(function (item) {
                             if (item.id === column.id || item.key === column.key) {
-                                return undefined
+                                item = undefined
                             }
                             return item
                         }).filter(function (item) {

@@ -238,6 +238,31 @@
                         resolve({type: 'multiple-ids', key: 'transaction_types', data: data.results});
                     });
                     break;
+                case 'one_off_event':
+                    transactionTypeRepository.getList().then(function (data) {
+                        resolve({type: 'multiple-ids', key: 'transaction_types', data: data.results});
+                    });
+                    break;
+                case 'regular_event':
+                    transactionTypeRepository.getList().then(function (data) {
+                        resolve({type: 'multiple-ids', key: 'transaction_types', data: data.results});
+                    });
+                    break;
+                case 'factor_same':
+                    transactionTypeRepository.getList().then(function (data) {
+                        resolve({type: 'multiple-ids', key: 'transaction_types', data: data.results});
+                    });
+                    break;
+                case 'factor_down':
+                    transactionTypeRepository.getList().then(function (data) {
+                        resolve({type: 'multiple-ids', key: 'transaction_types', data: data.results});
+                    });
+                    break;
+                case 'factor_up':
+                    transactionTypeRepository.getList().then(function (data) {
+                        resolve({type: 'multiple-ids', key: 'transaction_types', data: data.results});
+                    });
+                    break;
                 case 'instrument_types':
                     instrumentTypeRepository.getList().then(function (data) {
                         resolve({type: 'multiple-ids', key: 'instrument_types', data: data.results});

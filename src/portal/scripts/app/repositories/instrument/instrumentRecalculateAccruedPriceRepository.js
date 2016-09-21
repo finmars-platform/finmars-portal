@@ -6,16 +6,16 @@
     'use strict';
 
     var cookieService = require('../../../../../core/services/cookieService');
-    var configureRepositoryUrlService = require('../../services/configureRepositoryUrlService');
 
     var baseUrl = '/api/v1/';
 
-    var getList = function (options) {
-        return window.fetch(configureRepositoryUrlService.configureUrl(baseUrl + 'instruments/payment-size-detail/', options),
+    var recalculate = function (dateFrom, dateTo) {
+        return window.fetch(baseUrl + 'instruments/price-history/recalculate-prices-accrued-price/?date_0=' + dateFrom + '&date_1=' + dateTo,
             {
-                method: 'GET',
+                method: 'POST',
                 credentials: 'include',
                 headers: {
+                    'X-CSRFToken': cookieService.getCookie('csrftoken'),
                     Accept: 'application/json',
                     'Content-type': 'application/json'
                 }
@@ -24,8 +24,9 @@
         })
     };
 
+
     module.exports = {
-        getList: getList
+        recalculate: recalculate
     }
 
 }());

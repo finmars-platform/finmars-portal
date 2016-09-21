@@ -1,5 +1,5 @@
 /**
- * Created by szhitenev on 17.08.2016.
+ * Created by szhitenev on 04.05.2016.
  */
 (function () {
 
@@ -10,8 +10,41 @@
 
     var baseUrl = '/api/v1/';
 
-    var getList = function (providerId) {
-        return window.fetch(baseUrl + 'import/instrument-scheme/?provider' + providerId,
+    var getList = function (options) {
+        return window.fetch(configureRepositoryUrlService.configureUrl(baseUrl + 'instruments/instrument-attribute-type/', options),
+            {
+                method: 'GET',
+                credentials: 'include',
+                headers: {
+                    'X-CSRFToken': cookieService.getCookie('csrftoken'),
+                    Accept: 'application/json',
+                    'Content-type': 'application/json'
+                }
+            }).then(function (data) {
+            return data.json();
+        })
+    };
+
+    var getListByAttributeType = function (options) {
+
+        var filters = '?value_type=' + options[0];
+
+        return window.fetch(baseUrl + 'instruments/instrument-attribute-type/' + filters + '&show_classifiers=1',
+            {
+                method: 'GET',
+                credentials: 'include',
+                headers: {
+                    'X-CSRFToken': cookieService.getCookie('csrftoken'),
+                    Accept: 'application/json',
+                    'Content-type': 'application/json'
+                }
+            }).then(function (data) {
+            return data.json();
+        })
+    };
+
+    var getByKey = function (id) {
+        return window.fetch(baseUrl + 'instruments/instrument-attribute-type/' + id + '/',
             {
                 method: 'GET',
                 credentials: 'include',
@@ -24,8 +57,8 @@
         })
     };
 
-    var create = function (scheme) {
-        return window.fetch(baseUrl + 'import/instrument-scheme/',
+    var create = function (account) {
+        return window.fetch(baseUrl + 'instruments/instrument-attribute-type/',
             {
                 method: 'POST',
                 credentials: 'include',
@@ -34,59 +67,30 @@
                     Accept: 'application/json',
                     'Content-type': 'application/json'
                 },
-                body: JSON.stringify(scheme)
-            }).then(function (data) {
-            return new Promise(function (resolve, reject) {
-                data.json().then(function (result) {
-                    resolve({
-                        response: result,
-                        status: data.status
-                    })
-                })
-            });
-        })
-    };
-
-    var getByKey = function (id) {
-        return window.fetch(baseUrl + 'import/instrument-scheme/' + id + '/',
-            {
-                method: 'GET',
-                credentials: 'include',
-                headers: {
-                    'X-CSRFToken': cookieService.getCookie('csrftoken'),
-                    Accept: 'application/json',
-                    'Content-type': 'application/json'
-                }
+                body: JSON.stringify(account)
             }).then(function (data) {
             return data.json();
         })
     };
 
-    var update = function (id, scheme) {
-        return window.fetch(baseUrl + 'import/instrument-scheme/' + id + '/',
+    var update = function (id, account) {
+        return window.fetch(baseUrl + 'instruments/instrument-attribute-type/' + id + '/',
             {
-                method: 'PATCH',
+                method: 'PUT',
                 credentials: 'include',
                 headers: {
                     'X-CSRFToken': cookieService.getCookie('csrftoken'),
                     Accept: 'application/json',
                     'Content-type': 'application/json'
                 },
-                body: JSON.stringify(scheme)
+                body: JSON.stringify(account)
             }).then(function (data) {
-            return new Promise(function (resolve, reject) {
-                data.json().then(function (result) {
-                    resolve({
-                        response: result,
-                        status: data.status
-                    })
-                })
-            });
+            return data.json();
         })
     };
 
     var deleteByKey = function (id) {
-        return window.fetch(baseUrl + 'import/instrument-scheme/' + id + '/',
+        return window.fetch(baseUrl + 'instruments/instrument-attribute-type/' + id + '/',
             {
                 method: 'DELETE',
                 credentials: 'include',
@@ -96,14 +100,19 @@
                     'Content-type': 'application/json'
                 }
             }).then(function (data) {
-            return data.json();
+            return new Promise(function (resolve, reject) {
+                resolve({status: 'deleted'});
+            });
+            //return data.json();
         })
     };
 
+
     module.exports = {
         getList: getList,
-        create: create,
+        getListByAttributeType: getListByAttributeType,
         getByKey: getByKey,
+        create: create,
         update: update,
         deleteByKey: deleteByKey
     }

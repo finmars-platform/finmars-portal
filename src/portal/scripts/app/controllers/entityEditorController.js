@@ -172,6 +172,8 @@
         };
 
         vm.checkPermissions = function () {
+            //console.log('metaPermissionsService.getEntitiesWithDisabledPermissions()', metaPermissionsService.getEntitiesWithDisabledPermissions());
+            //console.log('metaPermissionsService.getEntitiesWithDisabledPermissions()', vm.entityType);
             if (metaPermissionsService.getEntitiesWithDisabledPermissions().indexOf(vm.entityType) !== -1) {
                 return false;
             }
@@ -184,7 +186,7 @@
 
                 var haveAccess = false;
 
-                if (vm.entity.granted_permissions.indexOf("manage_" + vm.entityType) !== -1) {
+                if (vm.entity.granted_permissions && vm.entity.granted_permissions.indexOf("manage_" + vm.entityType) !== -1) {
                     haveAccess = true;
                 }
 
@@ -534,7 +536,6 @@
 
                 return isValid
             }
-
 
             if (checkForNotNullRestriction(vm.entity)) {
 
