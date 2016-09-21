@@ -535,7 +535,7 @@
             });
         };
 
-        vm.openMapping = function ($event, mapEntityType) {
+        vm.openMapping = function ($event, item) {
             $mdDialog.show({
                 controller: 'EntityTypeMappingDialogController as vm',
                 templateUrl: 'views/dialogs/entity-type-mapping-dialog-view.html',
@@ -545,7 +545,7 @@
                 autoWrap: true,
                 skipHide: true,
                 locals: {
-                    mapEntityType: mapEntityType
+                    mapItem: item
                 }
             }).then(function (res) {
                 if (res.status === 'agree') {
