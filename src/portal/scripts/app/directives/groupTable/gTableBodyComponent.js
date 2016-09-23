@@ -239,8 +239,22 @@
 
                 }
 
-                scope.toggleSelectRow = function (item) {
+                scope.checkRowSelection = function (item) {
+                    //console.log('checkRowSelection', item);
 
+                    if (item) {
+                        if (item.selectedRow || item.simpleSelect) {
+                            return true;
+                        }
+                    }
+                    return false;
+                };
+
+                scope.toggleSelectRow = function ($event, item) {
+
+                    if (item.simpleSelect == true) {
+                        item.simpleSelect = false;
+                    }
                     item.selectedRow = !item.selectedRow;
                     if (scope.isAllSelected === true && item.selectedRow === false) {
                         scope.isAllSelected = false;
@@ -267,6 +281,7 @@
                     if (allSelected) {
                         scope.isAllSelected = true;
                     }
+                    $event.stopPropagation();
                 };
 
                 scope.checkReady = function () {
@@ -345,6 +360,7 @@
                             }
                         }
                     }
+
                     //console.log('column value_type', column, column['value_type']);
                     if (column.hasOwnProperty('id')) {
                         if (column['value_type'] === 30) {
@@ -432,6 +448,21 @@
                 scope.rowCallback = function (item, ev) {
                     //console.log('open additions!', item);
                     scope.itemAdditionsEditorEntityId = item.id;
+
+
+                    scope.items.forEach(function (item) {
+                        if (item.hasOwnProperty('groups')) {
+                            item.simpleSelect = false;
+                            item.items.forEach(function (row) {
+                                row.simpleSelect = false;
+                            })
+                        } else {
+                            item.simpleSelect = false;
+                        }
+                    });
+
+                    item.simpleSelect = !item.simpleSelect;
+
                     //if (localStorage.getItem('entityIsChanged') === "true") { // wow such shitcode
                     //    $mdDialog.show({
                     //        controller: 'WarningDialogController as vm',
