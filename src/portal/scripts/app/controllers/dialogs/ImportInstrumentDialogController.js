@@ -49,7 +49,7 @@
         };
 
         vm.loadIsAvailable = function () {
-            if (vm.providerId != null && vm.config.instrument_download_scheme != null && vm.config.instrument_code != null) {
+            if (vm.readyStatus.processing == false && vm.providerId != null && vm.config.instrument_download_scheme != null && vm.config.instrument_code != null) {
                 return true;
             }
             return false;
