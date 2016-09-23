@@ -37,16 +37,6 @@
                                                                                data-ng-show="vm.sort === 'action_text'"
                                                                                data-ng-class="{reverse: vm.direction}"></span>
                 </th>
-                <th data-ng-click="vm.setSort('action_is_sent_to_pending')">Action is sent to pending<span
-                        class="sortorder"
-                        data-ng-show="vm.sort === 'action_is_sent_to_pending'"
-                        data-ng-class="{reverse: vm.direction}"></span>
-                </th>
-                <th data-ng-click="vm.setSort('action_is_book_automatic')">Action is book automatic<span
-                        class="sortorder"
-                        data-ng-show="vm.sort === 'action_is_book_automatic'"
-                        data-ng-class="{reverse: vm.direction}"></span>
-                </th>
                 <th>
                     <md-button class="md-icon-button">
                         <ng-md-icon data-ng-click="vm.toggleQuery()" icon="search"></ng-md-icon>
@@ -103,18 +93,6 @@
                         <input type="text" data-ng-model="vm.query.action_text">
                     </md-input-container>
                 </th>
-                <th>
-                    <md-input-container>
-                        <ng-md-icon icon="search"></ng-md-icon>
-                        <input type="text" data-ng-model="vm.query.action_is_sent_to_pending">
-                    </md-input-container>
-                </th>
-                <th>
-                    <md-input-container>
-                        <ng-md-icon icon="search"></ng-md-icon>
-                        <input type="text" data-ng-model="vm.query.action_is_book_automatic">
-                    </md-input-container>
-                </th>
                 <th></th>
             </tr>
             </thead>
@@ -129,13 +107,6 @@
                 <td data-ng-if="!item.editStatus" data-ng-bind="[item.actions.length]"></td>
                 <td data-ng-if="!item.editStatus" data-ng-bind="item.notify_in_n_days"></td>
                 <td data-ng-if="!item.editStatus" data-ng-bind="item.action_text"></td>
-                <td data-ng-if="!item.editStatus">
-                    <span class="bool-table-view" data-ng-if="item.action_is_sent_to_pending"><ng-md-icon icon="check_circle" size="16"
-                                                                                  style="fill:rgb(0,0,0);"></ng-md-icon></span>
-                </td>
-                <td data-ng-if="!item.editStatus">
-                     <span class="bool-table-view" data-ng-if="item.action_is_book_automatic"><ng-md-icon icon="check_circle" size="16"
-                                                                                   style="fill:rgb(0,0,0);"></ng-md-icon></span>
                 </td>
                 <td data-ng-if="!item.editStatus" class="table-misc-cell">
                     <md-menu>
@@ -233,23 +204,6 @@
                     </md-input-container>
                 </td>
                 <td data-ng-if="item.editStatus" class="edit-state-td">
-                    <md-input-container>
-                        <md-checkbox data-ng-model="item.action_is_sent_to_pending"
-                                     aria-label="checkbox">
-                            <!--<label>Action is sent to pending</label>-->
-                        </md-checkbox>
-                    </md-input-container>
-                </td>
-                <td data-ng-if="item.editStatus" class="edit-state-td">
-
-                    <md-input-container>
-                        <md-checkbox data-ng-model="item.action_is_book_automatic"
-                                     aria-label="checkbox">
-                            <!--<label>Action is book automatic</label>-->
-                        </md-checkbox>
-                    </md-input-container>
-                </td>
-                <td data-ng-if="item.editStatus" class="edit-state-td">
                     <md-button data-ng-click="vm.saveItem(item)">
                         Ok
                     </md-button>
@@ -323,22 +277,6 @@
                     <md-input-container>
                         <!--<label for="">Periodicity</label>-->
                         <input type="text" data-ng-model="vm.newItem.action_text">
-                    </md-input-container>
-                </td>
-                <td>
-                    <md-input-container>
-                        <md-checkbox data-ng-model="vm.newItem.action_is_sent_to_pending"
-                                     aria-label="checkbox">
-                            <!--<label>Action is sent to pending</label>-->
-                        </md-checkbox>
-                    </md-input-container>
-                </td>
-                <td>
-                    <md-input-container>
-                        <md-checkbox data-ng-model="vm.newItem.action_is_book_automatic"
-                                     aria-label="checkbox">
-                            <!--<label>Action is book automatic</label>-->
-                        </md-checkbox>
                     </md-input-container>
                 </td>
                 <td>
