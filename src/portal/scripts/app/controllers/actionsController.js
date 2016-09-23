@@ -40,6 +40,19 @@
             });
         };
 
+        vm.eventScheduleConfig = function ($event) {
+            $mdDialog.show({
+                controller: 'EventScheduleConfigDialogController as vm',
+                templateUrl: 'views/dialogs/event-schedule-config-dialog-view.html',
+                targetEvent: $event
+            }).then(function (res) {
+                if (res.status === 'agree') {
+                    console.log('res', res.data);
+
+                }
+            });
+        };
+
         vm.automatedUploads = function ($event) {
             $mdDialog.show({
                 controller: 'AutomatedUploadsHistoryDialogController as vm',

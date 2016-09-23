@@ -921,7 +921,7 @@ md-select-header input {
 }
 
 .instrument-scheme-fields-holder {
-  md-input-container>md-select {
+  md-input-container > md-select {
     margin: 10px 0;
   }
   .field-name {
@@ -930,4 +930,24 @@ md-select-header input {
       margin: 0 0 10px;
     }
   }
+}
+
+md-input-container.error {
+  margin-bottom: 20px;
+  .md-input {
+    border-color: rgba(255, 0, 0, 0.8);
+  }
+  md-select .md-select-value {
+    border-color: rgba(255, 0, 0, 0.8);
+  }
+}
+
+.md-input-error {
+  margin-top: 5px;
+  color: rgba(255, 0, 0, .8);
+}
+
+.disabled-btn {
+  pointer-events: none;
+  opacity: .5;
 }
