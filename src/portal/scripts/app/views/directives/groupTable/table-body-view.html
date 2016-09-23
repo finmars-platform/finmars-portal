@@ -9,8 +9,8 @@
         <div>
             <div data-ng-if="grouping.length" contextmenu-container="gtbody.contextmenu">
                 <div data-ng-repeat="item in items">
-                    <div class="g-group-holder {{item.selectedRow ? 'selected-row' : ''}}">
-                        <div class="g-row-selection" data-ng-click="toggleSelectRow(item)">
+                    <div class="g-group-holder {{ checkRowSelection(item) ? 'selected-row' : '' }}">
+                        <div class="g-row-selection" data-ng-click="toggleSelectRow($event, item)">
                             <ng-md-icon icon="done" data-ng-show="item.selectedRow"></ng-md-icon>
                         </div>
                         <md-card class="group-row-fold-holder">
@@ -31,10 +31,10 @@
                     </div>
                     <div data-ng-repeat="groupedItem in item.items" contextmenu-item="groupedItem"
                          data-ng-show="!item.isFolded" data-ng-right-click="$mdOpenMenu($event)"
-                         class="{{groupedItem.selectedRow ? 'selected-row' : ''}} g-row"
+                         class="{{ checkRowSelection(groupedItem) ? 'selected-row' : ''}} g-row"
                          data-ng-click="rowCallback(groupedItem, $event)">
 
-                        <div class="g-row-selection" data-ng-click="toggleSelectRow(groupedItem)">
+                        <div class="g-row-selection" data-ng-click="toggleSelectRow($event, groupedItem)">
                             <ng-md-icon icon="done" data-ng-show="groupedItem.selectedRow"></ng-md-icon>
                         </div>
 
@@ -48,9 +48,9 @@
                 </div>
             </div>
             <div data-ng-if="!grouping.length" contextmenu-container="gtbody.contextmenu">
-                <div data-ng-repeat="item in items" class="{{item.selectedRow ? 'selected-row' : ''}} g-row"
+                <div data-ng-repeat="item in items" class="{{ checkRowSelection(item) ? 'selected-row' : ''}} g-row"
                      contextmenu-item="item" data-ng-click="rowCallback(item, $event)">
-                    <div class="g-row-selection" data-ng-click="toggleSelectRow(item)">
+                    <div class="g-row-selection" data-ng-click="toggleSelectRow($event, item)">
                         <ng-md-icon icon="done" data-ng-show="item.selectedRow"></ng-md-icon>
                     </div>
                     <div class="g-cell-wrap" data-ng-repeat="column in columns">
