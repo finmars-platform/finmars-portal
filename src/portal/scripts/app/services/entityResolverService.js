@@ -96,7 +96,7 @@
                 return priceHistoryService.getByKey(id);
                 break;
             case 'currency-history':
-                return priceHistoryService.getByKey(id);
+                return currencyHistoryService.getByKey(id);
                 break;
             case 'strategy-1':
                 return strategyService.getByKey(1, id);
@@ -201,7 +201,7 @@
                 return priceHistoryService.create(entity);
                 break;
             case 'currency-history':
-                return priceHistoryService.create(entity);
+                return currencyHistoryService.create(entity);
                 break;
             case 'strategy-1':
                 return strategyService.create(1, entity);
@@ -302,7 +302,7 @@
                 return pricingPolicyService.update(id, entity);
                 break;
             case 'currency-history':
-                return priceHistoryService.update(id, entity);
+                return currencyHistoryService.update(id, entity);
                 break;
             case 'strategy-1':
                 return strategyService.update(1, id, entity);
@@ -382,7 +382,7 @@
                 return pricingPolicyService.deleteByKey(id);
                 break;
             case 'currency-history':
-                return priceHistoryService.deleteByKey(id);
+                return currencyHistoryService.deleteByKey(id);
                 break;
             case 'strategy-1':
                 return strategyService.deleteByKey(1, id);
