@@ -395,12 +395,16 @@
                                     var _groupedItemVal = groupedItem[entityAttrs[e].key];
                                     if (scope.readyStatus.cellsReady) {
                                         //console.log('entityFieldsArray', entityFieldsArray);
-                                        var result = entityFieldsArray[column.key].filter(function (item) {
-                                            return item.id === _groupedItemVal;
-                                        })[0];
+                                        if (entityFieldsArray[column.key]) {
+                                            var result = entityFieldsArray[column.key].filter(function (item) {
+                                                return item.id === _groupedItemVal;
+                                            })[0];
+                                        }
                                         if (result) {
                                             if (column['key'] === 'instrument' && result['user_code']) {
                                                 return result['user_code'];
+                                            }else if(column['key'] === 'price_download_scheme') {
+                                                return result['scheme_name'];
                                             }
                                             else if (result['display_name']) {
                                                 return result['display_name'];

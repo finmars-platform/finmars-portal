@@ -138,8 +138,8 @@
                 </td>
                 <td data-ng-if="item.editStatus" class="edit-state-td" style="padding-top: 12px">
                     <md-input-container>
-                        <label for="">Accrual calculation model</label>
-                        <md-select data-ng-model="vm.item.accrual_calculation_model">
+                        <!--<label for="">Accrual calculation model</label>-->
+                        <md-select data-ng-model="item.accrual_calculation_model">
                             <md-option data-ng-repeat="model in vm.accrualModels" ng-value="model.id">{{model.name}}
                             </md-option>
                         </md-select>

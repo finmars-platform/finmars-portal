@@ -19,6 +19,7 @@
     var instrumentDailyPricingModelRepository = require('../repositories/instrument/instrumentDailyPricingModelRepository');
     var instrumentPaymentSizeDetailRepository = require('../repositories/instrument/instrumentPaymentSizeDetailRepository');
     var transactionTypeRepository = require('../repositories/transactionTypeRepository');
+    var importPriceDownloadSchemeRepository = require('../repositories/import/importPriceDownloadSchemeRepository');
 
     var strategyService = require('./strategyService');
     var strategyGroupService = require('./strategyGroupService');
@@ -106,6 +107,12 @@
                                     break;
                                 case 'daily_pricing_model':
                                     return instrumentDailyPricingModelRepository.getList().then(function (data) {
+                                        entities[entity] = data;
+                                        resolve({key: entity, data: entities[entity]});
+                                    });
+                                    break;
+                                case 'price_download_scheme':
+                                    return importPriceDownloadSchemeRepository.getList().then(function (data) {
                                         entities[entity] = data.results;
                                         resolve({key: entity, data: entities[entity]});
                                     });
@@ -298,6 +305,12 @@
                         return accountTypeRepository.getByKey(id).then(function (data) {
                             entitiesGetByKey[entity] = data;
                             resolve({key: entity, data: entitiesGetByKey[entity]});
+                        });
+                        break;
+                    case 'price_download_scheme':
+                        return importPriceDownloadSchemeRepository.getByKey(id).then(function (data) {
+                            entities[entity] = data.results;
+                            resolve({key: entity, data: entities[entity]});
                         });
                         break;
                 }
