@@ -23,7 +23,7 @@
                             date: new Date(ngModel.$modelValue),
                             position: 'right',
                             'hide_on_select': true,
-                            format: 'Y/m/d',
+                            format: 'Y-m-d',
                             change: function () {
                                 ngModel.$setViewValue(this.value);
                             }
@@ -32,7 +32,7 @@
                         input.pickmeup({
                             position: 'right',
                             'hide_on_select': true,
-                            format: 'Y/m/d',
+                            format: 'Y-m-d',
                             change: function () {
                                 ngModel.$setViewValue(this.value);
                             }
@@ -41,7 +41,7 @@
                     scope.$watch(function () {
                         //console.log('ngModel', ngModel);
                         if (ngModel.$modelValue) {
-                            input.val(moment(new Date(ngModel.$modelValue)).format('YYYY/MM/DD'));
+                            input.val(moment(new Date(ngModel.$modelValue)).format('YYYY-MM-DD'));
                         }
                     });
 
