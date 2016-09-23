@@ -124,23 +124,44 @@
             </div>
             <div data-ng-if="!checkComplexEntityType()">
                 <div data-ng-if="getModelKey() !== 'content_types'">
-                    <md-input-container class="md-block">
-                        <label data-ng-bind="getName()"></label>
-                        <md-select data-ng-change="changeWatcher()" md-on-close="searchTerm = ''"
-                                   data-ng-model="entity[getModelKey()]" md-selected-text="bindMCField()"
-                                   multiple="true">
-                            <md-select-header>
-                              <input data-ng-model="searchTerm"
-                                       type="search"
-                                       placeholder="Search for a ..."
-                                       class="md-text md-select-search-pattern">
-                            </md-select-header>
-                            <md-option data-ng-repeat="field in fields | orderBy:'-'+resolveSort(field) | filter:{name: searchTerm} track by field.id"
-                                       ng-value="field.id">
-                                {{bindListFields(field)}}
-                            </md-option>
-                        </md-select>
-                    </md-input-container>
+                    <div data-ng-if="resolveMultiple()">
+                        <md-input-container class="md-block">
+                            <label data-ng-bind="getName()"></label>
+                            <md-select data-ng-change="changeWatcher()" md-on-close="searchTerm = ''"
+                                       data-ng-model="entity[getModelKey()]" md-selected-text="bindMCField()"
+                                       multiple="true">
+                                <md-select-header>
+                                    <input data-ng-model="searchTerm"
+                                           type="search"
+                                           placeholder="Search for a ..."
+                                           class="md-text md-select-search-pattern">
+                                </md-select-header>
+                                <md-option data-ng-repeat="field in fields | orderBy:'-'+resolveSort(field) | filter:{name: searchTerm} track by field.id"
+                                           ng-value="field.id">
+                                    {{bindListFields(field)}}
+                                </md-option>
+                            </md-select>
+                        </md-input-container>
+                    </div>
+                    <div data-ng-if="!resolveMultiple()">
+                        <md-input-container class="md-block">
+                            <label data-ng-bind="getName()"></label>
+                            <md-select data-ng-change="changeWatcher()" md-on-close="searchTerm = ''"
+                                       data-ng-model="entity[getModelKey()]" md-selected-text="bindMCField()">
+                                <md-select-header>
+                                    <input data-ng-model="searchTerm"
+                                           type="search"
+                                           placeholder="Search for a ..."
+                                           class="md-text md-select-search-pattern">
+                                </md-select-header>
+                                <md-option data-ng-repeat="field in fields | orderBy:'-'+resolveSort(field) | filter:{name: searchTerm} track by field.id"
+                                           ng-value="field.id">
+                                    {{bindListFields(field)}}
+                                </md-option>
+                            </md-select>
+                        </md-input-container>
+                    </div>
+
                 </div>
                 <div data-ng-if="getModelKey() === 'content_types'">
                     <md-input-container class="md-block">

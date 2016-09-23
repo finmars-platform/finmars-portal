@@ -352,7 +352,7 @@
             instrumentSchemeService.create(vm.scheme).then(function (data) {
                 console.log('DATA', data);
                 if (data.status == 200 || data.status == 201) {
-                    $mdDialog.hide({res: 'agree'});
+                    $mdDialog.hide({status: 'agree'});
                 }
                 if (data.status == 400) {
                     $mdDialog.show({
