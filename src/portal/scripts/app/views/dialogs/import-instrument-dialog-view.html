@@ -37,8 +37,9 @@
                                     </md-button>
                                 </div>
                             </div>
-                            <div layout="column">
-                                <md-input-container flex="40">
+                            <div layout="row">
+
+                                <md-input-container>
                                     <label for="">Import scheme</label>
                                     <md-select style="width: 200px"
                                                data-ng-model="vm.config.instrument_download_scheme">
@@ -47,12 +48,16 @@
                                         </md-option>
                                     </md-select>
                                 </md-input-container>
-                                <md-button class="md-raised md-primary {{vm.loadIsAvailable() ? '' : 'disabled-btn' }}" data-ng-click="vm.openEditMapping($event)">
-                                    Edit mapping
+                                <md-button
+                                        class="instrument-mapping-btn md-fab {{vm.loadIsAvailable() ? '' : 'disabled-btn' }}"
+                                        data-ng-click="vm.openEditMapping($event)">
+                                    <ng-md-icon icon="functions" size="24" style="fill:rgb(63,81,181);"></ng-md-icon>
+                                    <md-tooltip class="tooltip_1" md-direction="top">Edit mapping</md-tooltip>
                                 </md-button>
                             </div>
                             <div layout="row">
-                                <md-button class="md-raised colored-btn {{vm.loadIsAvailable() ? '' : 'disabled-btn' }}" data-ng-click="vm.load()" style="height: 32px">
+                                <md-button class="md-raised colored-btn instrument-load-btn {{vm.loadIsAvailable() ? '' : 'disabled-btn' }}"
+                                           data-ng-click="vm.load()">
                                     Load
                                 </md-button>
                                 <div data-ng-if="vm.readyStatus.processing">
@@ -247,8 +252,7 @@
                                     'entityAttr', 'message')}}
                                 </div>
                             </md-input-container>
-                            <md-input-container
-                                    class="md-block {{vm.findError('public_name', 'entityAttr', 'class') ? 'error' : ''}}">
+                            <md-input-container class="md-block">
                                 <label for="">Public name</label>
                                 <input type="text" data-ng-model="vm.config.instrument.public_name">
                                 <div class="md-input-error"

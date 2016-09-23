@@ -35,6 +35,9 @@
                     if (scope.$parent.entityType !== 'instrument-type') { // refactor this
                         return true
                     }
+                    if (scope.item.key == 'tags') {
+                        return true;
+                    }
                     return false;
                 };
 
