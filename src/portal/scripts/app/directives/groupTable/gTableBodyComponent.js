@@ -448,7 +448,12 @@
                 scope.rowCallback = function (item, ev) {
                     //console.log('open additions!', item);
                     scope.itemAdditionsEditorEntityId = item.id;
+                    var itemHasSimpleSelect = false;
+                    if (item.simpleSelect) {
+                        itemHasSimpleSelect = JSON.parse(JSON.stringify(item.simpleSelect));
+                    }
 
+                    console.log('scope.itemAdditionsEditorEntityId', itemHasSimpleSelect);
 
                     scope.items.forEach(function (item) {
                         if (item.hasOwnProperty('groups')) {
@@ -462,6 +467,10 @@
                     });
 
                     item.simpleSelect = !item.simpleSelect;
+
+                    if (itemHasSimpleSelect == true) {
+                        item.simpleSelect = false;
+                    }
 
                     //if (localStorage.getItem('entityIsChanged') === "true") { // wow such shitcode
                     //    $mdDialog.show({

@@ -417,7 +417,7 @@
         };
 
         vm.openEditorViewPanel = function () {
-            vm.editorEntityId = undefined;
+            //vm.editorEntityId = undefined;
             vm.additionsState = true;
             vm.additionsStatus.table = true;
             vm.additionsStatus.extraFeatures.forEach(function (item) {
@@ -427,7 +427,7 @@
 
         vm.checkAdditionStatus = function () {
             if (!vm.additionsStatus.table && !vm.additionsStatus.editor) {
-                vm.editorEntityId = undefined;
+                //vm.editorEntityId = undefined;
                 return true;
             }
             return false;
@@ -437,7 +437,7 @@
             vm.additionsState = false;
             vm.additionsStatus.table = false;
             vm.additionsStatus.editor = false;
-            vm.editorEntityId = undefined;
+            //vm.editorEntityId = undefined;
         };
 
         vm.getView().then(function () {
