@@ -45,8 +45,14 @@
         vm.config = {
             instrument_code: "USP16394AG62 Corp",
             mode: 1,
-            provider: 1,
-            instrument_download_scheme: 19 // remove that
+
+        };
+
+        vm.loadIsAvailable = function () {
+            if (vm.providerId != null && vm.config.instrument_download_scheme != null && vm.config.instrument_code != null) {
+                return true;
+            }
+            return false;
         };
 
         vm.dailyModels = [];
@@ -56,9 +62,9 @@
 
         vm.dynAttributes = {};
 
-        var providerId = 1; //TODO HARD REFACTOR CODE BLOOMBERG PROVIDER
+        vm.providerId = 1; //TODO HARD REFACTOR CODE BLOOMBERG PROVIDER
 
-        instrumentSchemeService.getList(providerId).then(function (data) {
+        instrumentSchemeService.getList(vm.providerId).then(function (data) {
             vm.instrumentSchemes = data.results;
             vm.readyStatus.mapping = true;
             $scope.$apply();
@@ -108,6 +114,33 @@
             return result;
         };
 
+        vm.findError = function (item, type, state) {
+
+            var message = '';
+            var haveError = false;
+
+            if (type == 'entityAttr') {
+                if (vm.config.errors.hasOwnProperty(item)) {
+                    message = vm.config.errors[item].join(' ');
+                    haveError = true;
+                }
+            }
+
+            if (type == 'dynAttr') {
+                //console.log('item', item);
+                if (vm.config.errors.hasOwnProperty('attribute_type_' + item.attribute_type)) {
+                    message = vm.config.errors['attribute_type_' + item.attribute_type].join(' ');
+                    haveError = true;
+                }
+            }
+
+            if (state == 'message') {
+                return message
+            } else {
+                return haveError;
+            }
+        };
+
         vm.load = function () {
             vm.readyStatus.processing = true;
             //vm.config.task = 81;
@@ -145,6 +178,7 @@
                         }
                     });
 
+                    console.log('vm.instrument', vm.instrument);
 
                     Promise.all(promises).then(function (data) {
 
