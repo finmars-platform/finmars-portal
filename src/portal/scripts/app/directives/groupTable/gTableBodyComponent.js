@@ -470,6 +470,7 @@
 
                     if (itemHasSimpleSelect == true) {
                         item.simpleSelect = false;
+                        scope.itemAdditionsEditorEntityId = undefined;
                     }
 
                     //if (localStorage.getItem('entityIsChanged') === "true") { // wow such shitcode
