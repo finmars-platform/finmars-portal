@@ -81,7 +81,7 @@
                                 }
                             });
 
-                            console.log('entityFieldsArray', entityFieldsArray);
+                            //console.log('entityFieldsArray', entityFieldsArray);
 
                             findEntityFields().then(function () {
                                 resolve({status: "columns ready"})
@@ -345,7 +345,7 @@
                             }
                         }
                     }
-                    console.log('column value_type', column, column['value_type']);
+                    //console.log('column value_type', column, column['value_type']);
                     if (column.hasOwnProperty('id')) {
                         if (column['value_type'] === 30) {
                             if (scope.readyStatus.cellsReady) {

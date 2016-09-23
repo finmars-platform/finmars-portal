@@ -31,6 +31,13 @@
                 logService.property('field entity', scope.entity);
                 logService.property('field options', scope.options);
 
+                scope.resolveMultiple = function () {
+                    if (scope.$parent.entityType !== 'instrument-type') { // refactor this
+                        return true
+                    }
+                    return false;
+                };
+
                 scope.getFieldsGrouped = function () {
 
                     if (metaService.getFieldsWithTagGrouping().indexOf(scope.item.key) !== -1) {
@@ -39,7 +46,7 @@
 
                         console.log('ENTITYTYPE------------------------------------------', entityType);
 
-                        if(entityType === 'transaction-types'){
+                        if (entityType === 'transaction-types') {
                             entityType = 'transaction-type'
                         }
 
