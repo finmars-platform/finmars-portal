@@ -79,6 +79,8 @@
             "action_is_sent_to_pending": null,
             "action_is_book_automatic": null,
             "actions": [],
+            "effective_date": null,
+            "final_date": null,
             "event_class": null
         };
 
@@ -104,6 +106,8 @@
                 "event_class": vm.newItem.event_class,
                 "action_is_sent_to_pending": vm.newItem.action_is_sent_to_pending,
                 "action_is_book_automatic": vm.newItem.action_is_book_automatic,
+                "effective_date": vm.newItem.effective_date,
+                "final_date": vm.newItem.final_date,
                 "actions": vm.newItem.actions
             });
 
@@ -116,6 +120,8 @@
                 "action_is_sent_to_pending": null,
                 "action_is_book_automatic": null,
                 "actions": [],
+                "effective_date": null,
+                "final_date": null,
                 "event_class": null
             };
         }

@@ -11,6 +11,14 @@
                                                                                data-ng-show="vm.sort === 'description'"
                                                                                data-ng-class="{reverse: vm.direction}"></span>
                 </th>
+                <th data-ng-click="vm.setSort('effective_date')">Effective date<span class="sortorder"
+                                                                                     data-ng-show="vm.sort === 'effective_date'"
+                                                                                     data-ng-class="{reverse: vm.direction}"></span>
+                </th>
+                <th data-ng-click="vm.setSort('final_date')">Final date<span class="sortorder"
+                                                                             data-ng-show="vm.sort === 'final_date'"
+                                                                             data-ng-class="{reverse: vm.direction}"></span>
+                </th>
                 <th data-ng-click="vm.setSort('notification_class_name')">Notification class<span class="sortorder"
                                                                                                   data-ng-show="vm.sort === 'notification_class_name'"
                                                                                                   data-ng-class="{reverse: vm.direction}"></span>
@@ -61,6 +69,18 @@
                 <th>
                     <md-input-container>
                         <ng-md-icon icon="search"></ng-md-icon>
+                        <input type="text" data-ng-model="vm.query.effective_date">
+                    </md-input-container>
+                </th>
+                <th>
+                    <md-input-container>
+                        <ng-md-icon icon="search"></ng-md-icon>
+                        <input type="text" data-ng-model="vm.query.final_date">
+                    </md-input-container>
+                </th>
+                <th>
+                    <md-input-container>
+                        <ng-md-icon icon="search"></ng-md-icon>
                         <input type="text" data-ng-model="vm.query.notification_class_name">
                     </md-input-container>
                 </th>
@@ -102,13 +122,21 @@
             <tr data-ng-repeat="item in vm.entity.event_schedules | filter:vm.query | orderBy:vm.sort:vm.direction">
                 <td data-ng-if="!item.editStatus" data-ng-bind="item.name"></td>
                 <td data-ng-if="!item.editStatus" data-ng-bind="item.description"></td>
+                <td data-ng-if="!item.editStatus" data-ng-bind="item.effective_date"></td>
+                <td data-ng-if="!item.editStatus" data-ng-bind="item.final_date"></td>
                 <td data-ng-if="!item.editStatus" data-ng-bind="vm.bindNotificationClass(item)"></td>
                 <td data-ng-if="!item.editStatus" data-ng-bind="vm.bindEventClass(item)"></td>
                 <td data-ng-if="!item.editStatus" data-ng-bind="[item.actions.length]"></td>
                 <td data-ng-if="!item.editStatus" data-ng-bind="item.notify_in_n_days"></td>
                 <td data-ng-if="!item.editStatus" data-ng-bind="item.action_text"></td>
-                <td data-ng-if="!item.editStatus" data-ng-bind="item.action_is_sent_to_pending"></td>
-                <td data-ng-if="!item.editStatus" data-ng-bind="item.action_is_book_automatic"></td>
+                <td data-ng-if="!item.editStatus">
+                    <span class="bool-table-view" data-ng-if="item.action_is_sent_to_pending"><ng-md-icon icon="check_circle" size="16"
+                                                                                  style="fill:rgb(0,0,0);"></ng-md-icon></span>
+                </td>
+                <td data-ng-if="!item.editStatus">
+                     <span class="bool-table-view" data-ng-if="item.action_is_book_automatic"><ng-md-icon icon="check_circle" size="16"
+                                                                                   style="fill:rgb(0,0,0);"></ng-md-icon></span>
+                </td>
                 <td data-ng-if="!item.editStatus" class="table-misc-cell">
                     <md-menu>
                         <!-- Trigger element is a md-button with an icon -->
@@ -147,10 +175,22 @@
                         <input type="text" data-ng-model="item.description">
                     </md-input-container>
                 </td>
+                <td data-ng-if="item.editStatus" class="edit-state-td">
+                    <md-input-container>
+                        <label for="">Effective date</label>
+                        <zh-date-picker data-ng-model="item.effective_date"></zh-date-picker>
+                    </md-input-container>
+                </td>
+                <td data-ng-if="item.editStatus" class="edit-state-td">
+                    <md-input-container>
+                        <label for="">Final date</label>
+                        <zh-date-picker data-ng-model="item.final_date"></zh-date-picker>
+                    </md-input-container>
+                </td>
                 <td data-ng-if="item.editStatus" class="edit-state-td" style="padding-top: 12px">
                     <md-input-container>
                         <label for="">Notification class</label>
-                        <md-select data-ng-model="item.notification_class">
+                        <md-select data-ng-model="item.notification_class" style="max-width: 195px">
                             <md-option data-ng-repeat="model in vm.notificationClasses" ng-value="model.id">
                                 {{model.name}}
                             </md-option>
@@ -182,7 +222,7 @@
                 </td>
                 <td data-ng-if="item.editStatus" class="edit-state-td">
                     <md-input-container>
-                        <label for="">Notify in N days</label>
+                        <!--<label for="">Notify in N days</label>-->
                         <input type="text" data-ng-model="item.notify_in_n_days">
                     </md-input-container>
                 </td>
@@ -228,10 +268,22 @@
                         <input type="text" data-ng-model="vm.newItem.description">
                     </md-input-container>
                 </td>
+                <td>
+                    <md-input-container>
+                        <!--<label for="">Effective date</label>-->
+                        <zh-date-picker data-ng-model="vm.newItem.effective_date"></zh-date-picker>
+                    </md-input-container>
+                </td>
+                <td>
+                    <md-input-container>
+                        <!--<label for="">Final date</label>-->
+                        <zh-date-picker data-ng-model="vm.newItem.final_date"></zh-date-picker>
+                    </md-input-container>
+                </td>
                 <td style="padding-top: 12px">
                     <md-input-container>
                         <!--<label for="">Accrual calculation model</label>-->
-                        <md-select data-ng-model="vm.newItem.notification_class">
+                        <md-select data-ng-model="vm.newItem.notification_class" style="max-width: 195px">
                             <md-option data-ng-repeat="model in vm.notificationClasses" ng-value="model.id">
                                 {{model.name}}
                             </md-option>
