@@ -34,6 +34,11 @@
                 var baseAttrs = [];
                 var entityAttrs = [];
 
+                var promisesClassifiersAlreadyAdded = [];
+                var promisesEntityFieldsAlreadyAdded = [];
+                var promisesAttributeTypesAlreadyAdded = [];
+
+
                 var entityFieldsArray = {};
 
                 var classifiersInstances = {};
@@ -61,13 +66,25 @@
                         var promises = [];
 
                         for (i = 0; i < scope.columns.length; i = i + 1) {
+                            var attributeExist = false;
                             //console.log(scope.columns[i]);
                             if (scope.columns[i]['value_type'] == 'field') {
                                 promises.push(bindCellService.findEntities(scope.columns[i].key, {entityType: entityType}));
                             }
                             if (scope.columns[i]['value_type'] == 30) {
                                 //console.log('scope.columns[i]', scope.columns[i]);
-                                promises.push(attributeTypeService.getByKey(entityType, scope.columns[i].id));
+
+                                promisesAttributeTypesAlreadyAdded.forEach(function (attribute) {
+                                    if (attribute == scope.columns[i].id) {
+                                        attributeExist = true;
+                                    }
+                                });
+
+                                if (!attributeExist) {
+                                    promisesAttributeTypesAlreadyAdded.push(scope.columns[i].id);
+                                    promises.push(attributeTypeService.getByKey(entityType, scope.columns[i].id));
+                                }
+
                             }
                         }
 
@@ -106,7 +123,10 @@
                             var promisesClassifiers = [];
                             var promisesEntityFields = [];
 
+
                             var items = scope.items;
+                            var classifierExist = false;
+                            var entityExist = false;
 
                             //console.log('ITEMS', items);
 
@@ -114,15 +134,39 @@
                                 //console.log('scope.items[i].groups', scope.items[i].groups);
                                 if (scope.items[i].hasOwnProperty('groups')) {
                                     for (g = 0; g < scope.items[i].groups.length; g = g + 1) {
+                                        classifierExist = false;
+                                        entityExist = false;
                                         //console.log("scope.items[i].groups[g]['value_type']", scope.items[i].groups[g]['value_type']);
                                         if (scope.items[i].groups[g]['value_type'] === 'classifier') {
-                                            promisesClassifiers.push(entityClassifierSingletonService.getByKey(scope.entityType, scope.items[i].groups[g].value))
+
+
+                                            promisesClassifiersAlreadyAdded.forEach(function (classifier) {
+                                                if (classifier == scope.items[i].groups[g].value) {
+                                                    classifierExist = true;
+                                                }
+                                            });
+                                            if (!classifierExist) {
+                                                promisesClassifiersAlreadyAdded.push(scope.items[i].groups[g].value);
+                                                promisesClassifiers.push(entityClassifierSingletonService.getByKey(scope.entityType, scope.items[i].groups[g].value))
+                                            }
                                         }
                                         if (scope.items[i].groups[g]['value_type'] === 'field') {
                                             //console.log('scope.items[i].groups[g].value', scope.items[i].groups[g].value);
                                             //console.log('scope.items[i].groups[g].value', scope.items[i].groups[g]);
+
                                             if (scope.items[i].groups[g].value !== null) {
-                                                promisesEntityFields.push(bindCellService.getByKey(scope.items[i].groups[g].key, scope.items[i].groups[g].value, {entityType: scope.entityType}))
+
+                                                promisesEntityFieldsAlreadyAdded.forEach(function (entity) {
+                                                    if (entity == scope.items[i].groups[g].value) {
+                                                        entityExist = true;
+                                                    }
+                                                });
+                                                console.log('promisesEntityFieldsAlreadyAdded', promisesEntityFieldsAlreadyAdded);
+
+                                                if (!entityExist) {
+                                                    promisesEntityFieldsAlreadyAdded.push(scope.items[i].groups[g].value);
+                                                    promisesEntityFields.push(bindCellService.getByKey(scope.items[i].groups[g].key, scope.items[i].groups[g].value, {entityType: scope.entityType}))
+                                                }
                                             }
                                         }
                                     }
@@ -165,8 +209,8 @@
                                 });
 
                             })
-                        })
-                    }, 800)
+                        }, 800)
+                    })
                 }
 
 
@@ -200,23 +244,21 @@
                                 for (g = 0; g < scope.items[i].groups.length; g = g + 1) {
 
                                     if (scope.items[i].groups[g]['value_type'] === 'field') {
-                                        var exist = false;
-                                        var entityItem;
-                                        //console.log('scope.items[i].groups[g].key', scope.items[i].groups[g].key);
-                                        //console.log('scope.items[i].groups[g].key', entityFieldsArray);
-                                        if (entityFieldsArray.hasOwnProperty(scope.items[i].groups[g].key)) {
-                                            for (e = 0; e < entityFieldsArray[scope.items[i].groups[g].key].length; e = e + 1) {
-                                                entityItem = entityFieldsArray[scope.items[i].groups[g].key][e];
-                                                if (entityItem.id == scope.items[i].groups[g].value) {
-                                                    exist = true;
-                                                }
-                                            }
-                                        }
-                                        if (!exist) {
-                                            //console.log('here???');
-                                            promises.push(bindCellService.getByKey(scope.items[i].groups[g].key, scope.items[i].groups[g].value))
+                                        var entityExist = false;
 
+                                        promisesEntityFieldsAlreadyAdded.forEach(function (entity) {
+                                            if (entity == scope.items[i].groups[g].value) {
+                                                entityExist = true;
+                                            }
+                                        });
+
+                                        console.log('promisesEntityFieldsAlreadyAdded', promisesEntityFieldsAlreadyAdded);
+
+                                        if (!entityExist) {
+                                            promisesEntityFieldsAlreadyAdded.push(scope.items[i].groups[g].value);
+                                            promises.push(bindCellService.getByKey(scope.items[i].groups[g].key, scope.items[i].groups[g].value))
                                         }
+
                                     }
                                 }
                             }
@@ -403,7 +445,7 @@
                                         if (result) {
                                             if (column['key'] === 'instrument' && result['user_code']) {
                                                 return result['user_code'];
-                                            }else if(column['key'] === 'price_download_scheme') {
+                                            } else if (column['key'] === 'price_download_scheme') {
                                                 return result['scheme_name'];
                                             }
                                             else if (result['display_name']) {
