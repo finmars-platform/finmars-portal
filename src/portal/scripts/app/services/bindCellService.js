@@ -320,8 +320,7 @@
         })
 
     };
-
-
+    
     module.exports = {
         findEntities: findEntities,
         getByKey: getByKey
