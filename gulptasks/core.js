@@ -24,6 +24,7 @@
             'node_modules/angular-contextmenu/dist/contextmenu.js',
             'node_modules/angular-resource/angular-resource.js',
             'node_modules/angular-sanitize/angular-sanitize.js',
+            'node_modules/v-accordion/dist/v-accordion.js',
             'node_modules/angular-paging/dist/paging.js',
             'node_modules/angular-material/angular-material.js',
             'node_modules/angular-carousel/dist/angular-carousel.js',
@@ -55,6 +56,7 @@
             'node_modules/angular-material/angular-material.css',
             'bower_components/mdPickers/dist/mdPickers.css',
             'node_modules/angular-contextmenu/dist/style.css',
+            'node_modules/v-accordion/dist/v-accordion.css',
             'node_modules/angular-carousel/dist/angular-carousel.css'
         ];
 

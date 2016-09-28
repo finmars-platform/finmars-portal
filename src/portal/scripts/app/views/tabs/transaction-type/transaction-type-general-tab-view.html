@@ -1,0 +1,65 @@
+<div data-ng-controller="TransactionTypeGeneralTabController as vm">
+    <div data-ng-if="vm.checkReadyStatus()">
+        <div layout="row">
+            <md-input-container>
+                <label for="">User code</label>
+                <input type="text" data-ng-model="vm.entity.user_code">
+            </md-input-container>
+            <md-input-container>
+                <label for="">Group</label>
+                <md-select data-ng-model="vm.entity.group">
+                    <md-option ng-value="item.id" ng-repeat="item in vm.transactionTypeGroups">{{item.name}}</md-option>
+                </md-select>
+            </md-input-container>
+        </div>
+        <div layout="row">
+            <md-input-container>
+                <label for="">Name</label>
+                <input type="text" data-ng-model="vm.entity.name">
+            </md-input-container>
+        </div>
+        <div layout="row">
+            <md-input-container>
+                <label for="">Notes</label>
+                <textarea data-ng-model="vm.entity.notes" cols="30" rows="10"></textarea>
+            </md-input-container>
+        </div>
+        <div layout="row">
+            <md-input-container>
+                <md-checkbox data-ng-model="vm.entity.is_valid_for_all_instruments">Valid for all instruments
+                </md-checkbox>
+            </md-input-container>
+            <md-input-container>
+                <md-checkbox data-ng-model="vm.entity.is_valid_for_all_portfolios">Valid for all portfolios
+                </md-checkbox>
+            </md-input-container>
+        </div>
+        <div layout="row" style="margin-bottom: 15px">
+            <md-input-container style="min-width: 200px">
+                <label for="">Instrument types</label>
+                <md-select data-ng-model="vm.entity.instrument_types" multiple
+                           md-selected-text="vm.bindSelectedText(vm.entity.instrument_types)">
+                    <md-option ng-value="item.id" ng-repeat="item in vm.instrumentTypes">{{item.name}}</md-option>
+                </md-select>
+            </md-input-container>
+            <md-input-container style="min-width: 200px">
+                <label for="">Portfolios</label>
+                <md-select data-ng-model="vm.entity.portfolios" multiple
+                           md-selected-text="vm.bindSelectedText(vm.entity.portfolios)">
+                    <md-option ng-value="item.id" ng-repeat="item in vm.portfolios">{{item.name}}</md-option>
+                </md-select>
+            </md-input-container>
+        </div>
+        <div layout="row">
+            <md-input-container>
+                <label for="">Display expression</label>
+                <input type="text" data-ng-model="vm.entity.display_expr">
+            </md-input-container>
+        </div>
+    </div>
+    <div data-ng-if="!vm.checkReadyStatus()">
+        <div layout="row" layout-sm="column" layout-align="space-around">
+            <md-progress-circular md-mode="indeterminate"></md-progress-circular>
+        </div>
+    </div>
+</div>

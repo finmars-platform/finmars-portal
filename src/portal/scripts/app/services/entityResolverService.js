@@ -33,8 +33,23 @@
     var getList = function (entityType) {
 
         switch (entityType) {
+            case 'portfolio':
+                return portfolioService.getList();
+                break;
+            case 'account':
+                return accountService.getList();
+                break;
+            case 'responsible':
+                return responsibleService.getList();
+                break;
+            case 'counterparty':
+                return counterpartyService.getList();
+                break;
             case 'currency':
                 return currencyService.getList();
+                break;
+            case 'instrument':
+                return instrumentService.getList();
                 break;
             case 'instrument_type':
                 return instrumentTypeService.getList();
@@ -44,6 +59,15 @@
                 break;
             case 'periodicity':
                 return instrumentPeriodicityService.getList();
+                break;
+            case 'strategy-1':
+                return strategyService.getList(1);
+                break;
+            case 'strategy-2':
+                return strategyService.getList(2);
+                break;
+            case 'strategy-3':
+                return strategyService.getList(3);
                 break;
         }
     };
@@ -163,23 +187,6 @@
                 return instrumentService.create(entity);
                 break;
             case 'instrument-type':
-
-                if (entity["one_off_event"]) {
-                    entity["one_off_event"] = entity["one_off_event"][0];
-                }
-                if (entity["regular_event"]) {
-                    entity["regular_event"] = entity["regular_event"][0];
-                }
-                if (entity["factor_same"]) {
-                    entity["factor_same"] = entity["factor_same"][0];
-                }
-                if (entity["factor_up"]) {
-                    entity["factor_up"] = entity["factor_up"][0];
-                }
-                if (entity["factor_down"]) {
-                    entity["factor_down"] = entity["factor_down"][0];
-                }
-
                 return instrumentTypeService.create(entity);
                 break;
             case 'currency':
@@ -267,23 +274,6 @@
                 return instrumentService.update(id, entity);
                 break;
             case 'instrument-type':
-
-                if (entity["one_off_event"]) {
-                    entity["one_off_event"] = entity["one_off_event"][0];
-                }
-                if (entity["regular_event"]) {
-                    entity["regular_event"] = entity["regular_event"][0];
-                }
-                if (entity["factor_same"]) {
-                    entity["factor_same"] = entity["factor_same"][0];
-                }
-                if (entity["factor_up"]) {
-                    entity["factor_up"] = entity["factor_up"][0];
-                }
-                if (entity["factor_down"]) {
-                    entity["factor_down"] = entity["factor_down"][0];
-                }
-
                 return instrumentTypeService.update(id, entity);
                 break;
             case 'transaction':

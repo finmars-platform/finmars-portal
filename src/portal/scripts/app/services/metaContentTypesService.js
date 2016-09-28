@@ -35,11 +35,16 @@
         return contentType;
     };
 
+    var getListForTransactionTypeInputs = function () {
+        return metaContentTypesRepository.getListForTransactionTypeInputs();
+    };
+
 
     module.exports = {
         getListForTags: getListForTags,
         getListForUi: getListForUi,
-        findContentTypeByEntity: findContentTypeByEntity
+        findContentTypeByEntity: findContentTypeByEntity,
+        getListForTransactionTypeInputs: getListForTransactionTypeInputs
     }
 
 

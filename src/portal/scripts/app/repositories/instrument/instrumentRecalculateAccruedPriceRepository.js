@@ -10,7 +10,7 @@
     var baseUrl = '/api/v1/';
 
     var recalculate = function (dateFrom, dateTo) {
-        return window.fetch(baseUrl + 'instruments/price-history/recalculate-prices-accrued-price/?date_0=' + dateFrom + '&date_1=' + dateTo,
+        return window.fetch(baseUrl + 'instruments/instrument/recalculate-prices-accrued-price/?date_0=' + dateFrom + '&date_1=' + dateTo,
             {
                 method: 'POST',
                 credentials: 'include',

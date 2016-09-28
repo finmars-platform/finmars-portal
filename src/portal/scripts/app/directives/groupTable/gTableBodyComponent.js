@@ -38,7 +38,6 @@
                 var promisesEntityFieldsAlreadyAdded = [];
                 var promisesAttributeTypesAlreadyAdded = [];
 
-
                 var entityFieldsArray = {};
 
                 var classifiersInstances = {};

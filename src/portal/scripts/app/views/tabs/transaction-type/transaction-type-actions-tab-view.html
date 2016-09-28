@@ -1,0 +1,388 @@
+<div data-ng-controller="TransactionTypeActionsTabController as vm">
+    <div class="transaction-type-actions-tab-view">
+        <v-accordion class="vAccordion--default" multiple>
+
+            <v-pane data-ng-repeat="item in vm.entity.actions" expanded="item.isExpanded">
+                <v-pane-header inactive>
+                    <span data-ng-if="item.isExpanded">
+                        <md-input-container>
+                            <input type="text" data-ng-model="item.action_notes" placeholder="Action notes">
+                        </md-input-container>
+                        <button ng-click="$pane.toggle()">Toggle me</button>
+                    </span>
+                    <span data-ng-if="!item.isExpanded" data-ng-bind="item.action_notes"></span>
+                </v-pane-header>
+
+                <v-pane-content style="padding: 20px;">
+
+                    <div data-ng-if="item.transaction">
+
+                        <div layout="row">
+                            <div flex="50">
+                                <div layout="row">
+                                    <md-input-container>
+                                        <label for="">Transaction class</label>
+                                    </md-input-container>
+                                </div>
+                                <div layout="row">
+                                    <div flex="33">
+                                        <md-input-container>
+                                            <label for="">Instrument</label>
+                                        </md-input-container>
+                                    </div>
+                                    <div flex="33">
+                                        <md-input-container>
+                                            <label for="">Position size with sign</label>
+                                            <input type="text" data-ng-model="item.position_size_with_sign">
+                                        </md-input-container>
+                                    </div>
+                                    <div flex="33">
+                                        <md-input-container>
+                                            <label for="">Transaction currency</label>
+                                        </md-input-container>
+                                    </div>
+                                </div>
+                                <div layout="row">
+                                    <div flex="33">
+                                        <md-input-container>
+                                            <label for="">Principal with sign</label>
+                                            <input type="text" data-ng-model="item.principal_with_sign">
+                                        </md-input-container>
+                                    </div>
+                                    <div flex="33">
+                                        <md-input-container>
+                                            <label for="">Carry with sign</label>
+                                            <input type="text" data-ng-model="item.carry_with_sign">
+                                        </md-input-container>
+                                    </div>
+                                    <div flex="33">
+                                        <md-input-container>
+                                            <label for="">Overheads with sign</label>
+                                            <input type="text" data-ng-model="item.overheads_with_sign">
+                                        </md-input-container>
+                                    </div>
+                                </div>
+                                <div layout="row">
+                                    <div flex="33">
+                                        <md-input-container>
+                                            <label for="">Accounting date</label>
+                                            <input type="text" data-ng-model="item.accounting_date">
+                                        </md-input-container>
+                                    </div>
+                                    <div flex="33">
+                                        <md-input-container>
+                                            <label for="">Account position</label>
+                                        </md-input-container>
+                                    </div>
+                                    <div flex="33">
+                                        <md-input-container>
+                                            <label for="">&nbsp;</label>
+                                        </md-input-container>
+                                    </div>
+                                </div>
+                                <div layout="row">
+                                    <div flex="33">
+                                        <md-input-container>
+                                            <label for="">Strategy1 position</label>
+                                        </md-input-container>
+                                    </div>
+                                    <div flex="33">
+                                        <md-input-container>
+                                            <label for="">Strategy2 position</label>
+                                        </md-input-container>
+                                    </div>
+                                    <div flex="33">
+                                        <md-input-container>
+                                            <label for="">Strategy3 position</label>
+                                        </md-input-container>
+                                    </div>
+                                </div>
+                                <div layout="row">
+                                    <div flex="33">
+                                        <md-input-container>
+                                            <label for="">Trade price</label>
+                                            <input type="text" data-ng-model="item.trade_price">
+                                        </md-input-container>
+                                    </div>
+                                    <div flex="33">
+                                        <md-input-container>
+                                            <label for="">Factor</label>
+                                            <input type="text" data-ng-model="item.factor">
+                                        </md-input-container>
+                                    </div>
+                                    <div flex="33">
+                                        <md-input-container>
+                                            <label for="">&nbsp;</label>
+                                        </md-input-container>
+                                    </div>
+                                </div>
+                            </div>
+                            <div flex="50">
+                                <div layout="row">
+                                    <div flex="33">
+                                        <md-input-container>
+                                            <label for="">Portfolio</label>
+                                        </md-input-container>
+                                    </div>
+                                    <div flex="33">
+                                        <md-input-container>
+                                            <label for="">Counterparty</label>
+                                        </md-input-container>
+                                    </div>
+                                    <div flex="33">
+                                        <md-input-container>
+                                            <label for="">Responsible</label>
+                                        </md-input-container>
+                                    </div>
+                                </div>
+                                <div layout="row">
+                                    <div flex="33">
+                                        <md-input-container>
+                                            <label for="">&nbsp;</label>
+                                        </md-input-container>
+                                    </div>
+                                    <div flex="33">
+                                        <md-input-container>
+                                            <label for="">&nbsp;</label>
+                                        </md-input-container>
+                                    </div>
+                                    <div flex="33">
+                                        <md-input-container>
+                                            <label for="">&nbsp;</label>
+                                        </md-input-container>
+                                    </div>
+                                </div>
+                                <div layout="row">
+                                    <div flex="33">
+                                        <md-input-container>
+                                            <label for="">Settlement currency</label>
+                                        </md-input-container>
+                                    </div>
+                                    <div flex="33">
+                                        <md-input-container>
+                                            <label for="">Cash consideration</label>
+                                            <input type="text" data-ng-model="item.cash_consideration">
+                                        </md-input-container>
+                                    </div>
+                                    <div flex="33">
+                                        <md-input-container>
+                                            <label for="">Reference fx-rate</label>
+                                        </md-input-container>
+                                    </div>
+                                </div>
+                                <div layout="row">
+                                    <div flex="33">
+                                        <md-input-container>
+                                            <label for="">Cash date</label>
+                                            <input type="text" data-ng-model="item.cash_date">
+                                        </md-input-container>
+                                    </div>
+                                    <div flex="33">
+                                        <md-input-container>
+                                            <label for="">Account cash</label>
+                                        </md-input-container>
+                                    </div>
+                                    <div flex="33">
+                                        <md-input-container>
+                                            <label for="">Account interim</label>
+                                        </md-input-container>
+                                    </div>
+                                </div>
+                                <div layout="row">
+                                    <div flex="33">
+                                        <md-input-container>
+                                            <label for="">Strategy1 cash</label>
+                                        </md-input-container>
+                                    </div>
+                                    <div flex="33">
+                                        <md-input-container>
+                                            <label for="">Strategy 2 cash</label>
+                                        </md-input-container>
+                                    </div>
+                                    <div flex="33">
+                                        <md-input-container>
+                                            <label for="">Strategy 3 cash</label>
+                                        </md-input-container>
+                                    </div>
+                                </div>
+                                <div layout="row">
+                                    <div flex="33">
+                                        <md-input-container>
+                                            <label for="">Principal amount</label>
+                                            <input type="text" data-ng-model="item.principal_amount">
+                                        </md-input-container>
+                                    </div>
+                                    <div flex="33">
+                                        <md-input-container>
+                                            <label for="">Carry amount</label>
+                                            <input type="text" data-ng-model="item.carry_amount">
+                                        </md-input-container>
+                                    </div>
+                                    <div flex="33">
+                                        <md-input-container>
+                                            <label for="">Overheads</label>
+                                            <input type="text" data-ng-model="item.overheads">
+                                        </md-input-container>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div data-ng-if="item.instrument">
+                        <div layout="row">
+                            <div flex="50">
+                                <div layout="row">
+                                    <div flex="33">
+                                        <md-input-container>
+                                            <label for="">Instrument type</label>
+                                        </md-input-container>
+                                    </div>
+                                    <div flex="33">
+                                        <md-input-container>
+                                            <label for="">User code</label>
+                                            <input type="text" data-ng-model="item.user_code">
+                                        </md-input-container>
+                                    </div>
+                                </div>
+                                <div layout="row">
+                                    <div flex="33">
+                                        <md-input-container>
+                                            <label for="">Name</label>
+                                            <input type="text" data-ng-model="item.name">
+                                        </md-input-container>
+                                    </div>
+                                    <div flex="33">
+                                        <md-input-container>
+                                            <label for="">Short name</label>
+                                            <input type="text" data-ng-model="item.short_name">
+                                        </md-input-container>
+                                    </div>
+                                    <div flex="33">
+                                        <md-input-container>
+                                            <label for="">Public name</label>
+                                            <input type="text" data-ng-model="item.public_name">
+                                        </md-input-container>
+                                    </div>
+                                </div>
+                                <div layout="row">
+                                    <div flex="33">
+                                        <md-input-container>
+                                            <label for="">User text1</label>
+                                            <input type="text" data-ng-model="item.user_text_1">
+                                        </md-input-container>
+                                    </div>
+                                    <div flex="33">
+                                        <md-input-container>
+                                            <label for="">User text2</label>
+                                            <input type="text" data-ng-model="item.user_text_2">
+                                        </md-input-container>
+                                    </div>
+                                    <div flex="33">
+                                        <md-input-container>
+                                            <label for="">User text3</label>
+                                            <input type="text" data-ng-model="item.user_text_3">
+                                        </md-input-container>
+                                    </div>
+                                </div>
+                                <div layout="row">
+                                    <div flex="100">
+                                        <md-input-container>
+                                            <label for="">Notes</label>
+                                            <input type="text" data-ng-model="item.notes">
+                                        </md-input-container>
+                                    </div>
+                                </div>
+                            </div>
+                            <div flex="50">
+                                <div layout="row">
+                                    <div flex="33">
+                                        <md-input-container>
+                                            <label for="">Daily pricing model</label>
+                                        </md-input-container>
+                                    </div>
+                                    <div flex="33">
+                                        <md-input-container>
+                                            <label for="">Price download scheme</label>
+                                        </md-input-container>
+                                    </div>
+                                    <div flex="33">
+                                        <md-input-container>
+                                            <label for="">Reference for pricing</label>
+                                        </md-input-container>
+                                    </div>
+                                </div>
+                                <div layout="row">
+                                    <div flex="33">
+                                        <md-input-container>
+                                            <label for="">Pricing currency</label>
+                                        </md-input-container>
+                                    </div>
+                                    <div flex="33">
+                                        <md-input-container>
+                                            <label for="">Price multiplier</label>
+                                            <input type="text" data-ng-model="item.price_multiplier">
+                                        </md-input-container>
+                                    </div>
+                                    <div flex="33">
+                                        <md-input-container>
+                                            <label for="">Default price</label>
+                                            <input type="text" data-ng-model="item.default_price">
+                                        </md-input-container>
+                                    </div>
+                                </div>
+                                <div layout="row">
+                                    <div flex="33">
+                                        <md-input-container>
+                                            <label for="">Accrued currency</label>
+                                        </md-input-container>
+                                    </div>
+                                    <div flex="33">
+                                        <md-input-container>
+                                            <label for="">Accrued multiplier</label>
+                                            <input type="text" data-ng-model="item.accrued_multiplier">
+                                        </md-input-container>
+                                    </div>
+                                    <div flex="33">
+                                        <md-input-container>
+                                            <label for="">Default accrued</label>
+                                            <input type="text" data-ng-model="item.default_accrued">
+                                        </md-input-container>
+                                    </div>
+                                </div>
+                                <div flex="33">
+                                    <md-input-container>
+                                        <label for="">Payment size details</label>
+                                    </md-input-container>
+                                </div>
+                                <div flex="33">
+                                    <md-input-container>
+                                        <label for="">&nbsp;</label>
+                                    </md-input-container>
+                                </div>
+                                <div flex="33">
+                                    <md-input-container>
+                                        <label for="">Maturity date</label>
+                                        <input type="text" data-ng-model="item.maturity_date">
+                                    </md-input-container>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </v-pane-content>
+            </v-pane>
+
+        </v-accordion>
+
+        <div layout="row" layout-align="end center">
+            <md-button class="md-raised" data-ng-click="vm.addAction('transaction')">
+                Add new transaction action
+            </md-button>
+            <md-button class="md-raised" data-ng-click="vm.addAction('instrument')">
+                Add new instrument action
+            </md-button>
+        </div>
+
+    </div>
+</div>

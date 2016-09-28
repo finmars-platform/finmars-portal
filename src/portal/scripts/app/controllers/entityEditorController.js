@@ -37,15 +37,18 @@
         logService.property('entityType', vm.entityType);
         logService.property('entityId', vm.entityId);
 
-        uiService.getEditLayout(vm.entityType).then(function (data) {
-            if (data.results.length) {
-                vm.tabs = data.results[0].data;
-            } else {
-                vm.tabs = uiService.getDefaultEditLayout()[0].data;
-            }
-            logService.collection('vm.tabs', vm.tabs);
-            $scope.$apply();
-        });
+
+        if (vm.entityType !== 'transaction-type') {
+            uiService.getEditLayout(vm.entityType).then(function (data) {
+                if (data.results.length) {
+                    vm.tabs = data.results[0].data;
+                } else {
+                    vm.tabs = uiService.getDefaultEditLayout()[0].data;
+                }
+                logService.collection('vm.tabs', vm.tabs);
+                $scope.$apply();
+            });
+        }
 
         vm.attrs = [];
         vm.baseAttrs = [];
@@ -503,8 +506,8 @@
                 for (i = 0; i < keys.length; i = i + 1) {
                     for (e = 0; e < vm.entityAttrs.length; e = e + 1) {
                         if (keys[i] == vm.entityAttrs[e].key) {
-                            if(vm.entityAttrs[e].options && vm.entityAttrs[e].options.notNull == true) {
-                                if(item[keys[i]] == '' || item[keys[i]] == null || item[keys[i]] == undefined) {
+                            if (vm.entityAttrs[e].options && vm.entityAttrs[e].options.notNull == true) {
+                                if (item[keys[i]] == '' || item[keys[i]] == null || item[keys[i]] == undefined) {
                                     isValid = false
                                 }
                             }
@@ -513,8 +516,8 @@
 
                     for (b = 0; b < vm.baseAttrs.length; b = b + 1) {
                         if (keys[i] == vm.baseAttrs[b].key) {
-                            if(vm.baseAttrs[b].options && vm.baseAttrs[b].options.notNull == true) {
-                                if(item[keys[i]] == '' || item[keys[i]] == null || item[keys[i]] == undefined) {
+                            if (vm.baseAttrs[b].options && vm.baseAttrs[b].options.notNull == true) {
+                                if (item[keys[i]] == '' || item[keys[i]] == null || item[keys[i]] == undefined) {
                                     isValid = false
                                 }
                             }
@@ -523,8 +526,8 @@
 
                     for (a = 0; a < vm.attrs.length; a = a + 1) {
                         if (keys[i] == vm.attrs[a].name) {
-                            if(vm.attrs[a].options && vm.attrs[a].options.notNull == true) {
-                                if(item[keys[i]] == '' || item[keys[i]] == null || item[keys[i]] == undefined) {
+                            if (vm.attrs[a].options && vm.attrs[a].options.notNull == true) {
+                                if (item[keys[i]] == '' || item[keys[i]] == null || item[keys[i]] == undefined) {
                                     isValid = false
                                 }
                             }
