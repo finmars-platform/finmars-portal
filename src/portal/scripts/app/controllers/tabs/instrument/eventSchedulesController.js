@@ -5,11 +5,11 @@
 
     'use strict';
 
-    var logService = require('../../../../../core/services/logService');
+    var logService = require('../../../../../../core/services/logService');
 
     //var instrumentEventScheduleService = require('../../services/instrument/instrumentEventScheduleService');
-    var metaNotificationClassService = require('../../services/metaNotificationClassService');
-    var metaEventClassService = require('../../services/metaEventClassService');
+    var metaNotificationClassService = require('../../../services/metaNotificationClassService');
+    var metaEventClassService = require('../../../services/metaEventClassService');
 
     module.exports = function ($scope) {
 

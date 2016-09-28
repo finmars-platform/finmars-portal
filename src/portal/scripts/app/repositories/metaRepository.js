@@ -879,19 +879,43 @@
                 return [
                     {
                         label: 'Accruals',
-                        templateUrl: 'views/tabs/accrual-calculation-schedules-view.html'
+                        templateUrl: 'views/tabs/instrument/accrual-calculation-schedules-view.html'
                     },
                     {
                         label: 'Events',
-                        templateUrl: 'views/tabs/events-view.html'
+                        templateUrl: 'views/tabs/instrument/events-view.html'
                     },
                     {
                         label: 'Pricing',
-                        templateUrl: 'views/tabs/manual-pricing-formulas-view.html'
+                        templateUrl: 'views/tabs/instrument/manual-pricing-formulas-view.html'
                     },
                     {
                         label: 'Factors',
-                        templateUrl: 'views/tabs/factor-schedule-view.html'
+                        templateUrl: 'views/tabs/instrument/factor-schedule-view.html'
+                    }
+                ];
+                break;
+            case 'transaction':
+                return [
+                    {
+                        label: 'Actions',
+                        templateUrl: 'views/tabs/transaction/book-transaction-actions-tab-view.html'
+                    }
+                ];
+                break;
+            case 'transaction-type':
+                return [
+                    {
+                        label: 'General',
+                        templateUrl: 'views/tabs/transaction-type/transaction-type-general-tab-view.html'
+                    },
+                    {
+                        label: 'Inputs',
+                        templateUrl: 'views/tabs/transaction-type/transaction-type-inputs-tab-view.html'
+                    },
+                    {
+                        label: 'Actions',
+                        templateUrl: 'views/tabs/transaction-type/transaction-type-actions-tab-view.html'
                     }
                 ];
                 break;

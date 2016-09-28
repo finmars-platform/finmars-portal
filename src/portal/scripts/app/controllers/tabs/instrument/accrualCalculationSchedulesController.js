@@ -5,10 +5,10 @@
 
     'use strict';
 
-    var logService = require('../../../../../core/services/logService');
+    var logService = require('../../../../../../core/services/logService');
 
-    var accrualCalculationModelService = require('../../services/accrualCalculationModelService');
-    var instrumentPeriodicityService = require('../../services/instrumentPeriodicityService');
+    var accrualCalculationModelService = require('../../../services/accrualCalculationModelService');
+    var instrumentPeriodicityService = require('../../../services/instrumentPeriodicityService');
 
     module.exports = function ($scope) {
 

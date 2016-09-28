@@ -5,6 +5,76 @@
 
     "use strict";
 
+    var getListForTransactionTypeInputs = function(){
+        return [
+            {
+                name: "Account",
+                entity: 'account',
+                key: "accounts.account"
+            },
+            {
+                name: "Counterparty",
+                entity: 'counterparty',
+                key: "counterparties.counterparty"
+            },
+            {
+                name: "Responsible",
+                entity: 'responsible',
+                key: "counterparties.responsible"
+            },
+            {
+                name: "Currency",
+                entity: 'currency',
+                key: "currencies.currency"
+            },
+            {
+                name: "Instrument",
+                entity: 'instrument',
+                key: "instruments.instrument"
+            },
+            {
+                name: "Portfolio",
+                entity: 'portfolio',
+                key: "portfolios.portfolio"
+            },
+            {
+                name: "Instrument Type",
+                entity: 'instrument-type',
+                key: "instruments.instrumenttype"
+            },
+            {
+                name: "Strategy 1",
+                entity: 'strategy-1',
+                key: "strategies.strategy1"
+            },
+            {
+                name: "Strategy 2",
+                entity: 'strategy-2',
+                key: "strategies.strategy2"
+            },
+            {
+                name: "Strategy 3",
+                entity: 'strategy-3',
+                key: "strategies.strategy3"
+            },
+            {
+                name: 'Daily pricing model',
+                entity: 'daily-pricing-model',
+                key: 'instruments.dailypricingmodel'
+            },
+            {
+                name: 'Payment size detail',
+                entity: 'payment-size-detail',
+                key: 'instruments.paymentsizedetail'
+            },
+            {
+                name: 'Price download scheme',
+                entity: 'price-download-scheme',
+                key: 'integrations.pricedownloadscheme'
+            }
+        ]
+    };
+
     var getListForTags = function () {
 
         return [
@@ -269,7 +339,8 @@
 
     module.exports = {
         getListForTags: getListForTags,
-        getListForUi: getListForUi
+        getListForUi: getListForUi,
+        getListForTransactionTypeInputs: getListForTransactionTypeInputs
     }
 
 

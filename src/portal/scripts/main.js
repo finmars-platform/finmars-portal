@@ -13,6 +13,7 @@ var app = angular.module('portal', [
     'ngResource',
     'ngSanitize',
     'ui.router',
+    'vAccordion',
     'mdPickers',
     'bw.paging',
     'io.dennis.contextmenu',
@@ -69,10 +70,16 @@ app.controller('EntityViewerDeleteDialogController', ['$scope', '$mdDialog', 'en
 
 app.controller('EntityEditorController', ['$scope', require('./app/controllers/entityEditorController')]);
 
-app.controller('AccrualCalculationSchedulesTabController', ['$scope', require('./app/controllers/tabs/accrualCalculationSchedulesController')]);
-app.controller('EventSchedulesTabController', ['$scope', require('./app/controllers/tabs/eventSchedulesController')]);
-app.controller('FactorScheduleTabController', ['$scope', require('./app/controllers/tabs/factorScheduleTabController')]);
-app.controller('ManualPricingFormulasTabController', ['$scope', require('./app/controllers/tabs/manualPricingFormulasTabController')]);
+app.controller('BookTransactionActionsTabController', ['$scope', require('./app/controllers/tabs/transaction/bookTransactionActionsTabController')]);
+
+app.controller('TransactionTypeActionsTabController', ['$scope', require('./app/controllers/tabs/transaction-type/transactionTypeActionsTabController')]);
+app.controller('TransactionTypeGeneralTabController', ['$scope', require('./app/controllers/tabs/transaction-type/transactionTypeGeneralTabController')]);
+app.controller('TransactionTypeInputsTabController', ['$scope', require('./app/controllers/tabs/transaction-type/transactionTypeInputsTabController')]);
+
+app.controller('AccrualCalculationSchedulesTabController', ['$scope', require('./app/controllers/tabs/instrument/accrualCalculationSchedulesController')]);
+app.controller('EventSchedulesTabController', ['$scope', require('./app/controllers/tabs/instrument/eventSchedulesController')]);
+app.controller('FactorScheduleTabController', ['$scope', require('./app/controllers/tabs/instrument/factorScheduleTabController')]);
+app.controller('ManualPricingFormulasTabController', ['$scope', require('./app/controllers/tabs/instrument/manualPricingFormulasTabController')]);
 app.controller('InstrumentEventActionsDialogController', ['$scope', '$mdDialog', 'eventActions', require('./app/controllers/dialogs/instrumentEventActionsDialogController')]);
 
 app.controller('DataPortfolioController', ['$scope', require('./app/controllers/data/dataPortfolioController')]);

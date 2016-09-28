@@ -42,38 +42,40 @@
                             }
                         });
 
-                        //console.log(copiedItems);
+                        if (copiedItems.length) {
+                            //console.log(copiedItems);
 
-                        var result = '<table>';
-                        copiedItems.forEach(function (item) {
-                            var row = '<tr>';
+                            var result = '<table>';
+                            copiedItems.forEach(function (item) {
+                                var row = '<tr>';
 
-                            if (item.hasOwnProperty('type')) {
-                                row = row + '<td>' + item.data.map(function (item) {
-                                        return item.value
-                                    }).join(' ') + '</td>';
-                            } else {
-                                scope.columns.forEach(function (column) {
-                                    if (column.hasOwnProperty('key')) {
-                                        row = row + '<td>' + item[column.key] + '</td>';
-                                    } else {
-                                        row = row + '<td>' + item[column.name] + '</td>';
-                                    }
-                                });
+                                if (item.hasOwnProperty('type')) {
+                                    row = row + '<td>' + item.data.map(function (item) {
+                                            return item.value
+                                        }).join(' ') + '</td>';
+                                } else {
+                                    scope.columns.forEach(function (column) {
+                                        if (column.hasOwnProperty('key')) {
+                                            row = row + '<td>' + item[column.key] + '</td>';
+                                        } else {
+                                            row = row + '<td>' + item[column.name] + '</td>';
+                                        }
+                                    });
+                                }
+
+
+                                row = row + '</tr>';
+                                result = result + row;
+                            });
+                            result = result + '</table';
+
+                            console.log('result', result);
+                            if (e.clipboardData) {
+                                e.clipboardData.setData('text/html', result);
                             }
-
-
-                            row = row + '</tr>';
-                            result = result + row;
-                        });
-                        result = result + '</table';
-
-                        console.log('result', result);
-                        if (e.clipboardData) {
-                            e.clipboardData.setData('text/html', result);
+                            console.log('e', e);
+                            e.preventDefault(); // We want our data, not data from any selection, to be written to the clipboard
                         }
-                        console.log('e', e);
-                        e.preventDefault(); // We want our data, not data from any selection, to be written to the clipboard
                     }
                 };
 
