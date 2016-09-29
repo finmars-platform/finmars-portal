@@ -965,8 +965,23 @@ md-input-container.error {
 }
 
 .transaction-type-actions-tab-view {
+  md-switch {
+    padding-left: 11px;
+    margin-top: 0px;
+  }
   md-input-container {
     width: 100%;
     min-height: 58px;
+  }
+}
+
+.transaction-type-action-pane {
+  &::after {
+    display: none;
+    opacity: 0;
+  }
+  &::before {
+    display: none;
+    opacity: 0;
   }
 }

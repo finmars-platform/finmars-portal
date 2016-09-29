@@ -18,6 +18,7 @@
     var currencyHistoryService = require('./currencyHistoryService');
     var transactionService = require('./transactionService');
     var transactionTypeService = require('./transactionTypeService');
+    var transactionClassService = require('./transaction/transactionClassService');
     var transactionTypeGroupService = require('./transaction/transactionTypeGroupService');
 
     var pricingPolicyService = require('./pricingPolicyService');
@@ -31,6 +32,8 @@
     var strategySubgroupService = require('./strategySubgroupService');
 
     var getList = function (entityType) {
+
+        console.log('entityType', entityType);
 
         switch (entityType) {
             case 'portfolio':
@@ -51,11 +54,8 @@
             case 'instrument':
                 return instrumentService.getList();
                 break;
-            case 'instrument_type':
+            case 'instrument-type':
                 return instrumentTypeService.getList();
-                break;
-            case 'accrual_calculation_model':
-                return accrualCalculationModelService.getList();
                 break;
             case 'periodicity':
                 return instrumentPeriodicityService.getList();
