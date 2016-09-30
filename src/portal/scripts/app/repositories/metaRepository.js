@@ -230,6 +230,11 @@
                     "value_type": "boolean"
                 },
                 {
+                    "key": "reference_for_pricing",
+                    "name": "Reference for pricing",
+                    "value_type": 10
+                },
+                {
                     "key": "instrument_class",
                     "name": "Instrument class",
                     "value_type": "field"

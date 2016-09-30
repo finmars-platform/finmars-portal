@@ -27,6 +27,30 @@
             }
         };
 
+        vm.entity.actions.forEach(function (action) {
+            var keys;
+            if (action.instrument !== null) {
+                keys = Object.keys(action.instrument);
+
+                keys.forEach(function (key) {
+                    if (action.instrument.hasOwnProperty(key + '_input')) {
+                        if (action.instrument[key] !== null) {
+                            action.instrument[key + '_toggle'] = true;
+                        }
+                    }
+                })
+            } else {
+                keys = Object.keys(action.transaction);
+                keys.forEach(function (key) {
+                    if (action.transaction.hasOwnProperty(key + '_input')) {
+                        if (action.transaction[key] !== null) {
+                            action.transaction[key + '_toggle'] = true;
+                        }
+                    }
+                })
+            }
+        });
+
         vm.resetProperty = function (item, propertyName, fieldName) {
 
             item[propertyName][fieldName] = null;
@@ -67,6 +91,7 @@
                     transaction: {}
                 })
             }
+            vm.findPhantoms();
         };
 
         vm.relationItems = {};
@@ -75,13 +100,48 @@
             var swap = JSON.parse(JSON.stringify(item));
             vm.entity.actions[$index] = vm.entity.actions[$index + 1];
             vm.entity.actions[$index + 1] = swap;
+            vm.findPhantoms();
         };
 
         vm.moveUp = function (item, $index) {
             var swap = JSON.parse(JSON.stringify(item));
             vm.entity.actions[$index] = vm.entity.actions[$index - 1];
             vm.entity.actions[$index - 1] = swap;
+            vm.findPhantoms();
 
+        };
+
+        vm.resolveInstrumentProp = function (item) {
+
+            if (item.transaction.instrument_input !== null) {
+                return 'instrument_input'
+            }
+            return 'instrument_phantom'
+
+        };
+
+        vm.setTransactionInstrumentInput = function (item, name) {
+            item.transaction.instrument_input = name;
+            item.transaction.instrument_phantom = null;
+            item.transaction.instrument = null;
+        };
+
+        vm.setTransactionInstrumentPhantom = function (item, positionOrder) {
+            item.transaction.instrument_input = null;
+            item.transaction.instrument_phantom = positionOrder;
+            item.transaction.instrument = null;
+
+        };
+
+        vm.findPhantoms = function () {
+            var result = [];
+            vm.entity.actions.forEach(function (action, $index) {
+                action.positionOrder = $index;
+                if (action.instrument !== null) {
+                    result.push(action);
+                }
+            });
+            return result;
         };
 
         vm.loadRelation = function (field) {
