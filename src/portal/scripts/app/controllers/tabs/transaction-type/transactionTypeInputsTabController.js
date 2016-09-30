@@ -108,11 +108,13 @@
 
                 var entityName = '';
 
-                vm.relationItems[itemEntity].forEach(function (relationItem) {
-                    if (relationItem.id == item[itemEntity]) {
-                        entityName = relationItem.name;
-                    }
-                });
+                if (vm.relationItems[itemEntity]) {
+                    vm.relationItems[itemEntity].forEach(function (relationItem) {
+                        if (relationItem.id == item[itemEntity]) {
+                            entityName = relationItem.name;
+                        }
+                    });
+                }
 
                 return entityName;
             }

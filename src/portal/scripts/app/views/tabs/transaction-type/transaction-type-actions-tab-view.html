@@ -61,7 +61,12 @@
                                                     <label for="">Instrument</label>
                                                     <md-select data-ng-model="item.transaction.instrument"
                                                                md-on-open="vm.loadRelation('instrument')">
+                                                        <md-option data-ng-if="!vm.relationItems['instrument'].length"
+                                                                   ng-value="item.transaction.instrument_object.id">
+                                                            {{item.transaction.instrument_object.name}}
+                                                        </md-option>
                                                         <md-option
+                                                                data-ng-if="vm.relationItems['instrument'].length"
                                                                 data-ng-repeat="relationItem in vm.relationItems['instrument']"
                                                                 ng-value="relationItem.id">
                                                             {{relationItem.name}}
@@ -72,12 +77,23 @@
                                             <div data-ng-if="!item.transaction.instrument_toggle">
                                                 <md-input-container>
                                                     <label for="">Instrument</label>
-                                                    <md-select data-ng-model="item.transaction.instrument_input">
-                                                        <md-option
-                                                                data-ng-repeat="inputItem in vm.findInputs('instrument')"
-                                                                ng-value="inputItem.id">
-                                                            {{inputItem.name}}
-                                                        </md-option>
+                                                    <md-select data-ng-model="item.transaction[vm.resolveInstrumentProp(item)]">
+                                                        <md-optgroup label="Inputs">
+                                                            <md-option
+                                                                    data-ng-click="vm.setTransactionInstrumentInput(item, inputItem.name)"
+                                                                    data-ng-repeat="inputItem in vm.findInputs('instrument')"
+                                                                    ng-value="inputItem.name">
+                                                                {{inputItem.name}}
+                                                            </md-option>
+                                                        </md-optgroup>
+                                                        <md-optgroup label="Phantoms">
+                                                            <md-option
+                                                                    data-ng-click="vm.setTransactionInstrumentPhantom(item, phantomItem.positionOrder)"
+                                                                    data-ng-repeat="phantomItem in vm.findPhantoms()"
+                                                                    ng-value="phantomItem.positionOrder">
+                                                                {{phantomItem.action_notes}}
+                                                            </md-option>
+                                                        </md-optgroup>
                                                     </md-select>
                                                 </md-input-container>
                                             </div>
@@ -102,6 +118,12 @@
                                                 <md-select data-ng-model="item.transaction.transaction_currency"
                                                            md-on-open="vm.loadRelation('transaction_currency')">
                                                     <md-option
+                                                            data-ng-if="!vm.relationItems['transaction_currency'].length"
+                                                            ng-value="item.transaction.transaction_currency_object.id">
+                                                        {{item.transaction.transaction_currency_object.name}}
+                                                    </md-option>
+                                                    <md-option
+                                                            data-ng-if="vm.relationItems['transaction_currency'].length"
                                                             data-ng-repeat="relationItem in vm.relationItems['transaction_currency']"
                                                             ng-value="relationItem.id">
                                                         {{relationItem.name}}
@@ -116,7 +138,7 @@
                                                         data-ng-model="item.transaction.transaction_currency_input">
                                                     <md-option
                                                             data-ng-repeat="inputItem in vm.findInputs('currency')"
-                                                            ng-value="inputItem.id">
+                                                            ng-value="inputItem.name">
                                                         {{inputItem.name}}
                                                     </md-option>
                                                 </md-select>
@@ -163,7 +185,12 @@
                                                 <label for="">Account position</label>
                                                 <md-select data-ng-model="item.transaction.account_position"
                                                            md-on-open="vm.loadRelation('account_position')">
+                                                    <md-option data-ng-if="!vm.relationItems['account_position'].length"
+                                                               ng-value="item.transaction.account_position_object.id">
+                                                        {{item.transaction.account_position_object.name}}
+                                                    </md-option>
                                                     <md-option
+                                                            data-ng-if="vm.relationItems['account_position'].length"
                                                             data-ng-repeat="relationItem in vm.relationItems['account_position']"
                                                             ng-value="relationItem.id">
                                                         {{relationItem.name}}
@@ -178,7 +205,7 @@
                                                         data-ng-model="item.transaction.account_position_input">
                                                     <md-option
                                                             data-ng-repeat="inputItem in vm.findInputs('account')"
-                                                            ng-value="inputItem.id">
+                                                            ng-value="inputItem.name">
                                                         {{inputItem.name}}
                                                     </md-option>
                                                 </md-select>
@@ -205,6 +232,12 @@
                                                 <md-select data-ng-model="item.transaction.strategy1_position"
                                                            md-on-open="vm.loadRelation('strategy1_position')">
                                                     <md-option
+                                                            data-ng-if="!vm.relationItems['strategy1_position'].length"
+                                                            ng-value="item.transaction.strategy1_position_object.id">
+                                                        {{item.transaction.strategy1_position_object.name}}
+                                                    </md-option>
+                                                    <md-option
+                                                            data-ng-if="vm.relationItems['strategy1_position'].length"
                                                             data-ng-repeat="relationItem in vm.relationItems['strategy1_position']"
                                                             ng-value="relationItem.id">
                                                         {{relationItem.name}}
@@ -219,7 +252,7 @@
                                                         data-ng-model="item.transaction.strategy1_position_input">
                                                     <md-option
                                                             data-ng-repeat="inputItem in vm.findInputs('strategy-1')"
-                                                            ng-value="inputItem.id">
+                                                            ng-value="inputItem.name">
                                                         {{inputItem.name}}
                                                     </md-option>
                                                 </md-select>
@@ -239,6 +272,12 @@
                                                 <md-select data-ng-model="item.transaction.strategy2_position"
                                                            md-on-open="vm.loadRelation('strategy2_position')">
                                                     <md-option
+                                                            data-ng-if="!vm.relationItems['strategy2_position'].length"
+                                                            ng-value="item.transaction.strategy2_position_object.id">
+                                                        {{item.transaction.strategy2_position_object.name}}
+                                                    </md-option>
+                                                    <md-option
+                                                            data-ng-if="vm.relationItems['strategy2_position'].length"
                                                             data-ng-repeat="relationItem in vm.relationItems['strategy2_position']"
                                                             ng-value="relationItem.id">
                                                         {{relationItem.name}}
@@ -253,7 +292,7 @@
                                                         data-ng-model="item.transaction.strategy2_position_input">
                                                     <md-option
                                                             data-ng-repeat="inputItem in vm.findInputs('strategy-2')"
-                                                            ng-value="inputItem.id">
+                                                            ng-value="inputItem.name">
                                                         {{inputItem.name}}
                                                     </md-option>
                                                 </md-select>
@@ -267,12 +306,18 @@
                                             <span data-ng-if="!!item.transaction.strategy3_position_toggle">Reference</span>
                                             <span data-ng-if="!!!item.transaction.strategy3_position_toggle">Input</span>
                                         </md-switch>
-                                        <div data-ng-if="!item.transaction.strategy2_position_toggle">
+                                        <div data-ng-if="item.transaction.strategy3_position_toggle">
                                             <md-input-container>
                                                 <label for="">Strategy3 position</label>
                                                 <md-select data-ng-model="item.transaction.strategy3_position"
                                                            md-on-open="vm.loadRelation('strategy3_position')">
                                                     <md-option
+                                                            data-ng-if="!vm.relationItems['strategy3_position'].length"
+                                                            ng-value="item.transaction.strategy3_position_object.id">
+                                                        {{item.transaction.strategy3_position_object.name}}
+                                                    </md-option>
+                                                    <md-option
+                                                            data-ng-if="vm.relationItems['strategy3_position'].length"
                                                             data-ng-repeat="relationItem in vm.relationItems['strategy3_position']"
                                                             ng-value="relationItem.id">
                                                         {{relationItem.name}}
@@ -287,7 +332,7 @@
                                                         data-ng-model="item.transaction.strategy3_position_input">
                                                     <md-option
                                                             data-ng-repeat="inputItem in vm.findInputs('strategy-3')"
-                                                            ng-value="inputItem.id">
+                                                            ng-value="inputItem.name">
                                                         {{inputItem.name}}
                                                     </md-option>
                                                 </md-select>
@@ -324,12 +369,17 @@
                                             <span data-ng-if="!!item.transaction.portfolio_toggle">Reference</span>
                                             <span data-ng-if="!!!item.transaction.portfolio_toggle">Input</span>
                                         </md-switch>
-                                        <div data-ng-if="!item.transaction.portfolio_toggle">
+                                        <div data-ng-if="item.transaction.portfolio_toggle">
                                             <md-input-container>
                                                 <label for="">Portfolio</label>
                                                 <md-select data-ng-model="item.transaction.portfolio"
                                                            md-on-open="vm.loadRelation('portfolio')">
+                                                    <md-option data-ng-if="!vm.relationItems['portfolio'].length"
+                                                               ng-value="item.transaction.portfolio_object.id">
+                                                        {{item.transaction.portfolio_object.name}}
+                                                    </md-option>
                                                     <md-option
+                                                            data-ng-if="vm.relationItems['portfolio'].length"
                                                             data-ng-repeat="relationItem in vm.relationItems['portfolio']"
                                                             ng-value="relationItem.id">
                                                         {{relationItem.name}}
@@ -344,7 +394,7 @@
                                                         data-ng-model="item.transaction.portfolio_input">
                                                     <md-option
                                                             data-ng-repeat="inputItem in vm.findInputs('portfolio')"
-                                                            ng-value="inputItem.id">
+                                                            ng-value="inputItem.name">
                                                         {{inputItem.name}}
                                                     </md-option>
                                                 </md-select>
@@ -363,7 +413,12 @@
                                                 <label for="">Counterparty</label>
                                                 <md-select data-ng-model="item.transaction.counterparty"
                                                            md-on-open="vm.loadRelation('counterparty')">
+                                                    <md-option data-ng-if="!vm.relationItems['counterparty'].length"
+                                                               ng-value="item.transaction.counterparty_object.id">
+                                                        {{item.transaction.counterparty_object.name}}
+                                                    </md-option>
                                                     <md-option
+                                                            data-ng-if="vm.relationItems['counterparty'].length"
                                                             data-ng-repeat="relationItem in vm.relationItems['counterparty']"
                                                             ng-value="relationItem.id">
                                                         {{relationItem.name}}
@@ -378,7 +433,7 @@
                                                         data-ng-model="item.transaction.counterparty_input">
                                                     <md-option
                                                             data-ng-repeat="inputItem in vm.findInputs('counterparty')"
-                                                            ng-value="inputItem.id">
+                                                            ng-value="inputItem.name">
                                                         {{inputItem.name}}
                                                     </md-option>
                                                 </md-select>
@@ -397,7 +452,12 @@
                                                 <label for="">Responsible</label>
                                                 <md-select data-ng-model="item.transaction.responsible"
                                                            md-on-open="vm.loadRelation('responsible')">
+                                                    <md-option data-ng-if="!vm.relationItems['responsible'].length"
+                                                               ng-value="item.transaction.responsible_object.id">
+                                                        {{item.transaction.responsible_object.name}}
+                                                    </md-option>
                                                     <md-option
+                                                            data-ng-if="vm.relationItems['responsible'].length"
                                                             data-ng-repeat="relationItem in vm.relationItems['responsible']"
                                                             ng-value="relationItem.id">
                                                         {{relationItem.name}}
@@ -412,7 +472,7 @@
                                                         data-ng-model="item.transaction.responsible_input">
                                                     <md-option
                                                             data-ng-repeat="inputItem in vm.findInputs('responsible')"
-                                                            ng-value="inputItem.id">
+                                                            ng-value="inputItem.name">
                                                         {{inputItem.name}}
                                                     </md-option>
                                                 </md-select>
@@ -451,6 +511,12 @@
                                                 <md-select data-ng-model="item.transaction.settlement_currency"
                                                            md-on-open="vm.loadRelation('settlement_currency')">
                                                     <md-option
+                                                            data-ng-if="!vm.relationItems['settlement_currency'].length"
+                                                            ng-value="item.transaction.settlement_currency_object.id">
+                                                        {{item.transaction.settlement_currency_object.name}}
+                                                    </md-option>
+                                                    <md-option
+                                                            data-ng-if="vm.relationItems['settlement_currency'].length"
                                                             data-ng-repeat="relationItem in vm.relationItems['settlement_currency']"
                                                             ng-value="relationItem.id">
                                                         {{relationItem.name}}
@@ -465,7 +531,7 @@
                                                         data-ng-model="item.transaction.settlement_currency_input">
                                                     <md-option
                                                             data-ng-repeat="inputItem in vm.findInputs('currency')"
-                                                            ng-value="inputItem.id">
+                                                            ng-value="inputItem.name">
                                                         {{inputItem.name}}
                                                     </md-option>
                                                 </md-select>
@@ -503,7 +569,12 @@
                                                 <label for="">Account cash</label>
                                                 <md-select data-ng-model="item.transaction.account_cash"
                                                            md-on-open="vm.loadRelation('account_cash')">
+                                                    <md-option data-ng-if="!vm.relationItems['account_cash'].length"
+                                                               ng-value="item.transaction.account_cash_object.id">
+                                                        {{item.transaction.account_cash_object.name}}
+                                                    </md-option>
                                                     <md-option
+                                                            data-ng-if="vm.relationItems['account_cash'].length"
                                                             data-ng-repeat="relationItem in vm.relationItems['account_cash']"
                                                             ng-value="relationItem.id">
                                                         {{relationItem.name}}
@@ -518,7 +589,7 @@
                                                         data-ng-model="item.transaction.account_cash_input">
                                                     <md-option
                                                             data-ng-repeat="inputItem in vm.findInputs('account')"
-                                                            ng-value="inputItem.id">
+                                                            ng-value="inputItem.name">
                                                         {{inputItem.name}}
                                                     </md-option>
                                                 </md-select>
@@ -537,7 +608,12 @@
                                                 <label for="">Account interim</label>
                                                 <md-select data-ng-model="item.transaction.account_interim"
                                                            md-on-open="vm.loadRelation('account_interim')">
+                                                    <md-option data-ng-if="!vm.relationItems['account_interim'].length"
+                                                               ng-value="item.transaction.account_interim_object.id">
+                                                        {{item.transaction.account_interim_object.name}}
+                                                    </md-option>
                                                     <md-option
+                                                            data-ng-if="vm.relationItems['account_interim'].length"
                                                             data-ng-repeat="relationItem in vm.relationItems['account_interim']"
                                                             ng-value="relationItem.id">
                                                         {{relationItem.name}}
@@ -552,7 +628,7 @@
                                                         data-ng-model="item.transaction.account_interim_input">
                                                     <md-option
                                                             data-ng-repeat="inputItem in vm.findInputs('account')"
-                                                            ng-value="inputItem.id">
+                                                            ng-value="inputItem.name">
                                                         {{inputItem.name}}
                                                     </md-option>
                                                 </md-select>
@@ -573,7 +649,12 @@
                                                 <label for="">Strategy1 cash</label>
                                                 <md-select data-ng-model="item.transaction.strategy1_cash"
                                                            md-on-open="vm.loadRelation('strategy1_cash')">
+                                                    <md-option data-ng-if="!vm.relationItems['strategy1_cash'].length"
+                                                               ng-value="item.transaction.strategy1_cash_object.id">
+                                                        {{item.transaction.strategy1_cash_object.name}}
+                                                    </md-option>
                                                     <md-option
+                                                            data-ng-if="vm.relationItems['strategy1_cash'].length"
                                                             data-ng-repeat="relationItem in vm.relationItems['strategy1_cash']"
                                                             ng-value="relationItem.id">
                                                         {{relationItem.name}}
@@ -588,7 +669,7 @@
                                                         data-ng-model="item.transaction.strategy1_cash_input">
                                                     <md-option
                                                             data-ng-repeat="inputItem in vm.findInputs('strategy-1')"
-                                                            ng-value="inputItem.id">
+                                                            ng-value="inputItem.name">
                                                         {{inputItem.name}}
                                                     </md-option>
                                                 </md-select>
@@ -607,7 +688,12 @@
                                                 <label for="">Strategy2 cash</label>
                                                 <md-select data-ng-model="item.transaction.strategy2_cash"
                                                            md-on-open="vm.loadRelation('strategy2_cash')">
+                                                    <md-option data-ng-if="!vm.relationItems['strategy2_cash'].length"
+                                                               ng-value="item.transaction.strategy2_cash_object.id">
+                                                        {{item.transaction.strategy2_cash_object.name}}
+                                                    </md-option>
                                                     <md-option
+                                                            data-ng-if="vm.relationItems['strategy2_cash'].length"
                                                             data-ng-repeat="relationItem in vm.relationItems['strategy2_cash']"
                                                             ng-value="relationItem.id">
                                                         {{relationItem.name}}
@@ -622,7 +708,7 @@
                                                         data-ng-model="item.transaction.strategy2_cash_input">
                                                     <md-option
                                                             data-ng-repeat="inputItem in vm.findInputs('strategy-2')"
-                                                            ng-value="inputItem.id">
+                                                            ng-value="inputItem.name">
                                                         {{inputItem.name}}
                                                     </md-option>
                                                 </md-select>
@@ -636,12 +722,17 @@
                                             <span data-ng-if="!!item.transaction.strategy3_cash_toggle">Reference</span>
                                             <span data-ng-if="!!!item.transaction.strategy3_cash_toggle">Input</span>
                                         </md-switch>
-                                        <div data-ng-if="!item.transaction.strategy3_cash_toggle">
+                                        <div data-ng-if="item.transaction.strategy3_cash_toggle">
                                             <md-input-container>
                                                 <label for="">Strategy3 cash</label>
                                                 <md-select data-ng-model="item.transaction.strategy3_cash"
                                                            md-on-open="vm.loadRelation('strategy3_cash')">
+                                                    <md-option data-ng-if="!vm.relationItems['strategy3_cash'].length"
+                                                               ng-value="item.transaction.strategy3_cash_object.id">
+                                                        {{item.transaction.strategy3_cash_object.name}}
+                                                    </md-option>
                                                     <md-option
+                                                            data-ng-if="vm.relationItems['strategy3_cash'].length"
                                                             data-ng-repeat="relationItem in vm.relationItems['strategy3_cash']"
                                                             ng-value="relationItem.id">
                                                         {{relationItem.name}}
@@ -656,7 +747,7 @@
                                                         data-ng-model="item.transaction.strategy3_cash_input">
                                                     <md-option
                                                             data-ng-repeat="inputItem in vm.findInputs('strategy-3')"
-                                                            ng-value="inputItem.id">
+                                                            ng-value="inputItem.name">
                                                         {{inputItem.name}}
                                                     </md-option>
                                                 </md-select>
@@ -704,7 +795,12 @@
                                                 <label for="">Instrument type</label>
                                                 <md-select data-ng-model="item.instrument.instrument_type"
                                                            md-on-open="vm.loadRelation('instrument_type')">
+                                                    <md-option data-ng-if="!vm.relationItems['instrument_type'].length"
+                                                               ng-value="item.instrument.instrument_type_object.id">
+                                                        {{item.instrument.instrument_type_object.name}}
+                                                    </md-option>
                                                     <md-option
+                                                            data-ng-if="vm.relationItems['instrument_type'].length"
                                                             data-ng-repeat="relationItem in vm.relationItems['instrument_type']"
                                                             ng-value="relationItem.id">
                                                         {{relationItem.name}}
@@ -719,7 +815,7 @@
                                                         data-ng-model="item.instrument.instrument_type_input">
                                                     <md-option
                                                             data-ng-repeat="inputItem in vm.findInputs('instrument-type')"
-                                                            ng-value="inputItem.id">
+                                                            ng-value="inputItem.name">
                                                         {{inputItem.name}}
                                                     </md-option>
                                                 </md-select>
@@ -797,6 +893,12 @@
                                                 <md-select data-ng-model="item.instrument.daily_pricing_model"
                                                            md-on-open="vm.loadRelation('daily_pricing_model')">
                                                     <md-option
+                                                            data-ng-if="!vm.relationItems['daily_pricing_model'].length"
+                                                            ng-value="item.instrument.daily_pricing_model_object.id">
+                                                        {{item.instrument.daily_pricing_model_object.name}}
+                                                    </md-option>
+                                                    <md-option
+                                                            data-ng-if="vm.relationItems['daily_pricing_model'].length"
                                                             data-ng-repeat="relationItem in vm.relationItems['daily_pricing_model']"
                                                             ng-value="relationItem.id">
                                                         {{relationItem.name}}
@@ -811,7 +913,7 @@
                                                         data-ng-model="item.instrument.daily_pricing_model_input">
                                                     <md-option
                                                             data-ng-repeat="inputItem in vm.findInputs('daily-pricing-model')"
-                                                            ng-value="inputItem.id">
+                                                            ng-value="inputItem.name">
                                                         {{inputItem.name}}
                                                     </md-option>
                                                 </md-select>
@@ -831,6 +933,12 @@
                                                 <md-select data-ng-model="item.instrument.price_download_scheme"
                                                            md-on-open="vm.loadRelation('price_download_scheme')">
                                                     <md-option
+                                                            data-ng-if="!vm.relationItems['price_download_scheme'].length"
+                                                            ng-value="item.instrument.price_download_scheme_object.id">
+                                                        {{item.instrument.price_download_scheme_object.scheme_name}}
+                                                    </md-option>
+                                                    <md-option
+                                                            data-ng-if="vm.relationItems['price_download_scheme'].length"
                                                             data-ng-repeat="relationItem in vm.relationItems['price_download_scheme']"
                                                             ng-value="relationItem.id">
                                                         {{relationItem.scheme_name}}
@@ -845,7 +953,7 @@
                                                         data-ng-model="item.instrument.price_download_scheme_input">
                                                     <md-option
                                                             data-ng-repeat="inputItem in vm.findInputs('price-download-scheme')"
-                                                            ng-value="inputItem.id">
+                                                            ng-value="inputItem.name">
                                                         {{inputItem.name}}
                                                     </md-option>
                                                 </md-select>
@@ -873,7 +981,12 @@
                                                 <label for="">Pricing currency</label>
                                                 <md-select data-ng-model="item.instrument.pricing_currency"
                                                            md-on-open="vm.loadRelation('pricing_currency')">
+                                                    <md-option data-ng-if="!vm.relationItems['pricing_currency'].length"
+                                                               ng-value="item.instrument.pricing_currency_object.id">
+                                                        {{item.instrument.pricing_currency_object.name}}
+                                                    </md-option>
                                                     <md-option
+                                                            data-ng-if="vm.relationItems['pricing_currency'].length"
                                                             data-ng-repeat="relationItem in vm.relationItems['pricing_currency']"
                                                             ng-value="relationItem.id">
                                                         {{relationItem.name}}
@@ -888,7 +1001,7 @@
                                                         data-ng-model="item.instrument.pricing_currency_input">
                                                     <md-option
                                                             data-ng-repeat="inputItem in vm.findInputs('currency')"
-                                                            ng-value="inputItem.id">
+                                                            ng-value="inputItem.name">
                                                         {{inputItem.name}}
                                                     </md-option>
                                                 </md-select>
@@ -921,7 +1034,12 @@
                                                 <label for="">Accrued currency</label>
                                                 <md-select data-ng-model="item.instrument.accrued_currency"
                                                            md-on-open="vm.loadRelation('accrued_currency')">
+                                                    <md-option data-ng-if="!vm.relationItems['accrued_currency'].length"
+                                                               ng-value="item.instrument.accrued_currency_object.id">
+                                                        {{item.instrument.accrued_currency_object.name}}
+                                                    </md-option>
                                                     <md-option
+                                                            data-ng-if="vm.relationItems['accrued_currency'].length"
                                                             data-ng-repeat="relationItem in vm.relationItems['accrued_currency']"
                                                             ng-value="relationItem.id">
                                                         {{relationItem.name}}
@@ -936,7 +1054,7 @@
                                                         data-ng-model="item.instrument.accrued_currency_input">
                                                     <md-option
                                                             data-ng-repeat="inputItem in vm.findInputs('currency')"
-                                                            ng-value="inputItem.id">
+                                                            ng-value="inputItem.name">
                                                         {{inputItem.name}}
                                                     </md-option>
                                                 </md-select>
@@ -968,7 +1086,12 @@
                                             <label for="">Payment size details</label>
                                             <md-select data-ng-model="item.instrument.payment_size_detail"
                                                        md-on-open="vm.loadRelation('payment_size_detail')">
+                                                <md-option data-ng-if="!vm.relationItems['payment_size_detail'].length"
+                                                           ng-value="item.instrument.payment_size_detail_object.id">
+                                                    {{item.instrument.payment_size_detail_object.name}}
+                                                </md-option>
                                                 <md-option
+                                                        data-ng-if="vm.relationItems['payment_size_detail'].length"
                                                         data-ng-repeat="relationItem in vm.relationItems['payment_size_detail']"
                                                         ng-value="relationItem.id">
                                                     {{relationItem.name}}
@@ -983,7 +1106,7 @@
                                                     data-ng-model="item.instrument.payment_size_detail_input">
                                                 <md-option
                                                         data-ng-repeat="inputItem in vm.findInputs('payment-size-detail')"
-                                                        ng-value="inputItem.id">
+                                                        ng-value="inputItem.name">
                                                     {{inputItem.name}}
                                                 </md-option>
                                             </md-select>

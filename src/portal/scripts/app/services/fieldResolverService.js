@@ -174,22 +174,22 @@
                     });
                     break;
                 case 'type':
-                    accountRepository.getTypeList().then(function (data) {
+                    accountTypeRepository.getTypeList().then(function (data) {
                         resolve({type: 'id', key: 'type', data: data.results});
                     });
                     break;
                 case 'account_cash':
-                    accountRepository.getTypeList().then(function (data) {
+                    accountRepository.getList().then(function (data) {
                         resolve({type: 'id', key: 'account_cash', data: data.results});
                     });
                     break;
                 case 'account_position':
-                    accountRepository.getTypeList().then(function (data) {
+                    accountRepository.getList().then(function (data) {
                         resolve({type: 'id', key: 'account_position', data: data.results});
                     });
                     break;
                 case 'account_interim':
-                    accountRepository.getTypeList().then(function (data) {
+                    accountRepository.getList().then(function (data) {
                         resolve({type: 'id', key: 'account_interim', data: data.results});
                     });
                     break;

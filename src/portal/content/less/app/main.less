@@ -975,13 +975,16 @@ md-input-container.error {
   }
 }
 
-.transaction-type-action-pane {
-  &::after {
-    display: none;
-    opacity: 0;
-  }
-  &::before {
-    display: none;
-    opacity: 0;
+.vAccordion--default {
+  v-pane-header.transaction-type-action-pane {
+    padding-top: 20px;
+    &::after {
+      display: none;
+      opacity: 0;
+    }
+    &::before {
+      display: none;
+      opacity: 0;
+    }
   }
 }
