@@ -313,7 +313,7 @@
             return attributeTypeService.getList(vm.entityType).then(function (data) {
                 vm.attrs = data.results;
                 vm.baseAttrs = metaService.getBaseAttrs();
-                vm.entityAttrs = metaService.getEntityAttrs(vm.entityType);
+                vm.entityAttrs = metaService.getEntityAttrs(vm.entityType) || [];
                 $scope.$apply();
             })
         };
@@ -446,6 +446,13 @@
                 vm.getEntityData();
             });
         });
+
+        vm.checkAddBtn = function () {
+            if(["transaction"].indexOf(vm.entityType) !== -1){
+                return false
+            }
+            return true
+        };
 
         $scope.$on("$destroy", function (event) {
 

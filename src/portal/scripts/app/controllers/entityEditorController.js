@@ -21,7 +21,7 @@
 
     var metaPermissionsService = require('../services/metaPermissionsService');
 
-    module.exports = function ($scope) {
+    module.exports = function ($scope, $state) {
 
         logService.controller('EntityEditorController', 'initialized');
 
@@ -34,20 +34,53 @@
         vm.entityId = $scope.$parent.vm.entityId;
         vm.entity = {$_isValid: true};
 
+        vm.editLayoutByEntityInsance = false;
+        vm.entitySpecialRules = false;
+        vm.specialRulesReady = true;
+        if (['complex-transaction'].indexOf(vm.entityType) !== -1) {
+            vm.editLayoutByEntityInsance = true;
+            vm.entitySpecialRules = true
+        }
+
         logService.property('entityType', vm.entityType);
         logService.property('entityId', vm.entityId);
 
-
-        if (vm.entityType !== 'transaction-type') {
-            uiService.getEditLayout(vm.entityType).then(function (data) {
-                if (data.results.length) {
-                    vm.tabs = data.results[0].data;
+        vm.getEditListByInstanceId = function () {
+            uiService.getEditLayoutByInstanceId(vm.entityType, vm.editLayoutEntityInstanceId).then(function (data) {
+                if (data) {
+                    vm.tabs = data.data;
                 } else {
-                    vm.tabs = uiService.getDefaultEditLayout()[0].data;
+                    vm.tabs = uiService.getDefaultEditLayout(vm.entityType)[0].data;
                 }
-                logService.collection('vm.tabs', vm.tabs);
+                logService.collection('vm.tabs11111111111111111', vm.tabs);
                 $scope.$apply();
             });
+
+            $scope.$parent.vm.editLayout = function () {
+                $state.go('app.data-constructor', {
+                    entityType: vm.entityType,
+                    instanceId: vm.editLayoutEntityInstanceId
+                });
+            };
+
+        };
+
+        if (vm.entityType !== 'transaction-type') {
+            if (vm.editLayoutByEntityInsance == true) {
+                if (vm.editLayoutEntityInstanceId) {
+                    vm.getEditListByInstanceId();
+                }
+            } else {
+                uiService.getEditLayout(vm.entityType).then(function (data) {
+                    if (data.results.length) {
+                        vm.tabs = data.results[0].data;
+                    } else {
+                        vm.tabs = uiService.getDefaultEditLayout(vm.entityType)[0].data;
+                    }
+                    logService.collection('vm.tabs', vm.tabs);
+                    $scope.$apply();
+                });
+            }
         }
 
         vm.attrs = [];
@@ -108,6 +141,10 @@
             vm.readyStatus.me = true;
             $scope.$apply();
         });
+
+        vm.resolveSpecialRules = function () {
+            return 'views/special-rules/' + vm.entityType + '-special-rules-view.html';
+        };
 
         vm.getGroupList = function () {
             return usersGroupService.getList().then(function (data) {
@@ -235,7 +272,7 @@
         vm.bindField = function (tab, field) {
             var i, l, e;
             //console.log('FIELD', field);
-            if (field.type === 'field') {
+            if (field && field.type === 'field') {
                 if (field.hasOwnProperty('id') && field.id !== null) {
                     for (i = 0; i < vm.attrs.length; i = i + 1) {
                         if (field.id === vm.attrs[i].id) {

@@ -28,26 +28,47 @@
         console.log($stateParams);
 
         vm.entityType = $stateParams.entityType;
+        vm.isntanceId = $stateParams.instanceId;
 
-        uiService.getEditLayout(vm.entityType).then(function (data) {
-            //console.log(data['json_data']);
-            if (data.results.length) {
-                vm.ui = data.results[0];
-            } else {
-                vm.uiIsDefault = true;
-                vm.ui = uiService.getDefaultEditLayout()[0];
-            }
-            vm.tabs = vm.ui.data;
-            vm.tabs.forEach(function (tab) {
-                tab.layout.fields.forEach(function (field) {
-                    field.editMode = false;
-                })
+        if (vm.isntanceId) {
+            uiService.getEditLayoutByInstanceId(vm.entityType, vm.isntanceId).then(function (data) {
+                //console.log(data['json_data']);
+                if (data) {
+                    vm.ui = data
+                } else {
+                    vm.uiIsDefault = true;
+                    vm.ui = uiService.getDefaultEditLayout()[0];
+                }
+                vm.tabs = vm.ui.data || [];
+                vm.tabs.forEach(function (tab) {
+                    tab.layout.fields.forEach(function (field) {
+                        field.editMode = false;
+                    })
+                });
+                addRowForTab();
+                //logService.collection('vm tabs', vm.tabs);
+                $scope.$apply();
             });
-            addRowForTab();
-            //logService.collection('vm tabs', vm.tabs);
-            $scope.$apply();
-        });
-
+        } else {
+            uiService.getEditLayout(vm.entityType).then(function (data) {
+                //console.log(data['json_data']);
+                if (data.results.length) {
+                    vm.ui = data.results[0];
+                } else {
+                    vm.uiIsDefault = true;
+                    vm.ui = uiService.getDefaultEditLayout()[0];
+                }
+                vm.tabs = vm.ui.data;
+                vm.tabs.forEach(function (tab) {
+                    tab.layout.fields.forEach(function (field) {
+                        field.editMode = false;
+                    })
+                });
+                addRowForTab();
+                //logService.collection('vm tabs', vm.tabs);
+                $scope.$apply();
+            });
+        }
         vm.attrs = [];
         vm.baseAttrs = [];
         vm.entityAttrs = [];
@@ -226,13 +247,23 @@
                     $scope.$apply();
                 });
             } else {
-                uiService.updateEditLayout(vm.ui.id, vm.ui).then(function () {
-                    console.log('layout saved');
+                if (vm.isntanceId) {
+                    uiService.updateEditLayoutByInstanceId(vm.entityType, vm.isntanceId, vm.ui).then(function (data) {
+                        console.log('layout saved');
 
-                    var route = routeResolver.findExistingState('app.data.', vm.entityType);
-                    $state.go(route.state, route.options);
-                    $scope.$apply();
-                });
+                        var route = routeResolver.findExistingState('app.data.', vm.entityType);
+                        $state.go(route.state, route.options);
+                        $scope.$apply();
+                    });
+                } else {
+                    uiService.updateEditLayout(vm.ui.id, vm.ui).then(function () {
+                        console.log('layout saved');
+
+                        var route = routeResolver.findExistingState('app.data.', vm.entityType);
+                        $state.go(route.state, route.options);
+                        $scope.$apply();
+                    });
+                }
             }
         };
 
@@ -267,6 +298,9 @@
         };
 
         vm.addTab = function () {
+            if (!vm.tabs.length) {
+                vm.tabs = [];
+            }
             vm.tabs.push({
                 name: '',
                 editState: true,

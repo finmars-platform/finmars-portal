@@ -407,12 +407,14 @@
                         if (column['value_type'] === 30) {
                             if (scope.readyStatus.cellsReady) {
                                 var classifierNode;
-                                entityFieldsArray['classifier_' + column.id].classifiers.forEach(findNodeInChildren);
-                                if (classifierNode) {
-                                    if (classifierNode['display_name']) {
-                                        return classifierNode['display_name'];
+                                if (entityFieldsArray && entityFieldsArray['classifier_' + column.id]) {
+                                    entityFieldsArray['classifier_' + column.id].classifiers.forEach(findNodeInChildren);
+                                    if (classifierNode) {
+                                        if (classifierNode['display_name']) {
+                                            return classifierNode['display_name'];
+                                        }
+                                        return classifierNode['name'];
                                     }
-                                    return classifierNode['name'];
                                 }
                                 return '';
                             } else {

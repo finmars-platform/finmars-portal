@@ -130,8 +130,14 @@
 				"icon": ""
 			},
 			{
-				"state": "app.data.transaction",
+				"state": "app.data.complex-transaction",
 				"title": "Transactions",
+				"type": "link",
+				"icon": ""
+			},
+			{
+				"state": "app.data.transaction",
+				"title": "Base Transactions",
 				"type": "link",
 				"icon": ""
 			},

@@ -35,8 +35,24 @@
         return uiRepository.getDefaultListLayout();
     };
 
-    var getDefaultEditLayout = function () {
-        return uiRepository.getDefaultEditLayout();
+    var getDefaultEditLayout = function (entityType) {
+        return uiRepository.getDefaultEditLayout(entityType);
+    };
+
+    var getEditLayoutByInstanceId = function (entityType, id) {
+        return uiRepository.getEditLayoutByInstanceId(entityType, id).then(function (data) {
+            if (entityType == 'complex-transaction') {
+                return {data: data.book_transaction_layout}
+            }
+        });
+    };
+
+    var updateEditLayoutByInstanceId = function (entityType, id, editLayout) {
+
+        if (entityType == 'complex-transaction') {
+            return uiRepository.updateEditLayoutByInstanceId(entityType, id, {book_transaction_layout: editLayout})
+        }
+
     };
 
     module.exports = {
@@ -47,7 +63,9 @@
         updateEditLayout: updateEditLayout,
         getListLayout: getListLayout,
         createListLayout: createListLayout,
-        updateListLayout: updateListLayout
+        updateListLayout: updateListLayout,
+        getEditLayoutByInstanceId: getEditLayoutByInstanceId,
+        updateEditLayoutByInstanceId: updateEditLayoutByInstanceId
     }
 
 }());

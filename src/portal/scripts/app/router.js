@@ -91,6 +91,11 @@
                 templateUrl: 'views/data/data-pricing-policy-view.html',
                 controller: 'DataPricingPolicyController as vm'
             })
+            .state('app.data.complex-transaction', {
+                url: '/complex-transactions',
+                templateUrl: 'views/data/data-complex-transaction-view.html',
+                controller: 'DataComplexTransactionController as vm'
+            })
             .state('app.data.transaction', {
                 url: '/transactions',
                 templateUrl: 'views/data/data-transaction-view.html',
@@ -216,6 +221,9 @@
 
         $stateProvider.state('app.data-constructor', {
             url: '/layout/:entityType',
+            params: {
+                instanceId: null
+            },
             templateUrl: 'views/entity-data-constructor-view.html',
             controller: 'EntityDataConstructorController as vm'
         });
