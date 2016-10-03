@@ -900,11 +900,11 @@
                     }
                 ];
                 break;
-            case 'transaction':
+            case 'complex-transaction':
                 return [
                     {
                         label: 'Actions',
-                        templateUrl: 'views/tabs/transaction/book-transaction-actions-tab-view.html'
+                        templateUrl: 'views/tabs/complex-transaction/book-transaction-actions-tab-view.html'
                     }
                 ];
                 break;

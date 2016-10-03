@@ -6,7 +6,7 @@
     "use strict";
 
     var getEntitiesWithoutBaseAttrsList = function () {
-        return ['price-history', 'currency-history'];
+        return ['price-history', 'currency-history', 'complex-transaction', 'transaction'];
     };
 
     var getEntitiesWithoutDynamicAttrsList = function () {
@@ -14,6 +14,7 @@
             'instrument-type', 'currency', 'account-type', 'pricing-policy',
             'strategy-1', 'strategy-2', 'strategy-3', 'transaction-type',
             'strategy-1-group', 'strategy-2-group', 'strategy-3-group',
+            'complex-transaction',
             'counterparty-group', 'responsible-group', 'tag', 'transaction-type-group',
             'strategy-1-subgroup', 'strategy-2-subgroup', 'strategy-3-subgroup']
     };

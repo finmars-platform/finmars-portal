@@ -1,0 +1,36 @@
+<div class="special-rules-view complex-transaction-sr"
+     data-ng-controller="ComplexTransactionSpecialRulesController as vm">
+    <div layout="row">
+        <div layout="row" flex="50">
+            <md-input-container>
+                <label for="">Portfolio</label>
+                <md-select data-ng-model="vm.portfolioId">
+                    <md-option data-ng-repeat="item in vm.portfolios" ng-value="item.id">
+                        {{item.name}}
+                    </md-option>
+                </md-select>
+            </md-input-container>
+        </div>
+        <div layout="row" flex="50">
+            <md-input-container>
+                <label for="">Instrument</label>
+                <md-select data-ng-model="vm.instrumentId">
+                    <md-option data-ng-repeat="item in vm.instruments" ng-value="item.id">
+                        {{item.user_code}}
+                    </md-option>
+                </md-select>
+            </md-input-container>
+        </div>
+    </div>
+    <div layout="row">
+        <md-input-container>
+            <label for="">Transaction type</label>
+            <!--<md-select data-ng-model="vm.transactionType" md-on-open="vm.loadTransactionTypes()" ng-disabled="!vm.portfolioId && !vm.instrumentId">-->
+            <md-select data-ng-model="vm.transactionTypeId" md-on-open="vm.loadTransactionTypes()" data-ng-change="vm.transactionTypeHandler()">
+                <md-option data-ng-repeat="item in vm.transactionTypes" ng-value="item.id">
+                    {{item.name}}
+                </md-option>
+            </md-select>
+        </md-input-container>
+    </div>
+</div>

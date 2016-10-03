@@ -1,0 +1,34 @@
+<div data-ng-controller="BookTransactionActionsTabController as vm">
+
+    <div>
+        <table>
+            <tbody>
+            <tr>
+                <td>Action order</td>
+                <td data-ng-repeat="item vm.entityActions.action_order">{{item}}</td>
+            </tr>
+            <tr>
+                <td>Action type</td>
+                <td data-ng-repeat="item vm.entityActions.action_type">{{item}}</td>
+            </tr>
+            <tr>
+                <td>Description</td>
+                <td data-ng-repeat="item vm.entityActions.description">{{item}}</td>
+            </tr>
+            <tr>
+                <td>Transaction Class</td>
+                <td data-ng-repeat="item vm.entityActions.transaction_class">{{item}}</td>
+            </tr>
+            <tr>
+                <td>Portfolio</td>
+                <td data-ng-repeat="item vm.entityActions.portfolio">{{item}}</td>
+            </tr>
+            <tr>
+                <td>Instrument</td>
+                <td data-ng-repeat="item vm.entityActions.instrument">{{item}}</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+</div>

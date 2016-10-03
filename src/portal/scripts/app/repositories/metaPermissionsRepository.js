@@ -7,6 +7,7 @@
 
     var getEntitiesWithDisabledPermissions = function () {
         return ["transaction", "price-history", "currency-history", 'currency',
+            'complex-transaction',
             'counterparty-group', 'responsible-group'];
     };
 

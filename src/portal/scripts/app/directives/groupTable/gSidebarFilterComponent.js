@@ -48,7 +48,8 @@
                 };
 
                 scope.$watchCollection('filters', function () {
-                    scope.externalCallback();
+                    console.log('filters???');
+                    //scope.externalCallback();
 
                     var promises = [];
 

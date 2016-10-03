@@ -68,9 +68,11 @@ app.controller('EntityViewerAddDialogController', ['$scope', '$mdDialog', 'paren
 app.controller('EntityViewerEditDialogController', ['$scope', '$mdDialog', 'parentScope', 'entityId', '$state', require('./app/controllers/entityViewer/entityViewerEditDialogController')]);
 app.controller('EntityViewerDeleteDialogController', ['$scope', '$mdDialog', 'entity', 'entityType', require('./app/controllers/entityViewer/entityViewerDeleteDialogController')]);
 
-app.controller('EntityEditorController', ['$scope', require('./app/controllers/entityEditorController')]);
+app.controller('EntityEditorController', ['$scope', '$state', require('./app/controllers/entityEditorController')]);
 
-app.controller('BookTransactionActionsTabController', ['$scope', require('./app/controllers/tabs/transaction/bookTransactionActionsTabController')]);
+app.controller('ComplexTransactionSpecialRulesController', ['$scope', require('./app/controllers/special-rules/complexTransactionSpecialRulesController')]);
+
+app.controller('BookTransactionActionsTabController', ['$scope', require('./app/controllers/tabs/complex-transaction/bookTransactionActionsTabController')]);
 
 app.controller('TransactionTypeActionsTabController', ['$scope', require('./app/controllers/tabs/transaction-type/transactionTypeActionsTabController')]);
 app.controller('TransactionTypeGeneralTabController', ['$scope', require('./app/controllers/tabs/transaction-type/transactionTypeGeneralTabController')]);
@@ -94,6 +96,7 @@ app.controller('DataInstrumentController', ['$scope', require('./app/controllers
 app.controller('DataInstrumentTypeController', ['$scope', require('./app/controllers/data/dataInstrumentTypeController')]);
 app.controller('DataPricingPolicyController', ['$scope', require('./app/controllers/data/dataPricingPolicyController')]);
 app.controller('DataTransactionController', ['$scope', require('./app/controllers/data/dataTransactionController')]);
+app.controller('DataComplexTransactionController', ['$scope', require('./app/controllers/data/dataComplexTransactionController')]);
 app.controller('DataTransactionTypeController', ['$scope', require('./app/controllers/data/dataTransactionTypeController')]);
 app.controller('DataTransactionTypeGroupController', ['$scope', require('./app/controllers/data/dataTransactionTypeGroupController')]);
 app.controller('DataPriceHistoryController', ['$scope', require('./app/controllers/data/dataPriceHistoryController')]);
