@@ -91,7 +91,11 @@
             })
         } else {
 
-            entityResolverService.getList(vm.mapEntityType).then(function (data) {
+            console.log('vm.mapEntityType', vm.mapEntityType);
+            vm.entityMapDashed = vm.mapEntityType.split('_').join('-');
+            console.log('vm.entityMapDashed', vm.entityMapDashed);
+
+            entityResolverService.getList(vm.entityMapDashed).then(function (data) {
                 if (data.hasOwnProperty('results')) {
                     vm.entityItems = data.results;
                 } else {

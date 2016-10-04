@@ -11,6 +11,7 @@
     var uiService = require('../services/uiService');
 
     var portfolioService = require('../services/portfolioService');
+    var entityResolverService = require('../services/entityResolverService');
     var metaService = require('../services/metaService');
 
     var gridHelperService = require('../services/gridHelperService');
@@ -25,16 +26,26 @@
         vm.readyStatus = {constructor: false};
         vm.uiIsDefault = false;
 
+        vm.attrs = [];
+        vm.baseAttrs = [];
+        vm.entityAttrs = [];
+        vm.userInputs = [];
+
         console.log($stateParams);
 
         vm.entityType = $stateParams.entityType;
         vm.isntanceId = $stateParams.instanceId;
 
+        // weirdo stuff
+        // we took edit layout by instance id instead of entity content_type
+        // but it can be took from different entity
+        // e.g. transaction -> transaction-type.book_transaction_layout
+
         if (vm.isntanceId) {
             uiService.getEditLayoutByInstanceId(vm.entityType, vm.isntanceId).then(function (data) {
                 //console.log(data['json_data']);
                 if (data) {
-                    vm.ui = data
+                    vm.ui = data;
                 } else {
                     vm.uiIsDefault = true;
                     vm.ui = uiService.getDefaultEditLayout()[0];
@@ -69,9 +80,28 @@
                 $scope.$apply();
             });
         }
-        vm.attrs = [];
-        vm.baseAttrs = [];
-        vm.entityAttrs = [];
+
+        if (vm.isntanceId) {
+            if (vm.entityType === 'complex-transaction') {
+                entityResolverService.getByKey('transaction-type', vm.isntanceId).then(function (data) {
+                    var inputs = data.inputs;
+                    inputs.forEach(function (input) {
+                        var input_value_type = input.value_type;
+                        if (input.value_type == 100) {
+                            input_value_type = 'field'
+                        }
+
+                        vm.userInputs.push({
+                            key: input.name.split(' ').join('_').toLowerCase() + '_' + input.content_type,
+                            name: input.name,
+                            content_type: input.content_type,
+                            value_type: input_value_type
+                        })
+                    });
+                    $scope.$apply();
+                });
+            }
+        }
 
         vm.cancel = function () {
             $state.go('app.data.' + vm.entityType);
@@ -84,7 +114,6 @@
             logService.collection('vm attrs', vm.attrs);
 
             if (metaService.getEntitiesWithoutBaseAttrsList().indexOf(vm.entityType) === -1) {
-                console.log('1111111111111111111111');
                 vm.baseAttrs = metaService.getBaseAttrs();
             }
             logService.collection('vm.baseAttrs', vm.baseAttrs);
@@ -239,13 +268,23 @@
             }
             vm.ui.data = vm.tabs;
             if (vm.uiIsDefault) {
-                uiService.createEditLayout(vm.entityType, vm.ui).then(function () {
-                    console.log('layout saved');
+                if (vm.isntanceId) {
+                    uiService.updateEditLayoutByInstanceId(vm.entityType, vm.isntanceId, vm.ui).then(function (data) {
+                        console.log('layout saved');
 
-                    var route = routeResolver.findExistingState('app.data.', vm.entityType);
-                    $state.go(route.state, route.options);
-                    $scope.$apply();
-                });
+                        var route = routeResolver.findExistingState('app.data.', vm.entityType);
+                        $state.go(route.state, route.options);
+                        $scope.$apply();
+                    });
+                } else {
+                    uiService.createEditLayout(vm.entityType, vm.ui).then(function () {
+                        console.log('layout saved');
+
+                        var route = routeResolver.findExistingState('app.data.', vm.entityType);
+                        $state.go(route.state, route.options);
+                        $scope.$apply();
+                    });
+                }
             } else {
                 if (vm.isntanceId) {
                     uiService.updateEditLayoutByInstanceId(vm.entityType, vm.isntanceId, vm.ui).then(function (data) {
@@ -337,7 +376,7 @@
                 tab.name = tab.captionName;
                 tab.editState = !tab.editState;
             }
-        }
+        };
 
         vm.MABtnVisibility = function (entityType) {
             return metaService.checkRestrictedEntityTypesForAM(entityType);

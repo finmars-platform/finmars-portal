@@ -47,6 +47,7 @@
 
         vm.getEditListByInstanceId = function () {
             uiService.getEditLayoutByInstanceId(vm.entityType, vm.editLayoutEntityInstanceId).then(function (data) {
+                console.log('-------------------------------data', data);
                 if (data) {
                     vm.tabs = data.data;
                 } else {
@@ -89,7 +90,7 @@
         vm.layoutAttrs = layoutService.getLayoutAttrs();
 
         vm.baseAttrs = metaService.getBaseAttrs();
-        vm.entityAttrs = metaService.getEntityAttrs(vm.entityType);
+        vm.entityAttrs = metaService.getEntityAttrs(vm.entityType) || [];
 
         attributeTypeService.getList(vm.entityType).then(function (data) {
             vm.attrs = data.results;

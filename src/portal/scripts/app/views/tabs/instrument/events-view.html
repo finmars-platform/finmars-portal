@@ -33,9 +33,13 @@
                         data-ng-show="vm.sort === 'notify_in_n_days'"
                         data-ng-class="{reverse: vm.direction}"></span>
                 </th>
-                <th data-ng-click="vm.setSort('action_text')">Action text<span class="sortorder"
-                                                                               data-ng-show="vm.sort === 'action_text'"
+                <th data-ng-click="vm.setSort('periodicity')">Periodicity<span class="sortorder"
+                                                                               data-ng-show="vm.sort === 'periodicity'"
                                                                                data-ng-class="{reverse: vm.direction}"></span>
+                </th>
+                <th data-ng-click="vm.setSort('periodicity_n')">Periodicity N<span class="sortorder"
+                                                                                   data-ng-show="vm.sort === 'periodicity_n'"
+                                                                                   data-ng-class="{reverse: vm.direction}"></span>
                 </th>
                 <th>
                     <md-button class="md-icon-button">
@@ -90,7 +94,13 @@
                 <th>
                     <md-input-container>
                         <ng-md-icon icon="search"></ng-md-icon>
-                        <input type="text" data-ng-model="vm.query.action_text">
+                        <input type="text" data-ng-model="vm.query.periodicity_n">
+                    </md-input-container>
+                </th>
+                <th>
+                    <md-input-container>
+                        <ng-md-icon icon="search"></ng-md-icon>
+                        <input type="text" data-ng-model="vm.query.notes">
                     </md-input-container>
                 </th>
                 <th></th>
@@ -106,7 +116,8 @@
                 <td data-ng-if="!item.editStatus" data-ng-bind="vm.bindEventClass(item)"></td>
                 <td data-ng-if="!item.editStatus" data-ng-bind="[item.actions.length]"></td>
                 <td data-ng-if="!item.editStatus" data-ng-bind="item.notify_in_n_days"></td>
-                <td data-ng-if="!item.editStatus" data-ng-bind="item.action_text"></td>
+                <td data-ng-if="!item.editStatus" data-ng-bind="vm.bindPeriodicity(item)"></td>
+                <td data-ng-if="!item.editStatus" data-ng-bind="item.periodicity_n"></td>
                 </td>
                 <td data-ng-if="!item.editStatus" class="table-misc-cell">
                     <md-menu>
@@ -199,8 +210,17 @@
                 </td>
                 <td data-ng-if="item.editStatus" class="edit-state-td">
                     <md-input-container>
-                        <label for="">Action text</label>
-                        <input type="text" data-ng-model="item.action_text">
+                        <label for="">Periodicity</label>
+                        <md-select data-ng-model="item.periodicity">
+                            <md-option data-ng-repeat="model in vm.periodicityItems" ng-value="model.id">{{model.name}}
+                            </md-option>
+                        </md-select>
+                    </md-input-container>
+                </td>
+                <td data-ng-if="item.editStatus" class="edit-state-td">
+                    <md-input-container>
+                        <label for="">Periodicity N</label>
+                        <input type="text" data-ng-model="item.periodicity_n">
                     </md-input-container>
                 </td>
                 <td data-ng-if="item.editStatus" class="edit-state-td">
@@ -276,7 +296,16 @@
                 <td>
                     <md-input-container>
                         <!--<label for="">Periodicity</label>-->
-                        <input type="text" data-ng-model="vm.newItem.action_text">
+                        <md-select data-ng-model="vm.newItem.periodicity">
+                            <md-option data-ng-repeat="model in vm.periodicityItems" ng-value="model.id">{{model.name}}
+                            </md-option>
+                        </md-select>
+                    </md-input-container>
+                </td>
+                <td>
+                    <md-input-container>
+                        <!--<label for="">Periodicity N</label>-->
+                        <input type="text" data-ng-model="vm.newItem.periodicity_n">
                     </md-input-container>
                 </td>
                 <td>

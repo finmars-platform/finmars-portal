@@ -32,7 +32,7 @@
     };
 
     var getEntitiesWithoutBaseAttrsList = function () {
-        return ['price-history', 'currency-history', 'transaction'];
+        return ['price-history', 'currency-history', 'transaction', 'complex-transaction'];
     };
     var getEntitiesWithoutDynAttrsList = function () {
         return ['price-history', 'currency-history', 'transaction', 'pricing-policy','strategy-1', 'strategy-2', 'strategy-3',
@@ -230,11 +230,6 @@
                     "value_type": "boolean"
                 },
                 {
-                    "key": "reference_for_pricing",
-                    "name": "Reference for pricing",
-                    "value_type": 10
-                },
-                {
                     "key": "instrument_class",
                     "name": "Instrument class",
                     "value_type": "field"
@@ -285,6 +280,11 @@
                     "key": "is_active",
                     "name": "Is active",
                     "value_type": "boolean"
+                },
+                {
+                    "key": "reference_for_pricing",
+                    "name": "Reference for pricing",
+                    "value_type": 10
                 },
                 {
                     "key": "price_download_scheme",

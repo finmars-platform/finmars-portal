@@ -42,7 +42,7 @@
     var getEditLayoutByInstanceId = function (entityType, id) {
         return uiRepository.getEditLayoutByInstanceId(entityType, id).then(function (data) {
             if (entityType == 'complex-transaction') {
-                return {data: data.book_transaction_layout}
+                return data.book_transaction_layout
             }
         });
     };
