@@ -220,7 +220,7 @@
             });
 
         $stateProvider.state('app.data-constructor', {
-            url: '/layout/:entityType',
+            url: '/layout/:entityType/:instanceId',
             params: {
                 instanceId: null
             },

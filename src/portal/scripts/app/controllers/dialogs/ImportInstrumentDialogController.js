@@ -141,61 +141,77 @@
             }
         };
 
-        vm.load = function () {
+        vm.load = function ($event) {
             vm.readyStatus.processing = true;
             //vm.config.task = 81;
             importInstrumentService.startImport(vm.config).then(function (data) {
                 console.log('data', data);
-                vm.config = data;
-                if (data.task_object.status == 'D' && data.instrument !== null) {
-                    vm.readyStatus.processing = false;
-                    vm.dataIsImported = true;
+                if (data.status != 500) {
+                    vm.config = data.response;
+                    if (vm.config.task_object.status == 'D' && vm.config.instrument !== null) {
+                        vm.readyStatus.processing = false;
+                        vm.dataIsImported = true;
 
-                    vm.mappedFields = [];
+                        vm.mappedFields = [];
 
-                    var keysDict = [];
+                        var keysDict = [];
 
-                    if (Object.keys(vm.config["task_result_overrides"]).length > 0) {
-                        keysDict = vm.config["task_result_overrides"];
-                    } else {
-                        keysDict = vm.config["task_result"]
-                    }
-
-                    var keys = Object.keys(keysDict);
-                    var i;
-                    for (i = 0; i < keys.length; i = i + 1) {
-                        vm.mappedFields.push({
-                            key: keys[i],
-                            value: keysDict[keys[i]]
-                        })
-                    }
-
-                    var promises = [];
-
-                    vm.config.instrument.attributes.forEach(function (attribute) {
-                        if (attribute.attribute_type_object.value_type == 30) {
-                            promises.push(instrumentAttributeTypeService.getByKey(attribute.attribute_type));
+                        if (Object.keys(vm.config["task_result_overrides"]).length > 0) {
+                            keysDict = vm.config["task_result_overrides"];
+                        } else {
+                            keysDict = vm.config["task_result"]
                         }
-                    });
 
-                    console.log('vm.instrument', vm.instrument);
+                        var keys = Object.keys(keysDict);
+                        var i;
+                        for (i = 0; i < keys.length; i = i + 1) {
+                            vm.mappedFields.push({
+                                key: keys[i],
+                                value: keysDict[keys[i]]
+                            })
+                        }
 
-                    Promise.all(promises).then(function (data) {
+                        var promises = [];
 
-                        data.forEach(function (item) {
-                            vm.dynAttributes['id_' + item.id] = item;
+                        vm.config.instrument.attributes.forEach(function (attribute) {
+                            if (attribute.attribute_type_object.value_type == 30) {
+                                promises.push(instrumentAttributeTypeService.getByKey(attribute.attribute_type));
+                            }
                         });
 
-                        $scope.$apply();
-                    })
+                        console.log('vm.instrument', vm.instrument);
+
+                        Promise.all(promises).then(function (data) {
+
+                            data.forEach(function (item) {
+                                vm.dynAttributes['id_' + item.id] = item;
+                            });
+
+                            $scope.$apply();
+                        })
 
 
-                } else {
-                    setTimeout(function () {
-                        vm.load();
-                    }, 1000)
+                    } else {
+                        setTimeout(function () {
+                            vm.load();
+                        }, 1000)
 
+                    }
                 }
+                if (data.status == 500) {
+                    $mdDialog.show({
+                        controller: 'ValidationDialogController as vm',
+                        templateUrl: 'views/dialogs/validation-dialog-view.html',
+                        targetEvent: $event,
+                        locals: {
+                            validationData: "An error occurred. Please try again later"
+                        },
+                        preserveScope: true,
+                        autoWrap: true,
+                        skipHide: true
+                    })
+                }
+
 
             })
         };

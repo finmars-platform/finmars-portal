@@ -22,7 +22,14 @@
                 },
                 body: JSON.stringify(config)
             }).then(function (data) {
-            return data.json();
+            return new Promise(function (resolve, reject) {
+                data.json().then(function (result) {
+                    resolve({
+                        response: result,
+                        status: data.status
+                    })
+                })
+            });
         })
     };
 

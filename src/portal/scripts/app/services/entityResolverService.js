@@ -60,6 +60,9 @@
             case 'periodicity':
                 return instrumentPeriodicityService.getList();
                 break;
+            case 'accrual-calculation-model':
+                return accrualCalculationModelService.getList();
+                break;
             case 'strategy-1':
                 return strategyService.getList(1);
                 break;

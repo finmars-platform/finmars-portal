@@ -57,7 +57,7 @@
                             </div>
                             <div layout="row">
                                 <md-button class="md-raised colored-btn instrument-load-btn {{vm.loadIsAvailable() ? '' : 'disabled-btn' }}"
-                                           data-ng-click="vm.load()">
+                                           data-ng-click="vm.load($event)">
                                     Load
                                 </md-button>
                                 <div data-ng-if="vm.readyStatus.processing">

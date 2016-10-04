@@ -10,6 +10,7 @@
     //var instrumentEventScheduleService = require('../../services/instrument/instrumentEventScheduleService');
     var metaNotificationClassService = require('../../../services/metaNotificationClassService');
     var metaEventClassService = require('../../../services/metaEventClassService');
+    var instrumentPeriodicityService = require('../../../services/instrumentPeriodicityService');
 
     module.exports = function ($scope) {
 
@@ -30,6 +31,12 @@
         metaEventClassService.getList().then(function (data) {
             vm.eventClasses = data;
             vm.readyStatus.eventClasses = true;
+            $scope.$apply();
+        });
+
+        instrumentPeriodicityService.getList().then(function (data) {
+            vm.periodicityItems = data;
+            vm.readyStatus.periodicityItems = true;
             $scope.$apply();
         });
 
@@ -69,13 +76,26 @@
             return name;
         };
 
+        vm.bindPeriodicity = function (row) {
+            var name;
+            vm.periodicityItems.forEach(function (item) {
+                if (row.periodicity == item.id) {
+                    row.periodicity_name = item.name;
+                    name = item.name
+                }
+            });
+            return name;
+        };
+
+
 
         vm.newItem = {
             "name": '',
             "description": "",
             "notification_class": '',
             "notify_in_n_days": '',
-            "action_text": '',
+            "periodicity": '',
+            "periodicity_n": '',
             "action_is_sent_to_pending": null,
             "action_is_book_automatic": null,
             "actions": [],
@@ -108,7 +128,8 @@
                 "action_is_book_automatic": vm.newItem.action_is_book_automatic,
                 "effective_date": vm.newItem.effective_date,
                 "final_date": vm.newItem.final_date,
-                "actions": vm.newItem.actions
+                "periodicity": vm.newItem.periodicity,
+                "periodicity_n": vm.newItem.periodicity_n
             });
 
             vm.newItem = {
@@ -116,7 +137,8 @@
                 "description": "",
                 "notification_class": '',
                 "notify_in_n_days": '',
-                "action_text": '',
+                "periodicity": '',
+                "periodicity_n": '',
                 "action_is_sent_to_pending": null,
                 "action_is_book_automatic": null,
                 "actions": [],

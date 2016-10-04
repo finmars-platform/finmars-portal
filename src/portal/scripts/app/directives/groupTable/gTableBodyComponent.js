@@ -140,12 +140,12 @@
 
 
                                             promisesClassifiersAlreadyAdded.forEach(function (classifier) {
-                                                if (classifier == scope.items[i].groups[g].value) {
+                                                if (classifier == scope.items[i].groups[g].key + '_' + scope.items[i].groups[g].value) {
                                                     classifierExist = true;
                                                 }
                                             });
                                             if (!classifierExist) {
-                                                promisesClassifiersAlreadyAdded.push(scope.items[i].groups[g].value);
+                                                promisesClassifiersAlreadyAdded.push(scope.items[i].groups[g].key + '_' + scope.items[i].groups[g].value);
                                                 promisesClassifiers.push(entityClassifierSingletonService.getByKey(scope.entityType, scope.items[i].groups[g].value))
                                             }
                                         }
@@ -156,14 +156,14 @@
                                             if (scope.items[i].groups[g].value !== null) {
 
                                                 promisesEntityFieldsAlreadyAdded.forEach(function (entity) {
-                                                    if (entity == scope.items[i].groups[g].value) {
+                                                    if (entity == scope.items[i].groups[g].key + '_' + scope.items[i].groups[g].value) {
                                                         entityExist = true;
                                                     }
                                                 });
-                                                console.log('promisesEntityFieldsAlreadyAdded', promisesEntityFieldsAlreadyAdded);
+                                                //console.log('promisesEntityFieldsAlreadyAdded', promisesEntityFieldsAlreadyAdded);
 
                                                 if (!entityExist) {
-                                                    promisesEntityFieldsAlreadyAdded.push(scope.items[i].groups[g].value);
+                                                    promisesEntityFieldsAlreadyAdded.push(scope.items[i].groups[g].key + '_' + scope.items[i].groups[g].value);
                                                     promisesEntityFields.push(bindCellService.getByKey(scope.items[i].groups[g].key, scope.items[i].groups[g].value, {entityType: scope.entityType}))
                                                 }
                                             }
@@ -188,7 +188,7 @@
                                     }
                                 }
 
-                                console.log('promisesEntityFields', promisesEntityFields);
+                                //console.log('promisesEntityFields', promisesEntityFields);
 
 
                                 Promise.all(promisesEntityFields).then(function (data) {
@@ -246,15 +246,15 @@
                                         var entityExist = false;
 
                                         promisesEntityFieldsAlreadyAdded.forEach(function (entity) {
-                                            if (entity == scope.items[i].groups[g].value) {
+                                            if (entity == scope.items[i].groups[g].key + '_' + scope.items[i].groups[g].value) {
                                                 entityExist = true;
                                             }
                                         });
 
-                                        console.log('promisesEntityFieldsAlreadyAdded', promisesEntityFieldsAlreadyAdded);
-
+                                        //console.log('promisesEntityFieldsAlreadyAdded', promisesEntityFieldsAlreadyAdded);
+                                        console.log('scope.items[i].groups[g]', scope.items[i].groups[g]);
                                         if (!entityExist) {
-                                            promisesEntityFieldsAlreadyAdded.push(scope.items[i].groups[g].value);
+                                            promisesEntityFieldsAlreadyAdded.push(scope.items[i].groups[g].key + '_' + scope.items[i].groups[g].value);
                                             promises.push(bindCellService.getByKey(scope.items[i].groups[g].key, scope.items[i].groups[g].value))
                                         }
 

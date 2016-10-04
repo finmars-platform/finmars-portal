@@ -1,34 +1,40 @@
 <div data-ng-controller="BookTransactionActionsTabController as vm">
 
-    <div>
+    <div data-ng-if="vm.readyStatus.transactionType">
         <table>
             <tbody>
             <tr>
                 <td>Action order</td>
-                <td data-ng-repeat="item vm.entityActions.action_order">{{item}}</td>
+                <td data-ng-repeat="item in vm.transactionActions.action_order track by $index">{{item}}</td>
             </tr>
             <tr>
                 <td>Action type</td>
-                <td data-ng-repeat="item vm.entityActions.action_type">{{item}}</td>
+                <td data-ng-repeat="item in vm.transactionActions.action_type track by $index">{{item}}</td>
             </tr>
             <tr>
                 <td>Description</td>
-                <td data-ng-repeat="item vm.entityActions.description">{{item}}</td>
+                <td data-ng-repeat="item in vm.transactionActions.action_notes track by $index">{{item}}</td>
             </tr>
             <tr>
                 <td>Transaction Class</td>
-                <td data-ng-repeat="item vm.entityActions.transaction_class">{{item}}</td>
+                <td data-ng-repeat="item in vm.transactionActions.transaction_class track by $index">{{item}}</td>
             </tr>
             <tr>
                 <td>Portfolio</td>
-                <td data-ng-repeat="item vm.entityActions.portfolio">{{item}}</td>
+                <td data-ng-repeat="item in vm.transactionActions.portfolio track by $index">{{item}}</td>
             </tr>
             <tr>
                 <td>Instrument</td>
-                <td data-ng-repeat="item vm.entityActions.instrument">{{item}}</td>
+                <td data-ng-repeat="item in vm.transactionActions.instrument track by $index">{{item}}</td>
             </tr>
             </tbody>
         </table>
+    </div>
+    <div data-ng-if="!vm.readyStatus.transactionType">
+        <div layout="row" layout-sm="column" layout-align="space-around" class="m-large">
+            <md-progress-circular md-mode="indeterminate"
+                                  md-diameter="96"></md-progress-circular>
+        </div>
     </div>
 
 </div>
