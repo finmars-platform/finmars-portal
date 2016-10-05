@@ -82,21 +82,24 @@
                         vm.uploadPrice()
                     }, 5000)
                 } else {
-                    $mdDialog.show({
-                        controller: 'FillPriceManuallyInstrumentDialogController as vm',
-                        templateUrl: 'views/dialogs/fill-price-manually-instrument-dialog-view.html',
-                        targetEvent: $event,
-                        locals: {
-                            data: {
-                                instruments: vm.price.instrument_price_missed,
-                                currencies: vm.price.currency_price_missed
-                            }
-                        },
-                        preserveScope: true,
-                        autoWrap: true,
-                        skipHide: true
-                    });
+                    if (vm.price.instrument_price_missed.length || vm.price.currency_price_missed.length) {
+                        $mdDialog.show({
+                            controller: 'FillPriceManuallyInstrumentDialogController as vm',
+                            templateUrl: 'views/dialogs/fill-price-manually-instrument-dialog-view.html',
+                            targetEvent: $event,
+                            locals: {
+                                data: {
+                                    instruments: vm.price.instrument_price_missed,
+                                    currencies: vm.price.currency_price_missed
+                                }
+                            },
+                            preserveScope: true,
+                            autoWrap: true,
+                            skipHide: true
+                        });
+                    }
                     vm.readyStatus.processing = false;
+
                 }
                 $scope.$apply();
             })

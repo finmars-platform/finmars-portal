@@ -253,7 +253,23 @@
             instrumentService.create(vm.config.instrument).then(function (data) {
                 console.log('DATA', data);
                 if (data.status == 200 || data.status == 201) {
-                    $mdDialog.hide({res: 'agree'});
+                    $mdDialog.show({
+                        controller: 'SuccessDialogController as vm',
+                        templateUrl: 'views/dialogs/success-dialog-view.html',
+                        targetEvent: $event,
+                        locals: {
+                            success: {
+                                title: "",
+                                description: "You have you have successfully add instrument " + vm.config.instrument.user_code + " (user code)."
+                            }
+                        },
+                        preserveScope: true,
+                        autoWrap: true,
+                        skipHide: true
+                    }).then(function () {
+                        $mdDialog.hide({res: 'agree'});
+                    });
+
                 }
                 if (data.status == 400) {
                     $mdDialog.show({
