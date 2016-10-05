@@ -3,29 +3,9 @@
     <div data-ng-if="vm.readyStatus.transactionType">
         <table>
             <tbody>
-            <tr>
-                <td>Action order</td>
-                <td data-ng-repeat="item in vm.transactionActions.action_order track by $index">{{item}}</td>
-            </tr>
-            <tr>
-                <td>Action type</td>
-                <td data-ng-repeat="item in vm.transactionActions.action_type track by $index">{{item}}</td>
-            </tr>
-            <tr>
-                <td>Description</td>
-                <td data-ng-repeat="item in vm.transactionActions.action_notes track by $index">{{item}}</td>
-            </tr>
-            <tr>
-                <td>Transaction Class</td>
-                <td data-ng-repeat="item in vm.transactionActions.transaction_class track by $index">{{item}}</td>
-            </tr>
-            <tr>
-                <td>Portfolio</td>
-                <td data-ng-repeat="item in vm.transactionActions.portfolio track by $index">{{item}}</td>
-            </tr>
-            <tr>
-                <td>Instrument</td>
-                <td data-ng-repeat="item in vm.transactionActions.instrument track by $index">{{item}}</td>
+            <tr data-ng-repeat="key in vm.transactionActionsKeys">
+                <td>{{vm.beatufier(key)}}</td>
+                <td data-ng-repeat="item in vm.transactionActions[key] track by $index">{{item}}</td>
             </tr>
             </tbody>
         </table>

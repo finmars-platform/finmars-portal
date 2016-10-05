@@ -100,7 +100,7 @@
                     break;
                 case 'payment_size_detail':
                     entityFieldsRepository.getPaymentSizeDetailChoices().then(function (data) {
-                        resolve({type: 'key-value', key: 'payment_size_detail', data: data});
+                        resolve({type: 'id', key: 'payment_size_detail', data: data});
                     });
                     break;
                 case 'transaction_class':
@@ -296,8 +296,81 @@
 
     };
 
+    var getFieldsByContentType = function (contentType, options) {
+        return new Promise(function (resolve, reject) {
+            switch (contentType) {
+                case 'instruments.dailypricingmodel':
+                    entityFieldsRepository.getDailyPricingModelChoices().then(function (data) {
+                        resolve({type: 'id', key: 'instruments.dailypricingmodel', data: data});
+                    });
+                    break;
+                case 'instruments.paymentsizedetail':
+                    entityFieldsRepository.getPaymentSizeDetailChoices().then(function (data) {
+                        resolve({type: 'id', key: 'instruments.paymentsizedetail', data: data});
+                    });
+                    break;
+                case 'instruments.instrument':
+                    instrumentRepository.getList().then(function (data) {
+                        resolve({type: 'id', key: 'instruments.instrument', data: data.results});
+                    });
+                    break;
+                case 'integrations.pricedownloadscheme':
+                    importPriceDownloadSchemeRepository.getList().then(function (data) {
+                        resolve({type: 'id', key: 'integrations.pricedownloadscheme', data: data.results});
+                    });
+                    break;
+                case 'instruments.instrumenttype':
+                    instrumentTypeRepository.getList().then(function (data) {
+                        resolve({type: 'id', key: 'instruments.instrumenttype', data: data});
+                    });
+                    break;
+                case 'currencies.currency':
+                    currencyRepository.getList().then(function (data) {
+                        resolve({type: 'id', key: 'currencies.currency', data: data.results});
+                    });
+                    break;
+                case 'portfolios.portfolio':
+                    portfolioRepository.getList().then(function (data) {
+                        resolve({type: 'id', key: 'portfolios.portfolio', data: data.results});
+                    });
+                    break;
+                case 'counterparties.counterparty':
+                    counterpartyRepository.getList().then(function (data) {
+                        resolve({type: 'id', key: 'counterparties.counterparty', data: data.results});
+                    });
+                    break;
+                case 'counterparties.responsible':
+                    responsibleRepository.getList().then(function (data) {
+                        resolve({type: 'id', key: 'counterparties.responsible', data: data.results});
+                    });
+                    break;
+                case 'accounts.account':
+                    accountRepository.getList().then(function (data) {
+                        resolve({type: 'id', key: 'accounts.account', data: data.results});
+                    });
+                    break;
+                case 'strategies.strategy1':
+                    strategyRepository.getList(1).then(function (data) {
+                        resolve({type: 'id', key: 'strategies.strategy1', data: data.results});
+                    });
+                    break;
+                case 'strategies.strategy2':
+                    strategyRepository.getList(2).then(function (data) {
+                        resolve({type: 'id', key: 'strategies.strategy2', data: data.results});
+                    });
+                    break;
+                case 'strategies.strategy3':
+                    strategyRepository.getList(3).then(function (data) {
+                        resolve({type: 'id', key: 'strategies.strategy3', data: data.results});
+                    });
+                    break;
+            }
+        });
+    };
+
     module.exports = {
-        getFields: getFields
+        getFields: getFields,
+        getFieldsByContentType: getFieldsByContentType
     }
 
 }());

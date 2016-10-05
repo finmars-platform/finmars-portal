@@ -31,7 +31,7 @@
                 <label>Please select Element</label>
                 <!--{{item.attribute}}-->
                 <md-select ng-model="item.attribute" ng-change="changeModel(item.attribute)" ng-focus="findAttrsLeft()">
-                    <md-optgroup label="System" class="bold-field-select">
+                    <md-optgroup label="System" class="bold-field-select" data-ng-if="baseAttrs.length">
                         <md-option ng-repeat="attr in baseAttrs" ng-value="attr" class="{{attr.disabled ? 'disabled' : ''}}">
                             {{attr.name}} ({{bindTypeByValueType(attr['value_type'])}})
                         </md-option>
@@ -46,10 +46,16 @@
                             <!--{{attr.name}}-->
                         <!--</md-option>                        -->
                     <!--</md-optgroup>-->
-                    <md-optgroup label="User attributes" class="bold-field-select">
+                    <md-optgroup label="User attributes" class="bold-field-select" data-ng-if="attrs.length">
                         <md-option ng-repeat="attr in attrs" ng-value="attr" class="{{attr.disabled ? 'disabled' : ''}}">
                             <!--{{attr}}-->
                             {{attr.name}} ({{bindTypeByValueType(attr['value_type'])}})
+                        </md-option>
+                    </md-optgroup>
+                    <md-optgroup label="Inputs" class="bold-field-select" data-ng-if="userInputs.length">
+                        <md-option ng-repeat="userInput in userInputs" ng-value="userInput" class="{{userInput.disabled ? 'disabled' : ''}}">
+                            <!--{{attr}}-->
+                            {{userInput.name}} ({{bindTypeByValueType(userInput['value_type'])}})
                         </md-option>
                     </md-optgroup>
                     <md-optgroup label="Layout" class="bold-field-select">

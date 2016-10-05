@@ -34,6 +34,7 @@
         vm.entityId = $scope.$parent.vm.entityId;
         vm.entity = {$_isValid: true};
 
+        vm.editLayoutEntityInstanceId = null; // could be setted from special rules controller
         vm.editLayoutByEntityInsance = false;
         vm.entitySpecialRules = false;
         vm.specialRulesReady = true;
@@ -46,14 +47,24 @@
         logService.property('entityId', vm.entityId);
 
         vm.getEditListByInstanceId = function () {
+            console.log('vm.editLayoutEntityInstanceId', vm.editLayoutEntityInstanceId);
+
             uiService.getEditLayoutByInstanceId(vm.entityType, vm.editLayoutEntityInstanceId).then(function (data) {
-                console.log('-------------------------------data', data);
+
                 if (data) {
                     vm.tabs = data.data;
+                    vm.userInputs = [];
+                    vm.tabs.forEach(function (tab) {
+                        tab.layout.fields.forEach(function (field) {
+                            if (field.attribute_class = 'userInput') {
+                                vm.userInputs.push(field.attribute);
+                            }
+                        });
+                    })
                 } else {
                     vm.tabs = uiService.getDefaultEditLayout(vm.entityType)[0].data;
                 }
-                logService.collection('vm.tabs11111111111111111', vm.tabs);
+
                 $scope.$apply();
             });
 
@@ -87,6 +98,7 @@
         vm.attrs = [];
         vm.baseAttrs = [];
         vm.entityAttrs = [];
+        vm.userInputs = []; // setting from edit layout
         vm.layoutAttrs = layoutService.getLayoutAttrs();
 
         vm.baseAttrs = metaService.getBaseAttrs();
@@ -271,7 +283,7 @@
         };
 
         vm.bindField = function (tab, field) {
-            var i, l, e;
+            var i, l, e, u;
             //console.log('FIELD', field);
             if (field && field.type === 'field') {
                 if (field.hasOwnProperty('id') && field.id !== null) {
@@ -298,6 +310,12 @@
                         if (field.name === vm.layoutAttrs[l].name) {
                             vm.layoutAttrs[l].options = field.options;
                             return vm.layoutAttrs[l];
+                        }
+                    }
+                    for (u = 0; u < vm.userInputs.length; u = u + 1) {
+                        if (field.name === vm.userInputs[u].name) {
+                            vm.userInputs[u].options = field.options;
+                            return vm.userInputs[u];
                         }
                     }
                 }

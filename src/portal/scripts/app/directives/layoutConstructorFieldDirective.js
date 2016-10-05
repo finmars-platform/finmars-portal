@@ -53,10 +53,27 @@
                 scope.editMode = false;
                 scope.entityType = scope.$parent.vm.entityType;
 
-                scope.attrs = scope.$parent.vm.attrs;
-                scope.baseAttrs = scope.$parent.vm.baseAttrs;
-                scope.entityAttrs = scope.$parent.vm.entityAttrs;
+                scope.attrs = scope.$parent.vm.attrs || [];
+                scope.baseAttrs = scope.$parent.vm.baseAttrs || [];
+                scope.entityAttrs = scope.$parent.vm.entityAttrs || [];
+                scope.userInputs = scope.$parent.vm.userInputs || [];
                 scope.layoutAttrs = layoutService.getLayoutAttrs();
+
+                var baseAttrsKeys = [];
+                scope.baseAttrs.forEach(function (baseAttr) {
+                    baseAttrsKeys.push(baseAttr.key);
+                });
+                var entityAttrsKeys = [];
+                scope.entityAttrs.forEach(function (entityAttr) {
+                    entityAttrsKeys.push(entityAttr.key);
+                });
+                var layoutAttrsKeys = [];
+                scope.layoutAttrs.forEach(function (layoutAttr) {
+                    layoutAttrsKeys.push(layoutAttr.key);
+                });
+
+
+                //console.log('scope.userInputs ', scope.userInputs);
 
                 var tabs = scope.$parent.vm.tabs;
 
@@ -94,7 +111,7 @@
                     for (i = 0; i < scope.tab.layout.fields.length; i = i + 1) {
                         scope.tab.layout.fields[i].editMode = false;
                     }
-                    //console.log('ite55555555555555555555555555m', scope.item);
+
                     scope.item.editMode = true;
                 };
 
@@ -105,9 +122,23 @@
                         //console.log('scope.tab.layout', scope.tab.layout.fields[i]);
                         if (scope.tab.layout.fields[i].row === scope.item.row && scope.tab.layout.fields[i].column === scope.item.column) {
                             if (scope.item.attribute.hasOwnProperty('id')) {
+                                scope.tab.layout.fields[i].attribute_class = 'attr';
                                 scope.tab.layout.fields[i].id = scope.item.attribute.id;
                             } else {
                                 scope.tab.layout.fields[i].name = scope.item.attribute.name;
+                                if (baseAttrsKeys.indexOf(scope.item.attribute.key) !== -1) {
+                                    scope.tab.layout.fields[i].attribute_class = 'baseAttr';
+                                } else {
+                                    if (entityAttrsKeys.indexOf(scope.item.attribute.key) !== -1) {
+                                        scope.tab.layout.fields[i].attribute_class = 'entityAttr';
+                                    } else {
+                                        if (layoutAttrsKeys.indexOf(scope.item.attribute.key) !== -1) {
+                                            scope.tab.layout.fields[i].attribute_class = 'decorationAttr';
+                                        } else {
+                                            scope.tab.layout.fields[i].attribute_class = 'userInput';
+                                        }
+                                    }
+                                }
                             }
                             scope.tab.layout.fields[i].type = 'field';
                             scope.tab.layout.fields[i].colspan = scope.item.colspan;
@@ -191,6 +222,7 @@
                     scope.item.id = null;
                     scope.item.key = null;
                     scope.item.attribute = null;
+                    scope.item.attribute_class = null;
                     scope.item.disabled = false;
                     scope.item.options = null;
                     scope.item.colspan = 1;
@@ -199,6 +231,7 @@
                             if (scope.tab.layout.fields[i].column == scope.item.column) {
                                 scope.tab.layout.fields[i].id = null;
                                 scope.tab.layout.fields[i].key = null;
+                                scope.tab.layout.fields[i].attribute_class = null;
                                 scope.tab.layout.fields[i].disabled = false;
                                 scope.tab.layout.fields[i].colspan = 1;
                                 scope.tab.layout.fields[i].name = '';
@@ -211,7 +244,7 @@
                 };
 
                 function findAttribute() {
-                    var i, b, l, e;
+                    var i, b, l, e, u;
                     for (i = 0; i < scope.attrs.length; i = i + 1) {
                         if (scope.attrs[i].id && scope.item.id) {
                             if (scope.attrs[i].id === scope.item.id) {
@@ -231,6 +264,12 @@
                                     scope.backupItem.attribute = scope.entityAttrs[e];
                                 }
                             }
+                            for (u = 0; u < scope.userInputs.length; u = u + 1) {
+                                if (scope.userInputs[u].name === scope.item.name) {
+                                    scope.item.attribute = scope.userInputs[u];
+                                    scope.backupItem.attribute = scope.userInputs[u];
+                                }
+                            }
                             if (!scope.item.attribute) {
                                 for (l = 0; l < scope.layoutAttrs.length; l = l + 1) {
                                     if (scope.layoutAttrs[l].name === scope.item.name) {
@@ -246,8 +285,6 @@
                 findAttribute();
 
                 scope.findAttrsLeft = function () {
-
-                    console.log('test?', tabs);
 
                     scope.attrs.forEach(function (attr) {
                         attr.disabled = false;
@@ -282,6 +319,19 @@
                                 if (item.type === 'field') {
                                     if (entityAttr.key === item.attribute.key) {
                                         entityAttr.disabled = true;
+                                    }
+                                }
+                            })
+                        })
+                    });
+
+                    scope.userInputs.forEach(function (userInput) {
+                        userInput.disabled = false;
+                        tabs.forEach(function (tab) {
+                            tab.layout.fields.forEach(function (item) {
+                                if (item.type === 'field') {
+                                    if (userInput.key === item.attribute.key) {
+                                        userInput.disabled = true;
                                     }
                                 }
                             })

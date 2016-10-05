@@ -17,6 +17,7 @@
             scope: {
                 item: '=',
                 entity: '=',
+                content_type: '=',
                 options: '='
             },
             templateUrl: 'views/entity-viewer/field-resolver-view.html',
@@ -76,23 +77,47 @@
 
                 scope.searchTerm = '';
 
-                fieldResolverService.getFields(scope.item.key, scope.options).then(function (res) {
-                    logService.collection('DATA', res);
-                    scope.type = res.type;
-                    scope.fields = res.data;
-                    scope.readyStatus.content = true;
+                if (scope.item.content_type) {
 
-                    scope.getFieldsGrouped();
+                    console.log('scope.item.content_type', scope.item.content_type);
 
-                    scope.$apply(function () {
+                    fieldResolverService.getFieldsByContentType(scope.item.content_type, scope.options).then(function (res) {
+                        logService.collection('DATA', res);
+                        scope.type = res.type;
+                        scope.fields = res.data;
+                        scope.readyStatus.content = true;
 
-                        setTimeout(function () {
-                            $(elem).find('.md-select-search-pattern').on('keydown', function (ev) {
-                                ev.stopPropagation();
-                            });
-                        }, 100);
+                        scope.getFieldsGrouped();
+
+                        scope.$apply(function () {
+
+                            setTimeout(function () {
+                                $(elem).find('.md-select-search-pattern').on('keydown', function (ev) {
+                                    ev.stopPropagation();
+                                });
+                            }, 100);
+                        });
                     });
-                });
+                } else {
+
+                    fieldResolverService.getFields(scope.item.key, scope.options).then(function (res) {
+                        logService.collection('DATA', res);
+                        scope.type = res.type;
+                        scope.fields = res.data;
+                        scope.readyStatus.content = true;
+
+                        scope.getFieldsGrouped();
+
+                        scope.$apply(function () {
+
+                            setTimeout(function () {
+                                $(elem).find('.md-select-search-pattern').on('keydown', function (ev) {
+                                    ev.stopPropagation();
+                                });
+                            }, 100);
+                        });
+                    });
+                }
 
                 scope.resolveSort = function (field) {
                     if (field) {
