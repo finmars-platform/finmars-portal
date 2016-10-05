@@ -22,34 +22,40 @@
                             <span class="g-meta-circle green">G</span>
                             <span class="g-meta-circle blue">F</span>
                         </div>
-                        <div class="g-checkbox-row" data-ng-repeat="item in vm.baseAttrs">
-                            <md-checkbox ng-model="item.columns" aria="columns" data-ng-change="vm.updateAttrs()">
-                            </md-checkbox>
-                            <md-checkbox ng-style="vm.checkAreaAccessibility(item, 'group') ? {'visibility': 'hidden'} : {}"
-                                         ng-model="item.groups" aria="groups" class="md-g-green"
-                                         data-ng-change="vm.updateAttrs()">
-                            </md-checkbox>
-                            <md-checkbox ng-style="vm.checkAreaAccessibility(item, 'filter') ? {'visibility': 'hidden'} : {}"
-                                         ng-model="item.filters" aria="filters" class="md-primary"
-                                         data-ng-change="vm.updateAttrs()">
-                            </md-checkbox>
-                            <span flex></span>
+                        <div class="g-checkbox-row" data-ng-repeat="item in vm.baseAttrs" layout="row">
+                            <div>
+                                <md-checkbox ng-model="item.columns" aria="columns" data-ng-change="vm.updateAttrs()">
+                                </md-checkbox>
+                                <md-checkbox
+                                        ng-style="vm.checkAreaAccessibility(item, 'group') ? {'visibility': 'hidden'} : {}"
+                                        ng-model="item.groups" aria="groups" class="md-g-green"
+                                        data-ng-change="vm.updateAttrs()">
+                                </md-checkbox>
+                                <md-checkbox
+                                        ng-style="vm.checkAreaAccessibility(item, 'filter') ? {'visibility': 'hidden'} : {}"
+                                        ng-model="item.filters" aria="filters" class="md-primary"
+                                        data-ng-change="vm.updateAttrs()">
+                                </md-checkbox>
+                            </div>
                             <div dragula="'columns-bag'" class="g-modal-draggable-card">
                                 <md-card class="modal-dialog-card">{{item.name}}</md-card>
                             </div>
                         </div>
-                        <div class="g-checkbox-row" data-ng-repeat="item in vm.entityAttrs">
-                            <md-checkbox ng-model="item.columns" aria="columns" data-ng-change="vm.updateAttrs()">
-                            </md-checkbox>
-                            <md-checkbox ng-style="vm.checkAreaAccessibility(item, 'group') ? {'visibility': 'hidden'} : {}"
-                                         ng-model="item.groups" aria="groups" class="md-g-green"
-                                         data-ng-change="vm.updateAttrs()">
-                            </md-checkbox>
-                            <md-checkbox ng-style="vm.checkAreaAccessibility(item, 'filter') ? {'visibility': 'hidden'} : {}"
-                                         ng-model="item.filters" aria="filters" class="md-primary"
-                                         data-ng-change="vm.updateAttrs()">
-                            </md-checkbox>
-                            <span flex></span>
+                        <div class="g-checkbox-row" data-ng-repeat="item in vm.entityAttrs" layout="row">
+                            <div>
+                                <md-checkbox ng-model="item.columns" aria="columns" data-ng-change="vm.updateAttrs()">
+                                </md-checkbox>
+                                <md-checkbox
+                                        ng-style="vm.checkAreaAccessibility(item, 'group') ? {'visibility': 'hidden'} : {}"
+                                        ng-model="item.groups" aria="groups" class="md-g-green"
+                                        data-ng-change="vm.updateAttrs()">
+                                </md-checkbox>
+                                <md-checkbox
+                                        ng-style="vm.checkAreaAccessibility(item, 'filter') ? {'visibility': 'hidden'} : {}"
+                                        ng-model="item.filters" aria="filters" class="md-primary"
+                                        data-ng-change="vm.updateAttrs()">
+                                </md-checkbox>
+                            </div>
                             <div dragula="'columns-bag'" class="g-modal-draggable-card">
                                 <md-card class="modal-dialog-card">{{item.name}}</md-card>
                             </div>
@@ -64,16 +70,17 @@
                             <span class="g-meta-circle green">G</span>
                             <span class="g-meta-circle blue">F</span>
                         </div>
-                        <div class="g-checkbox-row" data-ng-repeat="item in vm.attrs">
-                            <md-checkbox ng-model="item.columns" aria="columns" data-ng-change="vm.updateAttrs()">
-                            </md-checkbox>
-                            <md-checkbox ng-model="item.groups" aria="groups" class="md-g-green"
-                                         data-ng-change="vm.updateAttrs()">
-                            </md-checkbox>
-                            <md-checkbox style="visibility: hidden" ng-model="item.filters" aria="filters"
-                                         class="md-primary" data-ng-change="vm.updateAttrs()">
-                            </md-checkbox>
-                            <span flex></span>
+                        <div class="g-checkbox-row" data-ng-repeat="item in vm.attrs" layout="row">
+                            <div>
+                                <md-checkbox ng-model="item.columns" aria="columns" data-ng-change="vm.updateAttrs()">
+                                </md-checkbox>
+                                <md-checkbox ng-model="item.groups" aria="groups" class="md-g-green"
+                                             data-ng-change="vm.updateAttrs()">
+                                </md-checkbox>
+                                <md-checkbox style="visibility: hidden" ng-model="item.filters" aria="filters"
+                                             class="md-primary" data-ng-change="vm.updateAttrs()">
+                                </md-checkbox>
+                            </div>
                             <div dragula="'columns-bag'" class="g-modal-draggable-card">
                                 <md-card class="modal-dialog-card">{{item.name}}</md-card>
                             </div>

@@ -252,7 +252,7 @@
                                         });
 
                                         //console.log('promisesEntityFieldsAlreadyAdded', promisesEntityFieldsAlreadyAdded);
-                                        console.log('scope.items[i].groups[g]', scope.items[i].groups[g]);
+                                        //console.log('scope.items[i].groups[g]', scope.items[i].groups[g]);
                                         if (!entityExist) {
                                             promisesEntityFieldsAlreadyAdded.push(scope.items[i].groups[g].key + '_' + scope.items[i].groups[g].value);
                                             promises.push(bindCellService.getByKey(scope.items[i].groups[g].key, scope.items[i].groups[g].value))
@@ -367,6 +367,7 @@
 
                             var i, result;
                             for (i = 0; i < entityFieldsArray[group.key].length; i = i + 1) {
+                                //console.log('entityFieldsArray[group.key]', entityFieldsArray[group.key]);
                                 if (entityFieldsArray[group.key][i].id === group.value) {
                                     result = entityFieldsArray[group.key][i];
                                 }
@@ -375,6 +376,9 @@
                             if (result) {
                                 if (result.hasOwnProperty('display_name')) {
                                     return result.display_name;
+                                }
+                                if (result.hasOwnProperty('scheme_name')) {
+                                    return result.scheme_name;
                                 }
                                 return result.name;
                             }

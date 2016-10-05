@@ -309,8 +309,8 @@
                         break;
                     case 'price_download_scheme':
                         return importPriceDownloadSchemeRepository.getByKey(id).then(function (data) {
-                            entities[entity] = data.results;
-                            resolve({key: entity, data: entities[entity]});
+                            entitiesGetByKey[entity] = data;
+                            resolve({key: entity, data: entitiesGetByKey[entity]});
                         });
                         break;
                 }

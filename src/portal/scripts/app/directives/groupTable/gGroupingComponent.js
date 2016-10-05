@@ -70,14 +70,26 @@
                 scope.removeGroup = function (group) {
                     //console.log('grouping', scope.grouping);
                     //console.log('remove', group);
-                    scope.grouping = scope.grouping.map(function (item) {
-                        if (item.id === group.id || item.name === group.name) {
-                            return undefined
-                        }
-                        return item
-                    }).filter(function (item) {
-                        return !!item;
-                    });
+                    if (group.id) {
+                        scope.grouping = scope.grouping.map(function (item) {
+                            if (item.id === group.id) {
+                                item = undefined
+                            }
+                            return item
+                        }).filter(function (item) {
+                            return !!item;
+                        });
+                    }
+                    if (group.name) {
+                        scope.grouping = scope.grouping.map(function (item) {
+                            if (item.name === group.name) {
+                                item = undefined
+                            }
+                            return item
+                        }).filter(function (item) {
+                            return !!item;
+                        });
+                    }
                     //console.log('grouping after', scope.grouping);
                     setTimeout(function () {
                         scope.externalCallback();
