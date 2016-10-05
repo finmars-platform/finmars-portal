@@ -22,10 +22,11 @@
                 scope.readyStatus = {classifier: false};
                 scope.entity = scope.$parent.vm.entity;
 
-                var attrs = scope.$parent.vm.attrs;
-                var choices = metaService.getValueTypes();
-                var baseAttrs = metaService.getBaseAttrs();
-                var entityAttrs = metaService.getEntityAttrs(scope.entityType);
+                var attrs = scope.$parent.vm.attrs || [];
+                var userInputs = scope.$parent.vm.userInputs || [];
+                var choices = metaService.getValueTypes() || [];
+                var baseAttrs = metaService.getBaseAttrs() || [];
+                var entityAttrs = metaService.getEntityAttrs(scope.entityType) || [];
 
                 scope.layoutAttrs = layoutService.getLayoutAttrs();
 
@@ -40,6 +41,11 @@
                             scope.fieldType = choices[i];
                         }
                     }
+
+                    if(scope.attribute['value_type'] == 100) {
+                        scope.fieldType = choices[5]; // relation == field, backend&frontend naming conflict
+                    }
+
                 }
 
                 scope.getName = function () {
@@ -91,7 +97,7 @@
                         if (scope.item.hasOwnProperty('id') && scope.item.id !== null) {
                             return scope.item.name
                         } else {
-                            var i, l, e;
+                            var i, l, e, u;
                             for (i = 0; i < baseAttrs.length; i = i + 1) {
                                 if (scope.item.name === baseAttrs[i].name) {
                                     return baseAttrs[i].key;
@@ -106,6 +112,11 @@
                             for (e = 0; e < entityAttrs.length; e = e + 1) {
                                 if (scope.item.name === entityAttrs[e].name) {
                                     return entityAttrs[e].key;
+                                }
+                            }
+                            for (u = 0; u < userInputs.length; u = u + 1) {
+                                if (scope.item.name === userInputs[u].name) {
+                                    return userInputs[u].key;
                                 }
                             }
                         }
@@ -175,7 +186,7 @@
                             resolve(undefined)
                         });
                     })
-                }
+                };
 
                 if (scope.fieldType && scope.fieldType.value == 30) {
 

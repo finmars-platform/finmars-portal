@@ -48,7 +48,10 @@
         };
 
         vm.bindSelectedText = function (entity) {
-            return '[' + entity.length + ']';
+            if (entity) {
+                return '[' + entity.length + ']';
+            }
+            return '';
         };
 
         vm.getTransactionTypeGroups();

@@ -18,6 +18,15 @@
         vm.transactionTypeId = $scope.$parent.vm.editLayoutEntityInstanceId;
         vm.readyStatus = {transactionType: false};
 
+        vm.beatufier = function (key) {
+            //console.log('KEY', key);
+            if (key !== undefined) {
+                var str = key.split('_').join(' ');
+                return str;
+            }
+            return key
+        };
+
         transactionTypeService.getByKey(vm.transactionTypeId).then(function (data) {
             vm.transactionType = data;
 
@@ -76,6 +85,8 @@
                 user_text_2: [],
                 user_text_3: []
             };
+
+            vm.transactionActionsKeys = Object.keys(vm.transactionActions);
 
             console.log('vm.transactionType', vm.transactionType);
 

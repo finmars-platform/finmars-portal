@@ -307,6 +307,11 @@
                     "value_type": "field"
                 },
                 {
+                    "key": "maturity_date",
+                    "name": "Maturity date",
+                    "value_type": 40
+                },
+                {
                     "key": "accrued_multiplier",
                     "name": "Accrued multiplier",
                     "value_type": "float"
