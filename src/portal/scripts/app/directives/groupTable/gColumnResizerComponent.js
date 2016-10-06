@@ -69,7 +69,9 @@
 
                     resizeScrollableArea();
                     resize();
-                }
+                };
+
+                scope.$parent.triggerResize = resize;
 
                 $(window).on('resize', function () {
                     // workAreaElem.width($(window).width() - filterSidebarWidth - $('md-sidenav').width());
@@ -129,6 +131,9 @@
                 };
 
                 function resize() {
+
+                    console.log('resize!!');
+
                     var tHead = $(elem).find('.g-thead');
                     var th = tHead.find('.g-cell');
                     var tr = $(elem).find('.g-row');
@@ -197,20 +202,20 @@
                     //console.log('th', th);
                 }
 
-                setTimeout(function () {
-                    setColumnsWidthAndNameTooltip();
-                }, 110);
+                //setTimeout(function () {
+                setColumnsWidthAndNameTooltip();
+                //}, 110);
                 scope.$watchCollection('items', function () {
                     //console.log('items added for resize');
                     resizeScrollableArea();
-                    setTimeout(function () {
-                        resize();
-                    }, 100);
+                    //setTimeout(function () {
+                    resize();
+                    //}, 100);
                     //resize();
                 });
-                setTimeout(function () {
-                    resize();
-                }, 100);
+                //setTimeout(function () {
+                resize();
+                //}, 100);
 
                 //console.log('resizer items is ', scope.items);
 

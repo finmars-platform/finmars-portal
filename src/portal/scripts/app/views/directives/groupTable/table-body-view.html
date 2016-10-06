@@ -5,7 +5,7 @@
             <md-progress-linear md-mode="indeterminate"></md-progress-linear>
         </div>
     </div>
-    <div data-ng-show="checkReady()" style="padding-bottom: 75px">
+    <div data-ng-show="checkReady()" ng-cloak style="padding-bottom: 75px">
         <div>
             <div data-ng-if="grouping.length" contextmenu-container="gtbody.contextmenu">
                 <div data-ng-repeat="item in items">
@@ -26,7 +26,7 @@
                             </div>
                         </md-card>
                         <div data-ng-repeat="group in item.groups track by $index" class="g-group">
-                            <span data-ng-bind="bindGroupValue(group)"></span>
+                            <span data-ng-bind="::bindGroupValue(group)"></span>
                         </div>
                     </div>
                     <div data-ng-repeat="groupedItem in item.items" contextmenu-item="groupedItem"
@@ -41,7 +41,7 @@
                         <div class="g-cell-wrap" data-ng-repeat="column in columns">
                             <div class="g-cell {{getAlign(column)}}">
                                 <span title="{{bindCellTitle(groupedItem, column)}}"
-                                      data-ng-bind-html="bindCell(groupedItem, column) | trustAsHtml"></span>
+                                      data-ng-bind-html="::bindCell(groupedItem, column) | trustAsHtml"></span>
                             </div>
                         </div>
                     </div>
@@ -56,7 +56,7 @@
                     <div class="g-cell-wrap" data-ng-repeat="column in columns">
                         <div class="g-cell {{getAlign(column)}}">
                             <span title="{{bindCellTitle(item, column)}}"
-                                  data-ng-bind-html="bindCell(item, column) | trustAsHtml"></span>
+                                  data-ng-bind-html="::bindCell(item, column) | trustAsHtml"></span>
                         </div>
                     </div>
                 </div>
