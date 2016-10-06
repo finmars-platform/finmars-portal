@@ -58,6 +58,15 @@
 
         };
 
+        vm.resetPropertyTest = function (item, propertyName, fieldName) {
+
+            item[propertyName][fieldName] = null;
+            item[propertyName][fieldName + '_input'] = null;
+
+            item[propertyName][fieldName + '_toggle'] = !item[propertyName][fieldName + '_toggle'];
+
+        };
+
         vm.findInputs = function (entity) {
 
             var content_type = '';

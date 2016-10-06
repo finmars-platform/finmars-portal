@@ -276,7 +276,7 @@
                                     class="md-block {{vm.findError('maturity_date', 'entityAttr', 'class') ? 'error' : ''}}"
                                     data-ng-if="vm.config.instrument.maturity_date != ''">
                                 <label for="">Maturity date</label>
-                                <input type="text" data-ng-model="vm.config.instrument.maturity_date">
+                                <zh-date-picker ng-model="vm.config.instrument.maturity_date"></zh-date-picker>
                                 <div class="md-input-error"
                                      data-ng-show="vm.findError('maturity_date', 'entityAttr', 'class')">
                                     {{vm.findError('maturity_date',

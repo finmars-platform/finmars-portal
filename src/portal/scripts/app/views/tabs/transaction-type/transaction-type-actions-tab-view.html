@@ -77,7 +77,8 @@
                                             <div data-ng-if="!item.transaction.instrument_toggle">
                                                 <md-input-container>
                                                     <label for="">Instrument</label>
-                                                    <md-select data-ng-model="item.transaction[vm.resolveInstrumentProp(item)]">
+                                                    <md-select
+                                                            data-ng-model="item.transaction[vm.resolveInstrumentProp(item)]">
                                                         <md-optgroup label="Inputs">
                                                             <md-option
                                                                     data-ng-click="vm.setTransactionInstrumentInput(item, inputItem.name)"
@@ -969,43 +970,60 @@
                                     </div>
                                 </div>
                                 <div layout="row">
-                                    <div flex="33">
-                                        <md-switch ng-model="item.instrument.pricing_currency_toggle"
-                                                   aria-label=""
-                                                   data-ng-click="vm.resetProperty(item, 'instrument', 'pricing_currency')">
-                                            <span data-ng-if="!!item.instrument.pricing_currency_toggle">Reference</span>
-                                            <span data-ng-if="!!!item.instrument.pricing_currency_toggle">Input</span>
-                                        </md-switch>
-                                        <div data-ng-if="item.instrument.pricing_currency_toggle">
-                                            <md-input-container>
-                                                <label for="">Pricing currency</label>
-                                                <md-select data-ng-model="item.instrument.pricing_currency"
-                                                           md-on-open="vm.loadRelation('pricing_currency')">
-                                                    <md-option data-ng-if="!vm.relationItems['pricing_currency'].length"
-                                                               ng-value="item.instrument.pricing_currency_object.id">
-                                                        {{item.instrument.pricing_currency_object.name}}
-                                                    </md-option>
-                                                    <md-option
-                                                            data-ng-if="vm.relationItems['pricing_currency'].length"
-                                                            data-ng-repeat="relationItem in vm.relationItems['pricing_currency']"
-                                                            ng-value="relationItem.id">
-                                                        {{relationItem.name}}
-                                                    </md-option>
-                                                </md-select>
-                                            </md-input-container>
+                                    <div flex="33" layout="row">
+                                        <!--<md-switch ng-model="item.instrument.pricing_currency_toggle"-->
+                                        <!--aria-label=""-->
+                                        <!--data-ng-click="vm.resetProperty(item, 'instrument', 'pricing_currency')">-->
+                                        <!--<span data-ng-if="!!item.instrument.pricing_currency_toggle">Reference</span>-->
+                                        <!--<span data-ng-if="!!!item.instrument.pricing_currency_toggle">Input</span>-->
+                                        <!--</md-switch>-->
+                                        <style type="text/css">
+                                            .ref {
+                                                background-color: rgb(255,64,129) !important;
+                                                color: #fff !important;
+                                            }
+                                        </style>
+                                        <div flex="20">
+                                            <md-button class="md-icon-button md-raised {{!!item.instrument.pricing_currency_toggle ? 'ref' : ''}}"
+                                                       style="transform: scale(0.7,0.7)"
+                                                       data-ng-click="vm.resetPropertyTest(item, 'instrument', 'pricing_currency')">
+                                                <span data-ng-if="!!item.instrument.pricing_currency_toggle">R</span>
+                                                <span data-ng-if="!!!item.instrument.pricing_currency_toggle">I</span>
+                                            </md-button>
                                         </div>
-                                        <div data-ng-if="!item.instrument.pricing_currency_toggle">
-                                            <md-input-container>
-                                                <label for="">Pricing currency</label>
-                                                <md-select
-                                                        data-ng-model="item.instrument.pricing_currency_input">
-                                                    <md-option
-                                                            data-ng-repeat="inputItem in vm.findInputs('currency')"
-                                                            ng-value="inputItem.name">
-                                                        {{inputItem.name}}
-                                                    </md-option>
-                                                </md-select>
-                                            </md-input-container>
+                                        <div flex="80">
+                                            <div data-ng-if="item.instrument.pricing_currency_toggle">
+                                                <md-input-container>
+                                                    <label for="">Pricing currency</label>
+                                                    <md-select data-ng-model="item.instrument.pricing_currency"
+                                                               md-on-open="vm.loadRelation('pricing_currency')">
+                                                        <md-option
+                                                                data-ng-if="!vm.relationItems['pricing_currency'].length"
+                                                                ng-value="item.instrument.pricing_currency_object.id">
+                                                            {{item.instrument.pricing_currency_object.name}}
+                                                        </md-option>
+                                                        <md-option
+                                                                data-ng-if="vm.relationItems['pricing_currency'].length"
+                                                                data-ng-repeat="relationItem in vm.relationItems['pricing_currency']"
+                                                                ng-value="relationItem.id">
+                                                            {{relationItem.name}}
+                                                        </md-option>
+                                                    </md-select>
+                                                </md-input-container>
+                                            </div>
+                                            <div data-ng-if="!item.instrument.pricing_currency_toggle">
+                                                <md-input-container>
+                                                    <label for="">Pricing currency</label>
+                                                    <md-select
+                                                            data-ng-model="item.instrument.pricing_currency_input">
+                                                        <md-option
+                                                                data-ng-repeat="inputItem in vm.findInputs('currency')"
+                                                                ng-value="inputItem.name">
+                                                            {{inputItem.name}}
+                                                        </md-option>
+                                                    </md-select>
+                                                </md-input-container>
+                                            </div>
                                         </div>
                                     </div>
                                     <div flex="33">

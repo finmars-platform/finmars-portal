@@ -54,6 +54,10 @@
                     //console.log(selected);
 
                     return selected;
+                };
+
+                scope.triggerResize = function () {
+
                 }
 
             }
