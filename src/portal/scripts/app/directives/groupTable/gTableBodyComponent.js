@@ -390,28 +390,30 @@
                         }
                     }
                     if (group.value_type === 'field') {
-                        if (!entityFieldsArray.hasOwnProperty(group.key)) {
-                            findGroups();
-                        }
+                        //if (!entityFieldsArray.hasOwnProperty(group.key)) {
+                        //    findGroups();
+                        //}
 
                         if (scope.readyStatus.cellsFirstReady == true) {
 
-                            var i, result;
-                            for (i = 0; i < entityFieldsArray[group.key].length; i = i + 1) {
-                                //console.log('entityFieldsArray[group.key]', entityFieldsArray[group.key]);
-                                if (entityFieldsArray[group.key][i].id === group.value) {
-                                    result = entityFieldsArray[group.key][i];
+                            if (entityFieldsArray[group.key]) {
+                                var i, result;
+                                for (i = 0; i < entityFieldsArray[group.key].length; i = i + 1) {
+                                    //console.log('entityFieldsArray[group.key]', entityFieldsArray[group.key]);
+                                    if (entityFieldsArray[group.key][i].id === group.value) {
+                                        result = entityFieldsArray[group.key][i];
+                                    }
                                 }
-                            }
 
-                            if (result) {
-                                if (result.hasOwnProperty('display_name')) {
-                                    return result.display_name;
+                                if (result) {
+                                    if (result.hasOwnProperty('display_name')) {
+                                        return result.display_name;
+                                    }
+                                    if (result.hasOwnProperty('scheme_name')) {
+                                        return result.scheme_name;
+                                    }
+                                    return result.name;
                                 }
-                                if (result.hasOwnProperty('scheme_name')) {
-                                    return result.scheme_name;
-                                }
-                                return result.name;
                             }
                         }
                     }
@@ -441,17 +443,17 @@
                     if (column.hasOwnProperty('id')) {
                         if (column['value_type'] === 30) {
                             //if (scope.readyStatus.cellsFirstReady == true) {
-                                var classifierNode;
-                                if (entityFieldsArray && entityFieldsArray['classifier_' + column.id]) {
-                                    entityFieldsArray['classifier_' + column.id].classifiers.forEach(findNodeInChildren);
-                                    if (classifierNode) {
-                                        if (classifierNode['display_name']) {
-                                            return classifierNode['display_name'];
-                                        }
-                                        return classifierNode['name'];
+                            var classifierNode;
+                            if (entityFieldsArray && entityFieldsArray['classifier_' + column.id]) {
+                                entityFieldsArray['classifier_' + column.id].classifiers.forEach(findNodeInChildren);
+                                if (classifierNode) {
+                                    if (classifierNode['display_name']) {
+                                        return classifierNode['display_name'];
                                     }
+                                    return classifierNode['name'];
                                 }
-                                return '';
+                            }
+                            return '';
                             //} else {
                             //    return '<div class="zh-loader"></div>';
                             //}
@@ -472,24 +474,24 @@
                                 if (column['value_type'] === 'field') {
                                     var _groupedItemVal = groupedItem[entityAttrs[e].key];
                                     //if (scope.readyStatus.cellsFirstReady) {
-                                        //console.log('entityFieldsArray', entityFieldsArray);
-                                        if (entityFieldsArray[column.key]) {
-                                            var result = entityFieldsArray[column.key].filter(function (item) {
-                                                return item.id === _groupedItemVal;
-                                            })[0];
+                                    //console.log('entityFieldsArray', entityFieldsArray);
+                                    if (entityFieldsArray[column.key]) {
+                                        var result = entityFieldsArray[column.key].filter(function (item) {
+                                            return item.id === _groupedItemVal;
+                                        })[0];
+                                    }
+                                    if (result) {
+                                        if (column['key'] === 'instrument' && result['user_code']) {
+                                            return result['user_code'];
+                                        } else if (column['key'] === 'price_download_scheme') {
+                                            return result['scheme_name'];
                                         }
-                                        if (result) {
-                                            if (column['key'] === 'instrument' && result['user_code']) {
-                                                return result['user_code'];
-                                            } else if (column['key'] === 'price_download_scheme') {
-                                                return result['scheme_name'];
-                                            }
-                                            else if (result['display_name']) {
-                                                return result['display_name'];
-                                            }
-                                            return result['name'];
+                                        else if (result['display_name']) {
+                                            return result['display_name'];
                                         }
-                                        return '';
+                                        return result['name'];
+                                    }
+                                    return '';
                                     //} else {
                                     //    return '<div class="zh-loader"></div>';
                                     //}
