@@ -58,7 +58,7 @@
 
                 $scope.$apply();
             });
-        }
+        };
 
         vm.dataProviders = [];
 
@@ -87,7 +87,8 @@
                 key: 'instrument_type',
                 caption: 'Instrument type',
                 required: true,
-                expression: ''
+                expression: '',
+                complexExpressionEntity: 'instrument_type'
             },
             {
                 key: 'reference_for_pricing',

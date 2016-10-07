@@ -88,7 +88,8 @@
                 key: 'instrument_type',
                 caption: 'Instrument type',
                 required: true,
-                expression: ''
+                expression: '',
+                complexExpressionEntity: 'instrument_type'
             },
             {
                 key: 'reference_for_pricing',
@@ -292,7 +293,7 @@
                                 if (vm.entityAttrs[e].key == keys[i]) {
                                     if (vm.scheme[keys[i]] != "" && vm.scheme[keys[i]] != null && vm.scheme[keys[i]] != undefined) {
                                         var complexExpressionEntity = false;
-                                        if(keys[i] == 'accrued_currency' || keys[i] == 'pricing_currency') {
+                                        if (keys[i] == 'accrued_currency' || keys[i] == 'pricing_currency') {
                                             complexExpressionEntity = 'currency';
                                         }
                                         vm.mappedDynamic.push({
@@ -345,7 +346,7 @@
 
 
             vm.scheme.inputs = vm.providerFields;
-            vm.scheme.inputs.forEach(function(item){
+            vm.scheme.inputs.forEach(function (item) {
                 item.field = item.name;
             });
 
@@ -372,6 +373,9 @@
         };
 
         vm.openMapping = function ($event, item) {
+
+            console.log('ITEEM', item);
+
             $mdDialog.show({
                 controller: 'EntityTypeMappingDialogController as vm',
                 templateUrl: 'views/dialogs/entity-type-mapping-dialog-view.html',
@@ -418,7 +422,7 @@
             if (field.value.hasOwnProperty('key')) {
                 field.key = field.value.key;
 
-                if(field.key == 'accrued_currency' || field.key == 'pricing_currency') {
+                if (field.key == 'accrued_currency' || field.key == 'pricing_currency') {
                     field.complexExpressionEntity = 'currency';
                 }
             }
