@@ -101,8 +101,8 @@
     position: relative;
     height: 24px;
     &:focus {
-      //outline-color: rgba(255, 62, 129, 1);
-      //outline: none;
+      //outline-color: transparent;
+      outline: none !important;
       //&:after {
       //  display: block;
       //  position: absolute;
@@ -1181,5 +1181,40 @@ body.md-dialog-is-showing {
 .ev-data-field {
   md-select {
     margin-bottom: 20px;
+  }
+}
+
+.g-table-body-pagination {
+  ul {
+    list-style-type: none;
+    margin: 0;
+    overflow: hidden;
+    background: #4C334D;
+    padding: 4px;
+  }
+  li {
+    display: block;
+    float: left;
+    background: #4C334D;
+    min-width: 24px;
+    height: 24px;
+    text-align: center;
+    line-height: 24px;
+    border-radius: 2px;
+    //border: 1px solid #fff;
+    margin-right: 4px;
+    &.active {
+      background: #F4AF8B;
+    }
+    &:hover {
+      background: #F4AF8B;
+    }
+    a {
+      display: block;
+      width: 100%;
+      height: 100%;
+      color: #fff;
+      text-decoration: none;
+    }
   }
 }

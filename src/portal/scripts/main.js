@@ -74,7 +74,7 @@ app.controller('ComplexTransactionSpecialRulesController', ['$scope', require('.
 
 app.controller('BookTransactionActionsTabController', ['$scope', require('./app/controllers/tabs/complex-transaction/bookTransactionActionsTabController')]);
 
-app.controller('TransactionTypeActionsTabController', ['$scope', require('./app/controllers/tabs/transaction-type/transactionTypeActionsTabController')]);
+app.controller('TransactionTypeActionsTabController', ['$scope', '$mdDialog', require('./app/controllers/tabs/transaction-type/transactionTypeActionsTabController')]);
 app.controller('TransactionTypeGeneralTabController', ['$scope', require('./app/controllers/tabs/transaction-type/transactionTypeGeneralTabController')]);
 app.controller('TransactionTypeInputsTabController', ['$scope', require('./app/controllers/tabs/transaction-type/transactionTypeInputsTabController')]);
 

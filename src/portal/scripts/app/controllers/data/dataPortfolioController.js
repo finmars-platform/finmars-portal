@@ -28,7 +28,7 @@
 
         vm.getList = function(options){
             return portfolioService.getList(options).then(function(data){
-                return data.results;
+                return data;
             })
         }
     }

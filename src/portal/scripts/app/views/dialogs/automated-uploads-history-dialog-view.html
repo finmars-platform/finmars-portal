@@ -12,7 +12,7 @@
                     <div>
                         <md-input-container>
                             <label for="">Upload periodicity</label>
-                            <md-select data-ng-model="vm.cron.periodicity">
+                            <md-select data-ng-model="vm.cron.periodicity" data-ng-change="vm.resetCronExpr()">
                                 <md-option value="1">Daily</md-option>
                                 <md-option value="2">Weekly</md-option>
                                 <md-option value="3">Monthly</md-option>
@@ -76,10 +76,12 @@
                                     <md-option value="12">December</md-option>
                                 </md-select>
                             </md-input-container>
+
                             <md-input-container>
                                 <label for="">Day</label>
-                                <md-select data-ng-model="vm.cron.day">
-                                    <md-option value="{{item + 1}}" data-ng-repeat="item in vm.getRange(30)">{{item + 1}}</md-option>
+
+                                <md-select data-ng-model="vm.cron.day" multiple>
+                                    <md-option value="{{item + 1}}" data-ng-repeat="item in vm.getRange(31)">{{item + 1}}</md-option>
                                 </md-select>
                             </md-input-container>
                         </div>

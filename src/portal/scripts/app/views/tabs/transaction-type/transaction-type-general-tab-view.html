@@ -38,14 +38,14 @@
             <md-input-container style="min-width: 200px">
                 <label for="">Instrument types</label>
                 <md-select data-ng-model="vm.entity.instrument_types" multiple
-                           md-selected-text="vm.bindSelectedText(vm.entity.instrument_types)">
+                           md-selected-text="vm.bindSelectedText(vm.entity.instrument_types, 'Instrument Type')">
                     <md-option ng-value="item.id" ng-repeat="item in vm.instrumentTypes">{{item.name}}</md-option>
                 </md-select>
             </md-input-container>
             <md-input-container style="min-width: 200px">
                 <label for="">Portfolios</label>
                 <md-select data-ng-model="vm.entity.portfolios" multiple
-                           md-selected-text="vm.bindSelectedText(vm.entity.portfolios)">
+                           md-selected-text="vm.bindSelectedText(vm.entity.portfolios, 'Portfolio')">
                     <md-option ng-value="item.id" ng-repeat="item in vm.portfolios">{{item.name}}</md-option>
                 </md-select>
             </md-input-container>

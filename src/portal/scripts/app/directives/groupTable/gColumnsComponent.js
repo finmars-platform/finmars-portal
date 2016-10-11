@@ -36,12 +36,12 @@
                 scope.isAllSelected = false;
 
 
-                scope.selectAllRows = function(){
+                scope.selectAllRows = function () {
                     scope.isAllSelected = !scope.isAllSelected;
-                    scope.items.forEach(function(item){
-                        if(item.hasOwnProperty('groups')) {
+                    scope.items.forEach(function (item) {
+                        if (item.hasOwnProperty('groups')) {
                             item.selectedRow = scope.isAllSelected;
-                            item.items.forEach(function(row){
+                            item.items.forEach(function (row) {
                                 row.selectedRow = scope.isAllSelected;
                             })
                         } else {
@@ -78,14 +78,18 @@
 
                 scope.isSortable = function (column) {
                     var b, e;
-                    for (b = 0; b < baseAttrs.length; b = b + 1) {
-                        if (baseAttrs[b].key === column.key && baseAttrs[b].key !== 'notes') {
-                            return true;
+                    if (baseAttrs && baseAttrs.length) {
+                        for (b = 0; b < baseAttrs.length; b = b + 1) {
+                            if (baseAttrs[b].key === column.key && baseAttrs[b].key !== 'notes') {
+                                return true;
+                            }
                         }
                     }
-                    for (e = 0; e < entityAttrs.length; e = e + 1) {
-                        if (entityAttrs[e].key === column.key) {
-                            return true;
+                    if (entityAttrs && entityAttrs.length) {
+                        for (e = 0; e < entityAttrs.length; e = e + 1) {
+                            if (entityAttrs[e].key === column.key) {
+                                return true;
+                            }
                         }
                     }
 

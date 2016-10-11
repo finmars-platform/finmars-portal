@@ -47,11 +47,11 @@
             })
         };
 
-        vm.bindSelectedText = function (entity) {
+        vm.bindSelectedText = function (entity, fallback) {
             if (entity) {
                 return '[' + entity.length + ']';
             }
-            return '';
+            return fallback;
         };
 
         vm.getTransactionTypeGroups();

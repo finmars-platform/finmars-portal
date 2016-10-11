@@ -29,7 +29,7 @@
 
         vm.getList = function(options){
             return tagService.getList(options).then(function(data){
-                return data.results;
+                return data;
             })
         }
 

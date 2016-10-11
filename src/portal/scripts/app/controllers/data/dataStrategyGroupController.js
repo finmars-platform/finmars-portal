@@ -35,7 +35,7 @@
 
         vm.getList = function(options){
             return strategyGroupService.getList(vm.strategyNumber, options).then(function(data){
-                return data.results;
+                return data;
             })
         }
 
