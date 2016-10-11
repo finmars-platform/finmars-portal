@@ -239,7 +239,9 @@
 
                 var haveAccess = false;
 
-                if (vm.entity.granted_permissions && vm.entity.granted_permissions.indexOf("manage_" + vm.entityType) !== -1) {
+                var entityType = vm.entityType.split('-').join('');
+
+                if (vm.entity.granted_permissions && vm.entity.granted_permissions.indexOf("manage_" + entityType) !== -1) {
                     haveAccess = true;
                 }
 

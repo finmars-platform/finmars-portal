@@ -37,7 +37,11 @@
                 externalUpdateItemAdditions: '&',
 
                 additionsStatus: '=',
-                additionsState: '='
+                additionsState: '=',
+
+                paginationItemPerPage: '=',
+                paginationItemsTotal: '=',
+                paginationPageCurrent: '='
             },
             link: function (scope, elem, attrs) {
 

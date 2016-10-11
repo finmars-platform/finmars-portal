@@ -21,6 +21,7 @@
 
         logService.controller('EntityViewerController', 'initialized');
 
+
         //console.log('$scope', $scope);
 
         $('.save-layout-btn').bind('click', function (e) {
@@ -83,6 +84,20 @@
         });
 
         var vm = this;
+
+        vm.paginationPageCurrent = 1;
+        vm.paginationItemPerPage = 20;
+        vm.paginationItemsTotal = 0;
+
+        if (window.location.hash.split('?')[1]) {
+            var queryParams = window.location.hash.split('?')[1].split('&');
+
+            queryParams.forEach(function (queryParameter) {
+                if (queryParameter.indexOf('page=') == 0) {
+                    vm.paginationPageCurrent = queryParameter.split('=')[1];
+                }
+            });
+        }
 
         // ATTRIBUTE STUFF START
 
@@ -325,7 +340,9 @@
                     key: vm.sorting.column.key,
                     direction: vm.sorting.column.sort
                 },
-                filters: {}
+                filters: {},
+                page: vm.paginationPageCurrent,
+                pageSize: vm.paginationItemPerPage
             };
 
             //console.log('vm.filters', vm.filters);
@@ -340,7 +357,12 @@
             //console.log('entityViewerController parent scope ', $scope.$parent);
             //console.log('ENTITY VIEWER vm.grouping', vm.grouping);
             $scope.$parent.vm.getList(options).then(function (data) {
-                entityViewerHelperService.transformItems(data, vm.attrs).then(function (data) {
+
+                vm.paginationItemsTotal = data.count;
+                vm.nextExist = !!data.next;
+                vm.previousExist = !!data.previous;
+
+                entityViewerHelperService.transformItems(data.results, vm.attrs).then(function (data) {
 
                     vm.entity = data;
                     vm.groupTableService.setItems(vm.entity);
@@ -448,7 +470,7 @@
         });
 
         vm.checkAddBtn = function () {
-            if(["transaction"].indexOf(vm.entityType) !== -1){
+            if (["transaction"].indexOf(vm.entityType) !== -1) {
                 return false
             }
             return true

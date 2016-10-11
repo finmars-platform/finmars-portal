@@ -36,7 +36,7 @@
 
         vm.getList = function (options) {
             return instrumentService.getList(options).then(function (data) {
-                return data.results;
+                return data;
             })
         }
 

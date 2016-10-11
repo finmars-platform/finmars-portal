@@ -10,7 +10,7 @@
     var fieldResolverService = require('../../../services/fieldResolverService');
     var metaContentTypesService = require('../../../services/metaContentTypesService');
 
-    module.exports = function ($scope) {
+    module.exports = function ($scope, $mdDialog) {
         logService.controller('TransactionTypeActionsTabController', 'initialized');
 
         var vm = this;
@@ -58,7 +58,7 @@
 
         };
 
-        vm.resetPropertyTest = function (item, propertyName, fieldName) {
+        vm.resetPropertyBtn = function (item, propertyName, fieldName) {
 
             item[propertyName][fieldName] = null;
             item[propertyName][fieldName + '_input'] = null;
@@ -88,15 +88,42 @@
 
         };
 
+        vm.deletePane = function (item, $index, $event) {
+
+            var description = 'Are you sure to delete this action?';
+
+            $mdDialog.show({
+                controller: 'WarningDialogController as vm',
+                templateUrl: 'views/warning-dialog-view.html',
+                parent: angular.element(document.body),
+                targetEvent: $event,
+                preserveScope: true,
+                autoWrap: true,
+                skipHide: true,
+                locals: {
+                    warning: {
+                        title: 'Warning',
+                        description: description
+                    }
+                }
+            }).then(function (res) {
+                if (res.status === 'agree') {
+                    vm.entity.actions.splice($index, 1);
+                }
+                $scope.$apply();
+            });
+        };
+
         vm.addAction = function (actionType) {
+            $scope.accordion.collapseAll();
             if (actionType == 'instrument') {
                 vm.entity.actions.push({
-                    isExpanded: true,
+                    isPaneExpanded: true,
                     instrument: {}
                 })
             } else {
                 vm.entity.actions.push({
-                    isExpanded: true,
+                    isPaneExpanded: true,
                     transaction: {}
                 })
             }

@@ -21,7 +21,11 @@
                 columns: '=',
                 itemAdditionsEditorEntityId: '=',
                 isAllSelected: '=',
-                entityType: '='
+                entityType: '=',
+
+                paginationItemPerPage: '=',
+                paginationItemsTotal: '=',
+                paginationPageCurrent: '='
             },
             templateUrl: 'views/directives/groupTable/table-body-view.html',
             link: function (scope, elem, attrs) {
@@ -123,7 +127,7 @@
                     //console.log('entityFieldsArray', entityFieldsArray);
                 };
 
-                if (scope.grouping.length) {
+                if (scope.grouping && scope.grouping.length) {
                     syncGroupsAndColumns();
                 }
 
@@ -420,9 +424,13 @@
 
                     if (group.value_type == '10'
                         || group.value_type == '40'
+                        || group.value_type == 'float'
+                        || group.value_type == 'string'
+                        || group.value_type == 'date'
                         || group.value_type == 'value_string'
                         || group.value_type == 'value_float'
-                        || group.value_type == 'value_date') {
+                        || group.value_type == 'value_date'
+                    ) {
                         return group.value;
                     }
                 };
@@ -537,7 +545,7 @@
                         itemHasSimpleSelect = JSON.parse(JSON.stringify(item.simpleSelect));
                     }
 
-                    console.log('scope.itemAdditionsEditorEntityId', itemHasSimpleSelect);
+                    //console.log('scope.itemAdditionsEditorEntityId', itemHasSimpleSelect);
 
                     scope.items.forEach(function (item) {
                         if (item.hasOwnProperty('groups')) {
@@ -637,7 +645,12 @@
                     });
                 };
 
-                //console.log('Table body component columns ', scope.columns);
+                scope.changePage = function (page) {
+                    scope.paginationPageCurrent = page;
+                    setTimeout(function () {
+                        scope.externalCallback(); // do update table after angular digest refresh scope.paginationPageCurrent
+                    }, 0)
+                }
             }
         }
     }

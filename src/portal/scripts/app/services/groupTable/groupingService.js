@@ -201,7 +201,7 @@
 
             //console.log('------------------------');
 
-            //console.log('Items grouped', itemsGroupedArray);
+            console.log('Items grouped', itemsGroupedArray);
             return itemsGroupedArray;
         } else {
             //console.log('items', items);
