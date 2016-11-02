@@ -111,6 +111,9 @@
         vm.entityRaw = $scope.$parent.vm.entityRaw;
         vm.entity = [];
         vm.entityType = $scope.$parent.vm.entityType;
+        vm.isReport = $scope.$parent.vm.isReport || false;
+
+        console.log('vm.isReport', vm.isReport);
 
         vm.customButtons = $scope.$parent.vm.entityViewer.extraFeatures;
 
@@ -369,7 +372,12 @@
 
                     vm.groupTableService.columns.setColumns(vm.columns);
                     //vm.groupTableService.filtering.setFilters(vm.filters);
-                    vm.groupTableService.grouping.setGroups(vm.grouping, vm.entityType);
+
+                    if (vm.isReport == true) {
+                        vm.groupTableService.grouping.setGroupsWithColumns(vm.grouping, vm.columns, vm.entityType);
+                    } else {
+                        vm.groupTableService.grouping.setGroups(vm.grouping, vm.entityType);
+                    }
                     //console.log("EXTERNAL CALLBACK ", vm.folding);
                     vm.groupTableService.folding.setFolds(vm.folding);
                     //console.log('UPDATE TABLE scope.sorting.group', vm.sorting.group);

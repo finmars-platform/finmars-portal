@@ -1218,3 +1218,42 @@ body.md-dialog-is-showing {
     }
   }
 }
+
+.report-holder {
+  .g-row.report-normal-row, .g-row.report-subtotal-row, .g-row.report-header-row {
+    border-bottom: 1px solid transparent;
+  }
+  .g-row .g-cell {
+    height: 24px;
+    box-sizing: border-box;
+  }
+
+  .g-row.report-subtotal-row {
+    .g-cell {
+      border-right: 0;
+      //border-bottom: 1px solid #363636;
+    }
+
+    .g-cell-wrap:last-child .g-cell {
+      border-right: 1px solid #363636;
+    }
+    .g-cell-wrap:nth-child(2) .g-cell { //wut?
+      border-right: 1px solid #363636;
+    }
+  }
+
+  .g-row {
+    .g-cell.r-c-border-right {
+      border-right: 1px solid #363636;
+    }
+    .g-cell.r-c-border-top {
+      border-top: 1px solid #363636;
+    }
+    .g-cell.r-c-border-top-border-right {
+      border-top: 1px solid #363636;
+      border-right: 1px solid #363636;
+    }
+  }
+
+}
+

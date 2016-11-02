@@ -30,6 +30,17 @@
             controller: 'ActionsController as vm'
         });
 
+        $stateProvider.state('app.data-constructor', {
+            url: '/layout/:entityType/:instanceId',
+            params: {
+                instanceId: null
+            },
+            templateUrl: 'views/entity-data-constructor-view.html',
+            controller: 'EntityDataConstructorController as vm'
+        });
+
+        $urlRouterProvider.otherwise('/');
+
         $stateProvider
             .state('app.data', {
                 url: '/data',
@@ -146,6 +157,21 @@
                 templateUrl: 'views/data/data-strategy-view.html',
                 controller: 'DataStrategyController as vm'
             })
+            .state('app.reports', {
+                url: '/reports',
+                abstract: true,
+                template: '<div data-ui-view></div>'
+            })
+            .state('app.reports.balance', {
+                url: '/balance',
+                templateUrl: 'views/reports/reports-balance-view.html',
+                controller: 'BalanceReportController as vm'
+            })
+            .state('app.reports.profit-and-lost', {
+                url: '/profit-and-lost',
+                templateUrl: 'views/reports/reports-profit-and-lost-view.html',
+                controller: 'ProfitAndLostReportController as vm'
+            })
             .state('app.settings', {
                 abstract: true,
                 url: '/settings',
@@ -218,17 +244,6 @@
                 templateUrl: 'views/system/audit-view.html',
                 controller: 'AuditController as vm'
             });
-
-        $stateProvider.state('app.data-constructor', {
-            url: '/layout/:entityType/:instanceId',
-            params: {
-                instanceId: null
-            },
-            templateUrl: 'views/entity-data-constructor-view.html',
-            controller: 'EntityDataConstructorController as vm'
-        });
-
-        $urlRouterProvider.otherwise('/');
 
     }
 
