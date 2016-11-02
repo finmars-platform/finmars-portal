@@ -263,22 +263,61 @@
                     return scope.reportItems;
                 };
 
-                scope.resolveReportCellBorder = function (rowType, cellsCaptions, column, $index) {
+                scope.resolveReportCellBorder = function (rowType, item, column, $index) {
 
                     var result = '';
 
+                    console.log('item', item);
+
                     if (rowType == 'subtotal') {
 
-                        if ($index < cellsCaptions.length) {
-                            if (cellsCaptions[$index + 1] == 'Subtotal') {
-                                result = 'r-c-border-right';
+                        if ($index < item.cellsCaptions.length) {
+                            if (item.cellsCaptions[$index] == 'Subtotal') {
+                                result = 'r-c-border-left-border-bottom';
                             }
 
-                            if (cellsCaptions[$index - 1] == 'Subtotal') {
-                                result = 'r-c-border-top';
+                            if (item.cellsCaptions[$index + 1] == 'Subtotal') {
+                                result = 'r-c-border-left-border-right'
                             }
+
+                            if (item.cellsCaptions[$index - 1] == 'Subtotal') {
+                                result = 'r-c-border-right-border-bottom-border-top';
+                            }
+
+                            if($index == 0) {
+                                result = 'r-c-border-left-border-right'
+                            }
+
                         } else {
-                            result = 'r-c-border-top-border-right';
+                            result = 'r-c-border-right-border-bottom-border-top';
+                        }
+
+                    }
+
+                    if (rowType == 'normal') {
+
+                        result = 'r-c-border-right-border-bottom-border-top';
+
+                        if($index < item.cellsCaptions.length) {
+                            result = 'r-c-border-left-border-right'
+                        }
+
+                        if($index == 0) {
+                            result = 'r-c-border-left-border-right'
+                        }
+
+
+                    }
+
+                    if (rowType == 'header') {
+
+                        result = 'r-c-border-right-border-bottom-border-top';
+
+                        if($index < item.cellsCaptions.length) {
+                            result = 'r-c-border-left-border-right'
+                        }
+                        if($index == 0) {
+                            result = 'r-c-border-left-border-right'
                         }
 
                     }

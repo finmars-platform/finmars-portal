@@ -16,10 +16,11 @@
     background: #4C334D;
     overflow: auto;
     position: relative;
-    &:after {
+    &::after {
       display: block;
       content: '';
       height: 100%;
+      z-index: 10;
       width: 6px;
       background: #4C334D;
       right: 0;
@@ -36,6 +37,7 @@
       content: '';
       display: block;
       top: 0;
+      z-index: 10;
       position: absolute;
       left: 0;
       background: #4C334D;
@@ -1223,9 +1225,58 @@ body.md-dialog-is-showing {
   .g-row.report-normal-row, .g-row.report-subtotal-row, .g-row.report-header-row {
     border-bottom: 1px solid transparent;
   }
+  .g-row {
+    border: none !important;
+  }
   .g-row .g-cell {
     height: 24px;
     box-sizing: border-box;
+    border: none !important;
+    box-shadow: 1px 0 0 0 #363636,
+    0 1px 0 0 #363636,
+    1px 1px 0 0 #363636,
+    1px 0 0 0 #363636 inset,
+    0 1px 0 0 #363636 inset;
+  }
+  .g-row .g-row-selection {
+    box-shadow: 1px 0 0 0 #363636,
+    0 1px 0 0 #363636,
+    1px 1px 0 0 #363636,
+    1px 0 0 0 #363636 inset,
+    0 1px 0 0 #363636 inset;
+    border: none !important;
+  }
+  .g-row.report-preinit-row {
+    border-bottom: 0;
+    position: relative;
+    z-index: 1;
+
+    .g-group {
+      height: 24px;
+      line-height: 24px;
+    }
+    .g-row-selection {
+      margin-right: 6px;
+    }
+  }
+  .g-row.report-init-row {
+    position: relative;
+    z-index: 1;
+    .g-group {
+      height: 24px;
+      line-height: 24px;
+    }
+    .g-row-selection {
+      margin-right: 6px;
+    }
+  }
+
+  .g-row.report-init-row {
+    box-shadow: 1px 0 0 0 #363636,
+    0 1px 0 0 #363636,
+    1px 1px 0 0 #363636,
+    1px 0 0 0 #363636 inset,
+    0 1px 0 0 #363636 inset;
   }
 
   .g-row.report-subtotal-row {
@@ -1234,24 +1285,64 @@ body.md-dialog-is-showing {
       //border-bottom: 1px solid #363636;
     }
 
-    .g-cell-wrap:last-child .g-cell {
-      border-right: 1px solid #363636;
-    }
-    .g-cell-wrap:nth-child(2) .g-cell { //wut?
-      border-right: 1px solid #363636;
-    }
+    //.g-cell-wrap:last-child .g-cell {
+    //  box-shadow: 1px 0 0 0 #363636,
+    //  0 1px 0 0 #363636,
+    //  1px 1px 0 0 #363636,
+    //  1px 0 0 0 #363636 inset,
+    //  0 1px 0 0 #363636 inset;
+    //}
+    //.g-cell-wrap:nth-child(2) .g-cell { //wut?
+    //  box-shadow: 1px 0 0 0 #363636, 0 1px 0 0 #363636, 1px 1px 0 0 #363636, 1px 0 0 0 #363636 inset;
+    //}
   }
+
+  //.g-row.report-header-row {
+  //  .g-cell-wrap:nth-child(2) .g-cell { //wut?
+  //    box-shadow: 1px 0 0 0 #363636, 0 1px 0 0 #363636, 1px 1px 0 0 #363636, 1px 0 0 0 #363636 inset;
+  //  }
+  //}
+  //.g-row.report-normal-row {
+  //  .g-cell-wrap:nth-child(2) .g-cell { //wut?
+  //    box-shadow: 1px 0 0 0 #363636, 0 1px 0 0 #363636, 1px 1px 0 0 #363636, 1px 0 0 0 #363636 inset;
+  //  }
+  //}
 
   .g-row {
     .g-cell.r-c-border-right {
-      border-right: 1px solid #363636;
+      box-shadow: inset -1px 0 0 #363636;
     }
     .g-cell.r-c-border-top {
-      border-top: 1px solid #363636;
+      box-shadow: 1px 0 0 0 #363636,
+      0 1px 0 0 #363636,
+      1px 1px 0 0 #363636,
+      1px 0 0 0 #363636 inset,
+      0 1px 0 0 #363636 inset;
     }
+    .g-cell.r-c-border-bottom {
+      box-shadow: inset 0 -.5px 0 0 #363636
+    }
+
+    .g-cell.r-c-border-left-border-right {
+      box-shadow: inset -.5px 0 0 #363636, inset .5px 0 0 #363636,
+    }
+    .g-cell.r-c-border-left-border-bottom {
+      box-shadow: inset .5px 0 0 #363636, inset 0 -.5px 0 0 #363636;
+    }
+    .g-cell.r-c-border-right-border-bottom {
+      box-shadow: inset -.5px 0 0 #363636, inset 0 -.5px 0 0 #363636;
+    }
+
+    .g-cell.r-c-border-right-border-bottom-border-top {
+      box-shadow: inset -.5px 0 0 #363636, inset 0 -.5px 0 0 #363636, inset 0 .5px 0 0 #363636;
+    }
+
+    .r-c-border-top-border-bottom {
+      box-shadow: inset 0 .5px 0 0 #363636, inset 0 -.5px 0 0 #363636;
+    }
+
     .g-cell.r-c-border-top-border-right {
-      border-top: 1px solid #363636;
-      border-right: 1px solid #363636;
+      box-shadow: inset 0 .5px 0 0 #363636, inset -.5px 0 0 #363636;
     }
   }
 
