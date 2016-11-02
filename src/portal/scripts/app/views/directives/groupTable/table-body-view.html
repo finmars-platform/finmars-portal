@@ -8,7 +8,7 @@
     <div data-ng-show="checkReady()" ng-cloak style="padding-bottom: 75px">
         <div>
             <div data-ng-if="grouping.length" contextmenu-container="gtbody.contextmenu">
-                <div data-ng-repeat="item in items">
+                <div data-ng-if="!isReport" data-ng-repeat="item in items">
                     <div class="g-group-holder {{ checkRowSelection(item) ? 'selected-row' : '' }}">
                         <div class="g-row-selection" data-ng-click="toggleSelectRow($event, item)">
                             <ng-md-icon icon="done" data-ng-show="item.selectedRow"></ng-md-icon>
@@ -46,6 +46,17 @@
                         </div>
                     </div>
                 </div>
+                <div data-ng-if="isReport" class="report-holder">
+
+                    <!-- preInit.initGroup start -->
+
+                    <group-bind-report-row data-ng-repeat="item in reportItemsProjection()" item="item"></group-bind-report-row>
+
+
+                    <!-- !preInit.initGroup end-->
+
+
+                </div>
             </div>
             <div data-ng-if="!grouping.length" contextmenu-container="gtbody.contextmenu">
                 <div data-ng-repeat="item in items" class="{{ checkRowSelection(item) ? 'selected-row' : ''}} g-row"
@@ -63,12 +74,14 @@
             </div>
         </div>
         <div class="table-end-row"></div>
-        <div paging
-             class="g-table-body-pagination"
-             page="paginationPageCurrent"
-             page-size="paginationItemPerPage"
-             total="paginationItemsTotal"
-             paging-action="changePage(page)">
+        <div
+                data-ng-if="!isReport"
+                paging
+                class="g-table-body-pagination"
+                page="paginationPageCurrent"
+                page-size="paginationItemPerPage"
+                total="paginationItemsTotal"
+                paging-action="changePage(page)">
         </div>
     </div>
 </div>

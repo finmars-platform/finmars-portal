@@ -22,6 +22,8 @@
                 folding: '=',
                 sorting: '=',
 
+                isReport: '=',
+
                 itemAdditionsEditorEntityId: '=',
                 itemAdditionsEditorTemplate: '=',
 

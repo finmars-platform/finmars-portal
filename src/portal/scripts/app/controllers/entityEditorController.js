@@ -506,14 +506,14 @@
                 if (member.objectPermissions && member.objectPermissions.manage == true) {
                     vm.entity["user_object_permissions"].push({
                         "member": member.id,
-                        "permission": "manage_" + vm.entityType
+                        "permission": "manage_" + vm.entityType //TODO remove _vm.entityType
                     })
                 }
 
                 if (member.objectPermissions && member.objectPermissions.change == true) {
                     vm.entity["user_object_permissions"].push({
                         "member": member.id,
-                        "permission": "change_" + vm.entityType
+                        "permission": "change_" + vm.entityType //TODO remove _vm.entityType
                     })
                 }
 

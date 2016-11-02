@@ -18,8 +18,14 @@
 		"type": "toggle",
 		"pages": [
 			{
-				"state": "app.add-balance",
+				"state": "app.reports.balance",
 				"title": "New Balance",
+				"type": "link",
+				"icon": ""
+			},
+			{
+				"state": "app.reports.profit-and-lost",
+				"title": "New P&L",
 				"type": "link",
 				"icon": ""
 			},

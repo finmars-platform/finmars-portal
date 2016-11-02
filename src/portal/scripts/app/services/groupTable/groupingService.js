@@ -7,6 +7,48 @@
 
     'use strict';
 
+    function returnValue(attribute) {
+
+        if (attribute['attribute_type_object'].value_type == 30) {
+            return attribute['classifier']
+        } else {
+            if (attribute['attribute_type_object'].value_type == 40) {
+                return attribute['value_date'];
+            } else {
+                if (attribute['attribute_type_object'].value_type == 20) {
+                    return attribute['value_float'];
+                } else {
+                    if (attribute['attribute_type_object'].value_type == 10 && attribute['value_string'] !== '') {
+                        return attribute['value_string'];
+                    } else {
+                        return null;
+                    }
+                }
+            }
+        }
+    }
+
+    function returnValueType(attribute) {
+
+        if (attribute['attribute_type_object'].value_type == 30) {
+            return 'classifier'
+        } else {
+            if (attribute['attribute_type_object'].value_type == 40) {
+                return 'value_date';
+            } else {
+                if (attribute['attribute_type_object'].value_type == 20) {
+                    return 'value_float';
+                } else {
+                    if (attribute['attribute_type_object'].value_type == 10) {
+                        return 'value_string';
+                    } else {
+                        return null;
+                    }
+                }
+            }
+        }
+    }
+
     var transformToArray = function (groupedObject) {
 
         //console.log('groupedObject', groupedObject);
@@ -59,54 +101,9 @@
             return false;
         }
 
-        function returnValue(attribute) {
-
-            //console.log('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!', attribute);
-
-            if (attribute['attribute_type_object'].value_type == 30) {
-                return attribute['classifier']
-            } else {
-                if (attribute['attribute_type_object'].value_type == 40) {
-                    return attribute['value_date'];
-                } else {
-                    if (attribute['attribute_type_object'].value_type == 20) {
-                        return attribute['value_float'];
-                    } else {
-                        if(attribute['attribute_type_object'].value_type == 10 && attribute['value_string'] !== '') {
-                            return attribute['value_string'];
-                        } else {
-                            return null;
-                        }
-                    }
-                }
-            }
-        }
-
-        function returnValueType(attribute) {
-
-            //console.log('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!', attribute);
-
-            if (attribute['attribute_type_object'].value_type == 30) {
-                return 'classifier'
-            } else {
-                if (attribute['attribute_type_object'].value_type == 40) {
-                    return 'value_date';
-                } else {
-                    if (attribute['attribute_type_object'].value_type == 20) {
-                        return 'value_float';
-                    } else {
-                        if(attribute['attribute_type_object'].value_type == 10) {
-                            return 'value_string';
-                        } else {
-                            return null;
-                        }
-                    }
-                }
-            }
-        }
 
         function checkIfEmptyString(item) {
-            if(item == '') {
+            if (item == '') {
                 return null
             }
             return item;
@@ -202,6 +199,12 @@
             //console.log('------------------------');
 
             console.log('Items grouped', itemsGroupedArray);
+
+            itemsGroupedArray.forEach(function (group) {
+                calcColumnSubTotal(group);
+            });
+
+
             return itemsGroupedArray;
         } else {
             //console.log('items', items);
@@ -209,8 +212,308 @@
         }
     };
 
+    function isInt(value) {
+        if (isNaN(value)) {
+            return false;
+        }
+        var x = parseFloat(value);
+        return (x | 0) === x;
+    }
+
+    function calcColumnSubTotal(group) {
+
+        var calculatedColumns = {};
+
+        group.items.forEach(function (groupedItem) {
+
+            var keys = Object.keys(groupedItem);
+
+
+            keys.forEach(function (groupedItemKey) {
+
+                if (isInt(groupedItem[groupedItemKey]) && groupedItemKey !== 'id') {
+                    if (!calculatedColumns[groupedItemKey]) {
+                        calculatedColumns[groupedItemKey] = 0;
+                    }
+
+                    calculatedColumns[groupedItemKey] = calculatedColumns[groupedItemKey] + parseFloat(groupedItem[groupedItemKey]);
+
+                }
+
+            });
+
+
+        });
+
+
+
+        group.subTotal = calculatedColumns;
+    }
+
+    function isAdded(needle, stack, property) {
+
+        var exist = false;
+
+        stack.forEach(function (item) {
+            if (item[property] == needle[property]) {
+                exist = true;
+            }
+        });
+
+        return exist;
+    }
+
+    var setGroupsWithColumns = function (items, groups, columns, entityType) {
+
+        var preInitGroups = [];
+        var initLineGroup = [];
+        var bootsGroup = [];
+        var linesGroup = [];
+
+
+        var initLineIndex = null;
+        var bootsGroupIndex = null;
+
+        var groupsInUse = [];
+
+        console.log('groups', groups);
+        console.log('columns', columns);
+
+        function findPreInitGroup() {
+            groups.forEach(function (group, $groupIndex) {
+                columns.forEach(function (column, $columnIndex) {
+                    if (initLineGroup.length) {
+                        if ($groupIndex < initLineIndex) {
+                            if ($groupIndex == $columnIndex) {
+                                if (group.hasOwnProperty('id') && column.hasOwnProperty('id')) {
+                                    if (group.id !== column.id) {
+                                        preInitGroups.push(group);
+                                    }
+                                } else {
+                                    if (group.hasOwnProperty('key') && column.hasOwnProperty('key')) {
+                                        if (group.key !== column.key) {
+                                            preInitGroups.push(group);
+                                        }
+                                    } else {
+                                        preInitGroups.push(group);
+                                    }
+                                }
+                            }
+                        }
+                    } else {
+                        // nice copypaste
+                        if ($groupIndex == $columnIndex) {
+                            if (group.hasOwnProperty('id') && column.hasOwnProperty('id')) {
+                                if (group.id !== column.id) {
+                                    preInitGroups.push(group);
+                                }
+                            } else {
+                                if (group.hasOwnProperty('key') && column.hasOwnProperty('key')) {
+                                    if (group.key !== column.key) {
+                                        preInitGroups.push(group);
+                                    }
+                                } else {
+                                    preInitGroups.push(group);
+                                }
+                            }
+                        }
+                    }
+
+                })
+            });
+        }
+
+        function findInitLineGroup() {
+            groups.forEach(function (group, $groupIndex) {
+                columns.forEach(function (column, $columnIndex) {
+                    if (!initLineGroup.length) {
+                        if (group.hasOwnProperty('id') && column.hasOwnProperty('id')) {
+                            if (group.id == column.id) {
+                                initLineGroup.push(group);
+                                initLineIndex = $groupIndex;
+                            }
+                        } else {
+                            if (group.hasOwnProperty('key') && column.hasOwnProperty('key')) {
+                                if (group.key == column.key) {
+                                    initLineGroup.push(group);
+                                    initLineIndex = $groupIndex;
+                                }
+                            }
+                        }
+                    }
+
+                })
+            });
+        }
+
+        function findBootsGroup() {
+            groups.forEach(function (group, $groupIndex) {
+                columns.forEach(function (column, $columnIndex) {
+
+                    if ($groupIndex > initLineIndex) {
+                        if ($groupIndex - initLineIndex == $columnIndex) {
+                            if (group.hasOwnProperty('id') && column.hasOwnProperty('id')) {
+                                if (group.id == column.id) {
+                                    bootsGroupIndex = $groupIndex;
+                                    bootsGroup.push(group);
+                                }
+                            } else {
+                                if (group.hasOwnProperty('key') && column.hasOwnProperty('key')) {
+                                    if (group.key == column.key) {
+                                        bootsGroupIndex = $groupIndex;
+                                        bootsGroup.push(group);
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                })
+            });
+        }
+
+        function findLinesGroup() {
+            groups.forEach(function (group, $groupIndex) {
+                columns.forEach(function (column, $columnIndex) {
+                    if (bootsGroupIndex) {
+                        if ($groupIndex > bootsGroupIndex) {
+                            if (group.hasOwnProperty('id')) {
+                                if (!isAdded(group, linesGroup, 'id')) {
+                                    linesGroup.push(group);
+                                }
+                            } else {
+                                if (!isAdded(group, linesGroup, 'key')) {
+                                    linesGroup.push(group);
+                                }
+                            }
+                        }
+                    }
+
+                })
+            });
+        }
+
+        findInitLineGroup();
+        findPreInitGroup();
+        findBootsGroup();
+        findLinesGroup();
+
+
+        console.log('preInitGroups', preInitGroups);
+        console.log('initLineGroup', initLineGroup);
+        console.log('bootsGroup', bootsGroup);
+        console.log('linesGroup', linesGroup);
+
+
+        var results = setGroups(items, preInitGroups, entityType);
+
+        results.forEach(function (preInitGroupsItem) {
+            preInitGroupsItem.initGroup = setGroups(preInitGroupsItem.items, initLineGroup, entityType);
+
+
+            if (preInitGroupsItem.initGroup && preInitGroupsItem.initGroup[0].hasOwnProperty('items')) {
+
+                preInitGroupsItem.initGroup.forEach(function (initGroupItem) {
+
+                    initGroupItem.bootGroup = setGroups(initGroupItem.items, bootsGroup, entityType);
+
+                    if (initGroupItem.bootGroup && initGroupItem.bootGroup[0].hasOwnProperty('items')) {
+
+                        initGroupItem.bootGroup.forEach(function (bootGroupItem) {
+
+                            bootGroupItem.lineGroup = setGroups(bootGroupItem.items, linesGroup, entityType);
+                        })
+                    }
+
+                })
+            }
+
+        });
+
+        console.log('results', results);
+
+        return results;
+
+    };
+
+
     module.exports = {
-        setGroups: setGroups
+        setGroups: setGroups,
+        setGroupsWithColumns: setGroupsWithColumns
     }
 
 }());
+
+
+// CASE 1 the simplest
+
+// GROUP1  | GROUP2      | GROUP3
+// COLUMN1 | COLUMN2     | COLUMN3
+// ______________________
+//
+// group1 full-width-line
+//         | group2 boot | group3 boot | row1
+//         |             |             | row2
+//         |             |             | row3
+//         |             |             group3 subtotal
+//         |             group2 subtotal
+//         | group2 boot | group3 boot | row4
+//         |             |             | row5
+//         |             |             | row6
+//         |             |             group3 subtotal
+//         |             | group3 boot | row7
+//         |             |             | row8
+//         |             |             | row9
+//         |             |             group3 subtotal
+//         |             group2 subtotal
+
+// CASE 2
+
+// GROUP1  | GROUP2      | GROUP3 | GROUP4
+// COLUMN2 | COLUMN3
+// ______________________
+//
+// group1  |
+// group2 full-width-line
+//         | group3 boot | group4 boot | row1
+//         |             |             | row2
+//         |             |             | row3
+//         |             |             group4 subtotal
+//         |             |             ∟ _ _ _ _ _ _  _
+//         |             ∟ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+//         |             group3 subtotal
+//         | group3 boot | group4 boot | row4
+//         |             |             | row5
+//         |             |             | row6
+//         |             |             ∟ _ _ _ _ _ _  _
+//         |             |             group4 subtotal
+//         |             | group4 boot | row7
+//         |             |             | row8
+//         |             |             | row9
+//         |             |             ∟ _ _ _ _ _ _  _
+//         |             |             group4 subtotal
+//         |             ∟ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+//         |             group3 subtotal
+
+
+// CASE 3
+
+// GROUP1  | GROUP2      | GROUP3      | GROUP 4
+// COLUMN1 | COLUMN2     | COLUMN3     | COLUMN 5
+// ______________________
+//
+// group1 full-width-line
+//         | group2 boot | group3 boot | group 4 line |
+//         |             |             | row2
+//         |             |             | row3
+//         |             |             group3 subtotal
+//         |             group2 subtotal
+//         | group2 boot | group3 boot | group 4 line |
+//         |             |             | row5
+//         |             |             | row6
+//         |             |             group3 subtotal
+//         |             | group3 boot | group 4 line |
+//         |             |             | row8
+//         |             |             | row9
+//         |             |             group3 subtotal
+//         |             group2 subtotal

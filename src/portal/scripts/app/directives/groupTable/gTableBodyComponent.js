@@ -10,6 +10,7 @@
     var attributeTypeService = require('../../services/attributeTypeService');
     var entityClassifierSingletonService = require('../../services/entityClassifierSingletonService');
     var bindCellService = require('../../services/bindCellService');
+    var groupTableReportService = require('../../services/groupTable/groupTableReportService');
 
     module.exports = function ($mdDialog) {
         return {
@@ -22,6 +23,7 @@
                 itemAdditionsEditorEntityId: '=',
                 isAllSelected: '=',
                 entityType: '=',
+                isReport: '=',
 
                 paginationItemPerPage: '=',
                 paginationItemsTotal: '=',
@@ -67,6 +69,21 @@
                     $mdOpenMenu(ev);
                 };
 
+
+                scope.checkReportColumnCaption = function (cellsCaptions, column, $columnIndex) {
+
+                    //console.log('$columnIndex', $columnIndex);
+                    //console.log('$columnIndex', $columnIndex);
+
+                    if ($columnIndex > cellsCaptions.length - 1) { // 1 - index
+                        return false;
+                    }
+
+                    // todo cellCaptions[columnIndex] == column
+
+                    return true;
+
+                };
 
                 var getFieldDisplayNamesArray = function () {
                     return new Promise(function (resolve, reject) {
@@ -130,6 +147,10 @@
                 if (scope.grouping && scope.grouping.length) {
                     syncGroupsAndColumns();
                 }
+
+                scope.$watch('items', function () {
+                    scope.reportItems = groupTableReportService.transformItems(scope.items);
+                });
 
                 function findGroups() {
 
@@ -237,6 +258,34 @@
 
                     })
                 }
+
+                scope.reportItemsProjection = function () {
+                    return scope.reportItems;
+                };
+
+                scope.resolveReportCellBorder = function (rowType, cellsCaptions, column, $index) {
+
+                    var result = '';
+
+                    if (rowType == 'subtotal') {
+
+                        if ($index < cellsCaptions.length) {
+                            if (cellsCaptions[$index + 1] == 'Subtotal') {
+                                result = 'r-c-border-right';
+                            }
+
+                            if (cellsCaptions[$index - 1] == 'Subtotal') {
+                                result = 'r-c-border-top';
+                            }
+                        } else {
+                            result = 'r-c-border-top-border-right';
+                        }
+
+                    }
+
+                    return result;
+
+                };
 
 
                 function syncGroupsAndColumns() {
@@ -394,9 +443,11 @@
                         }
                     }
                     if (group.value_type === 'field') {
-                        //if (!entityFieldsArray.hasOwnProperty(group.key)) {
-                        //    findGroups();
-                        //}
+                        if (!entityFieldsArray.hasOwnProperty(group.key)) {
+                            //findGroups();
+                        }
+
+                        //console.log('entityFieldsArray', entityFieldsArray);
 
                         if (scope.readyStatus.cellsFirstReady == true) {
 
@@ -433,6 +484,20 @@
                     ) {
                         return group.value;
                     }
+                };
+
+                scope.bindCellSubTotal = function (values, column) {
+
+                    //console.log(column);
+
+                    var result = '';
+
+                    if (column.hasOwnProperty('key')) {
+                        result = values[column.key];
+                    }
+
+                    return result;
+
                 };
 
                 scope.bindCell = function (groupedItem, column) {
