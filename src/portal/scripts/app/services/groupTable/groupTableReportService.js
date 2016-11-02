@@ -16,9 +16,13 @@
 
         var subTotalRows = [];
 
-        for (g = bootGroupItem.groups.length - 1; g >= 0; g = g - 1) {
+        var groupsLength = bootGroupItem.groups.length - 1;
+        var currentIndex = 0;
+
+        for (g = groupsLength; g >= 0; g = g - 1) {
 
             var cellCaptions = [];
+            currentIndex = currentIndex + 1;
 
             for (var i = 0; i < bootGroupItem.groups.length; i = i + 1) {
                 cellCaptions.push('');
@@ -35,6 +39,7 @@
                 options = {
                     type: 'subtotal',
                     cellsCaptions: [''].concat(cellCaptions), // first cell is forInit row
+
                     value: bootGroupItem.subTotal
                 };
                 subTotalRows.push(new Row(options));
@@ -45,6 +50,7 @@
                     options = {
                         type: 'subtotal',
                         cellsCaptions: [''].concat(cellCaptions), // first cell is forInit row
+
                         value: initGroupItem.subTotal
                     };
                     subTotalRows.push(new Row(options));

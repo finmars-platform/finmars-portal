@@ -12,7 +12,7 @@
             templateUrl: 'views/directives/groupTable/bind-report-row-view.html',
             link: function (scope, elem, attrs) {
 
-                //console.log('scope.item', scope.item);
+                console.log('scope.item', scope.item);
 
 
             }

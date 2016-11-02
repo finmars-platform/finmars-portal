@@ -50,7 +50,7 @@
 
                     <!-- preInit.initGroup start -->
 
-                    <group-bind-report-row data-ng-repeat="item in reportItemsProjection()" item="item"></group-bind-report-row>
+                    <group-bind-report-row data-ng-repeat="item in reportItemsProjection() track by $index" item="item"></group-bind-report-row>
 
 
                     <!-- !preInit.initGroup end-->
