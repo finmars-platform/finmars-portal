@@ -109,18 +109,27 @@
             return item;
         }
 
-        function fingGroupsForResult(group, item, attribute) {
+        function findGroupsForResult(group, item, attribute) {
+
+            var resGroupItem;
             if (group.hasOwnProperty('id')) {
                 //console.log('group', group);
                 //console.log('attribute[k]', attribute);
                 if (group.id === attribute['attribute_type']) {
                     if (returnValue(attribute) !== null) {
-                        groupsForResult.push({
+                        resGroupItem = {
                             comparePattern: '&[' + attribute['attribute_type'] + '}-{' + returnValue(attribute) + ']',
                             key: attribute['attribute_name'].replace(' ', '_'),
                             value: returnValue(attribute),
                             value_type: returnValueType(attribute)
-                        });
+                        };
+
+                        if (group.hasOwnProperty('report_settings')) {
+                            resGroupItem.report_settings = group.report_settings;
+                        }
+
+
+                        groupsForResult.push(resGroupItem);
                     }
                 }
             } else {
@@ -137,12 +146,19 @@
                             }
                         }
                         if (!nExist) {
-                            groupsForResult.push({
+
+                            resGroupItem = {
                                 comparePattern: '&[' + keywords[k].key + '}-{' + checkIfEmptyString(item[keywords[k].key]) + ']',
                                 key: keywords[k].key.replace(' ', '_'),
                                 value: checkIfEmptyString(item[keywords[k].key]),
                                 value_type: keywords[k].value_type
-                            });
+                            };
+
+                            if (group.hasOwnProperty('report_settings')) {
+                                resGroupItem.report_settings = group.report_settings;
+                            }
+
+                            groupsForResult.push(resGroupItem);
                         }
                     }
                 }
@@ -160,7 +176,7 @@
                     //console.log('items[i]', items[i]);
                     group = groups[c];
                     if (group.hasOwnProperty('key')) {
-                        fingGroupsForResult(group, item);
+                        findGroupsForResult(group, item);
                         var keys = Object.keys(items[i]);
                         for (a = 0; a < keys.length; a = a + 1) {
                             if (groupName.indexOf('&[' + checkIfEmptyString(group.key) + '}-{' + checkIfEmptyString(item[group.key]) + ']') === -1) {
@@ -171,7 +187,7 @@
                         if (item.hasOwnProperty('attributes')) {
                             //console.log('item.attributes', item.attributes);
                             for (a = 0; a < item.attributes.length; a = a + 1) {
-                                fingGroupsForResult(group, item, item['attributes'][a]);
+                                findGroupsForResult(group, item, item['attributes'][a]);
                                 if (item[group.name] !== null) {
                                     if (groupName.indexOf('&[' + checkIfEmptyString(group.name) + '}-{' + checkIfEmptyString(item[group.name]) + ']') === -1) {
                                         groupName = groupName + '&[' + checkIfEmptyString(group.name) + '}-{' + checkIfEmptyString(item[group.name]) + ']';
@@ -244,7 +260,6 @@
 
 
         });
-
 
 
         group.subTotal = calculatedColumns;

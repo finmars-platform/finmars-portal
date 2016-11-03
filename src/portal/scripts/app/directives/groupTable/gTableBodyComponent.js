@@ -260,6 +260,7 @@
                 }
 
                 scope.reportItemsProjection = function () {
+                    //console.log('scope.reportItems', scope.reportItems);
                     return scope.reportItems;
                 };
 
@@ -267,7 +268,7 @@
 
                     var result = '';
 
-                    console.log('item', item);
+                    //console.log('item', item);
 
                     if (rowType == 'subtotal') {
 
@@ -284,7 +285,7 @@
                                 result = 'r-c-border-right-border-bottom-border-top';
                             }
 
-                            if($index == 0) {
+                            if ($index == 0) {
                                 result = 'r-c-border-left-border-right'
                             }
 
@@ -298,11 +299,11 @@
 
                         result = 'r-c-border-right-border-bottom-border-top';
 
-                        if($index < item.cellsCaptions.length) {
+                        if ($index < item.cellsCaptions.length) {
                             result = 'r-c-border-left-border-right'
                         }
 
-                        if($index == 0) {
+                        if ($index == 0) {
                             result = 'r-c-border-left-border-right'
                         }
 
@@ -313,10 +314,10 @@
 
                         result = 'r-c-border-right-border-bottom-border-top';
 
-                        if($index < item.cellsCaptions.length) {
+                        if ($index < item.cellsCaptions.length) {
                             result = 'r-c-border-left-border-right'
                         }
-                        if($index == 0) {
+                        if ($index == 0) {
                             result = 'r-c-border-left-border-right'
                         }
 
@@ -460,10 +461,20 @@
 
                 scope.$watchCollection('columns', function () {
                     syncGroupsAndColumns();
+
+                    console.log('scope.isReport', scope.isReport);
+
+                    if (scope.isReport == true) {
+                        scope.reportItems = groupTableReportService.transformItems(scope.items);
+                    }
                 });
 
                 scope.$watchCollection('grouping', function () {
                     syncGroupsAndColumns();
+
+                    if (scope.isReport == true) {
+                        scope.reportItems = groupTableReportService.transformItems(scope.items);
+                    }
                 });
 
                 scope.bindGroupValue = function (group) {
