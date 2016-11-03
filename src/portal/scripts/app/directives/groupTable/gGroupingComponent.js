@@ -16,6 +16,7 @@
                 columns: '=',
                 tabs: '=',
                 sorting: '=',
+                isReport: '=',
                 folding: '=',
                 grouping: '=',
                 externalCallback: '&'
@@ -94,6 +95,64 @@
                     setTimeout(function () {
                         scope.externalCallback();
                     }, 0)
+                };
+
+                scope.reportSetSubtotalType = function (group, type) {
+
+                    console.log('group123123123', group);
+
+                    if (!group.hasOwnProperty('report_settings')) {
+                        group.report_settings = {};
+                    }
+
+                    group.report_settings.subtotal_type = type;
+                    scope.externalCallback();
+                };
+
+                scope.isReportGroupHaveExtSettings = function (group, $index) {
+
+                    var haveAccess = false;
+                    var preInitOffset = 0;
+                    var initIndex = 0;
+
+                    scope.grouping.forEach(function (groupItem, $groupItemIndex) {
+
+                        if (scope.columns.length > $groupItemIndex) {
+                            if (groupItem.hasOwnProperty('id')) {
+
+                            } else {
+                                if (groupItem.hasOwnProperty('key') && scope.columns[$groupItemIndex] && scope.columns[$groupItemIndex].hasOwnProperty('key')) {
+
+                                    if (groupItem.key == scope.columns[$groupItemIndex - preInitOffset].key) {
+                                        initIndex = preInitOffset;
+                                    } else {
+                                        preInitOffset = preInitOffset + 1;
+                                    }
+                                } else {
+                                    preInitOffset = preInitOffset + 1;
+                                }
+                            }
+                        }
+
+                    });
+
+                    if (scope.columns.length > $index) {
+                        if (group.hasOwnProperty('id') && scope.columns[$index - initIndex] && scope.columns[$index - initIndex].hasOwnProperty('id')) {
+
+                        } else {
+                            if (group.hasOwnProperty('key') && scope.columns[$index - initIndex] && scope.columns[$index - initIndex].hasOwnProperty('key')) {
+                                if ($index - initIndex !== 0) {
+                                    if (group.key == scope.columns[$index - initIndex].key) {
+                                        haveAccess = true;
+                                    }
+                                }
+                            }
+
+                        }
+                    }
+
+                    return haveAccess;
+
                 };
 
                 scope.openModalSettings = function (ev) {

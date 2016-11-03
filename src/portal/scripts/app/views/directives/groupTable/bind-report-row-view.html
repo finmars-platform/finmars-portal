@@ -7,7 +7,7 @@
         </div>
 
         <div data-ng-repeat="group in item.value track by $index" class="g-group">
-            <span data-ng-bind="::bindGroupValue(group)"></span>
+            <span data-ng-bind="bindGroupValue(group)"></span>
         </div>
 
     </div>
@@ -19,7 +19,7 @@
         </div>
 
         <div data-ng-repeat="group in item.value track by $index" class="g-group">
-            <span data-ng-bind="::bindGroupValue(group)"></span>
+            <span data-ng-bind="bindGroupValue(group)"></span>
         </div>
 
     </div>
@@ -31,7 +31,7 @@
         </div>
 
         <div data-ng-repeat="group in item.value track by $index" class="g-group">
-            <span data-ng-bind="::bindGroupValue(group)"></span>
+            <span data-ng-bind="bindGroupValue(group)"></span>
         </div>
 
     </div>
@@ -45,12 +45,12 @@
             <div class="g-cell-wrap" data-ng-repeat="column in columns track by $index">
                 <div class="g-cell {{resolveReportCellBorder('header', item, column, $index)}}"
                      data-ng-if="checkReportColumnCaption(item.cellsCaptions, column, $index)">
-                    {{::bindGroupValue(item.cellsCaptions[$index])}}
+                    {{bindGroupValue(item.cellsCaptions[$index])}}
                 </div>
 
                 <div class="g-cell {{getAlign(column)}} {{resolveReportCellBorder('header', item, column, $index)}}" data-ng-if="!checkReportColumnCaption(item.cellsCaptions, column, $index)">
                                 <span title="{{bindCellTitle(item, column)}}"
-                                      data-ng-bind-html="::bindCell(item.value, column) | trustAsHtml"></span>
+                                      data-ng-bind-html="bindCell(item.value, column) | trustAsHtml"></span>
                 </div>
             </div>
         </div>
@@ -66,12 +66,32 @@
             <div class="g-cell-wrap" data-ng-repeat="column in columns track by $index">
                 <div class="g-cell {{resolveReportCellBorder('normal', item, column, $index)}}"
                      data-ng-if="checkReportColumnCaption(item.cellsCaptions, column, $index)">
-                    {{::bindGroupValue(item.cellsCaptions[$index])}}
+                    {{bindGroupValue(item.cellsCaptions[$index])}}
                 </div>
                 <div class="g-cell {{getAlign(column)}} {{resolveReportCellBorder('normal', item, column, $index)}}"
                      data-ng-if="!checkReportColumnCaption(item.cellsCaptions, column, $index)">
                                 <span title="{{bindCellTitle(item.value, column)}}"
-                                      data-ng-bind-html="::bindCell(item.value, column) | trustAsHtml"></span>
+                                      data-ng-bind-html="bindCell(item.value, column) | trustAsHtml"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div data-ng-if="item.type == 'subtotal-line'" class="g-row report-subtotal-line-row">
+
+        <div>
+            <div class="g-row-selection" data-ng-click="toggleSelectRow($event, item)">
+                <ng-md-icon icon="done" data-ng-show="item.selectedRow"></ng-md-icon>
+            </div>
+            <div class="g-cell-wrap" data-ng-repeat="column in columns track by $index">
+                <div class="g-cell {{resolveReportCellBorder('subtotal', item, column, $index)}}"
+                     data-ng-if="checkReportColumnCaption(item.cellsCaptions, column, $index)">
+                    {{item.cellsCaptions[$index]}}
+                </div>
+                <div class="g-cell {{getAlign(column)}} {{resolveReportCellBorder('subtotal', item, column, $index)}} "
+                     data-ng-if="!checkReportColumnCaption(item.cellsCaptions, column, $index)">
+                    <b><span title="{{bindCellTitle(item.value, column)}}"
+                             data-ng-bind-html="bindCellSubTotal(item.value, column) | trustAsHtml"></span></b>
                 </div>
             </div>
         </div>
@@ -91,7 +111,7 @@
                 <div class="g-cell {{getAlign(column)}} {{resolveReportCellBorder('subtotal', item, column, $index)}} "
                      data-ng-if="!checkReportColumnCaption(item.cellsCaptions, column, $index)">
                                 <b><span title="{{bindCellTitle(item.value, column)}}"
-                                      data-ng-bind-html="::bindCellSubTotal(item.value, column) | trustAsHtml"></span></b>
+                                      data-ng-bind-html="bindCellSubTotal(item.value, column) | trustAsHtml"></span></b>
                 </div>
             </div>
         </div>
