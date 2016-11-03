@@ -176,13 +176,13 @@
 
                             }
 
-                            console.log('localBootGroupResult--------------', localBootGroupResult);
-
                             bootGroupResult = bootGroupResult.concat(localBootGroupResult);
 
                             bootGroupResult.forEach(function (bootGroupResultItem) {
 
-                                if (bootGroupResultItem.hasOwnProperty('isRootBootGroup') && bootGroupResultItem.isRootBootGroup == true) {
+                                if (bootGroupResultItem.hasOwnProperty('isRootBootGroup')
+                                    && bootGroupResultItem.isRootBootGroup == true
+                                    && bootGroupResultItem.type == 'subtotal-line') {
                                     bootGroupResultRooted.unshift(bootGroupResultItem);
                                 } else {
                                     bootGroupResultRooted.push(bootGroupResultItem);
@@ -190,15 +190,9 @@
 
                             });
 
-                            console.log('bootGroupResult', bootGroupResult);
-
-
                         });
 
                         result = result.concat(bootGroupResultRooted);
-
-                        console.log('result------------------------------------------', result);
-
 
                     } else {
                         options = {
