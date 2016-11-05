@@ -52,10 +52,16 @@
                     level: g
                 };
 
-                cellCaptions.forEach(function (cellCaption) {
-                    if (cellCaption.level > g) {
+                cellCaptions.forEach(function (cellCaption, $index) {
+
+                    console.log('cellCaption', cellCaption);
+
+
+                    if (cellCaption.level >= g || $index >= g) {
+                        cellCaption.type = bootGroupItem.groups[g].report_settings.subtotal_type;
                         cellCaption.level = g;
                     }
+
                 });
 
                 if (g > 0) {
