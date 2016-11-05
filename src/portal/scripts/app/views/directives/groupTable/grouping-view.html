@@ -54,15 +54,17 @@
 										<span>Remove</span>
 									</md-button>
 								</md-menu-item>
-								<md-menu-item data-ng-if="isReportGroupHaveExtSettings(item, $index)">
-									<md-button md-prevent-menu-close="md-prevent-menu-close" ng-click="reportSetSubtotalType(item, 'line')" class="g-settings-option-btn">
+								<md-menu-item data-ng-if="isReportGroupHaveExtSettings(item, $index, 'line')">
+									<md-button md-prevent-menu-close="md-prevent-menu-close" ng-click="reportSetSubtotalType(item, 'line', $index)" class="g-settings-option-btn">
 										<ng-md-icon icon="done" data-ng-show="item.report_settings.subtotal_type == 'line'"></ng-md-icon>
+										<ng-md-icon icon="done" style="visibility: hidden;" data-ng-show="item.report_settings.subtotal_type != 'line'"></ng-md-icon>
 										<span>Line subtotal</span>
 									</md-button>
 								</md-menu-item>
-								<md-menu-item data-ng-if="isReportGroupHaveExtSettings(item, $index)">
-									<md-button md-prevent-menu-close="md-prevent-menu-close" ng-click="reportSetSubtotalType(item, 'area')" class="g-settings-option-btn">
+								<md-menu-item data-ng-if="isReportGroupHaveExtSettings(item, $index, 'area')">
+									<md-button md-prevent-menu-close="md-prevent-menu-close" ng-click="reportSetSubtotalType(item, 'area', $index)" class="g-settings-option-btn">
 										<ng-md-icon icon="done" data-ng-show="item.report_settings.subtotal_type == 'area'"></ng-md-icon>
+										<ng-md-icon icon="done" style="visibility: hidden;" data-ng-show="item.report_settings.subtotal_type != 'area'"></ng-md-icon>
 										<span>Area subtotal</span>
 									</md-button>
 								</md-menu-item>
