@@ -264,11 +264,21 @@
                     return scope.reportItems;
                 };
 
+                scope.isSubtotalHided = function (column) {
+                    if (column.hasOwnProperty('report_settings')) {
+                        if (column.report_settings.hide_subtotal == true) {
+                            return false;
+                        }
+                    }
+
+                    return true;
+                };
+
 
                 scope.resolveReportCellItemBackground = function (rowType, item, column, $index) {
                     var result = '';
 
-                    console.log('item', item);
+                    //console.log('item', item);
 
                     if (item.hasOwnProperty('value_options')) {
 
@@ -306,7 +316,7 @@
 
                                 if (rowType == 'subtotal-line') {
 
-                                    console.log('item', item);
+                                    //console.log('item', item);
 
                                     if (cellCaption.type == 'line') {
                                         result = 'cell-line-bg-' + cellCaption.level;
@@ -518,7 +528,7 @@
                 scope.$watchCollection('columns', function () {
                     syncGroupsAndColumns();
 
-                    console.log('scope.isReport', scope.isReport);
+                    //console.log('scope.isReport', scope.isReport);
 
                     if (scope.isReport == true) {
                         scope.reportItems = groupTableReportService.transformItems(scope.items);

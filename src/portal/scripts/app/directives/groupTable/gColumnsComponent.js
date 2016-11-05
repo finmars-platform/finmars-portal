@@ -19,7 +19,8 @@
                 entityType: '=',
                 items: '=',
                 externalCallback: '&',
-                isAllSelected: '='
+                isAllSelected: '=',
+                isReport: '='
             },
             templateUrl: 'views/directives/groupTable/columns-view.html',
             link: function (scope, elem, attrs) {
@@ -34,7 +35,6 @@
                 entityAttrs = metaService.getEntityAttrs(scope.entityType);
 
                 scope.isAllSelected = false;
-
 
                 scope.selectAllRows = function () {
                     scope.isAllSelected = !scope.isAllSelected;
@@ -118,6 +118,16 @@
                         });
                     }
                     //console.log('remove', scope.columns);
+                };
+
+                scope.reportHideSubtotal = function (column) {
+
+                    if (!column.hasOwnProperty('report_settings')) {
+                        column.report_settings = {};
+                    }
+
+                    column.report_settings.hide_subtotal = !column.report_settings.hide_subtotal;
+
                 }
             }
         }
