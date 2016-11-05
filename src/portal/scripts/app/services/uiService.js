@@ -19,8 +19,12 @@
         return uiRepository.updateEditLayout(id, ui);
     };
 
-    var getListLayout = function (entity, name) {
-        return uiRepository.getListLayout(entity, name);
+    var getListLayout = function (entity) {
+        return uiRepository.getListLayout(entity);
+    };
+
+    var getActiveListLayout = function (entity) {
+        return uiRepository.getActiveListLayout(entity);
     };
 
     var createListLayout = function (entity, ui) {
@@ -29,6 +33,10 @@
 
     var updateListLayout = function (id, ui) {
         return uiRepository.updateListLayout(id, ui)
+    };
+
+    var deleteListLayoutByKey = function (id) {
+        return uiRepository.deleteListLayoutByKey(id);
     };
 
     var getDefaultListLayout = function () {
@@ -65,7 +73,10 @@
         createListLayout: createListLayout,
         updateListLayout: updateListLayout,
         getEditLayoutByInstanceId: getEditLayoutByInstanceId,
-        updateEditLayoutByInstanceId: updateEditLayoutByInstanceId
+        updateEditLayoutByInstanceId: updateEditLayoutByInstanceId,
+        getActiveListLayout: getActiveListLayout,
+
+        deleteListLayoutByKey: deleteListLayoutByKey
     }
 
 }());

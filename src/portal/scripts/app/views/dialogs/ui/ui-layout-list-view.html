@@ -1,0 +1,38 @@
+<md-dialog aria-label="" ng-cloak class="list-layouts-dialog" style="width: 50%" drag-dialog>
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            <h2>Layouts</h2>
+            <span flex></span>
+        </div>
+    </md-toolbar>
+    <md-dialog-content data-custom-scroll class="custom-scrollbar">
+
+        <div data-ng-if="vm.readyStatus.items" >
+            <div data-ng-repeat="item in vm.items" class="ll-layout-item {{item.is_default ? 'active' : ''}}" style="padding: 10px" layout="row" layout-align="space-between center">
+                <div layout="row" class="ll-name" data-ng-click="vm.selectLayout(item)">
+                    {{item.name}}
+                </div>
+                <div>
+                    <md-button class="md-button ll-delete-btn" ng-click="vm.deleteItem($event, item)">
+                        <ng-md-icon icon="delete" size="24"></ng-md-icon>
+                    </md-button>
+                </div>
+            </div>
+        </div>
+
+        <div data-ng-if="!vm.readyStatus.items" class="dialog-loader">
+            <div layout="row" layout-sm="column" layout-align="space-around">
+                <md-progress-circular md-mode="indeterminate"></md-progress-circular>
+            </div>
+        </div>
+
+    </md-dialog-content>
+    <md-dialog-actions layout="row">
+        <md-button ng-click="vm.cancel()">
+            Cancel
+        </md-button>
+        <md-button ng-click="vm.agree()" style="margin-right:20px;">
+            OK
+        </md-button>
+    </md-dialog-actions>
+</md-dialog>

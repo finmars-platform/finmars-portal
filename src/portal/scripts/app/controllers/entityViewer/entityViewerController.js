@@ -24,7 +24,88 @@
 
         //console.log('$scope', $scope);
 
+        var vm = this;
+
+        vm.oldListView = null;
+
+        $('.save-layout-as-btn').bind('click', function (e) {
+
+            // saving columns widths
+            var tHead = $('.g-columns-component');
+            var th = $('.g-columns-component.g-thead').find('.g-cell');
+            var thWidths = [];
+            for (var i = 0; i < th.length; i = i + 1) {
+                var thWidth = $(th[i]).width();
+                thWidths.push(thWidth);
+            }
+
+
+            vm.listView.data.table.columnsWidth = thWidths;
+
+            //console.log("View data is ", vm.listView.data);
+            vm.listView.data.table = vm.table;
+            vm.listView.data.table.columns = vm.columns;
+            // vm.listView.data.table.columns['cellWidth']
+            //console.log('---------vm.grouping-------', vm.grouping);
+            vm.listView.data.table.grouping = vm.grouping;
+            vm.listView.data.table.folding = vm.folding;
+            vm.listView.data.table.filters = vm.filters;
+            vm.listView.data.table.sorting = vm.sorting;
+
+            // vm.listView.data.table.cellWidth = 200;
+
+            vm.listView.data.additionsType = vm.additionsType;
+
+            vm.listView.data.tableAdditions.entityType = vm.additionsEntityType;
+
+            vm.listView.data.tableAdditions = vm.tableAdditions;
+            vm.listView.data.tableAdditions.table.columns = vm.entityAdditionsColumns;
+            vm.listView.data.tableAdditions.table.filters = vm.entityAdditionsFilters;
+            vm.listView.data.tableAdditions.table.sorting = vm.entityAdditionsSorting;
+            vm.listView.data.tableAdditions.additionsStatus = vm.additionsStatus;
+            vm.listView.data.tableAdditions.additionsState = vm.additionsState;
+
+            //vm.additionsStatus[res.results[0].data.tableAdditions.additionsType] = true;
+
+
+            $mdDialog.show({
+                controller: 'UiLayoutSaveAsDialogController as vm',
+                templateUrl: 'views/dialogs/ui/ui-layout-save-as-view.html',
+                parent: angular.element(document.body),
+                targetEvent: e,
+                locals: {
+                    options: {}
+                },
+                clickOutsideToClose: false
+            }).then(function (res) {
+
+                if (res.status == 'agree') {
+
+                    vm.oldListView.is_default = false;
+
+                    uiService.updateListLayout(vm.oldListView.id, vm.oldListView).then(function () {
+                        console.log('saved');
+                    }).then(function () {
+
+                        vm.listView.name = res.data.name;
+                        vm.listView.is_default = true;
+
+                        uiService.createListLayout(vm.entityType, vm.listView).then(function () {
+                            console.log('saved');
+                            vm.getView();
+                        });
+
+                    })
+                }
+
+            });
+
+        });
+
+
         $('.save-layout-btn').bind('click', function (e) {
+
+
             // saving columns widths
             var tHead = $('.g-columns-component');
             var th = $('.g-columns-component.g-thead').find('.g-cell');
@@ -77,13 +158,14 @@
             }).then(function () {
                 vm.getView();
             });
+
+
         });
 
         $('.header-add-new-btn').click(function (e) {
             vm.addEntity(e);
         });
 
-        var vm = this;
 
         vm.paginationPageCurrent = 1;
         vm.paginationItemPerPage = 20;
@@ -224,7 +306,7 @@
         };
 
         vm.getView = function () {
-            return uiService.getListLayout(vm.entityType, 'default').then(function (res) {
+            return uiService.getActiveListLayout(vm.entityType).then(function (res) {
 
                 //vm.entityType = data.entityType;
 
@@ -234,6 +316,8 @@
                 //console.log('res.results', res.results[0]);
                 if (res.results.length) {
                     vm.listView = res.results[0];
+
+                    vm.oldListView = JSON.parse(JSON.stringify(vm.listView));
 
                     vm.table = res.results[0].data.table;
                     vm.columns = res.results[0].data.table.columns;
@@ -487,6 +571,7 @@
         $scope.$on("$destroy", function (event) {
 
             $('.save-layout-btn').unbind('click');
+            $('.save-layout-as-btn').unbind('click');
             logService.controller('EntityViewerController', 'destroyed');
         });
 

@@ -10,6 +10,7 @@
         this.cellsCaptions = options.cellsCaptions || []; // captions for groups
         this.value = options.value; // casual val, or subtotal
         this.isRootBootGroup = options.isRootBootGroup || false;
+        this.value_options = options.value_options || {};
     };
 
     function findSubTotals(bootGroupItem, $bootGroupIndex, initGroupItem) {
@@ -26,42 +27,106 @@
             var options;
             currentIndex = currentIndex + 1;
 
+
             for (var i = 0; i < bootGroupItem.groups.length; i = i + 1) {
-                cellCaptions.push('');
+
+                var groupItem = bootGroupItem.groups[i];
+
+                var groupObject = JSON.parse(JSON.stringify(groupItem));
+
+                if (groupItem.hasOwnProperty('report_settings')) {
+                    groupObject.level = i;
+                    groupObject.type = groupItem.report_settings.subtotal_type;
+                }
+
+                groupObject.value = '';
+
+                cellCaptions.push(groupObject);
             }
 
             if (bootGroupItem.groups[g].hasOwnProperty('report_settings') && bootGroupItem.groups[g].report_settings.subtotal_type == 'area') {
 
-                cellCaptions[g] = 'Subtotal';
+                cellCaptions[g] = {
+                    value: 'Subtotal',
+                    type: bootGroupItem.groups[g].report_settings.subtotal_type,
+                    level: g
+                };
+
+                cellCaptions.forEach(function (cellCaption) {
+                    if (cellCaption.level > g) {
+                        cellCaption.level = g;
+                    }
+                });
 
                 if (g > 0) {
                     options = {
                         type: 'subtotal',
-                        cellsCaptions: [''].concat(cellCaptions), // first cell is forInit row
-
+                        cellsCaptions: [{value: ''}].concat(cellCaptions), // first cell is forInit row
+                        value_options: {
+                            type: bootGroupItem.groups[g].report_settings.subtotal_type,
+                            level: g
+                        },
                         value: bootGroupItem.subTotal
                     };
+
+
                     subTotalRows.area.push(new Row(options));
                 } else {
                     if ($bootGroupIndex == initGroupItem.bootGroup.length - 1 && g == 0) {
 
                         options = {
                             type: 'subtotal',
-                            cellsCaptions: [''].concat(cellCaptions), // first cell is forInit row
+                            cellsCaptions: [{value: ''}].concat(cellCaptions), // first cell is forInit row
                             isRootBootGroup: true,
+                            value_options: {
+                                type: bootGroupItem.groups[g].report_settings.subtotal_type,
+                                level: g
+                            },
                             value: initGroupItem.subTotal
                         };
+
                         subTotalRows.area.push(new Row(options));
                     }
                 }
+
+
             } else {
                 if (bootGroupItem.groups[g].hasOwnProperty('report_settings') && bootGroupItem.groups[g].report_settings.subtotal_type == 'line') {
-                    cellCaptions[g] = 'Test';
+
+                    cellCaptions[g] = {
+                        value: 'Subtotal',
+                        type: bootGroupItem.groups[g].report_settings.subtotal_type,
+                        level: g
+                    };
+
+                    cellCaptions.forEach(function (cellCaption) {
+
+                        console.log(cellCaption);
+
+                        if (cellCaption.hasOwnProperty('level')) {
+                            if (cellCaption.level >= g) {
+                                cellCaption.type = bootGroupItem.groups[g].report_settings.subtotal_type;
+                                cellCaption.level = g;
+                            } else {
+                                if (cellCaption.level < g) {
+                                    cellCaption.type = 'empty';
+                                    cellCaption.level = null;
+                                }
+                            }
+                        } else {
+                            cellCaption.type = bootGroupItem.groups[g].report_settings.subtotal_type;
+                            cellCaption.level = g;
+                        }
+                    });
 
                     if (g > 0) {
                         options = {
                             type: 'subtotal-line',
-                            cellsCaptions: [''].concat(cellCaptions), // first cell is forInit row
+                            cellsCaptions: [{value: ''}].concat(cellCaptions), // first cell is forInit row
+                            value_options: {
+                                type: bootGroupItem.groups[g].report_settings.subtotal_type,
+                                level: g
+                            },
                             value: bootGroupItem.subTotal
                         };
                         subTotalRows.line.unshift(new Row(options));
@@ -70,8 +135,12 @@
 
                             options = {
                                 type: 'subtotal-line',
-                                cellsCaptions: [''].concat(cellCaptions), // first cell is forInit row
+                                cellsCaptions: [{value: ''}].concat(cellCaptions), // first cell is forInit row
                                 isRootBootGroup: true,
+                                value_options: {
+                                    type: bootGroupItem.groups[g].report_settings.subtotal_type,
+                                    level: g
+                                },
                                 value: initGroupItem.subTotal
                             };
                             subTotalRows.line.unshift(new Row(options));
@@ -138,28 +207,53 @@
                                         var options = {};
                                         if ($index == 0) {
 
-                                            var cellCaptionsGroups = JSON.parse(JSON.stringify(bootGroupItem.groups));
+                                            var cellCaptionsGroups = [];
+
+                                            bootGroupItem.groups.forEach(function (groupItem, $index) {
+
+                                                //console.log('groupItem', groupItem);
+
+                                                var groupObject = JSON.parse(JSON.stringify(groupItem));
+
+                                                if (groupItem.hasOwnProperty('report_settings')) {
+                                                    groupObject.level = $index;
+                                                    groupObject.type = groupItem.report_settings.subtotal_type;
+                                                }
+
+                                                cellCaptionsGroups.push(groupObject);
+                                            });
 
                                             if ($bootGroupIndex !== 0) {
-                                                cellCaptionsGroups[0] = '';
+                                                cellCaptionsGroups[0] = {value: ''};
                                             }
+
 
                                             options = {
                                                 type: 'header',
-                                                cellsCaptions: [''].concat(cellCaptionsGroups), // first cell is forInit row
+                                                cellsCaptions: [{value: ''}].concat(cellCaptionsGroups), // first cell is forInit row
                                                 value: item
                                             };
                                         } else {
 
                                             var cellCaptions = [];
 
-                                            bootGroupItem.groups.forEach(function () {
-                                                cellCaptions.push('');
+                                            bootGroupItem.groups.forEach(function (groupItem, $index) {
+
+                                                //console.log('groupItem', groupItem);
+
+                                                var groupObject = {value: ''};
+
+                                                if (groupItem.hasOwnProperty('report_settings')) {
+                                                    groupObject.level = $index;
+                                                    groupObject.type = groupItem.report_settings.subtotal_type;
+                                                }
+
+                                                cellCaptions.push(groupObject);
                                             });
 
                                             options = {
                                                 type: 'normal',
-                                                cellsCaptions: [''].concat(cellCaptions), // first cell is forInit row
+                                                cellsCaptions: [{value: ''}].concat(cellCaptions), // first cell is forInit row
                                                 value: item
                                             };
                                         }
