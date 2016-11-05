@@ -99,8 +99,6 @@
 
                 scope.reportSetSubtotalType = function (group, type) {
 
-                    console.log('group123123123', group);
-
                     if (!group.hasOwnProperty('report_settings')) {
                         group.report_settings = {};
                     }

@@ -140,6 +140,11 @@ app.controller('ManageMemberDialogController', ['$scope', '$mdDialog', 'memberId
 app.controller('ManageGroupDialogController', ['$scope', '$mdDialog', 'groupId', require('./app/controllers/dialogs/manageGroupDialogController')])
 app.controller('CreateGroupDialogController', ['$scope', '$mdDialog', require('./app/controllers/dialogs/createGroupDialogController')]);
 
+
+app.controller('UiLayoutListDialogController', ['$scope', '$mdDialog', 'options', require('./app/controllers/dialogs/ui/uiLayoutListDialogController')]);
+app.controller('UiLayoutSaveAsDialogController', ['$scope', '$mdDialog', 'options', require('./app/controllers/dialogs/ui/uiLayoutSaveAsDialogController')]);
+
+
 app.directive('menuToggle', [require('./app/directives/menuToggleDirective')]);
 app.directive('menuLink', [require('./app/directives/menuLinkDirective')]);
 
@@ -171,6 +176,9 @@ app.directive('groupBindReportRow', [require('./app/directives/groupTable/gBindR
 app.controller('gModalController', ['$scope', '$mdDialog', 'parentScope', 'callback', require('./app/directives/groupTable/gModalComponent')]);
 
 // GROUP TABLE END
+
+
+
 
 app.directive('evFieldResolver', [require('./app/directives/entityViewerFieldResolverDirective')]);
 app.directive('ismFieldResolver', [require('./app/directives/instrumentSchemeManagerFieldResolverDirective')]);

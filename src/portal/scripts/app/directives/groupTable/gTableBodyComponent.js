@@ -264,6 +264,62 @@
                     return scope.reportItems;
                 };
 
+
+                scope.resolveReportCellItemBackground = function (rowType, item, column, $index) {
+                    var result = '';
+
+                    console.log('item', item);
+
+                    if (item.hasOwnProperty('value_options')) {
+
+                        if (item.value_options.type == 'area') {
+                            result = 'cell-area-bg-' + item.value_options.level;
+                        }
+
+                        if (rowType == 'subtotal-line') {
+
+                            if (item.value_options.type == 'line') {
+                                result = 'cell-line-bg-' + item.value_options.level;
+                            }
+                        }
+
+                    }
+
+                    return result;
+                };
+
+                scope.resolveReportCellBackground = function (rowType, item, column, $index) {
+
+                    var result = '';
+
+
+                    if (item.hasOwnProperty('cellsCaptions')) {
+
+                        var cellCaption = item.cellsCaptions[$index];
+
+                        if (cellCaption && cellCaption.hasOwnProperty('level') && cellCaption.hasOwnProperty('type')) {
+
+                            if (cellCaption.type !== 'empty') {
+                                if (cellCaption.type == 'area') {
+                                    result = 'cell-area-bg-' + cellCaption.level;
+                                }
+
+                                if (rowType == 'subtotal-line') {
+
+                                    console.log('item', item);
+
+                                    if (cellCaption.type == 'line') {
+                                        result = 'cell-line-bg-' + cellCaption.level;
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    return result;
+
+                };
+
                 scope.resolveReportCellBorder = function (rowType, item, column, $index) {
 
                     var result = '';

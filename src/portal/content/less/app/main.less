@@ -188,7 +188,6 @@ a.md-button.md-default-theme.md-fab, a.md-button.md-fab, .md-button.md-default-t
   }
 }
 
-
 .header-buttons {
   box-shadow: 0px 2px 3px rgba(0, 0, 0, 0.5);
 }
@@ -998,15 +997,40 @@ md-input-container.error {
 
 .transaction-type-actions-tab-view {
   div.flex-33 {
-      padding-left: 5px;
-      padding-right: 5px;
+    padding-left: 5px;
+    padding-right: 5px;
   }
 }
-.vAccordion--default v-pane.is-expanded>v-pane-header {
-  border-bottom-color: rgb(63,81,181);
+
+.vAccordion--default v-pane.is-expanded > v-pane-header {
+  border-bottom-color: rgb(63, 81, 181);
 }
+
 .automated-uploads-manager-dialog-view {
   md-input-container {
     max-height: inherit;
   }
+}
+
+.header-cloud-layout-btn {
+  line-height: 1;
+  margin-left: 10px;
+  min-width: 50px;
+}
+
+.ll-layout-item {
+  border-bottom: 1px solid #4C334D;
+  margin: 10px;
+  padding: 5px;
+  .ll-name {
+    cursor: pointer;
+  }
+  &.active {
+    background: #ffeee8;
+  }
+}
+
+.ll-delete-btn {
+  min-width: 40px;
+  line-height: 1;
 }

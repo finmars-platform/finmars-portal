@@ -9,8 +9,8 @@
         return metaContentTypesRepository.getListForTags(entity);
     };
 
-    var getListForUi = function (entity) {
-        return metaContentTypesRepository.getListForUi(entity);
+    var getListForUi = function () {
+        return metaContentTypesRepository.getListForUi();
     };
 
     var findContentTypeByEntity = function (entity, type) {
@@ -39,12 +39,30 @@
         return metaContentTypesRepository.getListForTransactionTypeInputs();
     };
 
+    var getContentTypeUIByState = function (state) {
+
+        result = '';
+
+        console.log('state', state);
+
+        if (state.indexOf('app.data') !== -1 || state.indexOf('app.data') !== -1) {
+
+            var result = state.split('.')[2];
+
+        }
+
+        return result;
+
+    };
+
 
     module.exports = {
         getListForTags: getListForTags,
         getListForUi: getListForUi,
         findContentTypeByEntity: findContentTypeByEntity,
-        getListForTransactionTypeInputs: getListForTransactionTypeInputs
+        getListForTransactionTypeInputs: getListForTransactionTypeInputs,
+
+        getContentTypeUIByState: getContentTypeUIByState
     }
 
 

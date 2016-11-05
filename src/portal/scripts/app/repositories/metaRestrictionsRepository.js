@@ -11,7 +11,7 @@
 
     var getEntitiesWithoutDynamicAttrsList = function () {
         return ['price-history', 'currency-history',
-            'instrument-type', 'currency', 'account-type', 'pricing-policy',
+            'instrument-type',  'account-type', 'pricing-policy',
             'strategy-1', 'strategy-2', 'strategy-3', 'transaction-type',
             'strategy-1-group', 'strategy-2-group', 'strategy-3-group',
             'complex-transaction',
