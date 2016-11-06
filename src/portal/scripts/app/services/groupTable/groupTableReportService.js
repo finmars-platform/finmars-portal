@@ -105,7 +105,7 @@
                         level: g
                     };
 
-                    cellCaptions.forEach(function (cellCaption) {
+                    cellCaptions.forEach(function (cellCaption, $index) {
 
                         console.log(cellCaption);
 
@@ -120,8 +120,10 @@
                                 }
                             }
                         } else {
-                            cellCaption.type = bootGroupItem.groups[g].report_settings.subtotal_type;
-                            cellCaption.level = g;
+                            if ($index > g) {
+                                cellCaption.type = bootGroupItem.groups[g].report_settings.subtotal_type;
+                                cellCaption.level = g;
+                            }
                         }
                     });
 
