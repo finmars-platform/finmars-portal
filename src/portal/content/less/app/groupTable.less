@@ -20,7 +20,7 @@
       display: block;
       content: '';
       height: 100%;
-      z-index: 10;
+      z-index: 10001;
       width: 6px;
       background: #4C334D;
       right: 0;
@@ -852,6 +852,9 @@ body.md-dialog-is-showing {
 .g-table-body-component {
   overflow: hidden;
   height: 100%;
+  .ps-scrollbar-y-rail {
+    z-index: 1000;
+  }
   .g-row {
     overflow: hidden;
     background: #DCDCDC;
