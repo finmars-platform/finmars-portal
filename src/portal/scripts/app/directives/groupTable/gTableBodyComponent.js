@@ -701,7 +701,9 @@
                                             return '[' + groupedItem[entityAttrs[e].key].length + ']'
                                         }
                                     } else {
-                                        return groupedItem[entityAttrs[e].key];
+                                        if (groupedItem[entityAttrs[e].key]) {
+                                            return groupedItem[entityAttrs[e].key];
+                                        }
                                     }
                                 }
                             }
@@ -710,12 +712,19 @@
                 };
 
                 scope.bindCellTitle = function (item, column) {
-                    if (column['value_type'] === 'mc_field') {
-                        return '[' + item[column.key].length + ']';
+
+                    var result = '';
+
+                    if (item && item.hasOwnProperty(column.key)) {
+                        if (column['value_type'] === 'mc_field') {
+                            result =  '[' + item[column.key].length + ']';
+                        }
+                        else {
+                            result = item[column.key];
+                        }
                     }
-                    else {
-                        return item[column.key];
-                    }
+
+                    return result;
                 };
 
                 scope.rowCallback = function (item, ev) {

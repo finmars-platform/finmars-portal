@@ -26,12 +26,22 @@
 
     <div data-ng-if="item.type == 'breadcrumbs'" class="g-row report-breacrumbs-row">
 
-        <div class="g-row-selection" data-ng-click="toggleSelectRow($event, item)">
-            <ng-md-icon icon="done" data-ng-show="item.selectedRow"></ng-md-icon>
-        </div>
-
-        <div data-ng-repeat="group in item.value track by $index" class="g-group">
-            <span data-ng-bind="bindGroupValue(group)"></span>
+        <div>
+            <div class="g-row-selection" data-ng-click="toggleSelectRow($event, item)">
+                <ng-md-icon icon="done" data-ng-show="item.selectedRow"></ng-md-icon>
+            </div>
+            <div class="g-cell-wrap" data-ng-repeat="column in item.cellsCaptions track by $index">
+                <div class="g-cell
+                {{resolveReportCellBackground('header', item, column, $index)}}
+                {{resolveReportCellBorder('header', item, column, $index)}}">
+                    {{bindGroupValue(item.cellsCaptions[$index])}}
+                </div>
+            </div>
+            <div class="g-cell g-cell-group" >
+                <div data-ng-repeat="group in item.value track by $index">
+                    <span data-ng-bind="bindGroupValue(group)"></span>
+                </div>
+            </div>
         </div>
 
     </div>

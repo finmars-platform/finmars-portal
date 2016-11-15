@@ -66,6 +66,8 @@
 
         //console.log('GROUPING SERVICE groups', groups);
 
+        console.log("items", items);
+
         var itemsGrouped = [];
         var itemsGroupedArray = [];
         var i, c, a, k;
@@ -422,28 +424,52 @@
 
         var results = setGroups(items, preInitGroups, entityType);
 
-        results.forEach(function (preInitGroupsItem) {
-            preInitGroupsItem.initGroup = setGroups(preInitGroupsItem.items, initLineGroup, entityType);
+        console.log('123', results);
 
+        if (results[0].items && results[0].items.length) {
 
-            if (preInitGroupsItem.initGroup && preInitGroupsItem.initGroup[0].hasOwnProperty('items')) {
+            results.forEach(function (preInitGroupsItem) {
 
-                preInitGroupsItem.initGroup.forEach(function (initGroupItem) {
+                preInitGroupsItem.initGroup = setGroups(preInitGroupsItem.items, initLineGroup, entityType);
 
-                    initGroupItem.bootGroup = setGroups(initGroupItem.items, bootsGroup, entityType);
+                if (preInitGroupsItem.initGroup && preInitGroupsItem.initGroup[0].hasOwnProperty('items')) {
 
-                    if (initGroupItem.bootGroup && initGroupItem.bootGroup[0].hasOwnProperty('items')) {
+                    preInitGroupsItem.initGroup.forEach(function (initGroupItem) {
 
-                        initGroupItem.bootGroup.forEach(function (bootGroupItem) {
+                        initGroupItem.bootGroup = setGroups(initGroupItem.items, bootsGroup, entityType);
 
-                            bootGroupItem.lineGroup = setGroups(bootGroupItem.items, linesGroup, entityType);
-                        })
-                    }
+                        if (initGroupItem.bootGroup && initGroupItem.bootGroup[0].hasOwnProperty('items')) {
 
-                })
-            }
+                            initGroupItem.bootGroup.forEach(function (bootGroupItem) {
 
-        });
+                                bootGroupItem.lineGroup = setGroups(bootGroupItem.items, linesGroup, entityType);
+                            })
+                        }
+
+                    })
+                }
+
+            });
+        } else {
+            preInitGroups = [];
+            results = setGroups(items, initLineGroup, entityType);
+
+            results.forEach(function (initGroupItem) {
+
+                initGroupItem.bootGroup = setGroups(initGroupItem.items, bootsGroup, entityType);
+
+                if (initGroupItem.bootGroup && initGroupItem.bootGroup[0].hasOwnProperty('items')) {
+
+                    initGroupItem.bootGroup.forEach(function (bootGroupItem) {
+
+                        bootGroupItem.lineGroup = setGroups(bootGroupItem.items, linesGroup, entityType);
+                    })
+                }
+
+            });
+
+        }
+
 
         console.log('results', results);
 
