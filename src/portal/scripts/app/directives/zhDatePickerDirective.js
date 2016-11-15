@@ -9,19 +9,28 @@
 
         return {
             restrict: 'AE',
-            scope: {},
+            scope: {
+                position: '@'
+            },
             require: '?ngModel',
             template: '<div class="pick-me-up"><input type="text" value=""></div>',
             // template: '<md-input-container class="pick-me-up"><input type="text" value=""></md-input-containe>',
             link: function (scope, elem, attrs, ngModel) {
                 //console.log('ngModel', ngModel);
                 var input = $(elem).find('input');
+
+                var position = 'right';
+
+                if(scope.position) {
+                    position = scope.position;
+                }
+
                 setTimeout(function () {
                     if (ngModel.$modelValue) {
                         $(elem).parent().addClass('md-input-has-value');
                         input.pickmeup({
                             date: new Date(ngModel.$modelValue),
-                            position: 'right',
+                            position: position,
                             'hide_on_select': true,
                             format: 'Y-m-d',
                             change: function () {
@@ -30,7 +39,7 @@
                         });
                     } else {
                         input.pickmeup({
-                            position: 'right',
+                            position: position,
                             'hide_on_select': true,
                             format: 'Y-m-d',
                             change: function () {

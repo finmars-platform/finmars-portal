@@ -1,23 +1,25 @@
 <div>
     <div data-ng-if="vm.readyStatus.provider">
         <md-card>
-            <md-card-content>
-                <md-input-container class="md-block">
-                    <label>Certificate</label>
-                    <input type="file" data-ng-model="vm.provider.p12cert">
-                </md-input-container>
-                <md-input-container class="md-block">
-                    <label>Password</label>
-                    <input type="password" data-ng-model="vm.provider.password">
-                </md-input-container>
-            </md-card-content>
-            <md-card-actions>
-                <div layout="row" layout-align="end center">
-                    <md-button class="md-raised">
-                        Save
-                    </md-button>
-                </div>
-            </md-card-actions>
+            <form action="" data-ng-submit="vm.saveConfig($event)" name="sertForm">
+                <md-card-content>
+                    <md-input-container class="md-block">
+                        <label>Certificate</label>
+                        <input type="file" file-read="vm.provider.p12cert">
+                    </md-input-container>
+                    <md-input-container class="md-block">
+                        <label>Password</label>
+                        <input type="password" data-ng-model="vm.provider.password">
+                    </md-input-container>
+                </md-card-content>
+                <md-card-actions>
+                    <div layout="row" layout-align="end center">
+                        <md-button class="md-raised" type="submit">
+                            Save
+                        </md-button>
+                    </div>
+                </md-card-actions>
+            </form>
         </md-card>
     </div>
     <div data-ng-if="!vm.readyStatus.provider">

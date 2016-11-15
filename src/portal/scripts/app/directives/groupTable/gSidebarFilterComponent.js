@@ -8,12 +8,16 @@
     var logService = require('../../../../../core/services/logService');
     var fieldResolverService = require('../../services/fieldResolverService');
 
-    module.exports = function () {
+
+    var pricingPolicyService = require('../../services/pricingPolicyService');
+
+    module.exports = function ($mdDialog) {
         return {
             restrict: 'AE',
             scope: {
                 filters: '=',
                 entityType: '=',
+                isReport: '=',
                 externalCallback: '&'
             },
             templateUrl: 'views/directives/groupTable/sidebar-filter-view.html',
@@ -22,6 +26,7 @@
                 logService.component('groupSidebarFilter', 'initialized');
 
                 scope.fields = {};
+                scope.reportOptions = {};
 
                 scope.filters.forEach(function (item) {
                     if (!item.options) {
@@ -29,6 +34,47 @@
                     }
                     item.options.enabled = false;
                 });
+
+                if (scope.isReport == true) {
+                    pricingPolicyService.getList().then(function (data) {
+
+                        scope.pricingPolicies = data.results;
+
+                        scope.$apply();
+
+                    });
+                }
+
+
+                scope.openReportSettings = function ($event) {
+
+                    console.log('scope.reportOptions', scope.reportOptions);
+
+                    $mdDialog.show({
+                        controller: 'GReportSettingsDialogController as vm',
+                        templateUrl: 'views/dialogs/g-report-settings-dialog-view.html',
+                        parent: angular.element(document.body),
+                        targetEvent: $event,
+                        locals: {
+                            reportOptions: scope.reportOptions
+                        }
+                    }).then(function (res) {
+
+                        console.log('res', res);
+
+                        if (res.status == 'agree') {
+                            scope.reportOptions = res.data;
+
+                        }
+
+                    });
+
+
+                };
+
+                scope.calculateReport = function () {
+
+                };
 
                 scope.resizeFilterSideNav = function (actionType) {
                     if (actionType === 'collapse') {
@@ -48,7 +94,7 @@
                 };
 
                 scope.$watchCollection('filters', function () {
-                    console.log('filters???');
+
                     //scope.externalCallback();
 
                     var promises = [];

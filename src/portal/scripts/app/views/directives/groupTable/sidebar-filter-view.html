@@ -1,4 +1,52 @@
 <div class="g-sidebar-filter-component">
+
+    <div data-ng-if="isReport">
+
+        <md-card class="g-sidebar-report-card">
+
+            <md-card-content>
+
+                <p class="g-r-card-title">
+                    Report settings
+                </p>
+
+                <div layout="column" style="padding-top: 16px">
+
+                    <md-input-container>
+
+                        <label for="">Date</label>
+
+                        <zh-date-picker data-ng-model="reportOptions.report_date" position="left"></zh-date-picker>
+
+                    </md-input-container>
+
+                    <md-input-container>
+
+                        <label for="">Pricing Policy</label>
+
+                        <md-select data-ng-model="reportOptions.pricing_policy">
+                            <md-option data-ng-repeat="item in pricingPolicies" ng-value="item.id">{{item.name}}
+                            </md-option>
+                        </md-select>
+
+                    </md-input-container>
+
+                </div>
+
+                <div layout="column" style="margin-top: 16px;">
+
+                    <md-button data-ng-click="openReportSettings($event)" class="md-primary md-raised">Settings</md-button>
+
+                    <md-button data-ng-click="calculateReport()" class="md-raised">Calculate</md-button>
+
+                </div>
+
+            </md-card-content>
+
+        </md-card>
+
+    </div>
+
     <div layout="row" layout-align="space-between center">
         <p class="area-title g-section-title"><span class="g-meta-circle blue">F</span><span class="after-text">ILTER AREA</span>
             <ng-md-icon class="tooltips-sign" icon="info" size="20" style="fill: #777777">
@@ -46,8 +94,10 @@
     <div dragula="'filters-bag'" dragula-model="filters" class="filters-holder">
         <md-card data-ng-repeat="filter in filters"
                  class="{{filter.options.enabled ? '' : 'f-disabled' }} g-filter-item" layout="row">
-            <md-tooltip data-ng-if="sideNavCollapsed" class="" md-direction="top">{{filter.name}}<span data-ng-if="!getFilterType(filter['value_type'])">: {{filter.options.query}}</span></md-tooltip>
-            <md-checkbox ng-model="filter.options.enabled" aria-label="filters" class="md-primary" ng-change="toggleFilterState(filter)" flex="15">
+            <md-tooltip data-ng-if="sideNavCollapsed" class="" md-direction="top">{{filter.name}}<span
+                    data-ng-if="!getFilterType(filter['value_type'])">: {{filter.options.query}}</span></md-tooltip>
+            <md-checkbox ng-model="filter.options.enabled" aria-label="filters" class="md-primary"
+                         ng-change="toggleFilterState(filter)" flex="15">
             </md-checkbox>
             <md-input-container flex="65">
                 <label data-ng-bind="filter.name"></label>
@@ -64,8 +114,9 @@
                                        placeholder="Search for a ..."
                                        class="md-text md-select-search-pattern">
                             </md-select-header>
-                            <md-option data-ng-repeat="field in fields[filter.key] | orderBy:'-'+field.name | filter:{ name:searchTerm} track by $index"
-                                       value="{{field.id}}">
+                            <md-option
+                                    data-ng-repeat="field in fields[filter.key] | orderBy:'-'+field.name | filter:{ name:searchTerm} track by $index"
+                                    value="{{field.id}}">
                                 {{field.name}}
                             </md-option>
                         </md-select>
