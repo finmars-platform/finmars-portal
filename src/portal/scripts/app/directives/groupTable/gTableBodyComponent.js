@@ -92,7 +92,7 @@
 
                         for (i = 0; i < scope.columns.length; i = i + 1) {
                             var attributeExist = false;
-                            //console.log(scope.columns[i]);
+                            //console.log('12312312312312312', scope.columns[i]);
                             if (scope.columns[i]['value_type'] == 'field') {
                                 promises.push(bindCellService.findEntities(scope.columns[i].key, {entityType: entityType}));
                             }
@@ -265,7 +265,7 @@
                 };
 
                 scope.isSubtotalHided = function (column) {
-                    if (column.hasOwnProperty('report_settings')) {
+                    if (column.hasOwnProperty('report_settings') && column.report_settings) {
                         if (column.report_settings.hide_subtotal == true) {
                             return false;
                         }
@@ -299,6 +299,10 @@
                 };
 
                 scope.resolveReportCellBackground = function (rowType, item, column, $index) {
+
+                    if ($index == 1) {
+                        //console.log(rowType, item, column, $index);
+                    }
 
                     var result = '';
 
@@ -417,10 +421,13 @@
                         var promises = [];
 
                         for (i = 0; i < scope.items.length; i = i + 1) {
+
+                            //console.log('scope.items[i]', scope.items[i]);
+
                             if (scope.items[i].hasOwnProperty('groups')) {
                                 for (g = 0; g < scope.items[i].groups.length; g = g + 1) {
 
-                                    if (scope.items[i].groups[g]['value_type'] === 'field') {
+                                    if (scope.items[i].groups[g]['value_type'] === 'field' && scope.items[i].groups[g].value !== null) {
                                         var entityExist = false;
 
                                         promisesEntityFieldsAlreadyAdded.forEach(function (entity) {
@@ -546,6 +553,9 @@
                 scope.bindGroupValue = function (group) {
 
                     //console.log('group', group);
+                    //console.log('entityFieldsArray', entityFieldsArray);
+
+                    var result = '';
 
                     if (group.value_type === 'classifier') {
                         if (scope.readyStatus.cellsFirstReady) {
@@ -553,7 +563,7 @@
                             if (classifiersInstances.hasOwnProperty(scope.entityType + '_' + group.value) && classifiersInstances[scope.entityType + '_' + group.value] !== undefined) {
                                 //console.log('11111111111111111111111111111111', classifiersInstances[scope.entityType]);
                                 if (classifiersInstances[scope.entityType + '_' + group.value] && classifiersInstances[scope.entityType + '_' + group.value] !== undefined) {
-                                    return classifiersInstances[scope.entityType + '_' + group.value].name
+                                    result =  classifiersInstances[scope.entityType + '_' + group.value].name
                                 }
                             }
                         }
@@ -563,27 +573,35 @@
                             //findGroups();
                         }
 
-                        //console.log('entityFieldsArray', entityFieldsArray);
+                        //console.log('entityFieldsArray', entityFieldsArray.portfolio);
 
                         if (scope.readyStatus.cellsFirstReady == true) {
 
                             if (entityFieldsArray[group.key]) {
-                                var i, result;
+                                var i, resultObject;
                                 for (i = 0; i < entityFieldsArray[group.key].length; i = i + 1) {
-                                    //console.log('entityFieldsArray[group.key]', entityFieldsArray[group.key]);
+                                    //if (group.key == 'currency') {
+                                    //    //console.log('entityFieldsArray[group.key]', entityFieldsArray[group.key]);
+                                    //    //console.log('entityFieldsArray[group.key]', group);
+                                    //}
                                     if (entityFieldsArray[group.key][i].id === group.value) {
-                                        result = entityFieldsArray[group.key][i];
+                                        resultObject = entityFieldsArray[group.key][i];
+                                        //console.log('result', resultObject, '++' + entityFieldsArray[group.key][i].id);
                                     }
                                 }
 
-                                if (result) {
+
+                                if (resultObject) {
                                     if (result.hasOwnProperty('display_name')) {
-                                        return result.display_name;
+                                        result = resultObject.display_name;
+                                    } else {
+                                        if (result.hasOwnProperty('scheme_name')) {
+                                            result = resultObject.scheme_name;
+                                        } else {
+                                            result = resultObject.name;
+                                        }
                                     }
-                                    if (result.hasOwnProperty('scheme_name')) {
-                                        return result.scheme_name;
-                                    }
-                                    return result.name;
+
                                 }
                             }
                         }
@@ -598,8 +616,12 @@
                         || group.value_type == 'value_float'
                         || group.value_type == 'value_date'
                     ) {
-                        return group.value;
+                        result = group.value;
                     }
+
+                    //console.log('result string', result);
+
+                    return result;
                 };
 
                 scope.bindCellSubTotal = function (values, column) {
@@ -717,7 +739,7 @@
 
                     if (item && item.hasOwnProperty(column.key)) {
                         if (column['value_type'] === 'mc_field') {
-                            result =  '[' + item[column.key].length + ']';
+                            result = '[' + item[column.key].length + ']';
                         }
                         else {
                             result = item[column.key];

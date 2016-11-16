@@ -5,7 +5,8 @@
 
     'use strict';
 
-    var instrumentService = require('../../services/instrumentService'); // TODO change to balance report service
+    //var instrumentService = require('../../services/instrumentService'); // TODO change to balance report service
+    var reportService = require('../../services/reportService');
 
     module.exports = function($scope){
 
@@ -13,7 +14,7 @@
 
         var vm = this;
 
-        vm.entityType = 'instrument';
+        vm.entityType = 'balance-report';
         vm.entityRaw = [];
 
         vm.isReport = true;
@@ -22,14 +23,16 @@
 
         vm.entityViewer = {extraFeatures: []};
 
-        instrumentService.getList().then(function (data) {
-            vm.entityRaw = data.results;
-            vm.readyStatus.content = true;
-            $scope.$apply();
-        });
+        vm.readyStatus.content = true;
+
+        //reportService.getList().then(function (data) {
+        //    vm.entityRaw = data.items;
+        //    vm.readyStatus.content = true;
+        //    $scope.$apply();
+        //});
 
         vm.getList = function (options) {
-            return instrumentService.getList(options).then(function (data) {
+            return reportService.getList(options).then(function (data) {
                 return data;
             })
         }
