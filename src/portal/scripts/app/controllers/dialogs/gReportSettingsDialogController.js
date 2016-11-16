@@ -22,7 +22,7 @@
 
         console.log('reportOptions', reportOptions);
 
-        vm.reportOptions = reportOptions;
+        vm.reportOptions = JSON.parse(JSON.stringify(reportOptions));
 
         vm.readyStatus = {
             pricingPolicy: false,
