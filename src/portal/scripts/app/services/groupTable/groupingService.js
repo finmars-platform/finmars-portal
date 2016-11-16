@@ -66,7 +66,7 @@
 
         //console.log('GROUPING SERVICE groups', groups);
 
-        console.log("items", items);
+        //console.log("items", items);
 
         var itemsGrouped = [];
         var itemsGroupedArray = [];
@@ -216,7 +216,7 @@
 
             //console.log('------------------------');
 
-            console.log('Items grouped', itemsGroupedArray);
+            //console.log('Items grouped', itemsGroupedArray);
 
             itemsGroupedArray.forEach(function (group) {
                 calcColumnSubTotal(group);
@@ -293,8 +293,8 @@
 
         var groupsInUse = [];
 
-        console.log('groups', groups);
-        console.log('columns', columns);
+        //console.log('groups', groups);
+        //console.log('columns', columns);
 
         function findPreInitGroup() {
             groups.forEach(function (group, $groupIndex) {
@@ -410,70 +410,77 @@
             });
         }
 
-        findInitLineGroup();
-        findPreInitGroup();
-        findBootsGroup();
-        findLinesGroup();
+        if(groups.length) {
+
+            findInitLineGroup();
+            findPreInitGroup();
+            findBootsGroup();
+            findLinesGroup();
 
 
-        console.log('preInitGroups', preInitGroups);
-        console.log('initLineGroup', initLineGroup);
-        console.log('bootsGroup', bootsGroup);
-        console.log('linesGroup', linesGroup);
+            //console.log('preInitGroups', preInitGroups);
+            //console.log('initLineGroup', initLineGroup);
+            //console.log('bootsGroup', bootsGroup);
+            //console.log('linesGroup', linesGroup);
 
 
-        var results = setGroups(items, preInitGroups, entityType);
+            var results = setGroups(items, preInitGroups, entityType);
 
-        console.log('123', results);
+            //console.log('123', results);
 
-        if (results[0].items && results[0].items.length) {
+            if (results[0].items && results[0].items.length) {
 
-            results.forEach(function (preInitGroupsItem) {
+                results.forEach(function (preInitGroupsItem) {
 
-                preInitGroupsItem.initGroup = setGroups(preInitGroupsItem.items, initLineGroup, entityType);
+                    preInitGroupsItem.initGroup = setGroups(preInitGroupsItem.items, initLineGroup, entityType);
 
-                if (preInitGroupsItem.initGroup && preInitGroupsItem.initGroup[0].hasOwnProperty('items')) {
+                    if (preInitGroupsItem.initGroup && preInitGroupsItem.initGroup[0].hasOwnProperty('items')) {
 
-                    preInitGroupsItem.initGroup.forEach(function (initGroupItem) {
+                        preInitGroupsItem.initGroup.forEach(function (initGroupItem) {
 
-                        initGroupItem.bootGroup = setGroups(initGroupItem.items, bootsGroup, entityType);
+                            initGroupItem.bootGroup = setGroups(initGroupItem.items, bootsGroup, entityType);
 
-                        if (initGroupItem.bootGroup && initGroupItem.bootGroup[0].hasOwnProperty('items')) {
+                            if (initGroupItem.bootGroup && initGroupItem.bootGroup[0].hasOwnProperty('items')) {
 
-                            initGroupItem.bootGroup.forEach(function (bootGroupItem) {
+                                initGroupItem.bootGroup.forEach(function (bootGroupItem) {
 
-                                bootGroupItem.lineGroup = setGroups(bootGroupItem.items, linesGroup, entityType);
-                            })
-                        }
+                                    bootGroupItem.lineGroup = setGroups(bootGroupItem.items, linesGroup, entityType);
+                                })
+                            }
 
-                    })
-                }
+                        })
+                    }
 
-            });
+                });
+            } else {
+                preInitGroups = [];
+                results = setGroups(items, initLineGroup, entityType);
+
+                results.forEach(function (initGroupItem) {
+
+                    initGroupItem.bootGroup = setGroups(initGroupItem.items, bootsGroup, entityType);
+
+                    if (initGroupItem.bootGroup && initGroupItem.bootGroup[0].hasOwnProperty('items')) {
+
+                        initGroupItem.bootGroup.forEach(function (bootGroupItem) {
+
+                            bootGroupItem.lineGroup = setGroups(bootGroupItem.items, linesGroup, entityType);
+                        })
+                    }
+
+                });
+
+            }
+
+
+            //console.log('results', results);
+
+            return results;
+
+
         } else {
-            preInitGroups = [];
-            results = setGroups(items, initLineGroup, entityType);
-
-            results.forEach(function (initGroupItem) {
-
-                initGroupItem.bootGroup = setGroups(initGroupItem.items, bootsGroup, entityType);
-
-                if (initGroupItem.bootGroup && initGroupItem.bootGroup[0].hasOwnProperty('items')) {
-
-                    initGroupItem.bootGroup.forEach(function (bootGroupItem) {
-
-                        bootGroupItem.lineGroup = setGroups(bootGroupItem.items, linesGroup, entityType);
-                    })
-                }
-
-            });
-
+            return items;
         }
-
-
-        console.log('results', results);
-
-        return results;
 
     };
 

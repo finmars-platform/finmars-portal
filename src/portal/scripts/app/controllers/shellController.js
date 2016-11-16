@@ -94,6 +94,12 @@
                 case 'app.data.currency':
                     return "CURRENCY";
                     break;
+                case 'app.reports.balance-report':
+                    return "BALANCE REPORT";
+                    break;
+                case 'app.reports.pnl-report':
+                    return "P&L REPORT";
+                    break;
                 case 'app.settings.users-groups':
                     vm.currentLocationShowBtns = false;
                     return 'USERS & GROUPS';
@@ -118,7 +124,7 @@
                 targetEvent: $event,
                 locals: {
                     options: {
-                        entityType: entityType,
+                        entityType: entityType
                     }
                 }
             }).then(function (res) {

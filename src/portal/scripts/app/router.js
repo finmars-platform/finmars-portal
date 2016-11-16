@@ -162,12 +162,12 @@
                 abstract: true,
                 template: '<div data-ui-view></div>'
             })
-            .state('app.reports.balance', {
+            .state('app.reports.balance-report', {
                 url: '/balance',
                 templateUrl: 'views/reports/reports-balance-view.html',
                 controller: 'BalanceReportController as vm'
             })
-            .state('app.reports.profit-and-lost', {
+            .state('app.reports.pnl-report', {
                 url: '/profit-and-lost',
                 templateUrl: 'views/reports/reports-profit-and-lost-view.html',
                 controller: 'ProfitAndLostReportController as vm'

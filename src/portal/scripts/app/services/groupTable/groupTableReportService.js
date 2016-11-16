@@ -470,6 +470,8 @@
                                                 groupObject = groupItem;
                                             }
 
+                                            console.log('groupItem', groupItem);
+
                                             if (groupItem.hasOwnProperty('report_settings')) {
                                                 groupObject.level = $index;
                                                 groupObject.type = groupItem.report_settings.subtotal_type;
@@ -542,14 +544,14 @@
 
                                             var cellCaptionsGroups = [];
 
-                                            bootGroupItem.groups.forEach(function (groupItem, $index) {
+                                            bootGroupItem.groups.forEach(function (groupItem, $groupIndex) {
 
                                                 //console.log('groupItem', groupItem);
 
                                                 var groupObject = JSON.parse(JSON.stringify(groupItem));
 
                                                 if (groupItem.hasOwnProperty('report_settings')) {
-                                                    groupObject.level = $index;
+                                                    groupObject.level = $groupIndex;
                                                     groupObject.type = groupItem.report_settings.subtotal_type;
                                                 }
 
@@ -557,7 +559,7 @@
                                             });
 
                                             if ($bootGroupIndex !== 0) {
-                                                cellCaptionsGroups[0] = {value: ''};
+                                                //cellCaptionsGroups[0] = {value: ''};
                                             }
 
 
@@ -570,14 +572,15 @@
 
                                             var cellCaptions = [];
 
-                                            bootGroupItem.groups.forEach(function (groupItem, $index) {
+                                            bootGroupItem.groups.forEach(function (groupItem, $groupIndex) {
 
                                                 //console.log('groupItem', groupItem);
 
-                                                var groupObject = {value: ''};
+                                                //var groupObject = {value: ''};
+                                                var groupObject = JSON.parse(JSON.stringify(groupItem));
 
                                                 if (groupItem.hasOwnProperty('report_settings')) {
-                                                    groupObject.level = $index;
+                                                    groupObject.level = $groupIndex;
                                                     groupObject.type = groupItem.report_settings.subtotal_type;
                                                 }
 

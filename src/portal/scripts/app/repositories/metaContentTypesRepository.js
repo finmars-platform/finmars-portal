@@ -333,6 +333,16 @@
                 name: "Tag",
                 entity: 'tag',
                 key: "tags.tag"
+            },
+            {
+                name: "Balance report",
+                entity: 'balance-report',
+                key: "reports.balancereport"
+            },
+            {
+                name: "P&L report",
+                entity: 'pnl-report',
+                key: "reports.plreport"
             }
         ]
     };
