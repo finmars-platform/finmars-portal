@@ -1,0 +1,23 @@
+<md-dialog class="create-member-group-dialog draggable-dialog" drag-dialog>
+	<md-toolbar>
+		<div class="md-toolbar-tools">
+			<h2>Add new group</h2>
+		</div>
+	</md-toolbar>
+	<md-dialog-content data-custom-scroll class="create-member-dialog-content custom-scrollbar">
+		<div layout="column">
+			<md-input-container>
+				<label>Group name</label>
+				<textarea data-ng-model="vm.groupName"></textarea>
+			</md-input-container>
+		</div>
+	</md-dialog-content>
+	<md-dialog-actions layout="row" layout-align="start center">
+		<div flex="70">
+			<md-button class="md-raised" data-ng-click="vm.cancel()">Cancel</md-button>
+		</div>
+		<div flex="30">
+			<md-button class="md-raised md-primary" data-ng-click="vm.agree()">Create</md-button>
+		</div>
+	</md-dialog-actions>
+</md-dialog>

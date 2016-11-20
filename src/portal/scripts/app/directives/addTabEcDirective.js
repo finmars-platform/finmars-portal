@@ -11,7 +11,6 @@
                 tabs: '='
             },
             link: function (scope, elem) {
-                console.log('elem', elem);
 
                 var btnString = '<md-button class="ec-tab-add-btn"' +
                     'data-ng-click="vm.addTab()">' +

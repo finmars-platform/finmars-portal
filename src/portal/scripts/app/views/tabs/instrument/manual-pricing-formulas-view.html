@@ -1,0 +1,143 @@
+<div data-ng-controller="ManualPricingFormulasTabController as vm">
+    <div>
+        <div data-ng-if="vm.readyStatus.content">
+            <table class="bordered">
+                <thead>
+
+                <tr>
+                    <th data-ng-click="vm.setSort('policy_name')">Pricing policy<span class="sortorder"
+                                                                                       data-ng-show="vm.sort === 'policy_name'"
+                                                                                       data-ng-class="{reverse: vm.direction}"></span>
+                    </th>
+                    <th data-ng-click="vm.setSort('expr')">Expression<span class="sortorder"
+                                                                                   data-ng-show="vm.sort === 'expr'"
+                                                                                   data-ng-class="{reverse: vm.direction}"></span>
+                    </th>
+                    <th data-ng-click="vm.setSort('notes')">Notes<span class="sortorder"
+                                                                              data-ng-show="vm.sort === 'notes'"
+                                                                              data-ng-class="{reverse: vm.direction}"></span>
+                    </th>
+                    <th>
+                        <md-button class="md-icon-button">
+                            <ng-md-icon data-ng-click="vm.toggleQuery()" icon="search"></ng-md-icon>
+                        </md-button>
+                    </th>
+                </tr>
+                <tr style="border: 0" data-ng-if="vm.queryStatus" class="filter-row-holder">
+                    <th>
+                        <md-input-container>
+                            <ng-md-icon icon="search"></ng-md-icon>
+                            <input type="text" data-ng-model="vm.query.policy_name">
+                        </md-input-container>
+                    </th>
+                    <th>
+                        <md-input-container>
+                            <ng-md-icon icon="search"></ng-md-icon>
+                            <input type="text" data-ng-model="vm.query.expr">
+                        </md-input-container>
+                    </th>
+                    <th>
+                        <md-input-container>
+                            <ng-md-icon icon="search"></ng-md-icon>
+                            <input type="text" data-ng-model="vm.query.notes">
+                        </md-input-container>
+                    </th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr data-ng-repeat="item in vm.entity.manual_pricing_formulas | filter:vm.query">
+                    <td data-ng-if="!item.editStatus" data-ng-bind="vm.bindPricingPolicy(item)"></td>
+                    <td data-ng-if="!item.editStatus" data-ng-bind="item.expr"></td>
+                    <td data-ng-if="!item.editStatus" data-ng-bind="item.notes"></td>
+                    <td data-ng-if="!item.editStatus" class="table-misc-cell">
+                        <md-menu>
+                            <!-- Trigger element is a md-button with an icon -->
+                            <md-button ng-click="$mdOpenMenu($event)" class="md-icon-button"
+                                       aria-label="Open sample menu">
+                                <ng-md-icon icon="settings"></ng-md-icon>
+                            </md-button>
+                            <md-menu-content>
+                                <md-menu-item>
+                                    <md-button ng-click="vm.editItem(item)">
+                                        <ng-md-icon icon="mode_edit" style="top: 6px;
+    position: relative;
+    margin-right: 10px;"></ng-md-icon>
+                                        Edit
+                                    </md-button>
+                                </md-menu-item>
+                                <md-menu-item>
+                                    <md-button ng-click="vm.deleteItem(item, $index)">
+                                        <ng-md-icon icon="delete" style="top: 6px;
+    position: relative;
+    margin-right: 10px;"></ng-md-icon>
+                                        Delete
+                                    </md-button>
+                                </md-menu-item>
+                            </md-menu-content>
+                        </md-menu>
+                    </td>
+                    <td data-ng-if="item.editStatus" class="edit-state-td" style="padding-top: 12px">
+                        <md-input-container>
+                            <label for="">Pricing policy</label>
+                            <md-select data-ng-model="item.pricing_policy">
+                                <md-option data-ng-repeat="policy in vm.policies" ng-value="policy.id">{{policy.name}}
+                                </md-option>
+                            </md-select>
+                        </md-input-container>
+                    </td>
+                    <td data-ng-if="item.editStatus" class="edit-state-td">
+                        <md-input-container>
+                            <label for="">Expression</label>
+                            <input type="text" data-ng-model="item.expr">
+                        </md-input-container>
+                    </td>
+                    <td data-ng-if="item.editStatus" class="edit-state-td">
+                        <md-input-container>
+                            <label for="">Notes</label>
+                            <input type="text" data-ng-model="item.notes">
+                        </md-input-container>
+                    </td>
+                    <td data-ng-if="item.editStatus" class="edit-state-td">
+                        <md-button data-ng-click="vm.saveItem(item)">
+                            Ok
+                        </md-button>
+                    </td>
+                </tr>
+                <tr class="tab-input-row">
+                    <td>
+                        <md-input-container>
+                            <!--<label for="">Pricing policy</label>-->
+                            <md-select data-ng-model="vm.newItem.pricing_policy">
+                                <md-option data-ng-repeat="policy in vm.policies" ng-value="policy.id">{{policy.name}}
+                                </md-option>
+                            </md-select>
+                        </md-input-container>
+                    </td>
+                    <td>
+                        <md-input-container>
+                            <!--<label for="">Expression</label>-->
+                            <input type="text" data-ng-model="vm.newItem.expr">
+                        </md-input-container>
+                    </td>
+                    <td>
+                        <md-input-container>
+                            <!--<label for="">Notes</label>-->
+                            <input type="text" data-ng-model="vm.newItem.notes">
+                        </md-input-container>
+                    </td>
+                    <td>
+                        <md-button data-ng-click="vm.addRow()">
+                            Add
+                        </md-button>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div data-ng-if="!vm.readyStatus.content">
+            <div layout="row" layout-sm="column" layout-align="space-around">
+                <md-progress-circular md-mode="indeterminate"></md-progress-circular>
+            </div>
+        </div>
+    </div>
+</div>

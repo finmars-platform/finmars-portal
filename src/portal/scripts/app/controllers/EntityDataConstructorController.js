@@ -5,50 +5,127 @@
 
     'use strict';
 
-    var demoPortfolioService = require('../services/demo/demoPortfolioService');
-    var demoTransactionsService = require('../services/demo/demoTransactionsService');
+    var logService = require('../../../../core/services/logService');
+    var attributeTypeService = require('../services/attributeTypeService');
+
+    var uiService = require('../services/uiService');
 
     var portfolioService = require('../services/portfolioService');
+    var entityResolverService = require('../services/entityResolverService');
     var metaService = require('../services/metaService');
 
     var gridHelperService = require('../services/gridHelperService');
+    var routeResolver = require('../services/routeResolverService');
 
     module.exports = function ($scope, $stateParams, $state, $mdDialog) {
 
+        logService.controller('EntityDataConstructorController', 'initialized');
+
         var vm = this;
-        vm.view = {};
         vm.boxColumns = [1, 2, 3, 4, 5, 6];
-
-        vm.entityType = "portfolio";
-
-        demoPortfolioService.getView().then(function (data) {
-            vm.view = data;
-            vm.tabs = data.tabs;
-            addRowForTab();
-            console.log('vm tabs!', vm.tabs);
-            $scope.$apply();
-        });
+        vm.readyStatus = {constructor: false};
+        vm.uiIsDefault = false;
 
         vm.attrs = [];
         vm.baseAttrs = [];
+        vm.entityAttrs = [];
+        vm.userInputs = [];
 
-        vm.cancel = function () {
-            $state.go('app.portfolio');
-        };
+        console.log($stateParams);
 
-        portfolioService.getAttributeTypeList().then(function (data) {
-            vm.attrs = data.results;
+        vm.entityType = $stateParams.entityType;
+        vm.isntanceId = $stateParams.instanceId;
 
-            console.log('vm attrs', vm.attrs);
-            metaService.getBaseAttrs().then(function (data) {
-                vm.baseAttrs = data;
+        // weirdo stuff
+        // we took edit layout by instance id instead of entity content_type
+        // but it can be took from different entity
+        // e.g. transaction -> transaction-type.book_transaction_layout
+
+        if (vm.isntanceId) {
+            uiService.getEditLayoutByInstanceId(vm.entityType, vm.isntanceId).then(function (data) {
+                //console.log(data['json_data']);
+                if (data) {
+                    vm.ui = data;
+                } else {
+                    vm.uiIsDefault = true;
+                    vm.ui = uiService.getDefaultEditLayout()[0];
+                }
+                vm.tabs = vm.ui.data || [];
+                vm.tabs.forEach(function (tab) {
+                    tab.layout.fields.forEach(function (field) {
+                        field.editMode = false;
+                    })
+                });
+                addRowForTab();
+                //logService.collection('vm tabs', vm.tabs);
                 $scope.$apply();
             });
+        } else {
+            uiService.getEditLayout(vm.entityType).then(function (data) {
+                //console.log(data['json_data']);
+                if (data.results.length) {
+                    vm.ui = data.results[0];
+                } else {
+                    vm.uiIsDefault = true;
+                    vm.ui = uiService.getDefaultEditLayout()[0];
+                }
+                vm.tabs = vm.ui.data;
+                vm.tabs.forEach(function (tab) {
+                    tab.layout.fields.forEach(function (field) {
+                        field.editMode = false;
+                    })
+                });
+                addRowForTab();
+                //logService.collection('vm tabs', vm.tabs);
+                $scope.$apply();
+            });
+        }
+
+        if (vm.isntanceId) {
+            if (vm.entityType === 'complex-transaction') {
+                entityResolverService.getByKey('transaction-type', vm.isntanceId).then(function (data) {
+                    var inputs = data.inputs;
+                    inputs.forEach(function (input) {
+                        var input_value_type = input.value_type;
+                        if (input.value_type == 100) {
+                            input_value_type = 'field'
+                        }
+
+                        vm.userInputs.push({
+                            key: input.name.split(' ').join('_').toLowerCase() + '_' + input.content_type,
+                            name: input.name,
+                            content_type: input.content_type,
+                            value_type: input_value_type
+                        })
+                    });
+                    $scope.$apply();
+                });
+            }
+        }
+
+        vm.cancel = function () {
+            $state.go('app.data.' + vm.entityType);
+        };
+
+        attributeTypeService.getList(vm.entityType).then(function (data) {
+            logService.collection('data', data);
+            vm.attrs = data.results;
+
+            logService.collection('vm attrs', vm.attrs);
+
+            if (metaService.getEntitiesWithoutBaseAttrsList().indexOf(vm.entityType) === -1) {
+                vm.baseAttrs = metaService.getBaseAttrs();
+            }
+            logService.collection('vm.baseAttrs', vm.baseAttrs);
+            vm.entityAttrs = metaService.getEntityAttrs(vm.entityType);
+            logService.collection('vm.entityAttrs', vm.entityAttrs);
+            vm.readyStatus.constructor = true;
+            $scope.$apply();
         });
 
         vm.checkColspan = function (tab, row, column) {
 
-            console.log('VM TAB', tab);
+            //console.log('VM TAB', tab);
 
             var i, c;
 
@@ -78,7 +155,7 @@
                 } else {
                     for (z = 1; z < rowMap[keys[x]].length; z = z + 1) {
                         if (column == rowMap[keys[x]][z]) {
-                            console.log('rowMap[keys[x]][z]', rowMap[keys[x]][z]);
+                            //console.log('rowMap[keys[x]][z]', rowMap[keys[x]][z]);
                             return false;
                         }
                     }
@@ -102,7 +179,6 @@
             var c;
             tab.layout.rows = tab.layout.rows + 1;
             for (c = 0; c < tab.layout.columns; c = c + 1) {
-                console.log('tab', tab);
                 tab.layout.fields.push({
                     row: tab.layout.rows,
                     column: c + 1,
@@ -186,16 +262,48 @@
         };
 
         vm.saveLayout = function () {
-            vm.view.tabs = vm.tabs;
             var i;
             for (i = 0; i < vm.tabs.length; i = i + 1) {
                 removeLastRow(vm.tabs[i]);
             }
-            demoPortfolioService.save(vm.view).then(function () {
-                console.log('layout saved', vm.view);
-                $state.go('app.portfolio');
-                $scope.$apply();
-            });
+            vm.ui.data = vm.tabs;
+            if (vm.uiIsDefault) {
+                if (vm.isntanceId) {
+                    uiService.updateEditLayoutByInstanceId(vm.entityType, vm.isntanceId, vm.ui).then(function (data) {
+                        console.log('layout saved');
+
+                        var route = routeResolver.findExistingState('app.data.', vm.entityType);
+                        $state.go(route.state, route.options);
+                        $scope.$apply();
+                    });
+                } else {
+                    uiService.createEditLayout(vm.entityType, vm.ui).then(function () {
+                        console.log('layout saved');
+
+                        var route = routeResolver.findExistingState('app.data.', vm.entityType);
+                        $state.go(route.state, route.options);
+                        $scope.$apply();
+                    });
+                }
+            } else {
+                if (vm.isntanceId) {
+                    uiService.updateEditLayoutByInstanceId(vm.entityType, vm.isntanceId, vm.ui).then(function (data) {
+                        console.log('layout saved');
+
+                        var route = routeResolver.findExistingState('app.data.', vm.entityType);
+                        $state.go(route.state, route.options);
+                        $scope.$apply();
+                    });
+                } else {
+                    uiService.updateEditLayout(vm.ui.id, vm.ui).then(function () {
+                        console.log('layout saved');
+
+                        var route = routeResolver.findExistingState('app.data.', vm.entityType);
+                        $state.go(route.state, route.options);
+                        $scope.$apply();
+                    });
+                }
+            }
         };
 
         vm.bindFlex = function (tab, row, column) {
@@ -229,6 +337,9 @@
         };
 
         vm.addTab = function () {
+            if (!vm.tabs.length) {
+                vm.tabs = [];
+            }
             vm.tabs.push({
                 name: '',
                 editState: true,
@@ -237,7 +348,8 @@
                     columns: 1,
                     fields: []
                 }
-            })
+            });
+            addRow(vm.tabs[vm.tabs.length - 1]);
         };
 
         vm.toggleEditTab = function (tab, action, $index) {
@@ -264,6 +376,10 @@
                 tab.name = tab.captionName;
                 tab.editState = !tab.editState;
             }
+        };
+
+        vm.MABtnVisibility = function (entityType) {
+            return metaService.checkRestrictedEntityTypesForAM(entityType);
         }
 
     }

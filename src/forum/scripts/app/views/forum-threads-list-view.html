@@ -1,0 +1,50 @@
+<div>
+	<md-content class="forum-content-padding">
+		<h2>Thread group: <span data-ng-bind="vm.threadGroupName"></span></h2>
+		<h3 class="forum-section-header">Threads list</h3>
+		<div layout="row">
+			<div layout="row" flex="50">
+				<md-button aria-label="back" ui-sref="app.forum.thread-groups" class="md-raised forum-back-btn" data-ng-click="vm.forumGoBackBtn()">Back</md-button>
+				<md-input-container class="margin-top-5">
+					<label>Filter by tags</label>
+					<md-select aria-label="" data-ng-model="vm.filterTags" multiple="true">
+						<md-option data-ng-repeat="tag in vm.tags" ng-value="tag.id">{{tag.display_name}}</md-option>
+					</md-select>
+				</md-input-container>
+				<hide-by-tags tags="vm.tags"></hide-by-tags>
+			</div>
+			<div layout="row" layout-align="end center" flex="50">
+				<md-button aria-lable="create thread" class="md-raised md-primary" data-ng-click="vm.createThredsList($event)">Create thread</md-button>
+			</div>
+		</div>
+		<div data-ng-if="vm.readyStatus.content">
+			<md-card class="thread-forum-list-item" class="md-3-line" ng-repeat="item in vm.threads | forumFilterByTags : vm.filterTags" data-tag-id="{{item.filterTag}}">
+				<a data-ui-sref="app.forum.thread({groupId: vm.threadGroupId, threadId: item.id})">
+					<span data-ng-bind="item.subject"></span>
+				</a>
+				<md-divider></md-divider>
+				<div class="forum-manage-buttons">
+					<md-button aria-label="edit thread" class="forum-manage-btn" data-ng-click="vm.editThreadDialog('$event', item.id)">
+						<ng-md-icon icon="mode_edit" size="20"></ng-md-icon>
+					</md-button>
+					<md-button aria-label='delete thread' class="forum-manage-btn" data-ng-click="vm.deleteThread(item.id)">
+						<ng-md-icon icon="clear" size="20"></ng-md-icon>
+					</md-button>
+				</div>
+			</md-card>
+		</div>
+		<div data-ng-if="!vm.readyStatus.content">
+			<div layout="row" layout-sm="column" layout-align="space-around" class="m-large">
+				<md-progress-circular md-mode="indeterminate" md-diameter="96"></md-progress-circular>
+			</div>
+		</div>
+		<div layout="row">
+			<div layout="row" flex="50">
+				<md-button aria-label="back" ui-sref="app.forum.thread-groups" class="md-raised forum-back-btn" data-ng-click="vm.forumGoBackBtn()">Back</md-button>
+			</div>
+			<div layout="row" layout-align="end center" flex="50">
+				<md-button aria-label="create" class="md-raised md-primary" data-ng-click="vm.createThredsList($event)">Create thread</md-button>
+			</div>
+		</div>
+	</md-content>
+</div>

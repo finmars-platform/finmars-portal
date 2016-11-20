@@ -1,0 +1,706 @@
+/**
+ * Created by szhitenev on 17.08.2016.
+ */
+(function () {
+
+    'use strict';
+
+    var logService = require('../../../../../core/services/logService');
+
+    var metaService = require('../../services/metaService');
+    var dataProvidersService = require('../../services/import/dataProvidersService');
+    var instrumentSchemeService = require('../../services/import/instrumentSchemeService');
+    var scheduleService = require('../../services/import/scheduleService');
+    var attributeTypeService = require('../../services/attributeTypeService');
+
+    module.exports = function ($scope, $mdDialog, schemeId) {
+
+        logService.controller('InstrumentMappingEditDialogController', 'initialized');
+
+        var vm = this;
+        vm.scheme = {};
+        vm.readyStatus = {dataProviders: false, scheme: false};
+
+        instrumentSchemeService.getByKey(schemeId).then(function (data) {
+            vm.scheme = data;
+            vm.getAttrs();
+            $scope.$apply();
+        });
+
+        vm.hidedEntityAttrs = [
+            'factor_schedule_method',
+            'accrual_calculation_schedule_method',
+            'provider',
+            'url',
+            'scheme_name',
+            'id',
+            'attributes',
+            'inputs'];
+
+        vm.baseAttrs = metaService.getBaseAttrs();
+        vm.entityAttrs = metaService.getEntityAttrs("instrument-scheme").map(function (item) {
+            if (item.key == 'factor_schedule_method' || item.key == 'accrual_calculation_schedule_method') {
+                return null;
+            }
+            return item;
+        }).filter(function (item) {
+            return !!item
+        });
+        console.log('vm.entityAttrs', vm.entityAttrs);
+        vm.attrs = [];
+
+
+        vm.getAttrs = function () {
+            attributeTypeService.getList('instrument').then(function (data) {
+                vm.attrs = data.results;
+
+                fillArraysWithScheme();
+
+                $scope.$apply();
+            });
+        };
+
+        vm.dataProviders = [];
+
+        dataProvidersService.getList().then(function (data) {
+            vm.dataProviders = data;
+            vm.readyStatus.dataProviders = true;
+            $scope.$apply();
+        });
+
+        vm.mapFields = [
+            {
+                key: 'name',
+                caption: 'Name',
+                required: true,
+                expression: '',
+                complexExpressionEntity: false
+            },
+            {
+                key: 'user_code',
+                caption: 'User code',
+                required: true,
+                expression: '',
+                complexExpressionEntity: false
+            },
+            {
+                key: 'instrument_type',
+                caption: 'Instrument type',
+                required: true,
+                expression: '',
+                complexExpressionEntity: 'instrument_type'
+            },
+            {
+                key: 'reference_for_pricing',
+                caption: 'Reference for pricing',
+                required: true,
+                expression: '',
+                complexExpressionEntity: false
+            }
+        ];
+
+        vm.mappedFieldsDefaults = [
+            {
+                key: 'daily_pricing_model',
+                caption: 'Daily pricing model',
+                required: false,
+                value_type: "field",
+                expression: '',
+                complexExpressionEntity: false
+            },
+            {
+                key: 'price_download_scheme',
+                caption: 'Price download scheme',
+                required: false,
+                value_type: "field",
+                expression: '',
+                complexExpressionEntity: false
+            },
+            {
+                key: 'default_price',
+                caption: 'Default price',
+                value_type: 10,
+                required: false,
+                expression: '',
+                complexExpressionEntity: false
+            },
+            {
+                key: 'default_accrued',
+                caption: 'Default accrued',
+                value_type: 10,
+                required: false,
+                expression: '',
+                complexExpressionEntity: false
+            },
+            {
+                key: 'payment_size_detail',
+                caption: 'Payment size detail',
+                value_type: "field",
+                required: false,
+                expression: '',
+                complexExpressionEntity: false
+            }
+        ];
+
+        vm.mappedFieldsSecond = [
+            {
+                key: 'short_name',
+                caption: 'Short name',
+                required: true,
+                expression: '',
+                complexExpressionEntity: false
+            },
+            {
+                key: 'public_name',
+                caption: 'Public name',
+                required: true,
+                expression: '',
+                complexExpressionEntity: false
+            }
+        ];
+
+        vm.mappedDynamic = [];
+
+        vm.providerFields = [
+            {
+                name: '',
+                field: ''
+            }
+        ];
+
+        var fillArraysWithScheme = function () {
+
+            vm.schemeName = vm.scheme['scheme_name'];
+            vm.schemeProvider = vm.scheme['provider'];
+            vm.factorScheduleMethod = vm.scheme['factor_schedule_method'];
+            vm.accrualCalculation = vm.scheme['accrual_calculation_schedule_method'];
+
+            var findKeyCaption = function (key) {
+                var i;
+                for (i = 0; i < vm.entityAttrs.length; i = i + 1) {
+                    if (vm.entityAttrs[i].key == key) {
+                        return vm.entityAttrs[i].caption;
+                    }
+                }
+            };
+
+            var checkRequired = function (key) {
+                var requiredFields = ['name',
+                    'user_code',
+                    'instrument_type',
+                    'reference_for_pricing',
+                    'short_name',
+                    'public_name'];
+                if (requiredFields.indexOf(key) !== -1) {
+                    return true
+                }
+                return false;
+            };
+
+            var findEntityWithComplexExpression = function (key) {
+
+                if (key == 'accrued_currency') {
+                    return 'currency';
+                }
+                if (key == 'pricing_currency') {
+                    return 'currency';
+                }
+
+                if (key == 'instrument_type') {
+                    return 'instrument_type';
+                }
+
+                return false;
+
+            };
+
+            function syncMapFields() {
+                var keys = Object.keys(vm.scheme);
+                var i;
+                var m;
+                //vm.mapFields = [];
+                for (i = 0; i < keys.length; i = i + 1) {
+                    if (vm.hidedEntityAttrs.indexOf(keys[i]) === -1) {
+
+                        var caption = findKeyCaption(keys[i]);
+                        var required = checkRequired(keys[i]);
+                        var complexExpressionEntity = findEntityWithComplexExpression(keys[i]);
+
+                        for (m = 0; m < vm.mapFields.length; m = m + 1) {
+                            if (vm.mapFields[m].key == keys[i]) {
+                                vm.mapFields[m].caption = caption;
+                                vm.mapFields[m].required = required;
+                                vm.mapFields[m].complexExpressionEntity = complexExpressionEntity;
+                                vm.mapFields[m].expression = vm.scheme[keys[i]];
+                            }
+
+                        }
+
+                    }
+                }
+            }
+
+            function syncMappedFieldsDefaults() {
+                var keys = Object.keys(vm.scheme);
+                var i;
+                var m;
+                //vm.mapFields = [];
+                for (i = 0; i < keys.length; i = i + 1) {
+
+                    if (vm.hidedEntityAttrs.indexOf(keys[i]) === -1) {
+
+                        var caption = findKeyCaption(keys[i]);
+                        var required = checkRequired(keys[i]);
+                        var complexExpressionEntity = findEntityWithComplexExpression(keys[i]);
+
+                        for (m = 0; m < vm.mappedFieldsDefaults.length; m = m + 1) {
+                            if (vm.mappedFieldsDefaults[m].key == keys[i]) {
+                                vm.mappedFieldsDefaults[m].caption = caption;
+                                vm.mappedFieldsDefaults[m].required = required;
+                                vm.mappedFieldsDefaults[m].complexExpressionEntity = complexExpressionEntity;
+                                vm.mappedFieldsDefaults[m].expression = vm.scheme[keys[i]];
+                            }
+
+                        }
+
+                    }
+                }
+            }
+
+            function syncMappedFieldsSecond() {
+                var keys = Object.keys(vm.scheme);
+                var i;
+                var m;
+                //vm.mapFields = [];
+                for (i = 0; i < keys.length; i = i + 1) {
+
+                    if (vm.hidedEntityAttrs.indexOf(keys[i]) === -1) {
+
+                        var caption = findKeyCaption(keys[i]);
+                        var required = checkRequired(keys[i]);
+                        var complexExpressionEntity = findEntityWithComplexExpression(keys[i]);
+
+                        for (m = 0; m < vm.mappedFieldsSecond.length; m = m + 1) {
+                            if (vm.mappedFieldsSecond[m].key == keys[i]) {
+                                vm.mappedFieldsSecond[m].caption = caption;
+                                vm.mappedFieldsSecond[m].required = required;
+                                vm.mappedFieldsSecond[m].complexExpressionEntity = complexExpressionEntity;
+                                vm.mappedFieldsSecond[m].expression = vm.scheme[keys[i]];
+                            }
+
+                        }
+
+                    }
+                }
+            }
+
+            function syncMappedDynamic() {
+                var a, x, b, i, e;
+
+                for (b = 0; b < vm.baseAttrs.length; b = b + 1) {
+                    if (vm.baseAttrs[b].key == 'notes') {
+                        if (vm.scheme.notes != null || vm.scheme.notes != '') {
+                            vm.mappedDynamic.push({
+                                key: 'notes',
+                                caption: 'Notes',
+                                required: false,
+                                value: vm.baseAttrs[b],
+                                complexExpressionEntity: false,
+                                expression: vm.scheme.notes
+                            })
+                        }
+                    }
+                }
+
+                var keys = Object.keys(vm.scheme);
+
+                var usedEntityAttrs = ['user_code', 'instrument_type', 'reference_for_pricing', 'daily_pricing_model',
+                    'price_download_scheme', 'default_price', 'default_accrued', 'payment_size_detail', 'public_name'];
+
+                for (i = 0; i < keys.length; i = i + 1) {
+                    if (vm.hidedEntityAttrs.indexOf(keys[i]) === -1) {
+
+                        if (usedEntityAttrs.indexOf(keys[i]) === -1) {
+
+                            for (e = 0; e < vm.entityAttrs.length; e = e + 1) {
+                                if (vm.entityAttrs[e].key == keys[i]) {
+                                    if (vm.scheme[keys[i]] != "" && vm.scheme[keys[i]] != null && vm.scheme[keys[i]] != undefined) {
+                                        var complexExpressionEntity = false;
+                                        if(keys[i] == 'accrued_currency' || keys[i] == 'pricing_currency') {
+                                            complexExpressionEntity = 'currency';
+                                        }
+                                        vm.mappedDynamic.push({
+                                            key: keys[i],
+                                            required: false,
+                                            value: vm.entityAttrs[e],
+                                            complexExpressionEntity: complexExpressionEntity,
+                                            expression: vm.scheme[keys[i]]
+                                        })
+                                    }
+                                }
+                            }
+                        }
+
+
+                    }
+                }
+
+                for (a = 0; a < vm.scheme.attributes.length; a = a + 1) {
+                    console.log('vm.scheme.attributes[a]', vm.scheme.attributes[a]);
+                    console.log('vm.attrs', vm.attrs);
+
+                    for (x = 0; x < vm.attrs.length; x = x + 1) {
+                        if (vm.attrs[x].id == vm.scheme.attributes[a].attribute_type) {
+
+                            var hasComplexExpression = false;
+
+                            if (vm.attrs[x].value_type == 30) {
+                                hasComplexExpression = 'classifier';
+                            }
+
+                            vm.mappedDynamic.push({
+                                id: vm.scheme.attributes[a]['id'],
+                                complexExpressionEntity: hasComplexExpression,
+                                expression: vm.scheme.attributes[a].value,
+                                attribute_name: vm.scheme.attributes[a]['name'],
+                                attribute_type: vm.scheme.attributes[a]['attribute_type'],
+                                value: vm.attrs[x],
+                                attr: vm.scheme.attributes[a]
+                            });
+                        }
+                    }
+                }
+            }
+
+
+            syncMapFields();
+            syncMappedFieldsDefaults();
+            syncMappedFieldsSecond();
+            syncMappedDynamic();
+
+            vm.providerFields = vm.scheme.inputs;
+            vm.readyStatus.scheme = true;
+        };
+
+        vm.resolveFieldType = function (field) {
+
+            console.log('field', field);
+
+            if (field.value.hasOwnProperty('key')) {
+                field.key = field.value.key;
+
+                if(field.key == 'accrued_currency' || field.key == 'pricing_currency') {
+                    field.complexExpressionEntity = 'currency';
+                }
+            }
+
+            if (field.value.hasOwnProperty('value_type') && field.value.hasOwnProperty('id')) {
+                field.attribute_type = field.value.id;
+                if (field.value.value_type == 30) {
+                    field.complexExpressionEntity = 'classifier';
+                }
+            }
+
+        };
+
+        vm.getModelKey = function (item) {
+
+            //console.log('key', item);
+
+            if (item.hasOwnProperty('key')) {
+                return 'key'
+            }
+
+            return 'attribute_type'
+        };
+
+        vm.addProviderField = function () {
+            vm.providerFields.push({
+                name: '',
+                field: ''
+            })
+        };
+
+        vm.beatufier = function (key) {
+            //console.log('KEY', key);
+            if (key !== undefined) {
+                var str = key.split('_').join(' ');
+                return str;
+            }
+            return key
+        };
+
+        vm.addMapField = function () {
+            vm.mappedDynamic.push({
+                expression: '',
+                required: false,
+                complexExpressionEntity: false
+            })
+        };
+
+        vm.removeProviderField = function (item, $index) {
+            vm.providerFields.splice($index, 1);
+        };
+
+        vm.removeMappingField = function (item, $index) {
+            vm.mappedDynamic.splice($index, 1);
+        };
+
+        vm.cancel = function () {
+            $mdDialog.cancel();
+        };
+
+        vm.agree = function ($event) {
+            vm.schemeUpdated = {};
+            vm.schemeUpdated['scheme_name'] = vm.schemeName;
+            vm.schemeUpdated['provider'] = vm.schemeProvider;
+            vm.schemeUpdated['factor_schedule_method'] = vm.factorScheduleMethod;
+            vm.schemeUpdated['accrual_calculation_schedule_method'] = vm.accrualCalculation;
+
+            vm.schemeUpdated.attributes = [];
+
+            console.log('mapFields', vm.mapFields);
+            console.log('mappedFieldsDefaults', vm.mappedFieldsDefaults);
+            console.log('mappedFieldsSecond', vm.mappedFieldsSecond);
+            console.log('mappedDynamic', vm.mappedDynamic);
+
+            var i, x, y, z;
+            for (i = 0; i < vm.mapFields.length; i = i + 1) {
+                if (vm.mapFields[i].hasOwnProperty('attribute_type')) {
+                    vm.schemeUpdated.attributes.push({
+                        id: vm.mapFields[i].id,
+                        attribute_type: vm.mapFields[i]['attribute_type'],
+                        value: vm.mapFields[i].expression
+                    })
+                } else {
+                    vm.schemeUpdated[vm.mapFields[i].key] = vm.mapFields[i].expression;
+                }
+            }
+
+            for (x = 0; x < vm.mappedFieldsDefaults.length; x = x + 1) {
+                if (vm.mappedFieldsDefaults[x].hasOwnProperty('attribute_type')) {
+                    vm.schemeUpdated.attributes.push({
+                        id: vm.mappedFieldsDefaults[x].id,
+                        attribute_type: vm.mappedFieldsDefaults[x]['attribute_type'],
+                        value: vm.mappedFieldsDefaults[x].expression
+                    })
+                } else {
+                    vm.schemeUpdated[vm.mappedFieldsDefaults[x].key] = vm.mappedFieldsDefaults[x].expression;
+                }
+            }
+
+            for (y = 0; y < vm.mappedFieldsSecond.length; y = y + 1) {
+                if (vm.mappedFieldsSecond[y].hasOwnProperty('attribute_type')) {
+                    vm.schemeUpdated.attributes.push({
+                        id: vm.mappedFieldsSecond[y].id,
+                        attribute_type: vm.mappedFieldsSecond[y]['attribute_type'],
+                        value: vm.mappedFieldsSecond[y].expression
+                    })
+                } else {
+                    vm.schemeUpdated[vm.mappedFieldsSecond[y].key] = vm.mappedFieldsSecond[y].expression;
+                }
+            }
+
+            for (z = 0; z < vm.mappedDynamic.length; z = z + 1) {
+                if (vm.mappedDynamic[z].hasOwnProperty('attribute_type')) {
+                    vm.schemeUpdated.attributes.push({
+                        id: vm.mappedDynamic[z].id,
+                        attribute_type: vm.mappedDynamic[z]['attribute_type'],
+                        value: vm.mappedDynamic[z].expression
+                    })
+                } else {
+                    vm.schemeUpdated[vm.mappedDynamic[z].key] = vm.mappedDynamic[z].expression;
+                }
+            }
+
+            vm.schemeUpdated.inputs = vm.providerFields;
+            vm.schemeUpdated.inputs.forEach(function(item){
+                item.field = item.name;
+            });
+
+            instrumentSchemeService.update(vm.scheme.id, vm.schemeUpdated).then(function (data) {
+                console.log('DATA', data);
+                if (data.status == 200 || data.status == 201) {
+                    $mdDialog.hide({res: 'agree'});
+                }
+                if (data.status == 400) {
+                    $mdDialog.show({
+                        controller: 'ValidationDialogController as vm',
+                        templateUrl: 'views/dialogs/validation-dialog-view.html',
+                        targetEvent: $event,
+                        locals: {
+                            validationData: data.response
+                        },
+                        preserveScope: true,
+                        autoWrap: true,
+                        skipHide: true
+                    })
+                }
+            });
+        };
+
+        vm.openMapping = function ($event, item) {
+            $mdDialog.show({
+                controller: 'EntityTypeMappingDialogController as vm',
+                templateUrl: 'views/dialogs/entity-type-mapping-dialog-view.html',
+                parent: angular.element(document.body),
+                targetEvent: $event,
+                preserveScope: true,
+                autoWrap: true,
+                skipHide: true,
+                locals: {
+                    mapItem: item
+                }
+            }).then(function (res) {
+                if (res.status === 'agree') {
+                    console.log("res", res.data);
+                }
+            });
+        };
+
+        vm.openExpressionDialog = function ($event, item) {
+            $mdDialog.show({
+                controller: 'ExpressionEditorDialogController as vm',
+                templateUrl: 'views/dialogs/expression-editor-dialog-view.html',
+                parent: angular.element(document.body),
+                targetEvent: $event,
+                preserveScope: true,
+                autoWrap: true,
+                skipHide: true,
+                locals: {
+                    item: item
+                }
+            }).then(function (res) {
+                if (res.status === 'agree') {
+                    console.log("res", res.data);
+                    if (res.data) {
+                        item.expression = res.data.item.expression;
+                    }
+                    $scope.$apply();
+                }
+            });
+        };
+
+        vm.getSchedules = function () {
+
+            scheduleService.getAccrualScheduleDownloadMethodList().then(function (data) {
+                vm.accrualSchedule = data;
+                vm.readyStatus.accrualSchedule = true;
+                $scope.$apply();
+            });
+
+            scheduleService.getFactorScheduleDownloadMethodList().then(function (data) {
+                vm.factorSchedule = data;
+                vm.readyStatus.factorSchedule = true;
+                $scope.$apply();
+            });
+
+        };
+
+        vm.checkSchedules = function () {
+            if (vm.readyStatus.accrualSchedule && vm.readyStatus.factorSchedule) {
+                return true;
+            }
+            return false;
+        };
+
+        vm.getSchedules();
+
+        vm.checkAttrs = function () {
+
+            console.log('chack attrs?');
+
+            var b, e, a;
+            var x, y, z, x1, y1, z1, x2, y2, z2, x3, y3, z3;
+            for (b = 0; b < vm.baseAttrs.length; b = b + 1) {
+                vm.baseAttrs[b].disabled = false;
+                for (x = 0; x < vm.mapFields.length; x = x + 1) {
+                    if (vm.mapFields[x].key == vm.baseAttrs[b].key) {
+                        vm.baseAttrs[b].disabled = true;
+                    }
+                }
+                for (x1 = 0; x1 < vm.mappedFieldsDefaults.length; x1 = x1 + 1) {
+                    if (vm.mappedFieldsDefaults[x1].key == vm.baseAttrs[b].key) {
+                        vm.baseAttrs[b].disabled = true;
+                    }
+                }
+                for (x2 = 0; x2 < vm.mappedFieldsSecond.length; x2 = x2 + 1) {
+                    if (vm.mappedFieldsSecond[x2].key == vm.baseAttrs[b].key) {
+                        vm.baseAttrs[b].disabled = true;
+                    }
+                }
+                for (x3 = 0; x3 < vm.mappedDynamic.length; x3 = x3 + 1) {
+                    if (vm.mappedDynamic[x3].key == vm.baseAttrs[b].key) {
+                        vm.baseAttrs[b].disabled = true;
+                    }
+                }
+            }
+
+            for (e = 0; e < vm.entityAttrs.length; e = e + 1) {
+                vm.entityAttrs[e].disabled = false;
+                for (y = 0; y < vm.mapFields.length; y = y + 1) {
+                    if (vm.hidedEntityAttrs.indexOf(vm.entityAttrs[e].key) === -1) {
+                        if (vm.mapFields[y].key == vm.entityAttrs[e].key) {
+                            vm.entityAttrs[e].disabled = true;
+                        }
+                    }
+                }
+                for (y1 = 0; y1 < vm.mappedFieldsDefaults.length; y1 = y1 + 1) {
+                    if (vm.hidedEntityAttrs.indexOf(vm.entityAttrs[e].key) === -1) {
+                        if (vm.mappedFieldsDefaults[y1].key == vm.entityAttrs[e].key) {
+                            vm.entityAttrs[e].disabled = true;
+                        }
+                    }
+                }
+                for (y2 = 0; y2 < vm.mappedFieldsSecond.length; y2 = y2 + 1) {
+                    if (vm.hidedEntityAttrs.indexOf(vm.entityAttrs[e].key) === -1) {
+                        if (vm.mappedFieldsSecond[y2].key == vm.entityAttrs[e].key) {
+                            vm.entityAttrs[e].disabled = true;
+                        }
+                    }
+                }
+                for (y3 = 0; y3 < vm.mappedDynamic.length; y3 = y3 + 1) {
+                    if (vm.hidedEntityAttrs.indexOf(vm.entityAttrs[e].key) === -1) {
+                        if (vm.mappedDynamic[y3].key == vm.entityAttrs[e].key) {
+                            vm.entityAttrs[e].disabled = true;
+                        }
+                    }
+                }
+            }
+
+            for (a = 0; a < vm.attrs.length; a = a + 1) {
+                vm.attrs[a].disabled = false;
+                for (z = 0; z < vm.mapFields.length; z = z + 1) {
+                    if (vm.mapFields[z].hasOwnProperty('attribute_type')) {
+                        if (vm.mapFields[z].attribute_type == vm.attrs[a].id) {
+                            vm.attrs[a].disabled = true;
+                        }
+                    }
+                }
+                for (z1 = 0; z1 < vm.mappedFieldsDefaults.length; z1 = z1 + 1) {
+                    if (vm.mappedFieldsDefaults[z1].hasOwnProperty('attribute_type')) {
+                        if (vm.mappedFieldsDefaults[z1].attribute_type == vm.attrs[a].id) {
+                            vm.attrs[a].disabled = true;
+                        }
+                    }
+                }
+                for (z2 = 0; z2 < vm.mappedFieldsSecond.length; z2 = z2 + 1) {
+                    if (vm.mappedFieldsSecond[z2].hasOwnProperty('attribute_type')) {
+                        if (vm.mappedFieldsSecond[z2].attribute_type == vm.attrs[a].id) {
+                            vm.attrs[a].disabled = true;
+                        }
+                    }
+                }
+                for (z3 = 0; z3 < vm.mappedDynamic.length; z3 = z3 + 1) {
+                    if (vm.mappedDynamic[z3].hasOwnProperty('attribute_type')) {
+                        if (vm.mappedDynamic[z3].attribute_type == vm.attrs[a].id) {
+                            vm.attrs[a].disabled = true;
+                        }
+                    }
+                }
+            }
+
+        }
+    };
+
+}());

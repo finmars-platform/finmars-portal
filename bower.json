@@ -1,0 +1,24 @@
+{
+  "name": "finmars-portal",
+  "description": "",
+  "main": "index.js",
+  "license": "ISC",
+  "moduleType": [],
+  "homepage": "",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "mdPickers": "^0.7.5",
+    "pickmeup": "^2.9.1",
+    "angular-timezone-selector": "^1.6.0"
+  },
+  "resolutions": {
+    "angular": "1.5.7",
+    "moment": "~2.11.1"
+  }
+}

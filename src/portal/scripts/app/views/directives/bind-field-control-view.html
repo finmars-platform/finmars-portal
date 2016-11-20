@@ -1,26 +1,105 @@
 <div>
     <div data-ng-if="fieldType['display_name'] === 'Number'">
         <md-input-container class="md-block">
-            <label>{{item.name}}</label>
-            <input data-ng-model="portfolio[getModelKey()]" type="number">
+            <label data-ng-bind="getName()"></label>
+            <input data-ng-change="changeWatcher()" data-ng-model="entity[getModelKey()]" type="number"
+                   data-ng-if="!item.options.onlyPositive">
+            <input data-ng-change="changeWatcher()" data-ng-model="entity[getModelKey()]" type="number" min="0"
+                   data-ng-if="item.options.onlyPositive">
         </md-input-container>
     </div>
     <div data-ng-if="fieldType['display_name'] === 'String'">
+        <div data-ng-if="getModelKey() === 'notes' ">
+            <md-input-container class="md-block textarea-bind-field">
+                <label data-ng-bind="getName()"></label>
+                <textarea data-ng-change="changeWatcher()" class="{{item.options.frame == 1 ? 'bordered' : '' }}"
+                          data-ng-model="entity[getModelKey()]"
+                          cols="30" rows="{{item.options.rowCount}}"></textarea>
+            </md-input-container>
+        </div>
+        <div data-ng-if="getModelKey() !== 'notes' ">
+            <md-input-container
+                    class="md-block bind-field-input {{item.options.copyFrom ? 'with-button' : ''}} {{checkValid() ? 'mdc-error' : ''}}
+                    {{entity[getModelKey()] != '' ? 'md-input-has-value' : ''}}">
+                <label data-ng-bind="getName()"></label>
+                <input type="text" data-ng-change="changeWatcher()" data-ng-model="entity[getModelKey()]">
+                <md-button data-ng-if="item.options.copyFrom" class="bf-copy-btn"
+                           data-ng-click="copyFromField(item.options.copyFrom)">
+                    <ng-md-icon icon="content_copy"></ng-md-icon>
+                </md-button>
+            </md-input-container>
+        </div>
+    </div>
+    <div data-ng-if="fieldType['display_name'] === 'Float'">
         <md-input-container class="md-block">
-            <label>{{item.name}}</label>
-            <input data-ng-model="portfolio[getModelKey()]">
+            <label data-ng-bind="getName()"></label>
+            <input data-ng-change="changeWatcher()" data-ng-model="entity[getModelKey()]" data-float-numbers
+                   data-ng-if="!item.options.onlyPositive">
+            <input data-ng-change="changeWatcher()" data-ng-model="entity[getModelKey()]" data-float-numbers
+                   data-only-positive="true"
+                   data-ng-if="item.options.onlyPositive">
         </md-input-container>
     </div>
-    <div data-ng-if="fieldType['display_name'] === 'Date'">
-        <span>Date is not ready</span>
+    <div data-ng-if="fieldType['display_name'] === 'Field'">
+        <div data-ev-field-resolver data-item="item" data-entity="entity" data-options="options"></div>
+    </div>
+    <div data-ng-if="fieldType['display_name'] === 'Multiple choice field'">
+        <div data-ev-field-resolver data-item="item" data-entity="entity" data-options="options"></div>
+    </div>
+    <div data-ng-if="fieldType['display_name'] === 'Date'" class="field-date-pick">
+        <!-- <label data-ng-bind="getName()"></label> -->
+        <md-input-container class="field-date-pick-holder">
+            <label data-ng-bind="getName()"></label>
+            <zh-date-picker data-ng-change="changeWatcher()" ng-model="entity[getModelKey()]"></zh-date-picker>
+            <!--<mdp-date-picker mdp-placeholder="Enter date" ng-model="entity[getModelKey()]" mdp-format="YYYY/MM/DD" data-ng-change="dateFormatter()"></mdp-date-picker>-->
+            <!--<md-datepicker ng-model="entity[getModelKey()]" md-placeholder="Enter date" data-ng-change="dateFormatter()"></md-datepicker>-->
+            <div class="date-pick-buttons-block">
+                <md-button data-ng-if="item.options.dateTodayMinus" data-ng-click="setDateMinus()">
+                    T - 1
+                </md-button>
+                <md-button data-ng-if="item.options.dateToday" data-ng-click="setDateToday()">
+                    T
+                </md-button>
+                <md-button data-ng-if="item.options.dateTodayPlus" data-ng-click="setDatePlus()">
+                    T + 1
+                </md-button>
+            </div>
+        </md-input-container>
+    </div>
+    <div data-ng-if="fieldType['display_name'] === 'Boolean'">
+        <md-checkbox class="checkbox-bind-field" data-ng-change="changeWatcher()" data-ng-model="entity[getModelKey()]"
+                     aria-label="checkbox">
+            <label data-ng-bind="getName()"></label>
+        </md-checkbox>
     </div>
     <div data-ng-if="fieldType['display_name'] === 'Classifier'">
-        <span>Classifier is not ready</span>
-    </div>
-    <div data-ng-if="fieldType['display_name'] === 'Classifier'">
-        <span>Classifier is not ready</span>
+        <div data-ng-if="readyStatus.classifier">
+            <md-input-container class="md-block">
+                <label data-ng-bind="getName()"></label>
+                <!--{{item}}-->
+                <md-select data-ng-model="entity[getModelKey()]"
+                           data-classifier-modal-resolver
+                           data-classifier-attr="item"
+                           data-classifier-value="entity[getModelKey()]"
+                           data-ng-change="changeClassifier()"
+                           md-container-class="h-classifier-select"
+                           data-entity-type="entityType">
+
+                    <md-option ng-value="node.id" selected="selected">
+                        {{node.name}}
+                    </md-option>
+                </md-select>
+            </md-input-container>
+        </div>
+        <div data-ng-if="!readyStatus.classifier">
+            <div layout="row" layout-sm="column" layout-align="space-around">
+                <md-progress-circular md-mode="indeterminate"></md-progress-circular>
+            </div>
+        </div>
     </div>
     <div data-ng-if="fieldType['display_name'] === 'Decoration'">
-        <span class="ec-decoration line"></span>
+        <span class="ec-decoration line" data-ng-if="!item.options.labelText"></span>
+        <span class="ec-decoration labeled" data-ng-if="item.options.labelText"><span class="w-rp"
+                                                                                      data-ng-bind="item.options.labelText"></span></span>
     </div>
 </div>

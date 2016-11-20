@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" data-ng-app="app">
+<html lang="en" data-ng-app="portal">
 <head>
     <meta charset="UTF-8">
     <title>Portal</title>
@@ -9,10 +9,15 @@
     <link rel="stylesheet" href="portal/content/css/main.min.css">
 </head>
 <body>
-<div data-ui-view="" class="min-height">
+<div data-ui-view="" class="min-height" id="root">
+</div>
+<div id="width-fallback">
+    <ng-md-icon icon="phonelink_erase" size="86"></ng-md-icon>
+    <h3>Sorry, web application is not suitable for small mobile devices</h3>
 </div>
 <script type="text/javascript" src="core/scripts/corejs.min.js"></script>
 <script type="text/javascript" src="core/scripts/fetch.min.js"></script>
+<script type="text/javascript" src="core/scripts/moment.min.js"></script>
 <script type="text/javascript" src="core/scripts/jquery.min.js"></script>
 <script type="text/javascript" src="core/scripts/plugins.min.js"></script>
 <script type="text/javascript" src="core/scripts/angular.min.js"></script>

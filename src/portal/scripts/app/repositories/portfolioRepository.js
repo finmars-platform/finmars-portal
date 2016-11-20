@@ -5,6 +5,10 @@
 
     'use strict';
 
+    var cookieService = require('../../../../core/services/cookieService');
+
+    var configureRepositoryUrlService = require('../services/configureRepositoryUrlService');
+
     var baseUrl = '/api/v1/';
 
     var getClassifierNodeList = function () {
@@ -63,37 +67,8 @@
         })
     };
 
-    var getAttributeTypeList = function () {
-        return window.fetch(baseUrl + 'portfolios/portfolio-attribute-type/',
-            {
-                method: 'GET',
-                credentials: 'include',
-                headers: {
-                    Accept: 'application/json',
-                    'Content-type': 'application/json'
-                }
-            }).then(function (data) {
-                return data.json();
-            })
-    };
-
-    var getAttributeTypeByKey = function (id) {
-        return window.fetch(baseUrl + 'portfolios/portfolio-attribute-type/' + id + '/',
-            {
-                method: 'GET',
-                credentials: 'include',
-                headers: {
-                    Accept: 'application/json',
-                    'Content-type': 'application/json'
-                }
-            }).then(function (data) {
-            return data.json();
-        })
-    };
-
-
-    var getList = function () {
-        return window.fetch(baseUrl + 'portfolios/portfolio/',
+    var getList = function (options) {
+        return window.fetch(configureRepositoryUrlService.configureUrl(baseUrl + 'portfolios/portfolio/', options),
             {
                 method: 'GET',
                 credentials: 'include',
@@ -126,12 +101,20 @@
                 method: 'POST',
                 credentials: 'include',
                 headers: {
+                    'X-CSRFToken': cookieService.getCookie('csrftoken'),
                     Accept: 'application/json',
                     'Content-type': 'application/json'
                 },
                 body: JSON.stringify(portfolio)
             }).then(function (data) {
-            return data.json();
+            return new Promise(function (resolve, reject) {
+                data.json().then(function (result) {
+                    resolve({
+                        response: result,
+                        status: data.status
+                    })
+                })
+            });
         })
     };
 
@@ -141,12 +124,20 @@
                 method: 'PUT',
                 credentials: 'include',
                 headers: {
+                    'X-CSRFToken': cookieService.getCookie('csrftoken'),
                     Accept: 'application/json',
                     'Content-type': 'application/json'
                 },
                 body: JSON.stringify(portfolio)
             }).then(function (data) {
-            return data.json();
+            return new Promise(function (resolve, reject) {
+                data.json().then(function (result) {
+                    resolve({
+                        response: result,
+                        status: data.status
+                    })
+                })
+            });
         })
     };
 
@@ -156,11 +147,15 @@
                 method: 'DELETE',
                 credentials: 'include',
                 headers: {
+                    'X-CSRFToken': cookieService.getCookie('csrftoken'),
                     Accept: 'application/json',
                     'Content-type': 'application/json'
                 }
             }).then(function (data) {
-            return data.json();
+            return new Promise(function(resolve,reject) {
+                resolve({status: 'deleted'});
+            });
+            //return data.json();
         })
     };
 
@@ -171,9 +166,6 @@
 
         getClassifierList: getClassifierList,
         getClassifierByKey: getClassifierByKey,
-
-        getAttributeTypeList: getAttributeTypeList,
-        getAttributeTypeByKey: getAttributeTypeByKey,
 
         getList: getList,
         getByKey: getByKey,

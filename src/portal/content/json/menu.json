@@ -1,140 +1,327 @@
 [
-  {
-    "state" : "app.dashboard",
-    "title": "Dashboard",
-    "type": "link",
-    "icon": "dashboard"
-  },
-  {
-    "state" : "app",
-    "title": "Reports",
-    "icon": "group",
-    "type": "toggle",
-    "pages": [
-      {
-        "state" : "app.add-balance",
-        "title": "New Balance",
-        "icon": "dashboard"
-      },
-      {
-        "state" : "app.add-performance",
-        "title": "New Performance",
-        "icon": "dashboard"
-      },
-      {
-        "state" : "app.add-cash-flow",
-        "title": "New Cash flow",
-        "icon": "dashboard"
-      },
-      {
-        "state" : "app.add-transaction",
-        "title": "New Transaction",
-        "icon": "dashboard"
-      }
-    ]
-  },
-  {
-    "state": "",
-    "title": "Data",
-    "icon": "message",
-    "type": "toggle",
-    "pages": [
-      {
-        "state" : "app.portfolio",
-        "title": "Portfolios",
-        "icon": ""
-      },
-      {
-        "state" : "app.accounts",
-        "title": "Accounts",
-        "icon": ""
-      },
-      {
-        "state" : "app.counterparties",
-        "title": "Counterparties",
-        "icon": ""
-      },
-      {
-        "state" : "app.responsibles",
-        "title": "Responsibles",
-        "icon": ""
-      },
-      {
-        "state" : "app.instruments",
-        "title": "Instruments",
-        "icon": ""
-      },
-      {
-        "state" : "app.transcations",
-        "title": "Transactions",
-        "icon": ""
-      },
-      {
-        "state" : "app.pricing",
-        "title": "Prcing",
-        "icon": ""
-      }
-    ]
-  },
-  {
-    "state": "",
-    "title": "SETTINGS",
-    "icon": "message",
-    "type": "toggle",
-     "pages": [
-      {
-        "state" : "app.portfolio-form",
-        "title": "Portfolio form",
-        "icon": ""
-      },
-      {
-        "state" : "app.account-form",
-        "title": "Account form",
-        "icon": ""
-      },
-      {
-        "state" : "app.counterparty-form",
-        "title": "Counterparty form",
-        "icon": ""
-      },
-      {
-        "state" : "app.instrument-form",
-        "title": "Instrument form",
-        "icon": ""
-      },
-      {
-        "state" : "app.transaction-form",
-        "title": "Transaction form",
-        "icon": ""
-      },
-      {
-        "state" : "app.instrument-types",
-        "title": "Instrument types",
-        "icon": ""
-      },
-      {
-        "state" : "app.complex-transactions",
-        "title": "Complex transactions",
-        "icon": ""
-      }
-    ]
-  },
-  {
-    "state": "",
-    "title": "SYSTEM",
-    "icon": "message",
-    "type": "toggle",
-     "pages": [
-       {
-         "state" : "app.notifications",
-         "title": "Notifications",
-         "icon": ""
-       },
-      {
-        "state" : "app.logging",
-        "title": "Logging",
-        "icon": ""
-      }
-    ]
-  }
+	{
+		"state": "app.dashboard",
+		"title": "Dashboard",
+		"type": "link",
+		"icon": "dashboard"
+	},
+	{
+		"state": "app.forum.thread-groups",
+		"title": "Forum",
+		"type": "link",
+		"icon": "forum"
+	},
+	{
+		"state": "app",
+		"title": "Reports",
+		"icon": "assessment",
+		"type": "toggle",
+		"pages": [
+			{
+				"state": "app.reports.balance",
+				"title": "New Balance",
+				"type": "link",
+				"icon": ""
+			},
+			{
+				"state": "app.reports.profit-and-lost",
+				"title": "New P&L",
+				"type": "link",
+				"icon": ""
+			},
+			{
+				"state": "app.add-performance",
+				"title": "New Performance",
+				"type": "link",
+				"icon": ""
+			},
+			{
+				"state": "app.add-cash-flow",
+				"title": "New Cash flow",
+				"type": "link",
+				"icon": ""
+			},
+			{
+				"state": "app.add-transaction",
+				"title": "New Transaction",
+				"type": "link",
+				"icon": ""
+			}
+		]
+	},
+	{
+		"state": "",
+		"title": "Data",
+		"icon": "view_compact",
+		"type": "toggle",
+		"pages": [
+			{
+				"state": "app.data.portfolio",
+				"title": "Portfolios",
+				"type": "link",
+				"icon": ""
+			},
+			{
+				"state": "app.data.account",
+				"title": "Accounts",
+				"type": "link",
+				"icon": ""
+			},
+			{
+				"state": "app.data.account-type",
+				"title": "Account Types",
+				"type": "link",
+				"icon": ""
+			},
+			{
+				"state": "",
+				"title": "Responsible",
+				"type": "toggle",
+				"pages": [
+					{
+						"state": "app.data.responsible-group",
+						"title": "Group",
+						"type": "link",
+						"icon": ""
+					},
+					{
+						"state": "app.data.responsible",
+						"title": "Responsibles",
+						"type": "link",
+						"icon": ""
+					}
+				]
+			},
+			{
+				"state": "",
+				"title": "Counterparty",
+				"type": "toggle",
+				"pages": [
+					{
+						"state": "app.data.counterparty-group",
+						"title": "Group",
+						"type": "link",
+						"icon": ""
+					},
+					{
+						"state": "app.data.counterparty",
+						"title": "Counterparties",
+						"type": "link",
+						"icon": ""
+					}
+				]
+			},
+			{
+				"state": "app.data.instrument",
+				"title": "Instruments",
+				"type": "link",
+				"icon": ""
+			},
+			{
+				"state": "app.data.instrument-type",
+				"title": "Instrument Types",
+				"type": "link",
+				"icon": ""
+			},
+			{
+				"state": "app.data.pricing-policy",
+				"title": "Pricing policy",
+				"type": "link",
+				"icon": ""
+			},
+			{
+				"state": "app.data.currency",
+				"title": "Currency",
+				"type": "link",
+				"icon": ""
+			},
+			{
+				"state": "app.data.complex-transaction",
+				"title": "Transactions",
+				"type": "link",
+				"icon": ""
+			},
+			{
+				"state": "app.data.transaction",
+				"title": "Base Transactions",
+				"type": "link",
+				"icon": ""
+			},
+			{
+				"state": "",
+				"title": "Transaction Type",
+				"type": "toggle",
+				"pages": [
+					{
+						"state": "app.data.transaction-type-group",
+						"title": "Group",
+						"type": "link",
+						"icon": ""
+					},
+					{
+						"state": "app.data.transaction-type",
+						"title": "Transaction types",
+						"type": "link",
+						"icon": ""
+					}
+				]
+			},
+			{
+				"state": "app.data.price-history",
+				"title": "Price history",
+				"type": "link",
+				"icon": ""
+			},
+			{
+				"state": "app.data.currency-history",
+				"title": "FX history",
+				"type": "link",
+				"icon": ""
+			},
+			{
+				"state": "app.data.tag",
+				"title": "Tags",
+				"type": "link",
+				"icon": ""
+			}
+		]
+	},
+	{
+		"state": "",
+		"title": "REFERENCE",
+		"icon": "view_compact",
+		"type": "toggle",
+		"pages": [
+			{
+				"state": "",
+				"title": "Strategy 1",
+				"icon": "",
+				"type": "toggle",
+				"pages": [
+					{
+						"state": "app.data.strategy-group({strategyNumber: 1})",
+						"title": "Group",
+						"type": "link",
+						"icon": ""
+					},
+					{
+						"state": "app.data.strategy-subgroup({strategyNumber: 1})",
+						"title": "Subgroup",
+						"type": "link",
+						"icon": ""
+					},
+					{
+						"state": "app.data.strategy({strategyNumber: 1})",
+						"title": "Strategies",
+						"type": "link",
+						"icon": ""
+					}
+				]
+			},
+			{
+				"state": "",
+				"title": "Strategy 2",
+				"icon": "",
+				"type": "toggle",
+				"pages": [
+					{
+						"state": "app.data.strategy-group({strategyNumber: 2})",
+						"title": "Group",
+						"type": "link",
+						"icon": ""
+					},
+					{
+						"state": "app.data.strategy-subgroup({strategyNumber: 2})",
+						"title": "Subgroup",
+						"type": "link",
+						"icon": ""
+					},
+					{
+						"state": "app.data.strategy({strategyNumber: 3})",
+						"title": "Strategies",
+						"type": "link",
+						"icon": ""
+					}
+				]
+			},
+			{
+				"state": "",
+				"title": "Strategy 3",
+				"icon": "",
+				"type": "toggle",
+				"pages": [
+					{
+						"state": "app.data.strategy-group({strategyNumber: 3})",
+						"title": "Group",
+						"type": "link",
+						"icon": ""
+					},
+					{
+						"state": "app.data.strategy-subgroup({strategyNumber: 3})",
+						"title": "Subgroup",
+						"type": "link",
+						"icon": ""
+					},
+					{
+						"state": "app.data.strategy({strategyNumber: 3})",
+						"title": "Strategies",
+						"type": "link",
+						"icon": ""
+					}
+				]
+			}
+		]
+	},
+	{
+		"state": "app.actions",
+		"title": "Actions",
+		"type": "link",
+		"icon": "assignment"
+	},
+	{
+		"state": "",
+		"title": "SETTINGS",
+		"icon": "settings",
+		"type": "toggle",
+		"pages": [
+			{
+				"state": "app.settings.general.profile",
+				"title": "General",
+				"type": "link",
+				"icon": ""
+			},
+			{
+				"state": "app.settings.form-design",
+				"title": "Form Design",
+				"type": "link",
+				"icon": ""
+			},
+			{
+				"state": "app.settings.users-groups",
+				"title": "Users & Groups",
+				"type": "link",
+				"icon": ""
+			}
+		]
+	},
+	{
+		"state": "",
+		"title": "SYSTEM",
+		"icon": "settings_system_daydream",
+		"type": "toggle",
+		"pages": [
+			{
+				"state": "app.system.notifications",
+				"title": "Notifications",
+				"type": "link",
+				"icon": ""
+			},
+			{
+				"state": "app.system.audit",
+				"title": "Audit",
+				"type": "link",
+				"icon": ""
+			}
+		]
+	}
 ]

@@ -12,8 +12,19 @@
   min-height: 100%;
   height: 100%;
   md-tabs {
-    height: 100%;
+    //height: 100%;
   }
+}
+
+md-optgroup.bold-field-select > label {
+  font-weight: bold;
+  color: #363636;
+  text-shadow: 0px 0px 1px #CDD;
+}
+
+.constructor-card-actions {
+  border: 1px solid rgba(0, 0, 0, 0.54);
+  margin-bottom: 18px;
 }
 
 .ec-layout-box {
@@ -37,10 +48,15 @@
 .ec-attr-card {
   overflow: hidden;
   fill: #898989;
+
   padding-left: 1em;
   padding-right: 1em;
+  md-input-container {
+    margin-bottom: 20px;
+  }
   &.active {
-    box-shadow: 0 0 30px rgba(255,187,0, .5);
+    background: #f3d074;
+    box-shadow: 0 0 30px rgba(255, 187, 0, .5);
     padding-top: 2em;
   }
   .options-holder {
@@ -53,6 +69,12 @@
       min-width: 36px;
     }
   }
+}
+
+.ec-tabs-holder {
+  overflow: auto;
+  min-height: 100%;
+  height: 100%;
 }
 
 .ec-tabs-holder md-tab-item {
@@ -109,6 +131,14 @@
 .ec-breadcrumbs {
   padding-left: 20px;
   margin-bottom: 10px;
+  font-size: 24px;
+  ng-md-icon {
+    position: relative;
+    top: 3px;
+  }
+  .ec-entity-type {
+    text-transform: uppercase;
+  }
   span {
     color: #8B8B8B;
   }
@@ -122,26 +152,115 @@
   }
 }
 
+.bind-field-input {
+  &.with-button {
+    input {
+      width: 80%;
+    }
+    .bf-copy-btn {
+      min-width: 0;
+      margin: 2px;
+    }
+  }
+}
+
+textarea.bordered {
+  border: 1px solid #4C334D;
+  position: relative;
+  width: 98%;
+}
+
+md-input-container textarea {
+  border-color: rgba(0, 0, 0, 0.12);
+}
+
+md-checkbox.checkbox-bind-field {
+  margin-left: 12px;
+}
+
+.ev-data-field .textarea-bind-field {
+  margin-bottom: 30px;
+}
+
+.textarea-bind-field label:not(.md-container-ignore) {
+  left: 5px;
+}
+
 .ev-data-field {
   //padding: 0 20px;
-  min-height: 94px;
+  //min-height: 94px;
   position: relative;
   box-sizing: border-box;
   md-input-container {
-    margin: 18px 10px;
+    //margin: 18px 10px;
+    margin: 0px 10px;
   }
   md-input-container.md-default-theme .md-input, md-input-container .md-input {
     border-color: #4C334D;
   }
 }
 
+.ev-data-field.decoration-label-line {
+  min-height: 50px;
+}
+
 .ec-decoration {
   &.line {
-    position: absolute;
+    //position: absolute;
     width: 100%;
-    top: 50%;
+    //top: 50%;
     height: 4px;
     background: #4C334D;
     display: block;
+    margin: 15px 0 30px;
+  }
+  &.labeled {
+    display: block;
+    position: relative;
+    width: 100%;
+    text-align: left;
+    margin: 30px 0;
+    // .w-rp {
+    // 	position: relative;
+    // 	background: #fff;
+    // 	z-index: 2;
+    // 	padding: 10px;
+    // 	border: 4px solid #4C334D;
+    // }
+    &::after {
+      content: '';
+      position: absolute;
+      width: 100%;
+      top: 50%;
+      height: 4px;
+      background: #4C334D;
+      display: block;
+    }
+    &::before {
+      content: '';
+      position: absolute;
+      width: 100%;
+      top: 50%;
+      height: 4px;
+      background: #4C334D;
+      display: block;
+    }
+  }
+}
+
+.w-rp {
+  position: relative;
+  background: #fff;
+  z-index: 2;
+  padding: 10px;
+  border: 4px solid #4C334D;
+}
+
+.manage-attrs-btn {
+  float: right;
+  margin-right: 20px;
+  a {
+    text-decoration: none;
+    color: inherit;
   }
 }

@@ -5,27 +5,28 @@
 
     'use strict';
 
+    var logService = require('../../../../../core/services/logService');
+
     module.exports = function ($mdDialog) {
         return {
             restrict: 'AE',
             scope: {
+                entityType: '=',
                 filters: '=',
                 columns: '=',
                 tabs: '=',
                 sorting: '=',
+                isReport: '=',
                 folding: '=',
                 grouping: '=',
                 externalCallback: '&'
             },
             templateUrl: 'views/directives/groupTable/grouping-view.html',
             link: function (scope, elem, attrs) {
-                console.log('Grouping component');
 
-                console.log('grouping', scope.grouping);
-
+                logService.component('groupGrouping', 'initialized');
 
                 scope.sortHandler = function (group, sort) {
-                    console.log('group', group);
                     var i;
                     for (i = 0; i < scope.grouping.length; i = i + 1) {
                         if (!scope.grouping[i].options) {
@@ -45,10 +46,7 @@
                         scope.sorting.group.key = group.key;
                         scope.sorting.group.sort = sort;
                     }
-                    setTimeout(function(){
-                        scope.externalCallback();
-                        scope.$apply();
-                    }, 0)
+                    scope.externalCallback();
                 };
 
                 scope.openGroupSettings = function ($mdOpenMenu, ev) {
@@ -56,14 +54,15 @@
                 };
 
                 scope.$watchCollection('grouping', function () {
-                    //console.log('change');
-                    scope.externalCallback();
+                    setTimeout(function () {
+                        scope.externalCallback();
+                        scope.$apply();
+                    }, 0)
                 });
 
                 scope.toggleGroupFold = function () {
                     scope.folding = !scope.folding;
-                    console.log('scope.folding', scope.folding);
-                    setTimeout(function(){
+                    setTimeout(function () {
                         scope.externalCallback();
                         scope.$apply();
                     }, 0)
@@ -72,18 +71,132 @@
                 scope.removeGroup = function (group) {
                     //console.log('grouping', scope.grouping);
                     //console.log('remove', group);
-                    scope.grouping = scope.grouping.map(function (item) {
-                        if (item.id === group.id || item.name === group.name) {
-                            return undefined
-                        }
-                        return item
-                    }).filter(function (item) {
-                        return !!item;
-                    });
+                    if (group.id) {
+                        scope.grouping = scope.grouping.map(function (item) {
+                            if (item.id === group.id) {
+                                item = undefined
+                            }
+                            return item
+                        }).filter(function (item) {
+                            return !!item;
+                        });
+                    }
+                    if (group.name) {
+                        scope.grouping = scope.grouping.map(function (item) {
+                            if (item.name === group.name) {
+                                item = undefined
+                            }
+                            return item
+                        }).filter(function (item) {
+                            return !!item;
+                        });
+                    }
                     //console.log('grouping after', scope.grouping);
                     setTimeout(function () {
                         scope.externalCallback();
                     }, 0)
+                };
+
+                scope.reportSetSubtotalType = function (group, type, $index) {
+
+                    if (!group.hasOwnProperty('report_settings')) {
+                        group.report_settings = {};
+                    }
+
+                    if (type == 'area') {
+
+                        scope.grouping.forEach(function (groupItem, $itemIndex) {
+
+                            if ($itemIndex > $index) {
+                                groupItem.disableLineSubtotal = true;
+
+                                console.log('group', groupItem);
+
+                                if (groupItem.hasOwnProperty('report_settings')) {
+
+                                    if (groupItem.report_settings.subtotal_type == 'line') {
+                                        groupItem.report_settings.subtotal_type = false;
+                                    }
+                                }
+                            } else {
+                                if ($itemIndex < $index) {
+                                    groupItem.disableLineSubtotal = false;
+                                }
+                            }
+
+
+                        });
+                    }
+
+                    if (type == 'line') {
+
+                        scope.grouping.forEach(function (groupItem, $itemIndex) {
+
+                            if ($itemIndex > $index) {
+                                groupItem.disableLineSubtotal = false;
+                            }
+
+                        });
+                    }
+
+                    if (group.report_settings.subtotal_type == type) {
+                        group.report_settings.subtotal_type = false;
+                    } else {
+                        group.report_settings.subtotal_type = type;
+                    }
+
+
+                    scope.externalCallback();
+                };
+
+                scope.isReportGroupHaveExtSettings = function (group, $index, subtotalType) {
+
+                    var haveAccess = false;
+                    var preInitOffset = 0;
+                    var initIndex = 0;
+
+                    scope.grouping.forEach(function (groupItem, $groupItemIndex) {
+
+                        if (scope.columns.length > $groupItemIndex) {
+                            if (groupItem.hasOwnProperty('id')) {
+
+                            } else {
+                                if (groupItem.hasOwnProperty('key') && scope.columns[$groupItemIndex] && scope.columns[$groupItemIndex].hasOwnProperty('key')) {
+
+                                    if (groupItem.key == scope.columns[$groupItemIndex - preInitOffset].key) {
+                                        initIndex = preInitOffset;
+                                    } else {
+                                        preInitOffset = preInitOffset + 1;
+                                    }
+                                } else {
+                                    preInitOffset = preInitOffset + 1;
+                                }
+                            }
+                        }
+
+                    });
+
+                    if (scope.columns.length > $index) {
+                        if (group.hasOwnProperty('id') && scope.columns[$index - initIndex] && scope.columns[$index - initIndex].hasOwnProperty('id')) {
+
+                        } else {
+                            if (group.hasOwnProperty('key') && scope.columns[$index - initIndex] && scope.columns[$index - initIndex].hasOwnProperty('key')) {
+                                if ($index - initIndex !== 0) {
+                                    if (group.key == scope.columns[$index - initIndex].key) {
+                                        haveAccess = true;
+                                    }
+                                }
+                            }
+
+                        }
+                    }
+
+                    if (group.hasOwnProperty('disableLineSubtotal') && group.disableLineSubtotal == true && subtotalType == 'line') {
+                        haveAccess = false;
+                    }
+
+                    return haveAccess;
+
                 };
 
                 scope.openModalSettings = function (ev) {

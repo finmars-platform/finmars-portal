@@ -1,0 +1,20 @@
+<md-dialog aria-label="" ng-cloak class="warning-dialog">
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            <h2>Input form error</h2>
+            <span flex></span>
+        </div>
+    </md-toolbar>
+    <md-dialog-content data-custom-scroll class="custom-scrollbar">
+        <div class="warning-text">
+            <p data-ng-repeat="item in vm.errorKeys">
+                <b data-ng-bind="item.caption" data-ng-if="item.caption != 'non field errors'"></b> - <span data-ng-bind="item.value"></span>
+            </p>
+        </div>
+    </md-dialog-content>
+    <md-dialog-actions layout="row">
+        <md-button ng-click="vm.agree()" style="margin-right:20px;">
+            OK
+        </md-button>
+    </md-dialog-actions>
+</md-dialog>

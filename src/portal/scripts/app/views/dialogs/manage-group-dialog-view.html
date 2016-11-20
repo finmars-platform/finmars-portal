@@ -1,0 +1,24 @@
+<md-dialog aria-label="" class="draggable-dialog manage-member-group" drag-dialog>
+	<md-toolbar>
+		<div class="md-toolbar-tools">
+			<h2>Edit group "{{vm.groups.name}}"</h2>
+		</div>
+	</md-toolbar>
+	<md-dialog-content data-custom-scroll class="manage-member-dialog-content custom-scrollbar">
+		<div layout="column">
+			<two-fields-options all-options="vm.membersList" selected-options="vm.assignedMembersList"></two-fields-options>
+		</div>
+	</md-dialog-content>
+	<md-dialog-actions layout="row">
+		<div flex="75">
+			<md-button class="md-raised" ng-click="vm.cancel()">
+				Cancel
+			</md-button>
+		</div>
+		<div flex>
+			<md-button class="md-raised" ng-click="vm.agree()" style="margin-right:20px;">
+				Save
+			</md-button>
+		</div>
+	</md-dialog-actions>
+</md-dialog>
