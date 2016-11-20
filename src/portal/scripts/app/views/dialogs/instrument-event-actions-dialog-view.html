@@ -1,0 +1,230 @@
+<md-dialog aria-label="" ng-cloak class="instrument-event-actions-dialog-view draggable-dialog" drag-dialog>
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            <h2>Actions</h2>
+            <span flex></span>
+        </div>
+    </md-toolbar>
+    <md-dialog-content data-custom-scroll class="custom-scrollbar" style="background: #E5E5E5;">
+        <md-content style="background: #fff; padding: 20px;">
+            <div data-ng-if="vm.checkReadyStatus()">
+                <table class="bordered">
+                    <thead>
+                    <tr>
+                        <th data-ng-click="vm.setSort('transaction_type_name')">Transaction type<span class="sortorder"
+                                                                                                      data-ng-show="vm.sort === 'transaction_type'"
+                                                                                                      data-ng-class="{reverse: vm.direction}"></span>
+                        </th>
+                        <th data-ng-click="vm.setSort('text')">Text<span class="sortorder"
+                                                                         data-ng-show="vm.sort === 'text'"
+                                                                         data-ng-class="{reverse: vm.direction}"></span>
+                        </th>
+                        <th data-ng-click="vm.setSort('is_sent_to_pending')">Action is sent to pending<span
+                                class="sortorder"
+                                data-ng-show="vm.sort === 'action_is_sent_to_pending'"
+                                data-ng-class="{reverse: vm.direction}"></span>
+                        </th>
+                        <th data-ng-click="vm.setSort('is_book_automatic')">Action is book automatic<span
+                                class="sortorder"
+                                data-ng-show="vm.sort === 'action_is_book_automatic'"
+                                data-ng-class="{reverse: vm.direction}"></span>
+                        </th>
+                        <th data-ng-click="vm.setSort('button_position')">Button position<span
+                                class="sortorder"
+                                data-ng-show="vm.sort === 'button_position'"
+                                data-ng-class="{reverse: vm.direction}"></span>
+                        </th>
+                        <th>
+                            <md-button class="md-icon-button">
+                                <ng-md-icon data-ng-click="vm.toggleQuery()" icon="search"></ng-md-icon>
+                            </md-button>
+                        </th>
+                    </tr>
+                    <tr data-ng-if="vm.queryStatus" class="filter-row-holder">
+                        <th>
+                            <md-input-container>
+                                <ng-md-icon icon="search"></ng-md-icon>
+                                <input type="text" data-ng-model="vm.query.transaction_type_name">
+                            </md-input-container>
+                        </th>
+                        <th>
+                            <md-input-container>
+                                <ng-md-icon icon="search"></ng-md-icon>
+                                <input type="text" data-ng-model="vm.query.text">
+                            </md-input-container>
+                        </th>
+                        <th>
+                            <md-input-container>
+                                <ng-md-icon icon="search"></ng-md-icon>
+                                <input type="text" data-ng-model="vm.query.is_sent_to_pending">
+                            </md-input-container>
+                        </th>
+                        <th>
+                            <md-input-container>
+                                <ng-md-icon icon="search"></ng-md-icon>
+                                <input type="text" data-ng-model="vm.query.is_book_automatic">
+                            </md-input-container>
+                        </th>
+                        <th>
+                            <md-input-container>
+                                <ng-md-icon icon="search"></ng-md-icon>
+                                <input type="text" data-ng-model="vm.query.button_position">
+                            </md-input-container>
+                        </th>
+                        <th></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr data-ng-repeat="item in vm.eventActions | filter:vm.query | orderBy:vm.sort:vm.direction">
+                        <td data-ng-if="!item.editStatus" data-ng-bind="vm.bindTransactionType(item)"></td>
+                        <td data-ng-if="!item.editStatus" data-ng-bind="item.text"></td>
+                        <td data-ng-if="!item.editStatus">
+                            <span class="bool-table-view" data-ng-if="item.is_sent_to_pending">
+                                <ng-md-icon icon="check_circle"
+                                    size="16"
+                                    style="fill:rgb(0,0,0);"></ng-md-icon></span>
+                        </td>
+                        <td data-ng-if="!item.editStatus">
+                            <span class="bool-table-view" data-ng-if="item.is_book_automatic">
+                         <ng-md-icon icon="check_circle"
+                                     size="16"
+                                     style="fill:rgb(0,0,0);"></ng-md-icon></span>
+                        </td>
+                        <td data-ng-if="!item.editStatus" data-ng-bind="item.button_position"></td>
+                        <td data-ng-if="!item.editStatus" class="table-misc-cell">
+                            <md-menu>
+                                <!-- Trigger element is a md-button with an icon -->
+                                <md-button ng-click="$mdOpenMenu($event)" class="md-icon-button"
+                                           aria-label="Open sample menu">
+                                    <ng-md-icon icon="settings"></ng-md-icon>
+                                </md-button>
+                                <md-menu-content>
+                                    <md-menu-item>
+                                        <md-button ng-click="vm.editItem(item)">
+                                            <ng-md-icon icon="mode_edit" style="top: 6px;
+    position: relative;
+    margin-right: 10px;"></ng-md-icon>
+                                            Edit
+                                        </md-button>
+                                    </md-menu-item>
+                                    <md-menu-item>
+                                        <md-button ng-click="vm.deleteItem(item, $index)">
+                                            <ng-md-icon icon="delete" style="top: 6px;
+    position: relative;
+    margin-right: 10px;"></ng-md-icon>
+                                            Delete
+                                        </md-button>
+                                    </md-menu-item>
+                                </md-menu-content>
+                            </md-menu>
+                        </td>
+                        <td data-ng-if="item.editStatus" class="edit-state-td" style="padding-top: 12px">
+                            <md-input-container>
+                                <label for="">Transaction Type</label>
+                                <md-select data-ng-model="item.transaction_type">
+                                    <md-option data-ng-repeat="model in vm.transactionTypes" ng-value="model.id">
+                                        {{model.name}}
+                                    </md-option>
+                                </md-select>
+                            </md-input-container>
+                        </td>
+                        <td data-ng-if="item.editStatus" class="edit-state-td">
+                            <md-input-container>
+                                <label for="">Text</label>
+                                <input type="text" data-ng-model="item.text">
+                            </md-input-container>
+                        </td>
+                        <td data-ng-if="item.editStatus" class="edit-state-td">
+                            <md-input-container>
+                                <md-checkbox data-ng-model="item.is_sent_to_pending"
+                                             aria-label="checkbox">
+                                    <!--<label>Action is sent to pending</label>-->
+                                </md-checkbox>
+                            </md-input-container>
+                        </td>
+                        <td data-ng-if="item.editStatus" class="edit-state-td">
+
+                            <md-input-container>
+                                <md-checkbox data-ng-model="item.is_book_automatic"
+                                             aria-label="checkbox">
+                                    <!--<label>Action is book automatic</label>-->
+                                </md-checkbox>
+                            </md-input-container>
+                        </td>
+                        <td data-ng-if="item.editStatus">
+                            <md-input-container>
+                                <!--<label for="">Periodicity</label>-->
+                                <input type="text" data-ng-model="item.button_position">
+                            </md-input-container>
+                        </td>
+                        <td data-ng-if="item.editStatus" class="edit-state-td">
+                            <md-button data-ng-click="vm.saveItem(item)">
+                                Ok
+                            </md-button>
+                        </td>
+                    </tr>
+                    <tr class="tab-input-row">
+                        <td style="padding-top: 12px">
+                            <md-input-container>
+                                <!--<label for="">Accrual calculation model</label>-->
+                                <md-select data-ng-model="vm.newItem.transaction_type">
+                                    <md-option data-ng-repeat="model in vm.transactionTypes" ng-value="model.id">
+                                        {{model.name}}
+                                    </md-option>
+                                </md-select>
+                            </md-input-container>
+                        </td>
+                        <td>
+                            <md-input-container>
+                                <!--<label for="">Periodicity</label>-->
+                                <input type="text" data-ng-model="vm.newItem.text">
+                            </md-input-container>
+                        </td>
+                        <td>
+                            <md-input-container>
+                                <md-checkbox data-ng-model="vm.newItem.is_sent_to_pending"
+                                             aria-label="checkbox">
+                                    <!--<label>Action is sent to pending</label>-->
+                                </md-checkbox>
+                            </md-input-container>
+                        </td>
+                        <td>
+                            <md-input-container>
+                                <md-checkbox data-ng-model="vm.newItem.is_book_automatic"
+                                             aria-label="checkbox">
+                                    <!--<label>Action is book automatic</label>-->
+                                </md-checkbox>
+                            </md-input-container>
+                        </td>
+                        <td>
+                            <md-input-container>
+                                <!--<label for="">Periodicity</label>-->
+                                <input type="text" data-ng-model="vm.newItem.button_position">
+                            </md-input-container>
+                        </td>
+                        <td>
+                            <md-button data-ng-click="vm.addRow()">
+                                Add
+                            </md-button>
+                        </td>
+                    </tr>
+
+                    </tbody>
+                </table>
+            </div>
+            <div data-ng-if="!vm.checkReadyStatus()">
+                <div layout="row" layout-sm="column" layout-align="space-around" class="m-large">
+                    <md-progress-circular md-mode="indeterminate" md-diameter="96"></md-progress-circular>
+                </div>
+            </div>
+        </md-content>
+    </md-dialog-content>
+    <md-dialog-actions layout="row">
+        <md-button class="md-raised" ng-click="vm.cancel()">
+            Cancel
+        </md-button>
+        <md-button class="md-raised" ng-click="vm.agree()" style="margin-right:20px;">
+            Save
+        </md-button>
+    </md-dialog-actions>
+</md-dialog>

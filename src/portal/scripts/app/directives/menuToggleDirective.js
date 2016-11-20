@@ -19,8 +19,8 @@
                     return controller.isOpen(scope.section);
                 };
 
-                scope.toggle = function(){
-                    controller.toggleOpen(scope.section);
+                scope.toggle = function($event){
+                    controller.toggleOpen($event, scope.section);
                 }
 
             }

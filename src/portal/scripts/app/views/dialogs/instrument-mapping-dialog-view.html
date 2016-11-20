@@ -1,0 +1,396 @@
+<md-dialog aria-label="" ng-cloak class="instrument-scheme-manager-dialog-view draggable-dialog" drag-dialog>
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            <h2>Instrument scheme manager</h2>
+            <span flex></span>
+        </div>
+    </md-toolbar>
+    <md-dialog-content data-custom-scroll class="custom-scrollbar" style="background: #E5E5E5;">
+        <div data-ng-if="vm.readyStatus.scheme">
+            <div layout="row" layout-align="center center">
+                <md-card flex="50" class="inm-card-special">
+                    <md-card-content>
+                        <md-input-container class="md-block">
+                            <label for="">Scheme name</label>
+                            <input type="text" data-ng-model="vm.schemeName">
+                        </md-input-container>
+                    </md-card-content>
+                </md-card>
+                <md-card flex="50" class="inm-card-special">
+                    <md-card-content>
+                        <md-input-container class="md-block" flex-gt-sm>
+                            <label>Provider</label>
+                            <md-select data-ng-model="vm.schemeProvider" data-ng-if="vm.readyStatus.dataProviders">
+                                <md-option data-ng-repeat="item in vm.dataProviders" data-ng-value="item.id">
+                                    {{item.name}}
+                                </md-option>
+                            </md-select>
+                        </md-input-container>
+                        <div data-ng-if="!vm.readyStatus.dataProviders">
+                            <div layout="row" layout-sm="column" layout-align="space-around" class="m-large">
+                                <md-progress-circular md-mode="indeterminate" md-diameter="96"></md-progress-circular>
+                            </div>
+                        </div>
+                    </md-card-content>
+                </md-card>
+            </div>
+            <div layout="row">
+                <div layout="column" flex="25">
+                    <div layout="row">
+                        <h4 style="padding-left: 10px">Fields to load</h4>
+                    </div>
+                    <div layout="column">
+
+                        <md-card>
+                            <md-card-content>
+                                <div data-ng-repeat="item in vm.providerFields track by $index" flex="100">
+                                    <div class="fields-holder" layout="row">
+                                        <div class="iscm-item">
+                                            <md-input-container>
+                                                <label for="">Field</label>
+                                                <input type="text" data-ng-model="item.name">
+                                            </md-input-container>
+                                        </div>
+                                        <div>
+                                            <md-button style="min-width: 40px;"
+                                                       data-ng-click="vm.removeProviderField(item, $index)"
+                                                       class="md-raised">x
+                                            </md-button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </md-card-content>
+                        </md-card>
+                    </div>
+                    <div layout="row">
+                        <md-button class="md-raised" data-ng-click="vm.addProviderField()">
+                            Add field
+                        </md-button>
+                    </div>
+
+                </div>
+                <div layout="column" flex="75">
+                    <div layout="row">
+                        <h4 style="padding-left: 10px">Map on instrument fields:</h4>
+                    </div>
+                    <div layout="column">
+                        <md-card flex="100">
+                            <md-card-content class="instrument-scheme-fields-holder">
+                                <div data-ng-repeat="item in vm.mapFields" layout="row" flex="100">
+                                    <div layout="row" flex="100">
+                                        <div class="field-name" flex="40">
+                                            {{vm.beatufier(item[vm.getModelKey(item)])}}
+                                            <!--{{item[vm.getModelKey(item)]}}-->
+                                            <!--<md-input-container>-->
+                                            <!--<md-select data-ng-model="item[vm.getModelKey(item)]"-->
+                                            <!--data-ng-focus="vm.checkAttrs()">-->
+                                            <!--<md-option data-ng-repeat="item in vm.baseAttrs"-->
+                                            <!--ng-value="item.key"-->
+                                            <!--class="{{item.disabled ? 'disabled' : ''}}">-->
+                                            <!--{{item.name}}-->
+                                            <!--</md-option>-->
+                                            <!--<md-option data-ng-repeat="item in vm.entityAttrs"-->
+                                            <!--ng-value="item.key"-->
+                                            <!--class="{{item.disabled ? 'disabled' : ''}}">-->
+                                            <!--{{item.name}}-->
+                                            <!--</md-option>-->
+                                            <!--<md-option data-ng-repeat="item in vm.attrs" ng-value="item.id"-->
+                                            <!--class="{{item.disabled ? 'disabled' : ''}}">-->
+                                            <!--{{item.name}}-->
+                                            <!--</md-option>-->
+                                            <!--</md-select>-->
+                                            <!--</md-input-container>-->
+                                        </div>
+                                        <div flex="50">
+                                            <div data-ng-if="item.complexExpressionEntity == false" layout="row">
+                                                <div flex="50">
+                                                    <md-input-container>
+                                                        <label for="">Expression</label>
+                                                        <input type="text" data-ng-model="item.expression">
+                                                    </md-input-container>
+                                                </div>
+                                                <div flex="50">
+                                                    <md-button class="md-raised md-primary expr-btn"
+                                                               data-ng-click="vm.openExpressionDialog($event, item)">
+                                                        ...
+                                                    </md-button>
+                                                </div>
+                                            </div>
+                                            <div data-ng-if="item.complexExpressionEntity != false" layout="row">
+                                                <div flex="50">
+                                                    <md-input-container>
+                                                        <label for="">Expression</label>
+                                                        <input type="text" data-ng-model="item.expression">
+                                                    </md-input-container>
+                                                </div>
+                                                <div flex="50" layout="row">
+                                                    <md-button class="md-raised md-primary expr-btn"
+                                                               data-ng-click="vm.openExpressionDialog($event, item)">
+                                                        ...
+                                                    </md-button>
+                                                    <md-button class="md-raised md-primary complex-expr-btn"
+                                                               data-ng-click="vm.openMapping($event, item)">
+                                                        Edit mapping
+                                                    </md-button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div flex="10">
+                                            <md-button
+                                                    class="custom-small-icon-btn md-raised"
+                                                    data-ng-click="vm.removeMappingField(item, $index)"
+                                                    data-ng-if="!item.required"
+                                                    class="md-raised">x
+                                            </md-button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div style="background: #ffeee8; padding: 10px; margin-bottom: 20px;">
+                                    <div data-ng-repeat="item in vm.mappedFieldsDefaults" layout="row" flex="100">
+                                        <div layout="row" flex="100">
+                                            <div class="field-name" flex="40">
+                                                {{vm.beatufier(item[vm.getModelKey(item)])}}
+                                                <!--{{item[vm.getModelKey(item)]}}-->
+                                                <!--<md-input-container>-->
+                                                <!--<md-select data-ng-model="item[vm.getModelKey(item)]"-->
+                                                <!--data-ng-focus="vm.checkAttrs()">-->
+                                                <!--<md-option data-ng-repeat="item in vm.baseAttrs"-->
+                                                <!--ng-value="item.key"-->
+                                                <!--class="{{item.disabled ? 'disabled' : ''}}">-->
+                                                <!--{{item.name}}-->
+                                                <!--</md-option>-->
+                                                <!--<md-option data-ng-repeat="item in vm.entityAttrs"-->
+                                                <!--ng-value="item.key"-->
+                                                <!--class="{{item.disabled ? 'disabled' : ''}}">-->
+                                                <!--{{item.name}}-->
+                                                <!--</md-option>-->
+                                                <!--<md-option data-ng-repeat="item in vm.attrs" ng-value="item.id"-->
+                                                <!--class="{{item.disabled ? 'disabled' : ''}}">-->
+                                                <!--{{item.name}}-->
+                                                <!--</md-option>-->
+                                                <!--</md-select>-->
+                                                <!--</md-input-container>-->
+                                            </div>
+                                            <div flex="50">
+                                                <div layout="row">
+                                                    <div flex="50">
+                                                        <div data-ng-if="item.value_type == 10">
+                                                            <md-input-container>
+                                                                <label for="">Default value</label>
+                                                                <input type="text" data-ng-model="item.expression">
+                                                            </md-input-container>
+                                                        </div>
+                                                        <div data-ng-if="item.value_type == 'field'">
+                                                            <div data-ism-field-resolver data-item="item"
+                                                                 data-options="options"></div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div flex="10">
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div data-ng-repeat="item in vm.mappedFieldsSecond" layout="row" flex="100">
+                                    <div layout="row" flex="100">
+                                        <div class="field-name" flex="40">
+                                            {{vm.beatufier(item[vm.getModelKey(item)])}}
+                                            <!--{{item[vm.getModelKey(item)]}}-->
+                                            <!--<md-input-container>-->
+                                            <!--<md-select data-ng-model="item[vm.getModelKey(item)]"-->
+                                            <!--data-ng-focus="vm.checkAttrs()">-->
+                                            <!--<md-option data-ng-repeat="item in vm.baseAttrs"-->
+                                            <!--ng-value="item.key"-->
+                                            <!--class="{{item.disabled ? 'disabled' : ''}}">-->
+                                            <!--{{item.name}}-->
+                                            <!--</md-option>-->
+                                            <!--<md-option data-ng-repeat="item in vm.entityAttrs"-->
+                                            <!--ng-value="item.key"-->
+                                            <!--class="{{item.disabled ? 'disabled' : ''}}">-->
+                                            <!--{{item.name}}-->
+                                            <!--</md-option>-->
+                                            <!--<md-option data-ng-repeat="item in vm.attrs" ng-value="item.id"-->
+                                            <!--class="{{item.disabled ? 'disabled' : ''}}">-->
+                                            <!--{{item.name}}-->
+                                            <!--</md-option>-->
+                                            <!--</md-select>-->
+                                            <!--</md-input-container>-->
+                                        </div>
+                                        <div flex="50">
+                                            <div data-ng-if="item.complexExpressionEntity == false" layout="row">
+                                                <div flex="50">
+                                                    <md-input-container>
+                                                        <label for="">Expression</label>
+                                                        <input type="text" data-ng-model="item.expression">
+                                                    </md-input-container>
+                                                </div>
+                                                <div flex="50">
+                                                    <md-button class="md-raised md-primary expr-btn"
+                                                               data-ng-click="vm.openExpressionDialog($event, item)">
+                                                        ...
+                                                    </md-button>
+                                                </div>
+                                            </div>
+                                            <div data-ng-if="item.complexExpressionEntity != false" layout="row">
+                                                <div flex="50">
+                                                    <md-input-container>
+                                                        <label for="">Expression</label>
+                                                        <input type="text" data-ng-model="item.expression">
+                                                    </md-input-container>
+                                                </div>
+                                                <div flex="50" layout="row">
+                                                    <md-button class="md-raised md-primary expr-btn"
+                                                               data-ng-click="vm.openExpressionDialog($event, item)">
+                                                        ...
+                                                    </md-button>
+                                                    <md-button class="md-raised md-primary complex-expr-btn"
+                                                               data-ng-click="vm.openMapping($event, item)">
+                                                        Edit mapping
+                                                    </md-button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div flex="10">
+                                            <md-button
+                                                    class="custom-small-icon-btn md-raised"
+                                                    data-ng-click="vm.removeMappingField(item, $index)"
+                                                    data-ng-if="!item.required"
+                                                    class="md-raised">x
+                                            </md-button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div data-ng-repeat="field in vm.mappedDynamic" layout="row" flex="100">
+                                    <div layout="row" flex="100">
+                                        <div class="field-name" flex="40">
+                                            <md-input-container>
+                                                <md-select data-ng-model="field.value"
+                                                           data-ng-change="vm.resolveFieldType(field)"
+                                                           data-ng-focus="vm.checkAttrs()">
+                                                    <md-option data-ng-repeat="item in vm.baseAttrs"
+                                                               ng-value="item"
+                                                               class="{{item.disabled ? 'disabled' : ''}}">
+                                                        {{item.name}}
+                                                    </md-option>
+                                                    <md-option data-ng-repeat="item in vm.entityAttrs"
+                                                               ng-value="item"
+                                                               class="{{item.disabled ? 'disabled' : ''}}">
+                                                        {{item.name}}
+                                                    </md-option>
+                                                    <md-option data-ng-repeat="item in vm.attrs" ng-value="item"
+                                                               class="{{item.disabled ? 'disabled' : ''}}">
+                                                        {{item.name}}
+                                                    </md-option>
+                                                </md-select>
+                                            </md-input-container>
+                                        </div>
+                                        <div flex="50">
+                                            <div data-ng-if="field.complexExpressionEntity == false" layout="row">
+                                                <div flex="50">
+                                                    <md-input-container>
+                                                        <label for="">Expression</label>
+                                                        <input type="text" data-ng-model="field.expression">
+                                                    </md-input-container>
+                                                </div>
+                                                <div flex="50">
+                                                    <md-button class="md-raised md-primary expr-btn"
+                                                               data-ng-click="vm.openExpressionDialog($event, field)">
+                                                        ...
+                                                    </md-button>
+                                                </div>
+                                            </div>
+                                            <div data-ng-if="field.complexExpressionEntity != false" layout="row">
+                                                <div flex="50">
+                                                    <md-input-container>
+                                                        <label for="">Expression</label>
+                                                        <input type="text" data-ng-model="field.expression">
+                                                    </md-input-container>
+                                                </div>
+                                                <div flex="50" layout="row">
+                                                    <md-button class="md-raised md-primary expr-btn"
+                                                               data-ng-click="vm.openExpressionDialog($event, field)">
+                                                        ...
+                                                    </md-button>
+                                                    <md-button class="md-raised md-primary complex-expr-btn"
+                                                               data-ng-click="vm.openMapping($event, field)">
+                                                        Edit mapping
+                                                    </md-button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div flex="10">
+                                            <md-button
+                                                    class="custom-small-icon-btn md-raised"
+                                                    data-ng-click="vm.removeMappingField(item, $index)"
+                                                    data-ng-if="!item.required"
+                                                    class="md-raised">x
+                                            </md-button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </md-card-content>
+                        </md-card>
+                    </div>
+                    <div layout="row">
+                        <md-button class="md-raised" data-ng-click="vm.addMapField()">Add field</md-button>
+                    </div>
+                </div>
+            </div>
+            <md-divider style="margin: 20px"></md-divider>
+            <div>
+                <div data-ng-if="vm.checkSchedules()">
+                    <div layout="row">
+                        <div layout="row" flex="50">
+                            <md-card flex="100">
+                                <md-card-content>
+                                    <md-input-container style="width: 100%">
+                                        <label for="">Factor upload method</label>
+                                        <md-select data-ng-model="vm.factorScheduleMethod">
+                                            <md-option data-ng-repeat="item in vm.factorSchedule"
+                                                       data-ng-value="item.id">{{item.name}}
+                                            </md-option>
+                                        </md-select>
+                                    </md-input-container>
+                                </md-card-content>
+                            </md-card>
+                        </div>
+                        <div layout="row" flex="50">
+                            <md-card flex="100">
+                                <md-card-content>
+                                    <md-input-container style="width: 100%">
+                                        <label for="">Accrual schedule upload</label>
+                                        <md-select data-ng-model="vm.accrualCalculation">
+                                            <md-option data-ng-repeat="item in vm.accrualSchedule"
+                                                       data-ng-value="item.id">{{item.name}}
+                                            </md-option>
+                                        </md-select>
+                                    </md-input-container>
+                                </md-card-content>
+                            </md-card>
+                        </div>
+                    </div>
+                </div>
+                <div data-ng-if="!vm.checkSchedules()">
+                    <div layout="row" layout-sm="column" layout-align="space-around" class="m-large">
+                        <md-progress-circular md-mode="indeterminate" md-diameter="96"></md-progress-circular>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div data-ng-if="!vm.readyStatus.scheme">
+            <div layout="row" layout-sm="column" layout-align="space-around" class="m-large">
+                <md-progress-circular md-mode="indeterminate" md-diameter="96"></md-progress-circular>
+            </div>
+        </div>
+    </md-dialog-content>
+    <md-dialog-actions layout="row">
+        <md-button class="md-raised" ng-click="vm.cancel()">
+            Cancel
+        </md-button>
+        <md-button class="md-raised" ng-click="vm.agree()" style="margin-right:20px;">
+            Save
+        </md-button>
+    </md-dialog-actions>
+</md-dialog>

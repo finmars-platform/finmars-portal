@@ -1,0 +1,126 @@
+/**
+ * Created by szhitenev on 17.08.2016.
+ */
+(function () {
+
+    'use strict';
+
+    var logService = require('../../../../../core/services/logService');
+
+    var metaService = require('../../services/metaService');
+    var importPriceDownloadSchemeService = require('../../services/import/importPriceDownloadSchemeService');
+    var dataProvidersService = require('../../services/import/dataProvidersService');
+
+    module.exports = function ($scope, $mdDialog) {
+
+        logService.controller('PriceDownloadSchemeAddDialogController', 'initialized');
+
+        var vm = this;
+
+        vm.readyStatus = {scheme: true, providers: false};
+
+        vm.dataProviders = [];
+
+        dataProvidersService.getList().then(function (data) {
+            vm.dataProviders = data;
+            vm.readyStatus.providers = true;
+            vm.getList();
+            $scope.$apply();
+        });
+
+        vm.toggleQuery = function () {
+            vm.queryStatus = !vm.queryStatus;
+            vm.query = {};
+        };
+
+        vm.setSort = function (propertyName) {
+            vm.direction = (vm.sort === propertyName) ? !vm.direction : false;
+            vm.sort = propertyName;
+        };
+
+        vm.cancel = function () {
+            $mdDialog.cancel();
+        };
+
+        vm.editItem = function (item) {
+            item.editStatus = true;
+        };
+
+        vm.saveItem = function (item) {
+            importPriceDownloadSchemeService.update(item.id, item).then(function () {
+                item.editStatus = false;
+                vm.getList();
+            });
+
+        };
+
+        vm.deleteItem = function (item, index) {
+            importPriceDownloadSchemeService.deleteByKey(item.id);
+            setTimeout(function () {
+                vm.getList();
+            }, 100)
+        };
+
+        vm.items = [];
+
+        vm.getList = function () {
+
+            importPriceDownloadSchemeService.getList().then(function (data) {
+                vm.items = data.results;
+
+                vm.items.forEach(function (item) {
+
+                    vm.dataProviders.forEach(function (provider) {
+                        if (item.provider == provider.id) {
+                            item.provider_name = provider.name
+                        }
+                    })
+                });
+
+                $scope.$apply();
+            });
+        };
+
+        vm.addRow = function () {
+
+            importPriceDownloadSchemeService.create(vm.newItem).then(function () {
+                vm.newItem = {
+                    "scheme_name": null,
+                    "provider": null,
+                    "bid0": '',
+                    "bid1": '',
+                    "bid2": '',
+                    "bid_multiplier": '',
+                    "ask0": "",
+                    "ask1": "",
+                    "ask2": "",
+                    "ask_multiplier": "",
+                    "last": "",
+                    "last_multiplier": "",
+                    "mid": "",
+                    "mid_multiplier": "",
+                    "bid_history": "",
+                    "ask_history": "",
+                    "last_history": "",
+                    "mid_history": "",
+                    "bid_history_multiplier": "",
+                    "mid_history_multiplier": "",
+                    "last_history_multiplier": "",
+                    "ask_history_multiplier": "",
+                    "currency_fxrate": "",
+                    "currency_fxrate_multiplier": ""
+                };
+
+                vm.getList();
+            });
+
+
+        };
+
+        vm.agree = function () {
+
+        };
+
+    };
+
+}());

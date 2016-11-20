@@ -1,0 +1,58 @@
+<div>
+    <div>
+        <md-button data-ng-click="vm.importInstrument($event)" class="md-primary md-raised">
+            Import instrument
+        </md-button>
+    </div>
+    <div>
+        <md-button data-ng-click="vm.fillPriceHistory($event)" class="md-primary md-raised">
+            Fill price history
+        </md-button>
+    </div>
+    <div>
+        <md-button data-ng-click="vm.automatedUploads($event)" class="md-primary md-raised">
+            Automated uploads
+        </md-button>
+    </div>
+    <div>
+        <md-button data-ng-click="vm.openMapping($event, {complexExpressionEntity:'currency'})"
+                   class="md-primary md-raised">
+            Currency mapping
+        </md-button>
+    </div>
+    <div>
+        <md-button data-ng-click="vm.openMapping($event, {complexExpressionEntity:'instrument_type'})"
+                   class="md-primary md-raised">
+            Instrument type mapping
+        </md-button>
+    </div>
+    <div>
+        <md-button data-ng-click="vm.openMapping($event, {complexExpressionEntity: 'accrual_calculation_model'})"
+                   class="md-primary md-raised">
+            Accrual calculation model mapping
+        </md-button>
+    </div>
+    <div>
+        <md-button data-ng-click="vm.openMapping($event, {complexExpressionEntity:'periodicity'})"
+                   class="md-primary md-raised">
+            Periodicity mapping
+        </md-button>
+    </div>
+    <div>
+        <md-button class="md-raised md-primary" data-ng-click="vm.addScheme($event)">
+            Create instrument import scheme
+        </md-button>
+    </div>
+    <div>
+        <md-button class="md-raised md-primary" data-ng-click="vm.addPriceDownloadScheme($event)">
+            Create price download scheme
+        </md-button>
+    </div>
+    <div>
+        <md-button class="md-raised md-primary" data-ng-click="vm.eventScheduleConfig()">
+            Configure event schedule
+        </md-button>
+    </div>
+
+
+</div>

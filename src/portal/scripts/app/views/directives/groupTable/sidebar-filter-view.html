@@ -1,15 +1,137 @@
 <div class="g-sidebar-filter-component">
-    <p class="area-title"><span class="g-meta-circle blue">F</span>ILTER AREA</p>
-    <div dragula="'filters-bag'" dragula-model="filters">
+
+    <div data-ng-if="isReport">
+
+        <md-card class="g-sidebar-report-card">
+
+            <md-card-content>
+
+                <p class="g-r-card-title">
+                    Report settings
+                </p>
+
+                <div layout="column" style="padding-top: 16px">
+
+                    <md-input-container>
+
+                        <label for="">Date</label>
+
+                        <zh-date-picker data-ng-model="reportOptions.report_date" position="left"></zh-date-picker>
+
+                    </md-input-container>
+
+                    <md-input-container>
+
+                        <label for="">Pricing Policy</label>
+
+                        <md-select data-ng-model="reportOptions.pricing_policy">
+                            <md-option data-ng-repeat="item in pricingPolicies" ng-value="item.id">{{item.name}}
+                            </md-option>
+                        </md-select>
+
+                    </md-input-container>
+
+                </div>
+
+                <div layout="column" style="margin-top: 16px;">
+
+                    <md-button data-ng-click="openReportSettings($event)" class="md-primary md-raised">Settings</md-button>
+
+                    <md-button data-ng-click="calculateReport()" class="md-raised">Calculate</md-button>
+
+                </div>
+
+            </md-card-content>
+
+        </md-card>
+
+    </div>
+
+    <div layout="row" layout-align="space-between center">
+        <p class="area-title g-section-title"><span class="g-meta-circle blue">F</span><span class="after-text">ILTER AREA</span>
+            <ng-md-icon class="tooltips-sign" icon="info" size="20" style="fill: #777777">
+                <md-tooltip class="tooltip_1" md-direction="top">tooltip text</md-tooltip>
+            </ng-md-icon>
+        </p>
+        <md-button aria-label="resize"
+                   class="to-small-btn filter-sidenav f-s-collapse fab md-raised"
+                   data-ng-click="resizeFilterSideNav('collapse')">
+            <md-tooltip class="" md-direction="top">Collapse area</md-tooltip>
+            <ng-md-icon icon="chevron_right"></ng-md-icon>
+        </md-button>
+    </div>
+    <div layout="row">
+        <md-button aria-label="resize"
+                   class="to-small-btn filter-sidenav f-s-expand fab md-raised"
+                   data-ng-click="resizeFilterSideNav('expand')">
+            <md-tooltip class="" md-direction="top">Expand area</md-tooltip>
+            <ng-md-icon icon="chevron_left"></ng-md-icon>
+        </md-button>
+    </div>
+    <div layout="row" class="filters-control-btn s-f-expanded-btns">
+        <md-button class="md-raised" data-ng-click="selectAll()">
+            Select all
+        </md-button>
+        <md-button class="md-raised" data-ng-click="deselectAll()">
+            Deselect all
+        </md-button>
+    </div>
+    <div class="s-f-collpased-btns" layout="column">
+        <md-button class="md-raised to-small-btn" data-ng-click="selectAll()">
+            <ng-md-icon icon="select_all"></ng-md-icon>
+            <md-tooltip class="" md-direction="top">Select all</md-tooltip>
+        </md-button>
+        <md-button class="md-raised to-small-btn" data-ng-click="deselectAll()">
+            <ng-md-icon icon="highlight_off"></ng-md-icon>
+            <md-tooltip class="" md-direction="top">Deselect all</md-tooltip>
+        </md-button>
+    </div>
+    <div layout="row" class="filters-control-btn s-f-expanded-btns">
+        <md-button class="md-raised clear-all full-width" data-ng-click="clearAll()">
+            Clear all
+        </md-button>
+    </div>
+    <div dragula="'filters-bag'" dragula-model="filters" class="filters-holder">
         <md-card data-ng-repeat="filter in filters"
                  class="{{filter.options.enabled ? '' : 'f-disabled' }} g-filter-item" layout="row">
-            <md-checkbox ng-model="filter.options.enabled" aria="filters" class="md-primary"
+            <md-tooltip data-ng-if="sideNavCollapsed" class="" md-direction="top">{{filter.name}}<span
+                    data-ng-if="!getFilterType(filter['value_type'])">: {{filter.options.query}}</span></md-tooltip>
+            <md-checkbox ng-model="filter.options.enabled" aria-label="filters" class="md-primary"
                          ng-change="toggleFilterState(filter)" flex="15">
             </md-checkbox>
             <md-input-container flex="65">
                 <label data-ng-bind="filter.name"></label>
-                <input data-ng-model="filter.options.query" data-ng-change="filterChange(filter)"
-                       data-ng-model-options="{debounce: 1000}">
+                <div data-ng-if="getFilterType(filter['value_type'])">
+                    <!-- {{fields}} -->
+                    <div data-ng-if="fields[filter.key]">
+                        <md-select data-ng-model="filter.options.query"
+                                   md-on-close="searchTerm = ''"
+                                   data-ng-change="filterChange(filter)"
+                                   multiple="{{fields['value_type'] == 'mc_field' ? 'true' : 'false'}}">
+                            <md-select-header>
+                                <input data-ng-model="searchTerm"
+                                       type="search"
+                                       placeholder="Search for a ..."
+                                       class="md-text md-select-search-pattern">
+                            </md-select-header>
+                            <md-option
+                                    data-ng-repeat="field in fields[filter.key] | orderBy:'-'+field.name | filter:{ name:searchTerm} track by $index"
+                                    value="{{field.id}}">
+                                {{field.name}}
+                            </md-option>
+                        </md-select>
+                    </div>
+                    <div data-ng-if="!fields[filter.key]">
+                        <div layout="row" layout-sm="column" layout-align="space-around">
+                            <md-progress-circular md-mode="indeterminate"></md-progress-circular>
+                        </div>
+                    </div>
+                </div>
+                <!-- <div data-ng-if="filter['value_type'] !== 'field'"> -->
+                <div data-ng-if="!getFilterType(filter['value_type'])">
+                    <input data-ng-model="filter.options.query" data-ng-change="filterChange(filter)"
+                           data-ng-model-options="{debounce: 1000}">
+                </div>
             </md-input-container>
             <div class="settings-btn" flex="20">
                 <md-menu>
@@ -28,6 +150,9 @@
                 </md-menu>
             </div>
         </md-card>
+    </div>
+    <div class="drop-new-filter">
+        Drop new Filter
     </div>
 
 </div>

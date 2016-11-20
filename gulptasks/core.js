@@ -21,10 +21,14 @@
             'node_modules/angular-aria/angular-aria.js',
             'node_modules/angular-messages/angular-messages.js',
             'node_modules/angular-touch/angular-touch.js',
+            'node_modules/angular-contextmenu/dist/contextmenu.js',
             'node_modules/angular-resource/angular-resource.js',
             'node_modules/angular-sanitize/angular-sanitize.js',
+            'node_modules/v-accordion/dist/v-accordion.js',
+            'node_modules/angular-paging/dist/paging.js',
             'node_modules/angular-material/angular-material.js',
             'node_modules/angular-carousel/dist/angular-carousel.js',
+            'bower_components/mdPickers/dist/mdPickers.js',
             'node_modules/angular-material-icons/angular-material-icons.js'];
 
         return gulp.src(pathToJS)
@@ -50,6 +54,9 @@
 
         var pathToCSS = [
             'node_modules/angular-material/angular-material.css',
+            'bower_components/mdPickers/dist/mdPickers.css',
+            'node_modules/angular-contextmenu/dist/style.css',
+            'node_modules/v-accordion/dist/v-accordion.css',
             'node_modules/angular-carousel/dist/angular-carousel.css'
         ];
 
@@ -96,6 +103,18 @@
 
     });
 
+    gulp.task(appName + '-moment-js-min', function(){
+
+        var pathToJS = ['node_modules/moment/moment.js'];
+
+        return gulp.src(pathToJS)
+            .pipe(concat('moment.js'))
+            .pipe(uglify())
+            .pipe(rename('moment.min.js'))
+            .pipe(gulp.dest('dist/' + appName + '/scripts/'));
+
+    });
+
     gulp.task(appName + '-dragula-js-min', function(){
 
         var pathToJS = [
@@ -128,7 +147,12 @@
     gulp.task(appName + '-plugins-js-min', function(){
 
         var pathToJS = [
-            'node_modules/malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.js'
+            //'node_modules/malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.js',
+            //'node_modules/nanoscroller/bin/javascripts/jquery.nanoscroller.js',
+            'node_modules/perfect-scrollbar/dist/js/perfect-scrollbar.jquery.min.js',
+            'node_modules/fancy-logger/dist/js/fancy-logger.js',
+            'node_modules/jstree/dist/jstree.js',
+            'bower_components/pickmeup/js/jquery.pickmeup.js'
         ];
 
         return gulp.src(pathToJS)
@@ -142,7 +166,10 @@
     gulp.task(appName + '-plugins-css-min', function(){
 
         var pathToCSS = [
-            'node_modules/malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.css'
+            //'node_modules/nanoscroller/bin/css/nanoscroller.css',
+            'node_modules/perfect-scrollbar/dist/css/perfect-scrollbar.css',
+            'node_modules/jstree/dist/themes/default/style.css',
+            'bower_components/pickmeup/css/pickmeup.css'
         ];
 
         return gulp.src(pathToCSS)
@@ -160,6 +187,7 @@
         appName + '-angular-css-min',
         appName + '-core-js-min',
         appName + '-min-Angular-UI-JS',
+        appName + '-moment-js-min',
         appName + '-fetch-js-min',
         appName + '-jquery-js-min',
         appName + '-dragula-js-min',

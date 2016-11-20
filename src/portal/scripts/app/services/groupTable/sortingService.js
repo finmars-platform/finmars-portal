@@ -15,37 +15,43 @@
     var groupSort = function (items, sort) {
 
         var i, g, valA, valB;
-        if (items[0].groups) {
+        if (items.length && items[0].groups) {
             //console.log('sort ID', sort);
             items = items.sort(function (a, b) {
                 for (i = 0; i < b.groups.length; i = i + 1) {
                     for (g = 0; g < a.groups.length; g = g + 1) {
                         if (b.groups[i].key === sort.key || b.groups[i].key === sort.name
                             && a.groups[g].key === sort.key || a.groups[g].key === sort.name) {
-                            valA = a.groups[g].value.toLowerCase();
-                            valB = b.groups[i].value.toLowerCase();
-                            if (sort.sort === 'DESC') {
-                                if (valA < valB) {
-                                    return -1;
-                                }
-                                if (valA > valB) {
-                                    return 1;
+                            if (b.groups[i].value !== null && !b.groups[i].value !== null) {
+                                valA = a.groups[g].value + '';
+                                valA = valA.toLowerCase();
+
+                                valB = b.groups[i].value + '';
+                                valB = valB.toLowerCase();
+
+                                if (sort.sort === 'DESC') {
+                                    if (valA < valB) {
+                                        return -1;
+                                    }
+                                    if (valA > valB) {
+                                        return 1;
+                                    }
+
+                                    // names must be equal
+                                    return 0;
                                 }
 
-                                // names must be equal
-                                return 0;
-                            }
+                                if (sort.sort === 'ASC') {
+                                    if (valA > valB) {
+                                        return -1;
+                                    }
+                                    if (valA < valB) {
+                                        return 1;
+                                    }
 
-                            if (sort.sort === 'ASC') {
-                                if (valA > valB) {
-                                    return -1;
+                                    // names must be equal
+                                    return 0;
                                 }
-                                if (valA < valB) {
-                                    return 1;
-                                }
-
-                                // names must be equal
-                                return 0;
                             }
                         }
                     }
@@ -153,9 +159,9 @@
     };
 
     var columnSort = function (items, sort) {
-        console.log('items', items);
+        //console.log('items', items);
         var g;
-        if (items[0].groups) {
+        if (items.length && items[0].groups) {
             if (sort.id) {
                 //console.log('sort ID', sort);
                 for (g = 0; g < items.length; g = g + 1) {

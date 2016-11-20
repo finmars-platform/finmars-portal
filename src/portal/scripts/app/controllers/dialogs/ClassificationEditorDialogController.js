@@ -1,0 +1,117 @@
+/**
+ * Created by szhitenev on 19.07.2016.
+ */
+(function () {
+
+    'use strict';
+
+    var attributeTypeService = require('../../services/attributeTypeService');
+
+    var logService = require('../../../../../core/services/logService');
+
+    module.exports = function ($scope, $mdDialog, data) {
+
+        var vm = this;
+
+        logService.controller('ClassificationEditorDialogController', 'initialized');
+
+        vm.classifier = data.classifier;
+
+        attributeTypeService.getByKey(data.entityType, data.classifier.id).then(function (data) {
+
+            function setText(item) {
+                item.text = item.name;
+                item.type = 'default';
+                if (item.children.length) {
+                    item.type = 'folder';
+                }
+                item.children = item.children.map(setText);
+                return item
+            }
+
+            var tree = data.classifiers.map(setText);
+
+            $('#jstree_demo').jstree({
+                "core": {
+                    "animation": 0,
+                    "check_callback": true,
+                    "themes": {"stripes": true},
+                    'data': [
+                        {
+                            'text': 'Root',
+                            'state': {'opened': true, 'selected': true},
+                            'children': tree
+                        }
+                    ]
+                },
+                "types": {
+                    "#": {
+                        "valid_children": ["root"]
+                    },
+                    "root": {
+                        "icon": "portal/content/img/ic_folder_black_1x.png",
+                        "valid_children": ["default"]
+                    },
+                    "default": {
+                        "icon": "portal/content/img/ic_label_outline_black_1x.png",
+                        "valid_children": ["default", "folder"]
+                    },
+                    "folder": {
+                        "icon": "portal/content/img/ic_folder_black_1x.png",
+                        "valid_children": ["default", "folder"]
+                    }
+                },
+                "plugins": [
+                    "contextmenu", "dnd", "search",
+                    "state", "types", "wholerow"
+                ]
+            });
+            $scope.$apply();
+        });
+
+        vm.createNode = function () {
+            var ref = $('#jstree_demo').jstree(true),
+                sel = ref.get_selected();
+            ref.set_type(sel, 'folder');
+            sel = sel[0];
+            sel = ref.create_node(sel, {"type": "default"});
+            if (sel) {
+                ref.edit(sel);
+            }
+        };
+        vm.renameNode = function () {
+            var ref = $('#jstree_demo').jstree(true),
+                sel = ref.get_selected();
+            if (!sel.length) {
+                return false;
+            }
+            sel = sel[0];
+            ref.edit(sel);
+        };
+
+        vm.deleteNode = function () {
+            var ref = $('#jstree_demo').jstree(true),
+                sel = ref.get_selected();
+            if (!sel.length) {
+                return false;
+            }
+            ref.delete_node(sel);
+        };
+
+        vm.agree = function () {
+            console.log('vm.attr', vm.classifier);
+            var ref = $('#jstree_demo').jstree(true);
+            var data = ref.get_json('#');
+            console.log('ref', data);
+            console.log('classifier', vm.classifier);
+
+            vm.classifier.children = data[0].children;
+            $mdDialog.hide({status: 'agree', data: {classifier: vm.classifier}});
+        };
+
+        vm.cancel = function () {
+            $mdDialog.cancel();
+        };
+    }
+
+}());

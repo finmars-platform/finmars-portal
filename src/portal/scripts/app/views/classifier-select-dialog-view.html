@@ -1,0 +1,32 @@
+<md-dialog aria-label="" ng-cloak class="classifier-select-dialog-view">
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            <h2>Select classifier</h2>
+            <span flex></span>
+        </div>
+    </md-toolbar>
+    <md-dialog-content data-custom-scroll class="custom-scrollbar">
+        <div layout="row">
+            <div data-ng-show="vm.tree.length" class="js-tree-holder-dialog-select">
+                <div id="js-tree-select-wrapper" class="js-tree-select" style="width: 100%; overflow: hidden"></div>
+            </div>
+            <div data-ng-if="!vm.tree.length" style="width: 100%;">
+                <p style="text-align: center; width: 100%;">
+                    Press Edit to create Classification
+                </p>
+            </div>
+        </div>
+
+    </md-dialog-content>
+    <md-dialog-actions layout="row">
+        <md-button class="md-raised md-primary" ng-click="vm.edit($event)">
+            Edit
+        </md-button>
+        <md-button class="md-raised" ng-click="vm.cancel()">
+            Cancel
+        </md-button>
+        <md-button class="md-raised" ng-click="vm.agree()" style="margin-right:20px;">
+            Save
+        </md-button>
+    </md-dialog-actions>
+</md-dialog>

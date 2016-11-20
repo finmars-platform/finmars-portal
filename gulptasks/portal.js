@@ -25,6 +25,7 @@
     var buffer = require('vinyl-buffer');
     var browserify = require('browserify');
 
+    var forumTasks = require('./forum.js');
 
     var appName = 'portal';
 
@@ -34,6 +35,11 @@
 
         return gulp.src(pathToLess)
             .pipe(less())
+            .on('error', function (err) {
+                console.error('Error in Browserify: \n', err.message);
+                this.emit('end');
+            })
+            .pipe(plumber())
             .pipe(postcss([ autoprefixer({ browsers: ['last 2 versions']})]))
             .pipe(minifyCSS())
             .pipe(rename('main.min.css'))
@@ -73,12 +79,16 @@
                 this.emit('end');
             })
             .pipe(ngHtml2Js({
-                moduleName: 'app'
+                moduleName: appName
             }))
             .pipe(concat('templates.min.js'))
             .pipe(uglify())
             .pipe(gulp.dest('src/' + appName + '/scripts/'));
 
+    });
+
+    gulp.task('portal-forum-HTML-to-JS', function() {
+        forumTasks.forumHtmlToJs();
     });
 
     gulp.task(appName + '-js-min', function(){
@@ -130,6 +140,11 @@
         gulp.watch('src/' + appName + '/**/*.html', [appName + '-HTML-to-JS', appName + '-js-min']);
         gulp.watch('src/index.html', [appName + '-html-min']);
     });
+    gulp.task('forum-watch-All', function () {
+        gulp.watch('src/' + appName + '/**/*.less', [appName + '-less-to-css-min']);
+        gulp.watch('src/forum/**/*.js', [appName + '-js-min']);
+        gulp.watch('src/forum/**/*.html', ['portal-forum-HTML-to-JS', appName + '-js-min']);
+    });
 
     gulp.task(appName + '-min-All', [
         appName + '-HTML-to-JS',
@@ -139,5 +154,4 @@
         appName + '-json-min',
         appName + '-img-copy',
         appName + '-fonts-copy']);
-
 }());

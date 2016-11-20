@@ -31,6 +31,10 @@
         return usersRepository.getByKey(id)
     };
 
+    var getMe = function(){
+        return usersRepository.getMe();
+    };
+
     var update = function(id, user) {
         return usersRepository.update(id, user);
     };
@@ -96,6 +100,7 @@
 
         getList: getList,
         getByKey: getByKey,
+        getMe: getMe,
         update: update,
         patch: patch,
         deleteByKey: deleteByKey,

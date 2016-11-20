@@ -1,0 +1,34 @@
+<div>
+    <div data-ng-if="vm.readyStatus.provider">
+        <md-card>
+            <form action="" data-ng-submit="vm.saveConfig($event)" name="sertForm">
+                <md-card-content>
+                    <!-- <md-input-container class="md-block"> -->
+                    <div class="sett-data-prov-choose-file">
+                        <h4>Certificate</h4>
+                        <input type="file" id="providerConfigFile" file-read="vm.provider.p12cert" input-file-directive>
+                        <label for="providerConfigFile" class="md-button md-raised md-primary">Choose a file</label>
+                        <p>No chosen files</p>
+                    </div>
+                    <!-- </md-input-container> -->
+                    <md-input-container class="md-block">
+                        <label>Password</label>
+                        <input type="password" data-ng-model="vm.provider.password">
+                    </md-input-container>
+                </md-card-content>
+                <md-card-actions>
+                    <div layout="row" layout-align="end center">
+                        <md-button class="md-raised" type="submit">
+                            Save
+                        </md-button>
+                    </div>
+                </md-card-actions>
+            </form>
+        </md-card>
+    </div>
+    <div data-ng-if="!vm.readyStatus.provider">
+        <div layout="row" layout-sm="column" layout-align="space-around" class="m-large">
+            <md-progress-circular md-mode="indeterminate" md-diameter="96"></md-progress-circular>
+        </div>
+    </div>
+</div>

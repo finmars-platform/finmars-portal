@@ -1,47 +1,105 @@
 <div class="g-wrapper" group-height-aligner additions-status="additionsStatus">
-    <div class="g-workarea main-area">
-        <div class="g-grouping-section">
-            <group-grouping tabs="tabs" folding="folding" sorting="sorting" grouping="grouping" filters="filters" columns="columns" external-callback="externalCallback()"></group-grouping>
-        </div>
-        <div class="g-table-section" group-horizontal-scroll>
-            <div class="g-table-wrap" group-column-resizer items="items">
-                <group-columns columns="columns" sorting="sorting" external-callback="externalCallback()" is-item-addition="false"></group-columns>
-                <group-table-body items="items"
-                                  tabs="tabs"
-                                  class="group-table-body"
-                                  entity-type="portfolio"
-                                  grouping="grouping"
-                                  columns="columns"></group-table-body>
+    <div class="g-workarea-wrap">
+        <div class="g-workarea main-area" group-clipboard-handler items="items" columns="columns">
+            <div class="g-grouping-section">
+                <group-grouping entity-type="entityType"
+                                tabs="tabs"
+                                folding="folding"
+                                sorting="sorting"
+                                grouping="grouping"
+                                filters="filters"
+                                columns="columns"
+                                is-report="isReport"
+                                external-callback="externalCallback()"></group-grouping>
+            </div>
+            <div class="g-table-section">
+                <div data-custom-scroll class="custom-scrollbar" data-scroll-y="false">
+                    <div class="g-table-wrap" group-column-resizer items="items" columns-width="columnsWidth">
+                        <group-columns entity-type="entityType"
+                                       columns="columns"
+                                       sorting="sorting"
+                                       items="items"
+                                       is-all-selected="isAllSelected"
+                                       external-callback="externalCallback()"
+                                       is-report="isReport"
+                                       is-item-addition="false"></group-columns>
+                        <group-table-body class="group-table-body"
+                                          items="items"
+                                          external-callback="externalCallback()"
+                                          entity-type="entityType"
+                                          grouping="grouping"
+                                          is-report="isReport"
+                                          item-additions-editor-entity-id="itemAdditionsEditorEntityId"
+                                          is-all-selected="isAllSelected"
+                                          columns="columns"
+
+                                          pagination-item-per-page="paginationItemPerPage"
+                                          pagination-items-total="paginationItemsTotal"
+                                          pagination-page-current="paginationPageCurrent"
+                        ></group-table-body>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
-    <div class="g-sidebar main-sidebar">
-        <div class="g-filter" id="filtersbag">
-            <group-sidebar-filter filters="filters" external-callback="externalCallback()"></group-sidebar-filter>
+    <div class="g-filter-sidebar main-sidebar">
+        <div data-custom-scroll class="custom-scrollbar">
+            <div class="g-filter" id="filtersbag">
+                <group-sidebar-filter filters="filters"
+                                      entity-type="entityType"
+                                      is-report="isReport"
+                                      external-callback="externalCallback()"></group-sidebar-filter>
+            </div>
         </div>
     </div>
     <div class="g-additions" data-ng-if="additionsState">
         <div class="g-height-slider"></div>
-        <div class="g-additions-data-editor">
-
+        <div class="g-additions-data-editor min-height" data-ng-show="additionsStatus.editor">
+            <div data-ng-show="!itemAdditionsEditorEntityId">
+                <div class="g-additions-editor-caption">
+                    Select row to start
+                </div>
+            </div>
+            <div data-ng-show="itemAdditionsEditorEntityId" class="min-height">
+                <group-editor-binder entity-type="entityType" item-id="itemAdditionsEditorEntityId"
+                                     template="itemAdditionsEditorTemplate"></group-editor-binder>
+            </div>
         </div>
-        <div class="g-additions-workarea">
-            <div class="g-workarea">
-                <div class="g-table-section" group-horizontal-scroll>
-                    <div class="g-table-wrap" group-column-resizer items="itemAdditions">
-                        <group-columns columns="itemAdditionsColumns" external-callback="externalAdditionsCallback()" sorting="sorting" is-item-addition="true"></group-columns>
-                        <group-table-body items="itemAdditions"
-                                          class="group-table-body"
-                                          entity-type="transaction"
-                                          columns="itemAdditionsColumns"></group-table-body>
+        <div class="g-additions-workarea" data-ng-show="additionsStatus.table">
+            <div class="g-workarea-wrap">
+                <div class="g-workarea" group-clipboard-handler items="itemAdditions" columns="columns">
+                    <div class="g-table-section" group-horizontal-scroll>
+                        <div class="g-table-wrap" group-column-resizer items="itemAdditions">
+                            <group-columns entity-type="entityType"
+                                           columns="itemAdditionsColumns"
+                                           is-all-selected="isAllAdditionsSelected"
+                                           external-callback="externalAdditionsCallback()"
+                                           sorting="sorting"
+                                           is-item-addition="true"></group-columns>
+                            <group-table-body items="itemAdditions"
+                                              class="group-table-body"
+                                              is-all-selected="isAllAdditionsSelected"
+                                              entity-type="additionsEntityType"
+                                              columns="itemAdditionsColumns"
+
+                                              pagination-item-per-page="paginationItemPerPage"
+                                              pagination-items-total="paginationItemsTotal"
+                                              pagination-page-current="paginationPageCurrent"
+                            ></group-table-body>
+                        </div>
                     </div>
                 </div>
             </div>
-            <div class="g-sidebar additions-sidebar">
+            <div class="g-filter-sidebar additions-sidebar">
                 <div class="g-filter">
-                    <group-sidebar-filter filters="itemAdditionsFilters" external-callback="externalAdditionsCallback()"></group-sidebar-filter>
+                    <group-sidebar-filter filters="itemAdditionsFilters"
+                                          entity-type="entityType"
+                                          external-callback="externalAdditionsCallback()"></group-sidebar-filter>
                 </div>
             </div>
+        </div>
+        <div class="g-extra-features" data-ng-if="findSelectedFeature().isOpened">
+            <div data-ng-include="{{findSelectedFeature().templateUrl}}"></div>
         </div>
     </div>
 </div>

@@ -6,6 +6,8 @@
 
     'use strict';
 
+    var cookieService = require('../../../../core/services/cookieService');
+
     var baseUrl = '/api/v1/';
 
     var handleError = function(methodName){
@@ -17,6 +19,7 @@
             method: 'POST',
             credentials: 'include',
             headers: {
+                'X-CSRFToken': cookieService.getCookie('csrftoken'),
                 Accept: 'application/json',
                 'Content-type': 'application/json'
             },
@@ -34,6 +37,7 @@
             method: 'POST',
             credentials: 'include',
             headers: {
+                'X-CSRFToken': cookieService.getCookie('csrftoken'),
                 Accept: 'application/json',
                 'Content-type': 'application/json'
             }
@@ -94,17 +98,38 @@
         })
     };
 
+    var getMe = function(){
+        return window.fetch(baseUrl + 'users/user/0', {
+            method: 'GET',
+            credentials: 'include',
+            headers: {
+                Accept: 'application/json',
+                'Content-type': 'application/json'
+            }
+        }).then(function(data){
+            return data.json();
+        })
+    };
+
     var update = function(id, user){
         return window.fetch(baseUrl + 'users/user/' + id, {
             method: 'PUT',
             credentials: 'include',
             headers: {
+                'X-CSRFToken': cookieService.getCookie('csrftoken'),
                 Accept: 'application/json',
                 'Content-type': 'application/json'
             },
             body: JSON.stringify(user)
-        }).then(function(data){
-            return data.json();
+        }).then(function (data) {
+            return new Promise(function (resolve, reject) {
+                data.json().then(function (result) {
+                    resolve({
+                        response: result,
+                        status: data.status
+                    })
+                })
+            });
         })
     };
 
@@ -291,6 +316,7 @@
 
         getList: getList,
         getByKey: getByKey,
+        getMe: getMe,
         update: update,
         patch: patch,
         deleteByKey: deleteByKey,

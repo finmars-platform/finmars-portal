@@ -1,63 +1,100 @@
 <div class="g-grouping-component">
-    <div><p class="g-drag-section-title"><span class="g-meta-circle green">G</span>ROUPING AREA</p></div>
-    <div class="g-second-line">
-        <div class="groups-holder">
-            <div class="group-folding-holder">
-                <md-card>
-                    <div>
-                        <div class="fold-btn-wrap {{folding ? '' : 'disabled'}}">
-                            <md-button class="" aria="hide/show grouping" data-ng-click="toggleGroupFold()">
-                                <ng-md-icon icon="add"></ng-md-icon>
-                            </md-button>
-                        </div>
-                        <div class="fold-btn-wrap {{folding ? 'disabled' : ''}}">
-                            <md-button class="" aria="hide/show grouping" data-ng-click="toggleGroupFold()">
-                                <ng-md-icon icon="remove"></ng-md-icon>
-                            </md-button>
-                        </div>
-                    </div>
-                </md-card>
-            </div>
-            <div dragula="'group-bag'" dragula-model="grouping">
-                <md-card data-ng-repeat="item in grouping" class="group-item card">
-                    <div class="sort">
-                        <md-button class="group-sort" data-ng-show="item.options.sort === 'ASC'" aria="open settings" data-ng-click="sortHandler(item, 'DESC')">
-                            <ng-md-icon icon="keyboard_arrow_down"></ng-md-icon>
-                        </md-button>
-                        <md-button class="group-sort-up" data-ng-show="item.options.sort === 'DESC'" aria="open settings" data-ng-click="sortHandler(item, 'ASC')">
-                            <ng-md-icon icon="keyboard_arrow_up"></ng-md-icon>
-                        </md-button>
-                        <md-button class="group-sort group-both-sorted" data-ng-show="!item.options.sort" aria="open settings" data-ng-click="sortHandler(item, 'DESC')">
-                            <ng-md-icon class="c-up" icon="keyboard_arrow_up"></ng-md-icon>
-                            <ng-md-icon class="c-down"  icon="keyboard_arrow_down"></ng-md-icon>
-                        </md-button>
-                    </div>
-                    <div class="caption">{{item.name}}</div>
-                    <div class="settings-btn">
-                        <md-menu>
-                            <md-button aria-label="Open phone interactions menu" class="md-icon-button"
-                                       ng-click="openGroupSettings($mdOpenMenu, $event)">
-                                <ng-md-icon icon="settings"></ng-md-icon>
-                            </md-button>
-                            <md-menu-content width="4">
-                                <md-menu-item>
-                                    <md-button ng-click="removeGroup(item)" class="g-settings-option-btn">
-                                        <ng-md-icon icon="visibility_off"></ng-md-icon>
-                                        <span>Remove</span>
-                                    </md-button>
-                                </md-menu-item>
-                            </md-menu-content>
-                        </md-menu>
-                    </div>
-                </md-card>
-            </div>
-            <div class="drop-new-group" id="groupsbag">
-                Drop level {{grouping.length + 1}} Group
-            </div>
-        </div>
+	<div>
+		<p class="g-drag-section-title"><span class="g-meta-circle green">G</span>ROUPING AREA
+			<ng-md-icon class="tooltips-sign" icon="info" size="20" style="fill: #777777"><md-tooltip class="tooltip_1" md-direction="top">tooltip text</md-tooltip></ng-md-icon>
+		</p>
+	</div>
+	<div class="g-second-line">
+		<div class="groups-holder">
+			<div class="group-folding-holder" data-ng-if="!isReport">
+				<md-card>
+					<div>
+						<!--<div class="fold-btn-wrap {{folding ? '' : 'disabled'}}">-->
+						<div class="fold-btn-wrap">
+							<md-button class="grouping-fold-btn" aria-label="hide/show grouping" data-ng-click="toggleGroupFold()">
+								<ng-md-icon icon="add"></ng-md-icon>
+							</md-button>
+							<md-tooltip class="tooltip_1" md-direction="top">Expand</md-tooltip>
+						</div>
+						<!--<div class="fold-btn-wrap {{folding ? 'disabled' : ''}}">-->
+						<div class="fold-btn-wrap">
+							<md-button class="grouping-fold-btn" aria-label="hide/show grouping" data-ng-click="toggleGroupFold()">
+								<ng-md-icon icon="remove"></ng-md-icon>
+							</md-button>
+							<md-tooltip class="tooltip_1" md-direction="top">Collapse</md-tooltip>
+						</div>
+					</div>
+				</md-card>
+			</div>
+			<div dragula="'group-bag'" dragula-model="grouping">
+				<md-card data-ng-repeat="item in grouping track by $index" class="group-item card">
+					<div class="sort">
+						<md-button class="group-sort" data-ng-show="item.options.sort === 'ASC'" aria-label="open settings" data-ng-click="sortHandler(item, 'DESC')">
+							<ng-md-icon icon="keyboard_arrow_down"></ng-md-icon>
+						</md-button>
+						<md-button class="group-sort-up" data-ng-show="item.options.sort === 'DESC'" aria-label="open settings" data-ng-click="sortHandler(item, 'ASC')">
+							<ng-md-icon icon="keyboard_arrow_up"></ng-md-icon>
+						</md-button>
+						<md-button class="group-sort group-both-sorted" data-ng-show="!item.options.sort" aria-label="open settings" data-ng-click="sortHandler(item, 'DESC')">
+							<ng-md-icon class="c-up" icon="keyboard_arrow_up"></ng-md-icon>
+							<ng-md-icon class="c-down"  icon="keyboard_arrow_down"></ng-md-icon>
+						</md-button>
+					</div>
+					<div class="caption">{{item.name}}</div>
+					<div class="settings-btn">
+						<md-menu data-ng-if="isReport">
+							<md-button aria-label="Open phone interactions menu" class="md-icon-button"
+									   ng-click="openGroupSettings($mdOpenMenu, $event)">
+								<ng-md-icon icon="settings"></ng-md-icon>
+							</md-button>
+							<md-menu-content width="4">
+								<md-menu-item>
+									<md-button ng-click="removeGroup(item)" class="g-settings-option-btn">
+										<ng-md-icon icon="visibility_off"></ng-md-icon>
+										<span>Remove</span>
+									</md-button>
+								</md-menu-item>
+								<md-menu-item data-ng-if="isReportGroupHaveExtSettings(item, $index, 'line')">
+									<md-button md-prevent-menu-close="md-prevent-menu-close" ng-click="reportSetSubtotalType(item, 'line', $index)" class="g-settings-option-btn">
+										<ng-md-icon icon="done" data-ng-show="item.report_settings.subtotal_type == 'line'"></ng-md-icon>
+										<ng-md-icon icon="done" style="visibility: hidden;" data-ng-show="item.report_settings.subtotal_type != 'line'"></ng-md-icon>
+										<span>Line subtotal</span>
+									</md-button>
+								</md-menu-item>
+								<md-menu-item data-ng-if="isReportGroupHaveExtSettings(item, $index, 'area')">
+									<md-button md-prevent-menu-close="md-prevent-menu-close" ng-click="reportSetSubtotalType(item, 'area', $index)" class="g-settings-option-btn">
+										<ng-md-icon icon="done" data-ng-show="item.report_settings.subtotal_type == 'area'"></ng-md-icon>
+										<ng-md-icon icon="done" style="visibility: hidden;" data-ng-show="item.report_settings.subtotal_type != 'area'"></ng-md-icon>
+										<span>Area subtotal</span>
+									</md-button>
+								</md-menu-item>
+							</md-menu-content>
+						</md-menu>
+						<md-menu data-ng-if="!isReport">
+							<md-button aria-label="Open phone interactions menu" class="md-icon-button"
+									   ng-click="openGroupSettings($mdOpenMenu, $event)">
+								<ng-md-icon icon="settings"></ng-md-icon>
+							</md-button>
+							<md-menu-content width="4">
+								<md-menu-item>
+									<md-button ng-click="removeGroup(item)" class="g-settings-option-btn">
+										<ng-md-icon icon="visibility_off"></ng-md-icon>
+										<span>Remove</span>
+									</md-button>
+								</md-menu-item>
+							</md-menu-content>
+						</md-menu>
+					</div>
+				</md-card>
+			</div>
+			<div class="drop-new-group" id="groupsbag">
+				<!-- Drop level {{grouping.length + 1}} Group -->
+				Drop New Grouping Level
+			</div>
+		</div>
 
-        <md-button class="md-fab g-settings-btn" data-ng-click="openModalSettings($event)">
-            <ng-md-icon icon="view_week"></ng-md-icon>
-        </md-button>
-    </div>
+		<md-button class="md-fab g-settings-btn" aria-label="drag modal" data-ng-click="openModalSettings($event)">
+			<ng-md-icon icon="view_week"></ng-md-icon>
+		</md-button>
+	</div>
 </div>

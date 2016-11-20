@@ -1,0 +1,69 @@
+/**
+ * Created by szhitenev on 12.09.2016.
+ */
+(function () {
+
+    var metaContentTypesRepository = require('../repositories/metaContentTypesRepository');
+
+    var getListForTags = function (entity) {
+        return metaContentTypesRepository.getListForTags(entity);
+    };
+
+    var getListForUi = function () {
+        return metaContentTypesRepository.getListForUi();
+    };
+
+    var findContentTypeByEntity = function (entity, type) {
+
+        var contentTypes;
+        if (type == 'tag') {
+            contentTypes = getListForTags();
+        } else {
+            if (type == 'ui') {
+                contentTypes = getListForUi();
+            }
+        }
+
+        var contentType = null;
+
+        contentTypes.forEach(function (item) {
+            if (item.entity == entity) {
+                contentType = item.key
+            }
+        });
+
+        return contentType;
+    };
+
+    var getListForTransactionTypeInputs = function () {
+        return metaContentTypesRepository.getListForTransactionTypeInputs();
+    };
+
+    var getContentTypeUIByState = function (state) {
+
+        result = '';
+
+        console.log('state', state);
+
+        if (state.indexOf('app.data') !== -1 || state.indexOf('app.data') !== -1) {
+
+            var result = state.split('.')[2];
+
+        }
+
+        return result;
+
+    };
+
+
+    module.exports = {
+        getListForTags: getListForTags,
+        getListForUi: getListForUi,
+        findContentTypeByEntity: findContentTypeByEntity,
+        getListForTransactionTypeInputs: getListForTransactionTypeInputs,
+
+        getContentTypeUIByState: getContentTypeUIByState
+    }
+
+
+}());
