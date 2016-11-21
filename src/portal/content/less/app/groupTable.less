@@ -1239,20 +1239,13 @@ body.md-dialog-is-showing {
     height: 24px;
     box-sizing: border-box;
     border: none !important;
-    box-shadow: 1px 0 0 0 #363636,
-    0 1px 0 0 #363636,
-    1px 1px 0 0 #363636,
-    1px 0 0 0 #363636 inset,
-    0 1px 0 0 #363636 inset;
+    box-shadow: -1px 0 0 0 #363636 inset, 0 1px 0 0 #363636 inset, -1px 1px 0 0 #363636, -1px 0 0 0 #363636 inset, 0 1px 0 0 #363636 inset;
   }
   .g-row .g-row-selection {
-    box-shadow: 1px 0 0 0 #363636,
-    0 1px 0 0 #363636,
-    1px 1px 0 0 #363636,
-    1px 0 0 0 #363636 inset,
-    0 1px 0 0 #363636 inset;
+    box-shadow: 1px 1px 0 0 #363636 inset, 1px 1px 0 0 #363636 inset, -1px 1px 0 0 #363636 inset, 1px 0 0 0 #363636 inset, 0 1px 0 0 #363636 inset;
     border: none !important;
   }
+
   .g-row.report-preinit-row {
     border-bottom: 0;
     position: relative;
@@ -1408,6 +1401,6 @@ body.md-dialog-is-showing {
   }
   md-input-container {
     min-width: 190px;
-    height:34px;
+    height: 34px;
   }
 }

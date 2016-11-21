@@ -25,7 +25,7 @@
             link: function (scope, elem, attrs) {
 
                 logService.component('groupGrouping', 'initialized');
-                console.log(' scope.grouping',  scope.grouping);
+                console.log(' scope.grouping', scope.grouping);
 
                 scope.sortHandler = function (group, sort) {
                     var i;
@@ -100,7 +100,7 @@
 
                 scope.reportSetSubtotalType = function (group, type, $index) {
 
-                    if (!group.hasOwnProperty('report_settings')) {
+                    if (!group.hasOwnProperty('report_settings') || group.report_settings == undefined) {
                         group.report_settings = {};
                     }
 
@@ -182,10 +182,8 @@
 
                         } else {
                             if (group.hasOwnProperty('key') && scope.columns[$index - initIndex] && scope.columns[$index - initIndex].hasOwnProperty('key')) {
-                                if ($index - initIndex !== 0) {
-                                    if (group.key == scope.columns[$index - initIndex].key) {
-                                        haveAccess = true;
-                                    }
+                                if (group.key == scope.columns[$index - initIndex].key) {
+                                    haveAccess = true;
                                 }
                             }
 
@@ -210,10 +208,6 @@
                             callback: scope.externalCallback,
                             parentScope: scope
                         }
-                    }).then(function (answer) {
-                        scope.status = 'You said the information was "' + answer + '".';
-                    }, function () {
-                        scope.status = 'You cancelled the dialog.';
                     });
                 }
             }

@@ -48,6 +48,7 @@
 
         vm.currentLocation = function () {
             vm.currentLocationShowBtns = true;
+
             switch ($state.current.name) {
                 case 'app.data.portfolio':
                     return "PORTFOLIO";
@@ -91,6 +92,9 @@
                 case 'app.data.pricing-policy':
                     return "PRICING POLICY";
                     break;
+                case 'app.data.transaction-type':
+                    return "TRANSACTION TYPE";
+                    break;
                 case 'app.data.currency':
                     return "CURRENCY";
                     break;
@@ -109,7 +113,6 @@
                     return "";
                     break;
             }
-
         };
 
 
