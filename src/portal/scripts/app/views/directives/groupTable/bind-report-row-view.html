@@ -57,7 +57,7 @@
                 {{resolveReportCellBackground('header', item, column, $index)}}
                 {{resolveReportCellBorder('header', item, column, $index)}}"
                      data-ng-if="checkReportColumnCaption(item.cellsCaptions, column, $index)">
-                    <!--{{item.cellsCaptions[$index]}}-->
+                    <!--{{item.cellsCaptions[$index]['comparePattern']}}-->
                     {{bindGroupValue(item.cellsCaptions[$index])}}
                 </div>
 

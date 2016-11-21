@@ -283,68 +283,25 @@
     var setGroupsWithColumns = function (items, groups, columns, entityType) {
 
         var preInitGroups = [];
+        var initLineGroup = [];
         var bootsGroup = [];
         var linesGroup = [];
 
+
+        var initLineIndex = null;
         var bootsGroupIndex = null;
 
-        function findBootsGroup() {
+        var groupsInUse = [];
 
-            var matchedIndex = 0;
-            var offset = 0;
-
-            groups.forEach(function (group, $groupIndex) {
-
-                if ($groupIndex > 0 && bootsGroup.length == 0) {
-                    offset = offset + 1;
-                }
-
-                columns.forEach(function (column, $columnIndex) {
-
-                    if ($columnIndex + offset == $groupIndex) {
-
-                        if ($columnIndex - matchedIndex == 0) {
-
-                            if (group.hasOwnProperty('id') && column.hasOwnProperty('id')) {
-                                if (group.id == column.id) {
-                                    if (bootsGroupIndex == null) {
-                                        bootsGroupIndex = $groupIndex;
-                                    }
-
-                                    matchedIndex = matchedIndex + 1;
-
-                                    bootsGroup.push(group);
-                                }
-                            } else {
-                                if (group.hasOwnProperty('key') && column.hasOwnProperty('key')) {
-                                    if (group.key == column.key) {
-                                        if (bootsGroupIndex == null) {
-                                            bootsGroupIndex = $groupIndex;
-                                        }
-                                        matchedIndex = matchedIndex + 1;
-
-
-                                        bootsGroup.push(group);
-                                    }
-                                }
-                            }
-                        }
-
-                    }
-
-                });
-
-            });
-
-
-        }
+        //console.log('groups', groups);
+        //console.log('columns', columns);
 
         function findPreInitGroup() {
             groups.forEach(function (group, $groupIndex) {
                 columns.forEach(function (column, $columnIndex) {
-
-                        if ($groupIndex == $columnIndex) {
-                            if ($groupIndex < bootsGroupIndex) {
+                    if (initLineGroup.length) {
+                        if ($groupIndex < initLineIndex) {
+                            if ($groupIndex == $columnIndex) {
                                 if (group.hasOwnProperty('id') && column.hasOwnProperty('id')) {
                                     if (group.id !== column.id) {
                                         preInitGroups.push(group);
@@ -360,17 +317,83 @@
                                 }
                             }
                         }
-
+                    } else {
+                        // nice copypaste
+                        if ($groupIndex == $columnIndex) {
+                            if (group.hasOwnProperty('id') && column.hasOwnProperty('id')) {
+                                if (group.id !== column.id) {
+                                    preInitGroups.push(group);
+                                }
+                            } else {
+                                if (group.hasOwnProperty('key') && column.hasOwnProperty('key')) {
+                                    if (group.key !== column.key) {
+                                        preInitGroups.push(group);
+                                    }
+                                } else {
+                                    preInitGroups.push(group);
+                                }
+                            }
+                        }
                     }
-                )
+
+                })
+            });
+        }
+
+        function findInitLineGroup() {
+            groups.forEach(function (group, $groupIndex) {
+                columns.forEach(function (column, $columnIndex) {
+                    if (!initLineGroup.length) {
+                        if (group.hasOwnProperty('id') && column.hasOwnProperty('id')) {
+                            if (group.id == column.id) {
+                                initLineGroup.push(group);
+                                initLineIndex = $groupIndex;
+                            }
+                        } else {
+                            if (group.hasOwnProperty('key') && column.hasOwnProperty('key')) {
+                                if (group.key == column.key) {
+                                    initLineGroup.push(group);
+                                    initLineIndex = $groupIndex;
+                                }
+                            }
+                        }
+                    }
+
+                })
+            });
+        }
+
+        function findBootsGroup() {
+            groups.forEach(function (group, $groupIndex) {
+                columns.forEach(function (column, $columnIndex) {
+
+                    if ($groupIndex > initLineIndex) {
+                        if ($groupIndex - initLineIndex == $columnIndex) {
+                            if (group.hasOwnProperty('id') && column.hasOwnProperty('id')) {
+                                if (group.id == column.id) {
+                                    bootsGroupIndex = $groupIndex;
+                                    bootsGroup.push(group);
+                                }
+                            } else {
+                                if (group.hasOwnProperty('key') && column.hasOwnProperty('key')) {
+                                    if (group.key == column.key) {
+                                        bootsGroupIndex = $groupIndex;
+                                        bootsGroup.push(group);
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                })
             });
         }
 
         function findLinesGroup() {
             groups.forEach(function (group, $groupIndex) {
                 columns.forEach(function (column, $columnIndex) {
-                    if (bootsGroupIndex !== null) {
-                        if ($groupIndex > bootsGroupIndex + bootsGroup.length - 1) {
+                    if (bootsGroupIndex) {
+                        if ($groupIndex > bootsGroupIndex) {
                             if (group.hasOwnProperty('id')) {
                                 if (!isAdded(group, linesGroup, 'id')) {
                                     linesGroup.push(group);
@@ -387,36 +410,59 @@
             });
         }
 
+        if(groups.length) {
 
-        if (groups.length) {
-
-            findBootsGroup();
+            findInitLineGroup();
             findPreInitGroup();
+            findBootsGroup();
             findLinesGroup();
 
-            console.log('preInitGroups', preInitGroups);
-            console.log('bootsGroup', bootsGroup);
-            console.log('linesGroup', linesGroup);
+
+            //console.log('preInitGroups', preInitGroups);
+            //console.log('initLineGroup', initLineGroup);
+            //console.log('bootsGroup', bootsGroup);
+            //console.log('linesGroup', linesGroup);
 
 
+            var results = setGroups(items, preInitGroups, entityType);
 
+            //console.log('123', results);
 
-            var results;
-            if (preInitGroups.length) {
-
-                results = setGroups(items, preInitGroups, entityType);
-
-                //console.log('123', results);
+            if (results[0].items && results[0].items.length) {
 
                 results.forEach(function (preInitGroupsItem) {
 
-                    preInitGroupsItem.bootGroup = setGroups(preInitGroupsItem.items, bootsGroup, entityType);
+                    preInitGroupsItem.initGroup = setGroups(preInitGroupsItem.items, initLineGroup, entityType);
 
-                    console.log('preInitGroupsItem.bootGroup', preInitGroupsItem.bootGroup);
+                    if (preInitGroupsItem.initGroup && preInitGroupsItem.initGroup[0].hasOwnProperty('items')) {
 
-                    if (preInitGroupsItem.bootGroup && preInitGroupsItem.bootGroup[0].hasOwnProperty('items')) {
+                        preInitGroupsItem.initGroup.forEach(function (initGroupItem) {
 
-                        preInitGroupsItem.bootGroup.forEach(function (bootGroupItem) {
+                            initGroupItem.bootGroup = setGroups(initGroupItem.items, bootsGroup, entityType);
+
+                            if (initGroupItem.bootGroup && initGroupItem.bootGroup[0].hasOwnProperty('items')) {
+
+                                initGroupItem.bootGroup.forEach(function (bootGroupItem) {
+
+                                    bootGroupItem.lineGroup = setGroups(bootGroupItem.items, linesGroup, entityType);
+                                })
+                            }
+
+                        })
+                    }
+
+                });
+            } else {
+                preInitGroups = [];
+                results = setGroups(items, initLineGroup, entityType);
+
+                results.forEach(function (initGroupItem) {
+
+                    initGroupItem.bootGroup = setGroups(initGroupItem.items, bootsGroup, entityType);
+
+                    if (initGroupItem.bootGroup && initGroupItem.bootGroup[0].hasOwnProperty('items')) {
+
+                        initGroupItem.bootGroup.forEach(function (bootGroupItem) {
 
                             bootGroupItem.lineGroup = setGroups(bootGroupItem.items, linesGroup, entityType);
                         })
@@ -424,19 +470,10 @@
 
                 });
 
-            } else {
-
-                results = setGroups(items, bootsGroup, entityType);
-
-                results.forEach(function (bootGroupItem) {
-
-                    bootGroupItem.lineGroup = setGroups(bootGroupItem.items, linesGroup, entityType);
-
-                });
-
             }
 
-            console.log('results', results);
+
+            //console.log('results', results);
 
             return results;
 
