@@ -14,6 +14,10 @@
     }
 
     function findSubTotals(bootGroupItem, $bootGroupIndex) {
+
+
+        //console.log('bootGroupItem', bootGroupItem);
+
         var g;
 
         var subTotalRows = {area: [], line: []};
@@ -66,8 +70,8 @@
 
                 var isRootBootGroup = false;
 
-                if ($bootGroupIndex == 0) {
-                    isRootBootGroup = true;
+                if ($bootGroupIndex == 0 && currentIndex == 0) {
+                    //isRootBootGroup = true;
                 }
 
 
@@ -138,399 +142,188 @@
         return subTotalRows;
     }
 
-    var transformItems = function (items) {
+    function findCellCaptions(item, level, type, reportSettingsType) {
 
-        var result = [];
+        var rowType = type || 'normal';
 
+        var cellCaptions = [];
+        var i;
+        var cellObj;
 
-        if (items[0].hasOwnProperty('bootGroup')) {
+        if (rowType == 'subtotal') {
 
-            var bootGroupResultRooted = [];
+            if (reportSettingsType == 'area') {
 
-            items.forEach(function (preInitGroupItem) {
+                for (i = 1; i <= level; i = i + 1) {
 
-                var options = {
-                    type: 'preinit',
-                    cellsCaptions: [],
-                    value: preInitGroupItem.groups
-                };
+                    cellObj = {
+                        value: '',
+                        type: item.groups[0].report_settings.subtotal_type,
+                        level: i
+                    };
 
-                result.push(new Row(options));
 
-                if (preInitGroupItem.hasOwnProperty('bootGroup') && preInitGroupItem.hasOwnProperty('bootGroup')) {
-
-
-                    if (preInitGroupItem.bootGroup[0].hasOwnProperty('groups')) {
-
-                        var bootGroupResult = [];
-                        var bootGroupResultRooted = [];
-
-                        preInitGroupItem.bootGroup.forEach(function (bootGroupItem, $bootGroupIndex) {
-
-                            var localBootGroupResult = [];
-                            var subTotalRows;
-                            bootGroupResultRooted = [];
-
-                            if (bootGroupItem.hasOwnProperty('lineGroup') && bootGroupItem.lineGroup.length) {
-
-                                if (bootGroupItem.lineGroup[0].hasOwnProperty('groups')) {
-
-                                    bootGroupItem.lineGroup.forEach(function (lineGroupItem, $lineGroupIndex) {
-
-                                        //console.log('lineGroupItem.items', lineGroupItem.items);
-
-                                        var cellCaptions = [];
-
-                                        bootGroupItem.groups.forEach(function (groupItem, $index) {
-
-                                            var groupObject = {value: ''};
-
-                                            //if ($index == 0 && $lineGroupIndex == 0) {
-                                            //    groupObject = groupItem;
-                                            //}
-
-                                            if (groupItem.hasOwnProperty('report_settings')) {
-                                                groupObject.level = $index;
-                                                groupObject.type = groupItem.report_settings.subtotal_type;
-                                            }
-
-                                            cellCaptions.push(groupObject);
-                                        });
-
-                                        var options = {
-                                            type: 'breadcrumbs',
-                                            cellsCaptions: cellCaptions,
-                                            value: lineGroupItem.groups
-                                        };
-
-                                        bootGroupResult.push(new Row(options));
-
-                                        lineGroupItem.items.forEach(function (item, $index) {
-
-                                            var itemCellCaptions = [];
-                                            bootGroupItem.groups.forEach(function (groupItem, $index) {
-
-                                                var groupObject = {value: ''};
-
-                                                if (groupItem.hasOwnProperty('report_settings')) {
-                                                    groupObject.level = $index;
-                                                    groupObject.type = groupItem.report_settings.subtotal_type;
-                                                }
-
-                                                itemCellCaptions.push(groupObject);
-                                            });
-
-                                            options = {
-                                                type: 'normal',
-                                                cellsCaptions: itemCellCaptions,
-                                                value: item
-                                            };
-
-                                            bootGroupResult.push(new Row(options));
-
-
-                                        });
-
-                                    });
-
-                                    subTotalRows = findSubTotals(bootGroupItem, $bootGroupIndex);
-
-                                    localBootGroupResult = localBootGroupResult.concat(subTotalRows.area);
-                                    localBootGroupResult = subTotalRows.line.concat(localBootGroupResult);
-
-                                    bootGroupResult = bootGroupResult.concat(localBootGroupResult);
-
-                                    bootGroupResult.forEach(function (bootGroupResultItem) {
-
-                                        if (bootGroupResultItem.hasOwnProperty('isRootBootGroup')
-                                            && bootGroupResultItem.isRootBootGroup == true
-                                            && bootGroupResultItem.type == 'subtotal-line') {
-                                            bootGroupResultRooted.unshift(bootGroupResultItem);
-                                        } else {
-                                            bootGroupResultRooted.push(bootGroupResultItem);
-                                        }
-
-                                    });
-
-                                } else {
-
-
-                                    bootGroupItem.items.forEach(function (item, $index) {
-
-                                        var options = {};
-                                        if ($index == 0) {
-
-                                            var cellCaptionsGroups = [];
-
-                                            bootGroupItem.groups.forEach(function (groupItem, $index) {
-
-                                                //console.log('groupItem', groupItem);
-
-                                                var groupObject = JSON.parse(JSON.stringify(groupItem));
-
-                                                if (groupItem && groupItem.hasOwnProperty('report_settings')) {
-                                                    groupObject.level = $index;
-                                                    groupObject.type = groupItem.report_settings.subtotal_type;
-                                                }
-
-                                                cellCaptionsGroups.push(groupObject);
-                                            });
-
-                                            //if ($bootGroupIndex !== 0) {
-                                            //    cellCaptionsGroups[0] = {value: ''};
-                                            //}
-
-
-                                            options = {
-                                                type: 'header',
-                                                cellsCaptions: cellCaptionsGroups,
-                                                value: item
-                                            };
-                                        } else {
-
-                                            var cellCaptions = [];
-
-                                            bootGroupItem.groups.forEach(function (groupItem, $index) {
-
-                                                //console.log('groupItem', groupItem);
-
-                                                var groupObject = {value: ''};
-
-                                                if (groupItem && groupItem.hasOwnProperty('report_settings')) {
-                                                    groupObject.level = $index;
-                                                    groupObject.type = groupItem.report_settings.subtotal_type;
-                                                }
-
-                                                cellCaptions.push(groupObject);
-                                            });
-
-                                            options = {
-                                                type: 'normal',
-                                                cellsCaptions: cellCaptions,
-                                                value: item
-                                            };
-                                        }
-
-                                        localBootGroupResult.push(new Row(options));
-
-                                    });
-
-                                    subTotalRows = findSubTotals(bootGroupItem, $bootGroupIndex);
-
-                                    localBootGroupResult = localBootGroupResult.concat(subTotalRows.area);
-                                    localBootGroupResult = subTotalRows.line.concat(localBootGroupResult);
-
-                                    bootGroupResult = bootGroupResult.concat(localBootGroupResult);
-
-                                    bootGroupResult.forEach(function (bootGroupResultItem) {
-
-                                        if (bootGroupResultItem.hasOwnProperty('isRootBootGroup')
-                                            && bootGroupResultItem.isRootBootGroup == true
-                                            && bootGroupResultItem.type == 'subtotal-line') {
-                                            bootGroupResultRooted.unshift(bootGroupResultItem);
-                                        } else {
-                                            bootGroupResultRooted.push(bootGroupResultItem);
-                                        }
-
-                                    });
-
-                                    //console.log('bootGroupResultRooted', bootGroupResultRooted);
-
-                                }
-                                //result = result.concat(bootGroupResultRooted);
-
-                            }
-                        });
-
-                        result = result.concat(bootGroupResultRooted);
+                    if (i == level) {
+                        cellObj.value = 'Subtotal';
+                        cellObj.level = level;
                     }
 
-                }
-            });
 
-
-        } else {
-
-            var bootGroupResultRooted = [];
-
-            items.forEach(function (bootGroupItem, $bootGroupIndex) {
-
-                var localBootGroupResult = [];
-                var subTotalRows;
-                var bootGroupResult = [];
-
-                if (bootGroupItem.hasOwnProperty('lineGroup') && bootGroupItem.lineGroup.length) {
-
-                    if (bootGroupItem.lineGroup[0].hasOwnProperty('groups')) {
-
-                        bootGroupItem.lineGroup.forEach(function (lineGroupItem, $lineGroupIndex) {
-
-                            //console.log('lineGroupItem.items', lineGroupItem.items);
-
-                            var cellCaptions = [];
-
-                            bootGroupItem.groups.forEach(function (groupItem, $index) {
-
-                                var groupObject = {value: ''};
-
-                                if ($index == 0 && $lineGroupIndex == 0) {
-                                    groupObject = groupItem;
-                                }
-
-                                //console.log('groupItem', groupItem);
-
-                                if (groupItem && groupItem.hasOwnProperty('report_settings')) {
-                                    groupObject.level = $index;
-                                    groupObject.type = groupItem.report_settings.subtotal_type;
-                                }
-
-                                cellCaptions.push(groupObject);
-                            });
-
-                            var options = {
-                                type: 'breadcrumbs',
-                                cellsCaptions: cellCaptions,
-                                value: lineGroupItem.groups
-                            };
-
-                            bootGroupResult.push(new Row(options));
-
-                            lineGroupItem.items.forEach(function (item, $index) {
-
-                                var itemCellCaptions = [];
-                                bootGroupItem.groups.forEach(function (groupItem, $index) {
-
-                                    var groupObject = {value: ''};
-
-                                    if (groupItem && groupItem.hasOwnProperty('report_settings')) {
-                                        groupObject.level = $index;
-                                        groupObject.type = groupItem.report_settings.subtotal_type;
-                                    }
-
-                                    itemCellCaptions.push(groupObject);
-                                });
-
-                                options = {
-                                    type: 'normal',
-                                    cellsCaptions: itemCellCaptions,
-                                    value: item
-                                };
-
-                                bootGroupResult.push(new Row(options));
-
-                            });
-
-                        });
-
-                        subTotalRows = findSubTotals(bootGroupItem, $bootGroupIndex);
-
-                        //console.log('subTotalRows', subTotalRows);
-
-                        localBootGroupResult = localBootGroupResult.concat(subTotalRows.area);
-                        localBootGroupResult = subTotalRows.line.concat(localBootGroupResult);
-
-                        bootGroupResult = bootGroupResult.concat(localBootGroupResult);
-
-                        bootGroupResult.forEach(function (bootGroupResultItem) {
-
-                            if (bootGroupResultItem.hasOwnProperty('isRootBootGroup')
-                                && bootGroupResultItem.isRootBootGroup == true
-                                && bootGroupResultItem.type == 'subtotal-line') {
-                                bootGroupResultRooted.unshift(bootGroupResultItem);
-                            } else {
-                                bootGroupResultRooted.push(bootGroupResultItem);
-                            }
-
-                        });
-
-                    } else {
-
-                        bootGroupItem.items.forEach(function (item, $index) {
-
-                            var options = {};
-                            if ($index == 0) {
-
-                                var cellCaptionsGroups = [];
-
-                                bootGroupItem.groups.forEach(function (groupItem, $groupIndex) {
-
-                                    //console.log('groupItem', groupItem);
-
-                                    var groupObject = JSON.parse(JSON.stringify(groupItem));
-
-                                    if (groupItem && groupItem.hasOwnProperty('report_settings')) {
-                                        groupObject.level = $groupIndex;
-                                        groupObject.type = groupItem.report_settings.subtotal_type;
-                                    }
-
-                                    cellCaptionsGroups.push(groupObject);
-                                });
-
-                                options = {
-                                    type: 'header',
-                                    cellsCaptions: cellCaptionsGroups,
-                                    value: item
-                                };
-                            } else {
-
-                                var cellCaptions = [];
-
-                                bootGroupItem.groups.forEach(function (groupItem, $groupIndex) {
-
-                                    var groupObject = JSON.parse(JSON.stringify(groupItem));
-
-                                    if (groupItem && groupItem.hasOwnProperty('report_settings')) {
-                                        groupObject.level = $groupIndex;
-                                        groupObject.type = groupItem.report_settings.subtotal_type;
-                                    }
-
-                                    cellCaptions.push(groupObject);
-                                });
-
-                                options = {
-                                    type: 'normal',
-                                    cellsCaptions: cellCaptions,
-                                    value: item
-                                };
-                            }
-
-                            localBootGroupResult.push(new Row(options));
-
-                        });
-
-                        subTotalRows = findSubTotals(bootGroupItem, $bootGroupIndex);
-
-                        //console.log('subTotalRows', subTotalRows);
-
-                        localBootGroupResult = localBootGroupResult.concat(subTotalRows.area);
-                        localBootGroupResult = subTotalRows.line.concat(localBootGroupResult);
-
-                        bootGroupResult = bootGroupResult.concat(localBootGroupResult);
-
-                        bootGroupResult.forEach(function (bootGroupResultItem) {
-
-                            if (bootGroupResultItem.hasOwnProperty('isRootBootGroup')
-                                && bootGroupResultItem.isRootBootGroup == true
-                                && bootGroupResultItem.type == 'subtotal-line') {
-                                bootGroupResultRooted.unshift(bootGroupResultItem);
-                            } else {
-                                bootGroupResultRooted.push(bootGroupResultItem);
-                            }
-
-                        });
-
-                    }
+                    cellCaptions.push(cellObj);
 
                 }
 
-            });
+            } else {
 
-            result = result.concat(bootGroupResultRooted);
+                level = level - 1;
+
+                console.log('level1231312321', level);
+                if (level > 0) {
+                    for (i = 0; i <= level; i = i + 1) {
+
+                        cellObj = {
+                            value: '',
+                            type: item.groups[0].report_settings.subtotal_type
+                        };
+
+                        if (i == level) {
+                            cellObj.level = level + 1;
+                        }
+
+                        cellCaptions.push(cellObj);
+
+                    }
+                }
+            }
+
         }
 
-        //console.log('result transformed', result);
+        if (rowType == 'normal') {
+            for (i = 1; i <= level; i = i + 1) {
 
-        return result;
+                cellObj = {
+                    value: '',
+                    type: item.groups[0].report_settings.subtotal_type,
+                    level: i
+                };
+
+
+                if (i == level) {
+                    cellObj.level = level;
+                }
+
+
+                cellCaptions.push(cellObj);
+
+            }
+        }
+
+        return cellCaptions;
+
+    }
+
+    function findItemRecursive(items, level, resultItems) {
+
+        //console.log('items', items);
+
+        items.forEach(function (item) {
+
+            var cellCaptions, obj;
+
+            if (!item.hasOwnProperty('boot_level_' + level)) {
+                if (level == 0) {
+                    level = level + 1;
+                }
+            }
+
+            if (item.groups[0].report_settings.subtotal_type == 'line' && level !== 0) {
+
+                cellCaptions = findCellCaptions(item, level, 'subtotal', 'line');
+
+                obj = {
+                    cellsCaptions: cellCaptions,
+                    value: item.subTotal,
+                    type: 'subtotal-line',
+                    value_options: {
+                        type: item.groups[0].report_settings.subtotal_type,
+                        level: level
+                    }
+                };
+
+                resultItems.push(new Row(obj));
+            }
+
+            if (level == 0) {
+                cellCaptions = findCellCaptions(item, level);
+
+                obj = {
+                    cellsCaptions: cellCaptions,
+                    value: item.groups,
+                    type: 'preinit',
+                    value_options: {
+                        level: level
+                    }
+                };
+
+                resultItems.push(new Row(obj));
+            }
+
+            if (item.hasOwnProperty('boot_level_' + level)) {
+
+                findItemRecursive(item['boot_level_' + level], level + 1, resultItems);
+
+            } else {
+
+                //console.log('item', item);
+
+                item.items.forEach(function (rowItem) {
+
+                    var cellCaptions = findCellCaptions(item, level);
+
+                    var obj = {
+                        cellsCaptions: cellCaptions,
+                        value: rowItem,
+                        value_options: {
+                            level: level
+                        }
+                    };
+
+                    resultItems.push(new Row(obj));
+
+                });
+            }
+
+            if (item.groups[0].report_settings.subtotal_type == 'area' && level !== 0) {
+
+                cellCaptions = findCellCaptions(item, level, 'subtotal', 'area');
+
+                obj = {
+                    cellsCaptions: cellCaptions,
+                    value: item.subTotal,
+                    type: 'subtotal',
+                    value_options: {
+                        type: item.groups[0].report_settings.subtotal_type,
+                        level: level
+                    }
+                };
+
+                resultItems.push(new Row(obj));
+            }
+
+        })
+
+    }
+
+    var transformItems = function (items) {
+
+        var level = 0;
+        var resultItems = [];
+
+        findItemRecursive(items, level, resultItems);
+
+        console.log('result transformed', resultItems);
+
+        return resultItems;
     };
 
     module.exports = {
