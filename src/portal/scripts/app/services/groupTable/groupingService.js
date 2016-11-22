@@ -238,6 +238,81 @@
         return (x | 0) === x;
     }
 
+
+    // deprecated start
+    function setProperty(path, obj, value) {
+        var schema = obj;
+        var pList = path.split('.');
+        var len = pList.length;
+        for (var i = 0; i < len - 1; i++) {
+            var elem = pList[i];
+            if (!schema[elem]) schema[elem] = {};
+            schema = schema[elem];
+        }
+
+        schema[pList[len - 1]] = value;
+    }
+
+    function getProperty(object, path) {
+        var o = object;
+        path = path.replace(/\[(\w+)\]/g, '.$1');
+        path = path.replace(/^\./, '');
+        var a = path.split('.');
+        while (a.length) {
+            var n = a.shift();
+            if (n in o) {
+                o = o[n];
+            } else {
+                return;
+            }
+        }
+        return o;
+    }
+    // deprecated end
+
+
+    function recursiveFillGrops(items, bootsGroup, entityType) {
+
+        var level = 0;
+        var results = [];
+
+        function recursiveWalker(items, bootsGroup, entityType, level) {
+
+            if (bootsGroup[level]) {
+
+                if (!results.length) {
+
+                    var tempResults = setGroups(items, [bootsGroup[level]], entityType);
+
+                    tempResults.forEach(function (item) {
+
+                        results.push(item);
+                    });
+
+                    recursiveWalker(results, bootsGroup, entityType, level + 1)
+
+                } else {
+
+                    items.forEach(function (resultItem) {
+
+                        resultItem['boot_level_' + level] = setGroups(resultItem.items, [bootsGroup[level]], entityType);
+
+                        recursiveWalker(resultItem['boot_level_' + level], bootsGroup, entityType, level + 1)
+
+                    });
+                }
+
+            }
+
+        }
+
+        recursiveWalker(items, bootsGroup, entityType, level);
+
+        console.log('results', results);
+
+        return results;
+    }
+
     function calcColumnSubTotal(group) {
 
         var calculatedColumns = {};
@@ -285,6 +360,8 @@
         var preInitGroups = [];
         var bootsGroup = [];
         var linesGroup = [];
+
+        var results = [];
 
         var bootsGroupIndex = null;
 
@@ -398,42 +475,19 @@
             console.log('bootsGroup', bootsGroup);
             console.log('linesGroup', linesGroup);
 
-
-
-
-            var results;
             if (preInitGroups.length) {
 
                 results = setGroups(items, preInitGroups, entityType);
 
-                //console.log('123', results);
-
                 results.forEach(function (preInitGroupsItem) {
 
-                    preInitGroupsItem.bootGroup = setGroups(preInitGroupsItem.items, bootsGroup, entityType);
-
-                    console.log('preInitGroupsItem.bootGroup', preInitGroupsItem.bootGroup);
-
-                    if (preInitGroupsItem.bootGroup && preInitGroupsItem.bootGroup[0].hasOwnProperty('items')) {
-
-                        preInitGroupsItem.bootGroup.forEach(function (bootGroupItem) {
-
-                            bootGroupItem.lineGroup = setGroups(bootGroupItem.items, linesGroup, entityType);
-                        })
-                    }
+                    preInitGroupsItem["boot_level_0"] = recursiveFillGrops(preInitGroupsItem.items, bootsGroup, entityType, {boot: true, breadcrumbs: true});
 
                 });
 
             } else {
 
-                results = setGroups(items, bootsGroup, entityType);
-
-                results.forEach(function (bootGroupItem) {
-
-                    bootGroupItem.lineGroup = setGroups(bootGroupItem.items, linesGroup, entityType);
-
-                });
-
+                results = recursiveFillGrops(items, bootsGroup, entityType, {boot: true, breadcrumbs: true});
             }
 
             console.log('results', results);
