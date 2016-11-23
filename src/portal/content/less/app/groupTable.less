@@ -133,6 +133,8 @@
         position: relative;
         top: -3px;
       }
+
+
     }
     .g-cell {
       // position: relative;
@@ -1234,6 +1236,7 @@ body.md-dialog-is-showing {
   }
   .g-row {
     border: none !important;
+    box-shadow: -1px 0 0 0 #363636 inset, 0 1px 0 0 #363636 inset, -1px 1px 0 0 #363636, -1px 0 0 0 #363636 inset, 0 1px 0 0 #363636 inset;
   }
   .g-row .g-cell {
     height: 24px;
@@ -1246,10 +1249,16 @@ body.md-dialog-is-showing {
     border: none !important;
   }
 
+  .g-cell.g-cell-group {
+    box-shadow: -1px 0 0 0 #363636 inset, 0 1px 0 0 #363636 inset, -1px 1px 0 0 #363636, -1px 0 0 0 #363636 inset, 0 1px 0 0 #363636 inset;
+  }
+
   .g-row.report-preinit-row {
     border-bottom: 0;
     position: relative;
     z-index: 1;
+
+    box-shadow: -1px 0 0 0 #363636 inset, 0 1px 0 0 #363636 inset, -1px 1px 0 0 #363636, -1px 0 0 0 #363636 inset, 0 1px 0 0 #363636 inset;
 
     .g-group {
       height: 24px;
