@@ -13,136 +13,10 @@
         this.value_options = options.value_options || {};
     }
 
-    function findSubTotals(bootGroupItem, $bootGroupIndex) {
-
-
-        //console.log('bootGroupItem', bootGroupItem);
-
-        var g;
-
-        var subTotalRows = {area: [], line: []};
-
-        var groupsLength = bootGroupItem.groups.length - 1;
-        var currentIndex = 0;
-
-        for (g = groupsLength; g >= 0; g = g - 1) {
-
-            var cellCaptions = [];
-            var options;
-            currentIndex = currentIndex + 1;
-
-
-            for (var i = 0; i < bootGroupItem.groups.length; i = i + 1) {
-
-                var groupItem = bootGroupItem.groups[i];
-
-                var groupObject = JSON.parse(JSON.stringify(groupItem));
-
-                if (groupItem.hasOwnProperty('report_settings')) {
-                    groupObject.level = i;
-                    groupObject.type = groupItem.report_settings.subtotal_type;
-                }
-
-                groupObject.value = '';
-
-                cellCaptions.push(groupObject);
-            }
-
-            if (bootGroupItem.groups[g].hasOwnProperty('report_settings') && bootGroupItem.groups[g].report_settings.subtotal_type == 'area') {
-
-                cellCaptions[g] = {
-                    value: 'Subtotal',
-                    type: bootGroupItem.groups[g].report_settings.subtotal_type,
-                    level: g
-                };
-
-                cellCaptions.forEach(function (cellCaption, $index) {
-
-                    //console.log('cellCaption', cellCaption);
-
-
-                    if (cellCaption.level >= g || $index >= g) {
-                        cellCaption.type = bootGroupItem.groups[g].report_settings.subtotal_type;
-                        cellCaption.level = g;
-                    }
-
-                });
-
-                var isRootBootGroup = false;
-
-                if ($bootGroupIndex == 0 && currentIndex == 0) {
-                    //isRootBootGroup = true;
-                }
-
-
-                options = {
-                    type: 'subtotal',
-                    cellsCaptions: cellCaptions,
-                    isRootBootGroup: isRootBootGroup,
-                    value_options: {
-                        type: bootGroupItem.groups[g].report_settings.subtotal_type,
-                        level: g
-                    },
-                    value: bootGroupItem.subTotal
-                };
-
-                subTotalRows.area.push(new Row(options));
-
-
-            } else {
-                if (bootGroupItem.groups[g].hasOwnProperty('report_settings') && bootGroupItem.groups[g].report_settings.subtotal_type == 'line') {
-
-                    cellCaptions[g] = {
-                        value: 'Subtotal',
-                        type: bootGroupItem.groups[g].report_settings.subtotal_type,
-                        level: g
-                    };
-
-                    cellCaptions.forEach(function (cellCaption, $index) {
-
-                        //console.log(cellCaption);
-
-                        if (cellCaption.hasOwnProperty('level')) {
-                            if (cellCaption.level >= g) {
-                                cellCaption.type = bootGroupItem.groups[g].report_settings.subtotal_type;
-                                cellCaption.level = g;
-                            } else {
-                                if (cellCaption.level < g) {
-                                    cellCaption.type = 'empty';
-                                    cellCaption.level = null;
-                                }
-                            }
-                        } else {
-                            if ($index > g) {
-                                cellCaption.type = bootGroupItem.groups[g].report_settings.subtotal_type;
-                                cellCaption.level = g;
-                            }
-                        }
-                    });
-
-
-                    options = {
-                        type: 'subtotal-line',
-                        cellsCaptions: cellCaptions,
-                        value_options: {
-                            type: bootGroupItem.groups[g].report_settings.subtotal_type,
-                            level: g
-                        },
-                        value: bootGroupItem.subTotal
-                    };
-                    subTotalRows.line.unshift(new Row(options));
-
-                }
-            }
-
-        }
-
-        //console.log('subTotalRows', subTotalRows);
-
-        return subTotalRows;
-    }
-
     function findCellCaptions(item, level, type, reportSettingsType) {
+
+        //console.log('item', item);
+        //console.log('type', type);
 
         var rowType = type || 'normal';
 
@@ -177,7 +51,6 @@
 
                 level = level - 1;
 
-                console.log('level1231312321', level);
                 if (level > 0) {
                     for (i = 0; i <= level; i = i + 1) {
 
@@ -236,7 +109,7 @@
                 }
             }
 
-            if (item.groups[0].report_settings.subtotal_type == 'line' && level !== 0) {
+            if (item.groups[0].report_settings && item.groups[0].report_settings.subtotal_type == 'line' && level !== 0) {
 
                 cellCaptions = findCellCaptions(item, level, 'subtotal', 'line');
 
@@ -276,24 +149,63 @@
 
                 //console.log('item', item);
 
-                item.items.forEach(function (rowItem) {
+                // TODO refactor breadcrumbs level?
 
-                    var cellCaptions = findCellCaptions(item, level);
+                if (item.hasOwnProperty('breadcrumbs_level_0') && item['breadcrumbs_level_0'][0].items) {
 
-                    var obj = {
-                        cellsCaptions: cellCaptions,
-                        value: rowItem,
-                        value_options: {
-                            level: level
-                        }
-                    };
+                    item['breadcrumbs_level_0'].forEach(function (breadCrumbItem) {
 
-                    resultItems.push(new Row(obj));
+                        var cellCaptions = findCellCaptions(item, level);
 
-                });
+                        var breadcrumbObj = {
+                            cellsCaptions: cellCaptions,
+                            value: breadCrumbItem.groups,
+                            type: 'breadcrumbs',
+                            value_options: {
+                                level: level
+                            }
+                        };
+
+                        resultItems.push(new Row(breadcrumbObj));
+
+                        breadCrumbItem.items.forEach(function (rowItem) {
+
+                            var cellCaptions = findCellCaptions(item, level);
+
+                            var obj = {
+                                cellsCaptions: cellCaptions,
+                                value: rowItem,
+                                value_options: {
+                                    level: level
+                                }
+                            };
+
+                            resultItems.push(new Row(obj));
+
+                        });
+                    })
+
+                } else {
+
+                    item.items.forEach(function (rowItem) {
+
+                        var cellCaptions = findCellCaptions(item, level);
+
+                        var obj = {
+                            cellsCaptions: cellCaptions,
+                            value: rowItem,
+                            value_options: {
+                                level: level
+                            }
+                        };
+
+                        resultItems.push(new Row(obj));
+
+                    });
+                }
             }
 
-            if (item.groups[0].report_settings.subtotal_type == 'area' && level !== 0) {
+            if (item.groups[0].report_settings && item.groups[0].report_settings.subtotal_type == 'area' && level !== 0) {
 
                 cellCaptions = findCellCaptions(item, level, 'subtotal', 'area');
 
@@ -321,7 +233,7 @@
 
         findItemRecursive(items, level, resultItems);
 
-        console.log('result transformed', resultItems);
+        //console.log('result transformed', resultItems);
 
         return resultItems;
     };
