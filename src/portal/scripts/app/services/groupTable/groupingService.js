@@ -219,9 +219,12 @@
 
             //console.log('Items grouped', itemsGroupedArray);
 
-            itemsGroupedArray.forEach(function (group) {
-                group.subTotal = reportSubtotalService.calcColumnSubTotal(group, options.columns);
-            });
+            if (options) {
+
+                itemsGroupedArray.forEach(function (group) {
+                    group.subTotal = reportSubtotalService.calcColumnSubTotal(group, options.columns);
+                });
+            }
 
             //console.log('Items grouped', itemsGroupedArray);
 
@@ -234,7 +237,7 @@
     };
 
     function isInt(value) {
-        if (isNaN(value)) {
+        if (isNaN(value)) { 
             return false;
         }
         var x = parseFloat(value);

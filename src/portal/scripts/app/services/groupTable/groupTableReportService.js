@@ -228,6 +228,8 @@
 
     var transformItems = function (items) {
 
+        console.log('transform?');
+
         var level = 0;
         var resultItems = [];
 
