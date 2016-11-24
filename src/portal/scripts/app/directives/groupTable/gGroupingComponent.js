@@ -25,6 +25,7 @@
             link: function (scope, elem, attrs) {
 
                 logService.component('groupGrouping', 'initialized');
+                console.log(' scope.grouping',  scope.grouping);
 
                 scope.sortHandler = function (group, sort) {
                     var i;

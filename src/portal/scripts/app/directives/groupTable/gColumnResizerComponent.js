@@ -85,9 +85,9 @@
                 });
 
                 // Close filter area button
-                console.log('filter toggle button is ', $('.filter-area-size-btn'));
+                //console.log('filter toggle button is ', $('.filter-area-size-btn'));
                 $('.filter-area-size-btn').click(function () {
-                    console.log('filter toggle working');
+                    //console.log('filter toggle working');
                     var filterArea = $('.g-filter-sidebar.main-sidebar');
                     if (filterArea.hasClass('min-filter')) {
                         filterArea.attr({
@@ -132,7 +132,7 @@
 
                 function resize() {
 
-                    console.log('resize!!');
+                    //console.log('resize!!');
 
                     var tHead = $(elem).find('.g-thead');
                     var th = tHead.find('.g-cell');

@@ -81,11 +81,24 @@
 
                 if (res.status == 'agree') {
 
-                    vm.oldListView.is_default = false;
+                    if (vm.oldListView) {
+                        vm.oldListView.is_default = false;
 
-                    uiService.updateListLayout(vm.oldListView.id, vm.oldListView).then(function () {
-                        console.log('saved');
-                    }).then(function () {
+                        uiService.updateListLayout(vm.oldListView.id, vm.oldListView).then(function () {
+                            console.log('saved');
+                        }).then(function () {
+
+                            vm.listView.name = res.data.name;
+                            vm.listView.is_default = true;
+
+                            uiService.createListLayout(vm.entityType, vm.listView).then(function () {
+                                console.log('saved');
+                                vm.getView();
+                            });
+
+                        })
+
+                    } else {
 
                         vm.listView.name = res.data.name;
                         vm.listView.is_default = true;
@@ -94,8 +107,7 @@
                             console.log('saved');
                             vm.getView();
                         });
-
-                    })
+                    }
                 }
 
             });
@@ -117,10 +129,12 @@
             vm.listView.data.table.columnsWidth = thWidths;
 
             //console.log("View data is ", vm.listView.data);
+
+
             vm.listView.data.table = vm.table;
             vm.listView.data.table.columns = vm.columns;
             // vm.listView.data.table.columns['cellWidth']
-            //console.log('---------vm.grouping-------', vm.grouping);
+            console.log('---------vm.grouping-------', vm.grouping);
             vm.listView.data.table.grouping = vm.grouping;
             vm.listView.data.table.folding = vm.folding;
             vm.listView.data.table.filters = vm.filters;
@@ -140,6 +154,8 @@
             vm.listView.data.tableAdditions.additionsState = vm.additionsState;
 
             //vm.additionsStatus[res.results[0].data.tableAdditions.additionsType] = true;
+
+            console.log('vm.listView', vm.listView);
 
             if (vm.listView.hasOwnProperty('id')) {
                 uiService.updateListLayout(vm.listView.id, vm.listView).then(function () {
@@ -195,6 +211,14 @@
         vm.entityType = $scope.$parent.vm.entityType;
         vm.isReport = $scope.$parent.vm.isReport || false;
 
+        if (vm.isReport == true) {
+            vm.reportOptions = {
+                cost_method: 1,
+                pricing_policy: 3
+            };
+
+        }
+
         console.log('vm.isReport', vm.isReport);
 
         vm.customButtons = $scope.$parent.vm.entityViewer.extraFeatures;
@@ -240,7 +264,7 @@
             if (!items) {
                 return [];
             }
-            var i, a, b, e, item, attr, baseAttr, attrOptions, entityAttr;
+            var i, a, b, e, item, attr, baseAttr, attrOptions, entityAttr, report_settings;
             for (i = 0; i < items.length; i = i + 1) {
                 item = items[i];
                 if (item.hasOwnProperty('id')) {
@@ -250,8 +274,12 @@
                             if (item.options) {
                                 attrOptions = JSON.parse(JSON.stringify(item.options));
                             }
+                            if(item.report_settings) {
+                                report_settings= JSON.parse(JSON.stringify(item.report_settings));
+                            }
                             item = attr;
                             item.options = attrOptions;
+                            item.report_settings = report_settings;
                             fullItems.push(item);
                         }
                     }
@@ -262,8 +290,12 @@
                             if (item.options) {
                                 attrOptions = JSON.parse(JSON.stringify(item.options));
                             }
-                            item.options = attrOptions;
+                            if(item.report_settings) {
+                                report_settings= JSON.parse(JSON.stringify(item.report_settings));
+                            }
                             item = baseAttr;
+                            item.options = attrOptions;
+                            item.report_settings = report_settings;
                             fullItems.push(item);
                         }
                     }
@@ -274,8 +306,12 @@
                             if (item.options) {
                                 attrOptions = JSON.parse(JSON.stringify(item.options));
                             }
-                            item.options = attrOptions;
+                            if(item.report_settings) {
+                                report_settings= JSON.parse(JSON.stringify(item.report_settings));
+                            }
                             item = entityAttr;
+                            item.options = attrOptions;
+                            item.report_settings = report_settings;
                             fullItems.push(item);
                         }
                     }
@@ -414,7 +450,9 @@
         vm.getAttributes = function () {
             return attributeTypeService.getList(vm.entityType).then(function (data) {
                 vm.attrs = data.results;
-                vm.baseAttrs = metaService.getBaseAttrs();
+                if (metaService.getEntitiesWithoutBaseAttrsList().indexOf(vm.entityType) == -1) {
+                    vm.baseAttrs = metaService.getBaseAttrs();
+                }
                 vm.entityAttrs = metaService.getEntityAttrs(vm.entityType) || [];
                 $scope.$apply();
             })
@@ -422,57 +460,99 @@
 
         vm.updateTable = function () {
 
-            var options = {
-                sort: {
-                    key: vm.sorting.column.key,
-                    direction: vm.sorting.column.sort
-                },
-                filters: {},
-                page: vm.paginationPageCurrent,
-                pageSize: vm.paginationItemPerPage
-            };
+            var options = {};
 
-            //console.log('vm.filters', vm.filters);
+            if (vm.isReport == true) {
 
-            vm.filters.forEach(function (item) {
-                if (item.options && item.options.enabled === true) {
-                    options.filters[item.key] = item.options.query;
-                }
-            });
+                //console.log('vm.reportOptions;', vm.reportOptions);
 
-            console.log('options', options);
-            //console.log('entityViewerController parent scope ', $scope.$parent);
-            //console.log('ENTITY VIEWER vm.grouping', vm.grouping);
-            $scope.$parent.vm.getList(options).then(function (data) {
+                $scope.$parent.vm.getList(vm.reportOptions).then(function (data) {
 
-                vm.paginationItemsTotal = data.count;
-                vm.nextExist = !!data.next;
-                vm.previousExist = !!data.previous;
+                    vm.reportOptions = data;
 
-                entityViewerHelperService.transformItems(data.results, vm.attrs).then(function (data) {
-
-                    vm.entity = data;
-                    vm.groupTableService.setItems(vm.entity);
-
-                    vm.groupTableService.columns.setColumns(vm.columns);
-                    //vm.groupTableService.filtering.setFilters(vm.filters);
-
-                    if (vm.isReport == true) {
-                        vm.groupTableService.grouping.setGroupsWithColumns(vm.grouping, vm.columns, vm.entityType);
+                    if (data.task_status !== 'SUCCESS') {
+                        setTimeout(function () {
+                            vm.updateTable();
+                        }, 1000)
                     } else {
-                        vm.groupTableService.grouping.setGroups(vm.grouping, vm.entityType);
+
+                        data.items.forEach(function(i){
+                            //console.log('i.portfolio', i.portfolio);
+                            //console.log('i.currency', i.currency);
+                        });
+
+                        entityViewerHelperService.transformItems(data.items, vm.attrs).then(function (data) {
+
+                            vm.entity = data;
+                            vm.groupTableService.setItems(vm.entity);
+
+                            vm.groupTableService.columns.setColumns(vm.columns);
+                            //vm.groupTableService.filtering.setFilters(vm.filters);
+                            vm.groupTableService.grouping.setGroupsWithColumns(vm.grouping, vm.columns, vm.entityType);
+                            //console.log("EXTERNAL CALLBACK ", vm.folding);
+                            vm.groupTableService.folding.setFolds(vm.folding);
+                            //console.log('UPDATE TABLE scope.sorting.group', vm.sorting.group);
+                            vm.sorting.group = findFullAttributeForItem(vm.sorting.group, vm.attrs);
+                            //vm.sorting.column = findFullAttributeForItem(vm.sorting.column, vm.attrs);
+                            vm.groupTableService.sorting.group.sort(vm.sorting.group);
+                            //vm.groupTableService.sorting.column.sort(vm.sorting.column);
+                            vm.tableIsReady = true;
+                            $scope.$apply();
+                        });
                     }
-                    //console.log("EXTERNAL CALLBACK ", vm.folding);
-                    vm.groupTableService.folding.setFolds(vm.folding);
-                    //console.log('UPDATE TABLE scope.sorting.group', vm.sorting.group);
-                    vm.sorting.group = findFullAttributeForItem(vm.sorting.group, vm.attrs);
-                    //vm.sorting.column = findFullAttributeForItem(vm.sorting.column, vm.attrs);
-                    vm.groupTableService.sorting.group.sort(vm.sorting.group);
-                    //vm.groupTableService.sorting.column.sort(vm.sorting.column);
-                    vm.tableIsReady = true;
-                    $scope.$apply();
+                })
+
+            } else {
+
+                options = {
+                    sort: {
+                        key: vm.sorting.column.key,
+                        direction: vm.sorting.column.sort
+                    },
+                    filters: {},
+                    page: vm.paginationPageCurrent,
+                    pageSize: vm.paginationItemPerPage
+                };
+
+                //console.log('vm.filters', vm.filters);
+
+                vm.filters.forEach(function (item) {
+                    if (item.options && item.options.enabled === true) {
+                        options.filters[item.key] = item.options.query;
+                    }
                 });
-            })
+
+                console.log('options', options);
+                //console.log('entityViewerController parent scope ', $scope.$parent);
+                //console.log('ENTITY VIEWER vm.grouping', vm.grouping);
+                $scope.$parent.vm.getList(options).then(function (data) {
+
+                    vm.paginationItemsTotal = data.count;
+                    vm.nextExist = !!data.next;
+                    vm.previousExist = !!data.previous;
+
+                    entityViewerHelperService.transformItems(data.results, vm.attrs).then(function (data) {
+
+                        vm.entity = data;
+                        vm.groupTableService.setItems(vm.entity);
+
+                        vm.groupTableService.columns.setColumns(vm.columns);
+                        //vm.groupTableService.filtering.setFilters(vm.filters);
+                        vm.groupTableService.grouping.setGroups(vm.grouping, vm.entityType);
+                        //console.log("EXTERNAL CALLBACK ", vm.folding);
+                        vm.groupTableService.folding.setFolds(vm.folding);
+                        //console.log('UPDATE TABLE scope.sorting.group', vm.sorting.group);
+                        vm.sorting.group = findFullAttributeForItem(vm.sorting.group, vm.attrs);
+                        //vm.sorting.column = findFullAttributeForItem(vm.sorting.column, vm.attrs);
+                        vm.groupTableService.sorting.group.sort(vm.sorting.group);
+                        //vm.groupTableService.sorting.column.sort(vm.sorting.column);
+                        vm.tableIsReady = true;
+                        $scope.$apply();
+                    });
+                })
+
+            }
+
         };
 
         vm.updateAdditionsTable = function () {

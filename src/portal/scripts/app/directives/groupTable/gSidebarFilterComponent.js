@@ -18,6 +18,7 @@
                 filters: '=',
                 entityType: '=',
                 isReport: '=',
+                reportOptions: '=',
                 externalCallback: '&'
             },
             templateUrl: 'views/directives/groupTable/sidebar-filter-view.html',
@@ -26,7 +27,7 @@
                 logService.component('groupSidebarFilter', 'initialized');
 
                 scope.fields = {};
-                scope.reportOptions = {};
+                //scope.reportOptions = {};
 
                 scope.filters.forEach(function (item) {
                     if (!item.options) {
@@ -64,7 +65,6 @@
 
                         if (res.status == 'agree') {
                             scope.reportOptions = res.data;
-
                         }
 
                     });
@@ -73,7 +73,9 @@
                 };
 
                 scope.calculateReport = function () {
-
+                    console.log('calculate report');
+                    scope.reportOptions["task_id"] = undefined;
+                    scope.externalCallback();
                 };
 
                 scope.resizeFilterSideNav = function (actionType) {

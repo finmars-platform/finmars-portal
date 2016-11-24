@@ -41,15 +41,17 @@
 
     var getContentTypeUIByState = function (state) {
 
-        result = '';
+        var result = '';
 
         console.log('state', state);
 
-        if (state.indexOf('app.data') !== -1 || state.indexOf('app.data') !== -1) {
+        if (state.indexOf('app.data') !== -1 || state.indexOf('app.reports') !== -1) {
 
-            var result = state.split('.')[2];
+            result = state.split('.')[2];
 
         }
+
+        console.log('result 3232', result);
 
         return result;
 

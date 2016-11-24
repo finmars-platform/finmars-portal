@@ -75,8 +75,8 @@
 
 				var a, t, c, b, e;
 				var tab, tabAttr, attr, baseAttr, attributeIsExist, entityAttr;
-				console.log('METHOD: restoreAttrs, data: vm.tabs, value: ', vm.tabs);
-				console.log('METHOD: restoreAttrs, data: vm.attrs, value: ', vm.attrs);
+				//console.log('METHOD: restoreAttrs, data: vm.tabs, value: ', vm.tabs);
+				//console.log('METHOD: restoreAttrs, data: vm.attrs, value: ', vm.attrs);
 				for (t = 0; t < vm.tabs.length; t = t + 1) {
 					tab = vm.tabs[t];
 					for (c = 0; c < tab.attrs.length; c = c + 1) {
@@ -135,9 +135,11 @@
 
 		$('body').addClass('drag-dialog'); // hide backdrop
 		vm.getAttributes = function () {
+
 			if (metaService.getEntitiesWithoutBaseAttrsList().indexOf(vm.entityType) === -1) {
 				vm.baseAttrs = metaService.getBaseAttrs();
 			}
+
 			vm.entityAttrs = metaService.getEntityAttrs(vm.entityType);
 			return attributeTypeService.getList(vm.entityType).then(function (data) {
 				vm.attrs = data.results;
@@ -367,10 +369,10 @@
 					var name = $(elem).html();
 					var i;
 
-					console.log('elem111111111111111111111111111111', elem);
-					console.log('columns111111111111111111111111111111', columns);
-					console.log('grouping111111111111111111111111111111', grouping);
-					console.log('filters111111111111111111111111111111', filters);
+					//console.log('elem111111111111111111111111111111', elem);
+					//console.log('columns111111111111111111111111111111', columns);
+					//console.log('grouping111111111111111111111111111111', grouping);
+					//console.log('filters111111111111111111111111111111', filters);
 
 					exist = false;
 					if (target === document.querySelector('#columnsbag')) {

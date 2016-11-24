@@ -83,6 +83,7 @@
     };
 
     var getActiveListLayout = function (entity) {
+
         var contentType = metaContentTypesService.findContentTypeByEntity(entity, 'ui');
 
         return window.fetch(baseUrl + 'ui/list-layout/?is_default=2&content_type=' + contentType,
