@@ -105,6 +105,7 @@ app.controller('DataCurrencyController', ['$scope', require('./app/controllers/d
 app.controller('DataStrategyController', ['$scope', '$stateParams', require('./app/controllers/data/dataStrategyController')]);
 app.controller('DataStrategyGroupController', ['$scope', '$stateParams', require('./app/controllers/data/dataStrategyGroupController')]);
 app.controller('DataStrategySubgroupController', ['$scope', '$stateParams', require('./app/controllers/data/dataStrategySubgroupController')]);
+app.controller('DataTransactionAuditController', ['$scope', '$stateParams', require('./app/controllers/data/dataTransactionAuditController')]);
 
 app.controller('BalanceReportController', ['$scope', require('./app/controllers/reports/balanceReportController')]);
 app.controller('ProfitAndLostReportController', ['$scope', require('./app/controllers/reports/profitAndLostReportController')]);

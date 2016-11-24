@@ -2,7 +2,7 @@
  * Created by szhitenev on 15.06.2016.
  */
 
-(function(){
+(function () {
 
     'use strict';
 
@@ -14,12 +14,15 @@
     var baseUrl = '/api/v1/';
 
     function endPointResolver(entity) {
-        switch (entity){
+        switch (entity) {
             case 'counterparty':
                 return 'counterparties/' + entity + '-attribute-type/';
                 break;
             case 'responsible':
                 return 'counterparties/' + entity + '-attribute-type/';
+                break;
+            case 'currency':
+                return 'currencies/' + entity + '-attribute-type/';
                 break;
             default:
                 return entity + 's/' + entity + '-attribute-type/';
@@ -28,8 +31,10 @@
 
     var getList = function (entity) {
 
-        if(metaRestrictionsService.getEntitiesWithoutDynamicAttrsList().indexOf(entity) !== -1) {
-            return new Promise(function(resolve){resolve({results: []})})
+        if (metaRestrictionsService.getEntitiesWithoutDynamicAttrsList().indexOf(entity) !== -1) {
+            return new Promise(function (resolve) {
+                resolve({results: []})
+            })
         }
 
         return window.fetch(baseUrl + endPointResolver(entity),
@@ -116,9 +121,9 @@
                     'Content-type': 'application/json'
                 }
             }).then(function (data) {
-            return new Promise(function(resolve,reject) {
+            return new Promise(function (resolve, reject) {
                 console.log('data', data);
-                if(data.status === 409) {
+                if (data.status === 409) {
                     resolve({status: 'conflict'});
                 }
                 resolve({status: 'success'});

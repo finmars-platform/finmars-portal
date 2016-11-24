@@ -23,6 +23,7 @@
                 sorting: '=',
 
                 isReport: '=',
+                reportOptions: '=',
 
                 itemAdditionsEditorEntityId: '=',
                 itemAdditionsEditorTemplate: '=',

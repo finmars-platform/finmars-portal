@@ -75,6 +75,12 @@
                                         resolve({key: entity, data: entities[entity]});
                                     });
                                     break;
+                                case 'portfolio':
+                                    return portfolioRepository.getList().then(function (data) {
+                                        entities[entity] = data.results;
+                                        resolve({key: entity, data: entities[entity]});
+                                    });
+                                    break;
                                 case 'pricing_policy':
                                     return pricingPolicyRepository.getList().then(function (data) {
                                         entities[entity] = data.results;
