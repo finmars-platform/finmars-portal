@@ -36,15 +36,52 @@
 
     }
 
-    function weightedMarketValuePercent() {
+    function weightedMarketValuePercent(calculatedColumns, column, group) {
+        if (!calculatedColumns[column.key]) {
+            calculatedColumns[column.key] = 0;
+        }
+
+        group.items.forEach(function (groupedItem) {
+
+            if (groupedItem["market_value_percent"]) {
+
+                calculatedColumns[column.key] = calculatedColumns[column.key] + (parseFloat(groupedItem[column.key] * groupedItem["market_value_percent"]));
+            }
+
+        });
+    }
+
+    function weightedExposure(calculatedColumns, column, group) {
+
+        if (!calculatedColumns[column.key]) {
+            calculatedColumns[column.key] = 0;
+        }
+
+        group.items.forEach(function (groupedItem) {
+
+            if (groupedItem["exposure"]) {
+
+                calculatedColumns[column.key] = calculatedColumns[column.key] + (parseFloat(groupedItem[column.key] * groupedItem["exposure"]));
+            }
+
+        });
 
     }
 
-    function weightedExposure() {
+    function weightedExposurePercent(calculatedColumns, column, group) {
 
-    }
+        if (!calculatedColumns[column.key]) {
+            calculatedColumns[column.key] = 0;
+        }
 
-    function weightedExposurePercent() {
+        group.items.forEach(function (groupedItem) {
+
+            if (groupedItem["exposure_percent"]) {
+
+                calculatedColumns[column.key] = calculatedColumns[column.key] + (parseFloat(groupedItem[column.key] * groupedItem["exposure_percent"]));
+            }
+
+        });
 
     }
 
@@ -77,18 +114,93 @@
 
     }
 
-    function weightedAverageMarketValuePercent() {
+    function weightedAverageMarketValuePercent(calculatedColumns, column, group) {
+
+        if (!calculatedColumns[column.key]) {
+            calculatedColumns[column.key] = 0;
+        }
+
+        var total = 0;
+
+        group.items.forEach(function (groupedItem) {
+
+            if (groupedItem["market_value_percent"]) {
+                total = total + groupedItem["market_value_percent"];
+            }
+
+        });
+
+        group.items.forEach(function (groupedItem) {
+
+            if (groupedItem["market_value_percent"]) {
+
+                var average = groupedItem["market_value_percent"] / total;
+
+                calculatedColumns[column.key] = calculatedColumns[column.key] + (parseFloat(groupedItem[column.key] * average));
+            }
+
+        });
+
 
     }
 
-    function weightedAverageExposure() {
+    function weightedAverageExposure(calculatedColumns, column, group) {
+
+        if (!calculatedColumns[column.key]) {
+            calculatedColumns[column.key] = 0;
+        }
+
+        var total = 0;
+
+        group.items.forEach(function (groupedItem) {
+
+            if (groupedItem["exposure"]) {
+                total = total + groupedItem["exposure"];
+            }
+
+        });
+
+        group.items.forEach(function (groupedItem) {
+
+            if (groupedItem["exposure"]) {
+
+                var average = groupedItem["exposure"] / total;
+
+                calculatedColumns[column.key] = calculatedColumns[column.key] + (parseFloat(groupedItem[column.key] * average));
+            }
+
+        });
 
     }
 
-    function weightedAverageExposurePercent() {
+    function weightedAverageExposurePercent(calculatedColumns, column, group) {
+
+        if (!calculatedColumns[column.key]) {
+            calculatedColumns[column.key] = 0;
+        }
+
+        var total = 0;
+
+        group.items.forEach(function (groupedItem) {
+
+            if (groupedItem["exposure_percent"]) {
+                total = total + groupedItem["exposure_percent"];
+            }
+
+        });
+
+        group.items.forEach(function (groupedItem) {
+
+            if (groupedItem["exposure_percent"]) {
+
+                var average = groupedItem["exposure_percent"] / total;
+
+                calculatedColumns[column.key] = calculatedColumns[column.key] + (parseFloat(groupedItem[column.key] * average));
+            }
+
+        });
 
     }
-
 
     function resolveSubtotalFunction(calculatedColumns, column, group) {
 
