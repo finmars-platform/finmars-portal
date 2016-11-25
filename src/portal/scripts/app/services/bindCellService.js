@@ -16,6 +16,7 @@
     var responsibleRepository = require('../repositories/responsibleRepository');
     var responsibleGroupRepository = require('../repositories/responsibleGroupRepository');
     var instrumentTypeRepository = require('../repositories/instrumentTypeRepository');
+    var strategyRepository = require('../repositories/strategyRepository');
     var instrumentDailyPricingModelRepository = require('../repositories/instrument/instrumentDailyPricingModelRepository');
     var instrumentPaymentSizeDetailRepository = require('../repositories/instrument/instrumentPaymentSizeDetailRepository');
     var transactionTypeRepository = require('../repositories/transactionTypeRepository');
@@ -51,6 +52,12 @@
                             resolve({key: entity, data: entities[entity]});
                         });
                     }
+
+                    return strategyService.getList(strategyNumber).then(function (data) {
+                        entities[entity] = data.results;
+                        resolve({key: entity, data: entities[entity]});
+                    });
+
                 } else {
                     if (options.entityType.indexOf('responsible') !== -1) {
                         if (entity === 'group') {
@@ -78,6 +85,17 @@
                                 case 'portfolio':
                                     return portfolioRepository.getList().then(function (data) {
                                         entities[entity] = data.results;
+                                        resolve({key: entity, data: entities[entity]});
+                                    });
+                                    break;
+                                case 'account':
+
+                                    console.log('lol here?');
+
+                                    return accountRepository.getList().then(function (data) {
+                                        entities[entity] = data.results;
+
+                                        console.log('entities account', entities);
                                         resolve({key: entity, data: entities[entity]});
                                     });
                                     break;
@@ -131,6 +149,24 @@
                                     break;
                                 case 'type':
                                     return accountTypeRepository.getList().then(function (data) {
+                                        entities[entity] = data.results;
+                                        resolve({key: entity, data: entities[entity]});
+                                    });
+                                    break;
+                                case 'strategy-1':
+                                    return strategyRepository.getList(1).then(function (data) {
+                                        entities[entity] = data.results;
+                                        resolve({key: entity, data: entities[entity]});
+                                    });
+                                    break;
+                                case 'strategy-2':
+                                    return strategyRepository.getList(2).then(function (data) {
+                                        entities[entity] = data.results;
+                                        resolve({key: entity, data: entities[entity]});
+                                    });
+                                    break;
+                                case 'strategy-3':
+                                    return strategyRepository.getList(3).then(function (data) {
                                         entities[entity] = data.results;
                                         resolve({key: entity, data: entities[entity]});
                                     });

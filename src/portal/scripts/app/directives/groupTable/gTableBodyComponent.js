@@ -116,9 +116,10 @@
                         findEntityFields();
 
                         Promise.all(promises).then(function (results) {
-                            //console.log('results', results);
+                            console.log('results11111111111111111', results);
                             results.forEach(function (item) {
                                 if (item.key) {
+
                                     entityFieldsArray[item.key] = item.data;
                                 } else {
                                     entityFieldsArray['classifier_' + item.id] = item;
@@ -148,9 +149,12 @@
                     syncGroupsAndColumns();
                 }
 
-                scope.$watch('items', function () {
-                    scope.reportItems = groupTableReportService.transformItems(scope.items);
-                });
+                if (scope.isReport == true) {
+
+                    scope.$watch('items', function () {
+                        scope.reportItems = groupTableReportService.transformItems(scope.items);
+                    });
+                }
 
                 function findGroups() {
 
@@ -222,7 +226,9 @@
                                     if (classifiersInstances[data[i].key] === undefined) {
                                         classifiersInstances[data[i].key] = {};
                                     }
-                                    classifiersInstances[data[i].key] = data[i].data
+                                    if (data[i].data !== undefined) {
+                                        classifiersInstances[data[i].key] = data[i].data
+                                    }
                                 }
                             }
 
@@ -239,7 +245,11 @@
 
                             if (data.length) {
                                 var i;
+
+                                console.log('data', data);
+
                                 for (i = 0; i < data.length; i = i + 1) {
+
                                     if (entityFieldsArray[data[i].key] == undefined) {
                                         entityFieldsArray[data[i].key] = [];
                                     }
@@ -456,7 +466,9 @@
                                     if (entityFieldsArray[item.key] == undefined) {
                                         entityFieldsArray[item.key] = [];
                                     }
-                                    entityFieldsArray[item.key].push(item.data);
+                                    if (item.data !== undefined) {
+                                        entityFieldsArray[item.key].push(item.data);
+                                    }
                                 }
                             });
 
@@ -563,7 +575,7 @@
                             if (classifiersInstances.hasOwnProperty(scope.entityType + '_' + group.value) && classifiersInstances[scope.entityType + '_' + group.value] !== undefined) {
                                 //console.log('11111111111111111111111111111111', classifiersInstances[scope.entityType]);
                                 if (classifiersInstances[scope.entityType + '_' + group.value] && classifiersInstances[scope.entityType + '_' + group.value] !== undefined) {
-                                    result =  classifiersInstances[scope.entityType + '_' + group.value].name
+                                    result = classifiersInstances[scope.entityType + '_' + group.value].name
                                 }
                             }
                         }
@@ -577,17 +589,22 @@
 
                         if (scope.readyStatus.cellsFirstReady == true) {
 
-                            if (entityFieldsArray[group.key]) {
+                            if (entityFieldsArray.hasOwnProperty(group.key) &&
+                                entityFieldsArray[group.key] &&
+                                entityFieldsArray[group.key] !== undefined &&
+                                entityFieldsArray[group.key].length) {
+
                                 var i, resultObject;
                                 for (i = 0; i < entityFieldsArray[group.key].length; i = i + 1) {
-                                    //if (group.key == 'currency') {
-                                    //    //console.log('entityFieldsArray[group.key]', entityFieldsArray[group.key]);
-                                    //    //console.log('entityFieldsArray[group.key]', group);
-                                    //}
-                                    if (entityFieldsArray[group.key][i].id === group.value) {
-                                        resultObject = entityFieldsArray[group.key][i];
-                                        //console.log('result', resultObject, '++' + entityFieldsArray[group.key][i].id);
+
+                                    if (group.value !== undefined) {
+                                        if (entityFieldsArray[group.key][i].id === group.value) {
+
+                                            resultObject = entityFieldsArray[group.key][i];
+                                            //console.log('result', resultObject, '++' + entityFieldsArray[group.key][i].id);
+                                        }
                                     }
+
                                 }
 
 
@@ -690,6 +707,7 @@
                                         var result = entityFieldsArray[column.key].filter(function (item) {
                                             return item.id === _groupedItemVal;
                                         })[0];
+
                                     }
                                     if (result) {
                                         if (column['key'] === 'instrument' && result['user_code']) {

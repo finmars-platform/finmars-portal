@@ -55,6 +55,23 @@
                 };
 
                 scope.$watchCollection('grouping', function () {
+
+
+                    if (scope.isReport == true) {
+                        scope.grouping.forEach(function (group) {
+
+                            if (!group.hasOwnProperty('report_settings') && !group.report_settings) {
+                                group.report_settings = {subtotal_type: 'area'};
+                            } else {
+                                if(group.report_settings.subtotal_type == undefined) {
+                                    group.report_settings.subtotal_type = 'area';
+                                }
+
+                            }
+
+                        })
+                    }
+
                     setTimeout(function () {
                         scope.externalCallback();
                         scope.$apply();

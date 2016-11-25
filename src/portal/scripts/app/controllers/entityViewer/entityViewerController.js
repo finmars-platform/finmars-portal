@@ -214,7 +214,7 @@
         if (vm.isReport == true) {
             vm.reportOptions = {
                 cost_method: 1,
-                pricing_policy: 3
+                pricing_policy: 2
             };
 
         }
