@@ -4,7 +4,6 @@
 (function () {
 
     var metaService = require('../metaService');
-    var reportSubtotalService = require('../reportSubtotalService');
 
     'use strict';
 
@@ -63,7 +62,7 @@
         return items;
     };
 
-    var setGroups = function (items, groups, entityType, options) {
+    var setGroups = function (items, groups, entityType) {
 
         //console.log('GROUPING SERVICE groups', groups);
 
@@ -219,14 +218,9 @@
 
             //console.log('Items grouped', itemsGroupedArray);
 
-            if (options) {
-
-                itemsGroupedArray.forEach(function (group) {
-                    group.subTotal = reportSubtotalService.calcColumnSubTotal(group, options.columns);
-                });
-            }
-
-            //console.log('Items grouped', itemsGroupedArray);
+            itemsGroupedArray.forEach(function (group) {
+                calcColumnSubTotal(group);
+            });
 
 
             return itemsGroupedArray;
@@ -237,128 +231,40 @@
     };
 
     function isInt(value) {
-        if (isNaN(value)) { 
+        if (isNaN(value)) {
             return false;
         }
         var x = parseFloat(value);
         return (x | 0) === x;
     }
 
+    function calcColumnSubTotal(group) {
 
-    // deprecated start
-    function setProperty(path, obj, value) {
-        var schema = obj;
-        var pList = path.split('.');
-        var len = pList.length;
-        for (var i = 0; i < len - 1; i++) {
-            var elem = pList[i];
-            if (!schema[elem]) schema[elem] = {};
-            schema = schema[elem];
-        }
+        var calculatedColumns = {};
 
-        schema[pList[len - 1]] = value;
-    }
+        group.items.forEach(function (groupedItem) {
 
-    function getProperty(object, path) {
-        var o = object;
-        path = path.replace(/\[(\w+)\]/g, '.$1');
-        path = path.replace(/^\./, '');
-        var a = path.split('.');
-        while (a.length) {
-            var n = a.shift();
-            if (n in o) {
-                o = o[n];
-            } else {
-                return;
-            }
-        }
-        return o;
-    }
-
-    // deprecated end
-
-    function recursiveFillGroups(items, groups, entityType, options) {
-
-        var level = 0;
-        var results = [];
-
-        function recursiveWalker(items, groups, entityType, level, options) {
-
-            //console.log('options', options);
-            //console.log('level', level);
-
-            var setGroupOptions = {
-                columns: options.columns
-            };
-
-            if (options.boot == true) {
-
-                if (groups.bootsGroup[level]) {
-
-                    if (!results.length) {
-
-                        var tempResults = setGroups(items, [groups.bootsGroup[level]], entityType, setGroupOptions);
-
-                        tempResults.forEach(function (item) {
-
-                            results.push(item);
-                        });
-
-                        recursiveWalker(results, groups, entityType, level + 1, options)
-
-                    } else {
-
-                        items.forEach(function (resultItem) {
-
-                            resultItem['boot_level_' + level] = setGroups(resultItem.items, [groups.bootsGroup[level]], entityType, setGroupOptions);
-
-                            if (groups.bootsGroup[level + 1]) {
-                                recursiveWalker(resultItem['boot_level_' + level], groups, entityType, level + 1, options)
-                            }
-                        });
-
-                        // TODO refactor breadcrumbs_level
+            var keys = Object.keys(groupedItem);
 
 
-                        if (!groups.bootsGroup[level + 1]) {
-                            if (options.breadcrumbs == true) {
+            keys.forEach(function (groupedItemKey) {
 
-                                items.forEach(function (resultItem) {
-
-                                    resultItem['boot_level_' + level].forEach(function (bootItem) {
-                                        bootItem['breadcrumbs_level_0'] = setGroups(bootItem.items, groups.linesGroup, entityType, setGroupOptions);
-                                    });
-
-
-                                });
-
-                            }
-                        }
-
+                if (isInt(groupedItem[groupedItemKey]) && groupedItemKey !== 'id') {
+                    if (!calculatedColumns[groupedItemKey]) {
+                        calculatedColumns[groupedItemKey] = 0;
                     }
 
-                } else {
+                    calculatedColumns[groupedItemKey] = calculatedColumns[groupedItemKey] + parseFloat(groupedItem[groupedItemKey]);
 
-                    if (options.breadcrumbs == true) {
-
-                        items.forEach(function (resultItem) {
-
-                            resultItem['breadcrumbs_level_0'] = setGroups(resultItem.items, groups.linesGroup, entityType, setGroupOptions);
-
-                        });
-
-                    }
                 }
-            }
+
+            });
 
 
-        }
+        });
 
-        recursiveWalker(items, groups, entityType, level, options);
 
-        //console.log('results', results);
-
-        return results;
+        group.subTotal = calculatedColumns;
     }
 
     function isAdded(needle, stack, property) {
@@ -377,74 +283,25 @@
     var setGroupsWithColumns = function (items, groups, columns, entityType) {
 
         var preInitGroups = [];
+        var initLineGroup = [];
         var bootsGroup = [];
         var linesGroup = [];
 
-        var results = [];
 
-        var bootsGroupStartMatching = null;
+        var initLineIndex = null;
+        var bootsGroupIndex = null;
 
-        function findBootsGroup() {
+        var groupsInUse = [];
 
-            groups.forEach(function (group, $groupIndex) {
-
-                columns.forEach(function (column, $columnIndex) {
-
-                    if (group.hasOwnProperty('id') && column.hasOwnProperty('id')) {
-                        if (group.id == column.id) {
-
-                            if (bootsGroupStartMatching == null) {
-                                bootsGroupStartMatching = {
-                                    groupIndex: $groupIndex,
-                                    columnIndex: $columnIndex
-                                };
-
-                                bootsGroup.push(group);
-                            } else {
-                                if ($groupIndex - bootsGroupStartMatching.groupIndex == $columnIndex - bootsGroupStartMatching.columnIndex) {
-                                    bootsGroup.push(group);
-                                }
-                            }
-
-                        }
-                    } else {
-                        if (group.hasOwnProperty('key') && column.hasOwnProperty('key')) {
-                            if (group.key == column.key) {
-
-                                if (bootsGroupStartMatching == null) {
-                                    bootsGroupStartMatching = {
-                                        groupIndex: $groupIndex,
-                                        columnIndex: $columnIndex
-                                    };
-
-                                    bootsGroup.push(group);
-                                } else {
-
-                                    if ($groupIndex - bootsGroupStartMatching.groupIndex == $columnIndex - bootsGroupStartMatching.columnIndex) {
-                                        bootsGroup.push(group);
-                                    }
-                                }
-                            }
-                        }
-                    }
-
-
-                });
-
-            });
-
-            //console.log('bootsGroupStartMatching', bootsGroupStartMatching);
-
-        }
+        //console.log('groups', groups);
+        //console.log('columns', columns);
 
         function findPreInitGroup() {
             groups.forEach(function (group, $groupIndex) {
                 columns.forEach(function (column, $columnIndex) {
-
-                        if ($groupIndex == $columnIndex) {
-                            if ($groupIndex < bootsGroupStartMatching.groupIndex) {
-
-
+                    if (initLineGroup.length) {
+                        if ($groupIndex < initLineIndex) {
+                            if ($groupIndex == $columnIndex) {
                                 if (group.hasOwnProperty('id') && column.hasOwnProperty('id')) {
                                     if (group.id !== column.id) {
                                         preInitGroups.push(group);
@@ -460,17 +317,83 @@
                                 }
                             }
                         }
-
+                    } else {
+                        // nice copypaste
+                        if ($groupIndex == $columnIndex) {
+                            if (group.hasOwnProperty('id') && column.hasOwnProperty('id')) {
+                                if (group.id !== column.id) {
+                                    preInitGroups.push(group);
+                                }
+                            } else {
+                                if (group.hasOwnProperty('key') && column.hasOwnProperty('key')) {
+                                    if (group.key !== column.key) {
+                                        preInitGroups.push(group);
+                                    }
+                                } else {
+                                    preInitGroups.push(group);
+                                }
+                            }
+                        }
                     }
-                )
+
+                })
+            });
+        }
+
+        function findInitLineGroup() {
+            groups.forEach(function (group, $groupIndex) {
+                columns.forEach(function (column, $columnIndex) {
+                    if (!initLineGroup.length) {
+                        if (group.hasOwnProperty('id') && column.hasOwnProperty('id')) {
+                            if (group.id == column.id) {
+                                initLineGroup.push(group);
+                                initLineIndex = $groupIndex;
+                            }
+                        } else {
+                            if (group.hasOwnProperty('key') && column.hasOwnProperty('key')) {
+                                if (group.key == column.key) {
+                                    initLineGroup.push(group);
+                                    initLineIndex = $groupIndex;
+                                }
+                            }
+                        }
+                    }
+
+                })
+            });
+        }
+
+        function findBootsGroup() {
+            groups.forEach(function (group, $groupIndex) {
+                columns.forEach(function (column, $columnIndex) {
+
+                    if ($groupIndex > initLineIndex) {
+                        if ($groupIndex - initLineIndex == $columnIndex) {
+                            if (group.hasOwnProperty('id') && column.hasOwnProperty('id')) {
+                                if (group.id == column.id) {
+                                    bootsGroupIndex = $groupIndex;
+                                    bootsGroup.push(group);
+                                }
+                            } else {
+                                if (group.hasOwnProperty('key') && column.hasOwnProperty('key')) {
+                                    if (group.key == column.key) {
+                                        bootsGroupIndex = $groupIndex;
+                                        bootsGroup.push(group);
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                })
             });
         }
 
         function findLinesGroup() {
             groups.forEach(function (group, $groupIndex) {
                 columns.forEach(function (column, $columnIndex) {
-                    if (bootsGroupStartMatching.groupIndex !== null) {
-                        if ($groupIndex > bootsGroupStartMatching.groupIndex + bootsGroup.length - 1) {
+                    if (bootsGroupIndex) {
+                        if ($groupIndex > bootsGroupIndex) {
                             if (group.hasOwnProperty('id')) {
                                 if (!isAdded(group, linesGroup, 'id')) {
                                     linesGroup.push(group);
@@ -487,60 +410,70 @@
             });
         }
 
+        if(groups.length) {
 
-        if (groups.length) {
-
-            findBootsGroup();
+            findInitLineGroup();
             findPreInitGroup();
+            findBootsGroup();
             findLinesGroup();
 
-            console.log('preInitGroups', preInitGroups);
-            console.log('bootsGroup', bootsGroup);
-            console.log('linesGroup', linesGroup);
+
+            //console.log('preInitGroups', preInitGroups);
+            //console.log('initLineGroup', initLineGroup);
+            //console.log('bootsGroup', bootsGroup);
+            //console.log('linesGroup', linesGroup);
 
 
-            var groups = {};
+            var results = setGroups(items, preInitGroups, entityType);
 
-            if (preInitGroups.length) {
+            //console.log('123', results);
 
-                var options = {
-                    columns: columns
-                };
-
-                results = setGroups(items, preInitGroups, entityType, options);
+            if (results[0].items && results[0].items.length) {
 
                 results.forEach(function (preInitGroupsItem) {
 
-                    groups = {
-                        preInitGroups: preInitGroups,
-                        bootsGroup: bootsGroup,
-                        linesGroup: linesGroup
-                    };
+                    preInitGroupsItem.initGroup = setGroups(preInitGroupsItem.items, initLineGroup, entityType);
 
-                    preInitGroupsItem["boot_level_0"] = recursiveFillGroups(preInitGroupsItem.items, groups, entityType, {
-                        boot: true,
-                        breadcrumbs: true,
-                        columns: columns
-                    });
+                    if (preInitGroupsItem.initGroup && preInitGroupsItem.initGroup[0].hasOwnProperty('items')) {
+
+                        preInitGroupsItem.initGroup.forEach(function (initGroupItem) {
+
+                            initGroupItem.bootGroup = setGroups(initGroupItem.items, bootsGroup, entityType);
+
+                            if (initGroupItem.bootGroup && initGroupItem.bootGroup[0].hasOwnProperty('items')) {
+
+                                initGroupItem.bootGroup.forEach(function (bootGroupItem) {
+
+                                    bootGroupItem.lineGroup = setGroups(bootGroupItem.items, linesGroup, entityType);
+                                })
+                            }
+
+                        })
+                    }
 
                 });
-
             } else {
+                preInitGroups = [];
+                results = setGroups(items, initLineGroup, entityType);
 
-                groups = {
-                    preInitGroups: preInitGroups,
-                    bootsGroup: bootsGroup,
-                    linesGroup: linesGroup
-                };
+                results.forEach(function (initGroupItem) {
 
-                results = recursiveFillGroups(items, groups, entityType, {
-                    boot: true,
-                    breadcrumbs: true,
-                    columns: columns
+                    initGroupItem.bootGroup = setGroups(initGroupItem.items, bootsGroup, entityType);
+
+                    if (initGroupItem.bootGroup && initGroupItem.bootGroup[0].hasOwnProperty('items')) {
+
+                        initGroupItem.bootGroup.forEach(function (bootGroupItem) {
+
+                            bootGroupItem.lineGroup = setGroups(bootGroupItem.items, linesGroup, entityType);
+                        })
+                    }
+
                 });
+
             }
 
-            console.log('results', results);
+
+            //console.log('results', results);
 
             return results;
 

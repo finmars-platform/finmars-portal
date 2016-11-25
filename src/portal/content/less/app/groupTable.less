@@ -133,6 +133,8 @@
         position: relative;
         top: -3px;
       }
+
+
     }
     .g-cell {
       // position: relative;
@@ -1234,29 +1236,29 @@ body.md-dialog-is-showing {
   }
   .g-row {
     border: none !important;
+    box-shadow: -1px 0 0 0 #363636 inset, 0 1px 0 0 #363636 inset, -1px 1px 0 0 #363636, -1px 0 0 0 #363636 inset, 0 1px 0 0 #363636 inset;
   }
   .g-row .g-cell {
     height: 24px;
     box-sizing: border-box;
     border: none !important;
-    box-shadow: 1px 0 0 0 #363636,
-    0 1px 0 0 #363636,
-    1px 1px 0 0 #363636,
-    1px 0 0 0 #363636 inset,
-    0 1px 0 0 #363636 inset;
+    box-shadow: -1px 0 0 0 #363636 inset, 0 1px 0 0 #363636 inset, -1px 1px 0 0 #363636, -1px 0 0 0 #363636 inset, 0 1px 0 0 #363636 inset;
   }
   .g-row .g-row-selection {
-    box-shadow: 1px 0 0 0 #363636,
-    0 1px 0 0 #363636,
-    1px 1px 0 0 #363636,
-    1px 0 0 0 #363636 inset,
-    0 1px 0 0 #363636 inset;
+    box-shadow: 1px 1px 0 0 #363636 inset, 1px 1px 0 0 #363636 inset, -1px 1px 0 0 #363636 inset, 1px 0 0 0 #363636 inset, 0 1px 0 0 #363636 inset;
     border: none !important;
   }
+
+  .g-cell.g-cell-group {
+    box-shadow: -1px 0 0 0 #363636 inset, 0 1px 0 0 #363636 inset, -1px 1px 0 0 #363636, -1px 0 0 0 #363636 inset, 0 1px 0 0 #363636 inset;
+  }
+
   .g-row.report-preinit-row {
     border-bottom: 0;
     position: relative;
     z-index: 1;
+
+    box-shadow: -1px 0 0 0 #363636 inset, 0 1px 0 0 #363636 inset, -1px 1px 0 0 #363636, -1px 0 0 0 #363636 inset, 0 1px 0 0 #363636 inset;
 
     .g-group {
       height: 24px;
@@ -1359,27 +1361,27 @@ body.md-dialog-is-showing {
   background: #DCDCDC;
 }
 
-.cell-area-bg-0 {
-  background: rgba(187, 52, 52, 0.2);
-}
-
 .cell-area-bg-1 {
-  background: rgba(52, 100, 187, 0.2)
+  background: rgba(187, 52, 52, 0.2);
 }
 
 .cell-area-bg-2 {
-  background: rgba(52, 187, 62, 0.2);
-}
-
-.cell-line-bg-0 {
-  background: rgba(187, 52, 52, 0.2);
-}
-
-.cell-line-bg-1 {
   background: rgba(52, 100, 187, 0.2)
 }
 
+.cell-area-bg-3 {
+  background: rgba(52, 187, 62, 0.2);
+}
+
+.cell-line-bg-1 {
+  background: rgba(187, 52, 52, 0.2);
+}
+
 .cell-line-bg-2 {
+  background: rgba(52, 100, 187, 0.2)
+}
+
+.cell-line-bg-3 {
   background: rgba(52, 187, 62, 0.2);
 }
 
@@ -1408,6 +1410,6 @@ body.md-dialog-is-showing {
   }
   md-input-container {
     min-width: 190px;
-    height:34px;
+    height: 34px;
   }
 }

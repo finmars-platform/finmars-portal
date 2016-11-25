@@ -56,6 +56,14 @@
                 <input type="text" data-ng-model="vm.entity.display_expr">
             </md-input-container>
         </div>
+        <div layout="row">
+            <md-input-container>
+                <label for="">Tags</label>
+                <md-select data-ng-model="vm.entity.tags" multiple>
+                    <md-option ng-value="item.id" ng-repeat="item in vm.tags">{{item.name}}</md-option>
+                </md-select>
+            </md-input-container>
+        </div>
     </div>
     <div data-ng-if="!vm.checkReadyStatus()">
         <div layout="row" layout-sm="column" layout-align="space-around">
