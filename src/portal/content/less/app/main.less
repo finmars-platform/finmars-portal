@@ -1047,3 +1047,42 @@ md-input-container.error {
   opacity: .8;
 }
 
+md-menu-content md-menu.md-menu {
+  padding: 0;
+  & > button.md-button {
+    margin: 0;
+    padding: 0;
+    padding: 0 16px;
+    width: 100%;
+    border-radius: 0;
+    font-size: 15px;
+    text-transform: none;
+    font-weight: 400;
+    text-align: left;
+    text-align: start;
+    height: 100%;
+    height: 48px;
+    display: inline-block;
+    -webkit-align-items: baseline;
+    -ms-flex-align: baseline;
+    align-items: baseline;
+    -webkit-align-content: flex-start;
+    -ms-flex-line-pack: start;
+    align-content: flex-start;
+  }
+  .z-menu-icon {
+    position: relative;
+    top: 6px;
+    margin-right: 10px;
+  }
+}
+
+.z-dropdown-icon {
+  position: absolute;
+  right: 8px;
+  top: 12px;
+  opacity: .5;
+  svg {
+    transform: rotate(90deg);
+  }
+}

@@ -25,6 +25,7 @@
             templateUrl: 'views/directives/groupTable/columns-view.html',
             link: function (scope, elem, attrs) {
 
+
                 logService.component('groupColumnResizer', 'initialized');
 
                 var baseAttrs = [];
@@ -72,9 +73,43 @@
                     scope.externalCallback();
                 };
 
-                scope.openColumnSettings = function ($mdOpenMenu, ev) {
-                    $mdOpenMenu(ev);
+                scope.selectSubtotalType = function (column, type) {
+
+                    if (!column.hasOwnProperty('report_settings')) {
+                        column.report_settings = {};
+                    }
+
+                    if (column.report_settings.subtotal_formula_id == type) {
+                        column.report_settings.subtotal_formula_id = null;
+                    } else {
+                        column.report_settings.subtotal_formula_id = type;
+                    }
+                    scope.externalCallback();
                 };
+
+                scope.checkSubtotalFormula = function (column, type) {
+
+                    if (column.hasOwnProperty('report_settings')) {
+                        if (column.report_settings.subtotal_formula_id == type) {
+                            return true;
+                        }
+
+                    }
+
+                    return false
+
+                };
+
+                scope.$watchCollection('columns', function () {
+                    setTimeout(function () {
+
+                        if (scope.isReport == true) {
+                            scope.externalCallback();
+                            scope.$apply();
+                        }
+
+                    }, 0)
+                });
 
                 scope.isSortable = function (column) {
                     var b, e;

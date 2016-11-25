@@ -10,6 +10,7 @@
     var transactionTypeGroupService = require('../../../services/transaction/transactionTypeGroupService');
     var portfolioService = require('../../../services/portfolioService');
     var instrumentTypeService = require('../../../services/instrumentTypeService');
+    var tagService = require('../../../services/tagService');
 
     module.exports = function ($scope) {
         logService.controller('TransactionTypeGeneralTabController', 'initialized');
@@ -21,7 +22,7 @@
         vm.entity.actions = vm.entity.actions || [];
         vm.entity.inputs = vm.entity.inputs || [];
 
-        vm.readyStatus = {transactionTypeGroups: false, instrumentTypes: false, portfolios: false};
+        vm.readyStatus = {transactionTypeGroups: false, instrumentTypes: false, portfolios: false, tags: false};
 
         vm.getTransactionTypeGroups = function () {
             transactionTypeGroupService.getList().then(function (data) {
@@ -47,6 +48,15 @@
             })
         };
 
+        vm.getTags = function () {
+            tagService.getListByContentType('transaction-type').then(function (data) {
+                vm.tags = data.results;
+                vm.readyStatus.tags = true;
+                $scope.$apply();
+            });
+
+        };
+
         vm.bindSelectedText = function (entity, fallback) {
             if (entity) {
                 return '[' + entity.length + ']';
@@ -57,9 +67,13 @@
         vm.getTransactionTypeGroups();
         vm.getPortfolios();
         vm.getInstrumentTypes();
+        vm.getTags();
 
         vm.checkReadyStatus = function () {
-            if (vm.readyStatus.transactionTypeGroups == true && vm.readyStatus.portfolios == true && vm.readyStatus.instrumentTypes == true) {
+            if (vm.readyStatus.transactionTypeGroups == true &&
+                vm.readyStatus.portfolios == true &&
+                vm.readyStatus.instrumentTypes == true &&
+                vm.readyStatus.tags == true) {
                 return true;
             }
             return false;

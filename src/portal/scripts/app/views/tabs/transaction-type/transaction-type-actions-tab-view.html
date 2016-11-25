@@ -44,6 +44,17 @@
                                         <md-select data-ng-model="item.transaction.transaction_class"
                                                    md-on-open="vm.loadRelation('transaction_class')">
                                             <md-option
+                                                    data-ng-if="!vm.relationItems['transaction_class'].length"
+                                                    ng-value="item.transaction.transaction_class_object.id">
+                                                {{item.transaction.transaction_class_object.name}}
+                                            </md-option>
+                                            <md-option
+                                                    data-ng-if="vm.relationItems['transaction_class'].length"
+                                                    data-ng-repeat="relationItem in vm.relationItems['transaction_class']"
+                                                    ng-value="relationItem.value">
+                                                {{relationItem.name}}
+                                            </md-option>
+                                            <md-option
                                                     data-ng-repeat="relationItem in vm.relationItems['transaction_class']"
                                                     ng-value="relationItem.value">
                                                 {{relationItem.name}}
@@ -113,7 +124,7 @@
                                     <div flex="33">
                                         <md-input-container>
                                             <label for="">Position size with sign</label>
-                                            <input type="text" data-ng-model="item.position_size_with_sign">
+                                            <input type="text" data-ng-model="item.transaction.position_size_with_sign">
                                         </md-input-container>
                                     </div>
                                     <div flex="33" layout="row">
@@ -604,6 +615,7 @@
                                     <div flex="33">
                                         <md-input-container>
                                             <label for="">Reference fx-rate</label>
+                                            <input type="text" data-ng-model="item.transaction.reference_fx_rate">
                                         </md-input-container>
                                     </div>
                                 </div>
