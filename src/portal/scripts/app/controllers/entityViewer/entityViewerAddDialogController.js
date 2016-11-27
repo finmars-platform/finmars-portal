@@ -48,6 +48,9 @@
         vm.save = function ($event) {
             vm.saveCallback().then(function (options) {
 
+                console.log('options.entityType', options);
+                console.log('vm', vm);
+
                 entityResolverService.create(options.entityType, options.entity).then(function (data) {
                     console.log('DATA', data);
                     if (data.status == 200 || data.status == 201) {

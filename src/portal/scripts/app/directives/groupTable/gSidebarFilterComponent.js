@@ -10,6 +10,7 @@
 
 
     var pricingPolicyService = require('../../services/pricingPolicyService');
+    var currencyService = require('../../services/currencyService');
 
     module.exports = function ($mdDialog) {
         return {
@@ -44,6 +45,15 @@
                         scope.$apply();
 
                     });
+
+                    currencyService.getList().then(function (data) {
+
+                        scope.currencies = data.results;
+
+                        scope.$apply();
+
+                    });
+
                 }
 
 

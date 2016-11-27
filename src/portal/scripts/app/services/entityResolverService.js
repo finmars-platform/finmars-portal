@@ -240,6 +240,12 @@
             case 'strategy-3-subgroup':
                 return strategySubgroupService.create(3, entity);
                 break;
+            case 'complex-transaction':
+                console.log('entity', entity);
+                var i;
+
+                return transactionTypeService.bookTransaction(entity);
+                break;
             case 'tag':
                 return tagService.create(entity);
                 break;

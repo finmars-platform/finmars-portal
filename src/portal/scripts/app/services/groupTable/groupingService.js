@@ -535,6 +535,10 @@
 
         if (groups.length) {
 
+            items.forEach(function(item, $index){
+                item._lid = $index;
+            });
+
             findBootsGroup();
             findPreInitGroup();
             findLinesGroup();
@@ -542,7 +546,6 @@
             console.log('preInitGroups', preInitGroups);
             console.log('bootsGroup', bootsGroup);
             console.log('linesGroup', linesGroup);
-
 
             var groups = {};
 

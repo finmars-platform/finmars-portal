@@ -20,6 +20,17 @@
 
                     </md-input-container>
 
+                    <md-input-container style="margin-bottom: 20px;">
+
+                        <label for="">Currency</label>
+
+                        <md-select data-ng-model="reportOptions.currency">
+                            <md-option data-ng-repeat="item in currencies" ng-value="item.id">{{item.name}}
+                            </md-option>
+                        </md-select>
+
+                    </md-input-container>
+
                     <md-input-container>
 
                         <label for="">Pricing Policy</label>
