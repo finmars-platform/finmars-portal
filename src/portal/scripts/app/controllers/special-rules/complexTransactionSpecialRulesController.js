@@ -40,6 +40,8 @@
             setTimeout(function () {
                 $scope.$parent.vm.editLayoutEntityInstanceId = vm.transactionTypeId;
                 $scope.$parent.vm.specialRulesReady = true;
+                $scope.$parent.vm.entity._transaction_type_id = vm.transactionTypeId;
+                console.log('PARENT', $scope.$parent.vm);
                 $scope.$parent.vm.getEditListByInstanceId($scope.$parent.vm.entityType, $scope.$parent.vm.editLayoutEntityInstanceId);
                 $scope.$apply();
             }, 200); // but why?

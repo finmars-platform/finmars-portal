@@ -92,7 +92,8 @@
                         }
 
                         vm.userInputs.push({
-                            key: input.name.split(' ').join('_').toLowerCase() + '_' + input.content_type,
+                            unique_key: input.name.split(' ').join('_').toLowerCase() + '_' + input.content_type,
+                            key: input.content_type.split('.')[1],
                             name: input.name,
                             content_type: input.content_type,
                             value_type: input_value_type

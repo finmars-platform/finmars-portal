@@ -286,7 +286,6 @@
 
         vm.bindField = function (tab, field) {
             var i, l, e, u;
-            //console.log('FIELD', field);
             if (field && field.type === 'field') {
                 if (field.hasOwnProperty('id') && field.id !== null) {
                     for (i = 0; i < vm.attrs.length; i = i + 1) {
@@ -314,6 +313,8 @@
                             return vm.layoutAttrs[l];
                         }
                     }
+
+                    console.log('vm.userInputs', vm.userInputs);
                     for (u = 0; u < vm.userInputs.length; u = u + 1) {
                         if (field.name === vm.userInputs[u].name) {
                             vm.userInputs[u].options = field.options;
@@ -602,6 +603,28 @@
 
                 var resultEntity = checkForNulls(vm.entity);
                 console.log('resultEntity', resultEntity);
+
+
+                if (vm.entityType == 'complex-transaction') {
+
+                    resultEntity.values = {};
+                    console.log('userInputs', vm.userInputs);
+
+                    vm.userInputs.forEach(function (userInput) {
+
+                        if (userInput !== null) {
+                            var keys = Object.keys(vm.entity);
+                            keys.forEach(function (key) {
+                                if (key == userInput.key) {
+                                    resultEntity.values[userInput.name] = vm.entity[userInput.key];
+                                }
+                            });
+                        }
+                    })
+
+                    resultEntity.store = true;
+
+                }
 
                 return new Promise(function (resolve, reject) {
                     var options = {

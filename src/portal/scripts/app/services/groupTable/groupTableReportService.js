@@ -21,6 +21,7 @@
 
             groups.push({
                 groups: ancestorItem.groups,
+                items: ancestorItem.items,
                 level: ancestorItem.level
             });
 
@@ -130,7 +131,7 @@
 
         if (rowType == 'normal') {
 
-            //console.log('item', item);
+            console.log('item', item);
 
             if (item.breadcrumbs_level_0[0].hasOwnProperty('groups')) {
 
@@ -156,29 +157,52 @@
 
                 previousGroups = findPreviousGroupsByAncestor(item);
 
-                for (i = 0; i < level; i = i + 1) {
+                //console.log('previousGroups', previousGroups);
+                //console.log('item', item);
 
-                    if (i == level - 1) {
-                        cellObj = item.groups[0];
-                        cellObj.type = item.groups[0].report_settings.subtotal_type;
-                        cellObj.level = level;
-                    } else {
-                        for (g = 0; g < previousGroups.length; g = g + 1) {
+                if (options.itemIndex == 0) {
 
-                            if (previousGroups[g].level == i) {
-                                cellObj = previousGroups[g].groups[0];
-                                cellObj.type = item.groups[0].report_settings.subtotal_type;
-                                cellObj.level = i + 1;
+                    for (i = 0; i < level; i = i + 1) {
+
+                        if (i == level - 1) {
+                            cellObj = item.groups[0];
+                            cellObj.type = item.groups[0].report_settings.subtotal_type;
+                            cellObj.level = level;
+                        } else {
+                            for (g = 0; g < previousGroups.length; g = g + 1) {
+
+                                if (previousGroups[g].level == i) {
+                                    cellObj = previousGroups[g].groups[0];
+                                    cellObj.type = item.groups[0].report_settings.subtotal_type;
+                                    cellObj.level = i + 1;
+                                }
                             }
+
                         }
 
+
+                        cellCaptions.push(cellObj);
                     }
+                } else {
 
 
-                    cellCaptions.push(cellObj);
+                    for (i = 1; i <= level; i = i + 1) {
 
-                    //console.log('cellCaptions', cellCaptions);
+                        cellObj = {
+                            value: '',
+                            type: item.groups[0].report_settings.subtotal_type,
+                            level: i
+                        };
 
+
+                        if (i == level) {
+                            cellObj.level = level;
+                        }
+
+
+                        cellCaptions.push(cellObj);
+
+                    }
                 }
             }
         }
@@ -295,9 +319,9 @@
 
                 } else {
 
-                    item.items.forEach(function (rowItem) {
+                    item.items.forEach(function (rowItem, $itemIndex) {
 
-                        var cellCaptions = findCellCaptions(item, level, 'normal');
+                        var cellCaptions = findCellCaptions(item, level, 'normal', {itemIndex: $itemIndex});
 
                         var obj = {
                             cellsCaptions: cellCaptions,
