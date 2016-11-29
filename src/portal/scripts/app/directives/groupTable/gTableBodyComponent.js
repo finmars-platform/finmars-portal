@@ -24,6 +24,7 @@
                 isAllSelected: '=',
                 entityType: '=',
                 isReport: '=',
+                reportIsReady: '=',
 
                 paginationItemPerPage: '=',
                 paginationItemsTotal: '=',
@@ -535,6 +536,7 @@
                     if (scope.readyStatus.cellsFirstReady == true &&
                         scope.readyStatus.cellsSecondReady == true &&
                         scope.readyStatus.classifiersReady == true &&
+                        scope.reportIsReady == true &&
                         scope.readyStatus.attributeTypesReady == true) {
 
                         scope.$parent.triggerResize();

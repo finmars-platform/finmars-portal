@@ -467,6 +467,8 @@
 
                 //console.log('vm.reportOptions;', vm.reportOptions);
 
+                vm.reportIsReady = false;
+
                 $scope.$parent.vm.getList(vm.reportOptions).then(function (data) {
 
                     vm.reportOptions = data;
@@ -487,6 +489,8 @@
                             vm.entity = data;
 
                             console.log('vm.entityItems', vm.entity);
+
+                            vm.reportIsReady = true;
 
                             if (vm.entityType == 'balance-report') {
                                 vm.entity = reportSubtotalService.groupByAndCalc(vm.entity, vm.reportOptions);
@@ -521,6 +525,8 @@
                     page: vm.paginationPageCurrent,
                     pageSize: vm.paginationItemPerPage
                 };
+
+                vm.reportIsReady = true;
 
                 //console.log('vm.filters', vm.filters);
 
