@@ -51,6 +51,15 @@
                     })
                 };
 
+                scope.isColumnFloat = function (column) {
+
+                    if (column.value_type == 'float' || column.value_type == 20) {
+                        return true
+                    }
+
+                    return false;
+                };
+
                 scope.sortHandler = function (column, sort) {
                     var i;
                     for (i = 0; i < scope.columns.length; i = i + 1) {

@@ -1256,7 +1256,7 @@
                         templateUrl: 'views/tabs/complex-transaction/book-transaction-actions-tab-view.html'
                     },
                     {
-                        enabled: ['update'], // create update view
+                        enabled: ['update'],
                         label: 'Transactions',
                         templateUrl: 'views/tabs/complex-transaction/book-transaction-transactions-tab-view.html'
                     }
