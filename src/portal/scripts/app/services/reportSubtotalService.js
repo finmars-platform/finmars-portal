@@ -256,8 +256,82 @@
         return calculatedColumns;
     };
 
+    var groupByAndCalc = function (items, options) {
+
+        var groups = [];
+
+        if (options.calculationGroup) {
+
+            items.forEach(function (item) {
+
+                if (groups.length) {
+
+                    var exist = false;
+
+                    groups.forEach(function (groupItem) {
+                        if (groupItem.name == options.calculationGroup + '_' + item[options.calculationGroup + '_object'].id) {
+                            groupItem.items.push(item);
+                            exist = true;
+                        }
+                    });
+
+                    if (!exist) {
+                        groups.push({
+                            name: options.calculationGroup + '_' + item[options.calculationGroup + '_object'].id,
+                            items: [item]
+                        });
+                    }
+
+                } else {
+                    groups.push({
+                        name: options.calculationGroup + '_' + item[options.calculationGroup + '_object'].id,
+                        items: [item]
+                    });
+                }
+
+            });
+
+        } else {
+            groups.push({name: '', items: items});
+        }
+
+        groups.forEach(function (group) {
+
+            var marketValueTotal = 0;
+            var exposureValueTotal = 0;
+
+            group.items.forEach(function (item) {
+                marketValueTotal = marketValueTotal + item.market_value;
+                exposureValueTotal = exposureValueTotal + item.exposure;
+            });
+
+            //console.log('marketValueTotal', marketValueTotal);
+            console.log('exposureValueTotal', exposureValueTotal);
+
+            group.items.forEach(function (item) {
+
+                if (marketValueTotal > 0) {
+                    item.market_value_percent = item.market_value / marketValueTotal * 100;
+                } else {
+                    item.market_value_percent = 0;
+                }
+                if (exposureValueTotal > 0) {
+                    item.exposure_percent = item.exposure / exposureValueTotal * 100;
+                } else {
+                    item.exposure_percent = 0;
+                }
+            })
+
+
+        });
+
+
+        return items;
+    };
+
     module.exports = {
-        calcColumnSubTotal: calcColumnSubTotal
+        calcColumnSubTotal: calcColumnSubTotal,
+        groupByAndCalc: groupByAndCalc
     }
 
 }());
