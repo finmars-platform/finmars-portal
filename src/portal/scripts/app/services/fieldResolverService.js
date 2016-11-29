@@ -179,7 +179,7 @@
                     });
                     break;
                 case 'type':
-                    accountTypeRepository.getTypeList().then(function (data) {
+                    accountTypeRepository.getList().then(function (data) {
                         resolve({type: 'id', key: 'type', data: data.results});
                     });
                     break;

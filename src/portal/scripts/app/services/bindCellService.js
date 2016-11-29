@@ -89,13 +89,8 @@
                                     });
                                     break;
                                 case 'account':
-
-                                    console.log('lol here?');
-
                                     return accountRepository.getList().then(function (data) {
                                         entities[entity] = data.results;
-
-                                        console.log('entities account', entities);
                                         resolve({key: entity, data: entities[entity]});
                                     });
                                     break;

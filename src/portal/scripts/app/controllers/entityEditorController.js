@@ -30,7 +30,7 @@
         console.log('$scope', $scope);
         vm.entityType = $scope.$parent.vm.entityType;
         vm.entityTabs = metaService.getEntityTabs(vm.entityType);
-        vm.evAction = 'update';
+        vm.evAction = $scope.$parent.vm.evAction;
         vm.entityId = $scope.$parent.vm.entityId;
         vm.entity = {$_isValid: true};
 
@@ -40,7 +40,8 @@
         vm.specialRulesReady = true;
         if (['complex-transaction'].indexOf(vm.entityType) !== -1) {
             vm.editLayoutByEntityInsance = true;
-            vm.entitySpecialRules = true
+            vm.entitySpecialRules = true;
+            vm.complexTransactionOptions = {};
         }
 
         logService.property('entityType', vm.entityType);
@@ -111,16 +112,28 @@
             //
 
             if (vm.entityId) {
-                console.log('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
+
                 entityResolverService.getByKey(vm.entityType, vm.entityId).then(function (data) {
-                    vm.entity = data;
-                    entityViewerHelperService.transformItems([vm.entity], vm.attrs).then(function (data) {
-                        vm.entity = data[0];
-                        vm.entity.$_isValid = true;
+
+                    if (vm.entityType == 'complex-transaction') {
+                        vm.complexTransactionOptions.transactionType = data.transaction_type;
+                        vm.editLayoutEntityInstanceId = data.transaction_type;
+                        vm.entity = data;
+                        vm.specialRulesReady = true;
                         vm.readyStatus.entity = true;
-                        console.log('1231231231312?');
-                        vm.loadPermissions();
-                    });
+                        vm.readyStatus.permissions = true;
+                        console.log('vm.complexTransactionOptions', vm.complexTransactionOptions);
+                        $scope.$apply();
+                    } else {
+                        vm.entity = data;
+                        entityViewerHelperService.transformItems([vm.entity], vm.attrs).then(function (data) {
+                            vm.entity = data[0];
+                            vm.entity.$_isValid = true;
+                            vm.readyStatus.entity = true;
+                            console.log('1231231231312?');
+                            vm.loadPermissions();
+                        });
+                    }
 
                     //$scope.$apply();
                 });
@@ -358,6 +371,18 @@
             originatorEv = ev;
             $mdOpenMenu(ev);
         };
+
+        vm.checkViewState = function (tab) {
+
+            if (tab.hasOwnProperty('enabled')) {
+                if (tab.enabled.indexOf(vm.evAction) == -1) {
+                    return false;
+                }
+            }
+
+            return true;
+        };
+
 
         $scope.$parent.vm.copyCallback = function () {
             return new Promise(function (resolve) {
@@ -620,9 +645,10 @@
                                 }
                             });
                         }
-                    })
+                    });
 
                     resultEntity.store = true;
+                    resultEntity.calculate = true;
 
                 }
 
