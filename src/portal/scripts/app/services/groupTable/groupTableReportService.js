@@ -131,7 +131,7 @@
 
         if (rowType == 'normal') {
 
-            console.log('item', item);
+            //console.log('item', item);
 
             if (item.breadcrumbs_level_0[0].hasOwnProperty('groups')) {
 

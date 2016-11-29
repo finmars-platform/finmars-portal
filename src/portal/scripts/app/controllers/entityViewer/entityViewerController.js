@@ -14,6 +14,7 @@
     var metaService = require('../../services/metaService');
 
     var GroupTableService = require('../../services/groupTable/groupTableService');
+    var reportSubtotalService = require('../../services/reportSubtotalService');
 
     var uiService = require('../../services/uiService');
 
@@ -274,8 +275,8 @@
                             if (item.options) {
                                 attrOptions = JSON.parse(JSON.stringify(item.options));
                             }
-                            if(item.report_settings) {
-                                report_settings= JSON.parse(JSON.stringify(item.report_settings));
+                            if (item.report_settings) {
+                                report_settings = JSON.parse(JSON.stringify(item.report_settings));
                             }
                             item = attr;
                             item.options = attrOptions;
@@ -290,8 +291,8 @@
                             if (item.options) {
                                 attrOptions = JSON.parse(JSON.stringify(item.options));
                             }
-                            if(item.report_settings) {
-                                report_settings= JSON.parse(JSON.stringify(item.report_settings));
+                            if (item.report_settings) {
+                                report_settings = JSON.parse(JSON.stringify(item.report_settings));
                             }
                             item = baseAttr;
                             item.options = attrOptions;
@@ -306,8 +307,8 @@
                             if (item.options) {
                                 attrOptions = JSON.parse(JSON.stringify(item.options));
                             }
-                            if(item.report_settings) {
-                                report_settings= JSON.parse(JSON.stringify(item.report_settings));
+                            if (item.report_settings) {
+                                report_settings = JSON.parse(JSON.stringify(item.report_settings));
                             }
                             item = entityAttr;
                             item.options = attrOptions;
@@ -476,7 +477,7 @@
                         }, 1000)
                     } else {
 
-                        data.items.forEach(function(i){
+                        data.items.forEach(function (i) {
                             //console.log('i.portfolio', i.portfolio);
                             //console.log('i.currency', i.currency);
                         });
@@ -484,6 +485,13 @@
                         entityViewerHelperService.transformItems(data.items, vm.attrs).then(function (data) {
 
                             vm.entity = data;
+
+                            console.log('vm.entityItems', vm.entity);
+
+                            if (vm.entityType == 'balance-report') {
+                                vm.entity = reportSubtotalService.groupByAndCalc(vm.entity, vm.reportOptions);
+                            }
+
                             vm.groupTableService.setItems(vm.entity);
 
                             vm.groupTableService.columns.setColumns(vm.columns);

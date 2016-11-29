@@ -116,7 +116,7 @@
                         findEntityFields();
 
                         Promise.all(promises).then(function (results) {
-                            console.log('results11111111111111111', results);
+                            //console.log('results11111111111111111', results);
                             results.forEach(function (item) {
                                 if (item.key) {
 
@@ -651,11 +651,15 @@
                         result = values[column.key];
                     }
 
-                    return result;
+                    if (result !== undefined) {
+                        return result + '';
+                    }
 
                 };
 
                 scope.bindCell = function (groupedItem, column) {
+
+                    //console.log('groupedItem', groupedItem);
 
                     function findNodeInChildren(item) {
                         if (groupedItem[column.name] == item.id) {
@@ -741,8 +745,10 @@
                                             return '[' + groupedItem[entityAttrs[e].key].length + ']'
                                         }
                                     } else {
-                                        if (groupedItem[entityAttrs[e].key]) {
-                                            return groupedItem[entityAttrs[e].key];
+
+                                        if (groupedItem[entityAttrs[e].key] !== null) {
+
+                                            return groupedItem[entityAttrs[e].key] + '';
                                         }
                                     }
                                 }
