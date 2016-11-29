@@ -46,7 +46,7 @@
 
                     });
 
-                    currencyService.getList().then(function (data) {
+                    currencyService.getList({"page_size": 200}).then(function (data) {
 
                         scope.currencies = data.results;
 

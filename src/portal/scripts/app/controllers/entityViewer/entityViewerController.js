@@ -15,6 +15,7 @@
 
     var GroupTableService = require('../../services/groupTable/groupTableService');
     var reportSubtotalService = require('../../services/reportSubtotalService');
+    var pricingPolicyService = require('../../services/pricingPolicyService');
 
     var uiService = require('../../services/uiService');
 
@@ -211,14 +212,6 @@
         vm.entity = [];
         vm.entityType = $scope.$parent.vm.entityType;
         vm.isReport = $scope.$parent.vm.isReport || false;
-
-        if (vm.isReport == true) {
-            vm.reportOptions = {
-                cost_method: 1,
-                pricing_policy: 2
-            };
-
-        }
 
         console.log('vm.isReport', vm.isReport);
 
@@ -472,6 +465,7 @@
                 $scope.$parent.vm.getList(vm.reportOptions).then(function (data) {
 
                     vm.reportOptions = data;
+                    vm.reportOptions.currency = data.report_currency;
 
                     if (data.task_status !== 'SUCCESS') {
                         setTimeout(function () {
@@ -648,12 +642,31 @@
             //vm.editorEntityId = undefined;
         };
 
-        vm.getView().then(function () {
-            vm.getAttributes().then(function () {
-                vm.transformViewAttributes();
-                vm.getEntityData();
+
+        if (vm.isReport == true) {
+            pricingPolicyService.getList().then(function (data) {
+
+                vm.reportOptions = {
+                    cost_method: 1,
+                    pricing_policy: data.results[0].id
+                };
+
+                vm.getView().then(function () {
+                    vm.getAttributes().then(function () {
+                        vm.transformViewAttributes();
+                        vm.getEntityData();
+                    });
+                });
+
+            })
+        } else {
+            vm.getView().then(function () {
+                vm.getAttributes().then(function () {
+                    vm.transformViewAttributes();
+                    vm.getEntityData();
+                });
             });
-        });
+        }
 
         vm.checkAddBtn = function () {
             if (["transaction"].indexOf(vm.entityType) !== -1) {
