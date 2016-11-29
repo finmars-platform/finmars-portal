@@ -105,6 +105,7 @@
         vm.baseAttrs = metaService.getBaseAttrs();
         vm.entityAttrs = metaService.getEntityAttrs(vm.entityType) || [];
 
+
         attributeTypeService.getList(vm.entityType).then(function (data) {
             vm.attrs = data.results;
             vm.readyStatus.content = true;
@@ -126,6 +127,18 @@
                         $scope.$apply();
                     } else {
                         vm.entity = data;
+
+
+                        if (vm.entityType == 'transaction-type') {
+                            $scope.$parent.vm.editLayout = function () {
+                                $state.go('app.data-constructor', {
+                                    entityType: 'complex-transaction',
+                                    instanceId: data.id
+                                });
+                            };
+                        }
+
+
                         entityViewerHelperService.transformItems([vm.entity], vm.attrs).then(function (data) {
                             vm.entity = data[0];
                             vm.entity.$_isValid = true;

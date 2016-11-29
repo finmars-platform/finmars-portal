@@ -654,7 +654,12 @@
                     }
 
                     if (result !== undefined) {
-                        return result + '';
+
+                        if (column.value_type == 20 || column.value_type == 'float') {
+                            return result.toFixed(2) + '';
+                        } else {
+                            return result;
+                        }
                     }
 
                 };
@@ -750,7 +755,11 @@
 
                                         if (groupedItem[entityAttrs[e].key] !== null) {
 
-                                            return groupedItem[entityAttrs[e].key] + '';
+                                            if (column.value_type == 20 || column.value_type == 'float') {
+                                                return groupedItem[entityAttrs[e].key].toFixed(2) + '';
+                                            } else {
+                                                return groupedItem[entityAttrs[e].key];
+                                            }
                                         }
                                     }
                                 }
@@ -877,7 +886,7 @@
                             entityId: entity.id
                         }
                     }).then(function (res) {
-                        if (res.res === 'agree') {
+                        if (res && res.res === 'agree') {
                             scope.externalCallback();
                         }
                     });

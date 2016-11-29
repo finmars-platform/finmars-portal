@@ -51,6 +51,10 @@
                 return false;
             }
 
+            if (btnName == 'edit-form-btn' && vm.entityType == 'transaction-type') {
+                return false;
+            }
+
             return true;
         };
 

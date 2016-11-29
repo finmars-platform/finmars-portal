@@ -57,7 +57,7 @@
 
         vm.checkVisibility = function () {
             return true;
-        }
+        };
 
         vm.save = function ($event) {
             if (vm.evAction == 'create') {
