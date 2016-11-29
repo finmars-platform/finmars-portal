@@ -91,9 +91,19 @@
                             input_value_type = 'field'
                         }
 
+                        var contentType = undefined;
+                        var uniqueKey = input.name.split(' ').join('_').toLowerCase();
+
+                        if(input.content_type && input.content_type !== undefined) {
+                            contentType = input.content_type.split('.')[1];
+                            uniqueKey = input.name.split(' ').join('_').toLowerCase() + '_' + input.content_type;
+                        } else {
+                            contentType = input.name.split(' ').join('_').toLowerCase();
+                        }
+
                         vm.userInputs.push({
-                            unique_key: input.name.split(' ').join('_').toLowerCase() + '_' + input.content_type,
-                            key: input.content_type.split('.')[1],
+                            unique_key: uniqueKey,
+                            key: contentType,
                             name: input.name,
                             content_type: input.content_type,
                             value_type: input_value_type

@@ -343,6 +343,11 @@
                 name: "P&L report",
                 entity: 'pnl-report',
                 key: "reports.plreport"
+            },
+            {
+                name: "Transaction",
+                entity: 'complex-transaction',
+                key: "transactions.complextransaction"
             }
         ]
     };

@@ -1054,6 +1054,23 @@
                     "value_type": "float"
                 }
             ],
+            "complex-transaction": [
+                {
+                    "key": "code",
+                    "name": "Code",
+                    "value_type": "float"
+                },
+                {
+                    "key": "status",
+                    "name": "Status",
+                    "value_type": 10 // actually field
+                },
+                {
+                    "key": "text",
+                    "name": "Text",
+                    "value_type": 10
+                }
+            ],
             "instrument-scheme": [
                 {
                     key: 'reference_for_pricing',
@@ -1237,8 +1254,14 @@
                     {
                         label: 'Actions',
                         templateUrl: 'views/tabs/complex-transaction/book-transaction-actions-tab-view.html'
+                    },
+                    {
+                        enabled: ['update'], // create update view
+                        label: 'Transactions',
+                        templateUrl: 'views/tabs/complex-transaction/book-transaction-transactions-tab-view.html'
                     }
                 ];
+
                 break;
             case 'transaction-type':
                 return [

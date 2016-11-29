@@ -4,7 +4,7 @@
         <div layout="row" flex="50">
             <md-input-container>
                 <label for="">Portfolio</label>
-                <md-select data-ng-model="vm.portfolioId">
+                <md-select data-ng-model="vm.complexTransactionOptions.portfolio">
                     <md-option data-ng-repeat="item in vm.portfolios" ng-value="item.id">
                         {{item.name}}
                     </md-option>
@@ -14,7 +14,7 @@
         <div layout="row" flex="50">
             <md-input-container>
                 <label for="">Instrument</label>
-                <md-select data-ng-model="vm.instrumentId">
+                <md-select data-ng-model="vm.complexTransactionOptions.instrument">
                     <md-option data-ng-repeat="item in vm.instruments" ng-value="item.id">
                         {{item.user_code}}
                     </md-option>
@@ -26,7 +26,8 @@
         <md-input-container>
             <label for="">Transaction type</label>
             <!--<md-select data-ng-model="vm.transactionType" md-on-open="vm.loadTransactionTypes()" ng-disabled="!vm.portfolioId && !vm.instrumentId">-->
-            <md-select data-ng-model="vm.transactionTypeId" md-on-open="vm.loadTransactionTypes()" data-ng-change="vm.transactionTypeHandler()">
+            <md-select data-ng-model="vm.complexTransactionOptions.transactionType"
+                       md-on-open="vm.loadTransactionTypes()" data-ng-change="vm.transactionTypeHandler()">
                 <md-option data-ng-repeat="item in vm.transactionTypes" ng-value="item.id">
                     {{item.name}}
                 </md-option>

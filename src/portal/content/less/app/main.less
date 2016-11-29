@@ -1086,3 +1086,28 @@ md-menu-content md-menu.md-menu {
     transform: rotate(90deg);
   }
 }
+
+.transaction-actions-table {
+  tr {
+    height: 40px;
+    border-bottom: 1px solid rgba(0, 0, 0, .2);
+    td {
+      border-right: 1px solid rgba(0, 0, 0, .2);
+      &:last-child {
+        border-right: 0;
+      }
+    }
+  }
+}
+
+.layout-row>.flex-16 {
+  -webkit-box-flex: 1;
+  -webkit-flex: 1 1 16.6%;
+  flex: 1 1 16.6%;
+}
+
+.flex-16, .layout-row>.flex-16 {
+  max-width: 16.6%;
+  max-height: 100%;
+  box-sizing: border-box;
+}

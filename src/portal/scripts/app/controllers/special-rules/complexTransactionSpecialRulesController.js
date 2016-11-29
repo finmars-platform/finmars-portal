@@ -16,6 +16,12 @@
 
         var vm = this;
 
+        vm.complexTransactionOptions = {
+            portfolio: $scope.$parent.vm.complexTransactionOptions.portfolio,
+            instrument: $scope.$parent.vm.complexTransactionOptions.instrument,
+            transactionType: $scope.$parent.vm.complexTransactionOptions.transactionType
+        };
+
         $scope.$parent.vm.specialRulesReady = false;
 
         portfolioService.getList().then(function (data) {
@@ -28,6 +34,11 @@
             $scope.$apply();
         });
 
+        transactionTypeService.getList().then(function (data) {
+            vm.transactionTypes = data.results;
+            $scope.$apply();
+        });
+
         vm.loadTransactionTypes = function () {
             transactionTypeService.getList().then(function (data) {
                 vm.transactionTypes = data.results;
@@ -35,14 +46,21 @@
             })
         };
 
+        $scope.$parent.$watch('vm.complexTransactionOptions', function () {
+            console.log('hererer?');
+            vm.complexTransactionOptions = $scope.$parent.vm.complexTransactionOptions;
+        });
+
+
         vm.transactionTypeHandler = function () {
             $scope.$parent.vm.specialRulesReady = false;
             setTimeout(function () {
-                $scope.$parent.vm.editLayoutEntityInstanceId = vm.transactionTypeId;
+                $scope.$parent.vm.complexTransactionOptions.transactionType = vm.complexTransactionOptions.transactionType;
+                $scope.$parent.vm.editLayoutEntityInstanceId = vm.complexTransactionOptions.transactionType;
                 $scope.$parent.vm.specialRulesReady = true;
-                $scope.$parent.vm.entity._transaction_type_id = vm.transactionTypeId;
+                $scope.$parent.vm.entity._transaction_type_id = vm.complexTransactionOptions.transactionType;
                 console.log('PARENT', $scope.$parent.vm);
-                $scope.$parent.vm.getEditListByInstanceId($scope.$parent.vm.entityType, $scope.$parent.vm.editLayoutEntityInstanceId);
+                $scope.$parent.vm.getEditListByInstanceId($scope.$parent.vm.entityType, vm.complexTransactionOptions.transactionType);
                 $scope.$apply();
             }, 200); // but why?
 
