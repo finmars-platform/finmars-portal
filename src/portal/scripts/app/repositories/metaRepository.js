@@ -73,6 +73,31 @@
             ],
             "audit-transaction": [
                 {
+                    "key": "dateFormatted",
+                    "name": "Date",
+                    "value_type": 10
+                },
+                {
+                    "key": "username",
+                    "name": "Member",
+                    "value_type": 10
+                },
+                {
+                    "key": "field",
+                    "name": "Field",
+                    "value_type": 10
+                },
+                {
+                    "key": "old_value",
+                    "name": "Old value",
+                    "value_type": 10
+                },
+                {
+                    "key": "value",
+                    "name": "New value",
+                    "value_type": 10
+                },
+                {
                     "key": "message",
                     "name": "Message",
                     "value_type": 10

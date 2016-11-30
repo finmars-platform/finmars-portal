@@ -467,6 +467,7 @@
 		}, 500);
 
 		vm.MABtnVisibility = function (entityType) {
+			console.log('custom entity type', entityType);
 			return metaService.checkRestrictedEntityTypesForAM(entityType);
 		}
 	}

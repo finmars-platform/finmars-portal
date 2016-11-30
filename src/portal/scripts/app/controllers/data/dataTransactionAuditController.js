@@ -22,7 +22,13 @@
         vm.entityViewer = {extraFeatures: []};
 
         auditService.getList({filters: {'content_type': 'transactions.transaction'}}).then(function (data) {
-            vm.entityRaw = data.results;
+            var formattedData = data.results.map(function (item) {
+                item.dateFormatted = moment(new Date(item.created)).format('DD/MM/YYYY');
+                item.username = item.member.username;
+                return item;
+            });
+            vm.entityRaw = formattedData;
+            console.log('audit date is', vm.entityRaw);
             vm.readyStatus.content = true;
             $scope.$apply();
         });
