@@ -1,13 +1,13 @@
 /**
  * Created by szhitenev on 08.06.2016.
  */
-(function(){
+(function () {
 
     'use strict';
 
     var logService = require('../../../../../core/services/logService');
 
-    module.exports = function($scope, $mdDialog, item){
+    module.exports = function ($scope, $mdDialog, item) {
 
         logService.controller('ExpressionEditorDialogController', 'initialized');
 
@@ -20,7 +20,7 @@
         };
 
         vm.agree = function () {
-            $mdDialog.hide({status: 'agree'});
+            $mdDialog.hide({status: 'agree', data: {item: vm.item}});
         };
     }
 

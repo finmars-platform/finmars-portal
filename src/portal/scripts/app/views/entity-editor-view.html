@@ -23,7 +23,7 @@
                         </md-content>
                     </md-tab-body>
                 </md-tab>
-                <md-tab data-ng-repeat="tab in vm.entityTabs">
+                <md-tab data-ng-repeat="tab in vm.entityTabs" data-ng-if="vm.checkViewState(tab)">
                     <md-tab-lable>
                         <span class="grey-tab">{{tab.label}}</span>
                     </md-tab-lable>

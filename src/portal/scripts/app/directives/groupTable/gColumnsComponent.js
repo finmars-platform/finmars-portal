@@ -51,6 +51,15 @@
                     })
                 };
 
+                scope.isColumnFloat = function (column) {
+
+                    if (column.value_type == 'float' || column.value_type == 20) {
+                        return true
+                    }
+
+                    return false;
+                };
+
                 scope.sortHandler = function (column, sort) {
                     var i;
                     for (i = 0; i < scope.columns.length; i = i + 1) {
@@ -89,7 +98,7 @@
 
                 scope.checkSubtotalFormula = function (column, type) {
 
-                    if (column.hasOwnProperty('report_settings')) {
+                    if (column.hasOwnProperty('report_settings') && column.report_settings) {
                         if (column.report_settings.subtotal_formula_id == type) {
                             return true;
                         }

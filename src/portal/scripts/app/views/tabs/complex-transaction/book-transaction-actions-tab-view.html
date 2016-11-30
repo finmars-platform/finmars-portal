@@ -1,7 +1,7 @@
 <div data-ng-controller="BookTransactionActionsTabController as vm">
 
     <div data-ng-if="vm.readyStatus.transactionType">
-        <table>
+        <table class="transaction-actions-table">
             <tbody>
             <tr data-ng-repeat="key in vm.transactionActionsKeys">
                 <td>{{vm.beatufier(key)}}</td>

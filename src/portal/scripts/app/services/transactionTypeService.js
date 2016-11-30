@@ -25,13 +25,18 @@
         return transactionTypeRepository.deleteByKey(id);
     };
 
+    var bookTransaction = function(transaction) {
+        return transactionTypeRepository.bookTransaction(transaction);
+    };
+
 
     module.exports = {
         getList: getList,
         getByKey: getByKey,
         create: create,
         update: update,
-        deleteByKey: deleteByKey
+        deleteByKey: deleteByKey,
+        bookTransaction: bookTransaction
     }
 
 

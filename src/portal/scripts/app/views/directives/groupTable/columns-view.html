@@ -37,7 +37,7 @@
                             </div>
                         </div>
                         <div class="settings-btn">
-                            <md-menu data-ng-if="isReport">
+                            <md-menu data-ng-if="isReport && isColumnFloat(column)">
                                 <md-button aria-label="Open phone interactions menu" class="md-icon-button column-btns"
                                            ng-click="$mdOpenMenu($event)">
                                     <ng-md-icon icon="settings"></ng-md-icon>
@@ -193,8 +193,6 @@
                                             </md-menu-content>
                                         </md-menu>
                                     </md-menu-item>
-
-
                                     <md-menu-item>
                                         <md-menu>
                                             <md-button ng-click="reportHideSubtotal(column)"
@@ -206,6 +204,23 @@
                                             <md-menu-content style="display: none"></md-menu-content>
                                         </md-menu>
                                     </md-menu-item>
+                                    <md-menu-item>
+                                        <md-menu>
+                                            <md-button ng-click="removeColumn(column)" class="g-settings-option-btn">
+                                                <ng-md-icon icon="visibility_off"></ng-md-icon>
+                                                <span>Remove</span>
+                                            </md-button>
+                                            <md-menu-content style="display: none"></md-menu-content>
+                                        </md-menu>
+                                    </md-menu-item>
+                                </md-menu-content>
+                            </md-menu>
+                            <md-menu data-ng-if="isReport && !isColumnFloat(column)">
+                                <md-button aria-label="Open phone interactions menu" class="md-icon-button column-btns"
+                                           ng-click="$mdOpenMenu($event)">
+                                    <ng-md-icon icon="settings"></ng-md-icon>
+                                </md-button>
+                                <md-menu-content>
                                     <md-menu-item>
                                         <md-menu>
                                             <md-button ng-click="removeColumn(column)" class="g-settings-option-btn">

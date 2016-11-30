@@ -14,6 +14,8 @@
     var metaService = require('../../services/metaService');
 
     var GroupTableService = require('../../services/groupTable/groupTableService');
+    var reportSubtotalService = require('../../services/reportSubtotalService');
+    var pricingPolicyService = require('../../services/pricingPolicyService');
 
     var uiService = require('../../services/uiService');
 
@@ -211,14 +213,6 @@
         vm.entityType = $scope.$parent.vm.entityType;
         vm.isReport = $scope.$parent.vm.isReport || false;
 
-        if (vm.isReport == true) {
-            vm.reportOptions = {
-                cost_method: 1,
-                pricing_policy: 3
-            };
-
-        }
-
         console.log('vm.isReport', vm.isReport);
 
         vm.customButtons = $scope.$parent.vm.entityViewer.extraFeatures;
@@ -274,8 +268,8 @@
                             if (item.options) {
                                 attrOptions = JSON.parse(JSON.stringify(item.options));
                             }
-                            if(item.report_settings) {
-                                report_settings= JSON.parse(JSON.stringify(item.report_settings));
+                            if (item.report_settings) {
+                                report_settings = JSON.parse(JSON.stringify(item.report_settings));
                             }
                             item = attr;
                             item.options = attrOptions;
@@ -290,8 +284,8 @@
                             if (item.options) {
                                 attrOptions = JSON.parse(JSON.stringify(item.options));
                             }
-                            if(item.report_settings) {
-                                report_settings= JSON.parse(JSON.stringify(item.report_settings));
+                            if (item.report_settings) {
+                                report_settings = JSON.parse(JSON.stringify(item.report_settings));
                             }
                             item = baseAttr;
                             item.options = attrOptions;
@@ -306,8 +300,8 @@
                             if (item.options) {
                                 attrOptions = JSON.parse(JSON.stringify(item.options));
                             }
-                            if(item.report_settings) {
-                                report_settings= JSON.parse(JSON.stringify(item.report_settings));
+                            if (item.report_settings) {
+                                report_settings = JSON.parse(JSON.stringify(item.report_settings));
                             }
                             item = entityAttr;
                             item.options = attrOptions;
@@ -466,9 +460,12 @@
 
                 //console.log('vm.reportOptions;', vm.reportOptions);
 
+                vm.reportIsReady = false;
+
                 $scope.$parent.vm.getList(vm.reportOptions).then(function (data) {
 
                     vm.reportOptions = data;
+                    vm.reportOptions.currency = data.report_currency;
 
                     if (data.task_status !== 'SUCCESS') {
                         setTimeout(function () {
@@ -476,7 +473,7 @@
                         }, 1000)
                     } else {
 
-                        data.items.forEach(function(i){
+                        data.items.forEach(function (i) {
                             //console.log('i.portfolio', i.portfolio);
                             //console.log('i.currency', i.currency);
                         });
@@ -484,6 +481,15 @@
                         entityViewerHelperService.transformItems(data.items, vm.attrs).then(function (data) {
 
                             vm.entity = data;
+
+                            console.log('vm.entityItems', vm.entity);
+
+                            vm.reportIsReady = true;
+
+                            if (vm.entityType == 'balance-report') {
+                                vm.entity = reportSubtotalService.groupByAndCalc(vm.entity, vm.reportOptions);
+                            }
+
                             vm.groupTableService.setItems(vm.entity);
 
                             vm.groupTableService.columns.setColumns(vm.columns);
@@ -513,6 +519,8 @@
                     page: vm.paginationPageCurrent,
                     pageSize: vm.paginationItemPerPage
                 };
+
+                vm.reportIsReady = true;
 
                 //console.log('vm.filters', vm.filters);
 
@@ -634,12 +642,31 @@
             //vm.editorEntityId = undefined;
         };
 
-        vm.getView().then(function () {
-            vm.getAttributes().then(function () {
-                vm.transformViewAttributes();
-                vm.getEntityData();
+
+        if (vm.isReport == true) {
+            pricingPolicyService.getList().then(function (data) {
+
+                vm.reportOptions = {
+                    cost_method: 1,
+                    pricing_policy: data.results[0].id
+                };
+
+                vm.getView().then(function () {
+                    vm.getAttributes().then(function () {
+                        vm.transformViewAttributes();
+                        vm.getEntityData();
+                    });
+                });
+
+            })
+        } else {
+            vm.getView().then(function () {
+                vm.getAttributes().then(function () {
+                    vm.transformViewAttributes();
+                    vm.getEntityData();
+                });
             });
-        });
+        }
 
         vm.checkAddBtn = function () {
             if (["transaction"].indexOf(vm.entityType) !== -1) {

@@ -163,6 +163,11 @@
                         resolve({type: 'id', key: 'portfolio', data: data.results});
                     });
                     break;
+                case 'account':
+                    accountRepository.getList().then(function (data) {
+                        resolve({type: 'id', key: 'account', data: data.results});
+                    });
+                    break;
                 case 'counterparty':
                     counterpartyRepository.getList().then(function (data) {
                         resolve({type: 'id', key: 'counterparty', data: data.results});
@@ -174,7 +179,7 @@
                     });
                     break;
                 case 'type':
-                    accountTypeRepository.getTypeList().then(function (data) {
+                    accountTypeRepository.getList().then(function (data) {
                         resolve({type: 'id', key: 'type', data: data.results});
                     });
                     break;
