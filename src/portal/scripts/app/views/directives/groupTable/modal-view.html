@@ -123,6 +123,10 @@
                    data-ui-sref="app.attributesManager({entityType: vm.entityType})" data-ng-click="vm.cancel()">
             Manage attributes
         </md-button>
+        <md-button data-ng-if="vm.entityType === 'balance-report'" class="md-raised md-primary" style="margin: 0;"
+                   data-ui-sref="app.reports.balanceCustomAttributesManager" data-ng-click="vm.cancel()">
+            Custom attributes
+        </md-button>
         <md-button class="md-raised" ng-click="vm.cancel()">
             OK
         </md-button>

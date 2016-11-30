@@ -1,0 +1,69 @@
+<div class="attributes-manager-view" style="height: 100%;">
+    <md-content style="height: 100%;">
+        <!--<md-button class="md-fab md-fab-bottom-right" data-ng-click="vm.addAttribute($event)">-->
+        <!--<ng-md-icon icon="add"></ng-md-icon>-->
+        <!--</md-button>-->
+        <div>
+            <h2 class="am-header"><span data-ng-bind="vm.entityType"></span>
+                BALANCE REPORT CUSTOM ATTRIBUTES
+                <!-- <ng-md-icon class="tooltips-sign" icon="info" size="20" style="fill: #777777">
+                    <md-tooltip class="tooltip_1" md-direction="top">tooltip text</md-tooltip>
+                </ng-md-icon> -->
+            </h2>
+        </div>
+        <div layout="row">
+            <div layout="row" flex="50" layout-align="start center">
+                <md-button class="md-raised" data-ng-click="vm.addAttribute($event)">
+                    ADD NEW
+                </md-button>
+            </div>
+            <div layout="row" flex="50" layout-align="end center">
+                <!-- <md-button class="md-raised" data-ng-click="vm.toggleHidden($event)">
+                    <span data-ng-show="!vm.showHidden">
+                        SHOW HIDDEN ATTRIBUTES
+                    </span>
+                    <span data-ng-show="vm.showHidden">
+                        HIDE ATTRIBUTES
+                    </span>
+                </md-button> -->
+                <md-button class="md-raised md-primary" data-ui-sref="app.data.{{vm.entityType}}">
+                    RETURN TO VIEW
+                </md-button>
+                <!-- <md-button class="md-raised md-primary"
+                           data-ui-sref="app.data-constructor({entityType: vm.entityType})">
+                    RETURN TO FORM EDITOR
+                </md-button> -->
+            </div>
+        </div>
+        <div data-ng-if="vm.attrs.length">
+            <md-card data-ng-repeat="item in vm.attrs" class="am-attr-card" data-ng-if="vm.checkIsHidden(item)">
+                <div>
+                    <b data-ng-bind="item.name"></b>
+                    <div class="am-attr-misc">
+                        <md-button data-ng-if="item['value_type'] === 30" class="am-attr-btn"
+                                   data-ng-click="vm.editTreeAttr(item, $event)">
+                            <ng-md-icon icon="format_align_right"></ng-md-icon>
+                        </md-button>
+                        <md-button class="am-attr-btn"
+                                   data-ng-click="vm.editAttr(item, $event)">
+                            <ng-md-icon icon="edit"></ng-md-icon>
+                        </md-button>
+                        <md-button class="am-attr-btn"
+                                   data-ng-click="vm.deleteAttr(item, $event)">
+                            <ng-md-icon icon="delete"></ng-md-icon>
+                        </md-button>
+                    </div>
+                </div>
+            </md-card>
+        </div>
+        <div data-ng-if="!vm.attrs.length">
+            <!-- <div layout="row" layout-sm="column" layout-align="space-around">
+                <md-progress-circular md-mode="indeterminate"></md-progress-circular>
+            </div> -->
+            <div layout="row" class="add-more-tip" layout-sm="column" layout-align="center center">
+                <h1>You could add new custom attributes here</h1>
+            </div>
+        </div>
+    </md-content>
+</div>
+

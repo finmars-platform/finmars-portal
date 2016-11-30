@@ -1,0 +1,56 @@
+/**
+ * Created by szhitenev on 30.05.2016.
+ */
+(function () {
+
+    'use strict';
+
+    var logService = require('../../../../../core/services/logService');
+
+    var attributeTypeService = require('../../services/attributeTypeService');
+    module.exports = function ($scope, $mdDialog) {
+
+        logService.controller('BalanceReportAddCustomAttrController', 'initialized');
+
+        var vm = this;
+        vm.attribute = {name: '', expr: ''};
+        vm.readyStatus = {attribute: true, permissions: false};
+
+        vm.editRestriction = false;
+
+        vm.valueTypes = [];
+        // vm.valueTypes = metaService.getValueTypes().filter(function (item) {
+        //     return item.value !== 30 && item.value !== 'decoration';
+        // });
+
+        // vm.valueTypes = vm.valueTypes.map(function (item) {
+
+        //     switch (item['display_name']){
+        //         case 'Number':
+        //             item['caption_name'] = 'Integer';
+        //             break;
+        //         case 'Float':
+        //             item['caption_name'] = 'Number with decimals';
+        //             break;
+        //         case 'Field':
+        //             item['caption_name'] = 'Classification';
+        //             break;
+        //         default:
+        //             item['caption_name'] = item['display_name'];
+        //             break;
+        //     }
+
+        //     return item;
+        // });
+
+        vm.agree = function () {
+            $mdDialog.hide({status: 'agree', data: {attribute: vm.attribute}});
+        };
+
+        vm.cancel = function () {
+            $mdDialog.cancel();
+        };
+
+    }
+
+}());

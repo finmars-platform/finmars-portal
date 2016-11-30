@@ -108,6 +108,10 @@ app.controller('DataStrategySubgroupController', ['$scope', '$stateParams', requ
 app.controller('DataTransactionAuditController', ['$scope', '$stateParams', require('./app/controllers/data/dataTransactionAuditController')]);
 
 app.controller('BalanceReportController', ['$scope', require('./app/controllers/reports/balanceReportController')]);
+app.controller('BalanceReportCustomAttrController', ['$scope', '$mdDialog', require('./app/controllers/reports/balanceReportCustomAttrController')]);
+app.controller('BalanceReportAddDialogCustomAttrController', ['$scope', require('./app/controllers/dialogs/balanceReportAddDialogCustomAttrController')]);
+app.controller('BalanceReportController', ['$scope', require('./app/controllers/reports/balanceReportController')]);
+
 app.controller('ProfitAndLostReportController', ['$scope', require('./app/controllers/reports/profitAndLostReportController')]);
 
 app.controller('EntityDataConstructorController', ['$scope', '$stateParams', '$state', '$mdDialog', require('./app/controllers/entityDataConstructorController')]);

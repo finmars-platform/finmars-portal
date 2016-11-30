@@ -167,6 +167,14 @@
                 templateUrl: 'views/reports/reports-balance-view.html',
                 controller: 'BalanceReportController as vm'
             })
+            .state('app.reports.balanceCustomAttributesManager', {
+                url: '/balance/customAttributes',
+                templateUrl: 'views/reports/reports-balance-custom-attr-view.html',
+                controller: 'BalanceReportCustomAttrController as vm',
+                params: {
+                    prevState: ''
+                }
+            })
             .state('app.reports.pnl-report', {
                 url: '/profit-and-lost',
                 templateUrl: 'views/reports/reports-profit-and-lost-view.html',
