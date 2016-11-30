@@ -30,7 +30,7 @@
         console.log('$scope', $scope);
         vm.entityType = $scope.$parent.vm.entityType;
         vm.entityTabs = metaService.getEntityTabs(vm.entityType);
-        vm.evAction = 'update';
+        vm.evAction = $scope.$parent.vm.evAction;
         vm.entityId = $scope.$parent.vm.entityId;
         vm.entity = {$_isValid: true};
 
@@ -40,7 +40,8 @@
         vm.specialRulesReady = true;
         if (['complex-transaction'].indexOf(vm.entityType) !== -1) {
             vm.editLayoutByEntityInsance = true;
-            vm.entitySpecialRules = true
+            vm.entitySpecialRules = true;
+            vm.complexTransactionOptions = {};
         }
 
         logService.property('entityType', vm.entityType);
@@ -104,6 +105,7 @@
         vm.baseAttrs = metaService.getBaseAttrs();
         vm.entityAttrs = metaService.getEntityAttrs(vm.entityType) || [];
 
+
         attributeTypeService.getList(vm.entityType).then(function (data) {
             vm.attrs = data.results;
             vm.readyStatus.content = true;
@@ -111,16 +113,40 @@
             //
 
             if (vm.entityId) {
-                console.log('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
+
                 entityResolverService.getByKey(vm.entityType, vm.entityId).then(function (data) {
-                    vm.entity = data;
-                    entityViewerHelperService.transformItems([vm.entity], vm.attrs).then(function (data) {
-                        vm.entity = data[0];
-                        vm.entity.$_isValid = true;
+
+                    if (vm.entityType == 'complex-transaction') {
+                        vm.complexTransactionOptions.transactionType = data.transaction_type;
+                        vm.editLayoutEntityInstanceId = data.transaction_type;
+                        vm.entity = data;
+                        vm.specialRulesReady = true;
                         vm.readyStatus.entity = true;
-                        console.log('1231231231312?');
-                        vm.loadPermissions();
-                    });
+                        vm.readyStatus.permissions = true;
+                        console.log('vm.complexTransactionOptions', vm.complexTransactionOptions);
+                        $scope.$apply();
+                    } else {
+                        vm.entity = data;
+
+
+                        if (vm.entityType == 'transaction-type') {
+                            $scope.$parent.vm.editLayout = function () {
+                                $state.go('app.data-constructor', {
+                                    entityType: 'complex-transaction',
+                                    instanceId: data.id
+                                });
+                            };
+                        }
+
+
+                        entityViewerHelperService.transformItems([vm.entity], vm.attrs).then(function (data) {
+                            vm.entity = data[0];
+                            vm.entity.$_isValid = true;
+                            vm.readyStatus.entity = true;
+                            console.log('1231231231312?');
+                            vm.loadPermissions();
+                        });
+                    }
 
                     //$scope.$apply();
                 });
@@ -286,7 +312,6 @@
 
         vm.bindField = function (tab, field) {
             var i, l, e, u;
-            //console.log('FIELD', field);
             if (field && field.type === 'field') {
                 if (field.hasOwnProperty('id') && field.id !== null) {
                     for (i = 0; i < vm.attrs.length; i = i + 1) {
@@ -314,6 +339,8 @@
                             return vm.layoutAttrs[l];
                         }
                     }
+
+                    console.log('vm.userInputs', vm.userInputs);
                     for (u = 0; u < vm.userInputs.length; u = u + 1) {
                         if (field.name === vm.userInputs[u].name) {
                             vm.userInputs[u].options = field.options;
@@ -357,6 +384,18 @@
             originatorEv = ev;
             $mdOpenMenu(ev);
         };
+
+        vm.checkViewState = function (tab) {
+
+            if (tab.hasOwnProperty('enabled')) {
+                if (tab.enabled.indexOf(vm.evAction) == -1) {
+                    return false;
+                }
+            }
+
+            return true;
+        };
+
 
         $scope.$parent.vm.copyCallback = function () {
             return new Promise(function (resolve) {
@@ -602,6 +641,29 @@
 
                 var resultEntity = checkForNulls(vm.entity);
                 console.log('resultEntity', resultEntity);
+
+
+                if (vm.entityType == 'complex-transaction') {
+
+                    resultEntity.values = {};
+                    console.log('userInputs', vm.userInputs);
+
+                    vm.userInputs.forEach(function (userInput) {
+
+                        if (userInput !== null) {
+                            var keys = Object.keys(vm.entity);
+                            keys.forEach(function (key) {
+                                if (key == userInput.key) {
+                                    resultEntity.values[userInput.name] = vm.entity[userInput.key];
+                                }
+                            });
+                        }
+                    });
+
+                    resultEntity.store = true;
+                    resultEntity.calculate = true;
+
+                }
 
                 return new Promise(function (resolve, reject) {
                     var options = {

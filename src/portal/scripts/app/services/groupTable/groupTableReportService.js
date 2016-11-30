@@ -13,20 +13,44 @@
         this.value_options = options.value_options || {};
     }
 
-    function findCellCaptions(item, level, type, reportSettingsType) {
+    function findPreviousGroupsByAncestor(item) {
 
-        //console.log('item', item);
-        //console.log('type', type);
+        var groups = [];
+
+        function findDataInAncestor(ancestorItem) {
+
+            groups.push({
+                groups: ancestorItem.groups,
+                items: ancestorItem.items,
+                level: ancestorItem.level
+            });
+
+            if (ancestorItem.hasOwnProperty('_ancestor')) {
+                findDataInAncestor(ancestorItem._ancestor);
+            }
+
+        }
+
+        if (item.hasOwnProperty('_ancestor')) {
+            findDataInAncestor(item._ancestor);
+        }
+
+        return groups;
+
+    }
+
+    function findCellCaptions(item, level, type, options) {
 
         var rowType = type || 'normal';
 
         var cellCaptions = [];
         var i;
         var cellObj;
+        var previousGroups = [];
 
         if (rowType == 'subtotal') {
 
-            if (reportSettingsType == 'area') {
+            if (options.reportSettingsType == 'area') {
 
                 for (i = 1; i <= level; i = i + 1) {
 
@@ -49,45 +73,137 @@
 
             } else {
 
-                level = level - 1;
+                if (options.reportSettingsType == 'line') {
+                    level = level - 1;
 
-                if (level > 0) {
-                    for (i = 0; i <= level; i = i + 1) {
+                    if (level > 0) {
+                        for (i = 0; i <= level; i = i + 1) {
 
-                        cellObj = {
-                            value: '',
-                            type: item.groups[0].report_settings.subtotal_type
-                        };
+                            cellObj = {
+                                value: '',
+                                type: item.groups[0].report_settings.subtotal_type
+                            };
 
-                        if (i == level) {
-                            cellObj.level = level + 1;
+                            if (i == level) {
+                                cellObj.level = level + 1;
+                            }
+
+                            cellCaptions.push(cellObj);
+
                         }
-
-                        cellCaptions.push(cellObj);
-
                     }
                 }
             }
 
         }
 
-        if (rowType == 'normal') {
-            for (i = 1; i <= level; i = i + 1) {
+        if (rowType == 'breadcrumb') {
 
-                cellObj = {
-                    value: '',
-                    type: item.groups[0].report_settings.subtotal_type,
-                    level: i
-                };
+            previousGroups = findPreviousGroupsByAncestor(item);
 
+            var g;
 
-                if (i == level) {
+            for (i = 0; i < level; i = i + 1) {
+
+                if (i == level - 1) {
+                    cellObj = item.groups[0];
+                    cellObj.type = item.groups[0].report_settings.subtotal_type;
                     cellObj.level = level;
+                } else {
+                    for (g = 0; g < previousGroups.length; g = g + 1) {
+
+                        if (previousGroups[g].level == i) {
+                            cellObj = previousGroups[g].groups[0];
+                            cellObj.type = item.groups[0].report_settings.subtotal_type;
+                            cellObj.level = i + 1;
+                        }
+                    }
+
                 }
 
 
                 cellCaptions.push(cellObj);
 
+                //console.log('cellCaptions', cellCaptions);
+
+            }
+        }
+
+        if (rowType == 'normal') {
+
+            //console.log('item', item);
+
+            if (item.breadcrumbs_level_0[0].hasOwnProperty('groups')) {
+
+                for (i = 1; i <= level; i = i + 1) {
+
+                    cellObj = {
+                        value: '',
+                        type: item.groups[0].report_settings.subtotal_type,
+                        level: i
+                    };
+
+
+                    if (i == level) {
+                        cellObj.level = level;
+                    }
+
+
+                    cellCaptions.push(cellObj);
+
+                }
+
+            } else {
+
+                previousGroups = findPreviousGroupsByAncestor(item);
+
+                //console.log('previousGroups', previousGroups);
+                //console.log('item', item);
+
+                if (options.itemIndex == 0) {
+
+                    for (i = 0; i < level; i = i + 1) {
+
+                        if (i == level - 1) {
+                            cellObj = item.groups[0];
+                            cellObj.type = item.groups[0].report_settings.subtotal_type;
+                            cellObj.level = level;
+                        } else {
+                            for (g = 0; g < previousGroups.length; g = g + 1) {
+
+                                if (previousGroups[g].level == i) {
+                                    cellObj = previousGroups[g].groups[0];
+                                    cellObj.type = item.groups[0].report_settings.subtotal_type;
+                                    cellObj.level = i + 1;
+                                }
+                            }
+
+                        }
+
+
+                        cellCaptions.push(cellObj);
+                    }
+                } else {
+
+
+                    for (i = 1; i <= level; i = i + 1) {
+
+                        cellObj = {
+                            value: '',
+                            type: item.groups[0].report_settings.subtotal_type,
+                            level: i
+                        };
+
+
+                        if (i == level) {
+                            cellObj.level = level;
+                        }
+
+
+                        cellCaptions.push(cellObj);
+
+                    }
+                }
             }
         }
 
@@ -103,15 +219,21 @@
 
             var cellCaptions, obj;
 
+
+            // If we don't have boot_level_0, so we are on the boot_level_0
+            // and we don't have preInit breadcrumbs
+
             if (!item.hasOwnProperty('boot_level_' + level)) {
                 if (level == 0) {
                     level = level + 1;
                 }
             }
 
+            // if item have top-line group subtotal start,
+
             if (item.groups[0].report_settings && item.groups[0].report_settings.subtotal_type == 'line' && level !== 0) {
 
-                cellCaptions = findCellCaptions(item, level, 'subtotal', 'line');
+                cellCaptions = findCellCaptions(item, level, 'subtotal', {reportSettingsType: 'line'});
 
                 obj = {
                     cellsCaptions: cellCaptions,
@@ -126,7 +248,11 @@
                 resultItems.push(new Row(obj));
             }
 
+            // if item have top-line group subtotal start end
+
+
             if (level == 0) {
+
                 cellCaptions = findCellCaptions(item, level);
 
                 obj = {
@@ -141,11 +267,17 @@
                 resultItems.push(new Row(obj));
             }
 
+            // if we have preInit groups end
+
+            // go deeper
+
             if (item.hasOwnProperty('boot_level_' + level)) {
 
                 findItemRecursive(item['boot_level_' + level], level + 1, resultItems);
 
             } else {
+
+                // or if bootGroups.length == 1, bring just breadcrumbs lines
 
                 //console.log('item', item);
 
@@ -153,9 +285,9 @@
 
                 if (item.hasOwnProperty('breadcrumbs_level_0') && item['breadcrumbs_level_0'][0].items) {
 
-                    item['breadcrumbs_level_0'].forEach(function (breadCrumbItem) {
+                    item['breadcrumbs_level_0'].forEach(function (breadCrumbItem, breadcrumbIndex) {
 
-                        var cellCaptions = findCellCaptions(item, level);
+                        var cellCaptions = findCellCaptions(item, level, 'breadcrumb', {inGroupIndex: breadcrumbIndex});
 
                         var breadcrumbObj = {
                             cellsCaptions: cellCaptions,
@@ -170,7 +302,7 @@
 
                         breadCrumbItem.items.forEach(function (rowItem) {
 
-                            var cellCaptions = findCellCaptions(item, level);
+                            var cellCaptions = findCellCaptions(item, level, 'normal');
 
                             var obj = {
                                 cellsCaptions: cellCaptions,
@@ -187,9 +319,9 @@
 
                 } else {
 
-                    item.items.forEach(function (rowItem) {
+                    item.items.forEach(function (rowItem, $itemIndex) {
 
-                        var cellCaptions = findCellCaptions(item, level);
+                        var cellCaptions = findCellCaptions(item, level, 'normal', {itemIndex: $itemIndex});
 
                         var obj = {
                             cellsCaptions: cellCaptions,
@@ -205,9 +337,11 @@
                 }
             }
 
+            // if group have area subtotal, do it, start
+
             if (item.groups[0].report_settings && item.groups[0].report_settings.subtotal_type == 'area' && level !== 0) {
 
-                cellCaptions = findCellCaptions(item, level, 'subtotal', 'area');
+                cellCaptions = findCellCaptions(item, level, 'subtotal', {reportSettingsType: 'area'});
 
                 obj = {
                     cellsCaptions: cellCaptions,
@@ -222,13 +356,15 @@
                 resultItems.push(new Row(obj));
             }
 
+            // if group have area subtotal, do it, end
+
         })
 
     }
 
     var transformItems = function (items) {
 
-        console.log('transform?');
+        //console.trace();
 
         var level = 0;
         var resultItems = [];

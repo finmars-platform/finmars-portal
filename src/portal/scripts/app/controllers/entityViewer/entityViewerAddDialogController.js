@@ -45,8 +45,24 @@
             $mdDialog.hide();
         };
 
+        vm.checkVisibility = function (btnName) {
+
+            if (btnName == 'edit-form-btn' && vm.entityType == 'complex-transaction') {
+                return false;
+            }
+
+            if (btnName == 'edit-form-btn' && vm.entityType == 'transaction-type') {
+                return false;
+            }
+
+            return true;
+        };
+
         vm.save = function ($event) {
             vm.saveCallback().then(function (options) {
+
+                console.log('options.entityType', options);
+                console.log('vm', vm);
 
                 entityResolverService.create(options.entityType, options.entity).then(function (data) {
                     console.log('DATA', data);

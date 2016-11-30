@@ -37,6 +37,7 @@
             balance_date: d,
             override_existed: false
         };
+        vm.priceSettings = {isRange: false};
 
         vm.cancel = function () {
             $mdDialog.cancel();
@@ -65,7 +66,7 @@
                 vm.price.date_both = vm.price.date_from;
             }
 
-            if (vm.price.isRange) {
+            if (vm.priceSettings.isRange) {
                 vm.price.date_from = moment(new Date(vm.price.date_from)).format('YYYY-MM-DD');
                 vm.price.date_to = moment(new Date(vm.price.date_to)).format('YYYY-MM-DD');
                 vm.price.balance_date = moment(new Date(vm.price.balance_date)).format('YYYY-MM-DD');
@@ -91,6 +92,21 @@
                                 data: {
                                     instruments: vm.price.instrument_price_missed,
                                     currencies: vm.price.currency_price_missed
+                                }
+                            },
+                            preserveScope: true,
+                            autoWrap: true,
+                            skipHide: true
+                        });
+                    } else {
+                        $mdDialog.show({
+                            controller: 'SuccessDialogController as vm',
+                            templateUrl: 'views/dialogs/success-dialog-view.html',
+                            targetEvent: $event,
+                            locals: {
+                                success: {
+                                    title: 'Success',
+                                    description: 'Prices download success'
                                 }
                             },
                             preserveScope: true,

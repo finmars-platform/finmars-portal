@@ -13,6 +13,8 @@
 
                 <div data-ng-if="vm.checkReadyStatus()">
 
+                    <h2>General Settings</h2>
+
                     <div layout="row">
 
                         <md-input-container>
@@ -71,13 +73,15 @@
 
                     <hr>
 
+                    <h2>Advanced Settings</h2>
+
                     <div layout="row">
 
                         <div layout="column" class="m-r-16">
 
-                            <md-checkbox data-ng-model="vm.reportOptions.detail_by_portfolio">Detail by portfolio
+                            <md-checkbox data-ng-model="vm.reportOptions.portfolio_mode">Portfolio mode
                             </md-checkbox>
-                            <md-checkbox data-ng-model="vm.reportOptions.detail_by_account">Detail by account
+                            <md-checkbox data-ng-model="vm.reportOptions.account_mode">Account mode
                             </md-checkbox>
                             <md-checkbox data-ng-model="vm.reportOptions.show_transaction_details">Detail by transaction
                                 details
@@ -87,11 +91,11 @@
 
                         <div layout="column">
 
-                            <md-checkbox data-ng-model="vm.reportOptions.detail_by_strategy1">Detail by strategy 1
+                            <md-checkbox data-ng-model="vm.reportOptions.strategy1_mode">Strategy 1 mode
                             </md-checkbox>
-                            <md-checkbox data-ng-model="vm.reportOptions.detail_by_strategy2">Detail by strategy 2
+                            <md-checkbox data-ng-model="vm.reportOptions.strategy2_mode">Strategy 2 mode
                             </md-checkbox>
-                            <md-checkbox data-ng-model="vm.reportOptions.detail_by_strategy3">Detail by strategy 3
+                            <md-checkbox data-ng-model="vm.reportOptions.strategy3_mode">Strategy 3 mode
                             </md-checkbox>
 
                         </div>
@@ -99,6 +103,8 @@
                     </div>
 
                     <hr>
+
+                    <h2>Filters</h2>
 
                     <div layout="row">
 
@@ -125,8 +131,6 @@
                         </md-input-container>
 
                     </div>
-
-                    <hr>
 
                     <div layout="row">
 
@@ -166,23 +170,20 @@
 
                     </div>
 
-                    <hr>
+                    <h2>Grouping</h2>
 
                     <div layout="row">
+                        <md-radio-group ng-model="vm.reportOptions.calculationGroup" layout="row">
 
-                        <md-input-container>
+                            <md-radio-button value="portfolio" class="md-primary">Portfolio</md-radio-button>
+                            <md-radio-button value="account">Account</md-radio-button>
+                            <md-radio-button value="strategy1">Strategy 1</md-radio-button>
+                            <md-radio-button value="strategy2">Strategy 2</md-radio-button>
+                            <md-radio-button value="strategy3">Strategy 3</md-radio-button>
 
-                            <label for="">Transaction classes</label>
-
-                            <md-select data-ng-model="vm.reportOptions.transaction_classes">
-                                <md-option data-ng-repeat="item in vm.transactionClasses" ng-value="item.id">{{item.name}}
-                                </md-option>
-                            </md-select>
-
-                        </md-input-container>
+                        </md-radio-group>
 
                     </div>
-
 
                 </div>
 

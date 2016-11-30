@@ -9,8 +9,15 @@
 
     var baseUrl = '/api/v1/';
 
-    var getList = function () {
-        return window.fetch(baseUrl + 'currencies/currency/',
+    var getList = function (options) {
+
+        var page_size = 200;
+
+        //if (options && options.page_size) {
+        //    page_size = options.page_size;
+        //}
+
+        return window.fetch(baseUrl + 'currencies/currency/?page_size=' + page_size,
             {
                 method: 'GET',
                 credentials: 'include',
@@ -94,7 +101,7 @@
                     'Content-type': 'application/json'
                 }
             }).then(function (data) {
-            return new Promise(function(resolve,reject) {
+            return new Promise(function (resolve, reject) {
                 resolve({status: 'deleted'});
             });
             //return data.json();

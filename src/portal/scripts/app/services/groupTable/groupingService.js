@@ -29,6 +29,45 @@
         }
     }
 
+    function setAncestors(item, level, groupType, options) {
+
+        if (groupType == 'boot') {
+
+            item["boot_level_" + level].forEach(function (childItem) {
+
+                var ancestor = JSON.parse(JSON.stringify(item));
+                if (level > 0) {
+                    ancestor.level = level - 1;
+                } else {
+                    ancestor.level = level;
+                }
+
+                delete ancestor["boot_level_" + level];
+
+                childItem._ancestor = ancestor;
+
+            })
+
+        }
+
+        if (groupType == 'breadcrumb') {
+
+            item["breadcrumbs_level_" + level].forEach(function (childItem) {
+
+                var ancestor = JSON.parse(JSON.stringify(item));
+
+                delete ancestor["breadcrumbs_level_" + level];
+                ancestor.level = options.bootLevel;
+
+                childItem._ancestor = ancestor;
+
+            })
+
+
+        }
+
+    };
+
     function returnValueType(attribute) {
 
         if (attribute['attribute_type_object'].value_type == 30) {
@@ -237,7 +276,7 @@
     };
 
     function isInt(value) {
-        if (isNaN(value)) { 
+        if (isNaN(value)) {
             return false;
         }
         var x = parseFloat(value);
@@ -310,7 +349,10 @@
 
                         items.forEach(function (resultItem) {
 
+
                             resultItem['boot_level_' + level] = setGroups(resultItem.items, [groups.bootsGroup[level]], entityType, setGroupOptions);
+
+                            setAncestors(resultItem, level, 'boot');
 
                             if (groups.bootsGroup[level + 1]) {
                                 recursiveWalker(resultItem['boot_level_' + level], groups, entityType, level + 1, options)
@@ -327,6 +369,9 @@
 
                                     resultItem['boot_level_' + level].forEach(function (bootItem) {
                                         bootItem['breadcrumbs_level_0'] = setGroups(bootItem.items, groups.linesGroup, entityType, setGroupOptions);
+
+                                        setAncestors(bootItem, 0, 'breadcrumb', {bootLevel: level});
+
                                     });
 
 
@@ -490,6 +535,10 @@
 
         if (groups.length) {
 
+            items.forEach(function(item, $index){
+                item._lid = $index;
+            });
+
             findBootsGroup();
             findPreInitGroup();
             findLinesGroup();
@@ -497,7 +546,6 @@
             console.log('preInitGroups', preInitGroups);
             console.log('bootsGroup', bootsGroup);
             console.log('linesGroup', linesGroup);
-
 
             var groups = {};
 

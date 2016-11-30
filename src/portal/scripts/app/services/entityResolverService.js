@@ -20,6 +20,7 @@
     var transactionTypeService = require('./transactionTypeService');
     var transactionClassService = require('./transaction/transactionClassService');
     var transactionTypeGroupService = require('./transaction/transactionTypeGroupService');
+    var complexTransactionService = require('./transaction/complexTransactionService');
 
     var pricingPolicyService = require('./pricingPolicyService');
     var instrumentTypeService = require('./instrumentTypeService');
@@ -107,6 +108,8 @@
             case 'currency':
                 return currencyService.getByKey(id);
                 break;
+            case 'complex-transaction':
+                return complexTransactionService.getByKey(id);
             case 'pricing-policy':
                 return pricingPolicyService.getByKey(id);
                 break;
@@ -239,6 +242,12 @@
                 break;
             case 'strategy-3-subgroup':
                 return strategySubgroupService.create(3, entity);
+                break;
+            case 'complex-transaction':
+                console.log('entity', entity);
+                var i;
+
+                return transactionTypeService.bookTransaction(entity);
                 break;
             case 'tag':
                 return tagService.create(entity);

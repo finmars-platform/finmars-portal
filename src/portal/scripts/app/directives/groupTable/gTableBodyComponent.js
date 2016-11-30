@@ -24,6 +24,7 @@
                 isAllSelected: '=',
                 entityType: '=',
                 isReport: '=',
+                reportIsReady: '=',
 
                 paginationItemPerPage: '=',
                 paginationItemsTotal: '=',
@@ -116,9 +117,10 @@
                         findEntityFields();
 
                         Promise.all(promises).then(function (results) {
-                            //console.log('results', results);
+                            //console.log('results11111111111111111', results);
                             results.forEach(function (item) {
                                 if (item.key) {
+
                                     entityFieldsArray[item.key] = item.data;
                                 } else {
                                     entityFieldsArray['classifier_' + item.id] = item;
@@ -148,9 +150,12 @@
                     syncGroupsAndColumns();
                 }
 
-                scope.$watch('items', function () {
-                    scope.reportItems = groupTableReportService.transformItems(scope.items);
-                });
+                if (scope.isReport == true) {
+
+                    scope.$watch('items', function () {
+                        scope.reportItems = groupTableReportService.transformItems(scope.items);
+                    });
+                }
 
                 function findGroups() {
 
@@ -222,7 +227,9 @@
                                     if (classifiersInstances[data[i].key] === undefined) {
                                         classifiersInstances[data[i].key] = {};
                                     }
-                                    classifiersInstances[data[i].key] = data[i].data
+                                    if (data[i].data !== undefined) {
+                                        classifiersInstances[data[i].key] = data[i].data
+                                    }
                                 }
                             }
 
@@ -239,7 +246,11 @@
 
                             if (data.length) {
                                 var i;
+
+                                console.log('data', data);
+
                                 for (i = 0; i < data.length; i = i + 1) {
+
                                     if (entityFieldsArray[data[i].key] == undefined) {
                                         entityFieldsArray[data[i].key] = [];
                                     }
@@ -456,7 +467,9 @@
                                     if (entityFieldsArray[item.key] == undefined) {
                                         entityFieldsArray[item.key] = [];
                                     }
-                                    entityFieldsArray[item.key].push(item.data);
+                                    if (item.data !== undefined) {
+                                        entityFieldsArray[item.key].push(item.data);
+                                    }
                                 }
                             });
 
@@ -523,6 +536,7 @@
                     if (scope.readyStatus.cellsFirstReady == true &&
                         scope.readyStatus.cellsSecondReady == true &&
                         scope.readyStatus.classifiersReady == true &&
+                        scope.reportIsReady == true &&
                         scope.readyStatus.attributeTypesReady == true) {
 
                         scope.$parent.triggerResize();
@@ -563,7 +577,7 @@
                             if (classifiersInstances.hasOwnProperty(scope.entityType + '_' + group.value) && classifiersInstances[scope.entityType + '_' + group.value] !== undefined) {
                                 //console.log('11111111111111111111111111111111', classifiersInstances[scope.entityType]);
                                 if (classifiersInstances[scope.entityType + '_' + group.value] && classifiersInstances[scope.entityType + '_' + group.value] !== undefined) {
-                                    result =  classifiersInstances[scope.entityType + '_' + group.value].name
+                                    result = classifiersInstances[scope.entityType + '_' + group.value].name
                                 }
                             }
                         }
@@ -577,17 +591,22 @@
 
                         if (scope.readyStatus.cellsFirstReady == true) {
 
-                            if (entityFieldsArray[group.key]) {
+                            if (entityFieldsArray.hasOwnProperty(group.key) &&
+                                entityFieldsArray[group.key] &&
+                                entityFieldsArray[group.key] !== undefined &&
+                                entityFieldsArray[group.key].length) {
+
                                 var i, resultObject;
                                 for (i = 0; i < entityFieldsArray[group.key].length; i = i + 1) {
-                                    //if (group.key == 'currency') {
-                                    //    //console.log('entityFieldsArray[group.key]', entityFieldsArray[group.key]);
-                                    //    //console.log('entityFieldsArray[group.key]', group);
-                                    //}
-                                    if (entityFieldsArray[group.key][i].id === group.value) {
-                                        resultObject = entityFieldsArray[group.key][i];
-                                        //console.log('result', resultObject, '++' + entityFieldsArray[group.key][i].id);
+
+                                    if (group.value !== undefined) {
+                                        if (entityFieldsArray[group.key][i].id === group.value) {
+
+                                            resultObject = entityFieldsArray[group.key][i];
+                                            //console.log('result', resultObject, '++' + entityFieldsArray[group.key][i].id);
+                                        }
                                     }
+
                                 }
 
 
@@ -634,11 +653,20 @@
                         result = values[column.key];
                     }
 
-                    return result;
+                    if (result !== undefined) {
+
+                        if (column.value_type == 20 || column.value_type == 'float') {
+                            return result.toFixed(2) + '';
+                        } else {
+                            return result;
+                        }
+                    }
 
                 };
 
                 scope.bindCell = function (groupedItem, column) {
+
+                    //console.log('groupedItem', groupedItem);
 
                     function findNodeInChildren(item) {
                         if (groupedItem[column.name] == item.id) {
@@ -690,6 +718,7 @@
                                         var result = entityFieldsArray[column.key].filter(function (item) {
                                             return item.id === _groupedItemVal;
                                         })[0];
+
                                     }
                                     if (result) {
                                         if (column['key'] === 'instrument' && result['user_code']) {
@@ -723,8 +752,14 @@
                                             return '[' + groupedItem[entityAttrs[e].key].length + ']'
                                         }
                                     } else {
-                                        if (groupedItem[entityAttrs[e].key]) {
-                                            return groupedItem[entityAttrs[e].key];
+
+                                        if (groupedItem[entityAttrs[e].key] !== null) {
+
+                                            if (column.value_type == 20 || column.value_type == 'float') {
+                                                return groupedItem[entityAttrs[e].key].toFixed(2) + '';
+                                            } else {
+                                                return groupedItem[entityAttrs[e].key];
+                                            }
                                         }
                                     }
                                 }
@@ -851,7 +886,7 @@
                             entityId: entity.id
                         }
                     }).then(function (res) {
-                        if (res.res === 'agree') {
+                        if (res && res.res === 'agree') {
                             scope.externalCallback();
                         }
                     });

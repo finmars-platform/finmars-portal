@@ -247,7 +247,7 @@
                     if (action.transaction.account_interim_object !== null) {
                         vm.transactionActions.account_interim.push(action.transaction.account_interim_object.name);
                     } else {
-                        if (action.instrument.account_interim_input !== null) {
+                        if (action.transaction.account_interim_input !== null) {
                             vm.transactionActions.account_interim.push(action.transaction.account_interim_input);
                         } else {
                             vm.transactionActions.account_interim.push('-');

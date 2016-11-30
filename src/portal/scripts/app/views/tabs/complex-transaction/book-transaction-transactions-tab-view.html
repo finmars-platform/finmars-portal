@@ -1,0 +1,31 @@
+<div data-ng-controller="BookTransactionTransactionsTabController as vm">
+
+    <h2>Transactions list</h2>
+
+    <table class="bordered">
+        <thead>
+        <tr style="height: 40px">
+            <th>Transaction date</th>
+            <th>Class</th>
+            <th>Currency</th>
+            <th>Instrument</th>
+            <th>Portfolio</th>
+            <th>Responsible</th>
+            <th>Counterparty</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr data-ng-repeat="item in vm.transactions" style="height: 40px;">
+            <td data-ng-bind="item.transaction_date"></td>
+            <td data-ng-bind="item.transaction_class_object.name"></td>
+            <td data-ng-bind="item.transaction_currency_object.name"></td>
+            <td data-ng-bind="item.instrument_object.user_code"></td>
+            <td data-ng-bind="item.portfolio_object.user_code"></td>
+            <td data-ng-bind="item.responsible_object.user_code"></td>
+            <td data-ng-bind="item.counterparty_object.user_code"></td>
+        </tr>
+        </tbody>
+    </table>
+
+
+</div>

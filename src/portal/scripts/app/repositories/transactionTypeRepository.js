@@ -101,13 +101,37 @@
         })
     };
 
+    var bookTransaction = function (transaction) {
+        return window.fetch(baseUrl + 'transactions/transaction-type/' + transaction._transaction_type_id + '/book/',
+            {
+                method: 'PUT',
+                credentials: 'include',
+                headers: {
+                    'X-CSRFToken': cookieService.getCookie('csrftoken'),
+                    Accept: 'application/json',
+                    'Content-type': 'application/json'
+                },
+                body: JSON.stringify(transaction)
+            }).then(function (data) {
+            return new Promise(function (resolve, reject) {
+                data.json().then(function (result) {
+                    resolve({
+                        response: result,
+                        status: data.status
+                    })
+                })
+            });
+        })
+    };
+
 
     module.exports = {
         getList: getList,
         getByKey: getByKey,
         create: create,
         update: update,
-        deleteByKey: deleteByKey
+        deleteByKey: deleteByKey,
+        bookTransaction: bookTransaction
     }
 
 }());

@@ -18,7 +18,7 @@
 
         vm.entity = $scope.$parent.vm.entity;
 
-        vm.readyStatus = {accrualModals: false};
+        vm.readyStatus = {accrualModals: false, periodicityItems: false};
 
         accrualCalculationModelService.getList().then(function (data) {
             vm.accrualModels = data;
@@ -33,7 +33,10 @@
         });
 
         vm.checkReadyStatus = function () {
-            return vm.readyStatus.accrualModals && vm.readyStatus.periodicityItems;
+            if (vm.readyStatus.accrualModals == true && vm.readyStatus.periodicityItems == true) {
+                return true;
+            }
+            return false;
         };
 
         vm.toggleQuery = function () {

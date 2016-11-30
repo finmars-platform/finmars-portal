@@ -35,7 +35,7 @@
         return ['price-history', 'currency-history', 'transaction', 'complex-transaction', 'balance-report', 'pnl-report', 'audit-transaction'];
     };
     var getEntitiesWithoutDynAttrsList = function () {
-        return ['price-history', 'currency-history', 'transaction', 'pricing-policy','strategy-1', 'strategy-2', 'strategy-3',
+        return ['price-history', 'currency-history', 'transaction', 'pricing-policy', 'strategy-1', 'strategy-2', 'strategy-3',
             'strategy-1-group', 'strategy-2-group', 'strategy-3-group',
             'strategy-1-subgroup', 'strategy-2-subgroup', 'strategy-3-subgroup',
             'audit-transaction'];
@@ -767,6 +767,11 @@
                     "value_type": 10
                 },
                 {
+                    "key": "short_name",
+                    "name": "Short name",
+                    "value_type": 10
+                },
+                {
                     "key": "user_code",
                     "name": "User code",
                     "value_type": 10
@@ -815,12 +820,32 @@
                     "key": "market_value",
                     "name": "Market value",
                     "value_type": "float"
+                },
+                {
+                    "key": "exposure",
+                    "name": "Exposure",
+                    "value_type": "float"
+                },
+                {
+                    "key": "market_value_percent",
+                    "name": "Market value %",
+                    "value_type": "float"
+                },
+                {
+                    "key": "exposure_percent",
+                    "name": "Exposure %",
+                    "value_type": "float"
                 }
             ],
             "pnl-report": [
                 {
                     "key": "name",
                     "name": "Name",
+                    "value_type": 10
+                },
+                {
+                    "key": "short_name",
+                    "name": "Short Name",
                     "value_type": 10
                 },
                 {
@@ -1054,6 +1079,23 @@
                     "value_type": "float"
                 }
             ],
+            "complex-transaction": [
+                {
+                    "key": "code",
+                    "name": "Code",
+                    "value_type": "float"
+                },
+                {
+                    "key": "status",
+                    "name": "Status",
+                    "value_type": 10 // actually field
+                },
+                {
+                    "key": "text",
+                    "name": "Text",
+                    "value_type": 10
+                }
+            ],
             "instrument-scheme": [
                 {
                     key: 'reference_for_pricing',
@@ -1237,8 +1279,14 @@
                     {
                         label: 'Actions',
                         templateUrl: 'views/tabs/complex-transaction/book-transaction-actions-tab-view.html'
+                    },
+                    {
+                        enabled: ['update'],
+                        label: 'Transactions',
+                        templateUrl: 'views/tabs/complex-transaction/book-transaction-transactions-tab-view.html'
                     }
                 ];
+
                 break;
             case 'transaction-type':
                 return [
@@ -1269,8 +1317,8 @@
             'strategy-1-subgroup', 'strategy-2-subgroup', 'strategy-3-subgroup']
     };
 
-    var getFieldsWithTagGrouping = function(){
-        return ['instrument_type', 'type', 'transaction_type', 'instrument_types',  'transaction_types', 'account_types'];
+    var getFieldsWithTagGrouping = function () {
+        return ['instrument_type', 'type', 'transaction_type', 'instrument_types', 'transaction_types', 'account_types'];
     };
 
     module.exports = {
