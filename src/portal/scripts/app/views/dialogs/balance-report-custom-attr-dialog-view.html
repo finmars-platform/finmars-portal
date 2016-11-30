@@ -15,13 +15,13 @@
                             <div class="a-m-tab-content">
                                 <md-input-container class="md-block" flex-gt-sm>
                                     <label>Attribute name</label>
-                                    <input data-ng-model="vm.attribute.name">
+                                    <input data-ng-model="vm.attribute.name" placeholder="{{vm.attribute.name}}">
                                 </md-input-container>
 
                                 <div data-ng-if="vm.editRestriction" flex-gt-sm>
                                     <md-input-container class="md-block">
                                         <label>Attribute expression</label>
-                                        <input data-ng-model="vm.attribute.expr">
+                                        <input data-ng-model="vm.attribute.expr" palceholder="{{vm.attribute.expr}}">
                                     </md-input-container>
                                 </div>
                                 <div data-ng-if="!vm.editRestriction" flex-gt-sm>

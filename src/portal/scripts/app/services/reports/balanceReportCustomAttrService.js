@@ -17,8 +17,8 @@
         return balanceReportCustomAttrRepository.create(account);
     };
 
-    var update = function(id, account) {
-        return balanceReportCustomAttrRepository.update(id, account);
+    var update = function(id, attribute) {
+        return balanceReportCustomAttrRepository.update(id, attribute);
     };
 
     var deleteByKey = function (id) {

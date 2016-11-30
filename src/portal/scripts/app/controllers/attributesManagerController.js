@@ -37,7 +37,12 @@
                 controller: 'AttributesManagerAddDialogController as vm',
                 templateUrl: 'views/attribute-manager-dialog-view.html',
                 parent: angular.element(document.body),
-                targetEvent: ev
+                targetEvent: ev,
+                locals: {
+                    data: {
+                        entityType: vm.entityType
+                    }
+                }
             }).then(function (res) {
                 if (res.status === 'agree') {
                     console.log(res.data.attribute['value_type']);

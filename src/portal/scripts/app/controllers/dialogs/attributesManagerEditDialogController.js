@@ -21,10 +21,10 @@
 
         vm.readyStatus = {attribute: false, permissions: false};
 
-        vm.entityType = data.entityType;
+        // vm.entityType = data.entityType;
         vm.attributeId = data.attributeId;
 
-        attributeTypeService.getByKey(vm.entityType, vm.attributeId).then(function (data) {
+        attributeTypeService.getByKey("generic", vm.attributeId).then(function (data) {
             vm.attribute = data;
             vm.readyStatus.attribute = true;
             vm.loadPermissions();
@@ -62,10 +62,10 @@
                                 if (!group.hasOwnProperty('objectPermissions')) {
                                     group.objectPermissions = {};
                                 }
-                                if (permission.permission === "manage_" + vm.entityType + 'attributetype') {
+                                if (permission.permission === "manage_" + "generic" + 'attributetype') {
                                     group.objectPermissions.manage = true;
                                 }
-                                if (permission.permission === "change_" + vm.entityType + 'attributetype') {
+                                if (permission.permission === "change_" + "generic" + 'attributetype') {
                                     group.objectPermissions.change = true;
                                 }
                             }
@@ -93,10 +93,10 @@
                                 if (!member.hasOwnProperty('objectPermissions')) {
                                     member.objectPermissions = {};
                                 }
-                                if (permission.permission === "manage_" + vm.entityType + 'attributetype') {
+                                if (permission.permission === "manage_" + "generic" + 'attributetype') {
                                     member.objectPermissions.manage = true;
                                 }
-                                if (permission.permission === "change_" + vm.entityType + 'attributetype') {
+                                if (permission.permission === "change_" + "generic" + 'attributetype') {
                                     member.objectPermissions.change = true;
                                 }
                             }
@@ -113,7 +113,7 @@
 
                 var haveAccess = false;
 
-                if (vm.attribute.granted_permissions.indexOf("manage_" + vm.entityType + 'attributetype') !== -1) {
+                if (vm.attribute.granted_permissions.indexOf("manage_" + "generic" + 'attributetype') !== -1) {
                     haveAccess = true;
                 }
 
@@ -139,14 +139,14 @@
                 if (member.objectPermissions && member.objectPermissions.manage == true) {
                     vm.attribute["user_object_permissions"].push({
                         "member": member.id,
-                        "permission": "manage_" + vm.entityType + 'attributetype'
+                        "permission": "manage_" + "generic" + 'attributetype'
                     })
                 }
 
                 if (member.objectPermissions && member.objectPermissions.change == true) {
                     vm.attribute["user_object_permissions"].push({
                         "member": member.id,
-                        "permission": "change_" + vm.entityType + 'attributetype'
+                        "permission": "change_" + "generic" + 'attributetype'
                     })
                 }
 
@@ -159,14 +159,14 @@
                 if (group.objectPermissions && group.objectPermissions.manage == true) {
                     vm.attribute["group_object_permissions"].push({
                         "group": group.id,
-                        "permission": "manage_" + vm.entityType + 'attributetype'
+                        "permission": "manage_" + "generic" + 'attributetype'
                     })
                 }
 
                 if (group.objectPermissions && group.objectPermissions.change == true) {
                     vm.attribute["group_object_permissions"].push({
                         "group": group.id,
-                        "permission": "change_" + vm.entityType + 'attributetype'
+                        "permission": "change_" + "generic" + 'attributetype'
                     })
                 }
 

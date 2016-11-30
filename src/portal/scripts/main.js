@@ -56,7 +56,7 @@ app.controller('PriceDownloadSchemeAddDialogController', ['$scope', '$mdDialog',
 
 app.controller('AttributesManagerController', ['$scope', '$state', '$stateParams', '$mdDialog', require('./app/controllers/attributesManagerController')]);
 app.controller('AttributesManagerEditDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/attributesManagerEditDialogController')]);
-app.controller('AttributesManagerAddDialogController', ['$scope', '$mdDialog', require('./app/controllers/dialogs/attributesManagerAddDialogController')]);
+app.controller('AttributesManagerAddDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/attributesManagerAddDialogController')]);
 app.controller('ClassificationEditorDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/classificationEditorDialogController')]);
 
 app.controller('InstrumentMappingAddDialogController', ['$scope', '$mdDialog', require('./app/controllers/dialogs/instrumentMappingAddDialogController')]);
@@ -109,8 +109,7 @@ app.controller('DataTransactionAuditController', ['$scope', '$stateParams', requ
 
 app.controller('BalanceReportController', ['$scope', require('./app/controllers/reports/balanceReportController')]);
 app.controller('BalanceReportCustomAttrController', ['$scope', '$mdDialog', require('./app/controllers/reports/balanceReportCustomAttrController')]);
-app.controller('BalanceReportAddDialogCustomAttrController', ['$scope', require('./app/controllers/dialogs/balanceReportAddDialogCustomAttrController')]);
-app.controller('BalanceReportController', ['$scope', require('./app/controllers/reports/balanceReportController')]);
+app.controller('BalanceReportDialogCustomAttrController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/balanceReportAddDialogCustomAttrController')]);
 
 app.controller('ProfitAndLostReportController', ['$scope', require('./app/controllers/reports/profitAndLostReportController')]);
 
