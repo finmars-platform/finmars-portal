@@ -11,6 +11,7 @@
 
 	var metaService = require('../../services/metaService');
 	var attributeTypeService = require('../../services/attributeTypeService');
+	var balanceReportCustomAttrService = require('../../services/reports/balanceReportCustomAttrService');
 
 	module.exports = function ($scope, $mdDialog, parentScope, callback) {
 
@@ -141,16 +142,26 @@
 			}
 
 			vm.entityAttrs = metaService.getEntityAttrs(vm.entityType);
+			
+			balanceReportCustomAttrService.getList().then(function(data) {
+				vm.custom = data.results;
+				restoreAttrs();
+				syncAttrs();
+				console.log('report balance custom attr is', vm.custom);
+				$scope.$apply();
+			});
+
 			return attributeTypeService.getList(vm.entityType).then(function (data) {
 				vm.attrs = data.results;
 				attrsList = vm.attrs.concat(vm.baseAttrs);
 				attrsList = attrsList.concat(vm.entityAttrs);
 				restoreAttrs();
 				syncAttrs();
-				//logService.collection('attrsList!!!!!!!!!', attrsList);
+				// logService.collection('attrsList!!!!!!!!!', attrsList);
 				vm.readyStatus.content = true;
 				$scope.$apply();
 			})
+
 		};
 
 		vm.getAttributes();
@@ -196,6 +207,7 @@
 			syncTypeAttrs(vm.baseAttrs);
 			syncTypeAttrs(vm.entityAttrs);
 			syncTypeAttrs(vm.attrs);
+			syncTypeAttrs(vm.custom);
 		};
 
 
@@ -205,6 +217,7 @@
 			updateTypeAttrs(vm.baseAttrs);
 			updateTypeAttrs(vm.entityAttrs);
 			updateTypeAttrs(vm.attrs);
+			updateTypeAttrs(vm.custom);
 
 			addColumn();
 

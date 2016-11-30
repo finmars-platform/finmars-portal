@@ -12,32 +12,17 @@
 
     // var metaService = require('../../services/metaService');
 
-    var balanceReportCustomAttrService = require('../../services/reports/balanceReportCustomAttrService');
-    module.exports = function ($scope, $mdDialog, data) {
+    var attributeTypeService = require('../../services/attributeTypeService');
+    module.exports = function ($scope, $mdDialog) {
 
-        logService.controller('BalanceReportCustomAttrController', 'initialized');
+        logService.controller('BalanceReportAddCustomAttrController', 'initialized');
 
         var vm = this;
-        vm.attribute = {};
-        vm.attributeId;
-        vm.readyStatus = {attribute: false, permissions: false};
+        vm.attribute = {name: '', expr: ''};
+        vm.readyStatus = {attribute: true, permissions: false};
 
-        vm.editRestriction = data.editRestriction;
-        if (vm.editRestriction) {
-            vm.attributeId = data.attributeId;
-            console.log('balance attribute id', vm.attributeId);
-            balanceReportCustomAttrService.getByKey(vm.attributeId).then(function (data) {
-                console.log('balance edit attr data', data);
-                vm.attribute = data;
-                vm.readyStatus.attribute = true;
-                $scope.$apply();
-            });
-        }
-        else {
-            vm.attribute = {name: '', expr: ''};
-            vm.readyStatus.attribute = true;
-            console.log('balance report create custom attr');
-        }
+        vm.editRestriction = false;
+
         // vm.valueTypes = [];
 
         // vm.loadPermissions = function () {

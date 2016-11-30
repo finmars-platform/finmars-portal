@@ -27,7 +27,7 @@
     };
 
     var getByKey = function (id) {
-        return window.fetch(baseUrl,
+        return window.fetch(baseUrl + id + '/',
             {
                 method: 'GET',
                 credentials: 'include',
@@ -40,7 +40,7 @@
         })
     };
 
-    var create = function (attributeType) {
+    var create = function (attribute) {
         return window.fetch(baseUrl,
             {
                 method: 'POST',
@@ -50,7 +50,7 @@
                     Accept: 'application/json',
                     'Content-type': 'application/json'
                 },
-                body: JSON.stringify(attributeType)
+                body: JSON.stringify(attribute)
             }).then(function (data) {
             return new Promise(function (resolve, reject) {
                 data.json().then(function (result) {
@@ -63,8 +63,8 @@
         })
     };
 
-    var update = function (id, attributeType) {
-        return window.fetch(baseUrl,
+    var update = function (id, attribute) {
+        return window.fetch(baseUrl + id + '/',
             {
                 method: 'PUT',
                 credentials: 'include',
@@ -73,7 +73,7 @@
                     Accept: 'application/json',
                     'Content-type': 'application/json'
                 },
-                body: JSON.stringify(attributeType)
+                body: JSON.stringify(attribute)
             }).then(function (data) {
             return new Promise(function (resolve, reject) {
                 data.json().then(function (result) {
@@ -87,7 +87,7 @@
     };
 
     var deleteByKey = function (id) {
-        return window.fetch(baseUrl,
+        return window.fetch(baseUrl + id + '/',
             {
                 method: 'DELETE',
                 credentials: 'include',
