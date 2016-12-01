@@ -985,7 +985,7 @@
                 },
                 {
                     "key": "principal_closed",
-                    "name": "Principal",
+                    "name": "Principal closed",
                     "value_type": "float"
                 },
                 {
