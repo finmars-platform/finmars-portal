@@ -129,6 +129,7 @@
                 thWidths.push(thWidth);
             }
             vm.listView.data.table.columnsWidth = thWidths;
+            console.log('entity viewer columnsWidth is', vm.listView.data.table.columnsWidth);
 
             //console.log("View data is ", vm.listView.data);
 
