@@ -172,7 +172,16 @@
                             for (g = 0; g < previousGroups.length; g = g + 1) {
 
                                 if (previousGroups[g].level == i) {
-                                    cellObj = previousGroups[g].groups[0];
+
+                                    cellObj = {};
+
+                                    //console.log('previousGroups[g].items[0]', previousGroups[g].items[0]);
+                                    //console.log('item.', item);
+
+                                    if (previousGroups[g].items[0]._lid == item.items[0]._lid) {
+                                        cellObj = previousGroups[g].groups[0];
+                                    }
+
                                     cellObj.type = item.groups[0].report_settings.subtotal_type;
                                     cellObj.level = i + 1;
                                 }

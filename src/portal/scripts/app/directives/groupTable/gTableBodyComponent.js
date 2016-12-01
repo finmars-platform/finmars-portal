@@ -697,7 +697,26 @@
                             //    return '<div class="zh-loader"></div>';
                             //}
                         } else {
-                            return groupedItem[column.name];
+
+                            if (column.hasOwnProperty('columnType') && column.columnType == 'custom-field') {
+
+                                result = '';
+
+                                console.log('groupedItem', groupedItem);
+
+                                groupedItem.custom_fields.forEach(function (customField) {
+
+                                    if (customField.custom_field == column.id) {
+                                        result = customField.value;
+                                    }
+
+                                });
+
+                                return result
+
+                            } else {
+                                return groupedItem[column.name];
+                            }
                         }
                     } else {
                         var i, e;

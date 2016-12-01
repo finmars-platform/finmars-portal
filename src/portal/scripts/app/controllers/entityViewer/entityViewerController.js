@@ -460,6 +460,18 @@
 
                 //console.log('vm.reportOptions;', vm.reportOptions);
 
+                console.log('11111111111111111', vm.columns);
+
+                vm.reportOptions.custom_fields = [];
+
+                vm.columns.forEach(function (column) {
+
+                    if (column.hasOwnProperty('columnType') && column.columnType == 'custom-field') {
+                        vm.reportOptions.custom_fields.push(column.id);
+                    }
+                });
+
+
                 vm.reportIsReady = false;
 
                 $scope.$parent.vm.getList(vm.reportOptions).then(function (data) {
