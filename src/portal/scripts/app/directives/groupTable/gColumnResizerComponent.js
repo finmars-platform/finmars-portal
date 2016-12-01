@@ -32,20 +32,23 @@
                 // set columns to saved width
                 function setColumnsWidthAndNameTooltip() {
                     var columns = elem.find('.g-column');
-                    if (scope.columnsWidth) {
-                        var savedWidths = scope.columnsWidth;
-                        for (var i = 0; i < columns.length; i = i + 1) {
-                            if (savedWidths[i]) {
-                                $(columns[i]).width(savedWidths[i]);
-                                // if width small enough, show tooltip
-                                if (savedWidths[i] <= minWidth) {
-                                    $(columns[i]).addClass('small-width');
+                    var savedWidths = scope.columnsWidth;
+                    if (columns.length > 0 && columns.length === savedWidths.length) {
+                            console.log('setColumnsWidthAndNameTooltip is working!');
+                        // if (scope.columnsWidth && scope.columnsWidth.length) {
+                            for (var i = 0; i < columns.length; i = i + 1) {
+                                if (savedWidths[i] && !isNaN(savedWidths[i])) {
+                                    $(columns[i]).width(savedWidths[i]);
+                                    // if width small enough, show tooltip
+                                    if (savedWidths[i] <= minWidth) {
+                                        $(columns[i]).addClass('small-width');
+                                    }
                                 }
+                                // if (i == columns.length - 1) {
+                                // 	groupTableReadinessCheckservice.checkTableCondition(true)
+                                // }
                             }
-                            // if (i == columns.length - 1) {
-                            // 	groupTableReadinessCheckservice.checkTableCondition(true)
-                            // }
-                        }
+                        // }
                     }
                 }
 
@@ -202,9 +205,9 @@
                     //console.log('th', th);
                 }
 
-                //setTimeout(function () {
-                setColumnsWidthAndNameTooltip();
-                //}, 110);
+                // setTimeout(function () {
+                    // setColumnsWidthAndNameTooltip();
+                // }, 200);
                 scope.$watchCollection('items', function () {
                     //console.log('items added for resize');
                     resizeScrollableArea();
@@ -212,6 +215,7 @@
                     resize();
                     //}, 100);
                     //resize();
+                    setColumnsWidthAndNameTooltip();
                 });
                 //setTimeout(function () {
                 resize();
