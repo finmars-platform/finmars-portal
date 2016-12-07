@@ -321,6 +321,18 @@
 				"title": "Audit",
 				"type": "link",
 				"icon": ""
+			},
+			{
+				"state": "app.system.transactions",
+				"title": "Transactions",
+				"type": "link",
+				"icon": ""
+			},
+			{
+				"state": "app.system.instruments",
+				"title": "Instruments",
+				"type": "link",
+				"icon": ""
 			}
 		]
 	}

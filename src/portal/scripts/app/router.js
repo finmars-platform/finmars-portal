@@ -247,13 +247,21 @@
                 templateUrl: 'views/system/notifications-view.html',
                 controller: 'NotificationsController as vm'
             })
+            .state('app.system.transactions', {
+                url: '/audit/transactions',
+                templateUrl: 'views/system/audit-transactions-view.html',
+                controller: 'TransactionsAuditController as vm'
+            })
+            .state('app.system.instruments', {
+                url: '/audit/instruments',
+                templateUrl: 'views/system/audit-instruments-view.html',
+                controller: 'InstrumentsAuditController as vm'
+            })
             .state('app.system.audit', {
                 url: '/audit',
                 templateUrl: 'views/system/audit-view.html',
                 controller: 'AuditController as vm'
             });
-
     }
-
 
 }());
