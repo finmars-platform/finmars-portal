@@ -7,8 +7,9 @@
 
     var cookieService = require('../../../../../core/services/cookieService');
     var configureRepositoryUrlService = require('../../services/configureRepositoryUrlService');
+    var baseUrlService = require('../../services/baseUrlService');
 
-    var baseUrl = '/api/v1/';
+    var baseUrl = baseUrlService.resolve();
 
     var updateSchedule = function(schedule){
         return window.fetch(baseUrl + 'import/pricing-automated-schedule/0/',
