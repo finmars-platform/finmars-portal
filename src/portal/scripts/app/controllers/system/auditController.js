@@ -64,26 +64,26 @@
 
         getInstruments();
 
-        function getTransaction() {
+        // function getTransaction() {
 
-            vm.transactionCurrent = vm.transactionCurrent || 1;
-            vm.readyStatus.transaction = false;
+        //     vm.transactionCurrent = vm.transactionCurrent || 1;
+        //     vm.readyStatus.transaction = false;
 
-            auditService.getList({filters: {'content_type': 'transactions.transaction'}, page: vm.transactionCurrent}).then(function (data) {
-                vm.transactions = data.results.map(function (item) {
-                    item.dateFormatted = moment(new Date(item.created)).format('DD/MM/YYYY');
-                    return item
-                });
+        //     auditService.getList({filters: {'content_type': 'transactions.transaction'}, page: vm.transactionCurrent}).then(function (data) {
+        //         vm.transactions = data.results.map(function (item) {
+        //             item.dateFormatted = moment(new Date(item.created)).format('DD/MM/YYYY');
+        //             return item
+        //         });
 
 
-                vm.transactionTotal = data.count;
+        //         vm.transactionTotal = data.count;
 
-                vm.readyStatus.transaction = true;
-                $scope.$apply();
-            });
-        }
+        //         vm.readyStatus.transaction = true;
+        //         $scope.$apply();
+        //     });
+        // }
 
-        getTransaction();
+        // getTransaction();
 
     };
 

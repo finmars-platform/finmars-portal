@@ -32,13 +32,13 @@
     };
 
     var getEntitiesWithoutBaseAttrsList = function () {
-        return ['price-history', 'currency-history', 'transaction', 'complex-transaction', 'balance-report', 'pnl-report', 'audit-transaction'];
+        return ['price-history', 'currency-history', 'transaction', 'complex-transaction', 'balance-report', 'pnl-report', 'audit-transaction', 'audit-instrument'];
     };
     var getEntitiesWithoutDynAttrsList = function () {
         return ['price-history', 'currency-history', 'transaction', 'pricing-policy', 'strategy-1', 'strategy-2', 'strategy-3',
             'strategy-1-group', 'strategy-2-group', 'strategy-3-group',
             'strategy-1-subgroup', 'strategy-2-subgroup', 'strategy-3-subgroup',
-            'audit-transaction'];
+            'audit-transaction', 'audit-instrument'];
     };
 
     var getEntityAttrs = function (entity) {
@@ -73,7 +73,7 @@
             ],
             "audit-transaction": [
                 {
-                    "key": "dateFormatted",
+                    "key": "date_formatted",
                     "name": "Date",
                     "value_type": 10
                 },
@@ -83,7 +83,39 @@
                     "value_type": 10
                 },
                 {
-                    "key": "field",
+                    "key": "field_name",
+                    "name": "Field",
+                    "value_type": 10
+                },
+                {
+                    "key": "old_value",
+                    "name": "Old value",
+                    "value_type": 10
+                },
+                {
+                    "key": "value",
+                    "name": "New value",
+                    "value_type": 10
+                },
+                {
+                    "key": "message",
+                    "name": "Message",
+                    "value_type": 10
+                }
+            ],
+            "audit-instrument": [
+                {
+                    "key": "date_formatted",
+                    "name": "Date",
+                    "value_type": 10
+                },
+                {
+                    "key": "username",
+                    "name": "Member",
+                    "value_type": 10
+                },
+                {
+                    "key": "field_name",
                     "name": "Field",
                     "value_type": 10
                 },

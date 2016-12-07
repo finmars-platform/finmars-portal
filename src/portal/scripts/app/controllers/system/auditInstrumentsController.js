@@ -1,6 +1,3 @@
-/**
- * Created by szhitenev on 15.06.2016.
- */
 (function () {
 
     'use strict';
@@ -10,18 +7,19 @@
 
     module.exports = function ($scope) {
 
-        console.log('{"controller": "DataInstrumentController", status: "initialized"}');
+        logService.controller('AuditController', 'initialized');
 
         var vm = this;
+        var vm = this;
 
-        vm.entityType = 'audit-transaction';
+        vm.entityType = 'audit-instrument';
         vm.entityRaw = [];
 
         vm.readyStatus = {content: false};
 
         vm.entityViewer = {extraFeatures: []};
 
-        auditService.getList({filters: {'content_type': 'transactions.transaction'}}).then(function (data) {
+        auditService.getList({filters: {'content_type': 'instruments.instrument'}}).then(function (data) {
             vm.entityRaw = data;
             vm.readyStatus.content = true;
             $scope.$apply();
@@ -32,7 +30,6 @@
                 return data;
             })
         }
-
-    }
+    };
 
 }());

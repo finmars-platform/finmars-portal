@@ -1,8 +1,8 @@
 <md-tabs md-dynamic-height md-border-bottom id="dialogbag">
     <md-tab label="Transaction" md-active="vm.checkActiveTab('transaction')"
             data-ng-click="vm.setActiveTab('transaction')">
-        <md-content class="md-padding">
-            <div data-ng-controller="DataTransactionAuditController as vm">
+        <md-content>
+            <div>
                 <div data-ng-if="vm.readyStatus.content">
                     <div data-ng-include="'views/entity-viewer/entity-viewer-view.html'"></div>
                 </div>

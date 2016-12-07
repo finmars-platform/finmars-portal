@@ -1,6 +1,3 @@
-/**
- * Created by szhitenev on 15.06.2016.
- */
 (function () {
 
     'use strict';
@@ -10,8 +7,9 @@
 
     module.exports = function ($scope) {
 
-        console.log('{"controller": "DataInstrumentController", status: "initialized"}');
+        logService.controller('AuditController', 'initialized');
 
+        var vm = this;
         var vm = this;
 
         vm.entityType = 'audit-transaction';
@@ -32,7 +30,6 @@
                 return data;
             })
         }
-
-    }
+    };
 
 }());
