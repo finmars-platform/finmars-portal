@@ -8,8 +8,9 @@
     var cookieService = require('../../../../core/services/cookieService');
 
     var configureRepositoryUrlService = require('../services/configureRepositoryUrlService');
+    var baseUrlService = require('../services/baseUrlService');
 
-    var baseUrl = '/api/v1/';
+    var baseUrl = baseUrlService.resolve();
 
     var getClassifierNodeList = function () {
         return window.fetch(baseUrl + 'portfolios/portfolio-classifier/node/',

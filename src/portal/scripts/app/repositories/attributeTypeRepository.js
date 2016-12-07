@@ -10,8 +10,9 @@
     var configureRepositoryUrlService = require('../services/configureRepositoryUrlService');
 
     var metaRestrictionsService = require('../services/metaRestrictionsService');
+    var baseUrlService = require('../services/baseUrlService');
 
-    var baseUrl = '/api/v1/';
+    var baseUrl = baseUrlService.resolve();
 
     function endPointResolver(entity) {
         switch (entity) {

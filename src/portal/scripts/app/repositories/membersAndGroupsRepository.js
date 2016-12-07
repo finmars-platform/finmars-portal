@@ -2,8 +2,9 @@
 	'use strict';
 
 	var cookieService = require('../../../../core/services/cookieService');
+	var baseUrlService = require('../services/baseUrlService');
 
-	var baseUrl = '/api/v1/';
+	var baseUrl = baseUrlService.resolve();
 
 	var getList = function (type) {
 		var fetchUrl = '';

@@ -6,7 +6,9 @@
     'use strict';
 
     var cookieService = require('../../../../core/services/cookieService');
-    var baseUrl = '/api/v1/';
+    var baseUrlService = require('../services/baseUrlService');
+
+    var baseUrl = baseUrlService.resolve();
 
     var getList = function (options) {
         return window.fetch(baseUrl + 'reports/report/',

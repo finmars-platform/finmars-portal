@@ -7,11 +7,11 @@
 
     var cookieService = require('../../../../core/services/cookieService');
     var configureRepositoryUrlService = require('../services/configureRepositoryUrlService');
+    var baseUrlService = require('../services/baseUrlService');
 
-    var baseUrl = '/api/v1/';
+    var baseUrl = baseUrlService.resolve();
 
-
-    var getTypeList = function() {
+    var getTypeList = function () {
         return window.fetch(baseUrl + 'accounts/account-type/',
             {
                 method: 'GET',
@@ -110,7 +110,7 @@
                     'Content-type': 'application/json'
                 }
             }).then(function (data) {
-            return new Promise(function(resolve,reject) {
+            return new Promise(function (resolve, reject) {
                 resolve({status: 'deleted'});
             });
             //return data.json();

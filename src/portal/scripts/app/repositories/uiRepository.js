@@ -8,8 +8,9 @@
     var cookieService = require('../../../../core/services/cookieService');
     var metaContentTypesService = require('../services/metaContentTypesService');
     var metaRestrictionsRepository = require('./metaRestrictionsRepository');
+    var baseUrlService = require('../services/baseUrlService');
 
-    var baseUrl = '/api/v1/';
+    var baseUrl = baseUrlService.resolve();
 
     var getEditLayout = function (entity) {
 
