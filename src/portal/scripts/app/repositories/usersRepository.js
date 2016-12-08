@@ -2,19 +2,20 @@
  * Created by szhitenev on 04.05.2016.
  */
 
-(function(){
+(function () {
 
     'use strict';
 
     var cookieService = require('../../../../core/services/cookieService');
+    var baseUrlService = require('../services/baseUrlService');
 
-    var baseUrl = '/api/v1/';
+    var baseUrl = baseUrlService.resolve();
 
-    var handleError = function(methodName){
-        console.log('Method: '+ methodName+ '. Cannot get data from server');
+    var handleError = function (methodName) {
+        console.log('Method: ' + methodName + '. Cannot get data from server');
     };
 
-    var login = function(login, password){
+    var login = function (login, password) {
         return window.fetch(baseUrl + 'users/login/', {
             method: 'POST',
             credentials: 'include',
@@ -24,15 +25,15 @@
                 'Content-type': 'application/json'
             },
             body: JSON.stringify({username: login, password: password})
-        }).then(function(data){
+        }).then(function (data) {
             return data.json();
-        }).catch(function(){
+        }).catch(function () {
             handleError('login');
             return [];
         })
     };
 
-    var logout = function() {
+    var logout = function () {
         return window.fetch(baseUrl + 'users/logout/', {
             method: 'POST',
             credentials: 'include',
@@ -41,12 +42,12 @@
                 Accept: 'application/json',
                 'Content-type': 'application/json'
             }
-        }).then(function(data){
+        }).then(function (data) {
             return data.json();
         })
     };
 
-    var ping = function() {
+    var ping = function () {
         return window.fetch(baseUrl + 'users/ping/', {
             method: 'GET',
             credentials: 'include',
@@ -54,12 +55,12 @@
                 Accept: 'application/json',
                 'Content-type': 'application/json'
             }
-        }).then(function(data){
+        }).then(function (data) {
             return data.json();
         })
     };
 
-    var protectedPing = function() {
+    var protectedPing = function () {
         return window.fetch(baseUrl + 'users/protected-ping/', {
             method: 'GET',
             credentials: 'include',
@@ -67,12 +68,12 @@
                 Accept: 'application/json',
                 'Content-type': 'application/json'
             }
-        }).then(function(data){
+        }).then(function (data) {
             return data.json();
         })
     };
 
-    var getList = function() {
+    var getList = function () {
         return window.fetch(baseUrl + 'users/user/', {
             method: 'GET',
             credentials: 'include',
@@ -80,39 +81,39 @@
                 Accept: 'application/json',
                 'Content-type': 'application/json'
             }
-        }).then(function(data){
+        }).then(function (data) {
             return data.json();
         })
     };
 
-    var getByKey = function(id){
-        return window.fetch(baseUrl + 'users/user/' + id, {
+    var getByKey = function (id) {
+        return window.fetch(baseUrl + 'users/user/' + id + '/', {
             method: 'GET',
             credentials: 'include',
             headers: {
                 Accept: 'application/json',
                 'Content-type': 'application/json'
             }
-        }).then(function(data){
+        }).then(function (data) {
             return data.json();
         })
     };
 
-    var getMe = function(){
-        return window.fetch(baseUrl + 'users/user/0', {
+    var getMe = function () {
+        return window.fetch(baseUrl + 'users/user/0/', {
             method: 'GET',
             credentials: 'include',
             headers: {
                 Accept: 'application/json',
                 'Content-type': 'application/json'
             }
-        }).then(function(data){
+        }).then(function (data) {
             return data.json();
         })
     };
 
-    var update = function(id, user){
-        return window.fetch(baseUrl + 'users/user/' + id, {
+    var update = function (id, user) {
+        return window.fetch(baseUrl + 'users/user/' + id + '/', {
             method: 'PUT',
             credentials: 'include',
             headers: {
@@ -133,8 +134,8 @@
         })
     };
 
-    var patch = function(id, user){
-        return window.fetch(baseUrl + 'users/user/' + id, {
+    var patch = function (id, user) {
+        return window.fetch(baseUrl + 'users/user/' + id + '/', {
             method: 'PATCH',
             credentials: 'include',
             headers: {
@@ -142,25 +143,25 @@
                 'Content-type': 'application/json'
             },
             body: JSON.stringify(user)
-        }).then(function(data){
+        }).then(function (data) {
             return data.json();
         })
     };
 
-    var deleteByKey = function(id) {
-        return window.fetch(baseUrl + 'users/user/' + id, {
+    var deleteByKey = function (id) {
+        return window.fetch(baseUrl + 'users/user/' + id + '/', {
             method: 'DELETE',
             credentials: 'include',
             headers: {
                 Accept: 'application/json',
                 'Content-type': 'application/json'
             }
-        }).then(function(data){
+        }).then(function (data) {
             return data.json();
         })
     };
 
-    var getMasterList = function() {
+    var getMasterList = function () {
         return window.fetch(baseUrl + 'users/master-user/', {
             method: 'GET',
             credentials: 'include',
@@ -168,12 +169,12 @@
                 Accept: 'application/json',
                 'Content-type': 'application/json'
             }
-        }).then(function(data){
+        }).then(function (data) {
             return data.json();
         })
     };
 
-    var getMasterByKey = function(id){
+    var getMasterByKey = function (id) {
         return window.fetch(baseUrl + 'users/master-user/' + id, {
             method: 'GET',
             credentials: 'include',
@@ -181,12 +182,12 @@
                 Accept: 'application/json',
                 'Content-type': 'application/json'
             }
-        }).then(function(data){
+        }).then(function (data) {
             return data.json();
         })
     };
 
-    var updateMaster = function(id, user){
+    var updateMaster = function (id, user) {
         return window.fetch(baseUrl + 'users/master-user/' + id, {
             method: 'PUT',
             credentials: 'include',
@@ -195,12 +196,12 @@
                 'Content-type': 'application/json'
             },
             body: JSON.stringify(user)
-        }).then(function(data){
+        }).then(function (data) {
             return data.json();
         })
     };
 
-    var patchMaster = function(id, user){
+    var patchMaster = function (id, user) {
         return window.fetch(baseUrl + 'users/master-user/' + id, {
             method: 'PATCH',
             credentials: 'include',
@@ -209,12 +210,12 @@
                 'Content-type': 'application/json'
             },
             body: JSON.stringify(user)
-        }).then(function(data){
+        }).then(function (data) {
             return data.json();
         })
     };
 
-    var deleteMasterByKey = function(id) {
+    var deleteMasterByKey = function (id) {
         return window.fetch(baseUrl + 'users/master-user/' + id, {
             method: 'DELETE',
             credentials: 'include',
@@ -222,12 +223,12 @@
                 Accept: 'application/json',
                 'Content-type': 'application/json'
             }
-        }).then(function(data){
+        }).then(function (data) {
             return data.json();
         })
     };
 
-    var getMemberList = function() {
+    var getMemberList = function () {
         return window.fetch(baseUrl + 'users/member/', {
             method: 'GET',
             credentials: 'include',
@@ -235,12 +236,12 @@
                 Accept: 'application/json',
                 'Content-type': 'application/json'
             }
-        }).then(function(data){
+        }).then(function (data) {
             return data.json();
         })
     };
 
-    var getMemberByKey = function(id){
+    var getMemberByKey = function (id) {
         return window.fetch(baseUrl + 'users/member/' + id, {
             method: 'GET',
             credentials: 'include',
@@ -248,12 +249,12 @@
                 Accept: 'application/json',
                 'Content-type': 'application/json'
             }
-        }).then(function(data){
+        }).then(function (data) {
             return data.json();
         })
     };
 
-    var updateMember = function(id, user){
+    var updateMember = function (id, user) {
         return window.fetch(baseUrl + 'users/member/' + id, {
             method: 'PUT',
             credentials: 'include',
@@ -262,12 +263,12 @@
                 'Content-type': 'application/json'
             },
             body: JSON.stringify(user)
-        }).then(function(data){
+        }).then(function (data) {
             return data.json();
         })
     };
 
-    var patchMember = function(id, user){
+    var patchMember = function (id, user) {
         return window.fetch(baseUrl + 'users/member/' + id, {
             method: 'PATCH',
             credentials: 'include',
@@ -276,12 +277,12 @@
                 'Content-type': 'application/json'
             },
             body: JSON.stringify(user)
-        }).then(function(data){
+        }).then(function (data) {
             return data.json();
         })
     };
 
-    var deleteMemberByKey = function(id) {
+    var deleteMemberByKey = function (id) {
         return window.fetch(baseUrl + 'users/member/' + id, {
             method: 'DELETE',
             credentials: 'include',
@@ -289,12 +290,12 @@
                 Accept: 'application/json',
                 'Content-type': 'application/json'
             }
-        }).then(function(data){
+        }).then(function (data) {
             return data.json();
         })
     };
 
-    var getGroupList = function() {
+    var getGroupList = function () {
         return window.fetch(baseUrl + 'users/group/', {
             method: 'GET',
             credentials: 'include',
@@ -302,7 +303,7 @@
                 Accept: 'application/json',
                 'Content-type': 'application/json'
             }
-        }).then(function(data){
+        }).then(function (data) {
             return data.json();
         })
     };
