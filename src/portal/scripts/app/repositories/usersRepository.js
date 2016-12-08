@@ -87,7 +87,7 @@
     };
 
     var getByKey = function (id) {
-        return window.fetch(baseUrl + 'users/user/' + id, {
+        return window.fetch(baseUrl + 'users/user/' + id + '/', {
             method: 'GET',
             credentials: 'include',
             headers: {
@@ -100,7 +100,7 @@
     };
 
     var getMe = function () {
-        return window.fetch(baseUrl + 'users/user/0', {
+        return window.fetch(baseUrl + 'users/user/0/', {
             method: 'GET',
             credentials: 'include',
             headers: {
@@ -113,7 +113,7 @@
     };
 
     var update = function (id, user) {
-        return window.fetch(baseUrl + 'users/user/' + id, {
+        return window.fetch(baseUrl + 'users/user/' + id + '/', {
             method: 'PUT',
             credentials: 'include',
             headers: {
@@ -135,7 +135,7 @@
     };
 
     var patch = function (id, user) {
-        return window.fetch(baseUrl + 'users/user/' + id, {
+        return window.fetch(baseUrl + 'users/user/' + id + '/', {
             method: 'PATCH',
             credentials: 'include',
             headers: {
@@ -149,7 +149,7 @@
     };
 
     var deleteByKey = function (id) {
-        return window.fetch(baseUrl + 'users/user/' + id, {
+        return window.fetch(baseUrl + 'users/user/' + id + '/', {
             method: 'DELETE',
             credentials: 'include',
             headers: {
