@@ -4,8 +4,9 @@
 (function () {
 
     'use strict';
+    var baseUrlService = require('../services/baseUrlService');
 
-    var baseUrl = '/api/v1/';
+    var baseUrl = baseUrlService.resolve();
 
     var getDailyPricingModelChoices = function () {
         return window.fetch(baseUrl + 'instruments/daily-pricing-model/',

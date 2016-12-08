@@ -8,8 +8,10 @@
 
     var cookieService = require('../../../../../core/services/cookieService');
     // var configureRepositoryUrlService = require('../services/configureRepositoryUrlService');
+    var baseUrlService = require('../../services/baseUrlService');
 
-    var baseUrl = '/api/v1/reports/custom-field/';
+    var baseUrl = baseUrlService.resolve();
+    baseUrl = baseUrl + 'reports/custom-field/';
 
     var getList = function () {
 
