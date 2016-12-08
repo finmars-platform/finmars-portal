@@ -6,9 +6,12 @@
         addEntityBtn: true
     };
     var setTablePartsSettings = function (entityType) {
-        if (["transaction"].indexOf(entityType) !== -1 &&
-            ["audit"].indexOf(entityType) !== -1) {
+        if (["transaction"].indexOf(entityType) !== -1 ||
+            entityType.indexOf("audit") !== -1) {
             tableParts.addEntityBtn = false;
+        }
+        else {
+           tableParts.addEntityBtn = true; 
         };
         return tableParts;
     };

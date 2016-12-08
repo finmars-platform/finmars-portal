@@ -16,7 +16,7 @@
     var GroupTableService = require('../../services/groupTable/groupTableService');
     var reportSubtotalService = require('../../services/reportSubtotalService');
     var pricingPolicyService = require('../../services/pricingPolicyService');
-    var tablePartsService = require('../../services/groupTable/groupTableService');
+    var tablePartsService = require('../../services/groupTable/tablePartsService');
 
     var uiService = require('../../services/uiService');
 
@@ -883,8 +883,9 @@
         //     }
         //     return true
         // };
-        var tableParts = tablePartsService.setTablePartsSettings(vm.entityType);
-        console.log('entity viewer addEntity visibility', tableParts);
+
+        vm.tableParts = tablePartsService.setTablePartsSettings(vm.entityType);
+        console.log('entity viewer addEntity visibility', vm.tableParts, vm.entityType);
 
         $scope.$on("$destroy", function (event) {
 
