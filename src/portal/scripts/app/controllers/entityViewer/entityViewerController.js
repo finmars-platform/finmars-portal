@@ -16,6 +16,7 @@
     var GroupTableService = require('../../services/groupTable/groupTableService');
     var reportSubtotalService = require('../../services/reportSubtotalService');
     var pricingPolicyService = require('../../services/pricingPolicyService');
+    var tablePartsService = require('../../services/groupTable/groupTableService');
 
     var uiService = require('../../services/uiService');
 
@@ -797,12 +798,14 @@
             });
         }
 
-        vm.checkAddBtn = function () {
-            if (["transaction"].indexOf(vm.entityType) !== -1) {
-                return false
-            }
-            return true
-        };
+        // vm.checkAddBtn = function () {
+        //     if (["transaction"].indexOf(vm.entityType) !== -1) {
+        //         return false
+        //     }
+        //     return true
+        // };
+        var tableParts = tablePartsService.setTablePartsSettings(vm.entityType);
+        console.log('entity viewer addEntity visibility', tableParts);
 
         $scope.$on("$destroy", function (event) {
 

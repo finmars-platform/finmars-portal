@@ -1,7 +1,7 @@
 <div data-ng-controller="EntityViewerController as vm">
     <div data-ng-if="!vm.isReport">
         <md-button aria-label="add entity" class="md-fab md-fab-bottom-right" data-ng-click="vm.addEntity($event)"
-                   data-ng-if="vm.checkAddBtn()">
+                   data-ng-if="tableParts.addEntityBtn">
             <ng-md-icon icon="add"></ng-md-icon>
         </md-button>
         <div class="lock-size g-table-dial" layout="row" layout-align="center center">

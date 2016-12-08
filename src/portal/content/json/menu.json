@@ -324,13 +324,13 @@
 			},
 			{
 				"state": "app.system.transactions",
-				"title": "Transactions",
+				"title": "Audit transactions",
 				"type": "link",
 				"icon": ""
 			},
 			{
 				"state": "app.system.instruments",
-				"title": "Instruments",
+				"title": "Audit instruments",
 				"type": "link",
 				"icon": ""
 			}
