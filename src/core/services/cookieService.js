@@ -57,6 +57,7 @@
 
     module.exports = {
         getCookie: getCookie,
+        setCookie: setCookie,
         deleteCookie: deleteCookie
     }
 

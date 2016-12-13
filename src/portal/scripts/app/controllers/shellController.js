@@ -19,23 +19,24 @@
 
         vm.logout = function () {
             console.log('Logged out');
+            usersService.logout();
             window.location.pathname = '/';
             cookiesService.deleteCookie();
             //usersService.logout();
         };
 
-         //window.fetch('/api/v1/users/ping/').then(function (data) {
-         //	return data.json()
-         //}).then(function (data) {
-         //	setTimeout(function () {
-         //		usersService.login('dev1', 'Uethohk0').then(function () {
-         //		//usersService.login('dev2', 'ceechohf8Eexue6u').then(function () {
-         //		//usersService.login('dev11', 'cheeL1ei').then(function () {
-         //		//	console.log('after login', cookiesService.getCookie('csrftoken'));
-         //			$scope.$apply();
-         //		});
-         //	}, 1000)
-         //});
+         window.fetch('/api/v1/users/ping/').then(function (data) {
+         	return data.json()
+         }).then(function (data) {
+         	setTimeout(function () {
+         		usersService.login('dev1', 'Uethohk0').then(function () {
+         		//usersService.login('dev2', 'ceechohf8Eexue6u').then(function () {
+         		//usersService.login('dev11', 'cheeL1ei').then(function () {
+         		//	console.log('after login', cookiesService.getCookie('csrftoken'));
+         			$scope.$apply();
+         		});
+         	}, 1000)
+         });
 
         usersService.getList().then(function (data) {
             vm.user = data.results[0];

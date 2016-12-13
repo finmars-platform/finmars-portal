@@ -23,6 +23,8 @@
         vm.tabs = [];
         vm.entityType = parentScope.entityType;
 
+        console.log('parentScope', parentScope);
+
         logService.property('vm.entityType', vm.entityType);
 
         //uiService.getListLayout(vm.entityType).then(function (data) {
@@ -150,20 +152,78 @@
                 });
                 restoreAttrs();
                 syncAttrs();
-                console.log('report balance custom attr is', vm.custom);
+
                 $scope.$apply();
             });
 
-            return attributeTypeService.getList(vm.entityType).then(function (data) {
-                vm.attrs = data.results;
-                attrsList = vm.attrs.concat(vm.baseAttrs);
-                attrsList = attrsList.concat(vm.entityAttrs);
-                restoreAttrs();
-                syncAttrs();
-                // logService.collection('attrsList!!!!!!!!!', attrsList);
-                vm.readyStatus.content = true;
-                $scope.$apply();
-            })
+            if (parentScope.isReport == true) {
+
+                var promises = [];
+
+                promises.push(attributeTypeService.getList('portfolio'));
+                promises.push(attributeTypeService.getList('account'));
+                promises.push(attributeTypeService.getList('instrument'));
+                promises.push(attributeTypeService.getList('currency'));
+
+                Promise.all(promises).then(function (data) {
+
+                    vm.attrs = [];
+
+                    data.forEach(function (entityData, index) {
+
+                        var results = entityData.results.map(function (item) {
+
+                            if (index == 0) {
+                                item.r_entityType = 'portfolio';
+                                item.source_name = item.name;
+                                item.name = 'Portfolio: ' + item.name;
+                            }
+                            if (index == 1) {
+                                item.r_entityType = 'account';
+                                item.source_name = item.name;
+                                item.name = 'Account: ' + item.name;
+                            }
+                            if (index == 2) {
+                                item.r_entityType = 'instrument';
+                                item.source_name = item.name;
+                                item.name = 'Instrument: ' + item.name;
+                            }
+                            if (index == 3) {
+                                item.r_entityType = 'currency';
+                                item.source_name = item.name;
+                                item.name = 'Currency: ' + item.name;
+                            }
+
+                            return item;
+                        });
+
+                        vm.attrs = vm.attrs.concat(results);
+                    });
+
+                    attrsList = vm.attrs.concat(vm.baseAttrs);
+                    attrsList = attrsList.concat(vm.entityAttrs);
+                    restoreAttrs();
+                    syncAttrs();
+
+                    console.log('report balance custom attr is', vm.attrs);
+                    vm.readyStatus.content = true;
+                    $scope.$apply();
+
+                })
+
+
+            } else {
+                return attributeTypeService.getList(vm.entityType).then(function (data) {
+                    vm.attrs = data.results;
+                    attrsList = vm.attrs.concat(vm.baseAttrs);
+                    attrsList = attrsList.concat(vm.entityAttrs);
+                    restoreAttrs();
+                    syncAttrs();
+                    // logService.collection('attrsList!!!!!!!!!', attrsList);
+                    vm.readyStatus.content = true;
+                    $scope.$apply();
+                })
+            }
 
         };
 
