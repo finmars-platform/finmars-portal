@@ -532,10 +532,101 @@
             });
         }
 
+        function extractDynamicAttributes(items) {
+            return items.map(function (item) {
+
+                if (item.hasOwnProperty('instrument_object') && item.instrument_object !== null) {
+
+                    item.instrument_object.attributes.forEach(function (attribute) {
+
+                        if (attribute.attribute_type_object.value_type == 10) {
+                            item['instrument_attribute_' + attribute.attribute_type_object.name] = attribute.value_string
+                        }
+                        if (attribute.attribute_type_object.value_type == 20) {
+                            item['instrument_attribute_' + attribute.attribute_type_object.name] = attribute.value_float
+                        }
+                        if (attribute.attribute_type_object.value_type == 30) {
+                            item['instrument_attribute_' + attribute.attribute_type_object.name] = attribute.classifier_object
+                        }
+                        if (attribute.attribute_type_object.value_type == 40) {
+                            item['instrument_attribute_' + attribute.attribute_type_object.name] = attribute.value_date
+                        }
+
+                    })
+                }
+
+                if (item.hasOwnProperty('account_object') && item.account_object !== null) {
+
+                    item.account_object.attributes.forEach(function (attribute) {
+
+                        if (attribute.attribute_type_object.value_type == 10) {
+                            item['account_attribute_' + attribute.attribute_type_object.name] = attribute.value_string
+                        }
+                        if (attribute.attribute_type_object.value_type == 20) {
+                            item['account_attribute_' + attribute.attribute_type_object.name] = attribute.value_float
+                        }
+                        if (attribute.attribute_type_object.value_type == 30) {
+                            item['account_attribute_' + attribute.attribute_type_object.name] = attribute.classifier_object
+                        }
+                        if (attribute.attribute_type_object.value_type == 40) {
+                            item['account_attribute_' + attribute.attribute_type_object.name] = attribute.value_date
+                        }
+
+                    })
+                }
+
+                if (item.hasOwnProperty('portfolio_object') && item.portfolio_object !== null) {
+
+                    item.portfolio_object.attributes.forEach(function (attribute) {
+
+                        if (attribute.attribute_type_object.value_type == 10) {
+                            item['portfolio_attribute_' + attribute.attribute_type_object.name] = attribute.value_string
+                        }
+                        if (attribute.attribute_type_object.value_type == 20) {
+                            item['portfolio_attribute_' + attribute.attribute_type_object.name] = attribute.value_float
+                        }
+                        if (attribute.attribute_type_object.value_type == 30) {
+                            item['portfolio_attribute_' + attribute.attribute_type_object.name] = attribute.classifier_object
+                        }
+                        if (attribute.attribute_type_object.value_type == 40) {
+                            item['portfolio_attribute_' + attribute.attribute_type_object.name] = attribute.value_date
+                        }
+
+                    })
+                }
+
+                if (item.hasOwnProperty('currency_object') && item.currency_object !== null) {
+
+                    item.currency_object.attributes.forEach(function (attribute) {
+
+                        if (attribute.attribute_type_object.value_type == 10) {
+                            item['currency_attribute_' + attribute.attribute_type_object.name] = attribute.value_string
+                        }
+                        if (attribute.attribute_type_object.value_type == 20) {
+                            item['currency_attribute_' + attribute.attribute_type_object.name] = attribute.value_float
+                        }
+                        if (attribute.attribute_type_object.value_type == 30) {
+                            item['currency_attribute_' + attribute.attribute_type_object.name] = attribute.classifier_object
+                        }
+                        if (attribute.attribute_type_object.value_type == 40) {
+                            item['currency_attribute_' + attribute.attribute_type_object.name] = attribute.value_date
+                        }
+
+                    })
+                }
+
+                return item;
+
+            })
+        }
+
+        items = extractDynamicAttributes(items);
+
+        console.log('TRANSFORMIN ITEMS WITH DYNAMIC ATTR PROPS', items);
 
         if (groups.length) {
 
-            items.forEach(function(item, $index){
+            items.forEach(function (item, $index) {
                 item._lid = $index;
             });
 

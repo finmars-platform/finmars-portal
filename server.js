@@ -9,7 +9,7 @@ var app = express();
 
 app.use(express.static('dist'));
 
-var proxyOptions = url.parse('https://dev.finmars.com');
+var proxyOptions = url.parse('https://api.dev.finmars.com');
 proxyOptions.cookieRewrite = true;
 
 app.use('/', proxy(proxyOptions));

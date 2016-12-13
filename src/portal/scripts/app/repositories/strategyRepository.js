@@ -12,7 +12,7 @@
     var baseUrl = baseUrlService.resolve();
 
     var getList = function (strategyNumber, options) {
-        return window.fetch(configureRepositoryUrlService.configureUrl(baseUrl + 'strategies/' + strategyNumber + '/strategy', options),
+        return window.fetch(configureRepositoryUrlService.configureUrl(baseUrl + 'strategies/' + strategyNumber + '/strategy/', options),
             {
                 method: 'GET',
                 credentials: 'include',

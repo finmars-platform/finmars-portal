@@ -41,7 +41,7 @@
 
     var setConfig = function(providerId, provider) {
 
-        return window.fetch(baseUrl + 'import/config/' + providerId,
+        return window.fetch(baseUrl + 'import/config/' + providerId + '/',
             {
                 method: 'PUT',
                 credentials: 'include',
