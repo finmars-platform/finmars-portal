@@ -340,13 +340,12 @@
         vm.getView = function () {
             return uiService.getActiveListLayout(vm.entityType).then(function (res) {
 
-                //vm.entityType = data.entityType;
-
                 //vm.tabs = res.data.tabs;
 
-                //console.log('re1233333s', res);
-                //console.log('res.results', res.results[0]);
+                console.log('re1233333s', res);
+                console.log('res.results', res.results[0]);
                 if (res.results.length) {
+                    console.log('recieved saved view');
                     vm.listView = res.results[0];
 
                     vm.oldListView = JSON.parse(JSON.stringify(vm.listView));
@@ -360,6 +359,7 @@
                     vm.sorting = res.results[0].data.table.sorting;
 
                     logService.collection('vm.columns', vm.columns);
+                    logService.collection('vm.filters', vm.filters);
 
                     vm.additionsType = res.results[0].data.tableAdditions.additionsType;
 
@@ -418,7 +418,7 @@
 
             vm.columns = returnFullAttributes(vm.columns, vm.attrs, vm.baseAttrs, vm.entityAttrs, vm.entityType);
             vm.grouping = returnFullAttributes(vm.grouping, vm.attrs, vm.baseAttrs, vm.entityAttrs, vm.entityType);
-            vm.filters = returnFullAttributes(vm.filters, vm.attrs, vm.baseAttrs, vm.entityAttrs, vm.entityType);
+            // vm.filters = returnFullAttributes(vm.filters, vm.attrs, vm.baseAttrs, vm.entityAttrs, vm.entityType);
             vm.sorting.group = findFullAttributeForItem(vm.sorting.group, vm.attrs);
             vm.sorting.column = findFullAttributeForItem(vm.sorting.column, vm.attrs);
             //console.log('vm.sorting.column', vm.sorting.column);
@@ -730,7 +730,7 @@
 
                     vm.reportIsReady = true;
 
-                    //console.log('vm.filters', vm.filters);
+                    console.log('vm.filters 123', vm.filters);
 
                     vm.filters.forEach(function (item) {
                         if (item.options && item.options.enabled === true) {
