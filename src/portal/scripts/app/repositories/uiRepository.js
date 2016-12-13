@@ -97,6 +97,7 @@
                     'Content-type': 'application/json'
                 }
             }).then(function (data) {
+            console.log('ui repository data', data);
             return data.json();
         })
     };
