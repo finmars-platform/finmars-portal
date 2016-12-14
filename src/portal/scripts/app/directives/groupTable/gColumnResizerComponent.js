@@ -30,12 +30,13 @@
                 }
 
                 // set columns to saved width
+                var columnsWidthSet = false;
                 function setColumnsWidthAndNameTooltip() {
-                    var columns = elem.find('.g-column');
-                    var savedWidths = scope.columnsWidth;
-                    if (columns.length > 0 && columns.length === savedWidths.length) {
-                            console.log('setColumnsWidthAndNameTooltip is working!');
-                        // if (scope.columnsWidth && scope.columnsWidth.length) {
+                    if (!columnsWidthSet) {
+                        var columns = elem.find('.g-column');
+                        var savedWidths = scope.columnsWidth;
+                        console.log('setColumnsWidthAndNameTooltip changes');
+                        if (columns.length > 0 && columns.length === savedWidths.length) {
                             for (var i = 0; i < columns.length; i = i + 1) {
                                 if (savedWidths[i] && !isNaN(savedWidths[i])) {
                                     $(columns[i]).width(savedWidths[i]);
@@ -44,11 +45,9 @@
                                         $(columns[i]).addClass('small-width');
                                     }
                                 }
-                                // if (i == columns.length - 1) {
-                                // 	groupTableReadinessCheckservice.checkTableCondition(true)
-                                // }
                             }
-                        // }
+                            columnsWidthSet = true;
+                        }
                     }
                 }
 

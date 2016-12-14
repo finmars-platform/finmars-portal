@@ -41,7 +41,8 @@
                 'X-CSRFToken': cookieService.getCookie('csrftoken'),
                 Accept: 'application/json',
                 'Content-type': 'application/json'
-            }
+            },
+            body: JSON.stringify({})
         }).then(function (data) {
             return data.json();
         })
@@ -56,6 +57,8 @@
                 'Content-type': 'application/json'
             }
         }).then(function (data) {
+
+
             return data.json();
         })
     };

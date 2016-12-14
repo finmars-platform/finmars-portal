@@ -1109,6 +1109,26 @@
                     "key": "total_unreal",
                     "name": "Total unreal",
                     "value_type": "float"
+                },
+                {
+                    "key": "market_value",
+                    "name": "Market value",
+                    "value_type": "float"
+                },
+                {
+                    "key": "exposure",
+                    "name": "Exposure",
+                    "value_type": "float"
+                },
+                {
+                    "key": "market_value_percent",
+                    "name": "Market value %",
+                    "value_type": "float"
+                },
+                {
+                    "key": "exposure_percent",
+                    "name": "Exposure %",
+                    "value_type": "float"
                 }
             ],
             "complex-transaction": [
