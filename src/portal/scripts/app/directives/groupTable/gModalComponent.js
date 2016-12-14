@@ -41,6 +41,8 @@
         vm.entityAttrs = [];
         vm.custom = [];
 
+        vm.isReport = parentScope.isReport;
+
         vm.tabAttrsReady = false;
 
         // refactore this block
