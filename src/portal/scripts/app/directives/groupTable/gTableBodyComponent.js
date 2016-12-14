@@ -668,6 +668,13 @@
 
                     //console.log('groupedItem', groupedItem);
 
+
+                    if (column.hasOwnProperty('r_entityType')) {
+
+                        return groupedItem[column.r_entityType + '_attribute_' + column.source_name];
+
+                    }
+
                     function findNodeInChildren(item) {
                         if (groupedItem[column.name] == item.id) {
                             classifierNode = item;
