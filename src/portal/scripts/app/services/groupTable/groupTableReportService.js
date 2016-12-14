@@ -43,6 +43,8 @@
 
         var rowType = type || 'normal';
 
+        //console.log('item 323 232 32 323 2', item);
+
         var cellCaptions = [];
         var i;
         var cellObj;
@@ -133,7 +135,7 @@
 
             //console.log('item', item);
 
-            if (item.breadcrumbs_level_0[0].hasOwnProperty('groups')) {
+            if (item.hasOwnProperty('breadcrumbs_level_0') && item.breadcrumbs_level_0.length && item.breadcrumbs_level_0[0].hasOwnProperty('groups')) {
 
                 for (i = 1; i <= level; i = i + 1) {
 
@@ -159,58 +161,66 @@
 
                 //console.log('previousGroups', previousGroups);
                 //console.log('item', item);
+                if (item.groups.length) {
+                    if (options.itemIndex == 0) {
 
-                if (options.itemIndex == 0) {
+                        var cellObjType = 'area';
 
-                    for (i = 0; i < level; i = i + 1) {
+                        if (item.groups.length && item.groups[0].report_settings.subtotal_type) {
+                            cellObjType = item.groups[0].report_settings.subtotal_type;
+                        }
 
-                        if (i == level - 1) {
-                            cellObj = item.groups[0];
-                            cellObj.type = item.groups[0].report_settings.subtotal_type;
-                            cellObj.level = level;
-                        } else {
-                            for (g = 0; g < previousGroups.length; g = g + 1) {
 
-                                if (previousGroups[g].level == i) {
+                        for (i = 0; i < level; i = i + 1) {
 
-                                    cellObj = {};
+                            if (i == level - 1) {
+                                cellObj = item.groups[0];
+                                cellObj.type = cellObjType;
+                                cellObj.level = level;
+                            } else {
+                                for (g = 0; g < previousGroups.length; g = g + 1) {
 
-                                    //console.log('previousGroups[g].items[0]', previousGroups[g].items[0]);
-                                    //console.log('item.', item);
+                                    if (previousGroups[g].level == i) {
 
-                                    if (previousGroups[g].items[0]._lid == item.items[0]._lid) {
-                                        cellObj = previousGroups[g].groups[0];
+                                        cellObj = {};
+
+                                        //console.log('previousGroups[g].items[0]', previousGroups[g].items[0]);
+                                        //console.log('item.', item);
+
+                                        if (previousGroups[g].items[0]._lid == item.items[0]._lid) {
+                                            cellObj = previousGroups[g].groups[0];
+                                        }
+
+                                        cellObj.type = cellObjType;
+                                        cellObj.level = i + 1;
                                     }
-
-                                    cellObj.type = item.groups[0].report_settings.subtotal_type;
-                                    cellObj.level = i + 1;
                                 }
+
                             }
 
+                            cellCaptions.push(cellObj);
+
                         }
+                    } else {
 
 
-                        cellCaptions.push(cellObj);
-                    }
-                } else {
+                        for (i = 1; i <= level; i = i + 1) {
+
+                            cellObj = {
+                                value: '',
+                                type: item.groups[0].report_settings.subtotal_type,
+                                level: i
+                            };
 
 
-                    for (i = 1; i <= level; i = i + 1) {
-
-                        cellObj = {
-                            value: '',
-                            type: item.groups[0].report_settings.subtotal_type,
-                            level: i
-                        };
+                            if (i == level) {
+                                cellObj.level = level;
+                            }
 
 
-                        if (i == level) {
-                            cellObj.level = level;
+                            cellCaptions.push(cellObj);
+
                         }
-
-
-                        cellCaptions.push(cellObj);
-
                     }
                 }
             }
@@ -240,22 +250,25 @@
 
             // if item have top-line group subtotal start,
 
-            if (item.groups[0].report_settings && item.groups[0].report_settings.subtotal_type == 'line' && level !== 0) {
+            if (item.groups.length) {
+                if (item.groups[0].report_settings && item.groups[0].report_settings.subtotal_type == 'line' && level !== 0) {
 
-                cellCaptions = findCellCaptions(item, level, 'subtotal', {reportSettingsType: 'line'});
+                    cellCaptions = findCellCaptions(item, level, 'subtotal', {reportSettingsType: 'line'});
 
-                obj = {
-                    cellsCaptions: cellCaptions,
-                    value: item.subTotal,
-                    type: 'subtotal-line',
-                    value_options: {
-                        type: item.groups[0].report_settings.subtotal_type,
-                        level: level
-                    }
-                };
+                    obj = {
+                        cellsCaptions: cellCaptions,
+                        value: item.subTotal,
+                        type: 'subtotal-line',
+                        value_options: {
+                            type: item.groups[0].report_settings.subtotal_type,
+                            level: level
+                        }
+                    };
 
-                resultItems.push(new Row(obj));
+                    resultItems.push(new Row(obj));
+                }
             }
+
 
             // if item have top-line group subtotal start end
 
@@ -348,21 +361,25 @@
 
             // if group have area subtotal, do it, start
 
-            if (item.groups[0].report_settings && item.groups[0].report_settings.subtotal_type == 'area' && level !== 0) {
+            //console.log('-------------------------------------------------------', item.groups[0]);
 
-                cellCaptions = findCellCaptions(item, level, 'subtotal', {reportSettingsType: 'area'});
+            if (item.groups.length) {
+                if (item.groups[0].report_settings && item.groups[0].report_settings.subtotal_type == 'area' && level !== 0) {
 
-                obj = {
-                    cellsCaptions: cellCaptions,
-                    value: item.subTotal,
-                    type: 'subtotal',
-                    value_options: {
-                        type: item.groups[0].report_settings.subtotal_type,
-                        level: level
-                    }
-                };
+                    cellCaptions = findCellCaptions(item, level, 'subtotal', {reportSettingsType: 'area'});
 
-                resultItems.push(new Row(obj));
+                    obj = {
+                        cellsCaptions: cellCaptions,
+                        value: item.subTotal,
+                        type: 'subtotal',
+                        value_options: {
+                            type: item.groups[0].report_settings.subtotal_type,
+                            level: level
+                        }
+                    };
+
+                    resultItems.push(new Row(obj));
+                }
             }
 
             // if group have area subtotal, do it, end
