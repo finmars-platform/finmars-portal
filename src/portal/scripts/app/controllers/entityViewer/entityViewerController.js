@@ -453,6 +453,27 @@
             })
         };
 
+        function itemFilterHasOwnProperty(item, filter) {
+
+            //console.log('item', item);
+            //console.log('filter', filter);
+
+            if (filter.hasOwnProperty('key')) {
+                if (item.hasOwnProperty(filter.key)) {
+                    return true;
+                }
+            }
+
+            if (filter.hasOwnProperty('id')) {
+                if (item.hasOwnProperty(filter.r_entityType + '_attribute_' + filter.source_name)) {
+                    return true;
+                }
+            }
+
+            return false;
+
+        }
+
         vm.updateTable = function () {
 
             var options = {};
@@ -471,9 +492,10 @@
                     }
                 });
 
-                console.log('vm.filters1111111111', vm.filters);
+                //console.log('vm.filters1111111111', vm.filters);
 
                 vm.reportIsReady = false;
+
 
                 $scope.$parent.vm.getList(vm.reportOptions).then(function (data) {
 
@@ -481,13 +503,18 @@
                     vm.reportOptions.currency = data.report_currency;
 
                     if (data.task_status !== 'SUCCESS') {
+
+
                         setTimeout(function () {
                             vm.updateTable();
                         }, 1000)
                     } else {
 
+                        vm.reportOptions.task_id = null;
 
                         var filteredData = data.items;
+
+                        filteredData = vm.groupTableService.extractDynamicAttributes(filteredData);
 
                         var isFiltersExist = false;
                         var isFiltersEnabled = false;
@@ -502,6 +529,10 @@
                                         isFiltersEnabled = true;
                                     }
                                     if (item.value_type == 'float' && item.options.query !== undefined && (item.options.query + '').length > 0) {
+                                        isFiltersEnabled = true;
+                                    }
+
+                                    if (item.value_type == 10 && item.options.query !== undefined && (item.options.query + '').length > 0) {
                                         isFiltersEnabled = true;
                                     }
                                 }
@@ -522,10 +553,9 @@
 
                                     itemsRepository.forEach(function (item) {
 
-                                        if (item.hasOwnProperty(filterItem.key)) {
+                                        if (itemFilterHasOwnProperty(item, filterItem)) {
 
                                             if (filterItem.value_type == 'field') {
-
 
                                                 if (filterItem.options.query !== undefined && filterItem.options.query.length) {
                                                     var matched = false;
@@ -555,13 +585,30 @@
                                                 }
                                             }
 
+                                            //console.log('filterItem', filterItem);
+
+                                            if (filterItem.value_type == 10) {
+
+                                                //console.log('item', item);
+
+                                                var _name = filterItem.r_entityType + '_attribute_' + filterItem.source_name;
+
+                                                if (filterItem.options.query !== undefined) {
+                                                    if (item[_name].indexOf(filterItem.options.query) !== -1) {
+                                                        localFilteredData.push(item);
+                                                    }
+                                                } else {
+                                                    localFilteredData.push(item);
+                                                }
+                                            }
+
                                             //if(item[filterItem.key] == filterItem.otions.query[0])
                                         }
 
                                     });
 
-                                    console.log('localFilteredData', localFilteredData);
-                                    console.log('itemsRepository', itemsRepository);
+                                    //console.log('localFilteredData', localFilteredData);
+                                    //console.log('itemsRepository', itemsRepository);
 
                                     itemsRepository = localFilteredData;
                                 }

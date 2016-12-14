@@ -27,13 +27,13 @@
             setGroups: function (groups, entityType) {
                 items = groupingService.setGroups(items, groups, entityType);
             },
-            setGroupsWithColumns: function(groups, columns, entityType) {
+            setGroupsWithColumns: function (groups, columns, entityType) {
                 items = groupingService.setGroupsWithColumns(items, groups, columns, entityType);
             }
         };
 
         var foldingServiceExt = {
-            setFolds: function(folding) {
+            setFolds: function (folding) {
                 items = foldingService.setFolds(items, folding);
             }
         };
@@ -86,6 +86,7 @@
             this.setItems = function (itemsSource) {
                 items = itemsSource;
             };
+            this.extractDynamicAttributes = groupingService.extractDynamicAttributes;
             this.columns = columnsServiceExt;
             this.grouping = groupingServiceExt;
             this.filtering = filteringServiceExt;

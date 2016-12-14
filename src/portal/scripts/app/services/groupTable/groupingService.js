@@ -104,7 +104,7 @@
 
     var setGroups = function (items, groups, entityType, options) {
 
-        //console.log('GROUPING SERVICE groups', groups);
+        console.log('GROUPING SERVICE groups', groups);
 
         //console.log("items", items);
 
@@ -157,21 +157,60 @@
             if (group.hasOwnProperty('id')) {
                 //console.log('group', group);
                 //console.log('attribute[k]', attribute);
-                if (group.id === attribute['attribute_type']) {
-                    if (returnValue(attribute) !== null) {
-                        resGroupItem = {
-                            comparePattern: '&[' + attribute['attribute_type'] + '}-{' + returnValue(attribute) + ']',
-                            key: attribute['attribute_name'].replace(' ', '_'),
-                            value: returnValue(attribute),
-                            value_type: returnValueType(attribute)
-                        };
 
-                        if (group.hasOwnProperty('report_settings')) {
-                            resGroupItem.report_settings = group.report_settings;
+                if (group.hasOwnProperty('r_entityType')) {
+
+
+                    //console.log('attribute1111111111111111111', attribute);
+                    //console.log('group1111111111111111111', group);
+
+                    if (group.id == attribute.attribute_type_object.id) {
+
+                        if (returnValue(attribute) !== null) {
+
+                            var _name = group.r_entityType + '_attribute_' + group.source_name;
+                            // '&[' + checkIfEmptyString(_name) + '}-{' + checkIfEmptyString(item[_name]) + ']'
+
+
+                            resGroupItem = {
+                                comparePattern: '&[' + checkIfEmptyString(_name) + '}-{' + checkIfEmptyString(item[_name]) + ']',
+                                key: _name,
+                                value: returnValue(attribute),
+                                value_type: returnValueType(attribute)
+                            };
+
+                            if (group.hasOwnProperty('report_settings')) {
+                                resGroupItem.report_settings = group.report_settings;
+                            }
+
+
+                            groupsForResult.push(resGroupItem);
                         }
 
+                        //console.log('groupsForResult', groupsForResult);
 
-                        groupsForResult.push(resGroupItem);
+                    }
+                } else {
+
+                    if (group.id === attribute['attribute_type']) {
+
+                        //console.log('group.id', group);
+
+                        if (returnValue(attribute) !== null) {
+                            resGroupItem = {
+                                comparePattern: '&[' + attribute['attribute_type'] + '}-{' + returnValue(attribute) + ']',
+                                key: attribute['attribute_name'].replace(' ', '_'),
+                                value: returnValue(attribute),
+                                value_type: returnValueType(attribute)
+                            };
+
+                            if (group.hasOwnProperty('report_settings')) {
+                                resGroupItem.report_settings = group.report_settings;
+                            }
+
+
+                            groupsForResult.push(resGroupItem);
+                        }
                     }
                 }
             } else {
@@ -216,8 +255,11 @@
                 //console.log('groups111111111111111111111111', groups);
                 for (c = 0; c < groups.length; c = c + 1) {
                     //console.log('items[i]', items[i]);
+
                     group = groups[c];
+                    //console.log('group[c]', group);
                     if (group.hasOwnProperty('key')) {
+
                         findGroupsForResult(group, item);
                         var keys = Object.keys(items[i]);
                         for (a = 0; a < keys.length; a = a + 1) {
@@ -225,14 +267,101 @@
                                 groupName = groupName + '&[' + checkIfEmptyString(group.key) + '}-{' + checkIfEmptyString(item[group.key]) + ']';
                             }
                         }
+
                     } else {
-                        if (item.hasOwnProperty('attributes')) {
-                            //console.log('item.attributes', item.attributes);
-                            for (a = 0; a < item.attributes.length; a = a + 1) {
-                                findGroupsForResult(group, item, item['attributes'][a]);
-                                if (item[group.name] !== null) {
-                                    if (groupName.indexOf('&[' + checkIfEmptyString(group.name) + '}-{' + checkIfEmptyString(item[group.name]) + ']') === -1) {
-                                        groupName = groupName + '&[' + checkIfEmptyString(group.name) + '}-{' + checkIfEmptyString(item[group.name]) + ']';
+
+                        if (group.hasOwnProperty('r_entityType')) {
+
+                            if (item.hasOwnProperty('account_object') && item.account_object !== null) {
+
+                                for (a = 0; a < item.account_object.attributes.length; a = a + 1) {
+                                    findGroupsForResult(group, item, item.account_object.attributes[a]);
+                                    var keys = Object.keys(items[i]);
+
+                                    var _name = group.r_entityType + '_attribute_' + group.source_name;
+
+                                    for (a = 0; a < keys.length; a = a + 1) {
+                                        if (groupName.indexOf('&[' + checkIfEmptyString(_name) + '}-{' + checkIfEmptyString(item[_name]) + ']') === -1) {
+                                            groupName = groupName + '&[' + checkIfEmptyString(_name) + '}-{' + checkIfEmptyString(item[_name]) + ']';
+                                        }
+                                    }
+                                }
+                            }
+
+                            if (item.hasOwnProperty('instrument_object') && item.instrument_object !== null) {
+
+                                for (a = 0; a < item.instrument_object.attributes.length; a = a + 1) {
+                                    findGroupsForResult(group, item, item.instrument_object.attributes[a]);
+                                    var keys = Object.keys(items[i]);
+
+                                    var _name = group.r_entityType + '_attribute_' + group.source_name;
+
+                                    for (a = 0; a < keys.length; a = a + 1) {
+                                        if (groupName.indexOf('&[' + checkIfEmptyString(_name) + '}-{' + checkIfEmptyString(item[_name]) + ']') === -1) {
+                                            groupName = groupName + '&[' + checkIfEmptyString(_name) + '}-{' + checkIfEmptyString(item[_name]) + ']';
+                                        }
+                                    }
+                                }
+                            }
+
+
+                            if (item.hasOwnProperty('portfolio_object') && item.portfolio_object !== null) {
+
+                                for (a = 0; a < item.portfolio_object.attributes.length; a = a + 1) {
+                                    findGroupsForResult(group, item, item.portfolio_object.attributes[a]);
+                                    var keys = Object.keys(items[i]);
+
+                                    var _name = group.r_entityType + '_attribute_' + group.source_name;
+
+                                    for (a = 0; a < keys.length; a = a + 1) {
+                                        if (groupName.indexOf('&[' + checkIfEmptyString(_name) + '}-{' + checkIfEmptyString(item[_name]) + ']') === -1) {
+                                            groupName = groupName + '&[' + checkIfEmptyString(_name) + '}-{' + checkIfEmptyString(item[_name]) + ']';
+                                        }
+                                    }
+                                }
+                            }
+
+                            if (item.hasOwnProperty('currency_object') && item.currency_object !== null) {
+
+                                for (a = 0; a < item.currency_object.attributes.length; a = a + 1) {
+                                    findGroupsForResult(group, item, item.currency_object.attributes[a]);
+                                    var keys = Object.keys(items[i]);
+
+                                    var _name = group.r_entityType + '_attribute_' + group.source_name;
+
+                                    for (a = 0; a < keys.length; a = a + 1) {
+                                        if (groupName.indexOf('&[' + checkIfEmptyString(_name) + '}-{' + checkIfEmptyString(item[_name]) + ']') === -1) {
+                                            groupName = groupName + '&[' + checkIfEmptyString(_name) + '}-{' + checkIfEmptyString(item[_name]) + ']';
+                                        }
+                                    }
+                                }
+                            }
+
+                        } else {
+                            if (item.hasOwnProperty('attributes')) {
+                                console.log('item.attributes', item.attributes);
+                                for (a = 0; a < item.attributes.length; a = a + 1) {
+                                    findGroupsForResult(group, item, item['attributes'][a]);
+
+                                    if (group.hasOwnProperty('r_entityType')) {
+
+                                        if (item[group.r_entityType + '_attribute_' + group.source_name] !== null) {
+
+                                            var name = group.r_entityType + '_attribute_' + group.source_name;
+
+                                            if (groupName.indexOf('&[' + checkIfEmptyString(group.source_name) + '}-{' + checkIfEmptyString(item[name]) + ']') === -1) {
+                                                groupName = groupName + '&[' + checkIfEmptyString(group.source_name) + '}-{' + checkIfEmptyString(item[name]) + ']';
+                                            }
+
+                                        }
+
+                                    } else {
+
+                                        if (item[group.name] !== null) {
+                                            if (groupName.indexOf('&[' + checkIfEmptyString(group.name) + '}-{' + checkIfEmptyString(item[group.name]) + ']') === -1) {
+                                                groupName = groupName + '&[' + checkIfEmptyString(group.name) + '}-{' + checkIfEmptyString(item[group.name]) + ']';
+                                            }
+                                        }
                                     }
                                 }
                             }
@@ -361,7 +490,6 @@
 
                         // TODO refactor breadcrumbs_level
 
-
                         if (!groups.bootsGroup[level + 1]) {
                             if (options.breadcrumbs == true) {
 
@@ -417,6 +545,189 @@
         });
 
         return exist;
+    }
+
+    function filterByID(obj) {
+        if ('id' in obj.attribute_type_object && typeof(obj.attribute_type_object.id) === 'number' && !isNaN(obj.attribute_type_object.id)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    function extractDynamicAttributes(items) {
+
+        var propsToMock = [];
+        var attributesToMock = {instrument: [], account: [], currency: [], portfolio: []};
+
+        var localItems = [];
+
+        localItems = items.map(function (item) {
+
+            if (item.hasOwnProperty('instrument_object') && item.instrument_object !== null) {
+
+                attributesToMock.instrument = attributesToMock.instrument.concat(JSON.parse(JSON.stringify(item.instrument_object.attributes))).filter(filterByID);
+
+                item.instrument_object.attributes.forEach(function (attribute) {
+
+                    var _name = 'instrument_attribute_' + attribute.attribute_type_object.name;
+
+                    if (propsToMock.indexOf(_name) == -1) {
+                        propsToMock.push(_name);
+                    }
+
+                    if (attribute.attribute_type_object.value_type == 10) {
+                        item[_name] = attribute.value_string
+                    }
+                    if (attribute.attribute_type_object.value_type == 20) {
+                        item[_name] = attribute.value_float
+                    }
+                    if (attribute.attribute_type_object.value_type == 30) {
+                        item[_name] = attribute.classifier_object
+                    }
+                    if (attribute.attribute_type_object.value_type == 40) {
+                        item[_name] = attribute.value_date
+                    }
+
+                })
+            } else {
+                //item.instrument_object = {
+                //    attributes: [
+                //        {
+                //            attribute_type_object: {
+                //                id: 1,
+                //                name: 'Group1',
+                //                value_type: 10
+                //            },
+                //            value_string: "__INTERNAL_NAME_UNSPECIFIED"
+                //        }
+                //    ]
+                //}
+            }
+
+            if (item.hasOwnProperty('account_object') && item.account_object !== null) {
+
+                attributesToMock.account = attributesToMock.account.concat(JSON.parse(JSON.stringify(item.account_object.attributes))).filter(filterByID);
+
+                item.account_object.attributes.forEach(function (attribute) {
+
+                    var _name = 'account_attribute_' + attribute.attribute_type_object.name;
+
+                    if (propsToMock.indexOf(_name) == -1) {
+                        propsToMock.push(_name);
+                    }
+
+                    if (attribute.attribute_type_object.value_type == 10) {
+                        item[_name] = attribute.value_string
+                    }
+                    if (attribute.attribute_type_object.value_type == 20) {
+                        item[_name] = attribute.value_float
+                    }
+                    if (attribute.attribute_type_object.value_type == 30) {
+                        item[_name] = attribute.classifier_object
+                    }
+                    if (attribute.attribute_type_object.value_type == 40) {
+                        item[_name] = attribute.value_date
+                    }
+
+                })
+            }
+
+            if (item.hasOwnProperty('portfolio_object') && item.portfolio_object !== null) {
+
+                attributesToMock.portfolio = attributesToMock.portfolio.concat(JSON.parse(JSON.stringify(item.portfolio_object.attributes))).filter(filterByID);
+
+                item.portfolio_object.attributes.forEach(function (attribute) {
+
+                    var _name = 'portfolio_attribute_' + attribute.attribute_type_object.name;
+
+                    if (propsToMock.indexOf(_name) == -1) {
+                        propsToMock.push(_name);
+                    }
+
+                    if (attribute.attribute_type_object.value_type == 10) {
+                        item[_name] = attribute.value_string
+                    }
+                    if (attribute.attribute_type_object.value_type == 20) {
+                        item[_name] = attribute.value_float
+                    }
+                    if (attribute.attribute_type_object.value_type == 30) {
+                        item[_name] = attribute.classifier_object
+                    }
+                    if (attribute.attribute_type_object.value_type == 40) {
+                        item[_name] = attribute.value_date
+                    }
+
+                })
+            }
+
+            if (item.hasOwnProperty('currency_object') && item.currency_object !== null) {
+
+                attributesToMock.currency = attributesToMock.currency.concat(JSON.parse(JSON.stringify(item.currency_object.attributes))).filter(filterByID);
+
+                item.currency_object.attributes.forEach(function (attribute) {
+
+                    var _name = 'currency_attribute_' + attribute.attribute_type_object.name;
+
+                    if (propsToMock.indexOf(_name) == -1) {
+                        propsToMock.push(_name);
+                    }
+
+                    if (attribute.attribute_type_object.value_type == 10) {
+                        item[_name] = attribute.value_string
+                    }
+                    if (attribute.attribute_type_object.value_type == 20) {
+                        item[_name] = attribute.value_float
+                    }
+                    if (attribute.attribute_type_object.value_type == 30) {
+                        item[_name] = attribute.classifier_object
+                    }
+                    if (attribute.attribute_type_object.value_type == 40) {
+                        item[_name] = attribute.value_date
+                    }
+
+                })
+            }
+
+            return item;
+
+        });
+
+        Object.keys(attributesToMock).forEach(function (key) {
+            attributesToMock[key].forEach(function (item) {
+                item.value_string = 'Ungrouped';
+            })
+
+        });
+
+
+        return localItems.map(function (item) {
+
+            propsToMock.forEach(function (propKey) {
+                if (!item.hasOwnProperty(propKey)) {
+                    item[propKey] = '';
+                }
+            });
+
+
+            if (item.hasOwnProperty('instrument_object') && item.instrument_object == null) {
+                item.instrument_object = {attributes: attributesToMock.instrument};
+            }
+            if (item.hasOwnProperty('portfolio_object') && item.portfolio_object == null) {
+                item.portfolio_object = {attributes: attributesToMock.portfolio};
+            }
+            if (item.hasOwnProperty('account_object') && item.account_object == null) {
+                item.account_object = {attributes: attributesToMock.account};
+            }
+            if (item.hasOwnProperty('currency_object') && item.currency_object == null) {
+                item.currency_object = {attributes: attributesToMock.currency};
+            }
+
+
+            return item;
+
+        })
+
     }
 
     var setGroupsWithColumns = function (items, groups, columns, entityType) {
@@ -532,97 +843,10 @@
             });
         }
 
-        function extractDynamicAttributes(items) {
-            return items.map(function (item) {
 
-                if (item.hasOwnProperty('instrument_object') && item.instrument_object !== null) {
+        //items = extractDynamicAttributes(items);
 
-                    item.instrument_object.attributes.forEach(function (attribute) {
-
-                        if (attribute.attribute_type_object.value_type == 10) {
-                            item['instrument_attribute_' + attribute.attribute_type_object.name] = attribute.value_string
-                        }
-                        if (attribute.attribute_type_object.value_type == 20) {
-                            item['instrument_attribute_' + attribute.attribute_type_object.name] = attribute.value_float
-                        }
-                        if (attribute.attribute_type_object.value_type == 30) {
-                            item['instrument_attribute_' + attribute.attribute_type_object.name] = attribute.classifier_object
-                        }
-                        if (attribute.attribute_type_object.value_type == 40) {
-                            item['instrument_attribute_' + attribute.attribute_type_object.name] = attribute.value_date
-                        }
-
-                    })
-                }
-
-                if (item.hasOwnProperty('account_object') && item.account_object !== null) {
-
-                    item.account_object.attributes.forEach(function (attribute) {
-
-                        if (attribute.attribute_type_object.value_type == 10) {
-                            item['account_attribute_' + attribute.attribute_type_object.name] = attribute.value_string
-                        }
-                        if (attribute.attribute_type_object.value_type == 20) {
-                            item['account_attribute_' + attribute.attribute_type_object.name] = attribute.value_float
-                        }
-                        if (attribute.attribute_type_object.value_type == 30) {
-                            item['account_attribute_' + attribute.attribute_type_object.name] = attribute.classifier_object
-                        }
-                        if (attribute.attribute_type_object.value_type == 40) {
-                            item['account_attribute_' + attribute.attribute_type_object.name] = attribute.value_date
-                        }
-
-                    })
-                }
-
-                if (item.hasOwnProperty('portfolio_object') && item.portfolio_object !== null) {
-
-                    item.portfolio_object.attributes.forEach(function (attribute) {
-
-                        if (attribute.attribute_type_object.value_type == 10) {
-                            item['portfolio_attribute_' + attribute.attribute_type_object.name] = attribute.value_string
-                        }
-                        if (attribute.attribute_type_object.value_type == 20) {
-                            item['portfolio_attribute_' + attribute.attribute_type_object.name] = attribute.value_float
-                        }
-                        if (attribute.attribute_type_object.value_type == 30) {
-                            item['portfolio_attribute_' + attribute.attribute_type_object.name] = attribute.classifier_object
-                        }
-                        if (attribute.attribute_type_object.value_type == 40) {
-                            item['portfolio_attribute_' + attribute.attribute_type_object.name] = attribute.value_date
-                        }
-
-                    })
-                }
-
-                if (item.hasOwnProperty('currency_object') && item.currency_object !== null) {
-
-                    item.currency_object.attributes.forEach(function (attribute) {
-
-                        if (attribute.attribute_type_object.value_type == 10) {
-                            item['currency_attribute_' + attribute.attribute_type_object.name] = attribute.value_string
-                        }
-                        if (attribute.attribute_type_object.value_type == 20) {
-                            item['currency_attribute_' + attribute.attribute_type_object.name] = attribute.value_float
-                        }
-                        if (attribute.attribute_type_object.value_type == 30) {
-                            item['currency_attribute_' + attribute.attribute_type_object.name] = attribute.classifier_object
-                        }
-                        if (attribute.attribute_type_object.value_type == 40) {
-                            item['currency_attribute_' + attribute.attribute_type_object.name] = attribute.value_date
-                        }
-
-                    })
-                }
-
-                return item;
-
-            })
-        }
-
-        items = extractDynamicAttributes(items);
-
-        console.log('TRANSFORMIN ITEMS WITH DYNAMIC ATTR PROPS', items);
+        //console.log('TRANSFORMIN ITEMS WITH DYNAMIC ATTR PROPS', items);
 
         if (groups.length) {
 
@@ -679,7 +903,7 @@
                 });
             }
 
-            console.log('results', results);
+            //console.log('results', results);
 
             return results;
 
@@ -693,81 +917,8 @@
 
     module.exports = {
         setGroups: setGroups,
-        setGroupsWithColumns: setGroupsWithColumns
+        setGroupsWithColumns: setGroupsWithColumns,
+        extractDynamicAttributes: extractDynamicAttributes
     }
 
 }());
-
-
-// CASE 1 the simplest
-
-// GROUP1  | GROUP2      | GROUP3
-// COLUMN1 | COLUMN2     | COLUMN3
-// ______________________
-//
-// group1 full-width-line
-//         | group2 boot | group3 boot | row1
-//         |             |             | row2
-//         |             |             | row3
-//         |             |             group3 subtotal
-//         |             group2 subtotal
-//         | group2 boot | group3 boot | row4
-//         |             |             | row5
-//         |             |             | row6
-//         |             |             group3 subtotal
-//         |             | group3 boot | row7
-//         |             |             | row8
-//         |             |             | row9
-//         |             |             group3 subtotal
-//         |             group2 subtotal
-
-// CASE 2
-
-// GROUP1  | GROUP2      | GROUP3 | GROUP4
-// COLUMN2 | COLUMN3
-// ______________________
-//
-// group1  |
-// group2 full-width-line
-//         | group3 boot | group4 boot | row1
-//         |             |             | row2
-//         |             |             | row3
-//         |             |             group4 subtotal
-//         |             |             ∟ _ _ _ _ _ _  _
-//         |             ∟ _ _ _ _ _ _ _ _ _ _ _ _ _ _
-//         |             group3 subtotal
-//         | group3 boot | group4 boot | row4
-//         |             |             | row5
-//         |             |             | row6
-//         |             |             ∟ _ _ _ _ _ _  _
-//         |             |             group4 subtotal
-//         |             | group4 boot | row7
-//         |             |             | row8
-//         |             |             | row9
-//         |             |             ∟ _ _ _ _ _ _  _
-//         |             |             group4 subtotal
-//         |             ∟ _ _ _ _ _ _ _ _ _ _ _ _ _ _
-//         |             group3 subtotal
-
-
-// CASE 3
-
-// GROUP1  | GROUP2      | GROUP3      | GROUP 4
-// COLUMN1 | COLUMN2     | COLUMN3     | COLUMN 5
-// ______________________
-//
-// group1 full-width-line
-//         | group2 boot | group3 boot | group 4 line |
-//         |             |             | row2
-//         |             |             | row3
-//         |             |             group3 subtotal
-//         |             group2 subtotal
-//         | group2 boot | group3 boot | group 4 line |
-//         |             |             | row5
-//         |             |             | row6
-//         |             |             group3 subtotal
-//         |             | group3 boot | group 4 line |
-//         |             |             | row8
-//         |             |             | row9
-//         |             |             group3 subtotal
-//         |             group2 subtotal
