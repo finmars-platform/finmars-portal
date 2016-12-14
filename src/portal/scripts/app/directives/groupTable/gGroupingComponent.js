@@ -63,7 +63,7 @@
                             if (!group.hasOwnProperty('report_settings') && !group.report_settings) {
                                 group.report_settings = {subtotal_type: 'area'};
                             } else {
-                                if(group.report_settings.subtotal_type == undefined) {
+                                if (group.report_settings.subtotal_type == undefined) {
                                     group.report_settings.subtotal_type = 'area';
                                 }
 
@@ -177,7 +177,11 @@
 
                         if (scope.columns.length > $groupItemIndex) {
                             if (groupItem.hasOwnProperty('id')) {
-
+                                if (groupItem.id == scope.columns[$groupItemIndex - preInitOffset].id) {
+                                    initIndex = preInitOffset;
+                                } else {
+                                    preInitOffset = preInitOffset + 1;
+                                }
                             } else {
                                 if (groupItem.hasOwnProperty('key') && scope.columns[$groupItemIndex] && scope.columns[$groupItemIndex].hasOwnProperty('key')) {
 
@@ -196,7 +200,9 @@
 
                     if (scope.columns.length > $index) {
                         if (group.hasOwnProperty('id') && scope.columns[$index - initIndex] && scope.columns[$index - initIndex].hasOwnProperty('id')) {
-
+                            if (group.id == scope.columns[$index - initIndex].id) {
+                                haveAccess = true;
+                            }
                         } else {
                             if (group.hasOwnProperty('key') && scope.columns[$index - initIndex] && scope.columns[$index - initIndex].hasOwnProperty('key')) {
                                 if (group.key == scope.columns[$index - initIndex].key) {

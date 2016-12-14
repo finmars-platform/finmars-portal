@@ -7,6 +7,10 @@
 
     function sum(calculatedColumns, column, group) {
 
+        //console.log('calculatedColumns', calculatedColumns);
+        //console.log('column', column);
+        //console.log('group', group);
+
         if (!calculatedColumns[column.key]) {
             calculatedColumns[column.key] = 0;
         }
@@ -306,7 +310,7 @@
             });
 
             //console.log('marketValueTotal', marketValueTotal);
-            console.log('exposureValueTotal', exposureValueTotal);
+            //console.log('exposureValueTotal', exposureValueTotal);
 
             group.items.forEach(function (item) {
 

@@ -569,6 +569,10 @@
                     //console.log('group', group);
                     //console.log('entityFieldsArray', entityFieldsArray);
 
+                    if (group.hasOwnProperty('r_entityType')) {
+                        return group[group.r_entityType + '_attribute_' + group.source_name];
+                    }
+
                     var result = '';
 
                     if (group.value_type === 'classifier') {
