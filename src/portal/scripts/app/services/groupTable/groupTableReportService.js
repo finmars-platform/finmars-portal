@@ -43,8 +43,6 @@
 
         var rowType = type || 'normal';
 
-        //console.log('item 323 232 32 323 2', item);
-
         var cellCaptions = [];
         var i;
         var cellObj;
@@ -54,25 +52,82 @@
 
             if (options.reportSettingsType == 'area') {
 
-                for (i = 1; i <= level; i = i + 1) {
-
-                    cellObj = {
-                        value: '',
-                        type: item.groups[0].report_settings.subtotal_type,
-                        level: i
-                    };
+                previousGroups = findPreviousGroupsByAncestor(item);
 
 
-                    if (i == level) {
-                        cellObj.value = 'Subtotal';
-                        cellObj.level = level;
+                //console.log('previousGroups', previousGroups);
+                //console.log('item', item);
+                if (item.groups.length) {
+
+                    var cellObjType = 'area';
+
+                    if (item.groups.length && item.groups[0].report_settings.subtotal_type) {
+                        cellObjType = item.groups[0].report_settings.subtotal_type;
                     }
 
 
-                    cellCaptions.push(cellObj);
+                    for (i = 0; i < level; i = i + 1) {
+
+                        if (i == level - 1) {
+                            cellObj = JSON.parse(JSON.stringify(item.groups[0]));
+                            //cellObj._group = item.groups[0];
+                            cellObj.comparePattern = item.groups[0].comparePattern;
+                            cellObj.type = cellObjType;
+                            cellObj.level = level;
+                            cellObj.value = 'Subtotal';
+                        } else {
+                            for (g = 0; g < previousGroups.length; g = g + 1) {
+
+                                if (previousGroups[g].level == i) {
+
+                                    cellObj = {};
+
+                                    //console.log('previousGroups[g].items[0]', previousGroups[g].items[0]);
+                                    //console.log('item.', item);
+
+                                    if (previousGroups[g].items[0]._lid == item.items[0]._lid) {
+                                        cellObj = JSON.parse(JSON.stringify(previousGroups[g].groups[0]));
+                                    }
+
+
+                                    //cellObj._group = previousGroups[g].groups[0];
+                                    cellObj.comparePattern = previousGroups[g].groups[0].comparePattern;
+                                    cellObj.type = cellObjType;
+                                    cellObj.level = i + 1;
+                                    cellObj.value = '';
+                                }
+                            }
+
+                        }
+
+                        cellCaptions.push(cellObj);
+
+                    }
 
                 }
 
+
+                //for (i = 1; i <= level; i = i + 1) {
+                //
+                //
+                //    cellObj = {
+                //        value: '',
+                //        //_group: item.groups[0],
+                //        comparePattern: item.groups[0].comparePattern,
+                //        type: item.groups[0].report_settings.subtotal_type,
+                //        level: i
+                //    };
+                //
+                //
+                //    if (i == level) {
+                //        cellObj.value = 'Subtotal';
+                //        cellObj.level = level;
+                //    }
+                //
+                //
+                //    cellCaptions.push(cellObj);
+                //
+                //}
             } else {
 
                 if (options.reportSettingsType == 'line') {
@@ -83,6 +138,8 @@
 
                             cellObj = {
                                 value: '',
+                                //_group: item.groups[0],
+                                comparePattern: item.groups[0].comparePattern,
                                 type: item.groups[0].report_settings.subtotal_type
                             };
 
@@ -109,6 +166,7 @@
 
                 if (i == level - 1) {
                     cellObj = item.groups[0];
+                    cellObj.comparePattern = item.groups[0].comparePattern;
                     cellObj.type = item.groups[0].report_settings.subtotal_type;
                     cellObj.level = level;
                 } else {
@@ -116,7 +174,8 @@
 
                         if (previousGroups[g].level == i) {
                             cellObj = previousGroups[g].groups[0];
-                            cellObj.type = item.groups[0].report_settings.subtotal_type;
+                            cellObj.comparePattern = previousGroups[g].groups[0].comparePattern;
+                            cellObj.type = previousGroups[g].groups[0].report_settings.subtotal_type;
                             cellObj.level = i + 1;
                         }
                     }
@@ -141,6 +200,8 @@
 
                     cellObj = {
                         value: '',
+                        comparePattern: item.groups[0].comparePattern,
+                        //_group: item.groups[0],
                         type: item.groups[0].report_settings.subtotal_type,
                         level: i
                     };
@@ -161,67 +222,60 @@
 
                 //console.log('previousGroups', previousGroups);
                 //console.log('item', item);
+                //console.log('options', options);
                 if (item.groups.length) {
-                    if (options.itemIndex == 0) {
 
-                        var cellObjType = 'area';
+                    var cellObjType = 'area';
 
-                        if (item.groups.length && item.groups[0].report_settings.subtotal_type) {
-                            cellObjType = item.groups[0].report_settings.subtotal_type;
-                        }
+                    if (item.groups.length && item.groups[0].report_settings.subtotal_type) {
+                        cellObjType = item.groups[0].report_settings.subtotal_type;
+                    }
 
 
-                        for (i = 0; i < level; i = i + 1) {
+                    for (i = 0; i < level; i = i + 1) {
 
-                            if (i == level - 1) {
-                                cellObj = item.groups[0];
-                                cellObj.type = cellObjType;
-                                cellObj.level = level;
-                            } else {
-                                for (g = 0; g < previousGroups.length; g = g + 1) {
+                        if (i == level - 1) {
+                            cellObj = JSON.parse(JSON.stringify(item.groups[0]));
+                            //cellObj._group = item.groups[0];
+                            cellObj.comparePattern = item.groups[0].comparePattern;
+                            cellObj.type = cellObjType;
+                            cellObj.level = level;
+                            if (options.itemIndex != 0) {
+                                cellObj.value = '';
+                            }
+                        } else {
+                            for (g = 0; g < previousGroups.length; g = g + 1) {
 
-                                    if (previousGroups[g].level == i) {
+                                if (previousGroups[g].level == i) {
 
-                                        cellObj = {};
+                                    cellObj = {};
 
-                                        //console.log('previousGroups[g].items[0]', previousGroups[g].items[0]);
-                                        //console.log('item.', item);
+                                    //console.log('previousGroups[g].items[0]', previousGroups[g].items[0]);
+                                    //console.log('item.', item);
 
-                                        if (previousGroups[g].items[0]._lid == item.items[0]._lid) {
-                                            cellObj = previousGroups[g].groups[0];
-                                        }
+                                    if (previousGroups[g].items[0]._lid == item.items[0]._lid) {
+                                        cellObj = JSON.parse(JSON.stringify(previousGroups[g].groups[0]));
+                                    }
 
-                                        cellObj.type = cellObjType;
-                                        cellObj.level = i + 1;
+
+                                    //cellObj._group = previousGroups[g].groups[0];
+                                    cellObj.comparePattern = previousGroups[g].groups[0].comparePattern;
+                                    cellObj.type = cellObjType;
+                                    cellObj.level = i + 1;
+                                    //cellObj.itemIndex = options.itemIndex;
+
+                                    if (options.itemIndex != 0) {
+                                        cellObj.value = '';
                                     }
                                 }
-
                             }
 
-                            cellCaptions.push(cellObj);
-
                         }
-                    } else {
 
+                        cellCaptions.push(cellObj);
 
-                        for (i = 1; i <= level; i = i + 1) {
-
-                            cellObj = {
-                                value: '',
-                                type: item.groups[0].report_settings.subtotal_type,
-                                level: i
-                            };
-
-
-                            if (i == level) {
-                                cellObj.level = level;
-                            }
-
-
-                            cellCaptions.push(cellObj);
-
-                        }
                     }
+
                 }
             }
         }

@@ -104,7 +104,7 @@
 
     var setGroups = function (items, groups, entityType, options) {
 
-        console.log('GROUPING SERVICE groups', groups);
+        //console.log('GROUPING SERVICE groups', groups);
 
         //console.log("items", items);
 
@@ -490,20 +490,25 @@
 
                         // TODO refactor breadcrumbs_level
 
+
                         if (!groups.bootsGroup[level + 1]) {
                             if (options.breadcrumbs == true) {
 
-                                items.forEach(function (resultItem) {
+                                if (groups.linesGroup.length) {
 
-                                    resultItem['boot_level_' + level].forEach(function (bootItem) {
-                                        bootItem['breadcrumbs_level_0'] = setGroups(bootItem.items, groups.linesGroup, entityType, setGroupOptions);
+                                    items.forEach(function (resultItem) {
 
-                                        setAncestors(bootItem, 0, 'breadcrumb', {bootLevel: level});
+                                        resultItem['boot_level_' + level].forEach(function (bootItem) {
+
+                                            bootItem['breadcrumbs_level_0'] = setGroups(bootItem.items, groups.linesGroup, entityType, setGroupOptions);
+
+                                            setAncestors(bootItem, 0, 'breadcrumb', {bootLevel: level});
+
+                                        });
+
 
                                     });
-
-
-                                });
+                                }
 
                             }
                         }
@@ -514,11 +519,14 @@
 
                     if (options.breadcrumbs == true) {
 
-                        items.forEach(function (resultItem) {
+                        if (groups.linesGroup.length) {
 
-                            resultItem['breadcrumbs_level_0'] = setGroups(resultItem.items, groups.linesGroup, entityType, setGroupOptions);
+                            items.forEach(function (resultItem) {
 
-                        });
+                                resultItem['breadcrumbs_level_0'] = setGroups(resultItem.items, groups.linesGroup, entityType, setGroupOptions);
+
+                            });
+                        }
 
                     }
                 }
@@ -529,7 +537,7 @@
 
         recursiveWalker(items, groups, entityType, level, options);
 
-        //console.log('results', results);
+        console.log('results', results);
 
         return results;
     }

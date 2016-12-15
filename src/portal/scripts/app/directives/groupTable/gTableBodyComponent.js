@@ -61,9 +61,97 @@
                     $('.g-table-section .custom-scrollbar')[0].dispatchEvent(new Event('scroll'));
                 }, 1000);
 
-                scope.toggleGroupFold = function (item) {
+                function getCellsCaptionsPatterns(item, itemIndex) {
+
+                    var result = [];
+
+                    //console.log('item.cellsCaptions', item.cellsCaptions);
+
+                    item.cellsCaptions.forEach(function (cellCaption, $index) {
+                        if ($index <= itemIndex) {
+                            result.push(cellCaption.comparePattern);
+                        }
+                    });
+
+                    return result.join('_-_');
+                }
+
+                scope.toggleGroupFold = function (item, $index) {
                     //console.log('item.isFolded', item.isFolded);
-                    item.isFolded = !item.isFolded;
+                    if (scope.isReport) {
+
+                        //console.log('ITEM', item);
+
+                        item.cellsCaptions[$index].isFolded = !item.cellsCaptions[$index].isFolded;
+
+                        var itemCellCaptionsPatterns = getCellsCaptionsPatterns(item, $index);
+
+                        var localItems = []; // to find first element, and revert isFolded;
+
+                        //console.log('$index', $index);
+                        //console.log('itemCellCaptionsPatterns', itemCellCaptionsPatterns);
+
+                        scope.reportItems.forEach(function (reportItem) {
+
+                            var reportCellCaptionsPatterns = getCellsCaptionsPatterns(reportItem, $index);
+
+                            //console.log('reportItem', reportItem);
+                            //console.log('reportCellCaptionsPatterns', reportCellCaptionsPatterns);
+
+                            if (itemCellCaptionsPatterns == reportCellCaptionsPatterns) {
+
+                                reportItem.isFirstOfFolded = false;
+                                reportItem.cellsCaptions[$index].isFolded = item.cellsCaptions[$index].isFolded;
+
+                                localItems.push(reportItem);
+                            }
+
+
+                        });
+
+
+                        localItems[0].isFirstOfFolded = true;
+
+                        localItems.forEach(function (locItem) {
+
+                            locItem.cellsCaptions.forEach(function (cellCaption, cellCaptionIndex) {
+
+                                if (cellCaptionIndex > $index) {
+                                    cellCaption.isFolded = false;
+                                }
+
+                            })
+
+
+                        });
+                        
+                        //console.log('localItems', localItems);
+
+                    } else {
+                        item.isFolded = !item.isFolded;
+                    }
+                };
+
+                scope.itemIsFolded = function (item) {
+
+                    var isShowed = true;
+
+                    //console.log('item', item);
+                    if (item.hasOwnProperty('cellsCaptions')) {
+                        if (item.isFirstOfFolded != true) {
+                            item.cellsCaptions.forEach(function (cellCaption) {
+
+                                if (cellCaption.hasOwnProperty('isFolded') && cellCaption.isFolded == true) {
+                                    isShowed = false;
+                                }
+
+                            });
+                        }
+                    }
+
+
+                    return isShowed;
+
                 };
 
                 scope.openEntityMenu = function ($mdOpenMenu, ev) {
