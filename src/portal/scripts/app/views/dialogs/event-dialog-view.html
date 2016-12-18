@@ -9,4 +9,9 @@
 			<md-button aria-label="event button" data-ng-repeat="button in vm.actionsBtns" class="md-raised" data-ng-bind="button.display_text" data-ng-click="vm.eventAction(button.id)"></md-button>
 		</div>
 	</md-dialog-content>
+	<md-dialog-actions layout="row">
+		<md-button aria-label="cancel" class="md-raised" data-ng-click="vm.cancel()">
+			Cancel
+		</md-button>
+	</md-dialog-actions>
 </md-dialog>
