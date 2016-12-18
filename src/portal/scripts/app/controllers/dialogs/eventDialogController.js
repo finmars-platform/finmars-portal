@@ -18,5 +18,9 @@
 				console.log('event action done');
 			});
 		}
+
+		vm.cancel = function () {
+		    $mdDialog.cancel();
+		};
 	}
 }());
