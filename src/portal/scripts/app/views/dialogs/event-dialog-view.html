@@ -1,0 +1,12 @@
+<md-dialog aria-label="event">
+	<md-toolbar>
+		<div class="md-toolbar-tools">
+			<h2>Event</h2>
+		</div>
+	</md-toolbar>
+	<md-dialog-content data-custom-scroll class="custom-scrollbar md-padding">
+		<div layout="row">
+			<md-button aria-label="event button" data-ng-repeat="button in vm.actionsBtns" class="md-raised" data-ng-bind="button.display_text" data-ng-click="vm.eventAction(button.id)"></md-button>
+		</div>
+	</md-dialog-content>
+</md-dialog>
