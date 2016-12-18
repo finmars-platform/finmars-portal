@@ -13,6 +13,7 @@
 
     var entityViewerHelperService = require('../../services/entityViewerHelperService');
     var metaService = require('../../services/metaService');
+    var tablePartsService = require('../../services/groupTable/tablePartsService');
 
     var GroupTableService = require('../../services/groupTable/groupTableService');
     var reportSubtotalService = require('../../services/reportSubtotalService');
@@ -955,12 +956,7 @@
             });
         }
 
-        vm.checkAddBtn = function () {
-            if (["transaction"].indexOf(vm.entityType) !== -1) {
-                return false
-            }
-            return true
-        };
+        vm.tableParts = tablePartsService.setTablePartsSettings(vm.entityType);
 
         $scope.$on("$destroy", function (event) {
 
