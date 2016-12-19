@@ -35,6 +35,16 @@
 		}
 		vm.getNotifications();
 
+		vm.markCurrentNotificationsAsReaded = function (url, data) {
+			notificationsService.markAsReaded(url, data).then(function() {
+				$scope.$apply();
+			})
+		}
+		vm.markAllNotificationsAsReaded	= function () {
+			notificationsService.markAsReaded(data).then(function() {
+				$scope.$apply();
+			})
+		}
 	}
 
 }());

@@ -10,6 +10,7 @@
 
 	var usersService = require('../services/usersService');
 	var metaContentTypesService = require('../services/metaContentTypesService');
+	var notificationsService = require('../services/notificationsService');
 
 	module.exports = function ($scope, $state, $rootScope, $mdDialog) {
 
@@ -142,7 +143,7 @@
 			})
 		};
 
-		vm.openNotificationsMenu = function () {
+		vm.openNotificationsMenu = function ($event) {
 			$mdDialog.show({
 				controller: 'HeaderNotificationsDialogController as vm',
 				templateUrl: 'views/dialogs/header-notifications-dialog-view.html',
@@ -151,10 +152,15 @@
 			});
 		}
 
+		vm.unreadedNotificationsAmount;
+		notificationsService.getList(1).then(function (data) {
+			vm.unreadedNotificationsAmount = data.count;
+			$scope.$apply(); 
+		});
+
 		$rootScope.$on('$stateChangeSuccess', function () {
 			$mdDialog.cancel();
 		});
-
 
 		// console.log('root scope is ', $rootScope);
 		console.log("Curent state is ", $state.current);

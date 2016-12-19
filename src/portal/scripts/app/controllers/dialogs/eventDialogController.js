@@ -14,10 +14,19 @@
 		var eventId = data.eventId;
 
 		vm.eventAction = function (actionId) {
-			eventsService.eventAction(eventId, {action: actionId}).then(function () {
-				console.log('event action done');
+			var actionUrl = {
+				eventId: eventId,
+				actionId: actionId
+			};
+			eventsService.getEventAction(actionUrl).then(function (data) {
+				var currentDate = moment(new Date()).format('YYYY-MM-DD');
+				data.values['date'] = currentDate;
+				eventsService.putEventAction(actionUrl, data).then(function () {
+					console.log('event action done');
+					vm.cancel();
+				});
 			});
-		}
+		};
 
 		vm.cancel = function () {
 		    $mdDialog.cancel();
