@@ -84,7 +84,7 @@
                     }
 
                     setTimeout(function () {
-                        scope.externalCallback();
+                        scope.externalCallback({test: 'GROUPING'});
                         scope.$apply();
                     }, 0)
                 });
