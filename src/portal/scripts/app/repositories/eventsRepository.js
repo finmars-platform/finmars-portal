@@ -8,19 +8,47 @@
 	var getList = function () {
 		return window.fetch(baseUrl + 'instruments/generated-event/',
 		{
-		    method: 'GET',
-		    credentials: 'include',
-		    headers: {
-		        Accept: 'application/json',
-		        'Content-type': 'application/json'
-		    }
+			method: 'GET',
+			credentials: 'include',
+			headers: {
+				Accept: 'application/json',
+				'Content-type': 'application/json'
+			}
 		}).then(function (data) {
 			return data.json();	
 		})
 	};
 
-	var eventAction = function (eventId, options) {
-		return window.fetch(baseUrl + 'instruments/generated-event/' + eventId + '/',
+	// var eventAction = function (eventId, options) {
+	// 	return window.fetch(baseUrl + 'instruments/generated-event/' + eventId + '/',
+	// 	{
+	// 		method: 'PUT',
+	// 		credentials: 'include',
+	// 		headers: {
+	// 			'X-CSRFToken': cookieService.getCookie('csrftoken'),
+	// 			Accept: 'application/json',
+	// 			'Content-type': 'application/json'
+	// 		},
+	// 		body: JSON.stringify(options)
+	// 	}).then(function (data) {
+	// 		return data.json();
+	// 	});
+	// }
+	var getEventAction = function (url) {
+		return window.fetch(baseUrl + 'instruments/generated-event/' + url.eventId + '/book/?action=' + url.actionId,
+		{
+			method: 'GET',
+			credentials: 'include',
+			headers: {
+				Accept: 'application/json',
+				'Content-type': 'application/json'
+			}
+		}).then(function (data) {
+			return data.json();	
+		})
+	}
+	var putEventAction = function (url, data) {
+		return window.fetch(baseUrl + 'instruments/generated-event/' + url.eventId + '/book/?action=' + url.actionId,
 		{
 			method: 'PUT',
 			credentials: 'include',
@@ -29,7 +57,7 @@
 			    Accept: 'application/json',
 			    'Content-type': 'application/json'
 			},
-			body: JSON.stringify(options)
+			body: JSON.stringify(data)
 		}).then(function (data) {
 			return data.json();
 		});
@@ -37,6 +65,7 @@
 
 	module.exports = {
 		getList: getList,
-		eventAction: eventAction
+		getEventAction: getEventAction,
+		putEventAction: putEventAction
 	}
 }());

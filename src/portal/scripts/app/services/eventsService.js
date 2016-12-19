@@ -6,13 +6,18 @@
         return eventsRepository.getList();
     };
 
-    var eventAction = function (eventId, options) {
-        return eventsRepository.eventAction(eventId, options);
+    var getEventAction = function (url) {
+        return eventsRepository.getEventAction(url);
+    };
+
+    var putEventAction = function (url, data) {
+        return eventsRepository.putEventAction(url, data);
     };
 
     module.exports = {
         getList: getList,
-        eventAction: eventAction
+        getEventAction: getEventAction,
+        putEventAction: putEventAction
     }
 
 

@@ -11,8 +11,13 @@
         return notificationsRepository.getList(page);
     };
 
+    var markAsReaded = function (url, data) {
+    	return notificationsRepository.markAsReaded(url, data);
+    }
+
     module.exports = {
-        getList: getList
+        getList: getList,
+        markAsReaded: markAsReaded
     }
 
 }());
