@@ -16,24 +16,33 @@
         return {
             restrict: 'AE',
             scope: {
-                items: '=',
-                grouping: '=',
-                externalCallback: '&',
-                columns: '=',
-                itemAdditionsEditorEntityId: '=',
-                isAllSelected: '=',
-                entityType: '=',
-                isReport: '=',
-                reportIsReady: '=',
-
-                paginationItemPerPage: '=',
-                paginationItemsTotal: '=',
-                paginationPageCurrent: '='
+                //items: '=',
+                //grouping: '=',
+                //externalCallback: '&',
+                //columns: '=',
+                //itemAdditionsEditorEntityId: '=',
+                //isAllSelected: '=',
+                //entityType: '=',
+                //isReport: '=',
+                //reportIsReady: '=',
+                //
+                //paginationItemPerPage: '=',
+                //paginationItemsTotal: '=',
+                //paginationPageCurrent: '='
+                options: '=',
+                items: '='
             },
             templateUrl: 'views/directives/groupTable/table-body-view.html',
             link: function (scope, elem, attrs) {
 
                 logService.component('groupTableBody', 'initialized', 1);
+
+                scope.externalCallback = scope.options.externalCallback;
+                scope.grouping = scope.options.grouping;
+                scope.columns = scope.options.columns;
+                scope.entityType = scope.options.entityType;
+                scope.reportIsReady = scope.options.reportIsReady;
+                scope.isReport = scope.options.isReport;
 
                 scope.readyStatus = {
                     cellsFirstReady: false,
@@ -124,7 +133,7 @@
 
 
                         });
-                        
+
                         //console.log('localItems', localItems);
 
                     } else {
@@ -621,10 +630,13 @@
 
                 scope.checkReady = function () {
 
+                    //console.log('scope.options.reportIsReady', scope.options.reportIsReady);
+
                     if (scope.readyStatus.cellsFirstReady == true &&
                         scope.readyStatus.cellsSecondReady == true &&
                         scope.readyStatus.classifiersReady == true &&
-                        scope.reportIsReady == true &&
+                        //scope.reportIsReady == true &&
+                        scope.options.reportIsReady == true &&
                         scope.readyStatus.attributeTypesReady == true) {
 
                         scope.$parent.triggerResize();

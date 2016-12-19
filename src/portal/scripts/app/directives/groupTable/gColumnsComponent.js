@@ -13,17 +13,24 @@
         return {
             restrict: 'AE',
             scope: {
-                columns: '=',
-                sorting: '=',
-                isItemAddition: '=',
-                entityType: '=',
+                //columns: '=',
+                //sorting: '=',
+                //isItemAddition: '=',
+                //entityType: '=',
                 items: '=',
-                externalCallback: '&',
-                isAllSelected: '=',
-                isReport: '='
+                //externalCallback: '&',
+                //isAllSelected: '=',
+                //isReport: '='
+                options: '='
             },
             templateUrl: 'views/directives/groupTable/columns-view.html',
             link: function (scope, elem, attrs) {
+
+                scope.grouping = scope.options.grouping;
+                scope.filters = scope.options.filters;
+                scope.columns = scope.options.columns;
+                scope.entityType = scope.options.entityType;
+                scope.externalCallback = scope.options.externalCallback;
 
 
                 logService.component('groupColumnResizer', 'initialized');
