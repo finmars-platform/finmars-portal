@@ -11,9 +11,12 @@
         return {
             restrict: 'A',
             scope: {
-                additionsStatus: '='
+                //additionsStatus: '='
+                options: '='
             },
             link: function (scope, elem, attrs) {
+
+                scope.additionsStatus = scope.options.additionsStatus;
 
                 logService.component('groupHeightAligner', 'initialized');
 
