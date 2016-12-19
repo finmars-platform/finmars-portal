@@ -12,49 +12,52 @@
             restrict: 'AE',
             templateUrl: 'views/directives/groupTable/group-table-shell-view.html',
             scope: {
-                tabs: '=',
-                entityType: '=',
+                //tabs: '=',
+                //entityType: '=',
                 items: '=',
-                filters: '=',
-                columns: '=',
-                columnsWidth: '=',
-                grouping: '=',
-                folding: '=',
-                sorting: '=',
-
-                isReport: '=',
-                reportIsReady: '=',
-                reportOptions: '=',
-
-                itemAdditionsEditorEntityId: '=',
-                itemAdditionsEditorTemplate: '=',
-
-                itemAdditions: '=',
-                itemAdditionsColumns: '=',
-                itemAdditionsFilters: '=',
-                itemAdditionsSorting: '=',
-
-                externalGetAdditions: '&',
-                externalCallback: '&',
-                externalAdditionsCallback: '&',
-                externalUpdateItem: '&',
-                externalUpdateItemAdditions: '&',
-
-                additionsStatus: '=',
-                additionsState: '=',
-
-                paginationItemPerPage: '=',
-                paginationItemsTotal: '=',
-                paginationPageCurrent: '='
+                options: '='
+                //filters: '=',
+                //columns: '=',
+                //columnsWidth: '=',
+                //grouping: '=',
+                //folding: '=',
+                //sorting: '=',
+                //
+                //isReport: '=',
+                //reportIsReady: '=',
+                //reportOptions: '=',
+                //
+                //itemAdditionsEditorEntityId: '=',
+                //itemAdditionsEditorTemplate: '=',
+                //
+                //itemAdditions: '=',
+                //itemAdditionsColumns: '=',
+                //itemAdditionsFilters: '=',
+                //itemAdditionsSorting: '=',
+                //
+                //externalGetAdditions: '&',
+                //externalCallback: '&',
+                //externalAdditionsCallback: '&',
+                //externalUpdateItem: '&',
+                //externalUpdateItemAdditions: '&',
+                //
+                //additionsStatus: '=',
+                //additionsState: '=',
+                //
+                //paginationItemPerPage: '=',
+                //paginationItemsTotal: '=',
+                //paginationPageCurrent: '='
             },
             link: function (scope, elem, attrs) {
 
                 logService.component('groupTable', 'initialized');
 
+                console.log('options12312321312', scope.options);
+
                 scope.findSelectedFeature = function () {
                     var selected = {isOpened: false, templateUrl: ''};
                     //console.log('additionsStatus', scope.additionsStatus);
-                    scope.additionsStatus.extraFeatures.forEach(function (item) {
+                    scope.options.additionsStatus.extraFeatures.forEach(function (item) {
                         if (item.isOpened == true) {
                             selected = item;
                         }

@@ -102,6 +102,8 @@
         })
     };
 
+    // TODO bookTransaction GET BOOK
+
     var bookTransaction = function (transaction) {
         return window.fetch(baseUrl + 'transactions/transaction-type/' + transaction._transaction_type_id + '/book/',
             {

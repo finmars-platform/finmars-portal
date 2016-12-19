@@ -256,96 +256,98 @@
         vm.additionsState = false;
         vm.additionsStatus.extraFeatures = vm.customButtons;
 
+        vm.reportIsReady = false;
+
         vm.reportAttrs = [];	//	array of reports's dynamic attributes
-        dynamicAttributesForReportsService.getDynamicAttributes().then(function(data) {
-        	vm.reportAttrs = data;
+        dynamicAttributesForReportsService.getDynamicAttributes().then(function (data) {
+            vm.reportAttrs = data;
         });
 
         function returnFullAttributes(items, attrs, baseAttrs, entityAttrs, entityType) {
-        	var fullItems = [];
-        	if (!items) {
-        		return [];
-        	}
-        	console.log('returnFullAttributes attributes:', attrs, items);
-        	var i, a, b, e, item, attr, baseAttr, attrOptions, entityAttr, report_settings, reportAttrs;
-        	var reportDynamicAttrsReady = false;
-        	for (i = 0; i < items.length; i = i + 1) {
-        		item = items[i];
-        		if (item.hasOwnProperty('id')) {
+            var fullItems = [];
+            if (!items) {
+                return [];
+            }
+            console.log('returnFullAttributes attributes:', attrs, items);
+            var i, a, b, e, item, attr, baseAttr, attrOptions, entityAttr, report_settings, reportAttrs;
+            var reportDynamicAttrsReady = false;
+            for (i = 0; i < items.length; i = i + 1) {
+                item = items[i];
+                if (item.hasOwnProperty('id')) {
 
-        			if (vm.isReport == true) {
-        				console.log('reportAttrs data is', vm.reportAttrs);
-        				vm.reportAttrs.map(function(repAttr) {
-        					if (item.r_entityType === repAttr.r_entityType && item.id === repAttr.id) {
-        						if (item.options) {
-        							attrOptions = JSON.parse(JSON.stringify(item.options));
-        						}
-        						if (item.report_settings) {
-        							report_settings = JSON.parse(JSON.stringify(item.report_settings));
-        						}
-        						item = repAttr;
-        						item.options = attrOptions;
-        						item.report_settings = report_settings;
-        						fullItems.push(item);
-        					}
-        				});
-        			}
-        			else {
-        				for (a = 0; a < attrs.length; a = a + 1) {
-        					attr = attrs[a];
+                    if (vm.isReport == true) {
+                        console.log('reportAttrs data is', vm.reportAttrs);
+                        vm.reportAttrs.map(function (repAttr) {
+                            if (item.r_entityType === repAttr.r_entityType && item.id === repAttr.id) {
+                                if (item.options) {
+                                    attrOptions = JSON.parse(JSON.stringify(item.options));
+                                }
+                                if (item.report_settings) {
+                                    report_settings = JSON.parse(JSON.stringify(item.report_settings));
+                                }
+                                item = repAttr;
+                                item.options = attrOptions;
+                                item.report_settings = report_settings;
+                                fullItems.push(item);
+                            }
+                        });
+                    }
+                    else {
+                        for (a = 0; a < attrs.length; a = a + 1) {
+                            attr = attrs[a];
 
-        					if (item.id === attr.id) {
-        						console.log("fullattributes this isn't report");
-        						if (item.options) {
-        							attrOptions = JSON.parse(JSON.stringify(item.options));
-        						}
-        						if (item.report_settings) {
-        							report_settings = JSON.parse(JSON.stringify(item.report_settings));
-        						}
-        						item = attr;
-        						item.options = attrOptions;
-        						item.report_settings = report_settings;
-        						fullItems.push(item);
-        					}
-        				}
-        			}
-        		} else {
-        			console.log('returnattribute without id', item);
-        			for (b = 0; b < baseAttrs.length; b = b + 1) {
-        				baseAttr = baseAttrs[b];
-        				if (item.key === baseAttr.key) {
-        					if (item.options) {
-        						attrOptions = JSON.parse(JSON.stringify(item.options));
-        					}
-        					if (item.report_settings) {
-        						report_settings = JSON.parse(JSON.stringify(item.report_settings));
-        					}
-        					item = baseAttr;
-        					item.options = attrOptions;
-        					item.report_settings = report_settings;
-        					fullItems.push(item);
-        				}
-        			}
+                            if (item.id === attr.id) {
+                                console.log("fullattributes this isn't report");
+                                if (item.options) {
+                                    attrOptions = JSON.parse(JSON.stringify(item.options));
+                                }
+                                if (item.report_settings) {
+                                    report_settings = JSON.parse(JSON.stringify(item.report_settings));
+                                }
+                                item = attr;
+                                item.options = attrOptions;
+                                item.report_settings = report_settings;
+                                fullItems.push(item);
+                            }
+                        }
+                    }
+                } else {
+                    console.log('returnattribute without id', item);
+                    for (b = 0; b < baseAttrs.length; b = b + 1) {
+                        baseAttr = baseAttrs[b];
+                        if (item.key === baseAttr.key) {
+                            if (item.options) {
+                                attrOptions = JSON.parse(JSON.stringify(item.options));
+                            }
+                            if (item.report_settings) {
+                                report_settings = JSON.parse(JSON.stringify(item.report_settings));
+                            }
+                            item = baseAttr;
+                            item.options = attrOptions;
+                            item.report_settings = report_settings;
+                            fullItems.push(item);
+                        }
+                    }
 
-        			for (e = 0; e < entityAttrs.length; e = e + 1) {
-        				entityAttr = entityAttrs[e];
-        				if (item.key === entityAttr.key) {
-        					if (item.options) {
-        						attrOptions = JSON.parse(JSON.stringify(item.options));
-        					}
-        					if (item.report_settings) {
-        						report_settings = JSON.parse(JSON.stringify(item.report_settings));
-        					}
-        					item = entityAttr;
-        					item.options = attrOptions;
-        					item.report_settings = report_settings;
-        					fullItems.push(item);
-        				}
-        			}
-        		}
-        	}
-        	console.log('returnfullattributes fullItems', fullItems);
-        	return fullItems;
+                    for (e = 0; e < entityAttrs.length; e = e + 1) {
+                        entityAttr = entityAttrs[e];
+                        if (item.key === entityAttr.key) {
+                            if (item.options) {
+                                attrOptions = JSON.parse(JSON.stringify(item.options));
+                            }
+                            if (item.report_settings) {
+                                report_settings = JSON.parse(JSON.stringify(item.report_settings));
+                            }
+                            item = entityAttr;
+                            item.options = attrOptions;
+                            item.report_settings = report_settings;
+                            fullItems.push(item);
+                        }
+                    }
+                }
+            }
+            console.log('returnfullattributes fullItems', fullItems);
+            return fullItems;
         }
 
         function findFullAttributeForItem(item, attrs) {
@@ -368,6 +370,31 @@
             }
             return false;
         };
+
+        function updateConfigOptions() {
+
+            vm.options = {
+                entityType: vm.entityType,
+                filters: vm.filters,
+                columns: vm.columns,
+                columnsWidth: vm.columnsWidth,
+
+                grouping: vm.grouping,
+                folding: vm.folding,
+                sorting: vm.sorting,
+                isReport: vm.isReport,
+                externalCallback: vm.updateTable,
+                reportIsReady: vm.reportIsReady,
+
+                additionsStatus: vm.additionsStatus,
+                additionsState: vm.additionsState,
+
+                paginationItemPerPage: vm.paginationItemPerPage,
+                paginationItemsTotal: vm.paginationItemsTotal,
+                paginationPageCurrent: vm.paginationPageCurrent
+            }
+
+        }
 
         vm.getView = function () {
             return uiService.getActiveListLayout(vm.entityType).then(function (res) {
@@ -409,6 +436,8 @@
                     vm.entityAdditionsFilters = res.results[0].data.tableAdditions.table.filters;
                     vm.entityAdditionsSorting = res.results[0].data.tableAdditions.table.sorting;
 
+                    updateConfigOptions();
+
                     //vm.additionsStatus[res.results[0].data.tableAdditions.additionsType] = true;
                 } else {
 
@@ -434,6 +463,8 @@
                     vm.entityAdditionsColumns = defaultList[0].data.tableAdditions.table.columns;
                     vm.entityAdditionsFilters = defaultList[0].data.tableAdditions.table.filters;
                     vm.entityAdditionsSorting = defaultList[0].data.tableAdditions.table.sorting;
+
+                    updateConfigOptions();
 
                     //vm.additionsStatus[defaultList[0].data.tableAdditions.additionsType] = true;
                 }
@@ -658,6 +689,8 @@
 
                             vm.reportIsReady = true;
 
+                            vm.options.reportIsReady = true;
+
                             if (vm.entityType == 'balance-report') {
                                 vm.entity = reportSubtotalService.groupByAndCalc(vm.entity, vm.reportOptions);
                             }
@@ -675,6 +708,9 @@
                             vm.groupTableService.sorting.group.sort(vm.sorting.group);
                             //vm.groupTableService.sorting.column.sort(vm.sorting.column);
                             vm.tableIsReady = true;
+
+                            updateConfigOptions();
+
                             $scope.$apply();
                         });
                     }
@@ -694,6 +730,7 @@
                     };
 
                     vm.reportIsReady = true;
+                    vm.options.reportIsReady = true;
 
                     //console.log('vm.filters', vm.filters);
 
@@ -791,6 +828,9 @@
                             vm.groupTableService.sorting.group.sort(vm.sorting.group);
                             //vm.groupTableService.sorting.column.sort(vm.sorting.column);
                             vm.tableIsReady = true;
+
+                            updateConfigOptions();
+
                             $scope.$apply();
                         });
                     });
@@ -808,6 +848,7 @@
                     };
 
                     vm.reportIsReady = true;
+                    vm.options.reportIsReady = true;
 
                     //console.log('vm.filters', vm.filters);
 
@@ -842,6 +883,9 @@
                             vm.groupTableService.sorting.group.sort(vm.sorting.group);
                             //vm.groupTableService.sorting.column.sort(vm.sorting.column);
                             vm.tableIsReady = true;
+
+                            updateConfigOptions();
+
                             $scope.$apply();
                         });
                     })
@@ -965,7 +1009,26 @@
             logService.controller('EntityViewerController', 'destroyed');
         });
 
+        vm.options = {
+            entityType: vm.entityType,
+            filters: vm.filters,
+            columns: vm.columns,
+            columnsWidth: vm.columnsWidth,
 
+            grouping: vm.grouping,
+            folding: vm.folding,
+            sorting: vm.sorting,
+            isReport: vm.isReport,
+            externalCallback: vm.updateTable,
+            reportIsReady: vm.reportIsReady,
+
+            additionsStatus: vm.additionsStatus,
+            additionsState: vm.additionsState,
+
+            paginationItemPerPage: vm.paginationItemPerPage,
+            paginationItemsTotal: vm.paginationItemsTotal,
+            paginationPageCurrent: vm.paginationPageCurrent
+        }
     }
 
 }());

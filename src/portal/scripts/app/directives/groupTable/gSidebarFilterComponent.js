@@ -16,16 +16,22 @@
         return {
             restrict: 'AE',
             scope: {
-                filters: '=',
-                entityType: '=',
-                isReport: '=',
-                reportOptions: '=',
-                externalCallback: '&'
+                //filters: '=',
+                //entityType: '=',
+                //isReport: '=',
+                //reportOptions: '=',
+                //externalCallback: '&'
+                options: '='
             },
             templateUrl: 'views/directives/groupTable/sidebar-filter-view.html',
             link: function (scope, elem, attrs) {
 
                 logService.component('groupSidebarFilter', 'initialized');
+
+                scope.filters = scope.options.filters;
+                scope.isReport = scope.options.isReport;
+                scope.entityType = scope.options.entityType;
+                scope.externalCallback = scope.options.externalCallback;
 
                 scope.fields = {};
                 //scope.reportOptions = {};
