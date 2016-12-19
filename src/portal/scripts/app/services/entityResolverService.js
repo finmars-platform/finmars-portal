@@ -246,8 +246,9 @@
             case 'complex-transaction':
                 console.log('entity', entity);
                 var i;
-
-                return transactionTypeService.bookTransaction(entity);
+                return transactionTypeService.getBookTransaction(entity).then(function () {
+                    return transactionTypeService.BookTransaction(entity); // PUT
+                });
                 break;
             case 'tag':
                 return tagService.create(entity);

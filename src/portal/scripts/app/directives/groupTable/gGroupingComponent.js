@@ -11,18 +11,29 @@
         return {
             restrict: 'AE',
             scope: {
-                entityType: '=',
-                filters: '=',
-                columns: '=',
-                tabs: '=',
-                sorting: '=',
-                isReport: '=',
-                folding: '=',
-                grouping: '=',
-                externalCallback: '&'
+                //entityType: '=',
+                //filters: '=',
+                //columns: '=',
+                //sorting: '=',
+                //isReport: '=',
+                //folding: '=',
+                //grouping: '=',
+                //externalCallback: '&'
+
+                options: '='
             },
             templateUrl: 'views/directives/groupTable/grouping-view.html',
             link: function (scope, elem, attrs) {
+
+                scope.grouping = scope.options.grouping;
+                scope.filters = scope.options.filters;
+                scope.columns = scope.options.columns;
+                scope.sorting = scope.options.sorting;
+                scope.folding = scope.options.folding;
+                scope.entityType = scope.options.entityType;
+                scope.externalCallback = scope.options.externalCallback;
+                scope.isReport = scope.options.isReport;
+
 
                 logService.component('groupGrouping', 'initialized');
                 console.log(' scope.grouping', scope.grouping);
@@ -73,7 +84,7 @@
                     }
 
                     setTimeout(function () {
-                        scope.externalCallback();
+                        scope.externalCallback({test: 'GROUPING'});
                         scope.$apply();
                     }, 0)
                 });

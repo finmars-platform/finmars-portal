@@ -13,9 +13,12 @@
             restrict: 'A',
             scope: {
                 items: '=',
-                columnsWidth: '='
+                //columnsWidth: '='
+                options: '='
             },
             link: function (scope, elem, attr) {
+
+                scope.columnsWidth = scope.options.columnsWidth;
 
                 logService.component('groupColumnResizer', 'initialized');
 
@@ -31,6 +34,7 @@
 
                 // set columns to saved width
                 var columnsWidthSet = false;
+
                 function setColumnsWidthAndNameTooltip() {
                     if (!columnsWidthSet) {
                         var columns = elem.find('.g-column');
@@ -205,7 +209,7 @@
                 }
 
                 // setTimeout(function () {
-                    // setColumnsWidthAndNameTooltip();
+                // setColumnsWidthAndNameTooltip();
                 // }, 200);
                 scope.$watchCollection('items', function () {
                     //console.log('items added for resize');
