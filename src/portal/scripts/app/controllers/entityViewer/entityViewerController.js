@@ -538,7 +538,9 @@
 
         }
 
-        vm.updateTable = function () {
+        vm.updateTable = function (params) {
+
+            console.log('params', params);
 
             var options = {};
 
@@ -924,7 +926,7 @@
                     parentScope: $scope
                 }
             }).then(function () {
-                vm.updateTable();
+                vm.updateTable({test: 'ololo'});
             })
         };
 
