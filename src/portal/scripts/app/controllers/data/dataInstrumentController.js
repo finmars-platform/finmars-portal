@@ -20,13 +20,13 @@
 
         vm.entityViewer = {extraFeatures: []};
 
-        vm.entityViewer.extraFeatures.push({
-            id: 1,
-            caption: 'Open timetable editor',
-            icon: 'schedule',
-            templateUrl: 'views/',
-            isOpened: false
-        });
+        //vm.entityViewer.extraFeatures.push({
+        //    id: 1,
+        //    caption: 'Open timetable editor',
+        //    icon: 'schedule',
+        //    templateUrl: 'views/',
+        //    isOpened: false
+        //});
 
         instrumentService.getList().then(function (data) {
             vm.entityRaw = data.results;

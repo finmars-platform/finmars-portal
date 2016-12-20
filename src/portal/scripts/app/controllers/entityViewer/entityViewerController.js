@@ -25,250 +25,16 @@
 
         logService.controller('EntityViewerController', 'initialized');
 
-
-        //console.log('$scope', $scope);
-
         var vm = this;
 
-        vm.oldListView = null;
+        console.log('------------------------ EV scope -----------------------------', $scope);
 
-        $('.save-layout-as-btn').bind('click', function (e) {
-
-            // saving columns widths
-            var tHead = $('.g-columns-component');
-            var th = $('.g-columns-component.g-thead').find('.g-cell');
-            var thWidths = [];
-            for (var i = 0; i < th.length; i = i + 1) {
-                var thWidth = $(th[i]).width();
-                thWidths.push(thWidth);
-            }
-
-
-            vm.listView.data.table.columnsWidth = thWidths;
-
-            //console.log("View data is ", vm.listView.data);
-            vm.listView.data.table = vm.table;
-            vm.listView.data.table.columns = vm.columns;
-            // vm.listView.data.table.columns['cellWidth']
-            //console.log('---------vm.grouping-------', vm.grouping);
-            vm.listView.data.table.grouping = vm.grouping;
-            vm.listView.data.table.folding = vm.folding;
-            vm.listView.data.table.filters = vm.filters;
-            vm.listView.data.table.sorting = vm.sorting;
-
-            // vm.listView.data.table.cellWidth = 200;
-
-            vm.listView.data.additionsType = vm.additionsType;
-
-            vm.listView.data.tableAdditions.entityType = vm.additionsEntityType;
-
-            vm.listView.data.tableAdditions = vm.tableAdditions;
-            vm.listView.data.tableAdditions.table.columns = vm.entityAdditionsColumns;
-            vm.listView.data.tableAdditions.table.filters = vm.entityAdditionsFilters;
-            vm.listView.data.tableAdditions.table.sorting = vm.entityAdditionsSorting;
-            vm.listView.data.tableAdditions.additionsStatus = vm.additionsStatus;
-            vm.listView.data.tableAdditions.additionsState = vm.additionsState;
-
-            //vm.additionsStatus[res.results[0].data.tableAdditions.additionsType] = true;
-
-
-            $mdDialog.show({
-                controller: 'UiLayoutSaveAsDialogController as vm',
-                templateUrl: 'views/dialogs/ui/ui-layout-save-as-view.html',
-                parent: angular.element(document.body),
-                targetEvent: e,
-                locals: {
-                    options: {}
-                },
-                clickOutsideToClose: false
-            }).then(function (res) {
-
-                if (res.status == 'agree') {
-
-                    if (vm.oldListView) {
-                        vm.oldListView.is_default = false;
-
-                        uiService.updateListLayout(vm.oldListView.id, vm.oldListView).then(function () {
-                            console.log('saved');
-                        }).then(function () {
-
-                            vm.listView.name = res.data.name;
-                            vm.listView.is_default = true;
-
-                            uiService.createListLayout(vm.entityType, vm.listView).then(function () {
-                                console.log('saved');
-                                vm.getView();
-                            });
-
-                        })
-
-                    } else {
-
-                        vm.listView.name = res.data.name;
-                        vm.listView.is_default = true;
-
-                        uiService.createListLayout(vm.entityType, vm.listView).then(function () {
-                            console.log('saved');
-                            vm.getView();
-                        });
-                    }
-                }
-
-            });
-
-        });
-
-
-        $('.save-layout-btn').bind('click', function (e) {
-
-
-            // saving columns widths
-            var tHead = $('.g-columns-component');
-            var th = $('.g-columns-component.g-thead').find('.g-cell');
-            var thWidths = [];
-            for (var i = 0; i < th.length; i = i + 1) {
-                var thWidth = $(th[i]).width();
-                thWidths.push(thWidth);
-            }
-            vm.listView.data.table.columnsWidth = thWidths;
-            console.log('entity viewer columnsWidth is', vm.listView.data.table.columnsWidth);
-
-            //console.log("View data is ", vm.listView.data);
-
-
-            vm.listView.data.table = vm.table;
-            vm.listView.data.table.columns = vm.columns;
-            // vm.listView.data.table.columns['cellWidth']
-            console.log('---------vm.grouping-------', vm.grouping);
-            vm.listView.data.table.grouping = vm.grouping;
-            vm.listView.data.table.folding = vm.folding;
-            vm.listView.data.table.filters = vm.filters;
-            vm.listView.data.table.sorting = vm.sorting;
-
-            // vm.listView.data.table.cellWidth = 200;
-
-            vm.listView.data.additionsType = vm.additionsType;
-
-            vm.listView.data.tableAdditions.entityType = vm.additionsEntityType;
-
-            vm.listView.data.tableAdditions = vm.tableAdditions;
-            vm.listView.data.tableAdditions.table.columns = vm.entityAdditionsColumns;
-            vm.listView.data.tableAdditions.table.filters = vm.entityAdditionsFilters;
-            vm.listView.data.tableAdditions.table.sorting = vm.entityAdditionsSorting;
-            vm.listView.data.tableAdditions.additionsStatus = vm.additionsStatus;
-            vm.listView.data.tableAdditions.additionsState = vm.additionsState;
-
-            //vm.additionsStatus[res.results[0].data.tableAdditions.additionsType] = true;
-
-            console.log('vm.listView', vm.listView);
-
-            if (vm.listView.hasOwnProperty('id')) {
-                uiService.updateListLayout(vm.listView.id, vm.listView).then(function () {
-                    console.log('saved');
-                });
-            } else {
-                uiService.createListLayout(vm.entityType, vm.listView).then(function () {
-                    console.log('saved');
-                });
-            }
-            $mdDialog.show({
-                controller: 'SaveLayoutDialogController as vm',
-                templateUrl: 'views/save-layout-dialog-view.html',
-                targetEvent: e,
-                clickOutsideToClose: true
-            }).then(function () {
-                vm.getView();
-            });
-
-
-        });
-
-        $('.header-add-new-btn').click(function (e) {
-            vm.addEntity(e);
-        });
-
-
-        vm.paginationPageCurrent = 1;
-        vm.paginationItemPerPage = 20;
-        vm.paginationItemsTotal = 0;
-
-        if (window.location.hash.split('?')[1]) {
-            var queryParams = window.location.hash.split('?')[1].split('&');
-
-            queryParams.forEach(function (queryParameter) {
-                if (queryParameter.indexOf('page=') == 0) {
-                    vm.paginationPageCurrent = queryParameter.split('=')[1];
-                }
-            });
-        }
-
-        // ATTRIBUTE STUFF START
-
-        vm.attrs = [];
-        vm.baseAttrs = [];
-        vm.layoutAttrs = [];
-        vm.entityAttrs = [];
-
-        // ENTITY STUFF START
-
-        vm.entityRaw = $scope.$parent.vm.entityRaw;
-        vm.entity = [];
-        vm.entityType = $scope.$parent.vm.entityType;
-        vm.isReport = $scope.$parent.vm.isReport || false;
-
-        console.log('vm.isReport', vm.isReport);
-
-        vm.customButtons = $scope.$parent.vm.entityViewer.extraFeatures;
-
-
-        vm.columns = [];
-        vm.columnsWidth = [];
-        vm.grouping = [];
-        vm.filters = [];
-        vm.sorting = [];
-
-        // ENTITY ADDITIONS STUFF START
-
-        vm.entityAdditions = [];
-        vm.additionsType = '';
-        vm.additionsEntityType = '';
-
-        vm.entityAdditionsColumns = [];
-        vm.entityAdditionsFilters = [];
-        vm.entityAdditionsSorting = [];
-
-        // OTHER STUFF START
-
-        vm.tabs = [];
-        vm.table = {};
-        vm.tableAdditions = {};
-
-        vm.tableIsReady = false;
-        vm.readyStatus = {uiView: false};
-
-        vm.editorTemplate = 'views/additions-editor-view.html';
-
-        vm.additionsStatus = {
-            editor: false,
-            table: false,
-            extraFeatures: []
-        };
-        vm.additionsState = false;
-        vm.additionsStatus.extraFeatures = vm.customButtons;
-
-        vm.reportIsReady = false;
-
-        vm.reportAttrs = [];	//	array of reports's dynamic attributes
-        dynamicAttributesForReportsService.getDynamicAttributes().then(function (data) {
-            vm.reportAttrs = data;
-        });
-
-        function returnFullAttributes(items, attrs, baseAttrs, entityAttrs, entityType) {
+        vm.returnFullAttributes = function (items, attrs, baseAttrs, entityAttrs, entityType) {
             var fullItems = [];
             if (!items) {
                 return [];
             }
-            console.log('returnFullAttributes attributes:', attrs, items);
+            console.log('vm.returnFullAttributes attributes:', attrs, items);
             var i, a, b, e, item, attr, baseAttr, attrOptions, entityAttr, report_settings, reportAttrs;
             var reportDynamicAttrsReady = false;
             for (i = 0; i < items.length; i = i + 1) {
@@ -346,11 +112,12 @@
                     }
                 }
             }
-            console.log('returnfullattributes fullItems', fullItems);
+            console.log('vm.returnfullattributes fullItems', fullItems);
             return fullItems;
-        }
 
-        function findFullAttributeForItem(item, attrs) {
+        };
+
+        vm.findFullAttributeForItem = function (item, attrs) {
             if (item.hasOwnProperty('id')) {
                 var i;
                 for (i = 0; i < attrs.length; i = i + 1) {
@@ -362,7 +129,7 @@
                 }
             }
             return item;
-        }
+        }; // TODO refactor, move to service
 
         vm.checkReadyStatus = function () {
             if (vm.tableIsReady == true && vm.readyStatus.uiView == true) {
@@ -371,7 +138,7 @@
             return false;
         };
 
-        function updateConfigOptions() {
+        vm.updateConfigOptions = function () {
 
             vm.options = {
                 entityType: vm.entityType,
@@ -385,6 +152,7 @@
                 isReport: vm.isReport,
                 externalCallback: vm.updateTable,
                 reportIsReady: vm.reportIsReady,
+                template: vm.editorTemplate,
 
                 additionsStatus: vm.additionsStatus,
                 additionsState: vm.additionsState,
@@ -436,7 +204,7 @@
                     vm.entityAdditionsFilters = res.results[0].data.tableAdditions.table.filters;
                     vm.entityAdditionsSorting = res.results[0].data.tableAdditions.table.sorting;
 
-                    updateConfigOptions();
+                    vm.updateConfigOptions();
 
                     //vm.additionsStatus[res.results[0].data.tableAdditions.additionsType] = true;
                 } else {
@@ -464,7 +232,7 @@
                     vm.entityAdditionsFilters = defaultList[0].data.tableAdditions.table.filters;
                     vm.entityAdditionsSorting = defaultList[0].data.tableAdditions.table.sorting;
 
-                    updateConfigOptions();
+                    vm.updateConfigOptions();
 
                     //vm.additionsStatus[defaultList[0].data.tableAdditions.additionsType] = true;
                 }
@@ -475,35 +243,22 @@
                 //console.log('vm tabs!', vm.tabs);
                 $scope.$apply();
             });
-        };
+        }; // TODO refactor
 
         vm.transformViewAttributes = function () { //deprecated
 
-            vm.columns = returnFullAttributes(vm.columns, vm.attrs, vm.baseAttrs, vm.entityAttrs, vm.entityType);
-            vm.grouping = returnFullAttributes(vm.grouping, vm.attrs, vm.baseAttrs, vm.entityAttrs, vm.entityType);
-            vm.filters = returnFullAttributes(vm.filters, vm.attrs, vm.baseAttrs, vm.entityAttrs, vm.entityType);
-            vm.sorting.group = findFullAttributeForItem(vm.sorting.group, vm.attrs);
-            vm.sorting.column = findFullAttributeForItem(vm.sorting.column, vm.attrs);
+            vm.columns = vm.returnFullAttributes(vm.columns, vm.attrs, vm.baseAttrs, vm.entityAttrs, vm.entityType);
+            vm.grouping = vm.returnFullAttributes(vm.grouping, vm.attrs, vm.baseAttrs, vm.entityAttrs, vm.entityType);
+            vm.filters = vm.returnFullAttributes(vm.filters, vm.attrs, vm.baseAttrs, vm.entityAttrs, vm.entityType);
+            vm.sorting.group = vm.findFullAttributeForItem(vm.sorting.group, vm.attrs);
+            vm.sorting.column = vm.findFullAttributeForItem(vm.sorting.column, vm.attrs);
             //console.log('vm.sorting.column', vm.sorting.column);
-            vm.entityAdditionsColumns = returnFullAttributes(vm.entityAdditionsColumns, vm.attrs, vm.baseAttrs, vm.entityAttrs, vm.additionsEntityType);
-            vm.entityAdditionsFilters = returnFullAttributes(vm.entityAdditionsFilters, vm.attrs, vm.baseAttrs, vm.entityAttrs, vm.additionsEntityType);
-            vm.entityAdditionsSorting.column = findFullAttributeForItem(vm.entityAdditionsSorting.column, vm.attrs);
+            vm.entityAdditionsColumns = vm.returnFullAttributes(vm.entityAdditionsColumns, vm.attrs, vm.baseAttrs, vm.entityAttrs, vm.additionsEntityType);
+            vm.entityAdditionsFilters = vm.returnFullAttributes(vm.entityAdditionsFilters, vm.attrs, vm.baseAttrs, vm.entityAttrs, vm.additionsEntityType);
+            vm.entityAdditionsSorting.column = vm.findFullAttributeForItem(vm.entityAdditionsSorting.column, vm.attrs);
 
             logService.collection('vm.grouping', vm.grouping);
             logService.collection('vm.columns', vm.columns);
-        };
-
-        vm.getEntityData = function () {
-            //console.log('entityRaw is ', vm.entityRaw);
-            entityViewerHelperService.transformItems(vm.entityRaw, vm.attrs).then(function (data) {
-                vm.entity = data;
-                vm.groupTableService = GroupTableService.getInstance();
-                //console.log("Column text ", vm.groupTableService);
-
-                vm.updateTable();
-
-                $scope.$apply();
-            })
         };
 
         vm.getAttributes = function () {
@@ -517,7 +272,7 @@
             })
         };
 
-        function itemFilterHasOwnProperty(item, filter) {
+        vm.itemFilterHasOwnProperty = function (item, filter) {
 
             //console.log('item', item);
             //console.log('filter', filter);
@@ -536,7 +291,7 @@
 
             return false;
 
-        }
+        }; // TODO refactor, move to service
 
         vm.updateTable = function (params) {
 
@@ -547,7 +302,6 @@
             if (vm.isReport == true) {
 
                 //console.log('vm.reportOptions;', vm.reportOptions);
-
 
                 vm.reportOptions.custom_fields = [];
 
@@ -561,7 +315,6 @@
                 //console.log('vm.filters1111111111', vm.filters);
 
                 vm.reportIsReady = false;
-
 
                 $scope.$parent.vm.getList(vm.reportOptions).then(function (data) {
 
@@ -619,7 +372,7 @@
 
                                     itemsRepository.forEach(function (item) {
 
-                                        if (itemFilterHasOwnProperty(item, filterItem)) {
+                                        if (vm.itemFilterHasOwnProperty(item, filterItem)) {
 
                                             if (filterItem.value_type == 'field') {
 
@@ -705,13 +458,13 @@
                             //console.log("EXTERNAL CALLBACK ", vm.folding);
                             vm.groupTableService.folding.setFolds(vm.folding);
                             //console.log('UPDATE TABLE scope.sorting.group', vm.sorting.group);
-                            vm.sorting.group = findFullAttributeForItem(vm.sorting.group, vm.attrs);
-                            //vm.sorting.column = findFullAttributeForItem(vm.sorting.column, vm.attrs);
+                            vm.sorting.group = vm.findFullAttributeForItem(vm.sorting.group, vm.attrs);
+                            //vm.sorting.column = vm.findFullAttributeForItem(vm.sorting.column, vm.attrs);
                             vm.groupTableService.sorting.group.sort(vm.sorting.group);
                             //vm.groupTableService.sorting.column.sort(vm.sorting.column);
                             vm.tableIsReady = true;
 
-                            updateConfigOptions();
+                            vm.updateConfigOptions();
 
                             $scope.$apply();
                         });
@@ -768,8 +521,8 @@
                             //console.log("EXTERNAL CALLBACK ", vm.folding);
                             vm.groupTableService.folding.setFolds(vm.folding);
                             //console.log('UPDATE TABLE scope.sorting.group', vm.sorting.group);
-                            vm.sorting.group = findFullAttributeForItem(vm.sorting.group, vm.attrs);
-                            //vm.sorting.column = findFullAttributeForItem(vm.sorting.column, vm.attrs);
+                            vm.sorting.group = vm.findFullAttributeForItem(vm.sorting.group, vm.attrs);
+                            //vm.sorting.column = vm.findFullAttributeForItem(vm.sorting.column, vm.attrs);
                             vm.groupTableService.sorting.group.sort(vm.sorting.group);
                             //vm.groupTableService.sorting.column.sort(vm.sorting.column);
                             vm.tableIsReady = true;
@@ -825,13 +578,13 @@
                             //console.log("EXTERNAL CALLBACK ", vm.folding);
                             vm.groupTableService.folding.setFolds(vm.folding);
                             //console.log('UPDATE TABLE scope.sorting.group', vm.sorting.group);
-                            vm.sorting.group = findFullAttributeForItem(vm.sorting.group, vm.attrs);
-                            //vm.sorting.column = findFullAttributeForItem(vm.sorting.column, vm.attrs);
+                            vm.sorting.group = vm.findFullAttributeForItem(vm.sorting.group, vm.attrs);
+                            //vm.sorting.column = vm.findFullAttributeForItem(vm.sorting.column, vm.attrs);
                             vm.groupTableService.sorting.group.sort(vm.sorting.group);
                             //vm.groupTableService.sorting.column.sort(vm.sorting.column);
                             vm.tableIsReady = true;
 
-                            updateConfigOptions();
+                            vm.updateConfigOptions();
 
                             $scope.$apply();
                         });
@@ -880,13 +633,13 @@
                             //console.log("EXTERNAL CALLBACK ", vm.folding);
                             vm.groupTableService.folding.setFolds(vm.folding);
                             //console.log('UPDATE TABLE scope.sorting.group', vm.sorting.group);
-                            vm.sorting.group = findFullAttributeForItem(vm.sorting.group, vm.attrs);
-                            //vm.sorting.column = findFullAttributeForItem(vm.sorting.column, vm.attrs);
+                            vm.sorting.group = vm.findFullAttributeForItem(vm.sorting.group, vm.attrs);
+                            //vm.sorting.column = vm.findFullAttributeForItem(vm.sorting.column, vm.attrs);
                             vm.groupTableService.sorting.group.sort(vm.sorting.group);
                             //vm.groupTableService.sorting.column.sort(vm.sorting.column);
                             vm.tableIsReady = true;
 
-                            updateConfigOptions();
+                            vm.updateConfigOptions();
 
                             $scope.$apply();
                         });
@@ -895,23 +648,6 @@
                 }
             }
 
-        };
-
-        vm.updateAdditionsTable = function () {
-            vm.groupTableService.additions.setItems(vm.entityAdditions);
-            vm.groupTableService.additions.columns.setColumns(vm.entityAdditionsColumns);
-            vm.groupTableService.additions.filtering.setFilters(vm.entityAdditionsFilters);
-            vm.groupTableService.additions.sorting.column.sort(vm.entityAdditionsSorting.column);
-        };
-
-        vm.getEntityAdditions = function (portfolioId) {
-            //console.log('vm.getPortfolioTransaction', portfolioId);
-            return demoTransactionsService.getList(portfolioId).then(function (data) {
-                //console.log('data', data);
-                vm.entityAdditions = data;
-                vm.updateAdditionsTable();
-                $scope.$apply();
-            });
         };
 
         vm.addEntity = function (ev) {
@@ -945,20 +681,29 @@
         };
 
         vm.openDataViewPanel = function () {
-            vm.additionsStatus.editor = true;
+            vm.additionsStatus.editor = false;
             vm.additionsState = true;
             vm.additionsStatus.extraFeatures.forEach(function (item) {
                 item.isOpened = false;
             });
+            vm.additionsStatus.reportWizard = true;
+
+            vm.updateConfigOptions();
         };
 
         vm.openEditorViewPanel = function () {
             //vm.editorEntityId = undefined;
+
+
+            vm.additionsStatus.editor = true;
             vm.additionsState = true;
             vm.additionsStatus.table = true;
             vm.additionsStatus.extraFeatures.forEach(function (item) {
                 item.isOpened = false;
             });
+            vm.additionsStatus.reportWizard = false;
+
+            vm.updateConfigOptions();
         };
 
         vm.checkAdditionStatus = function () {
@@ -973,64 +718,387 @@
             vm.additionsState = false;
             vm.additionsStatus.table = false;
             vm.additionsStatus.editor = false;
+            vm.updateConfigOptions();
             //vm.editorEntityId = undefined;
         };
 
+        // entityViewer initialization
+        // resolving is instance of entityViewer root
+        // settings all props depends of root/child
 
-        if (vm.isReport == true) {
-            pricingPolicyService.getList().then(function (data) {
+        (function ResolveEntityViewer() {
 
-                vm.reportOptions = {
-                    cost_method: 1,
-                    pricing_policy: data.results[0].id
-                };
+            if ($scope.$parent.options && $scope.$parent.options.additionsState == true) { // nested EntityViewer
 
-                vm.getView().then(function () {
-                    vm.getAttributes().then(function () {
-                        vm.transformViewAttributes();
-                        vm.getEntityData();
+                (function SetPropsForEntityViewer() {
+
+                    vm.oldListView = null;
+
+                    // TODO make onBeforeActionResolver
+
+                    vm.onBeforeLoadAction = $scope.$parent.options.additionsStatus.reportWizard;
+
+                    vm.paginationPageCurrent = 1;
+                    vm.paginationItemPerPage = 20;
+                    vm.paginationItemsTotal = 0;
+
+                    // ATTRIBUTE STUFF START
+
+                    vm.attrs = [];
+                    vm.baseAttrs = [];
+                    vm.layoutAttrs = [];
+                    vm.entityAttrs = [];
+
+                    // ENTITY STUFF START
+
+                    vm.entity = [];
+                    vm.entityType = $scope.$parent.vm.entityType;
+                    vm.isReport = $scope.$parent.vm.isReport || false;
+
+                    console.log('vm.isReport', vm.isReport);
+
+                    vm.customButtons = $scope.$parent.vm.entityViewer.extraFeatures;
+                    vm.groupTableService = GroupTableService.getInstance();
+
+                    vm.columns = [];
+                    vm.columnsWidth = [];
+                    vm.grouping = [];
+                    vm.filters = [];
+                    vm.sorting = [];
+
+                    // ENTITY ADDITIONS STUFF START
+
+                    vm.entityAdditions = [];
+                    vm.additionsType = '';
+                    vm.additionsEntityType = '';
+
+                    vm.entityAdditionsColumns = [];
+                    vm.entityAdditionsFilters = [];
+                    vm.entityAdditionsSorting = [];
+
+                    // OTHER STUFF START
+
+                    vm.tabs = [];
+                    vm.table = {};
+                    vm.tableAdditions = {};
+
+                    vm.tableIsReady = false;
+                    vm.readyStatus = {uiView: false};
+
+                    vm.editorTemplate = 'views/additions-editor-view.html';
+
+                    vm.additionsStatus = {
+                        editor: false,
+                        table: false,
+                        extraFeatures: []
+                    };
+                    vm.additionsState = false;
+                    vm.additionsStatus.extraFeatures = vm.customButtons;
+
+                    vm.reportIsReady = false;
+
+                    vm.reportAttrs = [];	//	array of reports's dynamic attributes
+
+                    dynamicAttributesForReportsService.getDynamicAttributes().then(function (data) {
+                        vm.reportAttrs = data;
                     });
-                });
 
-            })
-        } else {
-            vm.getView().then(function () {
-                vm.getAttributes().then(function () {
-                    vm.transformViewAttributes();
-                    vm.getEntityData();
-                });
-            });
-        }
+                    if (vm.isReport == true) {
+                        pricingPolicyService.getList().then(function (data) {
 
-        vm.tableParts = tablePartsService.setTablePartsSettings(vm.entityType);
+                            vm.reportOptions = {
+                                cost_method: 1,
+                                pricing_policy: data.results[0].id
+                            };
 
-        $scope.$on("$destroy", function (event) {
+                            vm.getView().then(function () {
+                                vm.getAttributes().then(function () {
+                                    vm.transformViewAttributes();
+                                    vm.updateTable();
+                                });
+                            });
 
-            $('.save-layout-btn').unbind('click');
-            $('.save-layout-as-btn').unbind('click');
-            logService.controller('EntityViewerController', 'destroyed');
-        });
+                        })
+                    } else {
+                        vm.getView().then(function () {
+                            vm.getAttributes().then(function () {
+                                vm.transformViewAttributes();
+                                vm.updateTable();
+                            });
+                        });
+                    }
 
-        vm.options = {
-            entityType: vm.entityType,
-            filters: vm.filters,
-            columns: vm.columns,
-            columnsWidth: vm.columnsWidth,
+                    vm.tableParts = tablePartsService.setTablePartsSettings(vm.entityType);
 
-            grouping: vm.grouping,
-            folding: vm.folding,
-            sorting: vm.sorting,
-            isReport: vm.isReport,
-            externalCallback: vm.updateTable,
-            reportIsReady: vm.reportIsReady,
+                    $scope.$on("$destroy", function (event) {
 
-            additionsStatus: vm.additionsStatus,
-            additionsState: vm.additionsState,
+                        logService.controller('EntityViewerController', 'destroyed');
 
-            paginationItemPerPage: vm.paginationItemPerPage,
-            paginationItemsTotal: vm.paginationItemsTotal,
-            paginationPageCurrent: vm.paginationPageCurrent
-        }
+                    });
+
+                }());
+
+            } else { // root EntityViewer
+                (function SetPropsForRootEntityViewer() {
+
+                    vm.oldListView = null;
+
+                    $('.save-layout-as-btn').bind('click', function (e) {
+
+                        // saving columns widths
+                        var tHead = $('.g-columns-component');
+                        var th = $('.g-columns-component.g-thead').find('.g-cell');
+                        var thWidths = [];
+                        for (var i = 0; i < th.length; i = i + 1) {
+                            var thWidth = $(th[i]).width();
+                            thWidths.push(thWidth);
+                        }
+
+
+                        vm.listView.data.table.columnsWidth = thWidths;
+
+                        //console.log("View data is ", vm.listView.data);
+                        vm.listView.data.table = vm.table;
+                        vm.listView.data.table.columns = vm.columns;
+                        // vm.listView.data.table.columns['cellWidth']
+                        //console.log('---------vm.grouping-------', vm.grouping);
+                        vm.listView.data.table.grouping = vm.grouping;
+                        vm.listView.data.table.folding = vm.folding;
+                        vm.listView.data.table.filters = vm.filters;
+                        vm.listView.data.table.sorting = vm.sorting;
+
+                        // vm.listView.data.table.cellWidth = 200;
+
+                        vm.listView.data.additionsType = vm.additionsType;
+
+                        vm.listView.data.tableAdditions.entityType = vm.additionsEntityType;
+
+                        vm.listView.data.tableAdditions = vm.tableAdditions;
+                        vm.listView.data.tableAdditions.table.columns = vm.entityAdditionsColumns;
+                        vm.listView.data.tableAdditions.table.filters = vm.entityAdditionsFilters;
+                        vm.listView.data.tableAdditions.table.sorting = vm.entityAdditionsSorting;
+                        vm.listView.data.tableAdditions.additionsStatus = vm.additionsStatus;
+                        vm.listView.data.tableAdditions.additionsState = vm.additionsState;
+
+                        //vm.additionsStatus[res.results[0].data.tableAdditions.additionsType] = true;
+
+
+                        $mdDialog.show({
+                            controller: 'UiLayoutSaveAsDialogController as vm',
+                            templateUrl: 'views/dialogs/ui/ui-layout-save-as-view.html',
+                            parent: angular.element(document.body),
+                            targetEvent: e,
+                            locals: {
+                                options: {}
+                            },
+                            clickOutsideToClose: false
+                        }).then(function (res) {
+
+                            if (res.status == 'agree') {
+
+                                if (vm.oldListView) {
+                                    vm.oldListView.is_default = false;
+
+                                    uiService.updateListLayout(vm.oldListView.id, vm.oldListView).then(function () {
+                                        console.log('saved');
+                                    }).then(function () {
+
+                                        vm.listView.name = res.data.name;
+                                        vm.listView.is_default = true;
+
+                                        uiService.createListLayout(vm.entityType, vm.listView).then(function () {
+                                            console.log('saved');
+                                            vm.getView();
+                                        });
+
+                                    })
+
+                                } else {
+
+                                    vm.listView.name = res.data.name;
+                                    vm.listView.is_default = true;
+
+                                    uiService.createListLayout(vm.entityType, vm.listView).then(function () {
+                                        console.log('saved');
+                                        vm.getView();
+                                    });
+                                }
+                            }
+
+                        });
+
+                    });
+
+                    $('.save-layout-btn').bind('click', function (e) {
+
+
+                        // saving columns widths
+                        var tHead = $('.g-columns-component');
+                        var th = $('.g-columns-component.g-thead').find('.g-cell');
+                        var thWidths = [];
+                        for (var i = 0; i < th.length; i = i + 1) {
+                            var thWidth = $(th[i]).width();
+                            thWidths.push(thWidth);
+                        }
+                        vm.listView.data.table.columnsWidth = thWidths;
+                        console.log('entity viewer columnsWidth is', vm.listView.data.table.columnsWidth);
+
+                        //console.log("View data is ", vm.listView.data);
+
+
+                        vm.listView.data.table = vm.table;
+                        vm.listView.data.table.columns = vm.columns;
+                        // vm.listView.data.table.columns['cellWidth']
+                        console.log('---------vm.grouping-------', vm.grouping);
+                        vm.listView.data.table.grouping = vm.grouping;
+                        vm.listView.data.table.folding = vm.folding;
+                        vm.listView.data.table.filters = vm.filters;
+                        vm.listView.data.table.sorting = vm.sorting;
+
+                        // vm.listView.data.table.cellWidth = 200;
+
+                        vm.listView.data.additionsType = vm.additionsType;
+
+                        vm.listView.data.tableAdditions.entityType = vm.additionsEntityType;
+
+                        vm.listView.data.tableAdditions = vm.tableAdditions;
+                        vm.listView.data.tableAdditions.table.columns = vm.entityAdditionsColumns;
+                        vm.listView.data.tableAdditions.table.filters = vm.entityAdditionsFilters;
+                        vm.listView.data.tableAdditions.table.sorting = vm.entityAdditionsSorting;
+                        vm.listView.data.tableAdditions.additionsStatus = vm.additionsStatus;
+                        vm.listView.data.tableAdditions.additionsState = vm.additionsState;
+
+                        //vm.additionsStatus[res.results[0].data.tableAdditions.additionsType] = true;
+
+                        console.log('vm.listView', vm.listView);
+
+                        if (vm.listView.hasOwnProperty('id')) {
+                            uiService.updateListLayout(vm.listView.id, vm.listView).then(function () {
+                                console.log('saved');
+                            });
+                        } else {
+                            uiService.createListLayout(vm.entityType, vm.listView).then(function () {
+                                console.log('saved');
+                            });
+                        }
+                        $mdDialog.show({
+                            controller: 'SaveLayoutDialogController as vm',
+                            templateUrl: 'views/save-layout-dialog-view.html',
+                            targetEvent: e,
+                            clickOutsideToClose: true
+                        }).then(function () {
+                            vm.getView();
+                        });
+
+
+                    });
+
+                    vm.paginationPageCurrent = 1;
+                    vm.paginationItemPerPage = 20;
+                    vm.paginationItemsTotal = 0;
+
+                    // ATTRIBUTE STUFF START
+
+                    vm.attrs = [];
+                    vm.baseAttrs = [];
+                    vm.layoutAttrs = [];
+                    vm.entityAttrs = [];
+
+                    // ENTITY STUFF START
+
+                    vm.entity = [];
+                    vm.entityType = $scope.$parent.vm.entityType;
+                    vm.isReport = $scope.$parent.vm.isReport || false;
+
+                    console.log('vm.isReport', vm.isReport);
+
+                    vm.customButtons = $scope.$parent.vm.entityViewer.extraFeatures;
+                    vm.groupTableService = GroupTableService.getInstance();
+
+                    vm.columns = [];
+                    vm.columnsWidth = [];
+                    vm.grouping = [];
+                    vm.filters = [];
+                    vm.sorting = [];
+
+                    // ENTITY ADDITIONS STUFF START
+
+                    vm.entityAdditions = [];
+                    vm.additionsType = '';
+                    vm.additionsEntityType = '';
+
+                    vm.entityAdditionsColumns = [];
+                    vm.entityAdditionsFilters = [];
+                    vm.entityAdditionsSorting = [];
+
+                    // OTHER STUFF START
+
+                    vm.tabs = [];
+                    vm.table = {};
+                    vm.tableAdditions = {};
+
+                    vm.tableIsReady = false;
+                    vm.readyStatus = {uiView: false};
+
+                    vm.editorTemplate = 'views/additions-editor-view.html';
+
+                    vm.additionsStatus = {
+                        editor: false,
+                        table: false,
+                        extraFeatures: []
+                    };
+                    vm.additionsState = false;
+                    vm.additionsStatus.extraFeatures = vm.customButtons;
+
+                    vm.reportIsReady = false;
+
+                    vm.reportAttrs = [];	//	array of reports's dynamic attributes
+
+                    dynamicAttributesForReportsService.getDynamicAttributes().then(function (data) {
+                        vm.reportAttrs = data;
+                    });
+
+                    if (vm.isReport == true) {
+                        pricingPolicyService.getList().then(function (data) {
+
+                            vm.reportOptions = {
+                                cost_method: 1,
+                                pricing_policy: data.results[0].id
+                            };
+
+                            vm.getView().then(function () {
+                                vm.getAttributes().then(function () {
+                                    vm.transformViewAttributes();
+                                    vm.updateTable();
+                                });
+                            });
+
+                        })
+                    } else {
+                        vm.getView().then(function () {
+                            vm.getAttributes().then(function () {
+                                vm.transformViewAttributes();
+                                vm.updateTable();
+                            });
+                        });
+                    }
+
+                    vm.tableParts = tablePartsService.setTablePartsSettings(vm.entityType);
+
+                    $scope.$on("$destroy", function (event) {
+
+                        $('.save-layout-btn').unbind('click');
+                        $('.save-layout-as-btn').unbind('click');
+
+                        logService.controller('EntityViewerController', 'destroyed');
+
+                    });
+
+                }());
+            }
+
+        }());
+
     }
 
 }());
