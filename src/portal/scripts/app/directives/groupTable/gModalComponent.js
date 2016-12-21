@@ -160,20 +160,20 @@
             });
 
             if (parentScope.isReport == true) {
-				
-				vm.attrs = [];
-				dynamicAttributesForReportsService.getDynamicAttributes().then(function(data) {
-					vm.attrs = data;
 
-					attrsList = vm.attrs.concat(vm.baseAttrs);
-					attrsList = attrsList.concat(vm.entityAttrs);
-					restoreAttrs();
-					syncAttrs();
+                vm.attrs = [];
+                dynamicAttributesForReportsService.getDynamicAttributes().then(function (data) {
+                    vm.attrs = data;
 
-					console.log('report balance new custom attr is', vm.attrs);
-					vm.readyStatus.content = true;
-					$scope.$apply();
-				});
+                    attrsList = vm.attrs.concat(vm.baseAttrs);
+                    attrsList = attrsList.concat(vm.entityAttrs);
+                    restoreAttrs();
+                    syncAttrs();
+
+                    console.log('report balance new custom attr is', vm.attrs);
+                    vm.readyStatus.content = true;
+                    $scope.$apply();
+                });
 
             } else {
                 return attributeTypeService.getList(vm.entityType).then(function (data) {
@@ -207,23 +207,23 @@
             }
         };
 
-        parentScope.$watch('columns', function () {
+        parentScope.$watch('options.columns', function () {
             if (vm.tabAttrsReady) {
-                columns = parentScope.columns;
+                columns = parentScope.options.columns;
                 syncAttrs();
                 callback();
             }
         });
-        parentScope.$watch('filters', function () {
+        parentScope.$watch('options.filters', function () {
             if (vm.tabAttrsReady) {
-                filters = parentScope.filters;
+                filters = parentScope.options.filters;
                 syncAttrs();
                 callback();
             }
         });
-        parentScope.$watch('grouping', function () {
+        parentScope.$watch('options.grouping', function () {
             if (vm.tabAttrsReady) {
-                grouping = parentScope.grouping;
+                grouping = parentScope.options.grouping;
                 syncAttrs();
                 callback();
             }

@@ -12,41 +12,8 @@
             restrict: 'AE',
             templateUrl: 'views/directives/groupTable/group-table-shell-view.html',
             scope: {
-                //tabs: '=',
-                //entityType: '=',
                 items: '=',
                 options: '='
-                //filters: '=',
-                //columns: '=',
-                //columnsWidth: '=',
-                //grouping: '=',
-                //folding: '=',
-                //sorting: '=',
-                //
-                //isReport: '=',
-                //reportIsReady: '=',
-                //reportOptions: '=',
-                //
-                //itemAdditionsEditorEntityId: '=',
-                //itemAdditionsEditorTemplate: '=',
-                //
-                //itemAdditions: '=',
-                //itemAdditionsColumns: '=',
-                //itemAdditionsFilters: '=',
-                //itemAdditionsSorting: '=',
-                //
-                //externalGetAdditions: '&',
-                //externalCallback: '&',
-                //externalAdditionsCallback: '&',
-                //externalUpdateItem: '&',
-                //externalUpdateItemAdditions: '&',
-                //
-                //additionsStatus: '=',
-                //additionsState: '=',
-                //
-                //paginationItemPerPage: '=',
-                //paginationItemsTotal: '=',
-                //paginationPageCurrent: '='
             },
             link: function (scope, elem, attrs) {
 
@@ -69,6 +36,13 @@
 
                 scope.triggerResize = function () {
 
+                };
+
+                scope.checkAdditions = function () {
+                    if (scope.options.additionsState == true && scope.options.isRootEntityViewer == true) {
+                        return true;
+                    }
+                    return false;
                 }
 
             }

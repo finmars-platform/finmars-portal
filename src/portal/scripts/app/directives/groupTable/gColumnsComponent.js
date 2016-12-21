@@ -13,14 +13,7 @@
         return {
             restrict: 'AE',
             scope: {
-                //columns: '=',
-                //sorting: '=',
-                //isItemAddition: '=',
-                //entityType: '=',
                 items: '=',
-                //externalCallback: '&',
-                //isAllSelected: '=',
-                //isReport: '='
                 options: '='
             },
             templateUrl: 'views/directives/groupTable/columns-view.html',
@@ -31,6 +24,7 @@
                 scope.columns = scope.options.columns;
                 scope.entityType = scope.options.entityType;
                 scope.externalCallback = scope.options.externalCallback;
+                scope.isReport = scope.options.isReport;
 
 
                 logService.component('groupColumnResizer', 'initialized');
@@ -86,7 +80,7 @@
                         scope.sorting.column.key = column.key;
                         scope.sorting.column.sort = sort;
                     }
-                    scope.externalCallback();
+                    scope.externalCallback({silent: true, options: {columns: scope.columns}});
                 };
 
                 scope.selectSubtotalType = function (column, type) {
@@ -100,7 +94,7 @@
                     } else {
                         column.report_settings.subtotal_formula_id = type;
                     }
-                    scope.externalCallback();
+                    scope.externalCallback({silent: true, options: {columns: scope.columns}});
                 };
 
                 scope.checkSubtotalFormula = function (column, type) {
@@ -117,12 +111,16 @@
                 };
 
                 scope.$watchCollection('columns', function () {
+
+                    if (scope.isReport == true) {
+
+
+                    }
+
                     setTimeout(function () {
 
-                        if (scope.isReport == true) {
-                            scope.externalCallback();
-                            scope.$apply();
-                        }
+                        scope.externalCallback({silent: true, options: {columns: scope.columns}});
+                        scope.$apply();
 
                     }, 0)
                 });
@@ -169,6 +167,10 @@
                         });
                     }
                     //console.log('remove', scope.columns);
+
+                    setTimeout(function () {
+                        scope.externalCallback({silent: true, options: {columns: scope.columns}});
+                    }, 0)
                 };
 
                 scope.reportHideSubtotal = function (column) {

@@ -13,6 +13,7 @@
 
     var entityViewerHelperService = require('../../services/entityViewerHelperService');
     var metaService = require('../../services/metaService');
+    var entityViewerDataResolver = require('../../services/entityViewerDataResolver');
     var tablePartsService = require('../../services/groupTable/tablePartsService');
 
     var GroupTableService = require('../../services/groupTable/groupTableService');
@@ -25,7 +26,66 @@
 
         logService.controller('EntityViewerController', 'initialized');
 
+
         var vm = this;
+        vm.options = {};
+        vm.reportOptions = {};
+
+        vm.updateConfig = function () {
+
+            setTimeout(function () {
+
+                vm.options = {
+
+                    columns: vm.columns,
+                    columnsWidth: vm.columnsWidth,
+
+                    grouping: vm.grouping,
+                    filters: vm.filters,
+                    sorting: vm.sorting,
+                    folding: vm.folding,
+
+                    entityType: vm.entityType,
+                    isRootEntityViewer: vm.isRootEntityViewer,
+                    isReport: vm.isReport,
+
+                    tableIsReady: vm.tableIsReady,
+                    reportIsReady: vm.reportIsReady,
+
+                    externalCallback: vm.updateTable,
+                    additionsStatus: vm.additionsStatus,
+                    additionsState: vm.additionsState,
+
+                    editorTemplate: vm.editorTemplate,
+                    editorEntityId: vm.editorEntityId
+
+
+                };
+
+                $scope.$apply();
+
+                console.log('vm.options', vm.options);
+
+            }, 0)
+
+        };
+
+        vm.updateVm = function (options) {
+
+            setTimeout(function () {
+
+                var keys = Object.keys(options);
+
+                keys.forEach(function (key) {
+
+                    vm[key] = options[key];
+                });
+
+                $scope.$apply();
+
+            }, 0);
+        };
+
 
         console.log('------------------------ EV scope -----------------------------', $scope);
 
@@ -34,7 +94,7 @@
             if (!items) {
                 return [];
             }
-            console.log('vm.returnFullAttributes attributes:', attrs, items);
+            //console.log('vm.returnFullAttributes attributes:', attrs, items);
             var i, a, b, e, item, attr, baseAttr, attrOptions, entityAttr, report_settings, reportAttrs;
             var reportDynamicAttrsReady = false;
             for (i = 0; i < items.length; i = i + 1) {
@@ -78,7 +138,7 @@
                         }
                     }
                 } else {
-                    console.log('returnattribute without id', item);
+                    //console.log('returnattribute without id', item);
                     for (b = 0; b < baseAttrs.length; b = b + 1) {
                         baseAttr = baseAttrs[b];
                         if (item.key === baseAttr.key) {
@@ -112,7 +172,7 @@
                     }
                 }
             }
-            console.log('vm.returnfullattributes fullItems', fullItems);
+            //console.log('vm.returnfullattributes fullItems', fullItems);
             return fullItems;
 
         };
@@ -138,41 +198,11 @@
             return false;
         };
 
-        vm.updateConfigOptions = function () {
-
-            vm.options = {
-                entityType: vm.entityType,
-                filters: vm.filters,
-                columns: vm.columns,
-                columnsWidth: vm.columnsWidth,
-
-                grouping: vm.grouping,
-                folding: vm.folding,
-                sorting: vm.sorting,
-                isReport: vm.isReport,
-                externalCallback: vm.updateTable,
-                reportIsReady: vm.reportIsReady,
-                template: vm.editorTemplate,
-
-                additionsStatus: vm.additionsStatus,
-                additionsState: vm.additionsState,
-
-                paginationItemPerPage: vm.paginationItemPerPage,
-                paginationItemsTotal: vm.paginationItemsTotal,
-                paginationPageCurrent: vm.paginationPageCurrent
-            }
-
-        }
 
         vm.getView = function () {
-            return uiService.getActiveListLayout(vm.entityType).then(function (res) {
 
-                //vm.entityType = data.entityType;
+            var handler = function (res) {
 
-                //vm.tabs = res.data.tabs;
-
-                //console.log('re1233333s', res);
-                //console.log('res.results', res.results[0]);
                 if (res.results.length) {
                     vm.listView = res.results[0];
 
@@ -190,7 +220,6 @@
 
                     vm.additionsType = res.results[0].data.tableAdditions.additionsType;
 
-                    vm.additionsEntityType = res.results[0].data.tableAdditions.entityType;
                     vm.additionsStatus = res.results[0].data.tableAdditions.additionsStatus || {
                             editor: false,
                             table: false,
@@ -204,7 +233,7 @@
                     vm.entityAdditionsFilters = res.results[0].data.tableAdditions.table.filters;
                     vm.entityAdditionsSorting = res.results[0].data.tableAdditions.table.sorting;
 
-                    vm.updateConfigOptions();
+                    vm.updateConfig();
 
                     //vm.additionsStatus[res.results[0].data.tableAdditions.additionsType] = true;
                 } else {
@@ -232,7 +261,7 @@
                     vm.entityAdditionsFilters = defaultList[0].data.tableAdditions.table.filters;
                     vm.entityAdditionsSorting = defaultList[0].data.tableAdditions.table.sorting;
 
-                    vm.updateConfigOptions();
+                    vm.updateConfig();
 
                     //vm.additionsStatus[defaultList[0].data.tableAdditions.additionsType] = true;
                 }
@@ -242,7 +271,18 @@
 
                 //console.log('vm tabs!', vm.tabs);
                 $scope.$apply();
-            });
+            };
+
+            console.log('vm.uiLayoutId', vm.uiLayoutId);
+            if (vm.uiLayoutId !== null && vm.uiLayoutId !== undefined) {
+                return uiService.getListLayoutByKey(vm.uiLayoutId).then(function (data) {
+                    handler({results: [data]});
+                });
+            } else {
+                return uiService.getActiveListLayout(vm.entityType).then(handler);
+            }
+
+
         }; // TODO refactor
 
         vm.transformViewAttributes = function () { //deprecated
@@ -252,13 +292,11 @@
             vm.filters = vm.returnFullAttributes(vm.filters, vm.attrs, vm.baseAttrs, vm.entityAttrs, vm.entityType);
             vm.sorting.group = vm.findFullAttributeForItem(vm.sorting.group, vm.attrs);
             vm.sorting.column = vm.findFullAttributeForItem(vm.sorting.column, vm.attrs);
-            //console.log('vm.sorting.column', vm.sorting.column);
-            vm.entityAdditionsColumns = vm.returnFullAttributes(vm.entityAdditionsColumns, vm.attrs, vm.baseAttrs, vm.entityAttrs, vm.additionsEntityType);
-            vm.entityAdditionsFilters = vm.returnFullAttributes(vm.entityAdditionsFilters, vm.attrs, vm.baseAttrs, vm.entityAttrs, vm.additionsEntityType);
-            vm.entityAdditionsSorting.column = vm.findFullAttributeForItem(vm.entityAdditionsSorting.column, vm.attrs);
 
             logService.collection('vm.grouping', vm.grouping);
             logService.collection('vm.columns', vm.columns);
+
+            vm.updateConfig();
         };
 
         vm.getAttributes = function () {
@@ -293,359 +331,375 @@
 
         }; // TODO refactor, move to service
 
+
         vm.updateTable = function (params) {
 
-            console.log('params', params);
+            //console.log('params', params);
+            var defaultParams = {
+                redraw: true,
+                silent: false,
+                options: {}
+            };
 
-            var options = {};
+            var _params = Object.assign(defaultParams, params);
 
-            if (vm.isReport == true) {
+            console.log('_params', _params);
 
-                //console.log('vm.reportOptions;', vm.reportOptions);
+            vm.updateVm(_params.options);
 
-                vm.reportOptions.custom_fields = [];
+            if (_params.redraw == true) {
 
-                vm.columns.forEach(function (column) {
+                var options = {};
 
-                    if (column.hasOwnProperty('columnType') && column.columnType == 'custom-field') {
-                        vm.reportOptions.custom_fields.push(column.id);
-                    }
-                });
+                if (vm.isReport == true) {
 
-                //console.log('vm.filters1111111111', vm.filters);
+                    //console.log('vm.reportOptions;', vm.reportOptions);
 
-                vm.reportIsReady = false;
+                    vm.reportOptions.custom_fields = [];
 
-                $scope.$parent.vm.getList(vm.reportOptions).then(function (data) {
+                    vm.columns.forEach(function (column) {
 
-                    vm.reportOptions = data;
-                    vm.reportOptions.currency = data.report_currency;
-
-                    if (data.task_status !== 'SUCCESS') {
-
-
-                        setTimeout(function () {
-                            vm.updateTable();
-                        }, 1000)
-                    } else {
-
-                        vm.reportOptions.task_id = null;
-
-                        var filteredData = data.items;
-
-                        filteredData = vm.groupTableService.extractDynamicAttributes(filteredData);
-
-                        var isFiltersExist = false;
-                        var isFiltersEnabled = false;
-
-                        if (vm.filters.length > 0) {
-                            isFiltersExist = true;
-
-                            vm.filters.forEach(function (item) {
-                                if (item.options !== undefined && item.options.enabled == true) {
-
-                                    if (item.value_type == 'field' && item.options.query !== undefined && item.options.query.length > 0) {
-                                        isFiltersEnabled = true;
-                                    }
-                                    if (item.value_type == 'float' && item.options.query !== undefined && (item.options.query + '').length > 0) {
-                                        isFiltersEnabled = true;
-                                    }
-
-                                    if (item.value_type == 10 && item.options.query !== undefined && (item.options.query + '').length > 0) {
-                                        isFiltersEnabled = true;
-                                    }
-                                }
-                            });
+                        if (column.hasOwnProperty('columnType') && column.columnType == 'custom-field') {
+                            vm.reportOptions.custom_fields.push(column.id);
                         }
+                    });
 
-                        if (isFiltersExist == true && isFiltersEnabled == true) {
+                    vm.reportIsReady = false;
 
-                            filteredData = [];
+                    entityViewerDataResolver.getList(vm.entityType, vm.reportOptions).then(function (data) {
 
-                            var itemsRepository = data.items;
+                        vm.reportOptions = data;
+                        vm.reportOptions.currency = data.report_currency;
 
-                            vm.filters.forEach(function (filterItem, $index) {
+                        if (data.task_status !== 'SUCCESS') {
 
-                                var localFilteredData = [];
 
-                                if (filterItem.options !== undefined && filterItem.options.enabled == true) {
+                            setTimeout(function () {
+                                vm.updateTable();
+                            }, 1000)
+                        } else {
 
-                                    itemsRepository.forEach(function (item) {
 
-                                        if (vm.itemFilterHasOwnProperty(item, filterItem)) {
+                            vm.reportOptions.task_id = null;
 
-                                            if (filterItem.value_type == 'field') {
+                            var filteredData = data.items;
 
-                                                if (filterItem.options.query !== undefined && filterItem.options.query.length) {
-                                                    var matched = false;
+                            filteredData = vm.groupTableService.extractDynamicAttributes(filteredData);
 
-                                                    filterItem.options.query.forEach(function (queryItem) {
-                                                        if (item[filterItem.key] == queryItem) {
-                                                            matched = true;
-                                                        }
-                                                    });
+                            var isFiltersExist = false;
+                            var isFiltersEnabled = false;
 
-                                                    if (matched) {
-                                                        localFilteredData.push(item);
-                                                    }
-                                                } else {
-                                                    localFilteredData.push(item);
-                                                }
+                            if (vm.filters.length > 0) {
+                                isFiltersExist = true;
 
-                                            }
+                                vm.filters.forEach(function (item) {
+                                    if (item.options !== undefined && item.options.enabled == true) {
 
-                                            if (filterItem.value_type == 'float') {
-                                                if (filterItem.options.query !== undefined) {
-                                                    if (item[filterItem.key] == parseFloat(filterItem.options.query)) {
-                                                        localFilteredData.push(item);
-                                                    }
-                                                } else {
-                                                    localFilteredData.push(item);
-                                                }
-                                            }
-
-                                            //console.log('filterItem', filterItem);
-
-                                            if (filterItem.value_type == 10) {
-
-                                                //console.log('item', item);
-
-                                                var _name = filterItem.r_entityType + '_attribute_' + filterItem.source_name;
-
-                                                if (filterItem.options.query !== undefined) {
-                                                    if (item[_name].indexOf(filterItem.options.query) !== -1) {
-                                                        localFilteredData.push(item);
-                                                    }
-                                                } else {
-                                                    localFilteredData.push(item);
-                                                }
-                                            }
-
-                                            //if(item[filterItem.key] == filterItem.otions.query[0])
+                                        if (item.value_type == 'field' && item.options.query !== undefined && item.options.query.length > 0) {
+                                            isFiltersEnabled = true;
+                                        }
+                                        if (item.value_type == 'float' && item.options.query !== undefined && (item.options.query + '').length > 0) {
+                                            isFiltersEnabled = true;
                                         }
 
-                                    });
-
-                                    //console.log('localFilteredData', localFilteredData);
-                                    //console.log('itemsRepository', itemsRepository);
-
-                                    itemsRepository = localFilteredData;
-                                }
-                            });
-
-                            filteredData = itemsRepository;
-                        }
-
-                        entityViewerHelperService.transformItems(filteredData, vm.attrs).then(function (data) {
-
-                            vm.entity = data;
-
-                            console.log('vm.entityItems', vm.entity);
-
-                            vm.reportIsReady = true;
-
-                            vm.options.reportIsReady = true;
-
-                            if (vm.entityType == 'balance-report') {
-                                vm.entity = reportSubtotalService.groupByAndCalc(vm.entity, vm.reportOptions);
+                                        if (item.value_type == 10 && item.options.query !== undefined && (item.options.query + '').length > 0) {
+                                            isFiltersEnabled = true;
+                                        }
+                                    }
+                                });
                             }
 
-                            vm.groupTableService.setItems(vm.entity);
+                            if (isFiltersExist == true && isFiltersEnabled == true) {
 
-                            vm.groupTableService.columns.setColumns(vm.columns);
-                            //vm.groupTableService.filtering.setFilters(vm.filters);
-                            vm.groupTableService.grouping.setGroupsWithColumns(vm.grouping, vm.columns, vm.entityType);
-                            //console.log("EXTERNAL CALLBACK ", vm.folding);
-                            vm.groupTableService.folding.setFolds(vm.folding);
-                            //console.log('UPDATE TABLE scope.sorting.group', vm.sorting.group);
-                            vm.sorting.group = vm.findFullAttributeForItem(vm.sorting.group, vm.attrs);
-                            //vm.sorting.column = vm.findFullAttributeForItem(vm.sorting.column, vm.attrs);
-                            vm.groupTableService.sorting.group.sort(vm.sorting.group);
-                            //vm.groupTableService.sorting.column.sort(vm.sorting.column);
-                            vm.tableIsReady = true;
+                                filteredData = [];
 
-                            vm.updateConfigOptions();
+                                var itemsRepository = data.items;
 
-                            $scope.$apply();
+                                vm.filters.forEach(function (filterItem, $index) {
+
+                                    var localFilteredData = [];
+
+                                    if (filterItem.options !== undefined && filterItem.options.enabled == true) {
+
+                                        itemsRepository.forEach(function (item) {
+
+                                            if (vm.itemFilterHasOwnProperty(item, filterItem)) {
+
+                                                if (filterItem.value_type == 'field') {
+
+                                                    if (filterItem.options.query !== undefined && filterItem.options.query.length) {
+                                                        var matched = false;
+
+                                                        filterItem.options.query.forEach(function (queryItem) {
+                                                            if (item[filterItem.key] == queryItem) {
+                                                                matched = true;
+                                                            }
+                                                        });
+
+                                                        if (matched) {
+                                                            localFilteredData.push(item);
+                                                        }
+                                                    } else {
+                                                        localFilteredData.push(item);
+                                                    }
+
+                                                }
+
+                                                if (filterItem.value_type == 'float') {
+                                                    if (filterItem.options.query !== undefined) {
+                                                        if (item[filterItem.key] == parseFloat(filterItem.options.query)) {
+                                                            localFilteredData.push(item);
+                                                        }
+                                                    } else {
+                                                        localFilteredData.push(item);
+                                                    }
+                                                }
+
+                                                //console.log('filterItem', filterItem);
+
+                                                if (filterItem.value_type == 10) {
+
+                                                    //console.log('item', item);
+
+                                                    var _name = filterItem.r_entityType + '_attribute_' + filterItem.source_name;
+
+                                                    if (filterItem.options.query !== undefined) {
+                                                        if (item[_name].indexOf(filterItem.options.query) !== -1) {
+                                                            localFilteredData.push(item);
+                                                        }
+                                                    } else {
+                                                        localFilteredData.push(item);
+                                                    }
+                                                }
+
+                                                //if(item[filterItem.key] == filterItem.otions.query[0])
+                                            }
+
+                                        });
+
+                                        //console.log('localFilteredData', localFilteredData);
+                                        //console.log('itemsRepository', itemsRepository);
+
+                                        itemsRepository = localFilteredData;
+                                    }
+                                });
+
+                                filteredData = itemsRepository;
+                            }
+
+                            entityViewerHelperService.transformItems(filteredData, vm.attrs).then(function (data) {
+
+                                vm.entity = data;
+
+                                //console.log('vm.entityItems', vm.entity);
+
+                                vm.reportIsReady = true;
+
+                                if (vm.entityType == 'balance-report') {
+                                    vm.entity = reportSubtotalService.groupByAndCalc(vm.entity, vm.reportOptions);
+                                }
+
+                                vm.groupTableService.setItems(vm.entity);
+
+                                vm.groupTableService.columns.setColumns(vm.columns);
+                                //vm.groupTableService.filtering.setFilters(vm.filters);
+                                vm.groupTableService.grouping.setGroupsWithColumns(vm.grouping, vm.columns, vm.entityType);
+                                //console.log("EXTERNAL CALLBACK ", vm.folding);
+                                vm.groupTableService.folding.setFolds(vm.folding);
+                                //console.log('UPDATE TABLE scope.sorting.group', vm.sorting.group);
+                                vm.sorting.group = vm.findFullAttributeForItem(vm.sorting.group, vm.attrs);
+                                //vm.sorting.column = vm.findFullAttributeForItem(vm.sorting.column, vm.attrs);
+                                vm.groupTableService.sorting.group.sort(vm.sorting.group);
+                                //vm.groupTableService.sorting.column.sort(vm.sorting.column);
+                                vm.tableIsReady = true;
+
+                                vm.updateConfig();
+
+                                $scope.$apply();
+                            });
+                        }
+                    })
+                } else {
+                    if (vm.entityType === 'audit-transaction') {
+
+                        options = {
+                            sort: {
+                                key: vm.sorting.column.key,
+                                direction: vm.sorting.column.sort
+                            },
+                            filters: {'content_type': 'transactions.transaction'},
+                            page: vm.paginationPageCurrent,
+                            pageSize: vm.paginationItemPerPage
+                        };
+
+                        vm.reportIsReady = true;
+                        vm.reportIsReady = true;
+
+                        //console.log('vm.filters', vm.filters);
+
+                        vm.filters.forEach(function (item) {
+                            if (item.options && item.options.enabled === true) {
+                                options.filters[item.key] = item.options.query;
+                            }
+                        });
+
+                        //console.log('options', options);
+                        //console.log('entityViewerController parent scope ', $scope.$parent);
+                        //console.log('ENTITY VIEWER vm.grouping', vm.grouping);
+                        entityViewerDataResolver.getList(vm.entityType, options).then(function (data) {
+
+                            vm.paginationItemsTotal = data.count;
+                            vm.nextExist = !!data.next;
+                            vm.previousExist = !!data.previous;
+
+                            entityViewerHelperService.transformItems(data.results, vm.attrs).then(function (data) {
+
+                                vm.entity = data;
+                                vm.entity = vm.entity.map(function (item) {
+                                    item.date_formatted = moment(new Date(item.created)).format('DD/MM/YYYY');
+                                    item.username = item.member.username;
+                                    return item;
+                                });
+                                //console.log('audit transaction data is', vm.entity);
+                                vm.groupTableService.setItems(vm.entity);
+
+                                vm.groupTableService.columns.setColumns(vm.columns);
+                                //vm.groupTableService.filtering.setFilters(vm.filters);
+                                vm.groupTableService.grouping.setGroups(vm.grouping, vm.entityType);
+                                //console.log("EXTERNAL CALLBACK ", vm.folding);
+                                vm.groupTableService.folding.setFolds(vm.folding);
+                                //console.log('UPDATE TABLE scope.sorting.group', vm.sorting.group);
+                                vm.sorting.group = vm.findFullAttributeForItem(vm.sorting.group, vm.attrs);
+                                //vm.sorting.column = vm.findFullAttributeForItem(vm.sorting.column, vm.attrs);
+                                vm.groupTableService.sorting.group.sort(vm.sorting.group);
+                                //vm.groupTableService.sorting.column.sort(vm.sorting.column);
+                                vm.tableIsReady = true;
+
+                                vm.updateConfig();
+
+                                $scope.$apply();
+                            });
                         });
                     }
-                })
+                    else if (vm.entityType === 'audit-instrument') {
 
+                        options = {
+                            sort: {
+                                key: vm.sorting.column.key,
+                                direction: vm.sorting.column.sort
+                            },
+                            filters: {'content_type': 'instruments.instrument'},
+                            page: vm.paginationPageCurrent,
+                            pageSize: vm.paginationItemPerPage
+                        };
+
+                        vm.reportIsReady = true;
+
+                        //console.log('vm.filters', vm.filters);
+
+                        vm.filters.forEach(function (item) {
+                            if (item.options && item.options.enabled === true) {
+                                options.filters[item.key] = item.options.query;
+                            }
+                        });
+
+                        //console.log('options', options);
+                        //console.log('entityViewerController parent scope ', $scope.$parent);
+                        //console.log('ENTITY VIEWER vm.grouping', vm.grouping);
+                        entityViewerDataResolver.getList(vm.entityType, options).then(function (data) {
+
+                            vm.paginationItemsTotal = data.count;
+                            vm.nextExist = !!data.next;
+                            vm.previousExist = !!data.previous;
+
+                            entityViewerHelperService.transformItems(data.results, vm.attrs).then(function (data) {
+
+                                vm.entity = data;
+                                vm.entity = vm.entity.map(function (item) {
+                                    item.date_formatted = moment(new Date(item.created)).format('DD/MM/YYYY');
+                                    item.username = item.member.username;
+                                    return item;
+                                });
+                                //console.log('audit instruments data is', vm.entity);
+                                vm.groupTableService.setItems(vm.entity);
+
+                                vm.groupTableService.columns.setColumns(vm.columns);
+                                //vm.groupTableService.filtering.setFilters(vm.filters);
+                                vm.groupTableService.grouping.setGroups(vm.grouping, vm.entityType);
+                                //console.log("EXTERNAL CALLBACK ", vm.folding);
+                                vm.groupTableService.folding.setFolds(vm.folding);
+                                //console.log('UPDATE TABLE scope.sorting.group', vm.sorting.group);
+                                vm.sorting.group = vm.findFullAttributeForItem(vm.sorting.group, vm.attrs);
+                                //vm.sorting.column = vm.findFullAttributeForItem(vm.sorting.column, vm.attrs);
+                                vm.groupTableService.sorting.group.sort(vm.sorting.group);
+                                //vm.groupTableService.sorting.column.sort(vm.sorting.column);
+                                vm.tableIsReady = true;
+
+                                vm.updateConfig();
+
+                                $scope.$apply();
+                            });
+                        });
+                    }
+                    else {
+
+                        options = {
+                            sort: {
+                                key: vm.sorting.column.key,
+                                direction: vm.sorting.column.sort
+                            },
+                            filters: {},
+                            page: vm.paginationPageCurrent,
+                            pageSize: vm.paginationItemPerPage
+                        };
+
+                        vm.reportIsReady = true;
+                        vm.reportIsReady = true;
+
+                        //console.log('vm.filters', vm.filters);
+
+                        vm.filters.forEach(function (item) {
+                            if (item.options && item.options.enabled === true) {
+                                options.filters[item.key] = item.options.query;
+                            }
+                        });
+
+                        //console.log('options', options);
+                        //console.log('entityViewerController parent scope ', $scope.$parent);
+                        //console.log('ENTITY VIEWER vm.grouping', vm.grouping);
+                        entityViewerDataResolver.getList(vm.entityType, options).then(function (data) {
+
+                            vm.paginationItemsTotal = data.count;
+                            vm.nextExist = !!data.next;
+                            vm.previousExist = !!data.previous;
+
+                            entityViewerHelperService.transformItems(data.results, vm.attrs).then(function (data) {
+
+                                vm.entity = data;
+                                vm.groupTableService.setItems(vm.entity);
+
+                                vm.groupTableService.columns.setColumns(vm.columns);
+                                //vm.groupTableService.filtering.setFilters(vm.filters);
+                                vm.groupTableService.grouping.setGroups(vm.grouping, vm.entityType);
+                                //console.log("EXTERNAL CALLBACK ", vm.folding);
+                                vm.groupTableService.folding.setFolds(vm.folding);
+                                //console.log('UPDATE TABLE scope.sorting.group', vm.sorting.group);
+                                vm.sorting.group = vm.findFullAttributeForItem(vm.sorting.group, vm.attrs);
+                                //vm.sorting.column = vm.findFullAttributeForItem(vm.sorting.column, vm.attrs);
+                                vm.groupTableService.sorting.group.sort(vm.sorting.group);
+                                //vm.groupTableService.sorting.column.sort(vm.sorting.column);
+                                vm.tableIsReady = true;
+
+                                vm.updateConfig();
+
+                                $scope.$apply();
+                            });
+                        })
+
+                    }
+                }
             } else {
-                if (vm.entityType === 'audit-transaction') {
-
-                    options = {
-                        sort: {
-                            key: vm.sorting.column.key,
-                            direction: vm.sorting.column.sort
-                        },
-                        filters: {'content_type': 'transactions.transaction'},
-                        page: vm.paginationPageCurrent,
-                        pageSize: vm.paginationItemPerPage
-                    };
-
-                    vm.reportIsReady = true;
-                    vm.options.reportIsReady = true;
-
-                    //console.log('vm.filters', vm.filters);
-
-                    vm.filters.forEach(function (item) {
-                        if (item.options && item.options.enabled === true) {
-                            options.filters[item.key] = item.options.query;
-                        }
-                    });
-
-                    console.log('options', options);
-                    //console.log('entityViewerController parent scope ', $scope.$parent);
-                    //console.log('ENTITY VIEWER vm.grouping', vm.grouping);
-                    $scope.$parent.vm.getList(options).then(function (data) {
-
-                        vm.paginationItemsTotal = data.count;
-                        vm.nextExist = !!data.next;
-                        vm.previousExist = !!data.previous;
-
-                        entityViewerHelperService.transformItems(data.results, vm.attrs).then(function (data) {
-
-                            vm.entity = data;
-                            vm.entity = vm.entity.map(function (item) {
-                                item.date_formatted = moment(new Date(item.created)).format('DD/MM/YYYY');
-                                item.username = item.member.username;
-                                return item;
-                            });
-                            console.log('audit transaction data is', vm.entity);
-                            vm.groupTableService.setItems(vm.entity);
-
-                            vm.groupTableService.columns.setColumns(vm.columns);
-                            //vm.groupTableService.filtering.setFilters(vm.filters);
-                            vm.groupTableService.grouping.setGroups(vm.grouping, vm.entityType);
-                            //console.log("EXTERNAL CALLBACK ", vm.folding);
-                            vm.groupTableService.folding.setFolds(vm.folding);
-                            //console.log('UPDATE TABLE scope.sorting.group', vm.sorting.group);
-                            vm.sorting.group = vm.findFullAttributeForItem(vm.sorting.group, vm.attrs);
-                            //vm.sorting.column = vm.findFullAttributeForItem(vm.sorting.column, vm.attrs);
-                            vm.groupTableService.sorting.group.sort(vm.sorting.group);
-                            //vm.groupTableService.sorting.column.sort(vm.sorting.column);
-                            vm.tableIsReady = true;
-                            $scope.$apply();
-                        });
-                    });
-                }
-                else if (vm.entityType === 'audit-instrument') {
-
-                    options = {
-                        sort: {
-                            key: vm.sorting.column.key,
-                            direction: vm.sorting.column.sort
-                        },
-                        filters: {'content_type': 'instruments.instrument'},
-                        page: vm.paginationPageCurrent,
-                        pageSize: vm.paginationItemPerPage
-                    };
-
-                    vm.reportIsReady = true;
-
-                    //console.log('vm.filters', vm.filters);
-
-                    vm.filters.forEach(function (item) {
-                        if (item.options && item.options.enabled === true) {
-                            options.filters[item.key] = item.options.query;
-                        }
-                    });
-
-                    console.log('options', options);
-                    //console.log('entityViewerController parent scope ', $scope.$parent);
-                    //console.log('ENTITY VIEWER vm.grouping', vm.grouping);
-                    $scope.$parent.vm.getList(options).then(function (data) {
-
-                        vm.paginationItemsTotal = data.count;
-                        vm.nextExist = !!data.next;
-                        vm.previousExist = !!data.previous;
-
-                        entityViewerHelperService.transformItems(data.results, vm.attrs).then(function (data) {
-
-                            vm.entity = data;
-                            vm.entity = vm.entity.map(function (item) {
-                                item.date_formatted = moment(new Date(item.created)).format('DD/MM/YYYY');
-                                item.username = item.member.username;
-                                return item;
-                            });
-                            console.log('audit instruments data is', vm.entity);
-                            vm.groupTableService.setItems(vm.entity);
-
-                            vm.groupTableService.columns.setColumns(vm.columns);
-                            //vm.groupTableService.filtering.setFilters(vm.filters);
-                            vm.groupTableService.grouping.setGroups(vm.grouping, vm.entityType);
-                            //console.log("EXTERNAL CALLBACK ", vm.folding);
-                            vm.groupTableService.folding.setFolds(vm.folding);
-                            //console.log('UPDATE TABLE scope.sorting.group', vm.sorting.group);
-                            vm.sorting.group = vm.findFullAttributeForItem(vm.sorting.group, vm.attrs);
-                            //vm.sorting.column = vm.findFullAttributeForItem(vm.sorting.column, vm.attrs);
-                            vm.groupTableService.sorting.group.sort(vm.sorting.group);
-                            //vm.groupTableService.sorting.column.sort(vm.sorting.column);
-                            vm.tableIsReady = true;
-
-                            vm.updateConfigOptions();
-
-                            $scope.$apply();
-                        });
-                    });
-                }
-                else {
-
-                    options = {
-                        sort: {
-                            key: vm.sorting.column.key,
-                            direction: vm.sorting.column.sort
-                        },
-                        filters: {},
-                        page: vm.paginationPageCurrent,
-                        pageSize: vm.paginationItemPerPage
-                    };
-
-                    vm.reportIsReady = true;
-                    vm.options.reportIsReady = true;
-
-                    //console.log('vm.filters', vm.filters);
-
-                    vm.filters.forEach(function (item) {
-                        if (item.options && item.options.enabled === true) {
-                            options.filters[item.key] = item.options.query;
-                        }
-                    });
-
-                    console.log('options', options);
-                    //console.log('entityViewerController parent scope ', $scope.$parent);
-                    //console.log('ENTITY VIEWER vm.grouping', vm.grouping);
-                    $scope.$parent.vm.getList(options).then(function (data) {
-
-                        vm.paginationItemsTotal = data.count;
-                        vm.nextExist = !!data.next;
-                        vm.previousExist = !!data.previous;
-
-                        entityViewerHelperService.transformItems(data.results, vm.attrs).then(function (data) {
-
-                            vm.entity = data;
-                            vm.groupTableService.setItems(vm.entity);
-
-                            vm.groupTableService.columns.setColumns(vm.columns);
-                            //vm.groupTableService.filtering.setFilters(vm.filters);
-                            vm.groupTableService.grouping.setGroups(vm.grouping, vm.entityType);
-                            //console.log("EXTERNAL CALLBACK ", vm.folding);
-                            vm.groupTableService.folding.setFolds(vm.folding);
-                            //console.log('UPDATE TABLE scope.sorting.group', vm.sorting.group);
-                            vm.sorting.group = vm.findFullAttributeForItem(vm.sorting.group, vm.attrs);
-                            //vm.sorting.column = vm.findFullAttributeForItem(vm.sorting.column, vm.attrs);
-                            vm.groupTableService.sorting.group.sort(vm.sorting.group);
-                            //vm.groupTableService.sorting.column.sort(vm.sorting.column);
-                            vm.tableIsReady = true;
-
-                            vm.updateConfigOptions();
-
-                            $scope.$apply();
-                        });
-                    })
-
-                }
+                vm.updateConfig();
             }
 
         };
@@ -667,7 +721,7 @@
         };
 
         vm.openCustomAdditionsView = function ($event, customButton) {
-            vm.additionsStatus.editor = false;
+            vm.additionsStatus.reportWizard = false;
             vm.additionsStatus.table = false;
             vm.additionsState = true;
             vm.additionsStatus.extraFeatures.forEach(function (item) {
@@ -678,9 +732,12 @@
             });
             console.log('vm.additionsStatus.extraFeatures', vm.additionsStatus.extraFeatures);
 
+            vm.updateConfig();
+
         };
 
         vm.openDataViewPanel = function () {
+
             vm.additionsStatus.editor = false;
             vm.additionsState = true;
             vm.additionsStatus.extraFeatures.forEach(function (item) {
@@ -688,26 +745,25 @@
             });
             vm.additionsStatus.reportWizard = true;
 
-            vm.updateConfigOptions();
+            vm.updateConfig();
+
         };
 
         vm.openEditorViewPanel = function () {
-            //vm.editorEntityId = undefined;
-
 
             vm.additionsStatus.editor = true;
             vm.additionsState = true;
-            vm.additionsStatus.table = true;
             vm.additionsStatus.extraFeatures.forEach(function (item) {
                 item.isOpened = false;
             });
             vm.additionsStatus.reportWizard = false;
 
-            vm.updateConfigOptions();
+
+            vm.updateConfig();
         };
 
         vm.checkAdditionStatus = function () {
-            if (!vm.additionsStatus.table && !vm.additionsStatus.editor) {
+            if (!vm.additionsStatus.reportWizard && !vm.additionsStatus.editor) {
                 //vm.editorEntityId = undefined;
                 return true;
             }
@@ -716,10 +772,46 @@
 
         vm.hideAdditions = function () {
             vm.additionsState = false;
-            vm.additionsStatus.table = false;
+            vm.additionsStatus.reportWizard = false;
             vm.additionsStatus.editor = false;
-            vm.updateConfigOptions();
+
             //vm.editorEntityId = undefined;
+
+            vm.updateConfig();
+        };
+
+        vm.getReport = function () {
+            pricingPolicyService.getList().then(function (data) {
+
+                vm.reportOptions = {
+                    cost_method: 1,
+                    pricing_policy: data.results[0].id
+                };
+
+                vm.readyStatus.reportOptions = true;
+
+                vm.getView().then(function () {
+                    vm.getAttributes().then(function () {
+                        vm.transformViewAttributes();
+                        vm.updateTable();
+                    });
+                });
+
+            })
+        };
+
+        vm.checkOnBeforeLoadAction = function () {
+
+            if (vm.onBeforeLoadAction && vm.onBeforeLoadActionFinish == false) {
+                return true;
+            }
+
+            if (vm.onBeforeLoadAction && vm.onBeforeLoadActionFinish == true) {
+                return false;
+            }
+
+            return false;
+
         };
 
         // entityViewer initialization
@@ -736,13 +828,18 @@
 
                     // TODO make onBeforeActionResolver
 
-                    vm.onBeforeLoadAction = $scope.$parent.options.additionsStatus.reportWizard;
+                    if ($scope.$parent.options.additionsStatus.reportWizard == true) {
+                        vm.onBeforeLoadAction = 'views/entity-viewer/report-wizard-view.html';
+                    }
+                    vm.onBeforeLoadActionFinish = false; // will be updated from onBeforeLoadAction controller, when it finish
 
                     vm.paginationPageCurrent = 1;
                     vm.paginationItemPerPage = 20;
                     vm.paginationItemsTotal = 0;
 
                     // ATTRIBUTE STUFF START
+
+                    vm.isRootEntityViewer = false;
 
                     vm.attrs = [];
                     vm.baseAttrs = [];
@@ -752,12 +849,12 @@
                     // ENTITY STUFF START
 
                     vm.entity = [];
-                    vm.entityType = $scope.$parent.vm.entityType;
-                    vm.isReport = $scope.$parent.vm.isReport || false;
+                    //vm.entityType = $scope.$parent.vm.entityType;
+                    //vm.isReport = $scope.$parent.vm.isReport || false;
 
-                    console.log('vm.isReport', vm.isReport);
+                    //console.log('vm.isReport', vm.isReport);
 
-                    vm.customButtons = $scope.$parent.vm.entityViewer.extraFeatures;
+                    //vm.customButtons = $scope.$parent.vm.entityViewer.extraFeatures;
                     vm.groupTableService = GroupTableService.getInstance();
 
                     vm.columns = [];
@@ -803,32 +900,32 @@
                         vm.reportAttrs = data;
                     });
 
-                    if (vm.isReport == true) {
-                        pricingPolicyService.getList().then(function (data) {
+                    //if (vm.isReport == true) {
+                    //    pricingPolicyService.getList().then(function (data) {
+                    //
+                    //        vm.reportOptions = {
+                    //            cost_method: 1,
+                    //            pricing_policy: data.results[0].id
+                    //        };
+                    //
+                    //        vm.getView().then(function () {
+                    //            vm.getAttributes().then(function () {
+                    //                vm.transformViewAttributes();
+                    //                vm.updateTable();
+                    //            });
+                    //        });
+                    //
+                    //    })
+                    //} else {
+                    //    vm.getView().then(function () {
+                    //        vm.getAttributes().then(function () {
+                    //            vm.transformViewAttributes();
+                    //            vm.updateTable();
+                    //        });
+                    //    });
+                    //}
 
-                            vm.reportOptions = {
-                                cost_method: 1,
-                                pricing_policy: data.results[0].id
-                            };
-
-                            vm.getView().then(function () {
-                                vm.getAttributes().then(function () {
-                                    vm.transformViewAttributes();
-                                    vm.updateTable();
-                                });
-                            });
-
-                        })
-                    } else {
-                        vm.getView().then(function () {
-                            vm.getAttributes().then(function () {
-                                vm.transformViewAttributes();
-                                vm.updateTable();
-                            });
-                        });
-                    }
-
-                    vm.tableParts = tablePartsService.setTablePartsSettings(vm.entityType);
+                    //vm.tableParts = tablePartsService.setTablePartsSettings(vm.entityType);
 
                     $scope.$on("$destroy", function (event) {
 
@@ -842,6 +939,9 @@
                 (function SetPropsForRootEntityViewer() {
 
                     vm.oldListView = null;
+
+                    vm.onBeforeLoadAction = false; // no before action for root, for now
+                    vm.onBeforeLoadActionFinish = true; // will be updated from onBeforeLoadAction controller, when it finish
 
                     $('.save-layout-as-btn').bind('click', function (e) {
 
@@ -900,14 +1000,14 @@
                                     vm.oldListView.is_default = false;
 
                                     uiService.updateListLayout(vm.oldListView.id, vm.oldListView).then(function () {
-                                        console.log('saved');
+                                        //console.log('saved');
                                     }).then(function () {
 
                                         vm.listView.name = res.data.name;
                                         vm.listView.is_default = true;
 
                                         uiService.createListLayout(vm.entityType, vm.listView).then(function () {
-                                            console.log('saved');
+                                            //console.log('saved');
                                             vm.getView();
                                         });
 
@@ -919,7 +1019,7 @@
                                     vm.listView.is_default = true;
 
                                     uiService.createListLayout(vm.entityType, vm.listView).then(function () {
-                                        console.log('saved');
+                                        //console.log('saved');
                                         vm.getView();
                                     });
                                 }
@@ -941,7 +1041,7 @@
                             thWidths.push(thWidth);
                         }
                         vm.listView.data.table.columnsWidth = thWidths;
-                        console.log('entity viewer columnsWidth is', vm.listView.data.table.columnsWidth);
+                        //console.log('entity viewer columnsWidth is', vm.listView.data.table.columnsWidth);
 
                         //console.log("View data is ", vm.listView.data);
 
@@ -949,7 +1049,7 @@
                         vm.listView.data.table = vm.table;
                         vm.listView.data.table.columns = vm.columns;
                         // vm.listView.data.table.columns['cellWidth']
-                        console.log('---------vm.grouping-------', vm.grouping);
+                        //console.log('---------vm.grouping-------', vm.grouping);
                         vm.listView.data.table.grouping = vm.grouping;
                         vm.listView.data.table.folding = vm.folding;
                         vm.listView.data.table.filters = vm.filters;
@@ -970,15 +1070,15 @@
 
                         //vm.additionsStatus[res.results[0].data.tableAdditions.additionsType] = true;
 
-                        console.log('vm.listView', vm.listView);
+                        //console.log('vm.listView', vm.listView);
 
                         if (vm.listView.hasOwnProperty('id')) {
                             uiService.updateListLayout(vm.listView.id, vm.listView).then(function () {
-                                console.log('saved');
+                                //console.log('saved');
                             });
                         } else {
                             uiService.createListLayout(vm.entityType, vm.listView).then(function () {
-                                console.log('saved');
+                                //console.log('saved');
                             });
                         }
                         $mdDialog.show({
@@ -999,6 +1099,8 @@
 
                     // ATTRIBUTE STUFF START
 
+                    vm.isRootEntityViewer = true;
+
                     vm.attrs = [];
                     vm.baseAttrs = [];
                     vm.layoutAttrs = [];
@@ -1009,8 +1111,6 @@
                     vm.entity = [];
                     vm.entityType = $scope.$parent.vm.entityType;
                     vm.isReport = $scope.$parent.vm.isReport || false;
-
-                    console.log('vm.isReport', vm.isReport);
 
                     vm.customButtons = $scope.$parent.vm.entityViewer.extraFeatures;
                     vm.groupTableService = GroupTableService.getInstance();
@@ -1026,10 +1126,6 @@
                     vm.entityAdditions = [];
                     vm.additionsType = '';
                     vm.additionsEntityType = '';
-
-                    vm.entityAdditionsColumns = [];
-                    vm.entityAdditionsFilters = [];
-                    vm.entityAdditionsSorting = [];
 
                     // OTHER STUFF START
 
@@ -1047,6 +1143,7 @@
                         table: false,
                         extraFeatures: []
                     };
+
                     vm.additionsState = false;
                     vm.additionsStatus.extraFeatures = vm.customButtons;
 

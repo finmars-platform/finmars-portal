@@ -23,6 +23,10 @@
         return uiRepository.getListLayout(entity);
     };
 
+    var getListLayoutByKey = function (key) {
+        return uiRepository.getListLayoutByKey(key);
+    };
+
     var getActiveListLayout = function (entity) {
         return uiRepository.getActiveListLayout(entity);
     };
@@ -70,6 +74,7 @@
         createEditLayout: createEditLayout,
         updateEditLayout: updateEditLayout,
         getListLayout: getListLayout,
+        getListLayoutByKey: getListLayoutByKey,
         createListLayout: createListLayout,
         updateListLayout: updateListLayout,
         getEditLayoutByInstanceId: getEditLayoutByInstanceId,
