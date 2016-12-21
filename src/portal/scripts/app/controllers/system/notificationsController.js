@@ -9,7 +9,7 @@
 
 	var notificationsService = require('../../services/notificationsService');
 
-	module.exports = function($scope){
+	module.exports = function($scope, $state, $stateParams){
 
 		logService.controller('NotificationsController', 'initialized');
 
@@ -17,6 +17,15 @@
 
 		vm.itemPerPage = 20;
 		vm.notificationsReady = true;
+
+		if ($stateParams.notificationsListType && $stateParams.notificationsListType.length) {
+			vm.notificationsListType = $stateParams.notificationsListType;
+		}
+		else {
+			vm.notificationsListType = 'all';
+		}
+
+		console.log('notification state', $state, $stateParams);
 
 		vm.changePage = function (page) {
 			vm.notificationsCurrent = page;
@@ -26,24 +35,37 @@
 			vm.notificationsCurrent = vm.notificationsCurrent || 1;
 			vm.notificationsReady = false;
 
-			notificationsService.getList(vm.notificationsCurrent).then(function(data){
+			notificationsService.getList(vm.notificationsCurrent, vm.notificationsListType).then(function(data){
 				vm.notificationsTotal = data.count;
 				vm.notifications = data.results;
+				vm.markNotificationAsReaded(vm.notifications);
 				vm.notificationsReady = true;
 				$scope.$apply();
 			});
 		}
+
 		vm.getNotifications();
 
-		vm.markCurrentNotificationsAsReaded = function (url, data) {
-			notificationsService.markAsReaded(url, data).then(function() {
-				$scope.$apply();
-			})
+		vm.markNotificationAsReaded = function (notificationsList) {
+			notificationsList.map(function(item) {
+				var notificationId = item.id;
+				var notificationsReadedDate = {
+					create_date: item.create_date,
+					read_date: moment(new Date()).format('YYYY-MM-DD[T]HH:mm:ssZZ')
+				};
+				if (item.read_date == null) {
+					console.log('notification marked as readed is', item);
+					// notificationsService.markAsReaded(notificationId, notificationsReadedDate);
+				}
+			});
 		}
 		vm.markAllNotificationsAsReaded	= function () {
-			notificationsService.markAsReaded(data).then(function() {
-				$scope.$apply();
-			})
+			notificationsService.markAllAsReaded();
+		}
+		vm.hideShowReadedNotifications = function (type) {
+			vm.notificationsListType = type;
+			vm.notificationsCurrent = 1;
+			vm.getNotifications();
 		}
 	}
 

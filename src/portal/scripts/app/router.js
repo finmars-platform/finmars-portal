@@ -245,7 +245,10 @@
             .state('app.system.notifications', {
                 url: '/notifications',
                 templateUrl: 'views/system/notifications-view.html',
-                controller: 'NotificationsController as vm'
+                controller: 'NotificationsController as vm',
+                params: {
+                    notificationsListType: 'all'
+                }
             })
             .state('app.system.transactions', {
                 url: '/audit/transactions',
