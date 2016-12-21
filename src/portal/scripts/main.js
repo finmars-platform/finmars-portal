@@ -130,7 +130,7 @@ app.controller('ClassifierSelectDialogController', ['$scope', '$mdDialog', 'data
 app.controller('SaveLayoutDialogController', ['$scope', '$mdDialog', require('./app/controllers/dialogs/saveLayoutDialogController')]);
 
 app.controller('AuditController', ['$scope', require('./app/controllers/system/auditController')]);
-app.controller('NotificationsController', ['$scope', require('./app/controllers/system/notificationsController')]);
+app.controller('NotificationsController', ['$scope','$state', '$stateParams', require('./app/controllers/system/notificationsController')]);
 app.controller('HeaderNotificationsDialogController', ['$scope', '$mdDialog', require('./app/controllers/dialogs/HeaderNotificationsDialogController')]);
 
 app.controller('SettingsGeneralController', ['$scope', '$state', require('./app/controllers/settings/settingsGeneralController')]);

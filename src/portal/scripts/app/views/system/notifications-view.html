@@ -36,6 +36,11 @@
 			</div>
 		</div>
 	</div>
+	<div layout="row">
+		<md-button class="md-raised" data-ng-click="vm.markAllNotificationsAsReaded()">Mark all as readed</md-button>
+		<md-button data-ng-if="vm.notificationsListType == 'all'" class="md-raised" data-ng-click="vm.hideShowReadedNotifications('unreaded')">Hide readed</md-button>
+		<md-button data-ng-if="vm.notificationsListType == 'unreaded'" class="md-raised" data-ng-click="vm.hideShowReadedNotifications('all')">Show readed</md-button>
+	</div>
 	<div data-ng-if="!vm.notifications.length && !vm.notificationsReady">
 		<div layout="row" layout-sm="column" layout-align="space-around">
 			<md-progress-circular md-mode="indeterminate"></md-progress-circular>

@@ -32,7 +32,7 @@
                     <!--<md-button data-ui-sref="app.system.notifications" aria-label="Notifications">-->
                     <!--<ng-md-icon icon="mail_outline"></ng-md-icon>-->
                     <!--</md-button>-->
-                    <md-button data-ui-sref="app.system.notifications" aria-label="Notifications">
+                    <md-button data-ui-sref="app.system.notifications({notificationsListType: 'unreaded'})" aria-label="Notifications">
                         <ng-md-icon icon="flag"></ng-md-icon>
                         <span data-ng-bind="vm.unreadedNotificationsAmount"></span>
                     </md-button>

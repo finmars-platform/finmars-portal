@@ -153,7 +153,7 @@
 		}
 
 		vm.unreadedNotificationsAmount;
-		notificationsService.getList(1).then(function (data) {
+		notificationsService.getList(1, 'unreaded').then(function (data) {
 			vm.unreadedNotificationsAmount = data.count;
 			$scope.$apply(); 
 		});
