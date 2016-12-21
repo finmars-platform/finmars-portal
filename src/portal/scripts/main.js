@@ -68,6 +68,7 @@ app.controller('EntityViewerController', ['$scope', '$mdDialog', require('./app/
 app.controller('EntityViewerAddDialogController', ['$scope', '$mdDialog', 'parentScope', '$state', require('./app/controllers/entityViewer/entityViewerAddDialogController')]);
 app.controller('EntityViewerEditDialogController', ['$scope', '$mdDialog', 'parentScope', 'entityId', '$state', require('./app/controllers/entityViewer/entityViewerEditDialogController')]);
 app.controller('EntityViewerDeleteDialogController', ['$scope', '$mdDialog', 'entity', 'entityType', require('./app/controllers/entityViewer/entityViewerDeleteDialogController')]);
+app.controller('ReportWizardController', ['$scope', require('./app/controllers/entityViewer/onBeforeLoadActions/reportWizardController')]);
 
 app.controller('EntityEditorController', ['$scope', '$state', require('./app/controllers/entityEditorController')]);
 
@@ -186,8 +187,6 @@ app.controller('GReportSettingsDialogController', ['$scope', '$mdDialog', 'repor
 app.controller('gModalController', ['$scope', '$mdDialog', 'parentScope', 'callback', require('./app/directives/groupTable/gModalComponent')]);
 
 // GROUP TABLE END
-
-
 
 
 app.directive('evFieldResolver', [require('./app/directives/entityViewerFieldResolverDirective')]);

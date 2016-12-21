@@ -11,15 +11,6 @@
         return {
             restrict: 'AE',
             scope: {
-                //entityType: '=',
-                //filters: '=',
-                //columns: '=',
-                //sorting: '=',
-                //isReport: '=',
-                //folding: '=',
-                //grouping: '=',
-                //externalCallback: '&'
-
                 options: '='
             },
             templateUrl: 'views/directives/groupTable/grouping-view.html',
@@ -58,7 +49,7 @@
                         scope.sorting.group.key = group.key;
                         scope.sorting.group.sort = sort;
                     }
-                    scope.externalCallback();
+                    scope.externalCallback({silent: true, options: {grouping: scope.grouping}});
                 };
 
                 scope.openGroupSettings = function ($mdOpenMenu, ev) {
@@ -84,7 +75,7 @@
                     }
 
                     setTimeout(function () {
-                        scope.externalCallback({test: 'GROUPING'});
+                        scope.externalCallback({silent: true, options: {grouping: scope.grouping}});
                         scope.$apply();
                     }, 0)
                 });
@@ -92,7 +83,7 @@
                 scope.toggleGroupFold = function () {
                     scope.folding = !scope.folding;
                     setTimeout(function () {
-                        scope.externalCallback();
+                        scope.externalCallback({silent: true, options: {grouping: scope.grouping}});
                         scope.$apply();
                     }, 0)
                 };
@@ -122,7 +113,7 @@
                     }
                     //console.log('grouping after', scope.grouping);
                     setTimeout(function () {
-                        scope.externalCallback();
+                        scope.externalCallback({silent: true, options: {grouping: scope.grouping}});
                     }, 0)
                 };
 
@@ -175,7 +166,7 @@
                     }
 
 
-                    scope.externalCallback();
+                    scope.externalCallback({silent: true, options: {grouping: scope.grouping}});
                 };
 
                 scope.isReportGroupHaveExtSettings = function (group, $index, subtotalType) {

@@ -16,11 +16,6 @@
         return {
             restrict: 'AE',
             scope: {
-                //filters: '=',
-                //entityType: '=',
-                //isReport: '=',
-                //reportOptions: '=',
-                //externalCallback: '&'
                 options: '='
             },
             templateUrl: 'views/directives/groupTable/sidebar-filter-view.html',
@@ -91,7 +86,7 @@
                 scope.calculateReport = function () {
                     console.log('calculate report');
                     scope.reportOptions["task_id"] = undefined;
-                    scope.externalCallback();
+                    scope.externalCallback({silent: true, options: {filters: scope.filters}});
                 };
 
                 scope.resizeFilterSideNav = function (actionType) {
@@ -155,32 +150,32 @@
                 };
 
                 scope.toggleFilterState = function () {
-                    scope.externalCallback();
+                    scope.externalCallback({silent: true, options: {filters: scope.filters}});
                 };
 
                 scope.filterChange = function (filter) {
-                    scope.externalCallback();
+                    scope.externalCallback({silent: true, options: {filters: scope.filters}});
                 };
 
                 scope.selectAll = function () {
                     scope.filters.forEach(function (item) {
                         item.options.enabled = true;
                     });
-                    scope.externalCallback();
+                    scope.externalCallback({silent: true, options: {filters: scope.filters}});
                 };
 
                 scope.clearAll = function () {
                     scope.filters.forEach(function (item) {
                         item.options.query = '';
                     });
-                    scope.externalCallback();
+                    scope.externalCallback({silent: true, options: {filters: scope.filters}});
                 };
 
                 scope.deselectAll = function () {
                     scope.filters.forEach(function (item) {
                         item.options.enabled = false;
                     });
-                    scope.externalCallback();
+                    scope.externalCallback({silent: true, options: {filters: scope.filters}});
                 };
 
                 scope.removeFilter = function (filter) {
@@ -197,8 +192,8 @@
                         return !!item;
                     });
 
-                    scope.externalCallback();
-                }
+                    scope.externalCallback({silent: true, options: {filters: scope.filters}});
+                };
 
                 scope.getFilterType = function (filterType) {
                     switch (filterType) {

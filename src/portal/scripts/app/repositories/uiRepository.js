@@ -83,6 +83,21 @@
         })
     };
 
+    var getListLayoutByKey = function (uiLayoutId) {
+        return window.fetch(baseUrl + 'ui/list-layout/' + uiLayoutId + '/',
+            {
+                method: 'GET',
+                credentials: 'include',
+                headers: {
+                    'X-CSRFToken': cookieService.getCookie('csrftoken'),
+                    Accept: 'application/json',
+                    'Content-type': 'application/json'
+                }
+            }).then(function (data) {
+            return data.json();
+        })
+    };
+
     var getActiveListLayout = function (entity) {
 
         var contentType = metaContentTypesService.findContentTypeByEntity(entity, 'ui');
@@ -299,6 +314,7 @@
         updateEditLayout: updateEditLayout,
 
         getListLayout: getListLayout,
+        getListLayoutByKey: getListLayoutByKey,
         createListLayout: createListLayout,
         updateListLayout: updateListLayout,
         deleteListLayoutByKey: deleteListLayoutByKey,
