@@ -16,19 +16,6 @@
         return {
             restrict: 'AE',
             scope: {
-                //items: '=',
-                //grouping: '=',
-                //externalCallback: '&',
-                //columns: '=',
-                //itemAdditionsEditorEntityId: '=',
-                //isAllSelected: '=',
-                //entityType: '=',
-                //isReport: '=',
-                //reportIsReady: '=',
-                //
-                //paginationItemPerPage: '=',
-                //paginationItemsTotal: '=',
-                //paginationPageCurrent: '='
                 options: '=',
                 items: '='
             },
@@ -635,7 +622,7 @@
                     if (scope.readyStatus.cellsFirstReady == true &&
                         scope.readyStatus.cellsSecondReady == true &&
                         scope.readyStatus.classifiersReady == true &&
-                        //scope.reportIsReady == true &&
+                            //scope.reportIsReady == true &&
                         scope.options.reportIsReady == true &&
                         scope.readyStatus.attributeTypesReady == true) {
 
@@ -916,7 +903,7 @@
 
                 scope.rowCallback = function (item, ev) {
                     //console.log('open additions!', item);
-                    scope.itemAdditionsEditorEntityId = item.id;
+                    scope.options.editorEntityId = item.id;
                     var itemHasSimpleSelect = false;
                     if (item.simpleSelect) {
                         itemHasSimpleSelect = JSON.parse(JSON.stringify(item.simpleSelect));
@@ -939,8 +926,10 @@
 
                     if (itemHasSimpleSelect == true) {
                         item.simpleSelect = false;
-                        scope.itemAdditionsEditorEntityId = undefined;
+                        scope.options.editorEntityId = undefined;
                     }
+
+                    scope.externalCallback({silent: true, redraw: false, options: {editorEntityId: scope.options.editorEntityId}});
 
                     //if (localStorage.getItem('entityIsChanged') === "true") { // wow such shitcode
                     //    $mdDialog.show({

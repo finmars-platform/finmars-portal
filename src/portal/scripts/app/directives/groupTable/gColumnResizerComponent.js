@@ -13,7 +13,6 @@
             restrict: 'A',
             scope: {
                 items: '=',
-                //columnsWidth: '='
                 options: '='
             },
             link: function (scope, elem, attr) {
