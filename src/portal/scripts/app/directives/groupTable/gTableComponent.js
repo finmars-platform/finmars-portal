@@ -38,6 +38,17 @@
 
                 };
 
+                if (scope.options.isRootEntityViewer == true) {
+
+                    scope.$watch('options.editorEntityId', function (event, data) {
+
+                        scope.$broadcast('rootEditorEntityIdDown', {
+                            editorEntityId: scope.options.editorEntityId,
+                            entityType: scope.options.entityType
+                        });
+                    });
+                }
+
                 scope.checkAdditions = function () {
                     if (scope.options.additionsState == true && scope.options.isRootEntityViewer == true) {
                         return true;

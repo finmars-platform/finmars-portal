@@ -46,7 +46,8 @@
 
                 <div layout="column" style="margin-top: 16px;">
 
-                    <md-button data-ng-click="openReportSettings($event)" class="md-primary md-raised">Settings</md-button>
+                    <md-button data-ng-click="openReportSettings($event)" class="md-primary md-raised">Settings
+                    </md-button>
 
                     <md-button data-ng-click="calculateReport()" class="md-raised">Calculate</md-button>
 
@@ -145,7 +146,7 @@
                 </div>
             </md-input-container>
             <div class="settings-btn" flex="20">
-                <md-menu>
+                <md-menu data-ng-if="options.isRootEntityViewer">
                     <md-button aria-label="Open phone interactions menu" class="md-icon-button"
                                ng-click="openFilterSettings($mdOpenMenu, $event)">
                         <ng-md-icon icon="settings"></ng-md-icon>
@@ -155,6 +156,27 @@
                             <md-button ng-click="removeFilter(filter)" class="g-settings-option-btn">
                                 <ng-md-icon icon="visibility_off"></ng-md-icon>
                                 <span>Remove</span>
+                            </md-button>
+                        </md-menu-item>
+                    </md-menu-content>
+                </md-menu>
+                <md-menu data-ng-if="!options.isRootEntityViewer">
+                    <md-button aria-label="Open phone interactions menu" class="md-icon-button"
+                               ng-click="openFilterSettings($mdOpenMenu, $event)">
+                        <ng-md-icon icon="settings"></ng-md-icon>
+                    </md-button>
+                    <md-menu-content width="3">
+                        <md-menu-item>
+                            <md-button ng-click="removeFilter(filter)" class="g-settings-option-btn">
+                                <ng-md-icon icon="visibility_off"></ng-md-icon>
+                                <span>Remove</span>
+                            </md-button>
+                        </md-menu-item>
+                        <md-menu-item>
+                            <md-button ng-click="useFromAbove(filter)" class="g-settings-option-btn">
+                                <ng-md-icon icon="done" data-ng-show="filter.options.useFromAbove"></ng-md-icon>
+                                <ng-md-icon icon="done" style="visibility: hidden;" data-ng-show="!filter.options.useFromAbove"></ng-md-icon>
+                                <span>Use from above</span>
                             </md-button>
                         </md-menu-item>
                     </md-menu-content>

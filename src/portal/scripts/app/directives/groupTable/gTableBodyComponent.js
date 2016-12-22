@@ -929,7 +929,11 @@
                         scope.options.editorEntityId = undefined;
                     }
 
-                    scope.externalCallback({silent: true, redraw: false, options: {editorEntityId: scope.options.editorEntityId}});
+                    scope.externalCallback({
+                        silent: true,
+                        redraw: false,
+                        options: {editorEntityId: scope.options.editorEntityId}
+                    });
 
                     //if (localStorage.getItem('entityIsChanged') === "true") { // wow such shitcode
                     //    $mdDialog.show({
