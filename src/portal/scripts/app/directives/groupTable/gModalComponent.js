@@ -211,21 +211,21 @@
             if (vm.tabAttrsReady) {
                 columns = parentScope.options.columns;
                 syncAttrs();
-                callback();
+                callback({silent: true});
             }
         });
         parentScope.$watch('options.filters', function () {
             if (vm.tabAttrsReady) {
                 filters = parentScope.options.filters;
                 syncAttrs();
-                callback();
+                callback({silent: true});
             }
         });
         parentScope.$watch('options.grouping', function () {
             if (vm.tabAttrsReady) {
                 grouping = parentScope.options.grouping;
                 syncAttrs();
-                callback();
+                callback({silent: true});
             }
         });
 
@@ -377,7 +377,7 @@
 
         vm.updateAttrs = function () {
             updateAttrs();
-            callback();
+            callback({silent: true});
         };
 
         vm.cancel = function () {
@@ -444,7 +444,7 @@
                                 }
                             }
                             syncAttrs();
-                            callback();
+                            callback({silent: true});
                         }
                         if (target === document.querySelector('#groupsbag')) {
 
@@ -454,7 +454,7 @@
                                 }
                             }
                             syncAttrs();
-                            callback();
+                            callback({silent: true});
                         }
                         if (target === document.querySelector('#filtersbag .drop-new-filter')) {
 
@@ -464,7 +464,7 @@
                                 }
                             }
                             syncAttrs();
-                            callback();
+                            callback({silent: true});
                         }
                         $scope.$apply();
                     }
