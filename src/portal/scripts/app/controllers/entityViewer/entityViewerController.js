@@ -652,7 +652,7 @@
 
                     } else {
                         if (_params.silent == true) {
-                            reportHandler(vm.originalData);
+                            handler(vm.originalData);
                         } else {
                             entityViewerDataResolver.getList(vm.entityType, options).then(function (data) {
                                 handler(data);
