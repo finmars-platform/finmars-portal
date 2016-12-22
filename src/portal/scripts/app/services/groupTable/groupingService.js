@@ -537,7 +537,7 @@
 
         recursiveWalker(items, groups, entityType, level, options);
 
-        console.log('results', results);
+        //console.log('results', results);
 
         return results;
     }
@@ -866,9 +866,9 @@
             findPreInitGroup();
             findLinesGroup();
 
-            console.log('preInitGroups', preInitGroups);
-            console.log('bootsGroup', bootsGroup);
-            console.log('linesGroup', linesGroup);
+            //console.log('preInitGroups', preInitGroups);
+            //console.log('bootsGroup', bootsGroup);
+            //console.log('linesGroup', linesGroup);
 
             var groups = {};
 

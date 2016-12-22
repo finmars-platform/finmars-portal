@@ -28,14 +28,14 @@
             var vm = this;
 
             vm.readyStatus = {content: false};
-            vm.entityType = $scope.$parent.entityType;
+            vm.entityType = $scope.$parent.options.entityType;
             vm.entity = {attributes: []};
             vm.entityId = '';
             vm.evAction = 'update';
 
             vm.readyStatus.entityId = false;
 
-            $scope.$parent.$watch('itemId', function (newItemId) {
+            $scope.$parent.$watch('options.editorEntityId', function (newItemId) {
                 vm.readyStatus.entityId = false;
                 setTimeout(function () {
                     vm.entityId = newItemId;
@@ -48,7 +48,7 @@
 
             });
 
-            vm.cancel = function() {
+            vm.cancel = function () {
                 var entityId = vm.entityId;
                 vm.entityId = undefined;
                 vm.readyStatus.entityId = false;

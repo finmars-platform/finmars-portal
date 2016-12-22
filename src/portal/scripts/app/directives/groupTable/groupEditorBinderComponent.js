@@ -1,20 +1,19 @@
 /**
  * Created by szhitenev on 30.06.2016.
  */
-(function(){
+(function () {
 
     'use strict';
 
-    module.exports = function($templateCache, $compile) {
+    module.exports = function ($templateCache, $compile) {
         return {
             scope: {
-                itemId: '=',
-                template: '=',
-                entityType: '='
+                options: '='
             },
             restrict: 'AE',
-            link: function(scope, elem, attrs){
-                var tpl = $templateCache.get(scope.template);
+            link: function (scope, elem, attrs) {
+
+                var tpl = $templateCache.get(scope.options.editorTemplate);
                 var ctrl = $compile(tpl)(scope);
                 $(elem).append(ctrl);
             }
