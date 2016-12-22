@@ -116,6 +116,9 @@
             case 'transaction':
                 return transactionService.getList(options);
                 break;
+            case 'complex-transaction':
+                return complexTransactionService.getList(options);
+                break;
             case 'transaction-type':
                 return transactionTypeService.getList(options);
                 break;
