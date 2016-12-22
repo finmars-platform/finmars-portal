@@ -11,115 +11,107 @@
     var columnsService = require('./columnsService');
     var foldingService = require('./foldingService');
 
-    var GroupTableService = (function () {
+    var columnsServiceExt = {
+        setColumns: function (columns) {
+            //console.log('setColumns', this.items);
+            this.items = columnsService.setColumns(this.items, columns)
+        }
+    };
 
-        var items = [];
-        var itemsAdditions = [];
+    var groupingServiceExt = {
+        setGroups: function (groups, entityType) {
+            this.items = groupingService.setGroups(this.items, groups, entityType);
+        },
+        setGroupsWithColumns: function (groups, columns, entityType) {
+            this.items = groupingService.setGroupsWithColumns(this.items, groups, columns, entityType);
+        }
+    };
 
-        var columnsServiceExt = {
-            setColumns: function (columns) {
-                //console.log('setColumns', items);
-                items = columnsService.setColumns(items, columns)
+    var foldingServiceExt = {
+        setFolds: function (folding) {
+            this.items = foldingService.setFolds(this.items, folding);
+        }
+    };
+
+    var filteringServiceExt = {
+        setFilters: function (filters) {
+            this.items = filteringService.setFilters(this.items, filters);
+        }
+    };
+
+    var sortingServiceExt = {
+        group: {
+            sort: function (sort) {
+                this.items = sortingService.group.sort(this.items, sort);
             }
-        };
-
-        var groupingServiceExt = {
-            setGroups: function (groups, entityType) {
-                items = groupingService.setGroups(items, groups, entityType);
-            },
-            setGroupsWithColumns: function (groups, columns, entityType) {
-                items = groupingService.setGroupsWithColumns(items, groups, columns, entityType);
-            }
-        };
-
-        var foldingServiceExt = {
-            setFolds: function (folding) {
-                items = foldingService.setFolds(items, folding);
-            }
-        };
-
-        var filteringServiceExt = {
-            setFilters: function (filters) {
-                items = filteringService.setFilters(items, filters);
-            }
-        };
-
-        var sortingServiceExt = {
-            group: {
-                sort: function (sort) {
-                    items = sortingService.group.sort(items, sort);
-                }
-            },
-            column: {
-                sort: function (sort) {
-                    itemsAdditions = sortingService.column.sort(items, sort);
-                }
-            }
-        };
-
-        // ADDITIONS
-
-        var columnsAdditionsServiceExt = {
-            setColumns: function (columns) {
-                //console.log('setColumns', items);
-                itemsAdditions = columnsService.setColumns(itemsAdditions, columns)
-            }
-        };
-
-        var filteringAdditionsServiceExt = {
-            setFilters: function (filters) {
-                itemsAdditions = filteringService.setFilters(itemsAdditions, filters);
-            }
-        };
-
-        var sortingAdditionsServiceExt = {
-            column: {
-                sort: function (sort) {
-                    itemsAdditions = sortingService.column.additions.sort(itemsAdditions, sort);
-                }
-            }
-        };
-
-
-        function GroupTableService() {
-            //console.log('instance created');
-            this.setItems = function (itemsSource) {
-                items = itemsSource;
-            };
-            this.extractDynamicAttributes = groupingService.extractDynamicAttributes;
-            this.columns = columnsServiceExt;
-            this.grouping = groupingServiceExt;
-            this.filtering = filteringServiceExt;
-            this.folding = foldingServiceExt;
-            this.sorting = sortingServiceExt;
-            this.projection = function () {
-                return items;
-            };
-            this.additions = {
-                setItems: function (itemsAdditionsSource) {
-                    itemsAdditions = itemsAdditionsSource;
-                },
-                columns: columnsAdditionsServiceExt,
-                filtering: filteringAdditionsServiceExt,
-                sorting: sortingAdditionsServiceExt,
-                projection: function () {
-                    return itemsAdditions;
-                }
+        },
+        column: {
+            sort: function (sort) {
+                this.items = sortingService.column.sort(this.items, sort);
             }
         }
+    };
 
-        var instance;
 
-        GroupTableService.getInstance = function () {
-            if (!instance) {
-                instance = new GroupTableService();
+    // THAT IS AWFUL! // TODO make refactor someday
+
+    function GroupTableService() {
+        //console.log('instance created');
+        var _this = this;
+        this.setItems = function (itemsSource) {
+            this.items = itemsSource;
+        };
+        this.extractDynamicAttributes = groupingService.extractDynamicAttributes;
+        this.columns = {
+            setColumns: function (columns) {
+                //console.log('setColumns', this.items);
+                _this.items = columnsService.setColumns(_this.items, columns)
             }
-            return instance
+        };
+        this.grouping = {
+            setGroups: function (groups, entityType) {
+                console.log('this', _this);
+                _this.items = groupingService.setGroups(_this.items, groups, entityType);
+            },
+            setGroupsWithColumns: function (groups, columns, entityType) {
+                _this.items = groupingService.setGroupsWithColumns(_this.items, groups, columns, entityType);
+            }
+        };
+        this.filtering = {
+            setFilters: function (filters) {
+                _this.items = filteringService.setFilters(_this.items, filters);
+            }
+        };
+        this.folding = {
+            setFolds: function (folding) {
+                _this.items = foldingService.setFolds(_this.items, folding);
+            }
+        };
+        this.sorting = {
+            group: {
+                sort: function (sort) {
+                    _this.items = sortingService.group.sort(_this.items, sort);
+                }
+            },
+            column: {
+                sort: function (sort) {
+                    _this.items = sortingService.column.sort(_this.items, sort);
+                }
+            }
+        };
+        this.projection = function () {
+            return this.items;
         };
 
-        return GroupTableService;
-    }());
+    }
 
-    module.exports = GroupTableService
+
+    var getInstance = function (recreate) {
+        return new GroupTableService();
+    };
+
+    module.exports = {
+        getInstance: getInstance
+    }
 
 }());
