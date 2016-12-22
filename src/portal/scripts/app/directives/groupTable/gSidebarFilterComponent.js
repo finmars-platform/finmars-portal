@@ -178,6 +178,39 @@
                     scope.externalCallback({silent: true, options: {filters: scope.filters}});
                 };
 
+
+                if (scope.options.isRootEntityViewer == false) {
+
+                    scope.$on('rootEditorEntityIdDown', function (event, data) {
+
+                        scope.filters.forEach(function (item) {
+                            console.log('item', item);
+                            if (item.hasOwnProperty('options') && item.options.useFromAbove == true) {
+
+                                if (item.key == data.entityType) {
+                                    item.options.query = [data.editorEntityId]
+                                }
+
+                            }
+
+                        });
+
+                        scope.externalCallback({silent: true, options: {filters: scope.filters}});
+
+                    });
+                }
+
+                scope.useFromAbove = function (filter) {
+
+                    if (!filter.hasOwnProperty('options')) {
+                        filter.options = {};
+                    }
+
+                    filter.options.useFromAbove = !filter.options.useFromAbove;
+
+                    scope.externalCallback({silent: true, options: {filters: scope.filters}});
+                };
+
                 scope.removeFilter = function (filter) {
                     console.log('filter to remove is ', filter);
                     scope.filters = scope.filters.map(function (item) {
@@ -194,6 +227,7 @@
 
                     scope.externalCallback({silent: true, options: {filters: scope.filters}});
                 };
+
 
                 scope.getFilterType = function (filterType) {
                     switch (filterType) {
