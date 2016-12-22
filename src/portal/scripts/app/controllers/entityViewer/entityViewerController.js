@@ -332,6 +332,18 @@
             }; // TODO refactor, move to service
 
 
+            vm.getProjection = function () {
+
+
+                //console.log('vm.entity---------' + vm.options.isRootEntityViewer + '------------------------', JSON.parse(JSON.stringify(vm.entity)));
+                //console.log('vm.entity---------' + vm.options.isRootEntityViewer + '------------------------', JSON.parse(JSON.stringify(vm.groupTableService.projection())));
+                //console.log('-----------------------------------------------------------------------------');
+
+
+                var x;
+                return vm.groupTableService.projection();
+            };
+
             vm.originalData = [];
 
             vm.updateTable = function (params) {
@@ -461,17 +473,17 @@
 
                         entityViewerHelperService.transformItems(filteredData, vm.attrs).then(function (data) {
 
-                            vm.entity = data;
+                            var entity = data;
 
                             //console.log('vm.entityItems', vm.entity);
 
                             vm.reportIsReady = true;
 
                             if (vm.entityType == 'balance-report') {
-                                vm.entity = reportSubtotalService.groupByAndCalc(vm.entity, vm.reportOptions);
+                                entity = reportSubtotalService.groupByAndCalc(entity, vm.reportOptions);
                             }
 
-                            vm.groupTableService.setItems(vm.entity);
+                            vm.groupTableService.setItems(entity);
 
                             vm.groupTableService.columns.setColumns(vm.columns);
                             //vm.groupTableService.filtering.setFilters(vm.filters);
@@ -501,8 +513,8 @@
 
                     entityViewerHelperService.transformItems(data.results, vm.attrs).then(function (data) {
 
-                        vm.entity = data;
-                        vm.entity = vm.entity.map(function (item) {
+                        var entity = data;
+                        entity = entity.map(function (item) {
                             item.date_formatted = moment(new Date(item.created)).format('DD/MM/YYYY');
 
                             if (vm.entityType == 'audit-transaction' || vm.entityType == 'audit-instrument') {
@@ -510,8 +522,9 @@
                             }
                             return item;
                         });
+
                         //console.log('audit transaction data is', vm.entity);
-                        vm.groupTableService.setItems(vm.entity);
+                        vm.groupTableService.setItems(entity);
 
                         vm.groupTableService.columns.setColumns(vm.columns);
                         //vm.groupTableService.filtering.setFilters(vm.filters);
@@ -742,6 +755,9 @@
             };
 
             vm.getReport = function () {
+
+                console.log('getReport, vm', vm);
+
                 pricingPolicyService.getList().then(function (data) {
 
                     vm.reportOptions = {
@@ -754,11 +770,13 @@
                     vm.getView().then(function () {
                         vm.getAttributes().then(function () {
                             vm.transformViewAttributes();
+                            debugger;
                             vm.updateTable();
                         });
                     });
 
                 })
+
             };
 
             vm.checkOnBeforeLoadAction = function () {
@@ -809,14 +827,13 @@
 
                         // ENTITY STUFF START
 
-                        vm.entity = [];
                         //vm.entityType = $scope.$parent.vm.entityType;
                         //vm.isReport = $scope.$parent.vm.isReport || false;
 
                         //console.log('vm.isReport', vm.isReport);
 
                         //vm.customButtons = $scope.$parent.vm.entityViewer.extraFeatures;
-                        vm.groupTableService = GroupTableService.getInstance();
+                        vm.groupTableService = GroupTableService.getInstance(true, 'child');
 
                         vm.columns = [];
                         vm.columnsWidth = [];
@@ -1068,13 +1085,11 @@
                         vm.entityAttrs = [];
 
                         // ENTITY STUFF START
-
-                        vm.entity = [];
                         vm.entityType = $scope.$parent.vm.entityType;
                         vm.isReport = $scope.$parent.vm.isReport || false;
 
                         vm.customButtons = $scope.$parent.vm.entityViewer.extraFeatures;
-                        vm.groupTableService = GroupTableService.getInstance();
+                        vm.groupTableService = GroupTableService.getInstance(true, 'root');
 
                         vm.columns = [];
                         vm.columnsWidth = [];
