@@ -54,8 +54,8 @@
 					read_date: moment(new Date()).format('YYYY-MM-DD[T]HH:mm:ssZZ')
 				};
 				if (item.read_date == null) {
-					console.log('notification marked as readed is', item);
-					// notificationsService.markAsReaded(notificationId, notificationsReadedDate);
+					// console.log('notification marked as readed is', item);
+					notificationsService.markAsReaded(notificationId, notificationsReadedDate);
 				}
 			});
 		}
