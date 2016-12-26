@@ -304,7 +304,7 @@
 
             // if item have top-line group subtotal start,
 
-            if (item.groups.length) {
+            if (item.hasOwnProperty('groups') && item.groups.length) {
                 if (item.groups[0].report_settings && item.groups[0].report_settings.subtotal_type == 'line' && level !== 0) {
 
                     cellCaptions = findCellCaptions(item, level, 'subtotal', {reportSettingsType: 'line'});
@@ -395,21 +395,23 @@
 
                 } else {
 
-                    item.items.forEach(function (rowItem, $itemIndex) {
+                    if (item.hasOwnProperty('items') && item.items.length) {
+                        item.items.forEach(function (rowItem, $itemIndex) {
 
-                        var cellCaptions = findCellCaptions(item, level, 'normal', {itemIndex: $itemIndex});
+                            var cellCaptions = findCellCaptions(item, level, 'normal', {itemIndex: $itemIndex});
 
-                        var obj = {
-                            cellsCaptions: cellCaptions,
-                            value: rowItem,
-                            value_options: {
-                                level: level
-                            }
-                        };
+                            var obj = {
+                                cellsCaptions: cellCaptions,
+                                value: rowItem,
+                                value_options: {
+                                    level: level
+                                }
+                            };
 
-                        resultItems.push(new Row(obj));
+                            resultItems.push(new Row(obj));
 
-                    });
+                        });
+                    }
                 }
             }
 
@@ -417,7 +419,7 @@
 
             //console.log('-------------------------------------------------------', item.groups[0]);
 
-            if (item.groups.length) {
+            if (item.hasOwnProperty('groups') && item.groups.length) {
                 if (item.groups[0].report_settings && item.groups[0].report_settings.subtotal_type == 'area' && level !== 0) {
 
                     cellCaptions = findCellCaptions(item, level, 'subtotal', {reportSettingsType: 'area'});

@@ -25,13 +25,18 @@
         return complexTransactionRepository.deleteByKey(id);
     };
 
+    var bookComplexTransaction = function(id, transaction) {
+        return complexTransactionRepository.bookComplexTransaction(id, transaction);
+    };
+
 
     module.exports = {
         getList: getList,
         getByKey: getByKey,
         create: create,
         update: update,
-        deleteByKey: deleteByKey
+        deleteByKey: deleteByKey,
+        bookComplexTransaction: bookComplexTransaction
     }
 
 

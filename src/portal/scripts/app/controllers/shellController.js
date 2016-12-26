@@ -109,6 +109,15 @@
 				case 'app.reports.pnl-report':
 					return "P&L REPORT";
 					break;
+				case 'app.reports.transaction-report':
+					return "TRANSACTION REPORT";
+					break;
+				case 'app.reports.cash-flow-projection-report':
+					return "CASH FLOW PROJECTION REPORT";
+					break;
+				case 'app.reports.performance-report':
+					return "PERFORMANCE REPORT";
+					break;
 				case 'app.settings.users-groups':
 					vm.currentLocationShowBtns = false;
 					return 'USERS & GROUPS';

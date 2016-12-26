@@ -1,6 +1,6 @@
-<div data-ng-controller="EntityViewerController as vm">
-    <div data-ng-if="vm.checkOnBeforeLoadAction()">
-        <div data-ng-include="vm.onBeforeLoadAction"></div>
+<div data-ng-controller="EntityViewerController as vm" class="entity-viewer-holder">
+    <div data-ng-if="vm.checkOnBeforeLoadAction()" class="min-height">
+        <div data-ng-include="vm.onBeforeLoadAction" class="min-height"></div>
     </div>
     <div data-ng-if="!vm.checkOnBeforeLoadAction()">
         <div data-ng-if="!vm.isReport">
@@ -45,6 +45,11 @@
         </div>
         <div data-ng-if="vm.checkReadyStatus()" class="g-group-table-holder">
             <group-table items="vm.getProjection()" options="vm.options"></group-table>
+        </div>
+        <div data-ng-if="!vm.checkReadyStatus()">
+            <div class="e-data-loader" layout="row" layout-sm="column" layout-align="space-around">
+                <md-progress-circular md-diameter="100" md-mode="indeterminate"></md-progress-circular>
+            </div>
         </div>
     </div>
 </div>

@@ -48,6 +48,7 @@
         logService.property('entityId', vm.entityId);
 
         vm.getEditListByInstanceId = function () {
+
             console.log('vm.editLayoutEntityInstanceId', vm.editLayoutEntityInstanceId);
 
             uiService.getEditLayoutByInstanceId(vm.entityType, vm.editLayoutEntityInstanceId).then(function (data) {
@@ -79,6 +80,10 @@
         };
 
         if (vm.entityType !== 'transaction-type') {
+
+            console.log('1231321321 editLayoutEntityInstanceId?', vm.editLayoutEntityInstanceId);
+            console.log('1231321321 editLayoutByEntityInsance?', vm.editLayoutByEntityInsance);
+
             if (vm.editLayoutByEntityInsance == true) {
                 if (vm.editLayoutEntityInstanceId) {
                     vm.getEditListByInstanceId();
@@ -95,6 +100,8 @@
                 });
             }
         }
+
+        logService.collection('vm.tabs', vm.tabs);
 
         vm.attrs = [];
         vm.baseAttrs = [];
@@ -119,6 +126,7 @@
                     if (vm.entityType == 'complex-transaction') {
                         vm.complexTransactionOptions.transactionType = data.transaction_type;
                         vm.editLayoutEntityInstanceId = data.transaction_type;
+                        vm.getEditListByInstanceId();
                         vm.entity = data;
                         vm.specialRulesReady = true;
                         vm.readyStatus.entity = true;
@@ -143,7 +151,7 @@
                             vm.entity = data[0];
                             vm.entity.$_isValid = true;
                             vm.readyStatus.entity = true;
-                            console.log('1231231231312?');
+
                             vm.loadPermissions();
                         });
                     }
@@ -340,7 +348,7 @@
                         }
                     }
 
-                    console.log('vm.userInputs', vm.userInputs);
+                    //console.log('vm.userInputs', vm.userInputs);
                     for (u = 0; u < vm.userInputs.length; u = u + 1) {
                         if (field.name === vm.userInputs[u].name) {
                             vm.userInputs[u].options = field.options;
@@ -540,43 +548,47 @@
                 vm.entity["user_object_permissions"] = [];
             }
 
-            vm.members.forEach(function (member) {
+            if (vm.members) {
+                vm.members.forEach(function (member) {
 
-                if (member.objectPermissions && member.objectPermissions.manage == true) {
-                    vm.entity["user_object_permissions"].push({
-                        "member": member.id,
-                        "permission": "manage_" + vm.entityType //TODO remove _vm.entityType
-                    })
-                }
+                    if (member.objectPermissions && member.objectPermissions.manage == true) {
+                        vm.entity["user_object_permissions"].push({
+                            "member": member.id,
+                            "permission": "manage_" + vm.entityType //TODO remove _vm.entityType
+                        })
+                    }
 
-                if (member.objectPermissions && member.objectPermissions.change == true) {
-                    vm.entity["user_object_permissions"].push({
-                        "member": member.id,
-                        "permission": "change_" + vm.entityType //TODO remove _vm.entityType
-                    })
-                }
+                    if (member.objectPermissions && member.objectPermissions.change == true) {
+                        vm.entity["user_object_permissions"].push({
+                            "member": member.id,
+                            "permission": "change_" + vm.entityType //TODO remove _vm.entityType
+                        })
+                    }
 
-            });
+                });
+            }
 
             vm.entity["group_object_permissions"] = [];
 
-            vm.groups.forEach(function (group) {
+            if (vm.groups) {
+                vm.groups.forEach(function (group) {
 
-                if (group.objectPermissions && group.objectPermissions.manage == true) {
-                    vm.entity["group_object_permissions"].push({
-                        "group": group.id,
-                        "permission": "manage_" + vm.entityType
-                    })
-                }
+                    if (group.objectPermissions && group.objectPermissions.manage == true) {
+                        vm.entity["group_object_permissions"].push({
+                            "group": group.id,
+                            "permission": "manage_" + vm.entityType
+                        })
+                    }
 
-                if (group.objectPermissions && group.objectPermissions.change == true) {
-                    vm.entity["group_object_permissions"].push({
-                        "group": group.id,
-                        "permission": "change_" + vm.entityType
-                    })
-                }
+                    if (group.objectPermissions && group.objectPermissions.change == true) {
+                        vm.entity["group_object_permissions"].push({
+                            "group": group.id,
+                            "permission": "change_" + vm.entityType
+                        })
+                    }
 
-            });
+                });
+            }
 
             console.log('vm.entity', vm.entity);
 

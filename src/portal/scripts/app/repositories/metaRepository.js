@@ -31,9 +31,17 @@
         ];
     };
 
+
+    // DEPRECATED start look at metaRestrictionRepository
+
     var getEntitiesWithoutBaseAttrsList = function () {
-        return ['price-history', 'currency-history', 'transaction', 'complex-transaction', 'balance-report', 'pnl-report', 'audit-transaction', 'audit-instrument'];
+        return ['price-history', 'currency-history', 'transaction',
+            'complex-transaction', 'transaction-report', 'cash-flow-projection-report', 'performance-report',
+            'balance-report', 'pnl-report', 'audit-transaction', 'audit-instrument'];
     };
+
+    // DEPRECATED end look at metaRestrictionRepository
+
     var getEntitiesWithoutDynAttrsList = function () {
         return ['price-history', 'currency-history', 'transaction', 'pricing-policy', 'strategy-1', 'strategy-2', 'strategy-3',
             'strategy-1-group', 'strategy-2-group', 'strategy-3-group',
@@ -1108,6 +1116,377 @@
                 {
                     "key": "total_unreal",
                     "name": "Total unreal",
+                    "value_type": "float"
+                },
+                {
+                    "key": "market_value",
+                    "name": "Market value",
+                    "value_type": "float"
+                },
+                {
+                    "key": "exposure",
+                    "name": "Exposure",
+                    "value_type": "float"
+                },
+                {
+                    "key": "market_value_percent",
+                    "name": "Market value %",
+                    "value_type": "float"
+                },
+                {
+                    "key": "exposure_percent",
+                    "name": "Exposure %",
+                    "value_type": "float"
+                }
+            ],
+            "transaction-report": [
+                {
+                    "key": "account_cash",
+                    "name": "Account cash",
+                    "value_type": "field"
+                },
+                {
+                    "key": "account_interim",
+                    "name": "Account interim",
+                    "value_type": "field"
+                },
+                {
+                    "key": "account_position",
+                    "name": "Account position",
+                    "value_type": "field"
+                },
+                {
+                    "key": "account_date",
+                    "name": "Account date",
+                    "value_type": 40
+                },
+                {
+                    "key": "allocation_balance",
+                    "name": "Allocation balance", // link to instrument
+                    "value_type": "field"
+                },
+                {
+                    "key": "allocation_pl",
+                    "name": "Allocation pl", // link to instrument
+                    "value_type": "field"
+                },
+                {
+                    "key": "carry_with_sign",
+                    "name": "Carry with sign",
+                    "value_type": "float"
+                },
+                {
+                    "key": "cash_consideration",
+                    "name": "Cash consideration",
+                    "value_type": "float"
+                },
+                {
+                    "key": "cash_date",
+                    "name": "Cash date",
+                    "value_type": 40
+                },
+                {
+                    "key": "complex-transaction",
+                    "name": "Complex transaction",
+                    "value_type": "field"
+                },
+                {
+                    "key": "counterparty",
+                    "name": "Counterparty",
+                    "value_type": "field"
+                },
+                {
+                    "key": "instrument",
+                    "name": "Instrument",
+                    "value_type": "field"
+                },
+                {
+                    "key": "linked_instrument",
+                    "name": "Linked Instrument",
+                    "value_type": "field"
+                },
+                {
+                    "key": "overheads_with_sign",
+                    "name": "Overheads with sign",
+                    "value_type": "float"
+                },
+                {
+                    "key": "portfolio",
+                    "name": "Portfolio",
+                    "value_type": "field"
+                },
+                {
+                    "key": "principal_with_sign",
+                    "name": "Principal with sign",
+                    "value_type": "float"
+                },
+                {
+                    "key": "reference_fx_rate",
+                    "name": "Reference fx rate",
+                    "value_type": "float"
+                },
+                {
+                    "key": "responsible",
+                    "name": "Responsible",
+                    "value_type": "field"
+                },
+                {
+                    "key": "settlement_currency",
+                    "name": "Settlement currency",
+                    "value_type": "field"
+                },
+                {
+                    "key": "strategy1_cash",
+                    "name": "Strategy 1 cash",
+                    "value_type": "field"
+                },
+                {
+                    "key": "strategy1_position",
+                    "name": "Strategy 1 position",
+                    "value_type": "field"
+                },
+                {
+                    "key": "strategy2_cash",
+                    "name": "Strategy 2 cash",
+                    "value_type": "field"
+                },
+                {
+                    "key": "strategy2_position",
+                    "name": "Strategy 2 position",
+                    "value_type": "field"
+                },
+                {
+                    "key": "strategy3_cash",
+                    "name": "Strategy 3 cash",
+                    "value_type": "field"
+                },
+                {
+                    "key": "strategy3_position",
+                    "name": "Strategy 3 position",
+                    "value_type": "field"
+                },
+                {
+                    "key": "transaction_class",
+                    "name": "Transaction class",
+                    "value_type": "field"
+                },
+                {
+                    "key": "transaction_code",
+                    "name": "Transaction code",
+                    "value_type": "float"
+                },
+                {
+                    "key": "transaction_currency",
+                    "name": "Transaction currency",
+                    "value_type": "field"
+                },
+                {
+                    "key": "transaction_date",
+                    "name": "Transaction date",
+                    "value_type": 40
+                }
+            ],
+            "cash-flow-projection-report": [
+                {
+                    "key": "account_cash",
+                    "name": "Account cash",
+                    "value_type": "field"
+                },
+                {
+                    "key": "account_interim",
+                    "name": "Account interim",
+                    "value_type": "field"
+                },
+                {
+                    "key": "account_position",
+                    "name": "Account position",
+                    "value_type": "field"
+                },
+                {
+                    "key": "allocation_balance",
+                    "name": "Allocation balance", // link to instrument
+                    "value_type": "field"
+                },
+                {
+                    "key": "allocation_pl",
+                    "name": "Allocation pl", // link to instrument
+                    "value_type": "field"
+                },
+                {
+                    "key": "carry_with_sign",
+                    "name": "Carry with sign",
+                    "value_type": "float"
+                },
+                {
+                    "key": "cash_consideration",
+                    "name": "Cash consideration",
+                    "value_type": "float"
+                },
+                {
+                    "key": "cash_consideration_after",
+                    "name": "Cash consideration after",
+                    "value_type": "float"
+                },
+                {
+                    "key": "cash_consideration_before",
+                    "name": "Cash consideration before",
+                    "value_type": "float"
+                },
+                {
+                    "key": "cash_date",
+                    "name": "Cash date",
+                    "value_type": 40
+                },
+                {
+                    "key": "complex-transaction",
+                    "name": "Complex transaction",
+                    "value_type": "field"
+                },
+                {
+                    "key": "counterparty",
+                    "name": "Counterparty",
+                    "value_type": "field"
+                },
+                {
+                    "key": "instrument",
+                    "name": "Instrument",
+                    "value_type": "field"
+                },
+                {
+                    "key": "linked_instrument",
+                    "name": "Linked Instrument",
+                    "value_type": "field"
+                },
+                {
+                    "key": "overheads_with_sign",
+                    "name": "Overheads with sign",
+                    "value_type": "float"
+                },
+                {
+                    "key": "portfolio",
+                    "name": "Portfolio",
+                    "value_type": "field"
+                },
+                {
+                    "key": "reference_fx_rate",
+                    "name": "Reference fx rate",
+                    "value_type": "float"
+                },
+                {
+                    "key": "responsible",
+                    "name": "Responsible",
+                    "value_type": "field"
+                },
+                {
+                    "key": "settlement_currency",
+                    "name": "Settlement currency",
+                    "value_type": "field"
+                },
+                {
+                    "key": "strategy1_cash",
+                    "name": "Strategy 1 cash",
+                    "value_type": "field"
+                },
+                {
+                    "key": "strategy1_position",
+                    "name": "Strategy 1 position",
+                    "value_type": "field"
+                },
+                {
+                    "key": "strategy2_cash",
+                    "name": "Strategy 2 cash",
+                    "value_type": "field"
+                },
+                {
+                    "key": "strategy2_position",
+                    "name": "Strategy 2 position",
+                    "value_type": "field"
+                },
+                {
+                    "key": "strategy3_cash",
+                    "name": "Strategy 3 cash",
+                    "value_type": "field"
+                },
+                {
+                    "key": "strategy3_position",
+                    "name": "Strategy 3 position",
+                    "value_type": "field"
+                },
+                {
+                    "key": "transaction_class",
+                    "name": "Transaction class",
+                    "value_type": "field"
+                },
+                {
+                    "key": "transaction_code",
+                    "name": "Transaction code",
+                    "value_type": "float"
+                },
+                {
+                    "key": "transaction_currency",
+                    "name": "Transaction currency",
+                    "value_type": "field"
+                },
+                {
+                    "key": "transaction_date",
+                    "name": "Transaction date",
+                    "value_type": 40
+                }
+            ],
+            "performance-report": [
+                {
+                    "key": "name",
+                    "name": "Name",
+                    "value_type": 10
+                },
+                {
+                    "key": "short_name",
+                    "name": "Short name",
+                    "value_type": 10
+                },
+                {
+                    "key": "user_code",
+                    "name": "User code",
+                    "value_type": 10
+                },
+                {
+                    "key": "account",
+                    "name": "Account",
+                    "value_type": "field"
+                },
+                {
+                    "key": "instrument",
+                    "name": "Instrument",
+                    "value_type": "field"
+                },
+                {
+                    "key": "currency",
+                    "name": "Currency",
+                    "value_type": "field"
+                },
+                {
+                    "key": "portfolio",
+                    "name": "Portfolio",
+                    "value_type": "field"
+                },
+                {
+                    "key": "strategy-1",
+                    "name": "Strategy 1",
+                    "value_type": "field"
+                },
+                {
+                    "key": "strategy-2",
+                    "name": "Strategy 2",
+                    "value_type": "field"
+                },
+                {
+                    "key": "strategy-3",
+                    "name": "Strategy 3",
+                    "value_type": "field"
+                },
+                {
+                    "key": "position_size",
+                    "name": "Position size",
                     "value_type": "float"
                 },
                 {

@@ -11,8 +11,23 @@
         return reportRepository.getList(options);
     };
 
+    var getCashFlowProjectionReport = function (options) {
+        return reportRepository.getCashFlowProjectionReport(options);
+    };
+
+    var getTransactionReport = function (options) {
+        return reportRepository.getTransactionReport(options);
+    };
+
+    var getPerformanceReport = function (options) {
+        return reportRepository.getPerformanceReport(options);
+    };
+
     module.exports = {
-        getList: getList
+        getList: getList,
+        getCashFlowProjectionReport: getCashFlowProjectionReport,
+        getTransactionReport: getTransactionReport,
+        getPerformanceReport: getPerformanceReport
     }
 
 }());

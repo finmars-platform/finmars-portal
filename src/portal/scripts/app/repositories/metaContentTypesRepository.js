@@ -5,7 +5,7 @@
 
     "use strict";
 
-    var getListForTransactionTypeInputs = function(){
+    var getListForTransactionTypeInputs = function () {
         return [
             {
                 name: "Account",
@@ -343,6 +343,21 @@
                 name: "P&L report",
                 entity: 'pnl-report',
                 key: "reports.plreport"
+            },
+            {
+                name: "Transaction report",
+                entity: 'transaction-report',
+                key: "reports.transactionreport"
+            },
+            {
+                name: "Cash flow projection report",
+                entity: 'cash-flow-projection-report',
+                key: "reports.cashflowreport"
+            },
+            {
+                name: "Performance report",
+                entity: 'performance-report',
+                key: "reports.performancereport"
             },
             {
                 name: "Transaction",

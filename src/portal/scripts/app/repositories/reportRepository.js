@@ -26,9 +26,59 @@
         })
     };
 
+    var getTransactionReport = function (options) {
+        return window.fetch(baseUrl + 'reports/transaction-report/',
+            {
+                method: 'POST',
+                credentials: 'include',
+                headers: {
+                    'X-CSRFToken': cookieService.getCookie('csrftoken'),
+                    Accept: 'application/json',
+                    'Content-type': 'application/json'
+                },
+                body: JSON.stringify(options)
+            }).then(function (data) {
+            return data.json();
+        })
+    };
+
+    var getCashFlowProjectionReport = function (options) {
+        return window.fetch(baseUrl + 'reports/cash-flow-projection-report/',
+            {
+                method: 'POST',
+                credentials: 'include',
+                headers: {
+                    'X-CSRFToken': cookieService.getCookie('csrftoken'),
+                    Accept: 'application/json',
+                    'Content-type': 'application/json'
+                },
+                body: JSON.stringify(options)
+            }).then(function (data) {
+            return data.json();
+        })
+    };
+
+    var getPerformanceReport = function (options) {
+        return window.fetch(baseUrl + 'reports/performance-report/',
+            {
+                method: 'POST',
+                credentials: 'include',
+                headers: {
+                    'X-CSRFToken': cookieService.getCookie('csrftoken'),
+                    Accept: 'application/json',
+                    'Content-type': 'application/json'
+                },
+                body: JSON.stringify(options)
+            }).then(function (data) {
+            return data.json();
+        })
+    };
 
     module.exports = {
-        getList: getList
+        getList: getList,
+        getTransactionReport: getTransactionReport,
+        getCashFlowProjectionReport: getCashFlowProjectionReport,
+        getPerformanceReport: getPerformanceReport
     }
 
 }());

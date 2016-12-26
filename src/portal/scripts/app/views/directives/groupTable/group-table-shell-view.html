@@ -39,7 +39,7 @@
             </div>
         </div>
         <div class="g-additions-workarea" data-ng-if="options.additionsStatus.reportWizard">
-            <div data-ng-include="'views/entity-viewer/entity-viewer-view.html'"></div>
+            <div data-ng-include="'views/entity-viewer/entity-viewer-view.html'" class="min-height"></div>
         </div>
         <div class="g-extra-features" data-ng-if="findSelectedFeature().isOpened">
             <div data-ng-include="{{findSelectedFeature().templateUrl}}"></div>

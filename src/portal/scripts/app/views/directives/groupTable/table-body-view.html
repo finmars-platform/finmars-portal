@@ -40,7 +40,7 @@
 
                         <div class="g-cell-wrap" data-ng-repeat="column in columns">
                             <div class="g-cell {{getAlign(column)}}">
-                                <span title="{{bindCellTitle(groupedItem, column)}}"
+                                <span title="{{::bindCellTitle(groupedItem, column)}}"
                                       data-ng-bind-html="::bindCell(groupedItem, column) | trustAsHtml"></span>
                             </div>
                         </div>
@@ -66,7 +66,7 @@
                     </div>
                     <div class="g-cell-wrap" data-ng-repeat="column in columns">
                         <div class="g-cell {{getAlign(column)}}">
-                            <span title="{{bindCellTitle(item, column)}}"
+                            <span title="{{::bindCellTitle(item, column)}}"
                                   data-ng-bind-html="::bindCell(item, column) | trustAsHtml"></span>
                         </div>
                     </div>

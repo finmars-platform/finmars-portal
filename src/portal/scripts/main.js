@@ -116,6 +116,9 @@ app.controller('BalanceReportCustomAttrController', ['$scope', '$mdDialog', requ
 app.controller('BalanceReportDialogCustomAttrController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/balanceReportAddDialogCustomAttrController')]);
 
 app.controller('ProfitAndLostReportController', ['$scope', require('./app/controllers/reports/profitAndLostReportController')]);
+app.controller('TransactionReportController', ['$scope', require('./app/controllers/reports/transactionReportController')]);
+app.controller('CashFlowProjectionReportController', ['$scope', require('./app/controllers/reports/cashFlowProjectionReportController')]);
+app.controller('PerformanceReportController', ['$scope', require('./app/controllers/reports/performanceReportController')]);
 
 app.controller('EntityDataConstructorController', ['$scope', '$stateParams', '$state', '$mdDialog', require('./app/controllers/entityDataConstructorController')]);
 
@@ -131,7 +134,7 @@ app.controller('ClassifierSelectDialogController', ['$scope', '$mdDialog', 'data
 app.controller('SaveLayoutDialogController', ['$scope', '$mdDialog', require('./app/controllers/dialogs/saveLayoutDialogController')]);
 
 app.controller('AuditController', ['$scope', require('./app/controllers/system/auditController')]);
-app.controller('NotificationsController', ['$scope','$state', '$stateParams', require('./app/controllers/system/notificationsController')]);
+app.controller('NotificationsController', ['$scope', '$state', '$stateParams', require('./app/controllers/system/notificationsController')]);
 app.controller('HeaderNotificationsDialogController', ['$scope', '$mdDialog', require('./app/controllers/dialogs/HeaderNotificationsDialogController')]);
 
 app.controller('SettingsGeneralController', ['$scope', '$state', require('./app/controllers/settings/settingsGeneralController')]);

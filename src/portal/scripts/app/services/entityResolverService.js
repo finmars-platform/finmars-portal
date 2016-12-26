@@ -292,8 +292,12 @@
             case 'transaction':
                 return transactionService.update(id, entity);
                 break;
+            case 'complex-transaction':
+                return complexTransactionService.update(id, entity);
+                break;
             case 'transaction-type':
-                return transactionTypeService.update(id, entity);
+
+                return transactionTypeService.bookComplexTransaction(id, entity);
                 break;
             case 'transaction-type-group':
                 return transactionTypeGroupService.update(id, entity);
