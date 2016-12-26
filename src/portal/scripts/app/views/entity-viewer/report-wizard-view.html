@@ -1,6 +1,6 @@
 <div data-ng-controller="ReportWizardController as vm" class="report-wizard">
 
-    <div data-ng-if="vm.checkReadyStatus()">
+    <div data-ng-if="vm.checkReadyStatus()" class="custom-scrollbar" data-custom-scroll>
 
         <div data-ng-if="vm.currentStep == 1">
 
@@ -9,21 +9,21 @@
             </div>
 
 
-            <md-list flex>
-                <md-list-item class="md-3-line" data-ng-repeat="item in vm.reportTypes"
-                              ng-click="vm.selectReport(item)">
-                    <ng-md-icon icon="done" size="20"
-                                class="{{item.selected ? 'visible' : 'visibility-hidden'}}"></ng-md-icon>
-                    {{item.caption}}
-                </md-list-item>
-            </md-list>
-
-            <div layout="row" layout-align="end center">
-
-                <md-button class="md-raised {{vm.checkDisabled() ? 'disabled-btn' : ''}}" data-ng-click="vm.nextStep()">
-                    Next
-                </md-button>
+            <div layout="column">
+                <div data-ng-repeat="item in vm.reportTypes">
+                    <md-button class="md-raised" data-ng-click="vm.selectReport(item)">
+                        {{item.caption}}
+                    </md-button>
+                </div>
             </div>
+
+
+            <!--<div layout="row" layout-align="end center">-->
+
+            <!--<md-button class="md-raised {{vm.checkDisabled() ? 'disabled-btn' : ''}}" data-ng-click="vm.nextStep()">-->
+            <!--Next-->
+            <!--</md-button>-->
+            <!--</div>-->
 
         </div>
 
@@ -33,22 +33,23 @@
                 <h3>Choose layout</h3>
             </div>
 
-            <md-list flex>
-                <md-list-item class="md-3-line" data-ng-repeat="item in vm.layouts"
-                              ng-click="vm.selectLayout(item)">
-                    <ng-md-icon icon="done" size="20"
-                                class="{{item.selected ? 'visible' : 'visibility-hidden'}}"></ng-md-icon>
-                    {{item.name}}
-                </md-list-item>
-            </md-list>
-
-
-            <div layout="row" layout-align="space-between center">
-                <md-button class="md-raised" data-ng-click="vm.prevStep()">Back</md-button>
-                <md-button class="md-raised {{vm.checkDisabled() ? 'disabled-btn' : ''}}" data-ng-click="vm.nextStep()">
-                    Finish
-                </md-button>
+            <div layout="column">
+                <div data-ng-repeat="item in vm.layouts">
+                    <md-button class="md-raised" data-ng-click="vm.selectLayout(item)">
+                        {{item.name}}
+                    </md-button>
+                </div>
             </div>
+
+            <div layout="row" layout-align="begin center">
+                <md-button class="md-raised" data-ng-click="vm.prevStep()">Back</md-button>
+            </div>
+            <!--<div layout="row" layout-align="space-between center">-->
+            <!--<md-button class="md-raised" data-ng-click="vm.prevStep()">Back</md-button>-->
+            <!--<md-button class="md-raised {{vm.checkDisabled() ? 'disabled-btn' : ''}}" data-ng-click="vm.nextStep()">-->
+            <!--Finish-->
+            <!--</md-button>-->
+            <!--</div>-->
         </div>
 
 

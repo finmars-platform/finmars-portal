@@ -15,12 +15,15 @@
             },
             link: function (scope, elem, attrs) {
 
+                var lastMouseMoveEvent = null;
+
                 function setDefaultHeights() {
                     workAreaHeight = $(window).height() - $('.header').first().height();
                     workAreaWithoutGrouping = workAreaHeight - $('.g-wrapper .g-grouping-section').first().height(); // margin 4px
                     $('.g-filter-sidebar').first().height(workAreaHeight);
                     $('.g-wrapper .g-table-section').first().height(workAreaWithoutGrouping);
                     $('.g-additions').first().height($(window).height() - workAreaHeight);
+                    $('group-table-body').first().css('height', 'auto');
 
                 }
 
@@ -48,7 +51,9 @@
                         var additionsBoxTableSection = $('.g-additions-workarea .g-table-section').last();
                         var additionsBoxSidebarBox = $('.g-additions-workarea .g-filter-sidebar').last();
 
-                        $(window).bind('mousemove', function (e) {
+                        var handler = function (e) {
+
+                            lastMouseMoveEvent = e;
 
                             spaceLeft = $(window).height() - headerBoxHeight;
                             mouseMoveY = e.clientY;
@@ -82,13 +87,29 @@
                             //console.log('additions sidebar box height', spaceLeft - mouseMoveY);
 
 
+                        };
+
+
+                        $(window).bind('mousemove', function (e) {
+                            handler(e);
+                            $(window).bind('mouseup', function () {
+                                $(window).unbind('mousemove');
+                            })
                         });
 
-                        $(window).bind('mouseup', function () {
-                            $(window).unbind('mousemove');
-                        })
-
                     })
+                }
+
+                function resolveHeight() {
+                    if (scope.additionsStatus.reportWizard || scope.additionsStatus.editor) {
+                        setTimeout(function () {
+                            setSplitHeights()
+                        }, 100);
+                    } else {
+                        if (!scope.additionsStatus.reportWizard && !scope.additionsStatus.editor) {
+                            setDefaultHeights()
+                        }
+                    }
                 }
 
                 if (scope.options.isRootEntityViewer == true) { // only root entityViewer has gHeightSlider
@@ -100,36 +121,78 @@
                     var workAreaHeight;
                     var workAreaWithoutGrouping;
 
+
                     scope.$watchCollection('additionsStatus', function () {
 
-                        if (scope.additionsStatus.reportWizard || scope.additionsStatus.editor) {
-                            setTimeout(function () {
-                                setSplitHeights()
-                            }, 100);
-                        } else {
-                            if (!scope.additionsStatus.reportWizard && !scope.additionsStatus.editor) {
-                                setDefaultHeights()
-                            }
-                        }
+                        console.log('scope.additionsStatus', scope.additionsStatus);
+
+                        resolveHeight()
                     });
+
+                    // THAT DUPLICATED NEEDS FOR SPLIT PANEL PROPER HEIGHT CALCULATION
+
+                    setInterval(function () {
+
+                        if ($('.g-additions-workarea .g-filter-sidebar').length) {
+
+                            var mouseMoveY;
+                            var spaceLeft;
+                            var headerBoxHeight = $('.header').height();
+                            var mainAreaBox = $('.g-workarea.main-area .g-table-section').first();
+                            var mainAreaSidebarBox = $('.g-filter-sidebar.main-sidebar').first();
+                            var groupingSectionBoxHeight = $('.g-wrapper .g-grouping-section').height();
+
+                            var additionsBox = $('.g-additions');
+                            var additionsBoxTableSection = $('.g-additions-workarea .g-table-section').last();
+                            var additionsBoxSidebarBox = $('.g-additions-workarea .g-filter-sidebar').last();
+
+                            var handler = function (e) {
+
+                                spaceLeft = $(window).height() - headerBoxHeight;
+                                mouseMoveY = e.clientY;
+
+                                $(elem).find('.mCSB_scrollTools_vertical').css({
+                                    position: 'absolute',
+                                    top: 0,
+                                    left: 'auto'
+                                });
+
+                                // WTF IS 88???
+
+                                additionsBox.height(spaceLeft - mouseMoveY + 88 - 15);
+                                additionsBoxTableSection.height(spaceLeft - mouseMoveY + 88);
+                                $('.g-additions-workarea .g-filter-sidebar').last().height(spaceLeft - mouseMoveY + 88);
+                                $('.g-workarea.main-area .group-table-body').first().height(mouseMoveY - $('.header').height() - $('.g-columns-component.g-thead').height() - 88);
+                                $('.g-additions-workarea .group-table-body').last().height($(window).height() - mouseMoveY - $('.g-additions-workarea .g-columns-component.g-thead').height());
+                                mainAreaBox.height(mouseMoveY - headerBoxHeight - 88);
+                                if (groupingSectionBoxHeight < (mouseMoveY + groupingSectionBoxHeight - headerBoxHeight - 88)) {
+                                    mainAreaSidebarBox.height(mouseMoveY + groupingSectionBoxHeight - headerBoxHeight - 88);
+                                }
+
+                            };
+
+                            if (lastMouseMoveEvent == null) {
+                                lastMouseMoveEvent = new Event('mousemove');
+                                lastMouseMoveEvent._is_default_event = true;
+                            }
+
+                            if (lastMouseMoveEvent.hasOwnProperty('_is_default_event')) {
+                                if ($('.g-additions-workarea .g-filter-sidebar').length) {
+                                    lastMouseMoveEvent.clientY = Math.floor(($(window).height() - $('.header').height()) / 2);
+                                }
+                            }
+
+                            handler(lastMouseMoveEvent);
+                        } else {
+                            lastMouseMoveEvent = null;
+                        }
+
+                    }, 100);
 
 
                     $(window).on('resize', function () {
-                        if (scope.additionsStatus.reportWizard || scope.additionsStatus.editor) {
-                            setSplitHeights()
-                        } else {
-                            if (!scope.additionsStatus.reportWizard && !scope.additionsStatus.editor) {
-                                setDefaultHeights()
-                            }
-                        }
+                        resolveHeight();
                     });
-
-                    //console.log('scope.additionsStatus.reportWizard', scope.additionsStatus.reportWizard);
-                    //console.log('scope.additionsStatus.editor', scope.additionsStatus.editor);
-                    //
-                    //if (!scope.additionsStatus.reportWizard && !scope.additionsStatus.editor) {
-                    //    setDefaultHeights()
-                    //}
 
                 }
             }

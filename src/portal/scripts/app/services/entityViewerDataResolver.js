@@ -132,8 +132,15 @@
             case 'pnl-report':
                 return reportService.getList(options);
                 break;
-
-
+            case 'transaction-report':
+                return reportService.getTransactionReport(options);
+                break;
+            case 'cash-flow-projection-report':
+                return reportService.getCashFlowProjectionReport(options);
+                break;
+            case 'performance-report':
+                return reportService.getPerformanceReport(options);
+                break;
         }
     };
 

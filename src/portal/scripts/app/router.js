@@ -180,6 +180,21 @@
                 templateUrl: 'views/reports/reports-profit-and-lost-view.html',
                 controller: 'ProfitAndLostReportController as vm'
             })
+            .state('app.reports.transaction-report', {
+                url: '/transaction',
+                templateUrl: 'views/reports/reports-transaction-view.html',
+                controller: 'TransactionReportController as vm'
+            })
+            .state('app.reports.cash-flow-projection-report', {
+                url: '/cash-flow-projection',
+                templateUrl: 'views/reports/reports-cash-flow-projection-view.html',
+                controller: 'CashFlowProjectionReportController as vm'
+            })
+            .state('app.reports.performance-report', {
+                url: '/performance',
+                templateUrl: 'views/reports/reports-performance-view.html',
+                controller: 'PerformanceReportController as vm'
+            })
             .state('app.settings', {
                 abstract: true,
                 url: '/settings',

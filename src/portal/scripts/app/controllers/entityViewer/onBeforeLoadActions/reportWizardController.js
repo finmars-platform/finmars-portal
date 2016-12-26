@@ -37,6 +37,18 @@
             {
                 caption: 'Profit & Lost report',
                 entityType: 'pnl-report'
+            },
+            {
+                caption: 'Transaction report',
+                entityType: 'transaction-report'
+            },
+            {
+                caption: 'Cash flow projection report',
+                entityType: 'cash-flow-projection-report'
+            },
+            {
+                caption: 'Performance report',
+                entityType: 'performance-report'
             }
         ];
 
@@ -48,6 +60,8 @@
 
             item.selected = true;
             vm.wizard.entityType = item.entityType;
+            vm.currentStep = vm.currentStep + 1;
+            vm.renderStep();
 
         };
 
@@ -59,7 +73,8 @@
 
             item.selected = true;
             vm.wizard.uiLayout = item.id;
-
+            vm.currentStep = vm.currentStep + 1;
+            vm.renderStep();
         };
 
         vm.checkDisabled = function () {
