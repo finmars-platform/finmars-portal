@@ -12,6 +12,7 @@
             <th>Portfolio</th>
             <th>Responsible</th>
             <th>Counterparty</th>
+            <th>Edit</th>
         </tr>
         </thead>
         <tbody>
@@ -23,6 +24,9 @@
             <td data-ng-bind="item.portfolio_object.user_code"></td>
             <td data-ng-bind="item.responsible_object.user_code"></td>
             <td data-ng-bind="item.counterparty_object.user_code"></td>
+            <td>
+                <md-button data-ng-click="vm.editBaseTransaction($event, item.id)" class="md-raised md-primary">Edit</md-button>
+            </td>
         </tr>
         </tbody>
     </table>

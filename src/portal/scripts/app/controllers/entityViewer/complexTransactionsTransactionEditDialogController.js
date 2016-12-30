@@ -6,16 +6,8 @@
     'use strict';
     var logService = require('../../../../../core/services/logService');
 
-    var attributeTypeService = require('../../services/attributeTypeService');
     var entityResolverService = require('../../services/entityResolverService');
-    var entityViewerHelperService = require('../../services/entityViewerHelperService');
 
-    var usersService = require('../../services/usersService');
-
-    var uiService = require('../../services/uiService');
-
-    var gridHelperService = require('../../services/gridHelperService');
-    var metaService = require('../../services/metaService');
     var layoutService = require('../../services/layoutService');
 
     var metaPermissionsService = require('../../services/metaPermissionsService');
@@ -37,23 +29,6 @@
         vm.cancel = function () {
             //localStorage.setItem('entityIsChanged', false);
             $mdDialog.cancel();
-        };
-
-        vm.editLayout = function (ev) {
-            $state.go('app.data-constructor', {entityType: vm.entityType});
-            $mdDialog.hide();
-        };
-
-        vm.manageAttrs = function (ev) {
-            $state.go('app.attributesManager', {entityType: vm.entityType});
-            $mdDialog.hide();
-        };
-
-        vm.copy = function () {
-            vm.copyCallback().then(function () {
-                vm.evAction = 'create';
-                $scope.$apply();
-            }); // look at entityEditorController
         };
 
         vm.checkVisibility = function () {

@@ -195,6 +195,7 @@
                             for (x = 0; x < th.length; x = x + 1) {
                                 (function (x) {
                                     $(td[x]).css({width: $(th[x]).width() + 'px'});
+                                    console.log('cell widths is ', $(td[x]).width(), $(th[x]).width());
                                 }(x))
                             }
                         }
