@@ -22,6 +22,11 @@
                         </md-button>
                     </md-fab-trigger>
                     <md-fab-actions>
+                        <md-button aria-label="" data-ng-if="vm.checkIfPermissionEditorAllowed()" class="md-fab md-raised md-mini"
+                                   data-ng-click="vm.openPermissionEditor()">
+                            <ng-md-icon icon="perm_identity"></ng-md-icon>
+                            <md-tooltip md-direction="right">Open permission editor</md-tooltip>
+                        </md-button>
                         <md-button aria-label="" class="md-fab md-raised md-mini"
                                    data-ng-click="vm.openDataViewPanel()">
                             <ng-md-icon icon="work"></ng-md-icon>

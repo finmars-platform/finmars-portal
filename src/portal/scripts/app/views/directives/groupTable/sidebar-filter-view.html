@@ -2,61 +2,159 @@
 
     <div data-ng-if="isReport" layout="column">
 
-        <md-card class="g-sidebar-report-card">
+        <div data-ng-if="options.entityType == 'balance-report' || options.entityType == 'pnl-report'">
+            <md-card class="g-sidebar-report-card">
 
-            <md-card-content>
+                <md-card-content>
 
-                <p class="g-r-card-title">
-                    Report settings
-                </p>
+                    <p class="g-r-card-title">
+                        Report settings
+                    </p>
 
-                <div layout="column" style="padding-top: 16px">
+                    <div layout="column" style="padding-top: 16px">
 
-                    <md-input-container>
+                        <md-input-container>
 
-                        <label for="">Date</label>
+                            <label for="">Date</label>
 
-                        <zh-date-picker data-ng-model="reportOptions.report_date" position="left"></zh-date-picker>
+                            <zh-date-picker data-ng-model="reportOptions.report_date" position="left"></zh-date-picker>
 
-                    </md-input-container>
+                        </md-input-container>
 
-                    <md-input-container style="margin-bottom: 20px;">
+                        <md-input-container style="margin-bottom: 20px;">
 
-                        <label for="">Currency</label>
+                            <label for="">Currency</label>
 
-                        <md-select data-ng-model="reportOptions.currency">
-                            <md-option data-ng-repeat="item in currencies" ng-value="item.id">{{item.name}}
-                            </md-option>
-                        </md-select>
+                            <md-select data-ng-model="reportOptions.currency">
+                                <md-option data-ng-repeat="item in currencies" ng-value="item.id">{{item.name}}
+                                </md-option>
+                            </md-select>
 
-                    </md-input-container>
+                        </md-input-container>
 
-                    <md-input-container>
+                        <md-input-container>
 
-                        <label for="">Pricing Policy</label>
+                            <label for="">Pricing Policy</label>
 
-                        <md-select data-ng-model="reportOptions.pricing_policy">
-                            <md-option data-ng-repeat="item in pricingPolicies" ng-value="item.id">{{item.name}}
-                            </md-option>
-                        </md-select>
+                            <md-select data-ng-model="reportOptions.pricing_policy">
+                                <md-option data-ng-repeat="item in pricingPolicies" ng-value="item.id">{{item.name}}
+                                </md-option>
+                            </md-select>
 
-                    </md-input-container>
+                        </md-input-container>
 
-                </div>
+                    </div>
 
-                <div layout="column" style="margin-top: 16px;">
+                    <div layout="column" style="margin-top: 16px;">
 
-                    <md-button data-ng-click="openReportSettings($event)" class="md-primary md-raised">Settings
-                    </md-button>
+                        <md-button data-ng-click="openReportSettings($event)" class="md-primary md-raised">Settings
+                        </md-button>
 
-                    <md-button data-ng-click="calculateReport()" class="md-raised">Calculate</md-button>
+                        <md-button data-ng-click="calculateReport()" class="md-raised">Calculate</md-button>
 
-                </div>
+                    </div>
 
-            </md-card-content>
+                </md-card-content>
 
-        </md-card>
+            </md-card>
+        </div>
+        <div data-ng-if="options.entityType == 'transaction-report'">
+            <md-card class="g-sidebar-report-card">
 
+                <md-card-content>
+
+                    <p class="g-r-card-title">
+                        Report settings
+                    </p>
+
+                    <div layout="column" style="padding-top: 16px">
+
+                        <md-input-container>
+
+                            <label for="">Begin date</label>
+
+                            <zh-date-picker data-ng-model="reportOptions.begin_date" position="left"></zh-date-picker>
+
+                        </md-input-container>
+
+                        <md-input-container>
+
+                            <label for="">End date</label>
+
+                            <zh-date-picker data-ng-model="reportOptions.end_date" position="left"></zh-date-picker>
+
+                        </md-input-container>
+
+                    </div>
+
+                    <div layout="column" style="margin-top: 16px;">
+
+
+                        <md-button data-ng-click="calculateReport()" class="md-raised">Calculate</md-button>
+
+                    </div>
+
+                </md-card-content>
+
+            </md-card>
+        </div>
+        <div data-ng-if="options.entityType == 'cash-flow-projection-report'">
+            <md-card class="g-sidebar-report-card">
+
+                <md-card-content>
+
+                    <p class="g-r-card-title">
+                        Report settings
+                    </p>
+
+                    <div layout="column" style="padding-top: 16px">
+
+                        <md-input-container>
+
+                            <label for="">Begin date</label>
+
+                            <zh-date-picker data-ng-model="reportOptions.begin_date" position="left"></zh-date-picker>
+
+                        </md-input-container>
+
+                        <md-input-container>
+
+                            <label for="">End date</label>
+
+                            <zh-date-picker data-ng-model="reportOptions.end_date" position="left"></zh-date-picker>
+
+                        </md-input-container>
+
+                        <md-input-container>
+
+                            <label for="">Balance date</label>
+
+                            <zh-date-picker data-ng-model="reportOptions.balance_date" position="left"></zh-date-picker>
+
+                        </md-input-container>
+
+                        <md-input-container>
+
+                            <label for="">Report date</label>
+
+                            <zh-date-picker data-ng-model="reportOptions.report_date" position="left"></zh-date-picker>
+
+                        </md-input-container>
+
+
+                    </div>
+
+                    <div layout="column" style="margin-top: 16px;">
+
+
+                        <md-button data-ng-click="calculateReport()" class="md-raised">Calculate</md-button>
+
+                    </div>
+
+                </md-card-content>
+
+            </md-card>
+        </div>
     </div>
 
     <div layout="row" layout-align="space-between center">
@@ -175,7 +273,8 @@
                         <md-menu-item>
                             <md-button ng-click="useFromAbove(filter)" class="g-settings-option-btn">
                                 <ng-md-icon icon="done" data-ng-show="filter.options.useFromAbove"></ng-md-icon>
-                                <ng-md-icon icon="done" style="visibility: hidden;" data-ng-show="!filter.options.useFromAbove"></ng-md-icon>
+                                <ng-md-icon icon="done" style="visibility: hidden;"
+                                            data-ng-show="!filter.options.useFromAbove"></ng-md-icon>
                                 <span>Use from above</span>
                             </md-button>
                         </md-menu-item>

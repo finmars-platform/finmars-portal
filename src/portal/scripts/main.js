@@ -71,6 +71,7 @@ app.controller('EntityViewerDeleteDialogController', ['$scope', '$mdDialog', 'en
 app.controller('ReportWizardController', ['$scope', require('./app/controllers/entityViewer/onBeforeLoadActions/reportWizardController')]);
 
 app.controller('EntityEditorController', ['$scope', '$state', require('./app/controllers/entityEditorController')]);
+app.controller('EntityViewerPermissionEditorController', ['$scope', require('./app/controllers/entityViewer/entityViewerPermissionEditorController')]);
 
 app.controller('ComplexTransactionSpecialRulesController', ['$scope', require('./app/controllers/special-rules/complexTransactionSpecialRulesController')]);
 

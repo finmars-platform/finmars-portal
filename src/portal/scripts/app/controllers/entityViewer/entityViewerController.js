@@ -223,6 +223,7 @@
                         vm.additionsStatus = res.results[0].data.tableAdditions.additionsStatus || {
                                 editor: false,
                                 table: false,
+                                permissionEditor: false,
                                 extraFeatures: []
                             };
 
@@ -284,6 +285,10 @@
 
 
             }; // TODO refactor
+
+            vm.checkIfPermissionEditorAllowed = function () {
+                return true;
+            }
 
             vm.transformViewAttributes = function () { //deprecated
 
@@ -713,11 +718,27 @@
             vm.openDataViewPanel = function () {
 
                 vm.additionsStatus.editor = false;
+                vm.additionsStatus.permissionEditor = false;
                 vm.additionsState = true;
                 vm.additionsStatus.extraFeatures.forEach(function (item) {
                     item.isOpened = false;
                 });
                 vm.additionsStatus.reportWizard = true;
+
+                vm.updateConfig();
+
+            };
+
+            vm.openPermissionEditor = function () {
+                vm.additionsStatus.editor = false;
+                vm.additionsStatus.reportWizard = false;
+                vm.additionsState = true;
+
+                vm.additionsStatus.extraFeatures.forEach(function (item) {
+                    item.isOpened = false;
+                });
+
+                vm.additionsStatus.permissionEditor = true;
 
                 vm.updateConfig();
 
@@ -731,13 +752,13 @@
                     item.isOpened = false;
                 });
                 vm.additionsStatus.reportWizard = false;
-
+                vm.additionsStatus.permissionEditor = false;
 
                 vm.updateConfig();
             };
 
             vm.checkAdditionStatus = function () {
-                if (!vm.additionsStatus.reportWizard && !vm.additionsStatus.editor) {
+                if (!vm.additionsStatus.reportWizard && !vm.additionsStatus.editor && !vm.additionsStatus.permissionEditor) {
                     //vm.editorEntityId = undefined;
                     return true;
                 }
@@ -748,6 +769,7 @@
                 vm.additionsState = false;
                 vm.additionsStatus.reportWizard = false;
                 vm.additionsStatus.editor = false;
+                vm.additionsStatus.permissionEditor = false;
 
                 //vm.editorEntityId = undefined;
 
@@ -865,6 +887,7 @@
                         vm.additionsStatus = {
                             editor: false,
                             table: false,
+                            permissionEditor: false,
                             extraFeatures: []
                         };
                         vm.additionsState = false;
@@ -1117,6 +1140,7 @@
                         vm.additionsStatus = {
                             editor: false,
                             table: false,
+                            permissionEditor: false,
                             extraFeatures: []
                         };
 
