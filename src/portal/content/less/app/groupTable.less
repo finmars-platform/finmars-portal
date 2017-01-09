@@ -520,18 +520,12 @@
   padding: 4px 15px 8px;
   height: 12px;
   font-size: 14px;
-  border-left: 1px solid #363636;
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
   &:last-child {
     border-right: 1px solid #363636;
-  }
-  &:first-child {
-    border-left: 0;
-  }
-  &:nth-child(2) {
-    border-left: 0;
+    margin-right: 2px;
   }
 }
 
@@ -543,6 +537,7 @@
   position: relative;
   background-color: #ffffff;
   border-radius: 2px;
+  // border-left: 1px solid #363636;
   //margin-left: 14px;
   cursor: grab;
   &:after {
