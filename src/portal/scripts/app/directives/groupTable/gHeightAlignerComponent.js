@@ -101,12 +101,12 @@
                 }
 
                 function resolveHeight() {
-                    if (scope.additionsStatus.reportWizard || scope.additionsStatus.editor) {
+                    if (scope.additionsStatus.reportWizard || scope.additionsStatus.editor || scope.additionsStatus.permissionEditor) {
                         setTimeout(function () {
                             setSplitHeights()
                         }, 100);
                     } else {
-                        if (!scope.additionsStatus.reportWizard && !scope.additionsStatus.editor) {
+                        if (!scope.additionsStatus.reportWizard && !scope.additionsStatus.editor && !scope.additionsStatus.permissionEditor) {
                             setDefaultHeights()
                         }
                     }

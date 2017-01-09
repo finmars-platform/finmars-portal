@@ -38,6 +38,9 @@
                 <group-editor-binder options="options"></group-editor-binder>
             </div>
         </div>
+        <div class="g-additions-workarea" data-ng-if="options.additionsStatus.permissionEditor">
+            <div data-ng-include="'views/entity-viewer/permission-editor-view.html'" class="min-height"></div>
+        </div>
         <div class="g-additions-workarea" data-ng-if="options.additionsStatus.reportWizard">
             <div data-ng-include="'views/entity-viewer/entity-viewer-view.html'" class="min-height"></div>
         </div>

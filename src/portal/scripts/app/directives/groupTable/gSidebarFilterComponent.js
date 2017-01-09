@@ -29,7 +29,7 @@
                 scope.externalCallback = scope.options.externalCallback;
 
                 scope.fields = {};
-                //scope.reportOptions = {};
+                scope.reportOptions = {};
 
                 scope.filters.forEach(function (item) {
                     if (!item.options) {
@@ -86,7 +86,7 @@
                 scope.calculateReport = function () {
                     console.log('calculate report');
                     scope.reportOptions["task_id"] = undefined;
-                    scope.externalCallback({silent: true, options: {filters: scope.filters}});
+                    scope.externalCallback({silent: false, options: {filters: scope.filters}});
                 };
 
                 scope.resizeFilterSideNav = function (actionType) {
