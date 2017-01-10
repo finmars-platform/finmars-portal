@@ -38,7 +38,7 @@
                     if (!columnsWidthSet) {
                         var columns = elem.find('.g-column');
                         var savedWidths = scope.columnsWidth;
-                        console.log('setColumnsWidthAndNameTooltip changes');
+                        //console.log('setColumnsWidthAndNameTooltip changes');
                         if (columns.length > 0 && columns.length === savedWidths.length) {
                             for (var i = 0; i < columns.length; i = i + 1) {
                                 if (savedWidths[i] && !isNaN(savedWidths[i])) {
@@ -195,7 +195,7 @@
                             for (x = 0; x < th.length; x = x + 1) {
                                 (function (x) {
                                     $(td[x]).css({width: $(th[x]).width() + 'px'});
-                                    console.log('cell widths is ', $(td[x]).width(), $(th[x]).width());
+                                    //console.log('cell widths is ', $(td[x]).width(), $(th[x]).width());
                                 }(x))
                             }
                         }

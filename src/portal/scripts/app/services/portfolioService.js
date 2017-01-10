@@ -29,11 +29,11 @@
         return portfolioRepository.getByKey(id);
     };
 
-    var create = function(portfolio) {
+    var create = function (portfolio) {
         return portfolioRepository.create(portfolio);
     };
 
-    var update = function(id, portfolio) {
+    var update = function (id, portfolio) {
         return portfolioRepository.update(id, portfolio);
     };
 
@@ -41,6 +41,9 @@
         return portfolioRepository.deleteByKey(id);
     };
 
+    var updateBulk = function (portfolios) {
+        return portfolioRepository.updateBulk(portfolios);
+    };
 
     module.exports = {
         getClassifierNodeList: getClassifierNodeList,
@@ -53,7 +56,9 @@
         getByKey: getByKey,
         create: create,
         update: update,
-        deleteByKey: deleteByKey
+        deleteByKey: deleteByKey,
+
+        updateBulk: updateBulk
     }
 
 

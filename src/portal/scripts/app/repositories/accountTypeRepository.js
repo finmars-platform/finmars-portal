@@ -86,6 +86,29 @@
         })
     };
 
+    var updateBulk = function (accountTypes) {
+        return window.fetch(baseUrl + 'accounts/account-type/bulk-update/',
+            {
+                method: 'PATCH',
+                credentials: 'include',
+                headers: {
+                    'X-CSRFToken': cookieService.getCookie('csrftoken'),
+                    Accept: 'application/json',
+                    'Content-type': 'application/json'
+                },
+                body: JSON.stringify(accountTypes)
+            }).then(function (data) {
+            return new Promise(function (resolve, reject) {
+                data.json().then(function (result) {
+                    resolve({
+                        response: result,
+                        status: data.status
+                    })
+                })
+            });
+        })
+    };
+
     var deleteByKey = function (id) {
         return window.fetch(baseUrl + 'accounts/account-type/' + id + '/',
             {
@@ -111,7 +134,9 @@
         getByKey: getByKey,
         create: create,
         update: update,
-        deleteByKey: deleteByKey
+        deleteByKey: deleteByKey,
+
+        updateBulk: updateBulk
     }
 
 }());

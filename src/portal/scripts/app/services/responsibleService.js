@@ -13,11 +13,11 @@
         return responsibleRepository.getByKey(id);
     };
 
-    var create = function(responsible) {
+    var create = function (responsible) {
         return responsibleRepository.create(responsible);
     };
 
-    var update = function(id, responsible) {
+    var update = function (id, responsible) {
         return responsibleRepository.update(id, responsible);
     };
 
@@ -25,13 +25,17 @@
         return responsibleRepository.deleteByKey(id);
     };
 
+    var updateBulk = function (responsibles) {
+        return responsibleRepository.updateBulk(responsibles);
+    };
 
     module.exports = {
         getList: getList,
         getByKey: getByKey,
         create: create,
         update: update,
-        deleteByKey: deleteByKey
+        deleteByKey: deleteByKey,
+        updateBulk: updateBulk
     }
 
 

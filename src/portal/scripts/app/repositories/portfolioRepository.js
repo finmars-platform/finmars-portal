@@ -142,6 +142,29 @@
         })
     };
 
+    var updateBulk = function (portfolios) {
+        return window.fetch(baseUrl + 'portfolios/portfolio/bulk-update/',
+            {
+                method: 'PATCH',
+                credentials: 'include',
+                headers: {
+                    'X-CSRFToken': cookieService.getCookie('csrftoken'),
+                    Accept: 'application/json',
+                    'Content-type': 'application/json'
+                },
+                body: JSON.stringify(portfolios)
+            }).then(function (data) {
+            return new Promise(function (resolve, reject) {
+                data.json().then(function (result) {
+                    resolve({
+                        response: result,
+                        status: data.status
+                    })
+                })
+            });
+        })
+    };
+
     var deleteByKey = function (id) {
         return window.fetch(baseUrl + 'portfolios/portfolio/' + id + '/',
             {
@@ -172,7 +195,9 @@
         getByKey: getByKey,
         create: create,
         update: update,
-        deleteByKey: deleteByKey
+        deleteByKey: deleteByKey,
+
+        updateBulk: updateBulk
     }
 
 }());

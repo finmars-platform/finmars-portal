@@ -57,20 +57,26 @@
                         additionsState: vm.additionsState,
 
                         editorTemplate: vm.editorTemplate,
-                        editorEntityId: vm.editorEntityId
+                        editorEntityId: vm.editorEntityId,
+
+                        permission_selected_id: vm.permission_selected_id,
+                        permission_selected_entity: vm.permission_selected_entity
 
 
                     };
 
-                    $scope.$apply();
+                    //console.log('updateConfig permission_selected_id', JSON.stringify(vm.permission_selected_id));
+                    //console.log('updateConfig permission_selected_entity', JSON.stringify(vm.permission_selected_entity));
 
-                    console.log('vm.options', vm.options);
+                    $scope.$apply();
 
                 }, 0)
 
             };
 
             vm.updateVm = function (options) {
+
+                console.log('options', options);
 
                 setTimeout(function () {
 
@@ -80,6 +86,9 @@
 
                         vm[key] = options[key];
                     });
+
+                    //console.log('updateVm permission_selected_id', JSON.stringify(vm.permission_selected_id));
+                    //console.log('updateVm permission_selected_entity', JSON.stringify(vm.permission_selected_entity));
 
                     $scope.$apply();
 
@@ -288,7 +297,7 @@
 
             vm.checkIfPermissionEditorAllowed = function () {
                 return true;
-            }
+            };
 
             vm.transformViewAttributes = function () { //deprecated
 
@@ -516,6 +525,23 @@
                     vm.nextExist = !!data.next;
                     vm.previousExist = !!data.previous;
 
+                    data.results = data.results.map(function (item) {
+
+                        item.object_permissions_group = [];
+                        item.object_permissions_user = [];
+
+                        item.object_permissions.forEach(function (permission) {
+                            if (permission.group == null) {
+                                item.object_permissions_user.push(permission);
+                            }
+                            if (permission.member == null) {
+                                item.object_permissions_group.push(permission);
+                            }
+                        });
+
+                        return item;
+                    });
+
                     entityViewerHelperService.transformItems(data.results, vm.attrs).then(function (data) {
 
                         var entity = data;
@@ -636,13 +662,14 @@
                         }
                     });
 
+                    console.log('here', options);
+
                     return options;
 
                 };
 
                 var options = optionsHandler(vm.entityType, vm.isReport);
 
-                console.trace();
                 //console.log('params', params);
                 var defaultParams = {
                     redraw: true,
@@ -652,9 +679,11 @@
 
                 var _params = Object.assign(defaultParams, params);
 
-                console.log('_params', _params);
+                //console.log('_params', _params);
 
                 vm.updateVm(_params.options);
+
+                console.trace();
 
                 if (_params.redraw == true) {
 
@@ -862,6 +891,9 @@
                         vm.grouping = [];
                         vm.filters = [];
                         vm.sorting = [];
+
+                        vm.permission_selected_id = null;
+                        vm.permission_selected_entity = null;
 
                         // ENTITY ADDITIONS STUFF START
 
@@ -1119,6 +1151,10 @@
                         vm.grouping = [];
                         vm.filters = [];
                         vm.sorting = [];
+
+
+                        vm.permission_selected_id = null;
+                        vm.permission_selected_entity = null;
 
                         // ENTITY ADDITIONS STUFF START
 

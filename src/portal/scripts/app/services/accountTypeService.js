@@ -25,13 +25,17 @@
         return accountRepository.deleteByKey(id);
     };
 
+    var updateBulk = function(accountTypes) {
+        return accountRepository.updateBulk(accountTypes);
+    }
 
     module.exports = {
         getList: getList,
         getByKey: getByKey,
         create: create,
         update: update,
-        deleteByKey: deleteByKey
+        deleteByKey: deleteByKey,
+        updateBulk: updateBulk
     }
 
 
