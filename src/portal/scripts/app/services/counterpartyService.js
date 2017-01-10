@@ -25,13 +25,17 @@
         return counterpartyRepository.deleteByKey(id);
     };
 
+    var updateBulk = function(counterparties) {
+        return counterpartyRepository.updateBulk(counterparties);
+    };
 
     module.exports = {
         getList: getList,
         getByKey: getByKey,
         create: create,
         update: update,
-        deleteByKey: deleteByKey
+        deleteByKey: deleteByKey,
+        updateBulk: updateBulk
     }
 
 

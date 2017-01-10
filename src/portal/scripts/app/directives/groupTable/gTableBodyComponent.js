@@ -865,6 +865,58 @@
                                     //     return groupedItem[entityAttrs[e].key];
                                     // }
                                     if (column['value_type'] === 'mc_field') {
+
+                                        //console.log('column.key ', column.key);
+
+                                        if (column.key == 'object_permissions_user') {
+
+                                            if (groupedItem[entityAttrs[e].key].length) {
+
+                                                //console.log('scope.options.permission_selected_entity', scope.options.permission_selected_entity);
+
+                                                if (scope.options.permission_selected_entity == 'user') {
+
+                                                    var resultPermission = [];
+
+                                                    groupedItem[entityAttrs[e].key].forEach(function (permission) {
+
+                                                        if (permission.member == scope.options.permission_selected_id) {
+                                                            if (permission.permission.indexOf('change') == 0) {
+                                                                resultPermission.push('Change');
+                                                            }
+                                                            if (permission.permission.indexOf('manage') == 0) {
+                                                                resultPermission.push('Manage');
+                                                            }
+                                                        }
+                                                    });
+
+                                                    return resultPermission.join(', ');
+
+                                                }
+                                            }
+                                        }
+
+                                        if (column.key == 'object_permissions_group') {
+
+                                            if (scope.options.permission_selected_entity == 'group') {
+
+                                                var resultPermission = [];
+
+                                                groupedItem[entityAttrs[e].key].forEach(function (permission) {
+                                                    if (permission.group == scope.options.permission_selected_id) {
+                                                        if (permission.permission.indexOf('change') == 0) {
+                                                            resultPermission.push('Change');
+                                                        }
+                                                        if (permission.permission.indexOf('manage') == 0) {
+                                                            resultPermission.push('Manage');
+                                                        }
+                                                    }
+                                                });
+
+                                                return resultPermission.join(', ');
+                                            }
+                                        }
+
                                         if (groupedItem[entityAttrs[e].key] && groupedItem[entityAttrs[e].key].length >= 1) {
                                             return '[' + groupedItem[entityAttrs[e].key].length + ']'
                                         }

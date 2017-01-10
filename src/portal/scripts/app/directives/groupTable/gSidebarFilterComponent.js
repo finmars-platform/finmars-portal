@@ -33,9 +33,9 @@
 
                 scope.filters.forEach(function (item) {
                     if (!item.options) {
-                        item.options = {enabled: false};
+                        //item.options = {enabled: false};
                     }
-                    item.options.enabled = false;
+                    //item.options.enabled = false;
                 });
 
                 if (scope.isReport == true) {
@@ -150,32 +150,52 @@
                 };
 
                 scope.toggleFilterState = function () {
-                    scope.externalCallback({silent: true, options: {filters: scope.filters}});
+                    if(scope.isReport == true) {
+                        scope.externalCallback({silent: true, options: {filters: scope.filters}});
+                    } else {
+                        scope.externalCallback({silent: false, options: {filters: scope.filters}});
+                    }
                 };
 
                 scope.filterChange = function (filter) {
-                    scope.externalCallback({silent: true, options: {filters: scope.filters}});
+                    if(scope.isReport == true) {
+                        scope.externalCallback({silent: true, options: {filters: scope.filters}});
+                    } else {
+                        scope.externalCallback({silent: false, options: {filters: scope.filters}});
+                    }
                 };
 
                 scope.selectAll = function () {
                     scope.filters.forEach(function (item) {
                         item.options.enabled = true;
                     });
-                    scope.externalCallback({silent: true, options: {filters: scope.filters}});
+                    if(scope.isReport == true) {
+                        scope.externalCallback({silent: true, options: {filters: scope.filters}});
+                    } else {
+                        scope.externalCallback({silent: false, options: {filters: scope.filters}});
+                    }
                 };
 
                 scope.clearAll = function () {
                     scope.filters.forEach(function (item) {
                         item.options.query = '';
                     });
-                    scope.externalCallback({silent: true, options: {filters: scope.filters}});
+                    if(scope.isReport == true) {
+                        scope.externalCallback({silent: true, options: {filters: scope.filters}});
+                    } else {
+                        scope.externalCallback({silent: false, options: {filters: scope.filters}});
+                    }
                 };
 
                 scope.deselectAll = function () {
                     scope.filters.forEach(function (item) {
                         item.options.enabled = false;
                     });
-                    scope.externalCallback({silent: true, options: {filters: scope.filters}});
+                    if(scope.isReport == true) {
+                        scope.externalCallback({silent: true, options: {filters: scope.filters}});
+                    } else {
+                        scope.externalCallback({silent: false, options: {filters: scope.filters}});
+                    }
                 };
 
 

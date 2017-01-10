@@ -423,6 +423,16 @@
                     "key": "user_text_3",
                     "name": "User text 3",
                     "value_type": 10
+                },
+                {
+                    "key": "object_permissions_user",
+                    "name": "Users permissions",
+                    "value_type": "mc_field"
+                },
+                {
+                    "key": "object_permissions_group",
+                    "name": "Groups permissions",
+                    "value_type": "mc_field"
                 }
             ],
             "transaction": [

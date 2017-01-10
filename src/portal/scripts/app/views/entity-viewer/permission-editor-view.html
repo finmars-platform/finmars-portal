@@ -1,4 +1,4 @@
-<div>
+<div data-ng-controller="EntityViewerPermissionEditorController as vm">
 
     <div layout="row" layout-align="center center">
         <h3>Permission manager</h3>
@@ -8,14 +8,99 @@
         <md-tab label="Users">
             <md-content class="md-padding">
 
-                <p>list of users</p>
+                <div layout="row" layout-align="space-between center" style="margin-bottom: 8px; padding: 0 16px">
+                    <div layout="row" layout-align="begin center">
+                        Username
+                    </div>
+                    <div layout="row" layout-align="center center">
+                        <div layout="row" layout-align="center center" style="width: 105px">
+                            Manage
+                        </div>
+                        <div layout="row" layout-align="center center" style="width: 105px">
+                            Change
+                        </div>
+                    </div>
+                </div>
+
+                <div layout="column" class="ev-permission-editor-item">
+
+                    <div layout="row" layout-align="space-between" class="{{user.isSelected ? 'selected' : ''}}" data-ng-repeat="user in vm.users"
+                         data-ng-click="vm.selectEntity('user', user)">
+
+                        <div layout="row" layout-align="begin center">
+                            <span data-ng-bind="user.username"></span>
+                        </div>
+
+                        <div layout="row" layout-align="center center">
+
+                            <md-button class="md-raised {{vm.processing ? 'disabled-btn' : ''}}"
+                                       data-ng-click="vm.toggleManage(user)">
+                                <span data-ng-show="user.manager_actions.manage">Disable</span>
+                                <span data-ng-show="!user.manager_actions.manage">Enable</span>
+                            </md-button>
+
+                            <md-button class="md-raised {{vm.processing ? 'disabled-btn' : ''}}"
+                                       data-ng-click="vm.toggleChange(user)">
+                                <span data-ng-show="user.manager_actions.change">Disable</span>
+                                <span data-ng-show="!user.manager_actions.change">Enable</span>
+                            </md-button>
+
+
+                        </div>
+
+                    </div>
+
+                </div>
+
 
             </md-content>
         </md-tab>
         <md-tab label="Groups">
             <md-content class="md-padding">
 
-                <p>list of users</p>
+                <div layout="row" layout-align="space-between center" style="margin-bottom: 8px; padding: 0 16px">
+                    <div layout="row" layout-align="begin center">
+                        Group
+                    </div>
+                    <div layout="row" layout-align="center center">
+                        <div layout="row" layout-align="center center" style="width: 105px">
+                            Manage
+                        </div>
+                        <div layout="row" layout-align="center center" style="width: 105px">
+                            Change
+                        </div>
+                    </div>
+                </div>
+
+                <div layout="column" class="ev-permission-editor-item">
+
+                    <div layout="row" layout-align="space-between" class="{{group.isSelected ? 'selected' : ''}}" data-ng-repeat="group in vm.groups"
+                         data-ng-click="vm.selectEntity('group', group)">
+
+                        <div layout="row" layout-align="begin center">
+                            <span data-ng-bind="group.name"></span>
+                        </div>
+
+                        <div layout="row" layout-align="center center">
+
+                            <md-button class="md-raised {{vm.processing ? 'disabled-btn' : ''}}"
+                                       data-ng-click="vm.toggleManage(group)">
+                                <span data-ng-show="group.manager_actions.manage">Disable</span>
+                                <span data-ng-show="!group.manager_actions.manage">Enable</span>
+                            </md-button>
+
+                            <md-button class="md-raised {{vm.processing ? 'disabled-btn' : ''}}"
+                                       data-ng-click="vm.toggleChange(group)">
+                                <span data-ng-show="group.manager_actions.change">Disable</span>
+                                <span data-ng-show="!group.manager_actions.change">Enable</span>
+                            </md-button>
+
+                        </div>
+
+
+                    </div>
+
+                </div>
 
             </md-content>
         </md-tab>

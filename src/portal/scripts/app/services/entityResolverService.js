@@ -344,6 +344,93 @@
         }
     };
 
+    var updateBulk = function (entityType, entities) {
+        switch (entityType) {
+            case 'portfolio':
+                return portfolioService.updateBulk(entities);
+                break;
+            case 'currency':
+                //return currencyService.update(id, entity);
+                break;
+            case 'account':
+                return accountService.updateBulk(entities);
+                break;
+            case 'account-type':
+                return accountTypeService.updateBulk(entities);
+                break;
+            case 'responsible':
+                return responsibleService.updateBulk(entities);
+                break;
+            case 'responsible-group':
+                //return responsibleGroupService.update(id, entity);
+                break;
+            case 'counterparty':
+                return counterpartyService.updateBulk(entities);
+                break;
+            case 'counterparty-group':
+                //return counterpartyGroupService.update(id, entity);
+                break;
+            case 'instrument':
+                return instrumentService.updateBulk(entities);
+                break;
+            case 'instrument-type':
+                //return instrumentTypeService.update(id, entity);
+                break;
+            case 'transaction':
+                //return transactionService.update(id, entity);
+                break;
+            case 'complex-transaction':
+                //return complexTransactionService.update(id, entity);
+                break;
+            case 'transaction-type':
+
+                //return transactionTypeService.bookComplexTransaction(id, entity);
+                break;
+            case 'transaction-type-group':
+                //return transactionTypeGroupService.update(id, entity);
+                break;
+            case 'price-history':
+                //return priceHistoryService.update(id, entity);
+                break;
+            case 'pricing-policy':
+                //return pricingPolicyService.update(id, entity);
+                break;
+            case 'currency-history':
+                //return currencyHistoryService.update(id, entity);
+                break;
+            case 'strategy-1':
+                //return strategyService.update(1, id, entity);
+                break;
+            case 'strategy-2':
+                //return strategyService.update(2, id, entity);
+                break;
+            case 'strategy-3':
+                //return strategyService.update(3, id, entity);
+                break;
+            case 'strategy-1-group':
+                //return strategyGroupService.update(1, id, entity);
+                break;
+            case 'strategy-2-group':
+                //return strategyGroupService.update(2, id, entity);
+                break;
+            case 'strategy-3-group':
+                //return strategyGroupService.update(3, id, entity);
+                break;
+            case 'strategy-1-subgroup':
+                //return strategySubgroupService.update(1, id, entity);
+                break;
+            case 'strategy-2-subgroup':
+                //return strategySubgroupService.update(2, id, entity);
+                break;
+            case 'strategy-3-subgroup':
+                //return strategySubgroupService.update(3, id, entity);
+                break;
+            case 'tag':
+                //return tagService.update(id, entity);
+                break;
+        }
+    };
+
     var deleteByKey = function (entityType, id) {
         switch (entityType) {
             case 'portfolio':
@@ -429,7 +516,8 @@
         getByKey: getByKey,
         create: create,
         update: update,
-        deleteByKey: deleteByKey
+        deleteByKey: deleteByKey,
+        updateBulk: updateBulk
     }
 
 }());
