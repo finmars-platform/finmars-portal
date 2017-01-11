@@ -62,12 +62,13 @@
 
             if (type == 'user') {
                 vm.users.forEach(function (user) {
-                    user.isSelected = false;
+                    if (item.id !== user.id) {
+                        user.isSelected = false;
+                    }
                 });
 
-                item.isSelected = !item.isSelected;
-
-                if (item.isSelected == true) {
+                if (!item.isSelected) {
+                    item.isSelected = true;
 
                     $scope.$parent.options.externalCallback({
                         silent: true,
@@ -105,7 +106,7 @@
 
         };
 
-        vm.toggleManage = function (entity) {
+        vm.toggleManage = function (state, entity) {
 
             if (!entity.hasOwnProperty('manager_actions')) {
                 entity.manager_actions = {manage: false, change: false};
@@ -138,16 +139,18 @@
 
             //console.log('selectedRows', selectedRows);
 
-            entity.manager_actions.manage = !entity.manager_actions.manage;
+            entity.manager_actions.manage = state;
 
-            vm.updateBulk(selectedRows, entityType, entity);
+            var permissionType = 'manage';
+
+            vm.updateBulk(selectedRows, entityType, entity, permissionType);
         };
 
         /*
          @entity: user / group
          */
 
-        vm.toggleChange = function (entity) {
+        vm.toggleChange = function (state, entity) {
 
             if (!entity.hasOwnProperty('manager_actions')) {
                 entity.manager_actions = {manage: false, change: false};
@@ -176,12 +179,14 @@
 
             //console.log('selectedRows', selectedRows);
 
-            entity.manager_actions.change = !entity.manager_actions.change;
+            entity.manager_actions.change = state;
 
-            vm.updateBulk(selectedRows, entityType, entity);
+            var permissionType = 'change';
+
+            vm.updateBulk(selectedRows, entityType, entity, permissionType);
         };
 
-        vm.updateBulk = function (selectedRows, entityType, entity) {
+        vm.updateBulk = function (selectedRows, entityType, entity, permissionType) {
 
             vm.processing = true;
 
@@ -200,7 +205,10 @@
 
                         if (permission.member == entity.id) {
                             if (permission.group == null) {
-                                item.object_permissions.splice($index, 1);
+
+                                if (permission.permission.indexOf(permissionType) == 0) {
+                                    item.object_permissions.splice($index, 1);
+                                }
 
                                 console.log('?here', item);
                             }

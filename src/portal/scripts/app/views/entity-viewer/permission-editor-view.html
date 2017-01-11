@@ -10,21 +10,22 @@
 
                 <div layout="row" layout-align="space-between center" style="margin-bottom: 8px; padding: 0 16px">
                     <div layout="row" layout-align="begin center">
-                        Username
+                        <b>Username</b>
                     </div>
                     <div layout="row" layout-align="center center">
-                        <div layout="row" layout-align="center center" style="width: 105px">
-                            Manage
+                        <div layout="row" layout-align="center center" style="width: 210px">
+                            <b>Manage</b>
                         </div>
-                        <div layout="row" layout-align="center center" style="width: 105px">
-                            Change
+                        <div layout="row" layout-align="center center" style="width: 210px">
+                            <b>Change</b>
                         </div>
                     </div>
                 </div>
 
                 <div layout="column" class="ev-permission-editor-item">
 
-                    <div layout="row" layout-align="space-between" class="{{user.isSelected ? 'selected' : ''}}" data-ng-repeat="user in vm.users"
+                    <div layout="row" layout-align="space-between" class="{{user.isSelected ? 'selected' : ''}}"
+                         data-ng-repeat="user in vm.users"
                          data-ng-click="vm.selectEntity('user', user)">
 
                         <div layout="row" layout-align="begin center">
@@ -34,15 +35,22 @@
                         <div layout="row" layout-align="center center">
 
                             <md-button class="md-raised {{vm.processing ? 'disabled-btn' : ''}}"
-                                       data-ng-click="vm.toggleManage(user)">
-                                <span data-ng-show="user.manager_actions.manage">Disable</span>
-                                <span data-ng-show="!user.manager_actions.manage">Enable</span>
+                                       data-ng-click="vm.toggleManage(false, user)">
+                                <span>Disable</span>
+                            </md-button>
+                            <md-button class="md-raised {{vm.processing ? 'disabled-btn' : ''}}"
+                                       data-ng-click="vm.toggleManage(true, user)">
+                                <span>Enable</span>
                             </md-button>
 
                             <md-button class="md-raised {{vm.processing ? 'disabled-btn' : ''}}"
-                                       data-ng-click="vm.toggleChange(user)">
-                                <span data-ng-show="user.manager_actions.change">Disable</span>
-                                <span data-ng-show="!user.manager_actions.change">Enable</span>
+                                       data-ng-click="vm.toggleChange(false, user)">
+                                <span>Disable</span>
+
+                            </md-button>
+                            <md-button class="md-raised {{vm.processing ? 'disabled-btn' : ''}}"
+                                       data-ng-click="vm.toggleChange(true, user)">
+                                <span>Enable</span>
                             </md-button>
 
 
@@ -74,7 +82,8 @@
 
                 <div layout="column" class="ev-permission-editor-item">
 
-                    <div layout="row" layout-align="space-between" class="{{group.isSelected ? 'selected' : ''}}" data-ng-repeat="group in vm.groups"
+                    <div layout="row" layout-align="space-between" class="{{group.isSelected ? 'selected' : ''}}"
+                         data-ng-repeat="group in vm.groups"
                          data-ng-click="vm.selectEntity('group', group)">
 
                         <div layout="row" layout-align="begin center">
