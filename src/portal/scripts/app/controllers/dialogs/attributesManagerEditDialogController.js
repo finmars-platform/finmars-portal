@@ -21,10 +21,11 @@
 
         vm.readyStatus = {attribute: false, permissions: false};
 
-        // vm.entityType = data.entityType;
+         vm.entityType = data.entityType;
         vm.attributeId = data.attributeId;
 
-        attributeTypeService.getByKey("generic", vm.attributeId).then(function (data) {
+        //attributeTypeService.getByKey("generic", vm.attributeId).then(function (data) {
+        attributeTypeService.getByKey(vm.entityType, vm.attributeId).then(function (data) {
             vm.attribute = data;
             vm.readyStatus.attribute = true;
             vm.loadPermissions();
