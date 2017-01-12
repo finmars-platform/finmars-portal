@@ -109,7 +109,8 @@
                 return currencyService.getByKey(id);
                 break;
             case 'complex-transaction':
-                return complexTransactionService.getByKey(id);
+                return complexTransactionService.getBookComplexTransaction(id);
+                break;
             case 'pricing-policy':
                 return pricingPolicyService.getByKey(id);
                 break;
@@ -118,6 +119,9 @@
                 break;
             case 'transaction-type':
                 return transactionTypeService.getByKey(id);
+                break;
+            case 'transaction-type-book':
+                return transactionTypeService.getBookTransaction(id);
                 break;
             case 'transaction-type-group':
                 return transactionTypeGroupService.getByKey(id);
@@ -244,12 +248,23 @@
                 return strategySubgroupService.create(3, entity);
                 break;
             case 'complex-transaction':
-                console.log('entity', entity);
-                var i;
-                return transactionTypeService.getBookTransaction(entity).then(function () {
-                    return transactionTypeService.BookTransaction(entity); // PUT
-                });
-                break;
+                return transactionTypeService.bookTransaction(entity.transaction_type, entity);
+            //console.log('entity', entity);
+            //
+            //return new Promise(function (resolve, reject) {
+            //    transactionTypeService.getBookTransaction(entity._transaction_type_id).then(function (data) {
+            //
+            //        var res = Object.assign(data, entity);
+            //
+            //        console.log('res------------------', res);
+            //
+            //        var i;
+            //
+            //        transactionTypeService.bookTransaction(entity._transaction_type_id, res).then(function (data) {
+            //            resolve(data);
+            //        });
+            //    });
+            //});
             case 'tag':
                 return tagService.create(entity);
                 break;
@@ -293,11 +308,57 @@
                 return transactionService.update(id, entity);
                 break;
             case 'complex-transaction':
-                return complexTransactionService.update(id, entity);
-                break;
+
+                return complexTransactionService.bookComplexTransaction(entity.transaction_type, entity);
+            //return new Promise(function (resolve, reject) {
+            //    transactionTypeService.getBookTransaction(entity.transaction_type).then(function (data) {
+            //
+            //        var originValues = JSON.parse(JSON.stringify(entity.values))
+            //
+            //        var res = entity;
+            //
+            //        var i;
+            //
+            //
+            //        res.transactions = data.transactions;
+            //        res.values = data.values;
+            //
+            //        var originValuesKeys = Object.keys(originValues);
+            //        var defaultValuesKeys = Object.keys(res.values);
+            //
+            //        originValuesKeys.forEach(function (originVal) {
+            //            defaultValuesKeys.forEach(function (defaultVal) {
+            //
+            //                if (originVal == defaultVal) {
+            //                    res.values[defaultVal] = originValues[originVal];
+            //                }
+            //
+            //            })
+            //        });
+            //
+            //        transactionTypeService.bookTransaction(entity.transaction_type, res).then(function (data) {
+            //            resolve(data);
+            //        });
+            //    });
+            //});
+            //break;
             case 'transaction-type':
 
-                return transactionTypeService.bookComplexTransaction(id, entity);
+                return transactionTypeService.update(id, entity);
+                //return new Promise(function (resolve, reject) {
+                //    transactionTypeService.getBookTransaction(id).then(function (data) {
+                //
+                //        var res = Object.assign(data, entity);
+                //
+                //        console.log('res------------------', res);
+                //
+                //        var i;
+                //
+                //        transactionTypeService.bookTransaction(id, res).then(function (data) {
+                //            resolve(data);
+                //        });
+                //    });
+                //});
                 break;
             case 'transaction-type-group':
                 return transactionTypeGroupService.update(id, entity);

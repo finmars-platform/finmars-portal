@@ -49,33 +49,77 @@
 
         vm.getEditListByInstanceId = function () {
 
-            console.log('vm.editLayoutEntityInstanceId', vm.editLayoutEntityInstanceId);
 
-            uiService.getEditLayoutByInstanceId(vm.entityType, vm.editLayoutEntityInstanceId).then(function (data) {
+            if (vm.entityType == 'complex-transaction') {
+                entityResolverService.getByKey('transaction-type-book', vm.editLayoutEntityInstanceId).then(function (data) {
 
-                if (data) {
-                    vm.tabs = data.data;
+
+                    vm.complexTransactionOptions.transactionType = data.transaction_type;
+                    vm.editLayoutEntityInstanceId = data.transaction_type;
+                    vm.entity = data;
+                    vm.specialRulesReady = true;
+                    vm.readyStatus.entity = true;
+                    vm.readyStatus.permissions = true;
+
+                    var keys = Object.keys(vm.entity.values);
+
+                    keys.forEach(function (item) {
+                        vm.entity[item] = vm.entity.values[item];
+                    });
+
+                    vm.tabs = data.book_transaction_layout.data;
                     vm.userInputs = [];
                     vm.tabs.forEach(function (tab) {
                         tab.layout.fields.forEach(function (field) {
-                            if (field.attribute_class = 'userInput') {
+                            if (field.attribute_class == 'userInput') {
                                 vm.userInputs.push(field.attribute);
                             }
                         });
-                    })
-                } else {
-                    vm.tabs = uiService.getDefaultEditLayout(vm.entityType)[0].data;
-                }
+                    });
 
-                $scope.$apply();
-            });
+                    console.log('vm.complexTransactionOptions22222222222222222222222222', vm.complexTransactionOptions);
 
-            $scope.$parent.vm.editLayout = function () {
-                $state.go('app.data-constructor', {
-                    entityType: vm.entityType,
-                    instanceId: vm.editLayoutEntityInstanceId
+
+                    $scope.$parent.vm.editLayout = function () {
+                        $state.go('app.data-constructor', {
+                            entityType: vm.entityType,
+                            instanceId: vm.editLayoutEntityInstanceId
+                        });
+                    };
+
+                    $scope.$apply();
                 });
-            };
+            } else {
+
+
+                console.log('vm.editLayoutEntityInstanceId', vm.editLayoutEntityInstanceId);
+
+                uiService.getEditLayoutByInstanceId(vm.entityType, vm.editLayoutEntityInstanceId).then(function (data) {
+
+                    if (data) {
+                        vm.tabs = data.data;
+                        vm.userInputs = [];
+                        vm.tabs.forEach(function (tab) {
+                            tab.layout.fields.forEach(function (field) {
+                                if (field.attribute_class == 'userInput') {
+                                    vm.userInputs.push(field.attribute);
+                                }
+                            });
+                        })
+                    } else {
+                        vm.tabs = uiService.getDefaultEditLayout(vm.entityType)[0].data;
+                    }
+
+                    $scope.$apply();
+                });
+
+                $scope.$parent.vm.editLayout = function () {
+                    $state.go('app.data-constructor', {
+                        entityType: vm.entityType,
+                        instanceId: vm.editLayoutEntityInstanceId
+                    });
+                };
+            }
 
         };
 
@@ -116,24 +160,39 @@
         attributeTypeService.getList(vm.entityType).then(function (data) {
             vm.attrs = data.results;
             vm.readyStatus.content = true;
-            //$scope.$apply();
-            //
+
+            console.log('vm.entityId55555555555555555555', vm.entityId);
 
             if (vm.entityId) {
 
-                entityResolverService.getByKey(vm.entityType, vm.entityId).then(function (data) {
+                if (vm.entityType == 'complex-transaction') {
 
-                    if (vm.entityType == 'complex-transaction') {
-                        vm.complexTransactionOptions.transactionType = data.transaction_type;
-                        vm.editLayoutEntityInstanceId = data.transaction_type;
-                        vm.getEditListByInstanceId();
-                        vm.entity = data;
-                        vm.specialRulesReady = true;
-                        vm.readyStatus.entity = true;
-                        vm.readyStatus.permissions = true;
-                        console.log('vm.complexTransactionOptions', vm.complexTransactionOptions);
-                        $scope.$apply();
-                    } else {
+                    if (vm.evAction == 'update') {
+                        entityResolverService.getByKey(vm.entityType, vm.entityId).then(function (data) {
+
+                            vm.complexTransactionOptions.transactionType = data.response.transaction_type;
+                            vm.editLayoutEntityInstanceId = data.response.transaction_type;
+                            vm.getEditListByInstanceId();
+                            vm.entity = data.response;
+
+                            var keys = Object.keys(vm.entity.values);
+
+                            keys.forEach(function (item) {
+                                vm.entity[item] = vm.entity.values[item];
+                            });
+
+                            vm.specialRulesReady = true;
+                            vm.readyStatus.entity = true;
+                            vm.readyStatus.permissions = true;
+
+                            $scope.$apply();
+                        });
+                    }
+
+                } else {
+
+
+                    entityResolverService.getByKey(vm.entityType, vm.entityId).then(function (data) {
                         vm.entity = data;
 
 
@@ -154,11 +213,12 @@
 
                             vm.loadPermissions();
                         });
-                    }
+                    });
 
-                    //$scope.$apply();
-                });
+                }
+                //$scope.$apply();
             } else {
+
                 vm.readyStatus.entity = true;
                 vm.loadPermissions();
             }
@@ -350,6 +410,7 @@
 
                     //console.log('vm.userInputs', vm.userInputs);
                     for (u = 0; u < vm.userInputs.length; u = u + 1) {
+                        //console.log('vm.userInputs[u]', vm.userInputs[u]);
                         if (field.name === vm.userInputs[u].name) {
                             vm.userInputs[u].options = field.options;
                             return vm.userInputs[u];
