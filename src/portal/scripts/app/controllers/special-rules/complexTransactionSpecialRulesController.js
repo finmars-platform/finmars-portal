@@ -60,7 +60,7 @@
                 $scope.$parent.vm.specialRulesReady = true;
                 $scope.$parent.vm.entity._transaction_type_id = vm.complexTransactionOptions.transactionType;
                 console.log('PARENT', $scope.$parent.vm);
-                $scope.$parent.vm.getEditListByInstanceId($scope.$parent.vm.entityType, vm.complexTransactionOptions.transactionType);
+                $scope.$parent.vm.getEditListByInstanceId();
                 $scope.$apply();
             }, 200); // but why?
 

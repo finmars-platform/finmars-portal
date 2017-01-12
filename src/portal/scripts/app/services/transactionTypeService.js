@@ -13,11 +13,11 @@
         return transactionTypeRepository.getByKey(id);
     };
 
-    var create = function(transaction) {
+    var create = function (transaction) {
         return transactionTypeRepository.create(transaction);
     };
 
-    var update = function(id, transaction) {
+    var update = function (id, transaction) {
         return transactionTypeRepository.update(id, transaction);
     };
 
@@ -25,8 +25,12 @@
         return transactionTypeRepository.deleteByKey(id);
     };
 
-    var bookTransaction = function(transaction) {
-        return transactionTypeRepository.bookTransaction(transaction);
+    var getBookTransaction = function (id) {
+        return transactionTypeRepository.getBookTransaction(id);
+    };
+
+    var bookTransaction = function (id, transaction) {
+        return transactionTypeRepository.bookTransaction(id, transaction);
     };
 
 
@@ -36,6 +40,7 @@
         create: create,
         update: update,
         deleteByKey: deleteByKey,
+        getBookTransaction: getBookTransaction,
         bookTransaction: bookTransaction
     }
 

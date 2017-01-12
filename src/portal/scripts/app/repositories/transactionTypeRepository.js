@@ -17,6 +17,7 @@
                 method: 'GET',
                 credentials: 'include',
                 headers: {
+                    'X-CSRFToken': cookieService.getCookie('csrftoken'),
                     Accept: 'application/json',
                     'Content-type': 'application/json'
                 }
@@ -31,6 +32,7 @@
                 method: 'GET',
                 credentials: 'include',
                 headers: {
+                    'X-CSRFToken': cookieService.getCookie('csrftoken'),
                     Accept: 'application/json',
                     'Content-type': 'application/json'
                 }
@@ -95,7 +97,7 @@
                     'Content-type': 'application/json'
                 }
             }).then(function (data) {
-            return new Promise(function(resolve,reject) {
+            return new Promise(function (resolve, reject) {
                 resolve({status: 'deleted'});
             });
             //return data.json();
@@ -104,8 +106,23 @@
 
     // TODO bookTransaction GET BOOK
 
-    var bookTransaction = function (transaction) {
-        return window.fetch(baseUrl + 'transactions/transaction-type/' + transaction._transaction_type_id + '/book/',
+    var getBookTransaction = function (id) {
+        return window.fetch(baseUrl + 'transactions/transaction-type/' + id + '/book/',
+            {
+                method: 'GET',
+                credentials: 'include',
+                headers: {
+                    'X-CSRFToken': cookieService.getCookie('csrftoken'),
+                    Accept: 'application/json',
+                    'Content-type': 'application/json'
+                }
+            }).then(function (data) {
+            return data.json();
+        })
+    };
+
+    var bookTransaction = function (id, transaction) {
+        return window.fetch(baseUrl + 'transactions/transaction-type/' + id + '/book/',
             {
                 method: 'PUT',
                 credentials: 'include',
@@ -134,6 +151,7 @@
         create: create,
         update: update,
         deleteByKey: deleteByKey,
+        getBookTransaction: getBookTransaction,
         bookTransaction: bookTransaction
     }
 

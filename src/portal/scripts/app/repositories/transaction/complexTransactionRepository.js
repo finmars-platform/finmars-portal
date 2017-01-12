@@ -103,8 +103,30 @@
         })
     };
 
+    var getBookComplexTransaction = function (id, transaction) {
+        return window.fetch(baseUrl + 'transactions/complex-transaction/' + id + '/book/',
+            {
+                method: 'GET',
+                credentials: 'include',
+                headers: {
+                    'X-CSRFToken': cookieService.getCookie('csrftoken'),
+                    Accept: 'application/json',
+                    'Content-type': 'application/json'
+                }
+            }).then(function (data) {
+            return new Promise(function (resolve, reject) {
+                data.json().then(function (result) {
+                    resolve({
+                        response: result,
+                        status: data.status
+                    })
+                })
+            });
+        })
+    };
+
     var bookComplexTransaction = function (id, transaction) {
-        return window.fetch(baseUrl + 'transactions/complex-transaction/' + id + '/book',
+        return window.fetch(baseUrl + 'transactions/complex-transaction/' + id + '/book/',
             {
                 method: 'PUT',
                 credentials: 'include',
@@ -133,6 +155,7 @@
         create: create,
         update: update,
         deleteByKey: deleteByKey,
+        getBookComplexTransaction: getBookComplexTransaction,
         bookComplexTransaction: bookComplexTransaction
     }
 

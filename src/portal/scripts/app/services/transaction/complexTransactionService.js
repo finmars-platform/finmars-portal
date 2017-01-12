@@ -13,11 +13,11 @@
         return complexTransactionRepository.getByKey(id);
     };
 
-    var create = function(transaction) {
+    var create = function (transaction) {
         return complexTransactionRepository.create(transaction);
     };
 
-    var update = function(id, transaction) {
+    var update = function (id, transaction) {
         return complexTransactionRepository.update(id, transaction);
     };
 
@@ -25,7 +25,11 @@
         return complexTransactionRepository.deleteByKey(id);
     };
 
-    var bookComplexTransaction = function(id, transaction) {
+    var getBookComplexTransaction = function (id) {
+        return complexTransactionRepository.getBookComplexTransaction(id);
+    };
+
+    var bookComplexTransaction = function (id, transaction) {
         return complexTransactionRepository.bookComplexTransaction(id, transaction);
     };
 
@@ -36,6 +40,7 @@
         create: create,
         update: update,
         deleteByKey: deleteByKey,
+        getBookComplexTransaction: getBookComplexTransaction,
         bookComplexTransaction: bookComplexTransaction
     }
 

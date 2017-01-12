@@ -527,17 +527,20 @@
 
                     data.results = data.results.map(function (item) {
 
-                        item.object_permissions_group = [];
-                        item.object_permissions_user = [];
+                        if (item.object_permissions) {
+                            item.object_permissions_group = [];
+                            item.object_permissions_user = [];
 
-                        item.object_permissions.forEach(function (permission) {
-                            if (permission.group == null) {
-                                item.object_permissions_user.push(permission);
-                            }
-                            if (permission.member == null) {
-                                item.object_permissions_group.push(permission);
-                            }
-                        });
+
+                            item.object_permissions.forEach(function (permission) {
+                                if (permission.group == null) {
+                                    item.object_permissions_user.push(permission);
+                                }
+                                if (permission.member == null) {
+                                    item.object_permissions_group.push(permission);
+                                }
+                            });
+                        }
 
                         return item;
                     });
