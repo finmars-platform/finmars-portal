@@ -1,0 +1,12 @@
+[
+  {
+    "name": "sum",
+    "description": "<p>Html sum description</p>",
+    "func": "(a + b)"
+  },
+  {
+    "name": "average",
+    "description": "<p>Html average description</p>",
+    "func": "(a + b) / 2"
+  }
+]
