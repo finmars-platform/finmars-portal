@@ -80,7 +80,7 @@ app.controller('BookTransactionTransactionsTabController', ['$scope', '$mdDialog
 app.controller('ComplexTransactionsTransactionEditDialogController', ['$scope', '$mdDialog', 'entityId', require('./app/controllers/entityViewer/complexTransactionsTransactionEditDialogController')]);
 
 app.controller('TransactionTypeActionsTabController', ['$scope', '$mdDialog', require('./app/controllers/tabs/transaction-type/transactionTypeActionsTabController')]);
-app.controller('TransactionTypeGeneralTabController', ['$scope', require('./app/controllers/tabs/transaction-type/transactionTypeGeneralTabController')]);
+app.controller('TransactionTypeGeneralTabController', ['$scope', '$mdDialog', require('./app/controllers/tabs/transaction-type/transactionTypeGeneralTabController')]);
 app.controller('TransactionTypeInputsTabController', ['$scope', require('./app/controllers/tabs/transaction-type/transactionTypeInputsTabController')]);
 
 app.controller('AccrualCalculationSchedulesTabController', ['$scope', require('./app/controllers/tabs/instrument/accrualCalculationSchedulesController')]);

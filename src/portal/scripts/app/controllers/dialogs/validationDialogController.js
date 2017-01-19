@@ -31,8 +31,38 @@
         var keys = Object.keys(vm.validationData);
 
         for (i = 0; i < keys.length; i = i + 1) {
-            vm.errorKeys.push({caption: removeUnderscores(keys[i]), value: vm.validationData[keys[i]][0]});
+            vm.errorKeys.push({caption: removeUnderscores(keys[i]), value: vm.validationData[keys[i]]});
         }
+
+        vm.bindValue = function (item) {
+
+            console.log('ITEM', item);
+
+            if (Array.isArray(item.value)) {
+
+                var result = '';
+
+                item.value.forEach(function (itemError, index) {
+
+                    var keys = Object.keys(itemError);
+
+                    if (keys.length > 0) {
+                        if (itemError.hasOwnProperty('name')) {
+                            result = result + ("<br/>&nbsp;&nbsp;" + (index + 1) + " " + itemError.name[0]);
+
+                        } else {
+                            result = result + itemError;
+                        }
+
+                    }
+                });
+
+                return result;
+            }
+
+            return item.value;
+
+        };
 
 
         vm.cancel = function () {
