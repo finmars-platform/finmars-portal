@@ -80,6 +80,10 @@
 
                         item.cellsCaptions[$index].isFolded = !item.cellsCaptions[$index].isFolded;
 
+                        item.subTotal = item.cellsCaptions[$index].subTotal;
+
+                        //console.log('item.cellsCaptions', item.cellsCaptions[$index]);
+
                         var itemCellCaptionsPatterns = getCellsCaptionsPatterns(item, $index);
 
                         var localItems = []; // to find first element, and revert isFolded;
@@ -106,7 +110,8 @@
                         });
 
 
-                        localItems[0].isFirstOfFolded = true;
+                        //localItems[0].isFirstOfFolded = true;
+                        localItems[0].isFirstOfFolded = item.cellsCaptions[$index].isFolded;
 
                         localItems.forEach(function (locItem) {
 
@@ -361,7 +366,14 @@
 
                 scope.isSubtotalHided = function (column) {
                     if (column.hasOwnProperty('report_settings') && column.report_settings) {
-                        if (column.report_settings.hide_subtotal == true) {
+
+                        //console.log('colum222222222222222n', column);
+                        if (column.report_settings.subtotal_formula_id) {
+                            if (column.report_settings.hide_subtotal == true) {
+                                return false;
+                            }
+                            return true;
+                        } else {
                             return false;
                         }
                     }
@@ -755,10 +767,7 @@
 
                 };
 
-                scope.bindCell = function (groupedItem, column) {
-
-                    //console.log('groupedItem', groupedItem);
-
+                scope.bindCell = function (groupedItem, column, options) {
 
                     if (column.hasOwnProperty('r_entityType')) {
 
@@ -849,9 +858,6 @@
                                         return result['name'];
                                     }
                                     return '';
-                                    //} else {
-                                    //    return '<div class="zh-loader"></div>';
-                                    //}
                                 } else {
                                     // if (column['value_type'] === 'mc_field') {
                                     //     if (groupedItem[entityAttrs[e].key].length == 1) {
@@ -925,7 +931,18 @@
                                         if (groupedItem[entityAttrs[e].key] !== null) {
 
                                             if (column.value_type == 20 || column.value_type == 'float') {
-                                                return groupedItem[entityAttrs[e].key].toFixed(2) + '';
+
+
+                                                if (options && options.hasOwnProperty('reportItem')) {
+                                                    if (options.reportItem.isFirstOfFolded && options.reportItem.isFirstOfFolded == true) {
+                                                        //console.log(options);
+                                                        return options.reportItem.subTotal[entityAttrs[e].key].toFixed(2) + '';
+                                                    } else {
+                                                        return groupedItem[entityAttrs[e].key].toFixed(2) + '';
+                                                    }
+                                                } else {
+                                                    return groupedItem[entityAttrs[e].key].toFixed(2) + '';
+                                                }
                                             } else {
                                                 return groupedItem[entityAttrs[e].key];
                                             }

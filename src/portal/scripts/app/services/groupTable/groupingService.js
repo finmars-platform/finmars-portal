@@ -390,7 +390,10 @@
             if (options) {
 
                 itemsGroupedArray.forEach(function (group) {
+
+                    //console.log('group122222', group);
                     group.subTotal = reportSubtotalService.calcColumnSubTotal(group, options.columns);
+                    group.groups[0].subTotal = group.subTotal;
                 });
             }
 

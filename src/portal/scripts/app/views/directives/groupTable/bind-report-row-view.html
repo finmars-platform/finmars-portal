@@ -1,4 +1,4 @@
-<div data-ng-show="itemIsFolded(item)">
+<div data-ng-show="itemIsFolded(item)" class="{{item.isFirstOfFolded ? 'folded-root-item' : ''}}">
 
     <div data-ng-if="item.type == 'preinit'" class="g-row report-preinit-row">
 
@@ -102,7 +102,7 @@
                 <div class="g-cell {{getAlign(column)}} {{resolveReportCellBorder('normal', item, column, $index)}}"
                      data-ng-if="!checkReportColumnCaption(item.cellsCaptions, column, $index)">
                                 <span title="{{::bindCellTitle(item.value, column)}}"
-                                      data-ng-bind-html="::bindCell(item.value, column) | trustAsHtml"></span>
+                                      data-ng-bind-html="bindCell(item.value, column, {reportItem: item}) | trustAsHtml"></span>
                 </div>
             </div>
         </div>
@@ -161,7 +161,7 @@
                 {{resolveReportCellBackground('subtotal', item, column, $index)}}
                 {{resolveReportCellBorder('subtotal', item, column, $index)}}"
                      data-ng-if="checkReportColumnCaption(item.cellsCaptions, column, $index)">
-                    <span data-ng-if="isSubtotalHided(column)">{{item.cellsCaptions[$index].value}}</span>
+                    <span data-ng-if="isSubtotalHided(column)" data-ng-bind-html="item.cellsCaptions[$index].value"></span>
                 </div>
                 <div class="g-cell {{getAlign(column)}}
                 {{resolveReportCellItemBackground('subtotal', item, column, $index)}}

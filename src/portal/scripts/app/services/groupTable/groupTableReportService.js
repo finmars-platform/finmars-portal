@@ -9,6 +9,7 @@
         this.type = options.type || 'normal'; // header row, subtotal row, normal row, breadcrumbs, init, preinit
         this.cellsCaptions = options.cellsCaptions || []; // captions for groups
         this.value = options.value; // casual val, or subtotal
+        this.subTotal = options.subTotal || {};
         this.isRootBootGroup = options.isRootBootGroup || false;
         this.value_options = options.value_options || {};
     }
@@ -74,7 +75,7 @@
                             cellObj.comparePattern = item.groups[0].comparePattern;
                             cellObj.type = cellObjType;
                             cellObj.level = level;
-                            cellObj.value = 'Subtotal';
+                            cellObj.value = '<b>Subtotal</b>';
                         } else {
                             for (g = 0; g < previousGroups.length; g = g + 1) {
 
@@ -105,7 +106,6 @@
                     }
 
                 }
-
 
                 //for (i = 1; i <= level; i = i + 1) {
                 //
@@ -202,6 +202,7 @@
                         value: '',
                         comparePattern: item.groups[0].comparePattern,
                         //_group: item.groups[0],
+                        subTotal: item.subTotal,
                         type: item.groups[0].report_settings.subtotal_type,
                         level: i
                     };
@@ -239,6 +240,7 @@
                             //cellObj._group = item.groups[0];
                             cellObj.comparePattern = item.groups[0].comparePattern;
                             cellObj.type = cellObjType;
+                            cellObj.subTotal = item.groups[0].subTotal;
                             cellObj.level = level;
                             if (options.itemIndex != 0) {
                                 cellObj.value = '';
@@ -257,10 +259,12 @@
                                         cellObj = JSON.parse(JSON.stringify(previousGroups[g].groups[0]));
                                     }
 
+                                    //console.log('previousGroups[g]', previousGroups[g]);
 
                                     //cellObj._group = previousGroups[g].groups[0];
                                     cellObj.comparePattern = previousGroups[g].groups[0].comparePattern;
                                     cellObj.type = cellObjType;
+                                    cellObj.subTotal = previousGroups[g].groups[0].subTotal;
                                     cellObj.level = i + 1;
                                     //cellObj.itemIndex = options.itemIndex;
 
@@ -383,6 +387,7 @@
                             var obj = {
                                 cellsCaptions: cellCaptions,
                                 value: rowItem,
+                                subTotal: item.subTotal,
                                 value_options: {
                                     level: level
                                 }
@@ -396,6 +401,7 @@
                 } else {
 
                     if (item.hasOwnProperty('items') && item.items.length) {
+
                         item.items.forEach(function (rowItem, $itemIndex) {
 
                             var cellCaptions = findCellCaptions(item, level, 'normal', {itemIndex: $itemIndex});
@@ -403,6 +409,7 @@
                             var obj = {
                                 cellsCaptions: cellCaptions,
                                 value: rowItem,
+                                subTotal: item.subTotal,
                                 value_options: {
                                     level: level
                                 }
