@@ -94,6 +94,10 @@
                     } else {
                         column.report_settings.subtotal_formula_id = type;
                     }
+
+                    console.log('scope.column11111s JSON', JSON.parse(JSON.stringify(column)));
+                    console.log('scope.column11111s JSON', JSON.parse(JSON.stringify(scope.columns)));
+
                     scope.externalCallback({silent: true, options: {columns: scope.columns}});
                 };
 
@@ -112,10 +116,6 @@
 
                 scope.$watchCollection('columns', function () {
 
-                    if (scope.isReport == true) {
-
-
-                    }
 
                     setTimeout(function () {
 

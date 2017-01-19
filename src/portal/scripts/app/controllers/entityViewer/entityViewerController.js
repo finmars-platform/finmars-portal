@@ -120,9 +120,9 @@
                                     if (item.report_settings) {
                                         report_settings = JSON.parse(JSON.stringify(item.report_settings));
                                     }
-                                    item = repAttr;
+                                    item = JSON.parse(JSON.stringify(repAttr));
                                     item.options = attrOptions;
-                                    item.report_settings = report_settings;
+                                    item.report_settings = JSON.parse(JSON.stringify(report_settings));
                                     fullItems.push(item);
                                 }
                             });
@@ -139,9 +139,9 @@
                                     if (item.report_settings) {
                                         report_settings = JSON.parse(JSON.stringify(item.report_settings));
                                     }
-                                    item = attr;
+                                    item = JSON.parse(JSON.stringify(attr));
                                     item.options = attrOptions;
-                                    item.report_settings = report_settings;
+                                    item.report_settings = JSON.parse(JSON.stringify(report_settings));
                                     fullItems.push(item);
                                 }
                             }
@@ -157,9 +157,9 @@
                                 if (item.report_settings) {
                                     report_settings = JSON.parse(JSON.stringify(item.report_settings));
                                 }
-                                item = baseAttr;
+                                item = JSON.parse(JSON.stringify(baseAttr));
                                 item.options = attrOptions;
-                                item.report_settings = report_settings;
+                                item.report_settings = JSON.parse(JSON.stringify(report_settings));
                                 fullItems.push(item);
                             }
                         }
@@ -173,9 +173,9 @@
                                 if (item.report_settings) {
                                     report_settings = JSON.parse(JSON.stringify(item.report_settings));
                                 }
-                                item = entityAttr;
+                                item = JSON.parse(JSON.stringify(entityAttr));
                                 item.options = attrOptions;
-                                item.report_settings = report_settings;
+                                item.report_settings = JSON.parse(JSON.stringify(report_settings));
                                 fullItems.push(item);
                             }
                         }
