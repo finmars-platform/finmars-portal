@@ -1533,7 +1533,7 @@
                 },
                 {
                     "key": "text",
-                    "name": "Text",
+                    "name": "Description",
                     "value_type": 10
                 }
             ],

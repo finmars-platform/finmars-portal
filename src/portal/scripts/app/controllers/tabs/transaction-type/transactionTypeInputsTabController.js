@@ -24,6 +24,7 @@
             instrument: null,
             currency: null,
             counterparty: null,
+            is_fill_from_context: false,
             responsible: null,
             portfolio: null,
             strategy1: null,
@@ -185,7 +186,7 @@
             vm.newItem.verbose_name = null;
             vm.newItem.value_type = null;
             vm.newItem.content_type = null;
-            vm.newItem.is_fill_from_context = null;
+            vm.newItem.is_fill_from_context = false;
             vm.newItem.account = null;
             vm.newItem.instrument_type = null;
             vm.newItem.instrument = null;

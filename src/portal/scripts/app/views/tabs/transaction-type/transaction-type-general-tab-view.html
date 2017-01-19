@@ -52,10 +52,25 @@
         </div>
         <div layout="row">
             <md-input-container>
+                <label for="">Complex transaction date</label>
+                <input type="text" data-ng-model="vm.entity.date_expr">
+            </md-input-container>
+            <md-button class="md-raised md-primary expr-btn"
+                       data-ng-click="vm.openExpressionDialog($event, vm.entity.date_expr)">
+                ...
+            </md-button>
+        </div>
+        <div layout="row">
+            <md-input-container>
                 <label for="">Display expression</label>
                 <input type="text" data-ng-model="vm.entity.display_expr">
             </md-input-container>
+            <md-button class="md-raised md-primary expr-btn"
+                       data-ng-click="vm.openExpressionDialog($event, vm.entity.display_expr)">
+                ...
+            </md-button>
         </div>
+
         <div layout="row">
             <md-input-container>
                 <label for="">Tags</label>
