@@ -93,10 +93,10 @@
                                                     <md-input-container>
                                                         <label for="">Instrument</label>
                                                         <md-select
-                                                                data-ng-model="item.transaction[vm.resolveInstrumentProp(item)]">
+                                                                data-ng-model="item.transaction[vm.resolveInstrumentProp(item, 'instrument')]">
                                                             <md-optgroup label="Inputs">
                                                                 <md-option
-                                                                        data-ng-click="vm.setTransactionInstrumentInput(item, inputItem.name)"
+                                                                        data-ng-click="vm.setTransactionInstrumentInput(item, inputItem.name, 'instrument')"
                                                                         data-ng-repeat="inputItem in vm.findInputs('instrument')"
                                                                         ng-value="inputItem.name">
                                                                     {{inputItem.name}}
@@ -104,7 +104,7 @@
                                                             </md-optgroup>
                                                             <md-optgroup label="Phantoms">
                                                                 <md-option
-                                                                        data-ng-click="vm.setTransactionInstrumentPhantom(item, phantomItem.positionOrder)"
+                                                                        data-ng-click="vm.setTransactionInstrumentPhantom(item, phantomItem.positionOrder, 'instrument')"
                                                                         data-ng-repeat="phantomItem in vm.findPhantoms()"
                                                                         ng-value="phantomItem.positionOrder">
                                                                     {{phantomItem.action_notes}}
@@ -192,7 +192,7 @@
                                                                    md-on-open="vm.loadRelation('instrument')">
                                                             <md-option
                                                                     data-ng-if="!vm.relationItems['instrument'].length"
-                                                                    ng-value="item.transaction.instrument_object.id">
+                                                                    ng-value="item.transaction.linked_instrument_object.id">
                                                                 {{item.transaction.instrument_object.name}}
                                                             </md-option>
                                                             <md-option
@@ -208,10 +208,10 @@
                                                     <md-input-container>
                                                         <label for="">Linked instrument</label>
                                                         <md-select
-                                                                data-ng-model="item.transaction[vm.resolveInstrumentProp(item)]">
+                                                                data-ng-model="item.transaction[vm.resolveInstrumentProp(item, 'linked_instrument')]">
                                                             <md-optgroup label="Inputs">
                                                                 <md-option
-                                                                        data-ng-click="vm.setTransactionInstrumentInput(item, inputItem.name)"
+                                                                        data-ng-click="vm.setTransactionInstrumentInput(item, inputItem.name, 'linked_instrument')"
                                                                         data-ng-repeat="inputItem in vm.findInputs('instrument')"
                                                                         ng-value="inputItem.name">
                                                                     {{inputItem.name}}
@@ -219,7 +219,7 @@
                                                             </md-optgroup>
                                                             <md-optgroup label="Phantoms">
                                                                 <md-option
-                                                                        data-ng-click="vm.setTransactionInstrumentPhantom(item, phantomItem.positionOrder)"
+                                                                        data-ng-click="vm.setTransactionInstrumentPhantom(item, phantomItem.positionOrder, 'linked_instrument')"
                                                                         data-ng-repeat="phantomItem in vm.findPhantoms()"
                                                                         ng-value="phantomItem.positionOrder">
                                                                     {{phantomItem.action_notes}}
@@ -266,10 +266,10 @@
                                                     <md-input-container>
                                                         <label for="">Allocation-P&L</label>
                                                         <md-select
-                                                                data-ng-model="item.transaction[vm.resolveInstrumentProp(item)]">
+                                                                data-ng-model="item.transaction[vm.resolveInstrumentProp(item, 'allocation_pl')]">
                                                             <md-optgroup label="Inputs">
                                                                 <md-option
-                                                                        data-ng-click="vm.setTransactionInstrumentInput(item, inputItem.name)"
+                                                                        data-ng-click="vm.setTransactionInstrumentInput(item, inputItem.name, 'allocation_pl')"
                                                                         data-ng-repeat="inputItem in vm.findInputs('instrument')"
                                                                         ng-value="inputItem.name">
                                                                     {{inputItem.name}}
@@ -277,7 +277,7 @@
                                                             </md-optgroup>
                                                             <md-optgroup label="Phantoms">
                                                                 <md-option
-                                                                        data-ng-click="vm.setTransactionInstrumentPhantom(item, phantomItem.positionOrder)"
+                                                                        data-ng-click="vm.setTransactionInstrumentPhantom(item, phantomItem.positionOrder, 'allocation_pl')"
                                                                         data-ng-repeat="phantomItem in vm.findPhantoms()"
                                                                         ng-value="phantomItem.positionOrder">
                                                                     {{phantomItem.action_notes}}
@@ -325,10 +325,10 @@
                                                     <md-input-container>
                                                         <label for="">Allocation-Balance</label>
                                                         <md-select
-                                                                data-ng-model="item.transaction[vm.resolveInstrumentProp(item)]">
+                                                                data-ng-model="item.transaction[vm.resolveInstrumentProp(item, 'allocation_balance')]">
                                                             <md-optgroup label="Inputs">
                                                                 <md-option
-                                                                        data-ng-click="vm.setTransactionInstrumentInput(item, inputItem.name)"
+                                                                        data-ng-click="vm.setTransactionInstrumentInput(item, inputItem.name, 'allocation_balance')"
                                                                         data-ng-repeat="inputItem in vm.findInputs('instrument')"
                                                                         ng-value="inputItem.name">
                                                                     {{inputItem.name}}
@@ -336,7 +336,7 @@
                                                             </md-optgroup>
                                                             <md-optgroup label="Phantoms">
                                                                 <md-option
-                                                                        data-ng-click="vm.setTransactionInstrumentPhantom(item, phantomItem.positionOrder)"
+                                                                        data-ng-click="vm.setTransactionInstrumentPhantom(item, phantomItem.positionOrder, 'allocation_balance')"
                                                                         data-ng-repeat="phantomItem in vm.findPhantoms()"
                                                                         ng-value="phantomItem.positionOrder">
                                                                     {{phantomItem.action_notes}}
