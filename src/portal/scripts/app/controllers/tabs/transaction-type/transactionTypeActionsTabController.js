@@ -176,25 +176,89 @@
 
         };
 
-        vm.resolveInstrumentProp = function (item) {
+        vm.resolveInstrumentProp = function (item, prop) {
 
-            if (item.transaction.instrument_input !== null) {
-                return 'instrument_input'
+            if (prop == 'instrument') {
+                if (item.transaction.instrument_input !== null) {
+                    return 'instrument_input'
+                }
+                return 'instrument_phantom'
             }
-            return 'instrument_phantom'
+
+            if (prop == 'linked_instrument') {
+                if (item.transaction.linked_instrument_input !== null) {
+                    return 'linked_instrument_input'
+                }
+                return 'linked_instrument_phantom'
+            }
+            if (prop == 'allocation_pl') {
+                if (item.transaction.allocation_pl_input !== null) {
+                    return 'allocation_pl_input'
+                }
+                return 'allocation_pl_phantom'
+            }
+
+            if (prop == 'allocation_balance') {
+                if (item.transaction.allocation_balance_input !== null) {
+                    return 'allocation_balance_input'
+                }
+                return 'allocation_balance_phantom'
+            }
 
         };
 
-        vm.setTransactionInstrumentInput = function (item, name) {
-            item.transaction.instrument_input = name;
-            item.transaction.instrument_phantom = null;
-            item.transaction.instrument = null;
+        vm.setTransactionInstrumentInput = function (item, name, prop) {
+
+            if (prop == 'instrument') {
+                item.transaction.instrument_input = name;
+                item.transaction.instrument_phantom = null;
+                item.transaction.instrument = null;
+            }
+
+            if (prop == 'linked_instrument') {
+                item.transaction.linked_instrument_input = name;
+                item.transaction.linked_instrument_phantom = null;
+                item.transaction.linked_instrument = null;
+            }
+
+            if (prop == 'allocation_pl') {
+                item.transaction.allocation_pl_input = name;
+                item.transaction.allocation_pl_phantom = null;
+                item.transaction.allocation_pl = null;
+            }
+
+            if (prop == 'allocation_balance') {
+                item.transaction.allocation_balance_input = name;
+                item.transaction.allocation_balance_phantom = null;
+                item.transaction.allocation_balance = null;
+            }
         };
 
-        vm.setTransactionInstrumentPhantom = function (item, positionOrder) {
-            item.transaction.instrument_input = null;
-            item.transaction.instrument_phantom = positionOrder;
-            item.transaction.instrument = null;
+        vm.setTransactionInstrumentPhantom = function (item, positionOrder, prop) {
+
+            if (prop == 'instrument') {
+                item.transaction.instrument_input = null;
+                item.transaction.instrument_phantom = positionOrder;
+                item.transaction.instrument = null;
+            }
+
+            if (prop == 'linked_instrument') {
+                item.transaction.linked_instrument_input = null;
+                item.transaction.linked_instrument_phantom = positionOrder;
+                item.transaction.linked_instrument = null;
+            }
+
+            if (prop == 'allocation_pl') {
+                item.transaction.allocation_pl_input = null;
+                item.transaction.allocation_pl_phantom = positionOrder;
+                item.transaction.allocation_pl = null;
+            }
+
+            if (prop == 'allocation_balance') {
+                item.transaction.allocation_balance_input = null;
+                item.transaction.allocation_balance_phantom = positionOrder;
+                item.transaction.allocation_balance = null;
+            }
 
         };
 
