@@ -271,7 +271,7 @@
                     });
 
                 }
-                if (data.status == 400) {
+                if (data.status == 400 || data.status == 500) {
                     $mdDialog.show({
                         controller: 'ValidationDialogController as vm',
                         templateUrl: 'views/dialogs/validation-dialog-view.html',

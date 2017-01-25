@@ -99,7 +99,7 @@
             $mdDialog.cancel();
         };
 
-        vm.agree = function () {
+        vm.agree = function ($event) {
 
             var minutes = moment(new Date(vm.cron.time)).format('mm');
             var hours = moment(new Date(vm.cron.time)).format('hh');
@@ -123,10 +123,25 @@
                 vm.schedule.cron_expr = parseInt(minutes) + ' ' + parseInt(hours) + ' ' + vm.cron.day + ' ' + vm.cron.month + ' *'
             }
 
-            pricingAutomatedScheduleService.updateSchedule(vm.schedule).then(function () {
+            pricingAutomatedScheduleService.updateSchedule(vm.schedule).then(function (data) {
                 console.log('here?');
-                $mdDialog.hide({status: 'agree', data: 'success'});
-                $scope.$apply();
+
+                if (data.status == 400 || data.status == 500) {
+                    $mdDialog.show({
+                        controller: 'ValidationDialogController as vm',
+                        templateUrl: 'views/dialogs/validation-dialog-view.html',
+                        targetEvent: $event,
+                        locals: {
+                            validationData: data.response
+                        },
+                        preserveScope: true,
+                        autoWrap: true,
+                        skipHide: true
+                    })
+                } else {
+                    $mdDialog.hide({status: 'agree', data: 'success'});
+                    $scope.$apply();
+                }
             })
         };
 

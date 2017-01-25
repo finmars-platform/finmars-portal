@@ -12,7 +12,7 @@
     var baseUrl = baseUrlService.resolve();
 
     var getList = function () {
-        return window.fetch(baseUrl + 'import/instrument-type-mapping/',
+        return window.fetch(baseUrl + 'import/instrument-type-mapping/?page_size=1000',
             {
                 method: 'GET',
                 credentials: 'include',

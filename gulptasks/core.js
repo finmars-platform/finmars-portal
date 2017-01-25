@@ -1,7 +1,7 @@
 /**
  * Created by szhitenev on 09.03.2016.
  */
-(function(){
+(function () {
 
     'use strict';
 
@@ -13,7 +13,7 @@
 
     var appName = 'core';
 
-    gulp.task(appName + '-angular-js-min', function(){
+    gulp.task(appName + '-angular-js-min', function () {
 
         var pathToJS = [
             'node_modules/angular/angular.js',
@@ -29,7 +29,8 @@
             'node_modules/angular-material/angular-material.js',
             'node_modules/angular-carousel/dist/angular-carousel.js',
             'bower_components/mdPickers/dist/mdPickers.js',
-            'node_modules/angular-material-icons/angular-material-icons.js'];
+            'node_modules/angular-material-icons/angular-material-icons.js'
+        ];
 
         return gulp.src(pathToJS)
             .pipe(concat('angular.js'))
@@ -41,7 +42,8 @@
     gulp.task(appName + '-min-Angular-UI-JS', function () {
 
         var pathToJS = [
-            'node_modules/angular-ui-router/release/angular-ui-router.js'
+            'node_modules/angular-ui-router/release/angular-ui-router.js',
+            'node_modules/ui-select/dist/select.js'
         ];
 
         return gulp.src(pathToJS)
@@ -50,11 +52,12 @@
             .pipe(gulp.dest('dist/' + appName + '/scripts/'));
     });
 
-    gulp.task(appName + '-angular-css-min', function(){
+    gulp.task(appName + '-angular-css-min', function () {
 
         var pathToCSS = [
             'node_modules/angular-material/angular-material.css',
             'bower_components/mdPickers/dist/mdPickers.css',
+            'node_modules/ui-select/dist/select.css',
             'node_modules/angular-contextmenu/dist/style.css',
             'node_modules/v-accordion/dist/v-accordion.css',
             'node_modules/angular-carousel/dist/angular-carousel.css'
@@ -68,7 +71,7 @@
 
     });
 
-    gulp.task(appName + '-core-js-min', function(){
+    gulp.task(appName + '-core-js-min', function () {
 
         var pathToJS = ['node_modules/core-js/client/core.js'];
 
@@ -79,7 +82,7 @@
 
     });
 
-    gulp.task(appName + '-jquery-js-min', function(){
+    gulp.task(appName + '-jquery-js-min', function () {
 
         var pathToJS = ['node_modules/jquery/dist/jquery.js'];
 
@@ -91,7 +94,7 @@
 
     });
 
-    gulp.task(appName + '-fetch-js-min', function(){
+    gulp.task(appName + '-fetch-js-min', function () {
 
         var pathToJS = ['node_modules/whatwg-fetch/fetch.js'];
 
@@ -103,7 +106,7 @@
 
     });
 
-    gulp.task(appName + '-moment-js-min', function(){
+    gulp.task(appName + '-moment-js-min', function () {
 
         var pathToJS = ['node_modules/moment/moment.js'];
 
@@ -115,7 +118,7 @@
 
     });
 
-    gulp.task(appName + '-dragula-js-min', function(){
+    gulp.task(appName + '-dragula-js-min', function () {
 
         var pathToJS = [
             'node_modules/dragula/dist/dragula.js',
@@ -130,7 +133,7 @@
 
     });
 
-    gulp.task(appName + '-dragula-css-min', function(){
+    gulp.task(appName + '-dragula-css-min', function () {
 
         var pathToCSS = [
             'node_modules/dragula/dist/dragula.css'
@@ -144,7 +147,7 @@
 
     });
 
-    gulp.task(appName + '-plugins-js-min', function(){
+    gulp.task(appName + '-plugins-js-min', function () {
 
         var pathToJS = [
             //'node_modules/malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.js',
@@ -163,7 +166,7 @@
 
     });
 
-    gulp.task(appName + '-plugins-css-min', function(){
+    gulp.task(appName + '-plugins-css-min', function () {
 
         var pathToCSS = [
             //'node_modules/nanoscroller/bin/css/nanoscroller.css',
@@ -179,7 +182,6 @@
             .pipe(gulp.dest('dist/' + appName + '/content/css'));
 
     });
-
 
 
     gulp.task(appName + '-min-All', [

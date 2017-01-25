@@ -16,6 +16,7 @@ var app = angular.module('portal', [
     'vAccordion',
     'mdPickers',
     'bw.paging',
+    'ui.select',
     'io.dennis.contextmenu',
     angularDragula(angular),
 
@@ -209,6 +210,7 @@ app.directive('inputFileDirective', [require('./app/directives/inputFileDirectiv
 
 app.filter('trustAsHtml', ['$sce', require('./app/filters/trustAsHtmlFilter')]);
 app.filter('strLimit', ['$filter', require('./app/filters/strLimitFilter')]);
+app.filter('propsFilter', ['$filter', require('./app/filters/propsFilter')]);
 
 app.directive('ngRightClick', ['$parse', function ($parse) {
     return function (scope, element, attrs) {
