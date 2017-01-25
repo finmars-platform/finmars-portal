@@ -12,7 +12,7 @@
     var baseUrl = baseUrlService.resolve();
 
     var getList = function () {
-        return window.fetch(baseUrl + 'import/currency-mapping/',
+        return window.fetch(baseUrl + 'import/currency-mapping/?page_size=1000',
             {
                 method: 'GET',
                 credentials: 'include',

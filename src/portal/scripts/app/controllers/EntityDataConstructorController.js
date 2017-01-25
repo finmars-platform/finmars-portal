@@ -38,7 +38,7 @@
 
         // weirdo stuff
         // we took edit layout by instance id instead of entity content_type
-        // but it can be took from different entity
+        // but it can be taken from different entity
         // e.g. transaction -> transaction-type.book_transaction_layout
 
         if (vm.isntanceId) {
@@ -94,7 +94,7 @@
                         var contentType = undefined;
                         var uniqueKey = input.name.split(' ').join('_').toLowerCase();
 
-                        if(input.content_type && input.content_type !== undefined) {
+                        if (input.content_type && input.content_type !== undefined) {
                             contentType = input.content_type.split('.')[1];
                             uniqueKey = input.name.split(' ').join('_').toLowerCase() + '_' + input.content_type;
                         } else {
@@ -282,8 +282,12 @@
                 if (vm.isntanceId) {
                     uiService.updateEditLayoutByInstanceId(vm.entityType, vm.isntanceId, vm.ui).then(function (data) {
                         console.log('layout saved');
-
-                        var route = routeResolver.findExistingState('app.data.', vm.entityType);
+                        var route;
+                        if (vm.entityType === 'complex-transaction') {
+                            route = routeResolver.findExistingState('app.data.', 'transaction-type');
+                        } else {
+                            route = routeResolver.findExistingState('app.data.', vm.entityType);
+                        }
                         $state.go(route.state, route.options);
                         $scope.$apply();
                     });
@@ -301,7 +305,12 @@
                     uiService.updateEditLayoutByInstanceId(vm.entityType, vm.isntanceId, vm.ui).then(function (data) {
                         console.log('layout saved');
 
-                        var route = routeResolver.findExistingState('app.data.', vm.entityType);
+                        var route;
+                        if (vm.entityType === 'complex-transaction') {
+                            route = routeResolver.findExistingState('app.data.', 'transaction-type');
+                        } else {
+                            route = routeResolver.findExistingState('app.data.', vm.entityType);
+                        }
                         $state.go(route.state, route.options);
                         $scope.$apply();
                     });

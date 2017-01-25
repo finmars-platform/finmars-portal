@@ -96,6 +96,35 @@
         vm.getInstrumentTypes();
         vm.getTags();
 
+        vm.tagTransform = function (newTag) {
+            //console.log('newTag', newTag);
+            var item = {
+                name: newTag,
+                id: null
+            };
+
+            return item;
+        };
+
+        $scope.$watch('vm.entity.tags', function () {
+            vm.entity.tags.forEach(function (item) {
+                if (item.id == null) {
+                    tagService.create({
+                        name: item.name,
+                        content_types: ['transactions.transactiontype']
+                    })
+                }
+            })
+        });
+
+        $scope.$watch('vm.entity.group', function () {
+            if (vm.entity.group.name != null) {
+                transactionTypeGroupService.create({
+                    name: vm.entity.group.name
+                })
+            }
+        });
+
         vm.checkReadyStatus = function () {
             if (vm.readyStatus.transactionTypeGroups == true &&
                 vm.readyStatus.portfolios == true &&

@@ -12,7 +12,7 @@
     var baseUrl = baseUrlService.resolve();
 
     var getList = function () {
-        return window.fetch(baseUrl + 'import/accrual-calculation-model-mapping/',
+        return window.fetch(baseUrl + 'import/accrual-calculation-model-mapping/?page_size=10000',
             {
                 method: 'GET',
                 credentials: 'include',

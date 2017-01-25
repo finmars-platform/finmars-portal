@@ -12,7 +12,7 @@
     var baseUrl = baseUrlService.resolve();
 
     var getList = function () {
-        return window.fetch(baseUrl + 'import/periodicity-mapping/',
+        return window.fetch(baseUrl + 'import/periodicity-mapping/?page_size=1000',
             {
                 method: 'GET',
                 credentials: 'include',

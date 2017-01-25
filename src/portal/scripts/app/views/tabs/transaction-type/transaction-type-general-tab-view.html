@@ -5,6 +5,18 @@
                 <label for="">User code</label>
                 <input type="text" data-ng-model="vm.entity.user_code">
             </md-input-container>
+
+            <!--<md-input-container>-->
+            <!--<label for="">Group</label>-->
+            <!--<ui-select tagging="vm.tagTransform" ng-model="vm.entity.group" theme="bootstrap"-->
+            <!--sortable="true" close-on-select="false">-->
+            <!--<ui-select-match placeholder="Group">{{$item.name}}</ui-select-match>-->
+            <!--<ui-select-choices-->
+            <!--repeat="item in vm.transactionTypeGroups | propsFilter: {name: $select.search}">-->
+            <!--<div ng-bind-html="item.name | highlight: $select.search"></div>-->
+            <!--</ui-select-choices>-->
+            <!--</ui-select>-->
+            <!--</md-input-container>-->
             <md-input-container>
                 <label for="">Group</label>
                 <md-select data-ng-model="vm.entity.group">
@@ -74,10 +86,22 @@
         <div layout="row">
             <md-input-container>
                 <label for="">Tags</label>
-                <md-select data-ng-model="vm.entity.tags" multiple>
-                    <md-option ng-value="item.id" ng-repeat="item in vm.tags">{{item.name}}</md-option>
-                </md-select>
+                <ui-select multiple tagging="vm.tagTransform" ng-model="vm.entity.tags" theme="bootstrap"
+                           sortable="true" close-on-select="false">
+                    <ui-select-match placeholder="Tags">{{$item.name}}</ui-select-match>
+                    <ui-select-choices
+                            repeat="item in vm.tags | propsFilter: {name: $select.search}">
+                        <div ng-bind-html="item.name | highlight: $select.search"></div>
+                    </ui-select-choices>
+                </ui-select>
             </md-input-container>
+
+            <!--<md-input-container>-->
+            <!--<label for="">Tags</label>-->
+            <!--<md-select data-ng-model="vm.entity.tags" multiple>-->
+            <!--<md-option ng-value="item.id" ng-repeat="item in vm.tags">{{item.name}}</md-option>-->
+            <!--</md-select>-->
+            <!--</md-input-container>-->
         </div>
     </div>
     <div data-ng-if="!vm.checkReadyStatus()">
