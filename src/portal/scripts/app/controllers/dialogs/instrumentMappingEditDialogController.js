@@ -73,6 +73,7 @@
                 key: 'name',
                 caption: 'Name',
                 required: true,
+                hasBackground: true,
                 expression: '',
                 complexExpressionEntity: false
             },
@@ -80,6 +81,7 @@
                 key: 'user_code',
                 caption: 'User code',
                 required: true,
+                hasBackground: true,
                 expression: '',
                 complexExpressionEntity: false
             },
@@ -87,12 +89,27 @@
                 key: 'instrument_type',
                 caption: 'Instrument type',
                 required: true,
+                hasBackground: true,
                 expression: '',
                 complexExpressionEntity: 'instrument_type'
             },
             {
-                key: 'reference_for_pricing',
-                caption: 'Reference for pricing',
+                key: 'short_name',
+                caption: 'Short name',
+                required: true,
+                expression: '',
+                complexExpressionEntity: false
+            },
+            {
+                key: 'public_name',
+                caption: 'Public name',
+                required: true,
+                expression: '',
+                complexExpressionEntity: false
+            },
+            {
+                key: 'maturity_date',
+                caption: 'Maturity',
                 required: true,
                 expression: '',
                 complexExpressionEntity: false
@@ -104,6 +121,7 @@
                 key: 'daily_pricing_model',
                 caption: 'Daily pricing model',
                 required: false,
+                hasBackground: true,
                 value_type: "field",
                 expression: '',
                 complexExpressionEntity: false
@@ -112,7 +130,33 @@
                 key: 'price_download_scheme',
                 caption: 'Price download scheme',
                 required: false,
+                hasBackground: true,
                 value_type: "field",
+                expression: '',
+                complexExpressionEntity: false
+            },
+            {
+                key: 'pricing_currency',
+                caption: 'Pricing currency',
+                value_type: "field",
+                required: true,
+                hasBackground: true,
+                expression: '',
+                complexExpressionEntity: 'currency'
+            },
+            {
+                key: 'price_multiplier',
+                caption: 'Price multiplier',
+                value_type: 10,
+                required: false,
+                hasBackground: true,
+                expression: '',
+                complexExpressionEntity: false
+            },
+            {
+                key: 'reference_for_pricing',
+                caption: 'Reference for pricing',
+                required: true,
                 expression: '',
                 complexExpressionEntity: false
             },
@@ -121,6 +165,28 @@
                 caption: 'Default price',
                 value_type: 10,
                 required: false,
+                expression: '',
+                complexExpressionEntity: false
+            }
+        ];
+
+        vm.mappedFieldsSecond = [
+            {
+                key: 'accrued_currency',
+                caption: 'Accrued currency',
+                //value_type: 10,
+                value_type: "field",
+                required: false,
+                hasBackground: true,
+                expression: '',
+                complexExpressionEntity: 'currency'
+            },
+            {
+                key: 'accrued_multiplier',
+                caption: 'Accrued multiplier',
+                value_type: 10,
+                required: false,
+                hasBackground: true,
                 expression: '',
                 complexExpressionEntity: false
             },
@@ -137,23 +203,35 @@
                 caption: 'Payment size detail',
                 value_type: "field",
                 required: false,
-                expression: '',
-                complexExpressionEntity: false
-            }
-        ];
-
-        vm.mappedFieldsSecond = [
-            {
-                key: 'short_name',
-                caption: 'Short name',
-                required: true,
+                hasBackground: true,
                 expression: '',
                 complexExpressionEntity: false
             },
             {
-                key: 'public_name',
-                caption: 'Public name',
-                required: true,
+                key: 'user_text_1',
+                caption: 'User text 1',
+                required: false,
+                expression: '',
+                complexExpressionEntity: false
+            },
+            {
+                key: 'user_text_2',
+                caption: 'User text 2',
+                required: false,
+                expression: '',
+                complexExpressionEntity: false
+            },
+            {
+                key: 'user_text_3',
+                caption: 'User text 3',
+                required: false,
+                expression: '',
+                complexExpressionEntity: false
+            },
+            {
+                key: 'notes',
+                caption: 'Notes',
+                required: false,
                 expression: '',
                 complexExpressionEntity: false
             }
@@ -296,54 +374,54 @@
 
             function syncMappedDynamic() {
                 var a, x, b, i, e;
-
-                for (b = 0; b < vm.baseAttrs.length; b = b + 1) {
-                    if (vm.baseAttrs[b].key == 'notes') {
-                        if (vm.scheme.notes != null || vm.scheme.notes != '') {
-                            vm.mappedDynamic.push({
-                                key: 'notes',
-                                caption: 'Notes',
-                                required: false,
-                                value: vm.baseAttrs[b],
-                                complexExpressionEntity: false,
-                                expression: vm.scheme.notes
-                            })
-                        }
-                    }
-                }
+                //
+                //for (b = 0; b < vm.baseAttrs.length; b = b + 1) {
+                //    if (vm.baseAttrs[b].key == 'notes') {
+                //        if (vm.scheme.notes != null || vm.scheme.notes != '') {
+                //            vm.mappedDynamic.push({
+                //                key: 'notes',
+                //                caption: 'Notes',
+                //                required: false,
+                //                value: vm.baseAttrs[b],
+                //                complexExpressionEntity: false,
+                //                expression: vm.scheme.notes
+                //            })
+                //        }
+                //    }
+                //}
 
                 var keys = Object.keys(vm.scheme);
 
                 var usedEntityAttrs = ['user_code', 'instrument_type', 'reference_for_pricing', 'daily_pricing_model',
                     'price_download_scheme', 'default_price', 'default_accrued', 'payment_size_detail', 'public_name'];
 
-                for (i = 0; i < keys.length; i = i + 1) {
-                    if (vm.hidedEntityAttrs.indexOf(keys[i]) === -1) {
-
-                        if (usedEntityAttrs.indexOf(keys[i]) === -1) {
-
-                            for (e = 0; e < vm.entityAttrs.length; e = e + 1) {
-                                if (vm.entityAttrs[e].key == keys[i]) {
-                                    if (vm.scheme[keys[i]] != "" && vm.scheme[keys[i]] != null && vm.scheme[keys[i]] != undefined) {
-                                        var complexExpressionEntity = false;
-                                        if(keys[i] == 'accrued_currency' || keys[i] == 'pricing_currency') {
-                                            complexExpressionEntity = 'currency';
-                                        }
-                                        vm.mappedDynamic.push({
-                                            key: keys[i],
-                                            required: false,
-                                            value: vm.entityAttrs[e],
-                                            complexExpressionEntity: complexExpressionEntity,
-                                            expression: vm.scheme[keys[i]]
-                                        })
-                                    }
-                                }
-                            }
-                        }
-
-
-                    }
-                }
+                //for (i = 0; i < keys.length; i = i + 1) {
+                //    if (vm.hidedEntityAttrs.indexOf(keys[i]) === -1) {
+                //
+                //        if (usedEntityAttrs.indexOf(keys[i]) === -1) {
+                //
+                //            for (e = 0; e < vm.entityAttrs.length; e = e + 1) {
+                //                if (vm.entityAttrs[e].key == keys[i]) {
+                //                    if (vm.scheme[keys[i]] != "" && vm.scheme[keys[i]] != null && vm.scheme[keys[i]] != undefined) {
+                //                        var complexExpressionEntity = false;
+                //                        if (keys[i] == 'accrued_currency' || keys[i] == 'pricing_currency') {
+                //                            complexExpressionEntity = 'currency';
+                //                        }
+                //                        vm.mappedDynamic.push({
+                //                            key: keys[i],
+                //                            required: false,
+                //                            value: vm.entityAttrs[e],
+                //                            complexExpressionEntity: complexExpressionEntity,
+                //                            expression: vm.scheme[keys[i]]
+                //                        })
+                //                    }
+                //                }
+                //            }
+                //        }
+                //
+                //
+                //    }
+                //}
 
                 for (a = 0; a < vm.scheme.attributes.length; a = a + 1) {
                     console.log('vm.scheme.attributes[a]', vm.scheme.attributes[a]);
@@ -389,7 +467,7 @@
             if (field.value.hasOwnProperty('key')) {
                 field.key = field.value.key;
 
-                if(field.key == 'accrued_currency' || field.key == 'pricing_currency') {
+                if (field.key == 'accrued_currency' || field.key == 'pricing_currency') {
                     field.complexExpressionEntity = 'currency';
                 }
             }
@@ -514,7 +592,7 @@
             }
 
             vm.schemeUpdated.inputs = vm.providerFields;
-            vm.schemeUpdated.inputs.forEach(function(item){
+            vm.schemeUpdated.inputs.forEach(function (item) {
                 item.field = item.name;
             });
 
