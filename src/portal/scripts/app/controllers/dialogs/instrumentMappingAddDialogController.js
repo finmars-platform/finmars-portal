@@ -74,6 +74,7 @@
                 key: 'name',
                 caption: 'Name',
                 required: true,
+                hasBackground: true,
                 expression: '',
                 complexExpressionEntity: false
             },
@@ -81,6 +82,7 @@
                 key: 'user_code',
                 caption: 'User code',
                 required: true,
+                hasBackground: true,
                 expression: '',
                 complexExpressionEntity: false
             },
@@ -88,12 +90,27 @@
                 key: 'instrument_type',
                 caption: 'Instrument type',
                 required: true,
+                hasBackground: true,
                 expression: '',
                 complexExpressionEntity: 'instrument_type'
             },
             {
-                key: 'reference_for_pricing',
-                caption: 'Reference for pricing',
+                key: 'short_name',
+                caption: 'Short name',
+                required: true,
+                expression: '',
+                complexExpressionEntity: false
+            },
+            {
+                key: 'public_name',
+                caption: 'Public name',
+                required: true,
+                expression: '',
+                complexExpressionEntity: false
+            },
+            {
+                key: 'maturity_date',
+                caption: 'Maturity',
                 required: true,
                 expression: '',
                 complexExpressionEntity: false
@@ -105,6 +122,7 @@
                 key: 'daily_pricing_model',
                 caption: 'Daily pricing model',
                 required: false,
+                hasBackground: true,
                 value_type: "field",
                 expression: '',
                 complexExpressionEntity: false
@@ -113,7 +131,33 @@
                 key: 'price_download_scheme',
                 caption: 'Price download scheme',
                 required: false,
+                hasBackground: true,
                 value_type: "field",
+                expression: '',
+                complexExpressionEntity: false
+            },
+            {
+                key: 'pricing_currency',
+                caption: 'Pricing currency',
+                value_type: "field",
+                required: true,
+                hasBackground: true,
+                expression: '',
+                complexExpressionEntity: 'currency'
+            },
+            {
+                key: 'price_multiplier',
+                caption: 'Price multiplier',
+                value_type: 10,
+                required: false,
+                hasBackground: true,
+                expression: '',
+                complexExpressionEntity: false
+            },
+            {
+                key: 'reference_for_pricing',
+                caption: 'Reference for pricing',
+                required: true,
                 expression: '',
                 complexExpressionEntity: false
             },
@@ -122,6 +166,28 @@
                 caption: 'Default price',
                 value_type: 10,
                 required: false,
+                expression: '',
+                complexExpressionEntity: false
+            }
+        ];
+
+        vm.mappedFieldsSecond = [
+            {
+                key: 'accrued_currency',
+                caption: 'Accrued currency',
+                //value_type: 10,
+                value_type: "field",
+                required: false,
+                hasBackground: true,
+                expression: '',
+                complexExpressionEntity: 'currency'
+            },
+            {
+                key: 'accrued_multiplier',
+                caption: 'Accrued multiplier',
+                value_type: 10,
+                required: false,
+                hasBackground: true,
                 expression: '',
                 complexExpressionEntity: false
             },
@@ -138,28 +204,39 @@
                 caption: 'Payment size detail',
                 value_type: "field",
                 required: false,
-                expression: '',
-                complexExpressionEntity: false
-            }
-        ];
-
-        vm.mappedFieldsSecond = [
-            {
-                key: 'short_name',
-                caption: 'Short name',
-                required: true,
+                hasBackground: true,
                 expression: '',
                 complexExpressionEntity: false
             },
             {
-                key: 'public_name',
-                caption: 'Public name',
-                required: true,
+                key: 'user_text_1',
+                caption: 'User text 1',
+                required: false,
+                expression: '',
+                complexExpressionEntity: false
+            },
+            {
+                key: 'user_text_2',
+                caption: 'User text 2',
+                required: false,
+                expression: '',
+                complexExpressionEntity: false
+            },
+            {
+                key: 'user_text_3',
+                caption: 'User text 3',
+                required: false,
+                expression: '',
+                complexExpressionEntity: false
+            },
+            {
+                key: 'notes',
+                caption: 'Notes',
+                required: false,
                 expression: '',
                 complexExpressionEntity: false
             }
         ];
-
         vm.mappedDynamic = [];
 
         vm.providerFields = [

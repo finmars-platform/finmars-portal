@@ -43,6 +43,8 @@
 
         function addChilds(classifier, item) {
 
+            console.log('item', item);
+
             vm.entityItems.push({
                 value_type: classifier.value_type,
                 classifier: classifier.id,
@@ -51,15 +53,22 @@
                 level: item.level
             });
 
-            if (item.children && item.children.length) {
-                addChilds(item.children);
+            if (item.children && item.children.length > 0) {
+                item.children.forEach(function (childItem) {
+                    addChilds(classifier, childItem);
+                })
             }
         }
 
         if (vm.mapEntityType == 'classifier') {
             instrumentAttributeTypeService.getByKey(vm.mapItem.attribute_type).then(function (data) {
 
+                console.log('classifier data', data);
+
                 [data].forEach(function (classifier) {
+
+                    console.log('classifier', classifier);
+
                     classifier.classifiers.forEach(function (item) {
 
                         addChilds(classifier, item);

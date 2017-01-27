@@ -76,7 +76,8 @@
                     <div layout="column">
                         <md-card flex="100">
                             <md-card-content class="instrument-scheme-fields-holder">
-                                <div data-ng-repeat="item in vm.mapFields" layout="row" flex="100">
+                                <div data-ng-repeat="item in vm.mapFields" layout="row" flex="100"
+                                     class="{{item.hasBackground ? 'instrument-import-field-bg' : 'instrument-import-field'}}">
                                     <div layout="row" flex="100">
                                         <div class="field-name" flex="40">
                                             {{vm.beatufier(item[vm.getModelKey(item)])}}
@@ -145,8 +146,10 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div style="background: #ffeee8; padding: 10px; margin-bottom: 20px;">
-                                    <div data-ng-repeat="item in vm.mappedFieldsDefaults" layout="row" flex="100">
+                                <div>
+                                    <div data-ng-repeat="item in vm.mappedFieldsDefaults"
+                                         class="{{item.hasBackground ? 'instrument-import-field-bg' : 'instrument-import-field'}}" layout="row"
+                                         flex="100">
                                         <div layout="row" flex="100">
                                             <div class="field-name" flex="40">
                                                 {{vm.beatufier(item[vm.getModelKey(item)])}}
@@ -193,7 +196,9 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div data-ng-repeat="item in vm.mappedFieldsSecond" layout="row" flex="100">
+                                <div data-ng-repeat="item in vm.mappedFieldsSecond"
+                                     class="{{item.hasBackground ? 'instrument-import-field-bg' : 'instrument-import-field'}}" layout="row"
+                                     flex="100">
                                     <div layout="row" flex="100">
                                         <div class="field-name" flex="40">
                                             {{vm.beatufier(item[vm.getModelKey(item)])}}
@@ -262,7 +267,9 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div data-ng-repeat="field in vm.mappedDynamic" layout="row" flex="100">
+                                <div data-ng-repeat="field in vm.mappedDynamic"
+                                     class="{{item.hasBackground ? 'instrument-import-field-bg' : 'instrument-import-field'}}" layout="row"
+                                     flex="100">
                                     <div layout="row" flex="100">
                                         <div class="field-name" flex="40">
                                             <md-input-container>
