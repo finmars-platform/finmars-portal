@@ -113,10 +113,7 @@
                 required: true,
                 expression: '',
                 complexExpressionEntity: false
-            }
-        ];
-
-        vm.mappedFieldsDefaults = [
+            },
             {
                 key: 'daily_pricing_model',
                 caption: 'Daily pricing model',
@@ -157,6 +154,7 @@
                 key: 'reference_for_pricing',
                 caption: 'Reference for pricing',
                 required: true,
+                value_type: 10,
                 expression: '',
                 complexExpressionEntity: false
             },
@@ -167,10 +165,7 @@
                 required: false,
                 expression: '',
                 complexExpressionEntity: false
-            }
-        ];
-
-        vm.mappedFieldsSecond = [
+            },
             {
                 key: 'accrued_currency',
                 caption: 'Accrued currency',
@@ -235,6 +230,15 @@
                 expression: '',
                 complexExpressionEntity: false
             }
+        ];
+
+        vm.mappedFieldsDefaults = [
+
+
+        ];
+
+        vm.mappedFieldsSecond = [
+
         ];
 
         vm.mappedDynamic = [];

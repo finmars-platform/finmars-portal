@@ -10,23 +10,26 @@
             <div class="i-p-20">
                 <md-input-container class="md-block">
                     <label for="">Expression</label>
-                    <input type="text" data-ng-model="vm.item.expression" id="editorExpressionInput">
+                    <textarea name="" id="editorExpressionInput" cols="30" rows="10"
+                              data-ng-model="vm.item.expression"></textarea>
                 </md-input-container>
             </div>
             <h2 style="text-align: center">Expressions manual</h2>
             <div class="expression-editor-helper" layout="row">
-                <div class="help-item-list custom-scrollbar" layout="column" flex="30" data-custom-scroll>
+                <div class="help-item-list " layout="column" flex="30">
                     <md-input-container class="help-search-control">
                         <input type="text" data-ng-model="vm.searchExpr" placeholder="Search">
                     </md-input-container>
-                    <div class="{{item.isSelected ? 'selected' : ''}} help-item-menu-item"
-                         data-ng-repeat="item in vm.expressions | filter: { name: vm.searchExpr }"
-                         data-ng-click="vm.selectHelpItem(item)">
-                        {{item.name}}
+                    <div class="custom-scrollbar" data-custom-scroll style="height: 164px">
+                        <div class="{{item.isSelected ? 'selected' : ''}} help-item-menu-item"
+                             data-ng-repeat="item in vm.expressions | filter: { name: vm.searchExpr }"
+                             data-ng-click="vm.selectHelpItem(item)">
+                            {{item.name}}
+                        </div>
                     </div>
                 </div>
                 <div class="help-item-description" layout="column" flex="70">
-                    <div class="help-item-description-content"
+                    <div data-custom-scroll class="help-item-description-content custom-scrollbar"
                          data-ng-bind-html="vm.selectedHelpItem.description | trustAsHtml">
                     </div>
                     <div layout="row" layout-align="end begin">
