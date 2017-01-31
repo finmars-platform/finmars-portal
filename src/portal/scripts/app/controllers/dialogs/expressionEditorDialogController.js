@@ -42,7 +42,7 @@
 
             console.log(this);
             var val = $('#editorExpressionInput')[0].value;
-            var cursorPosition = val.slice(0, $('#editorExpressionInput')[0].selectionStart).length;
+            var cursorPosition = val.slice(0, ($('#editorExpressionInput')[0].selectionStart + '')).length;
 
             if (cursorPosition == 0) {
                 vm.item.expression = vm.item.expression + item.func;

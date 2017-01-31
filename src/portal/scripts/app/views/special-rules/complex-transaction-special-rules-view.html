@@ -4,7 +4,7 @@
         <div layout="row" flex="50">
             <md-input-container>
                 <label for="">Portfolio</label>
-                <md-select data-ng-model="vm.complexTransactionOptions.portfolio">
+                <md-select multiple data-ng-model="vm.complexTransactionOptions.portfolio">
                     <md-option data-ng-repeat="item in vm.portfolios" ng-value="item.id">
                         {{item.name}}
                     </md-option>
@@ -13,9 +13,9 @@
         </div>
         <div layout="row" flex="50">
             <md-input-container>
-                <label for="">Instrument</label>
-                <md-select data-ng-model="vm.complexTransactionOptions.instrument">
-                    <md-option data-ng-repeat="item in vm.instruments" ng-value="item.id">
+                <label for="">Instrument Type</label>
+                <md-select multiple data-ng-model="vm.complexTransactionOptions.instrumentType">
+                    <md-option data-ng-repeat="item in vm.instrumentTypes" ng-value="item.id">
                         {{item.user_code}}
                     </md-option>
                 </md-select>

@@ -7,7 +7,7 @@
 
     var logService = require('../../../../../core/services/logService');
     var portfolioService = require('../../services/portfolioService');
-    var instrumentService = require('../../services/instrumentService');
+    var instrumentTypeService = require('../../services/instrumentTypeService');
     var transactionTypeService = require('../../services/transactionTypeService');
 
     module.exports = function ($scope) {
@@ -18,7 +18,7 @@
 
         vm.complexTransactionOptions = {
             portfolio: $scope.$parent.vm.complexTransactionOptions.portfolio,
-            instrument: $scope.$parent.vm.complexTransactionOptions.instrument,
+            instrumentType: $scope.$parent.vm.complexTransactionOptions.instrumentType,
             transactionType: $scope.$parent.vm.complexTransactionOptions.transactionType
         };
 
@@ -29,8 +29,8 @@
             $scope.$apply();
         });
 
-        instrumentService.getList().then(function (data) {
-            vm.instruments = data.results;
+        instrumentTypeService.getList().then(function (data) {
+            vm.instrumentTypes = data.results;
             $scope.$apply();
         });
 
@@ -40,15 +40,25 @@
         });
 
         vm.loadTransactionTypes = function () {
-            transactionTypeService.getList().then(function (data) {
+
+            var options = {
+                filters: {
+                    portfolio: vm.complexTransactionOptions.portfolio,
+                    'instrument_type': vm.complexTransactionOptions.instrumentType
+                }
+            };
+
+            transactionTypeService.getList(options).then(function (data) {
                 vm.transactionTypes = data.results;
                 $scope.$apply();
             })
         };
 
-        $scope.$parent.$watch('vm.complexTransactionOptions', function () {
+        $scope.$parent.$watchCollection('vm.complexTransactionOptions', function () {
             console.log('hererer?');
             vm.complexTransactionOptions = $scope.$parent.vm.complexTransactionOptions;
+
+            vm.loadTransactionTypes();
         });
 
 
