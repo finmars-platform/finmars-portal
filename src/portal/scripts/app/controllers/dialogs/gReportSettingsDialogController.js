@@ -20,6 +20,7 @@
 
         var vm = this;
 
+
         console.log('reportOptions', reportOptions);
 
         vm.reportOptions = JSON.parse(JSON.stringify(reportOptions));
@@ -49,6 +50,9 @@
             });
         };
 
+        vm.onSearchChange = function ($event) {
+            $event.stopPropagation();
+        };
 
         vm.getCurrencies = function () {
 

@@ -37,7 +37,7 @@
                     <md-input-container class="md-block">
                         <label data-ng-bind="getName()"></label>
                         <div data-ng-if="readyStatus.tags">
-                            <md-select data-ng-change="changeWatcher()" md-on-clonse="searchTerm = ''"
+                            <md-select data-ng-change="changeWatcher()" md-on-close="searchTerm = ''"
                                        data-ng-model="entity[getModelKey()]"
                                        md-selected-text="bindFormFields()">
                                 <md-select-header>
