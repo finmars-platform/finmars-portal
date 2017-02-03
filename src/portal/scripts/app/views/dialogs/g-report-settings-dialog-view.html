@@ -58,7 +58,7 @@
 
                             <label for="">Cost method</label>
 
-                            <md-select data-ng-model="vm.reportOptions.report_currency">
+                            <md-select data-ng-model="vm.reportOptions.cost_method">
                                 <md-option ng-value="1">AVCO
                                 </md-option>
                                 <md-option ng-value="2">FIFO
@@ -112,8 +112,18 @@
 
                             <label for="">Portfolios</label>
 
-                            <md-select data-ng-model="vm.reportOptions.portfolios">
-                                <md-option data-ng-repeat="item in vm.portfolios" ng-value="item.id">{{item.name}}
+                            <md-select multiple data-ng-model="vm.reportOptions.portfolios"
+                                       md-on-close="searchTerm = ''">
+                                <md-select-header>
+                                    <input data-ng-model="searchTerm"
+                                           type="search"
+                                           placeholder="Search for a ..."
+                                           ng-keydown="vm.onSearchChange($event)"
+                                           class="md-text md-select-search-pattern">
+                                </md-select-header>
+                                <md-option
+                                        data-ng-repeat="item in vm.portfolios | orderBy:'-'+item.name | filter:{name: searchTerm}"
+                                        ng-value="item.id">{{item.name}}
                                 </md-option>
                             </md-select>
 
@@ -123,8 +133,18 @@
 
                             <label for="">Accounts</label>
 
-                            <md-select data-ng-model="vm.reportOptions.accounts">
-                                <md-option data-ng-repeat="item in vm.accounts" ng-value="item.id">{{item.name}}
+                            <md-select multiple data-ng-model="vm.reportOptions.accounts"
+                                       md-on-close="searchTerm = ''">
+                                <md-select-header>
+                                    <input data-ng-model="searchTerm"
+                                           type="search"
+                                           placeholder="Search for a ..."
+                                           ng-keydown="vm.onSearchChange($event)"
+                                           class="md-text md-select-search-pattern">
+                                </md-select-header>
+                                <md-option
+                                        data-ng-repeat="item in vm.accounts | orderBy:'-'+item.name | filter:{name: searchTerm}"
+                                        ng-value="item.id">{{item.name}}
                                 </md-option>
                             </md-select>
 
@@ -138,8 +158,18 @@
 
                             <label for="">Strategies 1</label>
 
-                            <md-select data-ng-model="vm.reportOptions.strategies1">
-                                <md-option data-ng-repeat="item in vm.strategies1" ng-value="item.id">{{item.name}}
+                            <md-select multiple data-ng-model="vm.reportOptions.strategies1"
+                                       md-on-close="searchTerm = ''">
+                                <md-select-header>
+                                    <input data-ng-model="searchTerm"
+                                           type="search"
+                                           placeholder="Search for a ..."
+                                           ng-keydown="vm.onSearchChange($event)"
+                                           class="md-text md-select-search-pattern">
+                                </md-select-header>
+                                <md-option
+                                        data-ng-repeat="item in vm.strategies1 | orderBy:'-'+item.name | filter:{name: searchTerm}"
+                                        ng-value="item.id">{{item.name}}
                                 </md-option>
                             </md-select>
 
@@ -149,8 +179,18 @@
 
                             <label for="">Strategies 2</label>
 
-                            <md-select data-ng-model="vm.reportOptions.strategies2">
-                                <md-option data-ng-repeat="item in vm.strategies2" ng-value="item.id">{{item.name}}
+                            <md-select multiple data-ng-model="vm.reportOptions.strategies2"
+                                       md-on-close="searchTerm = ''">
+                                <md-select-header>
+                                    <input data-ng-model="searchTerm"
+                                           type="search"
+                                           placeholder="Search for a ..."
+                                           ng-keydown="vm.onSearchChange($event)"
+                                           class="md-text md-select-search-pattern">
+                                </md-select-header>
+                                <md-option
+                                        data-ng-repeat="item in vm.strategies2 | orderBy:'-'+item.name | filter:{name: searchTerm}"
+                                        ng-value="item.id">{{item.name}}
                                 </md-option>
                             </md-select>
 
@@ -160,8 +200,18 @@
 
                             <label for="">Strategies 3</label>
 
-                            <md-select data-ng-model="vm.reportOptions.strategies3">
-                                <md-option data-ng-repeat="item in vm.strategies3" ng-value="item.id">{{item.name}}
+                            <md-select multiple data-ng-model="vm.reportOptions.strategies3"
+                                       md-on-close="searchTerm = ''">
+                                <md-select-header>
+                                    <input data-ng-model="searchTerm"
+                                           type="search"
+                                           placeholder="Search for a ..."
+                                           ng-keydown="vm.onSearchChange($event)"
+                                           class="md-text md-select-search-pattern">
+                                </md-select-header>
+                                <md-option
+                                        data-ng-repeat="item in vm.strategies3 | orderBy:'-'+item.name | filter:{name: searchTerm}"
+                                        ng-value="item.id">{{item.name}}
                                 </md-option>
                             </md-select>
 
