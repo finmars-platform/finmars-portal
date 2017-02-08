@@ -1,0 +1,32 @@
+<div>
+    <md-button class="md-button header-cloud-layout-btn" data-ng-click="toggleBookmarkPanel()">
+        <ng-md-icon icon="bookmark" size="36"></ng-md-icon>
+    </md-button>
+    <div class="bookmarks-list" layout="row" layout-align="space-between center" data-ng-if="showBookmarks">
+        <div layout="row">
+            <div data-ng-repeat="item in items">
+                <div data-ng-if="item.children.length">
+                    <md-menu>
+                        <!-- Trigger element is a md-button with an icon -->
+                        <md-button ng-click="$mdOpenMenu($event)" class="" aria-label="Open sample menu">
+                            {{item.name}}
+                        </md-button>
+                        <md-menu-content>
+                            <md-menu-item data-ng-repeat="subItem in item.children">
+                                <md-button data-ui-sref="{{getState(subItem)}}">{{subItem.name}}</md-button>
+                            </md-menu-item>
+                        </md-menu-content>
+                    </md-menu>
+                </div>
+                <div data-ng-if="!item.children.length">
+                    <md-button data-ui-sref="{{getState(item)}}">{{item.name}}</md-button>
+                </div>
+            </div>
+        </div>
+        <div layout="row">
+            <md-button class="md-button header-cloud-layout-btn" data-ng-click="openSettings($event)">
+                <ng-md-icon icon="settings" size="36"></ng-md-icon>
+            </md-button>
+        </div>
+    </div>
+</div>

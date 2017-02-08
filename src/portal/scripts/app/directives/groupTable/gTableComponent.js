@@ -13,7 +13,8 @@
             templateUrl: 'views/directives/groupTable/group-table-shell-view.html',
             scope: {
                 items: '=',
-                options: '='
+                options: '=',
+                reportOptions: '='
             },
             link: function (scope, elem, attrs) {
 

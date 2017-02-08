@@ -197,6 +197,7 @@ a.md-button.md-default-theme.md-fab, a.md-button.md-fab, .md-button.md-default-t
     min-width: 0;
     line-height: 1;
     padding: 4px;
+    overflow: visible;
     margin-top: 12px;
     min-height: 0;
     height: 32px;
@@ -219,17 +220,17 @@ a.md-button.md-default-theme.md-fab, a.md-button.md-fab, .md-button.md-default-t
 }
 
 .unreaded-notifications-number {
-  background: red;
-  border-radius: 6px;
+  background: rgba(255, 64, 129, .87);
+  border-radius: 23px;
   position: relative;
-  top: -14px;
+  top: -18px;
   text-align: center;
-  line-height: 1;
+  padding: 4px;
   font-size: 13px;
-  height: 20px;
+  height: 24px;
   display: inline-block;
-  line-height: 20px;
-  font-weight: bold;
+  box-sizing: border-box;
+  font-weight: 700;
 }
 
 .e-data-loader {
@@ -857,6 +858,11 @@ mdp-time-picker.custom-time-picker {
   height: 30px;
   font-size: 12px;
   line-height: 1;
+}
+
+md-toolbar.header {
+  position: relative;
+  z-index: 100;
 }
 
 @media screen and (max-width: 740px) {

@@ -106,6 +106,9 @@
 
         vm.resolveAttributeNode = function (item) {
             var result = '';
+            if (item.hasOwnProperty('classifier_object') && item.classifier_object !== null) {
+                return item.classifier_object.name;
+            }
             vm.dynAttributes['id_' + item.attribute_type].classifiers.forEach(function (classifier) {
                 if (classifier.id == item.classifier) {
                     result = classifier.name;
