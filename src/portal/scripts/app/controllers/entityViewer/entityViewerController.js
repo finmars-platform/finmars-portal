@@ -1152,6 +1152,8 @@
 
                         // ENTITY STUFF START
                         vm.entityType = $scope.$parent.vm.entityType;
+                        vm.uiLayoutId = $scope.$parent.vm.uiLayoutId;
+
                         vm.isReport = $scope.$parent.vm.isReport || false;
 
                         vm.customButtons = $scope.$parent.vm.entityViewer.extraFeatures;

@@ -77,6 +77,11 @@
                     "key": "transaction_types",
                     "name": "Transaction types",
                     "value_type": "mc_field"
+                },
+                {
+                    "key": "tags",
+                    "name": "Tags",
+                    "value_type": "mc_field"
                 }
             ],
             "audit-transaction": [
@@ -230,7 +235,6 @@
                     "key": "portfolios",
                     "name": "Portfolios",
                     "value_type": "mc_field"
-
                 }
             ],
             "counterparty-group": [

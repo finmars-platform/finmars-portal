@@ -90,38 +90,38 @@ app.controller('FactorScheduleTabController', ['$scope', require('./app/controll
 app.controller('ManualPricingFormulasTabController', ['$scope', require('./app/controllers/tabs/instrument/manualPricingFormulasTabController')]);
 app.controller('InstrumentEventActionsDialogController', ['$scope', '$mdDialog', 'eventActions', require('./app/controllers/dialogs/instrumentEventActionsDialogController')]);
 
-app.controller('DataPortfolioController', ['$scope', require('./app/controllers/data/dataPortfolioController')]);
-app.controller('DataTagController', ['$scope', require('./app/controllers/data/dataTagController')]);
-app.controller('DataAccountController', ['$scope', require('./app/controllers/data/dataAccountController')]);
-app.controller('DataAccountTypeController', ['$scope', require('./app/controllers/data/dataAccountTypeController')]);
-app.controller('DataCounterpartyController', ['$scope', require('./app/controllers/data/dataCounterpartyController')]);
-app.controller('DataCounterpartyGroupController', ['$scope', require('./app/controllers/data/dataCounterpartyGroupController')]);
-app.controller('DataResponsibleController', ['$scope', require('./app/controllers/data/dataResponsibleController')]);
-app.controller('DataResponsibleGroupController', ['$scope', require('./app/controllers/data/dataResponsibleGroupController')]);
-app.controller('DataInstrumentController', ['$scope', require('./app/controllers/data/dataInstrumentController')]);
-app.controller('DataInstrumentTypeController', ['$scope', require('./app/controllers/data/dataInstrumentTypeController')]);
-app.controller('DataPricingPolicyController', ['$scope', require('./app/controllers/data/dataPricingPolicyController')]);
-app.controller('DataTransactionController', ['$scope', require('./app/controllers/data/dataTransactionController')]);
-app.controller('DataComplexTransactionController', ['$scope', require('./app/controllers/data/dataComplexTransactionController')]);
-app.controller('DataTransactionTypeController', ['$scope', require('./app/controllers/data/dataTransactionTypeController')]);
-app.controller('DataTransactionTypeGroupController', ['$scope', require('./app/controllers/data/dataTransactionTypeGroupController')]);
-app.controller('DataPriceHistoryController', ['$scope', require('./app/controllers/data/dataPriceHistoryController')]);
-app.controller('DataCurrencyHistoryController', ['$scope', require('./app/controllers/data/dataCurrencyHistoryController')]);
-app.controller('DataCurrencyController', ['$scope', require('./app/controllers/data/dataCurrencyController')]);
+app.controller('DataPortfolioController', ['$scope', '$stateParams', require('./app/controllers/data/dataPortfolioController')]);
+app.controller('DataTagController', ['$scope', '$stateParams', require('./app/controllers/data/dataTagController')]);
+app.controller('DataAccountController', ['$scope', '$stateParams', require('./app/controllers/data/dataAccountController')]);
+app.controller('DataAccountTypeController', ['$scope', '$stateParams', require('./app/controllers/data/dataAccountTypeController')]);
+app.controller('DataCounterpartyController', ['$scope', '$stateParams', require('./app/controllers/data/dataCounterpartyController')]);
+app.controller('DataCounterpartyGroupController', ['$scope', '$stateParams', require('./app/controllers/data/dataCounterpartyGroupController')]);
+app.controller('DataResponsibleController', ['$scope', '$stateParams', require('./app/controllers/data/dataResponsibleController')]);
+app.controller('DataResponsibleGroupController', ['$scope', '$stateParams', require('./app/controllers/data/dataResponsibleGroupController')]);
+app.controller('DataInstrumentController', ['$scope', '$stateParams', require('./app/controllers/data/dataInstrumentController')]);
+app.controller('DataInstrumentTypeController', ['$scope', '$stateParams', require('./app/controllers/data/dataInstrumentTypeController')]);
+app.controller('DataPricingPolicyController', ['$scope', '$stateParams', require('./app/controllers/data/dataPricingPolicyController')]);
+app.controller('DataTransactionController', ['$scope', '$stateParams', require('./app/controllers/data/dataTransactionController')]);
+app.controller('DataComplexTransactionController', ['$scope', '$stateParams', require('./app/controllers/data/dataComplexTransactionController')]);
+app.controller('DataTransactionTypeController', ['$scope', '$stateParams',require('./app/controllers/data/dataTransactionTypeController')]);
+app.controller('DataTransactionTypeGroupController', ['$scope', '$stateParams', require('./app/controllers/data/dataTransactionTypeGroupController')]);
+app.controller('DataPriceHistoryController', ['$scope', '$stateParams', require('./app/controllers/data/dataPriceHistoryController')]);
+app.controller('DataCurrencyHistoryController', ['$scope', '$stateParams',require('./app/controllers/data/dataCurrencyHistoryController')]);
+app.controller('DataCurrencyController', ['$scope', '$stateParams', require('./app/controllers/data/dataCurrencyController')]);
 app.controller('DataStrategyController', ['$scope', '$stateParams', require('./app/controllers/data/dataStrategyController')]);
 app.controller('DataStrategyGroupController', ['$scope', '$stateParams', require('./app/controllers/data/dataStrategyGroupController')]);
 app.controller('DataStrategySubgroupController', ['$scope', '$stateParams', require('./app/controllers/data/dataStrategySubgroupController')]);
 app.controller('TransactionsAuditController', ['$scope', '$stateParams', require('./app/controllers/system/auditTransactionsController')]);
 app.controller('InstrumentsAuditController', ['$scope', '$stateParams', require('./app/controllers/system/auditInstrumentsController')]);
 
-app.controller('BalanceReportController', ['$scope', require('./app/controllers/reports/balanceReportController')]);
+app.controller('BalanceReportController', ['$scope', '$stateParams', require('./app/controllers/reports/balanceReportController')]);
 app.controller('BalanceReportCustomAttrController', ['$scope', '$mdDialog', require('./app/controllers/reports/balanceReportCustomAttrController')]);
 app.controller('BalanceReportDialogCustomAttrController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/balanceReportAddDialogCustomAttrController')]);
 
-app.controller('ProfitAndLostReportController', ['$scope', require('./app/controllers/reports/profitAndLostReportController')]);
-app.controller('TransactionReportController', ['$scope', require('./app/controllers/reports/transactionReportController')]);
-app.controller('CashFlowProjectionReportController', ['$scope', require('./app/controllers/reports/cashFlowProjectionReportController')]);
-app.controller('PerformanceReportController', ['$scope', require('./app/controllers/reports/performanceReportController')]);
+app.controller('ProfitAndLostReportController', ['$scope', '$stateParams', require('./app/controllers/reports/profitAndLostReportController')]);
+app.controller('TransactionReportController', ['$scope', '$stateParams', require('./app/controllers/reports/transactionReportController')]);
+app.controller('CashFlowProjectionReportController', ['$scope', '$stateParams', require('./app/controllers/reports/cashFlowProjectionReportController')]);
+app.controller('PerformanceReportController', ['$scope', '$stateParams', require('./app/controllers/reports/performanceReportController')]);
 
 app.controller('EntityDataConstructorController', ['$scope', '$stateParams', '$state', '$mdDialog', require('./app/controllers/entityDataConstructorController')]);
 
@@ -157,6 +157,9 @@ app.controller('CreateGroupDialogController', ['$scope', '$mdDialog', require('.
 
 app.controller('UiLayoutListDialogController', ['$scope', '$mdDialog', 'options', require('./app/controllers/dialogs/ui/uiLayoutListDialogController')]);
 app.controller('UiLayoutSaveAsDialogController', ['$scope', '$mdDialog', 'options', require('./app/controllers/dialogs/ui/uiLayoutSaveAsDialogController')]);
+
+app.controller('BookmarksWizardDialogController', ['$scope', '$mdDialog', require('./app/controllers/dialogs/bookmarksWizardDialogController')]);
+app.controller('BookmarksLayoutSelectDialogController', ['$scope', '$mdDialog', require('./app/controllers/dialogs/bookmarksLayoutSelectDialogController')]);
 
 app.directive('menuToggle', [require('./app/directives/menuToggleDirective')]);
 app.directive('menuLink', [require('./app/directives/menuLinkDirective')]);
@@ -207,6 +210,7 @@ app.directive('dragDialog', [require('./app/directives/dragDialogDirective')]);
 app.directive('membersGroupsTable', [require('./app/directives/membersGroupsTableDirective')]);
 app.directive('twoFieldsOptions', [require('./app/directives/twoFieldsOptionsDirective')]);
 app.directive('inputFileDirective', [require('./app/directives/inputFileDirective')]);
+app.directive('bookmarks', ['$mdDialog', require('./app/directives/bookmarksDirective')]);
 
 app.filter('trustAsHtml', ['$sce', require('./app/filters/trustAsHtmlFilter')]);
 app.filter('strLimit', ['$filter', require('./app/filters/strLimitFilter')]);

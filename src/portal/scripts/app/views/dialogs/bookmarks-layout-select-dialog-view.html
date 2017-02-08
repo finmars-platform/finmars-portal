@@ -1,0 +1,32 @@
+<md-dialog aria-label="" ng-cloak class="bookmarks-wizard-view" drag-dialog>
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            <h2>UI layouts</h2>
+            <span flex></span>
+        </div>
+    </md-toolbar>
+    <md-dialog-content data-custom-scroll class="custom-scrollbar">
+        <div data-ng-if="vm.readyStatus.content" class="dialog-loader">
+            <div style="padding: 24px">
+                <div data-ng-repeat="item in vm.items" style="margin: 6px">
+                    <div data-ng-click="vm.selectLayout(item)">
+                        <b><span data-ng-bind="item.name"></span></b> (<span data-ng-bind="item.content_type"></span>)
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div data-ng-if="!vm.readyStatus.content" class="dialog-loader">
+            <div layout="row" layout-sm="column" layout-align="space-around">
+                <md-progress-circular md-mode="indeterminate"></md-progress-circular>
+            </div>
+        </div>
+    </md-dialog-content>
+    <md-dialog-actions layout="row">
+        <md-button ng-click="vm.cancel()">
+            Cancel
+        </md-button>
+        <md-button ng-click="vm.agree()" style="margin-right:20px;">
+            OK
+        </md-button>
+    </md-dialog-actions>
+</md-dialog>

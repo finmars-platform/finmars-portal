@@ -67,20 +67,35 @@
 
     var getListLayout = function (entity) {
 
-        var contentType = metaContentTypesService.findContentTypeByEntity(entity, 'ui');
+        if (entity == 'all') {
+            return window.fetch(baseUrl + 'ui/list-layout/',
+                {
+                    method: 'GET',
+                    credentials: 'include',
+                    headers: {
+                        Accept: 'application/json',
+                        'Content-type': 'application/json'
+                    }
+                }).then(function (data) {
+                return data.json();
+            })
+        } else {
 
-        return window.fetch(baseUrl + 'ui/list-layout/?content_type=' + contentType,
-            {
-                method: 'GET',
-                credentials: 'include',
-                headers: {
-                    'X-CSRFToken': cookieService.getCookie('csrftoken'),
-                    Accept: 'application/json',
-                    'Content-type': 'application/json'
-                }
-            }).then(function (data) {
-            return data.json();
-        })
+            var contentType = metaContentTypesService.findContentTypeByEntity(entity, 'ui');
+
+            return window.fetch(baseUrl + 'ui/list-layout/?content_type=' + contentType,
+                {
+                    method: 'GET',
+                    credentials: 'include',
+                    headers: {
+                        'X-CSRFToken': cookieService.getCookie('csrftoken'),
+                        Accept: 'application/json',
+                        'Content-type': 'application/json'
+                    }
+                }).then(function (data) {
+                return data.json();
+            })
+        }
     };
 
     var getListLayoutByKey = function (uiLayoutId) {

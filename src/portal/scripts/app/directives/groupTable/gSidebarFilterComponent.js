@@ -16,7 +16,8 @@
         return {
             restrict: 'AE',
             scope: {
-                options: '='
+                options: '=',
+                reportOptions: '='
             },
             templateUrl: 'views/directives/groupTable/sidebar-filter-view.html',
             link: function (scope, elem, attrs) {
@@ -29,7 +30,7 @@
                 scope.externalCallback = scope.options.externalCallback;
 
                 scope.fields = {};
-                scope.reportOptions = {};
+                //scope.reportOptions = {};
 
                 scope.filters.forEach(function (item) {
                     if (!item.options) {
