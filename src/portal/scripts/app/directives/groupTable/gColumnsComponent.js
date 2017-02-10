@@ -21,6 +21,7 @@
 
                 scope.grouping = scope.options.grouping;
                 scope.filters = scope.options.filters;
+                scope.sorting = scope.options.sorting;
                 scope.columns = scope.options.columns;
                 scope.entityType = scope.options.entityType;
                 scope.externalCallback = scope.options.externalCallback;

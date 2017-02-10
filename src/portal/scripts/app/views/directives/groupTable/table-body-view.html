@@ -7,7 +7,7 @@
     </div>
     <div data-ng-show="checkReady()" ng-cloak style="padding-bottom: 75px">
         <div>
-            <div data-ng-if="grouping.length" contextmenu-container="gtbody.contextmenu">
+            <div data-ng-if="options.grouping.length" contextmenu-container="gtbody.contextmenu">
                 <div data-ng-if="!options.isReport" data-ng-repeat="item in items">
                     <div class="g-group-holder {{ checkRowSelection(item) ? 'selected-row' : '' }}">
                         <div class="g-row-selection" data-ng-click="toggleSelectRow($event, item)">
@@ -58,7 +58,7 @@
 
                 </div>
             </div>
-            <div data-ng-if="!grouping.length" contextmenu-container="gtbody.contextmenu">
+            <div data-ng-if="!options.grouping.length" contextmenu-container="gtbody.contextmenu">
                 <div data-ng-repeat="item in items" class="{{ checkRowSelection(item) ? 'selected-row' : ''}} g-row"
                      contextmenu-item="item" data-ng-click="rowCallback(item, $event)">
                     <div class="g-row-selection" data-ng-click="toggleSelectRow($event, item)">

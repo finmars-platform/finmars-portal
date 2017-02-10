@@ -235,6 +235,11 @@
                     "key": "portfolios",
                     "name": "Portfolios",
                     "value_type": "mc_field"
+                },
+                {
+                    "key": "tags",
+                    "name": "Tags",
+                    "value_type": "mc_field"
                 }
             ],
             "counterparty-group": [
@@ -247,6 +252,11 @@
                     "key": "public_name",
                     "name": "Public name",
                     "value_type": 10
+                },
+                {
+                    "key": "tags",
+                    "name": "Tags",
+                    "value_type": "mc_field"
                 }
             ],
             "responsible": [
@@ -264,6 +274,11 @@
                     "key": "portfolios",
                     "name": "Portfolios",
                     "value_type": "mc_field"
+                },
+                {
+                    "key": "tags",
+                    "name": "Tags",
+                    "value_type": "mc_field"
                 }
             ],
             "responsible-group": [
@@ -276,6 +291,11 @@
                     "key": "public_name",
                     "name": "Public name",
                     "value_type": 10
+                },
+                {
+                    "key": "tags",
+                    "name": "Tags",
+                    "value_type": "mc_field"
                 }
             ],
             "pricing-policy": [
@@ -288,6 +308,11 @@
                     "key": "user_code",
                     "name": "User code",
                     "value_type": 10
+                },
+                {
+                    "key": "tags",
+                    "name": "Tags",
+                    "value_type": "mc_field"
                 }
             ],
             "instrument-type": [
@@ -436,6 +461,11 @@
                 {
                     "key": "object_permissions_group",
                     "name": "Groups permissions",
+                    "value_type": "mc_field"
+                },
+                {
+                    "key": "tags",
+                    "name": "Tags",
                     "value_type": "mc_field"
                 }
             ],
@@ -611,6 +641,11 @@
                     "key": "public_name",
                     "name": "Public name",
                     "value_type": 10
+                },
+                {
+                    "key": "tags",
+                    "name": "Tags",
+                    "value_type": "mc_field"
                 }
             ],
             "transaction-type": [
@@ -643,6 +678,11 @@
                     "key": "tags",
                     "name": "Tags",
                     "value_type": "mc_field"
+                },
+                {
+                    "key": "tags",
+                    "name": "Tags",
+                    "value_type": "mc_field"
                 }
             ],
             "currency": [
@@ -660,6 +700,11 @@
                     "key": "price_download_scheme",
                     "name": "Price download scheme",
                     "value_type": "field"
+                },
+                {
+                    "key": "tags",
+                    "name": "Tags",
+                    "value_type": "mc_field"
                 }
             ],
             "currency-history": [
@@ -731,6 +776,11 @@
                     "key": "subgroup",
                     "name": "Sub Group",
                     "value_type": "field"
+                },
+                {
+                    "key": "tags",
+                    "name": "Tags",
+                    "value_type": "mc_field"
                 }
             ],
             "strategy-2": [
@@ -743,6 +793,11 @@
                     "key": "subgroup",
                     "name": "Sub Group",
                     "value_type": "field"
+                },
+                {
+                    "key": "tags",
+                    "name": "Tags",
+                    "value_type": "mc_field"
                 }
             ],
             "strategy-3": [
@@ -755,6 +810,11 @@
                     "key": "subgroup",
                     "name": "Sub Group",
                     "value_type": "field"
+                },
+                {
+                    "key": "tags",
+                    "name": "Tags",
+                    "value_type": "mc_field"
                 }
             ],
             "strategy-1-subgroup": [
@@ -767,6 +827,11 @@
                     "key": "group",
                     "name": "Group",
                     "value_type": "field"
+                },
+                {
+                    "key": "tags",
+                    "name": "Tags",
+                    "value_type": "mc_field"
                 }
             ],
             "strategy-2-subgroup": [
@@ -779,6 +844,11 @@
                     "key": "group",
                     "name": "Group",
                     "value_type": "field"
+                },
+                {
+                    "key": "tags",
+                    "name": "Tags",
+                    "value_type": "mc_field"
                 }
             ],
             "strategy-3-subgroup": [
@@ -791,6 +861,11 @@
                     "key": "group",
                     "name": "Group",
                     "value_type": "field"
+                },
+                {
+                    "key": "tags",
+                    "name": "Tags",
+                    "value_type": "mc_field"
                 }
             ],
             "strategy-1-group": [
@@ -798,6 +873,11 @@
                     "key": "user_code",
                     "name": "User code",
                     "value_type": 10
+                },
+                {
+                    "key": "tags",
+                    "name": "Tags",
+                    "value_type": "mc_field"
                 }
             ],
             "strategy-2-group": [
@@ -805,6 +885,11 @@
                     "key": "user_code",
                     "name": "User code",
                     "value_type": 10
+                },
+                {
+                    "key": "tags",
+                    "name": "Tags",
+                    "value_type": "mc_field"
                 }
             ],
             "strategy-3-group": [
@@ -812,6 +897,11 @@
                     "key": "user_code",
                     "name": "User code",
                     "value_type": 10
+                },
+                {
+                    "key": "tags",
+                    "name": "Tags",
+                    "value_type": "mc_field"
                 }
             ],
             "balance-report": [
