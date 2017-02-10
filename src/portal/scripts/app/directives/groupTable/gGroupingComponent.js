@@ -224,16 +224,30 @@
                 };
 
                 scope.openModalSettings = function (ev) {
-                    $mdDialog.show({
-                        controller: 'gModalController as vm', // ../directives/gTable/gModalComponents
-                        templateUrl: 'views/directives/groupTable/modal-view.html',
-                        parent: angular.element(document.body),
-                        targetEvent: ev,
-                        locals: {
-                            callback: scope.externalCallback,
-                            parentScope: scope
-                        }
-                    });
+
+                    if (scope.isReport) {
+                        $mdDialog.show({
+                            controller: 'gModalReportController as vm', // ../directives/gTable/gModalComponents
+                            templateUrl: 'views/directives/groupTable/modal-report-view.html',
+                            parent: angular.element(document.body),
+                            targetEvent: ev,
+                            locals: {
+                                callback: scope.externalCallback,
+                                parentScope: scope
+                            }
+                        });
+                    } else {
+                        $mdDialog.show({
+                            controller: 'gModalController as vm', // ../directives/gTable/gModalComponents
+                            templateUrl: 'views/directives/groupTable/modal-view.html',
+                            parent: angular.element(document.body),
+                            targetEvent: ev,
+                            locals: {
+                                callback: scope.externalCallback,
+                                parentScope: scope
+                            }
+                        });
+                    }
                 }
             }
         }
