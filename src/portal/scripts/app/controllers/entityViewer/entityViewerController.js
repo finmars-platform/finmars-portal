@@ -525,6 +525,7 @@
                         });
                     }
                 };
+
                 var handler = function (data) {
 
                     vm.originalData = JSON.parse(JSON.stringify(data)); // store server response data untouched
@@ -565,6 +566,8 @@
                             return item;
                         });
 
+
+
                         //console.log('audit transaction data is', vm.entity);
                         vm.groupTableService.setItems(entity);
 
@@ -575,12 +578,17 @@
                         vm.groupTableService.folding.setFolds(vm.folding);
                         //console.log('UPDATE TABLE scope.sorting.group', vm.sorting.group);
                         vm.sorting.group = vm.findFullAttributeForItem(vm.sorting.group, vm.attrs);
-                        //vm.sorting.column = vm.findFullAttributeForItem(vm.sorting.column, vm.attrs);
+                        vm.sorting.column = vm.findFullAttributeForItem(vm.sorting.column, vm.attrs);
+
+                        console.log('vm.sorting.column', vm.sorting.column);
+
                         vm.groupTableService.sorting.group.sort(vm.sorting.group);
-                        //vm.groupTableService.sorting.column.sort(vm.sorting.column);
+                        vm.groupTableService.sorting.column.sort(vm.sorting.column);
                         vm.tableIsReady = true;
 
                         vm.updateConfig();
+
+                        console.log(vm.groupTableService.projection());
 
                         $scope.$apply();
                     });

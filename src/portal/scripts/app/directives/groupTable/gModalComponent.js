@@ -236,7 +236,6 @@
             syncTypeAttrs(vm.custom);
         };
 
-
         var updateAttrs = function () {
             console.log('gModalComponents columns ', columns);
 

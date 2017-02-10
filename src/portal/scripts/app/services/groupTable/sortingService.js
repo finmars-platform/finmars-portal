@@ -104,13 +104,15 @@
         return items.sort(function (a, b) {
             var nameA;
             var nameB;
-            if (typeof a === 'number') {
+            if (typeof a[sort.key] === 'number') {
                 nameA = a[sort.key];
                 nameB = b[sort.key];
             }
-            if (typeof a === 'string') {
-                nameA = a[sort.key].toLowerCase();
-                nameB = b[sort.key].toLowerCase();
+            if (typeof a[sort.key] === 'string') {
+                //nameA = a[sort.key].toLowerCase();
+                //nameB = b[sort.key].toLowerCase();
+                nameA = a[sort.key];
+                nameB = b[sort.key];
             }
 
 
@@ -159,7 +161,7 @@
     };
 
     var columnSort = function (items, sort) {
-        //console.log('items', items);
+        //console.log('columnSort items', items);
         var g;
         if (items.length && items[0].groups) {
             if (sort.id) {
@@ -184,8 +186,8 @@
             }
         }
 
-        //console.log('items', items);
-        //console.log('sort', sort);
+        console.log('columnSort items', items);
+        console.log('sort', sort);
 
         return items;
     };
