@@ -29,14 +29,6 @@
 
         logService.property('vm.entityType', vm.entityType);
 
-        //uiService.getListLayout(vm.entityType).then(function (data) {
-        //	logService.collection('DATA', data);
-        //	vm.tabs = data.results[0].data.modalDrag;
-        //	logService.collection('vm.tabs!!!!!!!!!!!!!', vm.tabs);
-        //
-        //	$scope.$apply();
-        //});
-
         vm.general = [];
         vm.attrs = [];
         vm.baseAttrs = [];

@@ -194,6 +194,7 @@ app.controller('GReportSettingsDialogController', ['$scope', '$mdDialog', 'repor
 
 
 app.controller('gModalController', ['$scope', '$mdDialog', 'parentScope', 'callback', require('./app/directives/groupTable/gModalComponent')]);
+app.controller('gModalReportController', ['$scope', '$mdDialog', 'parentScope', 'callback', require('./app/directives/groupTable/gModalReportComponent')]);
 
 // GROUP TABLE END
 
