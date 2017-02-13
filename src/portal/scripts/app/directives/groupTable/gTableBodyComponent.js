@@ -54,10 +54,12 @@
 
                 if (scope.isReport == true) {
 
-                    entityAttrs = metaService.getEntityAttrs('instrument').map(function (item) {
+                    entityAttrs = metaService.getEntityAttrs(entityType);
+
+                    entityAttrs = entityAttrs.concat(metaService.getEntityAttrs('instrument').map(function (item) {
                         item.key = 'instrument_object_' + item.key;
                         return item;
-                    });
+                    }));
 
                     entityAttrs = entityAttrs.concat(metaService.getEntityAttrs('instrument-type').map(function (item) {
                         item.key = 'instrument_type_object_' + item.key;

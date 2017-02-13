@@ -141,6 +141,10 @@
 
             //vm.entityAttrs = metaService.getEntityAttrs(vm.entityType);
 
+            vm.balanceAttrs = metaService.getEntityAttrs('balance-report').map(function (item) {
+                item.name = 'Balance.' + item.name;
+                return item;
+            });
 
             vm.instrumentAttrs = metaService.getEntityAttrs('instrument').map(function (item) {
                 item.name = 'Instrument.' + item.name;
@@ -149,7 +153,7 @@
             });
 
             vm.instrumentTypeAttrs = metaService.getEntityAttrs('instrument-type').map(function (item) {
-                item.key = 'Instrument.Instrument Type.' + item.name;
+                item.name = 'Instrument.Instrument Type.' + item.name;
                 item.key = 'instrument_type_object_' + item.key;
                 return item;
             });
@@ -302,6 +306,8 @@
 
         var syncAttrs = function () {
 
+            syncTypeAttrs(vm.balanceAttrs);
+
             syncTypeAttrs(vm.instrumentAttrs);
             syncTypeAttrs(vm.instrumentTypeAttrs);
 
@@ -326,6 +332,8 @@
 
         var updateAttrs = function () {
             //console.log('gModalComponents columns ', columns);
+
+            updateTypeAttrs(vm.balanceAttrs);
 
             updateTypeAttrs(vm.instrumentAttrs);
             updateTypeAttrs(vm.instrumentTypeAttrs);
