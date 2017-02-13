@@ -20,6 +20,8 @@
         var reportSubtotalService = require('../../services/reportSubtotalService');
         var pricingPolicyService = require('../../services/pricingPolicyService');
 
+        var reportHelper = require('../../helpers/reportHelper');
+
         var uiService = require('../../services/uiService');
 
         module.exports = function ($scope, $mdDialog) {
@@ -505,6 +507,8 @@
                                 entity = reportSubtotalService.groupByAndCalc(entity, vm.reportOptions);
                             }
 
+                            entity = reportHelper.releaseEntityObjects(entity);
+
                             vm.groupTableService.setItems(entity);
 
                             vm.groupTableService.columns.setColumns(vm.columns);
@@ -702,7 +706,9 @@
 
                 vm.updateVm(_params.options);
 
-                console.trace();
+                //console.trace();
+
+                console.log('projection', vm.getProjection());
 
                 if (_params.redraw == true) {
 
