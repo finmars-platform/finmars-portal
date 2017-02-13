@@ -51,7 +51,87 @@
                 var classifiersInstances = {};
 
                 baseAttrs = metaService.getBaseAttrs();
-                entityAttrs = metaService.getEntityAttrs(entityType);
+
+                if (scope.isReport == true) {
+
+                    entityAttrs = metaService.getEntityAttrs('instrument').map(function (item) {
+                        item.key = 'instrument_object_' + item.key;
+                        return item;
+                    });
+
+                    entityAttrs = entityAttrs.concat(metaService.getEntityAttrs('instrument-type').map(function (item) {
+                        item.key = 'instrument_type_object_' + item.key;
+                        return item;
+                    }));
+
+                    entityAttrs = entityAttrs.concat(metaService.getEntityAttrs('account').map(function (item) {
+                        item.key = 'account_object_' + item.key;
+                        return item;
+                    }));
+
+                    entityAttrs = entityAttrs.concat(metaService.getEntityAttrs('account-type').map(function (item) {
+                        item.key = 'account_type_object_' + item.key;
+                        return item;
+                    }));
+
+                    entityAttrs = entityAttrs.concat(metaService.getEntityAttrs('portfolio').map(function (item) {
+                        item.key = 'portfolio_object_' + item.key;
+                        return item;
+                    }));
+
+                    entityAttrs = entityAttrs.concat(metaService.getEntityAttrs('strategy-1').map(function (item) {
+                        item.key = 'strategy1_object_' + item.key;
+                        return item;
+                    }));
+
+                    entityAttrs = entityAttrs.concat(metaService.getEntityAttrs('strategy-1-subgroup').map(function (item) {
+                        item.key = 'strategy1_subgroup_object' + item.key;
+                        return item;
+                    }));
+
+                    entityAttrs = entityAttrs.concat(metaService.getEntityAttrs('strategy-1-group').map(function (item) {
+                        item.key = 'strategy1_group_object' + item.key;
+                        return item;
+                    }));
+
+                    entityAttrs = entityAttrs.concat(metaService.getEntityAttrs('strategy-2').map(function (item) {
+                        item.key = 'strategy2_object_' + item.key;
+                        return item;
+                    }));
+
+                    entityAttrs = entityAttrs.concat(metaService.getEntityAttrs('strategy-2-subgroup').map(function (item) {
+                        item.key = 'strategy2_subgroup_object' + item.key;
+                        return item;
+                    }));
+
+                    entityAttrs = entityAttrs.concat(metaService.getEntityAttrs('strategy-2-group').map(function (item) {
+                        item.key = 'strategy2_group_object' + item.key;
+                        return item;
+                    }));
+
+                    entityAttrs = entityAttrs.concat(metaService.getEntityAttrs('strategy-3').map(function (item) {
+                        item.key = 'strategy3_object_' + item.key;
+                        return item;
+                    }));
+
+                    entityAttrs = entityAttrs.concat(metaService.getEntityAttrs('strategy-3-subgroup').map(function (item) {
+                        item.key = 'strategy3_subgroup_object' + item.key;
+                        return item;
+                    }));
+
+                    entityAttrs = entityAttrs.concat(metaService.getEntityAttrs('strategy-3-group').map(function (item) {
+                        item.key = 'strategy3_group_object' + item.key;
+                        return item;
+                    }));
+
+                    entityAttrs = entityAttrs.concat(metaService.getEntityAttrs(entityType));
+
+                    //console.log('entityAttrs', entityAttrs);
+
+                } else {
+                    entityAttrs = metaService.getEntityAttrs(entityType);
+                }
+
 
                 setTimeout(function () {
                     $('.g-table-section .custom-scrollbar')[0].dispatchEvent(new Event('scroll'));

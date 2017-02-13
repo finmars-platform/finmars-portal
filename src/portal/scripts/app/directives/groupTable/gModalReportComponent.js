@@ -139,7 +139,71 @@
                 vm.baseAttrs = metaService.getBaseAttrs();
             }
 
-            vm.entityAttrs = metaService.getEntityAttrs(vm.entityType);
+            //vm.entityAttrs = metaService.getEntityAttrs(vm.entityType);
+
+
+            vm.instrumentAttrs = metaService.getEntityAttrs('instrument').map(function (item) {
+                item.key = 'instrument_object_' + item.key;
+                return item;
+            });
+
+            vm.instrumentTypeAttrs = metaService.getEntityAttrs('instrument-type').map(function (item) {
+                item.key = 'instrument_type_object_' + item.key;
+                return item;
+            });
+
+            vm.accountAttrs = metaService.getEntityAttrs('account').map(function (item) {
+                item.key = 'account_object_' + item.key;
+                return item;
+            });
+            vm.accountTypeAttrs = metaService.getEntityAttrs('account-type').map(function (item) {
+                item.key = 'account_type_object_' + item.key;
+                return item;
+            });
+
+            vm.portfolioAttrs = metaService.getEntityAttrs('portfolio').map(function (item) {
+                item.key = 'portfolio_object_' + item.key;
+                return item;
+            });
+
+            vm.strategy1attrs = metaService.getEntityAttrs('strategy-1').map(function (item) {
+                item.key = 'strategy1_object_' + item.key;
+                return item;
+            });
+            vm.strategy1subgroupAttrs = metaService.getEntityAttrs('strategy-1-subgroup').map(function (item) {
+                item.key = 'strategy1_subgroup_object' + item.key;
+                return item;
+            });
+            vm.strategy1groupAttrs = metaService.getEntityAttrs('strategy-1-group').map(function (item) {
+                item.key = 'strategy1_group_object' + item.key;
+                return item;
+            });
+
+            vm.strategy2attrs = metaService.getEntityAttrs('strategy-2').map(function (item) {
+                item.key = 'strategy2_object' + item.key;
+                return item;
+            });
+            vm.strategy2subgroupAttrs = metaService.getEntityAttrs('strategy-2-subgroup').map(function (item) {
+                item.key = 'strategy2_subgroup_object' + item.key;
+                return item;
+            });
+            vm.strategy2groupAttrs = metaService.getEntityAttrs('strategy-2-group').map(function (item) {
+                item.key = 'strategy2_group_object' + item.key;
+                return item;
+            });
+
+            vm.strategy3attrs = metaService.getEntityAttrs('strategy-3').map(function (item) {
+                item.key = 'strategy3_object' + item.key;
+                return item;
+            });
+            vm.strategy3subgroupAttrs = metaService.getEntityAttrs('strategy-3-subgroup').map(function (item) {
+                item.key = 'strategy3_subgroup_object' + item.key;
+                return item;
+            });
+            vm.strategy3groupAttrs = metaService.getEntityAttrs('strategy-3-group').map(function (item) {
+                item.key = 'strategy3_group_object' + item.key;
+                return item;
+            });
 
             balanceReportCustomAttrService.getList().then(function (data) {
                 vm.custom = data.results;
@@ -223,19 +287,51 @@
         });
 
         var syncAttrs = function () {
-            syncTypeAttrs(vm.baseAttrs);
-            syncTypeAttrs(vm.entityAttrs);
-            syncTypeAttrs(vm.attrs);
-            syncTypeAttrs(vm.custom);
+
+            syncTypeAttrs(vm.instrumentAttrs);
+            syncTypeAttrs(vm.instrumentTypeAttrs);
+
+            syncTypeAttrs(vm.accountAttrs);
+            syncTypeAttrs(vm.accountTypeAttrs);
+
+            syncTypeAttrs(vm.portfolioAttrs);
+
+            syncTypeAttrs(vm.strategy1attrs);
+            syncTypeAttrs(vm.strategy1subgroupAttrs);
+            syncTypeAttrs(vm.strategy1groupAttrs);
+
+            syncTypeAttrs(vm.strategy2attrs);
+            syncTypeAttrs(vm.strategy2subgroupAttrs);
+            syncTypeAttrs(vm.strategy2groupAttrs);
+
+            syncTypeAttrs(vm.strategy3attrs);
+            syncTypeAttrs(vm.strategy3subgroupAttrs);
+            syncTypeAttrs(vm.strategy3groupAttrs);
+
         };
 
         var updateAttrs = function () {
-            console.log('gModalComponents columns ', columns);
+            //console.log('gModalComponents columns ', columns);
 
-            updateTypeAttrs(vm.baseAttrs);
-            updateTypeAttrs(vm.entityAttrs);
-            updateTypeAttrs(vm.attrs);
-            updateTypeAttrs(vm.custom);
+            updateTypeAttrs(vm.instrumentAttrs);
+            updateTypeAttrs(vm.instrumentTypeAttrs);
+
+            updateTypeAttrs(vm.accountAttrs);
+            updateTypeAttrs(vm.accountTypeAttrs);
+
+            updateTypeAttrs(vm.portfolioAttrs);
+
+            updateTypeAttrs(vm.strategy1attrs);
+            updateTypeAttrs(vm.strategy1subgroupAttrs);
+            updateTypeAttrs(vm.strategy1groupAttrs);
+
+            updateTypeAttrs(vm.strategy2attrs);
+            updateTypeAttrs(vm.strategy2subgroupAttrs);
+            updateTypeAttrs(vm.strategy2groupAttrs);
+
+            updateTypeAttrs(vm.strategy3attrs);
+            updateTypeAttrs(vm.strategy3subgroupAttrs);
+            updateTypeAttrs(vm.strategy3groupAttrs);
 
             addColumn();
 
@@ -395,15 +491,9 @@
 
                 });
                 this.dragula.on('drop', function (elem, target) {
-                    //console.log('here?', target); //TODO fallback to ids instead of name/key
                     $(target).removeClass('active');
                     var name = $(elem).html();
                     var i;
-
-                    //console.log('elem111111111111111111111111111111', elem);
-                    //console.log('columns111111111111111111111111111111', columns);
-                    //console.log('grouping111111111111111111111111111111', grouping);
-                    //console.log('filters111111111111111111111111111111', filters);
 
                     exist = false;
                     if (target === document.querySelector('#columnsbag')) {
@@ -498,7 +588,6 @@
         }, 500);
 
         vm.MABtnVisibility = function (entityType) {
-            //console.log('custom entity type', entityType);
             return metaService.checkRestrictedEntityTypesForAM(entityType);
         }
     }
