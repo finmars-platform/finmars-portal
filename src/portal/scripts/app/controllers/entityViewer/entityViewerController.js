@@ -100,14 +100,13 @@
 
             console.log('------------------------ EV scope -----------------------------', $scope);
 
-            vm.returnFullAttributes = function (items, attrs, baseAttrs, entityAttrs, entityType) {
+            vm.returnFullAttributes = function (items, attrs, baseAttrs, entityAttrs) {
                 var fullItems = [];
                 if (!items) {
                     return [];
                 }
-                //console.log('vm.returnFullAttributes attributes:', attrs, items);
                 var i, a, b, e, item, attr, baseAttr, attrOptions, entityAttr, report_settings, reportAttrs;
-                var reportDynamicAttrsReady = false;
+
                 for (i = 0; i < items.length; i = i + 1) {
                     item = items[i];
                     if (item.hasOwnProperty('id')) {
@@ -132,18 +131,48 @@
                             });
                         }
                         else {
-                            for (a = 0; a < attrs.length; a = a + 1) {
-                                attr = attrs[a];
 
-                                if (item.id === attr.id) {
-                                    console.log("fullattributes this isn't report");
+                            var attrsKeys = Object.keys(attrs);
+
+                            attrsKeys.forEach(function (attrKey) {
+
+                                for (a = 0; a < attrs[attrKey].length; a = a + 1) {
+                                    attr = attrs[attrKey][a];
+
+                                    if (item.id === attr.id) {
+                                        console.log("fullattributes this isn't report");
+                                        if (item.options) {
+                                            attrOptions = JSON.parse(JSON.stringify(item.options));
+                                        }
+                                        if (item.report_settings) {
+                                            report_settings = JSON.parse(JSON.stringify(item.report_settings));
+                                        }
+                                        item = JSON.parse(JSON.stringify(attr));
+                                        item.options = attrOptions;
+                                        if (item.report_settings) {
+                                            item.report_settings = JSON.parse(JSON.stringify(report_settings));
+                                        }
+                                        fullItems.push(item);
+                                    }
+                                }
+                            })
+                        }
+                    } else {
+
+                        var baseAttrsKeys = Object.keys(baseAttrs);
+
+                        baseAttrsKeys.forEach(function (baseAttrKey) {
+
+                            for (b = 0; b < baseAttrs[baseAttrKey].length; b = b + 1) {
+                                baseAttr = baseAttrs[baseAttrKey][b];
+                                if (item.key === baseAttr.key) {
                                     if (item.options) {
                                         attrOptions = JSON.parse(JSON.stringify(item.options));
                                     }
                                     if (item.report_settings) {
                                         report_settings = JSON.parse(JSON.stringify(item.report_settings));
                                     }
-                                    item = JSON.parse(JSON.stringify(attr));
+                                    item = JSON.parse(JSON.stringify(baseAttr));
                                     item.options = attrOptions;
                                     if (item.report_settings) {
                                         item.report_settings = JSON.parse(JSON.stringify(report_settings));
@@ -151,47 +180,33 @@
                                     fullItems.push(item);
                                 }
                             }
-                        }
-                    } else {
-                        //console.log('returnattribute without id', item);
-                        for (b = 0; b < baseAttrs.length; b = b + 1) {
-                            baseAttr = baseAttrs[b];
-                            if (item.key === baseAttr.key) {
-                                if (item.options) {
-                                    attrOptions = JSON.parse(JSON.stringify(item.options));
-                                }
-                                if (item.report_settings) {
-                                    report_settings = JSON.parse(JSON.stringify(item.report_settings));
-                                }
-                                item = JSON.parse(JSON.stringify(baseAttr));
-                                item.options = attrOptions;
-                                if (item.report_settings) {
-                                    item.report_settings = JSON.parse(JSON.stringify(report_settings));
-                                }
-                                fullItems.push(item);
-                            }
-                        }
+                        });
 
-                        for (e = 0; e < entityAttrs.length; e = e + 1) {
-                            entityAttr = entityAttrs[e];
-                            if (item.key === entityAttr.key) {
-                                if (item.options) {
-                                    attrOptions = JSON.parse(JSON.stringify(item.options));
+                        var entityAttrsKeys = Object.keys(entityAttrs);
+
+                        entityAttrsKeys.forEach(function (entityAttrKey) {
+
+                            for (e = 0; e < entityAttrs[entityAttrKey].length; e = e + 1) {
+                                entityAttr = entityAttrs[entityAttrKey][e];
+                                if (item.key === entityAttr.key) {
+                                    if (item.options) {
+                                        attrOptions = JSON.parse(JSON.stringify(item.options));
+                                    }
+                                    if (item.report_settings) {
+                                        report_settings = JSON.parse(JSON.stringify(item.report_settings));
+                                    }
+                                    item = JSON.parse(JSON.stringify(entityAttr));
+                                    item.options = attrOptions;
+                                    if (item.report_settings) {
+                                        item.report_settings = JSON.parse(JSON.stringify(report_settings));
+                                    }
+                                    fullItems.push(item);
                                 }
-                                if (item.report_settings) {
-                                    report_settings = JSON.parse(JSON.stringify(item.report_settings));
-                                }
-                                item = JSON.parse(JSON.stringify(entityAttr));
-                                item.options = attrOptions;
-                                if (item.report_settings) {
-                                    item.report_settings = JSON.parse(JSON.stringify(report_settings));
-                                }
-                                fullItems.push(item);
                             }
-                        }
+                        })
                     }
                 }
-                //console.log('vm.returnfullattributes fullItems', fullItems);
+
                 return fullItems;
 
             };
@@ -311,27 +326,83 @@
 
             vm.transformViewAttributes = function () { //deprecated
 
-                vm.columns = vm.returnFullAttributes(vm.columns, vm.attrs, vm.baseAttrs, vm.entityAttrs, vm.entityType);
-                vm.grouping = vm.returnFullAttributes(vm.grouping, vm.attrs, vm.baseAttrs, vm.entityAttrs, vm.entityType);
-                vm.filters = vm.returnFullAttributes(vm.filters, vm.attrs, vm.baseAttrs, vm.entityAttrs, vm.entityType);
+
+                vm.columns = vm.returnFullAttributes(vm.columns, vm.attrs, vm.baseAttrs, vm.entityAttrs);
+                vm.grouping = vm.returnFullAttributes(vm.grouping, vm.attrs, vm.baseAttrs, vm.entityAttrs);
+                vm.filters = vm.returnFullAttributes(vm.filters, vm.attrs, vm.baseAttrs, vm.entityAttrs);
                 vm.sorting.group = vm.findFullAttributeForItem(vm.sorting.group, vm.attrs);
                 vm.sorting.column = vm.findFullAttributeForItem(vm.sorting.column, vm.attrs);
 
                 logService.collection('vm.grouping', vm.grouping);
                 logService.collection('vm.columns', vm.columns);
 
+
                 vm.updateConfig();
             };
 
             vm.getAttributes = function () {
-                return attributeTypeService.getList(vm.entityType).then(function (data) {
-                    vm.attrs = data.results;
-                    if (metaService.getEntitiesWithoutBaseAttrsList().indexOf(vm.entityType) == -1) {
-                        vm.baseAttrs = metaService.getBaseAttrs();
-                    }
-                    vm.entityAttrs = metaService.getEntityAttrs(vm.entityType) || [];
-                    $scope.$apply();
-                })
+
+                if (vm.isReport == true) {
+
+                    return new Promise(function (resolve, reject) {
+
+                        var promises = [];
+                        promises.push(attributeTypeService.getList(vm.entityType));
+                        promises.push(attributeTypeService.getList('instrument'));
+                        promises.push(attributeTypeService.getList('account'));
+                        promises.push(attributeTypeService.getList('portfolio'));
+
+                        Promise.all(promises).then(function (data) {
+
+                            //console.log('dyn attrs for report', data);
+
+                            vm.attrs[vm.entityType] = data[0].results;
+                            vm.attrs['instrument'] = data[1].results;
+                            vm.attrs['account'] = data[2].results;
+                            vm.attrs['portfolio'] = data[3].results;
+
+                            vm.baseAttrs[vm.entityType] = [];
+                            vm.baseAttrs['instrument'] = metaService.getBaseAttrs();
+                            vm.baseAttrs['account'] = metaService.getBaseAttrs();
+                            vm.baseAttrs['portfolio'] = metaService.getBaseAttrs();
+
+                            vm.entityAttrs[vm.entityType] = metaService.getEntityAttrs(vm.entityType).map(function (item) {
+                                item.name = vm.entityType.split('-')[0].capitalizeFirstLetter() + '.' + item.name;
+                                return item;
+                            });
+
+                            vm.entityAttrs['instrument'] = metaService.getEntityAttrs('instrument').map(function (item) {
+                                item.name = 'Instrument.' + item.name;
+                                item.key = 'instrument_object_' + item.key;
+                                return item;
+                            });
+
+                            vm.entityAttrs['account'] = metaService.getEntityAttrs('account').map(function (item) {
+                                item.key = 'account_object_' + item.key;
+                                return item;
+                            });
+
+                            vm.entityAttrs['portfolio'] = metaService.getEntityAttrs('portfolio').map(function (item) {
+                                item.key = 'portfolio_object_' + item.key;
+                                return item;
+                            });
+
+                            resolve(undefined);
+
+                        })
+
+                    })
+
+                } else {
+                    return attributeTypeService.getList(vm.entityType).then(function (data) {
+                        vm.attrs[vm.entityType] = data.results;
+                        if (metaService.getEntitiesWithoutBaseAttrsList().indexOf(vm.entityType) == -1) {
+                            vm.baseAttrs[vm.entityType] = metaService.getBaseAttrs();
+                        }
+                        vm.entityAttrs[vm.entityType] = metaService.getEntityAttrs(vm.entityType) || [];
+                        $scope.$apply();
+                    })
+                }
             };
 
             vm.itemFilterHasOwnProperty = function (item, filter) {
@@ -569,7 +640,6 @@
                             }
                             return item;
                         });
-
 
 
                         //console.log('audit transaction data is', vm.entity);
@@ -896,10 +966,10 @@
 
                         vm.isRootEntityViewer = false;
 
-                        vm.attrs = [];
-                        vm.baseAttrs = [];
+                        vm.attrs = {};
+                        vm.baseAttrs = {};
                         vm.layoutAttrs = [];
-                        vm.entityAttrs = [];
+                        vm.entityAttrs = {};
 
                         // ENTITY STUFF START
 
@@ -1159,10 +1229,10 @@
 
                         vm.isRootEntityViewer = true;
 
-                        vm.attrs = [];
-                        vm.baseAttrs = [];
+                        vm.attrs = {};
+                        vm.baseAttrs = {};
                         vm.layoutAttrs = [];
-                        vm.entityAttrs = [];
+                        vm.entityAttrs = {};
 
                         // ENTITY STUFF START
                         vm.entityType = $scope.$parent.vm.entityType;
