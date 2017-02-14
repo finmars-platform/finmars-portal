@@ -112,23 +112,30 @@
                     if (item.hasOwnProperty('id')) {
 
                         if (vm.isReport == true) {
-                            console.log('reportAttrs data is', vm.reportAttrs);
-                            vm.reportAttrs.map(function (repAttr) {
-                                if (item.r_entityType === repAttr.r_entityType && item.id === repAttr.id) {
-                                    if (item.options) {
-                                        attrOptions = JSON.parse(JSON.stringify(item.options));
+
+                            //console.log('reportAttrs data is', vm.reportAttrs);
+
+                            var reportAttrsKeys = Object.keys(vm.reportAttrs);
+
+                            reportAttrsKeys.forEach(function (reportAttrKeyEntity) {
+
+                                vm.reportAttrs[reportAttrKeyEntity].map(function (repAttr) {
+                                    if (item.r_entityType === repAttr.r_entityType && item.id === repAttr.id) {
+                                        if (item.options) {
+                                            attrOptions = JSON.parse(JSON.stringify(item.options));
+                                        }
+                                        if (item.report_settings) {
+                                            report_settings = JSON.parse(JSON.stringify(item.report_settings));
+                                        }
+                                        item = JSON.parse(JSON.stringify(repAttr));
+                                        item.options = attrOptions;
+                                        if (item.report_settings) {
+                                            item.report_settings = JSON.parse(JSON.stringify(report_settings));
+                                        }
+                                        fullItems.push(item);
                                     }
-                                    if (item.report_settings) {
-                                        report_settings = JSON.parse(JSON.stringify(item.report_settings));
-                                    }
-                                    item = JSON.parse(JSON.stringify(repAttr));
-                                    item.options = attrOptions;
-                                    if (item.report_settings) {
-                                        item.report_settings = JSON.parse(JSON.stringify(report_settings));
-                                    }
-                                    fullItems.push(item);
-                                }
-                            });
+                                });
+                            })
                         }
                         else {
 
@@ -140,7 +147,7 @@
                                     attr = attrs[attrKey][a];
 
                                     if (item.id === attr.id) {
-                                        console.log("fullattributes this isn't report");
+                                        //console.log("fullattributes this isn't report");
                                         if (item.options) {
                                             attrOptions = JSON.parse(JSON.stringify(item.options));
                                         }
@@ -407,8 +414,8 @@
 
             vm.itemFilterHasOwnProperty = function (item, filter) {
 
-                //console.log('item', item);
-                //console.log('filter', filter);
+                console.log('item', item);
+                console.log('filter', filter);
 
                 if (filter.hasOwnProperty('key')) {
                     if (item.hasOwnProperty(filter.key)) {
@@ -417,8 +424,16 @@
                 }
 
                 if (filter.hasOwnProperty('id')) {
-                    if (item.hasOwnProperty(filter.r_entityType + '_attribute_' + filter.source_name)) {
-                        return true;
+
+                    if (filter.hasOwnProperty('r_entityType')) {
+
+                        if (item.hasOwnProperty(filter.r_entityType + '_attribute_' + filter.source_name)) {
+                            return true;
+                        }
+                    } else {
+                        if (item.hasOwnProperty(filter.attribute_entity + '_attribute_' + filter.source_name)) {
+                            return true;
+                        }
                     }
                 }
 
@@ -468,6 +483,8 @@
                         var isFiltersExist = false;
                         var isFiltersEnabled = false;
 
+                        console.log('vm.filters', vm.filters);
+
                         if (vm.filters.length > 0) {
                             isFiltersExist = true;
 
@@ -490,11 +507,11 @@
 
                         if (isFiltersExist == true && isFiltersEnabled == true) {
 
-                            filteredData = [];
-
                             var itemsRepository = data.items;
 
-                            vm.filters.forEach(function (filterItem, $index) {
+                            vm.filters.forEach(function (filterItem) {
+
+                                console.log('filterItem', filterItem);
 
                                 var localFilteredData = [];
 
@@ -534,13 +551,17 @@
                                                 }
                                             }
 
-                                            //console.log('filterItem', filterItem);
-
                                             if (filterItem.value_type == 10) {
 
-                                                //console.log('item', item);
+                                                console.log('item', item);
 
-                                                var _name = filterItem.r_entityType + '_attribute_' + filterItem.source_name;
+                                                var _name;
+
+                                                if (filterItem.hasOwnProperty('r_entityType')) {
+                                                    _name = filterItem.r_entityType + '_attribute_' + filterItem.source_name;
+                                                } else {
+                                                    _name = filterItem.attribute_entity + '_attribute_' + filterItem.source_name;
+                                                }
 
                                                 if (filterItem.options.query !== undefined) {
                                                     if (item[_name].indexOf(filterItem.options.query) !== -1) {
@@ -580,11 +601,17 @@
 
                             entity = reportHelper.releaseEntityObjects(entity);
 
+                            var entitiesList = [vm.entityType, 'instrument', 'account',
+                                'portfolio', 'instrument-type', 'account-type',
+                                'strategy-1', 'strategy-1-subgroup', 'strategy-1-subgroup',
+                                'strategy-2', 'strategy-2-subgroup', 'strategy-2-subgroup',
+                                'strategy-3', 'strategy-3-subgroup', 'strategy-3-subgroup'];
+
                             vm.groupTableService.setItems(entity);
 
                             vm.groupTableService.columns.setColumns(vm.columns);
                             //vm.groupTableService.filtering.setFilters(vm.filters);
-                            vm.groupTableService.grouping.setGroupsWithColumns(vm.grouping, vm.columns, vm.entityType);
+                            vm.groupTableService.grouping.setGroupsWithColumns(vm.grouping, vm.columns, entitiesList);
                             //console.log("EXTERNAL CALLBACK ", vm.folding);
                             vm.groupTableService.folding.setFolds(vm.folding);
                             //console.log('UPDATE TABLE scope.sorting.group', vm.sorting.group);
@@ -1022,7 +1049,7 @@
 
                         vm.reportIsReady = false;
 
-                        vm.reportAttrs = [];	//	array of reports's dynamic attributes
+                        vm.reportAttrs = {};	//	array of reports's dynamic attributes
 
                         dynamicAttributesForReportsService.getDynamicAttributes().then(function (data) {
                             vm.reportAttrs = data;
@@ -1282,7 +1309,7 @@
 
                         vm.reportIsReady = false;
 
-                        vm.reportAttrs = [];	//	array of reports's dynamic attributes
+                        vm.reportAttrs = {};	//	array of reports's dynamic attributes
 
                         dynamicAttributesForReportsService.getDynamicAttributes().then(function (data) {
                             vm.reportAttrs = data;

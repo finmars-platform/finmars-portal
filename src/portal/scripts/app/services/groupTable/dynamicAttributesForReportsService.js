@@ -11,7 +11,7 @@
         console.log();
         var promises = [];
         var attr = [];
-        var reportAttrs = [];
+        var reportAttrs = {};
 
         promises.push(attributeTypeService.getList('portfolio'));
         promises.push(attributeTypeService.getList('account'));
@@ -21,37 +21,28 @@
         return Promise.all(promises).then(function (data) {
 
             console.log('attributes in report', data);
-            data.forEach(function (reportAttrsList, index) {
 
-                var reportAttrsResults = reportAttrsList.results.map(function (item) {
-
-                    if (index == 0) {
-                        item.r_entityType = 'portfolio';
-                        item.source_name = item.name;
-                        item.name = 'Portfolio: ' + item.name;
-                    }
-                    if (index == 1) {
-                        item.r_entityType = 'account';
-                        item.source_name = item.name;
-                        item.name = 'Account: ' + item.name;
-                    }
-                    if (index == 2) {
-                        item.r_entityType = 'instrument';
-                        item.source_name = item.name;
-                        item.name = 'Instrument: ' + item.name;
-                    }
-                    if (index == 3) {
-                        item.r_entityType = 'currency';
-                        item.source_name = item.name;
-                        item.name = 'Currency: ' + item.name;
-                    }
-
-
-                    return item;
-                });
-                reportAttrs = reportAttrs.concat(reportAttrsResults);
-
+            reportAttrs['portfolio'] = data[0].results.map(function(item){
+                item.source_name = item.name;
+                item.attribute_entity = 'portfolio';
+                item.name = 'Portfolio.' + item.name;
+                return item;
             });
+
+            reportAttrs['account'] = data[1].results.map(function(item){
+                item.source_name = item.name;
+                item.attribute_entity = 'account';
+                item.name = 'Account.' + item.name;
+                return item;
+            });
+
+            reportAttrs['instrument'] = data[2].results.map(function(item){
+                item.source_name = item.name;
+                item.attribute_entity = 'instrument';
+                item.name = 'Instrument.' + item.name;
+                return item;
+            });
+
             return reportAttrs;
         });
     };

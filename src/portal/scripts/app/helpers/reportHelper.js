@@ -19,7 +19,6 @@
                     item['instrument_object_' + instrumentObjectKeyItem] = item.instrument_object[instrumentObjectKeyItem];
                 });
 
-
                 if (item.instrument_object.hasOwnProperty('instrument_type_object')) {
                     var instrumentTypeObjectKeys = Object.keys(item.instrument_object.instrument_type_object);
 
@@ -114,6 +113,81 @@
                             item['strategy3_group_object_' + strategy3groupObjectKeyItem] = item.strategy3_object.subgroup_object.group_object[strategy3groupObjectKeyItem];
                         })
                     }
+                }
+
+
+                // extract dynamic attributes
+
+                if (item.instrument_object.attributes.length) {
+
+                    item.instrument_object.attributes.forEach(function (attribute) {
+
+                        if (attribute.hasOwnProperty('attribute_type_object')) {
+
+                            if (attribute.attribute_type_object.value_type == 10) {
+                                item['Instrument.' +  attribute.attribute_type_object.display_name] = attribute.value_string;
+                            }
+                            if (attribute.attribute_type_object.value_type == 20) {
+                                item['Instrument.' +  attribute.attribute_type_object.display_name] = attribute.value_float;
+                            }
+                            if (attribute.attribute_type_object.value_type == 40) {
+                                item['Instrument.' +  attribute.attribute_type_object.display_name] = attribute.value_date;
+                            }
+                            if (attribute.attribute_type_object.value_type == 30) {
+                                item['Instrument.' +  attribute.attribute_type_object.display_name] = attribute.classifier_object.name;
+                            }
+                        }
+
+                    })
+
+                }
+
+                if (item.account_object.attributes.length) {
+
+                    item.account_object.attributes.forEach(function (attribute) {
+
+                        if (attribute.hasOwnProperty('attribute_type_object')) {
+
+                            if (attribute.attribute_type_object.value_type == 10) {
+                                item['Account.' + attribute.attribute_type_object.display_name] = attribute.value_string;
+                            }
+                            if (attribute.attribute_type_object.value_type == 20) {
+                                item['Account.' + attribute.attribute_type_object.display_name] = attribute.value_float;
+                            }
+                            if (attribute.attribute_type_object.value_type == 40) {
+                                item['Account.' +  attribute.attribute_type_object.display_name] = attribute.value_date;
+                            }
+                            if (attribute.attribute_type_object.value_type == 30) {
+                                item['Account.' +  attribute.attribute_type_object.display_name] = attribute.classifier_object.name;
+                            }
+                        }
+
+                    })
+
+                }
+
+                if (item.portfolio_object.attributes.length) {
+
+                    item.portfolio_object.attributes.forEach(function (attribute) {
+
+                        if (attribute.hasOwnProperty('attribute_type_object')) {
+
+                            if (attribute.attribute_type_object.value_type == 10) {
+                                item['Portfolio.' + attribute.attribute_type_object.display_name] = attribute.value_string;
+                            }
+                            if (attribute.attribute_type_object.value_type == 20) {
+                                item['Portfolio.' +  attribute.attribute_type_object.display_name] = attribute.value_float;
+                            }
+                            if (attribute.attribute_type_object.value_type == 40) {
+                                item['Portfolio.' +  attribute.attribute_type_object.display_name] = attribute.value_date;
+                            }
+                            if (attribute.attribute_type_object.value_type == 30) {
+                                item['Portfolio.' +  attribute.attribute_type_object.display_name] = attribute.classifier_object.name;
+                            }
+                        }
+
+                    })
+
                 }
 
 

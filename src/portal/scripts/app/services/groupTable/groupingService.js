@@ -102,7 +102,7 @@
         return items;
     };
 
-    var setGroups = function (items, groups, entityType, options) {
+    var setGroups = function (items, groups, entityTypes, options) {
 
         //console.log('GROUPING SERVICE groups', groups);
 
@@ -113,16 +113,74 @@
         var i, c, a, k;
 
         var baseAttrs = [];
-        var entityAttrs = [];
+        var entityAttrs = {};
         if (metaService) {
-            if (metaService.getEntitiesWithoutBaseAttrsList().indexOf(entityType) === -1) {
-                baseAttrs = metaService.getBaseAttrs();
-            }
-            entityAttrs = metaService.getEntityAttrs(entityType);
+
+            entityTypes.forEach(function (entityType) {
+                if (metaService.getEntitiesWithoutBaseAttrsList().indexOf(entityType) === -1) {
+                    baseAttrs = metaService.getBaseAttrs();
+                }
+                entityAttrs[entityType] = metaService.getEntityAttrs(entityType).map(function (item) {
+
+                    if (entityType !== 'balance-report') {
+
+                        if (entityType.indexOf('strategy') == 0) {
+
+                            var pieces = entityType.split('-');
+
+                            //console.log('entityType', JSON.stringify(entityType));
+
+                            entityType = pieces[0] + pieces[1];
+
+                            if (pieces.length > 2) {
+                                entityType = entityType + '_' + pieces[2];
+                            }
+
+                        } else {
+                            entityType = entityType.split('-').join('_');
+                        }
+
+                        //console.log('entityType', JSON.stringify(entityType));
+                        //console.log('entityType', JSON.stringify(item));
+
+                        item.key = entityType + '_object_' + item.key;
+
+                        if (entityType == 'instrument-type') {
+                            item.name = 'Instrument.Instrument Type' + item.name;
+                        } else if (entityType == 'account-type') {
+                            item.name = 'Account.Account Type' + item.name;
+                        } else if ('strategy-1-subgroup') {
+                            item.name = 'Strategy1.Subgroup.' + item.name;
+                        } else if ('strategy-2-subgroup') {
+                            item.name = 'Strategy2.Subgroup.' + item.name;
+                        } else if ('strategy-3-subgroup') {
+                            item.name = 'Strategy3.Subgroup.' + item.name;
+                        } else if ('strategy-1-group') {
+                            item.name = 'Strategy1.Subgroup.Group.' + item.name;
+                        } else if ('strategy-2-group') {
+                            item.name = 'Strategy2.Subgroup.Group.' + item.name;
+                        } else if ('strategy-3-group') {
+                            item.name = 'Strategy3.Subgroup.Group.' + item.name;
+                        } else {
+                            item.name = entityType.capitalizeFirstLetter() + '.' + item.name;
+                        }
+                    }
+
+                    return item;
+
+                });
+            })
+
         }
+
         var keywords = [];
         keywords = keywords.concat(baseAttrs);
-        keywords = keywords.concat(entityAttrs);
+
+        var entityAttrsKeys = Object.keys(entityAttrs);
+
+        entityAttrsKeys.forEach(function (entityAttrsKey) {
+            keywords = keywords.concat(entityAttrs[entityAttrsKey]);
+        });
 
 
         var hasGroups = true;
@@ -142,7 +200,6 @@
             }
             return false;
         }
-
 
         function checkIfEmptyString(item) {
             if (item == '') {
@@ -448,12 +505,12 @@
 
     // deprecated end
 
-    function recursiveFillGroups(items, groups, entityType, options) {
+    function recursiveFillGroups(items, groups, entityTypes, options) {
 
         var level = 0;
         var results = [];
 
-        function recursiveWalker(items, groups, entityType, level, options) {
+        function recursiveWalker(items, groups, entityTypes, level, options) {
 
             //console.log('options', options);
             //console.log('level', level);
@@ -468,26 +525,26 @@
 
                     if (!results.length) {
 
-                        var tempResults = setGroups(items, [groups.bootsGroup[level]], entityType, setGroupOptions);
+                        var tempResults = setGroups(items, [groups.bootsGroup[level]], entityTypes, setGroupOptions);
 
                         tempResults.forEach(function (item) {
 
                             results.push(item);
                         });
 
-                        recursiveWalker(results, groups, entityType, level + 1, options)
+                        recursiveWalker(results, groups, entityTypes, level + 1, options)
 
                     } else {
 
                         items.forEach(function (resultItem) {
 
 
-                            resultItem['boot_level_' + level] = setGroups(resultItem.items, [groups.bootsGroup[level]], entityType, setGroupOptions);
+                            resultItem['boot_level_' + level] = setGroups(resultItem.items, [groups.bootsGroup[level]], entityTypes, setGroupOptions);
 
                             setAncestors(resultItem, level, 'boot');
 
                             if (groups.bootsGroup[level + 1]) {
-                                recursiveWalker(resultItem['boot_level_' + level], groups, entityType, level + 1, options)
+                                recursiveWalker(resultItem['boot_level_' + level], groups, entityTypes, level + 1, options)
                             }
                         });
 
@@ -503,7 +560,7 @@
 
                                         resultItem['boot_level_' + level].forEach(function (bootItem) {
 
-                                            bootItem['breadcrumbs_level_0'] = setGroups(bootItem.items, groups.linesGroup, entityType, setGroupOptions);
+                                            bootItem['breadcrumbs_level_0'] = setGroups(bootItem.items, groups.linesGroup, entityTypes, setGroupOptions);
 
                                             setAncestors(bootItem, 0, 'breadcrumb', {bootLevel: level});
 
@@ -526,7 +583,7 @@
 
                             items.forEach(function (resultItem) {
 
-                                resultItem['breadcrumbs_level_0'] = setGroups(resultItem.items, groups.linesGroup, entityType, setGroupOptions);
+                                resultItem['breadcrumbs_level_0'] = setGroups(resultItem.items, groups.linesGroup, entityTypes, setGroupOptions);
 
                             });
                         }
@@ -538,7 +595,7 @@
 
         }
 
-        recursiveWalker(items, groups, entityType, level, options);
+        recursiveWalker(items, groups, entityTypes, level, options);
 
         //console.log('results', results);
 
@@ -741,7 +798,7 @@
 
     }
 
-    var setGroupsWithColumns = function (items, groups, columns, entityType) {
+    var setGroupsWithColumns = function (items, groups, columns, entityTypes) {
 
         var preInitGroups = [];
         var bootsGroup = [];
@@ -881,7 +938,7 @@
                     columns: columns
                 };
 
-                results = setGroups(items, preInitGroups, entityType, options);
+                results = setGroups(items, preInitGroups, entityTypes, options);
 
                 results.forEach(function (preInitGroupsItem) {
 
@@ -891,7 +948,7 @@
                         linesGroup: linesGroup
                     };
 
-                    preInitGroupsItem["boot_level_0"] = recursiveFillGroups(preInitGroupsItem.items, groups, entityType, {
+                    preInitGroupsItem["boot_level_0"] = recursiveFillGroups(preInitGroupsItem.items, groups, entityTypes, {
                         boot: true,
                         breadcrumbs: true,
                         columns: columns
@@ -907,7 +964,7 @@
                     linesGroup: linesGroup
                 };
 
-                results = recursiveFillGroups(items, groups, entityType, {
+                results = recursiveFillGroups(items, groups, entityTypes, {
                     boot: true,
                     breadcrumbs: true,
                     columns: columns
@@ -924,7 +981,6 @@
         }
 
     };
-
 
     module.exports = {
         setGroups: setGroups,
