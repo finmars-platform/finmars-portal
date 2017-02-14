@@ -19,31 +19,31 @@
     "pages": [
       {
         "state": "app.reports.balance-report",
-        "title": "New Balance",
+        "title": "Balance",
         "type": "link",
         "icon": ""
       },
       {
         "state": "app.reports.pnl-report",
-        "title": "New P&L",
+        "title": "P&L",
         "type": "link",
         "icon": ""
       },
       {
         "state": "app.reports.performance-report",
-        "title": "New Performance",
+        "title": "Performance",
         "type": "link",
         "icon": ""
       },
       {
         "state": "app.reports.cash-flow-projection-report",
-        "title": "New Cash flow",
+        "title": "Cash flow",
         "type": "link",
         "icon": ""
       },
       {
         "state": "app.reports.transaction-report",
-        "title": "New Transaction",
+        "title": "Transaction",
         "type": "link",
         "icon": ""
       }

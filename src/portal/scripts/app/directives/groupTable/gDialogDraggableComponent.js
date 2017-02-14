@@ -37,7 +37,7 @@
 					//console.log('elemLeft', elemLeft);
 					//console.log(posX - elemLeft);
 					//console.log(posY - elemTop);
-					console.log(initMouseX, initMouseY);
+					//console.log(initMouseX, initMouseY);
 
 					// parent[0].style.left = (posX - elemLeft + 8) + 'px';
 					// parent[0].style.top = (posY - elemTop - 8 - 150) + 'px';
@@ -50,7 +50,7 @@
 				dragger.bind('mousedown', function (e) {
 					e.preventDefault();
 					e.stopPropagation();
-					console.log(parent);
+					//console.log(parent);
 					initMouseX = e.clientX;
 					initMouseY = e.clientY;
 					// if (elemLeft !== 0) {
@@ -63,7 +63,7 @@
 					$(window).bind('mousemove', mousemove);
 
 					$(window).bind('mouseup', function (e) {
-						console.log('unbind');
+						//console.log('unbind');
 						$(window).unbind('mousemove');
 					});
 					return false;

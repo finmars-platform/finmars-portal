@@ -35,6 +35,10 @@
         vm.entityAttrs = [];
         vm.custom = [];
 
+        vm.instrumentDynamicAttrs = [];
+        vm.accountDynamicAttrs = [];
+        vm.portfolioDynamicAttrs = [];
+
         vm.isReport = parentScope.isReport;
 
         vm.tabAttrsReady = false;
@@ -133,6 +137,7 @@
         var attrsList = [];
 
         $('body').addClass('drag-dialog'); // hide backdrop
+
         vm.getAttributes = function () {
 
             if (metaService.getEntitiesWithoutBaseAttrsList().indexOf(vm.entityType) === -1) {
@@ -148,6 +153,7 @@
 
             vm.instrumentAttrs = metaService.getEntityAttrs('instrument').map(function (item) {
                 item.name = 'Instrument.' + item.name;
+                item.attribute_entity = 'instrument';
                 item.key = 'instrument_object_' + item.key;
                 return item;
             });
@@ -160,9 +166,11 @@
 
             vm.accountAttrs = metaService.getEntityAttrs('account').map(function (item) {
                 item.name = 'Account.' + item.name;
+                item.attribute_entity = 'account';
                 item.key = 'account_object_' + item.key;
                 return item;
             });
+
             vm.accountTypeAttrs = metaService.getEntityAttrs('account-type').map(function (item) {
                 item.name = 'Account.Account Type.' + item.name;
                 item.key = 'account_type_object_' + item.key;
@@ -171,6 +179,7 @@
 
             vm.portfolioAttrs = metaService.getEntityAttrs('portfolio').map(function (item) {
                 item.name = 'Portfolio.' + item.name;
+                item.attribute_entity = 'portfolio';
                 item.key = 'portfolio_object_' + item.key;
                 return item;
             });
@@ -186,7 +195,7 @@
                 return item;
             });
             vm.strategy1groupAttrs = metaService.getEntityAttrs('strategy-1-group').map(function (item) {
-                item.name = 'Strategy1.Subgroup.Group' + item.name;
+                item.name = 'Strategy1.Subgroup.Group.' + item.name;
                 item.key = 'strategy1_group_object' + item.key;
                 return item;
             });
@@ -202,7 +211,7 @@
                 return item;
             });
             vm.strategy2groupAttrs = metaService.getEntityAttrs('strategy-2-group').map(function (item) {
-                item.name = 'Strategy2.Subgroup.Group' + item.name;
+                item.name = 'Strategy2.Subgroup.Group.' + item.name;
                 item.key = 'strategy2_group_object' + item.key;
                 return item;
             });
@@ -218,7 +227,7 @@
                 return item;
             });
             vm.strategy3groupAttrs = metaService.getEntityAttrs('strategy-3-group').map(function (item) {
-                item.name = 'Strategy3.Subgroup.Group' + item.name;
+                item.name = 'Strategy3.Subgroup.Group.' + item.name;
                 item.key = 'strategy3_group_object' + item.key;
                 return item;
             });
@@ -228,40 +237,24 @@
                 vm.custom.forEach(function (customItem) {
                     customItem.columnType = 'custom-field';
                 });
-                restoreAttrs();
-                syncAttrs();
 
-                $scope.$apply();
-            });
-
-            if (parentScope.isReport == true) {
-
-                vm.attrs = [];
                 dynamicAttributesForReportsService.getDynamicAttributes().then(function (data) {
-                    vm.attrs = data;
+
+                    vm.portfolioDynamicAttrs = data['portfolio'];
+                    vm.accountDynamicAttrs = data['account'];
+                    vm.instrumentDynamicAttrs = data['instrument'];
 
                     attrsList = vm.attrs.concat(vm.baseAttrs);
                     attrsList = attrsList.concat(vm.entityAttrs);
+
                     restoreAttrs();
                     syncAttrs();
 
-                    console.log('report balance new custom attr is', vm.attrs);
+
                     vm.readyStatus.content = true;
                     $scope.$apply();
                 });
-
-            } else {
-                return attributeTypeService.getList(vm.entityType).then(function (data) {
-                    vm.attrs = data.results;
-                    attrsList = vm.attrs.concat(vm.baseAttrs);
-                    attrsList = attrsList.concat(vm.entityAttrs);
-                    restoreAttrs();
-                    syncAttrs();
-                    // logService.collection('attrsList!!!!!!!!!', attrsList);
-                    vm.readyStatus.content = true;
-                    $scope.$apply();
-                })
-            }
+            });
 
         };
 
@@ -310,11 +303,14 @@
 
             syncTypeAttrs(vm.instrumentAttrs);
             syncTypeAttrs(vm.instrumentTypeAttrs);
+            syncTypeAttrs(vm.instrumentDynamicAttrs);
 
             syncTypeAttrs(vm.accountAttrs);
             syncTypeAttrs(vm.accountTypeAttrs);
+            syncTypeAttrs(vm.accountDynamicAttrs);
 
             syncTypeAttrs(vm.portfolioAttrs);
+            syncTypeAttrs(vm.portfolioDynamicAttrs);
 
             syncTypeAttrs(vm.strategy1attrs);
             syncTypeAttrs(vm.strategy1subgroupAttrs);
@@ -331,17 +327,19 @@
         };
 
         var updateAttrs = function () {
-            //console.log('gModalComponents columns ', columns);
 
             updateTypeAttrs(vm.balanceAttrs);
 
             updateTypeAttrs(vm.instrumentAttrs);
             updateTypeAttrs(vm.instrumentTypeAttrs);
+            updateTypeAttrs(vm.instrumentDynamicAttrs);
 
             updateTypeAttrs(vm.accountAttrs);
             updateTypeAttrs(vm.accountTypeAttrs);
+            updateTypeAttrs(vm.accountDynamicAttrs);
 
             updateTypeAttrs(vm.portfolioAttrs);
+            updateTypeAttrs(vm.portfolioDynamicAttrs);
 
             updateTypeAttrs(vm.strategy1attrs);
             updateTypeAttrs(vm.strategy1subgroupAttrs);
@@ -360,6 +358,7 @@
         };
 
         function syncTypeAttrs(attrs) {
+
             var i;
             for (i = 0; i < attrs.length; i = i + 1) {
                 attrs[i].columns = false;

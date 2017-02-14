@@ -228,7 +228,7 @@
 
                     var cellObjType = 'area';
 
-                    if (item.groups.length && item.groups[0].report_settings.subtotal_type) {
+                    if (item.groups.length && item.groups[0].report_settings && item.groups[0].report_settings.subtotal_type) {
                         cellObjType = item.groups[0].report_settings.subtotal_type;
                     }
 
