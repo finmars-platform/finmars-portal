@@ -25,6 +25,9 @@
             case 'currency':
                 return 'currencies/' + entity + '-attribute-type/';
                 break;
+            case 'complex-transaction':
+                return '/transactions/' + entity + '-attribute-type/';
+                break;
             default:
                 return entity + 's/' + entity + '-attribute-type/';
         }

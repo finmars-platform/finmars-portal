@@ -20,7 +20,7 @@
             'instrument-type', 'account-type', 'pricing-policy',
             'strategy-1', 'strategy-2', 'strategy-3', 'transaction-type',
             'strategy-1-group', 'strategy-2-group', 'strategy-3-group',
-            'complex-transaction', 'balance-report', 'pnl-report',
+            'balance-report', 'pnl-report',
             'transaction-report', 'cash-flow-projection-report',
             'performance-report',
             'counterparty-group', 'responsible-group', 'tag', 'transaction-type-group',

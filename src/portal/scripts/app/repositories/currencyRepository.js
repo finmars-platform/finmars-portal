@@ -7,18 +7,19 @@
 
     var cookieService = require('../../../../core/services/cookieService');
     var baseUrlService = require('../services/baseUrlService');
+    var configureRepositoryUrlService = require('../services/configureRepositoryUrlService');
 
     var baseUrl = baseUrlService.resolve();
 
     var getList = function (options) {
 
-        var page_size = 200;
+        if (!options) {
+            options = {};
+        }
 
-        //if (options && options.page_size) {
-        //    page_size = options.page_size;
-        //}
+        options.pageSize = 200;
 
-        return window.fetch(baseUrl + 'currencies/currency/?page_size=' + page_size,
+        return window.fetch(configureRepositoryUrlService.configureUrl(baseUrl + 'currencies/currency/', options),
             {
                 method: 'GET',
                 credentials: 'include',

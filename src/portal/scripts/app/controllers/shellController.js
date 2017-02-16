@@ -61,8 +61,14 @@
 				case 'app.data.counterparty':
 					return "COUNTERPARTY";
 					break;
+				case 'app.data.counterparty-group':
+					return "COUNTERPARTY GROUP";
+					break;
 				case 'app.data.responsible':
 					return "RESPONSIBLE";
+					break;
+				case 'app.data.responsible-group':
+					return "RESPONSIBLE GROUP";
 					break;
 				case 'app.data.instrument':
 					return "INSTRUMENT";
@@ -97,11 +103,17 @@
 				case 'app.data.transaction-type':
 					return "TRANSACTION TYPE";
 					break;
+				case 'app.data.transaction-type-group':
+					return "TRANSACTION TYPE GROUPS";
+					break;
 				case 'app.data.currency':
 					return "CURRENCY";
 					break;
 				case 'app.data.complex-transaction':
 					return "Transaction";
+					break;
+				case 'app.data.tag':
+					return "Tags";
 					break;
 				case 'app.reports.balance-report':
 					return "BALANCE REPORT";

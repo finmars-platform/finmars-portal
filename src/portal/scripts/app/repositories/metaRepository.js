@@ -308,11 +308,6 @@
                     "key": "user_code",
                     "name": "User code",
                     "value_type": 10
-                },
-                {
-                    "key": "tags",
-                    "name": "Tags",
-                    "value_type": "mc_field"
                 }
             ],
             "instrument-type": [
@@ -921,6 +916,11 @@
                     "value_type": 10
                 },
                 {
+                    "key": "last_notes",
+                    "name": "Last notes",
+                    "value_type": 10
+                },
+                {
                     "key": "account",
                     "name": "Account",
                     "value_type": "field"
@@ -979,7 +979,166 @@
                     "key": "exposure_percent",
                     "name": "Exposure %",
                     "value_type": "float"
+                },
+                {
+                    "key": "exposure_loc",
+                    "name": "Exposure (LOC)",
+                    "value_type": "float"
+                },
+                {
+                    "key": "report_currency_fx_rate",
+                    "name": "Report currency fx rate",
+                    "value_type": "float"
+                },
+                {
+                    "key": "instrument_price_history_principal_price",
+                    "name": "Instrument price history principal price",
+                    "value_type": "float"
+                },
+                {
+                    "key": "instrument_price_history_accrued_price",
+                    "name": "Instrument price history accrued price",
+                    "value_type": "float"
+                },
+                {
+                    "key": "instrument_pricing_currency_fx_rate",
+                    "name": "Instrument pricing currency fx rate",
+                    "value_type": "float"
+                },
+                {
+                    "key": "instrument_accrued_currency_fx_rate",
+                    "name": "Instrument accrued currency fx rate",
+                    "value_type": "float"
+                },
+                {
+                    "key": "currency_fx_rate",
+                    "name": "Currency fx rate",
+                    "value_type": "float"
+                },
+                {
+                    "key": "pricing_currency_fx_rate",
+                    "name": "Pricing currency fx rate",
+                    "value_type": "float"
+                },
+
+                {
+                    "key": "market_value_loc",
+                    "name": "Market value (LOC)",
+                    "value_type": "float"
+                },
+                {
+                    "key": "ytm",
+                    "name": "YTM",
+                    "value_type": "float"
+                },
+                {
+                    "key": "modified_duration",
+                    "name": "Modified duration",
+                    "value_type": "float"
+                },
+                {
+                    "key": "ytm_at_cost",
+                    "name": "YTM at cost",
+                    "value_type": "float"
+                },
+                {
+                    "key": "time_invested",
+                    "name": "Time invested",
+                    "value_type": "float"
+                },
+                {
+                    "key": "gross_cost_price",
+                    "name": "Gross cost price",
+                    "value_type": "float"
+                },
+                {
+                    "key": "gross_cost_price_loc",
+                    "name": "Gross cost price (LOC)",
+                    "value_type": "float"
+                },
+                {
+                    "key": "net_cost_price",
+                    "name": "Net cost price",
+                    "value_type": "float"
+                },
+                {
+                    "key": "net_cost_price_loc",
+                    "name": "Net cost price (LOC)",
+                    "value_type": "float"
+                },
+                {
+                    "key": "report_currency_history",
+                    "name": "Report currency history",
+                    "value_type": "field"
+                },
+                {
+                    "key": "instrument_price_history",
+                    "name": "Instrument price history",
+                    "value_type": "field"
+                },
+                {
+                    "key": "instrument_pricing_currency_history",
+                    "name": "Instrument pricing currency history",
+                    "value_type": "field"
+                },
+                {
+                    "key": "instrument_accrued_currency_history",
+                    "name": "Instrument accrued currency history",
+                    "value_type": "field"
+                },
+                {
+                    "key": "currency_history",
+                    "name": "Currency history",
+                    "value_type": "field"
+                },
+                {
+                    "key": "pricing_currency_history",
+                    "name": "Pricing currency history",
+                    "value_type": "field"
+                },
+                {
+                    "key": "instrument_accrual",
+                    "name": "Instrument accrual",
+                    "value_type": "field"
+                },
+                {
+                    "key": "instrument_accrual_accrued_price",
+                    "name": "Instrument accrua accrued price",
+                    "value_type": "field"
                 }
+            ],
+            'report-addon-performance': [
+                {
+                    "key": "amount_invested",
+                    "name": "Amount invested",
+                    "value_type": "float"
+                },
+                {
+                    "key": "amount_invested_loc",
+                    "name": "Amount invested (LOC)",
+                    "value_type": "float"
+                },
+                {
+                    "key": "position_return",
+                    "name": "Position return",
+                    "value_type": "float"
+                },
+                {
+                    "key": "position_return_loc",
+                    "name": "Position return (LOC)",
+                    "value_type": "float"
+                },
+                {
+                    "key": "daily_price_change",
+                    "name": "Daily price change",
+                    "value_type": "float"
+                },
+                {
+                    "key": "mtd_price_change",
+                    "name": "MTD price change",
+                    "value_type": "float"
+                },
+
             ],
             "pnl-report": [
                 {

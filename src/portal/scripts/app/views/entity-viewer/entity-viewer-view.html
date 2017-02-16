@@ -49,6 +49,7 @@
             </div>
         </div>
         <div data-ng-if="vm.checkReadyStatus()" class="g-group-table-holder">
+            <!--<group-table items="vm.getProjection()" options="vm.options" report-options="vm.reportOptions"></group-table>-->
             <group-table items="vm.getProjection()" options="vm.options" report-options="vm.reportOptions"></group-table>
         </div>
         <div data-ng-if="!vm.checkReadyStatus()">

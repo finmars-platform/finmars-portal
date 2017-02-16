@@ -14,7 +14,20 @@
                               data-ng-model="vm.item.expression"></textarea>
                 </md-input-container>
             </div>
-            <h2 style="text-align: center">Expressions manual</h2>
+
+            <h2>Expression help</h2>
+            <p>You could use this form to build an expression based on provided variables. You could use basic operators
+                like +, -, *, /. Plus (+) could be used for strings concatenation. Based on scope of expression, you
+                could use different set of expressions. For example inside "Instrument import schema" you could use data
+                provider variables to build your own vlaues. For example, you build a custom Instrument name based on
+                Bloomber downloaded parameters:
+            </p>
+            <p>ISSUER + ' ' +format_number(CPN)+'% ' + format_date(parse_date(MATURITY, '%m/%d/%Y'),'%d-%h-%Y')
+            </p>
+            <p>Where ISSUER, CPN and MATURITY - are bloomberg parameters, and format_date, parse_date - two predifined
+                functions. You could see predefined functions definition in a list below.
+            </p>
+            <h2 style="text-align: center">Available functions</h2>
             <div class="expression-editor-helper" layout="row">
                 <div class="help-item-list " layout="column" flex="30">
                     <md-input-container class="help-search-control">
