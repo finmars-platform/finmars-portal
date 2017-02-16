@@ -169,6 +169,8 @@
                     }
                     //console.log('remove', scope.columns);
 
+                    console.log('scope.columns', scope.columns)
+
                     setTimeout(function () {
                         scope.externalCallback({silent: true, options: {columns: scope.columns}});
                     }, 0)

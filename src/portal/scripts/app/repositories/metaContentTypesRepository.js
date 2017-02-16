@@ -80,7 +80,7 @@
         return [
             {
                 name: "Account Type",
-                entity: 'type',
+                entity: 'account-type',
                 key: "accounts.accounttype"
             },
             {

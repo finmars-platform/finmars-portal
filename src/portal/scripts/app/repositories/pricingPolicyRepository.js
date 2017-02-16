@@ -6,13 +6,13 @@
     'use strict';
 
     var cookieService = require('../../../../core/services/cookieService');
-
+    var configureRepositoryUrlService = require('../services/configureRepositoryUrlService');
     var baseUrlService = require('../services/baseUrlService');
 
     var baseUrl = baseUrlService.resolve();
 
-    var getList = function () {
-        return window.fetch(baseUrl + 'instruments/pricing-policy/',
+    var getList = function (options) {
+        return window.fetch(configureRepositoryUrlService.configureUrl(baseUrl + 'instruments/pricing-policy/', options),
             {
                 method: 'GET',
                 credentials: 'include',

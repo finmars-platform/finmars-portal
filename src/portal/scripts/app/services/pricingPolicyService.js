@@ -7,8 +7,8 @@
 
     var pricingPolicyRepository = require('../repositories/pricingPolicyRepository');
 
-    var getList = function () {
-        return pricingPolicyRepository.getList();
+    var getList = function (options) {
+        return pricingPolicyRepository.getList(options);
     };
 
     var getByKey = function (id) {

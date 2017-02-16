@@ -1096,7 +1096,7 @@
                     }, 0)
                 };
 
-                scope.$watchCollection('columns', function () {
+                scope.$watchCollection('options.columns', function () {
                     syncGroupsAndColumns();
 
                     //console.log('scope.isReport', scope.isReport);

@@ -35,66 +35,50 @@
 
             vm.updateConfig = function () {
 
-                setTimeout(function () {
+                vm.options = {
 
-                    vm.options = {
+                    columns: vm.columns,
+                    columnsWidth: vm.columnsWidth,
 
-                        columns: vm.columns,
-                        columnsWidth: vm.columnsWidth,
+                    grouping: vm.grouping,
+                    filters: vm.filters,
+                    sorting: vm.sorting,
+                    folding: vm.folding,
 
-                        grouping: vm.grouping,
-                        filters: vm.filters,
-                        sorting: vm.sorting,
-                        folding: vm.folding,
+                    entityType: vm.entityType,
+                    isRootEntityViewer: vm.isRootEntityViewer,
+                    isReport: vm.isReport,
 
-                        entityType: vm.entityType,
-                        isRootEntityViewer: vm.isRootEntityViewer,
-                        isReport: vm.isReport,
+                    tableIsReady: vm.tableIsReady,
+                    reportIsReady: vm.reportIsReady,
 
-                        tableIsReady: vm.tableIsReady,
-                        reportIsReady: vm.reportIsReady,
+                    externalCallback: vm.updateTable,
+                    additionsStatus: vm.additionsStatus,
+                    additionsState: vm.additionsState,
 
-                        externalCallback: vm.updateTable,
-                        additionsStatus: vm.additionsStatus,
-                        additionsState: vm.additionsState,
+                    editorTemplate: vm.editorTemplate,
+                    editorEntityId: vm.editorEntityId,
 
-                        editorTemplate: vm.editorTemplate,
-                        editorEntityId: vm.editorEntityId,
+                    permission_selected_id: vm.permission_selected_id,
+                    permission_selected_entity: vm.permission_selected_entity
 
-                        permission_selected_id: vm.permission_selected_id,
-                        permission_selected_entity: vm.permission_selected_entity
-
-
-                    };
-
-                    //console.log('updateConfig permission_selected_id', JSON.stringify(vm.permission_selected_id));
-                    //console.log('updateConfig permission_selected_entity', JSON.stringify(vm.permission_selected_entity));
-
-                    $scope.$apply();
-
-                }, 0)
+                };
 
             };
 
             vm.updateVm = function (options) {
 
-                console.log('options', options);
+                var keys = Object.keys(options);
 
-                setTimeout(function () {
+                keys.forEach(function (key) {
 
-                    var keys = Object.keys(options);
+                    vm[key] = options[key];
+                });
 
-                    keys.forEach(function (key) {
+                //$scope.$apply();
 
-                        vm[key] = options[key];
-                    });
 
-                    //console.log('updateVm permission_selected_id', JSON.stringify(vm.permission_selected_id));
-                    //console.log('updateVm permission_selected_entity', JSON.stringify(vm.permission_selected_entity));
-
-                    $scope.$apply();
-
-                }, 0);
+                //}, 0);
             };
 
 
@@ -672,9 +656,12 @@
                         //console.log('audit transaction data is', vm.entity);
                         vm.groupTableService.setItems(entity);
 
+
+                        console.log('handler 12312312', vm.columns);
+
                         vm.groupTableService.columns.setColumns(vm.columns);
                         //vm.groupTableService.filtering.setFilters(vm.filters);
-                        vm.groupTableService.grouping.setGroups(vm.grouping, vm.entityType);
+                        vm.groupTableService.grouping.setGroups(vm.grouping, [vm.entityType]);
                         //console.log("EXTERNAL CALLBACK ", vm.folding);
                         vm.groupTableService.folding.setFolds(vm.folding);
                         //console.log('UPDATE TABLE scope.sorting.group', vm.sorting.group);
@@ -688,6 +675,10 @@
                         vm.tableIsReady = true;
 
                         vm.updateConfig();
+
+                        console.log('handler update config', vm.columns);
+                        console.log('handler update options', vm.options.columns);
+
 
                         console.log(vm.groupTableService.projection());
 
@@ -799,9 +790,11 @@
 
                 var _params = Object.assign(defaultParams, params);
 
-                //console.log('_params', _params);
+                console.log('_params', _params);
 
                 vm.updateVm(_params.options);
+
+                console.log('entity viewer vm.columns', vm.columns);
 
                 //console.trace();
 
