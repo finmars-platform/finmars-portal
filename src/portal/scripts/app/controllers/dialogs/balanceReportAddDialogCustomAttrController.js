@@ -38,6 +38,28 @@
             vm.readyStatus.attribute = true;
             console.log('balance report create custom attr');
         }
+
+        vm.setupConfig = function ($event) {
+            $mdDialog.show({
+                controller: 'CustomFieldsConfigDialogController as vm',
+                templateUrl: 'views/dialogs/custom-fields-config-dialog-view.html',
+                parent: angular.element(document.body),
+                targetEvent: $event,
+                locals: {
+                    data: {
+                        customField: vm.attribute
+                    }
+                },
+                preserveScope: true,
+                autoWrap: true,
+                skipHide: true
+            }).then(function (res) {
+                if (res.status === 'agree') {
+
+                }
+            });
+        };
+
         // vm.valueTypes = [];
 
         // vm.loadPermissions = function () {
