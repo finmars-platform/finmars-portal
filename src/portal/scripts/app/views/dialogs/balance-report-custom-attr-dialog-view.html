@@ -30,6 +30,11 @@
                                         <input data-ng-model="vm.attribute.expr">
                                     </md-input-container>
                                 </div>
+
+                                <md-button class="md-raised md-primary" data-ng-click="vm.setupConfig($event)">
+                                    Setup config
+                                </md-button>
+
                                 <!-- <md-input-container class="md-block" flex-gt-sm style="margin-top: 10px">
                                     <md-checkbox data-ng-model="vm.attribute.is_hidden"
                                                  aria-label="checkbox">
@@ -207,7 +212,7 @@
         <md-button class="md-raised" ng-click="vm.cancel()">
             Cancel
         </md-button>
-        <md-button class="md-raised md-primary" ng-click="vm.agree()" style="margin-right:20px;">
+        <md-button class="md-raised" ng-click="vm.agree()" style="margin-right:20px;">
             Save
         </md-button>
     </md-dialog-actions>
