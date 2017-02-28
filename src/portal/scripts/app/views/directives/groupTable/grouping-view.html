@@ -108,7 +108,8 @@
             </div>
         </div>
 
-        <md-button class="md-fab g-settings-btn" aria-label="drag modal" data-ng-click="openModalSettings($event)">
+        <md-button data-ng-if="options.component.fieldManagerBtn" class="md-fab g-settings-btn" aria-label="drag modal"
+                   data-ng-click="openModalSettings($event)">
             <ng-md-icon icon="view_week"></ng-md-icon>
         </md-button>
     </div>

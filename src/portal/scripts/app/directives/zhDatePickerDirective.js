@@ -21,42 +21,46 @@
 
                 var position = 'right';
 
-                if(scope.position) {
+                if (scope.position) {
                     position = scope.position;
                 }
 
-                setTimeout(function () {
-                    if (ngModel.$modelValue) {
-                        $(elem).parent().addClass('md-input-has-value');
-                        input.pickmeup({
-                            date: new Date(ngModel.$modelValue),
-                            position: position,
-                            'hide_on_select': true,
-                            format: 'Y-m-d',
-                            change: function () {
-                                ngModel.$setViewValue(this.value);
-                            }
-                        });
-                    } else {
-                        input.pickmeup({
-                            position: position,
-                            'hide_on_select': true,
-                            format: 'Y-m-d',
-                            change: function () {
-                                ngModel.$setViewValue(this.value);
-                            }
-                        });
-                    }
-                    scope.$watch(function () {
-                        //console.log('ngModel', ngModel);
-                        if (ngModel.$modelValue) {
-                            input.val(moment(new Date(ngModel.$modelValue)).format('YYYY-MM-DD'));
+                //setTimeout(function () {
+                if (ngModel.$modelValue) {
+                    $(elem).parent().addClass('md-input-has-value');
+                    input.pickmeup({
+                        date: new Date(ngModel.$modelValue),
+                        position: position,
+                        default_date: false,
+                        'hide_on_select': true,
+                        format: 'Y-m-d',
+                        change: function () {
+                            ngModel.$setViewValue(this.value);
                         }
                     });
+                } else {
+                    input.pickmeup({
+                        position: position,
+                        default_date: false,
+                        'hide_on_select': true,
+                        format: 'Y-m-d',
+                        change: function () {
+                            ngModel.$setViewValue(this.value);
+                        }
+                    });
+                }
 
 
-                    scope.$apply();
-                }, 0);
+                scope.$watch(function () {
+                    //console.log('ngModel', ngModel);
+                    if (ngModel.$modelValue) {
+                        input.val(moment(new Date(ngModel.$modelValue)).format('YYYY-MM-DD'));
+                    }
+                });
+
+
+                //    scope.$apply();
+                //}, 0);
 
 
             }

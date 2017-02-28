@@ -5,7 +5,8 @@
             <md-progress-linear md-mode="indeterminate"></md-progress-linear>
         </div>
     </div>
-    <div data-ng-show="checkReady()" ng-cloak style="padding-bottom: 75px">
+    <!--<div data-ng-show="checkReady()" ng-cloak style="padding-bottom: 75px">-->
+    <div data-ng-show="checkReady()" ng-cloak>
         <div>
             <div data-ng-if="options.grouping.length" contextmenu-container="gtbody.contextmenu">
                 <div data-ng-if="!options.isReport" data-ng-repeat="item in items">
@@ -50,7 +51,8 @@
 
                     <!-- preInit.initGroup start -->
 
-                    <group-bind-report-row data-ng-repeat="item in reportItemsProjection() track by $index" item="item"></group-bind-report-row>
+                    <group-bind-report-row data-ng-repeat="item in reportItemsProjection() track by $index"
+                                           item="item"></group-bind-report-row>
 
 
                     <!-- !preInit.initGroup end-->
@@ -74,13 +76,14 @@
             </div>
         </div>
         <div class="table-end-row"></div>
+        {{paginationItemsTotal}}
         <div
                 data-ng-if="!options.isReport"
                 paging
                 class="g-table-body-pagination"
-                page="paginationPageCurrent"
-                page-size="paginationItemPerPage"
-                total="paginationItemsTotal"
+                page="options.paginationPageCurrent"
+                page-size="options.paginationItemPerPage"
+                total="options.paginationItemsTotal"
                 paging-action="changePage(page)">
         </div>
     </div>

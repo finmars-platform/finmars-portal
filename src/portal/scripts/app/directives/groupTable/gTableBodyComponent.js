@@ -134,9 +134,9 @@
                     entityAttrs = metaService.getEntityAttrs(entityType);
                 }
 
-                setTimeout(function () {
-                    $('.g-table-section .custom-scrollbar')[0].dispatchEvent(new Event('scroll'));
-                }, 1000);
+                //setInterval(function () {
+                //    $('.g-table-section .custom-scrollbar')[0].dispatchEvent(new Event('scroll'));
+                //}, 1000);
 
                 function getCellsCaptionsPatterns(item, itemIndex) {
 
@@ -1090,16 +1090,11 @@
                 };
 
                 scope.changePage = function (page) {
-                    scope.paginationPageCurrent = page;
-                    setTimeout(function () {
-                        scope.externalCallback(); // do update table after angular digest refresh scope.paginationPageCurrent
-                    }, 0)
+                    scope.externalCallback({options: {paginationPageCurrent: page}});
                 };
 
                 scope.$watchCollection('options.columns', function () {
                     syncGroupsAndColumns();
-
-                    //console.log('scope.isReport', scope.isReport);
 
                     if (scope.isReport == true) {
                         scope.reportItems = groupTableReportService.transformItems(scope.items);

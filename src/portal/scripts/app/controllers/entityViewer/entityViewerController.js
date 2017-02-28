@@ -37,6 +37,8 @@
 
                 vm.options = {
 
+                    components: vm.components,
+
                     columns: vm.columns,
                     columnsWidth: vm.columnsWidth,
 
@@ -60,7 +62,11 @@
                     editorEntityId: vm.editorEntityId,
 
                     permission_selected_id: vm.permission_selected_id,
-                    permission_selected_entity: vm.permission_selected_entity
+                    permission_selected_entity: vm.permission_selected_entity,
+
+                    paginationPageCurrent: vm.paginationPageCurrent,
+                    paginationItemPerPage: vm.paginationItemPerPage,
+                    paginationItemsTotal: vm.paginationItemsTotal
 
                 };
 
@@ -80,7 +86,6 @@
 
                 //}, 0);
             };
-
 
             console.log('------------------------ EV scope -----------------------------', $scope);
 
@@ -222,7 +227,6 @@
                 }
                 return false;
             };
-
 
             vm.getView = function () {
 
@@ -425,16 +429,7 @@
 
             }; // TODO refactor, move to service
 
-
             vm.getProjection = function () {
-
-
-                //console.log('vm.entity---------' + vm.options.isRootEntityViewer + '------------------------', JSON.parse(JSON.stringify(vm.entity)));
-                //console.log('vm.entity---------' + vm.options.isRootEntityViewer + '------------------------', JSON.parse(JSON.stringify(vm.groupTableService.projection())));
-                //console.log('-----------------------------------------------------------------------------');
-
-
-                var x;
                 return vm.groupTableService.projection();
             };
 
@@ -456,8 +451,6 @@
 
                         vm.originalData = JSON.parse(JSON.stringify(data)); // store server response data untouched
 
-                        console.log('vm.originalData1231312312', vm.originalData);
-
                         vm.reportOptions.task_id = null;
 
                         var filteredData = data.items;
@@ -466,8 +459,6 @@
 
                         var isFiltersExist = false;
                         var isFiltersEnabled = false;
-
-                        console.log('vm.filters', vm.filters);
 
                         if (vm.filters.length > 0) {
                             isFiltersExist = true;
@@ -655,9 +646,6 @@
 
                         //console.log('audit transaction data is', vm.entity);
                         vm.groupTableService.setItems(entity);
-
-
-                        console.log('handler 12312312', vm.columns);
 
                         vm.groupTableService.columns.setColumns(vm.columns);
                         //vm.groupTableService.filtering.setFilters(vm.filters);
@@ -959,6 +947,10 @@
 
             };
 
+            vm.checkAddEntityBtn = function () {
+                return vm.checkAddEntityBtn && vm.components.addEntityBtn;
+            };
+
             // entityViewer initialization
             // resolving is instance of entityViewer root
             // settings all props depends of root/child
@@ -1257,6 +1249,12 @@
                         // ENTITY STUFF START
                         vm.entityType = $scope.$parent.vm.entityType;
                         vm.uiLayoutId = $scope.$parent.vm.uiLayoutId;
+                        vm.components = $scope.$parent.vm.components || {
+                                sidebar: true,
+                                splitPanel: true,
+                                addEntityBtn: true,
+                                fieldManagerBtn: true
+                            };
 
                         vm.isReport = $scope.$parent.vm.isReport || false;
 
