@@ -1020,11 +1020,15 @@
                     "name": "Pricing currency fx rate",
                     "value_type": "float"
                 },
-
                 {
                     "key": "market_value_loc",
                     "name": "Market value (LOC)",
                     "value_type": "float"
+                },
+                {
+                    "key": "date",
+                    "name": "Date",
+                    "value_type": 40
                 },
                 {
                     "key": "ytm",

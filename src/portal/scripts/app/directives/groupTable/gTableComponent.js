@@ -51,7 +51,7 @@
                 }
 
                 scope.checkAdditions = function () {
-                    if (scope.options.additionsState == true && scope.options.isRootEntityViewer == true) {
+                    if (scope.options.additionsState == true && scope.options.isRootEntityViewer == true && scope.options.components.splitPanel == true) {
                         return true;
                     }
                     return false;

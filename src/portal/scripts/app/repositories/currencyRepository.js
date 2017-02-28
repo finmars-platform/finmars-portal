@@ -16,8 +16,8 @@
         if (!options) {
             options = {};
         }
-
-        options.pageSize = 200;
+        
+        options.pageSize = options.pageSize || 200;
 
         return window.fetch(configureRepositoryUrlService.configureUrl(baseUrl + 'currencies/currency/', options),
             {

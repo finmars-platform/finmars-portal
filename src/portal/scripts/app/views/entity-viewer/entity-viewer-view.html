@@ -5,10 +5,11 @@
     <div data-ng-if="!vm.checkOnBeforeLoadAction()">
         <div data-ng-if="!vm.isReport">
             <md-button aria-label="add entity" class="md-fab md-fab-bottom-right" data-ng-click="vm.addEntity($event)"
-                       data-ng-if="vm.tableParts.addEntityBtn">
+                       data-ng-if="vm.checkAddEntityBtn()">
                 <ng-md-icon icon="add"></ng-md-icon>
             </md-button>
-            <div class="lock-size g-table-dial" layout="row" layout-align="center center">
+            <div data-ng-if="vm.components.splitPanel" class="lock-size g-table-dial" layout="row"
+                 layout-align="center center">
                 <md-fab-speed-dial md-direction="up"
                                    md-open="false"
                                    class="md-scale">
@@ -22,7 +23,8 @@
                         </md-button>
                     </md-fab-trigger>
                     <md-fab-actions>
-                        <md-button aria-label="" data-ng-if="vm.checkIfPermissionEditorAllowed()" class="md-fab md-raised md-mini"
+                        <md-button aria-label="" data-ng-if="vm.checkIfPermissionEditorAllowed()"
+                                   class="md-fab md-raised md-mini"
                                    data-ng-click="vm.openPermissionEditor()">
                             <ng-md-icon icon="perm_identity"></ng-md-icon>
                             <md-tooltip md-direction="right">Open permission editor</md-tooltip>
@@ -50,7 +52,8 @@
         </div>
         <div data-ng-if="vm.checkReadyStatus()" class="g-group-table-holder">
             <!--<group-table items="vm.getProjection()" options="vm.options" report-options="vm.reportOptions"></group-table>-->
-            <group-table items="vm.getProjection()" options="vm.options" report-options="vm.reportOptions"></group-table>
+            <group-table items="vm.getProjection()" options="vm.options"
+                         report-options="vm.reportOptions"></group-table>
         </div>
         <div data-ng-if="!vm.checkReadyStatus()">
             <div class="e-data-loader" layout="row" layout-sm="column" layout-align="space-around">

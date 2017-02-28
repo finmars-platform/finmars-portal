@@ -18,25 +18,43 @@
                 var lastMouseMoveEvent = null;
 
                 function setDefaultHeights() {
-                    workAreaHeight = $(window).height() - $('.header').first().height();
-                    workAreaWithoutGrouping = workAreaHeight - $('.g-wrapper .g-grouping-section').first().height(); // margin 4px
-                    $('.g-filter-sidebar').first().height(workAreaHeight);
-                    $('.g-wrapper .g-table-section').first().height(workAreaWithoutGrouping);
-                    $('.g-additions').first().height($(window).height() - workAreaHeight);
-                    $('group-table-body').first().css('height', 'auto');
+
+                    //workAreaHeight = $(window).height() - $('.header').first().height();
+                    //workAreaWithoutGrouping = workAreaHeight - $('.g-wrapper .g-grouping-section').first().height(); // margin 4px
+                    //$('.g-filter-sidebar').first().height(workAreaHeight);
+                    //$('.g-wrapper .g-table-section').first().height(workAreaWithoutGrouping);
+                    //$('.g-additions').first().height($(window).height() - workAreaHeight);
+                    //$('group-table-body').first().css('height', 'auto');
+
+                    var upperFilterSidebar = $(elem).find('.g-filter-sidebar').first();
+                    var upperTableSection = $(elem).find('.g-wrapper .g-table-section').first();
+                    //var additions = $(elem).find('.g-additions').first();
+                    var upperGroupTableBody = $(elem).find('group-table-body').first();
+                    var upperGroupSection = $(elem).find('.g-wrapper .g-grouping-section').first();
+
+                    workAreaHeight = $(elem).parents('.entity-viewer-holder').height();
+                    workAreaWithoutGrouping = workAreaHeight - upperGroupSection.height();
+
+                    upperFilterSidebar.height(workAreaHeight);
+                    upperTableSection.height(workAreaWithoutGrouping);
+                    //additions.height($(window).height() - workAreaHeight);
+                    upperGroupTableBody.css('height', 'auto');
+
 
                 }
 
                 function setSplitHeights() {
-                    workAreaHeight = Math.floor(($(window).height() - $('.header').height()) / 2);
-                    workAreaWithoutGrouping = Math.floor((workAreaHeight - $('.g-wrapper .g-grouping-section').first().height()));
-                    $('.g-filter-sidebar').first().height(workAreaHeight);
-                    $('.g-wrapper .g-table-section').first().height(workAreaWithoutGrouping);
+
+                    //workAreaHeight = Math.floor(($(window).height() - $('.header').height()) / 2);
+                    //workAreaWithoutGrouping = Math.floor((workAreaHeight - $('.g-wrapper .g-grouping-section').first().height()));
+
+                    //$('.g-filter-sidebar').first().height(workAreaHeight);
+                    //$('.g-wrapper .g-table-section').first().height(workAreaWithoutGrouping);
 
 
-                    $('.g-additions').height(workAreaHeight);
-                    $('.g-additions-workarea .g-table-section').last().height(workAreaHeight);
-                    $('.g-additions-workarea .group-table-body').last().height(workAreaHeight);
+                    //$('.g-additions').height(workAreaHeight);
+                    //$('.g-additions-workarea .g-table-section').last().height(workAreaHeight);
+                    //$('.g-additions-workarea .group-table-body').last().height(workAreaHeight);
 
                     $('.g-height-slider').bind('mousedown', function (e) {
 
@@ -76,17 +94,6 @@
                             if (groupingSectionBoxHeight < (mouseMoveY + groupingSectionBoxHeight - headerBoxHeight - 88)) {
                                 mainAreaSidebarBox.height(mouseMoveY + groupingSectionBoxHeight - headerBoxHeight - 88);
                             }
-
-                            //console.log('mouseMoveY', mouseMoveY);
-                            //console.log('spaceLeft', spaceLeft);
-                            //
-                            //console.log('Main area box height', mouseMoveY - headerBoxHeight);
-                            //console.log('Main sidebar box height', mouseMoveY + groupingSectionBoxHeight - headerBoxHeight);
-                            //
-                            //console.log('additions area box height', spaceLeft - mouseMoveY);
-                            //console.log('additions sidebar box height', spaceLeft - mouseMoveY);
-
-
                         };
 
 
@@ -98,6 +105,25 @@
                         });
 
                     })
+
+
+                    var upperGroupSection = $(elem).find('.g-wrapper .g-grouping-section').first();
+                    var upperFilterSidebar = $(elem).find('.g-filter-sidebar').first();
+                    var upperTableSection = $(elem).find('.g-wrapper .g-table-section').first();
+                    var additions = $(elem).find('.g-additions').first();
+                    var additionsTableSection = $(elem).find('.g-additions-workarea .g-table-section').last();
+                    var additionsAdditionsTableBody = $(elem).find('.g-additions-workarea .g-table-section').last();
+
+                    workAreaHeight = Math.floor($(elem).parents('.entity-viewer-holder').height() / 2);
+                    workAreaWithoutGrouping = Math.floor((workAreaHeight - upperGroupSection.height()));
+
+                    upperFilterSidebar.height(workAreaHeight);
+                    upperTableSection.height(workAreaWithoutGrouping);
+
+                    additions.height(workAreaHeight);
+                    additionsTableSection.height(workAreaHeight);
+                    additionsAdditionsTableBody.height(workAreaHeight);
+
                 }
 
                 function resolveHeight() {
@@ -133,7 +159,7 @@
 
                     setInterval(function () {
 
-                        if ($('.g-additions-workarea .g-filter-sidebar').length) {
+                        //if ($('.g-additions-workarea .g-filter-sidebar').length) {
 
                             var mouseMoveY;
                             var spaceLeft;
@@ -183,9 +209,9 @@
                             }
 
                             handler(lastMouseMoveEvent);
-                        } else {
-                            lastMouseMoveEvent = null;
-                        }
+                        //} else {
+                        //    lastMouseMoveEvent = null;
+                        //}
 
                     }, 100);
 

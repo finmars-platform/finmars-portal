@@ -1,5 +1,180 @@
-<div class="row">
-	<md-button class="md-raised md-primary" data-ng-click="vm.checkForEvents($event)">
-		CHECK FOR EVENTS
-	</md-button>
+<div>
+    <div class="row">
+        <div layout="row">
+            <md-button class="md-raised md-primary" data-ng-click="vm.checkForEvents($event)"
+                       style="margin-left: 16px; margin-top: 12px">
+                CHECK FOR EVENTS
+            </md-button>
+        </div>
+
+        <div class="dashboard-row-holder" data-ng-if="vm.readyStatus.uiLayouts">
+
+            <div class="dashboard-row">
+
+                <div class="dashboard-item-wrap">
+
+                    <div data-ng-if="vm.widget1._d_configured">
+                        <div class="dashboard-item">
+                            <div class="custom-scrollbar" data-custom-scroll data-scroll-sticky="true">
+                                <dashboard-entity-viewer options="vm.widget1"></dashboard-entity-viewer>
+                            </div>
+                        </div>
+                    </div>
+                    <div data-ng-if="!vm.widget1._d_configured" class="dashboard-widget-wizard">
+
+                        <div layout="row" layout-align="center center">
+
+                            <md-input-container>
+
+                                <label for="">Layout</label>
+
+                                <md-select data-ng-model="vm.widget1._d_layout"
+                                           data-ng-change="vm.changeWidget(vm.widget1)">
+                                    <md-option data-ng-repeat="item in vm.uiLayouts" data-ng-value="item">
+                                        {{item.name}} (<span data-ng-bind="vm.resolveEntity(item)"></span>)
+                                    </md-option>
+                                </md-select>
+
+                            </md-input-container>
+
+                        </div>
+
+                    </div>
+
+                    <div class="close-entity-viewer-btn" data-ng-if="vm.widget1._d_configured"
+                         data-ng-click="vm.closeWidget(vm.widget1)">
+                        <ng-md-icon icon="close"></ng-md-icon>
+                        <md-tooltip class="tooltip_1" md-direction="bottom">Change layout</md-tooltip>
+                    </div>
+
+                </div>
+
+                <div class="dashboard-item-wrap">
+
+                    <div data-ng-if="vm.widget2._d_configured">
+                        <div class="dashboard-item">
+                            <div class="custom-scrollbar" data-custom-scroll data-scroll-sticky="true">
+                                <dashboard-entity-viewer options="vm.widget2"></dashboard-entity-viewer>
+                            </div>
+                        </div>
+                    </div>
+                    <div data-ng-if="!vm.widget2._d_configured" class="dashboard-widget-wizard">
+
+                        <div layout="row" layout-align="center center">
+
+                            <md-input-container>
+
+                                <label for="">Layout</label>
+
+                                <md-select data-ng-model="vm.widget2._d_layout"
+                                           data-ng-change="vm.changeWidget(vm.widget2)">
+                                    <md-option data-ng-repeat="item in vm.uiLayouts" data-ng-value="item">
+                                        {{item.name}} (<span data-ng-bind="vm.resolveEntity(item)"></span>)
+                                    </md-option>
+                                </md-select>
+
+                            </md-input-container>
+
+                        </div>
+
+                    </div>
+
+                    <div class="close-entity-viewer-btn" data-ng-if="vm.widget2._d_configured"
+                         data-ng-click="vm.closeWidget(vm.widget2)">
+                        <ng-md-icon icon="close"></ng-md-icon>
+                        <md-tooltip class="tooltip_1" md-direction="bottom">Change layout</md-tooltip>
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="dashboard-row">
+
+                <div class="dashboard-item-wrap">
+
+                    <div data-ng-if="vm.widget3._d_configured">
+                        <div class="dashboard-item">
+                            <div class="custom-scrollbar" data-custom-scroll data-scroll-sticky="true">
+                                <dashboard-entity-viewer options="vm.widget3"></dashboard-entity-viewer>
+                            </div>
+                        </div>
+                    </div>
+                    <div data-ng-if="!vm.widget3._d_configured" class="dashboard-widget-wizard">
+
+                        <div layout="row" layout-align="center center">
+
+                            <md-input-container>
+
+                                <label for="">Layout</label>
+
+                                <md-select data-ng-model="vm.widget3._d_layout"
+                                           data-ng-change="vm.changeWidget(vm.widget3)">
+                                    <md-option data-ng-repeat="item in vm.uiLayouts" data-ng-value="item">
+                                        {{item.name}} (<span data-ng-bind="vm.resolveEntity(item)"></span>)
+                                    </md-option>
+                                </md-select>
+
+                            </md-input-container>
+
+                        </div>
+
+                    </div>
+
+                    <div class="close-entity-viewer-btn" data-ng-if="vm.widget3._d_configured"
+                         data-ng-click="vm.closeWidget(vm.widget3)">
+                        <ng-md-icon icon="close"></ng-md-icon>
+                        <md-tooltip class="tooltip_1" md-direction="bottom">Change layout</md-tooltip>
+                    </div>
+
+                </div>
+
+                <div class="dashboard-item-wrap">
+
+                    <div data-ng-if="vm.widget4._d_configured">
+                        <div class="dashboard-item">
+                            <div class="custom-scrollbar" data-custom-scroll data-scroll-sticky="true">
+                                <dashboard-entity-viewer options="vm.widget4"></dashboard-entity-viewer>
+                            </div>
+                        </div>
+                    </div>
+                    <div data-ng-if="!vm.widget4._d_configured" class="dashboard-widget-wizard">
+
+                        <div layout="row" layout-align="center center">
+
+                            <md-input-container>
+
+                                <label for="">Layout</label>
+
+                                <md-select data-ng-model="vm.widget4._d_layout"
+                                           data-ng-change="vm.changeWidget(vm.widget4)">
+                                    <md-option data-ng-repeat="item in vm.uiLayouts" data-ng-value="item">
+                                        {{item.name}} (<span data-ng-bind="vm.resolveEntity(item)"></span>)
+                                    </md-option>
+                                </md-select>
+
+                            </md-input-container>
+
+                        </div>
+
+                    </div>
+
+                    <div class="close-entity-viewer-btn" data-ng-if="vm.widget4._d_configured"
+                         data-ng-click="vm.closeWidget(vm.widget4)">
+                        <ng-md-icon icon="close"></ng-md-icon>
+                        <md-tooltip class="tooltip_1" md-direction="bottom">Change layout</md-tooltip>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+        <div data-ng-if="!vm.readyStatus.uiLayouts">
+            <div class="e-data-loader" layout="row" layout-sm="column" layout-align="space-around">
+                <md-progress-circular md-diameter="100" md-mode="indeterminate"></md-progress-circular>
+            </div>
+        </div>
+
+    </div>
 </div>

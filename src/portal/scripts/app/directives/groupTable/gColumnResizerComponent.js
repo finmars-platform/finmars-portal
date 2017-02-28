@@ -31,7 +31,6 @@
                     }
                 }
 
-                // set columns to saved width
                 var columnsWidthSet = false;
 
                 function setColumnsWidthAndNameTooltip() {
@@ -54,23 +53,33 @@
                     }
                 }
 
-                // View workarea width
-                // var filterSidebarWidth = 246;
-                var filterSidebarWidth = $('.g-filter-sidebar.main-sidebar').width();
 
-                var workAreaElem = elem.parents('.g-workarea-wrap');
+                setTimeout(function () {
 
-                workAreaElem.width($(window).width() - $('.g-filter-sidebar.main-sidebar').width() - $('md-sidenav').width());
+                    var workAreaElem = elem.parents('.g-workarea-wrap');
 
-                var wrapperWidth = $('.g-columns-component.g-thead').width() - $('.g-cell-select.all').width();
-                $('.g-scroll-wrapper').width(wrapperWidth);
-                $('.g-scrollable-area').width(wrapperWidth);
+                    workAreaElem.width($(elem).parents('.entity-viewer-holder').width() - $(elem).parents('.g-wrapper').find('.g-filter-sidebar.main-sidebar').width());
+
+                    var wrapperWidth = $('.g-columns-component.g-thead').width() - $('.g-cell-select.all').width();
+
+                    console.log('--------------------', wrapperWidth);
+                    console.log('--------------------', $(elem).parents('.g-table-section').width());
+
+                    if (wrapperWidth < $(elem).parents('.g-table-section').width()) {
+                        wrapperWidth = $(elem).parents('.g-table-section').width();
+                        $(elem).width(wrapperWidth);
+                    }
+
+                    $(elem).find('.g-scroll-wrapper').width(wrapperWidth);
+                    $(elem).find('.g-scrollable-area').width(wrapperWidth);
+
+                }, 0);
 
                 var resizeWorkarea = function () {
-                    workAreaElem.width($(window).width() - $('.g-filter-sidebar.main-sidebar').width() - $('md-sidenav').width());
-                    var wrapperWidth = $('.g-columns-component.g-thead').width() - $('.g-cell-select.all').width();
-                    $('.g-scroll-wrapper').width(wrapperWidth);
-                    $('.g-scrollable-area').width(wrapperWidth);
+                    workAreaElem.width($(elem).parents('.entity-viewer-holder').width() - $(elem).parents('.g-wrapper').find('.g-filter-sidebar.main-sidebar').width());
+                    var wrapperWidth = $(elem).find('.g-columns-component.g-thead').width() - $(elem).find('.g-cell-select.all').width();
+                    $(elem).find('.g-scroll-wrapper').width(wrapperWidth);
+                    $(elem).find('.g-scrollable-area').width(wrapperWidth);
 
                     resizeScrollableArea();
                     resize();
@@ -79,21 +88,12 @@
                 scope.$parent.triggerResize = resize;
 
                 $(window).on('resize', function () {
-                    // workAreaElem.width($(window).width() - filterSidebarWidth - $('md-sidenav').width());
-                    // var wrapperWidth = $('.g-columns-component.g-thead').width() - $('.g-cell-select.all').width();
-                    // $('.g-scroll-wrapper').width(wrapperWidth);
-                    // $('.g-scrollable-area').width(wrapperWidth);
-
-                    // resizeScrollableArea();
-                    // resize();
                     resizeWorkarea();
                 });
 
-                // Close filter area button
-                //console.log('filter toggle button is ', $('.filter-area-size-btn'));
                 $('.filter-area-size-btn').click(function () {
                     //console.log('filter toggle working');
-                    var filterArea = $('.g-filter-sidebar.main-sidebar');
+                    var filterArea = $(elem).parents('.g-wrapper').find('.g-filter-sidebar.main-sidebar');
                     if (filterArea.hasClass('min-filter')) {
                         filterArea.attr({
                             'min-width': '20px',
@@ -111,7 +111,6 @@
                         filterArea.removeClass('min-filter');
                     }
                 });
-                //						******************************
 
                 function resizeScrollableArea() {
                     var columns;
@@ -124,16 +123,14 @@
                     for (i = 0; i < columns.length; i = i + 1) {
                         areaWidth = areaWidth + $(columns[i]).width() + columnMargins;
                     }
-                    var wrapperWidth = $('.g-columns-component.g-thead').width() - $('.g-cell-select.all').width();
+                    var wrapperWidth = $(elem).find('.g-columns-component.g-thead').width() - $(elem).find('.g-cell-select.all').width();
                     if (wrapperWidth < areaWidth + dropNewFieldWidth) {
-                        $('.g-scrollable-area').width(areaWidth + dropNewFieldWidth);
-                        // scope.$apply();
+                        $(elem).find('.g-scrollable-area').width(areaWidth + dropNewFieldWidth);
                         $(elem).width(areaWidth + dropNewFieldWidth + 24);
-                        //console.log(areaWidth + dropNewFieldWidth);
                     } else {
                         //$(elem).width(wrapperWidth);
                     }
-                };
+                }
 
                 function resize() {
 
@@ -208,23 +205,17 @@
                     //console.log('th', th);
                 }
 
-                // setTimeout(function () {
-                // setColumnsWidthAndNameTooltip();
-                // }, 200);
                 scope.$watchCollection('items', function () {
-                    //console.log('items added for resize');
+
                     resizeScrollableArea();
-                    //setTimeout(function () {
+
                     resize();
-                    //}, 100);
-                    //resize();
+
                     setColumnsWidthAndNameTooltip();
                 });
-                //setTimeout(function () {
-                resize();
-                //}, 100);
 
-                //console.log('resizer items is ', scope.items);
+                resize();
+
 
             }
         }

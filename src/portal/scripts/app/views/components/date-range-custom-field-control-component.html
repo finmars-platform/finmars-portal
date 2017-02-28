@@ -1,0 +1,145 @@
+<div>
+
+    <div layout="column">
+
+        <div layout="row" class="drcf-before" layout-align="center center">
+
+            <md-input-container flex="30">
+                <label for="">Before</label>
+                <input type="text" data-ng-model="$ctrl.before.first">
+            </md-input-container>
+
+            <md-input-container flex="30" style="height: 58px">
+                <label for="">Format</label>
+                <md-select data-ng-model="$ctrl.before.second">
+                    <md-option data-ng-value="item" data-ng-repeat="item in $ctrl.dateFormats">{{item.caption}}
+                    </md-option>
+                </md-select>
+            </md-input-container>
+
+            <md-input-container flex="30">
+                <input type="text" data-ng-model="$ctrl.before.third">
+            </md-input-container>
+
+        </div>
+
+        <div class="drcf-item" data-ng-repeat="item in $ctrl.items" layout="row">
+
+            <div class="column" flex="90">
+                <div layout="row" class="drcf-item-top" layout-align="space-between center">
+                    <md-input-container>
+                        <label for="">From</label>
+                        <input type="text" data-ng-model="item.from">
+                        <!--<zh-date-picker ng-model="item.from"></zh-date-picker>-->
+                    </md-input-container>
+
+                    <md-input-container style="height: 58px">
+                        <label for="">Frequency</label>
+                        <md-select data-ng-model="item.freq">
+                            <md-option data-ng-value="item" data-ng-repeat="item in $ctrl.frequencies">
+                                {{item.caption}}
+                            </md-option>
+                        </md-select>
+                    </md-input-container>
+
+                    <md-input-container>
+                        <label for="">To</label>
+                        <input type="text" data-ng-model="item.to">
+                        <!--<zh-date-picker ng-model="item.to"></zh-date-picker>-->
+                    </md-input-container>
+                </div>
+
+                <div layout="column" class="drcf-item-bottom" layout-align="center center">
+
+                    <div flex="60" layout="row" layout-align="center center">
+
+                        <div flex="30">
+
+                            <md-input-container>
+                                <label for="">From</label>
+                                <input type="text" data-ng-model="item.bottom.from.first">
+                            </md-input-container>
+
+                        </div>
+
+                        <md-input-container flex="30" style="height: 58px">
+                            <label for="">Format</label>
+                            <md-select data-ng-model="item.bottom.from.second">
+                                <md-option data-ng-value="item" data-ng-repeat="item in $ctrl.dateFormats">
+                                    {{item.caption}}
+                                </md-option>
+                            </md-select>
+                        </md-input-container>
+
+                        <md-input-container flex="30">
+                            <input type="text" data-ng-model="item.bottom.from.third">
+                        </md-input-container>
+
+                    </div>
+
+                    <div flex="60" layout="row" layout-align="center center">
+
+                        <div flex="30">
+                            <md-input-container>
+                                <label for="">To</label>
+                                <input type="text" data-ng-model="item.bottom.to.first">
+                            </md-input-container>
+                        </div>
+
+                        <md-input-container flex="30" style="height: 58px">
+                            <label for="">Format</label>
+                            <md-select data-ng-model="item.bottom.to.second">
+                                <md-option data-ng-value="item" data-ng-repeat="item in $ctrl.dateFormats">
+                                    {{item.caption}}
+                                </md-option>
+                            </md-select>
+                        </md-input-container>
+
+                        <md-input-container flex="30">
+                            <input type="text" data-ng-model="item.bottom.to.third">
+                        </md-input-container>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="row" flex="10">
+                <div>
+                    <md-button class="md-icon-button md-raised {{$ctrl.inputIsFocused ? 'disabled-btn' : ''}}"
+                               data-ng-click="$ctrl.addRange(item, $index)">
+                        <ng-md-icon icon="add"></ng-md-icon>
+                    </md-button>
+                </div>
+                <div data-ng-if="$index !== 0">
+                    <md-button class="md-icon-button md-raised" data-ng-click="$ctrl.removeRange($index)">
+                        <ng-md-icon icon="remove"></ng-md-icon>
+                    </md-button>
+                </div>
+            </div>
+
+        </div>
+
+        <div layout="row" class="drcf-after" layout-align="center center">
+
+            <md-input-container flex="30">
+                <label for="">After</label>
+                <input type="text" data-ng-model="$ctrl.after.first">
+            </md-input-container>
+
+            <md-input-container flex="30" style="height: 58px">
+                <label for="">Format</label>
+                <md-select data-ng-model="$ctrl.after.second">
+                    <md-option data-ng-value="item" data-ng-repeat="item in $ctrl.dateFormats">{{item.caption}}
+                    </md-option>
+                </md-select>
+            </md-input-container>
+
+            <md-input-container flex="30">
+                <input type="text" data-ng-model="$ctrl.after.third">
+            </md-input-container>
+
+        </div>
+
+    </div>
+
+</div>

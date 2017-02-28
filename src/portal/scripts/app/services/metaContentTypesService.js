@@ -35,6 +35,29 @@
         return contentType;
     };
 
+    var findEntityByContentType = function (contentType, type) {
+
+        var contentTypes;
+        if (type == 'tag') {
+            contentTypes = getListForTags();
+        } else {
+            if (type == 'ui') {
+                contentTypes = getListForUi();
+            }
+        }
+
+        var entity = null;
+
+        contentTypes.forEach(function (item) {
+            if (item.key == contentType) {
+                entity = item.entity
+            }
+        });
+
+        return entity;
+
+    };
+
     var getListForTransactionTypeInputs = function () {
         return metaContentTypesRepository.getListForTransactionTypeInputs();
     };
@@ -61,7 +84,10 @@
     module.exports = {
         getListForTags: getListForTags,
         getListForUi: getListForUi,
+
         findContentTypeByEntity: findContentTypeByEntity,
+        findEntityByContentType: findEntityByContentType,
+
         getListForTransactionTypeInputs: getListForTransactionTypeInputs,
 
         getContentTypeUIByState: getContentTypeUIByState

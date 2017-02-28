@@ -60,7 +60,7 @@ app.controller('AttributesManagerController', ['$scope', '$state', '$stateParams
 app.controller('AttributesManagerEditDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/attributesManagerEditDialogController')]);
 app.controller('AttributesManagerAddDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/attributesManagerAddDialogController')]);
 app.controller('ClassificationEditorDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/classificationEditorDialogController')]);
-app.controller('CustomFieldConfigDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/customFieldConfigDialogController')]);
+app.controller('CustomFieldsConfigDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/customFieldsConfigDialogController')]);
 
 app.controller('InstrumentMappingAddDialogController', ['$scope', '$mdDialog', require('./app/controllers/dialogs/instrumentMappingAddDialogController')]);
 app.controller('InstrumentMappingEditDialogController', ['$scope', '$mdDialog', 'schemeId', require('./app/controllers/dialogs/instrumentMappingEditDialogController')]);
@@ -161,6 +161,14 @@ app.controller('UiLayoutSaveAsDialogController', ['$scope', '$mdDialog', 'option
 
 app.controller('BookmarksWizardDialogController', ['$scope', '$mdDialog', require('./app/controllers/dialogs/bookmarksWizardDialogController')]);
 app.controller('BookmarksLayoutSelectDialogController', ['$scope', '$mdDialog', require('./app/controllers/dialogs/bookmarksLayoutSelectDialogController')]);
+
+
+app.controller('FloatCustomFieldConstructorController', ['$scope', require('./app/controllers/floatCustomFieldConstructorController')]);
+app.controller('DateCustomFieldConstructorController', ['$scope', require('./app/controllers/dateCustomFieldConstructorController')]);
+
+app.component('floatRangeCustomFieldControl', require('./app/components/floatRangeCustomFieldControlComponent'));
+app.component('dateRangeCustomFieldControl', require('./app/components/dateRangeCustomFieldControlComponent'));
+app.component('dashboardEntityViewer', require('./app/components/dashboardEntityViewerComponent'));
 
 app.directive('menuToggle', [require('./app/directives/menuToggleDirective')]);
 app.directive('menuLink', [require('./app/directives/menuLinkDirective')]);
