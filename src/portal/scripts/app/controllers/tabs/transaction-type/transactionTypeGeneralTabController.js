@@ -66,10 +66,6 @@
 
         vm.openExpressionDialog = function ($event, item, options) {
 
-            var itemObj = {expression: ''};
-            if (item) {
-                itemObj = {expression: JSON.parse(JSON.stringify(item))};
-            }
 
             $mdDialog.show({
                 controller: 'ExpressionEditorDialogController as vm',
@@ -80,12 +76,12 @@
                 autoWrap: true,
                 skipHide: true,
                 locals: {
-                    item: itemObj
+                    item: {expression: item[options.key]}
                 }
             }).then(function (res) {
                 if (res.status === 'agree') {
                     console.log("res", res.data);
-                    item = res.data.item.expression;
+                    item[options.key] = res.data.item.expression;
                 }
                 console.log('item', item);
             });

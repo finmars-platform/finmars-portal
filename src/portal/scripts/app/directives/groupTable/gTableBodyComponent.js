@@ -11,6 +11,7 @@
     var entityClassifierSingletonService = require('../../services/entityClassifierSingletonService');
     var bindCellService = require('../../services/bindCellService');
     var groupTableReportService = require('../../services/groupTable/groupTableReportService');
+    var groupTableBodyHelper = require('../../helpers/groupTableBodyHelper');
 
     module.exports = function ($mdDialog) {
         return {
@@ -247,14 +248,14 @@
 
                         if (scope.isReport == true) {
 
-                            console.log('entityFieldsArray', entityFieldsArray);
-                            console.log('scope.columns[i]', scope.columns);
+                            //console.log('entityFieldsArray', entityFieldsArray);
+                            //console.log('scope.columns[i]', scope.columns);
 
                         } else {
 
                             for (i = 0; i < scope.columns.length; i = i + 1) {
                                 var attributeExist = false;
-                                console.log('12312312312312312', scope.columns[i]);
+                                //console.log('12312312312312312', scope.columns[i]);
                                 if (scope.columns[i]['value_type'] == 'field') {
                                     promises.push(bindCellService.findEntities(scope.columns[i].key, {entityType: entityType}));
                                 }
@@ -311,6 +312,7 @@
 
                     return new Promise(function (resolve, reject) {
 
+
                         var i, g;
                         var promisesClassifiers = [];
                         var promisesEntityFields = [];
@@ -322,39 +324,41 @@
 
                         //console.log('ITEMS', items);
 
-                        for (i = 0; i < scope.items.length; i = i + 1) {
-                            //console.log('scope.items[i].groups', scope.items[i].groups);
-                            if (scope.items[i].hasOwnProperty('groups')) {
-                                for (g = 0; g < scope.items[i].groups.length; g = g + 1) {
-                                    classifierExist = false;
-                                    entityExist = false;
-                                    //console.log("scope.items[i].groups[g]['value_type']", scope.items[i].groups[g]['value_type']);
-                                    if (scope.items[i].groups[g]['value_type'] === 'classifier') {
+                        if (scope.items) {
+                            for (i = 0; i < scope.items.length; i = i + 1) {
+                                //console.log('scope.items[i].groups', scope.items[i].groups);
+                                if (scope.items[i].hasOwnProperty('groups')) {
+                                    for (g = 0; g < scope.items[i].groups.length; g = g + 1) {
+                                        classifierExist = false;
+                                        entityExist = false;
+                                        //console.log("scope.items[i].groups[g]['value_type']", scope.items[i].groups[g]['value_type']);
+                                        if (scope.items[i].groups[g]['value_type'] === 'classifier') {
 
 
-                                        promisesClassifiersAlreadyAdded.forEach(function (classifier) {
-                                            if (classifier == scope.items[i].groups[g].key + '_' + scope.items[i].groups[g].value) {
-                                                classifierExist = true;
-                                            }
-                                        });
-                                        if (!classifierExist) {
-                                            promisesClassifiersAlreadyAdded.push(scope.items[i].groups[g].key + '_' + scope.items[i].groups[g].value);
-                                            promisesClassifiers.push(entityClassifierSingletonService.getByKey(scope.entityType, scope.items[i].groups[g].value))
-                                        }
-                                    }
-                                    if (scope.items[i].groups[g]['value_type'] === 'field') {
-
-                                        if (scope.items[i].groups[g].value !== null) {
-
-                                            promisesEntityFieldsAlreadyAdded.forEach(function (entity) {
-                                                if (entity == scope.items[i].groups[g].key + '_' + scope.items[i].groups[g].value) {
-                                                    entityExist = true;
+                                            promisesClassifiersAlreadyAdded.forEach(function (classifier) {
+                                                if (classifier == scope.items[i].groups[g].key + '_' + scope.items[i].groups[g].value) {
+                                                    classifierExist = true;
                                                 }
                                             });
+                                            if (!classifierExist) {
+                                                promisesClassifiersAlreadyAdded.push(scope.items[i].groups[g].key + '_' + scope.items[i].groups[g].value);
+                                                promisesClassifiers.push(entityClassifierSingletonService.getByKey(scope.entityType, scope.items[i].groups[g].value))
+                                            }
+                                        }
+                                        if (scope.items[i].groups[g]['value_type'] === 'field') {
 
-                                            if (!entityExist) {
-                                                promisesEntityFieldsAlreadyAdded.push(scope.items[i].groups[g].key + '_' + scope.items[i].groups[g].value);
-                                                promisesEntityFields.push(bindCellService.getByKey(scope.items[i].groups[g].key, scope.items[i].groups[g].value, {entityType: scope.entityType}))
+                                            if (scope.items[i].groups[g].value !== null) {
+
+                                                promisesEntityFieldsAlreadyAdded.forEach(function (entity) {
+                                                    if (entity == scope.items[i].groups[g].key + '_' + scope.items[i].groups[g].value) {
+                                                        entityExist = true;
+                                                    }
+                                                });
+
+                                                if (!entityExist) {
+                                                    promisesEntityFieldsAlreadyAdded.push(scope.items[i].groups[g].key + '_' + scope.items[i].groups[g].value);
+                                                    promisesEntityFields.push(bindCellService.getByKey(scope.items[i].groups[g].key, scope.items[i].groups[g].value, {entityType: scope.entityType}))
+                                                }
                                             }
                                         }
                                     }
@@ -387,7 +391,7 @@
                             if (data.length) {
                                 var i;
 
-                                console.log('data', data);
+                                //console.log('data', data);
 
                                 for (i = 0; i < data.length; i = i + 1) {
 
@@ -411,7 +415,6 @@
                 }
 
                 scope.reportItemsProjection = function () {
-                    //console.log('scope.reportItems', scope.reportItems);
                     return scope.reportItems;
                 };
 
@@ -576,30 +579,31 @@
                         var i, g, e;
                         var promises = [];
 
-                        for (i = 0; i < scope.items.length; i = i + 1) {
+                        if (scope.items) {
+                            for (i = 0; i < scope.items.length; i = i + 1) {
 
-                            if (scope.items[i].hasOwnProperty('groups')) {
-                                for (g = 0; g < scope.items[i].groups.length; g = g + 1) {
+                                if (scope.items[i].hasOwnProperty('groups')) {
+                                    for (g = 0; g < scope.items[i].groups.length; g = g + 1) {
 
-                                    if (scope.items[i].groups[g]['value_type'] === 'field' && scope.items[i].groups[g].value !== null) {
-                                        var entityExist = false;
+                                        if (scope.items[i].groups[g]['value_type'] === 'field' && scope.items[i].groups[g].value !== null) {
+                                            var entityExist = false;
 
-                                        promisesEntityFieldsAlreadyAdded.forEach(function (entity) {
-                                            if (entity == scope.items[i].groups[g].key + '_' + scope.items[i].groups[g].value) {
-                                                entityExist = true;
+                                            promisesEntityFieldsAlreadyAdded.forEach(function (entity) {
+                                                if (entity == scope.items[i].groups[g].key + '_' + scope.items[i].groups[g].value) {
+                                                    entityExist = true;
+                                                }
+                                            });
+
+                                            if (!entityExist) {
+                                                promisesEntityFieldsAlreadyAdded.push(scope.items[i].groups[g].key + '_' + scope.items[i].groups[g].value);
+                                                promises.push(bindCellService.getByKey(scope.items[i].groups[g].key, scope.items[i].groups[g].value))
                                             }
-                                        });
 
-                                        if (!entityExist) {
-                                            promisesEntityFieldsAlreadyAdded.push(scope.items[i].groups[g].key + '_' + scope.items[i].groups[g].value);
-                                            promises.push(bindCellService.getByKey(scope.items[i].groups[g].key, scope.items[i].groups[g].value))
                                         }
-
                                     }
                                 }
                             }
                         }
-
                         Promise.all(promises).then(function (results) {
                             //console.log('RESULTS', results);
                             results.forEach(function (item) {
@@ -674,6 +678,14 @@
 
                     //console.log('scope.options.reportIsReady', scope.options.reportIsReady);
 
+                    if (scope.options.reportProcessing == true) {
+                        return false;
+                    }
+
+                    if (!scope.items) {
+                        return true;
+                    }
+
                     if (scope.readyStatus.cellsFirstReady == true &&
                         scope.readyStatus.cellsSecondReady == true &&
                         scope.readyStatus.classifiersReady == true &&
@@ -689,6 +701,8 @@
                 };
 
                 scope.bindGroupValue = function (group) {
+
+                    //console.log('group', group);
 
                     if (group.hasOwnProperty('r_entityType')) {
                         return group[group.r_entityType + '_attribute_' + group.source_name];
@@ -807,6 +821,8 @@
                         }
                     }
 
+                    //console.log('column', column);
+
                     if (column.hasOwnProperty('id')) {
                         if (column['value_type'] === 30) {
                             var classifierNode;
@@ -822,11 +838,13 @@
                             return '';
                         } else {
 
+                            //console.log('groupedItem', groupedItem);
+
                             if (column.hasOwnProperty('columnType') && column.columnType == 'custom-field') {
 
                                 result = '';
 
-                                console.log('groupedItem', groupedItem);
+                                //console.log('groupedItem', groupedItem);
 
                                 groupedItem.custom_fields.forEach(function (customField) {
 
@@ -839,17 +857,48 @@
                                 return result
 
                             } else {
-                                return groupedItem[column.name];
+
+                                if (groupedItem.hasOwnProperty(column.name)) {
+                                    return groupedItem[column.name];
+                                } else {
+                                    return groupTableBodyHelper.findGroupedItemAttribute(groupedItem, column.id);
+                                }
                             }
                         }
                     } else {
 
-                        var i, e;
+                        var i, e, c;
                         for (i = 0; i < baseAttrs.length; i = i + 1) {
                             if (baseAttrs[i].key === column.key) {
                                 return groupedItem[baseAttrs[i].key];
                             }
                         }
+
+                        //console.log('column.key', column.key);
+
+                        for (c = 0; c < scope.columns.length; c = c + 1) {
+
+                            if (scope.columns[c].key == column.key) {
+
+                                if (groupedItem[column.key + '_object']) {
+
+                                    if (column.key == 'instrument_type_object_instrument_class') {
+                                        return groupedItem[column.key + '_object'].name;
+                                    } else {
+                                        if (groupedItem[column.key + '_object'].user_code) {
+                                            return groupedItem[column.key + '_object'].user_code;
+                                        } else {
+                                            return groupedItem[column.key + '_object'].name;
+                                        }
+
+                                    }
+
+
+                                }
+                            }
+
+                        }
+
 
                         for (e = 0; e < entityAttrs.length; e = e + 1) {
 
@@ -933,7 +982,7 @@
                                         }
                                     } else {
 
-                                        if (groupedItem[entityAttrs[e].key] !== null) {
+                                        if (groupedItem[entityAttrs[e].key] !== null && groupedItem[entityAttrs[e].key] !== undefined) {
 
                                             if (column.value_type == 20 || column.value_type == 'float') {
 
@@ -949,6 +998,19 @@
                                                     return groupedItem[entityAttrs[e].key].toFixed(2) + '';
                                                 }
                                             } else {
+
+                                                if (entityType == 'complex-transaction') {
+                                                    if (entityAttrs[e].key == 'status') {
+                                                        if (groupedItem[entityAttrs[e].key] == 1) {
+                                                            return 'Production';
+                                                        }
+                                                        if (groupedItem[entityAttrs[e].key] == 2) {
+                                                            return 'Pending';
+                                                        }
+                                                    }
+                                                }
+
+
                                                 return groupedItem[entityAttrs[e].key];
                                             }
                                         }
@@ -956,6 +1018,8 @@
                                 }
                             }
                         }
+
+
                     }
                 };
 
@@ -1003,11 +1067,14 @@
                         scope.options.editorEntityId = undefined;
                     }
 
-                    scope.externalCallback({
-                        silent: true,
-                        redraw: false,
-                        options: {editorEntityId: scope.options.editorEntityId}
-                    });
+                    if (!scope.options.isReport) {
+
+                        scope.externalCallback({
+                            silent: true,
+                            redraw: false,
+                            options: {editorEntityId: scope.options.editorEntityId}
+                        });
+                    }
 
                     //if (localStorage.getItem('entityIsChanged') === "true") { // wow such shitcode
                     //    $mdDialog.show({
@@ -1093,28 +1160,24 @@
                     scope.externalCallback({options: {paginationPageCurrent: page}});
                 };
 
-                scope.$watchCollection('options.columns', function () {
+                scope.$watchCollection('options.lastUpdate', function () {
+
+                    scope.externalCallback = scope.options.externalCallback;
+                    scope.grouping = scope.options.grouping;
+                    scope.columns = scope.options.columns;
+                    scope.entityType = scope.options.entityType;
+                    scope.reportIsReady = scope.options.reportIsReady;
+                    scope.isReport = scope.options.isReport;
+
                     syncGroupsAndColumns();
 
-                    if (scope.isReport == true) {
+                    if (scope.isReport == true && scope.items) {
+                        //console.log('scope.reportItems', scope.reportItems);
+
                         scope.reportItems = groupTableReportService.transformItems(scope.items);
                     }
                 });
 
-                scope.$watchCollection('grouping', function () {
-                    syncGroupsAndColumns();
-
-                    if (scope.isReport == true) {
-                        scope.reportItems = groupTableReportService.transformItems(scope.items);
-                    }
-                });
-
-                if (scope.isReport == true) {
-
-                    scope.$watch('items', function () {
-                        scope.reportItems = groupTableReportService.transformItems(scope.items);
-                    });
-                }
 
             }
         }

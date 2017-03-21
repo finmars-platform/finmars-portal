@@ -59,6 +59,20 @@
         vm.agree = function () {
             $mdDialog.hide({status: 'agree', data: {item: vm.item}});
         };
+
+        vm.openHelp = function ($event) {
+            $mdDialog.show({
+                controller: 'HelpDialogController as vm',
+                templateUrl: 'views/dialogs/help-dialog-view.html',
+                targetEvent: $event,
+                locals: {
+                    data: {}
+                },
+                preserveScope: true,
+                autoWrap: true,
+                skipHide: true
+            })
+        }
     }
 
 }());

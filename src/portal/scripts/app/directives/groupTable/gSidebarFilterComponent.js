@@ -23,6 +23,7 @@
             link: function (scope, elem, attrs) {
 
                 logService.component('groupSidebarFilter', 'initialized');
+                console.log('reportOptions', scope.reportOptions);
 
                 scope.filters = scope.options.filters;
                 scope.isReport = scope.options.isReport;
@@ -61,7 +62,7 @@
 
                 scope.openReportSettings = function ($event) {
 
-                    console.log('scope.reportOptions', scope.reportOptions);
+                    //console.log('scope.reportOptions', scope.reportOptions);
 
                     $mdDialog.show({
                         controller: 'GReportSettingsDialogController as vm',
@@ -73,7 +74,7 @@
                         }
                     }).then(function (res) {
 
-                        console.log('res', res);
+                        //console.log('res', res);
 
                         if (res.status == 'agree') {
                             scope.reportOptions = res.data;
@@ -85,7 +86,7 @@
                 };
 
                 scope.calculateReport = function () {
-                    console.log('calculate report');
+                    //console.log('calculate report');
                     scope.reportOptions["task_id"] = undefined;
                     scope.externalCallback({silent: false, options: {filters: scope.filters}});
                 };
@@ -151,7 +152,7 @@
                 };
 
                 scope.toggleFilterState = function () {
-                    if(scope.isReport == true) {
+                    if (scope.isReport == true) {
                         scope.externalCallback({silent: true, options: {filters: scope.filters}});
                     } else {
                         scope.externalCallback({silent: false, options: {filters: scope.filters}});
@@ -159,7 +160,7 @@
                 };
 
                 scope.filterChange = function (filter) {
-                    if(scope.isReport == true) {
+                    if (scope.isReport == true) {
                         scope.externalCallback({silent: true, options: {filters: scope.filters}});
                     } else {
                         scope.externalCallback({silent: false, options: {filters: scope.filters}});
@@ -170,7 +171,7 @@
                     scope.filters.forEach(function (item) {
                         item.options.enabled = true;
                     });
-                    if(scope.isReport == true) {
+                    if (scope.isReport == true) {
                         scope.externalCallback({silent: true, options: {filters: scope.filters}});
                     } else {
                         scope.externalCallback({silent: false, options: {filters: scope.filters}});
@@ -181,7 +182,7 @@
                     scope.filters.forEach(function (item) {
                         item.options.query = '';
                     });
-                    if(scope.isReport == true) {
+                    if (scope.isReport == true) {
                         scope.externalCallback({silent: true, options: {filters: scope.filters}});
                     } else {
                         scope.externalCallback({silent: false, options: {filters: scope.filters}});
@@ -192,7 +193,7 @@
                     scope.filters.forEach(function (item) {
                         item.options.enabled = false;
                     });
-                    if(scope.isReport == true) {
+                    if (scope.isReport == true) {
                         scope.externalCallback({silent: true, options: {filters: scope.filters}});
                     } else {
                         scope.externalCallback({silent: false, options: {filters: scope.filters}});
@@ -205,7 +206,7 @@
                     scope.$on('rootEditorEntityIdDown', function (event, data) {
 
                         scope.filters.forEach(function (item) {
-                            console.log('item', item);
+                            //console.log('item', item);
                             if (item.hasOwnProperty('options') && item.options.useFromAbove == true) {
 
                                 if (item.key == data.entityType) {
@@ -233,14 +234,14 @@
                 };
 
                 scope.removeFilter = function (filter) {
-                    console.log('filter to remove is ', filter);
+                    //console.log('filter to remove is ', filter);
                     scope.filters = scope.filters.map(function (item) {
                         // if (item.id === filter.id || item.name === filter.name) {
                         if (item.name === filter.name) {
                             // return undefined;
                             item = undefined;
                         }
-                        console.log('filter in filters list', item);
+                        //console.log('filter in filters list', item);
                         return item;
                     }).filter(function (item) {
                         return !!item;

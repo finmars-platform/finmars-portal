@@ -49,6 +49,7 @@ app.controller('SideNavController', ['$scope', require('./app/controllers/sideNa
 app.controller('DashboardController', ['$scope', '$mdDialog', require('./app/controllers/dashboardController')]);
 app.controller('ActionsController', ['$scope', '$mdDialog', require('./app/controllers/actionsController')]);
 app.controller('ImportInstrumentDialogController', ['$scope', '$mdDialog', require('./app/controllers/dialogs/importInstrumentDialogController')]);
+app.controller('ImportTransactionDialogController', ['$scope', '$mdDialog', require('./app/controllers/dialogs/importTransactionDialogController')]);
 app.controller('AutomatedUploadsHistoryDialogController', ['$scope', '$mdDialog', '$mdpTimePicker', require('./app/controllers/dialogs/automatedUploadsHistoryDialogController')]);
 app.controller('FillPriceHistoryDialogController', ['$scope', '$mdDialog', require('./app/controllers/dialogs/fillPriceHistoryDialogController')]);
 app.controller('EventScheduleConfigDialogController', ['$scope', '$mdDialog', require('./app/controllers/dialogs/eventScheduleConfigDialogController')]);
@@ -65,6 +66,11 @@ app.controller('CustomFieldsConfigDialogController', ['$scope', '$mdDialog', 'da
 app.controller('InstrumentMappingAddDialogController', ['$scope', '$mdDialog', require('./app/controllers/dialogs/instrumentMappingAddDialogController')]);
 app.controller('InstrumentMappingEditDialogController', ['$scope', '$mdDialog', 'schemeId', require('./app/controllers/dialogs/instrumentMappingEditDialogController')]);
 app.controller('EntityTypeMappingDialogController', ['$scope', '$mdDialog', 'mapItem', require('./app/controllers/dialogs/entityTypeMappingDialogController')]);
+
+app.controller('TransactionMappingAddDialogController', ['$scope', '$mdDialog', require('./app/controllers/dialogs/transactionMappingAddDialogController')]);
+app.controller('TransactionMappingEditDialogController', ['$scope', '$mdDialog', 'schemeId', require('./app/controllers/dialogs/transactionMappingEditDialogController')]);
+app.controller('TransactionMappingInputMappingDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/transactionMappingInputMappingDialogController')]);
+
 
 app.controller('EntityViewerController', ['$scope', '$mdDialog', require('./app/controllers/entityViewer/entityViewerController')]);
 app.controller('EntityViewerAddDialogController', ['$scope', '$mdDialog', 'parentScope', '$state', require('./app/controllers/entityViewer/entityViewerAddDialogController')]);
@@ -116,7 +122,7 @@ app.controller('TransactionsAuditController', ['$scope', '$stateParams', require
 app.controller('InstrumentsAuditController', ['$scope', '$stateParams', require('./app/controllers/system/auditInstrumentsController')]);
 
 app.controller('BalanceReportController', ['$scope', '$stateParams', require('./app/controllers/reports/balanceReportController')]);
-app.controller('BalanceReportCustomAttrController', ['$scope', '$mdDialog', require('./app/controllers/reports/balanceReportCustomAttrController')]);
+app.controller('ReportCustomAttrController', ['$scope', '$stateParams', '$mdDialog', require('./app/controllers/reports/reportCustomAttrController')]);
 app.controller('BalanceReportDialogCustomAttrController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/balanceReportAddDialogCustomAttrController')]);
 
 app.controller('ProfitAndLostReportController', ['$scope', '$stateParams', require('./app/controllers/reports/profitAndLostReportController')]);
@@ -129,6 +135,7 @@ app.controller('EntityDataConstructorController', ['$scope', '$stateParams', '$s
 app.controller('AdditionsEditorEntityEditController', ['$scope', '$state', '$mdDialog', require('./app/controllers/additionsEditorEntityEditController')]);
 
 app.controller('WarningDialogController', ['$scope', '$mdDialog', 'warning', require('./app/controllers/dialogs/warningDialogController')]);
+app.controller('HelpDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/helpDialogController')]);
 app.controller('SuccessDialogController', ['$scope', '$mdDialog', 'success', require('./app/controllers/dialogs/successDialogController')]);
 app.controller('ValidationDialogController', ['$scope', '$mdDialog', 'validationData', require('./app/controllers/dialogs/validationDialogController')]);
 app.controller('ExpressionEditorDialogController', ['$scope', '$mdDialog', 'item', require('./app/controllers/dialogs/expressionEditorDialogController')]);
@@ -146,6 +153,7 @@ app.controller('SettingsGeneralProfileController', ['$scope', require('./app/con
 app.controller('SettingsGeneralDataProvidersController', ['$scope', require('./app/controllers/settings/general/settingsGeneralDataProvidersController')]);
 app.controller('SettingsGeneralDataProvidersConfigController', ['$scope', '$stateParams', '$mdDialog', '$state', require('./app/controllers/settings/general/settingsGeneralDataProvidersConfigController')]);
 app.controller('SettingsGeneralInstrumentImportController', ['$scope', '$mdDialog', require('./app/controllers/settings/general/settingsGeneralInstrumentImportController')]);
+app.controller('SettingsGeneralTransactionImportController', ['$scope', '$mdDialog', require('./app/controllers/settings/general/settingsGeneralTransactionImportController')]);
 
 app.controller('SettingsFormDesignController', ['$scope', '$state', require('./app/controllers/settings/settingsFormDesignController')]);
 app.controller('SettingBloombergImportInstrumentController', ['$scope', '$state', require('./app/controllers/settings/settingBloombergImportInstrumentController')]);
@@ -204,6 +212,7 @@ app.controller('GReportSettingsDialogController', ['$scope', '$mdDialog', 'repor
 
 app.controller('gModalController', ['$scope', '$mdDialog', 'parentScope', 'callback', require('./app/directives/groupTable/gModalComponent')]);
 app.controller('gModalReportController', ['$scope', '$mdDialog', 'parentScope', 'callback', require('./app/directives/groupTable/gModalReportComponent')]);
+app.controller('gModalReportTransactionController', ['$scope', '$mdDialog', 'parentScope', 'callback', require('./app/directives/groupTable/gModalReportTransactionComponent')]);
 
 // GROUP TABLE END
 

@@ -8,7 +8,7 @@
 
 	var balanceReportCustomAttrService = require('../../services/reports/balanceReportCustomAttrService');
 
-	module.exports = function ($scope, $mdDialog) {
+	module.exports = function ($scope, $stateParams, $mdDialog) {
 
 		logService.controller('BalanceReportCustomAttributesController', 'initialized');
 
@@ -18,7 +18,9 @@
 
 		vm.attrs = [];
 
-		vm.entityType = '';
+		//vm.entityType = '';
+
+		vm.entityType = $stateParams.entityType;
 
 		var getList = function () {
 			balanceReportCustomAttrService.getList(vm.entityType).then(function (data) {

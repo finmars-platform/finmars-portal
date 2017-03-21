@@ -38,7 +38,7 @@
                     "themes": {"stripes": true},
                     'data': [
                         {
-                            'text': 'Root',
+                            'text': 'Bookmark panel',
                             'state': {'opened': true, 'selected': true},
                             'children': items
                         }
@@ -46,9 +46,9 @@
                 },
                 "types": {
                     "#": {
-                        "valid_children": ["root"]
+                        "valid_children": ["Bookmark panel"]
                     },
-                    "root": {
+                    "Bookmark panel": {
                         "icon": "portal/content/img/ic_folder_black_1x.png",
                         "valid_children": ["default"]
                     },

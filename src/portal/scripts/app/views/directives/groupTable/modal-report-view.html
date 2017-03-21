@@ -1,4 +1,4 @@
-<md-dialog aria-label="Mango (Fruit)" ng-cloak class="g-modal-dialog drag" g-dialog-draggable>
+<md-dialog aria-label="Report fields modal" ng-cloak class="g-modal-dialog drag" g-dialog-draggable>
     <md-toolbar>
         <div class="md-toolbar-tools" layout="row" layout-align="start center">
             <h2 style="user-select: none; position: relative;">View Constructor
@@ -25,18 +25,19 @@
                         </div>
                         <div class="g-checkbox-row" data-ng-repeat="item in vm.balanceAttrs" layout="row">
                             <div>
-                                <md-checkbox ng-model="item.columns" aria="columns" data-ng-change="vm.updateAttrs()">
+                                <md-checkbox ng-model="item.columns" aria-label="Columns" aria="columns"
+                                             data-ng-change="vm.updateAttrs()">
                                 </md-checkbox>
-                                <md-checkbox ng-model="item.groups" aria="groups"
+                                <md-checkbox ng-model="item.groups" aria-label="Groups" aria="groups"
                                              class="md-g-green"
                                              data-ng-change="vm.updateAttrs()">
                                 </md-checkbox>
-                                <md-checkbox ng-model="item.filters" aria="filters"
+                                <md-checkbox ng-model="item.filters" aria-label="Filters" aria="filters"
                                              class="md-primary" data-ng-change="vm.updateAttrs()">
                                 </md-checkbox>
                             </div>
                             <div dragula="'columns-bag'" class="g-modal-draggable-card">
-                                <md-card class="modal-dialog-card">{{item.name}}</md-card>
+                                <md-card class="modal-dialog-card">{{::vm.bindReportItemName(item)}}</md-card>
                             </div>
                         </div>
                     </md-content>
@@ -48,6 +49,23 @@
                             <span class="g-meta-circle red">C</span>
                             <span class="g-meta-circle green">G</span>
                             <span class="g-meta-circle blue">F</span>
+                        </div>
+                        <div class="g-checkbox-row" data-ng-repeat="item in vm.balancePerformanceAttrs" layout="row">
+                            <div>
+                                <md-checkbox ng-model="item.columns" aria-label="Columns" aria="columns"
+                                             data-ng-change="vm.updateAttrs()">
+                                </md-checkbox>
+                                <md-checkbox ng-model="item.groups" aria-label="Groups" aria="groups"
+                                             class="md-g-green"
+                                             data-ng-change="vm.updateAttrs()">
+                                </md-checkbox>
+                                <md-checkbox ng-model="item.filters" aria-label="Filters" aria="filters"
+                                             class="md-primary" data-ng-change="vm.updateAttrs()">
+                                </md-checkbox>
+                            </div>
+                            <div dragula="'columns-bag'" class="g-modal-draggable-card">
+                                <md-card class="modal-dialog-card">{{::vm.bindReportItemName(item)}}</md-card>
+                            </div>
                         </div>
                     </md-content>
                 </md-tab>
@@ -61,50 +79,53 @@
                         </div>
                         <div class="g-checkbox-row" data-ng-repeat="item in vm.instrumentAttrs" layout="row">
                             <div>
-                                <md-checkbox ng-model="item.columns" aria="columns" data-ng-change="vm.updateAttrs()">
+                                <md-checkbox ng-model="item.columns" aria-label="Columns" aria="columns"
+                                             data-ng-change="vm.updateAttrs()">
                                 </md-checkbox>
-                                <md-checkbox ng-model="item.groups" aria="groups"
+                                <md-checkbox ng-model="item.groups" aria-label="Groups" aria="groups"
                                              class="md-g-green"
                                              data-ng-change="vm.updateAttrs()">
                                 </md-checkbox>
-                                <md-checkbox ng-model="item.filters" aria="filters"
+                                <md-checkbox ng-model="item.filters" aria-label="Filters" aria="filters"
                                              class="md-primary" data-ng-change="vm.updateAttrs()">
                                 </md-checkbox>
                             </div>
                             <div dragula="'columns-bag'" class="g-modal-draggable-card">
-                                <md-card class="modal-dialog-card">{{item.name}}</md-card>
+                                <md-card class="modal-dialog-card">{{::vm.bindReportItemName(item)}}</md-card>
                             </div>
                         </div>
                         <div class="g-checkbox-row" data-ng-repeat="item in vm.instrumentTypeAttrs" layout="row">
                             <div>
-                                <md-checkbox ng-model="item.columns" aria="columns" data-ng-change="vm.updateAttrs()">
+                                <md-checkbox ng-model="item.columns" aria-label="Columns" aria="columns"
+                                             data-ng-change="vm.updateAttrs()">
                                 </md-checkbox>
-                                <md-checkbox ng-model="item.groups" aria="groups"
+                                <md-checkbox ng-model="item.groups" aria-label="Groups" aria="groups"
                                              class="md-g-green"
                                              data-ng-change="vm.updateAttrs()">
                                 </md-checkbox>
-                                <md-checkbox ng-model="item.filters" aria="filters"
+                                <md-checkbox ng-model="item.filters" aria-label="Filters" aria="filters"
                                              class="md-primary" data-ng-change="vm.updateAttrs()">
                                 </md-checkbox>
                             </div>
                             <div dragula="'columns-bag'" class="g-modal-draggable-card">
-                                <md-card class="modal-dialog-card">{{item.name}}</md-card>
+                                <md-card class="modal-dialog-card">{{::vm.bindReportItemName(item)}}</md-card>
                             </div>
                         </div>
                         <div class="g-checkbox-row" data-ng-repeat="item in vm.instrumentDynamicAttrs" layout="row">
                             <div>
-                                <md-checkbox ng-model="item.columns" aria="columns" data-ng-change="vm.updateAttrs()">
+                                <md-checkbox ng-model="item.columns" aria-label="Columns" aria="columns"
+                                             data-ng-change="vm.updateAttrs()">
                                 </md-checkbox>
-                                <md-checkbox ng-model="item.groups" aria="groups"
+                                <md-checkbox ng-model="item.groups" aria-label="Groups" aria="groups"
                                              class="md-g-green"
                                              data-ng-change="vm.updateAttrs()">
                                 </md-checkbox>
-                                <md-checkbox ng-model="item.filters" aria="filters"
+                                <md-checkbox ng-model="item.filters" aria-label="Filters" aria="filters"
                                              class="md-primary" data-ng-change="vm.updateAttrs()">
                                 </md-checkbox>
                             </div>
                             <div dragula="'columns-bag'" class="g-modal-draggable-card">
-                                <md-card class="modal-dialog-card">{{item.name}}</md-card>
+                                <md-card class="modal-dialog-card">{{::vm.bindReportItemName(item)}}</md-card>
                             </div>
                         </div>
                     </md-content>
@@ -119,50 +140,53 @@
                         </div>
                         <div class="g-checkbox-row" data-ng-repeat="item in vm.accountAttrs" layout="row">
                             <div>
-                                <md-checkbox ng-model="item.columns" aria="columns" data-ng-change="vm.updateAttrs()">
+                                <md-checkbox ng-model="item.columns" aria-label="Columns" aria="columns"
+                                             data-ng-change="vm.updateAttrs()">
                                 </md-checkbox>
-                                <md-checkbox ng-model="item.groups" aria="groups"
+                                <md-checkbox ng-model="item.groups" aria-label="Groups" aria="groups"
                                              class="md-g-green"
                                              data-ng-change="vm.updateAttrs()">
                                 </md-checkbox>
-                                <md-checkbox ng-model="item.filters" aria="filters"
+                                <md-checkbox ng-model="item.filters" aria-label="Filters" aria="filters"
                                              class="md-primary" data-ng-change="vm.updateAttrs()">
                                 </md-checkbox>
                             </div>
                             <div dragula="'columns-bag'" class="g-modal-draggable-card">
-                                <md-card class="modal-dialog-card">{{item.name}}</md-card>
+                                <md-card class="modal-dialog-card">{{::vm.bindReportItemName(item)}}</md-card>
                             </div>
                         </div>
                         <div class="g-checkbox-row" data-ng-repeat="item in vm.accountTypeAttrs" layout="row">
                             <div>
-                                <md-checkbox ng-model="item.columns" aria="columns" data-ng-change="vm.updateAttrs()">
+                                <md-checkbox ng-model="item.columns" aria-label="Columns" aria="columns"
+                                             data-ng-change="vm.updateAttrs()">
                                 </md-checkbox>
-                                <md-checkbox ng-model="item.groups" aria="groups"
+                                <md-checkbox ng-model="item.groups" aria-label="Groups" aria="groups"
                                              class="md-g-green"
                                              data-ng-change="vm.updateAttrs()">
                                 </md-checkbox>
-                                <md-checkbox ng-model="item.filters" aria="filters"
+                                <md-checkbox ng-model="item.filters" aria-label="Filters" aria="filters"
                                              class="md-primary" data-ng-change="vm.updateAttrs()">
                                 </md-checkbox>
                             </div>
                             <div dragula="'columns-bag'" class="g-modal-draggable-card">
-                                <md-card class="modal-dialog-card">{{item.name}}</md-card>
+                                <md-card class="modal-dialog-card">{{::vm.bindReportItemName(item)}}</md-card>
                             </div>
                         </div>
                         <div class="g-checkbox-row" data-ng-repeat="item in vm.accountDynamicAttrs" layout="row">
                             <div>
-                                <md-checkbox ng-model="item.columns" aria="columns" data-ng-change="vm.updateAttrs()">
+                                <md-checkbox ng-model="item.columns" aria-label="Columns" aria="columns"
+                                             data-ng-change="vm.updateAttrs()">
                                 </md-checkbox>
-                                <md-checkbox ng-model="item.groups" aria="groups"
+                                <md-checkbox ng-model="item.groups" aria-label="Groups" aria="groups"
                                              class="md-g-green"
                                              data-ng-change="vm.updateAttrs()">
                                 </md-checkbox>
-                                <md-checkbox ng-model="item.filters" aria="filters"
+                                <md-checkbox ng-model="item.filters" aria-label="Filters" aria="filters"
                                              class="md-primary" data-ng-change="vm.updateAttrs()">
                                 </md-checkbox>
                             </div>
                             <div dragula="'columns-bag'" class="g-modal-draggable-card">
-                                <md-card class="modal-dialog-card">{{item.name}}</md-card>
+                                <md-card class="modal-dialog-card">{{::vm.bindReportItemName(item)}}</md-card>
                             </div>
                         </div>
                     </md-content>
@@ -177,34 +201,36 @@
                         </div>
                         <div class="g-checkbox-row" data-ng-repeat="item in vm.portfolioAttrs" layout="row">
                             <div>
-                                <md-checkbox ng-model="item.columns" aria="columns" data-ng-change="vm.updateAttrs()">
+                                <md-checkbox ng-model="item.columns" aria-label="Columns" aria="columns"
+                                             data-ng-change="vm.updateAttrs()">
                                 </md-checkbox>
-                                <md-checkbox ng-model="item.groups" aria="groups"
+                                <md-checkbox ng-model="item.groups" aria-label="Groups" aria="groups"
                                              class="md-g-green"
                                              data-ng-change="vm.updateAttrs()">
                                 </md-checkbox>
-                                <md-checkbox ng-model="item.filters" aria="filters"
+                                <md-checkbox ng-model="item.filters" aria-label="Filters" aria="filters"
                                              class="md-primary" data-ng-change="vm.updateAttrs()">
                                 </md-checkbox>
                             </div>
                             <div dragula="'columns-bag'" class="g-modal-draggable-card">
-                                <md-card class="modal-dialog-card">{{item.name}}</md-card>
+                                <md-card class="modal-dialog-card">{{::vm.bindReportItemName(item)}}</md-card>
                             </div>
                         </div>
                         <div class="g-checkbox-row" data-ng-repeat="item in vm.portfolioDynamicAttrs" layout="row">
                             <div>
-                                <md-checkbox ng-model="item.columns" aria="columns" data-ng-change="vm.updateAttrs()">
+                                <md-checkbox ng-model="item.columns" aria-label="Columns" aria="columns"
+                                             data-ng-change="vm.updateAttrs()">
                                 </md-checkbox>
-                                <md-checkbox ng-model="item.groups" aria="groups"
+                                <md-checkbox ng-model="item.groups" aria-label="Groups" aria="groups"
                                              class="md-g-green"
                                              data-ng-change="vm.updateAttrs()">
                                 </md-checkbox>
-                                <md-checkbox ng-model="item.filters" aria="filters"
+                                <md-checkbox ng-model="item.filters" aria-label="Filters" aria="filters"
                                              class="md-primary" data-ng-change="vm.updateAttrs()">
                                 </md-checkbox>
                             </div>
                             <div dragula="'columns-bag'" class="g-modal-draggable-card">
-                                <md-card class="modal-dialog-card">{{item.name}}</md-card>
+                                <md-card class="modal-dialog-card">{{::vm.bindReportItemName(item)}}</md-card>
                             </div>
                         </div>
                     </md-content>
@@ -219,146 +245,155 @@
                         </div>
                         <div class="g-checkbox-row" data-ng-repeat="item in vm.strategy1attrs" layout="row">
                             <div>
-                                <md-checkbox ng-model="item.columns" aria="columns" data-ng-change="vm.updateAttrs()">
+                                <md-checkbox ng-model="item.columns" aria-label="Columns" aria="columns"
+                                             data-ng-change="vm.updateAttrs()">
                                 </md-checkbox>
-                                <md-checkbox ng-model="item.groups" aria="groups"
+                                <md-checkbox ng-model="item.groups" aria-label="Groups" aria="groups"
                                              class="md-g-green"
                                              data-ng-change="vm.updateAttrs()">
                                 </md-checkbox>
-                                <md-checkbox ng-model="item.filters" aria="filters"
+                                <md-checkbox ng-model="item.filters" aria-label="Filters" aria="filters"
                                              class="md-primary" data-ng-change="vm.updateAttrs()">
                                 </md-checkbox>
                             </div>
                             <div dragula="'columns-bag'" class="g-modal-draggable-card">
-                                <md-card class="modal-dialog-card">{{item.name}}</md-card>
+                                <md-card class="modal-dialog-card">{{::vm.bindReportItemName(item)}}</md-card>
                             </div>
                         </div>
                         <div class="g-checkbox-row" data-ng-repeat="item in vm.strategy1subgroupAttrs" layout="row">
                             <div>
-                                <md-checkbox ng-model="item.columns" aria="columns" data-ng-change="vm.updateAttrs()">
+                                <md-checkbox ng-model="item.columns" aria-label="Columns" aria="columns"
+                                             data-ng-change="vm.updateAttrs()">
                                 </md-checkbox>
-                                <md-checkbox ng-model="item.groups" aria="groups"
+                                <md-checkbox ng-model="item.groups" aria-label="Groups" aria="groups"
                                              class="md-g-green"
                                              data-ng-change="vm.updateAttrs()">
                                 </md-checkbox>
-                                <md-checkbox ng-model="item.filters" aria="filters"
+                                <md-checkbox ng-model="item.filters" aria-label="Filters" aria="filters"
                                              class="md-primary" data-ng-change="vm.updateAttrs()">
                                 </md-checkbox>
                             </div>
                             <div dragula="'columns-bag'" class="g-modal-draggable-card">
-                                <md-card class="modal-dialog-card">{{item.name}}</md-card>
+                                <md-card class="modal-dialog-card">{{::vm.bindReportItemName(item)}}</md-card>
                             </div>
                         </div>
                         <div class="g-checkbox-row" data-ng-repeat="item in vm.strategy1groupAttrs" layout="row">
                             <div>
-                                <md-checkbox ng-model="item.columns" aria="columns" data-ng-change="vm.updateAttrs()">
+                                <md-checkbox ng-model="item.columns" aria-label="Columns" aria="columns"
+                                             data-ng-change="vm.updateAttrs()">
                                 </md-checkbox>
-                                <md-checkbox ng-model="item.groups" aria="groups"
+                                <md-checkbox ng-model="item.groups" aria-label="Groups" aria="groups"
                                              class="md-g-green"
                                              data-ng-change="vm.updateAttrs()">
                                 </md-checkbox>
-                                <md-checkbox ng-model="item.filters" aria="filters"
+                                <md-checkbox ng-model="item.filters" aria-label="Filters" aria="filters"
                                              class="md-primary" data-ng-change="vm.updateAttrs()">
                                 </md-checkbox>
                             </div>
                             <div dragula="'columns-bag'" class="g-modal-draggable-card">
-                                <md-card class="modal-dialog-card">{{item.name}}</md-card>
+                                <md-card class="modal-dialog-card">{{::vm.bindReportItemName(item)}}</md-card>
                             </div>
                         </div>
                         <div class="g-checkbox-row" data-ng-repeat="item in vm.strategy2attrs" layout="row">
                             <div>
-                                <md-checkbox ng-model="item.columns" aria="columns" data-ng-change="vm.updateAttrs()">
+                                <md-checkbox ng-model="item.columns" aria-label="Columns" aria="columns"
+                                             data-ng-change="vm.updateAttrs()">
                                 </md-checkbox>
-                                <md-checkbox ng-model="item.groups" aria="groups"
+                                <md-checkbox ng-model="item.groups" aria-label="Groups" aria="groups"
                                              class="md-g-green"
                                              data-ng-change="vm.updateAttrs()">
                                 </md-checkbox>
-                                <md-checkbox ng-model="item.filters" aria="filters"
+                                <md-checkbox ng-model="item.filters" aria-label="Filters" aria="filters"
                                              class="md-primary" data-ng-change="vm.updateAttrs()">
                                 </md-checkbox>
                             </div>
                             <div dragula="'columns-bag'" class="g-modal-draggable-card">
-                                <md-card class="modal-dialog-card">{{item.name}}</md-card>
+                                <md-card class="modal-dialog-card">{{::vm.bindReportItemName(item)}}</md-card>
                             </div>
                         </div>
                         <div class="g-checkbox-row" data-ng-repeat="item in vm.strategy2subgroupAttrs" layout="row">
                             <div>
-                                <md-checkbox ng-model="item.columns" aria="columns" data-ng-change="vm.updateAttrs()">
+                                <md-checkbox ng-model="item.columns" aria-label="Columns" aria="columns"
+                                             data-ng-change="vm.updateAttrs()">
                                 </md-checkbox>
-                                <md-checkbox ng-model="item.groups" aria="groups"
+                                <md-checkbox ng-model="item.groups" aria-label="Groups" aria="groups"
                                              class="md-g-green"
                                              data-ng-change="vm.updateAttrs()">
                                 </md-checkbox>
-                                <md-checkbox ng-model="item.filters" aria="filters"
+                                <md-checkbox ng-model="item.filters" aria-label="Filters" aria="filters"
                                              class="md-primary" data-ng-change="vm.updateAttrs()">
                                 </md-checkbox>
                             </div>
                             <div dragula="'columns-bag'" class="g-modal-draggable-card">
-                                <md-card class="modal-dialog-card">{{item.name}}</md-card>
+                                <md-card class="modal-dialog-card">{{::vm.bindReportItemName(item)}}</md-card>
                             </div>
                         </div>
                         <div class="g-checkbox-row" data-ng-repeat="item in vm.strategy2groupAttrs" layout="row">
                             <div>
-                                <md-checkbox ng-model="item.columns" aria="columns" data-ng-change="vm.updateAttrs()">
+                                <md-checkbox ng-model="item.columns" aria-label="Columns" aria="columns"
+                                             data-ng-change="vm.updateAttrs()">
                                 </md-checkbox>
-                                <md-checkbox ng-model="item.groups" aria="groups"
+                                <md-checkbox ng-model="item.groups" aria-label="Groups" aria="groups"
                                              class="md-g-green"
                                              data-ng-change="vm.updateAttrs()">
                                 </md-checkbox>
-                                <md-checkbox ng-model="item.filters" aria="filters"
+                                <md-checkbox ng-model="item.filters" aria-label="Filters" aria="filters"
                                              class="md-primary" data-ng-change="vm.updateAttrs()">
                                 </md-checkbox>
                             </div>
                             <div dragula="'columns-bag'" class="g-modal-draggable-card">
-                                <md-card class="modal-dialog-card">{{item.name}}</md-card>
+                                <md-card class="modal-dialog-card">{{::vm.bindReportItemName(item)}}</md-card>
                             </div>
                         </div>
                         <div class="g-checkbox-row" data-ng-repeat="item in vm.strategy3attrs" layout="row">
                             <div>
-                                <md-checkbox ng-model="item.columns" aria="columns" data-ng-change="vm.updateAttrs()">
+                                <md-checkbox ng-model="item.columns" aria-label="Columns" aria="columns"
+                                             data-ng-change="vm.updateAttrs()">
                                 </md-checkbox>
-                                <md-checkbox ng-model="item.groups" aria="groups"
+                                <md-checkbox ng-model="item.groups" aria-label="Groups" aria="groups"
                                              class="md-g-green"
                                              data-ng-change="vm.updateAttrs()">
                                 </md-checkbox>
-                                <md-checkbox ng-model="item.filters" aria="filters"
+                                <md-checkbox ng-model="item.filters" aria-label="Filters" aria="filters"
                                              class="md-primary" data-ng-change="vm.updateAttrs()">
                                 </md-checkbox>
                             </div>
                             <div dragula="'columns-bag'" class="g-modal-draggable-card">
-                                <md-card class="modal-dialog-card">{{item.name}}</md-card>
+                                <md-card class="modal-dialog-card">{{::vm.bindReportItemName(item)}}</md-card>
                             </div>
                         </div>
                         <div class="g-checkbox-row" data-ng-repeat="item in vm.strategy3subgroupAttrs" layout="row">
                             <div>
-                                <md-checkbox ng-model="item.columns" aria="columns" data-ng-change="vm.updateAttrs()">
+                                <md-checkbox ng-model="item.columns" aria-label="Columns" aria="columns"
+                                             data-ng-change="vm.updateAttrs()">
                                 </md-checkbox>
-                                <md-checkbox ng-model="item.groups" aria="groups"
+                                <md-checkbox ng-model="item.groups" aria-label="Groups" aria="groups"
                                              class="md-g-green"
                                              data-ng-change="vm.updateAttrs()">
                                 </md-checkbox>
-                                <md-checkbox ng-model="item.filters" aria="filters"
+                                <md-checkbox ng-model="item.filters" aria-label="Filters" aria="filters"
                                              class="md-primary" data-ng-change="vm.updateAttrs()">
                                 </md-checkbox>
                             </div>
                             <div dragula="'columns-bag'" class="g-modal-draggable-card">
-                                <md-card class="modal-dialog-card">{{item.name}}</md-card>
+                                <md-card class="modal-dialog-card">{{::vm.bindReportItemName(item)}}</md-card>
                             </div>
                         </div>
                         <div class="g-checkbox-row" data-ng-repeat="item in vm.strategy3groupAttrs" layout="row">
                             <div>
-                                <md-checkbox ng-model="item.columns" aria="columns" data-ng-change="vm.updateAttrs()">
+                                <md-checkbox ng-model="item.columns" aria-label="Columns" aria="columns"
+                                             data-ng-change="vm.updateAttrs()">
                                 </md-checkbox>
-                                <md-checkbox ng-model="item.groups" aria="groups"
+                                <md-checkbox ng-model="item.groups" aria-label="Groups" aria="groups"
                                              class="md-g-green"
                                              data-ng-change="vm.updateAttrs()">
                                 </md-checkbox>
-                                <md-checkbox ng-model="item.filters" aria="filters"
+                                <md-checkbox ng-model="item.filters" aria-label="Filters" aria="filters"
                                              class="md-primary" data-ng-change="vm.updateAttrs()">
                                 </md-checkbox>
                             </div>
                             <div dragula="'columns-bag'" class="g-modal-draggable-card">
-                                <md-card class="modal-dialog-card">{{item.name}}</md-card>
+                                <md-card class="modal-dialog-card">{{::vm.bindReportItemName(item)}}</md-card>
                             </div>
                         </div>
                     </md-content>
@@ -373,18 +408,19 @@
                         </div>
                         <div class="g-checkbox-row" data-ng-repeat="item in vm.custom" layout="row">
                             <div>
-                                <md-checkbox ng-model="item.columns" aria="columns" data-ng-change="vm.updateAttrs()">
+                                <md-checkbox ng-model="item.columns" aria-label="Columns" aria="columns"
+                                             data-ng-change="vm.updateAttrs()">
                                 </md-checkbox>
-                                <md-checkbox ng-model="item.groups" aria="groups"
+                                <md-checkbox ng-model="item.groups" aria-label="Groups" aria="groups"
                                              class="md-g-green"
                                              data-ng-change="vm.updateAttrs()">
                                 </md-checkbox>
-                                <md-checkbox ng-model="item.filters" aria="filters"
+                                <md-checkbox ng-model="item.filters" aria-label="Filters" aria="filters"
                                              class="md-primary" data-ng-change="vm.updateAttrs()">
                                 </md-checkbox>
                             </div>
                             <div dragula="'columns-bag'" class="g-modal-draggable-card">
-                                <md-card class="modal-dialog-card">{{item.name}}</md-card>
+                                <md-card class="modal-dialog-card">{{::vm.bindReportItemName(item)}}</md-card>
                             </div>
                         </div>
                     </md-content>
@@ -402,8 +438,10 @@
                    data-ui-sref="app.attributesManager({entityType: vm.entityType})" data-ng-click="vm.cancel()">
             Manage attributes
         </md-button>
-        <md-button data-ng-if="vm.entityType === 'balance-report'" class="md-raised md-primary" style="margin: 0;"
-                   data-ui-sref="app.reports.balanceCustomAttributesManager" data-ng-click="vm.cancel()">
+        <md-button data-ng-if="vm.entityType === 'balance-report' || vm.entityType === 'pnl-report'"
+                   class="md-raised md-primary" style="margin: 0;"
+                   data-ui-sref="app.reports.customAttributesManager({entityType: vm.entityType})"
+                   data-ng-click="vm.cancel()">
             Custom attributes
         </md-button>
         <md-button class="md-raised" ng-click="vm.cancel()">

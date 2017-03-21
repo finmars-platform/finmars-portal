@@ -5,20 +5,21 @@
         <div layout="row" class="drcf-before" layout-align="center center">
 
             <md-input-container flex="30">
-                <label for="">Before</label>
-                <input type="text" data-ng-model="$ctrl.before.first">
+                <label for="">Starting text</label>
+                <input type="text" data-ng-model="$ctrl.range.before.date">
             </md-input-container>
 
             <md-input-container flex="30" style="height: 58px">
-                <label for="">Format</label>
-                <md-select data-ng-model="$ctrl.before.second">
-                    <md-option data-ng-value="item" data-ng-repeat="item in $ctrl.dateFormats">{{item.caption}}
+                <label for="">Earliest From Date format</label>
+                <md-select data-ng-model="$ctrl.range.before.format">
+                    <md-option data-ng-value="item" data-ng-repeat="item in $ctrl.dateFormats track by item.id">{{item.caption}}
                     </md-option>
                 </md-select>
             </md-input-container>
 
             <md-input-container flex="30">
-                <input type="text" data-ng-model="$ctrl.before.third">
+                <label for="">Ending text</label>
+                <input type="text" data-ng-model="$ctrl.range.before.name">
             </md-input-container>
 
         </div>
@@ -28,23 +29,23 @@
             <div class="column" flex="90">
                 <div layout="row" class="drcf-item-top" layout-align="space-between center">
                     <md-input-container>
-                        <label for="">From</label>
-                        <input type="text" data-ng-model="item.from">
+                        <label for="">From date</label>
+                        <input type="text" data-ng-model="item.begin">
                         <!--<zh-date-picker ng-model="item.from"></zh-date-picker>-->
                     </md-input-container>
 
                     <md-input-container style="height: 58px">
                         <label for="">Frequency</label>
-                        <md-select data-ng-model="item.freq">
-                            <md-option data-ng-value="item" data-ng-repeat="item in $ctrl.frequencies">
+                        <md-select data-ng-model="item.step">
+                            <md-option data-ng-value="item" data-ng-repeat="item in $ctrl.frequencies track by item.id">
                                 {{item.caption}}
                             </md-option>
                         </md-select>
                     </md-input-container>
 
                     <md-input-container>
-                        <label for="">To</label>
-                        <input type="text" data-ng-model="item.to">
+                        <label for="">To date</label>
+                        <input type="text" data-ng-model="item.end">
                         <!--<zh-date-picker ng-model="item.to"></zh-date-picker>-->
                     </md-input-container>
                 </div>
@@ -56,23 +57,24 @@
                         <div flex="30">
 
                             <md-input-container>
-                                <label for="">From</label>
-                                <input type="text" data-ng-model="item.bottom.from.first">
+                                <label for="">Starting text</label>
+                                <input type="text" data-ng-model="item.str1">
                             </md-input-container>
 
                         </div>
 
                         <md-input-container flex="30" style="height: 58px">
-                            <label for="">Format</label>
-                            <md-select data-ng-model="item.bottom.from.second">
-                                <md-option data-ng-value="item" data-ng-repeat="item in $ctrl.dateFormats">
+                            <label for="">From Date format</label>
+                            <md-select data-ng-model="item.begin_date_fmt">
+                                <md-option data-ng-value="item" data-ng-repeat="item in $ctrl.dateFormats track by item.id">
                                     {{item.caption}}
                                 </md-option>
                             </md-select>
                         </md-input-container>
 
                         <md-input-container flex="30">
-                            <input type="text" data-ng-model="item.bottom.from.third">
+                            <label for="">Ending text</label>
+                            <input type="text" data-ng-model="item.str3">
                         </md-input-container>
 
                     </div>
@@ -81,22 +83,23 @@
 
                         <div flex="30">
                             <md-input-container>
-                                <label for="">To</label>
-                                <input type="text" data-ng-model="item.bottom.to.first">
+                                <label for="">Starting text</label>
+                                <input type="text" data-ng-model="item.str4">
                             </md-input-container>
                         </div>
 
                         <md-input-container flex="30" style="height: 58px">
-                            <label for="">Format</label>
-                            <md-select data-ng-model="item.bottom.to.second">
-                                <md-option data-ng-value="item" data-ng-repeat="item in $ctrl.dateFormats">
+                            <label for="">To Date Format</label>
+                            <md-select data-ng-model="item.end_date_fmt">
+                                <md-option data-ng-value="item" data-ng-repeat="item in $ctrl.dateFormats track by item.id">
                                     {{item.caption}}
                                 </md-option>
                             </md-select>
                         </md-input-container>
 
                         <md-input-container flex="30">
-                            <input type="text" data-ng-model="item.bottom.to.third">
+                            <label for="">Ending text</label>
+                            <input type="text" data-ng-model="item.str6">
                         </md-input-container>
                     </div>
 
@@ -122,20 +125,21 @@
         <div layout="row" class="drcf-after" layout-align="center center">
 
             <md-input-container flex="30">
-                <label for="">After</label>
-                <input type="text" data-ng-model="$ctrl.after.first">
+                <label for="">Starting text</label>
+                <input type="text" data-ng-model="$ctrl.range.after.date">
             </md-input-container>
 
             <md-input-container flex="30" style="height: 58px">
-                <label for="">Format</label>
-                <md-select data-ng-model="$ctrl.after.second">
-                    <md-option data-ng-value="item" data-ng-repeat="item in $ctrl.dateFormats">{{item.caption}}
+                <label for="">Latest To Date format</label>
+                <md-select data-ng-model="$ctrl.range.after.format">
+                    <md-option data-ng-value="item" data-ng-repeat="item in $ctrl.dateFormats track by item.id">{{item.caption}}
                     </md-option>
                 </md-select>
             </md-input-container>
 
             <md-input-container flex="30">
-                <input type="text" data-ng-model="$ctrl.after.third">
+                <label for="">Ending text</label>
+                <input type="text" data-ng-model="$ctrl.range.after.name">
             </md-input-container>
 
         </div>

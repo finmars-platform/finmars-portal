@@ -230,10 +230,10 @@
                     listLayout: null
                 }
             })
-            .state('app.reports.balanceCustomAttributesManager', {
-                url: '/balance/customAttributes',
-                templateUrl: 'views/reports/reports-balance-custom-attr-view.html',
-                controller: 'BalanceReportCustomAttrController as vm',
+            .state('app.reports.customAttributesManager', {
+                url: '/:entityType/customAttributes',
+                templateUrl: 'views/reports/reports-custom-attr-view.html',
+                controller: 'ReportCustomAttrController as vm',
                 params: {
                     prevState: ''
                 }
@@ -314,6 +314,15 @@
                     'instrument-import': {
                         templateUrl: 'views/settings/instrument-import-settings-view.html',
                         controller: 'SettingsGeneralInstrumentImportController as vm'
+                    }
+                }
+            })
+            .state('app.settings.general.transaction-import', {
+                url: '/transaction-import',
+                views: {
+                    'transaction-import': {
+                        templateUrl: 'views/settings/transaction-import-settings-view.html',
+                        controller: 'SettingsGeneralTransactionImportController as vm'
                     }
                 }
             })

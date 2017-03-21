@@ -62,8 +62,8 @@
 
                     var wrapperWidth = $('.g-columns-component.g-thead').width() - $('.g-cell-select.all').width();
 
-                    console.log('--------------------', wrapperWidth);
-                    console.log('--------------------', $(elem).parents('.g-table-section').width());
+                    //console.log('--------------------', wrapperWidth);
+                    //console.log('--------------------', $(elem).parents('.g-table-section').width());
 
                     if (wrapperWidth < $(elem).parents('.g-table-section').width()) {
                         wrapperWidth = $(elem).parents('.g-table-section').width();
@@ -76,6 +76,7 @@
                 }, 0);
 
                 var resizeWorkarea = function () {
+                    var workAreaElem = elem.parents('.g-workarea-wrap');
                     workAreaElem.width($(elem).parents('.entity-viewer-holder').width() - $(elem).parents('.g-wrapper').find('.g-filter-sidebar.main-sidebar').width());
                     var wrapperWidth = $(elem).find('.g-columns-component.g-thead').width() - $(elem).find('.g-cell-select.all').width();
                     $(elem).find('.g-scroll-wrapper').width(wrapperWidth);
@@ -205,7 +206,11 @@
                     //console.log('th', th);
                 }
 
-                scope.$watchCollection('items', function () {
+                //console.log('options', scope.options);
+
+                scope.$watch('options.lastUpdate', function () {
+
+                    //console.log('OPTIONS LAST UPDATE', scope.options.lastUpdate);
 
                     resizeScrollableArea();
 

@@ -4,7 +4,8 @@
             <md-card class="ec-attr-card">
                 <div layout="row">
                     <p class="name-holder" flex="60">
-                        <b><span data-ng-bind="item.attribute.name"></span></b> (<span data-ng-bind="bindTypeByValueType(item.attribute['value_type'])"></span>)
+                        <b><span data-ng-bind="bindAttrName(item)"></span></b> (<span
+                            data-ng-bind="bindTypeByValueType(item.attribute['value_type'])"></span>)
                     </p>
                     <div class="options-holder" flex="40">
                         <md-button aria-label="delete attribute" data-ng-click="deleteField()">
@@ -31,30 +32,33 @@
                 <label>Please select Element</label>
                 <!--{{item.attribute}}-->
                 <md-select ng-model="item.attribute" ng-change="changeModel(item.attribute)" ng-focus="findAttrsLeft()">
-                    <md-optgroup label="System" class="bold-field-select" >
-                        <md-option ng-repeat="attr in baseAttrs" data-ng-if="baseAttrs.length" ng-value="attr" class="{{attr.disabled ? 'disabled' : ''}}">
+                    <md-optgroup label="System" class="bold-field-select">
+                        <md-option ng-repeat="attr in baseAttrs" data-ng-if="baseAttrs.length" ng-value="attr"
+                                   class="{{attr.disabled ? 'disabled' : ''}}">
                             {{attr.name}} ({{bindTypeByValueType(attr['value_type'])}})
                         </md-option>
 
-                        <md-option ng-repeat="attr in entityAttrs" ng-value="attr" class="{{attr.disabled ? 'disabled' : ''}}">
+                        <md-option ng-repeat="attr in entityAttrs" ng-value="attr"
+                                   class="{{attr.disabled ? 'disabled' : ''}}">
                             <!--{{attr}}-->
                             {{attr.name}} ({{bindTypeByValueType(attr['value_type'])}})
                         </md-option>
                     </md-optgroup>
                     <!--<md-optgroup label="Specific">-->
-                        <!--<md-option ng-repeat="attr in entityAttrs" ng-value="attr" class="{{attr.disabled ? 'disabled' : ''}}">-->
-                            <!--&lt;!&ndash;{{attr}}&ndash;&gt;-->
-                            <!--{{attr.name}}-->
-                        <!--</md-option>                        -->
+                    <!--<md-option ng-repeat="attr in entityAttrs" ng-value="attr" class="{{attr.disabled ? 'disabled' : ''}}">-->
+                    <!--&lt;!&ndash;{{attr}}&ndash;&gt;-->
+                    <!--{{attr.name}}-->
+                    <!--</md-option>                        -->
                     <!--</md-optgroup>-->
                     <md-optgroup label="User attributes" class="bold-field-select" data-ng-if="attrs.length">
-                        <md-option ng-repeat="attr in attrs" ng-value="attr" class="{{attr.disabled ? 'disabled' : ''}}">
+                        <md-option ng-repeat="attr in attrs" ng-value="attr"
+                                   class="{{attr.disabled ? 'disabled' : ''}}">
                             <!--{{attr}}-->
                             {{attr.name}} ({{bindTypeByValueType(attr['value_type'])}})
                         </md-option>
                     </md-optgroup>
                     <md-optgroup label="Inputs" class="bold-field-select" data-ng-if="userInputs.length">
-                        <md-option ng-repeat="userInput in userInputs" ng-value="userInput" class="{{userInput.disabled ? 'disabled' : ''}}">
+                        <md-option ng-repeat="userInput in userInputs" ng-value="userInput">
                             <!--{{attr}}-->
                             {{userInput.name}} ({{bindTypeByValueType(userInput['value_type'])}})
                         </md-option>
@@ -87,7 +91,8 @@
                 <md-button aria-label="cancel" data-ng-click="cancel()">
                     Cancel
                 </md-button>
-                <md-button class="ec-field-btn {{item.attribute ? '' : 'disabled'}}" aria-label="save layout" data-ng-click="saveField()">
+                <md-button class="ec-field-btn {{item.attribute ? '' : 'disabled'}}" aria-label="save layout"
+                           data-ng-click="saveField()">
                     <span>Ok</span>
                 </md-button>
             </div>

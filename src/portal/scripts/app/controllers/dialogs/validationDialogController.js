@@ -36,7 +36,7 @@
 
         vm.bindValue = function (item) {
 
-            console.log('ITEM', item);
+            //console.log('ITEM', item);
 
             if (Array.isArray(item.value)) {
 
@@ -51,7 +51,7 @@
                             result = result + ("<br/>&nbsp;&nbsp;" + (index + 1) + " " + itemError.name[0]);
 
                         } else {
-                            result = result + itemError;
+                            result = result + JSON.stringify(itemError);
                         }
 
                     }
@@ -60,7 +60,7 @@
                 return result;
             }
 
-            return item.value;
+            return JSON.stringify(item.value);
 
         };
 

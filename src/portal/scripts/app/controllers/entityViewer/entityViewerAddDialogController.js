@@ -67,7 +67,32 @@
                 entityResolverService.create(options.entityType, options.entity).then(function (data) {
                     console.log('DATA', data);
                     if (data.status == 200 || data.status == 201) {
-                        $mdDialog.hide({res: 'agree'});
+
+                        if (options.entityType == 'complex-transaction') {
+                            if (data.response.hasOwnProperty('has_errors') && data.response.has_errors == true) {
+                                $mdDialog.show({
+                                    controller: 'ValidationDialogController as vm',
+                                    templateUrl: 'views/dialogs/validation-dialog-view.html',
+                                    targetEvent: $event,
+                                    locals: {
+                                        validationData: {
+                                            complex_transaction_errors: data.response.complex_transaction_errors,
+                                            instruments_errors: data.response.instruments_errors,
+                                            transactions_errors: data.response.transactions_errors
+                                        }
+                                    },
+                                    preserveScope: true,
+                                    autoWrap: true,
+                                    skipHide: true
+                                })
+                            } else {
+
+                                $mdDialog.hide({res: 'agree'});
+                            }
+                        } else {
+
+                            $mdDialog.hide({res: 'agree'});
+                        }
                     }
                     if (data.status == 400) {
                         $mdDialog.show({

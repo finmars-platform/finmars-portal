@@ -341,6 +341,18 @@
                 };
 
 
+                scope.bindAttrName = function (item) {
+
+                    //console.log('item', item);
+
+                    if (item.attribute.hasOwnProperty('verbose_name')) {
+                        return item.attribute.verbose_name;
+                    }
+
+                    return item.attribute.name;
+                };
+
+
                 scope.bindTypeByValueType = function (valueType) {
                     var i;
                     for (i = 0; i < choices.length; i = i + 1) {

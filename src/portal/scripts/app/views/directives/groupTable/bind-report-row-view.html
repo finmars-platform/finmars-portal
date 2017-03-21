@@ -34,6 +34,7 @@
                 <div class="g-cell
                 {{resolveReportCellBackground('header', item, column, $index)}}
                 {{resolveReportCellBorder('header', item, column, $index)}}">
+                    <!--{{item.cellsCaptions}}-->
                     {{bindGroupValue(item.cellsCaptions[$index])}}
                 </div>
             </div>
@@ -161,7 +162,8 @@
                 {{resolveReportCellBackground('subtotal', item, column, $index)}}
                 {{resolveReportCellBorder('subtotal', item, column, $index)}}"
                      data-ng-if="checkReportColumnCaption(item.cellsCaptions, column, $index)">
-                    <span data-ng-if="isSubtotalHided(column)" data-ng-bind-html="item.cellsCaptions[$index].value"></span>
+                    <span data-ng-if="isSubtotalHided(column)"
+                          data-ng-bind-html="item.cellsCaptions[$index].value"></span>
                 </div>
                 <div class="g-cell {{getAlign(column)}}
                 {{resolveReportCellItemBackground('subtotal', item, column, $index)}}

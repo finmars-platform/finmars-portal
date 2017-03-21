@@ -71,8 +71,12 @@
         if (state.indexOf('app.data') !== -1 || state.indexOf('app.reports') !== -1) {
 
             result = state.split('.')[2];
-
         }
+
+        if(state == 'app.dashboard') {
+            result = state.split('.')[1];
+        }
+
 
         console.log('result 3232', result);
 

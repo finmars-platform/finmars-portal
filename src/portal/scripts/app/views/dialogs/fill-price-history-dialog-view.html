@@ -16,7 +16,7 @@
                                     Date range
                                 </md-checkbox>
                             </div>
-                            <div data-ng-if="!vm.price.isRange">
+                            <div data-ng-if="!vm.priceSettings.isRange">
                                 <md-input-container>
                                     <label for="">Date</label>
                                     <zh-date-picker data-ng-model="vm.price.date_both"></zh-date-picker>
@@ -25,7 +25,7 @@
                                     <md-tooltip class="tooltip_1" md-direction="top">tooltip text</md-tooltip>
                                 </ng-md-icon>
                             </div>
-                            <div data-ng-if="vm.price.isRange">
+                            <div data-ng-if="vm.priceSettings.isRange">
                                 <md-input-container>
                                     <label for="">Date from</label>
                                     <zh-date-picker data-ng-model="vm.price.date_from"></zh-date-picker>
@@ -38,7 +38,7 @@
                                     <md-tooltip class="tooltip_1" md-direction="top">tooltip text</md-tooltip>
                                 </ng-md-icon>
                             </div>
-                            <div data-ng-if="vm.price.isRange">
+                            <div data-ng-if="vm.priceSettings.isRange">
                                 <md-input-container>
                                     <label for="">Portfolio balance date</label>
                                     <zh-date-picker data-ng-model="vm.price.balance_date"></zh-date-picker>

@@ -58,7 +58,7 @@
 
                     newRange = {
                         value_left: '',
-                        value_right: 'Infinity',
+                        value_right: 'inf',
                         group_name: 'Group ' + (vm.items.length + 1),
                         is_active: false
                     };
@@ -104,7 +104,7 @@
                     vm.items[$index - 1].is_active = true;
                 }
 
-                vm.items[$index - 1].value_right = 'Infinity';
+                vm.items[$index - 1].value_right = 'inf';
 
                 vm.items.splice($index, 1);
             } else {

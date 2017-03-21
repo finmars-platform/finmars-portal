@@ -68,7 +68,7 @@
                 <input type="text" data-ng-model="vm.entity.date_expr">
             </md-input-container>
             <md-button class="md-raised md-primary expr-btn"
-                       data-ng-click="vm.openExpressionDialog($event, vm.entity.date_expr)">
+                       data-ng-click="vm.openExpressionDialog($event, vm.entity, {key: 'date_expr'})">
                 ...
             </md-button>
         </div>
@@ -78,7 +78,7 @@
                 <input type="text" data-ng-model="vm.entity.display_expr">
             </md-input-container>
             <md-button class="md-raised md-primary expr-btn"
-                       data-ng-click="vm.openExpressionDialog($event, vm.entity.display_expr)">
+                       data-ng-click="vm.openExpressionDialog($event, vm.entity, {key: 'display_expr'})">
                 ...
             </md-button>
         </div>

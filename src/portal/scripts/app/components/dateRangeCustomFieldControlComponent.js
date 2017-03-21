@@ -11,135 +11,46 @@
 
         var vm = this;
 
-
         vm.dateFormats = [
-            {caption: "dd.mm.yyyy"},
-            {caption: "dd.mm.yy"},
-            {caption: "mmmm'yy"},
-            {caption: "dd-mmm-yy"}
+            {id: 1, caption: "dd.mm.yyyy"},
+            {id: 2, caption: "dd.mm.yy"},
+            {id: 3, caption: "mmmm'yy"},
+            {id: 4, caption: "dd-mmm-yy"}
         ];
 
         vm.frequencies = [
-            {caption: "Daily"}, {caption: "Weekly (+7d)"}, {caption: "Weekly (EoW)"},
-            {caption: "Bi-weekly (+14d)"}, {caption: "Bi-weekly (EoW)"}, {caption: "Monthly"},
-            {caption: "Monthly (EoM)"}, {caption: "Monthly (Last business day)"}, {caption: "Quarterly (Calendar)"},
-            {caption: "Quarterly (+3m)"}, {caption: "Yearly (+12m)"}, {caption: "Yearly (EoY)"}];
+            {id: 1, caption: "Daily"},
+            {id: 2, caption: "Weekly (+7d)"},
+            {id: 3, caption: "Weekly (EoW)"},
+            {id: 4, caption: "Bi-weekly (+14d)"},
+            {id: 5, caption: "Bi-weekly (EoW)"},
+            {id: 6, caption: "Monthly"},
+            {id: 7, caption: "Monthly (EoM)"},
+            {id: 8, caption: "Monthly (Last business day)"},
+            {id: 9, caption: "Quarterly (Calendar)"},
+            {id: 10, caption: "Quarterly (+3m)"},
+            {id: 11, caption: "Yearly (+12m)"},
+            {id: 12, caption: "Yearly (EoY)"}];
 
-        //vm.inputIsFocused = false;
 
-        //vm.syncActiveItem = function (item, $index) {
-        //
-        //    vm.items[$index + 1].value_left = item.value_right;
-        //
-        //};
-        //
-        //vm.checkRange = function (item, $index) {
-        //    if (parseFloat(item.value_left) > parseFloat(item.value_right)) {
-        //        item.value_right = parseFloat(item.value_left) + 1;
-        //        vm.items[$index + 1].value_left = item.value_right;
-        //    }
-        //
-        //    vm.inputIsFocused = false;
-        //};
-        //
-        //vm.addRange = function (item, $index) {
-        //
-        //    vm.inputIsFocused = true;
-        //
-        //    var newRange;
-        //
-        //    vm.items.forEach(function (item) {
-        //        item.is_active = false;
-        //    });
-        //
-        //    if (vm.items.length == 1) {
-        //
-        //        newRange = {
-        //            value_left: '',
-        //            value_right: vm.items[$index].value_right,
-        //            group_name: 'Group ' + (vm.items.length + 1),
-        //            is_active: false
-        //        };
-        //
-        //        item.is_active = true;
-        //        item.value_right = '';
-        //
-        //        vm.items.splice($index + 1, 0, newRange)
-        //
-        //    } else {
-        //
-        //        if (vm.items.length - 1 == $index) {
-        //
-        //            newRange = {
-        //                value_left: '',
-        //                value_right: 'Infinity',
-        //                group_name: 'Group ' + (vm.items.length + 1),
-        //                is_active: false
-        //            };
-        //
-        //            vm.items.splice($index + 1, 0, newRange);
-        //
-        //            vm.items[$index].value_right = '';
-        //            vm.items[$index].is_active = true;
-        //
-        //        } else {
-        //
-        //            newRange = {
-        //                value_left: vm.items[$index].value_right,
-        //                value_right: parseFloat(vm.items[$index + 1].value_left) + 1,
-        //                group_name: 'Group ' + (vm.items.length + 1),
-        //                is_active: true
-        //            };
-        //
-        //            vm.items[$index + 1].value_left = newRange.value_right + 1;
-        //
-        //            vm.items.splice($index + 1, 0, newRange)
-        //        }
-        //    }
-        //
-        //    console.log('vm.items', vm.items);
-        //
-        //
-        //};
-        //
-        //vm.removeRange = function ($index) {
-        //
-        //    vm.inputIsFocused = true;
-        //
-        //    if (vm.items.length - 1 == $index) {
-        //
-        //        vm.items.forEach(function (item) {
-        //            item.is_active = false;
-        //        });
-        //
-        //        if (vm.items.length == 3) {
-        //            vm.items[0].is_active = true;
-        //        } else {
-        //            vm.items[$index - 1].is_active = true;
-        //        }
-        //
-        //        vm.items[$index - 1].value_right = 'Infinity';
-        //
-        //        vm.items.splice($index, 1);
-        //    } else {
-        //
-        //        vm.items.forEach(function (item) {
-        //            item.is_active = false;
-        //        });
-        //
-        //        vm.items[$index - 1].is_active = true;
-        //
-        //        vm.items.splice($index, 1);
-        //    }
-        //
-        //
-        //}
+        vm.addRange = function (item, $index) {
+
+            vm.items.splice($index + 1, 0, {})
+
+        };
+
+        vm.removeRange = function ($index) {
+
+            vm.items.splice($index, 1);
+
+        }
 
     };
 
     module.exports = {
         bindings: {
-            "items": "="
+            "items": "=",
+            "range": '='
         },
         templateUrl: 'views/components/date-range-custom-field-control-component.html',
         controller: controller

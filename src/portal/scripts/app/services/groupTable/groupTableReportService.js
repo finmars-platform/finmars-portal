@@ -158,7 +158,10 @@
 
         if (rowType == 'breadcrumb') {
 
+
             previousGroups = findPreviousGroupsByAncestor(item);
+
+            //console.log('BREACRUMB', item);
 
             var g;
 
@@ -167,16 +170,21 @@
                 if (i == level - 1) {
                     cellObj = item.groups[0];
                     cellObj.comparePattern = item.groups[0].comparePattern;
-                    cellObj.type = item.groups[0].report_settings.subtotal_type;
+                    cellObj.type = 'area';
+                    if (item.groups[0].report_settings) {
+                        cellObj.type = item.groups[0].report_settings.subtotal_type;
+                    }
                     cellObj.level = level;
                 } else {
-                    for (g = 0; g < previousGroups.length; g = g + 1) {
+                    if (previousGroups.length) {
+                        for (g = 0; g < previousGroups.length; g = g + 1) {
 
-                        if (previousGroups[g].level == i) {
-                            cellObj = previousGroups[g].groups[0];
-                            cellObj.comparePattern = previousGroups[g].groups[0].comparePattern;
-                            cellObj.type = previousGroups[g].groups[0].report_settings.subtotal_type;
-                            cellObj.level = i + 1;
+                            if (previousGroups[g].level == i) {
+                                cellObj = previousGroups[g].groups[0];
+                                cellObj.comparePattern = previousGroups[g].groups[0].comparePattern;
+                                cellObj.type = previousGroups[g].groups[0].report_settings.subtotal_type;
+                                cellObj.level = i + 1;
+                            }
                         }
                     }
 
@@ -198,12 +206,18 @@
 
                 for (i = 1; i <= level; i = i + 1) {
 
+                    var type = 'area';
+
+                    if (item.groups[0].report_settings) {
+                        type = item.groups[0].report_settings.subtotal_type;
+                    }
+
                     cellObj = {
                         value: '',
                         comparePattern: item.groups[0].comparePattern,
                         //_group: item.groups[0],
                         subTotal: item.subTotal,
-                        type: item.groups[0].report_settings.subtotal_type,
+                        type: type,
                         level: i
                     };
 
@@ -364,6 +378,8 @@
                 // TODO refactor breadcrumbs level?
 
                 if (item.hasOwnProperty('breadcrumbs_level_0') && item['breadcrumbs_level_0'][0].items) {
+
+                    //console.log("item['breadcrumbs_level_0']", item['breadcrumbs_level_0']);
 
                     item['breadcrumbs_level_0'].forEach(function (breadCrumbItem, breadcrumbIndex) {
 

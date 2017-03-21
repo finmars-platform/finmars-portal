@@ -13,21 +13,21 @@
 
     var getBaseAttrs = function () {
         return [
-            {
-                "key": "name",
-                "name": "Name",
-                "value_type": 10
-            },
-            {
-                "key": "short_name",
-                "name": "Short name",
-                "value_type": 10
-            },
-            {
-                "key": "notes",
-                "name": "Notes",
-                "value_type": 10
-            }
+            //{
+            //    "key": "name",
+            //    "name": "Name",
+            //    "value_type": 10
+            //},
+            //{
+            //    "key": "short_name",
+            //    "name": "Short name",
+            //    "value_type": 10
+            //},
+            //{
+            //    "key": "notes",
+            //    "name": "Notes",
+            //    "value_type": 10
+            //}
         ];
     };
 
@@ -52,6 +52,21 @@
     var getEntityAttrs = function (entity) {
         var entityAttrs = {
             "portfolio": [
+                {
+                    "key": "name",
+                    "name": "Name",
+                    "value_type": 10
+                },
+                {
+                    "key": "short_name",
+                    "name": "Short name",
+                    "value_type": 10
+                },
+                {
+                    "key": "notes",
+                    "name": "Notes",
+                    "value_type": 10
+                },
                 {
                     "key": "user_code",
                     "name": "User code",
@@ -150,6 +165,21 @@
             ],
             "account": [
                 {
+                    "key": "name",
+                    "name": "Name",
+                    "value_type": 10
+                },
+                {
+                    "key": "short_name",
+                    "name": "Short name",
+                    "value_type": 10
+                },
+                {
+                    "key": "notes",
+                    "name": "Notes",
+                    "value_type": 10
+                },
+                {
                     "key": "user_code",
                     "name": "User code",
                     "value_type": 10
@@ -178,6 +208,21 @@
             ],
             "tag": [
                 {
+                    "key": "name",
+                    "name": "Name",
+                    "value_type": 10
+                },
+                {
+                    "key": "short_name",
+                    "name": "Short name",
+                    "value_type": 10
+                },
+                {
+                    "key": "notes",
+                    "name": "Notes",
+                    "value_type": 10
+                },
+                {
                     "key": "user_code",
                     "name": "User code",
                     "value_type": 10
@@ -194,6 +239,21 @@
                 }
             ],
             "account-type": [
+                {
+                    "key": "name",
+                    "name": "Name",
+                    "value_type": 10
+                },
+                {
+                    "key": "short_name",
+                    "name": "Short name",
+                    "value_type": 10
+                },
+                {
+                    "key": "notes",
+                    "name": "Notes",
+                    "value_type": 10
+                },
                 {
                     "key": "public_name",
                     "name": "Public name",
@@ -222,6 +282,21 @@
             ],
             "counterparty": [
                 {
+                    "key": "name",
+                    "name": "Name",
+                    "value_type": 10
+                },
+                {
+                    "key": "short_name",
+                    "name": "Short name",
+                    "value_type": 10
+                },
+                {
+                    "key": "notes",
+                    "name": "Notes",
+                    "value_type": 10
+                },
+                {
                     "key": "user_code",
                     "name": "User code",
                     "value_type": 10
@@ -244,6 +319,21 @@
             ],
             "counterparty-group": [
                 {
+                    "key": "name",
+                    "name": "Name",
+                    "value_type": 10
+                },
+                {
+                    "key": "short_name",
+                    "name": "Short name",
+                    "value_type": 10
+                },
+                {
+                    "key": "notes",
+                    "name": "Notes",
+                    "value_type": 10
+                },
+                {
                     "key": "user_code",
                     "name": "User code",
                     "value_type": 10
@@ -260,6 +350,21 @@
                 }
             ],
             "responsible": [
+                {
+                    "key": "name",
+                    "name": "Name",
+                    "value_type": 10
+                },
+                {
+                    "key": "short_name",
+                    "name": "Short name",
+                    "value_type": 10
+                },
+                {
+                    "key": "notes",
+                    "name": "Notes",
+                    "value_type": 10
+                },
                 {
                     "key": "user_code",
                     "name": "User code",
@@ -283,6 +388,21 @@
             ],
             "responsible-group": [
                 {
+                    "key": "name",
+                    "name": "Name",
+                    "value_type": 10
+                },
+                {
+                    "key": "short_name",
+                    "name": "Short name",
+                    "value_type": 10
+                },
+                {
+                    "key": "notes",
+                    "name": "Notes",
+                    "value_type": 10
+                },
+                {
                     "key": "user_code",
                     "name": "User code",
                     "value_type": 10
@@ -300,6 +420,21 @@
             ],
             "pricing-policy": [
                 {
+                    "key": "name",
+                    "name": "Name",
+                    "value_type": 10
+                },
+                {
+                    "key": "short_name",
+                    "name": "Short name",
+                    "value_type": 10
+                },
+                {
+                    "key": "notes",
+                    "name": "Notes",
+                    "value_type": 10
+                },
+                {
                     "key": "expr",
                     "name": "Expression",
                     "value_type": 10
@@ -311,6 +446,21 @@
                 }
             ],
             "instrument-type": [
+                {
+                    "key": "name",
+                    "name": "Name",
+                    "value_type": 10
+                },
+                {
+                    "key": "short_name",
+                    "name": "Short name",
+                    "value_type": 10
+                },
+                {
+                    "key": "notes",
+                    "name": "Notes",
+                    "value_type": 10
+                },
                 {
                     "key": "user_code",
                     "name": "User code",
@@ -363,6 +513,21 @@
                 }
             ],
             "instrument": [
+                {
+                    "key": "name",
+                    "name": "Name",
+                    "value_type": 10
+                },
+                {
+                    "key": "short_name",
+                    "name": "Short name",
+                    "value_type": 10
+                },
+                {
+                    "key": "notes",
+                    "name": "Notes",
+                    "value_type": 10
+                },
                 {
                     "key": "user_code",
                     "name": "User code",
@@ -628,6 +793,21 @@
             ],
             "transaction-type-group": [
                 {
+                    "key": "name",
+                    "name": "Name",
+                    "value_type": 10
+                },
+                {
+                    "key": "short_name",
+                    "name": "Short name",
+                    "value_type": 10
+                },
+                {
+                    "key": "notes",
+                    "name": "Notes",
+                    "value_type": 10
+                },
+                {
                     "key": "user_code",
                     "name": "User code",
                     "value_type": 10
@@ -644,6 +824,21 @@
                 }
             ],
             "transaction-type": [
+                {
+                    "key": "name",
+                    "name": "Name",
+                    "value_type": 10
+                },
+                {
+                    "key": "short_name",
+                    "name": "Short name",
+                    "value_type": 10
+                },
+                {
+                    "key": "notes",
+                    "name": "Notes",
+                    "value_type": 10
+                },
                 {
                     "key": "user_code",
                     "name": "User code",
@@ -682,6 +877,21 @@
             ],
             "currency": [
                 {
+                    "key": "name",
+                    "name": "Name",
+                    "value_type": 10
+                },
+                {
+                    "key": "short_name",
+                    "name": "Short name",
+                    "value_type": 10
+                },
+                {
+                    "key": "notes",
+                    "name": "Notes",
+                    "value_type": 10
+                },
+                {
                     "key": "reference_for_pricing",
                     "name": "Reference for pricing",
                     "value_type": 10
@@ -703,6 +913,21 @@
                 }
             ],
             "currency-history": [
+                {
+                    "key": "name",
+                    "name": "Name",
+                    "value_type": 10
+                },
+                {
+                    "key": "short_name",
+                    "name": "Short name",
+                    "value_type": 10
+                },
+                {
+                    "key": "notes",
+                    "name": "Notes",
+                    "value_type": 10
+                },
                 {
                     "key": "currency",
                     "name": "Currency",
@@ -763,6 +988,21 @@
             ],
             "strategy-1": [
                 {
+                    "key": "name",
+                    "name": "Name",
+                    "value_type": 10
+                },
+                {
+                    "key": "short_name",
+                    "name": "Short name",
+                    "value_type": 10
+                },
+                {
+                    "key": "notes",
+                    "name": "Notes",
+                    "value_type": 10
+                },
+                {
                     "key": "user_code",
                     "name": "User code",
                     "value_type": 10
@@ -779,6 +1019,21 @@
                 }
             ],
             "strategy-2": [
+                {
+                    "key": "name",
+                    "name": "Name",
+                    "value_type": 10
+                },
+                {
+                    "key": "short_name",
+                    "name": "Short name",
+                    "value_type": 10
+                },
+                {
+                    "key": "notes",
+                    "name": "Notes",
+                    "value_type": 10
+                },
                 {
                     "key": "user_code",
                     "name": "User code",
@@ -797,6 +1052,21 @@
             ],
             "strategy-3": [
                 {
+                    "key": "name",
+                    "name": "Name",
+                    "value_type": 10
+                },
+                {
+                    "key": "short_name",
+                    "name": "Short name",
+                    "value_type": 10
+                },
+                {
+                    "key": "notes",
+                    "name": "Notes",
+                    "value_type": 10
+                },
+                {
                     "key": "user_code",
                     "name": "User code",
                     "value_type": 10
@@ -813,6 +1083,21 @@
                 }
             ],
             "strategy-1-subgroup": [
+                {
+                    "key": "name",
+                    "name": "Name",
+                    "value_type": 10
+                },
+                {
+                    "key": "short_name",
+                    "name": "Short name",
+                    "value_type": 10
+                },
+                {
+                    "key": "notes",
+                    "name": "Notes",
+                    "value_type": 10
+                },
                 {
                     "key": "user_code",
                     "name": "User code",
@@ -831,6 +1116,21 @@
             ],
             "strategy-2-subgroup": [
                 {
+                    "key": "name",
+                    "name": "Name",
+                    "value_type": 10
+                },
+                {
+                    "key": "short_name",
+                    "name": "Short name",
+                    "value_type": 10
+                },
+                {
+                    "key": "notes",
+                    "name": "Notes",
+                    "value_type": 10
+                },
+                {
                     "key": "user_code",
                     "name": "User code",
                     "value_type": 10
@@ -847,6 +1147,21 @@
                 }
             ],
             "strategy-3-subgroup": [
+                {
+                    "key": "name",
+                    "name": "Name",
+                    "value_type": 10
+                },
+                {
+                    "key": "short_name",
+                    "name": "Short name",
+                    "value_type": 10
+                },
+                {
+                    "key": "notes",
+                    "name": "Notes",
+                    "value_type": 10
+                },
                 {
                     "key": "user_code",
                     "name": "User code",
@@ -865,6 +1180,21 @@
             ],
             "strategy-1-group": [
                 {
+                    "key": "name",
+                    "name": "Name",
+                    "value_type": 10
+                },
+                {
+                    "key": "short_name",
+                    "name": "Short name",
+                    "value_type": 10
+                },
+                {
+                    "key": "notes",
+                    "name": "Notes",
+                    "value_type": 10
+                },
+                {
                     "key": "user_code",
                     "name": "User code",
                     "value_type": 10
@@ -876,6 +1206,21 @@
                 }
             ],
             "strategy-2-group": [
+                {
+                    "key": "name",
+                    "name": "Name",
+                    "value_type": 10
+                },
+                {
+                    "key": "short_name",
+                    "name": "Short name",
+                    "value_type": 10
+                },
+                {
+                    "key": "notes",
+                    "name": "Notes",
+                    "value_type": 10
+                },
                 {
                     "key": "user_code",
                     "name": "User code",
@@ -889,6 +1234,21 @@
             ],
             "strategy-3-group": [
                 {
+                    "key": "name",
+                    "name": "Name",
+                    "value_type": 10
+                },
+                {
+                    "key": "short_name",
+                    "name": "Short name",
+                    "value_type": 10
+                },
+                {
+                    "key": "notes",
+                    "name": "Notes",
+                    "value_type": 10
+                },
+                {
                     "key": "user_code",
                     "name": "User code",
                     "value_type": 10
@@ -900,131 +1260,141 @@
                 }
             ],
             "balance-report": [
-                {
-                    "key": "name",
-                    "name": "Name",
-                    "value_type": 10
-                },
-                {
-                    "key": "short_name",
-                    "name": "Short name",
-                    "value_type": 10
-                },
-                {
-                    "key": "user_code",
-                    "name": "User code",
-                    "value_type": 10
-                },
-                {
-                    "key": "last_notes",
-                    "name": "Last notes",
-                    "value_type": 10
-                },
-                {
-                    "key": "account",
-                    "name": "Account",
-                    "value_type": "field"
-                },
-                {
-                    "key": "instrument",
-                    "name": "Instrument",
-                    "value_type": "field"
-                },
-                {
-                    "key": "currency",
-                    "name": "Currency",
-                    "value_type": "field"
-                },
-                {
-                    "key": "portfolio",
-                    "name": "Portfolio",
-                    "value_type": "field"
-                },
-                {
-                    "key": "strategy-1",
-                    "name": "Strategy 1",
-                    "value_type": "field"
-                },
-                {
-                    "key": "strategy-2",
-                    "name": "Strategy 2",
-                    "value_type": "field"
-                },
-                {
-                    "key": "strategy-3",
-                    "name": "Strategy 3",
-                    "value_type": "field"
-                },
+                //{
+                //    "key": "name",
+                //    "name": "Name",
+                //    "value_type": 10
+                //},
+                //{
+                //    "key": "short_name",
+                //    "name": "Short name",
+                //    "value_type": 10
+                //},
+                //{
+                //    "key": "user_code",
+                //    "name": "User code",
+                //    "value_type": 10
+                //},
+                //{
+                //    "key": "last_notes",
+                //    "name": "Last notes",
+                //    "value_type": 10
+                //},
+                //{
+                //    "key": "account",
+                //    "name": "Account",
+                //    "value_type": "field"
+                //},
+                //{
+                //    "key": "instrument",
+                //    "name": "Instrument",
+                //    "value_type": "field"
+                //},
+                //{
+                //    "key": "currency",
+                //    "name": "Currency",
+                //    "value_type": "field"
+                //},
+                //{
+                //    "key": "portfolio",
+                //    "name": "Portfolio",
+                //    "value_type": "field"
+                //},
+                //{
+                //    "key": "strategy-1",
+                //    "name": "Strategy 1",
+                //    "value_type": "field"
+                //},
+                //{
+                //    "key": "strategy-2",
+                //    "name": "Strategy 2",
+                //    "value_type": "field"
+                //},
+                //{
+                //    "key": "strategy-3",
+                //    "name": "Strategy 3",
+                //    "value_type": "field"
+                //},
                 {
                     "key": "position_size",
                     "name": "Position size",
                     "value_type": "float"
                 },
                 {
-                    "key": "market_value",
-                    "name": "Market value",
+                    "key": "pricing_currency",
+                    "name": "Pricing",
                     "value_type": "float"
                 },
-                {
-                    "key": "exposure",
-                    "name": "Exposure",
-                    "value_type": "float"
-                },
-                {
-                    "key": "market_value_percent",
-                    "name": "Market value %",
-                    "value_type": "float"
-                },
-                {
-                    "key": "exposure_percent",
-                    "name": "Exposure %",
-                    "value_type": "float"
-                },
-                {
-                    "key": "exposure_loc",
-                    "name": "Exposure (LOC)",
-                    "value_type": "float"
-                },
-                {
-                    "key": "report_currency_fx_rate",
-                    "name": "Report currency fx rate",
-                    "value_type": "float"
-                },
-                {
-                    "key": "instrument_price_history_principal_price",
-                    "name": "Instrument price history principal price",
-                    "value_type": "float"
-                },
-                {
-                    "key": "instrument_price_history_accrued_price",
-                    "name": "Instrument price history accrued price",
-                    "value_type": "float"
-                },
+                //{
+                //    "key": "instrument_principal",
+                //    "name": "Current Price",
+                //    "value_type": "float"
+                //},
+                //{
+                //    "key": "instrument_accrued",
+                //    "name": "Current Accrued",
+                //    "value_type": "float"
+                //},
                 {
                     "key": "instrument_pricing_currency_fx_rate",
-                    "name": "Instrument pricing currency fx rate",
-                    "value_type": "float"
-                },
-                {
-                    "key": "instrument_accrued_currency_fx_rate",
-                    "name": "Instrument accrued currency fx rate",
-                    "value_type": "float"
-                },
-                {
-                    "key": "currency_fx_rate",
-                    "name": "Currency fx rate",
-                    "value_type": "float"
-                },
-                {
-                    "key": "pricing_currency_fx_rate",
                     "name": "Pricing currency fx rate",
                     "value_type": "float"
                 },
                 {
-                    "key": "market_value_loc",
-                    "name": "Market value (LOC)",
+                    "key": "instrument_accrued_currency_fx_rate",
+                    "name": "Accrued currency FX rate",
                     "value_type": "float"
                 },
+
+                {
+                    "key": "instrument_accrual_object_accrual_size",
+                    "name": "Current Payment Size",
+                    "value_type": "float"
+                },
+                {
+                    "key": "instrument_accrual_object_periodicity_object_name",
+                    "name": "Current Payment Frequency",
+                    "value_type": "float"
+                },
+                {
+                    "key": "instrument_accrual_object_periodicity_n",
+                    "name": "Current Payment Periodicity N",
+                    "value_type": "float"
+                },
+
+
+                //{
+                //    "key": "report_currency_fx_rate",
+                //    "name": "Report currency fx rate",
+                //    "value_type": "float"
+                //},
+                //{
+                //    "key": "instrument_price_history_principal_price",
+                //    "name": "Instrument price history principal price",
+                //    "value_type": "float"
+                //},
+                //{
+                //    "key": "instrument_price_history_accrued_price",
+                //    "name": "Instrument price history accrued price",
+                //    "value_type": "float"
+                //},
+                //{
+                //    "key": "instrument_pricing_currency_fx_rate",
+                //    "name": "Instrument pricing currency fx rate",
+                //    "value_type": "float"
+                //},
+                //{
+                //    "key": "instrument_accrued_currency_fx_rate",
+                //    "name": "Instrument accrued currency fx rate",
+                //    "value_type": "float"
+                //},
+                //{
+                //    "key": "currency_fx_rate",
+                //    "name": "Currency fx rate",
+                //    "value_type": "float"
+                //},
+
+
                 {
                     "key": "date",
                     "name": "Date",
@@ -1040,6 +1410,22 @@
                     "name": "Modified duration",
                     "value_type": "float"
                 },
+
+                {
+                    "key": "last_notes",
+                    "name": "Last notes",
+                    "value_type": 10
+                },
+                //{
+                //    "key": "gross_cost_price",
+                //    "name": "Gross cost price",
+                //    "value_type": "float"
+                //},
+                {
+                    "key": "gross_cost_price_loc",
+                    "name": "Gross cost price (LOC)",
+                    "value_type": "float"
+                },
                 {
                     "key": "ytm_at_cost",
                     "name": "YTM at cost",
@@ -1050,68 +1436,67 @@
                     "name": "Time invested",
                     "value_type": "float"
                 },
-                {
-                    "key": "gross_cost_price",
-                    "name": "Gross cost price",
-                    "value_type": "float"
-                },
-                {
-                    "key": "gross_cost_price_loc",
-                    "name": "Gross cost price (LOC)",
-                    "value_type": "float"
-                },
-                {
-                    "key": "net_cost_price",
-                    "name": "Net cost price",
-                    "value_type": "float"
-                },
+                //{
+                //    "key": "net_cost_price",
+                //    "name": "Net cost price",
+                //    "value_type": "float"
+                //},
                 {
                     "key": "net_cost_price_loc",
                     "name": "Net cost price (LOC)",
                     "value_type": "float"
                 },
+                //{
+                //    "key": "report_currency_history",
+                //    "name": "Report currency history",
+                //    "value_type": "field"
+                //},
+                //{
+                //    "key": "instrument_price_history",
+                //    "name": "Instrument price history",
+                //    "value_type": "field"
+                //},
+                //{
+                //    "key": "instrument_pricing_currency_history",
+                //    "name": "Instrument pricing currency history",
+                //    "value_type": "field"
+                //},
+                //{
+                //    "key": "instrument_accrued_currency_history",
+                //    "name": "Instrument accrued currency history",
+                //    "value_type": "field"
+                //},
+                //{
+                //    "key": "currency_history",
+                //    "name": "Currency history",
+                //    "value_type": "field"
+                //},
+                //{
+                //    "key": "pricing_currency_history",
+                //    "name": "Pricing currency history",
+                //    "value_type": "field"
+                //},
+                //{
+                //    "key": "instrument_accrual",
+                //    "name": "Instrument accrual",
+                //    "value_type": "field"
+                //},
+                //{
+                //    "key": "instrument_accrual_accrued_price",
+                //    "name": "Instrument accrual accrued price",
+                //    "value_type": "field"
+                //},
+
                 {
-                    "key": "report_currency_history",
-                    "name": "Report currency history",
-                    "value_type": "field"
+                    "key": "principal_invested",
+                    "name": "Principal invested",
+                    "value_type": "float"
                 },
                 {
-                    "key": "instrument_price_history",
-                    "name": "Instrument price history",
-                    "value_type": "field"
+                    "key": "principal_invested_loc",
+                    "name": "Principal invested (LOC)",
+                    "value_type": "float"
                 },
-                {
-                    "key": "instrument_pricing_currency_history",
-                    "name": "Instrument pricing currency history",
-                    "value_type": "field"
-                },
-                {
-                    "key": "instrument_accrued_currency_history",
-                    "name": "Instrument accrued currency history",
-                    "value_type": "field"
-                },
-                {
-                    "key": "currency_history",
-                    "name": "Currency history",
-                    "value_type": "field"
-                },
-                {
-                    "key": "pricing_currency_history",
-                    "name": "Pricing currency history",
-                    "value_type": "field"
-                },
-                {
-                    "key": "instrument_accrual",
-                    "name": "Instrument accrual",
-                    "value_type": "field"
-                },
-                {
-                    "key": "instrument_accrual_accrued_price",
-                    "name": "Instrument accrua accrued price",
-                    "value_type": "field"
-                }
-            ],
-            'report-addon-performance': [
                 {
                     "key": "amount_invested",
                     "name": "Amount invested",
@@ -1120,6 +1505,59 @@
                 {
                     "key": "amount_invested_loc",
                     "name": "Amount invested (LOC)",
+                    "value_type": "float"
+                },
+
+                {
+                    "key": "market_value",
+                    "name": "Market value",
+                    "value_type": "float"
+                },
+                {
+                    "key": "market_value_loc",
+                    "name": "Market value (LOC)",
+                    "value_type": "float"
+                },
+                {
+                    "key": "market_value_percent",
+                    "name": "Market value %",
+                    "value_type": "float"
+                },
+                {
+                    "key": "exposure",
+                    "name": "Exposure",
+                    "value_type": "float"
+                },
+                {
+                    "key": "exposure_percent",
+                    "name": "Exposure %",
+                    "value_type": "float"
+                },
+                {
+                    "key": "exposure_loc",
+                    "name": "Exposure (LOC)",
+                    "value_type": "float"
+                }
+            ],
+            'report-addon-performance': [
+                {
+                    "key": "instrument_principal",
+                    "name": "Opened Principal",
+                    "value_type": "float"
+                },
+                {
+                    "key": "instrument_accrued",
+                    "name": "Opened Carry",
+                    "value_type": "float"
+                },
+                {
+                    "key": "net_position_return",
+                    "name": "Net position return",
+                    "value_type": "float"
+                },
+                {
+                    "key": "net_position_return_loc",
+                    "name": "Net position return (LOC)",
                     "value_type": "float"
                 },
                 {
@@ -1141,7 +1579,7 @@
                     "key": "mtd_price_change",
                     "name": "MTD price change",
                     "value_type": "float"
-                },
+                }
 
             ],
             "pnl-report": [
@@ -1782,6 +2220,11 @@
                     "key": "code",
                     "name": "Code",
                     "value_type": "float"
+                },
+                {
+                    "key": "date",
+                    "name": "Date",
+                    "value_type": 40
                 },
                 {
                     "key": "status",
