@@ -27,6 +27,19 @@
             });
         };
 
+        vm.importTransaction = function ($event) {
+            $mdDialog.show({
+                controller: 'ImportTransactionDialogController as vm',
+                templateUrl: 'views/dialogs/import-transaction-dialog-view.html',
+                targetEvent: $event
+            }).then(function (res) {
+                if (res.status === 'agree') {
+                    console.log('res', res.data);
+
+                }
+            });
+        };
+
         vm.fillPriceHistory = function ($event) {
             $mdDialog.show({
                 controller: 'FillPriceHistoryDialogController as vm',
@@ -66,7 +79,7 @@
             });
         };
 
-        vm.openMapping = function($event, mapItem){
+        vm.openMapping = function ($event, mapItem) {
             $mdDialog.show({
                 controller: 'EntityTypeMappingDialogController as vm',
                 templateUrl: 'views/dialogs/entity-type-mapping-dialog-view.html',

@@ -11,7 +11,23 @@
     var instrumentPeriodicityService = require('./import/instrumentPeriodicityMappingService');
     var instrumentAttributeTypeService = require('./import/instrumentAttributeTypeMappingService');
 
+    var accountMappingService = require('./import/accountMappingService');
+    var instrumentMappingService = require('./import/instrumentMappingService');
+    var counterpartyMappingService = require('./import/counterpartyMappingService');
+    var responsibleMappingService = require('./import/responsibleMappingService');
+    var portfolioMappingService = require('./import/portfolioMappingService');
+
+    var strategy1MappingService = require('./import/strategy1MappingService');
+    var strategy2MappingService = require('./import/strategy2MappingService');
+    var strategy3MappingService = require('./import/strategy3MappingService');
+
+    var dailyPricingModelMappingService = require('./import/dailyPricingModelMappingService');
+    var paymentSizeDetailMappingService = require('./import/paymentSizeDetailMappingService');
+    var priceDownloadSchemeMappingService = require('./import/priceDownloadSchemeMappingService');
+
     var getList = function (entityType) {
+
+        console.log('getList entityType', entityType);
 
         switch (entityType) {
             case 'currency':
@@ -28,6 +44,39 @@
                 break;
             case 'classifier':
                 return instrumentAttributeTypeService.getList();
+                break;
+            case 'account':
+                return accountMappingService.getList();
+                break;
+            case 'instrument':
+                return instrumentMappingService.getList();
+                break;
+            case 'counterparty':
+                return counterpartyMappingService.getList();
+                break;
+            case 'responsible':
+                return responsibleMappingService.getList();
+                break;
+            case 'portfolio':
+                return portfolioMappingService.getList();
+                break;
+            case 'strategy_1':
+                return strategy1MappingService.getList();
+                break;
+            case 'strategy_2':
+                return strategy2MappingService.getList();
+                break;
+            case 'strategy_3':
+                return strategy3MappingService.getList();
+                break;
+            case 'daily_pricing_model':
+                return dailyPricingModelMappingService.getList();
+                break;
+            case 'payment_size_detail':
+                return paymentSizeDetailMappingService.getList();
+                break;
+            case 'price_download_scheme':
+                return priceDownloadSchemeMappingService.getList();
                 break;
         }
 
@@ -50,6 +99,39 @@
             case 'classifier':
                 return instrumentAttributeTypeService.getByKey(id);
                 break;
+            case 'account':
+                return accountMappingService.getByKey(id);
+                break;
+            case 'instrument':
+                return instrumentMappingService.getByKey(id);
+                break;
+            case 'counterparty':
+                return counterpartyMappingService.getByKey(id);
+                break;
+            case 'responsible':
+                return responsibleMappingService.getByKey(id);
+                break;
+            case 'portfolio':
+                return portfolioMappingService.getByKey(id);
+                break;
+            case 'strategy_1':
+                return strategy1MappingService.getByKey(id);
+                break;
+            case 'strategy_2':
+                return strategy2MappingService.getByKey(id);
+                break;
+            case 'strategy_3':
+                return strategy3MappingService.getByKey(id);
+                break;
+            case 'daily_pricing_model':
+                return dailyPricingModelMappingService.getByKey(id);
+                break;
+            case 'payment_size_detail':
+                return paymentSizeDetailMappingService.getByKey(id);
+                break;
+            case 'price_download_scheme':
+                return priceDownloadSchemeMappingService.getByKey(id);
+                break;
         }
 
     };
@@ -70,6 +152,39 @@
                 break;
             case 'classifier':
                 return instrumentAttributeTypeService.create(map);
+                break;
+            case 'account':
+                return accountMappingService.create(map);
+                break;
+            case 'instrument':
+                return instrumentMappingService.create(map);
+                break;
+            case 'counterparty':
+                return counterpartyMappingService.create(map);
+                break;
+            case 'responsible':
+                return responsibleMappingService.create(map);
+                break;
+            case 'portfolio':
+                return portfolioMappingService.create(map);
+                break;
+            case 'strategy_1':
+                return strategy1MappingService.create(map);
+                break;
+            case 'strategy_2':
+                return strategy2MappingService.create(map);
+                break;
+            case 'strategy_3':
+                return strategy3MappingService.create(map);
+                break;
+            case 'daily_pricing_model':
+                return dailyPricingModelMappingService.create(map);
+                break;
+            case 'payment_size_detail':
+                return paymentSizeDetailMappingService.create(map);
+                break;
+            case 'price_download_scheme':
+                return priceDownloadSchemeMappingService.create(map);
                 break;
         }
 
@@ -92,6 +207,39 @@
             case 'classifier':
                 return instrumentAttributeTypeService.update(id, map);
                 break;
+            case 'account':
+                return accountMappingService.update(id, map);
+                break;
+            case 'instrument':
+                return instrumentMappingService.update(id, map);
+                break;
+            case 'counterparty':
+                return counterpartyMappingService.update(id, map);
+                break;
+            case 'responsible':
+                return responsibleMappingService.update(id, map);
+                break;
+            case 'portfolio':
+                return portfolioMappingService.update(id, map);
+                break;
+            case 'strategy_1':
+                return strategy1MappingService.update(id, map);
+                break;
+            case 'strategy_2':
+                return strategy2MappingService.update(id, map);
+                break;
+            case 'strategy_3':
+                return strategy3MappingService.update(id, map);
+                break;
+            case 'daily_pricing_model':
+                return dailyPricingModelMappingService.update(id, map);
+                break;
+            case 'payment_size_detail':
+                return paymentSizeDetailMappingService.update(id, map);
+                break;
+            case 'price_download_scheme':
+                return priceDownloadSchemeMappingService.update(id, map);
+                break;
         }
 
     };
@@ -112,6 +260,39 @@
                 break;
             case 'classifier':
                 return instrumentAttributeTypeService.deleteByKey(id);
+                break;
+            case 'account':
+                return accountMappingService.deleteByKey(id);
+                break;
+            case 'instrument':
+                return instrumentMappingService.deleteByKey(id);
+                break;
+            case 'counterparty':
+                return counterpartyMappingService.deleteByKey(id);
+                break;
+            case 'responsible':
+                return responsibleMappingService.deleteByKey(id);
+                break;
+            case 'portfolio':
+                return portfolioMappingService.deleteByKey(id);
+                break;
+            case 'strategy_1':
+                return strategy1MappingService.deleteByKey(id);
+                break;
+            case 'strategy_2':
+                return strategy2MappingService.deleteByKey(id);
+                break;
+            case 'strategy_3':
+                return strategy3MappingService.deleteByKey(id);
+                break;
+            case 'daily_pricing_model':
+                return dailyPricingModelMappingService.deleteByKey(id);
+                break;
+            case 'payment_size_detail':
+                return paymentSizeDetailMappingService.deleteByKey(id);
+                break;
+            case 'price_download_scheme':
+                return priceDownloadSchemeMappingService.deleteByKey(id);
                 break;
         }
 

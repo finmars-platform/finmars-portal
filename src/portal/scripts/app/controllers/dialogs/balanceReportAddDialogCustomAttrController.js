@@ -54,7 +54,13 @@
                 autoWrap: true,
                 skipHide: true
             }).then(function (res) {
+
+                console.log('res', res);
+
                 if (res.status === 'agree') {
+
+                    vm.attribute.expr = res.data.expression;
+                    vm.attribute.layout = res.data.layout;
 
                 }
             });

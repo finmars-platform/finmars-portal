@@ -105,6 +105,7 @@
                             unique_key: uniqueKey,
                             key: contentType,
                             name: input.name,
+                            verbose_name: input.verbose_name,
                             content_type: input.content_type,
                             value_type: input_value_type
                         })

@@ -303,22 +303,22 @@
                                             <div flex="80">
                                                 <div data-ng-if="item.transaction.allocation_balance_toggle">
                                                     <md-input-container>
-                                                        <label for="">Allocation-Balance/label>
-                                                            <md-select
-                                                                    data-ng-model="item.transaction.allocation_balance"
-                                                                    md-on-open="vm.loadRelation('instrument')">
-                                                                <md-option
-                                                                        data-ng-if="!vm.relationItems['instrument'].length"
-                                                                        ng-value="item.transaction.instrument_object.id">
-                                                                    {{item.transaction.instrument_object.name}}
-                                                                </md-option>
-                                                                <md-option
-                                                                        data-ng-if="vm.relationItems['instrument'].length"
-                                                                        data-ng-repeat="relationItem in vm.relationItems['instrument']"
-                                                                        ng-value="relationItem.id">
-                                                                    {{relationItem.name}}
-                                                                </md-option>
-                                                            </md-select>
+                                                        <label for="">Allocation-Balance</label>
+                                                        <md-select
+                                                                data-ng-model="item.transaction.allocation_balance"
+                                                                md-on-open="vm.loadRelation('instrument')">
+                                                            <md-option
+                                                                    data-ng-if="!vm.relationItems['instrument'].length"
+                                                                    ng-value="item.transaction.instrument_object.id">
+                                                                {{item.transaction.instrument_object.name}}
+                                                            </md-option>
+                                                            <md-option
+                                                                    data-ng-if="vm.relationItems['instrument'].length"
+                                                                    data-ng-repeat="relationItem in vm.relationItems['instrument']"
+                                                                    ng-value="relationItem.id">
+                                                                {{relationItem.name}}
+                                                            </md-option>
+                                                        </md-select>
                                                     </md-input-container>
                                                 </div>
                                                 <div data-ng-if="!item.transaction.allocation_balance_toggle">

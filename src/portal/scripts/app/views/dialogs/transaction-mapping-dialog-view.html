@@ -1,0 +1,143 @@
+<md-dialog aria-label="" ng-cloak class="transaction-scheme-manager-dialog-view draggable-dialog" drag-dialog>
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            <h2>Transaction scheme manager</h2>
+            <span flex></span>
+        </div>
+    </md-toolbar>
+    <md-dialog-content data-custom-scroll class="custom-scrollbar" style="background: #E5E5E5;">
+        <md-content>
+            <div data-ng-if="vm.checkReadyStatus()">
+                <div layout="row" layout-align="center center">
+                    <md-card flex="100" class="inm-card-special">
+                        <md-card-content layout="column">
+                            <md-input-container class="md-block">
+                                <label for="">Scheme name</label>
+                                <input type="text" data-ng-model="vm.scheme.scheme_name">
+                            </md-input-container>
+                            <md-input-container flex="40" style="margin-bottom: 0">
+                                <label for="">Expression</label>
+                                <input type="text" data-ng-model="vm.scheme.rule_expr">
+                            </md-input-container>
+                        </md-card-content>
+                    </md-card>
+                </div>
+                <div layout="row">
+                    <div layout="column" flex="25">
+                        <div layout="row">
+                            <h4 style="padding-left: 10px">Imported Columns</h4>
+                        </div>
+                        <div layout="column">
+
+                            <md-card>
+                                <md-card-content>
+                                    <div data-ng-repeat="item in vm.providerFields track by $index" flex="100">
+                                        <div class="fields-holder" layout="row">
+                                            <div class="iscm-item" layout="row">
+                                                <span style="position: relative; top: 8px">#</span>
+                                                <md-input-container flex="10">
+                                                    <!--<label for="">Number</label>-->
+                                                    <input type="text" data-ng-model="item.column">
+                                                </md-input-container>
+                                                <md-input-container flex="70">
+                                                    <!--<label for="">Name</label>-->
+                                                    <input type="text" data-ng-model="item.name">
+                                                </md-input-container>
+                                            </div>
+                                            <div>
+                                                <md-button style="min-width: 40px;"
+                                                           data-ng-click="vm.removeProviderField(item, $index)"
+                                                           class="md-raised">x
+                                                </md-button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </md-card-content>
+                            </md-card>
+                        </div>
+                        <div layout="row">
+                            <md-button class="md-raised" data-ng-click="vm.addProviderField()">
+                                Add field
+                            </md-button>
+                        </div>
+
+                    </div>
+                    <div layout="column" flex="75">
+                        <div layout="row">
+                            <h4 style="padding-left: 10px">Transaction type matching</h4>
+                        </div>
+                        <div layout="column">
+                            <md-card flex="100">
+                                <md-card-content class="instrument-scheme-fields-holder">
+                                    <div data-ng-repeat="item in vm.mapFields" layout="row" flex="100">
+                                        <div layout="row" flex="100">
+                                            <div flex="30">
+                                                <div layout="row">
+                                                    <div flex="50">
+                                                        <md-input-container>
+                                                            <label for="">Expression</label>
+                                                            <input type="text" data-ng-model="item.value">
+                                                        </md-input-container>
+                                                    </div>
+                                                    <!--<div flex="50">-->
+                                                    <!--<md-button class="md-raised md-primary expr-btn"-->
+                                                    <!--data-ng-click="vm.openExpressionDialog($event, item)">-->
+                                                    <!--...-->
+                                                    <!--</md-button>-->
+                                                    <!--</div>-->
+                                                </div>
+                                            </div>
+                                            <div flex="40">
+                                                <md-input-container style="width: 80%">
+                                                    <label for="">Transaction type</label>
+                                                    <md-select data-ng-model="item.transaction_type">
+                                                        <md-option
+                                                                data-ng-repeat="transactionType in vm.transactionTypes"
+                                                                data-ng-value="transactionType.id">
+                                                            {{transactionType.name}}
+                                                        </md-option>
+                                                    </md-select>
+                                                </md-input-container>
+                                            </div>
+                                            <div flex="20">
+                                                <md-button
+                                                        class="md-raised md-primary {{item.transaction_type ? '' : 'disabled-btn'}}"
+                                                        data-ng-click="vm.openInputs(item, $event)">
+                                                    Inputs
+                                                </md-button>
+                                            </div>
+                                            <div flex="10">
+                                                <md-button
+                                                        class="custom-small-icon-btn md-raised"
+                                                        data-ng-click="vm.removeMappingField(item, $index)"
+                                                        data-ng-if="!item.required"
+                                                        class="md-raised">x
+                                                </md-button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </md-card-content>
+                            </md-card>
+                        </div>
+                        <div layout="row">
+                            <md-button class="md-raised" data-ng-click="vm.addMapField()">Add field</md-button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div data-ng-if="!vm.checkReadyStatus()">
+                <div layout="row" layout-sm="column" layout-align="space-around" class="m-large">
+                    <md-progress-circular md-mode="indeterminate" md-diameter="96"></md-progress-circular>
+                </div>
+            </div>
+        </md-content>
+    </md-dialog-content>
+    <md-dialog-actions layout="row">
+        <md-button class="md-raised" ng-click="vm.cancel()">
+            Cancel
+        </md-button>
+        <md-button class="md-raised" ng-click="vm.agree()" style="margin-right:20px;">
+            Save
+        </md-button>
+    </md-dialog-actions>
+</md-dialog>

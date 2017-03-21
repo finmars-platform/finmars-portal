@@ -205,6 +205,11 @@
     var getListForUi = function () {
         return [
             {
+                name: "Dashboard",
+                entity: 'dashboard',
+                key: "ui.dashboard"
+            },
+            {
                 name: "Account Type",
                 entity: 'account-type',
                 key: "accounts.accounttype"

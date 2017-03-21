@@ -1,0 +1,66 @@
+<md-dialog aria-label="" ng-cloak class="transaction-import-manager-dialog-view draggable-dialog" drag-dialog>
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            <h2>Transaction import manager</h2>
+            <span flex></span>
+        </div>
+    </md-toolbar>
+    <md-dialog-content data-custom-scroll class="custom-scrollbar" style="background: #E5E5E5;">
+        <div data-ng-if="vm.readyStatus.mapping" layout="column">
+            <div layout="row">
+                <md-card style="width: 100%">
+                    <md-card-content class="p-t-26">
+                        <div layout="row">
+                            <div layout="column">
+                                <md-input-container flex="40" style="margin-bottom: 0">
+                                    <label for="">File</label>
+                                    <input type="file" data-ng-model="vm.config.transaction_file">
+                                </md-input-container>
+
+                            </div>
+                            <div layout="row">
+
+                                <md-input-container>
+                                    <label for="">Import scheme</label>
+                                    <md-select style="width: 200px"
+                                               data-ng-model="vm.config.scheme">
+                                        <md-option data-ng-repeat="item in vm.transactionSchemes" ng-value="item.id">
+                                            {{item.scheme_name}}
+                                        </md-option>
+                                    </md-select>
+                                </md-input-container>
+                                <md-button
+                                        class="instrument-mapping-btn md-fab {{vm.loadIsAvailable() ? '' : 'disabled-btn' }}"
+                                        data-ng-click="vm.openEditMapping($event)">
+                                    <ng-md-icon icon="functions" size="24" style="fill:rgb(63,81,181);"></ng-md-icon>
+                                    <md-tooltip class="tooltip_1" md-direction="top">Edit mapping</md-tooltip>
+                                </md-button>
+                            </div>
+                            <div layout="row">
+                                <md-button
+                                        class="md-raised colored-btn instrument-load-btn {{vm.loadIsAvailable() ? '' : 'disabled-btn' }}"
+                                        data-ng-click="vm.load($event)">
+                                    Load
+                                </md-button>
+                                <div data-ng-if="vm.readyStatus.processing">
+                                    <md-progress-circular md-mode="indeterminate"
+                                                          md-diameter="48"></md-progress-circular>
+                                </div>
+                            </div>
+                        </div>
+                    </md-card-content>
+                </md-card>
+            </div>
+        </div>
+        <div data-ng-if="!vm.readyStatus.mapping">
+            <div layout="row" layout-sm="column" layout-align="space-around" class="m-large">
+                <md-progress-circular md-mode="indeterminate" md-diameter="96"></md-progress-circular>
+            </div>
+        </div>
+    </md-dialog-content>
+    <md-dialog-actions layout="row">
+        <md-button class="md-raised" ng-click="vm.cancel()">
+            Cancel
+        </md-button>
+    </md-dialog-actions>
+</md-dialog>

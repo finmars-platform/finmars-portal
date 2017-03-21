@@ -96,8 +96,8 @@
                         column.report_settings.subtotal_formula_id = type;
                     }
 
-                    console.log('scope.column11111s JSON', JSON.parse(JSON.stringify(column)));
-                    console.log('scope.column11111s JSON', JSON.parse(JSON.stringify(scope.columns)));
+                    //console.log('scope.column11111s JSON', JSON.parse(JSON.stringify(column)));
+                    //console.log('scope.column11111s JSON', JSON.parse(JSON.stringify(scope.columns)));
 
                     scope.externalCallback({silent: true, options: {columns: scope.columns}});
                 };
@@ -114,17 +114,17 @@
                     return false
 
                 };
-
-                scope.$watchCollection('columns', function () {
-
-
-                    setTimeout(function () {
-
-                        scope.externalCallback({silent: true, options: {columns: scope.columns}});
-                        scope.$apply();
-
-                    }, 0)
-                });
+                //
+                //scope.$watchCollection('columns', function () {
+                //
+                //
+                //    setTimeout(function () {
+                //
+                //        scope.externalCallback({silent: true, options: {columns: scope.columns}});
+                //        scope.$apply();
+                //
+                //    }, 0)
+                //});
 
                 scope.isSortable = function (column) {
                     var b, e;
@@ -169,11 +169,11 @@
                     }
                     //console.log('remove', scope.columns);
 
-                    console.log('scope.columns', scope.columns)
+                    //console.log('scope.columns', scope.columns)
 
-                    setTimeout(function () {
+                    //setTimeout(function () {
                         scope.externalCallback({silent: true, options: {columns: scope.columns}});
-                    }, 0)
+                    //}, 0)
                 };
 
                 scope.reportHideSubtotal = function (column) {

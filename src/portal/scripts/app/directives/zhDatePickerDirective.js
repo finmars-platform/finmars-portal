@@ -39,6 +39,7 @@
                         }
                     });
                 } else {
+                    $(elem).parent().addClass('md-input-has-value');
                     input.pickmeup({
                         position: position,
                         default_date: false,

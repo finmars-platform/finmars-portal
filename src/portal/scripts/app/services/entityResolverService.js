@@ -32,9 +32,11 @@
     var strategyGroupService = require('./strategyGroupService');
     var strategySubgroupService = require('./strategySubgroupService');
 
-    var getList = function (entityType) {
+    var instrumentDailyPricingModelService = require('./instrument/instrumentDailyPricingModelService');
+    var instrumentPaymentSizeDetailService = require('./instrument/instrumentPaymentSizeDetailService');
+    var priceDownloadSchemeService = require('./import/priceDownloadSchemeService');
 
-        console.log('entityType', entityType);
+    var getList = function (entityType) {
 
         switch (entityType) {
             case 'portfolio':
@@ -63,6 +65,15 @@
                 break;
             case 'accrual-calculation-model':
                 return accrualCalculationModelService.getList();
+                break;
+            case 'daily-pricing-model':
+                return instrumentDailyPricingModelService.getList();
+                break;
+            case 'payment-size-detail':
+                return instrumentPaymentSizeDetailService.getList();
+                break;
+            case 'price-download-scheme':
+                return priceDownloadSchemeService.getList();
                 break;
             case 'strategy-1':
                 return strategyService.getList(1);
@@ -307,9 +318,10 @@
             case 'transaction':
                 return transactionService.update(id, entity);
                 break;
+            case 'complex-transaction-default':
+                return complexTransactionService.update(entity.id, entity);
             case 'complex-transaction':
-
-                return complexTransactionService.bookComplexTransaction(entity.transaction_type, entity);
+                return complexTransactionService.bookComplexTransaction(entity.id, entity);
             //return new Promise(function (resolve, reject) {
             //    transactionTypeService.getBookTransaction(entity.transaction_type).then(function (data) {
             //
@@ -520,6 +532,9 @@
                 break;
             case 'instrument-type':
                 return instrumentTypeService.deleteByKey(id);
+                break;
+            case 'complex-transaction':
+                return complexTransactionService.deleteByKey(id);
                 break;
             case 'transaction':
                 return transactionService.deleteByKey(id);

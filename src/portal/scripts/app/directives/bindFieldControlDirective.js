@@ -42,16 +42,22 @@
                         }
                     }
 
-                    if(scope.attribute['value_type'] == 100) {
+                    if (scope.attribute['value_type'] == 100) {
                         scope.fieldType = choices[5]; // relation == field, backend&frontend naming conflict
                     }
 
                 }
 
                 scope.getName = function () {
+
+                    if (scope.item.hasOwnProperty('verbose_name')) {
+                        return scope.item.verbose_name
+                    }
+
                     if (scope.item.options && scope.item.options.fieldName) {
                         return scope.item.options.fieldName;
                     }
+
                     return scope.item.name
                 };
 
@@ -93,8 +99,12 @@
                 };
 
                 scope.getModelKey = function () {
+
                     if (scope.item) {
                         if (scope.item.hasOwnProperty('id') && scope.item.id !== null) {
+
+                            //console.log('scope,entity', scope.entity);
+
                             return scope.item.name
                         } else {
                             var i, l, e, u;
@@ -116,7 +126,7 @@
                             }
                             for (u = 0; u < userInputs.length; u = u + 1) {
                                 if (scope.item.name === userInputs[u].name) {
-                                    return userInputs[u].key;
+                                    return userInputs[u].name;
                                 }
                             }
                         }

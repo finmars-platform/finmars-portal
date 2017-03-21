@@ -13,6 +13,16 @@
 
                     <div layout="column" style="padding-top: 16px">
 
+                        <md-input-container data-ng-if="options.entityType == 'pnl-report'">
+
+                            <label for="">First Date</label>
+
+                            <zh-date-picker data-ng-model="reportOptions.pl_first_date"
+                                            position="left"></zh-date-picker>
+
+
+                        </md-input-container>
+
                         <md-input-container>
 
                             <label for="">Date</label>
@@ -25,8 +35,16 @@
 
                             <label for="">Currency</label>
 
-                            <md-select data-ng-model="reportOptions.currency">
-                                <md-option data-ng-repeat="item in currencies" ng-value="item.id">{{item.name}}
+                            <md-select data-ng-model="reportOptions.currency" md-on-close="searchTerm = ''">
+                                <md-select-header>
+                                    <input data-ng-model="searchTerm"
+                                           type="search"
+                                           placeholder="Search for a ..."
+                                           class="md-text md-select-search-pattern">
+                                </md-select-header>
+                                <md-option
+                                        data-ng-repeat="item in currencies | orderBy:'-'+field.name | filter:{name: searchTerm}"
+                                        ng-value="item.id">{{item.name}}
                                 </md-option>
                             </md-select>
 

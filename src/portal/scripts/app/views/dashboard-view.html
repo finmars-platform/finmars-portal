@@ -7,7 +7,7 @@
             </md-button>
         </div>
 
-        <div class="dashboard-row-holder" data-ng-if="vm.readyStatus.uiLayouts">
+        <div class="dashboard-row-holder" data-ng-if="vm.readyStatus.uiLayouts && vm.readyStatus.entityListLayout">
 
             <div class="dashboard-row">
 
@@ -26,7 +26,7 @@
 
                             <md-input-container>
 
-                                <label for="">Layout</label>
+                                <label for="">Select Layout</label>
 
                                 <md-select data-ng-model="vm.widget1._d_layout"
                                            data-ng-change="vm.changeWidget(vm.widget1)">
@@ -64,7 +64,7 @@
 
                             <md-input-container>
 
-                                <label for="">Layout</label>
+                                <label for="">Select Layout</label>
 
                                 <md-select data-ng-model="vm.widget2._d_layout"
                                            data-ng-change="vm.changeWidget(vm.widget2)">
@@ -106,7 +106,7 @@
 
                             <md-input-container>
 
-                                <label for="">Layout</label>
+                                <label for="">Select Layout</label>
 
                                 <md-select data-ng-model="vm.widget3._d_layout"
                                            data-ng-change="vm.changeWidget(vm.widget3)">
@@ -144,7 +144,7 @@
 
                             <md-input-container>
 
-                                <label for="">Layout</label>
+                                <label for="">Select Layout</label>
 
                                 <md-select data-ng-model="vm.widget4._d_layout"
                                            data-ng-change="vm.changeWidget(vm.widget4)">
@@ -170,7 +170,7 @@
             </div>
 
         </div>
-        <div data-ng-if="!vm.readyStatus.uiLayouts">
+        <div data-ng-if="!vm.readyStatus.uiLayouts && !vm.readyStatus.entityListLayout">
             <div class="e-data-loader" layout="row" layout-sm="column" layout-align="space-around">
                 <md-progress-circular md-diameter="100" md-mode="indeterminate"></md-progress-circular>
             </div>

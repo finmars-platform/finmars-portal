@@ -24,8 +24,8 @@
         vm.tabs = [];
         vm.entityType = parentScope.entityType;
 
-        console.log('parentScope', parentScope);
-        console.log('vm', vm);
+        //console.log('parentScope', parentScope);
+        //console.log('vm', vm);
 
         logService.property('vm.entityType', vm.entityType);
 
@@ -129,10 +129,10 @@
 
         // end refactore
 
-        var columns = parentScope.columns;
+        var columns = parentScope.options.columns;
         var currentColumnsWidth = parentScope.columns.length;
-        var filters = parentScope.filters;
-        var grouping = parentScope.grouping;
+        var filters = parentScope.options.filters;
+        var grouping = parentScope.options.grouping;
 
         var attrsList = [];
 
@@ -147,6 +147,11 @@
             //vm.entityAttrs = metaService.getEntityAttrs(vm.entityType);
 
             vm.balanceAttrs = metaService.getEntityAttrs('balance-report').map(function (item) {
+                item.name = 'Balance.' + item.name;
+                return item;
+            });
+
+            vm.balancePerformanceAttrs = metaService.getEntityAttrs('report-addon-performance').map(function (item) {
                 item.name = 'Balance.' + item.name;
                 return item;
             });
@@ -297,9 +302,23 @@
             }
         });
 
+        vm.bindReportItemName = function (item) {
+
+            if (item.name.toLocaleLowerCase().indexOf('strategy') == -1) {
+
+                var pieces = item.name.split('.');
+
+                return pieces[pieces.length - 1];
+            }
+
+            return item.name;
+        };
+
         var syncAttrs = function () {
 
             syncTypeAttrs(vm.balanceAttrs);
+            syncTypeAttrs(vm.balancePerformanceAttrs);
+            syncTypeAttrs(vm.custom);
 
             syncTypeAttrs(vm.instrumentAttrs);
             syncTypeAttrs(vm.instrumentTypeAttrs);
@@ -323,37 +342,6 @@
             syncTypeAttrs(vm.strategy3attrs);
             syncTypeAttrs(vm.strategy3subgroupAttrs);
             syncTypeAttrs(vm.strategy3groupAttrs);
-
-        };
-
-        var updateAttrs = function () {
-
-            updateTypeAttrs(vm.balanceAttrs);
-
-            updateTypeAttrs(vm.instrumentAttrs);
-            updateTypeAttrs(vm.instrumentTypeAttrs);
-            updateTypeAttrs(vm.instrumentDynamicAttrs);
-
-            updateTypeAttrs(vm.accountAttrs);
-            updateTypeAttrs(vm.accountTypeAttrs);
-            updateTypeAttrs(vm.accountDynamicAttrs);
-
-            updateTypeAttrs(vm.portfolioAttrs);
-            updateTypeAttrs(vm.portfolioDynamicAttrs);
-
-            updateTypeAttrs(vm.strategy1attrs);
-            updateTypeAttrs(vm.strategy1subgroupAttrs);
-            updateTypeAttrs(vm.strategy1groupAttrs);
-
-            updateTypeAttrs(vm.strategy2attrs);
-            updateTypeAttrs(vm.strategy2subgroupAttrs);
-            updateTypeAttrs(vm.strategy2groupAttrs);
-
-            updateTypeAttrs(vm.strategy3attrs);
-            updateTypeAttrs(vm.strategy3subgroupAttrs);
-            updateTypeAttrs(vm.strategy3groupAttrs);
-
-            addColumn();
 
         };
 
@@ -485,8 +473,41 @@
         }
 
         vm.updateAttrs = function () {
-            updateAttrs();
-            callback({silent: true});
+            updateTypeAttrs(vm.balanceAttrs);
+            updateTypeAttrs(vm.balancePerformanceAttrs);
+            updateTypeAttrs(vm.custom);
+
+            updateTypeAttrs(vm.instrumentAttrs);
+            updateTypeAttrs(vm.instrumentTypeAttrs);
+            updateTypeAttrs(vm.instrumentDynamicAttrs);
+
+            updateTypeAttrs(vm.accountAttrs);
+            updateTypeAttrs(vm.accountTypeAttrs);
+            updateTypeAttrs(vm.accountDynamicAttrs);
+
+            updateTypeAttrs(vm.portfolioAttrs);
+            updateTypeAttrs(vm.portfolioDynamicAttrs);
+
+            updateTypeAttrs(vm.strategy1attrs);
+            updateTypeAttrs(vm.strategy1subgroupAttrs);
+            updateTypeAttrs(vm.strategy1groupAttrs);
+
+            updateTypeAttrs(vm.strategy2attrs);
+            updateTypeAttrs(vm.strategy2subgroupAttrs);
+            updateTypeAttrs(vm.strategy2groupAttrs);
+
+            updateTypeAttrs(vm.strategy3attrs);
+            updateTypeAttrs(vm.strategy3subgroupAttrs);
+            updateTypeAttrs(vm.strategy3groupAttrs);
+
+            addColumn();
+            callback({
+                silent: true, options: {
+                    columns: columns,
+                    filters: filters,
+                    grouping: grouping
+                }
+            });
         };
 
         vm.cancel = function () {
@@ -596,12 +617,16 @@
         };
 
         var addColumn = function () {
-            if (currentColumnsWidth < columns.length) {
-                metaService.columnsWidthGroups(true);
-            }
-            else {
-                metaService.columnsWidthGroups(false);
-            }
+
+
+            //console.log('parentScope.columns', parentScope.columns);
+
+            //if (currentColumnsWidth < parentScope.columns.length) {
+            metaService.columnsWidthGroups(true);
+            //}
+            //else {
+            //    metaService.columnsWidthGroups(false);
+            //}
         };
 
         setTimeout(function () {

@@ -11,8 +11,13 @@
         return transactionClassRepository.getList();
     };
 
+    var getListSync = function(){
+        return transactionClassRepository.getListSync();
+    };
+
     module.exports = {
-        getList: getList
+        getList: getList,
+        getListSync: getListSync
     }
 
 }());

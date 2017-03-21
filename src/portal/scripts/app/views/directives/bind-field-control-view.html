@@ -49,7 +49,7 @@
     <div data-ng-if="fieldType['display_name'] === 'Date'" class="field-date-pick">
         <!-- <label data-ng-bind="getName()"></label> -->
         <md-input-container class="field-date-pick-holder">
-            <label data-ng-bind="getName()"></label>
+            <label data-ng-if="!entity[getModelKey()]" data-ng-bind="getName()"></label>
             <zh-date-picker data-ng-change="changeWatcher()" ng-model="entity[getModelKey()]"></zh-date-picker>
             <!--<mdp-date-picker mdp-placeholder="Enter date" ng-model="entity[getModelKey()]" mdp-format="YYYY/MM/DD" data-ng-change="dateFormatter()"></mdp-date-picker>-->
             <!--<md-datepicker ng-model="entity[getModelKey()]" md-placeholder="Enter date" data-ng-change="dateFormatter()"></md-datepicker>-->

@@ -28,16 +28,40 @@
             vm.query = {};
         };
 
+        vm.bindEntityName = function (item) {
+
+            if (item.hasOwnProperty('scheme_name')) {
+                return item.scheme_name;
+            }
+
+            return item.name;
+
+        };
+
         vm.setSort = function (propertyName) {
             vm.direction = (vm.sort === propertyName) ? !vm.direction : false;
             vm.sort = propertyName;
         };
 
+        vm.addMapping = function (item, index) {
+
+            item.mapping.splice(index, 0, {value: ''});
+
+        };
+
+        vm.removeMapping = function (item, mappingItem, index) {
+
+            if (mappingItem.hasOwnProperty('id')) {
+                mappingItem.isDeleted = true;
+            } else {
+                item.mapping.splice(index, 1);
+            }
+
+        };
+
         vm.fancyEntity = function () {
             return vm.mapEntityType.replace('_', ' ');
         };
-
-        console.log(entityResolverService.getList(vm.mapEntityType));
 
         var classifier_value_type = 30;
 
@@ -86,7 +110,8 @@
                     var i, e;
                     for (e = 0; e < vm.entityItems.length; e = e + 1) {
                         for (i = 0; i < vm.items.length; i = i + 1) {
-                            if (vm.items[i][vm.mapEntityType] == vm.entityItems[e].id) {
+                            //if (vm.items[i][vm.mapEntityType] == vm.entityItems[e].id) {
+                            if (vm.items[i].content_object == vm.entityItems[e].id) {
                                 vm.entityItems[e].mapping = vm.items[i]
                             }
                         }
@@ -100,9 +125,9 @@
             })
         } else {
 
-            console.log('vm.mapEntityType', vm.mapEntityType);
+            //console.log('vm.mapEntityType', vm.mapEntityType);
             vm.entityMapDashed = vm.mapEntityType.split('_').join('-');
-            console.log('vm.entityMapDashed', vm.entityMapDashed);
+            //console.log('vm.entityMapDashed', vm.entityMapDashed);
 
             entityResolverService.getList(vm.entityMapDashed).then(function (data) {
                 if (data.hasOwnProperty('results')) {
@@ -119,12 +144,25 @@
                     var i, e;
                     for (e = 0; e < vm.entityItems.length; e = e + 1) {
                         for (i = 0; i < vm.items.length; i = i + 1) {
-                            if (vm.items[i][vm.mapEntityType] == vm.entityItems[e].id) {
-                                vm.entityItems[e].mapping = vm.items[i]
+                            //if (vm.items[i][vm.mapEntityType] == vm.entityItems[e].id) {
+                            if (vm.items[i].content_object == vm.entityItems[e].id) {
+
+                                if (!vm.entityItems[e].hasOwnProperty('mapping')) {
+                                    vm.entityItems[e].mapping = [];
+                                }
+
+                                vm.entityItems[e].mapping.push(vm.items[i])
                             }
                         }
                     }
 
+                    vm.entityItems.forEach(function (entityItem) {
+                        if (!entityItem.hasOwnProperty('mapping')) {
+                            entityItem.mapping = [{value: ''}];
+                        }
+                    });
+
+                    console.log('!!!!!!!!!!!!!!!', vm.items);
                     console.log('!!!!!!!!!!!!!!!', vm.entityItems);
 
                     vm.readyStatus.content = true;
@@ -151,31 +189,46 @@
                         updateRow();
                         return false;
                     }
-                    if (vm.entityItems[i].hasOwnProperty('mapping') && !vm.entityItems[i].mapping.hasOwnProperty('id')) {
-                        vm.entityItems[i].mapping.provider = 1; //TODO FIND PROVIDER ID?
-                        if (vm.mapEntityType == 'classifier') {
 
-                            vm.entityItems[i].mapping['attribute_type'] = vm.entityItems[i].classifier;
+                    if (vm.entityItems[i].mapping.length) {
 
-                            if (vm.entityItems[i].value_type == 30) {
-                                vm.entityItems[i].mapping.classifier = vm.entityItems[i].id
+                        vm.entityItems[i].mapping.forEach(function (mapItem) {
+
+                            if (!mapItem.hasOwnProperty('id')) {
+                                mapItem.provider = 1; //TODO FIND PROVIDER ID?
+                                if (vm.mapEntityType == 'classifier') {
+
+                                    mapItem['attribute_type'] = vm.entityItems[i].classifier;
+
+                                    if (vm.entityItems[i].value_type == 30) {
+                                        mapItem.classifier = vm.entityItems[i].id
+                                    }
+
+                                } else {
+                                    //vm.entityItems[i].mapping[vm.mapEntityType] = vm.entityItems[i].id;
+                                    mapItem.content_object = vm.entityItems[i].id;
+                                }
+
+                                return entityTypeMappingResolveService.create(vm.mapEntityType, mapItem).then(function () {
+                                    i = i + 1;
+                                    updateRow();
+                                    return false;
+                                })
                             }
-
-                        } else {
-                            vm.entityItems[i].mapping[vm.mapEntityType] = vm.entityItems[i].id;
-                        }
-
-                        return entityTypeMappingResolveService.create(vm.mapEntityType, vm.entityItems[i].mapping).then(function () {
-                            i = i + 1;
-                            updateRow();
-                            return false;
+                            if (mapItem.isDeleted == true) {
+                                return entityTypeMappingResolveService.deleteByKey(vm.mapEntityType, mapItem.id).then(function () {
+                                    i = i + 1;
+                                    updateRow();
+                                    return false;
+                                })
+                            }
+                            return entityTypeMappingResolveService.update(vm.mapEntityType, mapItem.id, mapItem).then(function () {
+                                i = i + 1;
+                                updateRow();
+                                return false;
+                            })
                         })
                     }
-                    return entityTypeMappingResolveService.update(vm.mapEntityType, vm.entityItems[i].mapping.id, vm.entityItems[i].mapping).then(function () {
-                        i = i + 1;
-                        updateRow();
-                        return false;
-                    })
                 }
             }
 

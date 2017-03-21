@@ -150,7 +150,7 @@
 
                     scope.$watchCollection('additionsStatus', function () {
 
-                        console.log('scope.additionsStatus', scope.additionsStatus);
+                        //console.log('scope.additionsStatus', scope.additionsStatus);
 
                         resolveHeight()
                     });

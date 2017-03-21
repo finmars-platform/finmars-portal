@@ -27,7 +27,7 @@
 
 
                 logService.component('groupGrouping', 'initialized');
-                console.log(' scope.grouping', scope.grouping);
+                //console.log(' scope.grouping', scope.grouping);
 
                 scope.sortHandler = function (group, sort) {
                     var i;
@@ -130,7 +130,7 @@
                             if ($itemIndex > $index) {
                                 groupItem.disableLineSubtotal = true;
 
-                                console.log('group', groupItem);
+                                //console.log('group', groupItem);
 
                                 if (groupItem.hasOwnProperty('report_settings')) {
 
@@ -226,16 +226,31 @@
                 scope.openModalSettings = function (ev) {
 
                     if (scope.isReport) {
-                        $mdDialog.show({
-                            controller: 'gModalReportController as vm', // ../directives/gTable/gModalComponents
-                            templateUrl: 'views/directives/groupTable/modal-report-view.html',
-                            parent: angular.element(document.body),
-                            targetEvent: ev,
-                            locals: {
-                                callback: scope.externalCallback,
-                                parentScope: scope
-                            }
-                        });
+
+                        if (scope.options.entityType == 'balance-report' || scope.options.entityType == 'pnl-report') {
+
+                            $mdDialog.show({
+                                controller: 'gModalReportController as vm', // ../directives/gTable/gModalComponents
+                                templateUrl: 'views/directives/groupTable/modal-report-view.html',
+                                parent: angular.element(document.body),
+                                targetEvent: ev,
+                                locals: {
+                                    callback: scope.externalCallback,
+                                    parentScope: scope
+                                }
+                            });
+                        } else {
+                            $mdDialog.show({
+                                controller: 'gModalReportTransactionController as vm', // ../directives/gTable/gModalComponents
+                                templateUrl: 'views/directives/groupTable/modal-report-transaction-view.html',
+                                parent: angular.element(document.body),
+                                targetEvent: ev,
+                                locals: {
+                                    callback: scope.externalCallback,
+                                    parentScope: scope
+                                }
+                            });
+                        }
                     } else {
                         $mdDialog.show({
                             controller: 'gModalController as vm', // ../directives/gTable/gModalComponents

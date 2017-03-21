@@ -13,13 +13,17 @@
 
         var vm = this;
 
-        vm.rangeItems = [
-            {
-                value_left: -Infinity,
-                value_right: Infinity,
+        vm.rangeItems = $scope.$parent.vm.rangeItems;
+
+        if (!vm.rangeItems.length) {
+            vm.rangeItems.push({
+                value_left: '-inf',
+                value_right: 'inf',
                 group_name: 'Group 1'
-            }
-        ]
+            });
+        }
+
+        $scope.$parent.vm.rangeType = 20;
 
     }
 

@@ -1,4 +1,4 @@
-<md-dialog aria-label="" ng-cloak class="warning-dialog draggable-dialog" drag-dialog style="width: 50%">
+<md-dialog aria-label="" ng-cloak class="expression-editor-dialog draggable-dialog" drag-dialog style="width: 50%">
     <md-toolbar>
         <div class="md-toolbar-tools">
             <h2>Expression editor</h2>
@@ -7,7 +7,7 @@
     </md-toolbar>
     <md-dialog-content data-custom-scroll class="custom-scrollbar">
         <md-content>
-            <div class="i-p-20">
+            <div>
                 <md-input-container class="md-block">
                     <label for="">Expression</label>
                     <textarea name="" id="editorExpressionInput" cols="30" rows="10"
@@ -15,18 +15,18 @@
                 </md-input-container>
             </div>
 
-            <h2>Expression help</h2>
-            <p>You could use this form to build an expression based on provided variables. You could use basic operators
-                like +, -, *, /. Plus (+) could be used for strings concatenation. Based on scope of expression, you
-                could use different set of expressions. For example inside "Instrument import schema" you could use data
-                provider variables to build your own vlaues. For example, you build a custom Instrument name based on
-                Bloomber downloaded parameters:
-            </p>
-            <p>ISSUER + ' ' +format_number(CPN)+'% ' + format_date(parse_date(MATURITY, '%m/%d/%Y'),'%d-%h-%Y')
-            </p>
-            <p>Where ISSUER, CPN and MATURITY - are bloomberg parameters, and format_date, parse_date - two predifined
-                functions. You could see predefined functions definition in a list below.
-            </p>
+            <!--<h2>Expression help</h2>-->
+            <!--<p>You could use this form to build an expression based on provided variables. You could use basic operators-->
+            <!--like +, -, *, /. Plus (+) could be used for strings concatenation. Based on scope of expression, you-->
+            <!--could use different set of expressions. For example inside "Instrument import schema" you could use data-->
+            <!--provider variables to build your own vlaues. For example, you build a custom Instrument name based on-->
+            <!--Bloomber downloaded parameters:-->
+            <!--</p>-->
+            <!--<p>ISSUER + ' ' +format_number(CPN)+'% ' + format_date(parse_date(MATURITY, '%m/%d/%Y'),'%d-%h-%Y')-->
+            <!--</p>-->
+            <!--<p>Where ISSUER, CPN and MATURITY - are bloomberg parameters, and format_date, parse_date - two predifined-->
+            <!--functions. You could see predefined functions definition in a list below.-->
+            <!--</p>-->
             <h2 style="text-align: center">Available functions</h2>
             <div class="expression-editor-helper" layout="row">
                 <div class="help-item-list " layout="column" flex="30">
@@ -53,12 +53,19 @@
             </div>
         </md-content>
     </md-dialog-content>
-    <md-dialog-actions layout="row">
-        <md-button ng-click="vm.cancel()">
-            Cancel
-        </md-button>
-        <md-button ng-click="vm.agree()" style="margin-right:20px;">
-            OK
-        </md-button>
+    <md-dialog-actions layout="row" layout-align="space-between">
+        <div>
+            <md-button ng-click="vm.openHelp($event)" class="md-raised md-primary">
+                Help
+            </md-button>
+        </div>
+        <div>
+            <md-button ng-click="vm.cancel()">
+                Cancel
+            </md-button>
+            <md-button ng-click="vm.agree()" style="margin-right:20px;">
+                OK
+            </md-button>
+        </div>
     </md-dialog-actions>
 </md-dialog>
