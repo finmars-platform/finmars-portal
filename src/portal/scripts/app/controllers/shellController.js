@@ -3,199 +3,217 @@
  */
 (function () {
 
-	'use strict';
+    'use strict';
 
-	var logService = require('../../../../core/services/logService');
-	var cookiesService = require('../../../../core/services/cookieService');
+    var logService = require('../../../../core/services/logService');
+    var cookiesService = require('../../../../core/services/cookieService');
 
-	var usersService = require('../services/usersService');
-	var metaContentTypesService = require('../services/metaContentTypesService');
-	var notificationsService = require('../services/notificationsService');
+    var usersService = require('../services/usersService');
+    var metaContentTypesService = require('../services/metaContentTypesService');
+    var notificationsService = require('../services/notificationsService');
 
-	module.exports = function ($scope, $state, $rootScope, $mdDialog) {
+    module.exports = function ($scope, $state, $rootScope, $mdDialog) {
 
-		logService.controller('ShellController', 'initialized', 1);
+        logService.controller('ShellController', 'initialized', 1);
 
-		var vm = this;
+        var vm = this;
 
-		vm.logout = function () {
-			console.log('Logged out');
-			usersService.logout();
-			window.location.pathname = '/';
-			cookiesService.deleteCookie();
-			//usersService.logout();
-		};
+        vm.readyStatus = {masters: false};
 
-		  //window.fetch('/api/v1/users/ping/').then(function (data) {
-		  //	return data.json()
-		  //}).then(function (data) {
-		  //	setTimeout(function () {
-		  //		usersService.login('dev1', 'Uethohk0').then(function () {
-		  //		//usersService.login('dev2', 'ceechohf8Eexue6u').then(function () {
-		  //		//usersService.login('dev11', 'cheeL1ei').then(function () {
-		  //		//	console.log('after login', cookiesService.getCookie('csrftoken'));
-		  //			$scope.$apply();
-		  //		});
-		  //	}, 1000)
-		  //});
+        vm.logout = function () {
+            console.log('Logged out');
+            usersService.logout();
+            window.location.pathname = '/';
+            cookiesService.deleteCookie();
+            //usersService.logout();
+        };
 
-		usersService.getList().then(function (data) {
-			vm.user = data.results[0];
-			$scope.$apply();
-		});
+        window.fetch('/api/v1/users/ping/').then(function (data) {
+            return data.json()
+        }).then(function (data) {
+            setTimeout(function () {
+                usersService.login('dev1', 'Itein9Ha4eige6Aiph5a').then(function () {
+                    //usersService.login('dev1', 'Uethohk0').then(function () {
+                    //usersService.login('dev2', 'ceechohf8Eexue6u').then(function () {
+                    //usersService.login('dev11', 'cheeL1ei').then(function () {
+                    //	console.log('after login', cookiesService.getCookie('csrftoken'));
+                    $scope.$apply();
+                });
+            }, 1000)
+        });
 
-		vm.currentState = function () {
-			return '';
-		};
+        usersService.getMasterList().then(function (data) {
+            vm.masters = data.results;
+            vm.readyStatus.masters = true;
+            $scope.$apply();
+        });
 
-		vm.currentLocation = function () {
-			vm.currentLocationShowBtns = true;
+        usersService.getList().then(function (data) {
+            vm.user = data.results[0];
+            $scope.$apply();
+        });
 
-			switch ($state.current.name) {
-				case 'app.dashboard':
-					return "DASHBOARD";
-					break;
-				case 'app.data.portfolio':
-					return "PORTFOLIO";
-					break;
-				case 'app.data.account':
-					return "ACCOUNT";
-					break;
-				case 'app.data.counterparty':
-					return "COUNTERPARTY";
-					break;
-				case 'app.data.counterparty-group':
-					return "COUNTERPARTY GROUP";
-					break;
-				case 'app.data.responsible':
-					return "RESPONSIBLE";
-					break;
-				case 'app.data.responsible-group':
-					return "RESPONSIBLE GROUP";
-					break;
-				case 'app.data.instrument':
-					return "INSTRUMENT";
-					break;
-				case 'app.data.transaction':
-					return "TRANSACTION";
-					break;
-				case 'app.data.price-history':
-					return "PRICE HISTORY";
-					break;
-				case 'app.data.currency-history':
-					return "CURRENCY HISTORY";
-					break;
-				case 'app.data.strategy':
-					return "STRATEGY";
-					break;
-				case 'app.data.strategy-subgroup':
-					return "STRATEGY SUBGROUP";
-					break;
-				case 'app.data.strategy-group':
-					return "STRATEGY GROUP";
-					break;
-				case 'app.data.account-type':
-					return "ACCOUNT TYPES";
-					break;
-				case 'app.data.instrument-type':
-					return "INSTRUMENT TYPES";
-					break;
-				case 'app.data.pricing-policy':
-					return "PRICING POLICY";
-					break;
-				case 'app.data.transaction-type':
-					return "TRANSACTION TYPE";
-					break;
-				case 'app.data.transaction-type-group':
-					return "TRANSACTION TYPE GROUPS";
-					break;
-				case 'app.data.currency':
-					return "CURRENCY";
-					break;
-				case 'app.data.complex-transaction':
-					return "Transaction";
-					break;
-				case 'app.data.tag':
-					return "Tags";
-					break;
-				case 'app.reports.balance-report':
-					return "BALANCE REPORT";
-					break;
-				case 'app.reports.pnl-report':
-					return "P&L REPORT";
-					break;
-				case 'app.reports.transaction-report':
-					return "TRANSACTION REPORT";
-					break;
-				case 'app.reports.cash-flow-projection-report':
-					return "CASH FLOW PROJECTION REPORT";
-					break;
-				case 'app.reports.performance-report':
-					return "PERFORMANCE REPORT";
-					break;
-				case 'app.settings.users-groups':
-					vm.currentLocationShowBtns = false;
-					return 'USERS & GROUPS';
-					break;
-				default:
-					vm.currentLocationShowBtns = false;
-					return "";
-					break;
-			}
-		};
+        vm.selectMaster = function (master) {
+
+            usersService.setMasterUser(master.id);
+            setTimeout(function () {
+                $state.reload();
+            }, 300);
+
+        };
+
+        vm.currentState = function () {
+            return '';
+        };
+
+        vm.currentLocation = function () {
+            vm.currentLocationShowBtns = true;
+
+            switch ($state.current.name) {
+                case 'app.dashboard':
+                    return "DASHBOARD";
+                    break;
+                case 'app.data.portfolio':
+                    return "PORTFOLIO";
+                    break;
+                case 'app.data.account':
+                    return "ACCOUNT";
+                    break;
+                case 'app.data.counterparty':
+                    return "COUNTERPARTY";
+                    break;
+                case 'app.data.counterparty-group':
+                    return "COUNTERPARTY GROUP";
+                    break;
+                case 'app.data.responsible':
+                    return "RESPONSIBLE";
+                    break;
+                case 'app.data.responsible-group':
+                    return "RESPONSIBLE GROUP";
+                    break;
+                case 'app.data.instrument':
+                    return "INSTRUMENT";
+                    break;
+                case 'app.data.transaction':
+                    return "TRANSACTION";
+                    break;
+                case 'app.data.price-history':
+                    return "PRICE HISTORY";
+                    break;
+                case 'app.data.currency-history':
+                    return "CURRENCY HISTORY";
+                    break;
+                case 'app.data.strategy':
+                    return "STRATEGY";
+                    break;
+                case 'app.data.strategy-subgroup':
+                    return "STRATEGY SUBGROUP";
+                    break;
+                case 'app.data.strategy-group':
+                    return "STRATEGY GROUP";
+                    break;
+                case 'app.data.account-type':
+                    return "ACCOUNT TYPES";
+                    break;
+                case 'app.data.instrument-type':
+                    return "INSTRUMENT TYPES";
+                    break;
+                case 'app.data.pricing-policy':
+                    return "PRICING POLICY";
+                    break;
+                case 'app.data.transaction-type':
+                    return "TRANSACTION TYPE";
+                    break;
+                case 'app.data.transaction-type-group':
+                    return "TRANSACTION TYPE GROUPS";
+                    break;
+                case 'app.data.currency':
+                    return "CURRENCY";
+                    break;
+                case 'app.data.complex-transaction':
+                    return "Transaction";
+                    break;
+                case 'app.data.tag':
+                    return "Tags";
+                    break;
+                case 'app.reports.balance-report':
+                    return "BALANCE REPORT";
+                    break;
+                case 'app.reports.pnl-report':
+                    return "P&L REPORT";
+                    break;
+                case 'app.reports.transaction-report':
+                    return "TRANSACTION REPORT";
+                    break;
+                case 'app.reports.cash-flow-projection-report':
+                    return "CASH FLOW PROJECTION REPORT";
+                    break;
+                case 'app.reports.performance-report':
+                    return "PERFORMANCE REPORT";
+                    break;
+                case 'app.settings.users-groups':
+                    vm.currentLocationShowBtns = false;
+                    return 'USERS & GROUPS';
+                    break;
+                default:
+                    vm.currentLocationShowBtns = false;
+                    return "";
+                    break;
+            }
+        };
 
 
-		vm.openLayoutList = function ($event) {
+        vm.openLayoutList = function ($event) {
 
-			var entityType = metaContentTypesService.getContentTypeUIByState($state.current.name);
+            var entityType = metaContentTypesService.getContentTypeUIByState($state.current.name);
 
-			$mdDialog.show({
-				controller: 'UiLayoutListDialogController as vm',
-				templateUrl: 'views/dialogs/ui/ui-layout-list-view.html',
-				parent: angular.element(document.body),
-				targetEvent: $event,
-				locals: {
-					options: {
-						entityType: entityType
-					}
-				}
-			}).then(function (res) {
-				if (res.status == 'agree') {
-					$state.reload($state.current.name);
-				}
+            $mdDialog.show({
+                controller: 'UiLayoutListDialogController as vm',
+                templateUrl: 'views/dialogs/ui/ui-layout-list-view.html',
+                parent: angular.element(document.body),
+                targetEvent: $event,
+                locals: {
+                    options: {
+                        entityType: entityType
+                    }
+                }
+            }).then(function (res) {
+                if (res.status == 'agree') {
+                    $state.reload($state.current.name);
+                }
 
-			})
-		};
+            })
+        };
 
-		vm.openNotificationsMenu = function ($event) {
-			$mdDialog.show({
-				controller: 'HeaderNotificationsDialogController as vm',
-				templateUrl: 'views/dialogs/header-notifications-dialog-view.html',
-				parent: angular.element(document.body),
-				targetEvent: $event
-			});
-		}
+        vm.openNotificationsMenu = function ($event) {
+            $mdDialog.show({
+                controller: 'HeaderNotificationsDialogController as vm',
+                templateUrl: 'views/dialogs/header-notifications-dialog-view.html',
+                parent: angular.element(document.body),
+                targetEvent: $event
+            });
+        }
 
-		vm.unreadedNotificationsAmount;
-		notificationsService.getList(1, 'unreaded').then(function (data) {
-			vm.unreadedNotificationsAmount = data.count;
-			$scope.$apply(); 
-		});
+        vm.unreadedNotificationsAmount;
+        notificationsService.getList(1, 'unreaded').then(function (data) {
+            vm.unreadedNotificationsAmount = data.count;
+            $scope.$apply();
+        });
 
-		$rootScope.$on('$stateChangeSuccess', function () {
-			$mdDialog.cancel();
-		});
+        $rootScope.$on('$stateChangeSuccess', function () {
+            $mdDialog.cancel();
+        });
 
-		// console.log('root scope is ', $rootScope);
-		console.log("Curent state is ", $state.current);
+        // console.log('root scope is ', $rootScope);
+        console.log("Curent state is ", $state.current);
 
-		vm.logOutMethod = function () {
-			usersService.logout().then(function (data) {
-				console.log('Logged out');
-				window.location.pathname = '/';
-				cookiesService.deleteCookie();
-			});
-		}
-	}
+        vm.logOutMethod = function () {
+            usersService.logout().then(function (data) {
+                console.log('Logged out');
+                window.location.pathname = '/';
+                cookiesService.deleteCookie();
+            });
+        }
+    }
 
 }());

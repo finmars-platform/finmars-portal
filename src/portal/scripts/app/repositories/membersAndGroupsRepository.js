@@ -62,7 +62,7 @@
 				})
 			});
 		});
-	}
+	};
 
 	var update = function (type, id, data) {
 		var fetchUrl = '';

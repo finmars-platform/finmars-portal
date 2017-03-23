@@ -74,10 +74,11 @@
                         }
                     }).then(function (res) {
 
-                        //console.log('res', res);
+                        console.log('res', res);
 
                         if (res.status == 'agree') {
-                            scope.reportOptions = res.data;
+
+                            scope.externalCallback({reportOptionsUpdated: true, options: {reportOptions: res.data}});
                         }
 
                     });

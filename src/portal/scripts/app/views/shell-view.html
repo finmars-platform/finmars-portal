@@ -33,9 +33,12 @@
                     <!--<md-button data-ui-sref="app.system.notifications" aria-label="Notifications">-->
                     <!--<ng-md-icon icon="mail_outline"></ng-md-icon>-->
                     <!--</md-button>-->
-                    <md-button data-ui-sref="app.system.notifications({notificationsListType: 'unreaded'})" aria-label="Notifications">
+                    <md-button data-ui-sref="app.system.notifications({notificationsListType: 'unreaded'})"
+                               aria-label="Notifications">
                         <ng-md-icon icon="flag"></ng-md-icon>
-                        <span data-ng-show="vm.unreadedNotificationsAmount" data-ng-bind="vm.unreadedNotificationsAmount" class="unreaded-notifications-number"></span>
+                        <span data-ng-show="vm.unreadedNotificationsAmount"
+                              data-ng-bind="vm.unreadedNotificationsAmount"
+                              class="unreaded-notifications-number"></span>
                     </md-button>
 
                     <div class="header-profile">
@@ -45,6 +48,12 @@
                                 <span class="header-profile-name" data-ng-bind="vm.user.username"></span>
                             </md-button>
                             <md-menu-content>
+                                <md-menu-item data-ng-repeat="item in vm.masters">
+                                    <md-button data-ng-click="vm.selectMaster(item)">
+                                        <span data-ng-if="item.is_current"><b>{{item.name}}</b></span>
+                                        <span data-ng-if="!item.is_current">{{item.name}}</span>
+                                    </md-button>
+                                </md-menu-item>
                                 <md-menu-item>
                                     <md-button data-ng-click="vm.logOutMethod()">Log Out</md-button>
                                 </md-menu-item>
@@ -57,7 +66,9 @@
             </div>
         </md-toolbar>
         <md-content flex data-custom-scroll class="app-md-content custom-scrollbar">
+
             <div data-ui-view class="shell-view"></div>
+
         </md-content>
     </div>
 </div>

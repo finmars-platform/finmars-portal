@@ -15,7 +15,7 @@
 
                     <h2>General Settings</h2>
 
-                    <div layout="row">
+                    <div layout="row" style="margin-bottom: 20px">
 
                         <md-input-container>
 
@@ -38,8 +38,6 @@
                         </md-input-container>
 
                     </div>
-
-                    <hr>
 
                     <div layout="row">
 
@@ -71,38 +69,75 @@
 
                     </div>
 
-                    <hr>
-
-                    <h2>Advanced Settings</h2>
+                    <h2>Consolidation</h2>
 
                     <div layout="row">
 
                         <div layout="column" class="m-r-16">
 
-                            <md-checkbox data-ng-model="vm.reportOptions.portfolio_mode">Portfolio mode
-                            </md-checkbox>
-                            <md-checkbox data-ng-model="vm.reportOptions.account_mode">Account mode
-                            </md-checkbox>
-                            <md-checkbox data-ng-model="vm.reportOptions.show_transaction_details">Detail by transaction
-                                details
-                            </md-checkbox>
+                            <md-input-container style="margin-bottom: 20px;">
+                                <label for="">Portfolio mode</label>
+                                <md-select data-ng-model="vm.reportOptions.portfolio_mode">
+                                    <md-option value="0">Ignore</md-option>
+                                    <md-option value="1" selected>Independent</md-option>
+                                </md-select>
+                            </md-input-container>
+
+                            <md-input-container style="margin-bottom: 20px;">
+                                <label for="">Account mode</label>
+                                <md-select data-ng-model="vm.reportOptions.account_mode">
+                                    <md-option value="0">Ignore</md-option>
+                                    <md-option value="1" selected>Independent</md-option>
+                                </md-select>
+                            </md-input-container>
 
                         </div>
 
                         <div layout="column">
 
-                            <md-checkbox data-ng-model="vm.reportOptions.strategy1_mode">Strategy 1 mode
-                            </md-checkbox>
-                            <md-checkbox data-ng-model="vm.reportOptions.strategy2_mode">Strategy 2 mode
-                            </md-checkbox>
-                            <md-checkbox data-ng-model="vm.reportOptions.strategy3_mode">Strategy 3 mode
-                            </md-checkbox>
+                            <md-input-container style="margin-bottom: 20px;">
+                                <label for="">Strategy 1 mode</label>
+                                <md-select data-ng-model="vm.reportOptions.strategy1_mode">
+                                    <md-option value="0">Ignore</md-option>
+                                    <md-option value="1" selected>Independent</md-option>
+                                    <md-option value="2">Offsetting (Interdependent - 0/100, 100/0, 50/50)</md-option>
+                                </md-select>
+                            </md-input-container>
+
+                            <md-input-container style="margin-bottom: 20px;">
+                                <label for="">Strategy 2 mode</label>
+                                <md-select data-ng-model="vm.reportOptions.strategy2_mode">
+                                    <md-option value="0">Ignore</md-option>
+                                    <md-option value="1" selected>Independent</md-option>
+                                    <md-option value="2">Offsetting (Interdependent - 0/100, 100/0, 50/50)</md-option>
+                                </md-select>
+                            </md-input-container>
+
+                            <md-input-container style="margin-bottom: 20px;">
+                                <label for="">Strategy 3 mode</label>
+                                <md-select data-ng-model="vm.reportOptions.strategy3_mode">
+                                    <md-option value="0">Ignore</md-option>
+                                    <md-option value="1" selected>Independent</md-option>
+                                    <md-option value="2">Offsetting (Interdependent - 0/100, 100/0, 50/50)</md-option>
+                                </md-select>
+                            </md-input-container>
+
+                        </div>
+
+                        <div layout="row">
+
+                            <md-input-container>
+                                <label for="">Offsetting size</label>
+                                <md-select data-ng-model="vm.reportOptions.approach_multiplier">
+                                    <md-option value="0">0/100</md-option>
+                                    <md-option value="0.5" selected>50/50</md-option>
+                                    <md-option value="1">100/0</md-option>
+                                </md-select>
+                            </md-input-container>
 
                         </div>
 
                     </div>
-
-                    <hr>
 
                     <h2>Filters</h2>
 
@@ -220,16 +255,28 @@
 
                     </div>
 
-                    <h2>Grouping</h2>
+                    <h2>Transaction details</h2>
+
+                    <div layout="row">
+
+                        <md-input-container>
+                            <md-checkbox data-ng-model="vm.reportOptions.show_transaction_details">
+                                Show transaction details
+                            </md-checkbox>
+                        </md-input-container>
+
+                    </div>
+
+                    <h2>Market Value/Exposure % calculation grouping</h2>
 
                     <div layout="row">
                         <md-radio-group ng-model="vm.reportOptions.calculationGroup" layout="row">
 
                             <md-radio-button value="portfolio" class="md-primary">Portfolio</md-radio-button>
-                            <md-radio-button value="account">Account</md-radio-button>
-                            <md-radio-button value="strategy1">Strategy 1</md-radio-button>
-                            <md-radio-button value="strategy2">Strategy 2</md-radio-button>
-                            <md-radio-button value="strategy3">Strategy 3</md-radio-button>
+                            <md-radio-button value="account" class="md-primary">Account</md-radio-button>
+                            <md-radio-button value="strategy1" class="md-primary">Strategy 1</md-radio-button>
+                            <md-radio-button value="strategy2" class="md-primary">Strategy 2</md-radio-button>
+                            <md-radio-button value="strategy3" class="md-primary">Strategy 3</md-radio-button>
 
                         </md-radio-group>
 

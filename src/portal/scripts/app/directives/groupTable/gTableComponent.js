@@ -20,7 +20,7 @@
 
                 logService.component('groupTable', 'initialized');
 
-                console.log('options12312321312', scope.options);
+                console.log('Group Table shell', scope.options);
 
                 scope.findSelectedFeature = function () {
                     var selected = {isOpened: false, templateUrl: ''};

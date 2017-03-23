@@ -249,7 +249,7 @@
                         vm.filters = res.results[0].data.table.filters;
                         vm.sorting = res.results[0].data.table.sorting;
 
-                        logService.collection('vm.columns', vm.columns);
+                        logService.collection(res.results.length + 'GET VIEW vm.columns', vm.columns);
 
                         vm.additionsType = res.results[0].data.tableAdditions.additionsType;
 
@@ -288,7 +288,7 @@
                         vm.filters = defaultList[0].data.table.filters;
                         vm.sorting = defaultList[0].data.table.sorting;
 
-                        logService.collection('vm.columns', vm.columns);
+                        logService.collection(res.results.length + 'GET VIEW (alternative) vm.columns', vm.columns);
 
                         vm.additionsType = defaultList[0].data.tableAdditions.additionsType;
 
@@ -584,6 +584,7 @@
                             filteredData = itemsRepository;
                         }
 
+
                         entityViewerHelperService.transformItems(filteredData, vm.attrs).then(function (data) {
 
                             var entity = data;
@@ -810,33 +811,38 @@
 
                 console.trace();
 
-                if (_params.redraw == true) {
+                if (_params.reportOptionsUpdated == true) {
 
-                    if (vm.isReport == true) {
-
-                        if (_params.silent == true) {
-                            if (vm.originalData.length || vm.originalData.hasOwnProperty('items')) {
-                                reportHandler(vm.originalData)
-                            } else {
-                                vm.updateConfig();
-                            }
-                        } else {
-                            entityViewerDataResolver.getList(vm.entityType, vm.reportOptions).then(function (data) {
-                                reportHandler(data);
-                            })
-                        }
-
-                    } else {
-                        if (_params.silent == true) {
-                            handler(vm.originalData);
-                        } else {
-                            entityViewerDataResolver.getList(vm.entityType, options).then(function (data) {
-                                handler(data);
-                            })
-                        }
-                    }
                 } else {
-                    vm.updateConfig();
+
+                    if (_params.redraw == true) {
+
+                        if (vm.isReport == true) {
+
+                            if (_params.silent == true) {
+                                if (vm.originalData.length || vm.originalData.hasOwnProperty('items')) {
+                                    reportHandler(vm.originalData)
+                                } else {
+                                    vm.updateConfig();
+                                }
+                            } else {
+                                entityViewerDataResolver.getList(vm.entityType, vm.reportOptions).then(function (data) {
+                                    reportHandler(data);
+                                })
+                            }
+
+                        } else {
+                            if (_params.silent == true) {
+                                handler(vm.originalData);
+                            } else {
+                                entityViewerDataResolver.getList(vm.entityType, options).then(function (data) {
+                                    handler(data);
+                                })
+                            }
+                        }
+                    } else {
+                        vm.updateConfig();
+                    }
                 }
 
             };
@@ -1132,8 +1138,11 @@
                                 splitPanel: true,
                                 addEntityBtn: true,
                                 fieldManagerBtn: true,
-                                layoutManager: true
+                                layoutManager: true,
+                                autoReportRequest: false
                             };
+
+                        console.log('vm.components', vm.components);
 
                         vm.isReport = $scope.$parent.vm.isReport || false;
 
@@ -1145,7 +1154,6 @@
                         vm.grouping = [];
                         vm.filters = [];
                         vm.sorting = [];
-
 
                         vm.permission_selected_id = null;
                         vm.permission_selected_entity = null;
@@ -1201,11 +1209,15 @@
 
                                 vm.getView().then(function () {
                                     vm.getAttributes().then(function () {
-                                        vm.transformViewAttributes();
+                                        //vm.transformViewAttributes();
 
                                         vm.tableIsReady = true;
 
-                                        //vm.updateTable();
+                                        if (vm.components.autoReportRequest == true) {
+                                            vm.updateTable();
+                                        }
+
+
                                     });
                                 });
 
@@ -1233,7 +1245,6 @@
                                     var thWidth = $(th[i]).width();
                                     thWidths.push(thWidth);
                                 }
-
 
                                 vm.listView.data.table.columnsWidth = thWidths;
 

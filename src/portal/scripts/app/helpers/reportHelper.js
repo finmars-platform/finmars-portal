@@ -13,7 +13,7 @@
 
             entity.forEach(function (item) {
 
-                if (item.hasOwnProperty('instrument_object')) {
+                if (item.hasOwnProperty('instrument_object') && item.instrument_object) {
 
                     var instrumentObjectKeys = Object.keys(item.instrument_object);
 
@@ -31,7 +31,81 @@
 
                 }
 
-                if (item.hasOwnProperty('account_object')) {
+                if (item.hasOwnProperty('allocation_balance_object') && item.allocation_balance_object) {
+
+                    var instrumentBalanceObjectKeys = Object.keys(item.allocation_balance_object);
+
+                    instrumentBalanceObjectKeys.forEach(function (instrumentObjectKeyItem) {
+                        item['allocation_balance_object_' + instrumentObjectKeyItem] = item.allocation_balance_object[instrumentObjectKeyItem];
+                    });
+
+                    if (item.allocation_balance_object.hasOwnProperty('instrument_type_object')) {
+                        var instrumentBalanceTypeObjectKeys = Object.keys(item.allocation_balance_object.instrument_type_object);
+
+                        instrumentBalanceTypeObjectKeys.forEach(function (instrumentObjectKeyItem) {
+                            item['allocation_balance_type_object_' + instrumentObjectKeyItem] = item.allocation_balance_object.instrument_type_object[instrumentObjectKeyItem];
+                        })
+                    }
+
+                }
+
+                if (item.hasOwnProperty('allocation_pl_object') && item.allocation_pl_object) {
+
+                    var instrumentPlObjectKeys = Object.keys(item.allocation_pl_object);
+
+                    instrumentPlObjectKeys.forEach(function (instrumentObjectKeyItem) {
+                        item['allocation_pl_object_' + instrumentObjectKeyItem] = item.allocation_pl_object[instrumentObjectKeyItem];
+                    });
+
+                    if (item.allocation_pl_object.hasOwnProperty('instrument_type_object')) {
+                        var instrumentPlTypeObjectKeys = Object.keys(item.allocation_pl_object.instrument_type_object);
+
+                        instrumentPlTypeObjectKeys.forEach(function (instrumentObjectKeyItem) {
+                            item['allocation_pl_type_object_' + instrumentObjectKeyItem] = item.allocation_pl_object.instrument_type_object[instrumentObjectKeyItem];
+                        })
+                    }
+
+                }
+
+                if (item.hasOwnProperty('linked_instrument_object') && item.linked_instrument_object) {
+
+                    var linkedInstrumentObjectKeys = Object.keys(item.linked_instrument_object);
+
+                    linkedInstrumentObjectKeys.forEach(function (instrumentObjectKeyItem) {
+                        item['linked_instrument_object_' + instrumentObjectKeyItem] = item.linked_instrument_object[instrumentObjectKeyItem];
+                    });
+
+                    if (item.instrument_object.hasOwnProperty('instrument_type_object')) {
+                        var linkedInstrumentTypeObjectKeys = Object.keys(item.linked_instrument_object.instrument_type_object);
+
+                        linkedInstrumentTypeObjectKeys.forEach(function (instrumentObjectKeyItem) {
+                            item['linked_instrument_object_type_object_' + instrumentObjectKeyItem] = item.linked_instrument_object.instrument_type_object[instrumentObjectKeyItem];
+                        })
+                    }
+
+                }
+
+                if (item.hasOwnProperty('responsible_object') && item.responsible_object) {
+
+                    var responsibleObjectKeys = Object.keys(item.responsible_object);
+
+                    responsibleObjectKeys.forEach(function (responsibleObjectKeyItem) {
+                        item['responsible_object_' + responsibleObjectKeyItem] = item.responsible_object[responsibleObjectKeyItem];
+                    });
+
+                }
+
+                if (item.hasOwnProperty('counterparty_object') && item.counterparty_object) {
+
+                    var counterpartyObjectKeys = Object.keys(item.counterparty_object);
+
+                    counterpartyObjectKeys.forEach(function (counterPartyObjectKeyItem) {
+                        item['counterparty_object_' + counterPartyObjectKeyItem] = item.counterparty_object[counterPartyObjectKeyItem];
+                    });
+
+                }
+
+                if (item.hasOwnProperty('account_object') && item.account_object) {
 
                     var accountObjectKeys = Object.keys(item.account_object);
 
@@ -49,7 +123,61 @@
 
                 }
 
-                if (item.hasOwnProperty('portfolio_object')) {
+                if (item.hasOwnProperty('account_position_object') && item.account_position_object) {
+
+                    var accountPositionObjectKeys = Object.keys(item.account_position_object);
+
+                    accountPositionObjectKeys.forEach(function (accountObjectKeyItem) {
+                        item['account_position_object_' + accountObjectKeyItem] = item.account_position_object[accountObjectKeyItem];
+                    });
+
+                    if (item.account_position_object.hasOwnProperty('type_object')) {
+                        var accountPositionTypeObjectKeys = Object.keys(item.account_position_object.type_object);
+
+                        accountPositionTypeObjectKeys.forEach(function (accountTypeObjectKeyItem) {
+                            item['account_position_type_object_' + accountTypeObjectKeyItem] = item.account_position_object.type_object[accountTypeObjectKeyItem];
+                        })
+                    }
+
+                }
+
+                if (item.hasOwnProperty('account_cash_object') && item.account_cash_object) {
+
+                    var accountCashObjectKeys = Object.keys(item.account_cash_object);
+
+                    accountCashObjectKeys.forEach(function (accountObjectKeyItem) {
+                        item['account_cash_object_' + accountObjectKeyItem] = item.account_cash_object[accountObjectKeyItem];
+                    });
+
+                    if (item.account_cash_object.hasOwnProperty('type_object')) {
+                        var accountCashTypeObjectKeys = Object.keys(item.account_cash_object.type_object);
+
+                        accountCashTypeObjectKeys.forEach(function (accountTypeObjectKeyItem) {
+                            item['account_cash_type_object_' + accountTypeObjectKeyItem] = item.account_cash_object.type_object[accountTypeObjectKeyItem];
+                        })
+                    }
+
+                }
+
+                if (item.hasOwnProperty('account_interim_object') && item.account_interim_object) {
+
+                    var accountInterimObjectKeys = Object.keys(item.account_interim_object);
+
+                    accountInterimObjectKeys.forEach(function (accountObjectKeyItem) {
+                        item['account_interim_object_' + accountObjectKeyItem] = item.account_interim_object[accountObjectKeyItem];
+                    });
+
+                    if (item.account_interim_object.hasOwnProperty('type_object')) {
+                        var accountInterimTypeObjectKeys = Object.keys(item.account_interim_object.type_object);
+
+                        accountInterimTypeObjectKeys.forEach(function (accountTypeObjectKeyItem) {
+                            item['account_interim_type_object_' + accountTypeObjectKeyItem] = item.account_interim_object.type_object[accountTypeObjectKeyItem];
+                        })
+                    }
+
+                }
+
+                if (item.hasOwnProperty('portfolio_object') && item.portfolio_object) {
 
                     var portfolioObjectKeys = Object.keys(item.portfolio_object);
 
@@ -59,7 +187,27 @@
 
                 }
 
-                if (item.hasOwnProperty('strategy1_object')) {
+                if (item.hasOwnProperty('transaction_currency_object') && item.transaction_currency_object) {
+
+                    var transactionCurrencyObjectKeys = Object.keys(item.transaction_currency_object);
+
+                    transactionCurrencyObjectKeys.forEach(function (transactionCurrencyObjectKeyItem) {
+                        item['transaction_currency_object_' + transactionCurrencyObjectKeyItem] = item.transaction_currency_object[transactionCurrencyObjectKeyItem];
+                    });
+
+                }
+
+                if (item.hasOwnProperty('settlement_currency_object') && item.settlement_currency_object) {
+
+                    var settlementCurrencyObjectKeys = Object.keys(item.settlement_currency_object);
+
+                    settlementCurrencyObjectKeys.forEach(function (settlementCurrencyObjectKeyItem) {
+                        item['settlement_currency_object_' + settlementCurrencyObjectKeyItem] = item.settlement_currency_object[settlementCurrencyObjectKeyItem];
+                    });
+
+                }
+
+                if (item.hasOwnProperty('strategy1_object') && item.strategy1_object) {
 
                     var strategy1ObjectKeys = Object.keys(item.strategy1_object);
 
@@ -86,7 +234,27 @@
 
                 }
 
-                if (item.hasOwnProperty('strategy2_object')) {
+                if (item.hasOwnProperty('strategy1_cash_object') && item.strategy1_cash_object) {
+
+                    var strategy1cashObjectKeys = Object.keys(item.strategy1_cash_object);
+
+                    strategy1cashObjectKeys.forEach(function (strategy1ObjectKeyItem) {
+                        item['strategy1_cash_object_' + strategy1ObjectKeyItem] = item.strategy1_cash_object[strategy1ObjectKeyItem];
+                    });
+
+                }
+
+                if (item.hasOwnProperty('strategy1_position_object') && item.strategy1_position_object) {
+
+                    var strategy1positionObjectKeys = Object.keys(item.strategy1_position_object);
+
+                    strategy1positionObjectKeys.forEach(function (strategy1ObjectKeyItem) {
+                        item['strategy1_position_object_' + strategy1ObjectKeyItem] = item.strategy1_position_object[strategy1ObjectKeyItem];
+                    });
+
+                }
+
+                if (item.hasOwnProperty('strategy2_object') && item.strategy2_object) {
 
                     var strategy2ObjectKeys = Object.keys(item.strategy2_object);
 
@@ -112,7 +280,27 @@
 
                 }
 
-                if (item.hasOwnProperty('strategy3_object')) {
+                if (item.hasOwnProperty('strategy2_cash_object') && item.strategy2_cash_object) {
+
+                    var strategy2cashObjectKeys = Object.keys(item.strategy2_cash_object);
+
+                    strategy2cashObjectKeys.forEach(function (strategy2ObjectKeyItem) {
+                        item['strategy2_cash_object_' + strategy2ObjectKeyItem] = item.strategy2_cash_object[strategy2ObjectKeyItem];
+                    });
+
+                }
+
+                if (item.hasOwnProperty('strategy2_position_object') && item.strategy2_position_object) {
+
+                    var strategy2positionObjectKeys = Object.keys(item.strategy2_position_object);
+
+                    strategy2positionObjectKeys.forEach(function (strategy2ObjectKeyItem) {
+                        item['strategy2_position_object_' + strategy2ObjectKeyItem] = item.strategy2_position_object[strategy2ObjectKeyItem];
+                    });
+
+                }
+
+                if (item.hasOwnProperty('strategy3_object') && item.strategy3_object) {
 
                     var strategy3ObjectKeys = Object.keys(item.strategy3_object);
 
@@ -138,9 +326,29 @@
 
                 }
 
+                if (item.hasOwnProperty('strategy3_cash_object') && item.strategy3_cash_object) {
+
+                    var strategy3cashObjectKeys = Object.keys(item.strategy3_cash_object);
+
+                    strategy3cashObjectKeys.forEach(function (strategy3ObjectKeyItem) {
+                        item['strategy3_cash_object_' + strategy3ObjectKeyItem] = item.strategy3_cash_object[strategy3ObjectKeyItem];
+                    });
+
+                }
+
+                if (item.hasOwnProperty('strategy3_position_object') && item.strategy3_cash_object) {
+
+                    var strategy3positionObjectKeys = Object.keys(item.strategy3_position_object);
+
+                    strategy3positionObjectKeys.forEach(function (strategy3ObjectKeyItem) {
+                        item['strategy3_position_object_' + strategy3ObjectKeyItem] = item.strategy3_position_object[strategy3ObjectKeyItem];
+                    });
+
+                }
+
                 // extract dynamic attributes
 
-                if (item.hasOwnProperty('instrument_object')) {
+                if (item.hasOwnProperty('instrument_object') && item.instrument_object) {
 
                     if (item.instrument_object.attributes.length) {
 
@@ -168,7 +376,7 @@
 
                 }
 
-                if (item.hasOwnProperty('account_object')) {
+                if (item.hasOwnProperty('account_object') && item.account_object) {
 
                     if (item.account_object.attributes.length) {
 
@@ -196,7 +404,91 @@
 
                 }
 
-                if (item.hasOwnProperty('portfolio_object')) {
+                if (item.hasOwnProperty('account_position_object') && item.account_position_object) {
+
+                    if (item.account_position_object.attributes.length) {
+
+                        item.account_position_object.attributes.forEach(function (attribute) {
+
+                            if (attribute.hasOwnProperty('attribute_type_object')) {
+
+                                if (attribute.attribute_type_object.value_type == 10) {
+                                    item['Account Position.' + attribute.attribute_type_object.display_name] = attribute.value_string;
+                                }
+                                if (attribute.attribute_type_object.value_type == 20) {
+                                    item['Account Position.' + attribute.attribute_type_object.display_name] = attribute.value_float;
+                                }
+                                if (attribute.attribute_type_object.value_type == 40) {
+                                    item['Account Position.' + attribute.attribute_type_object.display_name] = attribute.value_date;
+                                }
+                                if (attribute.attribute_type_object.value_type == 30) {
+                                    item['Account Position.' + attribute.attribute_type_object.display_name] = attribute.classifier_object.name;
+                                }
+                            }
+
+                        })
+
+                    }
+
+                }
+
+                if (item.hasOwnProperty('account_cash_object') && item.account_cash_object) {
+
+                    if (item.account_cash_object.attributes.length) {
+
+                        item.account_cash_object.attributes.forEach(function (attribute) {
+
+                            if (attribute.hasOwnProperty('attribute_type_object')) {
+
+                                if (attribute.attribute_type_object.value_type == 10) {
+                                    item['Account Cash.' + attribute.attribute_type_object.display_name] = attribute.value_string;
+                                }
+                                if (attribute.attribute_type_object.value_type == 20) {
+                                    item['Account Cash.' + attribute.attribute_type_object.display_name] = attribute.value_float;
+                                }
+                                if (attribute.attribute_type_object.value_type == 40) {
+                                    item['Account Cash.' + attribute.attribute_type_object.display_name] = attribute.value_date;
+                                }
+                                if (attribute.attribute_type_object.value_type == 30) {
+                                    item['Account Cash.' + attribute.attribute_type_object.display_name] = attribute.classifier_object.name;
+                                }
+                            }
+
+                        })
+
+                    }
+
+                }
+
+                if (item.hasOwnProperty('account_interim_object') && item.account_interim_object) {
+
+                    if (item.account_interim_object.attributes.length) {
+
+                        item.account_interim_object.attributes.forEach(function (attribute) {
+
+                            if (attribute.hasOwnProperty('attribute_type_object')) {
+
+                                if (attribute.attribute_type_object.value_type == 10) {
+                                    item['Account interim.' + attribute.attribute_type_object.display_name] = attribute.value_string;
+                                }
+                                if (attribute.attribute_type_object.value_type == 20) {
+                                    item['Account interim.' + attribute.attribute_type_object.display_name] = attribute.value_float;
+                                }
+                                if (attribute.attribute_type_object.value_type == 40) {
+                                    item['Account interim.' + attribute.attribute_type_object.display_name] = attribute.value_date;
+                                }
+                                if (attribute.attribute_type_object.value_type == 30) {
+                                    item['Account interim.' + attribute.attribute_type_object.display_name] = attribute.classifier_object.name;
+                                }
+                            }
+
+                        })
+
+                    }
+
+                }
+
+                if (item.hasOwnProperty('portfolio_object') && item.portfolio_object) {
 
                     if (item.portfolio_object.attributes.length) {
 

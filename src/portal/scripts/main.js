@@ -50,6 +50,7 @@ app.controller('DashboardController', ['$scope', '$mdDialog', require('./app/con
 app.controller('ActionsController', ['$scope', '$mdDialog', require('./app/controllers/actionsController')]);
 app.controller('ImportInstrumentDialogController', ['$scope', '$mdDialog', require('./app/controllers/dialogs/importInstrumentDialogController')]);
 app.controller('ImportTransactionDialogController', ['$scope', '$mdDialog', require('./app/controllers/dialogs/importTransactionDialogController')]);
+app.controller('ImportTransactionErrorsDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/importTransactionErrorsDialogController')]);
 app.controller('AutomatedUploadsHistoryDialogController', ['$scope', '$mdDialog', '$mdpTimePicker', require('./app/controllers/dialogs/automatedUploadsHistoryDialogController')]);
 app.controller('FillPriceHistoryDialogController', ['$scope', '$mdDialog', require('./app/controllers/dialogs/fillPriceHistoryDialogController')]);
 app.controller('EventScheduleConfigDialogController', ['$scope', '$mdDialog', require('./app/controllers/dialogs/eventScheduleConfigDialogController')]);
@@ -150,6 +151,7 @@ app.controller('HeaderNotificationsDialogController', ['$scope', '$mdDialog', re
 
 app.controller('SettingsGeneralController', ['$scope', '$state', require('./app/controllers/settings/settingsGeneralController')]);
 app.controller('SettingsGeneralProfileController', ['$scope', require('./app/controllers/settings/general/settingsGeneralProfileController')]);
+app.controller('SettingsGeneralChangePasswordController', ['$scope', '$mdDialog', require('./app/controllers/settings/general/settingsGeneralChangePasswordController')]);
 app.controller('SettingsGeneralDataProvidersController', ['$scope', require('./app/controllers/settings/general/settingsGeneralDataProvidersController')]);
 app.controller('SettingsGeneralDataProvidersConfigController', ['$scope', '$stateParams', '$mdDialog', '$state', require('./app/controllers/settings/general/settingsGeneralDataProvidersConfigController')]);
 app.controller('SettingsGeneralInstrumentImportController', ['$scope', '$mdDialog', require('./app/controllers/settings/general/settingsGeneralInstrumentImportController')]);

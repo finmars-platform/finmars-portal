@@ -131,7 +131,8 @@
                             splitPanel: false,
                             addEntityBtn: false,
                             fieldManagerBtn: false,
-                            layoutManager: false
+                            layoutManager: false,
+                            autoReportRequest: true
                         }
                     };
 
@@ -148,7 +149,8 @@
                             splitPanel: false,
                             addEntityBtn: false,
                             fieldManagerBtn: false,
-                            layoutManager: false
+                            layoutManager: false,
+                            autoReportRequest: true
                         }
                     };
 
@@ -165,7 +167,8 @@
                             splitPanel: false,
                             addEntityBtn: false,
                             fieldManagerBtn: false,
-                            layoutManager: false
+                            layoutManager: false,
+                            autoReportRequest: true
                         }
                     };
 
@@ -182,7 +185,8 @@
                             splitPanel: false,
                             addEntityBtn: false,
                             fieldManagerBtn: false,
-                            layoutManager: false
+                            layoutManager: false,
+                            autoReportRequest: true
                         }
                     };
                 }

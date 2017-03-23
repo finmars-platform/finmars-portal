@@ -115,6 +115,28 @@
         })
     };
 
+    var changePassword = function (id, user) {
+        return window.fetch(baseUrl + 'users/user/' + id + '/set-password/', {
+            method: 'PUT',
+            credentials: 'include',
+            headers: {
+                'X-CSRFToken': cookieService.getCookie('csrftoken'),
+                Accept: 'application/json',
+                'Content-type': 'application/json'
+            },
+            body: JSON.stringify(user)
+        }).then(function (data) {
+            return new Promise(function (resolve, reject) {
+                data.json().then(function (result) {
+                    resolve({
+                        response: result,
+                        status: data.status
+                    })
+                })
+            });
+        })
+    };
+
     var update = function (id, user) {
         return window.fetch(baseUrl + 'users/user/' + id + '/', {
             method: 'PUT',
@@ -231,6 +253,20 @@
         })
     };
 
+    var setMasterUser = function (id) {
+        return window.fetch(baseUrl + 'users/master-user/' + id + '/set-current/', {
+            method: 'PATCH',
+            credentials: 'include',
+            headers: {
+                'X-CSRFToken': cookieService.getCookie('csrftoken'),
+                Accept: 'application/json',
+                'Content-type': 'application/json'
+            }
+        }).then(function (data) {
+            return data.json();
+        })
+    };
+
     var getMemberList = function () {
         return window.fetch(baseUrl + 'users/member/', {
             method: 'GET',
@@ -321,6 +357,7 @@
         getList: getList,
         getByKey: getByKey,
         getMe: getMe,
+        changePassword: changePassword,
         update: update,
         patch: patch,
         deleteByKey: deleteByKey,
@@ -330,6 +367,7 @@
         updateMaster: updateMaster,
         patchMaster: patchMaster,
         deleteMasterByKey: deleteMasterByKey,
+        setMasterUser: setMasterUser,
 
         getMemberList: getMemberList,
         getMemberByKey: getMemberByKey,
