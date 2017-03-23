@@ -28,11 +28,14 @@
 
         var result = '';
 
-        groupedItem.attributes.forEach(function (item) {
-            if (item.attribute_type_object.id == attributeId) {
-                result = returnValue(item);
-            }
-        });
+
+        if (groupedItem.attributes) {
+            groupedItem.attributes.forEach(function (item) {
+                if (item.attribute_type_object.id == attributeId) {
+                    result = returnValue(item);
+                }
+            });
+        }
 
         return result;
 
