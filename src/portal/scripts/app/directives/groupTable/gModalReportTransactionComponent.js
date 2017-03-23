@@ -43,6 +43,53 @@
 
         vm.tabAttrsReady = false;
 
+        vm.toggleAll = function ($event, checkboxType) {
+
+            var parent = $($event.target).parent().parent();
+            var checkboxes = parent.find('.g-checkbox-row div md-checkbox');
+
+            var i;
+            var checkbox;
+
+            for (i = 0; i < checkboxes.length; i = i + 1) {
+
+                (function (index) {
+
+
+                    //console.log('checkbox', checkbox);
+
+                    setTimeout(function () {
+
+                        //console.log('12312331232', checkbox);
+
+                        if (checkboxType == 'columns' && !$(checkboxes[index]).hasClass('md-g-green') && !$(checkboxes[index]).hasClass('md-primary')) {
+
+                            checkboxes[index].dispatchEvent(new Event('click'))
+
+                        }
+
+                        if (checkboxType == 'groups' && $(checkboxes[index]).hasClass('md-g-green')) {
+
+                            checkboxes[index].dispatchEvent(new Event('click'))
+
+                        }
+
+                        if (checkboxType == 'filters' && $(checkboxes[index]).hasClass('md-primary')) {
+
+
+                            checkboxes[index].dispatchEvent(new Event('click'))
+
+                        }
+
+                        $scope.$apply();
+
+                    }, 1);
+                })(i);
+            }
+
+
+        };
+
         // refactore this block
         function restoreAttrs() {
             function fillTabWithAttrs() {
@@ -146,13 +193,149 @@
 
             //vm.entityAttrs = metaService.getEntityAttrs(vm.entityType);
 
-            vm.transactionAttrs = metaService.getEntityAttrs('transaction');
+            vm.transactionAttrs = metaService.getEntityAttrs('transaction-report').map(function (item) {
+                item.name = 'Transaction.' + item.name;
+                return item;
+            });
+
+            vm.portfolioAttrs = metaService.getEntityAttrs('portfolio').map(function (item) {
+                item.name = 'Portfolio.' + item.name;
+                item.attribute_entity = 'portfolio';
+                item.key = 'portfolio_object_' + item.key;
+                return item;
+            });
+
+            vm.instrumentAttrs = metaService.getEntityAttrs('instrument').map(function (item) {
+                item.name = 'Instrument.' + item.name;
+                item.attribute_entity = 'instrument';
+                item.key = 'instrument_object_' + item.key;
+                return item;
+            });
+
+            vm.responsibleAttrs = metaService.getEntityAttrs('responsible').map(function (item) {
+                item.name = 'Responsible.' + item.name;
+                item.attribute_entity = 'responsible';
+                item.key = 'responsible_object_' + item.key;
+                return item;
+            });
+
+            vm.counterpartyAttrs = metaService.getEntityAttrs('counterparty').map(function (item) {
+                item.name = 'Counterparty.' + item.name;
+                item.attribute_entity = 'counterparty';
+                item.key = 'counterparty_object_' + item.key;
+                return item;
+            });
+
+
+            // instruments
+
+            vm.linkedInstrumentAttrs = metaService.getEntityAttrs('instrument').map(function (item) {
+                item.name = 'Linked instrument.' + item.name;
+                item.attribute_entity = 'instrument';
+                item.key = 'linked_instrument_object_' + item.key;
+                return item;
+            });
+
+            vm.allocationBalanceAttrs = metaService.getEntityAttrs('instrument').map(function (item) {
+                item.name = 'Allocation balance.' + item.name;
+                item.attribute_entity = 'instrument';
+                item.key = 'allocation_balance_object_' + item.key;
+                return item;
+            });
+
+            vm.allocationPlAttrs = metaService.getEntityAttrs('instrument').map(function (item) {
+                item.name = 'Allocation P&L.' + item.name;
+                item.attribute_entity = 'instrument';
+                item.key = 'allocation_pl_object_' + item.key;
+                return item;
+            });
+
+            // currencies
+
+            vm.transactionCurrencyAttrs = metaService.getEntityAttrs('currency').map(function (item) {
+                item.name = 'Transaction currency.' + item.name;
+                item.attribute_entity = 'currency';
+                item.key = 'transaction_currency_object_' + item.key;
+                return item;
+            });
+
+            vm.settlementCurrencyAttrs = metaService.getEntityAttrs('currency').map(function (item) {
+                item.name = 'Settlement currency.' + item.name;
+                item.attribute_entity = 'currency';
+                item.key = 'settlement_currency_object_' + item.key;
+                return item;
+            });
+
+
+            // accounts
+
+            vm.accountPositionAttrs = metaService.getEntityAttrs('account').map(function (item) {
+                item.name = 'Account Position.' + item.name;
+                item.attribute_entity = 'account';
+                item.key = 'account_position_object_' + item.key;
+                return item;
+            });
+
+            vm.accountCashAttrs = metaService.getEntityAttrs('account').map(function (item) {
+                item.name = 'Account Cash.' + item.name;
+                item.attribute_entity = 'account';
+                item.key = 'account_cash_object_' + item.key;
+                return item;
+            });
+
+            vm.accountInterimAttrs = metaService.getEntityAttrs('account').map(function (item) {
+                item.name = 'Account interim.' + item.name;
+                item.attribute_entity = 'account';
+                item.key = 'account_interim_object_' + item.key;
+                return item;
+            });
+
+
+            // strategies
+
+            vm.strategy1cashAttrs = metaService.getEntityAttrs('strategy-1').map(function (item) {
+                item.name = 'Strategy1 Cash.' + item.name;
+                item.key = 'strategy1_cash_object_' + item.key;
+                return item;
+            });
+            vm.strategy1positionAttrs = metaService.getEntityAttrs('strategy-1').map(function (item) {
+                item.name = 'Strategy1 Position.' + item.name;
+                item.key = 'strategy1_position_object_' + item.key;
+                return item;
+            });
+
+            vm.strategy2cashAttrs = metaService.getEntityAttrs('strategy-2').map(function (item) {
+                item.name = 'Strategy2 Cash.' + item.name;
+                item.key = 'strategy2_cash_object_' + item.key;
+                return item;
+            });
+            vm.strategy2positionAttrs = metaService.getEntityAttrs('strategy-2').map(function (item) {
+                item.name = 'Strategy2 Position.' + item.name;
+                item.key = 'strategy2_position_object_' + item.key;
+                return item;
+            });
+
+
+            vm.strategy3cashAttrs = metaService.getEntityAttrs('strategy-3').map(function (item) {
+                item.name = 'Strategy3 Cash.' + item.name;
+                item.key = 'strategy3_cash_object_' + item.key;
+                return item;
+            });
+            vm.strategy3positionAttrs = metaService.getEntityAttrs('strategy-3').map(function (item) {
+                item.name = 'Strategy3 Position.' + item.name;
+                item.key = 'strategy3_position_object_' + item.key;
+                return item;
+            });
+
 
             balanceReportCustomAttrService.getList().then(function (data) {
                 vm.custom = data.results;
                 vm.custom.forEach(function (customItem) {
                     customItem.columnType = 'custom-field';
                 });
+
+                restoreAttrs();
+                syncAttrs();
 
                 vm.readyStatus.content = true;
                 $scope.$apply();
@@ -202,12 +385,12 @@
 
         vm.bindReportItemName = function (item) {
 
-            if (item.name.toLocaleLowerCase().indexOf('strategy') == -1) {
-
-                var pieces = item.name.split('.');
-
-                return pieces[pieces.length - 1];
-            }
+            //if (item.name.toLocaleLowerCase().indexOf('strategy') == -1) {
+            //
+            //    var pieces = item.name.split('.');
+            //
+            //    return pieces[pieces.length - 1];
+            //}
 
             return item.name;
         };
@@ -215,6 +398,32 @@
         var syncAttrs = function () {
 
             syncTypeAttrs(vm.transactionAttrs);
+
+            syncTypeAttrs(vm.portfolioAttrs);
+            syncTypeAttrs(vm.instrumentAttrs);
+            syncTypeAttrs(vm.responsibleAttrs);
+            syncTypeAttrs(vm.counterpartyAttrs);
+
+            syncTypeAttrs(vm.linkedInstrumentAttrs);
+            syncTypeAttrs(vm.allocationBalanceAttrs);
+            syncTypeAttrs(vm.allocationPlAttrs);
+
+            syncTypeAttrs(vm.transactionCurrencyAttrs);
+            syncTypeAttrs(vm.settlementCurrencyAttrs);
+
+            syncTypeAttrs(vm.accountPositionAttrs);
+            syncTypeAttrs(vm.accountCashAttrs);
+            syncTypeAttrs(vm.accountInterimAttrs);
+
+            syncTypeAttrs(vm.strategy1cashAttrs);
+            syncTypeAttrs(vm.strategy1positionAttrs);
+
+            syncTypeAttrs(vm.strategy2cashAttrs);
+            syncTypeAttrs(vm.strategy2positionAttrs);
+
+            syncTypeAttrs(vm.strategy3cashAttrs);
+            syncTypeAttrs(vm.strategy3positionAttrs);
+
             syncTypeAttrs(vm.custom);
 
         };
@@ -349,6 +558,32 @@
         vm.updateAttrs = function () {
 
             updateTypeAttrs(vm.transactionAttrs);
+
+            updateTypeAttrs(vm.portfolioAttrs);
+            updateTypeAttrs(vm.instrumentAttrs);
+            updateTypeAttrs(vm.responsibleAttrs);
+            updateTypeAttrs(vm.counterpartyAttrs);
+
+            updateTypeAttrs(vm.linkedInstrumentAttrs);
+            updateTypeAttrs(vm.allocationBalanceAttrs);
+            updateTypeAttrs(vm.allocationPlAttrs);
+
+            updateTypeAttrs(vm.accountPositionAttrs);
+            updateTypeAttrs(vm.accountCashAttrs);
+            updateTypeAttrs(vm.accountInterimAttrs);
+
+            updateTypeAttrs(vm.transactionCurrencyAttrs);
+            updateTypeAttrs(vm.settlementCurrencyAttrs);
+
+            updateTypeAttrs(vm.strategy1cashAttrs);
+            updateTypeAttrs(vm.strategy1positionAttrs);
+
+            updateTypeAttrs(vm.strategy2cashAttrs);
+            updateTypeAttrs(vm.strategy2positionAttrs);
+
+            updateTypeAttrs(vm.strategy3cashAttrs);
+            updateTypeAttrs(vm.strategy3positionAttrs);
+
             updateTypeAttrs(vm.custom);
 
 

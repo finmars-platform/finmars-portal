@@ -1316,6 +1316,11 @@
                 //    "value_type": "field"
                 //},
                 {
+                    "key": "item_type_name",
+                    "name": "Item Type",
+                    "value_type": 10
+                },
+                {
                     "key": "position_size",
                     "name": "Position size",
                     "value_type": "float"
@@ -1846,38 +1851,18 @@
             ],
             "transaction-report": [
                 {
-                    "key": "account_cash",
-                    "name": "Account cash",
+                    "key": "transaction_code",
+                    "name": "Transaction Code",
+                    "value_type": 20
+                },
+                {
+                    "key": "transaction_class",
+                    "name": "Transaction class",
                     "value_type": "field"
                 },
                 {
-                    "key": "account_interim",
-                    "name": "Account interim",
-                    "value_type": "field"
-                },
-                {
-                    "key": "account_position",
-                    "name": "Account position",
-                    "value_type": "field"
-                },
-                {
-                    "key": "account_date",
-                    "name": "Account date",
-                    "value_type": 40
-                },
-                {
-                    "key": "allocation_balance",
-                    "name": "Allocation balance", // link to instrument
-                    "value_type": "field"
-                },
-                {
-                    "key": "allocation_pl",
-                    "name": "Allocation pl", // link to instrument
-                    "value_type": "field"
-                },
-                {
-                    "key": "carry_with_sign",
-                    "name": "Carry with sign",
+                    "key": "position_size_with_sign",
+                    "name": "Position Size with sign",
                     "value_type": "float"
                 },
                 {
@@ -1886,29 +1871,14 @@
                     "value_type": "float"
                 },
                 {
-                    "key": "cash_date",
-                    "name": "Cash date",
-                    "value_type": 40
+                    "key": "principal_with_sign",
+                    "name": "Principal with sign",
+                    "value_type": "float"
                 },
                 {
-                    "key": "complex-transaction",
-                    "name": "Complex transaction",
-                    "value_type": "field"
-                },
-                {
-                    "key": "counterparty",
-                    "name": "Counterparty",
-                    "value_type": "field"
-                },
-                {
-                    "key": "instrument",
-                    "name": "Instrument",
-                    "value_type": "field"
-                },
-                {
-                    "key": "linked_instrument",
-                    "name": "Linked Instrument",
-                    "value_type": "field"
+                    "key": "carry_with_sign",
+                    "name": "Carry with sign",
+                    "value_type": "float"
                 },
                 {
                     "key": "overheads_with_sign",
@@ -1916,79 +1886,54 @@
                     "value_type": "float"
                 },
                 {
-                    "key": "portfolio",
-                    "name": "Portfolio",
-                    "value_type": "field"
+                    "key": "accounting_date",
+                    "name": "Accounting date",
+                    "value_type": 40
                 },
                 {
-                    "key": "principal_with_sign",
-                    "name": "Principal with sign",
-                    "value_type": "float"
+                    "key": "cash_date",
+                    "name": "Cash date",
+                    "value_type": 40
                 },
+                //{
+                //    "key": "transaction_date",
+                //    "name": "Transaction date",
+                //    "value_type": 40
+                //},
                 {
                     "key": "reference_fx_rate",
                     "name": "Reference fx rate",
-                    "value_type": "float"
+                    "value_type": 'float'
                 },
                 {
-                    "key": "responsible",
-                    "name": "Responsible",
-                    "value_type": "field"
+                    "key": "is_locked",
+                    "name": "Is locked",
+                    "value_type": 'boolean'
                 },
                 {
-                    "key": "settlement_currency",
-                    "name": "Settlement currency",
-                    "value_type": "field"
+                    "key": "is_canceled",
+                    "name": "Is canceled",
+                    "value_type": 'boolean'
                 },
                 {
-                    "key": "strategy1_cash",
-                    "name": "Strategy 1 cash",
-                    "value_type": "field"
+                    "key": "factor",
+                    "name": "Factor",
+                    "value_type": 'float'
                 },
                 {
-                    "key": "strategy1_position",
-                    "name": "Strategy 1 position",
-                    "value_type": "field"
+                    "key": "principal_amount",
+                    "name": "Principal amount",
+                    "value_type": 'float'
                 },
                 {
-                    "key": "strategy2_cash",
-                    "name": "Strategy 2 cash",
-                    "value_type": "field"
+                    "key": "carry_amount",
+                    "name": "Carry amount",
+                    "value_type": 'float'
                 },
                 {
-                    "key": "strategy2_position",
-                    "name": "Strategy 2 position",
-                    "value_type": "field"
-                },
-                {
-                    "key": "strategy3_cash",
-                    "name": "Strategy 3 cash",
-                    "value_type": "field"
-                },
-                {
-                    "key": "strategy3_position",
-                    "name": "Strategy 3 position",
-                    "value_type": "field"
-                },
-                {
-                    "key": "transaction_class",
-                    "name": "Transaction class",
-                    "value_type": "field"
-                },
-                {
-                    "key": "transaction_code",
-                    "name": "Transaction code",
-                    "value_type": "float"
-                },
-                {
-                    "key": "transaction_currency",
-                    "name": "Transaction currency",
-                    "value_type": "field"
-                },
-                {
-                    "key": "transaction_date",
-                    "name": "Transaction date",
-                    "value_type": 40
+                    "key": "overheads",
+                    "name": "overheads",
+                    "value_type": 'float'
                 }
             ],
             "cash-flow-projection-report": [

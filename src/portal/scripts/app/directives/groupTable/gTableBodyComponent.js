@@ -795,7 +795,7 @@
                     if (result !== undefined) {
 
                         if (column.value_type == 20 || column.value_type == 'float') {
-                            return result.toFixed(2) + '';
+                            return parseFloat(result).toFixed(2) + '';
                         } else {
                             return result;
                         }
@@ -879,6 +879,12 @@
                         for (c = 0; c < scope.columns.length; c = c + 1) {
 
                             if (scope.columns[c].key == column.key) {
+
+                                if (column.value_type == 10) {
+                                    if (groupedItem.hasOwnProperty(column.key)) {
+                                        return groupedItem[column.key];
+                                    }
+                                }
 
                                 if (groupedItem[column.key + '_object']) {
 
@@ -990,12 +996,12 @@
                                                 if (options && options.hasOwnProperty('reportItem')) {
                                                     if (options.reportItem.isFirstOfFolded && options.reportItem.isFirstOfFolded == true) {
                                                         //console.log(options);
-                                                        return options.reportItem.subTotal[entityAttrs[e].key].toFixed(2) + '';
+                                                        return parseFloat(options.reportItem.subTotal[entityAttrs[e].key]).toFixed(2) + '';
                                                     } else {
-                                                        return groupedItem[entityAttrs[e].key].toFixed(2) + '';
+                                                        return parseFloat(groupedItem[entityAttrs[e].key]).toFixed(2) + '';
                                                     }
                                                 } else {
-                                                    return groupedItem[entityAttrs[e].key].toFixed(2) + '';
+                                                    return parseFloat(groupedItem[entityAttrs[e].key]).toFixed(2) + '';
                                                 }
                                             } else {
 

@@ -290,6 +290,15 @@
                     }
                 }
             })
+            .state('app.settings.general.change-password', {
+                url: '/change-password',
+                views: {
+                    'change-password': {
+                        templateUrl: 'views/settings/change-password-settings-view.html',
+                        controller: 'SettingsGeneralChangePasswordController as vm'
+                    }
+                }
+            })
             .state('app.settings.general.data-providers', {
                 url: '/data-providers',
                 views: {

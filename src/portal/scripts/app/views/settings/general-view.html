@@ -7,6 +7,13 @@
                 <div data-ui-view="profile"></div>
             </md-content>
         </md-tab>
+        <md-tab label="Change Password" data-ui-sref="app.settings.general.change-password"
+                md-active="$state.includes('app.settings.general.change-password')">
+            <md-content class=" md-padding
+        ">
+                <div data-ui-view="change-password"></div>
+            </md-content>
+        </md-tab>
         <md-tab label="Data providers" data-ui-sref="app.settings.general.data-providers"
                 md-active="vm.checkProviders()">
             <md-content class=" md-padding

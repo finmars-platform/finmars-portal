@@ -19,7 +19,7 @@
     var instrumentDailyPricingModelService = require('../../services/instrument/instrumentDailyPricingModelService');
     var importPriceDownloadSchemeService = require('../../services/import/importPriceDownloadSchemeService');
 
-    var importInstrumentService = require('../../services/import/importInstrumentService');
+    var importTransactionService = require('../../services/import/importTransactionService');
     var instrumentPaymentSizeDetailService = require('../../services/instrument/instrumentPaymentSizeDetailService');
     var instrumentAttributeTypeService = require('../../services/instrument/instrumentAttributeTypeService');
 
@@ -144,11 +144,41 @@
         vm.load = function ($event) {
             vm.readyStatus.processing = true;
             //vm.config.task = 81;
-            importInstrumentService.startImport(vm.config).then(function (data) {
+
+            var formData = new FormData();
+
+            if (vm.config.task_id) {
+                formData.append('task_id', vm.config.task_id);
+            } else {
+
+                formData.append('file', vm.config.file);
+                formData.append('scheme', vm.config.scheme);
+                formData.append('error_handling', vm.config.error_handling);
+            }
+
+            importTransactionService.startImport(formData).then(function (data) {
                 console.log('data', data);
                 if (data.status != 500) {
                     vm.config = data.response;
-                    if (vm.config.task_object.status == 'D' && vm.config.instrument !== null) {
+                    if (vm.config.task_status == 'SUCCESS') {
+
+
+                        if (vm.config.error_rows.length == 0) {
+                            vm.finishedSuccess = true;
+                        } else {
+                            $mdDialog.show({
+                                controller: 'ImportTransactionErrorsDialogController as vm',
+                                templateUrl: 'views/dialogs/import-transaction-errors-dialog-view.html',
+                                targetEvent: $event,
+                                locals: {
+                                    data: vm.config
+                                },
+                                preserveScope: true,
+                                autoWrap: true,
+                                skipHide: true
+                            })
+                        }
+
                         vm.readyStatus.processing = false;
                         vm.dataIsImported = true;
 

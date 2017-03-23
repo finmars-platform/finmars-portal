@@ -10,11 +10,11 @@
             <div layout="row">
                 <md-card style="width: 100%">
                     <md-card-content class="p-t-26">
-                        <div layout="row">
+                        <div layout="row" style="margin-bottom: 20px">
                             <div layout="column">
                                 <md-input-container flex="40" style="margin-bottom: 0">
                                     <label for="">File</label>
-                                    <input type="file" data-ng-model="vm.config.transaction_file">
+                                    <input type="file" file-read="vm.config.file">
                                 </md-input-container>
 
                             </div>
@@ -47,6 +47,18 @@
                                                           md-diameter="48"></md-progress-circular>
                                 </div>
                             </div>
+                        </div>
+                        <div layout="row">
+                            <md-input-container>
+                                <label for="">Error handling</label>
+                                <md-select data-ng-model="vm.config.error_handling">
+                                    <md-option value="continue">Continue</md-option>
+                                    <md-option value="break">Break on first error</md-option>
+                                </md-select>
+                            </md-input-container>
+                        </div>
+                        <div layout="row" data-ng-if="vm.finishedSuccess" layout-align="center center">
+                            <h2>The data successfully imported.</h2>
                         </div>
                     </md-card-content>
                 </md-card>

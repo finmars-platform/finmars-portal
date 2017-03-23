@@ -309,17 +309,17 @@
                 exposureValueTotal = exposureValueTotal + item.exposure;
             });
 
-            //console.log('marketValueTotal', marketValueTotal);
+            console.log('marketValueTotal', marketValueTotal);
             //console.log('exposureValueTotal', exposureValueTotal);
 
             group.items.forEach(function (item) {
 
-                if (marketValueTotal > 0) {
+                if (marketValueTotal != 0) {
                     item.market_value_percent = item.market_value / marketValueTotal * 100;
                 } else {
                     item.market_value_percent = 0;
                 }
-                if (exposureValueTotal > 0) {
+                if (exposureValueTotal != 0) {
                     item.exposure_percent = item.exposure / exposureValueTotal * 100;
                 } else {
                     item.exposure_percent = 0;
