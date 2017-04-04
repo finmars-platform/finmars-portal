@@ -309,7 +309,7 @@
                 exposureValueTotal = exposureValueTotal + item.exposure;
             });
 
-            console.log('marketValueTotal', marketValueTotal);
+            //console.log('marketValueTotal', marketValueTotal);
             //console.log('exposureValueTotal', exposureValueTotal);
 
             group.items.forEach(function (item) {

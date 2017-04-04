@@ -75,9 +75,10 @@
                 vm.eventsList = data.results;
                 $scope.$apply();
                 data.results.map(function (event) {
-                    ;
-                    var eventActions = event.event_schedule_object['actions']; // button in event dialog
-                    vm.openEventWindow(target, event.id, eventActions);
+                    if (event.is_need_reaction == true) {
+                        var eventActions = event.event_schedule_object['actions']; // button in event dialog
+                        vm.openEventWindow(target, event.id, eventActions);
+                    }
                 });
             });
         };
@@ -95,7 +96,7 @@
                     }
                 }
             })
-        }
+        };
 
         vm.getView = function () {
 

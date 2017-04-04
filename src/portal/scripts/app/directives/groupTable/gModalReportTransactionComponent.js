@@ -327,7 +327,6 @@
                 return item;
             });
 
-
             balanceReportCustomAttrService.getList().then(function (data) {
                 vm.custom = data.results;
                 vm.custom.forEach(function (customItem) {
@@ -508,7 +507,17 @@
                                 g = g - 1;
                             }
                         }
-                    } else {
+                    }
+
+                    else if (typeAttrs[i].name === grouping[g].name) {
+
+                        groupExist = true;
+                        if (typeAttrs[i].groups === false) {
+                            grouping.splice(c, 1);
+                            g = g - 1;
+                        }
+                    }
+                    else {
                         if (typeAttrs[i].id === grouping[g].id) {
                             groupExist = true;
                             if (typeAttrs[i].groups === false) {

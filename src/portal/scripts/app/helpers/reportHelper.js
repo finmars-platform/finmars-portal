@@ -75,7 +75,7 @@
                         item['linked_instrument_object_' + instrumentObjectKeyItem] = item.linked_instrument_object[instrumentObjectKeyItem];
                     });
 
-                    if (item.instrument_object.hasOwnProperty('instrument_type_object')) {
+                    if (item.linked_instrument_object.hasOwnProperty('instrument_type_object')) {
                         var linkedInstrumentTypeObjectKeys = Object.keys(item.linked_instrument_object.instrument_type_object);
 
                         linkedInstrumentTypeObjectKeys.forEach(function (instrumentObjectKeyItem) {
@@ -346,87 +346,104 @@
 
                 }
 
+                // custom fields
+
+                if (item.hasOwnProperty('custom_fields')) {
+                    item.custom_fields.forEach(function (customField) {
+                        item[customField.custom_field_object.name] = customField.value;
+                    })
+                }
+
                 // extract dynamic attributes
 
                 if (item.hasOwnProperty('instrument_object') && item.instrument_object) {
 
-                    if (item.instrument_object.attributes.length) {
+                    if (item.instrument_object.hasOwnProperty('attributes')) {
+                        if (item.instrument_object.attributes.length) {
 
-                        item.instrument_object.attributes.forEach(function (attribute) {
+                            item.instrument_object.attributes.forEach(function (attribute) {
 
-                            if (attribute.hasOwnProperty('attribute_type_object')) {
+                                if (attribute.hasOwnProperty('attribute_type_object')) {
 
-                                if (attribute.attribute_type_object.value_type == 10) {
-                                    item['Instrument.' + attribute.attribute_type_object.display_name] = attribute.value_string;
+                                    if (attribute.attribute_type_object.value_type == 10) {
+                                        item['Instrument.' + attribute.attribute_type_object.display_name] = attribute.value_string;
+                                    }
+                                    if (attribute.attribute_type_object.value_type == 20) {
+                                        item['Instrument.' + attribute.attribute_type_object.display_name] = attribute.value_float;
+                                    }
+                                    if (attribute.attribute_type_object.value_type == 40) {
+                                        item['Instrument.' + attribute.attribute_type_object.display_name] = attribute.value_date;
+                                    }
+                                    if (attribute.attribute_type_object.value_type == 30) {
+                                        item['Instrument.' + attribute.attribute_type_object.display_name] = attribute.classifier_object.name;
+                                    }
                                 }
-                                if (attribute.attribute_type_object.value_type == 20) {
-                                    item['Instrument.' + attribute.attribute_type_object.display_name] = attribute.value_float;
-                                }
-                                if (attribute.attribute_type_object.value_type == 40) {
-                                    item['Instrument.' + attribute.attribute_type_object.display_name] = attribute.value_date;
-                                }
-                                if (attribute.attribute_type_object.value_type == 30) {
-                                    item['Instrument.' + attribute.attribute_type_object.display_name] = attribute.classifier_object.name;
-                                }
-                            }
 
-                        })
+                            })
 
+                        }
                     }
 
                 }
 
                 if (item.hasOwnProperty('account_object') && item.account_object) {
 
-                    if (item.account_object.attributes.length) {
+                    if (item.account_object.hasOwnProperty('attributes')) {
 
-                        item.account_object.attributes.forEach(function (attribute) {
+                        if (item.account_object.attributes.length) {
 
-                            if (attribute.hasOwnProperty('attribute_type_object')) {
+                            item.account_object.attributes.forEach(function (attribute) {
 
-                                if (attribute.attribute_type_object.value_type == 10) {
-                                    item['Account.' + attribute.attribute_type_object.display_name] = attribute.value_string;
+                                if (attribute.hasOwnProperty('attribute_type_object')) {
+
+                                    if (attribute.attribute_type_object.value_type == 10) {
+                                        item['Account.' + attribute.attribute_type_object.display_name] = attribute.value_string;
+                                    }
+                                    if (attribute.attribute_type_object.value_type == 20) {
+                                        item['Account.' + attribute.attribute_type_object.display_name] = attribute.value_float;
+                                    }
+                                    if (attribute.attribute_type_object.value_type == 40) {
+                                        item['Account.' + attribute.attribute_type_object.display_name] = attribute.value_date;
+                                    }
+                                    if (attribute.attribute_type_object.value_type == 30) {
+                                        item['Account.' + attribute.attribute_type_object.display_name] = attribute.classifier_object.name;
+                                    }
                                 }
-                                if (attribute.attribute_type_object.value_type == 20) {
-                                    item['Account.' + attribute.attribute_type_object.display_name] = attribute.value_float;
-                                }
-                                if (attribute.attribute_type_object.value_type == 40) {
-                                    item['Account.' + attribute.attribute_type_object.display_name] = attribute.value_date;
-                                }
-                                if (attribute.attribute_type_object.value_type == 30) {
-                                    item['Account.' + attribute.attribute_type_object.display_name] = attribute.classifier_object.name;
-                                }
-                            }
 
-                        })
+                            })
 
+                        }
                     }
 
                 }
 
                 if (item.hasOwnProperty('account_position_object') && item.account_position_object) {
 
-                    if (item.account_position_object.attributes.length) {
+                    if (item.account_position_object.hasOwnProperty('attributes')) {
 
-                        item.account_position_object.attributes.forEach(function (attribute) {
+                        if (item.account_position_object.attributes.length) {
 
-                            if (attribute.hasOwnProperty('attribute_type_object')) {
+                            item.account_position_object.attributes.forEach(function (attribute) {
 
-                                if (attribute.attribute_type_object.value_type == 10) {
-                                    item['Account Position.' + attribute.attribute_type_object.display_name] = attribute.value_string;
-                                }
-                                if (attribute.attribute_type_object.value_type == 20) {
-                                    item['Account Position.' + attribute.attribute_type_object.display_name] = attribute.value_float;
-                                }
-                                if (attribute.attribute_type_object.value_type == 40) {
-                                    item['Account Position.' + attribute.attribute_type_object.display_name] = attribute.value_date;
-                                }
-                                if (attribute.attribute_type_object.value_type == 30) {
-                                    item['Account Position.' + attribute.attribute_type_object.display_name] = attribute.classifier_object.name;
-                                }
-                            }
+                                if (attribute.hasOwnProperty('attribute_type_object')) {
 
-                        })
+                                    if (attribute.attribute_type_object.value_type == 10) {
+                                        item['Account Position.' + attribute.attribute_type_object.display_name] = attribute.value_string;
+                                    }
+                                    if (attribute.attribute_type_object.value_type == 20) {
+                                        item['Account Position.' + attribute.attribute_type_object.display_name] = attribute.value_float;
+                                    }
+                                    if (attribute.attribute_type_object.value_type == 40) {
+                                        item['Account Position.' + attribute.attribute_type_object.display_name] = attribute.value_date;
+                                    }
+                                    if (attribute.attribute_type_object.value_type == 30) {
+                                        item['Account Position.' + attribute.attribute_type_object.display_name] = attribute.classifier_object.name;
+                                    }
+                                }
+
+                            })
+
+                        }
 
                     }
 
@@ -434,27 +451,31 @@
 
                 if (item.hasOwnProperty('account_cash_object') && item.account_cash_object) {
 
-                    if (item.account_cash_object.attributes.length) {
+                    if (item.account_cash_object.hasOwnProperty('attributes')) {
 
-                        item.account_cash_object.attributes.forEach(function (attribute) {
+                        if (item.account_cash_object.attributes.length) {
 
-                            if (attribute.hasOwnProperty('attribute_type_object')) {
+                            item.account_cash_object.attributes.forEach(function (attribute) {
 
-                                if (attribute.attribute_type_object.value_type == 10) {
-                                    item['Account Cash.' + attribute.attribute_type_object.display_name] = attribute.value_string;
-                                }
-                                if (attribute.attribute_type_object.value_type == 20) {
-                                    item['Account Cash.' + attribute.attribute_type_object.display_name] = attribute.value_float;
-                                }
-                                if (attribute.attribute_type_object.value_type == 40) {
-                                    item['Account Cash.' + attribute.attribute_type_object.display_name] = attribute.value_date;
-                                }
-                                if (attribute.attribute_type_object.value_type == 30) {
-                                    item['Account Cash.' + attribute.attribute_type_object.display_name] = attribute.classifier_object.name;
-                                }
-                            }
+                                if (attribute.hasOwnProperty('attribute_type_object')) {
 
-                        })
+                                    if (attribute.attribute_type_object.value_type == 10) {
+                                        item['Account Cash.' + attribute.attribute_type_object.display_name] = attribute.value_string;
+                                    }
+                                    if (attribute.attribute_type_object.value_type == 20) {
+                                        item['Account Cash.' + attribute.attribute_type_object.display_name] = attribute.value_float;
+                                    }
+                                    if (attribute.attribute_type_object.value_type == 40) {
+                                        item['Account Cash.' + attribute.attribute_type_object.display_name] = attribute.value_date;
+                                    }
+                                    if (attribute.attribute_type_object.value_type == 30) {
+                                        item['Account Cash.' + attribute.attribute_type_object.display_name] = attribute.classifier_object.name;
+                                    }
+                                }
+
+                            })
+
+                        }
 
                     }
 
@@ -462,27 +483,31 @@
 
                 if (item.hasOwnProperty('account_interim_object') && item.account_interim_object) {
 
-                    if (item.account_interim_object.attributes.length) {
+                    if (item.account_interim_object.hasOwnProperty('attributes')) {
 
-                        item.account_interim_object.attributes.forEach(function (attribute) {
+                        if (item.account_interim_object.attributes.length) {
 
-                            if (attribute.hasOwnProperty('attribute_type_object')) {
+                            item.account_interim_object.attributes.forEach(function (attribute) {
 
-                                if (attribute.attribute_type_object.value_type == 10) {
-                                    item['Account interim.' + attribute.attribute_type_object.display_name] = attribute.value_string;
-                                }
-                                if (attribute.attribute_type_object.value_type == 20) {
-                                    item['Account interim.' + attribute.attribute_type_object.display_name] = attribute.value_float;
-                                }
-                                if (attribute.attribute_type_object.value_type == 40) {
-                                    item['Account interim.' + attribute.attribute_type_object.display_name] = attribute.value_date;
-                                }
-                                if (attribute.attribute_type_object.value_type == 30) {
-                                    item['Account interim.' + attribute.attribute_type_object.display_name] = attribute.classifier_object.name;
-                                }
-                            }
+                                if (attribute.hasOwnProperty('attribute_type_object')) {
 
-                        })
+                                    if (attribute.attribute_type_object.value_type == 10) {
+                                        item['Account interim.' + attribute.attribute_type_object.display_name] = attribute.value_string;
+                                    }
+                                    if (attribute.attribute_type_object.value_type == 20) {
+                                        item['Account interim.' + attribute.attribute_type_object.display_name] = attribute.value_float;
+                                    }
+                                    if (attribute.attribute_type_object.value_type == 40) {
+                                        item['Account interim.' + attribute.attribute_type_object.display_name] = attribute.value_date;
+                                    }
+                                    if (attribute.attribute_type_object.value_type == 30) {
+                                        item['Account interim.' + attribute.attribute_type_object.display_name] = attribute.classifier_object.name;
+                                    }
+                                }
+
+                            })
+
+                        }
 
                     }
 
@@ -490,30 +515,34 @@
 
                 if (item.hasOwnProperty('portfolio_object') && item.portfolio_object) {
 
-                    if (item.portfolio_object.attributes.length) {
+                    if (item.portfolio_object.hasOwnProperty('attributes')) {
 
-                        item.portfolio_object.attributes.forEach(function (attribute) {
+                        if (item.portfolio_object.attributes.length) {
 
-                            if (attribute.hasOwnProperty('attribute_type_object')) {
+                            item.portfolio_object.attributes.forEach(function (attribute) {
 
-                                if (attribute.attribute_type_object.value_type == 10) {
-                                    item['Portfolio.' + attribute.attribute_type_object.display_name] = attribute.value_string;
-                                }
-                                if (attribute.attribute_type_object.value_type == 20) {
-                                    item['Portfolio.' + attribute.attribute_type_object.display_name] = attribute.value_float;
-                                }
-                                if (attribute.attribute_type_object.value_type == 40) {
-                                    item['Portfolio.' + attribute.attribute_type_object.display_name] = attribute.value_date;
-                                }
-                                if (attribute.attribute_type_object.value_type == 30) {
+                                if (attribute.hasOwnProperty('attribute_type_object')) {
 
-                                    if (item['Portfolio.' + attribute.attribute_type_object.display_name] = attribute.classifier_object) {
-                                        item['Portfolio.' + attribute.attribute_type_object.display_name] = attribute.classifier_object.name;
+                                    if (attribute.attribute_type_object.value_type == 10) {
+                                        item['Portfolio.' + attribute.attribute_type_object.display_name] = attribute.value_string;
+                                    }
+                                    if (attribute.attribute_type_object.value_type == 20) {
+                                        item['Portfolio.' + attribute.attribute_type_object.display_name] = attribute.value_float;
+                                    }
+                                    if (attribute.attribute_type_object.value_type == 40) {
+                                        item['Portfolio.' + attribute.attribute_type_object.display_name] = attribute.value_date;
+                                    }
+                                    if (attribute.attribute_type_object.value_type == 30) {
+
+                                        if (item['Portfolio.' + attribute.attribute_type_object.display_name] = attribute.classifier_object) {
+                                            item['Portfolio.' + attribute.attribute_type_object.display_name] = attribute.classifier_object.name;
+                                        }
                                     }
                                 }
-                            }
 
-                        })
+                            })
+
+                        }
 
                     }
 

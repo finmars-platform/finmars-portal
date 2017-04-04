@@ -9,7 +9,7 @@
     var metaContentTypesService = require('../../../services/metaContentTypesService');
     var entityResolverService = require('../../../services/entityResolverService');
 
-    module.exports = function ($scope) {
+    module.exports = function ($scope, $mdDialog) {
         logService.controller('TransactionTypeInputsTabController', 'initialized');
 
         var vm = this;
@@ -158,6 +158,28 @@
 
         vm.deleteItem = function (item, index) {
             vm.entity.inputs.splice(index, 1);
+        };
+
+        vm.openExpressionDialog = function ($event, item, options) {
+
+            $mdDialog.show({
+                controller: 'ExpressionEditorDialogController as vm',
+                templateUrl: 'views/dialogs/expression-editor-dialog-view.html',
+                parent: angular.element(document.body),
+                targetEvent: $event,
+                preserveScope: true,
+                autoWrap: true,
+                skipHide: true,
+                locals: {
+                    item: {expression: item[options.key]}
+                }
+            }).then(function (res) {
+                if (res.status === 'agree') {
+                    console.log("res", res.data);
+                    item[options.key] = res.data.item.expression;
+                }
+                console.log('item', item);
+            });
         };
 
         vm.addRow = function () {

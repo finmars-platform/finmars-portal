@@ -105,7 +105,7 @@
             .pipe(source('bundled.js'))
             .pipe(buffer())
             .pipe(preprocess())
-            .pipe(uglify())
+            //.pipe(uglify())
             .pipe(rename({basename: 'main', suffix: '.min'}))
             .on('error', function (error) {
                 console.error('\nError on JS minification: \n', error.toString());

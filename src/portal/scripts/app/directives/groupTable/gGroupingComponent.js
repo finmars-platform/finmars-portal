@@ -240,16 +240,46 @@
                                 }
                             });
                         } else {
-                            $mdDialog.show({
-                                controller: 'gModalReportTransactionController as vm', // ../directives/gTable/gModalComponents
-                                templateUrl: 'views/directives/groupTable/modal-report-transaction-view.html',
-                                parent: angular.element(document.body),
-                                targetEvent: ev,
-                                locals: {
-                                    callback: scope.externalCallback,
-                                    parentScope: scope
+
+                            if (scope.options.entityType == 'performance-report') {
+
+                                $mdDialog.show({
+                                    controller: 'gModalReportPerformanceController as vm', // ../directives/gTable/gModalComponents
+                                    templateUrl: 'views/directives/groupTable/modal-report-performance-view.html',
+                                    parent: angular.element(document.body),
+                                    targetEvent: ev,
+                                    locals: {
+                                        callback: scope.externalCallback,
+                                        parentScope: scope
+                                    }
+                                });
+                            } else {
+
+                                if (scope.options.entityType == 'cash-flow-projection-report') {
+                                    $mdDialog.show({
+                                        controller: 'gModalReportCashFlowProjectionController as vm', // ../directives/gTable/gModalComponents
+                                        templateUrl: 'views/directives/groupTable/modal-report-cash-flow-projection-view.html',
+                                        parent: angular.element(document.body),
+                                        targetEvent: ev,
+                                        locals: {
+                                            callback: scope.externalCallback,
+                                            parentScope: scope
+                                        }
+                                    });
+                                } else {
+
+                                    $mdDialog.show({
+                                        controller: 'gModalReportTransactionController as vm', // ../directives/gTable/gModalComponents
+                                        templateUrl: 'views/directives/groupTable/modal-report-transaction-view.html',
+                                        parent: angular.element(document.body),
+                                        targetEvent: ev,
+                                        locals: {
+                                            callback: scope.externalCallback,
+                                            parentScope: scope
+                                        }
+                                    });
                                 }
-                            });
+                            }
                         }
                     } else {
                         $mdDialog.show({

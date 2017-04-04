@@ -69,6 +69,14 @@
         vm.currentLocation = function () {
             vm.currentLocationShowBtns = true;
 
+            if ($state.current.name.indexOf('app.forum') !== -1) {
+
+                vm.currentLocationShowBtns = false;
+
+                return 'FORUM';
+
+            }
+
             switch ($state.current.name) {
                 case 'app.dashboard':
                     return "DASHBOARD";

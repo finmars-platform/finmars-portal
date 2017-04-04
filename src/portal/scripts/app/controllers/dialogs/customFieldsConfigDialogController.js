@@ -49,7 +49,7 @@
             var expression = '';
 
             if (vm.rangeType == 20) {
-                expression = 'simple_group("' + vm.exprField + '", [';
+                expression = 'simple_group(' + vm.exprField + ', [';
 
                 vm.rangeItems.forEach(function (item, $index) {
 
@@ -84,7 +84,7 @@
 
             if (vm.rangeType == 40) {
 
-                expression = 'date_group("' + vm.exprField + '", [';
+                expression = 'date_group(' + vm.exprField + ', [';
 
                 var dateRangeBeforeDate = '';
                 var dateRangeBeforeFormat = '';

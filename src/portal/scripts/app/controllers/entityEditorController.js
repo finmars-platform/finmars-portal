@@ -38,6 +38,7 @@
         vm.editLayoutByEntityInsance = false;
         vm.entitySpecialRules = false;
         vm.specialRulesReady = true;
+
         if (['complex-transaction'].indexOf(vm.entityType) !== -1) {
             vm.editLayoutByEntityInsance = true;
             vm.entitySpecialRules = true;
@@ -47,10 +48,101 @@
         logService.property('entityType', vm.entityType);
         logService.property('entityId', vm.entityId);
 
+
+        vm.calculateComplexTransactionInputs = function (item) {
+            console.log('test', item);
+
+            var values = {};
+
+            vm.userInputs.forEach(function (item) {
+                values[item.name] = vm.entity[item.name]
+            });
+
+            var book = {
+                transaction_type: vm.entity.transaction_type,
+                recalculate_inputs: [item.name],
+                process_mode: 'recalculate',
+                values: values
+            };
+
+            entityResolverService.create('complex-transaction', book).then(function (data) {
+
+                //TODO REFACTOR DRY VIOLATION
+
+                vm.complexTransactionOptions.transactionType = data.response.transaction_type;
+                vm.editLayoutEntityInstanceId = data.response.transaction_type;
+                vm.transactionTypeId = data.response.transaction_type;
+                vm.entity = data.response.complex_transaction;
+
+                var inputsWithCalculations = data.response.transaction_type_object.inputs;
+
+
+                vm.specialRulesReady = true;
+                vm.readyStatus.entity = true;
+                vm.readyStatus.permissions = true;
+
+                var keys = Object.keys(data.response.values);
+
+                keys.forEach(function (item) {
+                    vm.entity[item] = data.response.values[item];
+                });
+
+                data.response.complex_transaction.attributes.forEach(function (item) {
+                    if (item.attribute_type_object.value_type == 10) {
+                        vm.entity[item.attribute_type_object.name] = item.value_string;
+                    }
+                    if (item.attribute_type_object.value_type == 20) {
+                        vm.entity[item.attribute_type_object.name] = item.value_float;
+                    }
+                    if (item.attribute_type_object.value_type == 30) {
+                        vm.entity[item.attribute_type_object.name] = item.classifier;
+                    }
+                    if (item.attribute_type_object.value_type == 40) {
+                        vm.entity[item.attribute_type_object.name] = item.value_date;
+                    }
+                });
+
+                vm.tabs = data.response.book_transaction_layout.data;
+                vm.userInputs = [];
+                vm.tabs.forEach(function (tab) {
+                    tab.layout.fields.forEach(function (field) {
+                        if (field.attribute_class == 'userInput') {
+                            vm.userInputs.push(field.attribute);
+                        }
+                    });
+                });
+
+                inputsWithCalculations.forEach(function (inputWithCalc) {
+
+                    vm.userInputs.forEach(function (userInput) {
+                        if (userInput.name == inputWithCalc.name) {
+                            if (inputWithCalc.can_recalculate == true) {
+                                userInput.buttons = [
+                                    {
+                                        icon: 'functions',
+                                        tooltip: 'Recalculate',
+                                        caption: '',
+                                        classes: 'md-raised',
+                                        action: vm.calculateComplexTransactionInputs
+                                    }
+                                ]
+                            }
+                        }
+                    })
+
+                });
+
+                $scope.$apply();
+
+            });
+        };
+
         vm.getEditListByInstanceId = function () {
 
+            console.log('$scope.$parent.vm', $scope.$parent.vm);
 
             if (vm.entityType == 'complex-transaction') {
+
                 if (vm.evAction == 'update') {
                     entityResolverService.getByKey('complex-transaction', vm.editLayoutEntityInstanceId).then(function (data) {
 
@@ -59,6 +151,8 @@
                         vm.editLayoutEntityInstanceId = data.response.transaction_type;
                         vm.transactionTypeId = data.response.transaction_type;
                         vm.entity = data.response.complex_transaction;
+
+                        var inputsWithCalculations = data.response.transaction_type_object.inputs;
 
 
                         vm.specialRulesReady = true;
@@ -96,8 +190,29 @@
                             });
                         });
 
+                        inputsWithCalculations.forEach(function (inputWithCalc) {
+
+                            vm.userInputs.forEach(function (userInput) {
+                                if (userInput.name == inputWithCalc.name) {
+                                    if (inputWithCalc.can_recalculate == true) {
+                                        userInput.buttons = [
+                                            {
+                                                icon: 'functions',
+                                                tooltip: 'Recalculate',
+                                                caption: '',
+                                                classes: 'md-raised',
+                                                action: vm.calculateComplexTransactionInputs
+                                            }
+                                        ]
+                                    }
+                                }
+                            })
+
+                        });
+
                         //console.log('vm.complexTransactionOptions', vm.complexTransactionOptions);
-                        //console.log('vm.entity', vm.entity);
+                        console.log('vm.entity', vm.entity);
+                        console.log('vm.vm.userInputs', vm.userInputs);
 
 
                         $scope.$parent.vm.editLayout = function () {
@@ -117,6 +232,8 @@
                         vm.editLayoutEntityInstanceId = data.transaction_type;
                         vm.entity = data.complex_transaction;
                         vm.entity.transaction_type = data.transaction_type;
+
+                        var inputsWithCalculations = data.transaction_type_object.inputs;
 
 
                         vm.specialRulesReady = true;
@@ -139,6 +256,30 @@
                             });
                         });
 
+
+                        inputsWithCalculations.forEach(function (inputWithCalc) {
+
+                            vm.userInputs.forEach(function (userInput) {
+                                if (userInput.name == inputWithCalc.name) {
+                                    if (inputWithCalc.can_recalculate == true) {
+                                        userInput.buttons = [
+                                            {
+                                                icon: 'functions',
+                                                tooltip: 'Recalculate',
+                                                caption: '',
+                                                classes: 'md-raised',
+                                                action: vm.calculateComplexTransactionInputs
+                                            }
+                                        ]
+                                    }
+                                }
+                            })
+
+                        });
+
+                        console.log('vm.userInputs', vm.userInputs);
+
+
                         //console.log('vm.complexTransactionOptions', vm.complexTransactionOptions);
                         //console.log('vm.entity', vm.entity);
 
@@ -153,6 +294,7 @@
                         $scope.$apply();
                     });
                 }
+
             } else {
 
 
@@ -220,6 +362,52 @@
         vm.baseAttrs = metaService.getBaseAttrs();
         vm.entityAttrs = metaService.getEntityAttrs(vm.entityType) || [];
 
+        vm.setDefaults = function () {
+
+            if ($scope.$parent.vm.isEventBook == true) {
+
+                var data = $scope.$parent.vm.eventBook;
+
+                vm.complexTransactionOptions.transactionType = data.transaction_type;
+                vm.editLayoutEntityInstanceId = data.transaction_type;
+                vm.entity = data.complex_transaction;
+                vm.entity.transaction_type = data.transaction_type;
+
+
+                vm.specialRulesReady = true;
+                vm.readyStatus.entity = true;
+                vm.readyStatus.permissions = true;
+
+                var keys = Object.keys(data.values);
+
+                keys.forEach(function (item) {
+                    vm.entity[item] = data.values[item];
+                });
+
+                vm.tabs = data.book_transaction_layout.data;
+                vm.userInputs = [];
+                vm.tabs.forEach(function (tab) {
+                    tab.layout.fields.forEach(function (field) {
+                        if (field.attribute_class == 'userInput') {
+                            vm.userInputs.push(field.attribute);
+                        }
+                    });
+                });
+
+                //console.log('vm.complexTransactionOptions', vm.complexTransactionOptions);
+                //console.log('vm.entity', vm.entity);
+
+
+                $scope.$parent.vm.editLayout = function () {
+                    $state.go('app.data-constructor', {
+                        entityType: vm.entityType,
+                        instanceId: vm.editLayoutEntityInstanceId
+                    });
+                };
+
+                $scope.$apply();
+            }
+        };
 
         attributeTypeService.getList(vm.entityType).then(function (data) {
             vm.attrs = data.results;
@@ -227,9 +415,12 @@
 
             //console.log('vm.entityId55555555555555555555', vm.entityId);
 
+            console.log('------------------', $scope.$parent.vm);
+
             if (vm.entityId) {
 
                 if (vm.entityType == 'complex-transaction') {
+
 
                     if (vm.evAction == 'update') {
                         entityResolverService.getByKey(vm.entityType, vm.entityId).then(function (data) {
@@ -297,7 +488,6 @@
                         });
                     }
 
-
                 } else {
 
 
@@ -329,6 +519,7 @@
             } else {
 
                 vm.readyStatus.entity = true;
+                vm.setDefaults();
                 vm.loadPermissions();
             }
 
@@ -351,12 +542,16 @@
 
         };
 
-        usersService.getMe().then(function (data) {
-            //console.log('data user', data);
-            vm.user = data;
-            vm.readyStatus.me = true;
-            $scope.$apply();
-        });
+        vm.getMe = function () {
+            usersService.getMe().then(function (data) {
+                //console.log('data user', data);
+                vm.user = data;
+                vm.readyStatus.me = true;
+                $scope.$apply();
+            });
+        };
+
+        vm.getMe();
 
         vm.resolveSpecialRules = function () {
             return 'views/special-rules/' + vm.entityType + '-special-rules-view.html';
@@ -573,7 +768,6 @@
 
             return true;
         };
-
 
         $scope.$parent.vm.copyCallback = function () {
             return new Promise(function (resolve) {

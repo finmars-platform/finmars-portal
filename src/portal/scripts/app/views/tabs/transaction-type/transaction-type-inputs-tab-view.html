@@ -21,6 +21,7 @@
                 </th>
                 <th>Default value
                 </th>
+                <th>Input expr</th>
                 <th>Fill from context
                 </th>
                 <th>
@@ -47,6 +48,7 @@
                 <th></th>
                 <th></th>
                 <th></th>
+                <th></th>
             </tr>
             </thead>
             <tbody>
@@ -56,6 +58,7 @@
                 <td data-ng-bind="vm.bindValueType(item)" data-ng-if="!item.editStatus"></td>
                 <td data-ng-bind="vm.bindContentType(item)" data-ng-if="!item.editStatus"></td>
                 <td data-ng-bind="vm.resolveDefaultValue(item)" data-ng-if="!item.editStatus"></td>
+                <td data-ng-bind="item.value_expr" data-ng-if="!item.editStatus"></td>
                 <td data-ng-if="!item.editStatus">
                     <span class="bool-table-view" data-ng-if="item.is_fill_from_context">
                                 <ng-md-icon icon="check_circle"
@@ -120,19 +123,35 @@
                         </md-select>
                     </md-input-container>
                 </td>
-                <td data-ng-if="item.editStatus" class="edit-state-td" >
+                <td data-ng-if="item.editStatus" class="edit-state-td">
                     <md-input-container data-ng-if="item.value_type != 100">
                         <label for="">Default value</label>
-                        <input type="text" data-ng-model="item.value" >
+                        <input type="text" data-ng-model="item.value">
                     </md-input-container>
+                    <md-button data-ng-if="item.value_type != 100" class="md-raised md-primary expr-btn"
+                               data-ng-click="vm.openExpressionDialog($event, item, {key: 'value'})">
+                        ...
+                    </md-button>
                     <md-input-container data-ng-if="item.value_type == 100" style="margin-top: -25px">
                         <label for="">Default value</label>
-                        <md-select data-ng-model="item[vm.resolveRelation(vm.newItem)]" md-on-open="vm.loadRelation(vm.resolveRelation(item))">
-                            <md-option data-ng-repeat="relationItem in vm.relationItems[vm.resolveRelation(item)]" ng-value="relationItem.id">
+                        <md-select data-ng-model="item[vm.resolveRelation(vm.newItem)]"
+                                   md-on-open="vm.loadRelation(vm.resolveRelation(item))">
+                            <md-option data-ng-repeat="relationItem in vm.relationItems[vm.resolveRelation(item)]"
+                                       ng-value="relationItem.id">
                                 {{relationItem.name}}
                             </md-option>
                         </md-select>
                     </md-input-container>
+                </td>
+                <td data-ng-if="item.editStatus" class="edit-state-td">
+                    <md-input-container>
+                        <label for="">Input expr</label>
+                        <input type="text" data-ng-model="item.value_expr">
+                    </md-input-container>
+                    <md-button class="md-raised md-primary expr-btn"
+                               data-ng-click="vm.openExpressionDialog($event, item, {key: 'value_expr'})">
+                        ...
+                    </md-button>
                 </td>
                 <td data-ng-if="item.editStatus" class="edit-state-td">
                     <md-input-container>
@@ -165,7 +184,7 @@
                         </md-select>
                     </md-input-container>
                 </td>
-                <td  style="padding-top: 12px">
+                <td style="padding-top: 12px">
                     <md-input-container>
                         <md-select data-ng-model="vm.newItem.content_type">
                             <md-option data-ng-repeat="item in vm.contentTypes" ng-value="item.key">
@@ -176,15 +195,31 @@
                 </td>
                 <td>
                     <md-input-container data-ng-if="vm.newItem.value_type != 100">
-                        <input type="text" data-ng-model="vm.newItem.value" >
+                        <input type="text" data-ng-model="vm.newItem.value">
                     </md-input-container>
+                    <md-button data-ng-if="vm.newItem.value_type != 100" class="md-raised md-primary expr-btn"
+                               data-ng-click="vm.openExpressionDialog($event, vm.newItem.item, {key: 'value'})">
+                        ...
+                    </md-button>
                     <md-input-container data-ng-if="vm.newItem.value_type == 100" style="margin-top: -25px">
-                        <md-select data-ng-model="vm.newItem[vm.resolveRelation(vm.newItem)]"  md-on-open="vm.loadRelation(vm.resolveRelation(vm.newItem))">
-                            <md-option data-ng-repeat="item in vm.relationItems[vm.resolveRelation(vm.newItem)]" ng-value="item.id">
+                        <md-select data-ng-model="vm.newItem[vm.resolveRelation(vm.newItem)]"
+                                   md-on-open="vm.loadRelation(vm.resolveRelation(vm.newItem))">
+                            <md-option data-ng-repeat="item in vm.relationItems[vm.resolveRelation(vm.newItem)]"
+                                       ng-value="item.id">
                                 {{item.name}}
                             </md-option>
                         </md-select>
                     </md-input-container>
+                </td>
+                <td>
+                    <md-input-container>
+                        <label for="">Input expr</label>
+                        <input type="text" data-ng-model="vm.newItem.value_expr">
+                    </md-input-container>
+                    <md-button class="md-raised md-primary expr-btn"
+                               data-ng-click="vm.openExpressionDialog($event, vm.newItem, {key: 'value_expr'})">
+                        ...
+                    </md-button>
                 </td>
                 <td>
                     <md-input-container>

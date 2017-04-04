@@ -30,6 +30,12 @@
         vm.entityType = parentScope.vm.entityType;
         vm.evAction = 'create';
 
+        if (parentScope.vm.isEventBook) {
+            vm.isEventBook = parentScope.vm.isEventBook;
+            vm.eventBook = parentScope.vm.eventBook;
+        }
+
+
         vm.cancel = function () {
             localStorage.setItem('entityIsChanged', false);
             $mdDialog.cancel();
@@ -59,57 +65,70 @@
         };
 
         vm.save = function ($event) {
-            vm.saveCallback().then(function (options) {
 
-                console.log('options.entityType', options);
-                console.log('vm', vm);
+            if (vm.isEventBook && vm.isEventBook == true) {
 
-                entityResolverService.create(options.entityType, options.entity).then(function (data) {
-                    console.log('DATA', data);
-                    if (data.status == 200 || data.status == 201) {
+                vm.saveCallback().then(function (options) {
+                    $mdDialog.hide({
+                        status: 'agree', data: {
+                            eventBook: options.entity
+                        }
+                    });
+                });
 
-                        if (options.entityType == 'complex-transaction') {
-                            if (data.response.hasOwnProperty('has_errors') && data.response.has_errors == true) {
-                                $mdDialog.show({
-                                    controller: 'ValidationDialogController as vm',
-                                    templateUrl: 'views/dialogs/validation-dialog-view.html',
-                                    targetEvent: $event,
-                                    locals: {
-                                        validationData: {
-                                            complex_transaction_errors: data.response.complex_transaction_errors,
-                                            instruments_errors: data.response.instruments_errors,
-                                            transactions_errors: data.response.transactions_errors
-                                        }
-                                    },
-                                    preserveScope: true,
-                                    autoWrap: true,
-                                    skipHide: true
-                                })
+            } else {
+                vm.saveCallback().then(function (options) {
+
+                    console.log('options.entityType', options);
+                    console.log('vm', vm);
+
+                    entityResolverService.create(options.entityType, options.entity).then(function (data) {
+                        console.log('DATA', data);
+                        if (data.status == 200 || data.status == 201) {
+
+                            if (options.entityType == 'complex-transaction') {
+                                if (data.response.hasOwnProperty('has_errors') && data.response.has_errors == true) {
+                                    $mdDialog.show({
+                                        controller: 'ValidationDialogController as vm',
+                                        templateUrl: 'views/dialogs/validation-dialog-view.html',
+                                        targetEvent: $event,
+                                        locals: {
+                                            validationData: {
+                                                complex_transaction_errors: data.response.complex_transaction_errors,
+                                                instruments_errors: data.response.instruments_errors,
+                                                transactions_errors: data.response.transactions_errors
+                                            }
+                                        },
+                                        preserveScope: true,
+                                        autoWrap: true,
+                                        skipHide: true
+                                    })
+                                } else {
+
+                                    $mdDialog.hide({res: 'agree'});
+                                }
                             } else {
 
                                 $mdDialog.hide({res: 'agree'});
                             }
-                        } else {
-
-                            $mdDialog.hide({res: 'agree'});
                         }
-                    }
-                    if (data.status == 400) {
-                        $mdDialog.show({
-                            controller: 'ValidationDialogController as vm',
-                            templateUrl: 'views/dialogs/validation-dialog-view.html',
-                            targetEvent: $event,
-                            locals: {
-                                validationData: data.response
-                            },
-                            preserveScope: true,
-                            autoWrap: true,
-                            skipHide: true
-                        })
-                    }
-                });
+                        if (data.status == 400) {
+                            $mdDialog.show({
+                                controller: 'ValidationDialogController as vm',
+                                templateUrl: 'views/dialogs/validation-dialog-view.html',
+                                targetEvent: $event,
+                                locals: {
+                                    validationData: data.response
+                                },
+                                preserveScope: true,
+                                autoWrap: true,
+                                skipHide: true
+                            })
+                        }
+                    });
 
-            })
+                })
+            }
         };
 
     }

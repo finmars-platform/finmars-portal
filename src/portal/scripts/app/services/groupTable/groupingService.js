@@ -102,6 +102,36 @@
         return items;
     };
 
+    function addEntityObjectsToGroups(itemsGroupedArray) {
+
+        itemsGroupedArray.forEach(function (itemsGroup) {
+
+
+            itemsGroup.groups.forEach(function (group) {
+
+                if (group.value_type == 'field') {
+
+                    itemsGroup.items.forEach(function (item) {
+
+                        if (item.hasOwnProperty(group.key)) {
+                            group[group.key + '_object'] = item[group.key + '_object'];
+                        }
+
+                    })
+                }
+            });
+
+            if (itemsGroup.hasOwnProperty('breadcrumbs_level_0')) {
+                itemsGroup.breadcrumbs_level_0 = addEntityObjectsToGroups(itemsGroup.breadcrumbs_level_0);
+            }
+        });
+
+
+        return itemsGroupedArray;
+
+    }
+
+
     var setGroups = function (items, groups, entityTypes, options) {
 
         //console.log('GROUPING SERVICE groups', groups);
@@ -145,6 +175,7 @@
                             //console.log('entityType', JSON.stringify(item));
 
                             item.key = entityType + '_object_' + item.key;
+                            item.value_entity = entityType;
 
                             if (entityType == 'instrument-type') {
                                 item.name = 'Instrument.Instrument Type' + item.name;
@@ -225,33 +256,48 @@
                     }
                 } else {
 
-                    if (group.id === attribute['attribute_type']) {
 
-                        //console.log('group.id', group);
+                    if (group.hasOwnProperty('columnType') && group.columnType == 'custom-field') {
 
-                        for (n = 0; n < groupsForResult.length; n = n + 1) {
-                            //console.log('groupsForResult[n]', groupsForResult[n]);
-                            if (groupsForResult[n].comparePattern.indexOf('&[' + attribute['attribute_type'] + '}-{' + returnValue(attribute) + ']') !== -1) {
-                                nExist = true;
-                            }
-                        }
-                        if (!nExist) {
+                        resGroupItem = {
+                            comparePattern: '&[' + group.name + '}-{' + checkIfEmptyString(item[group.name]) + ']',
+                            key: group.name.replace(' ', '_'),
+                            value: checkIfEmptyString(item[group.name]),
+                            value_type: 10
+                        };
 
-                            if (returnValue(attribute) !== null) {
-                                resGroupItem = {
-                                    comparePattern: '&[' + attribute['attribute_type'] + '}-{' + returnValue(attribute) + ']',
-                                    //key: attribute['attribute_name'].replace(' ', '_'),
-                                    key: '',
-                                    value: returnValue(attribute),
-                                    value_type: returnValueType(attribute)
-                                };
+                        groupsForResult.push(resGroupItem);
 
-                                if (group.hasOwnProperty('report_settings')) {
-                                    resGroupItem.report_settings = group.report_settings;
+                    } else {
+
+                        if (group.id === attribute['attribute_type']) {
+
+                            //console.log('group.id', group);
+
+                            for (n = 0; n < groupsForResult.length; n = n + 1) {
+                                //console.log('groupsForResult[n]', groupsForResult[n]);
+                                if (groupsForResult[n].comparePattern.indexOf('&[' + attribute['attribute_type'] + '}-{' + returnValue(attribute) + ']') !== -1) {
+                                    nExist = true;
                                 }
+                            }
+                            if (!nExist) {
+
+                                if (returnValue(attribute) !== null) {
+                                    resGroupItem = {
+                                        comparePattern: '&[' + attribute['attribute_type'] + '}-{' + returnValue(attribute) + ']',
+                                        //key: attribute['attribute_name'].replace(' ', '_'),
+                                        key: '',
+                                        value: returnValue(attribute),
+                                        value_type: returnValueType(attribute)
+                                    };
+
+                                    if (group.hasOwnProperty('report_settings')) {
+                                        resGroupItem.report_settings = group.report_settings;
+                                    }
 
 
-                                groupsForResult.push(resGroupItem);
+                                    groupsForResult.push(resGroupItem);
+                                }
                             }
                         }
                     }
@@ -277,6 +323,11 @@
                                 value: checkIfEmptyString(item[keywords[k].key]),
                                 value_type: keywords[k].value_type
                             };
+
+                            if (keywords[k].value_type == 'field') {
+                                //console.log('keywords[k]', keywords[k]);
+                                resGroupItem.value_entity = keywords[k].value_entity;
+                            }
 
                             if (group.hasOwnProperty('report_settings')) {
                                 resGroupItem.report_settings = group.report_settings;
@@ -380,52 +431,70 @@
                             }
 
                         } else {
-                            if (item.hasOwnProperty('attributes')) {
 
-                                for (a = 0; a < item.attributes.length; a = a + 1) {
-                                    findGroupsForResult(group, item, item['attributes'][a]);
+                            if (group.hasOwnProperty('columnType') && group.columnType == 'custom-field') {
 
-                                    if (group.hasOwnProperty('r_entityType')) {
+                                if (item[group.name] !== null) {
 
-                                        if (item[group.r_entityType + '_attribute_' + group.source_name] !== null) {
+                                    findGroupsForResult(group, item);
 
-                                            var name = group.r_entityType + '_attribute_' + group.source_name;
 
-                                            if (groupName.indexOf('&[' + checkIfEmptyString(group.source_name) + '}-{' + checkIfEmptyString(item[name]) + ']') === -1) {
-                                                groupName = groupName + '&[' + checkIfEmptyString(group.source_name) + '}-{' + checkIfEmptyString(item[name]) + ']';
-                                            }
-
-                                        }
-
-                                    } else {
-
-                                        if (item[group.name] !== null) {
-                                            if (groupName.indexOf('&[' + checkIfEmptyString(group.name) + '}-{' + checkIfEmptyString(item[group.name]) + ']') === -1) {
-                                                groupName = groupName + '&[' + checkIfEmptyString(group.name) + '}-{' + checkIfEmptyString(item[group.name]) + ']';
-                                            }
-                                        }
+                                    if (groupName.indexOf('&[' + checkIfEmptyString(group.name) + '}-{' + checkIfEmptyString(item[group.name]) + ']') === -1) {
+                                        groupName = groupName + '&[' + checkIfEmptyString(group.name) + '}-{' + checkIfEmptyString(item[group.name]) + ']';
                                     }
                                 }
+
+
                             } else {
-                                if (group.hasOwnProperty('attribute_entity')) {
-                                    if (item[group.attribute_entity + '_object_attributes']) {
 
-                                        //console.log('item.attributes', item[group.attribute_entity + '_object_attributes']);
+                                if (item.hasOwnProperty('attributes')) {
 
-                                        for (a = 0; a < item[group.attribute_entity + '_object_attributes'].length; a = a + 1) {
+                                    for (a = 0; a < item.attributes.length; a = a + 1) {
+                                        findGroupsForResult(group, item, item['attributes'][a]);
 
-                                            findGroupsForResult(group, item, item[group.attribute_entity + '_object_attributes'][a]);
+                                        if (group.hasOwnProperty('r_entityType')) {
+
+                                            if (item[group.r_entityType + '_attribute_' + group.source_name] !== null) {
+
+                                                var name = group.r_entityType + '_attribute_' + group.source_name;
+
+                                                if (groupName.indexOf('&[' + checkIfEmptyString(group.source_name) + '}-{' + checkIfEmptyString(item[name]) + ']') === -1) {
+                                                    groupName = groupName + '&[' + checkIfEmptyString(group.source_name) + '}-{' + checkIfEmptyString(item[name]) + ']';
+                                                }
+
+                                            }
+
+                                        } else {
 
                                             if (item[group.name] !== null) {
                                                 if (groupName.indexOf('&[' + checkIfEmptyString(group.name) + '}-{' + checkIfEmptyString(item[group.name]) + ']') === -1) {
                                                     groupName = groupName + '&[' + checkIfEmptyString(group.name) + '}-{' + checkIfEmptyString(item[group.name]) + ']';
                                                 }
                                             }
+                                        }
+                                    }
+                                } else {
+                                    if (group.hasOwnProperty('attribute_entity')) {
+                                        if (item[group.attribute_entity + '_object_attributes']) {
+
+                                            //console.log('item.attributes', item[group.attribute_entity + '_object_attributes']);
+
+                                            for (a = 0; a < item[group.attribute_entity + '_object_attributes'].length; a = a + 1) {
+
+                                                findGroupsForResult(group, item, item[group.attribute_entity + '_object_attributes'][a]);
+
+                                                if (item[group.name] !== null) {
+                                                    if (groupName.indexOf('&[' + checkIfEmptyString(group.name) + '}-{' + checkIfEmptyString(item[group.name]) + ']') === -1) {
+                                                        groupName = groupName + '&[' + checkIfEmptyString(group.name) + '}-{' + checkIfEmptyString(item[group.name]) + ']';
+                                                    }
+                                                }
+
+                                            }
+
 
                                         }
-
-
                                     }
+
                                 }
                             }
                         }
@@ -433,20 +502,25 @@
 
                 }
 
-
-                //console.log('itemsGrouped', itemsGrouped)
-                //console.log('groupName', groupName);
-
                 if (!itemsGrouped[groupName]) {
                     itemsGrouped[groupName] = {
                         groups: groupsForResult,
                         items: []
                     }
                 }
+
+                //console.log('itemsGrouped', itemsGrouped);
+
                 itemsGrouped[groupName].items.push(item);
                 //console.log('itemsGrouped[groupName]', itemsGrouped[groupName]);
-                ;
                 itemsGroupedArray = transformToArray(itemsGrouped);
+
+
+                itemsGroupedArray = addEntityObjectsToGroups(itemsGroupedArray);
+
+
+                //console.log('itemsGroupedArray', itemsGroupedArray);
+
             }
 
             //console.log('------------------------');
@@ -646,30 +720,33 @@
 
             if (item.hasOwnProperty('instrument_object') && item.instrument_object !== null) {
 
-                attributesToMock.instrument = attributesToMock.instrument.concat(JSON.parse(JSON.stringify(item.instrument_object.attributes))).filter(filterByID);
+                if (item.instrument_object.hasOwnProperty('attributes')) {
 
-                item.instrument_object.attributes.forEach(function (attribute) {
+                    attributesToMock.instrument = attributesToMock.instrument.concat(JSON.parse(JSON.stringify(item.instrument_object.attributes))).filter(filterByID);
 
-                    var _name = 'instrument_attribute_' + attribute.attribute_type_object.name;
+                    item.instrument_object.attributes.forEach(function (attribute) {
 
-                    if (propsToMock.indexOf(_name) == -1) {
-                        propsToMock.push(_name);
-                    }
+                        var _name = 'instrument_attribute_' + attribute.attribute_type_object.name;
 
-                    if (attribute.attribute_type_object.value_type == 10) {
-                        item[_name] = attribute.value_string
-                    }
-                    if (attribute.attribute_type_object.value_type == 20) {
-                        item[_name] = attribute.value_float
-                    }
-                    if (attribute.attribute_type_object.value_type == 30) {
-                        item[_name] = attribute.classifier_object
-                    }
-                    if (attribute.attribute_type_object.value_type == 40) {
-                        item[_name] = attribute.value_date
-                    }
+                        if (propsToMock.indexOf(_name) == -1) {
+                            propsToMock.push(_name);
+                        }
 
-                })
+                        if (attribute.attribute_type_object.value_type == 10) {
+                            item[_name] = attribute.value_string
+                        }
+                        if (attribute.attribute_type_object.value_type == 20) {
+                            item[_name] = attribute.value_float
+                        }
+                        if (attribute.attribute_type_object.value_type == 30) {
+                            item[_name] = attribute.classifier_object
+                        }
+                        if (attribute.attribute_type_object.value_type == 40) {
+                            item[_name] = attribute.value_date
+                        }
+
+                    })
+                }
             } else {
                 //item.instrument_object = {
                 //    attributes: [
@@ -687,86 +764,97 @@
 
             if (item.hasOwnProperty('account_object') && item.account_object !== null) {
 
-                attributesToMock.account = attributesToMock.account.concat(JSON.parse(JSON.stringify(item.account_object.attributes))).filter(filterByID);
+                if (item.account_object.hasOwnProperty('attributes')) {
 
-                item.account_object.attributes.forEach(function (attribute) {
+                    attributesToMock.account = attributesToMock.account.concat(JSON.parse(JSON.stringify(item.account_object.attributes))).filter(filterByID);
 
-                    var _name = 'account_attribute_' + attribute.attribute_type_object.name;
+                    item.account_object.attributes.forEach(function (attribute) {
 
-                    if (propsToMock.indexOf(_name) == -1) {
-                        propsToMock.push(_name);
-                    }
+                        var _name = 'account_attribute_' + attribute.attribute_type_object.name;
 
-                    if (attribute.attribute_type_object.value_type == 10) {
-                        item[_name] = attribute.value_string
-                    }
-                    if (attribute.attribute_type_object.value_type == 20) {
-                        item[_name] = attribute.value_float
-                    }
-                    if (attribute.attribute_type_object.value_type == 30) {
-                        item[_name] = attribute.classifier_object
-                    }
-                    if (attribute.attribute_type_object.value_type == 40) {
-                        item[_name] = attribute.value_date
-                    }
+                        if (propsToMock.indexOf(_name) == -1) {
+                            propsToMock.push(_name);
+                        }
 
-                })
+                        if (attribute.attribute_type_object.value_type == 10) {
+                            item[_name] = attribute.value_string
+                        }
+                        if (attribute.attribute_type_object.value_type == 20) {
+                            item[_name] = attribute.value_float
+                        }
+                        if (attribute.attribute_type_object.value_type == 30) {
+                            item[_name] = attribute.classifier_object
+                        }
+                        if (attribute.attribute_type_object.value_type == 40) {
+                            item[_name] = attribute.value_date
+                        }
+
+                    })
+
+                }
             }
 
             if (item.hasOwnProperty('portfolio_object') && item.portfolio_object !== null) {
 
-                attributesToMock.portfolio = attributesToMock.portfolio.concat(JSON.parse(JSON.stringify(item.portfolio_object.attributes))).filter(filterByID);
+                if (item.portfolio_object.hasOwnProperty('attributes')) {
 
-                item.portfolio_object.attributes.forEach(function (attribute) {
+                    attributesToMock.portfolio = attributesToMock.portfolio.concat(JSON.parse(JSON.stringify(item.portfolio_object.attributes))).filter(filterByID);
 
-                    var _name = 'portfolio_attribute_' + attribute.attribute_type_object.name;
+                    item.portfolio_object.attributes.forEach(function (attribute) {
 
-                    if (propsToMock.indexOf(_name) == -1) {
-                        propsToMock.push(_name);
-                    }
+                        var _name = 'portfolio_attribute_' + attribute.attribute_type_object.name;
 
-                    if (attribute.attribute_type_object.value_type == 10) {
-                        item[_name] = attribute.value_string
-                    }
-                    if (attribute.attribute_type_object.value_type == 20) {
-                        item[_name] = attribute.value_float
-                    }
-                    if (attribute.attribute_type_object.value_type == 30) {
-                        item[_name] = attribute.classifier_object
-                    }
-                    if (attribute.attribute_type_object.value_type == 40) {
-                        item[_name] = attribute.value_date
-                    }
+                        if (propsToMock.indexOf(_name) == -1) {
+                            propsToMock.push(_name);
+                        }
 
-                })
+                        if (attribute.attribute_type_object.value_type == 10) {
+                            item[_name] = attribute.value_string
+                        }
+                        if (attribute.attribute_type_object.value_type == 20) {
+                            item[_name] = attribute.value_float
+                        }
+                        if (attribute.attribute_type_object.value_type == 30) {
+                            item[_name] = attribute.classifier_object
+                        }
+                        if (attribute.attribute_type_object.value_type == 40) {
+                            item[_name] = attribute.value_date
+                        }
+
+                    })
+                }
             }
 
             if (item.hasOwnProperty('currency_object') && item.currency_object !== null) {
 
-                attributesToMock.currency = attributesToMock.currency.concat(JSON.parse(JSON.stringify(item.currency_object.attributes))).filter(filterByID);
+                if (item.currency_object.hasOwnProperty('attributes')) {
 
-                item.currency_object.attributes.forEach(function (attribute) {
+                    attributesToMock.currency = attributesToMock.currency.concat(JSON.parse(JSON.stringify(item.currency_object.attributes))).filter(filterByID);
 
-                    var _name = 'currency_attribute_' + attribute.attribute_type_object.name;
+                    item.currency_object.attributes.forEach(function (attribute) {
 
-                    if (propsToMock.indexOf(_name) == -1) {
-                        propsToMock.push(_name);
-                    }
+                        var _name = 'currency_attribute_' + attribute.attribute_type_object.name;
 
-                    if (attribute.attribute_type_object.value_type == 10) {
-                        item[_name] = attribute.value_string
-                    }
-                    if (attribute.attribute_type_object.value_type == 20) {
-                        item[_name] = attribute.value_float
-                    }
-                    if (attribute.attribute_type_object.value_type == 30) {
-                        item[_name] = attribute.classifier_object
-                    }
-                    if (attribute.attribute_type_object.value_type == 40) {
-                        item[_name] = attribute.value_date
-                    }
+                        if (propsToMock.indexOf(_name) == -1) {
+                            propsToMock.push(_name);
+                        }
 
-                })
+                        if (attribute.attribute_type_object.value_type == 10) {
+                            item[_name] = attribute.value_string
+                        }
+                        if (attribute.attribute_type_object.value_type == 20) {
+                            item[_name] = attribute.value_float
+                        }
+                        if (attribute.attribute_type_object.value_type == 30) {
+                            item[_name] = attribute.classifier_object
+                        }
+                        if (attribute.attribute_type_object.value_type == 40) {
+                            item[_name] = attribute.value_date
+                        }
+
+                    })
+
+                }
             }
 
             return item;
@@ -824,7 +912,7 @@
 
             groups.forEach(function (group, $groupIndex) {
 
-                //console.log('group', group);
+                console.log('group', group);
 
                 columns.forEach(function (column, $columnIndex) {
 
@@ -992,7 +1080,7 @@
                 });
             }
 
-            //console.log('results', results);
+            console.log('results', results);
 
             return results;
 

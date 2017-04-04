@@ -37,7 +37,7 @@
                                 </md-checkbox>
                             </div>
                             <div dragula="'columns-bag'" class="g-modal-draggable-card">
-                                <md-card class="modal-dialog-card">{{::vm.bindReportItemName(item)}}</md-card>
+                                <md-card class="modal-dialog-card" data-key-identifier="{{item.key}}">{{::vm.bindReportItemName(item)}}</md-card>
                             </div>
                         </div>
                     </md-content>

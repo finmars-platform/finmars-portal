@@ -90,7 +90,7 @@ app.controller('ComplexTransactionsTransactionEditDialogController', ['$scope', 
 
 app.controller('TransactionTypeActionsTabController', ['$scope', '$mdDialog', require('./app/controllers/tabs/transaction-type/transactionTypeActionsTabController')]);
 app.controller('TransactionTypeGeneralTabController', ['$scope', '$mdDialog', require('./app/controllers/tabs/transaction-type/transactionTypeGeneralTabController')]);
-app.controller('TransactionTypeInputsTabController', ['$scope', require('./app/controllers/tabs/transaction-type/transactionTypeInputsTabController')]);
+app.controller('TransactionTypeInputsTabController', ['$scope', '$mdDialog', require('./app/controllers/tabs/transaction-type/transactionTypeInputsTabController')]);
 
 app.controller('AccrualCalculationSchedulesTabController', ['$scope', require('./app/controllers/tabs/instrument/accrualCalculationSchedulesController')]);
 app.controller('EventSchedulesTabController', ['$scope', require('./app/controllers/tabs/instrument/eventSchedulesController')]);
@@ -215,6 +215,8 @@ app.controller('GReportSettingsDialogController', ['$scope', '$mdDialog', 'repor
 app.controller('gModalController', ['$scope', '$mdDialog', 'parentScope', 'callback', require('./app/directives/groupTable/gModalComponent')]);
 app.controller('gModalReportController', ['$scope', '$mdDialog', 'parentScope', 'callback', require('./app/directives/groupTable/gModalReportComponent')]);
 app.controller('gModalReportTransactionController', ['$scope', '$mdDialog', 'parentScope', 'callback', require('./app/directives/groupTable/gModalReportTransactionComponent')]);
+app.controller('gModalReportPerformanceController', ['$scope', '$mdDialog', 'parentScope', 'callback', require('./app/directives/groupTable/gModalReportPerformanceComponent')]);
+app.controller('gModalReportCashFlowProjectionController', ['$scope', '$mdDialog', 'parentScope', 'callback', require('./app/directives/groupTable/gModalReportCashFlowProjectionComponent')]);
 
 // GROUP TABLE END
 

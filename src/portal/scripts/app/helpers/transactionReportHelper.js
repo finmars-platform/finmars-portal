@@ -27,6 +27,11 @@
             });
         }
 
+        //console.error(report);
+        //console.error(propertyName);
+        //console.error("id ", id);
+        //console.error(result);
+
         return result
 
     }
@@ -65,9 +70,14 @@
 
         items.forEach(function (item) {
 
-            item.instrument_object = findEntityObject(report, 'instruments', item.instrument);
-            item.linked_instrument_object = findEntityObject(report, 'instruments', item.linked_instrument);
+            //console.error('item', item);
 
+            if (item.instrument) {
+                item.instrument_object = findEntityObject(report, 'instruments', item.instrument);
+            }
+            if (item.linked_instrument) {
+                item.linked_instrument_object = findEntityObject(report, 'instruments', item.linked_instrument);
+            }
             if (item.allocation_balance) {
                 item.allocation_balance_object = findEntityObject(report, 'instruments', item.allocation_balance);
             }
@@ -78,16 +88,32 @@
             //item.instrument_pricing_currency_history_object = findEntityObject(report, 'currencies');
             //item.instrument_price_history_object = findEntityObject(report, 'currencies');
 
-            item.account_cash_object = findEntityObject(report, 'accounts', item.account_cash);
-            item.account_interim_object = findEntityObject(report, 'accounts', item.account_interim);
-            item.account_position_object = findEntityObject(report, 'accounts', item.account_position);
-            item.counterparty_object = findEntityObject(report, 'counterparties', item.counterparty);
-            item.responsible_object = findEntityObject(report, 'responsibles', item.responsible);
-            item.complex_transaction_object = findEntityObject(report, 'complex_transactions', item.complex_transaction);
+            if (item.account_cash) {
+                item.account_cash_object = findEntityObject(report, 'accounts', item.account_cash);
+            }
+            if (item.account_interim) {
+                item.account_interim_object = findEntityObject(report, 'accounts', item.account_interim);
+            }
+            if (item.account_position) {
+                item.account_position_object = findEntityObject(report, 'accounts', item.account_position);
+            }
+            if (item.counterparty) {
+                item.counterparty_object = findEntityObject(report, 'counterparties', item.counterparty);
+            }
+            if (item.responsible) {
+                item.responsible_object = findEntityObject(report, 'responsibles', item.responsible);
+            }
+            if (item.complex_transaction) {
+                item.complex_transaction_object = findEntityObject(report, 'complex_transactions', item.complex_transaction);
+            }
 
-            item.transaction_class_object = findEntityObject({transaction_classes: transactionClassService.getListSync()}, 'transaction_classes', item.transaction_class);
+            if (item.transaction_class) {
+                item.transaction_class_object = findEntityObject({transaction_classes: transactionClassService.getListSync()}, 'transaction_classes', item.transaction_class);
+            }
 
-            item.portfolio_object = findEntityObject(report, 'portfolios', item.portfolio);
+            if (item.portfolio) {
+                item.portfolio_object = findEntityObject(report, 'portfolios', item.portfolio);
+            }
 
             if (item.transaction_currency) {
                 item.transaction_currency_object = findEntityObject(report, 'currencies', item.transaction_currency);
@@ -126,29 +152,55 @@
             //item.transaction_currency_object = findEntityObject(report, 'currencies', item.transaction_currency);
             //item.settlement_currency_object = findEntityObject(report, 'currencies', item.settlement_currency);
 
-            injectAttributeTypes(report, 'account_attribute_types', item.account_cash_object.attributes);
-            injectAttributeTypes(report, 'account_attribute_types', item.account_interim_object.attributes);
-            injectAttributeTypes(report, 'account_attribute_types', item.account_position_object.attributes);
+            if (item.account_cash_object) {
+                injectAttributeTypes(report, 'account_attribute_types', item.account_cash_object.attributes);
+            }
+            if (item.account_interim_object) {
+                injectAttributeTypes(report, 'account_attribute_types', item.account_interim_object.attributes);
+            }
+            if (item.account_position_object) {
+                injectAttributeTypes(report, 'account_attribute_types', item.account_position_object.attributes);
+            }
 
-            injectAttributeTypes(report, 'counterparty_attribute_types', item.counterparty_object.attributes);
-            injectAttributeTypes(report, 'responsible_attribute_types', item.responsible_object.attributes);
+            if (item.counterparty_object) {
+                injectAttributeTypes(report, 'counterparty_attribute_types', item.counterparty_object.attributes);
+            }
+            if (item.responsible_object) {
+                injectAttributeTypes(report, 'responsible_attribute_types', item.responsible_object.attributes);
+            }
 
-            injectAttributeTypes(report, 'currency_attribute_types', item.transaction_currency_object.attributes);
-            injectAttributeTypes(report, 'currency_attribute_types', item.settlement_currency_object.attributes);
+            if (item.transaction_currency_object) {
+                injectAttributeTypes(report, 'currency_attribute_types', item.transaction_currency_object.attributes);
+            }
+            if (item.settlement_currency_object) {
+                injectAttributeTypes(report, 'currency_attribute_types', item.settlement_currency_object.attributes);
+            }
 
-            injectAttributeTypes(report, 'instrument_attribute_types', item.instrument_object.attributes);
-            injectAttributeTypes(report, 'instrument_attribute_types', item.linked_instrument_object.attributes);
+            if (item.instrument_object) {
+                injectAttributeTypes(report, 'instrument_attribute_types', item.instrument_object.attributes);
+            }
+
+            if (item.linked_instrument_object) {
+                injectAttributeTypes(report, 'instrument_attribute_types', item.linked_instrument_object.attributes);
+            }
 
             if (item.hasOwnProperty('allocation_balance_object')) {
+
+                console.log('item.allocation_balance_object', item.allocation_balance_object);
+
                 injectAttributeTypes(report, 'instrument_attribute_types', item.allocation_balance_object.attributes);
             }
             if (item.hasOwnProperty('allocation_pl_object')) {
                 injectAttributeTypes(report, 'instrument_attribute_types', item.allocation_pl_object.attributes);
             }
 
-            injectAttributeTypes(report, 'portfolio_attribute_types', item.portfolio_object.attributes);
+            if (item.portfolio_object) {
+                injectAttributeTypes(report, 'portfolio_attribute_types', item.portfolio_object.attributes);
+            }
 
-            injectAttributeTypes(report, 'complex_transaction_attribute_types', item.complex_transaction_object.attributes);
+            if (item.complex_transaction_object) {
+                injectAttributeTypes(report, 'complex_transaction_attribute_types', item.complex_transaction_object.attributes);
+            }
 
             injectAttributeTypes(report, 'transaction_attribute_types', item.attributes);
 

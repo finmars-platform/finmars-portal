@@ -21,6 +21,7 @@
 
         vm.save = function ($event) {
             vm.readyStatus.processing = true;
+            vm.readyStatus.finished = false;
             usersService.changePassword(0, vm.data).then(function (data) {
                 vm.readyStatus.processing = false;
                 if (data.status == 400) {
@@ -36,7 +37,7 @@
                         skipHide: true
                     })
                 } else {
-
+                    vm.data = {};
                     vm.readyStatus.finished = true;
                     $scope.$apply();
                 }
