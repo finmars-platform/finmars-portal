@@ -1,0 +1,66 @@
+/**
+ * Created by szhitenev on 03.04.2017.
+ */
+(function () {
+
+    'use strict';
+
+    var getAttributes = function () {
+        return [
+            {
+                "key": "name",
+                "name": "Name",
+                "value_type": 10
+            },
+            {
+                "key": "short_name",
+                "name": "Short name",
+                "value_type": 10
+            },
+            {
+                "key": "notes",
+                "name": "Notes",
+                "value_type": 10
+            },
+            {
+                "key": "user_code",
+                "name": "User code",
+                "value_type": 10
+            },
+            {
+                "key": "accounts",
+                "name": "Accounts",
+                "value_type": "mc_field"
+
+            },
+            {
+                "key": "responsibles",
+                "name": "Responsibles",
+                "value_type": "mc_field"
+            },
+            {
+                "key": "counterparties",
+                "name": "Counterparties",
+                "value_type": "mc_field"
+            },
+            {
+                "key": "transaction_types",
+                "name": "Transaction types",
+                "value_type": "mc_field"
+            },
+            {
+                "key": "tags",
+                "name": "Tags",
+                "value_type": "mc_field"
+            }
+        ]
+    };
+
+    module.exports = {
+
+        getAttributes: getAttributes
+
+    }
+
+
+}())

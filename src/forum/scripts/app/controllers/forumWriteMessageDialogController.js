@@ -17,10 +17,17 @@
 
         vm.isQuotation = false;
 
+        vm.message = {
+            quotation: {},
+            text: ''
+        };
+
         // var message = '';
-        if(options && options.quote) {
+        if (options && options.quote) {
             vm.isQuotation = true;
-            vm.quotation = options.quote.item;
+            vm.message.quotation = options.quote.item;
+
+
             // console.log('quotation info is ', vm.quotation);
             // var messageObj = {
             //     message: vm.message,

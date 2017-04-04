@@ -1,0 +1,16 @@
+<div class="forum-quote">
+    <div layout="row" layout-align="start center" style="margin-bottom: 10px">
+        <h4 class="author-username" data-ng-bind="item.sender_object.username"></h4>
+        <p class="thread-message-create-data"
+           data-ng-bind="item.created | date:'HH:mm dd/MM/yyyy'"></p>
+    </div>
+    <div layout="row">
+        <div data-ng-if="item.text.quotation">
+            <bind-forum-quote item="item.text.quotation"></bind-forum-quote>
+            <p class="thread-message-text" data-ng-bind-html="item.text.text | trustAsHtml"></p>
+        </div>
+        <div data-ng-if="!item.text.quotation">
+            <p class="thread-message-text" data-ng-bind-html="item.text | trustAsHtml"></p>
+        </div>
+    </div>
+</div>

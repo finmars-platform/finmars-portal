@@ -248,7 +248,7 @@
 
                         if (scope.isReport == true) {
 
-                            //console.log('entityFieldsArray', entityFieldsArray);
+                            console.log('entityFieldsArray', entityFieldsArray);
                             //console.log('scope.columns[i]', scope.columns);
 
                         } else {
@@ -322,7 +322,7 @@
                         var classifierExist = false;
                         var entityExist = false;
 
-                        //console.log('ITEMS', items);
+                        //console.log('ITEMS', scope.items);
 
                         if (scope.items) {
                             for (i = 0; i < scope.items.length; i = i + 1) {
@@ -363,6 +363,7 @@
                                         }
                                     }
                                 }
+
                             }
                         }
 
@@ -391,7 +392,7 @@
                             if (data.length) {
                                 var i;
 
-                                //console.log('data', data);
+                                //console.log('data1111111111111111111111111', data);
 
                                 for (i = 0; i < data.length; i = i + 1) {
 
@@ -721,12 +722,21 @@
                             }
                         }
                     }
+
+
+                    //console.log('group', group);
+
                     if (group.value_type === 'field') {
                         if (!entityFieldsArray.hasOwnProperty(group.key)) {
                             //findGroups();
                         }
 
-                        //console.log('entityFieldsArray', entityFieldsArray.portfolio);
+
+                        if (group.hasOwnProperty(group.key + '_object') && group.value !== "") {
+                            return group[group.key + '_object'].user_code;
+                        }
+
+                        //console.log('entityFieldsArray', entityFieldsArray);
 
                         if (scope.readyStatus.cellsFirstReady == true) {
 
@@ -765,9 +775,12 @@
                         }
                     }
 
+                    if (group.value_type == 'float') {
+                        result = parseFloat(group.value).toFixed(2);
+                    }
+
                     if (group.value_type == '10'
                         || group.value_type == '40'
-                        || group.value_type == 'float'
                         || group.value_type == 'string'
                         || group.value_type == 'date'
                         || group.value_type == 'value_string'

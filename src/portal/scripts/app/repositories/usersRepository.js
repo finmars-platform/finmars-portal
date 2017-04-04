@@ -127,12 +127,21 @@
             body: JSON.stringify(user)
         }).then(function (data) {
             return new Promise(function (resolve, reject) {
-                data.json().then(function (result) {
-                    resolve({
-                        response: result,
-                        status: data.status
+
+                if (data.status == 400) {
+                    data.json().then(function (result) {
+                        resolve({
+                            response: result,
+                            status: data.status
+                        })
                     })
-                })
+                } else {
+                    resolve({
+                        response: {success: true},
+                        status: 200
+                    })
+                }
+
             });
         })
     };

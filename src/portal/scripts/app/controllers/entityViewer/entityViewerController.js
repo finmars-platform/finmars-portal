@@ -409,9 +409,15 @@
             };
 
             vm.itemFilterHasOwnProperty = function (item, filter) {
-
+                //
                 //console.log('item', item);
                 //console.log('filter', filter);
+
+                if (filter.hasOwnProperty('columnType')) {
+                    if (item.hasOwnProperty(filter.name)) {
+                        return true;
+                    }
+                }
 
                 if (filter.hasOwnProperty('key')) {
                     if (item.hasOwnProperty(filter.key)) {
@@ -452,6 +458,8 @@
                     vm.reportOptions = data;
                     vm.reportOptions.currency = data.report_currency;
 
+                    console.log('reportHandler data', data);
+
                     if (data.task_status !== 'SUCCESS') {
 
                         vm.reportProcessing = true;
@@ -462,6 +470,7 @@
                         setTimeout(function () {
                             vm.updateTable();
                         }, 1000)
+
                     } else {
 
                         vm.originalData = JSON.parse(JSON.stringify(data)); // store server response data untouched
@@ -469,11 +478,11 @@
                         vm.reportOptions.task_id = null;
 
 
-                        entityViewerHelperService.transformItems(data.items, vm.attrs).then(function (data) {
+                        entityViewerHelperService.transformItems(data.items, vm.attrs).then(function (transformedData) {
 
-                            var entity = data;
+                            var entity = transformedData;
 
-                            //console.log('vm.entityItems', vm.entity);
+                            console.log('transformedData', transformedData);
 
                             vm.reportIsReady = true;
 
@@ -481,15 +490,17 @@
                                 entity = reportSubtotalService.groupByAndCalc(entity, vm.reportOptions);
                             }
 
-                            entity = reportHelper.releaseEntityObjects(entity);
 
                             var filteredData = entity;
 
-                            if (vm.entityType == 'transaction-report') {
+                            if (vm.entityType == 'transaction-report' || vm.entityType == 'cash-flow-projection-report') {
                                 filteredData = transactionReportHelper.injectIntoItems(filteredData, data);
                             }
 
-                            console.log('filteredData', filteredData);
+                            if (filteredData.length) {
+                                filteredData = reportHelper.releaseEntityObjects(filteredData);
+                            }
+                            //console.log('filteredData', filteredData);
 
                             filteredData = vm.groupTableService.extractDynamicAttributes(filteredData);
 
@@ -509,20 +520,24 @@
                                             isFiltersEnabled = true;
                                         }
 
-                                        if (item.value_type == 10 && item.options.query !== undefined && (item.options.query + '').length > 0) {
+                                        if (item.hasOwnProperty('columnType') || item.value_type == 10 && item.options.query !== undefined && (item.options.query + '').length > 0) {
                                             isFiltersEnabled = true;
                                         }
                                     }
                                 });
                             }
 
-                            console.log('filteredData123', filteredData);
+                            //console.log('filteredData123', filteredData);
 
                             if (isFiltersExist == true && isFiltersEnabled == true) {
 
                                 var itemsRepository = JSON.parse(JSON.stringify(filteredData));
 
                                 vm.filters.forEach(function (filterItem) {
+
+                                    if (filterItem.hasOwnProperty('columnType')) {
+                                        filterItem.value_type = 10
+                                    }
 
                                     //console.log('filterItem', filterItem);
 
@@ -564,22 +579,31 @@
                                                     }
                                                 }
 
-                                                if (filterItem.value_type == 10) {
 
-                                                    //console.log('item', item);
+                                                if (filterItem.value_type == 10) {
 
                                                     var _name;
 
                                                     if (filterItem.hasOwnProperty('r_entityType')) {
                                                         _name = filterItem.r_entityType + '_attribute_' + filterItem.source_name;
                                                     } else {
-                                                        _name = filterItem.key;
-                                                        //_name = filterItem.attribute_entity + '_attribute_' + filterItem.source_name;
+                                                        if (filterItem.hasOwnProperty('columnType')) {
+                                                            _name = filterItem.name;
+                                                        } else {
+                                                            _name = filterItem.key;
+                                                            //_name = filterItem.attribute_entity + '_attribute_' + filterItem.source_name;
+                                                        }
                                                     }
 
 
                                                     if (filterItem.options.query !== undefined) {
-                                                        if (item[_name].toLocaleLowerCase().indexOf(filterItem.options.query.toLocaleLowerCase()) !== -1) {
+
+                                                        var strName = item[_name] + '';
+                                                        var strQuery = filterItem.options.query + '';
+
+                                                        if (strName.toLocaleLowerCase().indexOf(strQuery.toLocaleLowerCase()) !== -1) {
+
+
                                                             localFilteredData.push(item);
                                                         }
                                                     } else {
@@ -602,7 +626,7 @@
                                 filteredData = itemsRepository;
                             }
 
-                            console.log('filteredData1234', filteredData);
+                            //console.log('filteredData1234', filteredData);
 
 
                             var entitiesList = [vm.entityType, 'instrument', 'account',

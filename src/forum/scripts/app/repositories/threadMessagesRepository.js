@@ -6,8 +6,10 @@
     'use strict';
 
     var cookieService = require('../../../../core/services/cookieService');
+    var configureRepositoryUrlService = require('../services/configureRepositoryUrlService');
+    var baseUrlService = require('../services/baseUrlService');
 
-    var baseUrl = '/api/v1/';
+    var baseUrl = baseUrlService.resolve();
 
     var getList = function (options) {
         return window.fetch(baseUrl + 'chats/message/?ordering=created&thread=' + options.thread + '&page=' + options.page,

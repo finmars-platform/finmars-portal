@@ -3,9 +3,21 @@
         <md-input-container class="md-block">
             <label data-ng-bind="getName()"></label>
             <input data-ng-change="changeWatcher()" data-ng-model="entity[getModelKey()]" type="number"
-                   data-ng-if="!item.options.onlyPositive">
+                   data-ng-if="!item.options.onlyPositive" style="width: {{100 - item.buttons.length * 10}}%">
             <input data-ng-change="changeWatcher()" data-ng-model="entity[getModelKey()]" type="number" min="0"
-                   data-ng-if="item.options.onlyPositive">
+                   data-ng-if="item.options.onlyPositive" style="width: {{100 - item.buttons.length * 10}}%">
+
+            <div data-ng-if="item.buttons.length">
+                <md-button data-ng-repeat="button in item.buttons"
+                           class="{{button.classes}} {{button.icon && button.caption == '' ? 'md-icon-button' : ''}}"
+                           data-ng-click="button.action(item)">
+                    {{button.caption}}
+                    <ng-md-icon data-ng-if="button.icon" icon="{{button.icon}}"></ng-md-icon>
+                    <md-tooltip data-ng-if="button.tooltip" class="tooltip_1" md-direction="bottom">{{button.tooltip}}
+                    </md-tooltip>
+                </md-button>
+            </div>
+
         </md-input-container>
     </div>
     <div data-ng-if="fieldType['display_name'] === 'String'">
@@ -22,11 +34,22 @@
                     class="md-block bind-field-input {{item.options.copyFrom ? 'with-button' : ''}} {{checkValid() ? 'mdc-error' : ''}}
                     {{entity[getModelKey()] != '' ? 'md-input-has-value' : ''}}">
                 <label data-ng-bind="getName()"></label>
-                <input type="text" data-ng-change="changeWatcher()" data-ng-model="entity[getModelKey()]">
+                <input type="text" data-ng-change="changeWatcher()" data-ng-model="entity[getModelKey()]"
+                       style="width: {{100 - item.buttons.length * 10}}%">
                 <md-button data-ng-if="item.options.copyFrom" class="bf-copy-btn"
                            data-ng-click="copyFromField(item.options.copyFrom)">
                     <ng-md-icon icon="content_copy"></ng-md-icon>
                 </md-button>
+                <div data-ng-if="item.buttons.length">
+                    <md-button data-ng-repeat="button in item.buttons"
+                               class="{{button.classes}} {{button.icon && button.caption == '' ? 'md-icon-button' : ''}}"
+                               data-ng-click="button.action(item)">
+                        {{button.caption}}
+                        <ng-md-icon data-ng-if="button.icon" icon="{{button.icon}}"></ng-md-icon>
+                        <md-tooltip data-ng-if="button.tooltip" class="tooltip_1" md-direction="bottom">{{button.tooltip}}
+                        </md-tooltip>
+                    </md-button>
+                </div>
             </md-input-container>
         </div>
     </div>
@@ -38,6 +61,18 @@
             <input data-ng-change="changeWatcher()" data-ng-model="entity[getModelKey()]" data-float-numbers
                    data-only-positive="true"
                    data-ng-if="item.options.onlyPositive">
+
+            <div data-ng-if="item.buttons.length">
+                <md-button data-ng-repeat="button in item.buttons"
+                           class="{{button.classes}} {{button.icon && button.caption == '' ? 'md-icon-button' : ''}}"
+                           data-ng-click="button.action(item)">
+                    {{button.caption}}
+                    <ng-md-icon data-ng-if="button.icon" icon="{{button.icon}}"></ng-md-icon>
+                    <md-tooltip data-ng-if="button.tooltip" class="tooltip_1" md-direction="bottom">{{button.tooltip}}
+                    </md-tooltip>
+                </md-button>
+            </div>
+
         </md-input-container>
     </div>
     <div data-ng-if="fieldType['display_name'] === 'Field'">

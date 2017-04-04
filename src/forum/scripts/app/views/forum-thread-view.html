@@ -36,11 +36,26 @@
                         <h4 class="author-username" data-ng-bind="item.sender_object.username"></h4>
                         <p class="thread-message-create-data" data-ng-bind="item.created | date:'HH:mm dd/MM/yyyy'"></p>
                     </div>
-                    <div layout="row">
-                        <p class="thread-message-text" data-ng-bind-html="item.text | trustAsHtml"></p>
+                    <div layout="column">
+
+                        <div data-ng-if="item.text.quotation"
+                             style="background: #f9f9f9; padding: 16px; margin-bottom: 24px">
+
+                            <bind-forum-quote item="item.text.quotation"></bind-forum-quote>
+
+                        </div>
+
+                        <div data-ng-if="item.text.quotation">
+                            <p class="thread-message-text" data-ng-bind-html="item.text.text | trustAsHtml"></p>
+                        </div>
+                        <div data-ng-if="!item.text.quotation">
+                            <p class="thread-message-text" data-ng-bind-html="item.text | trustAsHtml"></p>
+                        </div>
                     </div>
                     <div layout="row" layout-align="end center">
-                        <md-button aria-label="reply" class="md-raised message-reply-btn" data-ng-click="vm.replyToMessage($event, item)">Reply</md-button>
+                        <md-button aria-label="reply" class="md-raised message-reply-btn"
+                                   data-ng-click="vm.replyToMessage($event, item)">Reply
+                        </md-button>
                     </div>
                 </div>
                 <md-divider class="thread-message-divider"></md-divider>

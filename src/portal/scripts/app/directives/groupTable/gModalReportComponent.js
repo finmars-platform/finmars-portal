@@ -156,6 +156,7 @@
                 return item;
             });
 
+
             vm.instrumentAttrs = metaService.getEntityAttrs('instrument').map(function (item) {
                 item.name = 'Instrument.' + item.name;
                 item.attribute_entity = 'instrument';
@@ -251,6 +252,33 @@
 
                     attrsList = vm.attrs.concat(vm.baseAttrs);
                     attrsList = attrsList.concat(vm.entityAttrs);
+                    attrsList = attrsList.concat(vm.balanceAttrs);
+
+                    attrsList = attrsList.concat(vm.balancePerformanceAttrs);
+                    attrsList = attrsList.concat(vm.custom);
+
+                    attrsList = attrsList.concat(vm.instrumentAttrs);
+                    attrsList = attrsList.concat(vm.instrumentTypeAttrs);
+                    attrsList = attrsList.concat(vm.instrumentDynamicAttrs);
+
+                    attrsList = attrsList.concat(vm.accountAttrs);
+                    attrsList = attrsList.concat(vm.accountTypeAttrs);
+                    attrsList = attrsList.concat(vm.accountDynamicAttrs);
+
+                    attrsList = attrsList.concat(vm.portfolioAttrs);
+                    attrsList = attrsList.concat(vm.portfolioDynamicAttrs);
+
+                    attrsList = attrsList.concat(vm.strategy1attrs);
+                    attrsList = attrsList.concat(vm.strategy1subgroupAttrs);
+                    attrsList = attrsList.concat(vm.strategy1groupAttrs);
+
+                    attrsList = attrsList.concat(vm.strategy2attrs);
+                    attrsList = attrsList.concat(vm.strategy2subgroupAttrs);
+                    attrsList = attrsList.concat(vm.strategy2groupAttrs);
+
+                    attrsList = attrsList.concat(vm.strategy3attrs);
+                    attrsList = attrsList.concat(vm.strategy3subgroupAttrs);
+                    attrsList = attrsList.concat(vm.strategy3groupAttrs);
 
                     restoreAttrs();
                     syncAttrs();
@@ -417,23 +445,45 @@
                 /////// GROUPING
 
                 for (g = 0; g < grouping.length; g = g + 1) {
-                    if (typeAttrs[i].hasOwnProperty('key')) {
-                        if (typeAttrs[i].key === grouping[g].key) {
-                            groupExist = true;
-                            if (typeAttrs[i].groups === false) {
-                                grouping.splice(g, 1);
-                                g = g - 1;
-                            }
+                    if (typeAttrs[i].hasOwnProperty('columnType')
+                        && typeAttrs[i].columnType == 'custom-field'
+                        && typeAttrs[i].name === grouping[g].name) {
+                        groupExist = true;
+                        if (typeAttrs[i].groups === false) {
+                            grouping.splice(g, 1);
+                            g = g - 1;
                         }
                     } else {
-                        if (typeAttrs[i].id === grouping[g].id) {
-                            groupExist = true;
-                            if (typeAttrs[i].groups === false) {
-                                grouping.splice(g, 1);
-                                g = g - 1;
+
+
+                        if (typeAttrs[i].hasOwnProperty('key')) {
+                            if (typeAttrs[i].key === grouping[g].key) {
+                                groupExist = true;
+                                if (typeAttrs[i].groups === false) {
+                                    grouping.splice(g, 1);
+                                    g = g - 1;
+                                }
                             }
                         }
                     }
+                    //else if (typeAttrs[i].name === grouping[g].name) {
+                    //
+                    //    groupExist = true;
+                    //    if (typeAttrs[i].groups === false) {
+                    //        grouping.splice(c, 1);
+                    //        g = g - 1;
+                    //    }
+                    //}
+                    //
+                    //else {
+                    //    //if (typeAttrs[i].id === grouping[g].id) {
+                    //    //    groupExist = true;
+                    //    //    if (typeAttrs[i].groups === false) {
+                    //    //        grouping.splice(g, 1);
+                    //    //        g = g - 1;
+                    //    //    }
+                    //    //}
+                    //}
                 }
                 if (!groupExist) {
                     if (typeAttrs[i].groups === true) {
@@ -534,38 +584,69 @@
                 });
                 this.dragula.on('drop', function (elem, target) {
                     $(target).removeClass('active');
-                    var name = $(elem).html();
+
+                    console.log('elem', elem);
+                    var identifier;
+                    if ($(elem).attr('data-key-identifier')) {
+                        identifier = $(elem).attr('data-key-identifier');
+                    } else {
+                        identifier = $(elem).html();
+                    }
+
                     var i;
 
                     exist = false;
                     if (target === document.querySelector('#columnsbag')) {
                         for (i = 0; i < columns.length; i = i + 1) {
-                            if (columns[i].name === name) {
+                            if (columns[i].key === identifier) {
+                                exist = true;
+                            }
+
+                            if (columns[i].name === identifier) {
                                 exist = true;
                             }
                         }
                     }
                     if (target === document.querySelector('#groupsbag')) {
                         for (i = 0; i < grouping.length; i = i + 1) {
-                            if (grouping[i].name === name) {
+
+                            if (grouping[i].key === identifier) {
+                                exist = true;
+                            }
+
+                            if (grouping[i].name === identifier) {
                                 exist = true;
                             }
                         }
                     }
                     if (target === document.querySelector('#filtersbag .drop-new-filter')) {
                         for (i = 0; i < filters.length; i = i + 1) {
-                            if (filters[i].name === name) {
+
+                            if (filters[i].key === identifier) {
+                                exist = true;
+                            }
+
+                            if (filters[i].name === identifier) {
                                 exist = true;
                             }
                         }
                     }
                     if (!exist) {
                         var a;
+
+                        console.log('attrsList', attrsList);
+
                         if (target === document.querySelector('#columnsbag')) {
                             for (a = 0; a < attrsList.length; a = a + 1) {
-                                if (attrsList[a].name === name) {
+
+                                if (attrsList[a].key === identifier) {
                                     columns.push(attrsList[a]);
+                                } else {
+                                    if (attrsList[a].name === identifier) {
+                                        columns.push(attrsList[a]);
+                                    }
                                 }
+
                             }
                             syncAttrs();
                             callback({silent: true});
@@ -573,7 +654,7 @@
                         if (target === document.querySelector('#groupsbag')) {
 
                             for (a = 0; a < attrsList.length; a = a + 1) {
-                                if (attrsList[a].name === name) {
+                                if (attrsList[a].name === identifier) {
                                     grouping.push(attrsList[a]);
                                 }
                             }
@@ -583,7 +664,7 @@
                         if (target === document.querySelector('#filtersbag .drop-new-filter')) {
 
                             for (a = 0; a < attrsList.length; a = a + 1) {
-                                if (attrsList[a].name === name) {
+                                if (attrsList[a].name === identifier) {
                                     filters.push(attrsList[a]);
                                 }
                             }
@@ -630,7 +711,7 @@
         };
 
         setTimeout(function () {
-            dragAndDrop.init()
+            dragAndDrop.init();
         }, 500);
 
         vm.MABtnVisibility = function (entityType) {
