@@ -893,9 +893,19 @@
 
                             if (scope.columns[c].key == column.key) {
 
-                                if (column.value_type == 10) {
+                                if (column.value_type == 10 || column.value_type == 'float' || column.value_type == 20 || column.value_type == 40) {
                                     if (groupedItem.hasOwnProperty(column.key)) {
                                         return groupedItem[column.key];
+                                    }
+                                }
+
+                                if (column.value_type == 'boolean') {
+                                    if (groupedItem.hasOwnProperty(column.key)) {
+                                        if (groupedItem[column.key] == 1) {
+                                            return 'True'
+                                        } else {
+                                            return 'False'
+                                        }
                                     }
                                 }
 

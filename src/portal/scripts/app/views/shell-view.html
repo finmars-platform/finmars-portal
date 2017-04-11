@@ -6,7 +6,7 @@
 
             <div class="md-toolbar-tools" flex="70" layout="start center">
                 <h2 data-ng-if="vm.currentLocation().length > 0" data-ng-bind="vm.currentLocation()"></h2>
-                <div data-ng-if="vm.currentLocationShowBtns" layout="row">
+                <div data-ng-if="vm.currentLocationShowBtns" layout="row" style="margin-left: 20px">
                     <md-menu>
                         <md-button class="md-button header-cloud-layout-btn" ng-click="$mdOpenMenu($event)">
                             <ng-md-icon icon="cloud" size="36"></ng-md-icon>
@@ -24,6 +24,12 @@
                         </md-menu-content>
                     </md-menu>
                     <bookmarks></bookmarks>
+                </div>
+                <div>
+                    <md-button class="md-button header-help-btn" data-ng-click="vm.openHelp($event)"
+                               aria-label="Notifications">
+                        <ng-md-icon icon="help" size="36"></ng-md-icon>
+                    </md-button>
                 </div>
             </div>
 

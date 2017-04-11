@@ -28,19 +28,20 @@
             //usersService.logout();
         };
 
-        window.fetch('/api/v1/users/ping/').then(function (data) {
-            return data.json()
-        }).then(function (data) {
-            setTimeout(function () {
-                usersService.login('dev1', 'Itein9Ha4eige6Aiph5a').then(function () {
-                    //usersService.login('dev1', 'Uethohk0').then(function () {
-                    //usersService.login('dev2', 'ceechohf8Eexue6u').then(function () {
-                    //usersService.login('dev11', 'cheeL1ei').then(function () {
-                    //	console.log('after login', cookiesService.getCookie('csrftoken'));
-                    $scope.$apply();
-                });
-            }, 1000)
-        });
+        //usersService.ping().then(function (data) {
+        //    return data.json()
+        //}).then(function (data) {
+        setTimeout(function () {
+            //usersService.login('dev1', 'Itein9Ha4eige6Aiph5a').then(function () {
+            usersService.login('dev1', '123456abc').then(function () {
+                //usersService.login('dev1', 'Uethohk0').then(function () {
+                //usersService.login('dev2', 'ceechohf8Eexue6u').then(function () {
+                //usersService.login('dev11', 'cheeL1ei').then(function () {
+                //	console.log('after login', cookiesService.getCookie('csrftoken'));
+                $scope.$apply();
+            });
+        }, 1000)
+        //});
 
         usersService.getMasterList().then(function (data) {
             vm.masters = data.results;
@@ -75,6 +76,13 @@
 
                 return 'FORUM';
 
+            }
+
+            if ($state.current.name.indexOf('app.settings') !== -1) {
+
+                vm.currentLocationShowBtns = false;
+
+                return 'SETTINGS';
             }
 
             switch ($state.current.name) {
@@ -159,6 +167,22 @@
                 case 'app.reports.performance-report':
                     return "PERFORMANCE REPORT";
                     break;
+                case 'app.actions':
+                    vm.currentLocationShowBtns = false;
+                    return 'ACTIONS';
+                    break;
+                case 'app.system.notifications':
+                    vm.currentLocationShowBtns = false;
+                    return 'NOTIFICATIONS';
+                    break;
+                case 'app.system.transactions':
+                    vm.currentLocationShowBtns = false;
+                    return 'AUDIT TRANSACTIONS';
+                    break;
+                case 'app.system.instruments':
+                    vm.currentLocationShowBtns = false;
+                    return 'AUDIT INSTRUMENTS';
+                    break;
                 case 'app.settings.users-groups':
                     vm.currentLocationShowBtns = false;
                     return 'USERS & GROUPS';
@@ -170,6 +194,29 @@
             }
         };
 
+        vm.openHelp = function ($event) {
+
+            //console.log('$state', $state);
+
+            var urlPieces = $state.current.url.split('/');
+            var destinationUrl = urlPieces[urlPieces.length - 1].replace('-', '_');
+
+            var helpPageUrl = destinationUrl + '.html';
+
+            $mdDialog.show({
+                controller: 'HelpDialogController as vm',
+                templateUrl: 'views/dialogs/help-dialog-view.html',
+                targetEvent: $event,
+                locals: {
+                    data: {
+                        helpPageUrl: helpPageUrl
+                    }
+                },
+                preserveScope: true,
+                autoWrap: true,
+                skipHide: true
+            })
+        };
 
         vm.openLayoutList = function ($event) {
 

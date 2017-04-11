@@ -15,6 +15,14 @@
 
         vm.data = data;
 
+        vm.baseUrl = 'https://finmars.com/portal/help/';
+
+        vm.helpPage = vm.baseUrl + 'index.html';
+
+        if (vm.data.helpPageUrl) {
+            vm.helpPage = vm.baseUrl + vm.data.helpPageUrl;
+        }
+
         vm.cancel = function () {
             $mdDialog.cancel();
         };

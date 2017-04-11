@@ -151,11 +151,22 @@
                 return item;
             });
 
+            vm.balanceMismatchAttrs = metaService.getEntityAttrs('report-mismatch').map(function (item) {
+                item.name = 'Mismatch.' + item.name;
+                return item;
+            });
+
             vm.balancePerformanceAttrs = metaService.getEntityAttrs('report-addon-performance').map(function (item) {
                 item.name = 'Balance.' + item.name;
                 return item;
             });
 
+            vm.allocationAttrs = metaService.getEntityAttrs('instrument').map(function (item) {
+                item.name = 'Allocation.' + item.name;
+                item.attribute_entity = 'instrument';
+                item.key = 'allocation_object_' + item.key;
+                return item;
+            });
 
             vm.instrumentAttrs = metaService.getEntityAttrs('instrument').map(function (item) {
                 item.name = 'Instrument.' + item.name;
@@ -253,8 +264,10 @@
                     attrsList = vm.attrs.concat(vm.baseAttrs);
                     attrsList = attrsList.concat(vm.entityAttrs);
                     attrsList = attrsList.concat(vm.balanceAttrs);
+                    attrsList = attrsList.concat(vm.allocationAttrs);
 
                     attrsList = attrsList.concat(vm.balancePerformanceAttrs);
+                    attrsList = attrsList.concat(vm.balanceMismatchAttrs);
                     attrsList = attrsList.concat(vm.custom);
 
                     attrsList = attrsList.concat(vm.instrumentAttrs);
@@ -346,7 +359,9 @@
 
             syncTypeAttrs(vm.balanceAttrs);
             syncTypeAttrs(vm.balancePerformanceAttrs);
+            syncTypeAttrs(vm.balanceMismatchAttrs);
             syncTypeAttrs(vm.custom);
+            syncTypeAttrs(vm.allocationAttrs);
 
             syncTypeAttrs(vm.instrumentAttrs);
             syncTypeAttrs(vm.instrumentTypeAttrs);
@@ -525,7 +540,9 @@
         vm.updateAttrs = function () {
             updateTypeAttrs(vm.balanceAttrs);
             updateTypeAttrs(vm.balancePerformanceAttrs);
+            updateTypeAttrs(vm.balanceMismatchAttrs);
             updateTypeAttrs(vm.custom);
+            updateTypeAttrs(vm.allocationAttrs);
 
             updateTypeAttrs(vm.instrumentAttrs);
             updateTypeAttrs(vm.instrumentTypeAttrs);

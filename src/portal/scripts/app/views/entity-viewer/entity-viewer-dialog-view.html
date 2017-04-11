@@ -17,7 +17,7 @@
             <md-button ng-click="vm.editLayout()" class="md-raised md-primary" data-ng-if="vm.checkVisibility('edit-form-btn')">
                 Edit Form
             </md-button>
-            <md-button ng-click="vm.manageAttrs()" class="md-raised md-primary">
+            <md-button ng-click="vm.manageAttrs()" class="md-raised md-primary" data-ng-if="vm.MABtnVisibility(vm.entityType)">
                 Manage attributes
             </md-button>
         </div>

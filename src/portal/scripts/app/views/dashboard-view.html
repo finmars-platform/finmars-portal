@@ -13,6 +13,17 @@
 
                 <div class="dashboard-item-wrap">
 
+                    <div layout="row" layout-align="space-between center" class="dashboard-item-header">
+                        <p data-ng-if="vm.widget1._d_layout.name">{{vm.widget1._d_layout.name}}</p>
+                        <p data-ng-if="!vm.widget1._d_layout.name">Default</p>
+
+                        <div class="close-entity-viewer-btn" data-ng-if="vm.widget1._d_configured"
+                             data-ng-click="vm.closeWidget(vm.widget1)">
+                            <ng-md-icon icon="close"></ng-md-icon>
+                            <md-tooltip class="tooltip_1" md-direction="bottom">Change layout</md-tooltip>
+                        </div>
+                    </div>
+
                     <div data-ng-if="vm.widget1._d_configured">
                         <div class="dashboard-item">
                             <div class="custom-scrollbar" data-custom-scroll data-scroll-sticky="true">
@@ -41,15 +52,21 @@
 
                     </div>
 
-                    <div class="close-entity-viewer-btn" data-ng-if="vm.widget1._d_configured"
-                         data-ng-click="vm.closeWidget(vm.widget1)">
-                        <ng-md-icon icon="close"></ng-md-icon>
-                        <md-tooltip class="tooltip_1" md-direction="bottom">Change layout</md-tooltip>
-                    </div>
-
                 </div>
 
                 <div class="dashboard-item-wrap">
+
+                    <div layout="row" layout-align="space-between center" class="dashboard-item-header">
+                        <p data-ng-if="vm.widget2._d_layout.name">{{vm.widget2._d_layout.name}}</p>
+                        <p data-ng-if="!vm.widget2._d_layout.name">Default</p>
+
+                        <div class="close-entity-viewer-btn" data-ng-if="vm.widget2._d_configured"
+                             data-ng-click="vm.closeWidget(vm.widget2)">
+                            <ng-md-icon icon="close"></ng-md-icon>
+                            <md-tooltip class="tooltip_1" md-direction="bottom">Change layout</md-tooltip>
+                        </div>
+                    </div>
+
 
                     <div data-ng-if="vm.widget2._d_configured">
                         <div class="dashboard-item">
@@ -79,17 +96,23 @@
 
                     </div>
 
-                    <div class="close-entity-viewer-btn" data-ng-if="vm.widget2._d_configured"
-                         data-ng-click="vm.closeWidget(vm.widget2)">
-                        <ng-md-icon icon="close"></ng-md-icon>
-                        <md-tooltip class="tooltip_1" md-direction="bottom">Change layout</md-tooltip>
-                    </div>
-
                 </div>
 
             </div>
 
             <div class="dashboard-row">
+
+                <div layout="row" layout-align="space-between center" class="dashboard-item-header">
+                    <p data-ng-if="vm.widget3._d_layout.name">{{vm.widget3._d_layout.name}}</p>
+                    <p data-ng-if="!vm.widget3._d_layout.name">Default</p>
+
+                    <div class="close-entity-viewer-btn" data-ng-if="vm.widget3._d_configured"
+                         data-ng-click="vm.closeWidget(vm.widget3)">
+                        <ng-md-icon icon="close"></ng-md-icon>
+                        <md-tooltip class="tooltip_1" md-direction="bottom">Change layout</md-tooltip>
+                    </div>
+                </div>
+
 
                 <div class="dashboard-item-wrap">
 
@@ -121,15 +144,20 @@
 
                     </div>
 
-                    <div class="close-entity-viewer-btn" data-ng-if="vm.widget3._d_configured"
-                         data-ng-click="vm.closeWidget(vm.widget3)">
-                        <ng-md-icon icon="close"></ng-md-icon>
-                        <md-tooltip class="tooltip_1" md-direction="bottom">Change layout</md-tooltip>
-                    </div>
-
                 </div>
 
                 <div class="dashboard-item-wrap">
+
+                    <div layout="row" layout-align="space-between center" class="dashboard-item-header">
+                        <p data-ng-if="vm.widget4._d_layout.name">{{vm.widget4._d_layout.name}}</p>
+                        <p data-ng-if="!vm.widget4._d_layout.name">Default</p>
+
+                        <div class="close-entity-viewer-btn" data-ng-if="vm.widget4._d_configured"
+                             data-ng-click="vm.closeWidget(vm.widget4)">
+                            <ng-md-icon icon="close"></ng-md-icon>
+                            <md-tooltip class="tooltip_1" md-direction="bottom">Change layout</md-tooltip>
+                        </div>
+                    </div>
 
                     <div data-ng-if="vm.widget4._d_configured">
                         <div class="dashboard-item">
@@ -157,12 +185,6 @@
 
                         </div>
 
-                    </div>
-
-                    <div class="close-entity-viewer-btn" data-ng-if="vm.widget4._d_configured"
-                         data-ng-click="vm.closeWidget(vm.widget4)">
-                        <ng-md-icon icon="close"></ng-md-icon>
-                        <md-tooltip class="tooltip_1" md-direction="bottom">Change layout</md-tooltip>
                     </div>
 
                 </div>

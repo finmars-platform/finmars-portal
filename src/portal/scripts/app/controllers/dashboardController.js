@@ -35,7 +35,7 @@
 
                 vm.readyStatus.uiLayouts = true;
 
-                $scope.$apply();
+                vm.getView();
 
             });
         };
@@ -114,6 +114,28 @@
                     vm.widget2 = vm.listView.data.widget2;
                     vm.widget3 = vm.listView.data.widget3;
                     vm.widget4 = vm.listView.data.widget4;
+
+
+                    vm.uiLayouts.forEach(function (uiLayout) {
+
+                        if(uiLayout.id == vm.widget1.uiLayoutId) {
+                            vm.widget1._d_layout = uiLayout;
+                        }
+
+                        if(uiLayout.id == vm.widget2.uiLayoutId) {
+                            vm.widget2._d_layout = uiLayout;
+                        }
+
+                        if(uiLayout.id == vm.widget3.uiLayoutId) {
+                            vm.widget3._d_layout = uiLayout;
+                        }
+
+                        if(uiLayout.id == vm.widget4.uiLayoutId) {
+                            vm.widget4._d_layout = uiLayout;
+                        }
+
+                    })
+
 
                 } else {
 
@@ -200,7 +222,6 @@
             })
         };
 
-        vm.getView();
 
         vm.bindLayoutManager = function () {
 

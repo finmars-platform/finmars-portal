@@ -7,21 +7,21 @@
 
     var getAttributes = function () {
         return [
-            //{
-            //    "key": "name",
-            //    "name": "Name",
-            //    "value_type": 10
-            //},
-            //{
-            //    "key": "short_name",
-            //    "name": "Short name",
-            //    "value_type": 10
-            //},
-            //{
-            //    "key": "user_code",
-            //    "name": "User code",
-            //    "value_type": 10
-            //},
+            {
+                "key": "name",
+                "name": "Name",
+                "value_type": 10
+            },
+            {
+                "key": "short_name",
+                "name": "Short name",
+                "value_type": 10
+            },
+            {
+                "key": "user_code",
+                "name": "User code",
+                "value_type": 10
+            },
             //{
             //    "key": "last_notes",
             //    "name": "Last notes",
@@ -294,7 +294,32 @@
                 "key": "exposure_loc",
                 "name": "Exposure (LOC)",
                 "value_type": "float"
+            },
+            {
+                "key": "instrument_principal_price",
+                "name": "Current Price",
+                "value_type": "float"
+            },
+            {
+                "key": "instrument_accrued_price",
+                "name": "Current Accrued",
+                "value_type": "float"
+            },
+            {
+                "key": "pricing_currency_fx_rate",
+                "name": "Pricing Ccy FX rate",
+                "value_type": "float"
+            },
+            {
+                "key": "instrument_accrued_currency_fx_rate",
+                "name": "Accrued currency FX rate",
+                "value_type": "float"
             }
+            //{
+            //    "key": "allocation_balance",
+            //    "name": "Allocation Balance",
+            //    "value_type": "field"
+            //}
         ]
     };
 

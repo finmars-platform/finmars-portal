@@ -770,6 +770,9 @@
         };
 
         $scope.$parent.vm.copyCallback = function () {
+
+            console.log('COPY CALLBACK ', vm.entity);
+
             return new Promise(function (resolve) {
                 vm.readyStatus.entity = false;
                 setTimeout(function () {
@@ -1017,6 +1020,10 @@
 
                 var resultEntity = checkForNulls(vm.entity);
                 //console.log('resultEntity', resultEntity);
+
+                if (vm.entityType == 'transaction-type') {
+                    resultEntity.book_transaction_layout = vm.entity.book_transaction_layout;
+                }
 
 
                 if (vm.entityType == 'complex-transaction') {
