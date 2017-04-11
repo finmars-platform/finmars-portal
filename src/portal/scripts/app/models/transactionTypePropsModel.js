@@ -56,7 +56,12 @@
                 "key": "tags",
                 "name": "Tags",
                 "value_type": "mc_field"
-            }
+            },
+            //{
+            //    "key": "book_transaction_layout",
+            //    "name": "Book transaction Layout",
+            //    "value_type": 10
+            //}
         ]
     };
 

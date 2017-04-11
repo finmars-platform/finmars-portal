@@ -453,6 +453,11 @@
 
                 //console.log('updateTable', vm.reportOptions);
 
+                if (vm.components.layoutManager == true) {
+                    vm.saveLayoutAsManager();
+                    vm.saveLayoutManager();
+                }
+
                 var reportHandler = function (data) {
 
                     vm.reportOptions = data;
@@ -1021,6 +1026,166 @@
             // resolving is instance of entityViewer root
             // settings all props depends of root/child
 
+
+            vm.saveLayoutAsManager = function () {
+                $('.save-layout-as-btn').unbind('click');
+                $('.save-layout-as-btn').bind('click', function (e) {
+
+                    // saving columns widths
+                    var tHead = $('.g-columns-component');
+                    var th = $('.g-columns-component.g-thead').find('.g-cell');
+                    var thWidths = [];
+                    for (var i = 0; i < th.length; i = i + 1) {
+                        var thWidth = $(th[i]).width();
+                        thWidths.push(thWidth);
+                    }
+
+                    vm.listView.data.table.columnsWidth = thWidths;
+
+                    //console.log("View data is ", vm.listView.data);
+                    vm.listView.data.table = vm.table;
+                    vm.listView.data.table.columns = vm.columns;
+                    // vm.listView.data.table.columns['cellWidth']
+                    //console.log('---------vm.grouping-------', vm.grouping);
+                    vm.listView.data.table.grouping = vm.grouping;
+                    vm.listView.data.table.folding = vm.folding;
+                    vm.listView.data.table.filters = vm.filters;
+                    vm.listView.data.table.sorting = vm.sorting;
+
+                    // vm.listView.data.table.cellWidth = 200;
+
+                    vm.listView.data.additionsType = vm.additionsType;
+
+                    vm.listView.data.tableAdditions.entityType = vm.additionsEntityType;
+
+                    vm.listView.data.tableAdditions = vm.tableAdditions;
+                    vm.listView.data.tableAdditions.table.columns = vm.entityAdditionsColumns;
+                    vm.listView.data.tableAdditions.table.filters = vm.entityAdditionsFilters;
+                    vm.listView.data.tableAdditions.table.sorting = vm.entityAdditionsSorting;
+                    vm.listView.data.tableAdditions.additionsStatus = vm.additionsStatus;
+                    vm.listView.data.tableAdditions.additionsState = vm.additionsState;
+
+                    vm.listView.data.reportOptions = vm.reportOptions;
+
+                    //vm.additionsStatus[res.results[0].data.tableAdditions.additionsType] = true;
+
+
+                    $mdDialog.show({
+                        controller: 'UiLayoutSaveAsDialogController as vm',
+                        templateUrl: 'views/dialogs/ui/ui-layout-save-as-view.html',
+                        parent: angular.element(document.body),
+                        targetEvent: e,
+                        locals: {
+                            options: {}
+                        },
+                        clickOutsideToClose: false
+                    }).then(function (res) {
+
+                        if (res.status == 'agree') {
+
+                            if (vm.oldListView) {
+                                vm.oldListView.is_default = false;
+
+                                uiService.updateListLayout(vm.oldListView.id, vm.oldListView).then(function () {
+                                    //console.log('saved');
+                                }).then(function () {
+
+                                    vm.listView.name = res.data.name;
+                                    vm.listView.is_default = true;
+
+                                    uiService.createListLayout(vm.entityType, vm.listView).then(function () {
+                                        //console.log('saved');
+                                        vm.getView();
+                                    });
+
+                                })
+
+                            } else {
+
+                                vm.listView.name = res.data.name;
+                                vm.listView.is_default = true;
+
+                                uiService.createListLayout(vm.entityType, vm.listView).then(function () {
+                                    //console.log('saved');
+                                    vm.getView();
+                                });
+                            }
+                        }
+
+                    });
+
+                });
+            };
+
+            vm.saveLayoutManager = function () {
+                $('.save-layout-btn').unbind('click');
+                $('.save-layout-btn').bind('click', function (e) {
+
+
+                    // saving columns widths
+                    var tHead = $('.g-columns-component');
+                    var th = $('.g-columns-component.g-thead').find('.g-cell');
+                    var thWidths = [];
+                    for (var i = 0; i < th.length; i = i + 1) {
+                        var thWidth = $(th[i]).width();
+                        thWidths.push(thWidth);
+                    }
+                    vm.listView.data.table.columnsWidth = thWidths;
+                    //console.log('entity viewer columnsWidth is', vm.listView.data.table.columnsWidth);
+
+                    //console.log("View data is ", vm.listView.data);
+
+
+                    vm.listView.data.table = vm.table;
+                    vm.listView.data.table.columns = vm.columns;
+                    // vm.listView.data.table.columns['cellWidth']
+                    //console.log('---------vm.grouping-------', vm.grouping);
+                    vm.listView.data.table.grouping = vm.grouping;
+                    vm.listView.data.table.folding = vm.folding;
+                    vm.listView.data.table.filters = vm.filters;
+                    vm.listView.data.table.sorting = vm.sorting;
+
+                    // vm.listView.data.table.cellWidth = 200;
+
+                    vm.listView.data.additionsType = vm.additionsType;
+
+                    vm.listView.data.tableAdditions.entityType = vm.additionsEntityType;
+
+                    vm.listView.data.tableAdditions = vm.tableAdditions;
+                    vm.listView.data.tableAdditions.table.columns = vm.entityAdditionsColumns;
+                    vm.listView.data.tableAdditions.table.filters = vm.entityAdditionsFilters;
+                    vm.listView.data.tableAdditions.table.sorting = vm.entityAdditionsSorting;
+                    vm.listView.data.tableAdditions.additionsStatus = vm.additionsStatus;
+                    vm.listView.data.tableAdditions.additionsState = vm.additionsState;
+
+                    vm.listView.data.reportOptions = vm.reportOptions;
+
+                    //vm.additionsStatus[res.results[0].data.tableAdditions.additionsType] = true;
+
+                    //console.log('vm.listView', vm.listView);
+
+                    if (vm.listView.hasOwnProperty('id')) {
+                        uiService.updateListLayout(vm.listView.id, vm.listView).then(function () {
+                            //console.log('saved');
+                        });
+                    } else {
+                        uiService.createListLayout(vm.entityType, vm.listView).then(function () {
+                            //console.log('saved');
+                        });
+                    }
+                    $mdDialog.show({
+                        controller: 'SaveLayoutDialogController as vm',
+                        templateUrl: 'views/save-layout-dialog-view.html',
+                        targetEvent: e,
+                        clickOutsideToClose: true
+                    }).then(function () {
+                        vm.getView();
+                    });
+
+
+                });
+            };
+
             (function ResolveEntityViewer() {
 
                 if ($scope.$parent.options && $scope.$parent.options.additionsState == true) { // nested EntityViewer
@@ -1268,160 +1433,8 @@
                         vm.tableParts = tablePartsService.setTablePartsSettings(vm.entityType);
 
                         if (vm.components.layoutManager == true) {
-
-                            $('.save-layout-as-btn').bind('click', function (e) {
-
-                                // saving columns widths
-                                var tHead = $('.g-columns-component');
-                                var th = $('.g-columns-component.g-thead').find('.g-cell');
-                                var thWidths = [];
-                                for (var i = 0; i < th.length; i = i + 1) {
-                                    var thWidth = $(th[i]).width();
-                                    thWidths.push(thWidth);
-                                }
-
-                                vm.listView.data.table.columnsWidth = thWidths;
-
-                                //console.log("View data is ", vm.listView.data);
-                                vm.listView.data.table = vm.table;
-                                vm.listView.data.table.columns = vm.columns;
-                                // vm.listView.data.table.columns['cellWidth']
-                                //console.log('---------vm.grouping-------', vm.grouping);
-                                vm.listView.data.table.grouping = vm.grouping;
-                                vm.listView.data.table.folding = vm.folding;
-                                vm.listView.data.table.filters = vm.filters;
-                                vm.listView.data.table.sorting = vm.sorting;
-
-                                // vm.listView.data.table.cellWidth = 200;
-
-                                vm.listView.data.additionsType = vm.additionsType;
-
-                                vm.listView.data.tableAdditions.entityType = vm.additionsEntityType;
-
-                                vm.listView.data.tableAdditions = vm.tableAdditions;
-                                vm.listView.data.tableAdditions.table.columns = vm.entityAdditionsColumns;
-                                vm.listView.data.tableAdditions.table.filters = vm.entityAdditionsFilters;
-                                vm.listView.data.tableAdditions.table.sorting = vm.entityAdditionsSorting;
-                                vm.listView.data.tableAdditions.additionsStatus = vm.additionsStatus;
-                                vm.listView.data.tableAdditions.additionsState = vm.additionsState;
-
-                                vm.listView.data.reportOptions = vm.reportOptions;
-
-                                //vm.additionsStatus[res.results[0].data.tableAdditions.additionsType] = true;
-
-
-                                $mdDialog.show({
-                                    controller: 'UiLayoutSaveAsDialogController as vm',
-                                    templateUrl: 'views/dialogs/ui/ui-layout-save-as-view.html',
-                                    parent: angular.element(document.body),
-                                    targetEvent: e,
-                                    locals: {
-                                        options: {}
-                                    },
-                                    clickOutsideToClose: false
-                                }).then(function (res) {
-
-                                    if (res.status == 'agree') {
-
-                                        if (vm.oldListView) {
-                                            vm.oldListView.is_default = false;
-
-                                            uiService.updateListLayout(vm.oldListView.id, vm.oldListView).then(function () {
-                                                //console.log('saved');
-                                            }).then(function () {
-
-                                                vm.listView.name = res.data.name;
-                                                vm.listView.is_default = true;
-
-                                                uiService.createListLayout(vm.entityType, vm.listView).then(function () {
-                                                    //console.log('saved');
-                                                    vm.getView();
-                                                });
-
-                                            })
-
-                                        } else {
-
-                                            vm.listView.name = res.data.name;
-                                            vm.listView.is_default = true;
-
-                                            uiService.createListLayout(vm.entityType, vm.listView).then(function () {
-                                                //console.log('saved');
-                                                vm.getView();
-                                            });
-                                        }
-                                    }
-
-                                });
-
-                            });
-
-                            $('.save-layout-btn').bind('click', function (e) {
-
-
-                                // saving columns widths
-                                var tHead = $('.g-columns-component');
-                                var th = $('.g-columns-component.g-thead').find('.g-cell');
-                                var thWidths = [];
-                                for (var i = 0; i < th.length; i = i + 1) {
-                                    var thWidth = $(th[i]).width();
-                                    thWidths.push(thWidth);
-                                }
-                                vm.listView.data.table.columnsWidth = thWidths;
-                                //console.log('entity viewer columnsWidth is', vm.listView.data.table.columnsWidth);
-
-                                //console.log("View data is ", vm.listView.data);
-
-
-                                vm.listView.data.table = vm.table;
-                                vm.listView.data.table.columns = vm.columns;
-                                // vm.listView.data.table.columns['cellWidth']
-                                //console.log('---------vm.grouping-------', vm.grouping);
-                                vm.listView.data.table.grouping = vm.grouping;
-                                vm.listView.data.table.folding = vm.folding;
-                                vm.listView.data.table.filters = vm.filters;
-                                vm.listView.data.table.sorting = vm.sorting;
-
-                                // vm.listView.data.table.cellWidth = 200;
-
-                                vm.listView.data.additionsType = vm.additionsType;
-
-                                vm.listView.data.tableAdditions.entityType = vm.additionsEntityType;
-
-                                vm.listView.data.tableAdditions = vm.tableAdditions;
-                                vm.listView.data.tableAdditions.table.columns = vm.entityAdditionsColumns;
-                                vm.listView.data.tableAdditions.table.filters = vm.entityAdditionsFilters;
-                                vm.listView.data.tableAdditions.table.sorting = vm.entityAdditionsSorting;
-                                vm.listView.data.tableAdditions.additionsStatus = vm.additionsStatus;
-                                vm.listView.data.tableAdditions.additionsState = vm.additionsState;
-
-                                vm.listView.data.reportOptions = vm.reportOptions;
-
-                                //vm.additionsStatus[res.results[0].data.tableAdditions.additionsType] = true;
-
-                                //console.log('vm.listView', vm.listView);
-
-                                if (vm.listView.hasOwnProperty('id')) {
-                                    uiService.updateListLayout(vm.listView.id, vm.listView).then(function () {
-                                        //console.log('saved');
-                                    });
-                                } else {
-                                    uiService.createListLayout(vm.entityType, vm.listView).then(function () {
-                                        //console.log('saved');
-                                    });
-                                }
-                                $mdDialog.show({
-                                    controller: 'SaveLayoutDialogController as vm',
-                                    templateUrl: 'views/save-layout-dialog-view.html',
-                                    targetEvent: e,
-                                    clickOutsideToClose: true
-                                }).then(function () {
-                                    vm.getView();
-                                });
-
-
-                            });
-
+                            vm.saveLayoutAsManager();
+                            vm.saveLayoutManager();
                         }
 
                         $scope.$on("$destroy", function (event) {

@@ -11,6 +11,14 @@
         return reportRepository.getList(options);
     };
 
+    var getBalanceReport = function (options) {
+        return reportRepository.getBalanceReport(options);
+    };
+
+    var getPnlReport = function (options) {
+        return reportRepository.getPnlReport(options);
+    };
+
     var getCashFlowProjectionReport = function (options) {
         return reportRepository.getCashFlowProjectionReport(options);
     };
@@ -25,6 +33,8 @@
 
     module.exports = {
         getList: getList,
+        getBalanceReport: getBalanceReport,
+        getPnlReport: getPnlReport,
         getCashFlowProjectionReport: getCashFlowProjectionReport,
         getTransactionReport: getTransactionReport,
         getPerformanceReport: getPerformanceReport

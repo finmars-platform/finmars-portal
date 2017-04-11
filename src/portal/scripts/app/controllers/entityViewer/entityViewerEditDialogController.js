@@ -49,6 +49,11 @@
             $mdDialog.hide();
         };
 
+        vm.MABtnVisibility = function (entityType) {
+            //console.log('custom entity type', entityType);
+            return metaService.checkRestrictedEntityTypesForAM(entityType);
+        }
+
         vm.copy = function () {
             vm.copyCallback().then(function () {
                 vm.evAction = 'create';

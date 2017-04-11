@@ -25,6 +25,14 @@
                         <menu-link section="section" ng-if="section.type === 'link'"></menu-link>
                         <menu-toggle section="section" ng-if="section.type === 'toggle'"></menu-toggle>
                     </li>
+                    <li>
+                        <md-button ui-sref-active="active" class="sidemenu-btn"
+                                   ng-click="vm.openHelp($event)">
+    <span class="side-nav-icon">
+        <ng-md-icon icon="local_library" size="24"></ng-md-icon>
+    </span>
+                            <span class="side-nav-title">Help</span>
+                    </li>
                 </ul>
             </div>
         </div>

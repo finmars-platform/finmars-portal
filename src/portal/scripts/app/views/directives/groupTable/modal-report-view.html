@@ -37,7 +37,9 @@
                                 </md-checkbox>
                             </div>
                             <div dragula="'columns-bag'" class="g-modal-draggable-card">
-                                <md-card class="modal-dialog-card" data-key-identifier="{{item.key}}">{{::vm.bindReportItemName(item)}}</md-card>
+                                <md-card class="modal-dialog-card" data-key-identifier="{{item.key}}">
+                                    {{::vm.bindReportItemName(item)}}
+                                </md-card>
                             </div>
                         </div>
                     </md-content>
@@ -407,6 +409,60 @@
                             <span class="g-meta-circle blue">F</span>
                         </div>
                         <div class="g-checkbox-row" data-ng-repeat="item in vm.custom" layout="row">
+                            <div>
+                                <md-checkbox ng-model="item.columns" aria-label="Columns" aria="columns"
+                                             data-ng-change="vm.updateAttrs()">
+                                </md-checkbox>
+                                <md-checkbox ng-model="item.groups" aria-label="Groups" aria="groups"
+                                             class="md-g-green"
+                                             data-ng-change="vm.updateAttrs()">
+                                </md-checkbox>
+                                <md-checkbox ng-model="item.filters" aria-label="Filters" aria="filters"
+                                             class="md-primary" data-ng-change="vm.updateAttrs()">
+                                </md-checkbox>
+                            </div>
+                            <div dragula="'columns-bag'" class="g-modal-draggable-card">
+                                <md-card class="modal-dialog-card">{{::vm.bindReportItemName(item)}}</md-card>
+                            </div>
+                        </div>
+                    </md-content>
+                </md-tab>
+
+                <md-tab label="Mismatch">
+                    <md-content class="md-padding">
+                        <div class="g-th-checkbox-row">
+                            <span class="g-meta-circle red">C</span>
+                            <span class="g-meta-circle green">G</span>
+                            <span class="g-meta-circle blue">F</span>
+                        </div>
+                        <div class="g-checkbox-row" data-ng-repeat="item in vm.balanceMismatchAttrs" layout="row">
+                            <div>
+                                <md-checkbox ng-model="item.columns" aria-label="Columns" aria="columns"
+                                             data-ng-change="vm.updateAttrs()">
+                                </md-checkbox>
+                                <md-checkbox ng-model="item.groups" aria-label="Groups" aria="groups"
+                                             class="md-g-green"
+                                             data-ng-change="vm.updateAttrs()">
+                                </md-checkbox>
+                                <md-checkbox ng-model="item.filters" aria-label="Filters" aria="filters"
+                                             class="md-primary" data-ng-change="vm.updateAttrs()">
+                                </md-checkbox>
+                            </div>
+                            <div dragula="'columns-bag'" class="g-modal-draggable-card">
+                                <md-card class="modal-dialog-card">{{::vm.bindReportItemName(item)}}</md-card>
+                            </div>
+                        </div>
+                    </md-content>
+                </md-tab>
+
+                <md-tab label="Allocation">
+                    <md-content class="md-padding">
+                        <div class="g-th-checkbox-row">
+                            <span class="g-meta-circle red">C</span>
+                            <span class="g-meta-circle green">G</span>
+                            <span class="g-meta-circle blue">F</span>
+                        </div>
+                        <div class="g-checkbox-row" data-ng-repeat="item in vm.allocationAttrs" layout="row">
                             <div>
                                 <md-checkbox ng-model="item.columns" aria-label="Columns" aria="columns"
                                              data-ng-change="vm.updateAttrs()">

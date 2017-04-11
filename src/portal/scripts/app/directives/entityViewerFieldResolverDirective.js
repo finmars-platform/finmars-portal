@@ -23,14 +23,14 @@
             templateUrl: 'views/entity-viewer/field-resolver-view.html',
             link: function (scope, elem, attrs) {
 
-                logService.component('EntityViewerFieldResolverController', 'initialized');
+                logService.component('EntityViewerFieldResolverDirective', 'initialized');
 
                 scope.readyStatus = {content: false, tags: false};
                 scope.type = '';
 
-                logService.property('field scope', scope.item);
-                logService.property('field entity', scope.entity);
-                logService.property('field options', scope.options);
+                //logService.property('field scope', scope.item);
+                //logService.property('field entity', scope.entity);
+                //logService.property('field options', scope.options);
 
                 scope.resolveMultiple = function () {
                     if (scope.$parent.entityType !== 'instrument-type') { // refactor this

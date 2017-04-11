@@ -26,6 +26,38 @@
         })
     };
 
+    var getBalanceReport = function (options) {
+        return window.fetch(baseUrl + 'reports/balance-report/',
+            {
+                method: 'POST',
+                credentials: 'include',
+                headers: {
+                    'X-CSRFToken': cookieService.getCookie('csrftoken'),
+                    Accept: 'application/json',
+                    'Content-type': 'application/json'
+                },
+                body: JSON.stringify(options)
+            }).then(function (data) {
+            return data.json();
+        })
+    };
+
+    var getPnlReport = function (options) {
+        return window.fetch(baseUrl + 'reports/pl-report/',
+            {
+                method: 'POST',
+                credentials: 'include',
+                headers: {
+                    'X-CSRFToken': cookieService.getCookie('csrftoken'),
+                    Accept: 'application/json',
+                    'Content-type': 'application/json'
+                },
+                body: JSON.stringify(options)
+            }).then(function (data) {
+            return data.json();
+        })
+    };
+
     var getTransactionReport = function (options) {
         return window.fetch(baseUrl + 'reports/transaction-report/',
             {
@@ -76,6 +108,8 @@
 
     module.exports = {
         getList: getList,
+        getBalanceReport: getBalanceReport,
+        getPnlReport: getPnlReport,
         getTransactionReport: getTransactionReport,
         getCashFlowProjectionReport: getCashFlowProjectionReport,
         getPerformanceReport: getPerformanceReport

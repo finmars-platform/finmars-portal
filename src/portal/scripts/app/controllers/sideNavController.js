@@ -9,7 +9,7 @@
 
     var metaService = require('../services/metaService');
 
-    module.exports = function ($scope) {
+    module.exports = function ($scope, $mdDialog) {
 
         logService.controller('SideNavController', 'initialized');
 
@@ -87,6 +87,20 @@
             vm.openedSection = (vm.openedSection === section ? null : section);
         };
         vm.autoFocusContent = false;
+
+        vm.openHelp = function ($event) {
+            $mdDialog.show({
+                controller: 'HelpDialogController as vm',
+                templateUrl: 'views/dialogs/help-dialog-view.html',
+                targetEvent: $event,
+                locals: {
+                    data: {}
+                },
+                preserveScope: true,
+                autoWrap: true,
+                skipHide: true
+            })
+        }
     }
 
 }());

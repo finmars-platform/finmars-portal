@@ -51,6 +51,11 @@
             $mdDialog.hide();
         };
 
+        vm.MABtnVisibility = function (entityType) {
+            //console.log('custom entity type', entityType);
+            return metaService.checkRestrictedEntityTypesForAM(entityType);
+        };
+
         vm.checkVisibility = function (btnName) {
 
             if (btnName == 'edit-form-btn' && vm.entityType == 'complex-transaction') {

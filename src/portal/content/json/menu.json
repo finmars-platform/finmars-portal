@@ -317,12 +317,6 @@
         "icon": ""
       },
       {
-        "state": "app.system.audit",
-        "title": "Audit",
-        "type": "link",
-        "icon": ""
-      },
-      {
         "state": "app.system.transactions",
         "title": "Audit transactions",
         "type": "link",

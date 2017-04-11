@@ -5,8 +5,11 @@
 
     module.exports = function ($stateProvider, $urlRouterProvider) {
 
+        $urlRouterProvider.otherwise('/');
+
         $stateProvider.state('app', {
             url: '',
+            abstract: true,
             templateUrl: 'views/shell-view.html',
             controller: 'ShellController as vm'
         }).state('app.attributesManager', {
@@ -38,8 +41,6 @@
             templateUrl: 'views/entity-data-constructor-view.html',
             controller: 'EntityDataConstructorController as vm'
         });
-
-        $urlRouterProvider.otherwise('/');
 
         $stateProvider
             .state('app.data', {

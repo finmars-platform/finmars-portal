@@ -35,7 +35,22 @@ app.run(['$rootScope', function ($rootScope) {
     console.log('App initialized');
     localStorage.setItem('entityIsChanged', false);
 
-    $rootScope.$on('$stateChangeStart', function () {
+    var usersService = require('./app/services/usersService');
+
+    $rootScope.$on('$stateChangeStart', function (event) {
+
+        usersService.ping().then(function (data) {
+
+            console.log('CHECK AUTH', data);
+
+            if (data.is_authenticated == false) {
+                event.preventDefault();
+                window.location = '/';
+            }
+
+        });
+
+
         setTimeout(function () {
             $(window).trigger('resize');
         }, 300);
@@ -44,7 +59,7 @@ app.run(['$rootScope', function ($rootScope) {
 
 
 app.controller('ShellController', ['$scope', '$state', '$rootScope', '$mdDialog', require('./app/controllers/shellController')]);
-app.controller('SideNavController', ['$scope', require('./app/controllers/sideNavController')]);
+app.controller('SideNavController', ['$scope', '$mdDialog', require('./app/controllers/sideNavController')]);
 
 app.controller('DashboardController', ['$scope', '$mdDialog', require('./app/controllers/dashboardController')]);
 app.controller('ActionsController', ['$scope', '$mdDialog', require('./app/controllers/actionsController')]);
@@ -236,6 +251,7 @@ app.directive('inputFileDirective', [require('./app/directives/inputFileDirectiv
 app.directive('bookmarks', ['$mdDialog', require('./app/directives/bookmarksDirective')]);
 
 app.filter('trustAsHtml', ['$sce', require('./app/filters/trustAsHtmlFilter')]);
+app.filter('trustAsUrl', ['$sce', require('./app/filters/trustAsUrlFilter')]);
 app.filter('strLimit', ['$filter', require('./app/filters/strLimitFilter')]);
 app.filter('propsFilter', ['$filter', require('./app/filters/propsFilter')]);
 

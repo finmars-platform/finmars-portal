@@ -198,6 +198,11 @@
                         resolve({type: 'id', key: 'account_interim', data: data.results});
                     });
                     break;
+                case 'strategy1':
+                    strategyRepository.getList(1).then(function (data) {
+                        resolve({type: 'id', key: 'strategy1', data: data.results});
+                    });
+                    break;
                 case 'strategy1_position':
                     strategyRepository.getList(1).then(function (data) {
                         resolve({type: 'id', key: 'strategy1_position', data: data.results});
@@ -208,6 +213,11 @@
                         resolve({type: 'id', key: 'strategy1_cash', data: data.results});
                     });
                     break;
+                case 'strategy2':
+                    strategyRepository.getList(2).then(function (data) {
+                        resolve({type: 'id', key: 'strategy1', data: data.results});
+                    });
+                    break;
                 case 'strategy2_position':
                     strategyRepository.getList(2).then(function (data) {
                         resolve({type: 'id', key: 'strategy2_position', data: data.results});
@@ -216,6 +226,11 @@
                 case 'strategy2_cash':
                     strategyRepository.getList(2).then(function (data) {
                         resolve({type: 'id', key: 'strategy2_cash', data: data.results});
+                    });
+                    break;
+                case 'strategy3':
+                    strategyRepository.getList(3).then(function (data) {
+                        resolve({type: 'id', key: 'strategy1', data: data.results});
                     });
                     break;
                 case 'strategy3_position':
