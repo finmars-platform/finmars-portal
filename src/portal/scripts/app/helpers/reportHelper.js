@@ -375,7 +375,9 @@
                                         item['Instrument.' + attribute.attribute_type_object.display_name] = attribute.value_date;
                                     }
                                     if (attribute.attribute_type_object.value_type == 30) {
-                                        item['Instrument.' + attribute.attribute_type_object.display_name] = attribute.classifier_object.name;
+                                        if (attribute.classifier_object) {
+                                            item['Instrument.' + attribute.attribute_type_object.display_name] = attribute.classifier_object.name;
+                                        }
                                     }
                                 }
 
@@ -406,7 +408,9 @@
                                         item['Account.' + attribute.attribute_type_object.display_name] = attribute.value_date;
                                     }
                                     if (attribute.attribute_type_object.value_type == 30) {
-                                        item['Account.' + attribute.attribute_type_object.display_name] = attribute.classifier_object.name;
+                                        if (attribute.classifier_object) {
+                                            item['Account.' + attribute.attribute_type_object.display_name] = attribute.classifier_object.name;
+                                        }
                                     }
                                 }
 
@@ -437,7 +441,9 @@
                                         item['Account Position.' + attribute.attribute_type_object.display_name] = attribute.value_date;
                                     }
                                     if (attribute.attribute_type_object.value_type == 30) {
-                                        item['Account Position.' + attribute.attribute_type_object.display_name] = attribute.classifier_object.name;
+                                        if (attribute.classifier_object) {
+                                            item['Account Position.' + attribute.attribute_type_object.display_name] = attribute.classifier_object.name;
+                                        }
                                     }
                                 }
 
@@ -469,7 +475,9 @@
                                         item['Account Cash.' + attribute.attribute_type_object.display_name] = attribute.value_date;
                                     }
                                     if (attribute.attribute_type_object.value_type == 30) {
-                                        item['Account Cash.' + attribute.attribute_type_object.display_name] = attribute.classifier_object.name;
+                                        if (attribute.classifier_object) {
+                                            item['Account Cash.' + attribute.attribute_type_object.display_name] = attribute.classifier_object.name;
+                                        }
                                     }
                                 }
 
@@ -501,7 +509,9 @@
                                         item['Account interim.' + attribute.attribute_type_object.display_name] = attribute.value_date;
                                     }
                                     if (attribute.attribute_type_object.value_type == 30) {
-                                        item['Account interim.' + attribute.attribute_type_object.display_name] = attribute.classifier_object.name;
+                                        if (attribute.classifier_object) {
+                                            item['Account interim.' + attribute.attribute_type_object.display_name] = attribute.classifier_object.name;
+                                        }
                                     }
                                 }
 
@@ -534,8 +544,10 @@
                                     }
                                     if (attribute.attribute_type_object.value_type == 30) {
 
-                                        if (item['Portfolio.' + attribute.attribute_type_object.display_name] = attribute.classifier_object) {
-                                            item['Portfolio.' + attribute.attribute_type_object.display_name] = attribute.classifier_object.name;
+                                        if (attribute.classifier_object) {
+                                            //if (item['Portfolio.' + attribute.attribute_type_object.display_name] = attribute.classifier_object) {
+                                                item['Portfolio.' + attribute.attribute_type_object.display_name] = attribute.classifier_object.name;
+                                            //}
                                         }
                                     }
                                 }

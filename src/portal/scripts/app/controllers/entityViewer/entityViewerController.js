@@ -498,9 +498,9 @@
 
                             var filteredData = entity;
 
-                            if (vm.entityType == 'transaction-report' || vm.entityType == 'cash-flow-projection-report') {
+                            //if (vm.entityType == 'transaction-report' || vm.entityType == 'cash-flow-projection-report') {
                                 filteredData = transactionReportHelper.injectIntoItems(filteredData, data);
-                            }
+                            //}
 
                             if (filteredData.length) {
                                 filteredData = reportHelper.releaseEntityObjects(filteredData);
@@ -1238,6 +1238,16 @@
                         vm.entityAdditions = [];
                         vm.additionsType = '';
                         vm.additionsEntityType = '';
+                        vm.components =  {
+                                sidebar: true,
+                                groupingArea: true,
+                                columnAreaHeader: true,
+                                splitPanel: false,
+                                addEntityBtn: false,
+                                fieldManagerBtn: true,
+                                layoutManager: false,
+                                autoReportRequest: false
+                            };
 
                         vm.entityAdditionsColumns = [];
                         vm.entityAdditionsFilters = [];
