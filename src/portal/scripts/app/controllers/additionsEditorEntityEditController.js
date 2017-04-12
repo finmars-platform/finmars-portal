@@ -76,7 +76,7 @@
 
             vm.save = function () {
 
-                if (vm.evAction = 'create') {
+                if (vm.evAction == 'create') {
                     vm.saveCallback().then(function (options) {
 
                         entityResolverService.create(options.entityType, options.entity).then(function () {

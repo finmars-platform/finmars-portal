@@ -35,6 +35,16 @@
             vm.eventBook = parentScope.vm.eventBook;
         }
 
+        vm.entityTypeSlug = function () {
+
+            console.log('here?');
+
+            if (vm.entityType == 'complex-transaction') {
+                return 'Transaction';
+            }
+
+            return vm.entityType.split('-').join(' ').capitalizeFirstLetter();
+        };
 
         vm.cancel = function () {
             localStorage.setItem('entityIsChanged', false);

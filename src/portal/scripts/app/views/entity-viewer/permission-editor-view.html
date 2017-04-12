@@ -71,11 +71,11 @@
                         Group
                     </div>
                     <div layout="row" layout-align="center center">
-                        <div layout="row" layout-align="center center" style="width: 105px">
-                            Manage
+                        <div layout="row" layout-align="center center" style="width: 210px">
+                            <b>Manage</b>
                         </div>
-                        <div layout="row" layout-align="center center" style="width: 105px">
-                            Change
+                        <div layout="row" layout-align="center center" style="width: 210px">
+                            <b>Change</b>
                         </div>
                     </div>
                 </div>
@@ -92,16 +92,24 @@
 
                         <div layout="row" layout-align="center center">
 
+
                             <md-button class="md-raised {{vm.processing ? 'disabled-btn' : ''}}"
-                                       data-ng-click="vm.toggleManage(group)">
-                                <span data-ng-show="group.manager_actions.manage">Disable</span>
-                                <span data-ng-show="!group.manager_actions.manage">Enable</span>
+                                       data-ng-click="vm.toggleManage(false, group)">
+                                <span>Disable</span>
+                            </md-button>
+                            <md-button class="md-raised {{vm.processing ? 'disabled-btn' : ''}}"
+                                       data-ng-click="vm.toggleManage(true, group)">
+                                <span>Enable</span>
                             </md-button>
 
                             <md-button class="md-raised {{vm.processing ? 'disabled-btn' : ''}}"
-                                       data-ng-click="vm.toggleChange(group)">
-                                <span data-ng-show="group.manager_actions.change">Disable</span>
-                                <span data-ng-show="!group.manager_actions.change">Enable</span>
+                                       data-ng-click="vm.toggleChange(false, group)">
+                                <span>Disable</span>
+
+                            </md-button>
+                            <md-button class="md-raised {{vm.processing ? 'disabled-btn' : ''}}"
+                                       data-ng-click="vm.toggleChange(true, group)">
+                                <span>Enable</span>
                             </md-button>
 
                         </div>

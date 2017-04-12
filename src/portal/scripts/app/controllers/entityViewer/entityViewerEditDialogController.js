@@ -34,6 +34,15 @@
         vm.saveCallback = ''; // save callback handler in inner controller;
         vm.copyCallback = ''; // copy callback handler in inner controller;
 
+        vm.entityTypeSlug = function () {
+
+            if (vm.entityType == 'complex-transaction') {
+                return 'Transaction';
+            }
+
+            return vm.entityType.split('-').join(' ').capitalizeFirstLetter();
+        };
+
         vm.cancel = function () {
             //localStorage.setItem('entityIsChanged', false);
             $mdDialog.cancel();

@@ -149,7 +149,7 @@
       },
       {
         "state": "",
-        "title": "Transaction Type",
+        "title": "Type",
         "type": "toggle",
         "pages": [
           {
@@ -160,7 +160,7 @@
           },
           {
             "state": "app.data.transaction-type",
-            "title": "Transaction types",
+            "title": "Types",
             "type": "link",
             "icon": ""
           }
