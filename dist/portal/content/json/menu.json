@@ -13,7 +13,7 @@
   },
   {
     "state": "app",
-    "title": "Reports",
+    "title": "Report",
     "icon": "assessment",
     "type": "toggle",
     "pages": [
@@ -57,19 +57,19 @@
     "pages": [
       {
         "state": "app.data.portfolio",
-        "title": "Portfolios",
+        "title": "Portfolio",
         "type": "link",
         "icon": ""
       },
       {
         "state": "app.data.account",
-        "title": "Accounts",
+        "title": "Account",
         "type": "link",
         "icon": ""
       },
       {
         "state": "app.data.account-type",
-        "title": "Account Types",
+        "title": "Account Type",
         "type": "link",
         "icon": ""
       },
@@ -86,7 +86,7 @@
           },
           {
             "state": "app.data.responsible",
-            "title": "Responsibles",
+            "title": "Responsible",
             "type": "link",
             "icon": ""
           }
@@ -105,7 +105,7 @@
           },
           {
             "state": "app.data.counterparty",
-            "title": "Counterparties",
+            "title": "Counterparty",
             "type": "link",
             "icon": ""
           }
@@ -113,13 +113,13 @@
       },
       {
         "state": "app.data.instrument",
-        "title": "Instruments",
+        "title": "Instrument",
         "type": "link",
         "icon": ""
       },
       {
         "state": "app.data.instrument-type",
-        "title": "Instrument Types",
+        "title": "Instrument Type",
         "type": "link",
         "icon": ""
       },
@@ -143,13 +143,13 @@
       },
       {
         "state": "app.data.transaction",
-        "title": "Base Transactions",
+        "title": "Base Transaction",
         "type": "link",
         "icon": ""
       },
       {
         "state": "",
-        "title": "Type",
+        "title": "Transaction Type",
         "type": "toggle",
         "pages": [
           {
@@ -160,7 +160,7 @@
           },
           {
             "state": "app.data.transaction-type",
-            "title": "Types",
+            "title": "Type",
             "type": "link",
             "icon": ""
           }
@@ -212,7 +212,7 @@
           },
           {
             "state": "app.data.strategy({strategyNumber: 1})",
-            "title": "Strategies",
+            "title": "Strategy",
             "type": "link",
             "icon": ""
           }
@@ -238,7 +238,7 @@
           },
           {
             "state": "app.data.strategy({strategyNumber: 3})",
-            "title": "Strategies",
+            "title": "Strategy",
             "type": "link",
             "icon": ""
           }
@@ -264,7 +264,7 @@
           },
           {
             "state": "app.data.strategy({strategyNumber: 3})",
-            "title": "Strategies",
+            "title": "Strategy",
             "type": "link",
             "icon": ""
           }
@@ -318,13 +318,13 @@
       },
       {
         "state": "app.system.transactions",
-        "title": "Audit transactions",
+        "title": "Audit transaction",
         "type": "link",
         "icon": ""
       },
       {
         "state": "app.system.instruments",
-        "title": "Audit instruments",
+        "title": "Audit instrument",
         "type": "link",
         "icon": ""
       }

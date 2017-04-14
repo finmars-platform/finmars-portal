@@ -776,7 +776,11 @@
                     }
 
                     if (group.value_type == 'float') {
-                        result = parseFloat(group.value).toFixed(2);
+
+                        result = '';
+                        if (group.value) {
+                            result = parseFloat(group.value).toFixed(2);
+                        }
                     }
 
                     if (group.value_type == '10'
@@ -893,7 +897,13 @@
 
                             if (scope.columns[c].key == column.key) {
 
-                                if (column.value_type == 10 || column.value_type == 'float' || column.value_type == 20 || column.value_type == 40) {
+                                if(column.value_type == 'float' || column.value_type == 20 ) {
+                                    if (groupedItem.hasOwnProperty(column.key)) {
+                                        return parseFloat(groupedItem[column.key]).toFixed(2) + '';
+                                    }
+                                }
+
+                                if (column.value_type == 10 || column.value_type == 40) {
                                     if (groupedItem.hasOwnProperty(column.key)) {
                                         return groupedItem[column.key];
                                     }

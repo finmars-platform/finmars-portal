@@ -12,6 +12,8 @@
     var metaContentTypesService = require('../services/metaContentTypesService');
     var notificationsService = require('../services/notificationsService');
 
+    var reportCopyHelper = require('../helpers/reportCopyHelper');
+
     module.exports = function ($scope, $state, $rootScope, $mdDialog) {
 
         logService.controller('ShellController', 'initialized', 1);
@@ -216,6 +218,35 @@
                 autoWrap: true,
                 skipHide: true
             })
+        };
+
+        vm.isReport = function () {
+
+            switch ($state.current.name) {
+                case 'app.reports.balance-report':
+                    return true;
+                    break;
+                case 'app.reports.pnl-report':
+                    return true;
+                    break;
+                case 'app.reports.transaction-report':
+                    return true;
+                    break;
+                case 'app.reports.cash-flow-projection-report':
+                    return true;
+                    break;
+                case 'app.reports.performance-report':
+                    return true;
+                    break;
+                default:
+                    return false
+            }
+
+        };
+
+        vm.copyReport = function ($event) {
+            console.log('copy report');
+            reportCopyHelper.copy($event);
         };
 
         vm.openLayoutList = function ($event) {

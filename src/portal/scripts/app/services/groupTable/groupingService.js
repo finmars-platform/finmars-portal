@@ -132,6 +132,127 @@
     }
 
 
+    function checkIfEmptyString(item) {
+        if (item == '') {
+            return null
+        }
+        return item;
+    }
+
+    function findGroupsForResult(group, item, attribute, groupsForResult, keywords) {
+
+        var resGroupItem;
+        if (group.hasOwnProperty('id')) {
+
+            if (group.hasOwnProperty('r_entityType')) {
+                if (group.id == attribute.attribute_type_object.id) {
+
+                    if (returnValue(attribute) !== null) {
+
+                        var _name = group.r_entityType + '_attribute_' + group.source_name;
+
+                        resGroupItem = {
+                            comparePattern: '&[' + checkIfEmptyString(_name) + '}-{' + checkIfEmptyString(item[_name]) + ']',
+                            key: _name,
+                            value: returnValue(attribute),
+                            value_type: returnValueType(attribute)
+                        };
+
+                        if (group.hasOwnProperty('report_settings')) {
+                            resGroupItem.report_settings = group.report_settings;
+                        }
+
+
+                        groupsForResult.push(resGroupItem);
+                    }
+                }
+            } else {
+
+
+                if (group.hasOwnProperty('columnType') && group.columnType == 'custom-field') {
+
+                    resGroupItem = {
+                        comparePattern: '&[' + group.name + '}-{' + checkIfEmptyString(item[group.name]) + ']',
+                        key: group.name.replace(' ', '_'),
+                        value: checkIfEmptyString(item[group.name]),
+                        value_type: 10
+                    };
+
+                    groupsForResult.push(resGroupItem);
+
+                } else {
+
+                    if (group.id === attribute['attribute_type']) {
+
+                        //console.log('group.id', group);
+
+                        for (n = 0; n < groupsForResult.length; n = n + 1) {
+                            //console.log('groupsForResult[n]', groupsForResult[n]);
+                            if (groupsForResult[n].comparePattern.indexOf('&[' + attribute['attribute_type'] + '}-{' + returnValue(attribute) + ']') !== -1) {
+                                nExist = true;
+                            }
+                        }
+                        if (!nExist) {
+
+                            if (returnValue(attribute) !== null) {
+                                resGroupItem = {
+                                    comparePattern: '&[' + attribute['attribute_type'] + '}-{' + returnValue(attribute) + ']',
+                                    //key: attribute['attribute_name'].replace(' ', '_'),
+                                    key: attribute.attribute_type_object['user_code'].replace(' ', '_'),
+                                    //key: '',
+                                    value: returnValue(attribute),
+                                    value_type: returnValueType(attribute)
+                                };
+
+                                if (group.hasOwnProperty('report_settings')) {
+                                    resGroupItem.report_settings = group.report_settings;
+                                }
+
+
+                                groupsForResult.push(resGroupItem);
+                            }
+                        }
+                    }
+                }
+            }
+        } else {
+            //console.log('keywords', keywords);
+            for (k = 0; k < keywords.length; k = k + 1) {
+                var n, nExist = false;
+                if (group.key === keywords[k].key) {
+
+                    //console.log('groupsForResult', groupsForResult);
+                    for (n = 0; n < groupsForResult.length; n = n + 1) {
+                        //console.log('groupsForResult[n]', groupsForResult[n]);
+                        if (groupsForResult[n].comparePattern.indexOf('&[' + keywords[k].key + '}-{' + checkIfEmptyString(item[keywords[k].key]) + ']') !== -1) {
+                            nExist = true;
+                        }
+                    }
+                    if (!nExist) {
+
+                        resGroupItem = {
+                            comparePattern: '&[' + keywords[k].key + '}-{' + checkIfEmptyString(item[keywords[k].key]) + ']',
+                            key: keywords[k].key.replace(' ', '_'),
+                            value: checkIfEmptyString(item[keywords[k].key]),
+                            value_type: keywords[k].value_type
+                        };
+
+                        if (keywords[k].value_type == 'field') {
+                            //console.log('keywords[k]', keywords[k]);
+                            resGroupItem.value_entity = keywords[k].value_entity;
+                        }
+
+                        if (group.hasOwnProperty('report_settings')) {
+                            resGroupItem.report_settings = group.report_settings;
+                        }
+
+                        groupsForResult.push(resGroupItem);
+                    }
+                }
+            }
+        }
+    }
+
     var setGroups = function (items, groups, entityTypes, options) {
 
         //console.log('GROUPING SERVICE groups', groups);
@@ -219,127 +340,6 @@
         var groupName = '';
         var groupsForResult = [];
 
-        function checkIfEmptyString(item) {
-            if (item == '') {
-                return null
-            }
-            return item;
-        }
-
-        function findGroupsForResult(group, item, attribute) {
-
-            var resGroupItem;
-            if (group.hasOwnProperty('id')) {
-
-                if (group.hasOwnProperty('r_entityType')) {
-
-                    if (group.id == attribute.attribute_type_object.id) {
-
-                        if (returnValue(attribute) !== null) {
-
-                            var _name = group.r_entityType + '_attribute_' + group.source_name;
-
-                            resGroupItem = {
-                                comparePattern: '&[' + checkIfEmptyString(_name) + '}-{' + checkIfEmptyString(item[_name]) + ']',
-                                key: _name,
-                                value: returnValue(attribute),
-                                value_type: returnValueType(attribute)
-                            };
-
-                            if (group.hasOwnProperty('report_settings')) {
-                                resGroupItem.report_settings = group.report_settings;
-                            }
-
-
-                            groupsForResult.push(resGroupItem);
-                        }
-                    }
-                } else {
-
-
-                    if (group.hasOwnProperty('columnType') && group.columnType == 'custom-field') {
-
-                        resGroupItem = {
-                            comparePattern: '&[' + group.name + '}-{' + checkIfEmptyString(item[group.name]) + ']',
-                            key: group.name.replace(' ', '_'),
-                            value: checkIfEmptyString(item[group.name]),
-                            value_type: 10
-                        };
-
-                        groupsForResult.push(resGroupItem);
-
-                    } else {
-
-                        if (group.id === attribute['attribute_type']) {
-
-                            //console.log('group.id', group);
-
-                            for (n = 0; n < groupsForResult.length; n = n + 1) {
-                                //console.log('groupsForResult[n]', groupsForResult[n]);
-                                if (groupsForResult[n].comparePattern.indexOf('&[' + attribute['attribute_type'] + '}-{' + returnValue(attribute) + ']') !== -1) {
-                                    nExist = true;
-                                }
-                            }
-                            if (!nExist) {
-
-                                if (returnValue(attribute) !== null) {
-                                    resGroupItem = {
-                                        comparePattern: '&[' + attribute['attribute_type'] + '}-{' + returnValue(attribute) + ']',
-                                        //key: attribute['attribute_name'].replace(' ', '_'),
-                                        key: '',
-                                        value: returnValue(attribute),
-                                        value_type: returnValueType(attribute)
-                                    };
-
-                                    if (group.hasOwnProperty('report_settings')) {
-                                        resGroupItem.report_settings = group.report_settings;
-                                    }
-
-
-                                    groupsForResult.push(resGroupItem);
-                                }
-                            }
-                        }
-                    }
-                }
-            } else {
-                //console.log('keywords', keywords);
-                for (k = 0; k < keywords.length; k = k + 1) {
-                    var n, nExist = false;
-                    if (group.key === keywords[k].key) {
-
-                        //console.log('groupsForResult', groupsForResult);
-                        for (n = 0; n < groupsForResult.length; n = n + 1) {
-                            //console.log('groupsForResult[n]', groupsForResult[n]);
-                            if (groupsForResult[n].comparePattern.indexOf('&[' + keywords[k].key + '}-{' + checkIfEmptyString(item[keywords[k].key]) + ']') !== -1) {
-                                nExist = true;
-                            }
-                        }
-                        if (!nExist) {
-
-                            resGroupItem = {
-                                comparePattern: '&[' + keywords[k].key + '}-{' + checkIfEmptyString(item[keywords[k].key]) + ']',
-                                key: keywords[k].key.replace(' ', '_'),
-                                value: checkIfEmptyString(item[keywords[k].key]),
-                                value_type: keywords[k].value_type
-                            };
-
-                            if (keywords[k].value_type == 'field') {
-                                //console.log('keywords[k]', keywords[k]);
-                                resGroupItem.value_entity = keywords[k].value_entity;
-                            }
-
-                            if (group.hasOwnProperty('report_settings')) {
-                                resGroupItem.report_settings = group.report_settings;
-                            }
-
-                            groupsForResult.push(resGroupItem);
-                        }
-                    }
-                }
-            }
-        }
-
         if (groups.length) {
             var group, item;
             for (i = 0; i < items.length; i = i + 1) {
@@ -351,10 +351,10 @@
                     //console.log('items[i]', items[i]);
 
                     group = groups[c];
-                    //console.log('group[c]', group);
+                    console.log('group[c]', group);
                     if (group.hasOwnProperty('key')) {
 
-                        findGroupsForResult(group, item);
+                        findGroupsForResult(group, item, null, groupsForResult, keywords);
                         var keys = Object.keys(items[i]);
                         for (a = 0; a < keys.length; a = a + 1) {
                             if (groupName.indexOf('&[' + checkIfEmptyString(group.key) + '}-{' + checkIfEmptyString(item[group.key]) + ']') === -1) {
@@ -369,7 +369,7 @@
                             if (item.hasOwnProperty('account_object') && item.account_object !== null) {
 
                                 for (a = 0; a < item.account_object.attributes.length; a = a + 1) {
-                                    findGroupsForResult(group, item, item.account_object.attributes[a]);
+                                    findGroupsForResult(group, item, item.account_object.attributes[a], groupsForResult, keywords);
                                     var keys = Object.keys(items[i]);
 
                                     var _name = group.r_entityType + '_attribute_' + group.source_name;
@@ -385,7 +385,7 @@
                             if (item.hasOwnProperty('instrument_object') && item.instrument_object !== null) {
 
                                 for (a = 0; a < item.instrument_object.attributes.length; a = a + 1) {
-                                    findGroupsForResult(group, item, item.instrument_object.attributes[a]);
+                                    findGroupsForResult(group, item, item.instrument_object.attributes[a], groupsForResult, keywords);
                                     var keys = Object.keys(items[i]);
 
                                     var _name = group.r_entityType + '_attribute_' + group.source_name;
@@ -401,7 +401,7 @@
                             if (item.hasOwnProperty('portfolio_object') && item.portfolio_object !== null) {
 
                                 for (a = 0; a < item.portfolio_object.attributes.length; a = a + 1) {
-                                    findGroupsForResult(group, item, item.portfolio_object.attributes[a]);
+                                    findGroupsForResult(group, item, item.portfolio_object.attributes[a], groupsForResult, keywords);
                                     var keys = Object.keys(items[i]);
 
                                     var _name = group.r_entityType + '_attribute_' + group.source_name;
@@ -417,7 +417,7 @@
                             if (item.hasOwnProperty('currency_object') && item.currency_object !== null) {
 
                                 for (a = 0; a < item.currency_object.attributes.length; a = a + 1) {
-                                    findGroupsForResult(group, item, item.currency_object.attributes[a]);
+                                    findGroupsForResult(group, item, item.currency_object.attributes[a], groupsForResult, keywords);
                                     var keys = Object.keys(items[i]);
 
                                     var _name = group.r_entityType + '_attribute_' + group.source_name;
@@ -436,7 +436,7 @@
 
                                 if (item[group.name] !== null) {
 
-                                    findGroupsForResult(group, item);
+                                    findGroupsForResult(group, item, null, groupsForResult, keywords);
 
 
                                     if (groupName.indexOf('&[' + checkIfEmptyString(group.name) + '}-{' + checkIfEmptyString(item[group.name]) + ']') === -1) {
@@ -450,7 +450,7 @@
                                 if (item.hasOwnProperty('attributes')) {
 
                                     for (a = 0; a < item.attributes.length; a = a + 1) {
-                                        findGroupsForResult(group, item, item['attributes'][a]);
+                                        findGroupsForResult(group, item, item['attributes'][a], groupsForResult, keywords);
 
                                         if (group.hasOwnProperty('r_entityType')) {
 
@@ -481,7 +481,7 @@
 
                                             for (a = 0; a < item[group.attribute_entity + '_object_attributes'].length; a = a + 1) {
 
-                                                findGroupsForResult(group, item, item[group.attribute_entity + '_object_attributes'][a]);
+                                                findGroupsForResult(group, item, item[group.attribute_entity + '_object_attributes'][a], groupsForResult, keywords);
 
                                                 if (item[group.name] !== null) {
                                                     if (groupName.indexOf('&[' + checkIfEmptyString(group.name) + '}-{' + checkIfEmptyString(item[group.name]) + ']') === -1) {
@@ -509,7 +509,7 @@
                     }
                 }
 
-                //console.log('itemsGrouped', itemsGrouped);
+                console.log('itemsGrouped', itemsGrouped);
 
                 itemsGrouped[groupName].items.push(item);
                 //console.log('itemsGrouped[groupName]', itemsGrouped[groupName]);
@@ -549,47 +549,6 @@
             return items;
         }
     };
-
-    function isInt(value) {
-        if (isNaN(value)) {
-            return false;
-        }
-        var x = parseFloat(value);
-        return (x | 0) === x;
-    }
-
-
-    // deprecated start
-    function setProperty(path, obj, value) {
-        var schema = obj;
-        var pList = path.split('.');
-        var len = pList.length;
-        for (var i = 0; i < len - 1; i++) {
-            var elem = pList[i];
-            if (!schema[elem]) schema[elem] = {};
-            schema = schema[elem];
-        }
-
-        schema[pList[len - 1]] = value;
-    }
-
-    function getProperty(object, path) {
-        var o = object;
-        path = path.replace(/\[(\w+)\]/g, '.$1');
-        path = path.replace(/^\./, '');
-        var a = path.split('.');
-        while (a.length) {
-            var n = a.shift();
-            if (n in o) {
-                o = o[n];
-            } else {
-                return;
-            }
-        }
-        return o;
-    }
-
-    // deprecated end
 
     function recursiveFillGroups(items, groups, entityTypes, options) {
 
@@ -702,7 +661,7 @@
     }
 
     function filterByID(obj) {
-        if ('id' in obj.attribute_type_object && typeof(obj.attribute_type_object.id) === 'number' && !isNaN(obj.attribute_type_object.id)) {
+        if (obj.attribute_type_object && 'id' in obj.attribute_type_object && typeof(obj.attribute_type_object.id) === 'number' && !isNaN(obj.attribute_type_object.id)) {
             return true;
         } else {
             return false;

@@ -68,6 +68,11 @@
                 "value_type": 40
             },
             {
+                "key": "maturity_price",
+                "name": "Maturity price",
+                "value_type": "float"
+            },
+            {
                 "key": "accrued_multiplier",
                 "name": "Accrued multiplier",
                 "value_type": "float"
