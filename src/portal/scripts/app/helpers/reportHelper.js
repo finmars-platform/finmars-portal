@@ -31,41 +31,59 @@
 
                 }
 
-                if (item.hasOwnProperty('allocation_balance_object') && item.allocation_balance_object) {
+                if (item.hasOwnProperty('allocation_object') && item.allocation_object) {
 
-                    var instrumentBalanceObjectKeys = Object.keys(item.allocation_balance_object);
+                    var instrumentBalanceObjectKeys = Object.keys(item.allocation_object);
 
                     instrumentBalanceObjectKeys.forEach(function (instrumentObjectKeyItem) {
-                        item['allocation_balance_object_' + instrumentObjectKeyItem] = item.allocation_balance_object[instrumentObjectKeyItem];
+                        item['allocation_object_' + instrumentObjectKeyItem] = item.allocation_object[instrumentObjectKeyItem];
                     });
 
-                    if (item.allocation_balance_object.hasOwnProperty('instrument_type_object')) {
-                        var instrumentBalanceTypeObjectKeys = Object.keys(item.allocation_balance_object.instrument_type_object);
+                    if (item.allocation_object.hasOwnProperty('instrument_type_object')) {
+                        var instrumentBalanceTypeObjectKeys = Object.keys(item.allocation_object.instrument_type_object);
 
                         instrumentBalanceTypeObjectKeys.forEach(function (instrumentObjectKeyItem) {
-                            item['allocation_balance_type_object_' + instrumentObjectKeyItem] = item.allocation_balance_object.instrument_type_object[instrumentObjectKeyItem];
+                            item['allocation_type_object_' + instrumentObjectKeyItem] = item.allocation_object.instrument_type_object[instrumentObjectKeyItem];
                         })
                     }
 
                 }
 
-                if (item.hasOwnProperty('allocation_pl_object') && item.allocation_pl_object) {
-
-                    var instrumentPlObjectKeys = Object.keys(item.allocation_pl_object);
-
-                    instrumentPlObjectKeys.forEach(function (instrumentObjectKeyItem) {
-                        item['allocation_pl_object_' + instrumentObjectKeyItem] = item.allocation_pl_object[instrumentObjectKeyItem];
-                    });
-
-                    if (item.allocation_pl_object.hasOwnProperty('instrument_type_object')) {
-                        var instrumentPlTypeObjectKeys = Object.keys(item.allocation_pl_object.instrument_type_object);
-
-                        instrumentPlTypeObjectKeys.forEach(function (instrumentObjectKeyItem) {
-                            item['allocation_pl_type_object_' + instrumentObjectKeyItem] = item.allocation_pl_object.instrument_type_object[instrumentObjectKeyItem];
-                        })
-                    }
-
-                }
+                //if (item.hasOwnProperty('allocation_balance_object') && item.allocation_balance_object) {
+                //
+                //    var instrumentBalanceObjectKeys = Object.keys(item.allocation_balance_object);
+                //
+                //    instrumentBalanceObjectKeys.forEach(function (instrumentObjectKeyItem) {
+                //        item['allocation_balance_object_' + instrumentObjectKeyItem] = item.allocation_balance_object[instrumentObjectKeyItem];
+                //    });
+                //
+                //    if (item.allocation_balance_object.hasOwnProperty('instrument_type_object')) {
+                //        var instrumentBalanceTypeObjectKeys = Object.keys(item.allocation_balance_object.instrument_type_object);
+                //
+                //        instrumentBalanceTypeObjectKeys.forEach(function (instrumentObjectKeyItem) {
+                //            item['allocation_balance_type_object_' + instrumentObjectKeyItem] = item.allocation_balance_object.instrument_type_object[instrumentObjectKeyItem];
+                //        })
+                //    }
+                //
+                //}
+                //
+                //if (item.hasOwnProperty('allocation_pl_object') && item.allocation_pl_object) {
+                //
+                //    var instrumentPlObjectKeys = Object.keys(item.allocation_pl_object);
+                //
+                //    instrumentPlObjectKeys.forEach(function (instrumentObjectKeyItem) {
+                //        item['allocation_pl_object_' + instrumentObjectKeyItem] = item.allocation_pl_object[instrumentObjectKeyItem];
+                //    });
+                //
+                //    if (item.allocation_pl_object.hasOwnProperty('instrument_type_object')) {
+                //        var instrumentPlTypeObjectKeys = Object.keys(item.allocation_pl_object.instrument_type_object);
+                //
+                //        instrumentPlTypeObjectKeys.forEach(function (instrumentObjectKeyItem) {
+                //            item['allocation_pl_type_object_' + instrumentObjectKeyItem] = item.allocation_pl_object.instrument_type_object[instrumentObjectKeyItem];
+                //        })
+                //    }
+                //
+                //}
 
                 if (item.hasOwnProperty('linked_instrument_object') && item.linked_instrument_object) {
 
@@ -348,9 +366,19 @@
 
                 // custom fields
 
-                if (item.hasOwnProperty('custom_fields')) {
-                    item.custom_fields.forEach(function (customField) {
-                        item[customField.custom_field_object.name] = customField.value;
+                if (item.hasOwnProperty('custom_fields_object')) {
+                    item.custom_fields_object.forEach(function (customField) {
+
+                        var _customField = {value: ''};
+
+                        item.custom_fields.forEach(function(itemCustomField){
+
+                            if(itemCustomField.custom_field == customField.id) {
+                                _customField = itemCustomField;
+                            }
+                        });
+
+                        item[customField.name] = _customField.value;
                     })
                 }
 

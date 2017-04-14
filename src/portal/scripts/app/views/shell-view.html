@@ -25,10 +25,15 @@
                     </md-menu>
                     <bookmarks></bookmarks>
                 </div>
-                <div>
+                <div layout="row">
                     <md-button class="md-button header-help-btn" data-ng-click="vm.openHelp($event)"
                                aria-label="Notifications">
                         <ng-md-icon icon="help" size="36"></ng-md-icon>
+                    </md-button>
+
+                    <md-button data-ng-if="vm.isReport()" class="md-button header-help-btn" data-ng-click="vm.copyReport($event)"
+                               aria-label="Copy report">
+                        <ng-md-icon icon="content_copy" size="36"></ng-md-icon>
                     </md-button>
                 </div>
             </div>
