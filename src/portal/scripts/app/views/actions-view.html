@@ -199,7 +199,12 @@
         <fieldset class="fieldset-event-settings">
             <legend>Event settings</legend>
 
-            <div>
+            <div layout="row">
+
+                <md-button class="md-raised md-primary" data-ng-click="vm.checkForEvents($event)">
+                    Check for events
+                </md-button>
+
                 <md-button class="md-raised md-primary" data-ng-click="vm.eventScheduleConfig()">
                     Configure event schedule
                 </md-button>

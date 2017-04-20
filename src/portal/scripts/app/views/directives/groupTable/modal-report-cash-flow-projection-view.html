@@ -513,7 +513,8 @@
                    data-ui-sref="app.attributesManager({entityType: vm.entityType})" data-ng-click="vm.cancel()">
             Manage attributes
         </md-button>
-        <md-button data-ng-if="vm.entityType === 'balance-report' || vm.entityType === 'pnl-report'"
+        <!--<md-button data-ng-if="vm.entityType === 'balance-report' || vm.entityType === 'pnl-report'"-->
+        <md-button
                    class="md-raised md-primary" style="margin: 0;"
                    data-ui-sref="app.reports.customAttributesManager({entityType: vm.entityType})"
                    data-ng-click="vm.cancel()">

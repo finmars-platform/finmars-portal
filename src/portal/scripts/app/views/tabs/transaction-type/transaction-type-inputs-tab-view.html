@@ -134,7 +134,7 @@
                     </md-button>
                     <md-input-container data-ng-if="item.value_type == 100" style="margin-top: -25px">
                         <label for="">Default value</label>
-                        <md-select data-ng-model="item[vm.resolveRelation(vm.newItem)]"
+                        <md-select data-ng-model="item[vm.resolveRelation(item)]"
                                    md-on-open="vm.loadRelation(vm.resolveRelation(item))">
                             <md-option data-ng-repeat="relationItem in vm.relationItems[vm.resolveRelation(item)]"
                                        ng-value="relationItem.id">

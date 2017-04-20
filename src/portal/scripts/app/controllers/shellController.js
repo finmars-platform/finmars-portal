@@ -42,7 +42,7 @@
                 //	console.log('after login', cookiesService.getCookie('csrftoken'));
                 $scope.$apply();
             });
-        }, 1000)
+        }, 1000);
         //});
 
         usersService.getMasterList().then(function (data) {

@@ -157,7 +157,7 @@
             });
 
             vm.balancePerformanceAttrs = metaService.getEntityAttrs('report-addon-performance').map(function (item) {
-                item.name = 'Balance.' + item.name;
+                item.name = 'Performance.' + item.name;
                 return item;
             });
 

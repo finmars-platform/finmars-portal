@@ -8,6 +8,7 @@
     var logService = require('../../../../core/services/logService');
 
     var instrumentSchemeService = require('../services/import/instrumentSchemeService');
+    var eventsService = require('../services/eventsService');
 
     module.exports = function ($scope, $mdDialog) {
         logService.controller('ActionsController', 'initialized');
@@ -118,6 +119,34 @@
                 controller: 'PriceDownloadSchemeAddDialogController as vm',
                 templateUrl: 'views/dialogs/price-download-scheme-dialog-view.html',
                 targetEvent: $event
+            })
+        };
+
+        vm.checkForEvents = function (target) {
+            eventsService.getList().then(function (data) {
+                vm.eventsList = data.results;
+                $scope.$apply();
+                data.results.map(function (event) {
+                    if (event.is_need_reaction == true) {
+                        var eventActions = event.event_schedule_object['actions']; // button in event dialog
+                        vm.openEventWindow(target, event.id, eventActions);
+                    }
+                });
+            });
+        };
+
+        vm.openEventWindow = function ($event, eventId, eventActions) {
+            $mdDialog.show({
+                controller: 'EventDialogController as vm',
+                templateUrl: 'views/dialogs/event-dialog-view.html',
+                parent: angular.element(document.body),
+                targetEvent: $event,
+                locals: {
+                    data: {
+                        eventId: eventId,
+                        eventActions: eventActions
+                    }
+                }
             })
         };
 

@@ -217,8 +217,10 @@
             }
         } else {
             //console.log('keywords', keywords);
+            var k;
             for (k = 0; k < keywords.length; k = k + 1) {
                 var n, nExist = false;
+                //console.log('keywords[k]', keywords[k]);
                 if (group.key === keywords[k].key) {
 
                     //console.log('groupsForResult', groupsForResult);
@@ -274,7 +276,11 @@
                 entityAttrs[entityType] = metaService.getEntityAttrs(entityType).map(function (item) {
 
                     if (options != undefined) { // do if we have report type
-                        if (entityType !== 'balance-report') {
+                        //if (entityType !== 'balance-report' && entityType !== 'pnl-report' && entityType !== 'cash-flow-projection-repor') {
+                        if (entityType !== 'balance-report' &&
+                            entityType !== 'pnl-report' &&
+                            entityType !== 'cash-flow-projection-report' &&
+                            entityType !== 'transaction-report') {
 
                             if (entityType.indexOf('strategy') == 0) {
 
@@ -295,10 +301,13 @@
                             //console.log('entityType', JSON.stringify(entityType));
                             //console.log('entityType', JSON.stringify(item));
 
+
                             item.key = entityType + '_object_' + item.key;
                             item.value_entity = entityType;
 
-                            if (entityType == 'instrument-type') {
+                            if (entityType == 'transaction-report') {
+                                item.name = 'Transaction.' + item.name;
+                            } else if (entityType == 'instrument-type') {
                                 item.name = 'Instrument.Instrument Type' + item.name;
                             } else if (entityType == 'account-type') {
                                 item.name = 'Account.Account Type' + item.name;
@@ -871,7 +880,7 @@
 
             groups.forEach(function (group, $groupIndex) {
 
-                console.log('group', group);
+                //console.log('group', group);
 
                 columns.forEach(function (column, $columnIndex) {
 

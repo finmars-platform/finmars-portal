@@ -65,7 +65,7 @@
                 values: values
             };
 
-            entityResolverService.create('complex-transaction', book).then(function (data) {
+            var handler = function (data) {
 
                 //TODO REFACTOR DRY VIOLATION
 
@@ -134,7 +134,17 @@
 
                 $scope.$apply();
 
-            });
+            };
+
+            if (vm.entityId) {
+
+                book.id = vm.entityId;
+
+                entityResolverService.update('complex-transaction', book.id, book).then(handler);
+            } else {
+
+                entityResolverService.create('complex-transaction', book).then(handler);
+            }
         };
 
         vm.getEditListByInstanceId = function () {
@@ -396,6 +406,28 @@
 
                 //console.log('vm.complexTransactionOptions', vm.complexTransactionOptions);
                 //console.log('vm.entity', vm.entity);
+
+                var inputsWithCalculations = data.transaction_type_object.inputs;
+
+                inputsWithCalculations.forEach(function (inputWithCalc) {
+
+                    vm.userInputs.forEach(function (userInput) {
+                        if (userInput.name == inputWithCalc.name) {
+                            if (inputWithCalc.can_recalculate == true) {
+                                userInput.buttons = [
+                                    {
+                                        icon: 'functions',
+                                        tooltip: 'Recalculate',
+                                        caption: '',
+                                        classes: 'md-raised',
+                                        action: vm.calculateComplexTransactionInputs
+                                    }
+                                ]
+                            }
+                        }
+                    })
+
+                });
 
 
                 $scope.$parent.vm.editLayout = function () {
@@ -783,59 +815,163 @@
             });
         };
 
-        $scope.$parent.vm.saveCallback = function () {
+        function updateValue(entityAttr, attr, value) {
+
+            if (attr['value_type'] === 10) {
+                entityAttr['value_string'] = value;
+            }
+
+            if (attr['value_type'] === 20) {
+                entityAttr['value_float'] = value;
+            }
+
+            if (attr['value_type'] === 30) {
+                entityAttr['classifier'] = value;
+            }
+
+            if (attr['value_type'] === 40) {
+                entityAttr['value_date'] = value;
+            }
+
+            return entityAttr;
+        }
+
+        function appendAttribute(attr, value) {
+            var attribute = {
+                attribute_name: attr.name,
+                attribute_type: attr.id,
+                classifier: null,
+                value_date: null,
+                value_float: null,
+                value_string: null
+            };
+
+            if (attr['value_type'] === 10) {
+                attribute['value_string'] = value;
+            }
+
+            if (attr['value_type'] === 20) {
+                attribute['value_float'] = value;
+            }
+
+            if (attr['value_type'] === 30) {
+                attribute['classifier'] = value;
+            }
+            if (attr['value_type'] === 40) {
+                attribute['value_date'] = value;
+            }
+
+            return attribute;
+        }
+
+        function checkEntityAttrTypes() {
+            var i;
+            for (i = 0; i < vm.entityAttrs.length; i = i + 1) {
+                //console.log('vm.entityAttrs[i]', vm.entityAttrs[i]);
+                if (vm.entityAttrs[i]['value_type'] === 40) {
+                    vm.entity[vm.entityAttrs[i].key] = moment(new Date(vm.entity[vm.entityAttrs[i].key])).format('YYYY-MM-DD');
+                }
+                if (vm.entityAttrs[i]['value_type'] === 20 || vm.entityAttrs[i]['value_type'] === 'float') {
+                    //console.log('vm.entity[vm.entityAttrs[i].key]', vm.entity[vm.entityAttrs[i].key]);
+                    var withotSpaces = (vm.entity[vm.entityAttrs[i].key] + '').replace(' ', '');
+                    var res;
+                    if (withotSpaces.indexOf(',') !== -1) {
+                        res = withotSpaces.replace(',', '.');
+                    } else {
+                        res = withotSpaces;
+                    }
+                    vm.entity[vm.entityAttrs[i].key] = parseFloat(res);
+                    //console.log('vm.entity[vm.entityAttrs[i].key]', vm.entity[vm.entityAttrs[i].key]);
+                }
+            }
+
+            vm.entity.attributes.forEach(function (item) {
+                if (item['value_date'] !== null) {
+                    item['value_date'] = moment(new Date(item['value_date'])).format('YYYY-MM-DD');
+                }
+            })
+        }
+
+        function clearUnusedAttributeValues() {
+            var i;
+            for (i = 0; i < vm.entity.attributes.length; i = i + 1) {
+                if (vm.entity.attributes[i].classifier == null) {
+                    delete vm.entity.attributes[i].classifier;
+                }
+                if (vm.entity.attributes[i].value_date == null) {
+                    delete vm.entity.attributes[i].value_date;
+                }
+                if (vm.entity.attributes[i].value_float == null) {
+                    delete vm.entity.attributes[i].value_float;
+                }
+                if (vm.entity.attributes[i].value_string == null) {
+                    delete vm.entity.attributes[i].value_string;
+                }
+            }
+
+        }
+
+        function checkForNulls(item) {
+            var i;
+            var keys = Object.keys(item);
+            var result = {};
+            for (i = 0; i < keys.length; i = i + 1) {
+                if (item[keys[i]] && item[keys[i]].length) {
+                    result[keys[i]] = item[keys[i]];
+                } else {
+                    if (item[keys[i]] != null && !isNaN(item[keys[i]])) {
+                        result[keys[i]] = item[keys[i]];
+                    }
+                }
+            }
+            return result;
+        }
+
+        function checkForNotNullRestriction(item) {
+            var i, e, b, a;
+            var keys = Object.keys(item);
+            var isValid = true;
+            for (i = 0; i < keys.length; i = i + 1) {
+                for (e = 0; e < vm.entityAttrs.length; e = e + 1) {
+                    if (keys[i] == vm.entityAttrs[e].key) {
+                        if (vm.entityAttrs[e].options && vm.entityAttrs[e].options.notNull == true) {
+                            if (item[keys[i]] == '' || item[keys[i]] == null || item[keys[i]] == undefined) {
+                                isValid = false
+                            }
+                        }
+                    }
+                }
+
+                for (b = 0; b < vm.baseAttrs.length; b = b + 1) {
+                    if (keys[i] == vm.baseAttrs[b].key) {
+                        if (vm.baseAttrs[b].options && vm.baseAttrs[b].options.notNull == true) {
+                            if (item[keys[i]] == '' || item[keys[i]] == null || item[keys[i]] == undefined) {
+                                isValid = false
+                            }
+                        }
+                    }
+                }
+
+                for (a = 0; a < vm.attrs.length; a = a + 1) {
+                    if (keys[i] == vm.attrs[a].name) {
+                        if (vm.attrs[a].options && vm.attrs[a].options.notNull == true) {
+                            if (item[keys[i]] == '' || item[keys[i]] == null || item[keys[i]] == undefined) {
+                                isValid = false
+                            }
+                        }
+                    }
+                }
+            }
+
+            vm.entity.$_isValid = isValid;
+
+            return isValid
+        }
+
+        $scope.$parent.vm.saveCallback = function (options) {
 
             if (metaService.getEntitiesWithoutDynAttrsList().indexOf(vm.entityType) == -1) {
                 vm.entity.attributes = [];
-            }
-
-            function updateValue(entityAttr, attr, value) {
-
-                if (attr['value_type'] === 10) {
-                    entityAttr['value_string'] = value;
-                }
-
-                if (attr['value_type'] === 20) {
-                    entityAttr['value_float'] = value;
-                }
-
-                if (attr['value_type'] === 30) {
-                    entityAttr['classifier'] = value;
-                }
-
-                if (attr['value_type'] === 40) {
-                    entityAttr['value_date'] = value;
-                }
-
-                return entityAttr;
-            }
-
-            function appendAttribute(attr, value) {
-                var attribute = {
-                    attribute_name: attr.name,
-                    attribute_type: attr.id,
-                    classifier: null,
-                    value_date: null,
-                    value_float: null,
-                    value_string: null
-                };
-
-                if (attr['value_type'] === 10) {
-                    attribute['value_string'] = value;
-                }
-
-                if (attr['value_type'] === 20) {
-                    attribute['value_float'] = value;
-                }
-
-                if (attr['value_type'] === 30) {
-                    attribute['classifier'] = value;
-                }
-                if (attr['value_type'] === 40) {
-                    attribute['value_date'] = value;
-                }
-
-                return attribute;
             }
 
             if (vm.entity.attributes) {
@@ -857,53 +993,6 @@
                         }
                     }
                 }
-            }
-
-            function checkEntityAttrTypes() {
-                var i;
-                for (i = 0; i < vm.entityAttrs.length; i = i + 1) {
-                    //console.log('vm.entityAttrs[i]', vm.entityAttrs[i]);
-                    if (vm.entityAttrs[i]['value_type'] === 40) {
-                        vm.entity[vm.entityAttrs[i].key] = moment(new Date(vm.entity[vm.entityAttrs[i].key])).format('YYYY-MM-DD');
-                    }
-                    if (vm.entityAttrs[i]['value_type'] === 20 || vm.entityAttrs[i]['value_type'] === 'float') {
-                        //console.log('vm.entity[vm.entityAttrs[i].key]', vm.entity[vm.entityAttrs[i].key]);
-                        var withotSpaces = (vm.entity[vm.entityAttrs[i].key] + '').replace(' ', '');
-                        var res;
-                        if (withotSpaces.indexOf(',') !== -1) {
-                            res = withotSpaces.replace(',', '.');
-                        } else {
-                            res = withotSpaces;
-                        }
-                        vm.entity[vm.entityAttrs[i].key] = parseFloat(res);
-                        //console.log('vm.entity[vm.entityAttrs[i].key]', vm.entity[vm.entityAttrs[i].key]);
-                    }
-                }
-
-                vm.entity.attributes.forEach(function (item) {
-                    if (item['value_date'] !== null) {
-                        item['value_date'] = moment(new Date(item['value_date'])).format('YYYY-MM-DD');
-                    }
-                })
-            }
-
-            function clearUnusedAttributeValues() {
-                var i;
-                for (i = 0; i < vm.entity.attributes.length; i = i + 1) {
-                    if (vm.entity.attributes[i].classifier == null) {
-                        delete vm.entity.attributes[i].classifier;
-                    }
-                    if (vm.entity.attributes[i].value_date == null) {
-                        delete vm.entity.attributes[i].value_date;
-                    }
-                    if (vm.entity.attributes[i].value_float == null) {
-                        delete vm.entity.attributes[i].value_float;
-                    }
-                    if (vm.entity.attributes[i].value_string == null) {
-                        delete vm.entity.attributes[i].value_string;
-                    }
-                }
-
             }
 
             if (vm.entity.attributes) {
@@ -959,63 +1048,6 @@
 
             //console.log('vm.entity', vm.entity);
 
-            function checkForNulls(item) {
-                var i;
-                var keys = Object.keys(item);
-                var result = {};
-                for (i = 0; i < keys.length; i = i + 1) {
-                    if (item[keys[i]] && item[keys[i]].length) {
-                        result[keys[i]] = item[keys[i]];
-                    } else {
-                        if (item[keys[i]] != null && !isNaN(item[keys[i]])) {
-                            result[keys[i]] = item[keys[i]];
-                        }
-                    }
-                }
-                return result;
-            }
-
-            function checkForNotNullRestriction(item) {
-                var i, e, b, a;
-                var keys = Object.keys(item);
-                var isValid = true;
-                for (i = 0; i < keys.length; i = i + 1) {
-                    for (e = 0; e < vm.entityAttrs.length; e = e + 1) {
-                        if (keys[i] == vm.entityAttrs[e].key) {
-                            if (vm.entityAttrs[e].options && vm.entityAttrs[e].options.notNull == true) {
-                                if (item[keys[i]] == '' || item[keys[i]] == null || item[keys[i]] == undefined) {
-                                    isValid = false
-                                }
-                            }
-                        }
-                    }
-
-                    for (b = 0; b < vm.baseAttrs.length; b = b + 1) {
-                        if (keys[i] == vm.baseAttrs[b].key) {
-                            if (vm.baseAttrs[b].options && vm.baseAttrs[b].options.notNull == true) {
-                                if (item[keys[i]] == '' || item[keys[i]] == null || item[keys[i]] == undefined) {
-                                    isValid = false
-                                }
-                            }
-                        }
-                    }
-
-                    for (a = 0; a < vm.attrs.length; a = a + 1) {
-                        if (keys[i] == vm.attrs[a].name) {
-                            if (vm.attrs[a].options && vm.attrs[a].options.notNull == true) {
-                                if (item[keys[i]] == '' || item[keys[i]] == null || item[keys[i]] == undefined) {
-                                    isValid = false
-                                }
-                            }
-                        }
-                    }
-                }
-
-                vm.entity.$_isValid = isValid;
-
-                return isValid
-            }
-
             if (checkForNotNullRestriction(vm.entity)) {
 
                 var resultEntity = checkForNulls(vm.entity);
@@ -1054,13 +1086,14 @@
 
 
                 return new Promise(function (resolve, reject) {
-                    var options = {
+
+                    var _options = {
                         entityType: vm.entityType,
                         entity: resultEntity
                     };
 
                     if (vm.entityId) {
-                        options.entityId = vm.entityId
+                        _options.entityId = vm.entityId
                     }
 
 
@@ -1087,10 +1120,22 @@
 
                             //return;
 
+                            if (options) {
+                                if (options.complexTransactionOptions) {
+
+                                    if (options.complexTransactionOptions.complexTransactionChangeStatus == true) {
+                                        _options.complexTransactionChangeStatus = true;
+
+                                        changed = true;
+                                    }
+
+                                }
+                            }
+
                             if (changed == true) {
-                                options = {
+                                _options = {
                                     entityType: vm.entityType,
-                                    complextTransactionChangeStatus: true,
+                                    complexTransactionChangeStatus: true,
                                     entity: {
                                         complex_transaction: {
                                             status: resultEntity.status,
@@ -1104,9 +1149,9 @@
                                     }
                                 }
                             } else {
-                                options = {
+                                _options = {
                                     entityType: vm.entityType,
-                                    complextTransactionChangeStatus: false,
+                                    complexTransactionChangeStatus: false,
                                     entity: {
                                         id: resultEntity.id,
                                         status: resultEntity.status,
@@ -1118,14 +1163,35 @@
                                 }
                             }
 
+
+                            if (vm.entityId) {
+                                _options.entityId = vm.entityId
+                            }
+
+
                         }
                     }
 
+                    console.log('_options', _options);
 
-                    resolve(options);
+                    resolve(_options);
                 });
             }
         };
+
+        $scope.$parent.vm.rebookTransaction = function ($event) {
+
+            console.log('$scope.$parent.vm', $scope.$parent.vm);
+
+            // INSANE ARCHITECTURE VIOLATION
+
+            $scope.$parent.vm.save($event, {
+                complexTransactionOptions: {
+                    complexTransactionChangeStatus: true
+                }
+            })
+
+        }
 
     }
 

@@ -95,29 +95,36 @@
 
         vm.resolveDefaultValue = function (item) {
 
-            var itemEntity = '';
+            //console.log('item', item);
 
-            vm.contentTypes.forEach(function (contentType) {
-                if (item.content_type == contentType.key) {
-                    itemEntity = contentType.entity;
+            if (item.value_type == 100) {
+
+                var itemEntity = '';
+
+                vm.contentTypes.forEach(function (contentType) {
+                    if (item.content_type == contentType.key) {
+                        itemEntity = contentType.entity;
+                    }
+                });
+
+                if (item[itemEntity + '_object']) {
+                    return item[itemEntity + '_object'].name;
+                } else {
+
+                    var entityName = '';
+
+                    if (vm.relationItems[itemEntity]) {
+                        vm.relationItems[itemEntity].forEach(function (relationItem) {
+                            if (relationItem.id == item[itemEntity]) {
+                                entityName = relationItem.name;
+                            }
+                        });
+                    }
+
+                    return entityName;
                 }
-            });
-
-            if (item[itemEntity + '_object']) {
-                return item[itemEntity + '_object'].name;
             } else {
-
-                var entityName = '';
-
-                if (vm.relationItems[itemEntity]) {
-                    vm.relationItems[itemEntity].forEach(function (relationItem) {
-                        if (relationItem.id == item[itemEntity]) {
-                            entityName = relationItem.name;
-                        }
-                    });
-                }
-
-                return entityName;
+                return item.value;
             }
 
         };

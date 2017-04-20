@@ -97,22 +97,46 @@
         };
 
         vm.openMapping = function (item, $event) {
-            $mdDialog.show({
-                controller: 'EntityTypeMappingDialogController as vm',
-                templateUrl: 'views/dialogs/entity-type-mapping-dialog-view.html',
-                parent: angular.element(document.body),
-                targetEvent: $event,
-                preserveScope: true,
-                autoWrap: true,
-                skipHide: true,
-                locals: {
-                    mapItem: {complexExpressionEntity: metaContentTypesService.findEntityByContentType(item.content_type, 'ui')}
-                }
-            }).then(function (res) {
-                if (res.status === 'agree') {
-                    console.log("res", res.data);
-                }
-            });
+
+            if (item.value_type == 100) {
+
+                $mdDialog.show({
+                    controller: 'EntityTypeMappingDialogController as vm',
+                    templateUrl: 'views/dialogs/entity-type-mapping-dialog-view.html',
+                    parent: angular.element(document.body),
+                    targetEvent: $event,
+                    preserveScope: true,
+                    autoWrap: true,
+                    skipHide: true,
+                    locals: {
+                        mapItem: {complexExpressionEntity: metaContentTypesService.findEntityByContentType(item.content_type, 'ui')}
+                    }
+                }).then(function (res) {
+                    if (res.status === 'agree') {
+                        console.log("res", res.data);
+                    }
+                });
+            } else {
+
+                $mdDialog.show({
+                    controller: 'ExpressionEditorDialogController as vm',
+                    templateUrl: 'views/dialogs/expression-editor-dialog-view.html',
+                    parent: angular.element(document.body),
+                    targetEvent: $event,
+                    preserveScope: true,
+                    autoWrap: true,
+                    skipHide: true,
+                    locals: {
+                        item: {expression: item.mapping.expression}
+                    }
+                }).then(function (res) {
+                    if (res.status === 'agree') {
+                        console.log("res", res.data);
+                        item.mapping.expression = res.data.item.expression;
+                    }
+                    console.log('item', item);
+                });
+            }
         };
 
         vm.checkReadyStatus = function () {

@@ -499,7 +499,7 @@
                             var filteredData = entity;
 
                             //if (vm.entityType == 'transaction-report' || vm.entityType == 'cash-flow-projection-report') {
-                                filteredData = transactionReportHelper.injectIntoItems(filteredData, data);
+                            filteredData = transactionReportHelper.injectIntoItems(filteredData, data);
                             //}
 
                             if (filteredData.length) {
@@ -639,6 +639,10 @@
                                 'strategy-1', 'strategy-1-subgroup', 'strategy-1-subgroup',
                                 'strategy-2', 'strategy-2-subgroup', 'strategy-2-subgroup',
                                 'strategy-3', 'strategy-3-subgroup', 'strategy-3-subgroup'];
+
+                            if (vm.entityType == 'cash-flow-projection-report') {
+                                entitiesList.push('transaction-report');
+                            }
 
                             vm.groupTableService.setItems(filteredData);
 
@@ -1238,16 +1242,16 @@
                         vm.entityAdditions = [];
                         vm.additionsType = '';
                         vm.additionsEntityType = '';
-                        vm.components =  {
-                                sidebar: true,
-                                groupingArea: true,
-                                columnAreaHeader: true,
-                                splitPanel: false,
-                                addEntityBtn: false,
-                                fieldManagerBtn: true,
-                                layoutManager: false,
-                                autoReportRequest: false
-                            };
+                        vm.components = {
+                            sidebar: true,
+                            groupingArea: true,
+                            columnAreaHeader: true,
+                            splitPanel: false,
+                            addEntityBtn: false,
+                            fieldManagerBtn: true,
+                            layoutManager: false,
+                            autoReportRequest: false
+                        };
 
                         vm.entityAdditionsColumns = [];
                         vm.entityAdditionsFilters = [];

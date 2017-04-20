@@ -7,21 +7,21 @@
 
     var getAttributes = function () {
         return [
-            {
-                "key": "name",
-                "name": "Name",
-                "value_type": 10
-            },
-            {
-                "key": "short_name",
-                "name": "Short name",
-                "value_type": 10
-            },
-            {
-                "key": "notes",
-                "name": "Notes",
-                "value_type": 10
-            },
+            //{
+            //    "key": "name",
+            //    "name": "Name",
+            //    "value_type": 10
+            //},
+            //{
+            //    "key": "short_name",
+            //    "name": "Short name",
+            //    "value_type": 10
+            //},
+            //{
+            //    "key": "notes",
+            //    "name": "Notes",
+            //    "value_type": 10
+            //},
             {
                 "key": "currency",
                 "name": "Currency",

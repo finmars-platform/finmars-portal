@@ -166,6 +166,11 @@
                 "key": "counterparty",
                 "name": "Counterparty",
                 "value_type": 'field'
+            },
+            {
+                "key": "trade_price",
+                "name": "Trade price",
+                "value_type": 'float'
             }
         ]
     };

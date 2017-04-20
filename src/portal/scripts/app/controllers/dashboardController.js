@@ -6,7 +6,6 @@
     'use strict';
 
     var logService = require('../../../../core/services/logService');
-    var eventsService = require('../services/eventsService');
     var uiService = require('../services/uiService');
     var metaContentTypesService = require('../services/metaContentTypesService');
 
@@ -70,33 +69,7 @@
 
         };
 
-        vm.checkForEvents = function (target) {
-            eventsService.getList().then(function (data) {
-                vm.eventsList = data.results;
-                $scope.$apply();
-                data.results.map(function (event) {
-                    if (event.is_need_reaction == true) {
-                        var eventActions = event.event_schedule_object['actions']; // button in event dialog
-                        vm.openEventWindow(target, event.id, eventActions);
-                    }
-                });
-            });
-        };
 
-        vm.openEventWindow = function ($event, eventId, eventActions) {
-            $mdDialog.show({
-                controller: 'EventDialogController as vm',
-                templateUrl: 'views/dialogs/event-dialog-view.html',
-                parent: angular.element(document.body),
-                targetEvent: $event,
-                locals: {
-                    data: {
-                        eventId: eventId,
-                        eventActions: eventActions
-                    }
-                }
-            })
-        };
 
         vm.getView = function () {
 
