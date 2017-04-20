@@ -86,20 +86,21 @@
 
                 expression = 'date_group(' + vm.exprField + ', [';
 
-                var dateRangeBeforeDate = '';
-                var dateRangeBeforeFormat = '';
-                var dateRangeBeforeName = '';
+                //var dateRangeBeforeDate = '';
+                //var dateRangeBeforeFormat = '';
+                //var dateRangeBeforeName = '';
+                //
+                //if (vm.dateRange.before) {
+                //    dateRangeBeforeDate = vm.dateRange.before.date;
+                //
+                //    if (vm.dateRange.before.format) {
+                //        //dateRangeBeforeFormat = vm.dateRange.before.format.caption;
+                //        dateRangeBeforeFormat = vm.dateRange.before.format;
+                //    }
+                //    dateRangeBeforeName = vm.dateRange.before.name;
+                //}
 
-                if (vm.dateRange.before) {
-                    dateRangeBeforeDate = vm.dateRange.before.date;
-
-                    if (vm.dateRange.before.format) {
-                        dateRangeBeforeFormat = vm.dateRange.before.format.caption;
-                    }
-                    dateRangeBeforeName = vm.dateRange.before.name;
-                }
-
-                expression = expression + '["","' + dateRangeBeforeDate + '", "", ["", "", "", "", "' + dateRangeBeforeFormat + '", "' + dateRangeBeforeName + '"]],';
+                //expression = expression + '["","' + dateRangeBeforeDate + '", "", ["", "", "", "", "' + dateRangeBeforeFormat + '", "' + dateRangeBeforeName + '"]],';
 
                 vm.rangeItems.forEach(function (item) {
 
@@ -108,14 +109,16 @@
                     var step = '';
 
                     if (item.step) {
-                        step = item.step.caption;
+                        //step = item.step.step;
+                        step = item.step;
                     }
 
                     var str1 = item.str1 || '';
                     var begin_date_fmt = '';
 
                     if (item.begin_date_fmt) {
-                        begin_date_fmt = item.begin_date_fmt.caption;
+                        //begin_date_fmt = item.begin_date_fmt.caption;
+                        begin_date_fmt = item.begin_date_fmt;
                     }
 
                     var str3 = item.str3 || '';
@@ -123,17 +126,18 @@
                     var end_date_fmt = '';
 
                     if (item.end_date_fmt) {
-                        end_date_fmt = item.end_date_fmt.caption;
+                        //end_date_fmt = item.end_date_fmt.caption;
+                        end_date_fmt = item.end_date_fmt;
                     }
 
                     var str6 = item.str6 || '';
 
                     var colon = ',';
 
-                    expression = expression + '["'
-                        + begin + '", "'
-                        + end + '", "'
-                        + step + '" ["'
+                    expression = expression + '['
+                        + begin + ', '
+                        + end + ', '
+                        + step + ', ["'
                         + str1 + '", "'
                         + begin_date_fmt + '", "'
                         + str3 + '", "'
@@ -142,22 +146,23 @@
                         + str6 + '"]]' + colon;
                 });
 
-                var dateRangeAfterDate = '';
-                var dateRangeAfterFormat = '';
-                var dateRangeAfterName = '';
+                //var dateRangeAfterDate = '';
+                //var dateRangeAfterFormat = '';
+                //var dateRangeAfterName = '';
+                //
+                //if (vm.dateRange.after) {
+                //    dateRangeAfterDate = vm.dateRange.after.date;
+                //
+                //    if (vm.dateRange.after.format) {
+                //        //dateRangeAfterFormat = vm.dateRange.after.format.caption;
+                //        dateRangeAfterFormat = vm.dateRange.after.format;
+                //    }
+                //    dateRangeAfterName = vm.dateRange.after.name;
+                //}
 
-                if (vm.dateRange.after) {
-                    dateRangeAfterDate = vm.dateRange.after.date
+                //expression = expression + '["","' + dateRangeAfterDate + '", "", ["", "", "", "", "' + dateRangeAfterFormat + '", "' + dateRangeAfterName + '"]]';
 
-                    if (vm.dateRange.after.format) {
-                        dateRangeAfterFormat = vm.dateRange.after.format.caption;
-                    }
-                    dateRangeAfterName = vm.dateRange.after.name;
-                }
-
-                expression = expression + '["","' + dateRangeAfterDate + '", "", ["", "", "", "", "' + dateRangeAfterFormat + '", "' + dateRangeAfterName + '"]]';
-
-                expression = expression + '], default="lorem")';
+                expression = expression + '], default="")';
 
             }
 

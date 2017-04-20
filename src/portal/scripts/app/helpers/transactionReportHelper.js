@@ -168,6 +168,23 @@
                 item.strategy3_position_object = findEntityObject(report, 'item_strategies1', item.strategy3_position);
             }
 
+            if(item.custom_fields) {
+                item.custom_fields_object = [];
+
+                item.custom_fields.forEach(function(localCustomField){
+                    report.custom_fields_object.forEach(function(reportCustomField){
+
+                        if(reportCustomField.id == localCustomField.custom_field) {
+
+                            item.custom_fields_object.push(reportCustomField);
+
+                        }
+
+                    })
+                })
+
+            }
+
             //item.transaction_currency_object = findEntityObject(report, 'item_currencies', item.transaction_currency);
             //item.settlement_currency_object = findEntityObject(report, 'item_currencies', item.settlement_currency);
 

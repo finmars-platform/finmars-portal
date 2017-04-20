@@ -63,180 +63,240 @@
                 "value_type": "float"
             },
             {
-                "key": "carry_closed",
-                "name": "Carry closed",
+                "key": "carry_loc",
+                "name": "Carry (LOC)",
                 "value_type": "float"
             },
+            //{
+            //    "key": "carry_closed",
+            //    "name": "Carry closed",
+            //    "value_type": "float"
+            //},
             {
                 "key": "carry_fixed",
                 "name": "Carry fixed",
                 "value_type": "float"
             },
             {
-                "key": "carry_fixed_closed",
-                "name": "Carry fixed closed",
+                "key": "carry_fixed_loc",
+                "name": "Carry fixed (LOC)",
                 "value_type": "float"
             },
-            {
-                "key": "carry_fixed_opened",
-                "name": "Carry fixed opened",
-                "value_type": "float"
-            },
+            //{
+            //    "key": "carry_fixed_closed",
+            //    "name": "Carry fixed closed",
+            //    "value_type": "float"
+            //},
+            //{
+            //    "key": "carry_fixed_opened",
+            //    "name": "Carry fixed opened",
+            //    "value_type": "float"
+            //},
             {
                 "key": "carry_fx",
                 "name": "Carry FX",
                 "value_type": "float"
             },
             {
-                "key": "carry_fx_closed",
-                "name": "Carry FX closed",
+                "key": "carry_fx_loc",
+                "name": "Carry FX (LOC)",
                 "value_type": "float"
             },
-            {
-                "key": "carry_fx_opened",
-                "name": "Carry FX opened",
-                "value_type": "float"
-            },
-            {
-                "key": "carry_opened",
-                "name": "Carry opened",
-                "value_type": "float"
-            },
+            //{
+            //    "key": "carry_fx_closed",
+            //    "name": "Carry FX closed",
+            //    "value_type": "float"
+            //},
+            //{
+            //    "key": "carry_fx_opened",
+            //    "name": "Carry FX opened",
+            //    "value_type": "float"
+            //},
+            //{
+            //    "key": "carry_opened",
+            //    "name": "Carry opened",
+            //    "value_type": "float"
+            //},
             {
                 "key": "overheads",
                 "name": "Overheads",
                 "value_type": "float"
             },
             {
-                "key": "overheads_closed",
-                "name": "Overheads closed",
+                "key": "overheads_loc",
+                "name": "Overheads (LOC)",
                 "value_type": "float"
             },
+            //{
+            //    "key": "overheads_closed",
+            //    "name": "Overheads closed",
+            //    "value_type": "float"
+            //},
             {
                 "key": "overheads_fixed",
                 "name": "Overheads fixed",
                 "value_type": "float"
             },
             {
-                "key": "overheads_fixed_closed",
-                "name": "Overheads fixed closed",
+                "key": "overheads_fixed_loc",
+                "name": "Overheads fixed (LOC)",
                 "value_type": "float"
             },
-            {
-                "key": "overheads_fixed_opened",
-                "name": "Overheads fixed opened",
-                "value_type": "float"
-            },
+            //{
+            //    "key": "overheads_fixed_closed",
+            //    "name": "Overheads fixed closed",
+            //    "value_type": "float"
+            //},
+            //{
+            //    "key": "overheads_fixed_opened",
+            //    "name": "Overheads fixed opened",
+            //    "value_type": "float"
+            //},
             {
                 "key": "overheads_fx",
                 "name": "Overheads FX",
                 "value_type": "float"
             },
             {
-                "key": "overheads_fx_closed",
-                "name": "Overheads FX closed",
+                "key": "overheads_fx_loc",
+                "name": "Overheads FX (LOC)",
                 "value_type": "float"
             },
-            {
-                "key": "overheads_fx_opened",
-                "name": "Overheads FX opened",
-                "value_type": "float"
-            },
-            {
-                "key": "overheads_opened",
-                "name": "Overheads opened",
-                "value_type": "float"
-            },
+            //{
+            //    "key": "overheads_fx_closed",
+            //    "name": "Overheads FX closed",
+            //    "value_type": "float"
+            //},
+            //{
+            //    "key": "overheads_fx_opened",
+            //    "name": "Overheads FX opened",
+            //    "value_type": "float"
+            //},
+            //{
+            //    "key": "overheads_opened",
+            //    "name": "Overheads opened",
+            //    "value_type": "float"
+            //},
             {
                 "key": "principal",
                 "name": "Principal",
                 "value_type": "float"
             },
             {
-                "key": "principal_closed",
-                "name": "Principal closed",
+                "key": "principal_loc",
+                "name": "Principal (LOC)",
                 "value_type": "float"
             },
+            //{
+            //    "key": "principal_closed",
+            //    "name": "Principal closed",
+            //    "value_type": "float"
+            //},
             {
                 "key": "principal_fixed",
                 "name": "Principal fixed",
                 "value_type": "float"
             },
             {
-                "key": "principal_fixed_closed",
-                "name": "Principal fixed closed",
+                "key": "principal_fixed_loc",
+                "name": "Principal fixed (LOC)",
                 "value_type": "float"
             },
-            {
-                "key": "principal_fixed_opened",
-                "name": "Principal fixed opened",
-                "value_type": "float"
-            },
+            //{
+            //    "key": "principal_fixed_closed",
+            //    "name": "Principal fixed closed",
+            //    "value_type": "float"
+            //},
+            //{
+            //    "key": "principal_fixed_opened",
+            //    "name": "Principal fixed opened",
+            //    "value_type": "float"
+            //},
             {
                 "key": "principal_fx",
                 "name": "Principal FX",
                 "value_type": "float"
             },
             {
-                "key": "principal_fx_closed",
-                "name": "Principal FX closed",
+                "key": "principal_fx_loc",
+                "name": "Principal FX (LOC)",
                 "value_type": "float"
             },
-            {
-                "key": "principal_fx_opened",
-                "name": "Principal FX opened",
-                "value_type": "float"
-            },
-            {
-                "key": "principal_opened",
-                "name": "Principal opened",
-                "value_type": "float"
-            },
+            //{
+            //    "key": "principal_fx_closed",
+            //    "name": "Principal FX closed",
+            //    "value_type": "float"
+            //},
+            //{
+            //    "key": "principal_fx_opened",
+            //    "name": "Principal FX opened",
+            //    "value_type": "float"
+            //},
+            //{
+            //    "key": "principal_opened",
+            //    "name": "Principal opened",
+            //    "value_type": "float"
+            //},
             {
                 "key": "total",
                 "name": "Total",
                 "value_type": "float"
             },
             {
-                "key": "total_closed",
-                "name": "Total closed",
+                "key": "total_loc",
+                "name": "Total (LOC)",
                 "value_type": "float"
             },
+            //{
+            //    "key": "total_closed",
+            //    "name": "Total closed",
+            //    "value_type": "float"
+            //},
             {
                 "key": "total_fixed",
                 "name": "Total fixed",
                 "value_type": "float"
             },
             {
-                "key": "total_fixed_closed",
-                "name": "Total fixed closed",
+                "key": "total_fixed_loc",
+                "name": "Total fixed (LOC)",
                 "value_type": "float"
             },
-            {
-                "key": "total_fixed_opened",
-                "name": "Total fixed opened",
-                "value_type": "float"
-            },
+            //{
+            //    "key": "total_fixed_closed",
+            //    "name": "Total fixed closed",
+            //    "value_type": "float"
+            //},
+            //{
+            //    "key": "total_fixed_opened",
+            //    "name": "Total fixed opened",
+            //    "value_type": "float"
+            //},
             {
                 "key": "total_fx",
                 "name": "Total FX",
                 "value_type": "float"
             },
             {
-                "key": "total_fx_closed",
-                "name": "Total FX closed",
+                "key": "total_fx_loc",
+                "name": "Total FX (LOC)",
                 "value_type": "float"
             },
-            {
-                "key": "total_fx_opened",
-                "name": "Total FX opened",
-                "value_type": "float"
-            },
-            {
-                "key": "total_opened",
-                "name": "Total opened",
-                "value_type": "float"
-            },
+            //{
+            //    "key": "total_fx_closed",
+            //    "name": "Total FX closed",
+            //    "value_type": "float"
+            //},
+            //{
+            //    "key": "total_fx_opened",
+            //    "name": "Total FX opened",
+            //    "value_type": "float"
+            //},
+            //{
+            //    "key": "total_opened",
+            //    "name": "Total opened",
+            //    "value_type": "float"
+            //},
             {
                 "key": "total_real",
                 "name": "Total real",
@@ -266,6 +326,48 @@
                 "key": "exposure_percent",
                 "name": "Exposure %",
                 "value_type": "float"
+            },
+
+
+            {
+                "key": "exposure_percent",
+                "name": "Exposure %",
+                "value_type": "float"
+            },
+            {
+                "key": "exposure_percent",
+                "name": "Exposure %",
+                "value_type": "float"
+            },
+            {
+                "key": "item_subtype",
+                "name": "Item subtype",
+                "value_type": 10
+            },
+            {
+                "key": "item_subtype_code",
+                "name": "Item subtype code",
+                "value_type": 10
+            },
+            {
+                "key": "item_subtype_name",
+                "name": "Item subtype name",
+                "value_type": 10
+            },
+            {
+                "key": "item_group",
+                "name": "Item group",
+                "value_type": 10
+            },
+            {
+                "key": "item_group_code",
+                "name": "Item group code",
+                "value_type": 10
+            },
+            {
+                "key": "item_group_name",
+                "name": "Item group name",
+                "value_type": 10
             }
         ]
     };

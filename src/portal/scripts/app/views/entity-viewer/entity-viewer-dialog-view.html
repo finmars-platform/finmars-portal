@@ -1,4 +1,5 @@
-<md-dialog aria-label="entity edit" ng-cloak class="add-portfolio-dialog draggable-dialog" drag-dialog style="height: 100%">
+<md-dialog aria-label="entity edit" ng-cloak class="add-portfolio-dialog draggable-dialog" drag-dialog
+           style="height: 100%">
     <md-toolbar>
         <div class="md-toolbar-tools" data-ng-if="vm.evAction === 'create'">
             <h2>Add {{vm.entityTypeSlug()}}</h2>
@@ -14,15 +15,21 @@
     </md-dialog-content>
     <md-dialog-actions layout="row" layout-align="space-between center">
         <div>
-            <md-button ng-click="vm.editLayout()" class="md-raised md-primary" data-ng-if="vm.checkVisibility('edit-form-btn')">
+            <md-button ng-click="vm.editLayout()" class="md-raised md-primary"
+                       data-ng-if="vm.checkVisibility('edit-form-btn')">
                 Edit Form
             </md-button>
-            <md-button ng-click="vm.manageAttrs()" class="md-raised md-primary" data-ng-if="vm.MABtnVisibility(vm.entityType)">
+            <md-button ng-click="vm.manageAttrs()" class="md-raised md-primary"
+                       data-ng-if="vm.MABtnVisibility(vm.entityType)">
                 Manage attributes
             </md-button>
         </div>
         <div>
-            <md-button data-ng-if="vm.evAction === 'update'" class="md-raised" ng-click="vm.copy()" style="margin-right: 25px">
+            <md-button class="md-raised"  data-ng-if="vm.entityType == 'complex-transaction'" data-ng-click="vm.rebookTransaction($event)">
+                Rebook
+            </md-button>
+            <md-button data-ng-if="vm.evAction === 'update'" class="md-raised" ng-click="vm.copy()"
+                       style="margin-right: 25px">
                 Make a copy
             </md-button>
             <md-button class="md-raised" ng-click="vm.cancel()">
@@ -35,7 +42,7 @@
 				<span data-ng-if="vm.evAction === 'update'">
 					Save
 				</span>
-			</md-button>
-		</div>
-	</md-dialog-actions>
+            </md-button>
+        </div>
+    </md-dialog-actions>
 </md-dialog>

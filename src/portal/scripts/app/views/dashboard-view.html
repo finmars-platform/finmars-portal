@@ -1,11 +1,6 @@
 <div>
+
     <div class="row">
-        <div layout="row">
-            <md-button class="md-raised md-primary" data-ng-click="vm.checkForEvents($event)"
-                       style="margin-left: 16px; margin-top: 12px">
-                CHECK FOR EVENTS
-            </md-button>
-        </div>
 
         <div class="dashboard-row-holder" data-ng-if="vm.readyStatus.uiLayouts && vm.readyStatus.entityListLayout">
 
@@ -14,7 +9,8 @@
                 <div class="dashboard-item-wrap">
 
                     <div layout="row" layout-align="space-between center" class="dashboard-item-header">
-                        <p data-ng-if="vm.widget1._d_layout.name">{{vm.widget1._d_layout.name}} (<span data-ng-bind="vm.resolveEntity(vm.widget1._d_layout)"></span>)</p>
+                        <p data-ng-if="vm.widget1._d_layout.name">{{vm.widget1._d_layout.name}} (<span
+                                data-ng-bind="vm.resolveEntity(vm.widget1._d_layout)"></span>)</p>
                         <p data-ng-if="!vm.widget1._d_layout.name">Default</p>
 
                         <div class="close-entity-viewer-btn" data-ng-if="vm.widget1._d_configured"
@@ -57,7 +53,8 @@
                 <div class="dashboard-item-wrap">
 
                     <div layout="row" layout-align="space-between center" class="dashboard-item-header">
-                        <p data-ng-if="vm.widget2._d_layout.name">{{vm.widget2._d_layout.name}} (<span data-ng-bind="vm.resolveEntity(vm.widget2._d_layout)"></span>)</p>
+                        <p data-ng-if="vm.widget2._d_layout.name">{{vm.widget2._d_layout.name}} (<span
+                                data-ng-bind="vm.resolveEntity(vm.widget2._d_layout)"></span>)</p>
                         <p data-ng-if="!vm.widget2._d_layout.name">Default</p>
 
                         <div class="close-entity-viewer-btn" data-ng-if="vm.widget2._d_configured"
@@ -105,7 +102,8 @@
                 <div class="dashboard-item-wrap">
 
                     <div layout="row" layout-align="space-between center" class="dashboard-item-header">
-                        <p data-ng-if="vm.widget3._d_layout.name">{{vm.widget3._d_layout.name}} (<span data-ng-bind="vm.resolveEntity(vm.widget3._d_layout)"></span>)</p>
+                        <p data-ng-if="vm.widget3._d_layout.name">{{vm.widget3._d_layout.name}} (<span
+                                data-ng-bind="vm.resolveEntity(vm.widget3._d_layout)"></span>)</p>
                         <p data-ng-if="!vm.widget3._d_layout.name">Default</p>
 
                         <div class="close-entity-viewer-btn" data-ng-if="vm.widget3._d_configured"
@@ -149,7 +147,8 @@
                 <div class="dashboard-item-wrap">
 
                     <div layout="row" layout-align="space-between center" class="dashboard-item-header">
-                        <p data-ng-if="vm.widget4._d_layout.name">{{vm.widget4._d_layout.name}} (<span data-ng-bind="vm.resolveEntity(vm.widget4._d_layout)"></span>)</p>
+                        <p data-ng-if="vm.widget4._d_layout.name">{{vm.widget4._d_layout.name}} (<span
+                                data-ng-bind="vm.resolveEntity(vm.widget4._d_layout)"></span>)</p>
                         <p data-ng-if="!vm.widget4._d_layout.name">Default</p>
 
                         <div class="close-entity-viewer-btn" data-ng-if="vm.widget4._d_configured"

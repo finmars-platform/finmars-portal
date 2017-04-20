@@ -16,7 +16,7 @@
             template: '<div class="pick-me-up"><input type="text" value=""></div>',
             // template: '<md-input-container class="pick-me-up"><input type="text" value=""></md-input-containe>',
             link: function (scope, elem, attrs, ngModel) {
-                //console.log('ngModel', ngModel);
+
                 var input = $(elem).find('input');
 
                 var position = 'right';
@@ -25,11 +25,12 @@
                     position = scope.position;
                 }
 
-                //setTimeout(function () {
+
                 if (ngModel.$modelValue) {
                     $(elem).parent().addClass('md-input-has-value');
                     input.pickmeup({
                         date: new Date(ngModel.$modelValue),
+                        current: new Date(ngModel.$modelValue),
                         position: position,
                         default_date: false,
                         'hide_on_select': true,
@@ -52,17 +53,14 @@
                 }
 
 
-                scope.$watch(function () {
-                    //console.log('ngModel', ngModel);
-                    if (ngModel.$modelValue) {
+                var unregister = scope.$watch(function () {
+
+                    if (new Date(ngModel.$modelValue) !== 'Invalid Date') {
                         input.val(moment(new Date(ngModel.$modelValue)).format('YYYY-MM-DD'));
+                        unregister();
                     }
+
                 });
-
-
-                //    scope.$apply();
-                //}, 0);
-
 
             }
         }

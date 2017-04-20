@@ -74,7 +74,7 @@
             return true;
         };
 
-        vm.save = function ($event) {
+        vm.save = function ($event, options) {
             if (vm.evAction == 'create') {
                 vm.saveCallback().then(function (options) {
 
@@ -100,12 +100,12 @@
 
                 })
             } else {
-                vm.saveCallback().then(function (options) {
+                vm.saveCallback(options).then(function (options) {
 
                     var entityType = options.entityType;
 
                     if (options.entityType == 'complex-transaction') {
-                        if (options.complextTransactionChangeStatus == false) {
+                        if (options.complexTransactionChangeStatus == false) {
                             entityType = 'complex-transaction-default'
                         }
                     }

@@ -904,6 +904,19 @@
                                 }
 
                                 if (column.value_type == 10 || column.value_type == 40) {
+
+
+                                    if (entityType == 'complex-transaction') {
+                                        if (column.key == 'status') {
+                                            if (groupedItem[column.key] == 1) {
+                                                return 'Production';
+                                            }
+                                            if (groupedItem[column.key] == 2) {
+                                                return 'Pending';
+                                            }
+                                        }
+                                    }
+
                                     if (groupedItem.hasOwnProperty(column.key)) {
                                         return groupedItem[column.key];
                                     }

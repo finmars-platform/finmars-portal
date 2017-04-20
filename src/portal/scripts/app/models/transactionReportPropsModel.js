@@ -91,6 +91,11 @@
                 "key": "overheads",
                 "name": "overheads",
                 "value_type": 'float'
+            },
+            {
+                "key": "trade_price",
+                "name": "Trade price",
+                "value_type": 'float'
             }
         ]
     };

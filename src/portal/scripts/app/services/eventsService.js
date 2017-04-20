@@ -14,10 +14,15 @@
         return eventsRepository.putEventAction(url, data);
     };
 
+    var ignoreEventAction = function (id) {
+        return eventsRepository.ignoreEventAction(id);
+    };
+
     module.exports = {
         getList: getList,
         getEventAction: getEventAction,
-        putEventAction: putEventAction
+        putEventAction: putEventAction,
+        ignoreEventAction: ignoreEventAction
     }
 
 

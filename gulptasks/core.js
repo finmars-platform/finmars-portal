@@ -155,7 +155,7 @@
             'node_modules/perfect-scrollbar/dist/js/perfect-scrollbar.jquery.min.js',
             'node_modules/fancy-logger/dist/js/fancy-logger.js',
             'node_modules/jstree/dist/jstree.js',
-            'bower_components/pickmeup/js/jquery.pickmeup.js'
+            'src/core/datepicker/pickmeup.js'
         ];
 
         return gulp.src(pathToJS)

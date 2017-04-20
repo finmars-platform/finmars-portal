@@ -16,6 +16,7 @@
         console.log('event button is', vm.actionsBtns);
         var eventId = data.eventId;
 
+
         vm.eventAction = function ($event, actionId) {
             var actionUrl = {
                 eventId: eventId,
@@ -48,7 +49,6 @@
                         });
                     }
 
-
                 });
 
 
@@ -58,5 +58,14 @@
         vm.cancel = function () {
             $mdDialog.cancel();
         };
+
+        vm.ignore = function () {
+
+            eventsService.ignoreEventAction(eventId).then(function () {
+                console.log('event action done');
+                vm.cancel();
+            });
+        };
+
     }
 }());
