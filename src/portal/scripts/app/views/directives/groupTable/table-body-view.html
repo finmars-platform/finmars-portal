@@ -9,7 +9,8 @@
     <div data-ng-show="checkReady()" ng-cloak>
         <div>
             <div data-ng-if="options.grouping.length" contextmenu-container="gtbody.contextmenu">
-                <div data-ng-if="!options.isReport" data-ng-repeat="item in items">
+
+                <div data-ng-if="!options.isReport" data-ng-repeat="item in items" on-finish-render="{{entityType}}">
                     <div class="g-group-holder {{ checkRowSelection(item) ? 'selected-row' : '' }}">
                         <div class="g-row-selection" data-ng-click="toggleSelectRow($event, item)">
                             <ng-md-icon icon="done" data-ng-show="item.selectedRow"></ng-md-icon>
@@ -51,7 +52,8 @@
 
                     <!-- preInit.initGroup start -->
 
-                    <group-bind-report-row data-ng-repeat="item in reportItemsProjection() track by $index"
+                    <group-bind-report-row on-finish-render="{{entityType}}"
+                                           data-ng-repeat="item in reportItemsProjection() track by $index"
                                            item="item"></group-bind-report-row>
 
 
@@ -61,7 +63,7 @@
                 </div>
             </div>
             <div data-ng-if="!options.grouping.length" contextmenu-container="gtbody.contextmenu">
-                <div data-ng-repeat="item in items" class="{{ checkRowSelection(item) ? 'selected-row' : ''}} g-row"
+                <div data-ng-repeat="item in items" on-finish-render="{{entityType}}" class="{{ checkRowSelection(item) ? 'selected-row' : ''}} g-row"
                      contextmenu-item="item" data-ng-click="rowCallback(item, $event)">
                     <div class="g-row-selection" data-ng-click="toggleSelectRow($event, item)">
                         <ng-md-icon icon="done" data-ng-show="item.selectedRow"></ng-md-icon>
@@ -88,7 +90,8 @@
         </div>
 
         <div data-ng-if="!items.length && options.isReport">
-            <h1 style="margin-top: 64px;text-align: left;margin-bottom: 64px;margin-left: 38vh;">Press calculate to build report</h1>
+            <h1 style="margin-top: 64px;text-align: left;margin-bottom: 64px;margin-left: 38vh;">Press calculate to
+                build report</h1>
         </div>
     </div>
 </div>

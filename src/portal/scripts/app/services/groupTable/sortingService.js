@@ -18,11 +18,19 @@
         if (items.length && items[0].groups) {
             //console.log('sort ID', sort);
             items = items.sort(function (a, b) {
+
+                console.log('a', a);
+                console.log('b', b);
+
                 for (i = 0; i < b.groups.length; i = i + 1) {
                     for (g = 0; g < a.groups.length; g = g + 1) {
                         if (b.groups[i].key === sort.key || b.groups[i].key === sort.name
                             && a.groups[g].key === sort.key || a.groups[g].key === sort.name) {
-                            if (b.groups[i].value !== null && !b.groups[i].value !== null) {
+                            if (!!b.groups[i].value && !!a.groups[g].value) {
+
+                                console.log('a.groups[g]', a.groups[g]);
+                                console.log('b.groups[i].value]', b.groups[i].value);
+
                                 valA = a.groups[g].value + '';
                                 valA = valA.toLowerCase();
 
@@ -52,6 +60,8 @@
                                     // names must be equal
                                     return 0;
                                 }
+                            } else {
+                                return 0;
                             }
                         }
                     }
@@ -59,7 +69,7 @@
             });
         }
 
-        //console.log("SORTED GROUPS", items);
+        console.log("SORTED GROUPS", items);
         return items;
 
     };

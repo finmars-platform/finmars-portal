@@ -457,6 +457,8 @@
                         }
                     };
 
+                    //console.log('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!', obj);
+
                     resultItems.push(new Row(obj));
                 }
             }
