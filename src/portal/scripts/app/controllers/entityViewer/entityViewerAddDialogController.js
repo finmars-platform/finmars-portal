@@ -37,7 +37,7 @@
 
         vm.entityTypeSlug = function () {
 
-            console.log('here?');
+            //console.log('here?');
 
             if (vm.entityType == 'complex-transaction') {
                 return 'Transaction';

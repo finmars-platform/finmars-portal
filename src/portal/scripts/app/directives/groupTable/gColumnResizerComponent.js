@@ -6,6 +6,8 @@
     'use strict';
 
     var logService = require('../../../../../core/services/logService');
+
+    var renderEventService = require('../../services/renderEventService');
     // var uiService = require('../../services/uiService');
 
     module.exports = function () {
@@ -22,6 +24,8 @@
                 logService.component('groupColumnResizer', 'initialized');
 
                 var minWidth = 65;	// width value for showing tooltip
+                var columnsWidthSet = false;
+
                 function toggleColumnNameTooltip(column, columnWidth) {
                     if (columnWidth <= minWidth && !column.hasClass('small-width')) {
                         column.addClass('small-width');
@@ -30,8 +34,6 @@
                         column.removeClass('small-width');
                     }
                 }
-
-                var columnsWidthSet = false;
 
                 function setColumnsWidthAndNameTooltip() {
                     if (!columnsWidthSet) {
@@ -52,7 +54,6 @@
                         }
                     }
                 }
-
 
                 setTimeout(function () {
 
@@ -87,10 +88,6 @@
                 };
 
                 scope.$parent.triggerResize = resize;
-
-                $(window).on('resize', function () {
-                    resizeWorkarea();
-                });
 
                 $('.filter-area-size-btn').click(function () {
                     //console.log('filter toggle working');
@@ -133,27 +130,54 @@
                     }
                 }
 
+
+                var i, x, a;
+                var tHead;
+                var th;
+                var tr;
+                var thSliders;
+                var td;
+
+                var setThMinWidths = function (th) {
+                    //var i, a;
+                    // var lastColumn = th.length - 1;
+                    // console.log('min width seted ', th.length, 'resizer columns ', [scope.columns]);
+                    for (i = 0; i < th.length; i = i + 1) {
+                        if (!$(th[i]).attr('min-width')) {
+                            $(th[i]).attr('min-width', '20');
+                        }
+                    }
+                };
+
+                function resizeCells() {
+
+                    tHead = $(elem).find('.g-thead');
+                    th = tHead.find('.g-cell');
+                    tr = $(elem).find('.g-row');
+
+                    //var i, x;
+
+                    for (i = 0; i < tr.length; i = i + 1) {
+                        td = $(tr[i]).find('.g-cell-wrap');
+                        for (x = 0; x < th.length; x = x + 1) {
+                            (function (x) {
+                                $(td[x]).css({width: $(th[x]).width() + 'px'});
+                                //console.log('cell widths is ', $(td[x]).width(), $(th[x]).width());
+                            }(x))
+                        }
+                    }
+                }
+
                 function resize() {
 
-                    //console.log('resize!!');
+                    //console.log('resize', elem);
 
-                    var tHead = $(elem).find('.g-thead');
-                    var th = tHead.find('.g-cell');
-                    var tr = $(elem).find('.g-row');
-                    var thSliders = th.find('.resize-slider');
-                    var td;
+                    tHead = $(elem).find('.g-thead');
+                    th = tHead.find('.g-cell');
+                    tr = $(elem).find('.g-row');
+                    thSliders = th.find('.resize-slider');
 
-                    var setThMinWidths = function () {
-                        var i, a;
-                        // var lastColumn = th.length - 1;
-                        // console.log('min width seted ', th.length, 'resizer columns ', [scope.columns]);
-                        for (i = 0; i < th.length; i = i + 1) {
-                            if (!$(th[i]).attr('min-width')) {
-                                $(th[i]).attr('min-width', '20');
-                            }
-                        }
-                    };
-                    setThMinWidths();
+                    setThMinWidths(th);
 
                     $(thSliders).bind('mousedown', function (e) {
                         e.preventDefault();
@@ -182,26 +206,9 @@
                         });
                     });
 
-                    function resizeCells() {
-                        var tHead = $(elem).find('.g-thead');
-                        var th = tHead.find('.g-cell');
-                        var tr = $(elem).find('.g-row');
-
-                        var i, x;
-                        for (i = 0; i < tr.length; i = i + 1) {
-                            td = $(tr[i]).find('.g-cell-wrap');
-                            for (x = 0; x < th.length; x = x + 1) {
-                                (function (x) {
-                                    $(td[x]).css({width: $(th[x]).width() + 'px'});
-                                    //console.log('cell widths is ', $(td[x]).width(), $(th[x]).width());
-                                }(x))
-                            }
-                        }
-                    }
-
-                    setTimeout(function () {
-                        resizeCells();
-                    }, 100);
+                    //setTimeout(function () {
+                    resizeCells();
+                    //}, 100);
 
                     //console.log('th', th);
                 }
@@ -210,7 +217,7 @@
 
                 scope.$watch('options.lastUpdate', function () {
 
-                    //console.log('OPTIONS LAST UPDATE', scope.options.lastUpdate);
+                    console.log('OPTIONS LAST UPDATE', scope.options.lastUpdate);
 
                     resizeScrollableArea();
 
@@ -219,7 +226,21 @@
                     setColumnsWidthAndNameTooltip();
                 });
 
-                resize();
+                //console.log('renderEventService', renderEventService);
+                //console.log('renderEventService scope.options.entityType', scope.options.entityType);
+
+                renderEventService.on(scope.options.entityType + ':ng-repeat:finished', resize);
+
+
+                $(window).on('resize', function () {
+                    resizeWorkarea();
+                });
+
+                scope.$on('$destroy', function(){
+                    //console.log('destroy resize scope');
+                    renderEventService.destroy(scope.options.entityType + ':ng-repeat:finished');
+
+                })
 
 
             }

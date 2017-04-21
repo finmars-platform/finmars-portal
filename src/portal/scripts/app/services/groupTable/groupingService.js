@@ -178,6 +178,10 @@
                         value_type: 10
                     };
 
+                    if (group.hasOwnProperty('report_settings')) {
+                        resGroupItem.report_settings = group.report_settings;
+                    }
+
                     groupsForResult.push(resGroupItem);
 
                 } else {
@@ -360,7 +364,7 @@
                     //console.log('items[i]', items[i]);
 
                     group = groups[c];
-                    console.log('group[c]', group);
+                    //console.log('group[c]', group);
                     if (group.hasOwnProperty('key')) {
 
                         findGroupsForResult(group, item, null, groupsForResult, keywords);

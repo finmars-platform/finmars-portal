@@ -822,6 +822,9 @@
 
                 scope.bindCell = function (groupedItem, column, options) {
 
+
+                    //console.log(groupedItem, column, options);
+
                     if (column.hasOwnProperty('r_entityType')) {
 
                         return groupedItem[column.r_entityType + '_attribute_' + column.source_name];
@@ -897,9 +900,30 @@
 
                             if (scope.columns[c].key == column.key) {
 
-                                if(column.value_type == 'float' || column.value_type == 20 ) {
+                                if (column.value_type == 'float' || column.value_type == 20) {
+
                                     if (groupedItem.hasOwnProperty(column.key)) {
-                                        return parseFloat(groupedItem[column.key]).toFixed(2) + '';
+
+                                        if (options && options.hasOwnProperty('reportItem')) {
+                                            if (options.reportItem.isFirstOfFolded && options.reportItem.isFirstOfFolded == true) {
+                                                //console.log(options);
+                                                return parseFloat(options.reportItem.subTotal[column.key]).toFixed(2) + '';
+                                            } else {
+                                                return parseFloat(groupedItem[column.key]).toFixed(2) + '';
+                                            }
+                                        } else {
+
+                                            return parseFloat(groupedItem[column.key]).toFixed(2) + '';
+                                        }
+                                    }
+                                }
+
+                                if (groupedItem.hasOwnProperty(column.key)) {
+
+                                    if (options && options.hasOwnProperty('reportItem')) {
+                                        if (options.reportItem.isFirstOfFolded && options.reportItem.isFirstOfFolded == true) {
+                                            return '';
+                                        }
                                     }
                                 }
 

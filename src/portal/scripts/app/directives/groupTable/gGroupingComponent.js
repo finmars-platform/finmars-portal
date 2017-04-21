@@ -38,16 +38,25 @@
                         scope.grouping[i].options.sort = null;
                     }
                     group.options.sort = sort;
-                    if (group.hasOwnProperty('id')) {
-                        scope.sorting.group = {};
-                        scope.sorting.group.id = group.id;
-                        scope.sorting.group.key = null;
-                        scope.sorting.group.sort = sort;
-                    } else {
+
+                    if (group.hasOwnProperty('columnType') && group.columnType == 'custom-field') {
                         scope.sorting.group = {};
                         scope.sorting.group.id = null;
-                        scope.sorting.group.key = group.key;
+                        scope.sorting.group.key = group.name;
                         scope.sorting.group.sort = sort;
+                    } else {
+
+                        if (group.hasOwnProperty('id')) {
+                            scope.sorting.group = {};
+                            scope.sorting.group.id = group.id;
+                            scope.sorting.group.key = null;
+                            scope.sorting.group.sort = sort;
+                        } else {
+                            scope.sorting.group = {};
+                            scope.sorting.group.id = null;
+                            scope.sorting.group.key = group.key;
+                            scope.sorting.group.sort = sort;
+                        }
                     }
                     scope.externalCallback({silent: true, options: {grouping: scope.grouping}});
                 };

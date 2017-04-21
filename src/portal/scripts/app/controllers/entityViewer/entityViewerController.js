@@ -652,11 +652,11 @@
                             //console.log("EXTERNAL CALLBACK ", vm.folding);
                             vm.groupTableService.folding.setFolds(vm.folding);
                             //console.log('UPDATE TABLE scope.sorting.group', vm.sorting.group);
-                            vm.sorting.group = vm.findFullAttributeForItem(vm.sorting.group, vm.attrs);
+                            //vm.sorting.group = vm.findFullAttributeForItem(vm.sorting.group, vm.attrs);
                             //vm.sorting.column = vm.findFullAttributeForItem(vm.sorting.column, vm.attrs);
                             vm.groupTableService.sorting.group.sort(vm.sorting.group);
 
-                            vm.groupTableService.sorting.column.sort(vm.sorting.column);
+                            //vm.groupTableService.sorting.column.sort(vm.sorting.column);
 
                             console.log('report projection', vm.groupTableService.projection());
 
