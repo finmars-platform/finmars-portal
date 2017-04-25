@@ -125,7 +125,6 @@
             case 'transaction-type-group':
                 return transactionTypeGroupService.getList(options);
                 break;
-
             case 'balance-report':
                 return reportService.getBalanceReport(options);
                 break;
