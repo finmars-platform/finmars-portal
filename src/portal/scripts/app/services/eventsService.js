@@ -18,11 +18,16 @@
         return eventsRepository.ignoreEventAction(id);
     };
 
+    var generateEvents = function () {
+        return eventsRepository.generateEvents();
+    };
+
     module.exports = {
         getList: getList,
         getEventAction: getEventAction,
         putEventAction: putEventAction,
-        ignoreEventAction: ignoreEventAction
+        ignoreEventAction: ignoreEventAction,
+        generateEvents: generateEvents
     }
 
 

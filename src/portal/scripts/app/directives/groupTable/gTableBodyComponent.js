@@ -1233,6 +1233,9 @@
                 };
 
                 scope.changePage = function (page) {
+
+                    console.log('page----------------', page);
+
                     scope.externalCallback({options: {paginationPageCurrent: page}});
                 };
 

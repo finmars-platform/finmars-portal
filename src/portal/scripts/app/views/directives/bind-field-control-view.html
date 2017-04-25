@@ -101,6 +101,18 @@
                     T + 1
                 </md-button>
             </div>
+
+            <div data-ng-if="item.buttons.length">
+                <md-button data-ng-repeat="button in item.buttons"
+                           class="{{button.classes}} {{button.icon && button.caption == '' ? 'md-icon-button' : ''}}"
+                           data-ng-click="button.action(item)">
+                    {{button.caption}}
+                    <ng-md-icon data-ng-if="button.icon" icon="{{button.icon}}"></ng-md-icon>
+                    <md-tooltip data-ng-if="button.tooltip" class="tooltip_1" md-direction="bottom">{{button.tooltip}}
+                    </md-tooltip>
+                </md-button>
+            </div>
+
         </md-input-container>
     </div>
     <div data-ng-if="fieldType['display_name'] === 'Boolean'">

@@ -81,10 +81,26 @@
 
     };
 
+    var generateEvents = function () {
+        return window.fetch(baseUrl + 'instruments/instrument/generate-events/',
+            {
+                method: 'POST',
+                credentials: 'include',
+                headers: {
+                    'X-CSRFToken': cookieService.getCookie('csrftoken'),
+                    Accept: 'application/json',
+                    'Content-type': 'application/json'
+                }
+            }).then(function (data) {
+            return data.json();
+        });
+    };
+
     module.exports = {
         getList: getList,
         getEventAction: getEventAction,
         putEventAction: putEventAction,
-        ignoreEventAction: ignoreEventAction
+        ignoreEventAction: ignoreEventAction,
+        generateEvents: generateEvents
     }
 }());

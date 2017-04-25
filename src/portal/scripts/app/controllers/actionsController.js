@@ -135,6 +135,24 @@
             });
         };
 
+        vm.generateEvents = function ($event) {
+            eventsService.generateEvents();
+            $mdDialog.show({
+                controller: 'InfoDialogController as vm',
+                templateUrl: 'views/info-dialog-view.html',
+                targetEvent: $event,
+                locals: {
+                    info: {
+                        title: "Generating events",
+                        description: "Your request is processing"
+                    }
+                },
+                preserveScope: true,
+                autoWrap: true,
+                skipHid: true
+            })
+        };
+
         vm.openEventWindow = function ($event, eventId, eventActions) {
             $mdDialog.show({
                 controller: 'EventDialogController as vm',

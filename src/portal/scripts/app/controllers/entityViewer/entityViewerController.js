@@ -234,7 +234,9 @@
 
             vm.getView = function () {
 
-                var handler = function (res) {
+                var layoutsIsNotExist = false;
+
+                var handler = function (res, isFromList) {
 
                     if (res.results.length) {
                         vm.listView = res.results[0];
@@ -276,31 +278,36 @@
                         //vm.additionsStatus[res.results[0].data.tableAdditions.additionsType] = true;
                     } else {
 
-                        var defaultList = uiService.getDefaultListLayout();
+                        if (!isFromList) {
+                            uiService.getListLayout(vm.entityType).then(handler, true);
+                        } else {
 
-                        vm.listView = defaultList[0];
+                            var defaultList = uiService.getDefaultListLayout();
 
-                        vm.table = defaultList[0].data.table;
-                        vm.columns = defaultList[0].data.table.columns;
-                        vm.columnsWidth = defaultList[0].data.table.columnsWidth;
-                        vm.grouping = defaultList[0].data.table.grouping;
-                        vm.folding = defaultList[0].data.table.folding;
-                        vm.filters = defaultList[0].data.table.filters;
-                        vm.sorting = defaultList[0].data.table.sorting;
+                            vm.listView = defaultList[0];
 
-                        logService.collection(res.results.length + 'GET VIEW (alternative) vm.columns', vm.columns);
+                            vm.table = defaultList[0].data.table;
+                            vm.columns = defaultList[0].data.table.columns;
+                            vm.columnsWidth = defaultList[0].data.table.columnsWidth;
+                            vm.grouping = defaultList[0].data.table.grouping;
+                            vm.folding = defaultList[0].data.table.folding;
+                            vm.filters = defaultList[0].data.table.filters;
+                            vm.sorting = defaultList[0].data.table.sorting;
 
-                        vm.additionsType = defaultList[0].data.tableAdditions.additionsType;
+                            logService.collection(res.results.length + 'GET VIEW (alternative) vm.columns', vm.columns);
 
-                        vm.additionsEntityType = defaultList[0].data.tableAdditions.entityType;
+                            vm.additionsType = defaultList[0].data.tableAdditions.additionsType;
 
-                        vm.tableAdditions = defaultList[0].data.tableAdditions;
-                        vm.entityAdditionsColumns = defaultList[0].data.tableAdditions.table.columns;
-                        vm.entityAdditionsFilters = defaultList[0].data.tableAdditions.table.filters;
-                        vm.entityAdditionsSorting = defaultList[0].data.tableAdditions.table.sorting;
+                            vm.additionsEntityType = defaultList[0].data.tableAdditions.entityType;
 
-                        vm.updateConfig();
+                            vm.tableAdditions = defaultList[0].data.tableAdditions;
+                            vm.entityAdditionsColumns = defaultList[0].data.tableAdditions.table.columns;
+                            vm.entityAdditionsFilters = defaultList[0].data.tableAdditions.table.filters;
+                            vm.entityAdditionsSorting = defaultList[0].data.tableAdditions.table.sorting;
 
+                            vm.updateConfig();
+
+                        }
                         //vm.additionsStatus[defaultList[0].data.tableAdditions.additionsType] = true;
                     }
 
@@ -465,208 +472,223 @@
 
                     console.log('reportHandler data', data);
 
-                    if (data.task_status !== 'SUCCESS') {
+                    if (!data.hasOwnProperty('non_field_errors')) {
 
-                        vm.reportProcessing = true;
-                        vm.updateConfig();
+                        if (data.task_status !== 'SUCCESS') {
 
-                        $scope.$apply();
-
-                        setTimeout(function () {
-                            vm.updateTable();
-                        }, 1000)
-
-                    } else {
-
-                        vm.originalData = JSON.parse(JSON.stringify(data)); // store server response data untouched
-
-                        vm.reportOptions.task_id = null;
-
-
-                        entityViewerHelperService.transformItems(data.items, vm.attrs).then(function (transformedData) {
-
-                            var entity = transformedData;
-
-                            console.log('transformedData', transformedData);
-
-                            vm.reportIsReady = true;
-
-                            if (vm.entityType == 'balance-report') {
-                                entity = reportSubtotalService.groupByAndCalc(entity, vm.reportOptions);
-                            }
-
-
-                            var filteredData = entity;
-
-                            //if (vm.entityType == 'transaction-report' || vm.entityType == 'cash-flow-projection-report') {
-                            filteredData = transactionReportHelper.injectIntoItems(filteredData, data);
-                            //}
-
-                            if (filteredData.length) {
-                                filteredData = reportHelper.releaseEntityObjects(filteredData);
-                            }
-                            //console.log('filteredData', filteredData);
-
-                            filteredData = vm.groupTableService.extractDynamicAttributes(filteredData);
-
-                            var isFiltersExist = false;
-                            var isFiltersEnabled = false;
-
-                            if (vm.filters.length > 0) {
-                                isFiltersExist = true;
-
-                                vm.filters.forEach(function (item) {
-                                    if (item.options !== undefined && item.options.enabled == true) {
-
-                                        if (item.value_type == 'field' && item.options.query !== undefined && item.options.query.length > 0) {
-                                            isFiltersEnabled = true;
-                                        }
-                                        if (item.value_type == 'float' && item.options.query !== undefined && (item.options.query + '').length > 0) {
-                                            isFiltersEnabled = true;
-                                        }
-
-                                        if (item.hasOwnProperty('columnType') || item.value_type == 10 && item.options.query !== undefined && (item.options.query + '').length > 0) {
-                                            isFiltersEnabled = true;
-                                        }
-                                    }
-                                });
-                            }
-
-                            //console.log('filteredData123', filteredData);
-
-                            if (isFiltersExist == true && isFiltersEnabled == true) {
-
-                                var itemsRepository = JSON.parse(JSON.stringify(filteredData));
-
-                                vm.filters.forEach(function (filterItem) {
-
-                                    if (filterItem.hasOwnProperty('columnType')) {
-                                        filterItem.value_type = 10
-                                    }
-
-                                    //console.log('filterItem', filterItem);
-
-                                    var localFilteredData = [];
-
-                                    if (filterItem.options !== undefined && filterItem.options.enabled == true) {
-
-                                        itemsRepository.forEach(function (item) {
-
-                                            if (vm.itemFilterHasOwnProperty(item, filterItem)) {
-
-                                                if (filterItem.value_type == 'field') {
-
-                                                    if (filterItem.options.query !== undefined && filterItem.options.query.length) {
-                                                        var matched = false;
-
-                                                        filterItem.options.query.forEach(function (queryItem) {
-                                                            if (item[filterItem.key] == queryItem) {
-                                                                matched = true;
-                                                            }
-                                                        });
-
-                                                        if (matched) {
-                                                            localFilteredData.push(item);
-                                                        }
-                                                    } else {
-                                                        localFilteredData.push(item);
-                                                    }
-
-                                                }
-
-                                                if (filterItem.value_type == 'float') {
-                                                    if (filterItem.options.query !== undefined) {
-                                                        if (item[filterItem.key] == parseFloat(filterItem.options.query)) {
-                                                            localFilteredData.push(item);
-                                                        }
-                                                    } else {
-                                                        localFilteredData.push(item);
-                                                    }
-                                                }
-
-
-                                                if (filterItem.value_type == 10) {
-
-                                                    var _name;
-
-                                                    if (filterItem.hasOwnProperty('r_entityType')) {
-                                                        _name = filterItem.r_entityType + '_attribute_' + filterItem.source_name;
-                                                    } else {
-                                                        if (filterItem.hasOwnProperty('columnType')) {
-                                                            _name = filterItem.name;
-                                                        } else {
-                                                            _name = filterItem.key;
-                                                            //_name = filterItem.attribute_entity + '_attribute_' + filterItem.source_name;
-                                                        }
-                                                    }
-
-
-                                                    if (filterItem.options.query !== undefined) {
-
-                                                        var strName = item[_name] + '';
-                                                        var strQuery = filterItem.options.query + '';
-
-                                                        if (strName.toLocaleLowerCase().indexOf(strQuery.toLocaleLowerCase()) !== -1) {
-
-
-                                                            localFilteredData.push(item);
-                                                        }
-                                                    } else {
-                                                        localFilteredData.push(item);
-                                                    }
-                                                }
-
-                                                //if(item[filterItem.key] == filterItem.otions.query[0])
-                                            }
-
-                                        });
-
-                                        //console.log('localFilteredData', localFilteredData);
-                                        //console.log('itemsRepository', itemsRepository);
-
-                                        itemsRepository = localFilteredData;
-                                    }
-                                });
-
-                                filteredData = itemsRepository;
-                            }
-
-                            //console.log('filteredData1234', filteredData);
-
-
-                            var entitiesList = [vm.entityType, 'instrument', 'account',
-                                'portfolio', 'instrument-type', 'account-type',
-                                'strategy-1', 'strategy-1-subgroup', 'strategy-1-subgroup',
-                                'strategy-2', 'strategy-2-subgroup', 'strategy-2-subgroup',
-                                'strategy-3', 'strategy-3-subgroup', 'strategy-3-subgroup'];
-
-                            if (vm.entityType == 'cash-flow-projection-report') {
-                                entitiesList.push('transaction-report');
-                            }
-
-                            vm.groupTableService.setItems(filteredData);
-
-                            vm.groupTableService.columns.setColumns(vm.columns);
-                            //vm.groupTableService.filtering.setFilters(vm.filters);
-                            vm.groupTableService.grouping.setGroupsWithColumns(vm.grouping, vm.columns, entitiesList);
-                            //console.log("EXTERNAL CALLBACK ", vm.folding);
-                            vm.groupTableService.folding.setFolds(vm.folding);
-                            //console.log('UPDATE TABLE scope.sorting.group', vm.sorting.group);
-                            //vm.sorting.group = vm.findFullAttributeForItem(vm.sorting.group, vm.attrs);
-                            //vm.sorting.column = vm.findFullAttributeForItem(vm.sorting.column, vm.attrs);
-                            vm.groupTableService.sorting.group.sort(vm.sorting.group);
-
-                            //vm.groupTableService.sorting.column.sort(vm.sorting.column);
-
-                            console.log('report projection', vm.groupTableService.projection());
-
-                            vm.tableIsReady = true;
-                            vm.reportProcessing = false;
-
+                            vm.reportProcessing = true;
                             vm.updateConfig();
 
                             $scope.$apply();
-                        });
+
+                            setTimeout(function () {
+                                vm.updateTable();
+                            }, 1000)
+
+                        } else {
+
+                            vm.originalData = JSON.parse(JSON.stringify(data)); // store server response data untouched
+
+                            vm.reportOptions.task_id = null;
+
+
+                            entityViewerHelperService.transformItems(data.items, vm.attrs).then(function (transformedData) {
+
+                                var entity = transformedData;
+
+                                console.log('transformedData', transformedData);
+
+                                vm.reportIsReady = true;
+
+                                if (vm.entityType == 'balance-report') {
+                                    entity = reportSubtotalService.groupByAndCalc(entity, vm.reportOptions);
+                                }
+
+
+                                var filteredData = entity;
+
+                                //if (vm.entityType == 'transaction-report' || vm.entityType == 'cash-flow-projection-report') {
+                                filteredData = transactionReportHelper.injectIntoItems(filteredData, data);
+                                //}
+
+                                if (filteredData.length) {
+                                    filteredData = reportHelper.releaseEntityObjects(filteredData);
+                                }
+                                //console.log('filteredData', filteredData);
+
+                                filteredData = vm.groupTableService.extractDynamicAttributes(filteredData);
+
+                                var isFiltersExist = false;
+                                var isFiltersEnabled = false;
+
+                                if (vm.filters.length > 0) {
+                                    isFiltersExist = true;
+
+                                    vm.filters.forEach(function (item) {
+                                        if (item.options !== undefined && item.options.enabled == true) {
+
+                                            if (item.value_type == 'field' && item.options.query !== undefined && item.options.query.length > 0) {
+                                                isFiltersEnabled = true;
+                                            }
+                                            if (item.value_type == 'float' && item.options.query !== undefined && (item.options.query + '').length > 0) {
+                                                isFiltersEnabled = true;
+                                            }
+
+                                            if (item.hasOwnProperty('columnType') || item.value_type == 10 && item.options.query !== undefined && (item.options.query + '').length > 0) {
+                                                isFiltersEnabled = true;
+                                            }
+                                        }
+                                    });
+                                }
+
+                                //console.log('filteredData123', filteredData);
+
+                                if (isFiltersExist == true && isFiltersEnabled == true) {
+
+                                    var itemsRepository = JSON.parse(JSON.stringify(filteredData));
+
+                                    vm.filters.forEach(function (filterItem) {
+
+                                        if (filterItem.hasOwnProperty('columnType')) {
+                                            filterItem.value_type = 10
+                                        }
+
+                                        //console.log('filterItem', filterItem);
+
+                                        var localFilteredData = [];
+
+                                        if (filterItem.options !== undefined && filterItem.options.enabled == true) {
+
+                                            itemsRepository.forEach(function (item) {
+
+                                                if (vm.itemFilterHasOwnProperty(item, filterItem)) {
+
+                                                    if (filterItem.value_type == 'field') {
+
+                                                        if (filterItem.options.query !== undefined && filterItem.options.query.length) {
+                                                            var matched = false;
+
+                                                            filterItem.options.query.forEach(function (queryItem) {
+                                                                if (item[filterItem.key] == queryItem) {
+                                                                    matched = true;
+                                                                }
+                                                            });
+
+                                                            if (matched) {
+                                                                localFilteredData.push(item);
+                                                            }
+                                                        } else {
+                                                            localFilteredData.push(item);
+                                                        }
+
+                                                    }
+
+                                                    if (filterItem.value_type == 'float') {
+                                                        if (filterItem.options.query !== undefined) {
+                                                            if (item[filterItem.key] == parseFloat(filterItem.options.query)) {
+                                                                localFilteredData.push(item);
+                                                            }
+                                                        } else {
+                                                            localFilteredData.push(item);
+                                                        }
+                                                    }
+
+
+                                                    if (filterItem.value_type == 10) {
+
+                                                        var _name;
+
+                                                        if (filterItem.hasOwnProperty('r_entityType')) {
+                                                            _name = filterItem.r_entityType + '_attribute_' + filterItem.source_name;
+                                                        } else {
+                                                            if (filterItem.hasOwnProperty('columnType')) {
+                                                                _name = filterItem.name;
+                                                            } else {
+                                                                _name = filterItem.key;
+                                                                //_name = filterItem.attribute_entity + '_attribute_' + filterItem.source_name;
+                                                            }
+                                                        }
+
+
+                                                        if (filterItem.options.query !== undefined) {
+
+                                                            var strName = item[_name] + '';
+                                                            var strQuery = filterItem.options.query + '';
+
+                                                            if (strName.toLocaleLowerCase().indexOf(strQuery.toLocaleLowerCase()) !== -1) {
+
+
+                                                                localFilteredData.push(item);
+                                                            }
+                                                        } else {
+                                                            localFilteredData.push(item);
+                                                        }
+                                                    }
+
+                                                    //if(item[filterItem.key] == filterItem.otions.query[0])
+                                                }
+
+                                            });
+
+                                            //console.log('localFilteredData', localFilteredData);
+                                            //console.log('itemsRepository', itemsRepository);
+
+                                            itemsRepository = localFilteredData;
+                                        }
+                                    });
+
+                                    filteredData = itemsRepository;
+                                }
+
+                                //console.log('filteredData1234', filteredData);
+
+
+                                var entitiesList = [vm.entityType, 'instrument', 'account',
+                                    'portfolio', 'instrument-type', 'account-type',
+                                    'strategy-1', 'strategy-1-subgroup', 'strategy-1-subgroup',
+                                    'strategy-2', 'strategy-2-subgroup', 'strategy-2-subgroup',
+                                    'strategy-3', 'strategy-3-subgroup', 'strategy-3-subgroup'];
+
+                                if (vm.entityType == 'cash-flow-projection-report') {
+                                    entitiesList.push('transaction-report');
+                                }
+
+                                vm.groupTableService.setItems(filteredData);
+
+                                vm.groupTableService.columns.setColumns(vm.columns);
+                                //vm.groupTableService.filtering.setFilters(vm.filters);
+                                vm.groupTableService.grouping.setGroupsWithColumns(vm.grouping, vm.columns, entitiesList);
+                                //console.log("EXTERNAL CALLBACK ", vm.folding);
+                                vm.groupTableService.folding.setFolds(vm.folding);
+                                //console.log('UPDATE TABLE scope.sorting.group', vm.sorting.group);
+                                //vm.sorting.group = vm.findFullAttributeForItem(vm.sorting.group, vm.attrs);
+                                //vm.sorting.column = vm.findFullAttributeForItem(vm.sorting.column, vm.attrs);
+                                vm.groupTableService.sorting.group.sort(vm.sorting.group);
+
+                                //vm.groupTableService.sorting.column.sort(vm.sorting.column);
+
+                                console.log('report projection', vm.groupTableService.projection());
+
+                                vm.tableIsReady = true;
+                                vm.reportProcessing = false;
+
+                                vm.updateConfig();
+
+                                $scope.$apply();
+                            });
+                        }
+                    } else {
+                        $mdDialog.show({
+                            controller: 'ValidationDialogController as vm',
+                            templateUrl: 'views/dialogs/validation-dialog-view.html',
+                            //targetEvent: $event,
+                            locals: {
+                                validationData: data
+                            },
+                            preserveScope: true,
+                            autoWrap: true,
+                            skipHide: true
+                        })
                     }
                 };
 
@@ -781,6 +803,14 @@
                             }
                         });
 
+                        if (vm.columns.length == 0) {
+
+                            var attrs = metaService.getEntityAttrs('audit-transaction');
+
+                            vm.columns = vm.columns.concat(attrs);
+
+                        }
+
                         return options
                     }
 
@@ -806,6 +836,14 @@
                             }
                         });
 
+                        if (vm.columns.length == 0) {
+
+                            var attrs = metaService.getEntityAttrs('audit-instrument');
+
+                            vm.columns = vm.columns.concat(attrs);
+
+                        }
+
                         return options;
 
                     }
@@ -830,11 +868,11 @@
 
                     //console.log('here', options);
 
+
                     return options;
 
                 };
 
-                var options = optionsHandler(vm.entityType, vm.isReport);
 
                 console.log('params', params);
                 var defaultParams = {
@@ -845,10 +883,15 @@
 
                 var _params = Object.assign(defaultParams, params);
 
+                vm.updateVm(_params.options);
+
+
+                var options = optionsHandler(vm.entityType, vm.isReport);
+
+
                 //console.log('_params', _params);
                 //console.log('vm.originalData', vm.originalData);
 
-                vm.updateVm(_params.options);
 
                 console.log('vm', vm);
 

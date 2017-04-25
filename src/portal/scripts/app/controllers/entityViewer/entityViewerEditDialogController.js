@@ -134,9 +134,6 @@
 
                                 $mdDialog.hide({res: 'agree'});
                             }
-                        } else {
-
-                            $mdDialog.hide({res: 'agree'});
                         }
                         if (data.status == 400) {
                             $mdDialog.show({
@@ -150,6 +147,8 @@
                                 autoWrap: true,
                                 skipHide: true
                             })
+                        } else {
+                            $mdDialog.hide({res: 'agree'});
                         }
                     });
                 })
