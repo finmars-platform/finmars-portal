@@ -52,6 +52,16 @@
                 "key": "tags",
                 "name": "Tags",
                 "value_type": "mc_field"
+            },
+            {
+                "key": "object_permissions_user",
+                "name": "Users permissions",
+                "value_type": "mc_field"
+            },
+            {
+                "key": "object_permissions_group",
+                "name": "Groups permissions",
+                "value_type": "mc_field"
             }
         ]
     };

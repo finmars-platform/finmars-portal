@@ -236,7 +236,11 @@
 
                 var layoutsIsNotExist = false;
 
-                var handler = function (res, isFromList) {
+                var handler = function (res, isDefaultFallback) {
+
+
+                    console.log('isDefaultFallback', isDefaultFallback);
+
 
                     if (res.results.length) {
                         vm.listView = res.results[0];
@@ -278,9 +282,13 @@
                         //vm.additionsStatus[res.results[0].data.tableAdditions.additionsType] = true;
                     } else {
 
-                        if (!isFromList) {
-                            uiService.getListLayout(vm.entityType).then(handler, true);
+                        if (!isDefaultFallback) {
+                            uiService.getListLayout(vm.entityType).then(function (data) {
+                                handler(data, true);
+                            });
                         } else {
+
+                            console.log('default triggered');
 
                             var defaultList = uiService.getDefaultListLayout();
 
@@ -304,6 +312,15 @@
                             vm.entityAdditionsColumns = defaultList[0].data.tableAdditions.table.columns;
                             vm.entityAdditionsFilters = defaultList[0].data.tableAdditions.table.filters;
                             vm.entityAdditionsSorting = defaultList[0].data.tableAdditions.table.sorting;
+
+                            if (vm.entityType == 'audit-transaction' || vm.entityType == 'audit-instrument') {
+                                vm.columns = [];
+
+                                var attrs = metaService.getEntityAttrs('audit-transaction');
+
+                                vm.columns = vm.columns.concat(attrs);
+
+                            }
 
                             vm.updateConfig();
 
@@ -340,8 +357,14 @@
                 vm.columns = vm.returnFullAttributes(vm.columns, vm.attrs, vm.baseAttrs, vm.entityAttrs);
                 vm.grouping = vm.returnFullAttributes(vm.grouping, vm.attrs, vm.baseAttrs, vm.entityAttrs);
                 vm.filters = vm.returnFullAttributes(vm.filters, vm.attrs, vm.baseAttrs, vm.entityAttrs);
-                vm.sorting.group = vm.findFullAttributeForItem(vm.sorting.group, vm.attrs);
-                vm.sorting.column = vm.findFullAttributeForItem(vm.sorting.column, vm.attrs);
+                if (vm.sorting) {
+                    if (vm.sorting.group) {
+                        vm.sorting.group = vm.findFullAttributeForItem(vm.sorting.group, vm.attrs);
+                    }
+                    if (vm.sorting.column) {
+                        vm.sorting.column = vm.findFullAttributeForItem(vm.sorting.column, vm.attrs);
+                    }
+                }
 
                 logService.collection('vm.grouping', vm.grouping);
                 logService.collection('vm.columns', vm.columns);
@@ -742,8 +765,8 @@
                         //console.log("EXTERNAL CALLBACK ", vm.folding);
                         vm.groupTableService.folding.setFolds(vm.folding);
                         //console.log('UPDATE TABLE scope.sorting.group', vm.sorting.group);
-                        vm.sorting.group = vm.findFullAttributeForItem(vm.sorting.group, vm.attrs);
-                        vm.sorting.column = vm.findFullAttributeForItem(vm.sorting.column, vm.attrs);
+                        //vm.sorting.group = vm.findFullAttributeForItem(vm.sorting.group, vm.attrs);
+                        //vm.sorting.column = vm.findFullAttributeForItem(vm.sorting.column, vm.attrs);
 
                         //console.log('vm.sorting.column', vm.sorting.column);
 
@@ -785,11 +808,17 @@
 
                     if (vm.entityType === 'audit-transaction') {
 
-                        options = {
-                            sort: {
+                        var sort = {};
+
+                        if (vm.sorting && vm.sorting.column) {
+                            sort = {
                                 key: vm.sorting.column.key,
                                 direction: vm.sorting.column.sort
-                            },
+                            }
+                        }
+
+                        options = {
+                            sort: sort,
                             filters: {'content_type': 'transactions.transaction'},
                             page: vm.paginationPageCurrent,
                             pageSize: vm.paginationItemPerPage
@@ -803,24 +832,22 @@
                             }
                         });
 
-                        if (vm.columns.length == 0) {
-
-                            var attrs = metaService.getEntityAttrs('audit-transaction');
-
-                            vm.columns = vm.columns.concat(attrs);
-
-                        }
-
                         return options
                     }
 
                     if (vm.entityType === 'audit-instrument') {
 
-                        options = {
-                            sort: {
+                        var sort = {};
+
+                        if (vm.sorting && vm.sorting.column) {
+                            sort = {
                                 key: vm.sorting.column.key,
                                 direction: vm.sorting.column.sort
-                            },
+                            }
+                        }
+
+                        options = {
+                            sort: sort,
                             filters: {'content_type': 'instruments.instrument'},
                             page: vm.paginationPageCurrent,
                             pageSize: vm.paginationItemPerPage
@@ -835,14 +862,6 @@
                                 options.filters[item.key] = item.options.query;
                             }
                         });
-
-                        if (vm.columns.length == 0) {
-
-                            var attrs = metaService.getEntityAttrs('audit-instrument');
-
-                            vm.columns = vm.columns.concat(attrs);
-
-                        }
 
                         return options;
 

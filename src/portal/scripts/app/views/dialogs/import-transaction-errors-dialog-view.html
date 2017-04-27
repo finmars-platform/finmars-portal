@@ -14,6 +14,34 @@
 
                     <div data-ng-if="vm.data.error_handling == 'break'">
                         Error occurred on <span data-ng-bind="vm.data.error_row_index"></span> row.
+
+                        <div data-ng-show="vm.data.error_rows.length" style="margin-top: 24px">
+                            <table>
+                                <thead>
+                                <tr>
+                                    <th>Message</th>
+                                    <th>Inputs</th>
+                                    <th>Row content</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr data-ng-repeat="item in vm.data.error_rows">
+                                    <td data-ng-bind="item.error_message"></td>
+                                    <td>
+                                        <div data-ng-repeat="(key, val) in item.inputs">
+                                            <b data-ng-bind="key"></b>: {{val}}
+                                        </div>
+                                    </td>
+                                    <td data-ng-bind="item.original_row"></td>
+                                </tr>
+                                </tbody>
+
+                            </table>
+
+                            <span data-ng-bind="item.error_message"></span>
+
+                        </div>
+
                     </div>
                     <div data-ng-if="vm.data.error_handling == 'continue'">
                         <table>

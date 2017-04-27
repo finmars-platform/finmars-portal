@@ -53,10 +53,15 @@
                 "value_type": "mc_field"
             },
             {
-                "key": "tags",
-                "name": "Tags",
+                "key": "object_permissions_user",
+                "name": "Users permissions",
                 "value_type": "mc_field"
             },
+            {
+                "key": "object_permissions_group",
+                "name": "Groups permissions",
+                "value_type": "mc_field"
+            }
             //{
             //    "key": "book_transaction_layout",
             //    "name": "Book transaction Layout",

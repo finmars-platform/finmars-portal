@@ -229,6 +229,13 @@
                     $mdOpenMenu(ev);
                 };
 
+                scope.rightClickStatus = function () {
+                    if (scope.entityType !== 'audit-transaction' && scope.entityType !== 'audit-instrument') {
+                        return true
+                    }
+                    return false;
+                };
+
                 scope.checkReportColumnCaption = function (cellsCaptions, column, $columnIndex) {
 
                     if ($columnIndex > cellsCaptions.length - 1) { // 1 - index
@@ -779,7 +786,7 @@
 
                         result = '';
                         if (group.value) {
-                            result = parseFloat(group.value).toFixed(2);
+                            result = numberWithCommas(parseFloat(group.value).toFixed(2) + '');
                         }
                     }
 
@@ -819,6 +826,32 @@
                     }
 
                 };
+
+                function numberWithCommas(number) {
+
+                    //console.log('numberWithCommas number', number);
+
+                    //return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, "'");
+                    return number.toString().replace(/\B(?=(\d{3})+(?=\.))/g, "'");
+                }
+
+                function numberWithRoundFormat(number, formatId) {
+
+                    //console.log('numberWithRoundFormat', formatId);
+
+                    if (formatId == 0) {
+                        return number;
+                    }
+
+                    if (formatId == 1) {
+                        return parseFloat(number).toFixed(0) + '';
+                    }
+
+                    if (formatId == 2) {
+                        return parseFloat(number).toFixed(2) + '';
+                    }
+
+                }
 
                 scope.bindCell = function (groupedItem, column, options) {
 
@@ -862,7 +895,7 @@
 
                             if (column.hasOwnProperty('columnType') && column.columnType == 'custom-field') {
 
-                                result = '';
+                                var result = '';
 
                                 //console.log('groupedItem', groupedItem);
 
@@ -887,14 +920,18 @@
                         }
                     } else {
 
-                        var i, e, c;
-                        for (i = 0; i < baseAttrs.length; i = i + 1) {
-                            if (baseAttrs[i].key === column.key) {
-                                return groupedItem[baseAttrs[i].key];
-                            }
-                        }
+                        var c;
+
+                        //var i, e, c;
+                        //for (i = 0; i < baseAttrs.length; i = i + 1) {
+                        //    if (baseAttrs[i].key === column.key) {
+                        //        return groupedItem[baseAttrs[i].key];
+                        //    }
+                        //}
 
                         //console.log('column.key', column.key);
+
+                        var format = 0;
 
                         for (c = 0; c < scope.columns.length; c = c + 1) {
 
@@ -902,18 +939,30 @@
 
                                 if (column.value_type == 'float' || column.value_type == 20) {
 
+                                    if (column.hasOwnProperty('report_settings')) {
+                                        if (column.report_settings.hasOwnProperty('round_format_id')) {
+                                            format = column.report_settings.round_format_id;
+
+                                            //console.log('column.report_settings.round_format_id', column.report_settings.round_format_id);
+                                        }
+                                    }
+
+                                    //console.log('column', column);
+                                    //console.log('format', format);
+
                                     if (groupedItem.hasOwnProperty(column.key)) {
 
                                         if (options && options.hasOwnProperty('reportItem')) {
                                             if (options.reportItem.isFirstOfFolded && options.reportItem.isFirstOfFolded == true) {
                                                 //console.log(options);
-                                                return parseFloat(options.reportItem.subTotal[column.key]).toFixed(2) + '';
+
+                                                return numberWithCommas(numberWithRoundFormat(options.reportItem.subTotal[column.key], format));
                                             } else {
-                                                return parseFloat(groupedItem[column.key]).toFixed(2) + '';
+                                                return numberWithCommas(numberWithRoundFormat(groupedItem[column.key], format));
                                             }
                                         } else {
 
-                                            return parseFloat(groupedItem[column.key]).toFixed(2) + '';
+                                            return numberWithCommas(numberWithRoundFormat(groupedItem[column.key], format));
                                         }
                                     }
                                 }
@@ -956,6 +1005,62 @@
                                     }
                                 }
 
+                                if (column.value_type == 'mc_field') {
+
+
+                                    if (column.key == 'object_permissions_user') {
+
+                                        if (groupedItem[column.key].length) {
+
+                                            //console.log('scope.options.permission_selected_entity', scope.options.permission_selected_entity);
+
+                                            if (scope.options.permission_selected_entity == 'user') {
+
+                                                var resultPermission = [];
+
+                                                groupedItem[column.key].forEach(function (permission) {
+
+                                                    if (permission.member == scope.options.permission_selected_id) {
+                                                        if (permission.permission.indexOf('change') == 0) {
+                                                            resultPermission.push('Change');
+                                                        }
+                                                        if (permission.permission.indexOf('manage') == 0) {
+                                                            resultPermission.push('Manage');
+                                                        }
+                                                    }
+                                                });
+
+                                                return resultPermission.join(', ');
+
+                                            }
+                                        }
+                                    }
+
+                                    if (column.key == 'object_permissions_group') {
+
+                                        if (scope.options.permission_selected_entity == 'group') {
+
+                                            var resultPermission = [];
+
+                                            groupedItem[column.key].forEach(function (permission) {
+                                                if (permission.group == scope.options.permission_selected_id) {
+                                                    if (permission.permission.indexOf('change') == 0) {
+                                                        resultPermission.push('Change');
+                                                    }
+                                                    if (permission.permission.indexOf('manage') == 0) {
+                                                        resultPermission.push('Manage');
+                                                    }
+                                                }
+                                            });
+
+                                            return resultPermission.join(', ');
+                                        }
+                                    }
+
+
+                                    return scope.bindCellTitle(groupedItem, column);
+                                }
+
                                 if (groupedItem[column.key + '_object']) {
 
                                     if (column.key == 'instrument_type_object_instrument_class') {
@@ -976,124 +1081,132 @@
                         }
 
 
-                        for (e = 0; e < entityAttrs.length; e = e + 1) {
-
-                            if (entityAttrs[e].key === column.key) {
-                                if (column['value_type'] === 'field') {
-                                    var _groupedItemVal = groupedItem[entityAttrs[e].key];
-                                    //if (scope.readyStatus.cellsFirstReady) {
-                                    //console.log('entityFieldsArray', entityFieldsArray);
-                                    if (entityFieldsArray[column.key]) {
-                                        var result = entityFieldsArray[column.key].filter(function (item) {
-                                            return item.id === _groupedItemVal;
-                                        })[0];
-
-                                    }
-                                    if (result) {
-                                        if (column['key'] === 'instrument' && result['user_code']) {
-                                            return result['user_code'];
-                                        } else if (column['key'] === 'price_download_scheme') {
-                                            return result['scheme_name'];
-                                        }
-                                        else if (result['display_name']) {
-                                            return result['display_name'];
-                                        }
-                                        return result['name'];
-                                    }
-                                    return '';
-                                } else {
-                                    if (column['value_type'] === 'mc_field') {
-
-                                        if (column.key == 'object_permissions_user') {
-
-                                            if (groupedItem[entityAttrs[e].key].length) {
-
-                                                //console.log('scope.options.permission_selected_entity', scope.options.permission_selected_entity);
-
-                                                if (scope.options.permission_selected_entity == 'user') {
-
-                                                    var resultPermission = [];
-
-                                                    groupedItem[entityAttrs[e].key].forEach(function (permission) {
-
-                                                        if (permission.member == scope.options.permission_selected_id) {
-                                                            if (permission.permission.indexOf('change') == 0) {
-                                                                resultPermission.push('Change');
-                                                            }
-                                                            if (permission.permission.indexOf('manage') == 0) {
-                                                                resultPermission.push('Manage');
-                                                            }
-                                                        }
-                                                    });
-
-                                                    return resultPermission.join(', ');
-
-                                                }
-                                            }
-                                        }
-
-                                        if (column.key == 'object_permissions_group') {
-
-                                            if (scope.options.permission_selected_entity == 'group') {
-
-                                                var resultPermission = [];
-
-                                                groupedItem[entityAttrs[e].key].forEach(function (permission) {
-                                                    if (permission.group == scope.options.permission_selected_id) {
-                                                        if (permission.permission.indexOf('change') == 0) {
-                                                            resultPermission.push('Change');
-                                                        }
-                                                        if (permission.permission.indexOf('manage') == 0) {
-                                                            resultPermission.push('Manage');
-                                                        }
-                                                    }
-                                                });
-
-                                                return resultPermission.join(', ');
-                                            }
-                                        }
-
-                                        if (groupedItem[entityAttrs[e].key] && groupedItem[entityAttrs[e].key].length >= 1) {
-                                            return '[' + groupedItem[entityAttrs[e].key].length + ']'
-                                        }
-                                    } else {
-
-                                        if (groupedItem[entityAttrs[e].key] !== null && groupedItem[entityAttrs[e].key] !== undefined) {
-
-                                            if (column.value_type == 20 || column.value_type == 'float') {
-
-
-                                                if (options && options.hasOwnProperty('reportItem')) {
-                                                    if (options.reportItem.isFirstOfFolded && options.reportItem.isFirstOfFolded == true) {
-                                                        //console.log(options);
-                                                        return parseFloat(options.reportItem.subTotal[entityAttrs[e].key]).toFixed(2) + '';
-                                                    } else {
-                                                        return parseFloat(groupedItem[entityAttrs[e].key]).toFixed(2) + '';
-                                                    }
-                                                } else {
-                                                    return parseFloat(groupedItem[entityAttrs[e].key]).toFixed(2) + '';
-                                                }
-                                            } else {
-
-                                                if (entityType == 'complex-transaction') {
-                                                    if (entityAttrs[e].key == 'status') {
-                                                        if (groupedItem[entityAttrs[e].key] == 1) {
-                                                            return 'Production';
-                                                        }
-                                                        if (groupedItem[entityAttrs[e].key] == 2) {
-                                                            return 'Pending';
-                                                        }
-                                                    }
-                                                }
-
-
-                                                return groupedItem[entityAttrs[e].key];
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
+                        //for (e = 0; e < entityAttrs.length; e = e + 1) {
+                        //
+                        //    if (entityAttrs[e].key === column.key) {
+                        //        if (column['value_type'] === 'field') {
+                        //            var _groupedItemVal = groupedItem[entityAttrs[e].key];
+                        //            //if (scope.readyStatus.cellsFirstReady) {
+                        //            //console.log('entityFieldsArray', entityFieldsArray);
+                        //            if (entityFieldsArray[column.key]) {
+                        //                var result = entityFieldsArray[column.key].filter(function (item) {
+                        //                    return item.id === _groupedItemVal;
+                        //                })[0];
+                        //
+                        //            }
+                        //            if (result) {
+                        //                if (column['key'] === 'instrument' && result['user_code']) {
+                        //                    return result['user_code'];
+                        //                } else if (column['key'] === 'price_download_scheme') {
+                        //                    return result['scheme_name'];
+                        //                }
+                        //                else if (result['display_name']) {
+                        //                    return result['display_name'];
+                        //                }
+                        //                return result['name'];
+                        //            }
+                        //            return '';
+                        //        } else {
+                        //            if (column['value_type'] === 'mc_field') {
+                        //
+                        //                if (column.key == 'object_permissions_user') {
+                        //
+                        //                    if (groupedItem[entityAttrs[e].key].length) {
+                        //
+                        //                        //console.log('scope.options.permission_selected_entity', scope.options.permission_selected_entity);
+                        //
+                        //                        if (scope.options.permission_selected_entity == 'user') {
+                        //
+                        //                            var resultPermission = [];
+                        //
+                        //                            groupedItem[entityAttrs[e].key].forEach(function (permission) {
+                        //
+                        //                                if (permission.member == scope.options.permission_selected_id) {
+                        //                                    if (permission.permission.indexOf('change') == 0) {
+                        //                                        resultPermission.push('Change');
+                        //                                    }
+                        //                                    if (permission.permission.indexOf('manage') == 0) {
+                        //                                        resultPermission.push('Manage');
+                        //                                    }
+                        //                                }
+                        //                            });
+                        //
+                        //                            return resultPermission.join(', ');
+                        //
+                        //                        }
+                        //                    }
+                        //                }
+                        //
+                        //                if (column.key == 'object_permissions_group') {
+                        //
+                        //                    if (scope.options.permission_selected_entity == 'group') {
+                        //
+                        //                        var resultPermission = [];
+                        //
+                        //                        groupedItem[entityAttrs[e].key].forEach(function (permission) {
+                        //                            if (permission.group == scope.options.permission_selected_id) {
+                        //                                if (permission.permission.indexOf('change') == 0) {
+                        //                                    resultPermission.push('Change');
+                        //                                }
+                        //                                if (permission.permission.indexOf('manage') == 0) {
+                        //                                    resultPermission.push('Manage');
+                        //                                }
+                        //                            }
+                        //                        });
+                        //
+                        //                        return resultPermission.join(', ');
+                        //                    }
+                        //                }
+                        //
+                        //                if (groupedItem[entityAttrs[e].key] && groupedItem[entityAttrs[e].key].length >= 1) {
+                        //                    return '[' + groupedItem[entityAttrs[e].key].length + ']'
+                        //                }
+                        //            } else {
+                        //
+                        //                if (groupedItem[entityAttrs[e].key] !== null && groupedItem[entityAttrs[e].key] !== undefined) {
+                        //
+                        //                    if (column.value_type == 20 || column.value_type == 'float') {
+                        //
+                        //                        var format = 0;
+                        //
+                        //                        if (column.hasOwnProperty('report_settings')) {
+                        //                            if (column.report_settings.hasOwnProperty('round_format_id')) {
+                        //                                format = column.report_settings.round_format_id;
+                        //                            }
+                        //                        }
+                        //
+                        //
+                        //                        if (options && options.hasOwnProperty('reportItem')) {
+                        //                            if (options.reportItem.isFirstOfFolded && options.reportItem.isFirstOfFolded == true) {
+                        //                                //console.log(options);
+                        //                                return numberWithCommas(numberWithRoundFormat(options.reportItem.subTotal[entityAttrs[e].key], format));
+                        //                            } else {
+                        //                                return numberWithCommas(numberWithRoundFormat(groupedItem[entityAttrs[e].key], format));
+                        //                            }
+                        //                        } else {
+                        //                            return numberWithCommas(numberWithRoundFormat(groupedItem[entityAttrs[e].key], format));
+                        //                        }
+                        //                    } else {
+                        //
+                        //                        if (entityType == 'complex-transaction') {
+                        //                            if (entityAttrs[e].key == 'status') {
+                        //                                if (groupedItem[entityAttrs[e].key] == 1) {
+                        //                                    return 'Production';
+                        //                                }
+                        //                                if (groupedItem[entityAttrs[e].key] == 2) {
+                        //                                    return 'Pending';
+                        //                                }
+                        //                            }
+                        //                        }
+                        //
+                        //
+                        //                        return groupedItem[entityAttrs[e].key];
+                        //                    }
+                        //                }
+                        //            }
+                        //        }
+                        //    }
+                        //}
 
 
                     }

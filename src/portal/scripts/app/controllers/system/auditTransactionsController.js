@@ -10,7 +10,6 @@
         logService.controller('AuditController', 'initialized');
 
         var vm = this;
-        var vm = this;
 
         vm.entityType = 'audit-transaction';
         vm.entityRaw = [];
@@ -24,6 +23,17 @@
             vm.readyStatus.content = true;
             $scope.$apply();
         });
+
+        vm.components = {
+            sidebar: true,
+            groupingArea: true,
+            columnAreaHeader: true,
+            splitPanel: true,
+            addEntityBtn: false,
+            fieldManagerBtn: true,
+            layoutManager: true,
+            autoReportRequest: false
+        };
 
         vm.getList = function (options) {
             return auditService.getList(options).then(function (data) {
