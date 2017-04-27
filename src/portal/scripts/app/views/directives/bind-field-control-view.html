@@ -3,7 +3,7 @@
         <md-input-container class="md-block">
             <label data-ng-bind="getName()"></label>
             <input data-ng-change="changeWatcher()" data-ng-model="entity[getModelKey()]" type="number"
-                   data-ng-if="!item.options.onlyPositive" style="width: {{100 - item.buttons.length * 10}}%">
+                   data-ng-if="!item.options.onlyPositive" style="width: {{100 - item.buttons.length * 25}}%">
             <input data-ng-change="changeWatcher()" data-ng-model="entity[getModelKey()]" type="number" min="0"
                    data-ng-if="item.options.onlyPositive" style="width: {{100 - item.buttons.length * 10}}%">
 

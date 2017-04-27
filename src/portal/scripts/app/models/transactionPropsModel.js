@@ -171,6 +171,16 @@
                 "key": "trade_price",
                 "name": "Trade price",
                 "value_type": 'float'
+            },
+            {
+                "key": "object_permissions_user",
+                "name": "Users permissions",
+                "value_type": "mc_field"
+            },
+            {
+                "key": "object_permissions_group",
+                "name": "Groups permissions",
+                "value_type": "mc_field"
             }
         ]
     };

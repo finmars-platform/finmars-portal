@@ -40,16 +40,40 @@
                                 </md-input-container>
                             </div>
                         </div>
+                        <!--<div data-ng-repeat="item in vm.entityItems | filter:vm.query | orderBy:vm.sort:vm.direction">-->
+                            <!--<div layout="row">-->
+                                <!--<div flex="50">-->
+                                    <!--<md-input-container>-->
+                                        <!--<label for="">Value</label>-->
+                                        <!--<input type="text" data-ng-model="item.mapping.value">-->
+                                    <!--</md-input-container>-->
+                                <!--</div>-->
+                                <!--<div flex="50">-->
+                                    <!--<p data-ng-bind="item.name"></p>-->
+                                <!--</div>-->
+                            <!--</div>-->
+                        <!--</div>-->
                         <div data-ng-repeat="item in vm.entityItems | filter:vm.query | orderBy:vm.sort:vm.direction">
-                            <div layout="row">
-                                <div flex="50">
+                            <div layout="row" data-ng-repeat="mappingItem in item.mapping"
+                                 data-ng-show="!mappingItem.isDeleted">
+                                <div flex="50" layout="row">
                                     <md-input-container>
                                         <label for="">Value</label>
-                                        <input type="text" data-ng-model="item.mapping.value">
+                                        <input type="text" data-ng-model="mappingItem.value">
                                     </md-input-container>
+                                    <div layout="row">
+                                        <md-button data-ng-click="vm.addMapping(item)" class="md-raised md-icon-button">
+                                            +
+                                        </md-button>
+                                        <md-button data-ng-click="vm.removeMapping(item, mappingItem, $index)"
+                                                   data-ng-show="item.mapping.length > 1"
+                                                   class="md-raised md-icon-button">-
+                                        </md-button>
+                                    </div>
                                 </div>
                                 <div flex="50">
-                                    <p data-ng-bind="item.name"></p>
+                                    <!--{{item}}-->
+                                    <p data-ng-bind="vm.bindEntityName(item)"></p>
                                 </div>
                             </div>
                         </div>

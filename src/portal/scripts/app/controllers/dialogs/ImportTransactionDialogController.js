@@ -182,43 +182,45 @@
                         vm.readyStatus.processing = false;
                         vm.dataIsImported = true;
 
-                        vm.mappedFields = [];
-
-                        var keysDict = [];
-
-                        if (Object.keys(vm.config["task_result_overrides"]).length > 0) {
-                            keysDict = vm.config["task_result_overrides"];
-                        } else {
-                            keysDict = vm.config["task_result"]
-                        }
-
-                        var keys = Object.keys(keysDict);
-                        var i;
-                        for (i = 0; i < keys.length; i = i + 1) {
-                            vm.mappedFields.push({
-                                key: keys[i],
-                                value: keysDict[keys[i]]
-                            })
-                        }
-
-                        var promises = [];
-
-                        vm.config.instrument.attributes.forEach(function (attribute) {
-                            if (attribute.attribute_type_object.value_type == 30) {
-                                promises.push(instrumentAttributeTypeService.getByKey(attribute.attribute_type));
-                            }
-                        });
-
-                        console.log('vm.instrument', vm.instrument);
-
-                        Promise.all(promises).then(function (data) {
-
-                            data.forEach(function (item) {
-                                vm.dynAttributes['id_' + item.id] = item;
-                            });
-
-                            $scope.$apply();
-                        })
+                        //vm.mappedFields = [];
+                        //
+                        //var keysDict = [];
+                        //
+                        //
+                        //
+                        //if (Object.keys(vm.config["task_result_overrides"]).length > 0) {
+                        //    keysDict = vm.config["task_result_overrides"];
+                        //} else {
+                        //    keysDict = vm.config["task_result"]
+                        //}
+                        //
+                        //var keys = Object.keys(keysDict);
+                        //var i;
+                        //for (i = 0; i < keys.length; i = i + 1) {
+                        //    vm.mappedFields.push({
+                        //        key: keys[i],
+                        //        value: keysDict[keys[i]]
+                        //    })
+                        //}
+                        //
+                        //var promises = [];
+                        //
+                        //vm.config.instrument.attributes.forEach(function (attribute) {
+                        //    if (attribute.attribute_type_object.value_type == 30) {
+                        //        promises.push(instrumentAttributeTypeService.getByKey(attribute.attribute_type));
+                        //    }
+                        //});
+                        //
+                        //console.log('vm.instrument', vm.instrument);
+                        //
+                        //Promise.all(promises).then(function (data) {
+                        //
+                        //    data.forEach(function (item) {
+                        //        vm.dynAttributes['id_' + item.id] = item;
+                        //    });
+                        //
+                        //    $scope.$apply();
+                        //})
 
 
                     } else {

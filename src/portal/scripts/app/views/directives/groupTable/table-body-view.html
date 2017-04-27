@@ -63,7 +63,8 @@
                 </div>
             </div>
             <div data-ng-if="!options.grouping.length" contextmenu-container="gtbody.contextmenu">
-                <div data-ng-repeat="item in items" on-finish-render="{{entityType}}" class="{{ checkRowSelection(item) ? 'selected-row' : ''}} g-row"
+                <div data-ng-repeat="item in items" on-finish-render="{{entityType}}"
+                     class="{{ checkRowSelection(item) ? 'selected-row' : ''}} g-row"
                      contextmenu-item="item" data-ng-click="rowCallback(item, $event)">
                     <div class="g-row-selection" data-ng-click="toggleSelectRow($event, item)">
                         <ng-md-icon icon="done" data-ng-show="item.selectedRow"></ng-md-icon>
@@ -96,7 +97,7 @@
     </div>
 </div>
 <div contextmenu="gtbody.contextmenu" class="dropdown contextmenu ng-hide">
-    <md-menu-content width="4">
+    <md-menu-content width="4" ng-if="rightClickStatus()">
         <md-menu-item>
             <md-button ng-click="editEntity($event, gtbody.contextmenu.get().item)" class="g-settings-option-btn">
                 <ng-md-icon icon="mode_edit"></ng-md-icon>

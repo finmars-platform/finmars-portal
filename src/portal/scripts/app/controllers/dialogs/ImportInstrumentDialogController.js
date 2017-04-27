@@ -105,6 +105,11 @@
         };
 
         vm.resolveAttributeNode = function (item) {
+
+            console.log('item', item);
+
+            //return item.name;
+
             var result = '';
             if (item.hasOwnProperty('classifier_object') && item.classifier_object !== null) {
                 return item.classifier_object.name;

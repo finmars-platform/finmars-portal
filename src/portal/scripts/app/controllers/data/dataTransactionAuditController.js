@@ -21,6 +21,17 @@
 
         vm.entityViewer = {extraFeatures: []};
 
+        vm.components = {
+            sidebar: true,
+            groupingArea: true,
+            columnAreaHeader: true,
+            splitPanel: true,
+            addEntityBtn: false,
+            fieldManagerBtn: true,
+            layoutManager: true,
+            autoReportRequest: false
+        };
+
         auditService.getList({filters: {'content_type': 'transactions.transaction'}}).then(function (data) {
             vm.entityRaw = data;
             vm.readyStatus.content = true;

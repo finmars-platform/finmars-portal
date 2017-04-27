@@ -44,9 +44,7 @@
         };
 
         vm.addMapping = function (item, index) {
-
             item.mapping.splice(index, 0, {value: ''});
-
         };
 
         vm.removeMapping = function (item, mappingItem, index) {
@@ -62,8 +60,6 @@
         vm.fancyEntity = function () {
             return vm.mapEntityType.replace('_', ' ');
         };
-
-        var classifier_value_type = 30;
 
         function addChilds(classifier, item) {
 
@@ -105,17 +101,33 @@
                         vm.items = data.results;
                     } else {
                         vm.items = data
-
                     }
+
+                    console.log('vm.items', vm.items);
+
                     var i, e;
                     for (e = 0; e < vm.entityItems.length; e = e + 1) {
                         for (i = 0; i < vm.items.length; i = i + 1) {
                             //if (vm.items[i][vm.mapEntityType] == vm.entityItems[e].id) {
-                            if (vm.items[i].content_object == vm.entityItems[e].id) {
-                                vm.entityItems[e].mapping = vm.items[i]
+                            //if (vm.items[i].content_object == vm.entityItems[e].id) {
+                            if (vm.items[i].classifier == vm.entityItems[e].id) {
+
+                                if (!vm.entityItems[e].hasOwnProperty('mapping')) {
+                                    vm.entityItems[e].mapping = [];
+                                }
+
+                                vm.entityItems[e].mapping.push(vm.items[i])
+
+                                //vm.entityItems[e].mapping = vm.items[i]
                             }
                         }
                     }
+
+                    vm.entityItems.forEach(function (entityItem) {
+                        if (!entityItem.hasOwnProperty('mapping')) {
+                            entityItem.mapping = [{value: ''}];
+                        }
+                    });
 
                     console.log('!!!!!!!!!!!!!!!', vm.entityItems);
 
@@ -203,11 +215,16 @@
                                     if (vm.entityItems[i].value_type == 30) {
                                         mapItem.classifier = vm.entityItems[i].id
                                     }
+                                    mapItem.content_object = mapItem.attribute_type;
 
                                 } else {
                                     //vm.entityItems[i].mapping[vm.mapEntityType] = vm.entityItems[i].id;
                                     mapItem.content_object = vm.entityItems[i].id;
                                 }
+
+                                console.log('mapItem', mapItem);
+                                console.log('vm.entityItems[i]', vm.entityItems[i]);
+
 
                                 return entityTypeMappingResolveService.create(vm.mapEntityType, mapItem).then(function () {
                                     i = i + 1;

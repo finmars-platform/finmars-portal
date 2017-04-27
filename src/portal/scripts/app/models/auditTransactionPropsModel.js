@@ -36,6 +36,26 @@
                 "key": "message",
                 "name": "Message",
                 "value_type": 10
+            },
+            {
+                "key": "actor_content_type",
+                "name": "Change source type",
+                "value_type": 'field'
+            },
+            {
+                "key": "actor_object_repr",
+                "name": "Change source",
+                "value_type": 10
+            },
+            {
+                "key": "content_type",
+                "name": "Change target type",
+                "value_type": 'field'
+            },
+            {
+                "key": "object_repr",
+                "name": "Change target",
+                "value_type": 10
             }
         ]
     };
