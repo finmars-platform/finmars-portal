@@ -141,6 +141,56 @@
                     return false
                 };
 
+                scope.selectNegativeFormat = function (column, type) {
+                    if (!column.hasOwnProperty('report_settings')) {
+                        column.report_settings = {};
+                    }
+
+                    if (column.report_settings.negative_format_id == type) {
+                        column.report_settings.netgative_format_id = null;
+                    } else {
+                        column.report_settings.negative_format_id = type;
+                    }
+
+                    scope.externalCallback({silent: true, options: {columns: scope.columns}});
+                };
+
+                scope.checkNegativeFormatFormula = function (column, type) {
+
+                    if (column.hasOwnProperty('report_settings') && column.report_settings) {
+                        if (column.report_settings.negative_format_id == type) {
+                            return true;
+                        }
+
+                    }
+                    return false
+                };
+
+                scope.selectZeroFormat = function (column, type) {
+                    if (!column.hasOwnProperty('report_settings')) {
+                        column.report_settings = {};
+                    }
+
+                    if (column.report_settings.zero_format_id == type) {
+                        column.report_settings.zero_format_id = null;
+                    } else {
+                        column.report_settings.zero_format_id = type;
+                    }
+
+                    scope.externalCallback({silent: true, options: {columns: scope.columns}});
+                };
+
+                scope.checkZeroFormatFormula = function (column, type) {
+
+                    if (column.hasOwnProperty('report_settings') && column.report_settings) {
+                        if (column.report_settings.zero_format_id == type) {
+                            return true;
+                        }
+
+                    }
+                    return false
+                };
+
                 //
                 //scope.$watchCollection('columns', function () {
                 //

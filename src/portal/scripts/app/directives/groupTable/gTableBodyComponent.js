@@ -819,7 +819,37 @@
                     if (result !== undefined) {
 
                         if (column.value_type == 20 || column.value_type == 'float') {
-                            return parseFloat(result).toFixed(2) + '';
+
+                            var format_round = 0;
+                            var format_negative = 0;
+                            var format_zero = 0;
+
+                            if (column.report_settings.hasOwnProperty('round_format_id')) {
+                                format_round = column.report_settings.round_format_id;
+                            }
+
+                            if (column.report_settings.hasOwnProperty('negative_format_id')) {
+                                format_negative = column.report_settings.negative_format_id;
+                            }
+
+                            if (column.report_settings.hasOwnProperty('zero_format_id')) {
+                                format_zero = column.report_settings.zero_format_id;
+                            }
+
+
+                            if (result == 0) {
+                                return numberWithCommas(
+                                    numberWithZeroFormat(result, format_zero, format_round)
+                                );
+                            } else {
+                                return numberWithCommas(
+                                    numberWihNegativeFormat(
+                                        numberWithRoundFormat(result, format_round),
+                                        format_negative
+                                    ));
+                            }
+
+
                         } else {
                             return result;
                         }
@@ -832,7 +862,9 @@
                     //console.log('numberWithCommas number', number);
 
                     //return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, "'");
-                    return number.toString().replace(/\B(?=(\d{3})+(?=\.))/g, "'");
+                    if (number) {
+                        return number.toString().replace(/\B(?=(\d{3})+(?=\.))/g, "'");
+                    }
                 }
 
                 function numberWithRoundFormat(number, formatId) {
@@ -844,11 +876,52 @@
                     }
 
                     if (formatId == 1) {
-                        return parseFloat(number).toFixed(0) + '';
+                        return parseFloat(number).toFixed(0);
                     }
 
                     if (formatId == 2) {
-                        return parseFloat(number).toFixed(2) + '';
+                        return parseFloat(number).toFixed(2);
+                    }
+
+                }
+
+                function numberWihNegativeFormat(number, formatId) {
+
+
+                    if (number < 0) {
+
+                        if (formatId == 0) {
+                            return number;
+                        }
+
+                        if (formatId == 1) {
+
+                            number = number + '';
+
+                            number = '(' + number.slice(1, number.length) + ')';
+
+                            return number;
+                        }
+
+
+                    }
+
+                    return number
+
+                }
+
+                function numberWithZeroFormat(number, formatId, roudingFormatId) {
+
+                    if (formatId == 0) {
+                        return numberWithRoundFormat(number, roudingFormatId)
+                    }
+
+                    if (formatId == 1) {
+                        return '-'
+                    }
+
+                    if (formatId == 2) {
+                        return '';
                     }
 
                 }
@@ -931,7 +1004,11 @@
 
                         //console.log('column.key', column.key);
 
-                        var format = 0;
+                        // set defaults
+
+                        var format_round = 0;
+                        var format_negative = 0;
+                        var format_zero = 0;
 
                         for (c = 0; c < scope.columns.length; c = c + 1) {
 
@@ -941,9 +1018,15 @@
 
                                     if (column.hasOwnProperty('report_settings')) {
                                         if (column.report_settings.hasOwnProperty('round_format_id')) {
-                                            format = column.report_settings.round_format_id;
+                                            format_round = column.report_settings.round_format_id;
+                                        }
 
-                                            //console.log('column.report_settings.round_format_id', column.report_settings.round_format_id);
+                                        if (column.report_settings.hasOwnProperty('negative_format_id')) {
+                                            format_negative = column.report_settings.negative_format_id;
+                                        }
+
+                                        if (column.report_settings.hasOwnProperty('zero_format_id')) {
+                                            format_zero = column.report_settings.zero_format_id;
                                         }
                                     }
 
@@ -956,13 +1039,27 @@
                                             if (options.reportItem.isFirstOfFolded && options.reportItem.isFirstOfFolded == true) {
                                                 //console.log(options);
 
-                                                return numberWithCommas(numberWithRoundFormat(options.reportItem.subTotal[column.key], format));
+                                                return numberWithCommas(
+                                                    numberWihNegativeFormat(
+                                                        numberWithRoundFormat(options.reportItem.subTotal[column.key], format_round),
+                                                        format_negative
+                                                    ));
                                             } else {
-                                                return numberWithCommas(numberWithRoundFormat(groupedItem[column.key], format));
+                                                return numberWithCommas(
+                                                    numberWihNegativeFormat(
+                                                        numberWithRoundFormat(groupedItem[column.key], format_round),
+                                                        format_negative
+                                                    ));
                                             }
                                         } else {
 
-                                            return numberWithCommas(numberWithRoundFormat(groupedItem[column.key], format));
+                                            return numberWithCommas(
+                                                numberWihNegativeFormat(
+                                                    numberWithRoundFormat(groupedItem[column.key], format_round),
+                                                    format_negative
+                                                ));
+
+
                                         }
                                     }
                                 }

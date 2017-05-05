@@ -26,6 +26,16 @@
                 }
 
 
+                scope.$watch(function () {
+
+                    return ngModel.$modelValue;
+
+                }, function (newValue) {
+                    if (ngModel.$modelValue) {
+                        input.val(newValue);
+                    }
+                });
+
                 if (ngModel.$modelValue) {
                     $(elem).parent().addClass('md-input-has-value');
                     input.pickmeup({
@@ -36,6 +46,9 @@
                         'hide_on_select': true,
                         format: 'Y-m-d',
                         change: function () {
+
+                            console.log('heeeer?');
+
                             ngModel.$setViewValue(this.value);
                         }
                     });
