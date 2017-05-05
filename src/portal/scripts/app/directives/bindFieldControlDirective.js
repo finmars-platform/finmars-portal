@@ -151,17 +151,20 @@
                 }
 
                 scope.setDateToday = function () {
-                    //console.log('1232', scope.entity[scope.getModelKey()])
-                    scope.entity[scope.getModelKey()] = new Date();
+                    console.log('1232', scope.entity[scope.getModelKey()]);
+                    //scope.entity[scope.getModelKey()] = new Date();
+                    scope.entity[scope.getModelKey()] = moment(new Date()).format('YYYY-MM-DD');
                     //console.log('1232', scope.entity[scope.getModelKey()])
                 };
 
                 scope.setDatePlus = function () {
-                    scope.entity[scope.getModelKey()] = new Date(new Date().setDate(new Date(scope.entity[scope.getModelKey()]).getDate() + 1));
+                    //scope.entity[scope.getModelKey()] = new Date(new Date().setDate(new Date(scope.entity[scope.getModelKey()]).getDate() + 1));
+                    scope.entity[scope.getModelKey()] = moment(new Date(scope.entity[scope.getModelKey()])).add(1, 'days').format('YYYY-MM-DD');
                 };
 
                 scope.setDateMinus = function () {
-                    scope.entity[scope.getModelKey()] = new Date(new Date().setDate(new Date(scope.entity[scope.getModelKey()]).getDate() - 1));
+                    //scope.entity[scope.getModelKey()] = new Date(new Date().setDate(new Date(scope.entity[scope.getModelKey()]).getDate() - 1));
+                    scope.entity[scope.getModelKey()] = moment(new Date(scope.entity[scope.getModelKey()])).subtract(1, 'days').format('YYYY-MM-DD');
                 };
 
                 scope.node = scope.node || null;

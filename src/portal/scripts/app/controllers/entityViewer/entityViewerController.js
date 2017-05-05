@@ -867,11 +867,18 @@
 
                     }
 
-                    options = {
-                        sort: {
+                    var sort = {};
+
+                    if (vm.sorting && vm.sorting.column) {
+                        sort = {
                             key: vm.sorting.column.key,
                             direction: vm.sorting.column.sort
-                        },
+                        }
+                    }
+
+
+                    options = {
+                        sort: sort,
                         filters: {},
                         page: vm.paginationPageCurrent,
                         pageSize: vm.paginationItemPerPage

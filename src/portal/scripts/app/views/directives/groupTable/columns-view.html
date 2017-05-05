@@ -249,6 +249,101 @@
                                     </md-menu-item>
                                     <md-menu-item>
                                         <md-menu>
+                                            <md-button aria-label="Open phone interactions menu"
+                                                       class=""
+                                                       ng-click="$mdOpenMenu($event)">
+                                                <ng-md-icon icon="done"
+                                                            class="z-menu-icon"
+                                                            style="visibility: hidden;"></ng-md-icon>
+                                                <span>Format negative</span>
+                                                <ng-md-icon icon="arrow_drop_up" class="z-dropdown-icon"></ng-md-icon>
+                                            </md-button>
+                                            <md-menu-content width="3">
+                                                <md-menu-item>
+                                                    <md-button ng-click="selectNegativeFormat(column, 0)"
+                                                               class="g-settings-option-btn">
+                                                        <ng-md-icon icon="done"
+                                                                    data-ng-show="!checkNegativeFormatFormula(column, 0)"
+                                                                    class="z-menu-icon"
+                                                                    style="visibility: hidden;"></ng-md-icon>
+                                                        <ng-md-icon icon="done"
+                                                                    data-ng-show="checkNegativeFormatFormula(column, 0)"
+                                                                    class="z-menu-icon"></ng-md-icon>
+                                                        <span>Default</span>
+                                                    </md-button>
+                                                </md-menu-item>
+                                                <md-menu-item>
+                                                    <md-button ng-click="selectNegativeFormat(column, 1)"
+                                                               class="g-settings-option-btn">
+                                                        <ng-md-icon icon="done"
+                                                                    data-ng-show="!checkNegativeFormatFormula(column, 1)"
+                                                                    class="z-menu-icon"
+                                                                    style="visibility: hidden;"></ng-md-icon>
+                                                        <ng-md-icon icon="done"
+                                                                    data-ng-show="checkNegativeFormatFormula(column, 1)"
+                                                                    class="z-menu-icon"></ng-md-icon>
+                                                        <span>Brackets</span>
+                                                    </md-button>
+                                                </md-menu-item>
+                                            </md-menu-content>
+                                        </md-menu>
+                                    </md-menu-item>
+                                    <md-menu-item>
+                                        <md-menu>
+                                            <md-button aria-label="Open phone interactions menu"
+                                                       class=""
+                                                       ng-click="$mdOpenMenu($event)">
+                                                <ng-md-icon icon="done"
+                                                            class="z-menu-icon"
+                                                            style="visibility: hidden;"></ng-md-icon>
+                                                <span>Format zero</span>
+                                                <ng-md-icon icon="arrow_drop_up" class="z-dropdown-icon"></ng-md-icon>
+                                            </md-button>
+                                            <md-menu-content width="3">
+                                                <md-menu-item>
+                                                    <md-button ng-click="selectZeroFormat(column, 0)"
+                                                               class="g-settings-option-btn">
+                                                        <ng-md-icon icon="done"
+                                                                    data-ng-show="!checkZeroFormatFormula(column, 0)"
+                                                                    class="z-menu-icon"
+                                                                    style="visibility: hidden;"></ng-md-icon>
+                                                        <ng-md-icon icon="done"
+                                                                    data-ng-show="checkZeroFormatFormula(column, 0)"
+                                                                    class="z-menu-icon"></ng-md-icon>
+                                                        <span>Using rounding format</span>
+                                                    </md-button>
+                                                </md-menu-item>
+                                                <md-menu-item>
+                                                    <md-button ng-click="selectZeroFormat(column, 1)"
+                                                               class="g-settings-option-btn">
+                                                        <ng-md-icon icon="done"
+                                                                    data-ng-show="!checkZeroFormatFormula(column, 1)"
+                                                                    class="z-menu-icon"
+                                                                    style="visibility: hidden;"></ng-md-icon>
+                                                        <ng-md-icon icon="done"
+                                                                    data-ng-show="checkZeroFormatFormula(column, 1)"
+                                                                    class="z-menu-icon"></ng-md-icon>
+                                                        <span>Show as "-"</span>
+                                                    </md-button>
+                                                </md-menu-item>
+                                                <md-menu-item>
+                                                    <md-button ng-click="selectZeroFormat(column, 2)"
+                                                               class="g-settings-option-btn">
+                                                        <ng-md-icon icon="done"
+                                                                    data-ng-show="!checkZeroFormatFormula(column, 2)"
+                                                                    class="z-menu-icon"
+                                                                    style="visibility: hidden;"></ng-md-icon>
+                                                        <ng-md-icon icon="done"
+                                                                    data-ng-show="checkZeroFormatFormula(column, 2)"
+                                                                    class="z-menu-icon"></ng-md-icon>
+                                                        <span>Hide</span>
+                                                    </md-button>
+                                                </md-menu-item>
+                                            </md-menu-content>
+                                        </md-menu>
+                                    </md-menu-item>
+                                    <md-menu-item>
+                                        <md-menu>
                                             <md-button ng-click="reportHideSubtotal(column)"
                                                        class="g-settings-option-btn">
                                                 <ng-md-icon icon="done" style="visibility: hidden;"></ng-md-icon>
