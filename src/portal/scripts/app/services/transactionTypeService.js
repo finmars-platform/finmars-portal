@@ -33,6 +33,10 @@
         return transactionTypeRepository.bookTransaction(id, transaction);
     };
 
+    var updateBulk = function(entities){
+        return transactionTypeRepository.updateBulk(entities);
+    };
+
 
     module.exports = {
         getList: getList,
@@ -41,7 +45,8 @@
         update: update,
         deleteByKey: deleteByKey,
         getBookTransaction: getBookTransaction,
-        bookTransaction: bookTransaction
+        bookTransaction: bookTransaction,
+        updateBulk: updateBulk
     }
 
 

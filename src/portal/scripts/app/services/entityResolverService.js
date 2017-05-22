@@ -456,8 +456,7 @@
                 //return complexTransactionService.update(id, entity);
                 break;
             case 'transaction-type':
-
-                //return transactionTypeService.bookComplexTransaction(id, entity);
+                return transactionTypeService.updateBulk(entities);
                 break;
             case 'transaction-type-group':
                 //return transactionTypeGroupService.update(id, entity);

@@ -13,11 +13,11 @@
 
     var markAsReaded = function (url, data) {
     	return notificationsRepository.markAsReaded(url, data);
-    }
+    };
 
     var markAllAsReaded = function () {
     	return notificationsRepository.markAllAsReaded();
-    }
+    };
 
     module.exports = {
         getList: getList,

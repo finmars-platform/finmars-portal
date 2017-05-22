@@ -24,10 +24,35 @@
 
         $scope.$parent.vm.specialRulesReady = false;
 
+        function getGroupsFromItems(items) {
+
+            var groups = [];
+
+            items.forEach(function (item) {
+
+                if (!groups[item.group_object.id]) {
+                    groups[item.group_object.id] = item.group_object;
+                    groups[item.group_object.id].items = [];
+                }
+
+                groups[item.group_object.id].items.push(item);
+
+
+            });
+
+            groups = groups.filter(function (item) {
+                return !!item
+            });
+
+            return groups;
+
+        }
+
         portfolioService.getList().then(function (data) {
             vm.portfolios = data.results;
             $scope.$apply();
         });
+
 
         instrumentTypeService.getList().then(function (data) {
             vm.instrumentTypes = data.results;
@@ -35,9 +60,10 @@
         });
 
         transactionTypeService.getList().then(function (data) {
-            vm.transactionTypes = data.results;
+            vm.transactionGroups = getGroupsFromItems(data.results);
             $scope.$apply();
         });
+
 
         vm.loadTransactionTypes = function () {
 
@@ -49,8 +75,15 @@
             };
 
             transactionTypeService.getList(options).then(function (data) {
-                vm.transactionTypes = data.results;
-                $scope.$apply();
+                vm.transactionGroups = getGroupsFromItems(data.results);
+
+                $scope.$apply(function () {
+                    setTimeout(function () {
+                        $('body').find('.md-select-search-pattern').on('keydown', function (ev) {
+                            ev.stopPropagation();
+                        });
+                    }, 100);
+                });
             })
         };
 
