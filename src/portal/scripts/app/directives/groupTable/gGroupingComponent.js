@@ -236,60 +236,38 @@
 
                     if (scope.isReport) {
 
-                        if (scope.options.entityType == 'balance-report' || scope.options.entityType == 'pnl-report') {
+                        var controllerName = '';
 
-                            $mdDialog.show({
-                                controller: 'gModalReportController as vm', // ../directives/gTable/gModalComponents
-                                templateUrl: 'views/directives/groupTable/modal-report-view.html',
-                                parent: angular.element(document.body),
-                                targetEvent: ev,
-                                locals: {
-                                    callback: scope.externalCallback,
-                                    parentScope: scope
-                                }
-                            });
-                        } else {
-
-                            if (scope.options.entityType == 'performance-report') {
-
-                                $mdDialog.show({
-                                    controller: 'gModalReportPerformanceController as vm', // ../directives/gTable/gModalComponents
-                                    templateUrl: 'views/directives/groupTable/modal-report-performance-view.html',
-                                    parent: angular.element(document.body),
-                                    targetEvent: ev,
-                                    locals: {
-                                        callback: scope.externalCallback,
-                                        parentScope: scope
-                                    }
-                                });
-                            } else {
-
-                                if (scope.options.entityType == 'cash-flow-projection-report') {
-                                    $mdDialog.show({
-                                        controller: 'gModalReportCashFlowProjectionController as vm', // ../directives/gTable/gModalComponents
-                                        templateUrl: 'views/directives/groupTable/modal-report-cash-flow-projection-view.html',
-                                        parent: angular.element(document.body),
-                                        targetEvent: ev,
-                                        locals: {
-                                            callback: scope.externalCallback,
-                                            parentScope: scope
-                                        }
-                                    });
-                                } else {
-
-                                    $mdDialog.show({
-                                        controller: 'gModalReportTransactionController as vm', // ../directives/gTable/gModalComponents
-                                        templateUrl: 'views/directives/groupTable/modal-report-transaction-view.html',
-                                        parent: angular.element(document.body),
-                                        targetEvent: ev,
-                                        locals: {
-                                            callback: scope.externalCallback,
-                                            parentScope: scope
-                                        }
-                                    });
-                                }
-                            }
+                        switch (scope.options.entityType) {
+                            case 'balance-report':
+                                controllerName = 'gModalReportController as vm';
+                                break;
+                            case 'pnl-report':
+                                controllerName = 'gModalReportPnlController as vm';
+                                break;
+                            case 'performance-report':
+                                controllerName = 'gModalReportPerformanceController as vm';
+                                break;
+                            case 'cash-flow-projection-report':
+                                controllerName = 'gModalReportCashFlowProjectionController as vm';
+                                break;
+                            case 'transaction-report':
+                                controllerName = 'gModalReportTransactionController as vm';
+                                break;
                         }
+
+                        $mdDialog.show({
+                            controller: controllerName,
+                            templateUrl: 'views/directives/groupTable/modal-report-view.html',
+                            parent: angular.element(document.body),
+                            targetEvent: ev,
+                            locals: {
+                                callback: scope.externalCallback,
+                                parentScope: scope
+                            }
+                        });
+
+
                     } else {
                         $mdDialog.show({
                             controller: 'gModalController as vm', // ../directives/gTable/gModalComponents
