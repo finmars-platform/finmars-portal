@@ -1,36 +1,69 @@
 <div class="special-rules-view complex-transaction-sr"
      data-ng-controller="ComplexTransactionSpecialRulesController as vm">
-    <div layout="row">
-        <div layout="row" flex="50">
-            <md-input-container>
-                <label for="">Portfolio</label>
-                <md-select multiple data-ng-model="vm.complexTransactionOptions.portfolio">
-                    <md-option data-ng-repeat="item in vm.portfolios" ng-value="item.id">
-                        {{item.name}}
-                    </md-option>
-                </md-select>
-            </md-input-container>
+
+    <fieldset class="fieldset-event-settings" style="margin-bottom: 36px">
+
+        <legend>Filters</legend>
+
+        <div layout="row">
+            <div layout="row" flex="50">
+                <md-input-container>
+                    <label for="">Portfolio</label>
+                    <md-select multiple data-ng-model="vm.complexTransactionOptions.portfolio"
+                               md-on-close="searchTerm = ''">
+                        <md-select-header>
+                            <input data-ng-model="searchTerm"
+                                   type="search"
+                                   placeholder="Search for a ..."
+                                   class="md-text md-select-search-pattern">
+                        </md-select-header>
+                        <md-option data-ng-repeat="item in vm.portfolios | filter:{name: searchTerm}"
+                                   ng-value="item.id">
+                            {{item.name}}
+                        </md-option>
+                    </md-select>
+                </md-input-container>
+            </div>
+            <div layout="row" flex="50">
+                <md-input-container>
+                    <label for="">Instrument Type</label>
+                    <md-select multiple data-ng-model="vm.complexTransactionOptions.instrumentType"
+                               md-on-close="searchTerm = ''">
+                        <md-select-header>
+                            <input data-ng-model="searchTerm"
+                                   type="search"
+                                   placeholder="Search for a ..."
+                                   class="md-text md-select-search-pattern">
+                        </md-select-header>
+                        <md-option data-ng-repeat="item in vm.instrumentTypes | filter:{name: searchTerm}"
+                                   ng-value="item.id">
+                            {{item.user_code}}
+                        </md-option>
+                    </md-select>
+                </md-input-container>
+            </div>
         </div>
-        <div layout="row" flex="50">
-            <md-input-container>
-                <label for="">Instrument Type</label>
-                <md-select multiple data-ng-model="vm.complexTransactionOptions.instrumentType">
-                    <md-option data-ng-repeat="item in vm.instrumentTypes" ng-value="item.id">
-                        {{item.user_code}}
-                    </md-option>
-                </md-select>
-            </md-input-container>
-        </div>
-    </div>
+
+    </fieldset>
     <div layout="row">
         <md-input-container>
             <label for="">Transaction type</label>
             <!--<md-select data-ng-model="vm.transactionType" md-on-open="vm.loadTransactionTypes()" ng-disabled="!vm.portfolioId && !vm.instrumentId">-->
             <md-select data-ng-model="vm.complexTransactionOptions.transactionType"
-                       md-on-open="vm.loadTransactionTypes()" data-ng-change="vm.transactionTypeHandler()">
-                <md-option data-ng-repeat="item in vm.transactionTypes" ng-value="item.id">
-                    {{item.name}}
-                </md-option>
+                       md-on-open="vm.loadTransactionTypes()" data-ng-change="vm.transactionTypeHandler()"
+                       md-on-close="searchTerm = ''">
+                <md-select-header>
+                    <input data-ng-model="searchTerm"
+                           type="search"
+                           placeholder="Search for a ..."
+                           class="md-text md-select-search-pattern">
+                </md-select-header>
+                <md-optgroup label="{{group.name}}" data-ng-repeat="group in vm.transactionGroups">
+                    <md-option data-ng-repeat="item in group.items | filter:{name: searchTerm}"
+                               ng-value="item.id">
+                        {{item.name}}
+                    </md-option>
+                </md-optgroup>
             </md-select>
         </md-input-container>
     </div>

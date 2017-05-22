@@ -38,8 +38,15 @@
         </div>
         <div data-ng-if="vm.attrs.length">
             <md-card data-ng-repeat="item in vm.attrs" class="am-attr-card" data-ng-if="vm.checkIsHidden(item)">
-                <div>
-                    <b data-ng-bind="item.name"></b> (<span data-ng-bind="vm.bindType(item)"></span>)
+                <div class="am-attr-card__wrapper">
+                    <div class="am-attr-card__left-side">
+                        <ng-md-icon class="am-attr-card__status" data-ng-if="!item.is_hidden"
+                                    icon="visibility"></ng-md-icon>
+                        <ng-md-icon class="am-attr-card__status" data-ng-if="item.is_hidden"
+                                    icon="visibility_off"></ng-md-icon>
+
+                        <b data-ng-bind="item.name"></b> (<span data-ng-bind="vm.bindType(item)"></span>)
+                    </div>
                     <div class="am-attr-misc">
                         <md-button data-ng-if="item['value_type'] === 30" class="am-attr-btn"
                                    data-ng-click="vm.editTreeAttr(item, $event)">

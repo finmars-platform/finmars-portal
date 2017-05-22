@@ -89,8 +89,7 @@
                 <ui-select multiple tagging="vm.tagTransform" ng-model="vm.entity.tags" theme="bootstrap"
                            sortable="true" close-on-select="false">
                     <ui-select-match placeholder="Tags">{{$item.name}}</ui-select-match>
-                    <ui-select-choices
-                            repeat="item in vm.tags | propsFilter: {name: $select.search}">
+                    <ui-select-choices position="up" repeat="item.id as item in vm.tags | propsFilter: {name: $select.search}">
                         <div ng-bind-html="item.name | highlight: $select.search"></div>
                     </ui-select-choices>
                 </ui-select>

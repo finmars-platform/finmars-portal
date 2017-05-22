@@ -39,16 +39,16 @@ app.run(['$rootScope', function ($rootScope) {
 
     $rootScope.$on('$stateChangeStart', function (event) {
 
-        usersService.ping().then(function (data) {
-
-            console.log('CHECK AUTH', data);
-
-            if (data.is_authenticated == false) {
-                event.preventDefault();
-                window.location = '/';
-            }
-
-        });
+        //usersService.ping().then(function (data) {
+        //
+        //    console.log('CHECK AUTH', data);
+        //
+        //    if (data.is_authenticated == false) {
+        //        event.preventDefault();
+        //        //window.location = '/';
+        //    }
+        //
+        //});
 
 
         setTimeout(function () {
