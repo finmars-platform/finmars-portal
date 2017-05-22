@@ -81,6 +81,7 @@
             "strategy-3-group": require('../models/strategy3groupPropsModel').getAttributes(),
             "balance-report": require('../models/balanceReportPropsModel').getAttributes(),
             'report-addon-performance': require('../models/reportAddonPerformancePropsModel').getAttributes(),
+            'report-addon-performance-pnl': require('../models/reportAddonPerformancePnlPropsModel').getAttributes(),
             'report-mismatch': require('../models/reportMismatchPropsModel').getAttributes(),
             "pnl-report": require('../models/pnlReportPropsModel').getAttributes(),
             "transaction-report": require('../models/transactionReportPropsModel').getAttributes(),

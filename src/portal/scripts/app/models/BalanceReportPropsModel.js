@@ -314,6 +314,11 @@
                 "key": "instrument_accrued_currency_fx_rate",
                 "name": "Accrued currency FX rate",
                 "value_type": "float"
+            },
+            {
+                "key": "detail",
+                "name": "Transaction Detail",
+                "value_type": 10
             }
             //{
             //    "key": "allocation_balance",
