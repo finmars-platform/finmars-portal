@@ -186,6 +186,21 @@
                 "key": "object_permissions_group",
                 "name": "Groups permissions",
                 "value_type": "mc_field"
+            },
+            {
+                "key": "allocation_balance",
+                "name": "Allocation Balance",
+                "value_type": "field"
+            },
+            {
+                "key": "allocation_pl",
+                "name": "Allocation P&L",
+                "value_type": "field"
+            },
+            {
+                "key": "linked_instrument",
+                "name": "Linked instrument",
+                "value_type": "field"
             }
         ]
     };

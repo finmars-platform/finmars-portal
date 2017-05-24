@@ -237,28 +237,34 @@
                     if (scope.isReport) {
 
                         var controllerName = '';
+                        var templateUrl = '';
 
                         switch (scope.options.entityType) {
                             case 'balance-report':
                                 controllerName = 'gModalReportController as vm';
+                                templateUrl = 'views/directives/groupTable/modal-report-view.html';
                                 break;
                             case 'pnl-report':
                                 controllerName = 'gModalReportPnlController as vm';
+                                templateUrl = 'views/directives/groupTable/modal-report-view.html';
                                 break;
                             case 'performance-report':
                                 controllerName = 'gModalReportPerformanceController as vm';
+                                templateUrl = 'views/directives/groupTable/modal-report-performance-view.html';
                                 break;
                             case 'cash-flow-projection-report':
                                 controllerName = 'gModalReportCashFlowProjectionController as vm';
+                                templateUrl = 'views/directives/groupTable/modal-report-cash-flow-projection-view.html';
                                 break;
                             case 'transaction-report':
                                 controllerName = 'gModalReportTransactionController as vm';
+                                templateUrl = 'views/directives/groupTable/modal-report-transaction-view.html';
                                 break;
                         }
 
                         $mdDialog.show({
                             controller: controllerName,
-                            templateUrl: 'views/directives/groupTable/modal-report-view.html',
+                            templateUrl: templateUrl,
                             parent: angular.element(document.body),
                             targetEvent: ev,
                             locals: {

@@ -114,6 +114,13 @@
                 required: true,
                 expression: '',
                 complexExpressionEntity: false
+            },
+            {
+                key: 'maturity_price',
+                caption: 'Maturity Price',
+                required: true,
+                expression: '',
+                complexExpressionEntity: false
             }
         ];
 

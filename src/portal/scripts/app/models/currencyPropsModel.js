@@ -23,6 +23,11 @@
                 "value_type": 10
             },
             {
+                "key": "user_code",
+                "name": "User code",
+                "value_type": 10
+            },
+            {
                 "key": "reference_for_pricing",
                 "name": "Reference for pricing",
                 "value_type": 10

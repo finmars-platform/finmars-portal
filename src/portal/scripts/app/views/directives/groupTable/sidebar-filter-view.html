@@ -244,7 +244,7 @@
                             </md-select-header>
                             <md-option
                                     data-ng-repeat="field in fields[filter.key] | orderBy:'-'+field.name | filter:{ name:searchTerm}"
-                                    ng-value="field.id">
+                                    ng-value="resolveFilterValue(field)">
                                 {{field.name}}
                             </md-option>
                         </md-select>
