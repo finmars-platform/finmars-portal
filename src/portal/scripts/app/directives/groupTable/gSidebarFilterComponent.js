@@ -40,6 +40,12 @@
                     //item.options.enabled = false;
                 });
 
+                scope.resolveFilterValue = function (field) {
+
+                    return field.id ? field.id : field.key;
+
+                };
+
                 if (scope.isReport == true) {
                     pricingPolicyService.getList().then(function (data) {
 

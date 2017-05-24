@@ -115,6 +115,13 @@
                 complexExpressionEntity: false
             },
             {
+                key: 'maturity_price',
+                caption: 'Maturity Price',
+                required: true,
+                expression: '',
+                complexExpressionEntity: false
+            },
+            {
                 key: 'daily_pricing_model',
                 caption: 'Daily pricing model',
                 required: false,
