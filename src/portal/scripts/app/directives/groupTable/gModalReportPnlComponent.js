@@ -600,17 +600,22 @@
 
                 });
                 this.dragula.on('drop', function (elem, target) {
+                    //console.log('here?', target); //TODO fallback to ids instead of name/key
                     $(target).removeClass('active');
+                    var name = $(elem).html();
+                    var i;
 
-                    console.log('elem', elem);
+                    //console.log('elem111111111111111111111111111111', elem);
+                    //console.log('columns111111111111111111111111111111', columns);
+                    //console.log('grouping111111111111111111111111111111', grouping);
+                    //console.log('filters111111111111111111111111111111', filters);
+
                     var identifier;
                     if ($(elem).attr('data-key-identifier')) {
                         identifier = $(elem).attr('data-key-identifier');
                     } else {
                         identifier = $(elem).html();
                     }
-
-                    var i;
 
                     exist = false;
                     if (target === document.querySelector('#columnsbag')) {
@@ -626,7 +631,6 @@
                     }
                     if (target === document.querySelector('#groupsbag')) {
                         for (i = 0; i < grouping.length; i = i + 1) {
-
                             if (grouping[i].key === identifier) {
                                 exist = true;
                             }
@@ -638,7 +642,6 @@
                     }
                     if (target === document.querySelector('#filtersbag .drop-new-filter')) {
                         for (i = 0; i < filters.length; i = i + 1) {
-
                             if (filters[i].key === identifier) {
                                 exist = true;
                             }
@@ -648,41 +651,100 @@
                             }
                         }
                     }
-                    if (!exist) {
+
+                    if (!exist && target) {
                         var a;
+                        //console.log('target', {target: target});
+                        //console.log('elem', {elem: elem});
 
-                        console.log('attrsList', attrsList);
+                        var nodes = Array.prototype.slice.call(target.children);
+                        var index = nodes.indexOf(elem);
 
-                        if (target === document.querySelector('#columnsbag')) {
+                        // .g-columns-holder
+                        //if (target === document.querySelector('#columnsbag')) {
+                        if (target === document.querySelector('.g-columns-holder') ||
+                            target === document.querySelector('#columnsbag')) {
+
                             for (a = 0; a < attrsList.length; a = a + 1) {
 
                                 if (attrsList[a].key === identifier) {
-                                    columns.push(attrsList[a]);
-                                } else {
-                                    if (attrsList[a].name === identifier) {
+
+                                    if (target === document.querySelector('#columnsbag')) {
                                         columns.push(attrsList[a]);
+                                    } else {
+                                        columns.splice(index, 0, attrsList[a]);
                                     }
+
+                                    //columns.push(attrsList[a]);
                                 }
 
+                                if (attrsList[a].name === identifier) {
+
+                                    if (target === document.querySelector('#columnsbag')) {
+                                        columns.push(attrsList[a]);
+                                    } else {
+                                        columns.splice(index, 0, attrsList[a]);
+                                    }
+
+                                    //columns.push(attrsList[a]);
+                                }
                             }
                             syncAttrs();
                             callback({silent: true});
                         }
-                        if (target === document.querySelector('#groupsbag')) {
+                        if (target === document.querySelector('#groupsbag') ||
+                            target === document.querySelector('.g-groups-holder')) {
 
                             for (a = 0; a < attrsList.length; a = a + 1) {
+
+                                if (attrsList[a].key === identifier) {
+
+                                    if (target === document.querySelector('#groupsbag')) {
+                                        grouping.push(attrsList[a]);
+                                    } else {
+                                        grouping.splice(index, 0, attrsList[a]);
+                                    }
+
+                                    //columns.push(attrsList[a]);
+                                }
+
                                 if (attrsList[a].name === identifier) {
-                                    grouping.push(attrsList[a]);
+
+                                    if (target === document.querySelector('#groupsbag')) {
+                                        grouping.push(attrsList[a]);
+                                    } else {
+                                        grouping.splice(index, 0, attrsList[a]);
+                                    }
+
                                 }
                             }
                             syncAttrs();
                             callback({silent: true});
                         }
-                        if (target === document.querySelector('#filtersbag .drop-new-filter')) {
+                        if (target === document.querySelector('#filtersbag .drop-new-filter') ||
+                            target === document.querySelector('.g-filters-holder')) {
 
                             for (a = 0; a < attrsList.length; a = a + 1) {
+
+                                if (attrsList[a].key === identifier) {
+
+                                    if (target === document.querySelector('#filtersbag .drop-new-filter')) {
+                                        filters.push(attrsList[a]);
+                                    } else {
+                                        filters.splice(index, 0, attrsList[a]);
+                                    }
+
+                                    //columns.push(attrsList[a]);
+                                }
+
                                 if (attrsList[a].name === identifier) {
-                                    filters.push(attrsList[a]);
+
+                                    if (target === document.querySelector('#filtersbag .drop-new-filter')) {
+                                        filters.push(attrsList[a]);
+                                    } else {
+                                        filters.splice(index, 0, attrsList[a]);
+                                    }
+
                                 }
                             }
                             syncAttrs();
@@ -700,7 +762,22 @@
             },
 
             dragula: function () {
-                var items = [document.querySelector('#columnsbag'), document.querySelector('#groupsbag'), document.querySelector('#filtersbag .drop-new-filter')];
+                //var items = [
+                //    document.querySelector('.g-columns-holder'),
+                //    //document.querySelector('#columnsbag'),
+                //    document.querySelector('#groupsbag'),
+                //    document.querySelector('#filtersbag .drop-new-filter')
+                //];
+
+                var items = [
+                    document.querySelector('.g-columns-holder'),
+                    document.querySelector('#columnsbag'),
+                    document.querySelector('.g-groups-holder'),
+                    document.querySelector('#groupsbag'),
+                    document.querySelector('.g-filters-holder'),
+                    document.querySelector('#filtersbag .drop-new-filter')
+                ];
+
                 var i;
                 var itemsElem = document.querySelectorAll('#dialogbag .g-modal-draggable-card');
                 for (i = 0; i < itemsElem.length; i = i + 1) {
@@ -709,6 +786,16 @@
 
                 this.dragula = dragula(items,
                     {
+                        accepts: function (el, target, source, sibling) {
+
+                            //console.log('el', el, target, source);
+
+                            if(target.classList.contains('g-modal-draggable-card')) {
+                                return false;
+                            }
+
+                            return true;
+                        },
                         copy: true
                     });
             }

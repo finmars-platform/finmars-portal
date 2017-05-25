@@ -30,7 +30,8 @@
                     </div>
                 </md-card>
             </div>
-            <div dragula="'group-bag'" dragula-model="grouping">
+            <!--<div dragula="'group-bag'" dragula-model="grouping">-->
+            <div class="g-groups-holder">
                 <md-card data-ng-repeat="item in options.grouping track by $index" class="group-item card">
                     <div class="sort">
                         <md-button class="group-sort" data-ng-show="item.options.sort === 'ASC'"
