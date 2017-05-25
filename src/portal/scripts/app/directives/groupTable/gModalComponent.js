@@ -435,32 +435,64 @@
                             }
                         }
                     }
-                    if (!exist) {
+
+                    if (!exist && target) {
                         var a;
-                        if (target === document.querySelector('#columnsbag')) {
+                        //console.log('target', {target: target});
+                        //console.log('elem', {elem: elem});
+
+                        var nodes = Array.prototype.slice.call(target.children);
+                        var index = nodes.indexOf(elem);
+
+                        // .g-columns-holder
+                        //if (target === document.querySelector('#columnsbag')) {
+                        if (target === document.querySelector('.g-columns-holder') ||
+                            target === document.querySelector('#columnsbag')) {
+
                             for (a = 0; a < attrsList.length; a = a + 1) {
                                 if (attrsList[a].name === name) {
-                                    columns.push(attrsList[a]);
+
+                                    if (target === document.querySelector('#columnsbag')) {
+                                        columns.push(attrsList[a]);
+                                    } else {
+                                        columns.splice(index, 0, attrsList[a]);
+                                    }
+
+                                    //columns.push(attrsList[a]);
                                 }
                             }
                             syncAttrs();
                             callback({silent: true});
                         }
-                        if (target === document.querySelector('#groupsbag')) {
+                        if (target === document.querySelector('#groupsbag') ||
+                            target === document.querySelector('.g-groups-holder')) {
 
                             for (a = 0; a < attrsList.length; a = a + 1) {
                                 if (attrsList[a].name === name) {
-                                    grouping.push(attrsList[a]);
+
+                                    if (target === document.querySelector('#groupsbag')) {
+                                        grouping.push(attrsList[a]);
+                                    } else {
+                                        grouping.splice(index, 0, attrsList[a]);
+                                    }
+
                                 }
                             }
                             syncAttrs();
                             callback({silent: true});
                         }
-                        if (target === document.querySelector('#filtersbag .drop-new-filter')) {
+                        if (target === document.querySelector('#filtersbag .drop-new-filter') ||
+                            target === document.querySelector('.g-filters-holder')) {
 
                             for (a = 0; a < attrsList.length; a = a + 1) {
                                 if (attrsList[a].name === name) {
-                                    filters.push(attrsList[a]);
+
+                                    if (target === document.querySelector('#filtersbag .drop-new-filter')) {
+                                        filters.push(attrsList[a]);
+                                    } else {
+                                        filters.splice(index, 0, attrsList[a]);
+                                    }
+
                                 }
                             }
                             syncAttrs();
@@ -478,7 +510,22 @@
             },
 
             dragula: function () {
-                var items = [document.querySelector('#columnsbag'), document.querySelector('#groupsbag'), document.querySelector('#filtersbag .drop-new-filter')];
+                //var items = [
+                //    document.querySelector('.g-columns-holder'),
+                //    //document.querySelector('#columnsbag'),
+                //    document.querySelector('#groupsbag'),
+                //    document.querySelector('#filtersbag .drop-new-filter')
+                //];
+
+                var items = [
+                    document.querySelector('.g-columns-holder'),
+                    document.querySelector('#columnsbag'),
+                    document.querySelector('.g-groups-holder'),
+                    document.querySelector('#groupsbag'),
+                    document.querySelector('.g-filters-holder'),
+                    document.querySelector('#filtersbag .drop-new-filter')
+                ];
+
                 var i;
                 var itemsElem = document.querySelectorAll('#dialogbag .g-modal-draggable-card');
                 for (i = 0; i < itemsElem.length; i = i + 1) {
@@ -487,6 +534,16 @@
 
                 this.dragula = dragula(items,
                     {
+                        accepts: function (el, target, source, sibling) {
+
+                            //console.log('el', el, target, source);
+
+                            if(target.classList.contains('g-modal-draggable-card')) {
+                                return false;
+                            }
+
+                            return true;
+                        },
                         copy: true
                     });
             }

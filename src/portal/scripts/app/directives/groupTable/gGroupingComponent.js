@@ -237,28 +237,34 @@
                     if (scope.isReport) {
 
                         var controllerName = '';
+                        var templateUrl = '';
 
                         switch (scope.options.entityType) {
                             case 'balance-report':
                                 controllerName = 'gModalReportController as vm';
+                                templateUrl = 'views/directives/groupTable/modal-report-view.html';
                                 break;
                             case 'pnl-report':
                                 controllerName = 'gModalReportPnlController as vm';
+                                templateUrl = 'views/directives/groupTable/modal-report-view.html';
                                 break;
                             case 'performance-report':
                                 controllerName = 'gModalReportPerformanceController as vm';
+                                templateUrl = 'views/directives/groupTable/modal-report-performance-view.html';
                                 break;
                             case 'cash-flow-projection-report':
                                 controllerName = 'gModalReportCashFlowProjectionController as vm';
+                                templateUrl = 'views/directives/groupTable/modal-report-cash-flow-projection-view.html';
                                 break;
                             case 'transaction-report':
                                 controllerName = 'gModalReportTransactionController as vm';
+                                templateUrl = 'views/directives/groupTable/modal-report-transaction-view.html';
                                 break;
                         }
 
                         $mdDialog.show({
                             controller: controllerName,
-                            templateUrl: 'views/directives/groupTable/modal-report-view.html',
+                            templateUrl: templateUrl,
                             parent: angular.element(document.body),
                             targetEvent: ev,
                             locals: {
@@ -281,6 +287,51 @@
                         });
                     }
                 }
+
+                var dragAndDrop = {
+
+                    init: function () {
+                        this.dragula();
+                        this.eventListeners();
+                    },
+
+                    eventListeners: function () {
+
+                        this.dragula.on('over', function (elem, container, source) {
+                            $(container).addClass('active');
+                            $(container).on('mouseleave', function () {
+                                $(this).removeClass('active');
+                            })
+                        });
+                        this.dragula.on('drop', function (elem, target) {
+                            $(target).removeClass('active');
+                        });
+
+                        this.dragula.on('dragend', function (el) {
+
+                            scope.externalCallback({silent: true});
+
+                        })
+                    },
+
+                    dragula: function () {
+                        console.log('COLUMSN DRAGULA INIT?');
+
+                        var items = [document.querySelector('.g-groups-holder')];
+                        var i;
+                        //var itemsElem = document.querySelectorAll('.g-columns-holder md-card');
+                        //for (i = 0; i < itemsElem.length; i = i + 1) {
+                        //    items.push(itemsElem[i]);
+                        //}
+
+                        this.dragula = dragula(items);
+                    }
+                };
+
+                //
+                setTimeout(function () {
+                    dragAndDrop.init();
+                }, 500);
             }
         }
     }

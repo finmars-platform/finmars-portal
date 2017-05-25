@@ -45,7 +45,8 @@
                     console.log('upperGroupTableBody', upperGroupTableBody);
                     console.log('workAreaHeight', workAreaHeight);
 
-                    upperGroupTableBody.css('height', 'auto');
+                    //upperGroupTableBody.css('height', 'auto');
+                    upperGroupTableBody.height(workAreaWithoutGrouping - 76);
                     //upperGroupTableBody.height(workAreaHeight);
 
 
@@ -112,7 +113,7 @@
                             })
                         });
 
-                    })
+                    });
 
 
                     var upperGroupSection = $(elem).find('.g-grouping-section').first();

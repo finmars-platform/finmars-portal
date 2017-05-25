@@ -244,9 +244,9 @@
                 };
 
                 //
-                //setTimeout(function () {
-                //    dragAndDrop.init();
-                //}, 500);
+                setTimeout(function () {
+                    dragAndDrop.init();
+                }, 500);
 
                 scope.isSortable = function (column) {
                     var b, e;

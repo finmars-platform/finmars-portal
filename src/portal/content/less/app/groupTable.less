@@ -388,6 +388,34 @@
   }
   .g-columns-holder {
     float: left;
+    .modal-dialog-card {
+      margin: 3px 0 5px;
+      font-size: 11.2px;
+      display: inline-block;
+      padding: .5em 1em;
+      line-height: 1;
+      overflow: hidden;
+    }
+  }
+  .g-filters-holder {
+    float: left;
+    .modal-dialog-card {
+      margin: 8px;
+      width: 100%;
+      min-height: 66px;
+    }
+  }
+  .g-groups-holder {
+    float: left;
+
+    .modal-dialog-card {
+      margin: 8px;
+      display: inline-block;
+      padding: .5em 1em;
+      line-height: 1;
+      overflow: hidden;
+    }
+
   }
   .g-cell-select.all {
     height: 24px;
@@ -554,8 +582,9 @@
 }
 
 .g-cell.g-column {
-  float: left;
-  display: block;
+  //float: left;
+  //display: block;
+  display: inline-block;
   position: relative;
   margin: 3px 0 5px 0;
   overflow: visible;
@@ -707,8 +736,9 @@ body.md-dialog-is-showing {
 }
 
 .group-item {
-  float: left;
-  display: block;
+  //float: left;
+  //display: block;
+  display: inline-block;
   height: 2em;
   overflow: hidden;
 
@@ -843,6 +873,7 @@ body.md-dialog-is-showing {
 }
 
 .modal-dialog-card {
+  margin: 0;
   display: inline-block;
   padding: .5em 1em;
 }

@@ -27,6 +27,12 @@
             }
         };
 
+        vm.preventSpace = function($event){
+            //$event.preventDefault();
+            $event.stopPropagation();
+            //return false;
+        };
+
         vm.openExpressionDialog = function ($event, item, options) {
 
             var itemObj = {expression: ''};
