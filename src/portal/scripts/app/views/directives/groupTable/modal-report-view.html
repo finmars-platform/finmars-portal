@@ -14,7 +14,7 @@
     </md-toolbar>
     <md-dialog-content>
         <div data-ng-if="vm.readyStatus.content">
-            <md-tabs md-dynamic-height md-border-bottom id="dialogbag">
+            <md-tabs data-ng-init="vm.initDnd()" md-dynamic-height md-border-bottom id="dialogbag">
 
                 <md-tab label="Balance">
                     <md-content class="md-padding">
@@ -36,7 +36,7 @@
                                              class="md-primary" data-ng-change="vm.updateAttrs()">
                                 </md-checkbox>
                             </div>
-                            <div dragula="'columns-bag'" class="g-modal-draggable-card">
+                            <div class="g-modal-draggable-card">
                                 <md-card class="modal-dialog-card" data-key-identifier="{{item.key}}">
                                     {{::vm.bindReportItemName(item)}}
                                 </md-card>
@@ -65,7 +65,7 @@
                                              class="md-primary" data-ng-change="vm.updateAttrs()">
                                 </md-checkbox>
                             </div>
-                            <div dragula="'columns-bag'" class="g-modal-draggable-card">
+                            <div class="g-modal-draggable-card">
                                 <md-card class="modal-dialog-card">{{::vm.bindReportItemName(item)}}</md-card>
                             </div>
                         </div>
@@ -92,7 +92,7 @@
                                              class="md-primary" data-ng-change="vm.updateAttrs()">
                                 </md-checkbox>
                             </div>
-                            <div dragula="'columns-bag'" class="g-modal-draggable-card">
+                            <div class="g-modal-draggable-card">
                                 <md-card class="modal-dialog-card">{{::vm.bindReportItemName(item)}}</md-card>
                             </div>
                         </div>
@@ -109,7 +109,7 @@
                                              class="md-primary" data-ng-change="vm.updateAttrs()">
                                 </md-checkbox>
                             </div>
-                            <div dragula="'columns-bag'" class="g-modal-draggable-card">
+                            <div class="g-modal-draggable-card">
                                 <md-card class="modal-dialog-card">{{::vm.bindReportItemName(item)}}</md-card>
                             </div>
                         </div>
@@ -126,7 +126,7 @@
                                              class="md-primary" data-ng-change="vm.updateAttrs()">
                                 </md-checkbox>
                             </div>
-                            <div dragula="'columns-bag'" class="g-modal-draggable-card">
+                            <div class="g-modal-draggable-card">
                                 <md-card class="modal-dialog-card">{{::vm.bindReportItemName(item)}}</md-card>
                             </div>
                         </div>
@@ -153,7 +153,7 @@
                                              class="md-primary" data-ng-change="vm.updateAttrs()">
                                 </md-checkbox>
                             </div>
-                            <div dragula="'columns-bag'" class="g-modal-draggable-card">
+                            <div class="g-modal-draggable-card">
                                 <md-card class="modal-dialog-card">{{::vm.bindReportItemName(item)}}</md-card>
                             </div>
                         </div>
@@ -170,7 +170,7 @@
                                              class="md-primary" data-ng-change="vm.updateAttrs()">
                                 </md-checkbox>
                             </div>
-                            <div dragula="'columns-bag'" class="g-modal-draggable-card">
+                            <div class="g-modal-draggable-card">
                                 <md-card class="modal-dialog-card">{{::vm.bindReportItemName(item)}}</md-card>
                             </div>
                         </div>
@@ -187,7 +187,7 @@
                                              class="md-primary" data-ng-change="vm.updateAttrs()">
                                 </md-checkbox>
                             </div>
-                            <div dragula="'columns-bag'" class="g-modal-draggable-card">
+                            <div class="g-modal-draggable-card">
                                 <md-card class="modal-dialog-card">{{::vm.bindReportItemName(item)}}</md-card>
                             </div>
                         </div>
@@ -214,7 +214,7 @@
                                              class="md-primary" data-ng-change="vm.updateAttrs()">
                                 </md-checkbox>
                             </div>
-                            <div dragula="'columns-bag'" class="g-modal-draggable-card">
+                            <div class="g-modal-draggable-card">
                                 <md-card class="modal-dialog-card">{{::vm.bindReportItemName(item)}}</md-card>
                             </div>
                         </div>
@@ -231,7 +231,7 @@
                                              class="md-primary" data-ng-change="vm.updateAttrs()">
                                 </md-checkbox>
                             </div>
-                            <div dragula="'columns-bag'" class="g-modal-draggable-card">
+                            <div class="g-modal-draggable-card">
                                 <md-card class="modal-dialog-card">{{::vm.bindReportItemName(item)}}</md-card>
                             </div>
                         </div>
@@ -258,7 +258,7 @@
                                              class="md-primary" data-ng-change="vm.updateAttrs()">
                                 </md-checkbox>
                             </div>
-                            <div dragula="'columns-bag'" class="g-modal-draggable-card">
+                            <div class="g-modal-draggable-card">
                                 <md-card class="modal-dialog-card">{{::vm.bindReportItemName(item)}}</md-card>
                             </div>
                         </div>
@@ -275,7 +275,7 @@
                                              class="md-primary" data-ng-change="vm.updateAttrs()">
                                 </md-checkbox>
                             </div>
-                            <div dragula="'columns-bag'" class="g-modal-draggable-card">
+                            <div class="g-modal-draggable-card">
                                 <md-card class="modal-dialog-card">{{::vm.bindReportItemName(item)}}</md-card>
                             </div>
                         </div>
@@ -292,7 +292,7 @@
                                              class="md-primary" data-ng-change="vm.updateAttrs()">
                                 </md-checkbox>
                             </div>
-                            <div dragula="'columns-bag'" class="g-modal-draggable-card">
+                            <div class="g-modal-draggable-card">
                                 <md-card class="modal-dialog-card">{{::vm.bindReportItemName(item)}}</md-card>
                             </div>
                         </div>
@@ -309,7 +309,7 @@
                                              class="md-primary" data-ng-change="vm.updateAttrs()">
                                 </md-checkbox>
                             </div>
-                            <div dragula="'columns-bag'" class="g-modal-draggable-card">
+                            <div class="g-modal-draggable-card">
                                 <md-card class="modal-dialog-card">{{::vm.bindReportItemName(item)}}</md-card>
                             </div>
                         </div>
@@ -326,7 +326,7 @@
                                              class="md-primary" data-ng-change="vm.updateAttrs()">
                                 </md-checkbox>
                             </div>
-                            <div dragula="'columns-bag'" class="g-modal-draggable-card">
+                            <div class="g-modal-draggable-card">
                                 <md-card class="modal-dialog-card">{{::vm.bindReportItemName(item)}}</md-card>
                             </div>
                         </div>
@@ -343,7 +343,7 @@
                                              class="md-primary" data-ng-change="vm.updateAttrs()">
                                 </md-checkbox>
                             </div>
-                            <div dragula="'columns-bag'" class="g-modal-draggable-card">
+                            <div class="g-modal-draggable-card">
                                 <md-card class="modal-dialog-card">{{::vm.bindReportItemName(item)}}</md-card>
                             </div>
                         </div>
@@ -360,7 +360,7 @@
                                              class="md-primary" data-ng-change="vm.updateAttrs()">
                                 </md-checkbox>
                             </div>
-                            <div dragula="'columns-bag'" class="g-modal-draggable-card">
+                            <div class="g-modal-draggable-card">
                                 <md-card class="modal-dialog-card">{{::vm.bindReportItemName(item)}}</md-card>
                             </div>
                         </div>
@@ -377,7 +377,7 @@
                                              class="md-primary" data-ng-change="vm.updateAttrs()">
                                 </md-checkbox>
                             </div>
-                            <div dragula="'columns-bag'" class="g-modal-draggable-card">
+                            <div class="g-modal-draggable-card">
                                 <md-card class="modal-dialog-card">{{::vm.bindReportItemName(item)}}</md-card>
                             </div>
                         </div>
@@ -394,7 +394,7 @@
                                              class="md-primary" data-ng-change="vm.updateAttrs()">
                                 </md-checkbox>
                             </div>
-                            <div dragula="'columns-bag'" class="g-modal-draggable-card">
+                            <div class="g-modal-draggable-card">
                                 <md-card class="modal-dialog-card">{{::vm.bindReportItemName(item)}}</md-card>
                             </div>
                         </div>
@@ -421,7 +421,7 @@
                                              class="md-primary" data-ng-change="vm.updateAttrs()">
                                 </md-checkbox>
                             </div>
-                            <div dragula="'columns-bag'" class="g-modal-draggable-card">
+                            <div class="g-modal-draggable-card">
                                 <md-card class="modal-dialog-card">{{::vm.bindReportItemName(item)}}</md-card>
                             </div>
                         </div>
@@ -448,7 +448,7 @@
                                              class="md-primary" data-ng-change="vm.updateAttrs()">
                                 </md-checkbox>
                             </div>
-                            <div dragula="'columns-bag'" class="g-modal-draggable-card">
+                            <div class="g-modal-draggable-card">
                                 <md-card class="modal-dialog-card">{{::vm.bindReportItemName(item)}}</md-card>
                             </div>
                         </div>
@@ -475,7 +475,7 @@
                                              class="md-primary" data-ng-change="vm.updateAttrs()">
                                 </md-checkbox>
                             </div>
-                            <div dragula="'columns-bag'" class="g-modal-draggable-card">
+                            <div class="g-modal-draggable-card">
                                 <md-card class="modal-dialog-card">{{::vm.bindReportItemName(item)}}</md-card>
                             </div>
                         </div>

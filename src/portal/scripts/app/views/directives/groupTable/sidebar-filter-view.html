@@ -219,7 +219,8 @@
             Clear all
         </md-button>
     </div>
-    <div dragula="'filters-bag'" dragula-model="filters" class="filters-holder">
+    <!--<div dragula="'filters-bag'" dragula-model="filters" class="filters-holder">-->
+    <div class="g-filters-holder">
         <md-card data-ng-repeat="filter in filters"
                  class="{{filter.options.enabled ? '' : 'f-disabled' }} g-filter-item" layout="row">
             <md-tooltip data-ng-if="sideNavCollapsed" class="" md-direction="top">{{filter.name}}<span

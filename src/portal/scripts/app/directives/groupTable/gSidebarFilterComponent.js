@@ -270,6 +270,52 @@
                     }
                 };
                 //console.log('filter fields', scope.filters);
+
+
+                var dragAndDrop = {
+
+                    init: function () {
+                        this.dragula();
+                        this.eventListeners();
+                    },
+
+                    eventListeners: function () {
+
+                        this.dragula.on('over', function (elem, container, source) {
+                            $(container).addClass('active');
+                            $(container).on('mouseleave', function () {
+                                $(this).removeClass('active');
+                            })
+                        });
+                        this.dragula.on('drop', function (elem, target) {
+                            $(target).removeClass('active');
+                        });
+
+                        this.dragula.on('dragend', function (el) {
+
+                            scope.externalCallback({silent: true});
+
+                        })
+                    },
+
+                    dragula: function () {
+                        console.log('COLUMSN DRAGULA INIT?');
+
+                        var items = [document.querySelector('.g-filters-holder')];
+                        var i;
+                        //var itemsElem = document.querySelectorAll('.g-columns-holder md-card');
+                        //for (i = 0; i < itemsElem.length; i = i + 1) {
+                        //    items.push(itemsElem[i]);
+                        //}
+
+                        this.dragula = dragula(items);
+                    }
+                };
+
+                //
+                setTimeout(function () {
+                    dragAndDrop.init();
+                }, 500);
             }
         }
     }
