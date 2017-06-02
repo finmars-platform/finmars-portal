@@ -16,7 +16,7 @@
     var transactionClassService = require('../../services/transaction/transactionClassService');
 
 
-    module.exports = function ($scope, $mdDialog, reportOptions) {
+    module.exports = function ($scope, $mdDialog, reportOptions, options) {
 
         var vm = this;
 
@@ -24,6 +24,8 @@
         console.log('reportOptions', reportOptions);
 
         vm.reportOptions = JSON.parse(JSON.stringify(reportOptions));
+
+        vm.entityType = options.entityType;
 
         vm.readyStatus = {
             pricingPolicy: false,
@@ -34,6 +36,10 @@
             strategy2: false,
             strategy3: false,
             transactionClass: false
+        };
+
+        vm.checkGeneralSettings = function () {
+            return vm.entityType == 'balance-report' || vm.entityType == 'pnl-report' || vm.entityType == 'performance-report';
         };
 
         vm.getPricingPolicies = function () {

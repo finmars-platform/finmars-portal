@@ -613,10 +613,6 @@
             });
         };
 
-        vm.cancel = function () {
-            $('body').removeClass('drag-dialog');
-            $mdDialog.cancel();
-        };
 
         var dragAndDrop = {
 
@@ -763,12 +759,13 @@
                             for (a = 0; a < attrsList.length; a = a + 1) {
 
                                 if (attrsList[a].key === identifier) {
+                                    https://www.linkedin.com/help/linkedin?trk=neptune_help
 
-                                    if (target === document.querySelector('#filtersbag .drop-new-filter')) {
-                                        filters.push(attrsList[a]);
-                                    } else {
-                                        filters.splice(index, 0, attrsList[a]);
-                                    }
+                                        if (target === document.querySelector('#filtersbag .drop-new-filter')) {
+                                            filters.push(attrsList[a]);
+                                        } else {
+                                            filters.splice(index, 0, attrsList[a]);
+                                        }
 
                                     //columns.push(attrsList[a]);
                                 }
@@ -834,7 +831,19 @@
                         },
                         copy: true
                     });
+            },
+
+            destroy: function () {
+                console.log('this.dragula', this.dragula)
+                this.dragula.destroy();
             }
+        };
+
+        vm.cancel = function () {
+            $('body').removeClass('drag-dialog');
+
+            dragAndDrop.destroy();
+            $mdDialog.cancel();
         };
 
         var addColumn = function () {

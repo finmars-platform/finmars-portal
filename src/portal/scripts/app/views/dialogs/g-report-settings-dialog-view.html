@@ -13,113 +13,31 @@
 
                 <div data-ng-if="vm.checkReadyStatus()">
 
-                    <h2>General Settings</h2>
+                    <div data-ng-if="vm.entityType == 'balance-report' || vm.entityType == 'pnl-report' || vm.entityType == 'performance-report'">
 
-                    <div layout="row" style="margin-bottom: 20px">
+                        <h2>General Settings</h2>
 
-                        <md-input-container>
+                        <div layout="row" style="margin-bottom: 20px">
 
-                            <label for="">Date</label>
+                            <md-input-container>
 
-                            <zh-date-picker data-ng-model="vm.reportOptions.report_date"
-                                            position="left"></zh-date-picker>
+                                <label for="">Date</label>
 
-                        </md-input-container>
+                                <zh-date-picker data-ng-model="vm.reportOptions.report_date"
+                                                position="left"></zh-date-picker>
 
-                        <md-input-container>
-
-                            <label for="">Pricing Policy</label>
-
-                            <md-select data-ng-model="vm.reportOptions.pricing_policy">
-                                <md-option data-ng-repeat="item in vm.pricingPolicies" ng-value="item.id">{{item.name}}
-                                </md-option>
-                            </md-select>
-
-                        </md-input-container>
-
-                    </div>
-
-                    <div layout="row">
-
-                        <md-input-container>
-
-                            <label for="">Currency</label>
-
-                            <md-select data-ng-model="vm.reportOptions.report_currency">
-                                <md-option data-ng-repeat="item in vm.currencies" ng-value="item.id">{{item.name}}
-                                </md-option>
-                            </md-select>
-
-                        </md-input-container>
-
-                        <md-input-container>
-
-                            <label for="">Cost method</label>
-
-                            <md-select data-ng-model="vm.reportOptions.cost_method">
-                                <md-option ng-value="1">AVCO
-                                </md-option>
-                                <md-option ng-value="2">FIFO
-                                </md-option>
-                                <!--<md-option ng-value="3">LIFO-->
-                                <!--</md-option>-->
-                            </md-select>
-
-                        </md-input-container>
-
-                    </div>
-
-                    <h2>Consolidation</h2>
-
-                    <div layout="row">
-
-                        <div layout="column" class="m-r-16">
-
-                            <md-input-container style="margin-bottom: 20px;">
-                                <label for="">Portfolio mode</label>
-                                <md-select data-ng-model="vm.reportOptions.portfolio_mode">
-                                    <md-option value="0">Ignore</md-option>
-                                    <md-option value="1" selected>Independent</md-option>
-                                </md-select>
                             </md-input-container>
 
-                            <md-input-container style="margin-bottom: 20px;">
-                                <label for="">Account mode</label>
-                                <md-select data-ng-model="vm.reportOptions.account_mode">
-                                    <md-option value="0">Ignore</md-option>
-                                    <md-option value="1" selected>Independent</md-option>
+                            <md-input-container>
+
+                                <label for="">Pricing Policy</label>
+
+                                <md-select data-ng-model="vm.reportOptions.pricing_policy">
+                                    <md-option data-ng-repeat="item in vm.pricingPolicies" ng-value="item.id">
+                                        {{item.name}}
+                                    </md-option>
                                 </md-select>
-                            </md-input-container>
 
-                        </div>
-
-                        <div layout="column">
-
-                            <md-input-container style="margin-bottom: 20px;">
-                                <label for="">Strategy 1 mode</label>
-                                <md-select data-ng-model="vm.reportOptions.strategy1_mode">
-                                    <md-option value="0">Ignore</md-option>
-                                    <md-option value="1" selected>Independent</md-option>
-                                    <md-option value="2">Offsetting (Interdependent - 0/100, 100/0, 50/50)</md-option>
-                                </md-select>
-                            </md-input-container>
-
-                            <md-input-container style="margin-bottom: 20px;">
-                                <label for="">Strategy 2 mode</label>
-                                <md-select data-ng-model="vm.reportOptions.strategy2_mode">
-                                    <md-option value="0">Ignore</md-option>
-                                    <md-option value="1" selected>Independent</md-option>
-                                    <md-option value="2">Offsetting (Interdependent - 0/100, 100/0, 50/50)</md-option>
-                                </md-select>
-                            </md-input-container>
-
-                            <md-input-container style="margin-bottom: 20px;">
-                                <label for="">Strategy 3 mode</label>
-                                <md-select data-ng-model="vm.reportOptions.strategy3_mode">
-                                    <md-option value="0">Ignore</md-option>
-                                    <md-option value="1" selected>Independent</md-option>
-                                    <md-option value="2">Offsetting (Interdependent - 0/100, 100/0, 50/50)</md-option>
-                                </md-select>
                             </md-input-container>
 
                         </div>
@@ -127,13 +45,111 @@
                         <div layout="row">
 
                             <md-input-container>
-                                <label for="">Offsetting size</label>
-                                <md-select data-ng-model="vm.reportOptions.approach_multiplier">
-                                    <md-option value="0">0/100</md-option>
-                                    <md-option value="0.5" selected>50/50</md-option>
-                                    <md-option value="1">100/0</md-option>
+
+                                <label for="">Currency</label>
+
+                                <md-select data-ng-model="vm.reportOptions.report_currency">
+                                    <md-option data-ng-repeat="item in vm.currencies" ng-value="item.id">{{item.name}}
+                                    </md-option>
                                 </md-select>
+
                             </md-input-container>
+
+                            <md-input-container data-ng-if="vm.entityType != 'performance-report'">
+
+                                <label for="">Cost method</label>
+
+                                <md-select data-ng-model="vm.reportOptions.cost_method">
+                                    <md-option ng-value="1">AVCO
+                                    </md-option>
+                                    <md-option ng-value="2">FIFO
+                                    </md-option>
+                                    <!--<md-option ng-value="3">LIFO-->
+                                    <!--</md-option>-->
+                                </md-select>
+
+                            </md-input-container>
+
+                        </div>
+
+                        <h2>Consolidation</h2>
+
+                        <div layout="row">
+
+                            <div layout="column" class="m-r-16">
+
+                                <md-input-container style="margin-bottom: 20px;">
+                                    <label for="">Portfolio mode</label>
+                                    <md-select data-ng-model="vm.reportOptions.portfolio_mode">
+                                        <md-option value="0">Ignore</md-option>
+                                        <md-option value="1" selected>Independent</md-option>
+                                    </md-select>
+                                </md-input-container>
+
+                                <md-input-container style="margin-bottom: 20px;">
+                                    <label for="">Account position</label>
+                                    <md-select data-ng-model="vm.reportOptions.accounts_position">
+                                        <md-option value="0">Ignore</md-option>
+                                        <md-option value="1" selected>Independent</md-option>
+                                    </md-select>
+                                </md-input-container>
+
+                                <md-input-container style="margin-bottom: 20px;">
+                                    <label for="">Account cash</label>
+                                    <md-select data-ng-model="vm.reportOptions.accounts_cash">
+                                        <md-option value="0">Ignore</md-option>
+                                        <md-option value="1" selected>Independent</md-option>
+                                    </md-select>
+                                </md-input-container>
+
+                            </div>
+
+                            <div layout="column">
+
+                                <md-input-container style="margin-bottom: 20px;">
+                                    <label for="">Strategy 1 mode</label>
+                                    <md-select data-ng-model="vm.reportOptions.strategy1_mode">
+                                        <md-option value="0">Ignore</md-option>
+                                        <md-option value="1" selected>Independent</md-option>
+                                        <md-option value="2">Offsetting (Interdependent - 0/100, 100/0, 50/50)
+                                        </md-option>
+                                    </md-select>
+                                </md-input-container>
+
+                                <md-input-container style="margin-bottom: 20px;">
+                                    <label for="">Strategy 2 mode</label>
+                                    <md-select data-ng-model="vm.reportOptions.strategy2_mode">
+                                        <md-option value="0">Ignore</md-option>
+                                        <md-option value="1" selected>Independent</md-option>
+                                        <md-option value="2">Offsetting (Interdependent - 0/100, 100/0, 50/50)
+                                        </md-option>
+                                    </md-select>
+                                </md-input-container>
+
+                                <md-input-container style="margin-bottom: 20px;">
+                                    <label for="">Strategy 3 mode</label>
+                                    <md-select data-ng-model="vm.reportOptions.strategy3_mode">
+                                        <md-option value="0">Ignore</md-option>
+                                        <md-option value="1" selected>Independent</md-option>
+                                        <md-option value="2">Offsetting (Interdependent - 0/100, 100/0, 50/50)
+                                        </md-option>
+                                    </md-select>
+                                </md-input-container>
+
+                            </div>
+
+                            <div layout="row">
+
+                                <md-input-container>
+                                    <label for="">Offsetting size</label>
+                                    <md-select data-ng-model="vm.reportOptions.approach_multiplier">
+                                        <md-option value="0">0/100</md-option>
+                                        <md-option value="0.5" selected>50/50</md-option>
+                                        <md-option value="1">100/0</md-option>
+                                    </md-select>
+                                </md-input-container>
+
+                            </div>
 
                         </div>
 
@@ -255,30 +271,34 @@
 
                     </div>
 
-                    <h2>Transaction details</h2>
+                    <div data-ng-if="vm.entityType == 'balance-report' || vm.entityType == 'pnl-report'">
 
-                    <div layout="row">
+                        <h2>Transaction details</h2>
 
-                        <md-input-container>
-                            <md-checkbox data-ng-model="vm.reportOptions.show_transaction_details">
-                                Show transaction details
-                            </md-checkbox>
-                        </md-input-container>
+                        <div layout="row">
 
-                    </div>
+                            <md-input-container>
+                                <md-checkbox data-ng-model="vm.reportOptions.show_transaction_details">
+                                    Show transaction details
+                                </md-checkbox>
+                            </md-input-container>
 
-                    <h2>Market Value/Exposure % calculation grouping</h2>
+                        </div>
 
-                    <div layout="row">
-                        <md-radio-group ng-model="vm.reportOptions.calculationGroup" layout="row">
+                        <h2>Market Value/Exposure % calculation grouping</h2>
 
-                            <md-radio-button value="portfolio" class="md-primary">Portfolio</md-radio-button>
-                            <md-radio-button value="account" class="md-primary">Account</md-radio-button>
-                            <md-radio-button value="strategy1" class="md-primary">Strategy 1</md-radio-button>
-                            <md-radio-button value="strategy2" class="md-primary">Strategy 2</md-radio-button>
-                            <md-radio-button value="strategy3" class="md-primary">Strategy 3</md-radio-button>
+                        <div layout="row">
+                            <md-radio-group ng-model="vm.reportOptions.calculationGroup" layout="row">
 
-                        </md-radio-group>
+                                <md-radio-button value="portfolio" class="md-primary">Portfolio</md-radio-button>
+                                <md-radio-button value="account" class="md-primary">Account</md-radio-button>
+                                <md-radio-button value="strategy1" class="md-primary">Strategy 1</md-radio-button>
+                                <md-radio-button value="strategy2" class="md-primary">Strategy 2</md-radio-button>
+                                <md-radio-button value="strategy3" class="md-primary">Strategy 3</md-radio-button>
+
+                            </md-radio-group>
+
+                        </div>
 
                     </div>
 
