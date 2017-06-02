@@ -18,6 +18,10 @@
 
         $scope.$parent.vm.rangeType = 40;
 
+        if (!vm.rangeItems) {
+            vm.rangeItems = [];
+        }
+
         if (!vm.rangeItems.length) {
             vm.rangeItems.push({});
         }

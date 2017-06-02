@@ -571,10 +571,7 @@
             });
         };
 
-        vm.cancel = function () {
-            $('body').removeClass('drag-dialog');
-            $mdDialog.cancel();
-        };
+
 
         var dragAndDrop = {
 
@@ -745,6 +742,8 @@
                             callback({silent: true});
                         }
                         $scope.$apply();
+                        
+
                     }
                     $scope.$apply();
                 });
@@ -792,6 +791,11 @@
                         },
                         copy: true
                     });
+            },
+
+            destroy: function () {
+                console.log('this.dragula', this.dragula)
+                this.dragula.destroy();
             }
         };
 
@@ -811,6 +815,12 @@
         setTimeout(function () {
             dragAndDrop.init();
         }, 500);
+
+        vm.cancel = function () {
+            $('body').removeClass('drag-dialog');
+            dragAndDrop.destroy();
+            $mdDialog.cancel();
+        };
 
         vm.MABtnVisibility = function (entityType) {
             return metaService.checkRestrictedEntityTypesForAM(entityType);

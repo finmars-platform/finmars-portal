@@ -9,7 +9,11 @@
                 <div data-ng-if="vm.currentLocationShowBtns" layout="row" style="margin-left: 20px">
                     <md-menu>
                         <md-button class="md-button header-cloud-layout-btn" ng-click="$mdOpenMenu($event)">
-                            <ng-md-icon icon="cloud" size="36"></ng-md-icon>
+                            <ng-md-icon icon="cloud" size="36">
+                                <md-tooltip class="tooltip_1" md-direction="bottom">Select and save current view
+                                    layouts
+                                </md-tooltip>
+                            </ng-md-icon>
                         </md-button>
                         <md-menu-content>
                             <md-menu-item>
@@ -28,12 +32,17 @@
                 <div layout="row">
                     <md-button class="md-button header-help-btn" data-ng-click="vm.openHelp($event)"
                                aria-label="Notifications">
-                        <ng-md-icon icon="help" size="36"></ng-md-icon>
+                        <ng-md-icon icon="help" size="36">
+                            <md-tooltip class="tooltip_1" md-direction="bottom">Open help menu</md-tooltip>
+                        </ng-md-icon>
                     </md-button>
 
-                    <md-button data-ng-if="vm.isReport()" class="md-button header-help-btn" data-ng-click="vm.copyReport($event)"
+                    <md-button data-ng-if="vm.isReport()" class="md-button header-help-btn"
+                               data-ng-click="vm.copyReport($event)"
                                aria-label="Copy report">
-                        <ng-md-icon icon="content_copy" size="36"></ng-md-icon>
+                        <ng-md-icon icon="content_copy" size="36">
+                            <md-tooltip class="tooltip_1" md-direction="bottom">Copy report in buffer</md-tooltip>
+                        </ng-md-icon>
                     </md-button>
                 </div>
             </div>

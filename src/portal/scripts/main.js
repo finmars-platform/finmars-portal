@@ -225,7 +225,8 @@ app.directive('groupColumnInitWidth', [require('./app/directives/groupTable/gCol
 
 app.directive('groupBindReportRow', [require('./app/directives/groupTable/gBindReportRowDirective.js')]);
 
-app.controller('GReportSettingsDialogController', ['$scope', '$mdDialog', 'reportOptions', require('./app/controllers/dialogs/gReportSettingsDialogController')]);
+app.controller('GReportSettingsDialogController', ['$scope', '$mdDialog', 'reportOptions', 'options', require('./app/controllers/dialogs/gReportSettingsDialogController')]);
+app.controller('PeriodsEditorDialogController', ['$scope', '$mdDialog', 'options', require('./app/controllers/dialogs/periodsEditorDialogController')]);
 
 
 app.controller('gModalController', ['$scope', '$mdDialog', 'parentScope', 'callback', require('./app/directives/groupTable/gModalComponent')]);

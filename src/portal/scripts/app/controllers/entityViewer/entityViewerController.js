@@ -1486,9 +1486,14 @@
                                     report_date: moment(new Date(Date.now() - 86400000)).format('YYYY-MM-DD') // yesterday
                                 };
 
+                                if(vm.entityType == 'performance-report') {
+                                    vm.reportOptions.begin_date = moment(new Date(Date.now() - 86400000)).format('YYYY-MM-DD');
+                                    vm.reportOptions.end = moment(new Date(Date.now())).format('YYYY-MM-DD');
+                                    vm.reportOptions.periods = 'date_group(transaction.accounting_date, [[None,None,timedelta(months=1),["[","%Y-%m-%d","/","","%Y-%m-%d","]"]]], "Err")';
+                                }
+
 
                                 console.log('vm.reportOptions', vm.reportOptions);
-
                                 vm.getView().then(function () {
                                     vm.getAttributes().then(function () {
                                         //vm.transformViewAttributes();

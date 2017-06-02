@@ -577,10 +577,6 @@
             });
         };
 
-        vm.cancel = function () {
-            $('body').removeClass('drag-dialog');
-            $mdDialog.cancel();
-        };
 
         var dragAndDrop = {
 
@@ -769,6 +765,7 @@
                 //    document.querySelector('#filtersbag .drop-new-filter')
                 //];
 
+
                 var items = [
                     document.querySelector('.g-columns-holder'),
                     document.querySelector('#columnsbag'),
@@ -790,7 +787,7 @@
 
                             //console.log('el', el, target, source);
 
-                            if(target.classList.contains('g-modal-draggable-card')) {
+                            if (target.classList.contains('g-modal-draggable-card')) {
                                 return false;
                             }
 
@@ -798,7 +795,18 @@
                         },
                         copy: true
                     });
+            },
+
+            destroy: function () {
+                console.log('this.dragula', this.dragula)
+                this.dragula.destroy();
             }
+        };
+
+        vm.cancel = function () {
+            $('body').removeClass('drag-dialog');
+            dragAndDrop.destroy();
+            $mdDialog.cancel();
         };
 
         var addColumn = function () {

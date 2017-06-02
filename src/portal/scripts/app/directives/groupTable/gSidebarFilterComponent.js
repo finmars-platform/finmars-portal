@@ -66,17 +66,19 @@
                 }
 
 
-                scope.openReportSettings = function ($event) {
+                scope.openPeriodsDialog = function ($event) {
 
                     //console.log('scope.reportOptions', scope.reportOptions);
 
                     $mdDialog.show({
-                        controller: 'GReportSettingsDialogController as vm',
-                        templateUrl: 'views/dialogs/g-report-settings-dialog-view.html',
+                        controller: 'PeriodsEditorDialogController as vm',
+                        templateUrl: 'views/dialogs/periods-editor-dialog-view.html',
                         parent: angular.element(document.body),
                         targetEvent: $event,
                         locals: {
-                            reportOptions: scope.reportOptions
+                            options: {
+                                periods: scope.reportOptions.periods
+                            }
                         }
                     }).then(function (res) {
 
@@ -88,6 +90,26 @@
                         }
 
                     });
+
+
+                };
+
+                scope.openReportSettings = function ($event) {
+
+                    //console.log('scope.reportOptions', scope.reportOptions);
+
+                    $mdDialog.show({
+                        controller: 'GReportSettingsDialogController as vm',
+                        templateUrl: 'views/dialogs/g-report-settings-dialog-view.html',
+                        parent: angular.element(document.body),
+                        targetEvent: $event,
+                        locals: {
+                            reportOptions: scope.reportOptions,
+                            options: {
+                                entityType: scope.entityType
+                            }
+                        }
+                    })
 
 
                 };

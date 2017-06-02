@@ -107,6 +107,8 @@
 
                     <div layout="column" style="margin-top: 16px;">
 
+                        <md-button data-ng-click="openReportSettings($event)" class="md-primary md-raised">Settings
+                        </md-button>
 
                         <md-button data-ng-click="calculateReport()" class="md-raised">Calculate</md-button>
 
@@ -164,6 +166,87 @@
 
                     <div layout="column" style="margin-top: 16px;">
 
+                        <md-button data-ng-click="openReportSettings($event)" class="md-primary md-raised">Settings
+                        </md-button>
+
+                        <md-button data-ng-click="calculateReport()" class="md-raised">Calculate</md-button>
+
+                    </div>
+
+                </md-card-content>
+
+            </md-card>
+        </div>
+        <div data-ng-if="options.entityType == 'performance-report'">
+            <md-card class="g-sidebar-report-card">
+
+                <md-card-content>
+
+                    <p class="g-r-card-title">
+                        Report settings
+                    </p>
+
+                    <div layout="column" style="padding-top: 16px">
+
+                        <md-input-container>
+
+                            <label for="">Begin Date</label>
+
+                            <zh-date-picker data-ng-model="reportOptions.begin_date"
+                                            position="left"></zh-date-picker>
+
+
+                        </md-input-container>
+
+                        <md-input-container>
+
+                            <label for="">End Date</label>
+
+                            <zh-date-picker data-ng-model="reportOptions.end_date" position="left"></zh-date-picker>
+
+                        </md-input-container>
+
+
+                        <md-input-container style="margin-bottom: 20px;">
+
+                            <label for="">Currency</label>
+
+                            <md-select data-ng-model="reportOptions.report_currency" md-on-close="searchTerm = ''">
+                                <md-select-header>
+                                    <input data-ng-model="searchTerm"
+                                           type="search"
+                                           placeholder="Search for a ..."
+                                           class="md-text md-select-search-pattern">
+                                </md-select-header>
+                                <md-option
+                                        data-ng-repeat="item in currencies | orderBy:'-'+field.name | filter:{name: searchTerm}"
+                                        ng-value="item.id">{{item.name}}
+                                </md-option>
+                            </md-select>
+
+                        </md-input-container>
+
+                        <md-input-container>
+
+                            <label for="">Pricing Policy</label>
+
+                            <md-select data-ng-model="reportOptions.pricing_policy">
+                                <md-option data-ng-repeat="item in pricingPolicies" ng-value="item.id">{{item.name}}
+                                </md-option>
+                            </md-select>
+
+                        </md-input-container>
+
+                    </div>
+
+                    <div layout="column" style="margin-top: 16px;">
+
+                        <md-button data-ng-click="openPeriodsDialog($event)" class="md-primary md-raised">Periodicity
+                        </md-button>
+
+
+                        <md-button data-ng-click="openReportSettings($event)" class="md-primary md-raised">Settings
+                        </md-button>
 
                         <md-button data-ng-click="calculateReport()" class="md-raised">Calculate</md-button>
 

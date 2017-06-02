@@ -191,22 +191,15 @@
                     return false
                 };
 
-                //
-                //scope.$watchCollection('columns', function () {
-                //
-                //
-                //    setTimeout(function () {
-                //
-                //        scope.externalCallback({silent: true, options: {columns: scope.columns}});
-                //        scope.$apply();
-                //
-                //    }, 0)
-                //});
+
 
                 var dragAndDrop = {
 
                     init: function () {
-                        this.dragula();
+
+                        console.log('Reinit dragula', this);
+
+                        this.dragulaInit();
                         this.eventListeners();
                     },
 
@@ -229,7 +222,7 @@
                         })
                     },
 
-                    dragula: function () {
+                    dragulaInit: function () {
                         console.log('COLUMSN DRAGULA INIT?');
 
                         var items = [document.querySelector('.g-columns-holder')];
@@ -243,7 +236,18 @@
                     }
                 };
 
+                //scope.$watchCollection('columns', function () {
                 //
+                //    dragAndDrop.init();
+                //
+                //    //setTimeout(function () {
+                //    //
+                //    //    scope.externalCallback({silent: true, options: {columns: scope.columns}});
+                //    //    scope.$apply();
+                //    //
+                //    //}, 0)
+                //});
+
                 setTimeout(function () {
                     dragAndDrop.init();
                 }, 500);

@@ -1,6 +1,8 @@
 <div>
     <md-button class="md-button header-cloud-layout-btn" data-ng-click="toggleBookmarkPanel()">
-        <ng-md-icon icon="bookmark" size="36"></ng-md-icon>
+        <ng-md-icon icon="bookmark" size="36">
+            <md-tooltip class="tooltip_1" md-direction="bottom">Open bookmark panel</md-tooltip>
+        </ng-md-icon>
     </md-button>
     <div class="bookmarks-list" layout="row" layout-align="space-between center" data-ng-if="showBookmarks">
         <div layout="row">

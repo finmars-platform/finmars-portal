@@ -380,10 +380,6 @@
             callback({silent: true});
         };
 
-        vm.cancel = function () {
-            $('body').removeClass('drag-dialog');
-            $mdDialog.cancel();
-        };
 
         var dragAndDrop = {
 
@@ -538,7 +534,7 @@
 
                             //console.log('el', el, target, source);
 
-                            if(target.classList.contains('g-modal-draggable-card')) {
+                            if (target.classList.contains('g-modal-draggable-card')) {
                                 return false;
                             }
 
@@ -546,6 +542,11 @@
                         },
                         copy: true
                     });
+            },
+
+            destroy: function () {
+                console.log('this.dragula', this.dragula)
+                this.dragula.destroy();
             }
         };
 
@@ -562,10 +563,21 @@
             dragAndDrop.init()
         }, 500);
 
+        vm.cancel = function () {
+            $('body').removeClass('drag-dialog');
+
+            dragAndDrop.destroy();
+
+            $mdDialog.cancel();
+        };
+
+
         vm.MABtnVisibility = function (entityType) {
             //console.log('custom entity type', entityType);
             return metaService.checkRestrictedEntityTypesForAM(entityType);
         }
+
+
     }
 
 }());
