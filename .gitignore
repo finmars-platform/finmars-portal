@@ -4,6 +4,9 @@ logs
 *.ppk
 *.pem
 
+dist
+dist/*
+
 # Runtime data
 pids
 *.pid
