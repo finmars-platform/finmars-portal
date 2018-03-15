@@ -17,7 +17,7 @@ var app = angular.module('portal', [
     'mdPickers',
     'bw.paging',
     'ui.select',
-    'io.dennis.contextmenu',
+    // 'io.dennis.contextmenu',
     angularDragula(angular),
 
     'forum'
@@ -63,6 +63,7 @@ app.controller('SideNavController', ['$scope', '$mdDialog', require('./app/contr
 
 app.controller('DashboardController', ['$scope', '$mdDialog', require('./app/controllers/dashboardController')]);
 app.controller('ActionsController', ['$scope', '$mdDialog', require('./app/controllers/actionsController')]);
+app.controller('ImportEntityDialogController', ['$scope', '$mdDialog', require('./app/controllers/dialogs/importEntityDialogController')]);
 app.controller('ImportInstrumentDialogController', ['$scope', '$mdDialog', require('./app/controllers/dialogs/importInstrumentDialogController')]);
 app.controller('ImportTransactionDialogController', ['$scope', '$mdDialog', require('./app/controllers/dialogs/importTransactionDialogController')]);
 app.controller('ImportTransactionErrorsDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/importTransactionErrorsDialogController')]);
