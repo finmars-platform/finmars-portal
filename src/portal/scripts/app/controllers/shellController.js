@@ -30,10 +30,10 @@
             //usersService.logout();
         };
 
-        //usersService.ping().then(function (data) {
+        // usersService.ping().then(function (data) {
         //    setTimeout(function () {
         //        //usersService.login('dev1', 'Itein9Ha4eige6Aiph5a').then(function () {
-        //        usersService.login('dev1', '123456abc').then(function () {
+        //        usersService.login('admin', 'superuser').then(function () {
         //
         //
         //            //usersService.login('dev1', 'Uethohk0').then(function () {
@@ -43,7 +43,7 @@
         //            $scope.$apply();
         //        });
         //    }, 1000);
-        //});
+        // });
 
         usersService.getMasterList().then(function (data) {
             vm.masters = data.results;

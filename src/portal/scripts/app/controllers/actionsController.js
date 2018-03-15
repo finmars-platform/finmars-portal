@@ -15,6 +15,18 @@
 
         var vm = this;
 
+        vm.importEntity = function ($event) {
+            $mdDialog.show({
+                controller: 'ImportEntityDialogController as vm',
+                templateUrl: 'views/dialogs/import-entity-dialog-view.html',
+                targetEvent: $event
+            }).then(function (res) {
+                if (res.status === 'agree') {
+                    console.log('res', res.data);
+                }
+            });
+        };
+
         vm.importInstrument = function ($event) {
             $mdDialog.show({
                 controller: 'ImportInstrumentDialogController as vm',

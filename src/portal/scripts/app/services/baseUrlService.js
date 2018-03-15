@@ -13,8 +13,12 @@
             result = 'http://' + window.location.host;
         }
 
-        if(window.location.hostname == 'dev.finmars.com') {
-            result = 'https://api.dev.finmars.com';
+        // if(window.location.hostname == 'dev.finmars.com') {
+        //     result = 'https://api.dev.finmars.com';
+        // }
+
+        if(window.location.hostname == 'ec2-18-196-215-43.eu-central-1.compute.amazonaws.com/') {
+            result = 'http://ec2-18-196-215-43.eu-central-1.compute.amazonaws.com/api/v1/';
         }
 
         if(window.location.hostname == 'finmars.com') {
