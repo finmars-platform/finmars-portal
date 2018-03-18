@@ -5,6 +5,10 @@
 
     "use strict";
 
+    var baseUrlService = require('../services/baseUrlService');
+
+    var baseUrl = baseUrlService.resolve();
+
     var getListForTransactionTypeInputs = function () {
         return [
             {
@@ -372,10 +376,25 @@
         ]
     };
 
+    var getContentTypeList = function () {
+        return window.fetch(baseUrl + 'import/content_type/',
+            {
+                method: 'GET',
+                credentials: 'include',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-type': 'application/json'
+                }
+            }).then(function(data){
+                return data.json();
+        })
+    };
+
     module.exports = {
         getListForTags: getListForTags,
         getListForUi: getListForUi,
-        getListForTransactionTypeInputs: getListForTransactionTypeInputs
+        getListForTransactionTypeInputs: getListForTransactionTypeInputs,
+        getContentTypeList: getContentTypeList
     }
 
 

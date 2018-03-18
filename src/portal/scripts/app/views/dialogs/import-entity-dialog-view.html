@@ -13,12 +13,22 @@
                         <div layout="row" style="margin-bottom: 20px">
 
                             <md-input-container flex="40" style="margin-bottom: 0" class="ng-hide">
-                                <input type="file" file-read="vm.config.file" id="importDataUploadInput" input-file-directive>
+                                <!--<input type="file" file-read="vm.config.file" id="importDataUploadInput" input-file-directive>-->
+                                <input type="file" id="importDataUploadInput" input-file-directive read-file="vm.config.file">
                             </md-input-container>
                             <div class="input-upload-file-container">
                                 <p class="importDataUploadInput">Select file</p>
                                 <label for="importDataUploadInput" class="md-button md-raised md-primary IFUlabel"><ng-md-icon icon="file_upload"></ng-md-icon><span>BROWSE</span></label>
                             </div>
+
+                            <md-input-container>
+                                <label>Choose entity</label>
+                                <md-select data-ng-model="vm.config.entity" data-ng-change="vm.updateEntitySchemes()">
+                                    <md-option data-ng-repeat="entity in vm.listOfEntities" ng-value="entity.id">
+                                        {{ entity.name }}
+                                    </md-option>
+                                </md-select>
+                            </md-input-container>
 
                             <div layout="row">
 
@@ -27,7 +37,7 @@
                                     <md-select style="width: 200px"
                                                data-ng-model="vm.config.scheme">
                                         <md-option data-ng-repeat="item in vm.entitySchemes" ng-value="item.id">
-                                            {{item.scheme_name}}
+                                            {{item.name}}
                                         </md-option>
                                         <md-option>Add scheme</md-option>
                                     </md-select>
@@ -56,15 +66,8 @@
                             <md-input-container>
                                 <label>Error handling</label>
                                 <md-select data-ng-model="vm.config.error_handling">
-                                    <md-option value="continue">Continue</md-option>
-                                    <md-option value="break">Break on first error</md-option>
-                                </md-select>
-                            </md-input-container>
-
-                            <md-input-container>
-                                <label>Choose entity</label>
-                                <md-select data-ng-model="vm.config.entity">
-                                    <md-option data-ng-repeat="entity in vm.entitiesList" ng-value="entity.name">{{ entity.name }}</md-option>
+                                    <md-option value="1">Continue</md-option>
+                                    <md-option value="0">Break on first error</md-option>
                                 </md-select>
                             </md-input-container>
 
