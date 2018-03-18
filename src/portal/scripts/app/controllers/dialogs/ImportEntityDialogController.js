@@ -8,6 +8,7 @@
     var logService = require('../../../../../core/services/logService');
 
     var metaService = require('../../services/metaService');
+    var metaContentTypesService = require('../../services/metaContentTypesService');
     var dataProvidersService = require('../../services/import/dataProvidersService');
     var scheduleService = require('../../services/import/scheduleService');
     var attributeTypeService = require('../../services/attributeTypeService');
@@ -19,7 +20,7 @@
     var instrumentDailyPricingModelService = require('../../services/instrument/instrumentDailyPricingModelService');
     var importPriceDownloadSchemeService = require('../../services/import/importPriceDownloadSchemeService');
 
-    var importTransactionService = require('../../services/import/importTransactionService');
+    var importEntityService = require('../../services/import/importEntityService');
     var instrumentPaymentSizeDetailService = require('../../services/instrument/instrumentPaymentSizeDetailService');
     var instrumentAttributeTypeService = require('../../services/instrument/instrumentAttributeTypeService');
 
@@ -61,19 +62,25 @@
 
         vm.dynAttributes = {};
 
-        vm.entity = '';
 
-        entitySchemeService.getList(vm.entity).then(function (data) {
+        metaContentTypesService.findEntityByAPIContentType().then(function (data) {
+            vm.listOfEntities = data;
+            $scope.$apply();
+        });
+
+        entitySchemeService.getEntitiesSchemesList().then(function (data) {
             vm.entitySchemes = data.results;
             vm.readyStatus.mapping = true;
             $scope.$apply();
         });
 
-        entitySchemeService.getEntitiesList(vm.entity).then(function (data) {
-            vm.entitiesList = data.results;
-            // vm.readyStatus.mapping = true;
-            $scope.$apply();
-        });
+        vm.updateEntitySchemes = function () {
+
+            entitySchemeService.getEntitySchemesByModel(vm.config.entity).then(function (data) {
+                vm.entitySchemes = data.results;
+                $scope.$apply();
+            });
+        };
 
         instrumentDailyPricingModelService.getList().then(function (data) {
             vm.dailyModels = data;
@@ -158,13 +165,13 @@
             if (vm.config.task_id) {
                 formData.append('task_id', vm.config.task_id);
             } else {
-
-                formData.append('file', vm.config.file);
-                formData.append('scheme', vm.config.scheme);
+                console.log('csv data for upload', vm.config);
+                formData.append('files', vm.config.file);
+                formData.append('schema', vm.config.scheme);
                 formData.append('error_handling', vm.config.error_handling);
             }
 
-            importTransactionService.startImport(formData).then(function (data) {
+            importEntityService.startImport(formData).then(function (data) {
                 console.log('data', data);
                 if (data.status != 500) {
                     vm.config = data.response;

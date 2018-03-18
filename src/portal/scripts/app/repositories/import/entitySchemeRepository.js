@@ -11,8 +11,8 @@
 
     var baseUrl = baseUrlService.resolve();
 
-    var getList = function (entity) {
-        return window.fetch(baseUrl + 'import/data_schema/?entity=' + entity,
+    var getEntitiesSchemesList = function () {
+        return window.fetch(baseUrl + 'import/data_schema/',
             {
                 method: 'GET',
                 credentials: 'include',
@@ -25,8 +25,9 @@
         })
     };
 
-    var getEntitiesList = function () {
-        return window.fetch(baseUrl + 'import/entities',
+    var getEntitySchemesByModel = function (entityModel) {
+        console.log('model of entity schemes is', entityModel);
+        return window.fetch(baseUrl + 'import/data_schema/?model=' + entityModel,
             {
                 method: 'GET',
                 credentials: 'include',
@@ -35,9 +36,9 @@
                     'Content-type': 'application/json'
                 }
             }).then(function (data) {
-                return data.json();
+            return data.json();
         })
-    };
+    }
 
     var create = function (scheme) {
         return window.fetch(baseUrl + 'import/complex-transaction-import-scheme/',
@@ -116,8 +117,8 @@
     };
 
     module.exports = {
-        getList: getList,
-        getEntitiesList: getEntitiesList,
+        getEntitiesSchemesList: getEntitiesSchemesList,
+        getEntitySchemesByModel: getEntitySchemesByModel,
         create: create,
         getByKey: getByKey,
         update: update,

@@ -84,6 +84,42 @@
 
     };
 
+    var getContentTypeList = function () {
+        return metaContentTypesRepository.getContentTypeList();
+    };
+
+    var findEntityByAPIContentType = function () {
+        return metaContentTypesRepository.getContentTypeList().then(function (data) {
+            var contentTypeList = data.results,
+                listForUi = getListForUi(),
+                entities = [];
+
+            if (contentTypeList && contentTypeList.length > 0) {
+                contentTypeList.forEach(function (type) {
+                    var typeKey,
+                        entityFound = false;
+                    // Create key property for content type from api
+                    typeKey = type.app_label + '.' + type.model;
+
+                    for (var a = 0; a < listForUi.length; a++) {
+                        var UiType = listForUi[a],
+                            APIEntity = {};
+                        if (entityFound == true) {
+                            break;
+                        }
+                        else if (typeKey == UiType.key) {
+                            APIEntity.id = type.id;
+                            APIEntity.name = UiType.name;
+                            entities.push(APIEntity);
+                            entityFound = true;
+                        }
+                    }
+                });
+            }
+
+            return entities;
+        });
+    };
 
     module.exports = {
         getListForTags: getListForTags,
@@ -91,10 +127,13 @@
 
         findContentTypeByEntity: findContentTypeByEntity,
         findEntityByContentType: findEntityByContentType,
+        findEntityByAPIContentType: findEntityByAPIContentType,
 
         getListForTransactionTypeInputs: getListForTransactionTypeInputs,
 
-        getContentTypeUIByState: getContentTypeUIByState
+        getContentTypeUIByState: getContentTypeUIByState,
+
+        getContentTypeList: getContentTypeList
     }
 
 

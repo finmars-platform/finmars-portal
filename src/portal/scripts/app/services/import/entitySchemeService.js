@@ -7,12 +7,12 @@
 
     var entitySchemeRepository = require('../../repositories/import/entitySchemeRepository');
 
-    var getList = function (entity) {
-        return entitySchemeRepository.getList(entity);
+    var getEntitiesSchemesList = function () {
+        return entitySchemeRepository.getEntitiesSchemesList();
     };
 
-    var getEntitiesList = function () {
-      return entitySchemeRepository.getEntitiesList();
+    var getEntitySchemesByModel = function (entityModel) {
+        return entitySchemeRepository.getEntitySchemesByModel(entityModel);
     };
 
     var create = function (scheme) {
@@ -32,8 +32,8 @@
     };
 
     module.exports = {
-        getList: getList,
-        getEntitiesList: getEntitiesList,
+        getEntitiesSchemesList: getEntitiesSchemesList,
+        getEntitySchemesByModel: getEntitySchemesByModel,
         create: create,
         getByKey: getByKey,
         update: update,
