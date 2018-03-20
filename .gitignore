@@ -6,6 +6,7 @@ logs
 
 dist
 dist/*
+src/portal/scripts/templates.min.js
 
 # Runtime data
 pids
