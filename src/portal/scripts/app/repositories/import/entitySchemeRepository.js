@@ -26,7 +26,6 @@
     };
 
     var getEntitySchemesByModel = function (entityModel) {
-        console.log('model of entity schemes is', entityModel);
         return window.fetch(baseUrl + 'import/data_schema/?model=' + entityModel,
             {
                 method: 'GET',
@@ -38,7 +37,35 @@
             }).then(function (data) {
             return data.json();
         })
-    }
+    };
+
+    var getSchemeFields = function (schemeId) {
+        return window.fetch(baseUrl + 'import/schema_fields/?schema_id=' + schemeId,
+            {
+                method: 'GET',
+                credentials: 'include',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-type': 'application/json'
+                }
+            }).then(function (data) {
+            return data.json();
+        })
+    };
+
+    var getSchemeAttributes = function (schemeId) {
+        return window.fetch(baseUrl + 'import/schema_matching/?schema_id=' + schemeId,
+            {
+                method: 'GET',
+                credentials: 'include',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-type': 'application/json'
+                }
+            }).then(function (data) {
+            return data.json();
+        })
+    };
 
     var create = function (scheme) {
         return window.fetch(baseUrl + 'import/complex-transaction-import-scheme/',
@@ -119,6 +146,8 @@
     module.exports = {
         getEntitiesSchemesList: getEntitiesSchemesList,
         getEntitySchemesByModel: getEntitySchemesByModel,
+        getSchemeFields: getSchemeFields,
+        getSchemeAttributes: getSchemeAttributes,
         create: create,
         getByKey: getByKey,
         update: update,

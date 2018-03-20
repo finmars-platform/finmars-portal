@@ -75,7 +75,6 @@
         });
 
         vm.updateEntitySchemes = function () {
-
             entitySchemeService.getEntitySchemesByModel(vm.config.entity).then(function (data) {
                 vm.entitySchemes = data.results;
                 $scope.$apply();
@@ -272,10 +271,11 @@
 
         vm.openEditMapping = function ($event) {
             $mdDialog.show({
-                controller: 'TransactionMappingEditDialogController as vm',
-                templateUrl: 'views/dialogs/transaction-mapping-dialog-view.html',
+                controller: 'EntityMappingEditDialogController as vm',
+                templateUrl: 'views/dialogs/entity-mapping-dialog-view.html',
                 targetEvent: $event,
                 preserveScope: true,
+                multiple: true,
                 autoWrap: true,
                 skipHide: true,
                 locals: {
