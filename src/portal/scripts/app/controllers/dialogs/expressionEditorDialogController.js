@@ -69,6 +69,7 @@
                     data: {}
                 },
                 preserveScope: true,
+                multiple: true,
                 autoWrap: true,
                 skipHide: true
             })

@@ -19,7 +19,8 @@
             $mdDialog.show({
                 controller: 'ImportEntityDialogController as vm',
                 templateUrl: 'views/dialogs/import-entity-dialog-view.html',
-                targetEvent: $event
+                targetEvent: $event,
+                multiple: true
             }).then(function (res) {
                 if (res.status === 'agree') {
                     console.log('res', res.data);

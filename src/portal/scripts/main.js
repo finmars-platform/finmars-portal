@@ -88,6 +88,7 @@ app.controller('TransactionMappingAddDialogController', ['$scope', '$mdDialog', 
 app.controller('TransactionMappingEditDialogController', ['$scope', '$mdDialog', 'schemeId', require('./app/controllers/dialogs/transactionMappingEditDialogController')]);
 app.controller('TransactionMappingInputMappingDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/transactionMappingInputMappingDialogController')]);
 
+app.controller('EntityMappingEditDialogController', ['$scope', '$mdDialog', 'schemeId', require('./app/controllers/dialogs/entityMappingEditDialogController')]);
 
 app.controller('EntityViewerController', ['$scope', '$mdDialog', require('./app/controllers/entityViewer/entityViewerController')]);
 app.controller('EntityViewerAddDialogController', ['$scope', '$mdDialog', 'parentScope', '$state', require('./app/controllers/entityViewer/entityViewerAddDialogController')]);

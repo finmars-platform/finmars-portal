@@ -15,6 +15,14 @@
         return entitySchemeRepository.getEntitySchemesByModel(entityModel);
     };
 
+    var getSchemeFields = function (schemeId) {
+        return entitySchemeRepository.getSchemeFields(schemeId);
+    };
+
+    var getSchemeAttributes = function (schemeId) {
+        return entitySchemeRepository.getSchemeAttributes(schemeId);
+    };
+
     var create = function (scheme) {
         return entitySchemeRepository.create(scheme);
     };
@@ -34,6 +42,8 @@
     module.exports = {
         getEntitiesSchemesList: getEntitiesSchemesList,
         getEntitySchemesByModel: getEntitySchemesByModel,
+        getSchemeFields: getSchemeFields,
+        getSchemeAttributes: getSchemeAttributes,
         create: create,
         getByKey: getByKey,
         update: update,
