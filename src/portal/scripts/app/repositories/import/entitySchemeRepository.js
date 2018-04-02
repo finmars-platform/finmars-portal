@@ -39,8 +39,8 @@
         })
     };
 
-    var getSchemeFields = function (schemeId) {
-        return window.fetch(baseUrl + 'import/schema_fields/?schema_id=' + schemeId,
+    var getSchemeAttributes = function (schemeId) {
+        return window.fetch(baseUrl + 'import/schema_matching/?schema_id=' + schemeId,
             {
                 method: 'GET',
                 credentials: 'include',
@@ -53,17 +53,26 @@
         })
     };
 
-    var getSchemeAttributes = function (schemeId) {
-        return window.fetch(baseUrl + 'import/schema_matching/?schema_id=' + schemeId,
+    var updateEntitySchemeMapping = function (schemeMapping) {
+        return window.fetch(baseUrl + 'import/schema_fields/',
             {
-                method: 'GET',
+                method: 'POST',
                 credentials: 'include',
                 headers: {
+                    'X-CSRFToken': cookieService.getCookie('csrftoken'),
                     Accept: 'application/json',
                     'Content-type': 'application/json'
-                }
+                },
+                body: JSON.stringify(schemeMapping)
             }).then(function (data) {
-            return data.json();
+            return new Promise(function (resolve, reject) {
+                data.json().then(function (result) {
+                    resolve({
+                        response: result,
+                        status: data.status
+                    })
+                })
+            });
         })
     };
 
@@ -146,8 +155,8 @@
     module.exports = {
         getEntitiesSchemesList: getEntitiesSchemesList,
         getEntitySchemesByModel: getEntitySchemesByModel,
-        getSchemeFields: getSchemeFields,
         getSchemeAttributes: getSchemeAttributes,
+        updateEntitySchemeMapping: updateEntitySchemeMapping,
         create: create,
         getByKey: getByKey,
         update: update,

@@ -1001,6 +1001,13 @@ md-input-container.error {
   }
 }
 
+md-input-container.SC-entity-select-container {
+  max-width: 250px;
+  md-select {
+    margin-left: 0;
+  }
+}
+
 .vAccordion--default {
   v-pane-header.transaction-type-action-pane {
     padding-top: 20px;
@@ -1382,6 +1389,10 @@ md-menu-content md-menu.md-menu {
   }
 }
 
+.entity-scheme-manager-dialog-view {
+  width: 75%;
+}
+
 .ui-select-multiple.ui-select-bootstrap input.ui-select-search {
   float: none;
 }
@@ -1456,4 +1467,13 @@ md-menu-content md-menu.md-menu {
 
   }
 
+}
+
+@media (max-width: 1279px) {
+  .entity-scheme-manager-dialog-view {
+    width: 85%;
+  }
+  .ESD-edit-mapping-btn {
+    font-size: 12px;
+  }
 }
