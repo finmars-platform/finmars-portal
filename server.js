@@ -10,6 +10,7 @@ var app = express();
 app.use(express.static('dist'));
 
 var proxyOptions = url.parse('http://ec2-18-196-215-43.eu-central-1.compute.amazonaws.com/');
+// var proxyOptions = url.parse('https://api.dev.finmars.com/');
 proxyOptions.cookieRewrite = true;
 
 app.use('/', proxy(proxyOptions));

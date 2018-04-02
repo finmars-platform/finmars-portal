@@ -43,6 +43,8 @@
         };
         vm.dataIsImported = false;
 
+        vm.entity = {};
+
         vm.config = {
             mode: 1,
 
@@ -74,8 +76,9 @@
             $scope.$apply();
         });
 
-        vm.updateEntitySchemes = function () {
-            entitySchemeService.getEntitySchemesByModel(vm.config.entity).then(function (data) {
+        vm.updateEntitySchemes = function (entityId) {
+            vm.entitySchemes = [];
+            entitySchemeService.getEntitySchemesByModel(entityId).then(function (data) {
                 vm.entitySchemes = data.results;
                 $scope.$apply();
             });
@@ -172,77 +175,41 @@
 
             importEntityService.startImport(formData).then(function (data) {
                 console.log('data', data);
+
                 if (data.status != 500) {
                     vm.config = data.response;
-                    if (vm.config.task_status == 'SUCCESS') {
 
+                    vm.readyStatus.processing = false;
+                    vm.dataIsImported = true;
 
-                        if (vm.config.error_rows.length == 0) {
-                            vm.finishedSuccess = true;
-                        } else {
-                            $mdDialog.show({
-                                controller: 'ImportTransactionErrorsDialogController as vm',
-                                templateUrl: 'views/dialogs/import-transaction-errors-dialog-view.html',
-                                targetEvent: $event,
-                                locals: {
-                                    data: vm.config
-                                },
-                                preserveScope: true,
-                                autoWrap: true,
-                                skipHide: true
-                            })
-                        }
-
-                        vm.readyStatus.processing = false;
-                        vm.dataIsImported = true;
-
-                        //vm.mappedFields = [];
-                        //
-                        //var keysDict = [];
-                        //
-                        //
-                        //
-                        //if (Object.keys(vm.config["task_result_overrides"]).length > 0) {
-                        //    keysDict = vm.config["task_result_overrides"];
-                        //} else {
-                        //    keysDict = vm.config["task_result"]
-                        //}
-                        //
-                        //var keys = Object.keys(keysDict);
-                        //var i;
-                        //for (i = 0; i < keys.length; i = i + 1) {
-                        //    vm.mappedFields.push({
-                        //        key: keys[i],
-                        //        value: keysDict[keys[i]]
-                        //    })
-                        //}
-                        //
-                        //var promises = [];
-                        //
-                        //vm.config.instrument.attributes.forEach(function (attribute) {
-                        //    if (attribute.attribute_type_object.value_type == 30) {
-                        //        promises.push(instrumentAttributeTypeService.getByKey(attribute.attribute_type));
-                        //    }
-                        //});
-                        //
-                        //console.log('vm.instrument', vm.instrument);
-                        //
-                        //Promise.all(promises).then(function (data) {
-                        //
-                        //    data.forEach(function (item) {
-                        //        vm.dynAttributes['id_' + item.id] = item;
-                        //    });
-                        //
-                        //    $scope.$apply();
-                        //})
-
-
-                    } else {
-                        setTimeout(function () {
-                            vm.load();
-                        }, 1000)
-
-                    }
+                    // if (vm.config.task_status == 'SUCCESS') {
+                    //
+                    //
+                    //     if (vm.config.error_rows.length == 0) {
+                    //         vm.finishedSuccess = true;
+                    //     } else {
+                    //         $mdDialog.show({
+                    //             controller: 'ImportTransactionErrorsDialogController as vm',
+                    //             templateUrl: 'views/dialogs/import-transaction-errors-dialog-view.html',
+                    //             targetEvent: $event,
+                    //             locals: {
+                    //                 data: vm.config
+                    //             },
+                    //             preserveScope: true,
+                    //             autoWrap: true,
+                    //             skipHide: true
+                    //         })
+                    //     }
+                    //
+                    //     vm.readyStatus.processing = false;
+                    //     vm.dataIsImported = true;
+                    //
+                    // } else {
+                    //     setTimeout(function () {
+                    //         vm.load();
+                    //     }, 1000)
+                    //
+                    // }
                 }
                 if (data.status == 500) {
                     $mdDialog.show({
@@ -257,9 +224,58 @@
                         skipHide: true
                     })
                 }
+            });
 
-
-            })
+            // importEntityService.startImport(formData).then(function (data) {
+            //     console.log('data', data);
+            //     if (data.status != 500) {
+            //         vm.config = data.response;
+            //         if (vm.config.task_status == 'SUCCESS') {
+            //
+            //
+            //             if (vm.config.error_rows.length == 0) {
+            //                 vm.finishedSuccess = true;
+            //             } else {
+            //                 $mdDialog.show({
+            //                     controller: 'ImportTransactionErrorsDialogController as vm',
+            //                     templateUrl: 'views/dialogs/import-transaction-errors-dialog-view.html',
+            //                     targetEvent: $event,
+            //                     locals: {
+            //                         data: vm.config
+            //                     },
+            //                     preserveScope: true,
+            //                     autoWrap: true,
+            //                     skipHide: true
+            //                 })
+            //             }
+            //
+            //             vm.readyStatus.processing = false;
+            //             vm.dataIsImported = true;
+            //
+            //
+            //         } else {
+            //             setTimeout(function () {
+            //                 vm.load();
+            //             }, 1000)
+            //
+            //         }
+            //     }
+            //     if (data.status == 500) {
+            //         $mdDialog.show({
+            //             controller: 'ValidationDialogController as vm',
+            //             templateUrl: 'views/dialogs/validation-dialog-view.html',
+            //             targetEvent: $event,
+            //             locals: {
+            //                 validationData: "An error occurred. Please try again later"
+            //             },
+            //             preserveScope: true,
+            //             autoWrap: true,
+            //             skipHide: true
+            //         })
+            //     }
+            //
+            //
+            // })
         };
 
         vm.recalculate = function () {
@@ -288,6 +304,22 @@
                         //vm.getList();
                         $scope.$apply();
                     })
+                }
+            });
+        };
+
+        vm.createScheme = function ($event, entity) {
+            $mdDialog.show({
+                controller: 'EntitySchemeCreationDialogController as vm',
+                templateUrl: 'views/dialogs/entity-scheme-creation-dialog.html',
+                targetEvent: $event,
+                multiple: true,
+                locals: {
+                    entity: entity
+                }
+            }).then(function (res) {
+                if (res.status) {
+                    console.log(res);
                 }
             });
         };

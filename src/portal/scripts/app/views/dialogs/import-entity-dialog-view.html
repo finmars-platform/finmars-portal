@@ -23,8 +23,8 @@
 
                             <md-input-container>
                                 <label>Choose entity</label>
-                                <md-select data-ng-model="vm.config.entity" data-ng-change="vm.updateEntitySchemes()">
-                                    <md-option data-ng-repeat="entity in vm.listOfEntities" ng-value="entity.id">
+                                <md-select data-ng-model="vm.entity" data-ng-change="vm.updateEntitySchemes(vm.entity.id)">
+                                    <md-option data-ng-repeat="entity in vm.listOfEntities" ng-value="{id:entity.id,name:entity.name}">
                                         {{ entity.name }}
                                     </md-option>
                                 </md-select>
@@ -39,7 +39,7 @@
                                         <md-option data-ng-repeat="item in vm.entitySchemes" ng-value="item.id">
                                             {{item.name}}
                                         </md-option>
-                                        <md-option>Add scheme</md-option>
+                                        <md-option data-ng-click="vm.createScheme($event, vm.entity)"><b>Add scheme</b></md-option>
                                     </md-select>
                                 </md-input-container>
                                 <md-button
