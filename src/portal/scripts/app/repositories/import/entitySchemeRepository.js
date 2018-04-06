@@ -65,14 +65,7 @@
                 },
                 body: JSON.stringify(schemeMapping)
             }).then(function (data) {
-            return new Promise(function (resolve, reject) {
-                data.json().then(function (result) {
-                    resolve({
-                        response: result,
-                        status: data.status
-                    })
-                })
-            });
+                return data;
         })
     };
 

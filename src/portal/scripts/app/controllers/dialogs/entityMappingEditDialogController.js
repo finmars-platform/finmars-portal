@@ -146,12 +146,12 @@
             vm.scheme.field_list = vm.providerFields;
             vm.scheme.matching_list = vm.mapFields;
 
-            entitySchemeService.updateEntitySchemeMapping(vm.scheme).then(function (updateData) {
-                console.log('data mapping updated', updateData);
-                // if (data.status == 200 || data.status == 201) {
-                //     $mdDialog.hide({res: 'agree'});
-                // }
-                $mdDialog.hide({res: 'agree'});
+            entitySchemeService.updateEntitySchemeMapping(vm.scheme).then(function (data) {
+                console.log('data mapping updated', data);
+                if (data.status == 200 || data.status == 201) {
+                    $mdDialog.hide({res: 'agree'});
+                }
+                // $mdDialog.hide({res: 'agree'});
             });
 
             // transactionSchemeService.update(vm.scheme.id, vm.scheme).then(function (data) {
