@@ -17,6 +17,9 @@
     var livereload = require('gulp-livereload');
     var htmlmin = require('gulp-htmlmin');
     var ngHtml2Js = require('gulp-ng-html2js');
+    var gulpif = require('gulp-if');
+    var minimist = require('minimist');
+    var replace = require('gulp-replace');
 
     //js
     var plumber = require('gulp-plumber');
@@ -26,6 +29,12 @@
     var browserify = require('browserify');
 
     var forumTasks = require('./forum.js');
+
+    var environments = {
+        string: 'env'
+    };
+
+    var options = minimist(process.argv.slice(2), environments);
 
     var appName = 'portal';
 
@@ -52,6 +61,8 @@
         var pathToHTML = ['src/*.html'];
 
         return gulp.src(pathToHTML)
+            .pipe(gulpif(options.env === "prod",
+                    replace(/{hash}/g, new Date().getTime())))
             .pipe(minifyHTML())
             .pipe(gulp.dest('dist/'));
 
