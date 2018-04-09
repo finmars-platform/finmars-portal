@@ -7,13 +7,10 @@
 
     var logService = require('../../../../../core/services/logService');
 
-    var metaService = require('../../services/metaService');
     var metaContentTypeService = require('../../services/metaContentTypesService');
-    var entitySchemeService = require('../../services/import/entitySchemeService');
-    var entitySchemeAttributesService = require('../../services/import/entitySchemeAttributesService');
-    var scheduleService = require('../../services/import/scheduleService');
-    var attributeTypeService = require('../../services/attributeTypeService');
-    var transactionTypeService = require('../../services/transactionTypeService');
+    var entitySchemesService = require('../../services/import/entitySchemesService');
+    var entitySchemesFieldsService = require('../../services/import/entitySchemesFieldsService');
+    var entitySchemesAttributesService = require('../../services/import/entitySchemesAttributesService');
 
     module.exports = function ($scope, $mdDialog, entity) {
 
@@ -43,7 +40,7 @@
             console.log('data types is', vm.dataTypes);
             $scope.$apply();
             if (entity.name) {
-                vm.schemeDataType.name = entity.name;
+                vm.schemeDataType = entity;
                 vm.updateMatchingAttributes(vm.schemeDataType.name);
             }
             vm.readyStatus.dataTypes = true;
@@ -53,9 +50,9 @@
         vm.updateMatchingAttributes = function (dataTypeName) {
             console.log('new entity is', dataTypeName);
             vm.mapFields = [];
-            entitySchemeAttributesService.getMatchingAttributesList(dataTypeName).then(function (data) {
+            entitySchemesAttributesService.getMatchingAttributesList(dataTypeName).then(function (data) {
                 vm.matchingAttrs = data;
-                var relatedAttrs = entitySchemeAttributesService.getRelatedAttributesList();
+                var relatedAttrs = entitySchemesAttributesService.getRelatedAttributesList();
                 vm.mapFields = vm.matchingAttrs;
 
                 vm.mapFields.forEach(function(mapField) {
@@ -157,21 +154,68 @@
             $mdDialog.cancel();
         };
 
-        vm.agree = function () {
+        vm.create = function () {
 
-            vm.scheme.schema_name = vm.schemeName;
-            vm.scheme.schema_model = vm.schemeDataType.id;
-            vm.scheme.field_list = vm.providerFields;
-            vm.scheme.matching_list = vm.mapFields;
+            // vm.scheme.schema_name = vm.schemeName;
+            // vm.scheme.schema_model = vm.schemeDataType.id;
+            // vm.scheme.field_list = vm.providerFields;
+            // vm.scheme.matching_list = vm.mapFields;
+            vm.scheme.name = vm.schemeName;
+            vm.scheme.model = vm.schemeDataType.id;
 
-            entitySchemeService.updateEntitySchemeMapping(vm.scheme).then(function (updateData) {
-                console.log('data mapping updated', updateData);
+            entitySchemesService.create(vm.scheme).then(function (schemeRes) {
+                var schemeData = {};
+                schemeData.id = schemeRes.response.id;
+                console.log('data mapping updated', schemeRes, schemeData.id);
+                // if (schemeId) {
+                //     vm.mapFields.forEach(function (mapField) {
+                //         mapField.schema = schemeId;
+                //     });
+                //     entitySchemesAttributesService.create(vm.mapFields, schemeId).then(function (attrsRes) {
+                //         if (vm.providerFields && vm.providerFields.length > 0) {
+                //             vm.providerFields.forEach(function (provField) {
+                //                 provField.schema = schemeId;
+                //             });
+                //             entitySchemesFieldsService.create(vm.providerFields).then(function (fieldsRes) {
+                //                 $mdDialog.hide({res: 'agree'});
+                //             });
+                //         }
+                //         else {
+                //             $mdDialog.hide({res: 'agree'});
+                //         }
+                //     });
+                // }
+                if (schemeData.id) {
+
+                    schemeData.schema_name = schemeRes.response.name;
+                    schemeData.schema_model = schemeRes.response.model;
+
+                    vm.mapFields.forEach(function (mapField) {
+                        mapField.schema = schemeData.id;
+                    });
+                    if (vm.providerFields && vm.providerFields.length > 0) {
+                        vm.providerFields.forEach(function (provField) {
+                            provField.schema = schemeData.id;
+                        });
+                    }
+
+                    schemeData.field_list = vm.providerFields;
+                    schemeData.matching_list = vm.mapFields;
+                    console.log('schemeData to update', schemeData);
+
+                    entitySchemesService.update(schemeData).then(function (schemeRes) {
+                        $mdDialog.hide({res: 'agree'});
+                    });
+                }
+                // if () {
+                //
+                // }
                 // if (data.status == 200 || data.status == 201) {
                 //     $mdDialog.hide({res: 'agree'});
                 // }
-                $mdDialog.hide({res: 'agree'});
-            });
+                // $mdDialog.hide({res: 'agree'});
 
+            });
         };
 
         vm.openMapping = function ($event, mapItem) {

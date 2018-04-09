@@ -11,13 +11,18 @@
         return schemesFieldsRepository.getSchemeFields(schemeId);
     };
 
-    var deleteField = function (id) {
-        return schemesFieldsRepository.deleteField(id);
+    var create = function (fields) {
+        return schemesFieldsRepository.create(fields);
+    };
+
+    var deleteById = function (id) {
+        return schemesFieldsRepository.deleteById(id);
     };
 
     module.exports = {
         getSchemeFields: getSchemeFields,
-        deleteField: deleteField
+        create: create,
+        deleteById: deleteById
     }
 
 } ());

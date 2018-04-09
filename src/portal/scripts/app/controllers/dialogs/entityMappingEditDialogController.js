@@ -8,8 +8,8 @@
     var logService = require('../../../../../core/services/logService');
 
     var metaService = require('../../services/metaService');
-    var entitySchemeService = require('../../services/import/entitySchemeService');
-    var schemesFieldsService = require('../../services/import/entitySchemesFieldsService');
+    var entitySchemesService = require('../../services/import/entitySchemesService');
+    var entitySchemesFieldsService = require('../../services/import/entitySchemesFieldsService');
     var scheduleService = require('../../services/import/scheduleService');
     var attributeTypeService = require('../../services/attributeTypeService');
     var transactionTypeService = require('../../services/transactionTypeService');
@@ -39,7 +39,7 @@
             }
         ];
 
-        schemesFieldsService.getSchemeFields(schemeId).then(function (data) {
+        entitySchemesFieldsService.getSchemeFields(schemeId).then(function (data) {
 
             vm.providerFields = data;
             // vm.scheme = data;
@@ -66,14 +66,15 @@
             $scope.$apply();
         });
 
-        entitySchemeService.getSchemeAttributes(schemeId).then(function (data) {
+        entitySchemesService.getSchemeAttributes(schemeId).then(function (data) {
             vm.mapFields = data;
 
             vm.readyStatus.mapFields = true;
             $scope.$apply();
         });
 
-        entitySchemeService.getByKey(schemeId).then(function (data) {
+        entitySchemesService.getByKey(schemeId).then(function (data) {
+            vm.scheme.id = schemeId;
             vm.scheme.schema_name = data.name;
             vm.scheme.schema_model = data.model;
             vm.readyStatus.schemeName = true;
@@ -127,7 +128,7 @@
         vm.removeProviderField = function ($index, item) {
             if (item.id) {
                 vm.providerFields.splice($index, 1);
-                schemesFieldsService.deleteField(item.id).then(function (data) {
+                entitySchemesFieldsService.deleteById(item.id).then(function (data) {
                     console.log('field deleted');
                 });
             }
@@ -146,7 +147,7 @@
             vm.scheme.field_list = vm.providerFields;
             vm.scheme.matching_list = vm.mapFields;
 
-            entitySchemeService.updateEntitySchemeMapping(vm.scheme).then(function (data) {
+            entitySchemesService.update(vm.scheme).then(function (data) {
                 console.log('data mapping updated', data);
                 if (data.status == 200 || data.status == 201) {
                     $mdDialog.hide({res: 'agree'});

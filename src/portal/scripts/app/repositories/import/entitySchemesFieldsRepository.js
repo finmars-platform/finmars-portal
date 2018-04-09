@@ -24,7 +24,23 @@
         })
     };
 
-    var deleteField = function (id) {
+    var create = function (fields) {
+        return window.fetch(baseUrl + 'import/schema_fields/',
+            {
+                method: 'PATCH',
+                credentials: 'include',
+                headers: {
+                    'X-CSRFToken': cookieService.getCookie('csrftoken'),
+                    Accept: 'application/json',
+                    'Content-type': 'application/json'
+                },
+                body: JSON.stringify(fields)
+            }).then(function (data) {
+            return data.json();
+        })
+    };
+
+    var deleteById = function (id) {
         return window.fetch(baseUrl + 'import/schema_fields/' + id + '/',
             {
                 method: 'DELETE',
@@ -41,7 +57,8 @@
 
     module.exports = {
         getSchemeFields: getSchemeFields,
-        deleteField: deleteField
+        create: create,
+        deleteById: deleteById
     }
 
 } ());

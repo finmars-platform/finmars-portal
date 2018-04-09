@@ -16,8 +16,9 @@
                                 <input aria-label="scheme name" type="text" data-ng-model="vm.schemeName">
                             </md-input-container>
                             <md-input-container class="SC-entity-select-container">
-                                <label>Data type</label>
+                                <label>{{ vm.schemeDataType.name }}</label>
                                 <md-select data-ng-model="vm.schemeDataType"
+                                           placeholder="Data type"
                                            data-ng-change="vm.updateMatchingAttributes(vm.schemeDataType.name)">
                                     <md-option
                                             data-ng-repeat="dataType in vm.dataTypes"
@@ -131,7 +132,7 @@
         <md-button class="md-raised" data-ng-click="vm.cancel()">
             Cancel
         </md-button>
-        <md-button class="md-raised" data-ng-click="vm.agree()" style="margin-right:20px;">
+        <md-button class="md-raised" data-ng-click="vm.create()" style="margin-right:20px;">
             Save
         </md-button>
     </md-dialog-actions>
