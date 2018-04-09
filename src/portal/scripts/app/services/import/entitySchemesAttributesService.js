@@ -5,7 +5,7 @@
 
     'use strict'
 
-    var schemeAttributesRepository = require('../../repositories/import/entitySchemeAttributesRepository');
+    var entitySchemesAttributesRepository = require('../../repositories/import/entitySchemesAttributesRepository');
     var metaService = require('../metaService');
     var attributeTypeService = require('../attributeTypeService');
     var baseUrlService = require('../baseUrlService');
@@ -13,7 +13,7 @@
     var baseUrl = baseUrlService.resolve();
 
     var getRelatedAttributesList = function () {
-        return schemeAttributesRepository.getRelatedAttributesList();
+        return entitySchemesAttributesRepository.getRelatedAttributesList();
     };
 
     var getMatchingAttributesList = function (entity) {
@@ -71,9 +71,14 @@
         });
     };
 
+    var create = function (attrs, schemeId) {
+        return entitySchemesAttributesRepository.create(attrs, schemeId);
+    };
+
     module.exports = {
         getRelatedAttributesList: getRelatedAttributesList,
-        getMatchingAttributesList: getMatchingAttributesList
+        getMatchingAttributesList: getMatchingAttributesList,
+        create: create
     }
 
 }());

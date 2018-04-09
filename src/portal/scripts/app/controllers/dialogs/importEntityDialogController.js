@@ -12,7 +12,7 @@
     var dataProvidersService = require('../../services/import/dataProvidersService');
     var scheduleService = require('../../services/import/scheduleService');
     var attributeTypeService = require('../../services/attributeTypeService');
-    var entitySchemeService = require('../../services/import/entitySchemeService');
+    var entitySchemesService = require('../../services/import/entitySchemesService');
     var instrumentService = require('../../services/instrumentService');
     var currencyService = require('../../services/currencyService');
 
@@ -70,7 +70,7 @@
             $scope.$apply();
         });
 
-        entitySchemeService.getEntitiesSchemesList().then(function (data) {
+        entitySchemesService.getEntitiesSchemesList().then(function (data) {
             vm.entitySchemes = data.results;
             vm.readyStatus.mapping = true;
             $scope.$apply();
@@ -78,7 +78,7 @@
 
         vm.updateEntitySchemes = function (entityId) {
             vm.entitySchemes = [];
-            entitySchemeService.getEntitySchemesByModel(entityId).then(function (data) {
+            entitySchemesService.getEntitySchemesByModel(entityId).then(function (data) {
                 vm.entitySchemes = data.results;
                 $scope.$apply();
             });

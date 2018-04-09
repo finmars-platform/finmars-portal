@@ -70,7 +70,7 @@
     };
 
     var create = function (scheme) {
-        return window.fetch(baseUrl + 'import/complex-transaction-import-scheme/',
+        return window.fetch(baseUrl + 'import/data_schema/',
             {
                 method: 'POST',
                 credentials: 'include',
@@ -83,9 +83,9 @@
             }).then(function (data) {
             return new Promise(function (resolve, reject) {
                 data.json().then(function (result) {
+                    console.log('refined data', result);
                     resolve({
-                        response: result,
-                        status: data.status
+                        response: result
                     })
                 })
             });
@@ -107,10 +107,10 @@
         })
     };
 
-    var update = function (id, scheme) {
-        return window.fetch(baseUrl + 'import/data_schema/' + id + '/',
+    var update = function (scheme) {
+        return window.fetch(baseUrl + 'import/schema_fields/',
             {
-                method: 'PATCH',
+                method: 'POST',
                 credentials: 'include',
                 headers: {
                     'X-CSRFToken': cookieService.getCookie('csrftoken'),
@@ -119,14 +119,7 @@
                 },
                 body: JSON.stringify(scheme)
             }).then(function (data) {
-            return new Promise(function (resolve, reject) {
-                data.json().then(function (result) {
-                    resolve({
-                        response: result,
-                        status: data.status
-                    })
-                })
-            });
+                return data
         })
     };
 
