@@ -16,9 +16,9 @@
                                 <input aria-label="scheme name" type="text" data-ng-model="vm.schemeName">
                             </md-input-container>
                             <md-input-container class="SC-entity-select-container">
-                                <label>{{ vm.schemeDataType.name }}</label>
+                                <label>Data type</label>
                                 <md-select data-ng-model="vm.schemeDataType"
-                                           placeholder="Data type"
+                                           data-ng-model-options="{trackBy: '$value.id'}"
                                            data-ng-change="vm.updateMatchingAttributes(vm.schemeDataType.name)">
                                     <md-option
                                             data-ng-repeat="dataType in vm.dataTypes"

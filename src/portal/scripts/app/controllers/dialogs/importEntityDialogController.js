@@ -70,13 +70,16 @@
             $scope.$apply();
         });
 
-        entitySchemesService.getEntitiesSchemesList().then(function (data) {
-            vm.entitySchemes = data.results;
-            vm.readyStatus.mapping = true;
-            $scope.$apply();
-        });
+        vm.getSchemeList = function () {
+            entitySchemesService.getEntitiesSchemesList().then(function (data) {
+                vm.entitySchemes = data.results;
+                vm.readyStatus.mapping = true;
+                $scope.$apply();
+            });
+        };
+        vm.getSchemeList();
 
-        vm.updateEntitySchemes = function (entityId) {
+        vm.filterSchemesByEntity = function (entityId) {
             vm.entitySchemes = [];
             entitySchemesService.getEntitySchemesByModel(entityId).then(function (data) {
                 vm.entitySchemes = data.results;
@@ -213,15 +216,16 @@
                 }
                 if (data.status == 500) {
                     $mdDialog.show({
-                        controller: 'ValidationDialogController as vm',
-                        templateUrl: 'views/dialogs/validation-dialog-view.html',
+                        controller: 'ImportEntityErrorController as vm',
+                        templateUrl: 'views/dialogs/import-entity-error-dialog-view.html',
                         targetEvent: $event,
-                        locals: {
-                            validationData: "An error occurred. Please try again later"
-                        },
+                        multiple: true,
                         preserveScope: true,
                         autoWrap: true,
-                        skipHide: true
+                        skipHide: true,
+                        locals: {
+                            errorData: data.response
+                        }
                     })
                 }
             });
@@ -305,6 +309,14 @@
                         $scope.$apply();
                     })
                 }
+                if (res.res === 'agree') {
+                    if (vm.entity.id) {
+                        vm.filterSchemesByEntity(vm.entity.id);
+                    }
+                    else {
+                        vm.getSchemeList();
+                    }
+                }
             });
         };
 
@@ -318,8 +330,17 @@
                     entity: entity
                 }
             }).then(function (res) {
+                console.log('response after creation is', res);
                 if (res.status) {
                     console.log(res);
+                }
+                if (res.res === 'agree') {
+                    if (vm.entity.id) {
+                        vm.filterSchemesByEntity(vm.entity.id);
+                    }
+                    else {
+                        vm.getSchemeList();
+                    }
                 }
             });
         };
