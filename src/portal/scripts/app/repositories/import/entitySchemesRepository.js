@@ -85,7 +85,8 @@
                 data.json().then(function (result) {
                     console.log('refined data', result);
                     resolve({
-                        response: result
+                        response: result,
+                        status: data.status
                     })
                 })
             });

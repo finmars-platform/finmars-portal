@@ -23,7 +23,7 @@
 
                             <md-input-container>
                                 <label>Choose entity</label>
-                                <md-select data-ng-model="vm.entity" data-ng-change="vm.updateEntitySchemes(vm.entity.id)">
+                                <md-select data-ng-model="vm.entity" data-ng-change="vm.filterSchemesByEntity(vm.entity.id)">
                                     <md-option data-ng-repeat="entity in vm.listOfEntities" ng-value="{id:entity.id,name:entity.name}">
                                         {{ entity.name }}
                                     </md-option>
