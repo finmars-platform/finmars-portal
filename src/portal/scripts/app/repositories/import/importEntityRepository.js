@@ -12,7 +12,7 @@
     var baseUrl = baseUrlService.resolve();
 
     var startImport = function (config) {
-        return window.fetch(baseUrl + 'import/data/',
+        return window.fetch(baseUrl + 'import/csv/',
             {
                 method: 'POST',
                 credentials: 'include',

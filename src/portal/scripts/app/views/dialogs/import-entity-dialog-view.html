@@ -5,7 +5,7 @@
             <span flex></span>
         </div>
     </md-toolbar>
-    <md-dialog-content data-custom-scroll class="custom-scrollbar" style="background: #E5E5E5;">
+    <md-dialog-content data-custom-scroll class="custom-scrollbar" style="background: #E5E5E5; width: 910px">
         <div data-ng-if="vm.readyStatus.mapping" layout="column">
             <div layout="row">
                 <md-card style="width: 100%">
@@ -21,14 +21,14 @@
                                 <label for="importDataUploadInput" class="md-button md-raised md-primary IFUlabel"><ng-md-icon icon="file_upload"></ng-md-icon><span>BROWSE</span></label>
                             </div>
 
-                            <md-input-container>
-                                <label>Choose entity</label>
-                                <md-select data-ng-model="vm.config.entity" data-ng-change="vm.updateEntitySchemes()">
-                                    <md-option data-ng-repeat="entity in vm.listOfEntities" ng-value="entity.id">
-                                        {{ entity.name }}
-                                    </md-option>
-                                </md-select>
-                            </md-input-container>
+                            <!--<md-input-container>-->
+                                <!--<label>Choose entity</label>-->
+                                <!--<md-select data-ng-model="vm.config.entity" data-ng-change="vm.updateEntitySchemes()">-->
+                                    <!--<md-option data-ng-repeat="entity in vm.listOfEntities" ng-value="entity.id">-->
+                                        <!--{{ entity.name }}-->
+                                    <!--</md-option>-->
+                                <!--</md-select>-->
+                            <!--</md-input-container>-->
 
                             <div layout="row">
 
@@ -39,7 +39,7 @@
                                         <md-option data-ng-repeat="item in vm.entitySchemes" ng-value="item.id">
                                             {{item.name}}
                                         </md-option>
-                                        <md-option>Add scheme</md-option>
+                                        <md-option data-ng-click="vm.createScheme($event)">Add scheme</md-option>
                                     </md-select>
                                 </md-input-container>
                                 <md-button
@@ -65,9 +65,9 @@
 
                             <md-input-container>
                                 <label>Error handling</label>
-                                <md-select data-ng-model="vm.config.error_handling">
-                                    <md-option value="1">Continue</md-option>
-                                    <md-option value="0">Break on first error</md-option>
+                                <md-select data-ng-model="vm.config.error_handler">
+                                    <md-option value="continue">Continue</md-option>
+                                    <md-option value="break">Break on first error</md-option>
                                 </md-select>
                             </md-input-container>
 

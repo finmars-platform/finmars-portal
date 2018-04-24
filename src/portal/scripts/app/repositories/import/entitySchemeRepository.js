@@ -12,7 +12,7 @@
     var baseUrl = baseUrlService.resolve();
 
     var getEntitiesSchemesList = function () {
-        return window.fetch(baseUrl + 'import/data_schema/',
+        return window.fetch(baseUrl + 'import/csv/scheme/',
             {
                 method: 'GET',
                 credentials: 'include',
@@ -68,7 +68,7 @@
     };
 
     var create = function (scheme) {
-        return window.fetch(baseUrl + 'import/complex-transaction-import-scheme/',
+        return window.fetch(baseUrl + 'import/csv/scheme/',
             {
                 method: 'POST',
                 credentials: 'include',
@@ -91,7 +91,7 @@
     };
 
     var getByKey = function (id) {
-        return window.fetch(baseUrl + 'import/data_schema/' + id + '/',
+        return window.fetch(baseUrl + 'import/csv/scheme/' + id + '/',
             {
                 method: 'GET',
                 credentials: 'include',
@@ -106,7 +106,7 @@
     };
 
     var update = function (id, scheme) {
-        return window.fetch(baseUrl + 'import/data_schema/' + id + '/',
+        return window.fetch(baseUrl + 'import/csv/scheme/' + id + '/',
             {
                 method: 'PATCH',
                 credentials: 'include',
@@ -129,7 +129,7 @@
     };
 
     var deleteByKey = function (id) {
-        return window.fetch(baseUrl + 'import/data_schema/' + id + '/',
+        return window.fetch(baseUrl + 'import/csv/scheme/' + id + '/',
             {
                 method: 'DELETE',
                 credentials: 'include',

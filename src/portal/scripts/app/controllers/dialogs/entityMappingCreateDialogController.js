@@ -7,28 +7,21 @@
 
     var logService = require('../../../../../core/services/logService');
     var entitySchemeService = require('../../services/import/entitySchemeService');
+    var metaContentTypeService = require('../../services/metaContentTypesService');
+    var metaService = require('../../services/metaService');
     var attributeTypeService = require('../../services/attributeTypeService');
 
+    module.exports = function ($scope, $mdDialog) {
 
-    module.exports = function ($scope, $mdDialog, schemeId) {
-
-        logService.controller('EntityMappingEditDialogController', 'initialized');
+        logService.controller('EntityMappingCreateDialogController', 'initialized');
 
         var vm = this;
-        vm.scheme = {};
-        vm.readyStatus = {scheme: false, entitySchemeAttributes: false};
+        vm.scheme = {
 
-        entitySchemeService.getByKey(schemeId).then(function (data) {
+            csv_fields: [],
+            entity_fields: []
 
-            vm.scheme = data;
-
-            vm.readyStatus.scheme = true;
-
-            vm.getAttrs();
-
-            $scope.$apply();
-
-        });
+        };
 
         vm.getAttrs = function () {
 
@@ -41,6 +34,38 @@
                 $scope.$apply();
             });
         };
+
+        vm.readyStatus = {scheme: true, entitySchemeAttributes: false};
+
+        vm.contentTypes = metaContentTypeService.getListForTransactionTypeInputs();
+
+        vm.scheme.content_type = vm.contentTypes[0].key;
+        vm.getAttrs();
+
+        vm.updateEntityFields = function () {
+
+            var parts = vm.scheme.content_type.split('.');
+            var entity = parts[1];
+
+            vm.scheme.entity_fields = metaService.getEntityAttrs(entity).filter(function (item) {
+
+                return ['tags', 'transaction_types', 'object_permissions_user', 'object_permissions_group'].indexOf(item.key) === -1
+
+            }).map(function (item) {
+
+                return {
+                    expression: '',
+                    system_property_key: item.key,
+                    name: item.name
+                }
+
+            });
+
+            vm.getAttrs();
+
+        };
+
+        vm.updateEntityFields();
 
         vm.checkReadyStatus = function () {
             return vm.readyStatus.scheme;
@@ -90,7 +115,7 @@
 
             });
 
-            entitySchemeService.update(vm.scheme.id, vm.scheme).then(function (data) {
+            entitySchemeService.create(vm.scheme).then(function (data) {
                 console.log('DATA', data);
                 if (data.status == 200 || data.status == 201) {
                     $mdDialog.hide({res: 'agree'});
@@ -125,10 +150,6 @@
 
             if (item.system_property_key === 'counterparties') {
                 entity = 'counterparty'
-            }
-
-            if (item.system_property_key === 'portfolios') {
-                entity = 'portfolio'
             }
 
             $mdDialog.show({

@@ -30,20 +30,20 @@
             //usersService.logout();
         };
 
-        // usersService.ping().then(function (data) {
-        //    setTimeout(function () {
-        //        //usersService.login('dev1', 'Itein9Ha4eige6Aiph5a').then(function () {
-        //        usersService.login('admin', 'superuser').then(function () {
-        //
-        //
-        //            //usersService.login('dev1', 'Uethohk0').then(function () {
-        //            //usersService.login('dev2', 'ceechohf8Eexue6u').then(function () {
-        //            //usersService.login('dev11', 'cheeL1ei').then(function () {
-        //            console.log('after login', cookiesService.getCookie('csrftoken'));
-        //            $scope.$apply();
-        //        });
-        //    }, 1000);
-        // });
+        usersService.ping().then(function (data) {
+           setTimeout(function () {
+               //usersService.login('dev1', 'Itein9Ha4eige6Aiph5a').then(function () {
+               usersService.login('admin', 'superuser').then(function () {
+
+
+                   //usersService.login('dev1', 'Uethohk0').then(function () {
+                   //usersService.login('dev2', 'ceechohf8Eexue6u').then(function () {
+                   //usersService.login('dev11', 'cheeL1ei').then(function () {
+                   console.log('after login', cookiesService.getCookie('csrftoken'));
+                   $scope.$apply();
+               });
+           }, 1000);
+        });
 
         usersService.getMasterList().then(function (data) {
             vm.masters = data.results;

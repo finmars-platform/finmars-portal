@@ -9,27 +9,14 @@
 
     var metaService = require('../../services/metaService');
     var metaContentTypesService = require('../../services/metaContentTypesService');
-    var dataProvidersService = require('../../services/import/dataProvidersService');
-    var scheduleService = require('../../services/import/scheduleService');
-    var attributeTypeService = require('../../services/attributeTypeService');
     var entitySchemeService = require('../../services/import/entitySchemeService');
-    var instrumentService = require('../../services/instrumentService');
-    var currencyService = require('../../services/currencyService');
-
-    var instrumentTypeService = require('../../services/instrumentTypeService');
-    var instrumentDailyPricingModelService = require('../../services/instrument/instrumentDailyPricingModelService');
-    var importPriceDownloadSchemeService = require('../../services/import/importPriceDownloadSchemeService');
 
     var importEntityService = require('../../services/import/importEntityService');
-    var instrumentPaymentSizeDetailService = require('../../services/instrument/instrumentPaymentSizeDetailService');
-    var instrumentAttributeTypeService = require('../../services/instrument/instrumentAttributeTypeService');
 
 
     module.exports = function ($scope, $mdDialog) {
 
         logService.controller('ImportEntityDialogControllers', 'initialized');
-
-        console.log('mdDialog is ', $mdDialog);
 
         var vm = this;
 
@@ -44,88 +31,36 @@
         vm.dataIsImported = false;
 
         vm.config = {
-            mode: 1,
-
+            error_handler: 'break'
         };
 
         vm.loadIsAvailable = function () {
-            if (vm.readyStatus.processing == false && vm.config.scheme != null) {
+            if (vm.config.scheme != null) {
                 return true;
             }
             return false;
         };
-
-        vm.dailyModels = [];
-        vm.priceDownloadSchemes = [];
-        vm.instrumentTypes = [];
-        vm.currencies = [];
-
-        vm.dynAttributes = {};
-
 
         metaContentTypesService.findEntityByAPIContentType().then(function (data) {
             vm.listOfEntities = data;
             $scope.$apply();
         });
 
-        entitySchemeService.getEntitiesSchemesList().then(function (data) {
-            vm.entitySchemes = data.results;
-            vm.readyStatus.mapping = true;
-            $scope.$apply();
-        });
+        vm.getSchemeList = function () {
+            entitySchemeService.getEntitiesSchemesList().then(function (data) {
+                vm.entitySchemes = data.results;
+                vm.readyStatus.mapping = true;
+                $scope.$apply();
+            });
+        };
+
+        vm.getSchemeList();
 
         vm.updateEntitySchemes = function () {
             entitySchemeService.getEntitySchemesByModel(vm.config.entity).then(function (data) {
                 vm.entitySchemes = data.results;
                 $scope.$apply();
             });
-        };
-
-        instrumentDailyPricingModelService.getList().then(function (data) {
-            vm.dailyModels = data;
-            vm.readyStatus.dailyModel = true;
-            $scope.$apply();
-        });
-
-        importPriceDownloadSchemeService.getList().then(function (data) {
-            vm.priceDownloadSchemes = data.results;
-            vm.readyStatus.priceDownloadScheme = true;
-            $scope.$apply();
-        });
-
-        instrumentPaymentSizeDetailService.getList().then(function (data) {
-            vm.paymentSizeDefaults = data;
-            $scope.$apply();
-        });
-
-        instrumentTypeService.getList().then(function (data) {
-            vm.instrumentTypes = data.results;
-            vm.readyStatus.instrumentType = true;
-            $scope.$apply();
-        });
-
-        currencyService.getList().then(function (data) {
-            vm.currencies = data.results;
-            vm.readyStatus.currency = true;
-            $scope.$apply();
-        });
-
-        vm.appendString = function (string) {
-            var code = vm.config.instrument_code.split(' ')[0];
-            vm.config.instrument_code = code + ' ' + string;
-        };
-
-        vm.resolveAttributeNode = function (item) {
-            var result = '';
-            if (item.hasOwnProperty('classifier_object') && item.classifier_object !== null) {
-                return item.classifier_object.name;
-            }
-            vm.dynAttributes['id_' + item.attribute_type].classifiers.forEach(function (classifier) {
-                if (classifier.id == item.classifier) {
-                    result = classifier.name;
-                }
-            });
-            return result;
         };
 
         vm.findError = function (item, type, state) {
@@ -156,95 +91,46 @@
         };
 
         vm.load = function ($event) {
+
             vm.readyStatus.processing = true;
-            //vm.config.task = 81;
 
             var formData = new FormData();
 
-            if (vm.config.task_id) {
-                formData.append('task_id', vm.config.task_id);
-            } else {
-                console.log('csv data for upload', vm.config);
-                formData.append('files', vm.config.file);
-                formData.append('schema', vm.config.scheme);
-                formData.append('error_handling', vm.config.error_handling);
-            }
+            formData.append('file', vm.config.file);
+            formData.append('scheme', vm.config.scheme);
+            formData.append('error_handler', vm.config.error_handler);
+
+            console.log('vm.config', vm.config);
 
             importEntityService.startImport(formData).then(function (data) {
+
                 console.log('data', data);
-                if (data.status != 500) {
-                    vm.config = data.response;
-                    if (vm.config.task_status == 'SUCCESS') {
 
+                if (data.status !== 500 && data.status !== 400) {
 
-                        if (vm.config.error_rows.length == 0) {
-                            vm.finishedSuccess = true;
-                        } else {
-                            $mdDialog.show({
-                                controller: 'ImportTransactionErrorsDialogController as vm',
-                                templateUrl: 'views/dialogs/import-transaction-errors-dialog-view.html',
-                                targetEvent: $event,
-                                locals: {
-                                    data: vm.config
-                                },
-                                preserveScope: true,
-                                autoWrap: true,
-                                skipHide: true
-                            })
-                        }
+                    vm.readyStatus.processing = false;
+                    vm.dataIsImported = true;
 
-                        vm.readyStatus.processing = false;
-                        vm.dataIsImported = true;
+                    $mdDialog.show({
+                        controller: 'SuccessDialogController as vm',
+                        templateUrl: 'views/dialogs/success-dialog-view.html',
+                        targetEvent: $event,
+                        locals: {
+                            success: {
+                                title: "",
+                                description: "You have successfully imported csv file"
+                            }
+                        },
+                        multiple: true,
+                        preserveScope: true,
+                        autoWrap: true,
+                        skipHide: true
+                    });
 
-                        //vm.mappedFields = [];
-                        //
-                        //var keysDict = [];
-                        //
-                        //
-                        //
-                        //if (Object.keys(vm.config["task_result_overrides"]).length > 0) {
-                        //    keysDict = vm.config["task_result_overrides"];
-                        //} else {
-                        //    keysDict = vm.config["task_result"]
-                        //}
-                        //
-                        //var keys = Object.keys(keysDict);
-                        //var i;
-                        //for (i = 0; i < keys.length; i = i + 1) {
-                        //    vm.mappedFields.push({
-                        //        key: keys[i],
-                        //        value: keysDict[keys[i]]
-                        //    })
-                        //}
-                        //
-                        //var promises = [];
-                        //
-                        //vm.config.instrument.attributes.forEach(function (attribute) {
-                        //    if (attribute.attribute_type_object.value_type == 30) {
-                        //        promises.push(instrumentAttributeTypeService.getByKey(attribute.attribute_type));
-                        //    }
-                        //});
-                        //
-                        //console.log('vm.instrument', vm.instrument);
-                        //
-                        //Promise.all(promises).then(function (data) {
-                        //
-                        //    data.forEach(function (item) {
-                        //        vm.dynAttributes['id_' + item.id] = item;
-                        //    });
-                        //
-                        //    $scope.$apply();
-                        //})
-
-
-                    } else {
-                        setTimeout(function () {
-                            vm.load();
-                        }, 1000)
-
-                    }
                 }
-                if (data.status == 500) {
+
+
+                if (data.status === 500 || data.status === 400) {
                     $mdDialog.show({
                         controller: 'ValidationDialogController as vm',
                         templateUrl: 'views/dialogs/validation-dialog-view.html',
@@ -258,21 +144,14 @@
                     })
                 }
 
-
             })
         };
 
-        vm.recalculate = function () {
-            vm.mappedFields.forEach(function (item) {
-                vm.config.task_result_overrides[item.key] = item.value;
-            });
-            vm.load();
-        };
+        vm.createScheme = function ($event) {
 
-        vm.openEditMapping = function ($event) {
             $mdDialog.show({
-                controller: 'EntityMappingEditDialogController as vm',
-                templateUrl: 'views/dialogs/entity-mapping-dialog-view.html',
+                controller: 'EntityMappingCreateDialogController as vm',
+                templateUrl: 'views/dialogs/entity-mapping-create-dialog-view.html',
                 targetEvent: $event,
                 preserveScope: true,
                 multiple: true,
@@ -281,58 +160,31 @@
                 locals: {
                     schemeId: vm.config.scheme
                 }
-            }).then(function (res) {
-                if (res.status === 'agree') {
-                    console.log('res', res.data);
-                    transactionSchemeService.update(vm.config.scheme, res.data).then(function () {
-                        //vm.getList();
-                        $scope.$apply();
-                    })
+            }).then(function () {
+
+                vm.getSchemeList();
+
+            })
+
+        };
+
+        vm.openEditMapping = function ($event) {
+            $mdDialog.show({
+                controller: 'EntityMappingEditDialogController as vm',
+                templateUrl: 'views/dialogs/entity-mapping-edit-dialog-view.html',
+                targetEvent: $event,
+                preserveScope: true,
+                multiple: true,
+                autoWrap: true,
+                skipHide: true,
+                locals: {
+                    schemeId: vm.config.scheme
                 }
-            });
+            })
         };
 
         vm.cancel = function () {
             $mdDialog.cancel();
-        };
-
-        vm.agree = function ($event) {
-            instrumentService.create(vm.config.instrument).then(function (data) {
-                console.log('DATA', data);
-                if (data.status == 200 || data.status == 201) {
-                    $mdDialog.show({
-                        controller: 'SuccessDialogController as vm',
-                        templateUrl: 'views/dialogs/success-dialog-view.html',
-                        targetEvent: $event,
-                        locals: {
-                            success: {
-                                title: "",
-                                description: "You have you have successfully add instrument " + vm.config.instrument.user_code + " (user code)."
-                            }
-                        },
-                        preserveScope: true,
-                        autoWrap: true,
-                        skipHide: true
-                    }).then(function () {
-                        $mdDialog.hide({res: 'agree'});
-                    });
-
-                }
-                if (data.status == 400 || data.status == 500) {
-                    $mdDialog.show({
-                        controller: 'ValidationDialogController as vm',
-                        templateUrl: 'views/dialogs/validation-dialog-view.html',
-                        targetEvent: $event,
-                        locals: {
-                            validationData: data.response
-                        },
-                        preserveScope: true,
-                        autoWrap: true,
-                        skipHide: true
-                    })
-                }
-            });
-
         };
 
     };

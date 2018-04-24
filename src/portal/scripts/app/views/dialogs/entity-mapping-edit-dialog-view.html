@@ -1,4 +1,5 @@
-<md-dialog aria-label="data mapping" ng-cloak class="transaction-scheme-manager-dialog-view draggable-dialog" drag-dialog>
+<md-dialog aria-label="data mapping" ng-cloak class="transaction-scheme-manager-dialog-view draggable-dialog"
+           drag-dialog>
     <md-toolbar>
         <div class="md-toolbar-tools">
             <h2>Data scheme manager</h2>
@@ -16,22 +17,20 @@
 
                         <md-card>
                             <md-card-content>
-                                <div data-ng-repeat="item in vm.providerFields track by $index" flex="100">
+                                <div data-ng-repeat="item in vm.scheme.csv_fields track by $index" flex="100">
                                     <div class="fields-holder" layout="row">
                                         <div class="iscm-item" layout="row">
                                             <span style="position: relative; top: 8px">#</span>
                                             <md-input-container flex="20">
-                                                <!--<label for="">Number</label>-->
-                                                <input aria-label="index" type="text" data-ng-model="item.num">
+                                                <input aria-label="index" type="text" data-ng-model="item.column">
                                             </md-input-container>
                                             <md-input-container flex="70">
-                                                <!--<label for="">Name</label>-->
-                                                <input aria-label="key" type="text" data-ng-model="item.source">
+                                                <input aria-label="key" type="text" data-ng-model="item.value">
                                             </md-input-container>
                                         </div>
                                         <div>
                                             <md-button style="min-width: 40px;"
-                                                       data-ng-click="vm.removeProviderField(item, $index)"
+                                                       data-ng-click="vm.removeCsvField(item, $index)"
                                                        class="md-raised">x
                                             </md-button>
                                         </div>
@@ -41,7 +40,7 @@
                         </md-card>
 
                         <div layout="row">
-                            <md-button class="md-raised" data-ng-click="vm.addProviderField()">
+                            <md-button class="md-raised" data-ng-click="vm.addCsvField()">
                                 Add field
                             </md-button>
                         </div>
@@ -55,27 +54,53 @@
                         <md-card>
                             <md-card-content>
                                 <div layout="column">
-                                    <div data-ng-repeat="item in vm.entitySchemeAttributes track by $index" flex="100">
+                                    <div data-ng-repeat="item in vm.scheme.entity_fields track by $index" flex="100">
                                         <div class="fields-holder" layout="row">
                                             <div class="iscm-item" layout="row" layout-align="center center">
-                                                <md-input-container flex="20">
-                                                    <!--<label for="">Number</label>-->
-                                                    <input aria-label="attribute name" type="text" data-ng-model="item.model_field" readonly>
+                                                <md-input-container flex="30">
+
+                                                    <div data-ng-if="item.system_property_key">
+                                                        <input aria-label="attribute name" type="text"
+                                                               data-ng-model="item.name" readonly>
+                                                    </div>
+
+                                                    <div data-ng-if="!item.system_property_key">
+
+                                                        <md-select data-ng-model="item.dynamic_attribute_id" style="margin-top: 0">
+                                                            <md-option
+                                                                    data-ng-repeat="item in vm.dynamicAttributes"
+                                                                    data-ng-value="item.id">
+                                                                {{item.name}}
+                                                            </md-option>
+                                                        </md-select>
+
+                                                    </div>
+
                                                 </md-input-container>
-                                                <md-input-container flex="70">
+                                                <md-input-container flex="40">
                                                     <!--<label for="">Name</label>-->
-                                                    <input data-ng-model="" aria-label="attribute value" type="text">
+                                                    <input data-ng-model="item.expression" aria-label="attribute value"
+                                                           type="text">
                                                 </md-input-container>
-                                                <div>
+                                                <div flex="30">
                                                     <md-button style="min-width: 40px;"
                                                                data-ng-click="vm.openExpressionDialog($event, item)"
                                                                class="md-raised md-primary">
                                                         ...
                                                     </md-button>
                                                     <md-button style="min-width: 40px;"
-                                                               data-ng-click="vm.editMapping()"
-                                                               class="md-raised md-primary" data-ng-if="item.related">Edit mapping
+                                                               data-ng-click="vm.openMapping($event, item)"
+                                                               class="md-raised md-primary"
+                                                               data-ng-if="vm.isRelation(item.system_property_key)">Edit
+                                                        mapping
                                                     </md-button>
+
+                                                    <md-button data-ng-if="!item.system_property_key"
+                                                               class="custom-small-icon-btn md-raised"
+                                                               data-ng-click="vm.removeDynamicAttribute(item, $index)"
+                                                               class="md-raised">x
+                                                    </md-button>
+
                                                 </div>
                                             </div>
                                         </div>
@@ -85,7 +110,7 @@
                         </md-card>
 
                         <div>
-                            <md-button class="md-raised" data-ng-click="vm.addMapField()">Add field</md-button>
+                            <md-button class="md-raised" data-ng-click="vm.addDynamicAttribute()">Add field</md-button>
                         </div>
                     </div>
                 </div>

@@ -1,0 +1,156 @@
+<md-dialog aria-label="data mapping" ng-cloak class="transaction-scheme-manager-dialog-view draggable-dialog"
+           drag-dialog>
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            <h2>Data scheme manager</h2>
+            <span flex></span>
+        </div>
+    </md-toolbar>
+    <md-dialog-content data-custom-scroll class="custom-scrollbar" style="background: #E5E5E5;">
+        <md-content>
+            <div data-ng-if="vm.checkReadyStatus()">
+
+                <div layout="row" layout-align="center center">
+                    <md-card flex="100" class="inm-card-special">
+                        <md-card-content layout="column">
+                            <md-input-container class="md-block">
+                                <label>Scheme name</label>
+                                <input aria-label="scheme name" type="text" data-ng-model="vm.scheme.name">
+                            </md-input-container>
+                            <md-input-container class="SC-entity-select-container">
+                                <label>Data type</label>
+                                <md-select data-ng-model="vm.scheme.content_type"
+                                           data-ng-change="vm.updateEntityFields()">
+                                    <md-option
+                                            data-ng-repeat="item in vm.contentTypes"
+                                            data-ng-value="item.key">
+                                        {{item.name}}
+                                    </md-option>
+                                </md-select>
+                            </md-input-container>
+                        </md-card-content>
+                    </md-card>
+                </div>
+
+                <div layout="row">
+                    <div layout="column" flex="25">
+
+                        <div layout="row">
+                            <h3 style="padding-left: 10px">Imported Columns</h3>
+                        </div>
+
+                        <md-card>
+                            <md-card-content>
+                                <div data-ng-repeat="item in vm.scheme.csv_fields track by $index" flex="100">
+                                    <div class="fields-holder" layout="row">
+                                        <div class="iscm-item" layout="row">
+                                            <span style="position: relative; top: 8px">#</span>
+                                            <md-input-container flex="20">
+                                                <input aria-label="index" type="text" data-ng-model="item.column">
+                                            </md-input-container>
+                                            <md-input-container flex="70">
+                                                <input aria-label="key" type="text" data-ng-model="item.value">
+                                            </md-input-container>
+                                        </div>
+                                        <div>
+                                            <md-button style="min-width: 40px;"
+                                                       data-ng-click="vm.removeCsvField(item, $index)"
+                                                       class="md-raised">x
+                                            </md-button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </md-card-content>
+                        </md-card>
+
+                        <div layout="row">
+                            <md-button class="md-raised" data-ng-click="vm.addCsvField()">
+                                Add field
+                            </md-button>
+                        </div>
+
+                    </div>
+                    <div layout="column" flex="75">
+                        <div layout="row">
+                            <h3 style="padding-left: 10px">Data matching</h3>
+                        </div>
+
+                        <md-card>
+                            <md-card-content>
+                                <div layout="column">
+                                    <div data-ng-repeat="item in vm.scheme.entity_fields track by $index" flex="100">
+                                        <div class="fields-holder" layout="row">
+                                            <div class="iscm-item" layout="row" layout-align="center center">
+                                                <md-input-container flex="30">
+
+                                                    <div data-ng-if="item.system_property_key">
+                                                        <input aria-label="attribute name" type="text"
+                                                               data-ng-model="item.name" readonly>
+                                                    </div>
+
+                                                    <div data-ng-if="!item.system_property_key">
+
+                                                        <md-select data-ng-model="item.dynamic_attribute_id" style="margin-top: 0">
+                                                            <md-option
+                                                                    data-ng-repeat="item in vm.dynamicAttributes"
+                                                                    data-ng-value="item.id">
+                                                                {{item.name}}
+                                                            </md-option>
+                                                        </md-select>
+
+                                                    </div>
+                                                </md-input-container>
+                                                <md-input-container flex="40">
+                                                    <!--<label for="">Name</label>-->
+                                                    <input data-ng-model="item.expression" aria-label="attribute value"
+                                                           type="text">
+                                                </md-input-container>
+                                                <div flex="30">
+                                                    <md-button style="min-width: 40px;"
+                                                               data-ng-click="vm.openExpressionDialog($event, item)"
+                                                               class="md-raised md-primary">
+                                                        ...
+                                                    </md-button>
+                                                    <md-button style="min-width: 40px;"
+                                                               data-ng-click="vm.openMapping($event, item)"
+                                                               class="md-raised md-primary"
+                                                               data-ng-if="vm.isRelation(item.system_property_key)">Edit
+                                                        mapping
+                                                    </md-button>
+
+                                                    <md-button data-ng-if="!item.system_property_key"
+                                                               class="custom-small-icon-btn md-raised"
+                                                               data-ng-click="vm.removeDynamicAttribute(item, $index)"
+                                                               class="md-raised">x
+                                                    </md-button>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </md-card-content>
+                        </md-card>
+
+                        <div>
+                            <md-button class="md-raised" data-ng-click="vm.addDynamicAttribute()">Add field</md-button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div data-ng-if="!vm.checkReadyStatus()">
+                <div layout="row" layout-sm="column" layout-align="space-around" class="m-large">
+                    <md-progress-circular md-mode="indeterminate" md-diameter="96"></md-progress-circular>
+                </div>
+            </div>
+        </md-content>
+    </md-dialog-content>
+    <md-dialog-actions layout="row">
+        <md-button class="md-raised" ng-click="vm.cancel()">
+            Cancel
+        </md-button>
+        <md-button class="md-raised" ng-click="vm.agree()" style="margin-right:20px;">
+            Create
+        </md-button>
+    </md-dialog-actions>
+</md-dialog>
