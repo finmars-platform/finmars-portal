@@ -21,15 +21,17 @@
                 },
                 body: config
             }).then(function (data) {
-            return new Promise(function (resolve, reject) {
-                data.json().then(function (result) {
-                    resolve({
-                        response: result,
-                        status: data.status
+                console.log('import entity response data', data, typeof data);
+                // return data
+                return new Promise(function (resolve, reject) {
+                    data.text().then(function (result) {
+                        resolve({
+                            response: result,
+                            status: data.status
+                        })
                     })
-                })
-            });
-        })
+                });
+            })
     };
 
     module.exports = {
