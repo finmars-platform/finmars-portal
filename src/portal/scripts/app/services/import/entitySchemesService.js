@@ -5,38 +5,42 @@
 
     'use strict';
 
-    var entitySchemeRepository = require('../../repositories/import/entitySchemeRepository');
+    var entitySchemesRepository = require('../../repositories/import/entitySchemesRepository');
 
     var getEntitiesSchemesList = function () {
-        return entitySchemeRepository.getEntitiesSchemesList();
+        return entitySchemesRepository.getEntitiesSchemesList();
     };
 
     var getEntitySchemesByModel = function (entityModel) {
-        return entitySchemeRepository.getEntitySchemesByModel(entityModel);
+        return entitySchemesRepository.getEntitySchemesByModel(entityModel);
     };
 
     var getSchemeFields = function (schemeId) {
-        return entitySchemeRepository.getSchemeFields(schemeId);
+        return entitySchemesRepository.getSchemeFields(schemeId);
     };
 
     var getSchemeAttributes = function (schemeId) {
-        return entitySchemeRepository.getSchemeAttributes(schemeId);
+        return entitySchemesRepository.getSchemeAttributes(schemeId);
+    };
+
+    var updateEntitySchemeMapping = function (schemeMapping) {
+        return entitySchemesRepository.updateEntitySchemeMapping(schemeMapping);
     };
 
     var create = function (scheme) {
-        return entitySchemeRepository.create(scheme);
+        return entitySchemesRepository.create(scheme);
     };
 
     var getByKey = function(id) {
-        return entitySchemeRepository.getByKey(id);
+        return entitySchemesRepository.getByKey(id);
     };
 
     var update = function(id, scheme) {
-        return entitySchemeRepository.update(id, scheme);
+        return entitySchemesRepository.update(id, scheme);
     };
 
     var deleteByKey = function(id) {
-        return entitySchemeRepository.deleteByKey(id)
+        return entitySchemesRepository.deleteByKey(id)
     };
 
     module.exports = {
@@ -44,6 +48,7 @@
         getEntitySchemesByModel: getEntitySchemesByModel,
         getSchemeFields: getSchemeFields,
         getSchemeAttributes: getSchemeAttributes,
+        updateEntitySchemeMapping: updateEntitySchemeMapping,
         create: create,
         getByKey: getByKey,
         update: update,
