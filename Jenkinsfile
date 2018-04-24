@@ -8,7 +8,7 @@ pipeline {
     }
     stage('Publish') {
       steps {
-	    withDockerRegistry([ credentialsId: "2004efc3-4a15-46b2-b0dc-c2116d6870c1", url: "" ]) {
+	    withDockerRegistry([ credentialsId: "3ba5937e-6ef6-4909-8bac-d4df4ce67869", url: "" ]) {
             sh 'docker push 34cxn70m0o9cy1h/legacy-frontend'
 	    }
       }
