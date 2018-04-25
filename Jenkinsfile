@@ -8,7 +8,7 @@ pipeline {
         echo "Running ${env.BUILD_ID} on ${env.JENKINS_URL}"
         echo "Branch ${GIT_BRANCH}"
         echo "Branch ${ENV}"
-        sh 'docker build . -t 34cxn70m0o9cy1h/legacy-frontend'
+        sh 'docker build . -t 34cxn70m0o9cy1h/legacy-frontend:${ENV}'
       }
     }
     stage('Publish') {
