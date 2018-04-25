@@ -8,7 +8,7 @@
     var logService = require('../../../../../core/services/logService');
 
     var metaContentTypeService = require('../../services/metaContentTypesService');
-    var entitySchemesService = require('../../services/import/entitySchemesService');
+    var entitySchemeService = require('../../services/import/entitySchemeService');
     var entitySchemesFieldsService = require('../../services/import/entitySchemesFieldsService');
     var entitySchemesAttributesService = require('../../services/import/entitySchemesAttributesService');
 
@@ -163,7 +163,7 @@
             vm.scheme.name = vm.schemeName;
             vm.scheme.model = vm.schemeDataType.id;
 
-            entitySchemesService.create(vm.scheme).then(function (schemeRes) {
+            entitySchemeService.create(vm.scheme).then(function (schemeRes) {
                 var schemeData = {};
                 schemeData.id = schemeRes.response.id;
 
