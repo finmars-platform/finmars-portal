@@ -17,6 +17,7 @@
     module.exports = function ($scope, $state, $rootScope, $mdDialog) {
 
         logService.controller('ShellController', 'initialized', 1);
+        logService.controller('ShellController', 'working', 1);
 
         var vm = this;
 
