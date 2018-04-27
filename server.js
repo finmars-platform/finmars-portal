@@ -17,6 +17,9 @@ app.use(express.static(path.join(__dirname, 'dist')));
 // app.use('/', proxy(proxyOptions));
 
 app.get('/', function(req, res) {
+
+    console.log('Send index page');
+
     res.sendFile(path.join(__dirname, 'dist/' + "index.html"));
 });
 

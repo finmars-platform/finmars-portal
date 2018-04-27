@@ -61,8 +61,7 @@
         var pathToHTML = ['src/*.html'];
 
         return gulp.src(pathToHTML)
-            .pipe(gulpif(options.env === "prod",
-                    replace(/{hash}/g, new Date().getTime())))
+            .pipe(replace(/{hash}/g, new Date().getTime()))
             .pipe(minifyHTML())
             .pipe(gulp.dest('dist/'));
 

@@ -188,10 +188,12 @@
         appName + '-angular-js-min',
         appName + '-angular-css-min',
         appName + '-core-js-min',
+        appName + '-plugins-js-min',
         appName + '-min-Angular-UI-JS',
         appName + '-moment-js-min',
         appName + '-fetch-js-min',
         appName + '-jquery-js-min',
+        appName + '-plugins-css-min',
         appName + '-dragula-js-min',
         appName + '-dragula-css-min'
     ])
