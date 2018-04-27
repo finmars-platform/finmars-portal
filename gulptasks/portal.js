@@ -78,7 +78,7 @@
 
     gulp.task(appName + '-HTML-to-JS', function () {
 
-        console.log('Executing task index-HTML-templateCache...');
+        // console.log('Executing task index-HTML-templateCache...');
 
         var pathToHtml = ['src/' + appName + '/scripts/app/**/*.html'];
 
@@ -101,7 +101,7 @@
         forumTasks.forumHtmlToJs();
     });
 
-    gulp.task(appName + '-js-min', function(){
+    gulp.task(appName + '-js-min', [appName + '-HTML-to-JS'], function(){
 
         var pathToJS = ['src/' + appName + '/scripts/main.js'];
 
@@ -157,7 +157,6 @@
     });
 
     gulp.task(appName + '-min-All', [
-        appName + '-HTML-to-JS',
         appName + '-html-min',
         appName + '-less-to-css-min',
         appName + '-js-min',

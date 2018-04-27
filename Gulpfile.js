@@ -9,6 +9,6 @@
     var requireDir = require('require-dir');
     var dir = requireDir('./gulptasks/');
 
-    gulp.task('default', ['core-min-All', 'portal-HTML-to-JS', 'portal-min-All']);
+    gulp.task('default', ['core-min-All', 'portal-min-All']);
 
 }());
