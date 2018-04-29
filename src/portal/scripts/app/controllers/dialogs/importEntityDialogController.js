@@ -29,6 +29,7 @@
             currency: false
         };
         vm.dataIsImported = false;
+        vm.activeContentType = null;
 
         vm.config = {
             error_handler: 'break'
@@ -41,13 +42,10 @@
             return false;
         };
 
-        metaContentTypesService.findEntityByAPIContentType().then(function (data) {
-            vm.listOfEntities = data;
-            $scope.$apply();
-        });
+        vm.contentTypes = metaContentTypesService.getListForTransactionTypeInputs();
 
         vm.getSchemeList = function () {
-            entitySchemeService.getEntitiesSchemesList().then(function (data) {
+            entitySchemeService.getEntitiesSchemesList(vm.activeContentType).then(function (data) {
                 vm.entitySchemes = data.results;
                 vm.readyStatus.mapping = true;
                 $scope.$apply();
@@ -57,10 +55,7 @@
         vm.getSchemeList();
 
         vm.updateEntitySchemes = function () {
-            entitySchemeService.getEntitySchemesByModel(vm.config.entity).then(function (data) {
-                vm.entitySchemes = data.results;
-                $scope.$apply();
-            });
+            vm.getSchemeList();
         };
 
         vm.findError = function (item, type, state) {
@@ -111,21 +106,41 @@
                     vm.readyStatus.processing = false;
                     vm.dataIsImported = true;
 
-                    $mdDialog.show({
-                        controller: 'SuccessDialogController as vm',
-                        templateUrl: 'views/dialogs/success-dialog-view.html',
-                        targetEvent: $event,
-                        locals: {
-                            success: {
-                                title: "",
-                                description: "You have successfully imported csv file"
+                    if (data.response.errors.length == 0) {
+
+                        $mdDialog.show({
+                            controller: 'SuccessDialogController as vm',
+                            templateUrl: 'views/dialogs/success-dialog-view.html',
+                            targetEvent: $event,
+                            preserveScope: true,
+                            multiple: true,
+                            autoWrap: true,
+                            skipHide: true,
+                            locals: {
+                                success: {
+                                    title: "",
+                                    description: "You have successfully imported csv file"
+                                }
                             }
-                        },
-                        multiple: true,
-                        preserveScope: true,
-                        autoWrap: true,
-                        skipHide: true
-                    });
+
+                        });
+
+                    } else {
+
+                        $mdDialog.show({
+                            controller: 'ImportEntityErrorsDialogController as vm',
+                            templateUrl: 'views/dialogs/import-entity-errors-dialog-view.html',
+                            targetEvent: $event,
+                            preserveScope: true,
+                            multiple: true,
+                            autoWrap: true,
+                            skipHide: true,
+                            locals: {
+                                data: data.response
+                            }
+                        })
+
+                    }
 
                 }
 
@@ -135,12 +150,15 @@
                         controller: 'ValidationDialogController as vm',
                         templateUrl: 'views/dialogs/validation-dialog-view.html',
                         targetEvent: $event,
-                        locals: {
-                            validationData: "An error occurred. Please try again later"
-                        },
                         preserveScope: true,
+                        multiple: true,
                         autoWrap: true,
-                        skipHide: true
+                        skipHide: true,
+                        locals: {
+                            validationData: {
+                                message: "An error occurred. Please try again later"
+                            }
+                        }
                     })
                 }
 

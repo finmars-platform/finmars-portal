@@ -7,8 +7,8 @@
 
     var entitySchemesRepository = require('../../repositories/import/entitySchemesRepository');
 
-    var getEntitiesSchemesList = function () {
-        return entitySchemesRepository.getEntitiesSchemesList();
+    var getEntitiesSchemesList = function (contentType) {
+        return entitySchemesRepository.getEntitiesSchemesList(contentType);
     };
 
     var getEntitySchemesByModel = function (entityModel) {
