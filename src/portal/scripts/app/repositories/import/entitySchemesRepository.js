@@ -11,8 +11,15 @@
 
     var baseUrl = baseUrlService.resolve();
 
-    var getEntitiesSchemesList = function () {
-        return window.fetch(baseUrl + 'import/csv/scheme/',
+    var getEntitiesSchemesList = function (contentType) {
+
+        var queryFilter = '';
+
+        if(contentType) {
+            queryFilter = '?content_type=' + contentType
+        }
+
+        return window.fetch(baseUrl + 'import/csv/scheme/' + queryFilter,
             {
                 method: 'GET',
                 credentials: 'include',

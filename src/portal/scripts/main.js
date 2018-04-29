@@ -64,7 +64,7 @@ app.controller('SideNavController', ['$scope', '$mdDialog', require('./app/contr
 app.controller('DashboardController', ['$scope', '$mdDialog', require('./app/controllers/dashboardController')]);
 app.controller('ActionsController', ['$scope', '$mdDialog', require('./app/controllers/actionsController')]);
 app.controller('ImportEntityDialogController', ['$scope', '$mdDialog', require('./app/controllers/dialogs/importEntityDialogController')]);
-app.controller('EntitySchemeCreationDialogController', ['$scope', '$mdDialog', 'entity', require('./app/controllers/dialogs/entitySchemeCreationDialogController')]);
+app.controller('ImportEntityErrorsDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/importEntityErrorsDialogController')]);
 app.controller('ImportInstrumentDialogController', ['$scope', '$mdDialog', require('./app/controllers/dialogs/importInstrumentDialogController')]);
 app.controller('ImportTransactionDialogController', ['$scope', '$mdDialog', require('./app/controllers/dialogs/importTransactionDialogController')]);
 app.controller('ImportTransactionErrorsDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/importTransactionErrorsDialogController')]);
@@ -163,7 +163,6 @@ app.controller('InfoDialogController', ['$scope', '$mdDialog', 'info', require('
 app.controller('InstrumentSelectDialogController', ['$scope', '$mdDialog', require('./app/controllers/dialogs/instrumentSelectDialogController')]);
 app.controller('ClassifierSelectDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/classifierSelectDialogController')]);
 app.controller('SaveLayoutDialogController', ['$scope', '$mdDialog', require('./app/controllers/dialogs/saveLayoutDialogController')]);
-app.controller('ImportEntityErrorController', ['$scope', '$mdDialog', 'errorData', require('./app/controllers/dialogs/importEntityErrorController')]);
 
 app.controller('AuditController', ['$scope', require('./app/controllers/system/auditController')]);
 app.controller('NotificationsController', ['$scope', '$state', '$stateParams', require('./app/controllers/system/notificationsController')]);

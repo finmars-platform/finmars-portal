@@ -12,6 +12,9 @@
     var baseUrl = baseUrlService.resolve();
 
     var startImport = function (config) {
+
+        var status = null;
+
         return window.fetch(baseUrl + 'import/csv/',
             {
                 method: 'POST',
@@ -21,17 +24,19 @@
                 },
                 body: config
             }).then(function (data) {
-                console.log('import entity response data', data, typeof data);
-                // return data
-                return new Promise(function (resolve, reject) {
-                    data.text().then(function (result) {
-                        resolve({
-                            response: result,
-                            status: data.status
-                        })
-                    })
-                });
-            })
+
+            status = data.status;
+
+            return data.json()
+
+        }).then(function (data) {
+
+            return {
+                status: status,
+                response: data
+            }
+
+        })
     };
 
     module.exports = {

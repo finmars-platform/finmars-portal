@@ -7,7 +7,7 @@
 
     var logService = require('../../../../../core/services/logService');
     var entitySchemeService = require('../../services/import/entitySchemeService');
-    var metaContentTypeService = require('../../services/metaContentTypesService');
+    var metaContentTypesService = require('../../services/metaContentTypesService');
     var metaService = require('../../services/metaService');
     var attributeTypeService = require('../../services/attributeTypeService');
 
@@ -37,7 +37,7 @@
 
         vm.readyStatus = {scheme: true, entitySchemeAttributes: false};
 
-        vm.contentTypes = metaContentTypeService.getListForTransactionTypeInputs();
+        vm.contentTypes = metaContentTypesService.getListForTransactionTypeInputs();
 
         vm.scheme.content_type = vm.contentTypes[0].key;
         vm.getAttrs();

@@ -21,14 +21,14 @@
                                 <label for="importDataUploadInput" class="md-button md-raised md-primary IFUlabel"><ng-md-icon icon="file_upload"></ng-md-icon><span>BROWSE</span></label>
                             </div>
 
-                            <!--<md-input-container>-->
-                                <!--<label>Choose entity</label>-->
-                                <!--<md-select data-ng-model="vm.config.entity" data-ng-change="vm.updateEntitySchemes()">-->
-                                    <!--<md-option data-ng-repeat="entity in vm.listOfEntities" ng-value="entity.id">-->
-                                        <!--{{ entity.name }}-->
-                                    <!--</md-option>-->
-                                <!--</md-select>-->
-                            <!--</md-input-container>-->
+                            <md-input-container>
+                                <label>Choose entity</label>
+                                <md-select data-ng-model="vm.activeContentType" data-ng-change="vm.updateEntitySchemes()">
+                                    <md-option data-ng-repeat="entity in vm.contentTypes" ng-value="entity.key">
+                                        {{ entity.name }}
+                                    </md-option>
+                                </md-select>
+                            </md-input-container>
 
                             <div layout="row">
 
