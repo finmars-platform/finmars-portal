@@ -66,7 +66,7 @@
 
                                                     <div data-ng-if="!item.system_property_key">
 
-                                                        <md-select data-ng-model="item.dynamic_attribute_id" style="margin-top: 0">
+                                                        <md-select data-ng-change="vm.extendEntityFields()" data-ng-model="item.dynamic_attribute_id" style="margin-top: 0">
                                                             <md-option
                                                                     data-ng-repeat="item in vm.dynamicAttributes"
                                                                     data-ng-value="item.id">
@@ -91,7 +91,7 @@
                                                     <md-button style="min-width: 40px;"
                                                                data-ng-click="vm.openMapping($event, item)"
                                                                class="md-raised md-primary"
-                                                               data-ng-if="vm.isRelation(item.system_property_key)">Edit
+                                                               data-ng-if="vm.hasMapping(item)">Edit
                                                         mapping
                                                     </md-button>
 

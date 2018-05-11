@@ -38,8 +38,31 @@
 
                 vm.dynamicAttributes = data.results;
 
+
+                vm.extendEntityFields();
+
                 $scope.$apply();
             });
+        };
+
+        vm.extendEntityFields = function () {
+
+            vm.scheme.entity_fields.forEach(function (item) {
+
+                if (item.dynamic_attribute_id !== null) {
+
+                    vm.dynamicAttributes.forEach(function (attribute) {
+
+                        if (item.dynamic_attribute_id === attribute.id) {
+                            item.value_type = attribute.value_type;
+                        }
+
+                    })
+
+                }
+
+            })
+
         };
 
         vm.checkReadyStatus = function () {
@@ -68,8 +91,17 @@
             vm.scheme.entity_fields.splice($index, 1);
         };
 
-        vm.isRelation = function (key) {
-            return ['accounts', 'responsibles', 'counterparties', 'transaction_types', 'portfolios'].indexOf(key) !== -1
+        vm.hasMapping = function (item) {
+
+            if (item.system_property_key != null) {
+                return ['accounts', 'responsibles', 'counterparties', 'transaction_types', 'portfolios'].indexOf(item.system_property_key) !== -1
+            }
+
+            if (item.hasOwnProperty('value_type')) {
+                console.log('item', item);
+                return item.value_type === 30;
+            }
+
         };
 
         vm.cancel = function () {
@@ -113,41 +145,64 @@
 
         vm.openMapping = function ($event, item) {
 
-            var entity = '';
+            if (item.hasOwnProperty('value_type')) {
 
-            if (item.system_property_key === 'accounts') {
-                entity = 'account'
-            }
+                $mdDialog.show({
+                    controller: 'EntityTypeClassifierMappingDialogController as vm',
+                    templateUrl: 'views/dialogs/entity-type-classifier-mapping-dialog-view.html',
+                    parent: angular.element(document.body),
+                    targetEvent: $event,
+                    preserveScope: true,
+                    multiple: true,
+                    autoWrap: true,
+                    skipHide: true,
+                    locals: {
+                        options: {
+                            entity: vm.scheme.content_type,
+                            attribute_type_id: item.dynamic_attribute_id
+                        }
+                    }
+                })
 
-            if (item.system_property_key === 'responsibles') {
-                entity = 'responsible'
-            }
+            } else {
 
-            if (item.system_property_key === 'counterparties') {
-                entity = 'counterparty'
-            }
+                var entity = '';
 
-            if (item.system_property_key === 'portfolios') {
-                entity = 'portfolio'
-            }
-
-            $mdDialog.show({
-                controller: 'EntityTypeMappingDialogController as vm',
-                templateUrl: 'views/dialogs/entity-type-mapping-dialog-view.html',
-                parent: angular.element(document.body),
-                targetEvent: $event,
-                preserveScope: true,
-                multiple: true,
-                autoWrap: true,
-                skipHide: true,
-                locals: {
-                    mapItem: {complexExpressionEntity: entity}
+                if (item.system_property_key === 'accounts') {
+                    entity = 'account'
                 }
-            }).then(function (res) {
-                if (res.status === 'agree') {
-                    console.log("res", res.data);
+
+                if (item.system_property_key === 'responsibles') {
+                    entity = 'responsible'
                 }
-            });
+
+                if (item.system_property_key === 'counterparties') {
+                    entity = 'counterparty'
+                }
+
+                if (item.system_property_key === 'portfolios') {
+                    entity = 'portfolio'
+                }
+
+                $mdDialog.show({
+                    controller: 'EntityTypeMappingDialogController as vm',
+                    templateUrl: 'views/dialogs/entity-type-mapping-dialog-view.html',
+                    parent: angular.element(document.body),
+                    targetEvent: $event,
+                    preserveScope: true,
+                    multiple: true,
+                    autoWrap: true,
+                    skipHide: true,
+                    locals: {
+                        mapItem: {complexExpressionEntity: entity}
+                    }
+                }).then(function (res) {
+                    if (res.status === 'agree') {
+                        console.log("res", res.data);
+                    }
+                });
+
+            }
         };
 
         vm.openExpressionDialog = function ($event, item) {
