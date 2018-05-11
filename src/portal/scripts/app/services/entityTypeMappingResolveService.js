@@ -5,25 +5,25 @@
 
     'use strict';
 
-    var currencyMappingService = require('./import/currencyMappingService');
-    var instrumentTypeMappingService = require('./import/instrumentTypeMappingService');
-    var accrualCalculationModelService = require('./import/accrualCalculationModelMappingService');
-    var instrumentPeriodicityService = require('./import/instrumentPeriodicityMappingService');
-    var instrumentAttributeTypeService = require('./import/instrumentAttributeTypeMappingService');
+    var currencyMappingService = require('./import/mappings/currencyMappingService');
+    var instrumentTypeMappingService = require('./import/mappings/instrumentTypeMappingService');
+    var accrualCalculationModelService = require('./import/mappings/accrualCalculationModelMappingService');
+    var instrumentPeriodicityService = require('./import/mappings/instrumentPeriodicityMappingService');
+    var instrumentAttributeTypeService = require('./import/mappings/instrumentAttributeTypeMappingService');
 
-    var accountMappingService = require('./import/accountMappingService');
-    var instrumentMappingService = require('./import/instrumentMappingService');
-    var counterpartyMappingService = require('./import/counterpartyMappingService');
-    var responsibleMappingService = require('./import/responsibleMappingService');
-    var portfolioMappingService = require('./import/portfolioMappingService');
+    var accountMappingService = require('./import/mappings/accountMappingService');
+    var instrumentMappingService = require('./import/mappings/instrumentMappingService');
+    var counterpartyMappingService = require('./import/mappings/counterpartyMappingService');
+    var responsibleMappingService = require('./import/mappings/responsibleMappingService');
+    var portfolioMappingService = require('./import/mappings/portfolioMappingService');
 
-    var strategy1MappingService = require('./import/strategy1MappingService');
-    var strategy2MappingService = require('./import/strategy2MappingService');
-    var strategy3MappingService = require('./import/strategy3MappingService');
+    var strategy1MappingService = require('./import/mappings/strategy1MappingService');
+    var strategy2MappingService = require('./import/mappings/strategy2MappingService');
+    var strategy3MappingService = require('./import/mappings/strategy3MappingService');
 
-    var dailyPricingModelMappingService = require('./import/dailyPricingModelMappingService');
-    var paymentSizeDetailMappingService = require('./import/paymentSizeDetailMappingService');
-    var priceDownloadSchemeMappingService = require('./import/priceDownloadSchemeMappingService');
+    var dailyPricingModelMappingService = require('./import/mappings/dailyPricingModelMappingService');
+    var paymentSizeDetailMappingService = require('./import/mappings/paymentSizeDetailMappingService');
+    var priceDownloadSchemeMappingService = require('./import/mappings/priceDownloadSchemeMappingService');
 
     var getList = function (entityType) {
 
