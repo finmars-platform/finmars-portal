@@ -70,6 +70,16 @@
 
                     });
 
+                    vm.items = vm.items.map(function (item) {
+
+                        if (!item.mapping.length) {
+                            item.mapping = [{value: ''}]
+                        }
+
+                        return item;
+
+                    });
+
                     vm.readyStatus.content = true;
 
                     $scope.$apply();
