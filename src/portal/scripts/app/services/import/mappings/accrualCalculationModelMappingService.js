@@ -7,8 +7,8 @@
 
     var accrualCalculationModelMappingRepository = require('../../../repositories/import/mappings/accrualCalculationModelMappingRepository');
 
-    var getList = function () {
-        return accrualCalculationModelMappingRepository.getList();
+    var getList = function (options) {
+        return accrualCalculationModelMappingRepository.getList(options);
     };
 
     var getByKey = function (id) {

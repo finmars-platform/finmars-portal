@@ -7,8 +7,8 @@
 
     var instrumentPeriodicityMappingRepository = require('../../../repositories/import/mappings/instrumentPeriodicityMappingRepository');
 
-    var getList = function () {
-        return instrumentPeriodicityMappingRepository.getList();
+    var getList = function (options) {
+        return instrumentPeriodicityMappingRepository.getList(options);
     };
 
     var getByKey = function (id) {

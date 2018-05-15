@@ -7,8 +7,8 @@
 
     var responsibleMappingRepository = require('../../../repositories/import/mappings/responsibleMappingRepository');
 
-    var getList = function () {
-        return responsibleMappingRepository.getList();
+    var getList = function (options) {
+        return responsibleMappingRepository.getList(options);
     };
 
     var getByKey = function (id) {
