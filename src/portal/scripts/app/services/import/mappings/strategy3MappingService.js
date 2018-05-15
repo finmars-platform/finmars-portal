@@ -7,8 +7,8 @@
 
     var strategy3MappingRepository = require('../../../repositories/import/mappings/strategy3MappingRepository');
 
-    var getList = function () {
-        return strategy3MappingRepository.getList();
+    var getList = function (options) {
+        return strategy3MappingRepository.getList(options);
     };
 
     var getByKey = function (id) {

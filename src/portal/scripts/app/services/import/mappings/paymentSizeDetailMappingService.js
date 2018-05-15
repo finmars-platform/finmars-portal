@@ -7,8 +7,8 @@
 
     var paymentSizeDetailMappingRepository = require('../../../repositories/import/mappings/paymentSizeDetailMappingRepository');
 
-    var getList = function () {
-        return paymentSizeDetailMappingRepository.getList();
+    var getList = function (options) {
+        return paymentSizeDetailMappingRepository.getList(options);
     };
 
     var getByKey = function (id) {
