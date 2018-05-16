@@ -6,9 +6,12 @@
                     Date
                 </div>
                 <div flex="10">
-                    From
+                    Entity
                 </div>
-                <div flex="75">
+                <div flex="10">
+                    Action
+                </div>
+                <div flex="65">
                     Notification
                 </div>
             </div>
@@ -19,9 +22,12 @@
                     {{item['create_date'] | date:'dd/MM/yyyy HH:mm'}}
                 </div>
                 <div flex="10">
-                    System
+                    {{ vm.getEntity(item) }}
                 </div>
-                <div flex="75" layout="row" layout-align="space-between center">
+                <div flex="10">
+                    {{ item.verb }}
+                </div>
+                <div flex="65" layout="row" layout-align="space-between center">
                     <div>
                         {{item.message}}
                     </div>
