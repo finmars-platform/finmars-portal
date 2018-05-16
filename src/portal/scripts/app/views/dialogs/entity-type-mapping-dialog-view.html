@@ -77,7 +77,7 @@
                 </div>
             </div>
             <div data-ng-if="vm.mapEntityType != 'classifier'">
-                <div layout="row" style="margin-bottom: 20px; padding: 24px" >
+                <div layout="row" style="margin-bottom: 20px; padding: 24px">
                     <div flex="50" data-ng-click="vm.setSort('mapping.value')"><b>Your value </b><span
                             class="sortorder"
                             data-ng-show="vm.sort === 'mapping.value'"
@@ -109,7 +109,7 @@
                 <!--<div data-ng-repeat="item in vm.entityItems | filter:vm.query | orderBy:vm.sort:vm.direction">-->
                 <div ui-scroll-viewport style="height: 300px; padding: 24px">
 
-                    <div ui-scroll="item in vm.itemsProvider" buffer-size="5" padding="1">
+                    <div ui-scroll="item in vm.itemsProvider" buffer-size="20">
                         <div layout="row" data-ng-repeat="mappingItem in item.mapping"
                              data-ng-show="!mappingItem.isDeleted">
                             <div flex="50" layout="row">

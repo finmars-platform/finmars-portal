@@ -5,6 +5,8 @@
 
 require('../../forum/scripts/main.js');
 
+// require('../../core/context-menu/index.js')
+
 var app = angular.module('portal', [
     'ngAria',
     'ngMaterial',

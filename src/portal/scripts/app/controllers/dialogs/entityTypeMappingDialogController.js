@@ -31,19 +31,22 @@
 
                 var result = [];
 
+                --index;
+                var endItem = index + count;
+                var startItem = (index < 0 ? 0 : index);
 
-                if (index > 0 && index + count > vm.entityItems.length) {
+                if (index > 0 && index + count > vm.entityItems.length - count * 2) {
 
                     vm.options.page = vm.options.page + 1;
                     vm.getDataEntity().then(function (value) {
 
-                        result = vm.entityItems.slice(index, index + count);
+                        result = vm.entityItems.slice(startItem, endItem);
 
                         callback(result);
 
                     }).catch(function (reason) {
 
-                        result = vm.entityItems.slice(index, index + count);
+                        result = vm.entityItems.slice(startItem, endItem);
 
                         callback(result);
 
@@ -51,7 +54,7 @@
 
                 } else {
 
-                    result = vm.entityItems.slice(index, index + count);
+                    result = vm.entityItems.slice(startItem, endItem);
 
                     callback(result);
                 }
@@ -71,6 +74,10 @@
 
             if (item.hasOwnProperty('scheme_name')) {
                 return item.scheme_name;
+            }
+
+            if(item.hasOwnProperty('user_code')) {
+                return item.name + ' (' + item.user_code + ')'
             }
 
             return item.name;
