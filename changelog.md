@@ -1,5 +1,11 @@
 # Changelog
 
+## 18.05.2018
+
+- New virtual scroll component
+- Entity mappings refactor
+- File input control refactor
+
 ## 16.05.2018
 
 - Error handler in CSV file import wizard
