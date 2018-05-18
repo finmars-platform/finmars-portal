@@ -21,6 +21,48 @@
         vm.mapItem = mapItem;
         vm.mapEntityType = mapItem.complexExpressionEntity;
 
+        vm.options = {
+            page: 1,
+            page_size: 40
+        };
+
+        vm.itemsProvider = {
+            get: function (index, count, callback) {
+
+                var result = [];
+
+                --index;
+                var endItem = index + count;
+                var startItem = (index < 0 ? 0 : index);
+
+                if (index > 0 && index + count > vm.entityItems.length - count * 2) {
+
+                    vm.options.page = vm.options.page + 1;
+                    vm.getDataEntity().then(function (value) {
+
+                        result = vm.entityItems.slice(startItem, endItem);
+
+                        callback(result);
+
+                    }).catch(function (reason) {
+
+                        result = vm.entityItems.slice(startItem, endItem);
+
+                        callback(result);
+
+                    })
+
+                } else {
+
+                    result = vm.entityItems.slice(startItem, endItem);
+
+                    callback(result);
+                }
+
+
+            }
+        };
+
         console.log('mapEntityType', vm.mapEntityType);
 
         vm.toggleQuery = function () {
@@ -32,6 +74,10 @@
 
             if (item.hasOwnProperty('scheme_name')) {
                 return item.scheme_name;
+            }
+
+            if(item.hasOwnProperty('user_code')) {
+                return item.name + ' (' + item.user_code + ')'
             }
 
             return item.name;
@@ -80,7 +126,8 @@
             }
         }
 
-        if (vm.mapEntityType == 'classifier') {
+        vm.getDataClassifier = function () {
+
             instrumentAttributeTypeService.getByKey(vm.mapItem.attribute_type).then(function (data) {
 
                 console.log('classifier data', data);
@@ -129,60 +176,61 @@
                         }
                     });
 
-                    console.log('!!!!!!!!!!!!!!!', vm.entityItems);
-
                     vm.readyStatus.content = true;
                     $scope.$apply();
                 });
             })
-        } else {
 
-            //console.log('vm.mapEntityType', vm.mapEntityType);
-            vm.entityMapDashed = vm.mapEntityType.split('_').join('-');
-            //console.log('vm.entityMapDashed', vm.entityMapDashed);
+        };
 
-            entityResolverService.getList(vm.entityMapDashed).then(function (data) {
-                if (data.hasOwnProperty('results')) {
-                    vm.entityItems = data.results;
-                } else {
-                    vm.entityItems = data;
-                }
-                entityTypeMappingResolveService.getList(vm.mapEntityType).then(function (data) {
-                    if (data.hasOwnProperty('results')) {
+        vm.getDataEntity = function () {
+
+            return new Promise(function (resolve, reject) {
+
+                vm.entityMapDashed = vm.mapEntityType.split('_').join('-');
+
+                entityResolverService.getList(vm.entityMapDashed, vm.options).then(function (data) {
+
+                    if (!data.results) return reject('End of list');
+
+                    vm.entityItems = vm.entityItems.concat(data.results);
+
+                    console.log('vm.entityItems', vm.entityItems);
+
+                    entityTypeMappingResolveService.getList(vm.mapEntityType).then(function (data) {
+
                         vm.items = data.results;
-                    } else {
-                        vm.items = data
-                    }
-                    var i, e;
-                    for (e = 0; e < vm.entityItems.length; e = e + 1) {
-                        for (i = 0; i < vm.items.length; i = i + 1) {
-                            //if (vm.items[i][vm.mapEntityType] == vm.entityItems[e].id) {
-                            if (vm.items[i].content_object == vm.entityItems[e].id) {
 
-                                if (!vm.entityItems[e].hasOwnProperty('mapping')) {
-                                    vm.entityItems[e].mapping = [];
+                        var i, e;
+                        for (e = 0; e < vm.entityItems.length; e = e + 1) {
+                            for (i = 0; i < vm.items.length; i = i + 1) {
+
+                                if (vm.items[i].content_object === vm.entityItems[e].id) {
+
+                                    if (!vm.entityItems[e].hasOwnProperty('mapping')) {
+                                        vm.entityItems[e].mapping = [];
+                                    }
+
+                                    vm.entityItems[e].mapping.push(vm.items[i])
                                 }
-
-                                vm.entityItems[e].mapping.push(vm.items[i])
                             }
                         }
-                    }
 
-                    vm.entityItems.forEach(function (entityItem) {
-                        if (!entityItem.hasOwnProperty('mapping')) {
-                            entityItem.mapping = [{value: ''}];
-                        }
+                        vm.entityItems.forEach(function (entityItem) {
+                            if (!entityItem.hasOwnProperty('mapping')) {
+                                entityItem.mapping = [{value: ''}];
+                            }
+                        });
+
+                        vm.readyStatus.content = true;
+                        resolve($scope.$apply());
+
                     });
-
-                    console.log('!!!!!!!!!!!!!!!', vm.items);
-                    console.log('!!!!!!!!!!!!!!!', vm.entityItems);
-
-                    vm.readyStatus.content = true;
-                    $scope.$apply();
                 });
-            });
-        }
 
+            })
+
+        };
 
         vm.cancel = function () {
             $mdDialog.cancel();
@@ -222,10 +270,6 @@
                                     mapItem.content_object = vm.entityItems[i].id;
                                 }
 
-                                console.log('mapItem', mapItem);
-                                console.log('vm.entityItems[i]', vm.entityItems[i]);
-
-
                                 return entityTypeMappingResolveService.create(vm.mapEntityType, mapItem).then(function () {
                                     i = i + 1;
                                     updateRow();
@@ -253,6 +297,18 @@
 
             $mdDialog.hide({status: 'agree'});
         };
+
+        vm.init = function () {
+
+            if (vm.mapEntityType === 'classifier') {
+                vm.getDataClassifier();
+            } else {
+                vm.getDataEntity();
+            }
+
+        };
+
+        vm.init();
     }
 
 }());

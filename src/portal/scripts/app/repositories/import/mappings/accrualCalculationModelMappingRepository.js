@@ -11,7 +11,7 @@
 
     var baseUrl = baseUrlService.resolve();
 
-    var getList = function () {
+    var getList = function (options) {
         return window.fetch(baseUrl + 'import/accrual-calculation-model-mapping/?page_size=10000',
             {
                 method: 'GET',

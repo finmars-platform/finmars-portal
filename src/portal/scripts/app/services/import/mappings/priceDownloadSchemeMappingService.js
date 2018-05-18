@@ -7,8 +7,8 @@
 
     var priceDownloadSchemeMappingRepository = require('../../../repositories/import/mappings/priceDownloadSchemeMappingRepository');
 
-    var getList = function () {
-        return priceDownloadSchemeMappingRepository.getList();
+    var getList = function (options) {
+        return priceDownloadSchemeMappingRepository.getList(options);
     };
 
     var getByKey = function (id) {

@@ -7,8 +7,8 @@
 
     var portfolioMappingRepository = require('../../../repositories/import/mappings/portfolioMappingRepository');
 
-    var getList = function () {
-        return portfolioMappingRepository.getList();
+    var getList = function (options) {
+        return portfolioMappingRepository.getList(options);
     };
 
     var getByKey = function (id) {

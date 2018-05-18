@@ -7,8 +7,8 @@
 
     var accountMappingRepository = require('../../../repositories/import/mappings/accountMappingRepository');
 
-    var getList = function () {
-        return accountMappingRepository.getList();
+    var getList = function (options) {
+        return accountMappingRepository.getList(options);
     };
 
     var getByKey = function (id) {
