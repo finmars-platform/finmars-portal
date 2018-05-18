@@ -7,8 +7,8 @@
 
     var instrumentTypeMappingRepository = require('../../../repositories/import/mappings/instrumentTypeMappingRepository');
 
-    var getList = function () {
-        return instrumentTypeMappingRepository.getList();
+    var getList = function (options) {
+        return instrumentTypeMappingRepository.getList(options);
     };
 
     var getByKey = function (id) {

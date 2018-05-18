@@ -11,7 +11,7 @@
 
     var baseUrl = baseUrlService.resolve();
 
-    var getList = function () {
+    var getList = function (options) {
         return window.fetch(baseUrl + 'import/payment-size-detail-mapping/?page_size=1000',
             {
                 method: 'GET',

@@ -7,8 +7,8 @@
 
     var dailyPricingModelMappingRepository = require('../../../repositories/import/mappings/dailyPricingModelMappingRepository');
 
-    var getList = function () {
-        return dailyPricingModelMappingRepository.getList();
+    var getList = function (options) {
+        return dailyPricingModelMappingRepository.getList(options);
     };
 
     var getByKey = function (id) {

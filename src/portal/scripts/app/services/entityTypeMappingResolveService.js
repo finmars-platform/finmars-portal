@@ -25,58 +25,58 @@
     var paymentSizeDetailMappingService = require('./import/mappings/paymentSizeDetailMappingService');
     var priceDownloadSchemeMappingService = require('./import/mappings/priceDownloadSchemeMappingService');
 
-    var getList = function (entityType) {
+    var getList = function (entityType, options) {
 
         console.log('getList entityType', entityType);
 
         switch (entityType) {
             case 'currency':
-                return currencyMappingService.getList();
+                return currencyMappingService.getList(options);
                 break;
             case 'instrument_type':
-                return instrumentTypeMappingService.getList();
+                return instrumentTypeMappingService.getList(options);
                 break;
             case 'accrual_calculation_model':
-                return accrualCalculationModelService.getList();
+                return accrualCalculationModelService.getList(options);
                 break;
             case 'periodicity':
-                return instrumentPeriodicityService.getList();
+                return instrumentPeriodicityService.getList(options);
                 break;
             case 'classifier':
-                return instrumentAttributeTypeService.getList();
+                return instrumentAttributeTypeService.getList(options);
                 break;
             case 'account':
-                return accountMappingService.getList();
+                return accountMappingService.getList(options);
                 break;
             case 'instrument':
-                return instrumentMappingService.getList();
+                return instrumentMappingService.getList(options);
                 break;
             case 'counterparty':
-                return counterpartyMappingService.getList();
+                return counterpartyMappingService.getList(options);
                 break;
             case 'responsible':
-                return responsibleMappingService.getList();
+                return responsibleMappingService.getList(options);
                 break;
             case 'portfolio':
-                return portfolioMappingService.getList();
+                return portfolioMappingService.getList(options);
                 break;
             case 'strategy_1':
-                return strategy1MappingService.getList();
+                return strategy1MappingService.getList(options);
                 break;
             case 'strategy_2':
-                return strategy2MappingService.getList();
+                return strategy2MappingService.getList(options);
                 break;
             case 'strategy_3':
-                return strategy3MappingService.getList();
+                return strategy3MappingService.getList(options);
                 break;
             case 'daily_pricing_model':
-                return dailyPricingModelMappingService.getList();
+                return dailyPricingModelMappingService.getList(options);
                 break;
             case 'payment_size_detail':
-                return paymentSizeDetailMappingService.getList();
+                return paymentSizeDetailMappingService.getList(options);
                 break;
             case 'price_download_scheme':
-                return priceDownloadSchemeMappingService.getList();
+                return priceDownloadSchemeMappingService.getList(options);
                 break;
         }
 

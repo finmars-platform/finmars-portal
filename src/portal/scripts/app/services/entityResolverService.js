@@ -36,44 +36,44 @@
     var instrumentPaymentSizeDetailService = require('./instrument/instrumentPaymentSizeDetailService');
     var priceDownloadSchemeService = require('./import/priceDownloadSchemeService');
 
-    var getList = function (entityType) {
+    var getList = function (entityType, options) {
 
         switch (entityType) {
             case 'portfolio':
-                return portfolioService.getList();
+                return portfolioService.getList(options);
                 break;
             case 'account':
-                return accountService.getList();
+                return accountService.getList(options);
                 break;
             case 'responsible':
-                return responsibleService.getList();
+                return responsibleService.getList(options);
                 break;
             case 'counterparty':
-                return counterpartyService.getList();
+                return counterpartyService.getList(options);
                 break;
             case 'currency':
-                return currencyService.getList();
+                return currencyService.getList(options);
                 break;
             case 'instrument':
-                return instrumentService.getList();
+                return instrumentService.getList(options);
                 break;
             case 'instrument-type':
-                return instrumentTypeService.getList();
+                return instrumentTypeService.getList(options);
                 break;
             case 'periodicity':
-                return instrumentPeriodicityService.getList();
+                return instrumentPeriodicityService.getList(options);
                 break;
             case 'accrual-calculation-model':
-                return accrualCalculationModelService.getList();
+                return accrualCalculationModelService.getList(options);
                 break;
             case 'daily-pricing-model':
-                return instrumentDailyPricingModelService.getList();
+                return instrumentDailyPricingModelService.getList(options);
                 break;
             case 'payment-size-detail':
-                return instrumentPaymentSizeDetailService.getList();
+                return instrumentPaymentSizeDetailService.getList(options);
                 break;
             case 'price-download-scheme':
-                return priceDownloadSchemeService.getList();
+                return priceDownloadSchemeService.getList(options);
                 break;
             case 'strategy-1':
                 return strategyService.getList(1);

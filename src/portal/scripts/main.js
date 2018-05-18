@@ -5,6 +5,8 @@
 
 require('../../forum/scripts/main.js');
 
+// require('../../core/context-menu/index.js')
+
 var app = angular.module('portal', [
     'ngAria',
     'ngMaterial',
@@ -12,11 +14,12 @@ var app = angular.module('portal', [
     'ngMdIcons',
     'ngResource',
     'ngSanitize',
-    'ui.router',
     'vAccordion',
     'mdPickers',
+    'ui.router',
     'bw.paging',
     'ui.select',
+    'ui.scroll',
     // 'io.dennis.contextmenu',
     angularDragula(angular),
 

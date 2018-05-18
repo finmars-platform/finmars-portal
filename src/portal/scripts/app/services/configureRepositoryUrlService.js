@@ -33,8 +33,6 @@
 
     function configureUrl(url, options) {
 
-        //console.log('OPTIOPNS', options);
-
         if (options) {
 
             url = url + '?page_size=' + options.pageSize;
@@ -69,8 +67,6 @@
                 url = url + '&page=' + options.page;
             }
 
-
-            //console.log('URL------------------', url);
         }
         return url
     }

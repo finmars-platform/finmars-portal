@@ -6,7 +6,8 @@
                     <!-- <md-input-container class="md-block"> -->
                     <div class="sett-data-prov-choose-file">
                         <h4>Certificate</h4>
-                        <input type="file" id="providerConfigFile" file-read="vm.provider.p12cert" input-file-directive>
+                        <!--<input type="file" id="providerConfigFile" file-read="vm.provider.p12cert" input-file-directive>-->
+                        <input type="file" id="providerConfigFile" input-file-directive read-file="vm.provider.p12cert">
                         <label for="providerConfigFile" class="md-button md-raised md-primary">Choose a file</label>
                         <p>No chosen files</p>
                     </div>

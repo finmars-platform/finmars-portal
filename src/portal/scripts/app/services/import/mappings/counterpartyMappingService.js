@@ -7,8 +7,8 @@
 
     var counterpartyMappingRepository = require('../../../repositories/import/mappings/counterpartyMappingRepository');
 
-    var getList = function () {
-        return counterpartyMappingRepository.getList();
+    var getList = function (options) {
+        return counterpartyMappingRepository.getList(options);
     };
 
     var getByKey = function (id) {

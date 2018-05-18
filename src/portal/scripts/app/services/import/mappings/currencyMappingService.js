@@ -7,8 +7,8 @@
 
     var currencyMappingRepository = require('../../../repositories/import/mappings/currencyMappingRepository');
 
-    var getList = function () {
-        return currencyMappingRepository.getList();
+    var getList = function (options) {
+        return currencyMappingRepository.getList(options);
     };
 
     var getByKey = function (id) {
