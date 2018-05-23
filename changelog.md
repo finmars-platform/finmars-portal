@@ -1,5 +1,10 @@
 # Changelog
 
+## 13.05.2018
+
+- **HOTFIX**: fix input saving in transaction import mapping
+
+
 ## 18.05.2018
 
 - New virtual scroll component
