@@ -77,6 +77,7 @@
                 preserveScope: true,
                 autoWrap: true,
                 skipHide: true,
+                multiple: true,
                 locals: {
                     data: {
                         item: item
@@ -141,6 +142,7 @@
                         },
                         preserveScope: true,
                         autoWrap: true,
+                        multiple: true,
                         skipHide: true
                     })
                 }
@@ -155,6 +157,7 @@
                 targetEvent: $event,
                 preserveScope: true,
                 autoWrap: true,
+                multiple: true,
                 skipHide: true,
                 locals: {
                     mapItem: item
@@ -174,6 +177,7 @@
                 targetEvent: $event,
                 preserveScope: true,
                 autoWrap: true,
+                multiple: true,
                 skipHide: true,
                 locals: {
                     item: {

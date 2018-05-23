@@ -170,13 +170,14 @@
                             $mdDialog.show({
                                 controller: 'ImportTransactionErrorsDialogController as vm',
                                 templateUrl: 'views/dialogs/import-transaction-errors-dialog-view.html',
-                                targetEvent: $event,
                                 locals: {
                                     data: vm.config
                                 },
+                                targetEvent: $event,
                                 preserveScope: true,
+                                multiple: true,
                                 autoWrap: true,
-                                skipHide: true
+                                skipHide: true,
                             })
                         }
 
@@ -194,13 +195,14 @@
                     $mdDialog.show({
                         controller: 'ValidationDialogController as vm',
                         templateUrl: 'views/dialogs/validation-dialog-view.html',
-                        targetEvent: $event,
                         locals: {
                             validationData: "An error occurred. Please try again later"
                         },
+                        targetEvent: $event,
                         preserveScope: true,
+                        multiple: true,
                         autoWrap: true,
-                        skipHide: true
+                        skipHide: true,
                     })
                 }
 
@@ -219,13 +221,14 @@
             $mdDialog.show({
                 controller: 'TransactionMappingEditDialogController as vm',
                 templateUrl: 'views/dialogs/transaction-mapping-dialog-view.html',
-                targetEvent: $event,
-                preserveScope: true,
-                autoWrap: true,
-                skipHide: true,
                 locals: {
                     schemeId: vm.config.scheme
-                }
+                },
+                targetEvent: $event,
+                preserveScope: true,
+                multiple: true,
+                autoWrap: true,
+                skipHide: true
             }).then(function (res) {
                 if (res.status === 'agree') {
                     console.log('res', res.data);
@@ -248,14 +251,15 @@
                     $mdDialog.show({
                         controller: 'SuccessDialogController as vm',
                         templateUrl: 'views/dialogs/success-dialog-view.html',
-                        targetEvent: $event,
                         locals: {
                             success: {
                                 title: "",
                                 description: "You have you have successfully add instrument " + vm.config.instrument.user_code + " (user code)."
                             }
                         },
+                        targetEvent: $event,
                         preserveScope: true,
+                        multiple: true,
                         autoWrap: true,
                         skipHide: true
                     }).then(function () {
@@ -267,11 +271,12 @@
                     $mdDialog.show({
                         controller: 'ValidationDialogController as vm',
                         templateUrl: 'views/dialogs/validation-dialog-view.html',
-                        targetEvent: $event,
                         locals: {
                             validationData: data.response
                         },
+                        targetEvent: $event,
                         preserveScope: true,
+                        multiple: true,
                         autoWrap: true,
                         skipHide: true
                     })
