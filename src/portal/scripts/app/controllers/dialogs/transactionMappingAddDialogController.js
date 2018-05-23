@@ -36,6 +36,7 @@
                 targetEvent: $event,
                 preserveScope: true,
                 autoWrap: true,
+                multiple: true,
                 skipHide: true,
                 locals: {
                     data: {
@@ -73,6 +74,7 @@
                 parent: angular.element(document.body),
                 targetEvent: $event,
                 preserveScope: true,
+                multiple: true,
                 autoWrap: true,
                 skipHide: true,
                 locals: {
@@ -154,6 +156,7 @@
                         },
                         preserveScope: true,
                         autoWrap: true,
+                        multiple: true,
                         skipHide: true
                     })
                 }
@@ -173,6 +176,7 @@
                 preserveScope: true,
                 autoWrap: true,
                 skipHide: true,
+                multiple: true,
                 locals: {
                     mapItem: item
                 }
@@ -192,6 +196,7 @@
                 preserveScope: true,
                 autoWrap: true,
                 skipHide: true,
+                multiple: true,
                 locals: {
                     item: {
                         expression: item.value
