@@ -22,7 +22,7 @@
         });
 
         $stateProvider.state('app.dashboard', {
-            url: '/',
+            url: '/dashboard',
             templateUrl: 'views/dashboard-view.html',
             controller: 'DashboardController as vm'
         });
@@ -47,6 +47,14 @@
                 url: '/data',
                 abstract: true,
                 template: '<div data-ui-view></div>'
+            })
+            .state('app.portfolio_default', {
+                url: '/',
+                templateUrl: 'views/data/data-portfolio-view.html',
+                controller: 'DataPortfolioController as vm',
+                params: {
+                    listLayout: null
+                }
             })
             .state('app.data.portfolio', {
                 url: '/portfolios',

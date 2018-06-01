@@ -236,48 +236,43 @@
         return [{
             "name": "default",
             "data": {
-                "tableAdditions": {
-                    "foreignEntityId": null,
-                    "table": {
-                        "sorting": {
-                            "column": {
-                                "sort": null,
-                                "key": null
-                            }
-                        },
-                        "columns": [],
-                        "filters": []
-                    },
-                    "additionsType": "",
-                    "entityType": null
-                },
+                "foreignEntityId": null,
                 "table": {
-                    "folding": false,
                     "sorting": {
-                        "group": {
-                            "id": null,
-                            "sort": "DESC",
-                            "key": null
-                        },
                         "column": {
-                            "id": null,
-                            "sort": "ASC",
+                            "sort": null,
                             "key": null
                         }
                     },
-                    "grouping": [],
-                    "columns": [
-                        {
-                            "value_type": 10,
-                            "name": "Name",
-                            "key": "name"
-                        }
-                    ],
-                    "filters": [],
-                    "columnsWidth": [
-                        238
-                    ]
+                    "columns": [],
+                    "filters": []
                 },
+                "entityType": null,
+                "folding": false,
+                "sorting": {
+                    "group": {
+                        "id": null,
+                        "sort": "DESC",
+                        "key": null
+                    },
+                    "column": {
+                        "id": null,
+                        "sort": "ASC",
+                        "key": null
+                    }
+                },
+                "grouping": [],
+                "columns": [
+                    {
+                        "value_type": 10,
+                        "name": "Name",
+                        "key": "name"
+                    }
+                ],
+                "filters": [],
+                "columnsWidth": [
+                    238
+                ],
                 "additionsType": ""
             }
         }]

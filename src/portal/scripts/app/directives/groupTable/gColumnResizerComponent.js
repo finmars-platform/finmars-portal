@@ -5,9 +5,8 @@
 
     'use strict';
 
-    var logService = require('../../../../../core/services/logService');
-
-    var renderEventService = require('../../services/renderEventService');
+    var evEvents = require('../../services/entityViewerEvents');
+    var metaService = require('../../services/metaService');
     // var uiService = require('../../services/uiService');
 
     module.exports = function () {
@@ -15,13 +14,15 @@
             restrict: 'A',
             scope: {
                 items: '=',
-                options: '='
+                options: '=',
+                evDataService: '=',
+                evEventService: '='
             },
             link: function (scope, elem, attr) {
 
                 scope.columnsWidth = scope.options.columnsWidth;
 
-                logService.component('groupColumnResizer', 'initialized');
+                console.log('scope.columnsWidth', scope.columnsWidth);
 
                 var minWidth = 65;	// width value for showing tooltip
                 var columnsWidthSet = false;
@@ -130,7 +131,6 @@
                     }
                 }
 
-
                 var i, x, a;
                 var tHead;
                 var th;
@@ -139,9 +139,7 @@
                 var td;
 
                 var setThMinWidths = function (th) {
-                    //var i, a;
-                    // var lastColumn = th.length - 1;
-                    // console.log('min width seted ', th.length, 'resizer columns ', [scope.columns]);
+
                     for (i = 0; i < th.length; i = i + 1) {
                         if (!$(th[i]).attr('min-width')) {
                             $(th[i]).attr('min-width', '20');
@@ -155,22 +153,20 @@
                     th = tHead.find('.g-cell');
                     tr = $(elem).find('.g-row');
 
-                    //var i, x;
-
                     for (i = 0; i < tr.length; i = i + 1) {
                         td = $(tr[i]).find('.g-cell-wrap');
+
                         for (x = 0; x < th.length; x = x + 1) {
                             (function (x) {
-                                $(td[x]).css({width: $(th[x]).width() + 'px'});
-                                //console.log('cell widths is ', $(td[x]).width(), $(th[x]).width());
+
+                                $(td[x]).width($(th[x]).width());
+
                             }(x))
                         }
                     }
                 }
 
                 function resize() {
-
-                    //console.log('resize', elem);
 
                     tHead = $(elem).find('.g-thead');
                     th = tHead.find('.g-cell');
@@ -213,34 +209,70 @@
                     //console.log('th', th);
                 }
 
-                //console.log('options', scope.options);
-
-                scope.$watch('options.lastUpdate', function () {
-
-                    console.log('OPTIONS LAST UPDATE', scope.options.lastUpdate);
-
-                    resizeScrollableArea();
-
-                    resize();
-
-                    setColumnsWidthAndNameTooltip();
-                });
-
-                //console.log('renderEventService', renderEventService);
-                //console.log('renderEventService scope.options.entityType', scope.options.entityType);
-
-                renderEventService.on(scope.options.entityType + ':ng-repeat:finished', resize);
-
 
                 $(window).on('resize', function () {
                     resizeWorkarea();
                 });
 
-                scope.$on('$destroy', function(){
-                    //console.log('destroy resize scope');
-                    renderEventService.destroy(scope.options.entityType + ':ng-repeat:finished');
 
-                })
+                var init = function () {
+
+                    setColumnsWidthAndNameTooltip();
+
+                    scope.evEventService.addEventListener(evEvents.REDRAW_TABLE, function () {
+
+                        resizeScrollableArea();
+
+                        resize();
+
+
+                    });
+
+                    scope.evEventService.addEventListener(evEvents.UPDATE_TABLE_HEAD_COLUMNS_SIZE, function () {
+
+                        var columns = scope.evDataService.getColumns();
+
+                        var groupsWidth = metaService.columnsWidthGroups();
+
+                        if (groupsWidth['newColumnAdded']) {
+                            var DOMcolumns = elem.find('.g-column');
+                            var lastColumn = DOMcolumns.length - 1;
+                            var newColumn = DOMcolumns[lastColumn];
+                            var columnWidth;
+                            switch (columns[lastColumn]["value_type"]) {
+                                case 10:
+                                    columnWidth = groupsWidth.groupThree;
+                                    break;
+                                case 20:
+                                case 40:
+                                    columnWidth = groupsWidth.groupFive;
+                                    break;
+                                case 30:
+                                    columnWidth = groupsWidth.groupOne;
+                                    break;
+                            }
+
+                            $(newColumn).width(columnWidth);
+                        }
+
+                        resizeScrollableArea();
+
+                        resize();
+
+                    });
+
+                    scope.evEventService.addEventListener(evEvents.UPDATE_COLUMNS_SIZE, function () {
+
+                        resizeScrollableArea();
+
+                        resize();
+
+                    });
+
+
+                };
+
+                init();
 
 
             }

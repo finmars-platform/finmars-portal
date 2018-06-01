@@ -93,9 +93,10 @@
 
         vm.hasMapping = function (item) {
 
-            if (item.system_property_key != null) {
-                return ['accounts', 'responsibles', 'counterparties', 'transaction_types', 'portfolios'].indexOf(item.system_property_key) !== -1
-            }
+            // if (item.system_property_key != null) {
+            //     return ['accounts', 'responsibles', 'counterparties', 'transaction_types', 'portfolios'].indexOf(item.system_property_key) !== -1
+            // }
+
 
             if (item.hasOwnProperty('value_type')) {
                 console.log('item', item);

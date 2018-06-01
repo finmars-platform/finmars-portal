@@ -5,7 +5,7 @@
 
     'use strict';
 
-    var logService = require('../../../../../core/services/logService');
+    var evEvents = require('../../services/entityViewerEvents');
 
     var metaService = require('../../services/metaService');
 
@@ -14,22 +14,21 @@
             restrict: 'AE',
             scope: {
                 items: '=',
-                options: '='
+                options: '=',
+                evDataService: '=',
+                evEventService: '='
             },
             templateUrl: 'views/directives/groupTable/columns-view.html',
             link: function (scope, elem, attrs) {
 
-                scope.grouping = scope.options.grouping;
-                scope.filters = scope.options.filters;
                 scope.sorting = scope.options.sorting;
-                scope.columns = scope.options.columns;
-                scope.entityType = scope.options.entityType;
-                scope.externalCallback = scope.options.externalCallback;
-                scope.isReport = scope.options.isReport;
+                scope.columns = scope.evDataService.getColumns();
+                scope.entityType = scope.evDataService.getEntityType();
 
-
-                logService.component('groupColumnResizer', 'initialized');
-
+                scope.isReport = ['balance-report',
+                    'cash-flow-projection-report',
+                    'performance-report', 'pnl-report',
+                    'transaction-report'].indexOf(scope.entityType) !== -1;
 
                 var baseAttrs = [];
                 var entityAttrs = [];
@@ -64,6 +63,7 @@
                 };
 
                 scope.sortHandler = function (column, sort) {
+
                     var i;
                     for (i = 0; i < scope.columns.length; i = i + 1) {
                         if (!scope.columns[i].options) {
@@ -82,7 +82,8 @@
                         scope.sorting.column.key = column.key;
                         scope.sorting.column.sort = sort;
                     }
-                    scope.externalCallback({silent: true, options: {columns: scope.columns}});
+
+                    scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
                 };
 
                 scope.selectSubtotalType = function (column, type) {
@@ -97,10 +98,7 @@
                         column.report_settings.subtotal_formula_id = type;
                     }
 
-                    //console.log('scope.column11111s JSON', JSON.parse(JSON.stringify(column)));
-                    //console.log('scope.column11111s JSON', JSON.parse(JSON.stringify(scope.columns)));
-
-                    scope.externalCallback({silent: true, options: {columns: scope.columns}});
+                    scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
                 };
 
                 scope.checkSubtotalFormula = function (column, type) {
@@ -127,7 +125,7 @@
                         column.report_settings.round_format_id = type;
                     }
 
-                    scope.externalCallback({silent: true, options: {columns: scope.columns}});
+                    scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
                 };
 
                 scope.checkRoundFormatFormula = function (column, type) {
@@ -152,7 +150,7 @@
                         column.report_settings.negative_format_id = type;
                     }
 
-                    scope.externalCallback({silent: true, options: {columns: scope.columns}});
+                    scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
                 };
 
                 scope.checkNegativeFormatFormula = function (column, type) {
@@ -177,7 +175,7 @@
                         column.report_settings.zero_format_id = type;
                     }
 
-                    scope.externalCallback({silent: true, options: {columns: scope.columns}});
+                    scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
                 };
 
                 scope.checkZeroFormatFormula = function (column, type) {
@@ -190,8 +188,6 @@
                     }
                     return false
                 };
-
-
 
                 var dragAndDrop = {
 
@@ -217,36 +213,20 @@
 
                         this.dragula.on('dragend', function (el) {
 
-                            scope.externalCallback({silent: true});
+                            console.log(scope.columns);
+
+                            scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
 
                         })
                     },
 
                     dragulaInit: function () {
-                        console.log('COLUMSN DRAGULA INIT?');
 
                         var items = [document.querySelector('.g-columns-holder')];
-                        var i;
-                        //var itemsElem = document.querySelectorAll('.g-columns-holder md-card');
-                        //for (i = 0; i < itemsElem.length; i = i + 1) {
-                        //    items.push(itemsElem[i]);
-                        //}
 
                         this.dragula = dragula(items);
                     }
                 };
-
-                //scope.$watchCollection('columns', function () {
-                //
-                //    dragAndDrop.init();
-                //
-                //    //setTimeout(function () {
-                //    //
-                //    //    scope.externalCallback({silent: true, options: {columns: scope.columns}});
-                //    //    scope.$apply();
-                //    //
-                //    //}, 0)
-                //});
 
                 setTimeout(function () {
                     dragAndDrop.init();
@@ -293,13 +273,12 @@
                             return !!item;
                         });
                     }
-                    //console.log('remove', scope.columns);
 
-                    //console.log('scope.columns', scope.columns)
+                    scope.evDataService.setColumns(scope.columns);
+                    scope.evEventService.dispatchEvent(evEvents.COLUMNS_CHANGE);
+                    scope.evEventService.dispatchEvent(evEvents.UPDATE_COLUMNS_SIZE);
+                    scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
 
-                    //setTimeout(function () {
-                    scope.externalCallback({silent: true, options: {columns: scope.columns}});
-                    //}, 0)
                 };
 
                 scope.reportHideSubtotal = function (column) {
@@ -310,7 +289,24 @@
 
                     column.report_settings.hide_subtotal = !column.report_settings.hide_subtotal;
 
-                }
+                };
+
+                scope.triggerResizeTableHeadColumns = function () {
+                    scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE_HEAD_COLUMNS_SIZE);
+                };
+
+                var init = function () {
+
+                    scope.evEventService.addEventListener(evEvents.COLUMNS_CHANGE, function () {
+
+                        scope.columns = scope.evDataService.getColumns();
+
+                    });
+
+
+                };
+
+                init();
             }
         }
     }

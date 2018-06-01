@@ -5,17 +5,23 @@
 
     'use strict';
 
+    var evEvents = require('../../services/entityViewerEvents');
+
     module.exports = function ($templateCache, $compile) {
         return {
             scope: {
-                options: '='
+                evDataService: '=',
+                evEventService: '='
             },
             restrict: 'AE',
             link: function (scope, elem, attrs) {
 
-                var tpl = $templateCache.get(scope.options.editorTemplate);
+                var editorTemplateUrl = scope.evDataService.getEditorTemplateUrl();
+
+                var tpl = $templateCache.get(editorTemplateUrl);
                 var ctrl = $compile(tpl)(scope);
                 $(elem).append(ctrl);
+
             }
         }
     }

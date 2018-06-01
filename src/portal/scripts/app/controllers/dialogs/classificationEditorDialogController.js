@@ -79,14 +79,35 @@
                 ref.edit(sel);
             }
         };
-        vm.renameNode = function () {
-            var ref = $('#jstree_demo').jstree(true),
-                sel = ref.get_selected();
-            if (!sel.length) {
-                return false;
-            }
-            sel = sel[0];
-            ref.edit(sel);
+        vm.renameNode = function ($event) {
+
+            $mdDialog.show({
+                controller: 'WarningDialogController as vm',
+                templateUrl: 'views/warning-dialog-view.html',
+                targetEvent: $event,
+                preserveScope: true,
+                multiple: true,
+                autoWrap: true,
+                skipHide: true,
+                locals: {
+                    warning: {
+                        title: 'Warning!',
+                        description: 'If you rename a classifier your classifier mappings will change too.'
+                    }
+                }
+            }).then(function (res) {
+                if (res.status === 'agree') {
+                    var ref = $('#jstree_demo').jstree(true),
+                        sel = ref.get_selected();
+                    if (!sel.length) {
+                        return false;
+                    }
+                    sel = sel[0];
+                    ref.edit(sel);
+                }
+            });
+
+
         };
 
         vm.deleteNode = function () {

@@ -5,48 +5,40 @@
 
         'use strict';
 
-        var logService = require('../../../../core/services/logService');
-
-        var attributeTypeService = require('../services/attributeTypeService');
         var entityResolverService = require('../services/entityResolverService');
 
-        var uiService = require('../services/uiService');
-
-        var gridHelperService = require('../services/gridHelperService');
-        var metaService = require('../services/metaService');
-        var layoutService = require('../services/layoutService');
-
-
-        // codemonkey
+        var evEvents = require('../services/entityViewerEvents');
 
         module.exports = function ($scope, $state, $mdDialog) {
-
-            logService.controller('AdditionsEditorEntityEditController', 'initialized');
-
-            //console.log('scope', $scope);
 
             var vm = this;
 
             vm.readyStatus = {content: false};
-            vm.entityType = $scope.$parent.options.entityType;
+            vm.entityType = $scope.$parent.evDataService.getEntityType();
             vm.entity = {attributes: []};
             vm.entityId = '';
             vm.evAction = 'update';
 
-            vm.readyStatus.entityId = false;
+            $scope.$parent.evEventService.addEventListener(evEvents.ADDITIONS_EDITOR_ENTITY_ID_CHANGE, function () {
 
-            $scope.$parent.$watch('options.editorEntityId', function (newItemId) {
                 vm.readyStatus.entityId = false;
+
                 setTimeout(function () {
-                    vm.entityId = newItemId;
+
+                    vm.entityId = $scope.evDataService.getEditorEntityId();
+
                     if (vm.entityId !== undefined) {
                         vm.evAction = 'update';
                         vm.readyStatus.entityId = true;
                     }
+
                     $scope.$apply();
+
                 }, 100)
 
             });
+
+            vm.readyStatus.entityId = false;
 
             vm.cancel = function () {
                 var entityId = vm.entityId;

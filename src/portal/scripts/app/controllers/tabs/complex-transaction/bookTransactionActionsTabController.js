@@ -5,17 +5,15 @@
 
     'use strict';
 
-    var logService = require('../../../../../../core/services/logService');
 
     var transactionTypeService = require('../../../services/transactionTypeService');
 
-    module.exports = function ($scope) {
-        logService.controller('BookTransactionActionsTabController', 'initialized');
+    module.exports = function BookTransactionActionsTabController($scope) {
 
         var vm = this;
         vm.entity = $scope.$parent.vm.entity;
 
-        vm.transactionTypeId = $scope.$parent.vm.transactionTypeId;
+        vm.transactionTypeId = $scope.$parent.complexTransactionOptions.transactionType;
         vm.readyStatus = {transactionType: false};
 
         vm.beatufier = function (key) {

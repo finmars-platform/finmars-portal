@@ -5,14 +5,11 @@
 
     'use strict';
 
-    var logService = require('../../../../../core/services/logService');
     var portfolioService = require('../../services/portfolioService');
     var instrumentTypeService = require('../../services/instrumentTypeService');
     var transactionTypeService = require('../../services/transactionTypeService');
 
-    module.exports = function ($scope) {
-
-        logService.controller('complexTransactionSpecialRulesController', 'initialized');
+    module.exports = function ComplexTransactionSpecialRulesController($scope) {
 
         var vm = this;
 
@@ -26,25 +23,46 @@
 
         function getGroupsFromItems(items) {
 
-            var groups = [];
+            var groups = {};
 
             items.forEach(function (item) {
 
-                if (!groups[item.group_object.id]) {
-                    groups[item.group_object.id] = item.group_object;
-                    groups[item.group_object.id].items = [];
-                }
+                console.log('item', item);
 
-                groups[item.group_object.id].items.push(item);
+                if (item.group_object) {
+
+                    if (!groups[item.group_object.id]) {
+                        groups[item.group_object.id] = item.group_object;
+                        groups[item.group_object.id].items = [];
+                    }
+
+                    groups[item.group_object.id].items.push(item);
+
+                } else {
+
+                    if (!groups['ungrouped']) {
+                        groups['ungrouped'] = {name: 'Ungrouped'};
+                        groups['ungrouped'].items = [];
+                    }
+
+                    groups['ungrouped'].items.push(item);
+
+                }
 
 
             });
 
-            groups = groups.filter(function (item) {
+            var groupsList = Object.keys(groups).map(function (key) {
+                return groups[key]
+            });
+
+            groupsList = groupsList.filter(function (item) {
                 return !!item
             });
 
-            return groups;
+            console.log('groups', groupsList);
+
+            return groupsList;
 
         }
 
@@ -60,6 +78,9 @@
         });
 
         transactionTypeService.getList().then(function (data) {
+
+            console.log('DATA', data);
+
             vm.transactionGroups = getGroupsFromItems(data.results);
             $scope.$apply();
         });
