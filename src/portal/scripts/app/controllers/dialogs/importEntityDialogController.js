@@ -36,7 +36,7 @@
         };
 
         vm.loadIsAvailable = function () {
-            if (vm.config.scheme != null) {
+            if (vm.config.scheme != null && vm.config.file !== null && vm.config.file !== undefined) {
                 return true;
             }
             return false;

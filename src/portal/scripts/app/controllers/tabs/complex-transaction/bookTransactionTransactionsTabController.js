@@ -20,7 +20,7 @@
 				parent: angular.element(document.body),
 				targetEvent: ev,
 				locals: {
-					parentScope: {entityType: 'transaction'},
+                    entityType: 'transaction',
 					entityId: entityId
 				}
 			}).then(function (res) {

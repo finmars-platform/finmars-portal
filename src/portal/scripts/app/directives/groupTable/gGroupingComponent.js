@@ -5,29 +5,27 @@
 
     'use strict';
 
-    var logService = require('../../../../../core/services/logService');
+    var evEvents = require('../../services/entityViewerEvents');
 
     module.exports = function ($mdDialog) {
         return {
             restrict: 'AE',
             scope: {
-                options: '='
+                options: '=',
+                evDataService: '=',
+                evEventService: '='
             },
             templateUrl: 'views/directives/groupTable/grouping-view.html',
             link: function (scope, elem, attrs) {
 
-                scope.grouping = scope.options.grouping;
-                scope.filters = scope.options.filters;
-                scope.columns = scope.options.columns;
+                scope.grouping = scope.evDataService.getGroups();
                 scope.sorting = scope.options.sorting;
                 scope.folding = scope.options.folding;
-                scope.entityType = scope.options.entityType;
-                scope.externalCallback = scope.options.externalCallback;
-                scope.isReport = scope.options.isReport;
-
-
-                logService.component('groupGrouping', 'initialized');
-                //console.log(' scope.grouping', scope.grouping);
+                scope.entityType = scope.evDataService.getEntityType();
+                scope.isReport = ['balance-report',
+                    'cash-flow-projection-report',
+                    'performance-report', 'pnl-report',
+                    'transaction-report'].indexOf(scope.entityType) !== -1;
 
                 scope.sortHandler = function (group, sort) {
                     var i;
@@ -58,7 +56,8 @@
                             scope.sorting.group.sort = sort;
                         }
                     }
-                    scope.externalCallback({silent: true, options: {grouping: scope.grouping}});
+
+                    scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
                 };
 
                 scope.openGroupSettings = function ($mdOpenMenu, ev) {
@@ -66,7 +65,6 @@
                 };
 
                 scope.$watchCollection('grouping', function () {
-
 
                     if (scope.isReport == true) {
                         scope.grouping.forEach(function (group) {
@@ -83,23 +81,16 @@
                         })
                     }
 
-                    setTimeout(function () {
-                        scope.externalCallback({silent: true, options: {grouping: scope.grouping}});
-                        scope.$apply();
-                    }, 0)
+                    scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
                 });
 
                 scope.toggleGroupFold = function () {
                     scope.folding = !scope.folding;
-                    setTimeout(function () {
-                        scope.externalCallback({silent: true, options: {grouping: scope.grouping}});
-                        scope.$apply();
-                    }, 0)
+                    scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
                 };
 
                 scope.removeGroup = function (group) {
-                    //console.log('grouping', scope.grouping);
-                    //console.log('remove', group);
+
                     if (group.id) {
                         scope.grouping = scope.grouping.map(function (item) {
                             if (item.id === group.id) {
@@ -120,10 +111,13 @@
                             return !!item;
                         });
                     }
-                    //console.log('grouping after', scope.grouping);
-                    setTimeout(function () {
-                        scope.externalCallback({silent: true, options: {grouping: scope.grouping}});
-                    }, 0)
+
+
+                    scope.evDataService.setGroups(scope.grouping);
+                    scope.evEventService.dispatchEvent(evEvents.GROUPS_CHANGE);
+
+                    scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+
                 };
 
                 scope.reportSetSubtotalType = function (group, type, $index) {
@@ -175,7 +169,7 @@
                     }
 
 
-                    scope.externalCallback({silent: true, options: {grouping: scope.grouping}});
+                    scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
                 };
 
                 scope.isReportGroupHaveExtSettings = function (group, $index, subtotalType) {
@@ -268,8 +262,8 @@
                             parent: angular.element(document.body),
                             targetEvent: ev,
                             locals: {
-                                callback: scope.externalCallback,
-                                parentScope: scope
+                                entityViewerDataService: scope.evDataService,
+                                entityViewerEventService: scope.evEventService
                             }
                         });
 
@@ -281,12 +275,12 @@
                             parent: angular.element(document.body),
                             targetEvent: ev,
                             locals: {
-                                callback: scope.externalCallback,
-                                parentScope: scope
+                                entityViewerDataService: scope.evDataService,
+                                entityViewerEventService: scope.evEventService
                             }
                         });
                     }
-                }
+                };
 
                 var dragAndDrop = {
 
@@ -309,29 +303,34 @@
 
                         this.dragula.on('dragend', function (el) {
 
-                            scope.externalCallback({silent: true});
+                            scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
 
                         })
                     },
 
                     dragula: function () {
-                        console.log('COLUMSN DRAGULA INIT?');
 
                         var items = [document.querySelector('.g-groups-holder')];
-                        var i;
-                        //var itemsElem = document.querySelectorAll('.g-columns-holder md-card');
-                        //for (i = 0; i < itemsElem.length; i = i + 1) {
-                        //    items.push(itemsElem[i]);
-                        //}
 
                         this.dragula = dragula(items);
                     }
                 };
 
-                //
                 setTimeout(function () {
                     dragAndDrop.init();
                 }, 500);
+
+                var init = function () {
+
+                    scope.evEventService.addEventListener(evEvents.GROUPS_CHANGE, function () {
+
+                        scope.grouping = scope.evDataService.getGroups();
+
+                    })
+
+                };
+
+                init();
             }
         }
     }

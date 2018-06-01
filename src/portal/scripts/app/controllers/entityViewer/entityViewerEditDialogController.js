@@ -20,15 +20,14 @@
 
     var metaPermissionsService = require('../../services/metaPermissionsService');
 
-    module.exports = function ($scope, $mdDialog, parentScope, entityId, $state) {
+    module.exports = function ($scope, $mdDialog, entityType, entityId, $state) {
 
         logService.controller('EntityViewerEditDialogController', 'initialized');
 
         var vm = this;
 
         //vm.readyStatus = {content: false, permissions: false, entity: false, me: false};
-        vm.entityType = parentScope.entityType;
-        console.log('entity edit dialog', parentScope);
+        vm.entityType = entityType;
         vm.evAction = 'update';
         vm.entityId = entityId;
         vm.saveCallback = ''; // save callback handler in inner controller;

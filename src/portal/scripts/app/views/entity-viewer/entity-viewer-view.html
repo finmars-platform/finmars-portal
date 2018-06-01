@@ -8,7 +8,7 @@
                        data-ng-if="vm.checkAddEntityBtn()">
                 <ng-md-icon icon="add"></ng-md-icon>
             </md-button>
-            <div data-ng-if="vm.components.splitPanel" class="lock-size g-table-dial" layout="row"
+            <div data-ng-if="vm.options.components.splitPanel" class="lock-size g-table-dial" layout="row"
                  layout-align="center center">
                 <md-fab-speed-dial md-direction="up"
                                    md-open="false"
@@ -23,7 +23,7 @@
                         </md-button>
                     </md-fab-trigger>
                     <md-fab-actions>
-                        <md-button aria-label="" data-ng-if="vm.checkIfPermissionEditorAllowed()"
+                        <md-button aria-label=""
                                    class="md-fab md-raised md-mini"
                                    data-ng-click="vm.openPermissionEditor()">
                             <ng-md-icon icon="perm_identity"></ng-md-icon>
@@ -39,23 +39,25 @@
                             <ng-md-icon icon="view_stream"></ng-md-icon>
                             <md-tooltip md-direction="right">Open editor split panel</md-tooltip>
                         </md-button>
-                        <md-button aria-label=""
-                                   data-ng-repeat="customButton in vm.customButtons"
-                                   class="md-fab md-raised md-mini"
-                                   data-ng-click="vm.openCustomAdditionsView($event, customButton)">
-                            <ng-md-icon icon="{{customButton.icon}}"></ng-md-icon>
-                            <md-tooltip md-direction="right">{{customButton.caption}}</md-tooltip>
-                        </md-button>
+                        <!--<md-button aria-label=""-->
+                                   <!--data-ng-repeat="customButton in vm.customButtons"-->
+                                   <!--class="md-fab md-raised md-mini"-->
+                                   <!--data-ng-click="vm.openCustomAdditionsView($event, customButton)">-->
+                            <!--<ng-md-icon icon="{{customButton.icon}}"></ng-md-icon>-->
+                            <!--<md-tooltip md-direction="right">{{customButton.caption}}</md-tooltip>-->
+                        <!--</md-button>-->
                     </md-fab-actions>
                 </md-fab-speed-dial>
             </div>
         </div>
-        <div data-ng-if="vm.checkReadyStatus()" class="g-group-table-holder">
+        <div data-ng-if="vm.tableIsReady" class="g-group-table-holder">
             <!--<group-table items="vm.getProjection()" options="vm.options" report-options="vm.reportOptions"></group-table>-->
             <group-table items="vm.getProjection()" options="vm.options"
+                         ev-data-service="vm.entityViewerDataService"
+                         ev-event-service="vm.entityViewerEventService"
                          report-options="vm.reportOptions"></group-table>
         </div>
-        <div data-ng-if="!vm.checkReadyStatus()">
+        <div data-ng-if="!vm.tableIsReady">
             <div class="e-data-loader" layout="row" layout-sm="column" layout-align="space-around">
                 <md-progress-circular md-diameter="100" md-mode="indeterminate"></md-progress-circular>
             </div>

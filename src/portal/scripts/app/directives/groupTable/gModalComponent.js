@@ -8,13 +8,14 @@
     var logService = require('../../../../../core/services/logService');
 
     var uiService = require('../../services/uiService');
+    var evEvents = require('../../services/entityViewerEvents');
 
     var metaService = require('../../services/metaService');
     var attributeTypeService = require('../../services/attributeTypeService');
     var balanceReportCustomAttrService = require('../../services/reports/balanceReportCustomAttrService');
     var dynamicAttributesForReportsService = require('../../services/groupTable/dynamicAttributesForReportsService');
 
-    module.exports = function ($scope, $mdDialog, parentScope, callback) {
+    module.exports = function ($scope, $mdDialog, EntityViewerDataService, EntityViewerEventService) {
 
         logService.controller('gModalController', 'initialized');
 
@@ -22,28 +23,17 @@
         vm.readyStatus = {content: false};
 
         vm.tabs = [];
-        vm.entityType = parentScope.entityType;
+        vm.entityType = EntityViewerDataService.getEntityType();
 
-        console.log('parentScope', parentScope);
         console.log('vm', vm);
 
         logService.property('vm.entityType', vm.entityType);
-
-        //uiService.getListLayout(vm.entityType).then(function (data) {
-        //	logService.collection('DATA', data);
-        //	vm.tabs = data.results[0].data.modalDrag;
-        //	logService.collection('vm.tabs!!!!!!!!!!!!!', vm.tabs);
-        //
-        //	$scope.$apply();
-        //});
 
         vm.general = [];
         vm.attrs = [];
         vm.baseAttrs = [];
         vm.entityAttrs = [];
         vm.custom = [];
-
-        vm.isReport = parentScope.isReport;
 
         vm.tabAttrsReady = false;
 
@@ -133,10 +123,10 @@
 
         // end refactore
 
-        var columns = parentScope.columns;
-        var currentColumnsWidth = parentScope.columns.length;
-        var filters = parentScope.filters;
-        var grouping = parentScope.grouping;
+        var columns = EntityViewerDataService.getColumns();
+        var currentColumnsWidth = columns.length;
+        var filters = EntityViewerDataService.getFilters();
+        var grouping = EntityViewerDataService.getGroups();
 
         var attrsList = [];
 
@@ -160,7 +150,7 @@
                 $scope.$apply();
             });
 
-            if (parentScope.isReport == true) {
+            if (['balance-report'].indexOf(vm.entityType) !== -1) {
 
                 vm.attrs = [];
                 dynamicAttributesForReportsService.getDynamicAttributes().then(function (data) {
@@ -178,12 +168,13 @@
 
             } else {
                 return attributeTypeService.getList(vm.entityType).then(function (data) {
+
                     vm.attrs = data.results;
                     attrsList = vm.attrs.concat(vm.baseAttrs);
                     attrsList = attrsList.concat(vm.entityAttrs);
                     restoreAttrs();
                     syncAttrs();
-                    // logService.collection('attrsList!!!!!!!!!', attrsList);
+
                     vm.readyStatus.content = true;
                     $scope.$apply();
                 })
@@ -208,28 +199,6 @@
             }
         };
 
-        parentScope.$watch('options.columns', function () {
-            if (vm.tabAttrsReady) {
-                columns = parentScope.options.columns;
-                syncAttrs();
-                callback({silent: true});
-            }
-        });
-        parentScope.$watch('options.filters', function () {
-            if (vm.tabAttrsReady) {
-                filters = parentScope.options.filters;
-                syncAttrs();
-                callback({silent: true});
-            }
-        });
-        parentScope.$watch('options.grouping', function () {
-            if (vm.tabAttrsReady) {
-                grouping = parentScope.options.grouping;
-                syncAttrs();
-                callback({silent: true});
-            }
-        });
-
         var syncAttrs = function () {
             syncTypeAttrs(vm.baseAttrs);
             syncTypeAttrs(vm.entityAttrs);
@@ -237,19 +206,9 @@
             syncTypeAttrs(vm.custom);
         };
 
-        var updateAttrs = function () {
-            console.log('gModalComponents columns ', columns);
-
-            updateTypeAttrs(vm.baseAttrs);
-            updateTypeAttrs(vm.entityAttrs);
-            updateTypeAttrs(vm.attrs);
-            updateTypeAttrs(vm.custom);
-
-            addColumn();
-
-        };
 
         function syncTypeAttrs(attrs) {
+
             var i;
             for (i = 0; i < attrs.length; i = i + 1) {
                 attrs[i].columns = false;
@@ -372,12 +331,27 @@
                 }
             }
 
-            // console.log('attributes in modal ', vm.attrs, vm.baseAttrs, vm.entityAttrs, parentScope);
+            EntityViewerDataService.setColumns(columns);
+            EntityViewerDataService.setGroups(grouping);
+            EntityViewerDataService.setFilters(filters);
+
         }
 
         vm.updateAttrs = function () {
-            updateAttrs();
-            callback({silent: true});
+
+            updateTypeAttrs(vm.baseAttrs);
+            updateTypeAttrs(vm.entityAttrs);
+            updateTypeAttrs(vm.attrs);
+            updateTypeAttrs(vm.custom);
+
+            addColumn();
+
+            EntityViewerEventService.dispatchEvent(evEvents.COLUMNS_CHANGE);
+            EntityViewerEventService.dispatchEvent(evEvents.FILTERS_CHANGE);
+            EntityViewerEventService.dispatchEvent(evEvents.GROUPS_CHANGE);
+
+            EntityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+
         };
 
 
@@ -399,15 +373,11 @@
 
                 });
                 this.dragula.on('drop', function (elem, target) {
-                    //console.log('here?', target); //TODO fallback to ids instead of name/key
+
                     $(target).removeClass('active');
                     var name = $(elem).html();
                     var i;
 
-                    //console.log('elem111111111111111111111111111111', elem);
-                    //console.log('columns111111111111111111111111111111', columns);
-                    //console.log('grouping111111111111111111111111111111', grouping);
-                    //console.log('filters111111111111111111111111111111', filters);
 
                     exist = false;
                     if (target === document.querySelector('#columnsbag')) {
@@ -434,14 +404,10 @@
 
                     if (!exist && target) {
                         var a;
-                        //console.log('target', {target: target});
-                        //console.log('elem', {elem: elem});
 
                         var nodes = Array.prototype.slice.call(target.children);
                         var index = nodes.indexOf(elem);
 
-                        // .g-columns-holder
-                        //if (target === document.querySelector('#columnsbag')) {
                         if (target === document.querySelector('.g-columns-holder') ||
                             target === document.querySelector('#columnsbag')) {
 
@@ -458,7 +424,7 @@
                                 }
                             }
                             syncAttrs();
-                            callback({silent: true});
+                            EntityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
                         }
                         if (target === document.querySelector('#groupsbag') ||
                             target === document.querySelector('.g-groups-holder')) {
@@ -475,7 +441,7 @@
                                 }
                             }
                             syncAttrs();
-                            callback({silent: true});
+                            EntityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
                         }
                         if (target === document.querySelector('#filtersbag .drop-new-filter') ||
                             target === document.querySelector('.g-filters-holder')) {
@@ -492,7 +458,7 @@
                                 }
                             }
                             syncAttrs();
-                            callback({silent: true});
+                            EntityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
                         }
                         $scope.$apply();
                     }
@@ -506,12 +472,6 @@
             },
 
             dragula: function () {
-                //var items = [
-                //    document.querySelector('.g-columns-holder'),
-                //    //document.querySelector('#columnsbag'),
-                //    document.querySelector('#groupsbag'),
-                //    document.querySelector('#filtersbag .drop-new-filter')
-                //];
 
                 var items = [
                     document.querySelector('.g-columns-holder'),
@@ -571,11 +531,37 @@
             $mdDialog.cancel();
         };
 
-
         vm.MABtnVisibility = function (entityType) {
             //console.log('custom entity type', entityType);
             return metaService.checkRestrictedEntityTypesForAM(entityType);
-        }
+        };
+
+        var init = function () {
+
+            EntityViewerEventService.addEventListener(evEvents.COLUMNS_CHANGE, function () {
+
+                columns = EntityViewerDataService.getColumns();
+                syncAttrs();
+
+            });
+
+            EntityViewerEventService.addEventListener(evEvents.GROUPS_CHANGE, function () {
+
+                grouping = EntityViewerDataService.getGroups();
+                syncAttrs();
+
+            });
+
+            EntityViewerEventService.addEventListener(evEvents.FILTERS_CHANGE, function () {
+
+                filters = EntityViewerDataService.getFilters();
+                syncAttrs();
+
+            });
+
+        };
+
+        init();
 
 
     }

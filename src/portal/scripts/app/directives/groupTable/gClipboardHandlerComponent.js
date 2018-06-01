@@ -15,7 +15,6 @@
                 columns: '='
             },
             link: function (scope, elem, attrs) {
-                logService.component('groupClipboardHandlerComponent', 'initialized');
 
                 var handler = function (e) {
 
@@ -84,7 +83,6 @@
                 $(document).bind('copy', handler);
 
                 scope.$on("destroy", function () {
-                    logService.component('groupClipboardHandlerComponent', 'destroyed');
                     $(document).unbind('copy');
                     document.removeEventListener('copy');
                 })

@@ -5,7 +5,7 @@
 
 require('../../forum/scripts/main.js');
 
-// require('../../core/context-menu/index.js')
+require('../../core/context-menu/index.js')
 
 var app = angular.module('portal', [
     'ngAria',
@@ -20,7 +20,7 @@ var app = angular.module('portal', [
     'bw.paging',
     'ui.select',
     'ui.scroll',
-    // 'io.dennis.contextmenu',
+    'io.dennis.contextmenu',
     angularDragula(angular),
 
     'forum'
@@ -97,8 +97,8 @@ app.controller('EntityMappingEditDialogController', ['$scope', '$mdDialog', 'sch
 app.controller('EntityMappingCreateDialogController', ['$scope', '$mdDialog', require('./app/controllers/dialogs/entityMappingCreateDialogController')]);
 
 app.controller('EntityViewerController', ['$scope', '$mdDialog', require('./app/controllers/entityViewer/entityViewerController')]);
-app.controller('EntityViewerAddDialogController', ['$scope', '$mdDialog', 'parentScope', '$state', require('./app/controllers/entityViewer/entityViewerAddDialogController')]);
-app.controller('EntityViewerEditDialogController', ['$scope', '$mdDialog', 'parentScope', 'entityId', '$state', require('./app/controllers/entityViewer/entityViewerEditDialogController')]);
+app.controller('EntityViewerAddDialogController', ['$scope', '$mdDialog', 'entityType', '$state', require('./app/controllers/entityViewer/entityViewerAddDialogController')]);
+app.controller('EntityViewerEditDialogController', ['$scope', '$mdDialog', 'entityType', 'entityId', '$state', require('./app/controllers/entityViewer/entityViewerEditDialogController')]);
 app.controller('EntityViewerDeleteDialogController', ['$scope', '$mdDialog', 'entity', 'entityType', require('./app/controllers/entityViewer/entityViewerDeleteDialogController')]);
 app.controller('ReportWizardController', ['$scope', require('./app/controllers/entityViewer/onBeforeLoadActions/reportWizardController')]);
 
@@ -229,7 +229,6 @@ app.directive('groupVerticalScroll', [require('./app/directives/groupTable/gVert
 app.directive('groupHorizontalScroll', [require('./app/directives/groupTable/gHorizontalScrollComponent')]);
 app.directive('groupSecondVerticalScroll', [require('./app/directives/groupTable/gSecondVerticalScrollComponent')]);
 app.directive('groupEditorBinder', ['$templateCache', '$compile', require('./app/directives/groupTable/groupEditorBinderComponent')]);
-app.directive('groupColumnInitWidth', [require('./app/directives/groupTable/gColumnInitWidthComponent.js')]);
 
 app.directive('groupBindReportRow', [require('./app/directives/groupTable/gBindReportRowDirective.js')]);
 
@@ -237,7 +236,7 @@ app.controller('GReportSettingsDialogController', ['$scope', '$mdDialog', 'repor
 app.controller('PeriodsEditorDialogController', ['$scope', '$mdDialog', 'options', require('./app/controllers/dialogs/periodsEditorDialogController')]);
 
 
-app.controller('gModalController', ['$scope', '$mdDialog', 'parentScope', 'callback', require('./app/directives/groupTable/gModalComponent')]);
+app.controller('gModalController', ['$scope', '$mdDialog', 'entityViewerDataService', 'entityViewerEventService', require('./app/directives/groupTable/gModalComponent')]);
 app.controller('gModalReportController', ['$scope', '$mdDialog', 'parentScope', 'callback', require('./app/directives/groupTable/gModalReportComponent')]);
 app.controller('gModalReportPnlController', ['$scope', '$mdDialog', 'parentScope', 'callback', require('./app/directives/groupTable/gModalReportPnlComponent')]);
 app.controller('gModalReportTransactionController', ['$scope', '$mdDialog', 'parentScope', 'callback', require('./app/directives/groupTable/gModalReportTransactionComponent')]);

@@ -9,12 +9,13 @@
     <div class="g-cell-select all {{isAllSelected ? 'active' : ''}}" data-ng-click="selectAllRows()">
         <ng-md-icon icon="signal_cellular_0_bar"></ng-md-icon>
     </div>
-    <div class="g-scroll-wrapper" group-column-width-set init-width="">
+    <div class="g-scroll-wrapper">
         <div class="g-scrollable-area">
             <!--<div dragula="'columns-bag'" dragula-model="columns" class="g-columns-holder">-->
             <div class="g-columns-holder">
-            <!--<div data-ng-init="initDragula()" class="g-columns-holder">-->
-                <md-card class="g-cell g-column" data-ng-repeat="column in columns">
+                <!--<div data-ng-init="initDragula()" class="g-columns-holder">-->
+                <md-card class="g-cell g-column" data-ng-repeat="column in options.columns" on-finish-render
+                         data-callback="triggerResizeTableHeadColumns()">
                     <div class="g-column-content">
                         <div class="column-left-content">
                             <div class="sort" data-ng-if="isSortable(column)">

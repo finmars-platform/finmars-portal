@@ -4,7 +4,6 @@
 (function () {
 
     'use strict';
-    var logService = require('../../../../core/services/logService');
 
     var attributeTypeService = require('../services/attributeTypeService');
     var entityResolverService = require('../services/entityResolverService');
@@ -23,7 +22,8 @@
 
     module.exports = function ($scope, $state) {
 
-        logService.controller('EntityEditorController', 'initialized');
+        console.log('$scope.$parent.vm', $scope.$parent.vm);
+        console.log('$scope.$parent', $scope.$parent);
 
         var vm = this;
         vm.readyStatus = {content: false, permissions: false, entity: false, me: false};
@@ -44,10 +44,6 @@
             vm.entitySpecialRules = true;
             vm.complexTransactionOptions = {};
         }
-
-        logService.property('entityType', vm.entityType);
-        logService.property('entityId', vm.entityId);
-
 
         vm.calculateComplexTransactionInputs = function (item) {
             console.log('test', item);
@@ -355,13 +351,11 @@
                     } else {
                         vm.tabs = uiService.getDefaultEditLayout(vm.entityType)[0].data;
                     }
-                    logService.collection('vm.tabs', vm.tabs);
+
                     $scope.$apply();
                 });
             }
         }
-
-        logService.collection('vm.tabs', vm.tabs);
 
         vm.attrs = [];
         vm.baseAttrs = [];

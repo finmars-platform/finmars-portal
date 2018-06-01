@@ -2,7 +2,7 @@
 
     <div data-ng-if="isReport" layout="column">
 
-        <div data-ng-if="options.entityType == 'balance-report' || options.entityType == 'pnl-report'">
+        <div data-ng-if="entityType == 'balance-report' || entityType == 'pnl-report'">
             <md-card class="g-sidebar-report-card">
 
                 <md-card-content>
@@ -76,7 +76,7 @@
 
             </md-card>
         </div>
-        <div data-ng-if="options.entityType == 'transaction-report'">
+        <div data-ng-if="entityType == 'transaction-report'">
             <md-card class="g-sidebar-report-card">
 
                 <md-card-content>
@@ -118,7 +118,7 @@
 
             </md-card>
         </div>
-        <div data-ng-if="options.entityType == 'cash-flow-projection-report'">
+        <div data-ng-if="entityType == 'cash-flow-projection-report'">
             <md-card class="g-sidebar-report-card">
 
                 <md-card-content>
@@ -177,7 +177,7 @@
 
             </md-card>
         </div>
-        <div data-ng-if="options.entityType == 'performance-report'">
+        <div data-ng-if="entityType == 'performance-report'">
             <md-card class="g-sidebar-report-card">
 
                 <md-card-content>
@@ -314,7 +314,6 @@
             <md-input-container flex="65">
                 <label data-ng-bind="filter.name"></label>
                 <div data-ng-if="getFilterType(filter['value_type'])">
-                    <!-- {{fields}} -->
                     <div data-ng-if="fields[filter.key]">
                         <md-select data-ng-model="filter.options.query"
                                    md-on-close="searchTerm = ''"
@@ -339,7 +338,6 @@
                         </div>
                     </div>
                 </div>
-                <!-- <div data-ng-if="filter['value_type'] !== 'field'"> -->
                 <div data-ng-if="!getFilterType(filter['value_type'])">
                     <input data-ng-model="filter.options.query" data-ng-change="filterChange(filter)"
                            data-ng-model-options="{debounce: 1000}">

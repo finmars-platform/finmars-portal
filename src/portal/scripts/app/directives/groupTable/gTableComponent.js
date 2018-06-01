@@ -5,7 +5,7 @@
 
     'use strict';
 
-    var logService = require('../../../../../core/services/logService');
+    var evEvents = require('../../services/entityViewerEvents');
 
     module.exports = function () {
         return {
@@ -14,29 +14,26 @@
             scope: {
                 items: '=',
                 options: '=',
-                reportOptions: '='
+                reportOptions: '=',
+                evDataService: '=',
+                evEventService: '='
             },
             link: function (scope, elem, attrs) {
 
-                logService.component('groupTable', 'initialized');
-
-                console.log('Group Table shell', scope.options);
+                scope.additions = scope.evDataService.getAdditions();
+                scope.components = scope.evDataService.getComponents();
+                scope.editorEntityId = scope.evDataService.getEditorEntityId();
 
                 scope.findSelectedFeature = function () {
-                    var selected = {isOpened: false, templateUrl: ''};
-                    //console.log('additionsStatus', scope.additionsStatus);
-                    scope.options.additionsStatus.extraFeatures.forEach(function (item) {
-                        if (item.isOpened == true) {
-                            selected = item;
-                        }
-                    });
-                    //console.log(selected);
-
-                    return selected;
-                };
-
-                scope.triggerResize = function () {
-
+                    // var selected = {isOpened: false, templateUrl: ''};
+                    // //console.log('additionsStatus', scope.additionsStatus);
+                    // scope.options.additionsStatus.extraFeatures.forEach(function (item) {
+                    //     if (item.isOpened == true) {
+                    //         selected = item;
+                    //     }
+                    // });
+                    //
+                    // return selected;
                 };
 
                 if (scope.options.isRootEntityViewer == true) {
@@ -51,10 +48,35 @@
                 }
 
                 scope.checkAdditions = function () {
-                    if (scope.options.additionsState == true && scope.options.isRootEntityViewer == true && scope.options.components.splitPanel == true) {
+                    // if (scope.additions.additionsState == true && scope.options.isRootEntityViewer == true && scope.components.splitPanel == true) {
+                    //     return true;
+                    // }
+                    // return false;
+
+                    if (scope.additions && scope.additions.additionsState === true && scope.components && scope.components.splitPanel === true) {
                         return true;
                     }
                     return false;
+                };
+
+                scope.evEventService.addEventListener(evEvents.ADDITIONS_CHANGE, function () {
+
+                    scope.additions = scope.evDataService.getAdditions();
+                    scope.editorEntityId = scope.evDataService.getEditorEntityId();
+
+                });
+
+                scope.evEventService.addEventListener(evEvents.ADDITIONS_EDITOR_ENTITY_ID_CHANGE, function () {
+
+                    scope.editorEntityId = scope.evDataService.getEditorEntityId();
+
+                });
+
+
+                scope.activateHeightSlider = function () {
+
+                   scope.evEventService.dispatchEvent(evEvents.ADDITIONS_RENDER)
+
                 }
 
             }
