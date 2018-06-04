@@ -206,7 +206,6 @@
 
                         });
 
-                        //console.log('localItems', localItems);
 
                     } else {
                         item.isFolded = !item.isFolded;
