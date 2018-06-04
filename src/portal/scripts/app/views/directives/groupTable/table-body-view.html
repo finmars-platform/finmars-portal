@@ -40,7 +40,8 @@
                             <ng-md-icon icon="done" data-ng-show="groupedItem.selectedRow"></ng-md-icon>
                         </div>
 
-                        <div class="g-cell-wrap" data-ng-repeat="column in columns">
+                        <div class="g-cell-wrap" data-ng-repeat="column in columns" on-finish-render
+                             data-row-is-last="$last" data-callback="triggerResizeColumns()">
                             <div class="g-cell {{getAlign(column)}}">
                                 <span title="{{bindCellTitle(groupedItem, column)}}"
                                       data-ng-bind-html="bindCell(groupedItem, column) | trustAsHtml"></span>
@@ -50,15 +51,9 @@
                 </div>
                 <div data-ng-if="isReport" class="report-holder">
 
-                    <!-- preInit.initGroup start -->
-
                     <group-bind-report-row
                             data-ng-repeat="item in reportItemsProjection() track by $index"
                             item="item"></group-bind-report-row>
-
-
-                    <!-- !preInit.initGroup end-->
-
 
                 </div>
             </div>
