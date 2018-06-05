@@ -19,12 +19,13 @@
             restrict: 'AE',
             scope: {
                 options: '=',
-                items: '=',
                 evDataService: '=',
                 evEventService: '='
             },
             templateUrl: 'views/directives/groupTable/table-body-view.html',
             link: function (scope, elem, attrs) {
+
+                scope.items = [];
 
                 scope.grouping = scope.evDataService.getGroups();
                 scope.columns = scope.evDataService.getColumns();
@@ -1340,10 +1341,11 @@
 
                 };
 
-                scope.evEventService.addEventListener(evEvents.UPDATE_TABLE, function () {
+                scope.evEventService.addEventListener(evEvents.DATA_LOAD_END, function () {
 
-                    if (scope.isReport === true && scope.items) {
-                        console.log('scope.reportItems', scope.reportItems);
+                    scope.items = scope.evDataService.getProjection();
+
+                    if (scope.isReport === true) {
 
                         scope.reportItems = groupTableReportService.transformItems(scope.items);
                     }
