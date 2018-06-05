@@ -2,24 +2,34 @@
 
     'use strict';
 
-    var renderEventService = require('../services/renderEventService');
-
     module.exports = function () {
         return {
             restrict: 'A',
-
+            scope: {
+                rowIsLast: '=', // for parent ng-repeat $last
+                callback: '&'
+            },
             link: function (scope, element, attr) {
 
-                if (scope.$last === true) {
+                if(scope.rowIsLast === undefined) {
 
-                    setTimeout(function () {
+                    if (scope.$parent.$last === true) {
 
-                        renderEventService.emit(attr.onFinishRender + ':ng-repeat:finished');
+                        scope.callback()
 
-                        scope.$apply();
+                    }
 
-                    }, 0);
+                } else {
+
+                    if (scope.$parent.$last === true && scope.rowIsLast === true) {
+
+                        scope.callback()
+
+                    }
+
                 }
+
+
             }
         }
     }

@@ -1,17 +1,5 @@
 [
   {
-    "state": "app.dashboard",
-    "title": "Dashboard",
-    "type": "link",
-    "icon": "dashboard"
-  },
-  {
-    "state": "app.forum.thread-groups",
-    "title": "Forum",
-    "type": "link",
-    "icon": "forum"
-  },
-  {
     "state": "app",
     "title": "Report",
     "icon": "assessment",
@@ -142,12 +130,6 @@
         "icon": ""
       },
       {
-        "state": "app.data.transaction",
-        "title": "Base Transaction",
-        "type": "link",
-        "icon": ""
-      },
-      {
         "state": "",
         "title": "Transaction Type",
         "type": "toggle",
@@ -178,20 +160,7 @@
         "type": "link",
         "icon": ""
       },
-      {
-        "state": "app.data.tag",
-        "title": "Tags",
-        "type": "link",
-        "icon": ""
-      }
-    ]
-  },
-  {
-    "state": "",
-    "title": "REFERENCE",
-    "icon": "view_compact",
-    "type": "toggle",
-    "pages": [
+
       {
         "state": "",
         "title": "Strategy 1",
@@ -272,6 +241,7 @@
       }
     ]
   },
+
   {
     "state": "app.actions",
     "title": "Actions",
@@ -327,7 +297,31 @@
         "title": "Audit instrument",
         "type": "link",
         "icon": ""
+      },
+      {
+        "state": "app.data.transaction",
+        "title": "Base Transaction",
+        "type": "link",
+        "icon": ""
+      },
+      {
+        "state": "app.data.tag",
+        "title": "Tags",
+        "type": "link",
+        "icon": ""
       }
     ]
+  },
+  {
+    "state": "app.dashboard",
+    "title": "Dashboard",
+    "type": "link",
+    "icon": "dashboard"
+  },
+  {
+    "state": "app.forum.thread-groups",
+    "title": "Forum",
+    "type": "link",
+    "icon": "forum"
   }
 ]

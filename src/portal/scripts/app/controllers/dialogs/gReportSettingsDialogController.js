@@ -23,7 +23,7 @@
 
         console.log('reportOptions', reportOptions);
 
-        vm.reportOptions = JSON.parse(JSON.stringify(reportOptions));
+        vm.reportOptions = Object.assign({}, reportOptions);
 
         vm.entityType = options.entityType;
 

@@ -28,6 +28,7 @@
                         preserveScope: true,
                         autoWrap: true,
                         skipHide: true,
+                        multiple: true,
                         clickOutsideToClose: true,
                         locals: {
                             ngModelCtrl: ngModelCtrl,

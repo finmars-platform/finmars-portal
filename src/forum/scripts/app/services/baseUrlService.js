@@ -7,23 +7,9 @@
 
     var resolve = function () {
 
-        var result = '';
+        var host = '__API_HOST__';
 
-        if(window.location.hostname == 'localhost') {
-            result = 'http://' + window.location.host;
-        }
-
-        if(window.location.hostname == 'dev.finmars.com') {
-            result = 'https://api.dev.finmars.com';
-        }
-
-        if(window.location.hostname == 'finmars.com') {
-            result = 'https://api.finmars.com';
-        }
-
-        result = result + '/api/v1/';
-
-        return result;
+        return host + '/api/v1/';
     };
 
     module.exports = {

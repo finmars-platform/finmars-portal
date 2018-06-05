@@ -5,7 +5,6 @@
 
     'use strict';
 
-    var logService = require('../../../../../core/services/logService');
     var metaService = require('../../services/metaService');
     var attributeTypeService = require('../../services/attributeTypeService');
     var entityClassifierSingletonService = require('../../services/entityClassifierSingletonService');
@@ -13,24 +12,39 @@
     var groupTableReportService = require('../../services/groupTable/groupTableReportService');
     var groupTableBodyHelper = require('../../helpers/groupTableBodyHelper');
 
+    var evEvents = require('../../services/entityViewerEvents');
+
     module.exports = function ($mdDialog) {
         return {
             restrict: 'AE',
             scope: {
                 options: '=',
-                items: '='
+                items: '=',
+                evDataService: '=',
+                evEventService: '='
             },
             templateUrl: 'views/directives/groupTable/table-body-view.html',
             link: function (scope, elem, attrs) {
 
-                logService.component('groupTableBody', 'initialized', 1);
+                scope.grouping = scope.evDataService.getGroups();
+                scope.columns = scope.evDataService.getColumns();
+                scope.entityType = scope.evDataService.getEntityType();
 
-                scope.externalCallback = scope.options.externalCallback;
-                scope.grouping = scope.options.grouping;
-                scope.columns = scope.options.columns;
-                scope.entityType = scope.options.entityType;
                 scope.reportIsReady = scope.options.reportIsReady;
-                scope.isReport = scope.options.isReport;
+                scope.isReport = ['balance-report',
+                    'cash-flow-projection-report',
+                    'performance-report', 'pnl-report',
+                    'transaction-report'].indexOf(scope.entityType) !== -1;
+
+                scope.pagination = scope.evDataService.getPagination();
+
+                scope.evEventService.addEventListener(evEvents.COLUMNS_CHANGE, function () {
+                    scope.columns = scope.evDataService.getColumns();
+                });
+
+                scope.evEventService.addEventListener(evEvents.GROUPS_CHANGE, function () {
+                    scope.grouping = scope.evDataService.getGroups();
+                });
 
                 scope.readyStatus = {
                     cellsFirstReady: false,
@@ -135,10 +149,6 @@
                     entityAttrs = metaService.getEntityAttrs(entityType);
                 }
 
-                //setInterval(function () {
-                //    $('.g-table-section .custom-scrollbar')[0].dispatchEvent(new Event('scroll'));
-                //}, 1000);
-
                 function getCellsCaptionsPatterns(item, itemIndex) {
 
                     var result = [];
@@ -196,7 +206,6 @@
 
                         });
 
-                        //console.log('localItems', localItems);
 
                     } else {
                         item.isFolded = !item.isFolded;
@@ -301,10 +310,12 @@
                                 }
                             });
 
+                            console.log('attributeTypesReady')
+
                             scope.readyStatus.attributeTypesReady = true;
 
-                        }).then(function () {
-                            scope.$apply();
+                            resolve({status: 'attribute types ready'});
+
                         })
 
                     });
@@ -315,14 +326,12 @@
                     syncGroupsAndColumns();
                 }
 
-                function findGroups() {
+                function findGroupsClassifiers() {
 
                     return new Promise(function (resolve, reject) {
 
-
                         var i, g;
                         var promisesClassifiers = [];
-                        var promisesEntityFields = [];
 
 
                         var items = scope.items;
@@ -352,6 +361,62 @@
                                                 promisesClassifiers.push(entityClassifierSingletonService.getByKey(scope.entityType, scope.items[i].groups[g].value))
                                             }
                                         }
+
+                                    }
+                                }
+
+                            }
+                        }
+
+                        scope.readyStatus.classifiersReady = false;
+
+                        Promise.all(promisesClassifiers).then(function (data) {
+
+                            if (data.length) {
+                                var i;
+                                for (i = 0; i < data.length; i = i + 1) {
+                                    if (classifiersInstances[data[i].key] === undefined) {
+                                        classifiersInstances[data[i].key] = {};
+                                    }
+                                    if (data[i].data !== undefined) {
+                                        classifiersInstances[data[i].key] = data[i].data
+                                    }
+                                }
+                            }
+
+                            console.log('classifiersReady')
+
+                            scope.readyStatus.classifiersReady = true;
+
+                            resolve({status: "groups ready"});
+
+                        })
+
+                    })
+                }
+
+                function findGroupsEntities() {
+
+                    return new Promise(function (resolve, reject) {
+
+
+                        var i, g;
+                        var promisesEntityFields = [];
+
+
+                        var items = scope.items;
+                        var entityExist = false;
+
+                        //console.log('ITEMS', scope.items);
+
+                        if (scope.items) {
+                            for (i = 0; i < scope.items.length; i = i + 1) {
+                                //console.log('scope.items[i].groups', scope.items[i].groups);
+                                if (scope.items[i].hasOwnProperty('groups')) {
+                                    for (g = 0; g < scope.items[i].groups.length; g = g + 1) {
+
+                                        entityExist = false;
+
                                         if (scope.items[i].groups[g]['value_type'] === 'field') {
 
                                             if (scope.items[i].groups[g].value !== null) {
@@ -374,25 +439,7 @@
                             }
                         }
 
-                        Promise.all(promisesClassifiers).then(function (data) {
-
-                            if (data.length) {
-                                var i;
-                                for (i = 0; i < data.length; i = i + 1) {
-                                    if (classifiersInstances[data[i].key] === undefined) {
-                                        classifiersInstances[data[i].key] = {};
-                                    }
-                                    if (data[i].data !== undefined) {
-                                        classifiersInstances[data[i].key] = data[i].data
-                                    }
-                                }
-                            }
-
-                            scope.readyStatus.classifiersReady = true;
-
-                        }).then(function () {
-                            scope.$apply();
-                        });
+                        scope.readyStatus.cellsFirstReady = false;
 
                         Promise.all(promisesEntityFields).then(function (data) {
 
@@ -411,12 +458,9 @@
                             }
 
                             scope.readyStatus.cellsFirstReady = true;
-                            //console.log('cells first ready');
+                            console.log('cells first ready');
                             resolve({status: "groups ready"});
 
-
-                        }).then(function () {
-                            scope.$apply();
                         })
 
                     })
@@ -567,17 +611,21 @@
 
                 function syncGroupsAndColumns() {
 
-                    //console.log("scope.grouping!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!", scope.grouping);
-
                     var promises = [];
 
                     promises.push(getFieldDisplayNamesArray());
-                    promises.push(findGroups());
+                    promises.push(findGroupsClassifiers());
+                    promises.push(findGroupsEntities());
 
-                    //console.log('??????????????????', promises);
+                    console.log('promises', promises);
 
                     Promise.all(promises).then(function () {
+
+                        console.log('All promises??');
+
+                        scope.evEventService.dispatchEvent(evEvents.UPDATE_COLUMNS_SIZE);
                         scope.$apply();
+
                     })
                 }
 
@@ -612,6 +660,9 @@
                                 }
                             }
                         }
+
+                        scope.readyStatus.cellsSecondReady = false;
+
                         Promise.all(promises).then(function (results) {
                             //console.log('RESULTS', results);
                             results.forEach(function (item) {
@@ -627,11 +678,10 @@
                             });
 
                             scope.readyStatus.cellsSecondReady = true;
+                            console.log('cellsSecondReady');
 
                             resolve({status: "entity field ready"});
 
-                        }).then(function () {
-                            scope.$apply();
                         })
                     })
 
@@ -650,15 +700,18 @@
 
                 scope.toggleSelectRow = function ($event, item) {
 
-                    if (item.simpleSelect == true) {
+                    if (item.simpleSelect === true) {
                         item.simpleSelect = false;
                     }
+
                     item.selectedRow = !item.selectedRow;
+
                     if (scope.isAllSelected === true && item.selectedRow === false) {
                         scope.isAllSelected = false;
                     }
 
                     var allSelected = true;
+
                     scope.items.forEach(function (item) {
                         if (item.hasOwnProperty('groups')) {
                             if (!!item.selectedRow === false) {
@@ -679,6 +732,7 @@
                     if (allSelected) {
                         scope.isAllSelected = true;
                     }
+
                     $event.stopPropagation();
                 };
 
@@ -686,25 +740,23 @@
 
                     //console.log('scope.options.reportIsReady', scope.options.reportIsReady);
 
-                    if (scope.options.reportProcessing == true) {
-                        return false;
-                    }
+                    // if (scope.options.reportProcessing == true) {
+                    //     return false;
+                    // }
 
                     if (!scope.items) {
                         return true;
                     }
 
-                    if (scope.readyStatus.cellsFirstReady == true &&
-                        scope.readyStatus.cellsSecondReady == true &&
-                        scope.readyStatus.classifiersReady == true &&
-                            //scope.reportIsReady == true &&
-                        scope.options.reportIsReady == true &&
-                        scope.readyStatus.attributeTypesReady == true) {
-
-                        scope.$parent.triggerResize();
+                    if (scope.readyStatus.cellsFirstReady &&
+                        scope.readyStatus.cellsSecondReady &&
+                        scope.readyStatus.classifiersReady &&
+                        scope.evDataService.getStatusData() === 'loaded' &&
+                        scope.readyStatus.attributeTypesReady) {
 
                         return true;
                     }
+
                     return false;
                 };
 
@@ -734,10 +786,6 @@
                     //console.log('group', group);
 
                     if (group.value_type === 'field') {
-                        if (!entityFieldsArray.hasOwnProperty(group.key)) {
-                            //findGroups();
-                        }
-
 
                         if (group.hasOwnProperty(group.key + '_object') && group.value !== "") {
                             return group[group.key + '_object'].user_code;
@@ -928,9 +976,6 @@
 
                 scope.bindCell = function (groupedItem, column, options) {
 
-
-                    //console.log(groupedItem, column, options);
-
                     if (column.hasOwnProperty('r_entityType')) {
 
                         return groupedItem[column.r_entityType + '_attribute_' + column.source_name];
@@ -947,8 +992,6 @@
                         }
                     }
 
-                    //console.log('column', column);
-
                     if (column.hasOwnProperty('id')) {
                         if (column['value_type'] === 30) {
                             var classifierNode;
@@ -964,13 +1007,9 @@
                             return '';
                         } else {
 
-                            //console.log('groupedItem', groupedItem);
-
                             if (column.hasOwnProperty('columnType') && column.columnType == 'custom-field') {
 
                                 var result = '';
-
-                                //console.log('groupedItem', groupedItem);
 
                                 groupedItem.custom_fields.forEach(function (customField) {
 
@@ -994,17 +1033,6 @@
                     } else {
 
                         var c;
-
-                        //var i, e, c;
-                        //for (i = 0; i < baseAttrs.length; i = i + 1) {
-                        //    if (baseAttrs[i].key === column.key) {
-                        //        return groupedItem[baseAttrs[i].key];
-                        //    }
-                        //}
-
-                        //console.log('column.key', column.key);
-
-                        // set defaults
 
                         var format_round = 0;
                         var format_negative = 0;
@@ -1177,135 +1205,6 @@
 
                         }
 
-
-                        //for (e = 0; e < entityAttrs.length; e = e + 1) {
-                        //
-                        //    if (entityAttrs[e].key === column.key) {
-                        //        if (column['value_type'] === 'field') {
-                        //            var _groupedItemVal = groupedItem[entityAttrs[e].key];
-                        //            //if (scope.readyStatus.cellsFirstReady) {
-                        //            //console.log('entityFieldsArray', entityFieldsArray);
-                        //            if (entityFieldsArray[column.key]) {
-                        //                var result = entityFieldsArray[column.key].filter(function (item) {
-                        //                    return item.id === _groupedItemVal;
-                        //                })[0];
-                        //
-                        //            }
-                        //            if (result) {
-                        //                if (column['key'] === 'instrument' && result['user_code']) {
-                        //                    return result['user_code'];
-                        //                } else if (column['key'] === 'price_download_scheme') {
-                        //                    return result['scheme_name'];
-                        //                }
-                        //                else if (result['display_name']) {
-                        //                    return result['display_name'];
-                        //                }
-                        //                return result['name'];
-                        //            }
-                        //            return '';
-                        //        } else {
-                        //            if (column['value_type'] === 'mc_field') {
-                        //
-                        //                if (column.key == 'object_permissions_user') {
-                        //
-                        //                    if (groupedItem[entityAttrs[e].key].length) {
-                        //
-                        //                        //console.log('scope.options.permission_selected_entity', scope.options.permission_selected_entity);
-                        //
-                        //                        if (scope.options.permission_selected_entity == 'user') {
-                        //
-                        //                            var resultPermission = [];
-                        //
-                        //                            groupedItem[entityAttrs[e].key].forEach(function (permission) {
-                        //
-                        //                                if (permission.member == scope.options.permission_selected_id) {
-                        //                                    if (permission.permission.indexOf('change') == 0) {
-                        //                                        resultPermission.push('Change');
-                        //                                    }
-                        //                                    if (permission.permission.indexOf('manage') == 0) {
-                        //                                        resultPermission.push('Manage');
-                        //                                    }
-                        //                                }
-                        //                            });
-                        //
-                        //                            return resultPermission.join(', ');
-                        //
-                        //                        }
-                        //                    }
-                        //                }
-                        //
-                        //                if (column.key == 'object_permissions_group') {
-                        //
-                        //                    if (scope.options.permission_selected_entity == 'group') {
-                        //
-                        //                        var resultPermission = [];
-                        //
-                        //                        groupedItem[entityAttrs[e].key].forEach(function (permission) {
-                        //                            if (permission.group == scope.options.permission_selected_id) {
-                        //                                if (permission.permission.indexOf('change') == 0) {
-                        //                                    resultPermission.push('Change');
-                        //                                }
-                        //                                if (permission.permission.indexOf('manage') == 0) {
-                        //                                    resultPermission.push('Manage');
-                        //                                }
-                        //                            }
-                        //                        });
-                        //
-                        //                        return resultPermission.join(', ');
-                        //                    }
-                        //                }
-                        //
-                        //                if (groupedItem[entityAttrs[e].key] && groupedItem[entityAttrs[e].key].length >= 1) {
-                        //                    return '[' + groupedItem[entityAttrs[e].key].length + ']'
-                        //                }
-                        //            } else {
-                        //
-                        //                if (groupedItem[entityAttrs[e].key] !== null && groupedItem[entityAttrs[e].key] !== undefined) {
-                        //
-                        //                    if (column.value_type == 20 || column.value_type == 'float') {
-                        //
-                        //                        var format = 0;
-                        //
-                        //                        if (column.hasOwnProperty('report_settings')) {
-                        //                            if (column.report_settings.hasOwnProperty('round_format_id')) {
-                        //                                format = column.report_settings.round_format_id;
-                        //                            }
-                        //                        }
-                        //
-                        //
-                        //                        if (options && options.hasOwnProperty('reportItem')) {
-                        //                            if (options.reportItem.isFirstOfFolded && options.reportItem.isFirstOfFolded == true) {
-                        //                                //console.log(options);
-                        //                                return numberWithCommas(numberWithRoundFormat(options.reportItem.subTotal[entityAttrs[e].key], format));
-                        //                            } else {
-                        //                                return numberWithCommas(numberWithRoundFormat(groupedItem[entityAttrs[e].key], format));
-                        //                            }
-                        //                        } else {
-                        //                            return numberWithCommas(numberWithRoundFormat(groupedItem[entityAttrs[e].key], format));
-                        //                        }
-                        //                    } else {
-                        //
-                        //                        if (entityType == 'complex-transaction') {
-                        //                            if (entityAttrs[e].key == 'status') {
-                        //                                if (groupedItem[entityAttrs[e].key] == 1) {
-                        //                                    return 'Production';
-                        //                                }
-                        //                                if (groupedItem[entityAttrs[e].key] == 2) {
-                        //                                    return 'Pending';
-                        //                                }
-                        //                            }
-                        //                        }
-                        //
-                        //
-                        //                        return groupedItem[entityAttrs[e].key];
-                        //                    }
-                        //                }
-                        //            }
-                        //        }
-                        //    }
-                        //}
-
-
                     }
                 };
 
@@ -1326,14 +1225,14 @@
                 };
 
                 scope.rowCallback = function (item, ev) {
-                    //console.log('open additions!', item);
-                    scope.options.editorEntityId = item.id;
+
+                    console.log('rowCallback', item);
+
+                    scope.evDataService.setEditorEntityId(item.id);
                     var itemHasSimpleSelect = false;
                     if (item.simpleSelect) {
                         itemHasSimpleSelect = JSON.parse(JSON.stringify(item.simpleSelect));
                     }
-
-                    //console.log('scope.itemAdditionsEditorEntityId', itemHasSimpleSelect);
 
                     scope.items.forEach(function (item) {
                         if (item.hasOwnProperty('groups')) {
@@ -1350,41 +1249,15 @@
 
                     if (itemHasSimpleSelect == true) {
                         item.simpleSelect = false;
-                        scope.options.editorEntityId = undefined;
+                        scope.evDataService.setEditorEntityId(null);
                     }
 
                     if (!scope.options.isReport) {
 
-                        scope.externalCallback({
-                            silent: true,
-                            redraw: false,
-                            options: {editorEntityId: scope.options.editorEntityId}
-                        });
+                        scope.evEventService.dispatchEvent(evEvents.ADDITIONS_EDITOR_ENTITY_ID_CHANGE);
+                        // scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
                     }
 
-                    //if (localStorage.getItem('entityIsChanged') === "true") { // wow such shitcode
-                    //    $mdDialog.show({
-                    //        controller: 'WarningDialogController as vm',
-                    //        templateUrl: 'views/warning-dialog-view.html',
-                    //        parent: angular.element(document.body),
-                    //        targetEvent: ev,
-                    //        clickOutsideToClose: true,
-                    //        locals: {
-                    //            warning: {
-                    //                title: 'Warning',
-                    //                description: 'Unsaved data will be lost'
-                    //            }
-                    //        }
-                    //    }).then(function (res) {
-                    //        if (res.status === 'agree') {
-                    //            scope.itemAdditionsEditorEntityId = item.id;
-                    //            localStorage.setItem('entityIsChanged', false);
-                    //        }
-                    //    });
-                    //} else {
-                    //    scope.itemAdditionsEditorEntityId = item.id;
-                    //    //localStorage.setItem('entityIsChanged', false);
-                    //}
                 };
 
                 scope.getAlign = function (column) {
@@ -1419,12 +1292,13 @@
                         }
                     }).then(function (res) {
                         if (res.status === 'agree') {
-                            scope.externalCallback();
+                            scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE);
                         }
                     })
                 };
 
                 scope.editEntity = function (ev, entity) {
+
                     $mdDialog.show({
                         controller: 'EntityViewerEditDialogController as vm',
                         templateUrl: 'views/entity-viewer/entity-viewer-dialog-view.html',
@@ -1432,40 +1306,58 @@
                         targetEvent: ev,
                         //clickOutsideToClose: true,
                         locals: {
-                            parentScope: scope,
+                            entityType: scope.entityType,
                             entityId: entity.id
                         }
                     }).then(function (res) {
                         if (res && res.res === 'agree') {
-                            scope.externalCallback();
+                            scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE);
                         }
                     });
                 };
 
                 scope.changePage = function (page) {
 
-                    console.log('page----------------', page);
+                    scope.pagination = Object.assign({}, scope.pagination, {current_page: page});
 
-                    scope.externalCallback({options: {paginationPageCurrent: page}});
+                    scope.evDataService.setPagination(scope.pagination);
+                    scope.evEventService.dispatchEvent(evEvents.PAGE_CHANGE);
+
+                    scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE);
+
                 };
 
-                scope.$watchCollection('options.lastUpdate', function () {
 
-                    scope.externalCallback = scope.options.externalCallback;
-                    scope.grouping = scope.options.grouping;
-                    scope.columns = scope.options.columns;
-                    scope.entityType = scope.options.entityType;
-                    scope.reportIsReady = scope.options.reportIsReady;
-                    scope.isReport = scope.options.isReport;
+                scope.evEventService.addEventListener(evEvents.REDRAW_TABLE, function () {
 
                     syncGroupsAndColumns();
 
-                    if (scope.isReport == true && scope.items) {
-                        //console.log('scope.reportItems', scope.reportItems);
-
-                        scope.reportItems = groupTableReportService.transformItems(scope.items);
-                    }
                 });
+
+                scope.triggerResizeColumns = function () {
+
+                    scope.evEventService.dispatchEvent(evEvents.UPDATE_COLUMNS_SIZE);
+
+                }
+
+
+                // scope.$watchCollection('options.lastUpdate', function () {
+                //
+                //     scope.externalCallback = scope.options.externalCallback;
+                //     scope.grouping = scope.options.grouping;
+                //     scope.columns = scope.options.columns;
+                //     scope.entityType = scope.options.entityType;
+                //     scope.reportIsReady = scope.options.reportIsReady;
+                //     scope.isReport = scope.options.isReport;
+                //
+                //     syncGroupsAndColumns();
+                //
+                //     if (scope.isReport == true && scope.items) {
+                //         //console.log('scope.reportItems', scope.reportItems);
+                //
+                //         scope.reportItems = groupTableReportService.transformItems(scope.items);
+                //     }
+                // });
 
 
             }

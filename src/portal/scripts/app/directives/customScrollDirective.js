@@ -13,6 +13,8 @@
                 scrollSticky: '@'
             },
             link: function (scope, elem) {
+
+
                 //baron($(elem));
                 if (scope.scrollY && scope.scrollY == 'false') {
                     $(elem).perfectScrollbar({

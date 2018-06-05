@@ -18,7 +18,7 @@
                 for (f = 0; f < filters.length; f = f + 1) {
                     filter = filters[f];
                     if(!filter.options) {
-                        filter.options = {enabled: true, query: ''};
+                        filter.options = {enabled: false, query: ''};
                     }
                     if (filter.options.enabled) {
                         if(filter.options.query) {

@@ -5,9 +5,8 @@
 
     'use strict';
 
-    var logService = require('../../../../../core/services/logService');
     var fieldResolverService = require('../../services/fieldResolverService');
-
+    var evEvents = require('../../services/entityViewerEvents');
 
     var pricingPolicyService = require('../../services/pricingPolicyService');
     var currencyService = require('../../services/currencyService');
@@ -17,36 +16,35 @@
             restrict: 'AE',
             scope: {
                 options: '=',
-                reportOptions: '='
+                reportOptions: '=',
+                evDataService: '=',
+                evEventService: '='
             },
             templateUrl: 'views/directives/groupTable/sidebar-filter-view.html',
             link: function (scope, elem, attrs) {
 
-                logService.component('groupSidebarFilter', 'initialized');
-                console.log('reportOptions', scope.reportOptions);
+                scope.filters = scope.evDataService.getFilters();
+                scope.entityType = scope.evDataService.getEntityType();
+                scope.reportOptions = scope.evDataService.getReportOptions();
 
-                scope.filters = scope.options.filters;
-                scope.isReport = scope.options.isReport;
-                scope.entityType = scope.options.entityType;
-                scope.externalCallback = scope.options.externalCallback;
+                console.log('scope.reportOptions', scope.reportOptions);
+
+                scope.isReport = ['balance-report',
+                    'cash-flow-projection-report',
+                    'performance-report', 'pnl-report',
+                    'transaction-report'].indexOf(scope.entityType) !== -1;
+
+
+                console.log('scope.isReport', scope.isReport);
 
                 scope.fields = {};
-                //scope.reportOptions = {};
-
-                scope.filters.forEach(function (item) {
-                    if (!item.options) {
-                        //item.options = {enabled: false};
-                    }
-                    //item.options.enabled = false;
-                });
 
                 scope.resolveFilterValue = function (field) {
-
                     return field.id ? field.id : field.key;
-
                 };
 
-                if (scope.isReport == true) {
+                if (scope.isReport === true) {
+
                     pricingPolicyService.getList().then(function (data) {
 
                         scope.pricingPolicies = data.results;
@@ -65,10 +63,7 @@
 
                 }
 
-
                 scope.openPeriodsDialog = function ($event) {
-
-                    //console.log('scope.reportOptions', scope.reportOptions);
 
                     $mdDialog.show({
                         controller: 'PeriodsEditorDialogController as vm',
@@ -84,9 +79,10 @@
 
                         console.log('res', res);
 
-                        if (res.status == 'agree') {
+                        if (res.status === 'agree') {
 
-                            scope.externalCallback({reportOptionsUpdated: true, options: {reportOptions: res.data}});
+                            // scope.externalCallback({reportOptionsUpdated: true, options: {reportOptions: res.data}});
+                            scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE)
                         }
 
                     });
@@ -96,7 +92,7 @@
 
                 scope.openReportSettings = function ($event) {
 
-                    //console.log('scope.reportOptions', scope.reportOptions);
+                    var reportOptions = scope.evDataService.getReportOptions();
 
                     $mdDialog.show({
                         controller: 'GReportSettingsDialogController as vm',
@@ -104,20 +100,34 @@
                         parent: angular.element(document.body),
                         targetEvent: $event,
                         locals: {
-                            reportOptions: scope.reportOptions,
+                            reportOptions: reportOptions,
                             options: {
                                 entityType: scope.entityType
                             }
                         }
-                    })
+                    }).then(function (res) {
 
+                        reportOptions = res.data;
+
+                        scope.evDataService.setReportOptions(reportOptions);
+
+                        scope.reportOptions = reportOptions;
+
+                    })
 
                 };
 
                 scope.calculateReport = function () {
-                    //console.log('calculate report');
-                    scope.reportOptions["task_id"] = undefined;
-                    scope.externalCallback({silent: false, options: {filters: scope.filters}});
+
+                    var reportOptions = scope.evDataService.getReportOptions();
+
+                    reportOptions = Object.assign({}, reportOptions, {task_id: null});
+
+                    scope.evDataService.setReportOptions(reportOptions);
+
+                    scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE);
+                    // scope.evEventService.dispatchEvent(evEvents.CALCULATE_REPORT);
+
                 };
 
                 scope.resizeFilterSideNav = function (actionType) {
@@ -137,62 +147,23 @@
                     }, 300);
                 };
 
-                scope.$watchCollection('filters', function () {
-
-                    //scope.externalCallback();
-
-                    var promises = [];
-
-                    scope.filters.forEach(function (item) {
-                        //console.log("filter's item ", item);
-                        if (!scope.fields.hasOwnProperty(item.key)) {
-                            if (item['value_type'] == "mc_field" || item['value_type'] == "field") {
-                                if (item.key == 'tags') {
-                                    promises.push(fieldResolverService.getFields(item.key, {entityType: scope.entityType}));
-                                } else {
-                                    promises.push(fieldResolverService.getFields(item.key));
-                                }
-                            }
-
-                            //console.log("filter's promises ", promises);
-                        }
-                    });
-
-                    Promise.all(promises).then(function (data) {
-                        //console.log("filter's data ", data);
-                        data.forEach(function (item) {
-                            scope.fields[item.key] = item.data;
-                        });
-                        scope.$apply(
-                            function () {
-                                setTimeout(function () {
-                                    $(elem).find('.md-select-search-pattern').on('keydown', function (ev) {
-                                        ev.stopPropagation();
-                                    });
-                                }, 100);
-                            }
-                        )
-                        ;
-                    });
-                });
-
                 scope.openFilterSettings = function ($mdOpenMenu, ev) {
                     $mdOpenMenu(ev);
                 };
 
                 scope.toggleFilterState = function () {
-                    if (scope.isReport == true) {
-                        scope.externalCallback({silent: true, options: {filters: scope.filters}});
+                    if (scope.isReport === true) {
+                        scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE)
                     } else {
-                        scope.externalCallback({silent: false, options: {filters: scope.filters}});
+                        scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE)
                     }
                 };
 
                 scope.filterChange = function (filter) {
-                    if (scope.isReport == true) {
-                        scope.externalCallback({silent: true, options: {filters: scope.filters}});
+                    if (scope.isReport === true) {
+                        scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE)
                     } else {
-                        scope.externalCallback({silent: false, options: {filters: scope.filters}});
+                        scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE)
                     }
                 };
 
@@ -200,10 +171,14 @@
                     scope.filters.forEach(function (item) {
                         item.options.enabled = true;
                     });
-                    if (scope.isReport == true) {
-                        scope.externalCallback({silent: true, options: {filters: scope.filters}});
+
+                    scope.evDataService.setFilters(scope.filters);
+                    scope.evEventService.dispatchEvent(evEvents.FILTERS_CHANGE);
+
+                    if (scope.isReport === true) {
+                        scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE)
                     } else {
-                        scope.externalCallback({silent: false, options: {filters: scope.filters}});
+                        scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE)
                     }
                 };
 
@@ -211,26 +186,34 @@
                     scope.filters.forEach(function (item) {
                         item.options.query = '';
                     });
-                    if (scope.isReport == true) {
-                        scope.externalCallback({silent: true, options: {filters: scope.filters}});
+
+                    scope.evDataService.setFilters(scope.filters);
+                    scope.evEventService.dispatchEvent(evEvents.FILTERS_CHANGE);
+
+                    if (scope.isReport === true) {
+                        scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE)
                     } else {
-                        scope.externalCallback({silent: false, options: {filters: scope.filters}});
+                        scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE)
                     }
                 };
 
                 scope.deselectAll = function () {
+
                     scope.filters.forEach(function (item) {
                         item.options.enabled = false;
                     });
-                    if (scope.isReport == true) {
-                        scope.externalCallback({silent: true, options: {filters: scope.filters}});
+
+                    scope.evDataService.setFilters(scope.filters);
+                    scope.evEventService.dispatchEvent(evEvents.FILTERS_CHANGE);
+
+                    if (scope.isReport === true) {
+                        scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE)
                     } else {
-                        scope.externalCallback({silent: false, options: {filters: scope.filters}});
+                        scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE)
                     }
                 };
 
-
-                if (scope.options.isRootEntityViewer == false) {
+                if (scope.options.isRootEntityViewer === false) {
 
                     scope.$on('rootEditorEntityIdDown', function (event, data) {
 
@@ -246,7 +229,7 @@
 
                         });
 
-                        scope.externalCallback({silent: true, options: {filters: scope.filters}});
+                        scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE)
 
                     });
                 }
@@ -259,7 +242,7 @@
 
                     filter.options.useFromAbove = !filter.options.useFromAbove;
 
-                    scope.externalCallback({silent: true, options: {filters: scope.filters}});
+                    scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE)
                 };
 
                 scope.removeFilter = function (filter) {
@@ -276,9 +259,11 @@
                         return !!item;
                     });
 
-                    scope.externalCallback({silent: true, options: {filters: scope.filters}});
-                };
+                    scope.evDataService.setFilters(scope.filters);
+                    scope.evEventService.dispatchEvent(evEvents.FILTERS_CHANGE);
 
+                    scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE)
+                };
 
                 scope.getFilterType = function (filterType) {
                     switch (filterType) {
@@ -291,8 +276,6 @@
                             break;
                     }
                 };
-                //console.log('filter fields', scope.filters);
-
 
                 var dragAndDrop = {
 
@@ -315,7 +298,7 @@
 
                         this.dragula.on('dragend', function (el) {
 
-                            scope.externalCallback({silent: true});
+                            scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE)
 
                         })
                     },
@@ -334,10 +317,56 @@
                     }
                 };
 
-                //
                 setTimeout(function () {
                     dragAndDrop.init();
                 }, 500);
+
+                var init = function () {
+
+                    scope.evEventService.addEventListener(evEvents.FILTERS_CHANGE, function () {
+
+                        scope.filters = scope.evDataService.getFilters();
+
+                        var promises = [];
+
+                        scope.filters.forEach(function (item) {
+
+                            if (!scope.fields.hasOwnProperty(item.key)) {
+                                if (item['value_type'] === "mc_field" || item['value_type'] === "field") {
+                                    if (item.key === 'tags') {
+                                        promises.push(fieldResolverService.getFields(item.key, {entityType: scope.entityType}));
+                                    } else {
+                                        promises.push(fieldResolverService.getFields(item.key));
+                                    }
+                                }
+
+                            }
+                        });
+
+                        Promise.all(promises).then(function (data) {
+
+                            data.forEach(function (item) {
+                                scope.fields[item.key] = item.data;
+                            });
+                            scope.$apply(
+                                function () {
+                                    setTimeout(function () {
+                                        $(elem).find('.md-select-search-pattern').on('keydown', function (ev) {
+                                            ev.stopPropagation();
+                                        });
+                                    }, 100);
+                                }
+                            )
+                            ;
+                        });
+
+
+                    })
+
+                };
+
+                init();
+
             }
         }
     }
