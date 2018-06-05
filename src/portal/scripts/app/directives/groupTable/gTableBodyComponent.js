@@ -1338,7 +1338,17 @@
 
                     scope.evEventService.dispatchEvent(evEvents.UPDATE_COLUMNS_SIZE);
 
-                }
+                };
+
+                scope.evEventService.addEventListener(evEvents.UPDATE_TABLE, function () {
+
+                    if (scope.isReport === true && scope.items) {
+                        console.log('scope.reportItems', scope.reportItems);
+
+                        scope.reportItems = groupTableReportService.transformItems(scope.items);
+                    }
+
+                });
 
 
                 // scope.$watchCollection('options.lastUpdate', function () {
