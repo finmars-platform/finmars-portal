@@ -122,6 +122,14 @@
             return data.status.data;
         }
 
+        function setProjection(projection) {
+            data.projection = projection
+        }
+
+        function getProjection() {
+            return data.projection;
+        }
+
         return {
 
             setRootEntityViewer: setRootEntityViewer,
@@ -158,7 +166,10 @@
             getReportOptions: getReportOptions,
 
             setStatusData: setStatusData,
-            getStatusData: getStatusData
+            getStatusData: getStatusData,
+
+            setProjection: setProjection,
+            getProjection: getProjection
 
         }
     }
