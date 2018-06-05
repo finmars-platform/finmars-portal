@@ -151,7 +151,7 @@
         var pathToJS = [
             //'node_modules/malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.js',
             //'node_modules/nanoscroller/bin/javascripts/jquery.nanoscroller.js',
-            'node_modules/perfect-scrollbar/dist/js/perfect-scrollbar.jquery.min.js',
+            'node_modules/perfect-scrollbar/dist/perfect-scrollbar.js',
             'node_modules/fancy-logger/dist/js/fancy-logger.js',
             'node_modules/jstree/dist/jstree.js',
             'src/core/datepicker/pickmeup.js'
@@ -169,7 +169,7 @@
 
         var pathToCSS = [
             //'node_modules/nanoscroller/bin/css/nanoscroller.css',
-            'node_modules/perfect-scrollbar/dist/css/perfect-scrollbar.css',
+            'node_modules/perfect-scrollbar/css/perfect-scrollbar.css',
             'node_modules/jstree/dist/themes/default/style.css',
             'node_modules/pickmeup/css/pickmeup.css'
         ];
