@@ -13,7 +13,6 @@
         return {
             restrict: 'A',
             scope: {
-                items: '=',
                 options: '=',
                 evDataService: '=',
                 evEventService: '='

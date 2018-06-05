@@ -741,9 +741,9 @@
 
                     //console.log('scope.options.reportIsReady', scope.options.reportIsReady);
 
-                    // if (scope.options.reportProcessing == true) {
-                    //     return false;
-                    // }
+                    if (scope.isReport && scope.evDataService.getStatusData() !== 'loaded' && scope.evDataService.getStatusData() !== 'loading') {
+                        return true;
+                    }
 
                     if (!scope.items) {
                         return true;

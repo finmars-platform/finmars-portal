@@ -27,7 +27,7 @@
 
                             <label for="">Date</label>
 
-                            <zh-date-picker data-ng-model="reportOptions.report_date" position="left"></zh-date-picker>
+                            <zh-date-picker data-ng-model="reportOptions.report_date" position="left" ng-change="updateReportOptions()"></zh-date-picker>
 
                         </md-input-container>
 
@@ -35,7 +35,7 @@
 
                             <label for="">Currency</label>
 
-                            <md-select data-ng-model="reportOptions.report_currency" md-on-close="searchTerm = ''">
+                            <md-select data-ng-model="reportOptions.report_currency" ng-change="updateReportOptions()" md-on-close="searchTerm = ''">
                                 <md-select-header>
                                     <input data-ng-model="searchTerm"
                                            type="search"
@@ -54,7 +54,7 @@
 
                             <label for="">Pricing Policy</label>
 
-                            <md-select data-ng-model="reportOptions.pricing_policy">
+                            <md-select data-ng-model="reportOptions.pricing_policy" ng-change="updateReportOptions()">
                                 <md-option data-ng-repeat="item in pricingPolicies" ng-value="item.id">{{item.name}}
                                 </md-option>
                             </md-select>
