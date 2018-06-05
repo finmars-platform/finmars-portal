@@ -147,9 +147,6 @@
 
     function fill() {
 
-        //console.log('fill');
-
-
         var options = $(this).data('pickmeup-options'),
             pickmeup = this.pickmeup,
             current_cal = Math.floor(options.calendars / 2),
@@ -768,8 +765,8 @@
 
     function show(force) {
 
-        //console.log('show');
-        //console.trace();
+        // console.log('show');
+        // console.trace();
 
         var pickmeup = this.pickmeup;
         if (force || !pickmeup.is(':visible')) {
@@ -797,20 +794,15 @@
                         }
                     }).blur(function () {
 
-                    //console.log('blur');
 
-                    //console.log('111111111111111111111', $this.val());
-
-                    //options.current = new Date($this.val()).getTime();
                     if ($this.val() !== '') {
                         $this.pickmeup('set_date', (parseDate($this.val(), options.format, options.separator, options.locale)));
                         //options.current.setDate($this.val());
                         options.binded.update_date();
                     }
 
-                    //console.log('options', options);
 
-                })
+                });
                 options.lastSel = false;
             }
             options.before_show();
@@ -891,8 +883,8 @@
 
     function update() {
 
-        //console.log('update');
-        //console.trace();
+        console.log('update');
+        console.trace();
 
         var options = $(this).data('pickmeup-options');
         $(document)

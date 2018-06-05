@@ -17,6 +17,8 @@
             // template: '<md-input-container class="pick-me-up"><input type="text" value=""></md-input-containe>',
             link: function (scope, elem, attrs, ngModel) {
 
+                console.log('datepicker!');
+
                 var input = $(elem).find('input');
 
                 var position = 'right';
@@ -46,12 +48,10 @@
                         'hide_on_select': true,
                         format: 'Y-m-d',
                         change: function () {
-
-                            console.log('heeeer?');
-
                             ngModel.$setViewValue(this.value);
                         }
                     });
+
                 } else {
                     $(elem).parent().addClass('md-input-has-value');
                     input.pickmeup({
@@ -63,8 +63,8 @@
                             ngModel.$setViewValue(this.value);
                         }
                     });
-                }
 
+                }
 
                 var unregister = scope.$watch(function () {
 

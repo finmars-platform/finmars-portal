@@ -14,8 +14,6 @@
 
     module.exports = function ($scope, $mdDialog, parentScope, entityId, $state) {
 
-        logService.controller('EntityViewerEditDialogController', 'initialized');
-
         var vm = this;
 
         //vm.readyStatus = {content: false, permissions: false, entity: false, me: false};

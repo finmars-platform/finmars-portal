@@ -70,7 +70,6 @@
         };
         this.grouping = {
             setGroups: function (groups, entityType) {
-                console.log('this', _this);
                 _this.items = groupingService.setGroups(_this.items, groups, entityType);
             },
             setGroupsWithColumns: function (groups, columns, entityType) {

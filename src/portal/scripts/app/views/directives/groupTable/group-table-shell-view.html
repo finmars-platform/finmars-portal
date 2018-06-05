@@ -1,18 +1,25 @@
-<div class="g-wrapper" data-group-height-aligner data-options="options">
+<div class="g-wrapper" data-group-height-aligner ev-data-service="evDataService"
+     ev-event-service="evEventService">
     <div class="g-workarea-wrap">
         <div class="g-workarea main-area" data-group-clipboard-handler data-items="items" data-columns="columns">
             <div class="g-grouping-section" data-ng-if="options.components.groupingArea">
-                <group-grouping options="options"></group-grouping>
+                <group-grouping options="options" ev-data-service="evDataService"
+                                ev-event-service="evEventService"></group-grouping>
             </div>
             <div class="g-table-section">
                 <div data-custom-scroll class="custom-scrollbar" data-scroll-y="false">
-                    <div class="g-table-wrap" data-group-column-resizer data-items="items" data-options="options">
+                    <div class="g-table-wrap" data-group-column-resizer data-items="items" data-options="options" ev-data-service="evDataService"
+                         ev-event-service="evEventService">
                         <group-columns options="options"
                                        items="items"
+                                       ev-data-service="evDataService"
+                                       ev-event-service="evEventService"
                         ></group-columns>
                         <group-table-body class="group-table-body"
                                           options="options"
                                           items="items"
+                                          ev-data-service="evDataService"
+                                          ev-event-service="evEventService"
                         ></group-table-body>
                     </div>
                 </div>
@@ -22,30 +29,32 @@
     <div class="g-filter-sidebar main-sidebar" data-ng-if="options.components.sidebar">
         <div data-custom-scroll class="custom-scrollbar">
             <div class="g-filter" id="filtersbag">
-                <group-sidebar-filter options="options" report-options="reportOptions"></group-sidebar-filter>
+                <group-sidebar-filter options="options" report-options="reportOptions" ev-data-service="evDataService"
+                                      ev-event-service="evEventService"></group-sidebar-filter>
             </div>
         </div>
     </div>
     <div class="g-additions" data-ng-if="checkAdditions()">
-        <div class="g-height-slider"></div>
-        <div class="g-additions-data-editor min-height" data-ng-show="options.additionsStatus.editor">
-            <div data-ng-show="!options.editorEntityId">
+        <div class="g-height-slider" ng-init="activateHeightSlider()"></div>
+        <div class="g-additions-data-editor min-height" data-ng-show="additions.editor">
+            <div data-ng-show="!editorEntityId">
                 <div class="g-additions-editor-caption">
                     Select row to start
                 </div>
             </div>
-            <div data-ng-show="options.editorEntityId" class="min-height">
-                <group-editor-binder options="options"></group-editor-binder>
+            <div data-ng-show="editorEntityId" class="min-height">
+                <group-editor-binder ev-data-service="evDataService"
+                                     ev-event-service="evEventService"></group-editor-binder>
             </div>
         </div>
-        <div class="g-additions-workarea" data-ng-if="options.additionsStatus.permissionEditor">
+        <div class="g-additions-workarea" data-ng-if="additions.permissionEditor">
             <div data-ng-include="'views/entity-viewer/permission-editor-view.html'" class="min-height"></div>
         </div>
-        <div class="g-additions-workarea" data-ng-if="options.additionsStatus.reportWizard">
+        <div class="g-additions-workarea" data-ng-if="additions.reportWizard">
             <div data-ng-include="'views/entity-viewer/entity-viewer-view.html'" class="min-height"></div>
         </div>
-        <div class="g-extra-features" data-ng-if="findSelectedFeature().isOpened">
-            <div data-ng-include="{{findSelectedFeature().templateUrl}}"></div>
-        </div>
+        <!--<div class="g-extra-features" data-ng-if="findSelectedFeature().isOpened">-->
+            <!--<div data-ng-include="{{findSelectedFeature().templateUrl}}"></div>-->
+        <!--</div>-->
     </div>
 </div>

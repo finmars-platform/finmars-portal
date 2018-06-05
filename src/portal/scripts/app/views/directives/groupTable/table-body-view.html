@@ -6,11 +6,11 @@
         </div>
     </div>
     <!--<div data-ng-show="checkReady()" ng-cloak style="padding-bottom: 75px">-->
-    <div data-ng-show="checkReady()" ng-cloak>
+    <div data-ng-if="checkReady()">
         <div>
-            <div data-ng-if="options.grouping.length" contextmenu-container="gtbody.contextmenu">
+            <div data-ng-if="grouping.length" contextmenu-container="gtbody.contextmenu">
 
-                <div data-ng-if="!options.isReport" data-ng-repeat="item in items" on-finish-render="{{entityType}}">
+                <div data-ng-if="!isReport" data-ng-repeat="item in items">
                     <div class="g-group-holder {{ checkRowSelection(item) ? 'selected-row' : '' }}">
                         <div class="g-row-selection" data-ng-click="toggleSelectRow($event, item)">
                             <ng-md-icon icon="done" data-ng-show="item.selectedRow"></ng-md-icon>
@@ -40,7 +40,8 @@
                             <ng-md-icon icon="done" data-ng-show="groupedItem.selectedRow"></ng-md-icon>
                         </div>
 
-                        <div class="g-cell-wrap" data-ng-repeat="column in columns">
+                        <div class="g-cell-wrap" data-ng-repeat="column in columns" on-finish-render
+                             data-row-is-last="$last" data-callback="triggerResizeColumns()">
                             <div class="g-cell {{getAlign(column)}}">
                                 <span title="{{bindCellTitle(groupedItem, column)}}"
                                       data-ng-bind-html="bindCell(groupedItem, column) | trustAsHtml"></span>
@@ -48,28 +49,24 @@
                         </div>
                     </div>
                 </div>
-                <div data-ng-if="options.isReport" class="report-holder">
+                <div data-ng-if="isReport" class="report-holder">
 
-                    <!-- preInit.initGroup start -->
-
-                    <group-bind-report-row on-finish-render="{{entityType}}"
-                                           data-ng-repeat="item in reportItemsProjection() track by $index"
-                                           item="item"></group-bind-report-row>
-
-
-                    <!-- !preInit.initGroup end-->
-
+                    <group-bind-report-row
+                            data-ng-repeat="item in reportItemsProjection() track by $index"
+                            item="item"></group-bind-report-row>
 
                 </div>
             </div>
-            <div data-ng-if="!options.grouping.length" contextmenu-container="gtbody.contextmenu">
-                <div data-ng-repeat="item in items" on-finish-render="{{entityType}}"
+            <div data-ng-if="!grouping.length" contextmenu-container="gtbody.contextmenu">
+                <div data-ng-repeat="item in items" contextmenu-item="item"
                      class="{{ checkRowSelection(item) ? 'selected-row' : ''}} g-row"
-                     contextmenu-item="item" data-ng-click="rowCallback(item, $event)">
+                     data-ng-click="rowCallback(item, $event)">
+
                     <div class="g-row-selection" data-ng-click="toggleSelectRow($event, item)">
                         <ng-md-icon icon="done" data-ng-show="item.selectedRow"></ng-md-icon>
                     </div>
-                    <div class="g-cell-wrap" data-ng-repeat="column in columns">
+                    <div class="g-cell-wrap" data-ng-repeat="column in columns" on-finish-render
+                         data-row-is-last="$last" data-callback="triggerResizeColumns()">
                         <div class="g-cell {{getAlign(column)}}">
                             <span title="{{bindCellTitle(item, column)}}"
                                   data-ng-bind-html="bindCell(item, column) | trustAsHtml"></span>
@@ -81,19 +78,21 @@
         <div class="table-end-row"></div>
         {{paginationItemsTotal}}
         <div
-                data-ng-if="!options.isReport"
+                data-ng-if="!isReport"
                 paging
                 class="g-table-body-pagination"
-                page="options.paginationPageCurrent"
-                page-size="options.paginationItemPerPage"
-                total="options.paginationItemsTotal"
+                page="pagination.current_page"
+                page-size="pagination.items_per_page"
+                total="pagination.items_total"
                 paging-action="changePage(page)">
         </div>
 
-        <div data-ng-if="!items.length && options.isReport">
+        <div data-ng-if="!items.length && isReport">
             <h1 style="margin-top: 64px;text-align: left;margin-bottom: 64px;margin-left: 38vh;">Press calculate to
                 build report</h1>
         </div>
+
+
     </div>
 </div>
 <div contextmenu="gtbody.contextmenu" class="dropdown contextmenu ng-hide">

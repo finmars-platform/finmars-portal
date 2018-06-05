@@ -34,7 +34,11 @@
         string: 'env'
     };
 
-    var options = minimist(process.argv.slice(2), environments);
+    var PROJECT_ENV = process.env.PROJECT_ENV || 'development';
+    var API_HOST = process.env.API_HOST || 'http://0.0.0.0:8080';
+
+    console.log('PROJECT_ENV: ' + PROJECT_ENV);
+    console.log('API_HOST: ' + API_HOST);
 
     var appName = 'portal';
 
@@ -115,7 +119,8 @@
             .pipe(source('bundled.js'))
             .pipe(buffer())
             .pipe(preprocess())
-            //.pipe(uglify())
+            .pipe(replace(/__API_HOST__/g, API_HOST))
+            .pipe(gulpif(PROJECT_ENV === 'production', uglify()))
             .pipe(rename({basename: 'main', suffix: '.min'}))
             .on('error', function (error) {
                 console.error('\nError on JS minification: \n', error.toString());

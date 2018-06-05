@@ -19,21 +19,19 @@
 
     var metaPermissionsService = require('../../services/metaPermissionsService');
 
-    module.exports = function ($scope, $mdDialog, parentScope, $state) {
+    module.exports = function ($scope, $mdDialog, entityType, $state) {
 
         logService.controller('EntityViewerAddDialogController', 'initialized');
 
-        logService.property('parentScope', parentScope);
-
         var vm = this;
         vm.readyStatus = {content: false, entity: true, permissions: true};
-        vm.entityType = parentScope.vm.entityType;
+        vm.entityType = entityType;
         vm.evAction = 'create';
 
-        if (parentScope.vm.isEventBook) {
-            vm.isEventBook = parentScope.vm.isEventBook;
-            vm.eventBook = parentScope.vm.eventBook;
-        }
+        // if (parentScope.vm.isEventBook) {
+        //     vm.isEventBook = parentScope.vm.isEventBook;
+        //     vm.eventBook = parentScope.vm.eventBook;
+        // }
 
         vm.entityTypeSlug = function () {
 

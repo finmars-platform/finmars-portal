@@ -95,9 +95,9 @@
 
         vm.hasMapping = function (item) {
 
-            if (item.hasOwnProperty('system_property_key')) {
-                return ['accounts', 'responsibles', 'counterparties', 'transaction_types', 'portfolios'].indexOf(item.system_property_key) !== -1
-            }
+            // if (item.hasOwnProperty('system_property_key')) {
+            //     return ['accounts', 'responsibles', 'counterparties', 'transaction_types', 'portfolios'].indexOf(item.system_property_key) !== -1
+            // }
 
             if (item.hasOwnProperty('value_type')) {
                 return item.value_type == 30;
