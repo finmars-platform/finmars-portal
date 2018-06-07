@@ -1,5 +1,9 @@
 # Changelog
 
+## 07.06.2018
+
+- **BUGFIX** View Constructor in Balance Report is not showing up
+
 ## 05.06.2018
 
 - Entity Viewer Event Model
