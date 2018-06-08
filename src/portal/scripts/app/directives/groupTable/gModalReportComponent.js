@@ -542,13 +542,16 @@
             updateTypeAttrs(vm.strategy3groupAttrs);
 
             addColumn();
-            callback({
-                silent: true, options: {
-                    columns: columns,
-                    filters: filters,
-                    grouping: grouping
-                }
-            });
+
+            entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+
+            // callback({
+            //     silent: true, options: {
+            //         columns: columns,
+            //         filters: filters,
+            //         grouping: grouping
+            //     }
+            // });
         };
 
 
