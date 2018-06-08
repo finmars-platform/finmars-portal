@@ -1,7 +1,7 @@
 /**
  * Created by szhitenev on 09.03.2016.
  */
-(function(){
+(function () {
 
     'use strict';
 
@@ -42,7 +42,7 @@
 
     var appName = 'portal';
 
-    gulp.task(appName + '-less-to-css-min', function(){
+    gulp.task(appName + '-less-to-css-min', function () {
 
         var pathToLess = ['src/' + appName + '/content/less/imports.less'];
 
@@ -53,14 +53,14 @@
                 this.emit('end');
             })
             .pipe(plumber())
-            .pipe(postcss([ autoprefixer({ browsers: ['last 2 versions']})]))
+            .pipe(postcss([autoprefixer({browsers: ['last 2 versions']})]))
             .pipe(minifyCSS())
             .pipe(rename('main.min.css'))
             .pipe(gulp.dest('dist/' + appName + '/content/css/'));
 
     });
 
-    gulp.task(appName + '-html-min', function(){
+    gulp.task(appName + '-html-min', function () {
 
         var pathToHTML = ['src/*.html'];
 
@@ -71,7 +71,7 @@
 
     });
 
-    gulp.task(appName + '-json-min', function(){
+    gulp.task(appName + '-json-min', function () {
 
         var pathToJSON = ['src/' + appName + '/content/json/*.json'];
 
@@ -101,13 +101,31 @@
 
     });
 
-    gulp.task('portal-forum-HTML-to-JS', function() {
+    gulp.task('portal-forum-HTML-to-JS', function () {
         forumTasks.forumHtmlToJs();
     });
 
-    gulp.task(appName + '-js-min', [appName + '-HTML-to-JS'], function(){
+    function left_pad(num) {
+
+        if (parseInt(num, 10) < 10) {
+            return '0' + num
+        }
+
+        return num;
+    }
+
+    gulp.task(appName + '-js-min', [appName + '-HTML-to-JS'], function () {
 
         var pathToJS = ['src/' + appName + '/scripts/main.js'];
+
+        var d = new Date();
+        var date = left_pad(d.getDate());
+        var month = left_pad(d.getMonth() + 1);
+        var year = left_pad(d.getFullYear());
+        var hours = left_pad(d.getHours());
+        var minutes = left_pad(d.getMinutes());
+
+        var build_date = hours + ':' + minutes + ', ' + date + '/' + month + '/' + year;
 
         return browserify(pathToJS)
             .bundle()
@@ -120,6 +138,7 @@
             .pipe(buffer())
             .pipe(preprocess())
             .pipe(replace(/__API_HOST__/g, API_HOST))
+            .pipe(replace(/__BUILD_DATE__/g, build_date))
             .pipe(gulpif(PROJECT_ENV === 'production', uglify()))
             .pipe(rename({basename: 'main', suffix: '.min'}))
             .on('error', function (error) {
@@ -130,7 +149,7 @@
             .pipe(livereload());
     });
 
-    gulp.task(appName + '-img-copy', function(){
+    gulp.task(appName + '-img-copy', function () {
 
         var pathToImg = ['src/' + appName + '/content/img/**/*'];
 
@@ -139,7 +158,7 @@
 
     });
 
-    gulp.task(appName + '-fonts-copy', function(){
+    gulp.task(appName + '-fonts-copy', function () {
 
         var pathToFonts = ['src/' + appName + '/content/fonts/**/*'];
 
@@ -148,7 +167,7 @@
 
     });
 
-    gulp.task(appName + '-watch-All', function(){
+    gulp.task(appName + '-watch-All', function () {
         livereload.listen();
         gulp.watch('src/' + appName + '/**/*.less', [appName + '-less-to-css-min']);
         gulp.watch('src/' + appName + '/**/*.js', [appName + '-js-min']);
