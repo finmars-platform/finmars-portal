@@ -97,6 +97,7 @@ app.controller('EntityMappingEditDialogController', ['$scope', '$mdDialog', 'sch
 app.controller('EntityMappingCreateDialogController', ['$scope', '$mdDialog', require('./app/controllers/dialogs/entityMappingCreateDialogController')]);
 
 app.controller('EntityViewerController', ['$scope', '$mdDialog', require('./app/controllers/entityViewer/entityViewerController')]);
+app.controller('EntityViewer2Controller', ['$scope', '$mdDialog', require('./app/controllers/entityViewer/entityViewer2Controller')]);
 app.controller('EntityViewerAddDialogController', ['$scope', '$mdDialog', 'entityType', '$state', require('./app/controllers/entityViewer/entityViewerAddDialogController')]);
 app.controller('EntityViewerEditDialogController', ['$scope', '$mdDialog', 'entityType', 'entityId', '$state', require('./app/controllers/entityViewer/entityViewerEditDialogController')]);
 app.controller('EntityViewerDeleteDialogController', ['$scope', '$mdDialog', 'entity', 'entityType', require('./app/controllers/entityViewer/entityViewerDeleteDialogController')]);

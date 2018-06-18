@@ -21,9 +21,13 @@
             templateUrl: 'views/directives/groupTable/columns-view.html',
             link: function (scope, elem, attrs) {
 
-                scope.sorting = scope.options.sorting;
+                if (scope.options) {
+                    scope.sorting = scope.options.sorting;
+                }
+
                 scope.columns = scope.evDataService.getColumns();
                 scope.entityType = scope.evDataService.getEntityType();
+                scope.components = scope.evDataService.getComponents();
 
                 scope.isReport = ['balance-report',
                     'cash-flow-projection-report',
