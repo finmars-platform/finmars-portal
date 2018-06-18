@@ -19,8 +19,15 @@
             link: function (scope, elem, attrs) {
 
                 scope.grouping = scope.evDataService.getGroups();
-                scope.sorting = scope.options.sorting;
-                scope.folding = scope.options.folding;
+                scope.components = scope.evDataService.getComponents();
+
+                if (scope.options) {
+
+                    scope.sorting = scope.options.sorting;
+                    scope.folding = scope.options.folding;
+
+                }
+
                 scope.entityType = scope.evDataService.getEntityType();
                 scope.isReport = ['balance-report',
                     'cash-flow-projection-report',
@@ -64,25 +71,25 @@
                     $mdOpenMenu(ev);
                 };
 
-                scope.$watchCollection('grouping', function () {
-
-                    if (scope.isReport == true) {
-                        scope.grouping.forEach(function (group) {
-
-                            if (!group.hasOwnProperty('report_settings') && !group.report_settings) {
-                                group.report_settings = {subtotal_type: 'area'};
-                            } else {
-                                if (group.report_settings.subtotal_type == undefined) {
-                                    group.report_settings.subtotal_type = 'area';
-                                }
-
-                            }
-
-                        })
-                    }
-
-                    scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
-                });
+                // scope.$watchCollection('grouping', function () {
+                //
+                //     if (scope.isReport == true) {
+                //         scope.grouping.forEach(function (group) {
+                //
+                //             if (!group.hasOwnProperty('report_settings') && !group.report_settings) {
+                //                 group.report_settings = {subtotal_type: 'area'};
+                //             } else {
+                //                 if (group.report_settings.subtotal_type == undefined) {
+                //                     group.report_settings.subtotal_type = 'area';
+                //                 }
+                //
+                //             }
+                //
+                //         })
+                //     }
+                //
+                //     scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+                // });
 
                 scope.toggleGroupFold = function () {
                     scope.folding = !scope.folding;

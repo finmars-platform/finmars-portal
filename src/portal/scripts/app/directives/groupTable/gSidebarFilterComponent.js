@@ -225,7 +225,7 @@
                     }
                 };
 
-                if (scope.options.isRootEntityViewer === false) {
+                if (scope.options && scope.options.isRootEntityViewer === false) {
 
                     scope.$on('rootEditorEntityIdDown', function (event, data) {
 

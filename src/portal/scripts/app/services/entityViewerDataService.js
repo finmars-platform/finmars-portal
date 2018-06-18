@@ -1,5 +1,7 @@
 (function () {
 
+    var stringHelper = require('../helpers/stringHelper')
+
     module.exports = function () {
 
         console.log('Entity Viewer Data Service started!');
@@ -18,8 +20,11 @@
             },
             rootEntityViewer: false,
             additions: {},
-            report: {}
+            report: {},
+            data: {}
         };
+
+        var rootHash = stringHelper.toHash('root');
 
 
         console.log('Entity Viewer Data Service data', data);
@@ -130,6 +135,61 @@
             return data.projection;
         }
 
+        function setData(obj) {
+            data.data[obj.___id] = obj
+        }
+
+        function getData(hashId) {
+
+            console.log('data.data', data.data);
+
+            if (hashId) {
+                return data.data[hashId];
+            }
+
+            return data.data[rootHash];
+        }
+
+
+        function setRequestParameters(requestParameters) {
+
+            data.requestParameters = requestParameters;
+
+        }
+
+        function getRequestParameters() {
+
+            console.log('data.requestParameters', data.requestParameters);
+
+            if (data.requestParameters) {
+                return data.requestParameters
+            }
+
+            var defaultParameters = {
+                requestType: 'groups',
+                event: {
+                    groupName: null,
+                    groupId: null,
+                    parentGroupId: null
+                },
+                body: {
+                    groups_types: [getGroups()[0]].map(function (item) {
+                            if (item.id) {
+                                return item.id
+                            } else {
+                                return item.key
+                            }
+                        }
+                    ),
+                    groups_values: [],
+                    groups_order: 'asc'
+                }
+            };
+
+            return defaultParameters;
+        }
+
+
         return {
 
             setRootEntityViewer: setRootEntityViewer,
@@ -169,7 +229,13 @@
             getStatusData: getStatusData,
 
             setProjection: setProjection,
-            getProjection: getProjection
+            getProjection: getProjection,
+
+            setData: setData,
+            getData: getData,
+
+            setRequestParameters: setRequestParameters,
+            getRequestParameters: getRequestParameters
 
         }
     }

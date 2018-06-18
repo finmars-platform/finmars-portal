@@ -2,7 +2,7 @@
      ev-event-service="evEventService">
     <div class="g-workarea-wrap">
         <div class="g-workarea main-area" data-group-clipboard-handler data-items="items" data-columns="columns">
-            <div class="g-grouping-section" data-ng-if="options.components.groupingArea">
+            <div class="g-grouping-section" data-ng-if="components.groupingArea">
                 <group-grouping options="options" ev-data-service="evDataService"
                                 ev-event-service="evEventService"></group-grouping>
             </div>
@@ -25,7 +25,7 @@
             </div>
         </div>
     </div>
-    <div class="g-filter-sidebar main-sidebar" data-ng-if="options.components.sidebar">
+    <div class="g-filter-sidebar main-sidebar" data-ng-if="components.sidebar">
         <div data-custom-scroll class="custom-scrollbar">
             <div class="g-filter" id="filtersbag">
                 <group-sidebar-filter options="options" report-options="reportOptions" ev-data-service="evDataService"
