@@ -36,7 +36,7 @@
                     // return selected;
                 };
 
-                if (scope.options.isRootEntityViewer == true) {
+                if (scope.options && scope.options.isRootEntityViewer == true) {
 
                     scope.$watch('options.editorEntityId', function (event, data) {
 
@@ -75,7 +75,7 @@
 
                 scope.activateHeightSlider = function () {
 
-                   scope.evEventService.dispatchEvent(evEvents.ADDITIONS_RENDER)
+                    scope.evEventService.dispatchEvent(evEvents.ADDITIONS_RENDER)
 
                 }
 

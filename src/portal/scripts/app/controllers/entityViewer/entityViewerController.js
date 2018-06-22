@@ -206,6 +206,8 @@
 
                         }
 
+
+
                     } else {
 
                         if (!isDefaultFallback) {
@@ -223,6 +225,11 @@
                         }
 
                     }
+
+                    var reportOptions = entityViewerDataService.getReportOptions();
+                    var newReportOptions = Object.assign({}, reportOptions, vm.options.reportOptions);
+
+                    entityViewerDataService.setReportOptions(newReportOptions);
 
                     entityViewerDataService.setColumns(vm.options.columns);
                     entityViewerDataService.setGroups(vm.options.grouping);
@@ -570,10 +577,13 @@
 
                             console.log('report projection', vm.groupTableService.projection());
 
+                            entityViewerDataService.setProjection(vm.groupTableService.projection());
+
                             vm.tableIsReady = true;
                             vm.reportProcessing = false;
 
                             entityViewerDataService.setStatusData('loaded');
+                            entityViewerEventService.dispatchEvent(evEvents.DATA_LOAD_END);
 
                             $scope.$apply();
                         });
@@ -647,7 +657,10 @@
                     // vm.groupTableService.sorting.column.sort(vm.options.sorting.column);
                     vm.tableIsReady = true;
 
+                    entityViewerDataService.setProjection(vm.groupTableService.projection());
+
                     entityViewerDataService.setStatusData('loaded');
+                    entityViewerEventService.dispatchEvent(evEvents.DATA_LOAD_END);
 
                     $scope.$apply();
                 });
@@ -802,8 +815,23 @@
                 if (vm.isReport === true && _params.silent === false) {
 
                     entityViewerDataService.setStatusData('loading');
+                    entityViewerEventService.dispatchEvent(evEvents.DATA_LOAD_START);
 
-                    entityViewerDataResolver.getList(vm.entityType, entityViewerDataService.getReportOptions()).then(function (data) {
+                    var reportOptions = entityViewerDataService.getReportOptions();
+
+                    delete reportOptions['items'];
+                    delete reportOptions['item_accounts'];
+                    delete reportOptions['item_currencies'];
+                    delete reportOptions['item_currency_fx_rates'];
+                    delete reportOptions['item_instrument_accruals'];
+                    delete reportOptions['item_instrument_pricings'];
+                    delete reportOptions['item_instruments'];
+                    delete reportOptions['item_portfolios'];
+                    delete reportOptions['item_strategies1'];
+                    delete reportOptions['item_strategies2'];
+                    delete reportOptions['item_strategies3'];
+
+                    entityViewerDataResolver.getList(vm.entityType, reportOptions).then(function (data) {
                         reportHandler(data);
                     })
                 }
@@ -819,6 +847,7 @@
                 if (vm.isReport === false && _params.silent === false) {
 
                     entityViewerDataService.setStatusData('loading');
+                    entityViewerEventService.dispatchEvent(evEvents.DATA_LOAD_START);
 
                     entityViewerDataResolver.getList(vm.entityType, options).then(function (data) {
                         handler(data);
@@ -929,6 +958,8 @@
 
                     entityViewerDataService.setReportOptions(reportOptions);
 
+                    debugger;
+
                     // vm.reportOptions = {
                     //     cost_method: 1,
                     //     pricing_policy: data.results ? data.results[0].id : null
@@ -982,6 +1013,8 @@
                     vm.options.columns = entityViewerDataService.getColumns();
                     vm.options.grouping = entityViewerDataService.getGroups();
                     vm.options.filters = entityViewerDataService.getFilters();
+
+                    vm.options.reportOptions = entityViewerDataService.getReportOptions();
 
                     vm.options.columnsWidth = thWidths;
 
@@ -1052,6 +1085,8 @@
                     vm.options.columns = entityViewerDataService.getColumns();
                     vm.options.grouping = entityViewerDataService.getGroups();
                     vm.options.filters = entityViewerDataService.getFilters();
+
+                    vm.options.reportOptions = entityViewerDataService.getReportOptions();
 
                     vm.options.columnsWidth = thWidths;
 
@@ -1212,6 +1247,7 @@
                         vm.entityType = $scope.$parent.vm.entityType;
                         vm.options.entityType = $scope.$parent.vm.entityType;
                         entityViewerDataService.setEntityType($scope.$parent.vm.entityType);
+
                         vm.uiLayoutId = $scope.$parent.vm.uiLayoutId;
                         vm.options.components = $scope.$parent.vm.components || {
                             sidebar: true,

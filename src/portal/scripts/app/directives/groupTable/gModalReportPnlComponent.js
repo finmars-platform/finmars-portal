@@ -9,12 +9,14 @@
 
     var uiService = require('../../services/uiService');
 
+    var evEvents = require('../../services/entityViewerEvents');
+
     var metaService = require('../../services/metaService');
     var attributeTypeService = require('../../services/attributeTypeService');
     var balanceReportCustomAttrService = require('../../services/reports/balanceReportCustomAttrService');
     var dynamicAttributesForReportsService = require('../../services/groupTable/dynamicAttributesForReportsService');
 
-    module.exports = function ($scope, $mdDialog, parentScope, callback) {
+    module.exports = function ($scope, $mdDialog, EntityViewerDataService, EntityViewerEventService) {
 
         logService.controller('gModalController', 'initialized');
 
@@ -22,7 +24,7 @@
         vm.readyStatus = {content: false};
 
         vm.tabs = [];
-        vm.entityType = parentScope.entityType;
+        vm.entityType = EntityViewerDataService.getEntityType();
 
         //console.log('parentScope', parentScope);
         //console.log('vm', vm);
@@ -39,7 +41,10 @@
         vm.accountDynamicAttrs = [];
         vm.portfolioDynamicAttrs = [];
 
-        vm.isReport = parentScope.isReport;
+        vm.isReport = ['balance-report',
+            'cash-flow-projection-report',
+            'performance-report', 'pnl-report',
+            'transaction-report'].indexOf(vm.entityType) !== -1;
 
         vm.tabAttrsReady = false;
 
@@ -129,10 +134,10 @@
 
         // end refactore
 
-        var columns = parentScope.options.columns;
-        var currentColumnsWidth = parentScope.columns.length;
-        var filters = parentScope.options.filters;
-        var grouping = parentScope.options.grouping;
+        var columns = EntityViewerDataService.getColumns();
+        var currentColumnsWidth = columns.length;
+        var filters = EntityViewerDataService.getFilters();
+        var grouping = EntityViewerDataService.getGroups();
 
         var attrsList = [];
 
@@ -321,27 +326,6 @@
             }
         };
 
-        parentScope.$watch('options.columns', function () {
-            if (vm.tabAttrsReady) {
-                columns = parentScope.options.columns;
-                syncAttrs();
-                callback({silent: true});
-            }
-        });
-        parentScope.$watch('options.filters', function () {
-            if (vm.tabAttrsReady) {
-                filters = parentScope.options.filters;
-                syncAttrs();
-                callback({silent: true});
-            }
-        });
-        parentScope.$watch('options.grouping', function () {
-            if (vm.tabAttrsReady) {
-                grouping = parentScope.options.grouping;
-                syncAttrs();
-                callback({silent: true});
-            }
-        });
 
         vm.bindReportItemName = function (item) {
 
@@ -568,13 +552,16 @@
             updateTypeAttrs(vm.strategy3groupAttrs);
 
             addColumn();
-            callback({
-                silent: true, options: {
-                    columns: columns,
-                    filters: filters,
-                    grouping: grouping
-                }
-            });
+
+            entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+
+            // callback({
+            //     silent: true, options: {
+            //         columns: columns,
+            //         filters: filters,
+            //         grouping: grouping
+            //     }
+            // });
         };
 
         vm.cancel = function () {
@@ -790,7 +777,7 @@
 
                             //console.log('el', el, target, source);
 
-                            if(target.classList.contains('g-modal-draggable-card')) {
+                            if (target.classList.contains('g-modal-draggable-card')) {
                                 return false;
                             }
 
@@ -821,6 +808,34 @@
         vm.MABtnVisibility = function (entityType) {
             return metaService.checkRestrictedEntityTypesForAM(entityType);
         }
+
+        var init = function () {
+
+            EntityViewerEventService.addEventListener(evEvents.COLUMNS_CHANGE, function () {
+
+                columns = EntityViewerDataService.getColumns();
+                syncAttrs();
+
+            });
+
+            EntityViewerEventService.addEventListener(evEvents.GROUPS_CHANGE, function () {
+
+                grouping = EntityViewerDataService.getGroups();
+                syncAttrs();
+
+            });
+
+            EntityViewerEventService.addEventListener(evEvents.FILTERS_CHANGE, function () {
+
+                filters = EntityViewerDataService.getFilters();
+                syncAttrs();
+
+            });
+
+        };
+
+        init();
+
     }
 
 }());

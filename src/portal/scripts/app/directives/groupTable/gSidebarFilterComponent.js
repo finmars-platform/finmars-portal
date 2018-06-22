@@ -63,6 +63,18 @@
 
                 }
 
+                scope.updateReportOptions = function () {
+
+                    var reportOptions = scope.evDataService.getReportOptions();
+
+                    var newReportOptions = Object.assign({}, reportOptions, scope.reportOptions);
+
+                    console.log('report options', newReportOptions);
+
+                    scope.evDataService.setReportOptions(newReportOptions)
+
+                };
+
                 scope.openPeriodsDialog = function ($event) {
 
                     $mdDialog.show({
@@ -213,7 +225,7 @@
                     }
                 };
 
-                if (scope.options.isRootEntityViewer === false) {
+                if (scope.options && scope.options.isRootEntityViewer === false) {
 
                     scope.$on('rootEditorEntityIdDown', function (event, data) {
 

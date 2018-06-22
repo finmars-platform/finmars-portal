@@ -13,16 +13,19 @@
         return {
             restrict: 'A',
             scope: {
-                items: '=',
                 options: '=',
                 evDataService: '=',
                 evEventService: '='
             },
             link: function (scope, elem, attr) {
 
-                scope.columnsWidth = scope.options.columnsWidth;
+                if (scope.options) {
 
-                console.log('scope.columnsWidth', scope.columnsWidth);
+                    scope.columnsWidth = scope.options.columnsWidth;
+
+                    console.log('scope.columnsWidth', scope.columnsWidth);
+
+                }
 
                 var minWidth = 65;	// width value for showing tooltip
                 var columnsWidthSet = false;

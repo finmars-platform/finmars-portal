@@ -97,6 +97,7 @@ app.controller('EntityMappingEditDialogController', ['$scope', '$mdDialog', 'sch
 app.controller('EntityMappingCreateDialogController', ['$scope', '$mdDialog', require('./app/controllers/dialogs/entityMappingCreateDialogController')]);
 
 app.controller('EntityViewerController', ['$scope', '$mdDialog', require('./app/controllers/entityViewer/entityViewerController')]);
+app.controller('EntityViewer2Controller', ['$scope', '$mdDialog', require('./app/controllers/entityViewer/entityViewer2Controller')]);
 app.controller('EntityViewerAddDialogController', ['$scope', '$mdDialog', 'entityType', '$state', require('./app/controllers/entityViewer/entityViewerAddDialogController')]);
 app.controller('EntityViewerEditDialogController', ['$scope', '$mdDialog', 'entityType', 'entityId', '$state', require('./app/controllers/entityViewer/entityViewerEditDialogController')]);
 app.controller('EntityViewerDeleteDialogController', ['$scope', '$mdDialog', 'entity', 'entityType', require('./app/controllers/entityViewer/entityViewerDeleteDialogController')]);
@@ -237,11 +238,11 @@ app.controller('PeriodsEditorDialogController', ['$scope', '$mdDialog', 'options
 
 
 app.controller('gModalController', ['$scope', '$mdDialog', 'entityViewerDataService', 'entityViewerEventService', require('./app/directives/groupTable/gModalComponent')]);
-app.controller('gModalReportController', ['$scope', '$mdDialog', 'parentScope', 'callback', require('./app/directives/groupTable/gModalReportComponent')]);
-app.controller('gModalReportPnlController', ['$scope', '$mdDialog', 'parentScope', 'callback', require('./app/directives/groupTable/gModalReportPnlComponent')]);
-app.controller('gModalReportTransactionController', ['$scope', '$mdDialog', 'parentScope', 'callback', require('./app/directives/groupTable/gModalReportTransactionComponent')]);
-app.controller('gModalReportPerformanceController', ['$scope', '$mdDialog', 'parentScope', 'callback', require('./app/directives/groupTable/gModalReportPerformanceComponent')]);
-app.controller('gModalReportCashFlowProjectionController', ['$scope', '$mdDialog', 'parentScope', 'callback', require('./app/directives/groupTable/gModalReportCashFlowProjectionComponent')]);
+app.controller('gModalReportController', ['$scope', '$mdDialog', 'entityViewerDataService', 'entityViewerEventService', require('./app/directives/groupTable/gModalReportComponent')]);
+app.controller('gModalReportPnlController', ['$scope', '$mdDialog', 'entityViewerDataService', 'entityViewerEventService', require('./app/directives/groupTable/gModalReportPnlComponent')]);
+app.controller('gModalReportTransactionController', ['$scope', '$mdDialog', 'entityViewerDataService', 'entityViewerEventService', require('./app/directives/groupTable/gModalReportTransactionComponent')]);
+app.controller('gModalReportPerformanceController', ['$scope', '$mdDialog', 'entityViewerDataService', 'entityViewerEventService', require('./app/directives/groupTable/gModalReportPerformanceComponent')]);
+app.controller('gModalReportCashFlowProjectionController', ['$scope', '$mdDialog', 'entityViewerDataService', 'entityViewerEventService', require('./app/directives/groupTable/gModalReportCashFlowProjectionComponent')]);
 
 // GROUP TABLE END
 

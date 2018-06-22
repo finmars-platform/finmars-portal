@@ -11,11 +11,11 @@ var app = express();
 app.use(express.static(path.join(__dirname, 'dist')));
 // app.use('/portal', express.static('dist'));
 
-// var proxyOptions = url.parse('http://127.0.0.1:8000');
-//
-// proxyOptions.cookieRewrite = true;
-//
-// app.use('/', proxy(proxyOptions));
+var proxyOptions = url.parse('http://127.0.0.1:8000');
+
+proxyOptions.cookieRewrite = true;
+
+app.use('/', proxy(proxyOptions));
 
 app.listen(8080, '0.0.0.0', function () {
     console.info('Express server start at 8080 port');
