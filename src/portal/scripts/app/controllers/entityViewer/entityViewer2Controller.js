@@ -111,6 +111,7 @@
 
                     entityViewerDataService.setComponents(vm.options.components);
                     entityViewerDataService.setEditorTemplateUrl('views/additions-editor-view.html');
+                    entityViewerDataService.setRootEntityViewer(true);
 
                     if (vm.options.components.layoutManager === true) {
                         vm.saveLayoutAsManager();
