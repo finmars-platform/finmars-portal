@@ -95,19 +95,40 @@
 
         elem.addEventListener('click', function (event) {
 
-            var groupHashId = event.target.dataset.groupHashId;
+            console.log('event', event);
+
+            var dataType = event.target.dataset.type;
             var parentGroupHashId = event.target.dataset.parentGroupHashId;
 
-            var parents = evDataHelper.getParents(parentGroupHashId, evDataService);
-            var groups = evDataService.getGroups();
+            console.log('dataType', dataType);
 
-            if (parents.length < groups.length) {
+            if (dataType === 'group') {
 
-                requestGroups(groupHashId, parentGroupHashId, evDataService, evEventService);
+                var groupHashId = event.target.dataset.groupHashId;
 
-            } else {
+                var parents = evDataHelper.getParents(parentGroupHashId, evDataService);
+                var groups = evDataService.getGroups();
 
-                requestObjects(groupHashId, parentGroupHashId, evDataService, evEventService)
+                if (parents.length < groups.length) {
+
+                    requestGroups(groupHashId, parentGroupHashId, evDataService, evEventService);
+
+                } else {
+
+                    requestObjects(groupHashId, parentGroupHashId, evDataService, evEventService)
+                }
+
+            }
+
+            if (dataType === 'object') {
+
+                var objectId = event.target.dataset.objectId;
+                var obj = evDataHelper.getObject(objectId, parentGroupHashId, evDataService);
+
+                console.log('obj', obj);
+
+                evDataService.setEditorEntityId(obj.id);
+                evEventService.dispatchEvent(evEvents.ADDITIONS_EDITOR_ENTITY_ID_CHANGE);
             }
 
 
