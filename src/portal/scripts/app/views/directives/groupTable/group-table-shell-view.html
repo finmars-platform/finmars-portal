@@ -2,13 +2,14 @@
      ev-event-service="evEventService">
     <div class="g-workarea-wrap">
         <div class="g-workarea main-area" data-group-clipboard-handler data-items="items" data-columns="columns">
-            <div class="g-grouping-section" data-ng-if="options.components.groupingArea">
+            <div class="g-grouping-section" data-ng-if="components.groupingArea">
                 <group-grouping options="options" ev-data-service="evDataService"
                                 ev-event-service="evEventService"></group-grouping>
             </div>
             <div class="g-table-section">
-                <div data-custom-scroll class="custom-scrollbar" data-scroll-y="false">
-                    <div class="g-table-wrap" data-group-column-resizer data-items="items" data-options="options" ev-data-service="evDataService"
+                <div>
+                    <div class="g-table-wrap" data-group-column-resizer data-options="options"
+                         ev-data-service="evDataService"
                          ev-event-service="evEventService">
                         <group-columns options="options"
                                        items="items"
@@ -17,7 +18,6 @@
                         ></group-columns>
                         <group-table-body class="group-table-body"
                                           options="options"
-                                          items="items"
                                           ev-data-service="evDataService"
                                           ev-event-service="evEventService"
                         ></group-table-body>
@@ -26,7 +26,7 @@
             </div>
         </div>
     </div>
-    <div class="g-filter-sidebar main-sidebar" data-ng-if="options.components.sidebar">
+    <div class="g-filter-sidebar main-sidebar" data-ng-if="components.sidebar">
         <div data-custom-scroll class="custom-scrollbar">
             <div class="g-filter" id="filtersbag">
                 <group-sidebar-filter options="options" report-options="reportOptions" ev-data-service="evDataService"
@@ -54,7 +54,7 @@
             <div data-ng-include="'views/entity-viewer/entity-viewer-view.html'" class="min-height"></div>
         </div>
         <!--<div class="g-extra-features" data-ng-if="findSelectedFeature().isOpened">-->
-            <!--<div data-ng-include="{{findSelectedFeature().templateUrl}}"></div>-->
+        <!--<div data-ng-include="{{findSelectedFeature().templateUrl}}"></div>-->
         <!--</div>-->
     </div>
 </div>

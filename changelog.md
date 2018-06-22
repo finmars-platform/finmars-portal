@@ -1,5 +1,29 @@
 # Changelog
 
+## 08.06.2018
+
+- Build date label at sidenav
+- **BUGFIX** PNL report sidebar settings
+- **BUGFIX** View Constructor in P&L Report is not showing up
+
+## 07.06.2018
+
+- **BUGFIX** View Constructor in Balance Report is not showing up
+
+## 05.06.2018
+
+- Entity Viewer Event Model
+- ENV variables configuration
+- Gulp build improvements
+- Docker file update
+- Warning dialog after click on Classifier rename button
+- Update styles on classifier mapping dialog
+- **BUGFIX** Right click context-menu in Entity Viewer
+- **BUGFIX** Open instrument select dialog
+- **BUGFIX** Transaction type without group missed in dropdown
+- **BUGFIX** Import CSV scheme edit button unavailable until both file and scheme selected
+
+
 ## 13.05.2018
 
 - **HOTFIX**: fix input saving in transaction import mapping

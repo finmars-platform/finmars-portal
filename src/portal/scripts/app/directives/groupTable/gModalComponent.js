@@ -31,7 +31,6 @@
 
         vm.general = [];
         vm.attrs = [];
-        vm.baseAttrs = [];
         vm.entityAttrs = [];
         vm.custom = [];
 
@@ -92,13 +91,7 @@
                                 c = c - 1;
                             }
                         } else {
-                            for (b = 0; b < vm.baseAttrs.length; b = b + 1) {
-                                baseAttr = vm.baseAttrs[b];
-                                if (tabAttr.name === baseAttr.name) {
-                                    vm.tabs[t].attrs[c] = baseAttr;
-                                    attributeIsExist = true;
-                                }
-                            }
+
                             for (e = 0; e < vm.entityAttrs.length; e = e + 1) {
                                 entityAttr = vm.entityAttrs[e];
                                 if (tabAttr.name === entityAttr.name) {
@@ -133,10 +126,6 @@
         $('body').addClass('drag-dialog'); // hide backdrop
         vm.getAttributes = function () {
 
-            if (metaService.getEntitiesWithoutBaseAttrsList().indexOf(vm.entityType) === -1) {
-                vm.baseAttrs = metaService.getBaseAttrs();
-            }
-
             vm.entityAttrs = metaService.getEntityAttrs(vm.entityType);
 
             balanceReportCustomAttrService.getList().then(function (data) {
@@ -156,7 +145,6 @@
                 dynamicAttributesForReportsService.getDynamicAttributes().then(function (data) {
                     vm.attrs = data;
 
-                    attrsList = vm.attrs.concat(vm.baseAttrs);
                     attrsList = attrsList.concat(vm.entityAttrs);
                     restoreAttrs();
                     syncAttrs();
@@ -170,7 +158,6 @@
                 return attributeTypeService.getList(vm.entityType).then(function (data) {
 
                     vm.attrs = data.results;
-                    attrsList = vm.attrs.concat(vm.baseAttrs);
                     attrsList = attrsList.concat(vm.entityAttrs);
                     restoreAttrs();
                     syncAttrs();
@@ -200,7 +187,6 @@
         };
 
         var syncAttrs = function () {
-            syncTypeAttrs(vm.baseAttrs);
             syncTypeAttrs(vm.entityAttrs);
             syncTypeAttrs(vm.attrs);
             syncTypeAttrs(vm.custom);
@@ -339,7 +325,6 @@
 
         vm.updateAttrs = function () {
 
-            updateTypeAttrs(vm.baseAttrs);
             updateTypeAttrs(vm.entityAttrs);
             updateTypeAttrs(vm.attrs);
             updateTypeAttrs(vm.custom);

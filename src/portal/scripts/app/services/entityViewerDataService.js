@@ -1,5 +1,72 @@
 (function () {
 
+    var stringHelper = require('../helpers/stringHelper');
+
+    var getDefaultInterfaceLayout = function () {
+
+        var sidebarWidth = 200;
+        var sidebarHeight = document.body.clientHeight;
+
+        var headerToolbarHeight = 64;
+        var headerToolbarWidth = document.body.clientWidth - sidebarWidth;
+
+        var groupingAreaHeight = 86;
+        var columnAreaHeight = 70;
+        var filterAreaWidth = 239;
+        var filterAreaLeft = document.body.clientWidth - filterAreaWidth;
+
+        return {
+            sidebar: {
+                left: 0,
+                top: 0,
+                width: sidebarWidth,
+                height: sidebarHeight
+            },
+            headerToolbar: {
+                left: sidebarWidth,
+                top: 0,
+                width: headerToolbarWidth,
+                height: headerToolbarHeight
+            },
+            groupingArea: {
+                left: sidebarWidth,
+                top: headerToolbarHeight,
+                height: groupingAreaHeight
+            },
+            columnArea: {
+                left: sidebarWidth,
+                top: headerToolbarHeight + groupingAreaHeight,
+                height: columnAreaHeight
+            },
+            filterArea: {
+                left: filterAreaLeft,
+                top: headerToolbarHeight,
+                width: filterAreaWidth
+            }
+        }
+
+    };
+
+    var getDefaultRootGroup = function () {
+
+        var rootHash = stringHelper.toHash('root');
+
+        var obj = {};
+        obj.count = 0;
+        obj.next = null;
+        obj.previous = null;
+        obj.results = [];
+        obj.group_name = 'root';
+        obj.is_open = true;
+        obj.___id = rootHash;
+        obj.___parentId = null;
+        obj.___type = 'group';
+        obj.___level = 0;
+
+        return obj
+
+    };
+
     module.exports = function () {
 
         console.log('Entity Viewer Data Service started!');
@@ -18,11 +85,40 @@
             },
             rootEntityViewer: false,
             additions: {},
-            report: {}
+            report: {},
+            data: {},
+            virtualScroll: {
+                reserveTop: 20,
+                reserveBottom: 20,
+                requestThreshold: 20,
+                lastRequestOffset: 0,
+                rowHeight: 24,
+                offset: 0, // current position
+                limit: 0, // total rows
+                step: 40 // rows to render
+            },
+            interfaceLayout: null,
+            requestParameters: {},
+            activeRequestParametersId: null,
+            lastClickInfo: {}
         };
+
+        console.log('getInterfaceLayout', getDefaultInterfaceLayout());
+
+        data.interfaceLayout = getDefaultInterfaceLayout();
+
+        var rootHash = stringHelper.toHash('root');
+        var defaultRootGroup = getDefaultRootGroup();
+
+        setData(defaultRootGroup);
+        setActiveRequestParametersId(defaultRootGroup.___id);
 
 
         console.log('Entity Viewer Data Service data', data);
+
+        function getInterfaceLayout() {
+            return data.interfaceLayout
+        }
 
         function setRootEntityViewer(isRootEntityViewer) {
             data.rootEntityViewer = isRootEntityViewer;
@@ -122,6 +218,138 @@
             return data.status.data;
         }
 
+        function setProjection(projection) {
+            data.projection = projection
+        }
+
+        function getProjection() {
+            return data.projection;
+        }
+
+        function setData(obj) {
+            data.data[obj.___id] = obj
+        }
+
+        function getData(hashId) {
+
+            if (hashId) {
+                return data.data[hashId];
+            }
+
+            return data.data;
+        }
+
+        function getRootGroupData() {
+            return data.data[rootHash]
+        }
+
+        function setLastClickInfo(click) {
+            data.lastClickInfo = click;
+        }
+
+        function getLastClickInfo() {
+            return data.lastClickInfo;
+        }
+
+
+        function setRequestParameters(requestParameters) {
+
+            data.requestParameters[requestParameters.id] = requestParameters;
+
+        }
+
+        function getRequestParameters(id) {
+
+            // console.log('data.requestParameters', data.requestParameters);
+
+            if (data.requestParameters[id]) {
+                return data.requestParameters[id]
+            } else {
+
+                var defaultParameters = {
+                    requestType: 'groups',
+                    id: id,
+                    event: {
+                        groupName: null,
+                        groupId: null,
+                        parentGroupId: null
+                    },
+                    body: {
+                        groups_types: [getGroups()[0]].map(function (item) {
+                                if (item.id) {
+                                    return item.id
+                                } else {
+                                    return item.key
+                                }
+                            }
+                        ),
+                        page: 1,
+                        groups_values: [],
+                        groups_order: 'asc'
+                    }
+                };
+
+                return defaultParameters;
+            }
+        }
+
+        function getActiveRequestParameters() {
+
+            if (data.activeRequestParametersId) {
+                return getRequestParameters(data.activeRequestParametersId);
+            }
+
+        }
+
+        function setActiveRequestParametersId(id) {
+            data.activeRequestParametersId = id;
+        }
+
+
+        function getRowHeight() {
+            return data.virtualScroll.rowHeight;
+        }
+
+        function getRequestThreshold() {
+            return data.virtualScroll.requestThreshold;
+        }
+
+        function setLastRequestOffset(offset) {
+            return data.virtualScroll.lastRequestOffset = offset;
+        }
+
+        function getLastRequestOffset() {
+            return data.virtualScroll.lastRequestOffset;
+        }
+
+        function getVirtualScrollStep() {
+            return data.virtualScroll.step;
+        }
+
+        function setVirtualScrollOffset(offset) {
+            data.virtualScroll.offset = offset;
+        }
+
+        function getVirtualScrollOffset() {
+            return data.virtualScroll.offset;
+        }
+
+        function getVirtualScrollReserveTop() {
+            return data.virtualScroll.reserveTop;
+        }
+
+        function getVirtualScrollReserveBottom() {
+            return data.virtualScroll.reserveBottom;
+        }
+
+        function setVirtualScrollLimit(limit) {
+            data.virtualScroll.limit = limit;
+        }
+
+        function getVirtualScrollLimit() {
+            return data.virtualScroll.limit;
+        }
+
         return {
 
             setRootEntityViewer: setRootEntityViewer,
@@ -158,7 +386,41 @@
             getReportOptions: getReportOptions,
 
             setStatusData: setStatusData,
-            getStatusData: getStatusData
+            getStatusData: getStatusData,
+
+            setProjection: setProjection,
+            getProjection: getProjection,
+
+            setData: setData,
+            getData: getData,
+
+            getRootGroupData: getRootGroupData,
+
+            setLastClickInfo: setLastClickInfo,
+            getLastClickInfo: getLastClickInfo,
+
+            setRequestParameters: setRequestParameters,
+            getRequestParameters: getRequestParameters,
+            getActiveRequestParameters: getActiveRequestParameters,
+            setActiveRequestParametersId: setActiveRequestParametersId,
+
+            getRowHeight: getRowHeight,
+            getRequestThreshold: getRequestThreshold,
+            getVirtualScrollStep: getVirtualScrollStep,
+
+            setLastRequestOffset: setLastRequestOffset,
+            getLastRequestOffset: getLastRequestOffset,
+
+            setVirtualScrollOffset: setVirtualScrollOffset,
+            getVirtualScrollOffset: getVirtualScrollOffset,
+
+            getVirtualScrollReserveTop: getVirtualScrollReserveTop,
+            getVirtualScrollReserveBottom: getVirtualScrollReserveBottom,
+
+            setVirtualScrollLimit: setVirtualScrollLimit,
+            getVirtualScrollLimit: getVirtualScrollLimit,
+
+            getInterfaceLayout: getInterfaceLayout
 
         }
     }

@@ -1,5 +1,5 @@
 <div class="g-columns-component g-thead" group-column-init-width columns="columns">
-    <div class="g-column-title-row" layout="row" data-ng-if="options.components.columnAreaHeader">
+    <div class="g-column-title-row" layout="row" data-ng-if="components.columnAreaHeader">
         <p class="g-column-title"><span class="g-meta-circle red">C</span>OLUMN AREA
             <ng-md-icon style="fill: #fff;" class="tooltips-sign" icon="info" size="20" style="fill: #777777">
                 <md-tooltip class="tooltip_1" md-direction="top">tooltip text</md-tooltip>
@@ -14,7 +14,7 @@
             <!--<div dragula="'columns-bag'" dragula-model="columns" class="g-columns-holder">-->
             <div class="g-columns-holder">
                 <!--<div data-ng-init="initDragula()" class="g-columns-holder">-->
-                <md-card class="g-cell g-column" data-ng-repeat="column in options.columns" on-finish-render
+                <md-card class="g-cell g-column" data-ng-repeat="column in columns" on-finish-render
                          data-callback="triggerResizeTableHeadColumns()">
                     <div class="g-column-content">
                         <div class="column-left-content">
