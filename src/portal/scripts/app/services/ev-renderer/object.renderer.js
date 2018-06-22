@@ -53,7 +53,7 @@
 
     var render = function (obj, columns) {
 
-        var result = '<div class="g-row">';
+        var result = '<div class="g-row" data-type="object" data-object-id="' + obj.___id + '" data-parent-group-hash-id="' + obj.___parentId + '">';
         var cell;
 
         result = result + '<div class="g-row-selection"></div>';

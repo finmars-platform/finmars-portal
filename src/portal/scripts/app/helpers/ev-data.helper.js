@@ -93,7 +93,7 @@
 
     var getParent = function (parentId, evDataService, results) {
 
-            var item = evDataService.getData(parentId);
+        var item = evDataService.getData(parentId);
 
         results.push(item);
 
@@ -114,6 +114,24 @@
         results = getParent(parentId, evDataService, results);
 
         return results;
+
+    };
+
+    var getObject = function (objectId, parentGroupHashId, evDataService) {
+
+        var parent = evDataService.getData(parentGroupHashId);
+
+        var result;
+
+        parent.results.forEach(function (item) {
+
+            if (item.___id === objectId) {
+                result = item;
+            }
+
+        });
+
+        return result
 
     };
 
@@ -272,6 +290,8 @@
 
         getFlatStructure: getFlatStructure,
         getUnfoldedGroups: getUnfoldedGroups,
+
+        getObject: getObject,
 
         getNextPage: getNextPage,
 

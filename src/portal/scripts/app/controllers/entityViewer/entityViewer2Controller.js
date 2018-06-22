@@ -110,6 +110,7 @@
                     };
 
                     entityViewerDataService.setComponents(vm.options.components);
+                    entityViewerDataService.setEditorTemplateUrl('views/additions-editor-view.html');
 
                     if (vm.options.components.layoutManager === true) {
                         vm.saveLayoutAsManager();
