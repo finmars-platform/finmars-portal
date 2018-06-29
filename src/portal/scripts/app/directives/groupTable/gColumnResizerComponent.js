@@ -74,10 +74,10 @@
 
                     var wrapperWidth = $('.g-columns-component.g-thead').width() - $('.g-cell-select.all').width();
 
-                    // if (wrapperWidth < $(elem).parents('.g-table-section').width()) {
-                    //     wrapperWidth = $(elem).parents('.g-table-section').width();
-                    //     $(elem).width(wrapperWidth);
-                    // }
+                    if (wrapperWidth < $(elem).parents('.g-table-section').width()) {
+                        wrapperWidth = $(elem).parents('.g-table-section').width();
+                        $(elem).width(wrapperWidth);
+                    }
 
                     $(elem).find('.g-scroll-wrapper').width(wrapperWidth);
                     $(elem).find('.g-scrollable-area').width(wrapperWidth);
@@ -138,14 +138,17 @@
                     console.log('resultWidth', resultWidth);
                     console.log('scrollableArea', scrollableArea);
 
-                    // if (!scrollableArea) {
-                        scrollableArea = $(elem).find('.g-scrollable-area');
-                    // }
+                    var wrapperWidth = $('.ev-viewport').width();
 
-                    console.log($(scrollableArea).width());
+                    scrollableArea = $(elem).find('.g-scrollable-area');
+
+                    if (resultWidth < wrapperWidth) {
+                        resultWidth = wrapperWidth;
+                    }
 
                     $(scrollableArea).width(resultWidth);
                     $(evContent).width(resultWidth + buttonSelectAllWidth);
+
 
                 }
 
