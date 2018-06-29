@@ -19,6 +19,13 @@
             },
             link: function (scope, elem, attr) {
 
+                var evContent = elem.find('.ev-content');
+                var scrollableArea = $(elem).find('.g-scrollable-area');
+                var scrollWrapper = $(elem).find('.g-scroll-wrapper');
+
+                console.log('evContent', evContent);
+
+
                 if (scope.options) {
 
                     scope.columnsWidth = scope.options.columnsWidth;
@@ -67,13 +74,10 @@
 
                     var wrapperWidth = $('.g-columns-component.g-thead').width() - $('.g-cell-select.all').width();
 
-                    //console.log('--------------------', wrapperWidth);
-                    //console.log('--------------------', $(elem).parents('.g-table-section').width());
-
-                    if (wrapperWidth < $(elem).parents('.g-table-section').width()) {
-                        wrapperWidth = $(elem).parents('.g-table-section').width();
-                        $(elem).width(wrapperWidth);
-                    }
+                    // if (wrapperWidth < $(elem).parents('.g-table-section').width()) {
+                    //     wrapperWidth = $(elem).parents('.g-table-section').width();
+                    //     $(elem).width(wrapperWidth);
+                    // }
 
                     $(elem).find('.g-scroll-wrapper').width(wrapperWidth);
                     $(elem).find('.g-scrollable-area').width(wrapperWidth);
@@ -115,6 +119,7 @@
                 });
 
                 function resizeScrollableArea() {
+
                     var columns;
                     var i;
                     var areaWidth = 0;
@@ -122,16 +127,26 @@
                     var dropNewFieldWidth = 400;
                     columns = elem.find('.g-column');
 
+                    var buttonSelectAllWidth = 24;
+
                     for (i = 0; i < columns.length; i = i + 1) {
                         areaWidth = areaWidth + $(columns[i]).width() + columnMargins;
                     }
-                    var wrapperWidth = $(elem).find('.g-columns-component.g-thead').width() - $(elem).find('.g-cell-select.all').width();
-                    if (wrapperWidth < areaWidth + dropNewFieldWidth) {
-                        $(elem).find('.g-scrollable-area').width(areaWidth + dropNewFieldWidth);
-                        $(elem).width(areaWidth + dropNewFieldWidth + 24);
-                    } else {
-                        //$(elem).width(wrapperWidth);
-                    }
+
+                    var resultWidth = areaWidth + dropNewFieldWidth;
+
+                    console.log('resultWidth', resultWidth);
+                    console.log('scrollableArea', scrollableArea);
+
+                    // if (!scrollableArea) {
+                        scrollableArea = $(elem).find('.g-scrollable-area');
+                    // }
+
+                    console.log($(scrollableArea).width());
+
+                    $(scrollableArea).width(resultWidth);
+                    $(evContent).width(resultWidth + buttonSelectAllWidth);
+
                 }
 
                 var i, x, a;
@@ -189,15 +204,20 @@
                         var mouseDownLeft = e.clientX;
 
                         $(window).bind('mousemove', function (e) {
+
                             newWidth = e.clientX - mouseDownLeft;
+
                             resizeScrollableArea();
                             resizeCells();
-                            //resizeScrollableArea();
+
                             parent.width(width + newWidth);
+
                             if (newWidth + width > minWidth) {
                                 parent.width(width + newWidth);
                             }
+
                             toggleColumnNameTooltip(parent, parent.width());
+
 
                         });
                         $(window).bind('mouseup', function () {
@@ -205,11 +225,8 @@
                         });
                     });
 
-                    //setTimeout(function () {
                     resizeCells();
-                    //}, 100);
 
-                    //console.log('th', th);
                 }
 
 

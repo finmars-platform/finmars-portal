@@ -350,15 +350,30 @@
         var rowHeight = evDataService.getRowHeight();
         var viewportElem = elements.viewportElem;
 
-        var handler = utilsHelper.debounce(function () {
+        var columnBottomRow;
+
+        var scrollYHandler = utilsHelper.debounce(function () {
 
             offset = Math.floor(viewportElem.scrollTop / rowHeight);
             evDataService.setVirtualScrollOffset(offset);
-            evEventService.dispatchEvent(evEvents.UPDATE_TABLE)
+            evEventService.dispatchEvent(evEvents.UPDATE_TABLE);
+
 
         }, 100);
 
-        viewportElem.addEventListener('scroll', handler)
+        var scrollXHandler = function () {
+
+            if (!columnBottomRow) {
+                columnBottomRow = document.querySelector('.g-column-bottom-row');
+            }
+
+            columnBottomRow.style.left = -viewportElem.scrollLeft + 'px';
+
+        };
+
+        viewportElem.addEventListener('scroll', scrollYHandler);
+
+        viewportElem.addEventListener('scroll', scrollXHandler);
 
     };
 
