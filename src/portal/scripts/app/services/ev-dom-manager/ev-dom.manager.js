@@ -119,8 +119,27 @@
 
             console.log('event', event);
 
-            var dataType = event.target.dataset.type;
-            var parentGroupHashId = event.target.dataset.parentGroupHashId;
+            var dataType;
+            var objectId;
+            var parentGroupHashId;
+
+            if (event.target.offsetParent.classList.contains('ev-viewport')) {
+
+                dataType = event.target.dataset.type;
+                objectId = event.target.dataset.objectId;
+                parentGroupHashId = event.target.dataset.parentGroupHashId;
+
+            } else {
+
+                if (event.target.offsetParent.classList.contains('g-row')) {
+
+                    dataType = event.target.offsetParent.dataset.type;
+                    objectId = event.target.offsetParent.dataset.objectId;
+                    parentGroupHashId = event.target.offsetParent.dataset.parentGroupHashId;
+
+                }
+
+            }
 
             console.log('dataType', dataType);
 
@@ -172,7 +191,6 @@
 
             if (dataType === 'object') {
 
-                var objectId = event.target.dataset.objectId;
                 var obj = evDataHelper.getObject(objectId, parentGroupHashId, evDataService);
 
                 console.log('obj', obj);
@@ -201,8 +219,24 @@
 
         elem.addEventListener('contextmenu', function (ev) {
 
-            var objectId = event.target.dataset.objectId;
-            var parentGroupHashId = event.target.dataset.parentGroupHashId;
+            var objectId;
+            var parentGroupHashId;
+
+            if (event.target.offsetParent.classList.contains('ev-viewport')) {
+
+                objectId = event.target.dataset.objectId;
+                parentGroupHashId = event.target.dataset.parentGroupHashId;
+
+            } else {
+
+                if (event.target.offsetParent.classList.contains('g-row')) {
+
+                    objectId = event.target.offsetParent.dataset.objectId;
+                    parentGroupHashId = event.target.offsetParent.dataset.parentGroupHashId;
+
+                }
+
+            }
 
             console.log('initContextMenuEventDelegation.event', event);
 
