@@ -18,6 +18,8 @@
 
                 var editorTemplateUrl = scope.evDataService.getEditorTemplateUrl();
 
+                console.log('editorTemplateUrl', editorTemplateUrl);
+
                 var tpl = $templateCache.get(editorTemplateUrl);
                 var ctrl = $compile(tpl)(scope);
                 $(elem).append(ctrl);

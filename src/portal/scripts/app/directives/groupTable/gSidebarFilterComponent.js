@@ -63,6 +63,18 @@
 
                 }
 
+                scope.updateReportOptions = function () {
+
+                    var reportOptions = scope.evDataService.getReportOptions();
+
+                    var newReportOptions = Object.assign({}, reportOptions, scope.reportOptions);
+
+                    console.log('report options', newReportOptions);
+
+                    scope.evDataService.setReportOptions(newReportOptions)
+
+                };
+
                 scope.openPeriodsDialog = function ($event) {
 
                     $mdDialog.show({
@@ -163,6 +175,7 @@
                     if (scope.isReport === true) {
                         scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE)
                     } else {
+                        scope.evDataService.resetData();
                         scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE)
                     }
                 };
@@ -213,7 +226,7 @@
                     }
                 };
 
-                if (scope.options.isRootEntityViewer === false) {
+                if (scope.options && scope.options.isRootEntityViewer === false) {
 
                     scope.$on('rootEditorEntityIdDown', function (event, data) {
 
@@ -261,7 +274,6 @@
 
                     scope.evDataService.setFilters(scope.filters);
                     scope.evEventService.dispatchEvent(evEvents.FILTERS_CHANGE);
-
                     scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE)
                 };
 

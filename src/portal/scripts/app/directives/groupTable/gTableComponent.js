@@ -23,6 +23,7 @@
                 scope.additions = scope.evDataService.getAdditions();
                 scope.components = scope.evDataService.getComponents();
                 scope.editorEntityId = scope.evDataService.getEditorEntityId();
+                scope.entityType = scope.evDataService.getEntityType();
 
                 scope.findSelectedFeature = function () {
                     // var selected = {isOpened: false, templateUrl: ''};
@@ -36,7 +37,7 @@
                     // return selected;
                 };
 
-                if (scope.options.isRootEntityViewer == true) {
+                if (scope.options && scope.options.isRootEntityViewer == true) {
 
                     scope.$watch('options.editorEntityId', function (event, data) {
 
@@ -70,12 +71,17 @@
 
                     scope.editorEntityId = scope.evDataService.getEditorEntityId();
 
+                    scope.$broadcast('rootEditorEntityIdDown', {
+                        editorEntityId: scope.editorEntityId,
+                        entityType: scope.entityType
+                    });
+
                 });
 
 
                 scope.activateHeightSlider = function () {
 
-                   scope.evEventService.dispatchEvent(evEvents.ADDITIONS_RENDER)
+                    scope.evEventService.dispatchEvent(evEvents.ADDITIONS_RENDER)
 
                 }
 

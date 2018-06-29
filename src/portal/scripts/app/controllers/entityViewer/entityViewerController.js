@@ -206,6 +206,8 @@
 
                         }
 
+
+
                     } else {
 
                         if (!isDefaultFallback) {
@@ -223,6 +225,11 @@
                         }
 
                     }
+
+                    var reportOptions = entityViewerDataService.getReportOptions();
+                    var newReportOptions = Object.assign({}, reportOptions, vm.options.reportOptions);
+
+                    entityViewerDataService.setReportOptions(newReportOptions);
 
                     entityViewerDataService.setColumns(vm.options.columns);
                     entityViewerDataService.setGroups(vm.options.grouping);
@@ -951,6 +958,8 @@
 
                     entityViewerDataService.setReportOptions(reportOptions);
 
+                    debugger;
+
                     // vm.reportOptions = {
                     //     cost_method: 1,
                     //     pricing_policy: data.results ? data.results[0].id : null
@@ -1004,6 +1013,8 @@
                     vm.options.columns = entityViewerDataService.getColumns();
                     vm.options.grouping = entityViewerDataService.getGroups();
                     vm.options.filters = entityViewerDataService.getFilters();
+
+                    vm.options.reportOptions = entityViewerDataService.getReportOptions();
 
                     vm.options.columnsWidth = thWidths;
 
@@ -1074,6 +1085,8 @@
                     vm.options.columns = entityViewerDataService.getColumns();
                     vm.options.grouping = entityViewerDataService.getGroups();
                     vm.options.filters = entityViewerDataService.getFilters();
+
+                    vm.options.reportOptions = entityViewerDataService.getReportOptions();
 
                     vm.options.columnsWidth = thWidths;
 
@@ -1234,6 +1247,7 @@
                         vm.entityType = $scope.$parent.vm.entityType;
                         vm.options.entityType = $scope.$parent.vm.entityType;
                         entityViewerDataService.setEntityType($scope.$parent.vm.entityType);
+
                         vm.uiLayoutId = $scope.$parent.vm.uiLayoutId;
                         vm.options.components = $scope.$parent.vm.components || {
                             sidebar: true,
