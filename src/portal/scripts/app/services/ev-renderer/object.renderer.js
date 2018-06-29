@@ -12,6 +12,12 @@
                 return obj[column.key]
             }
 
+            if (Array.isArray(obj[column.key])) {
+
+                return '[' + obj[column.key].length + ']';
+
+            }
+
         }
 
         if (column.id) {
