@@ -32,7 +32,7 @@
             </div>
             <!--<div dragula="'group-bag'" dragula-model="grouping">-->
             <div class="g-groups-holder">
-                <md-card data-ng-repeat="item in options.grouping track by $index" class="group-item card">
+                <md-card data-ng-repeat="item in grouping track by $index" class="group-item card">
                     <div class="sort">
                         <md-button class="group-sort" data-ng-show="item.options.sort === 'ASC'"
                                    aria-label="open settings" data-ng-click="sortHandler(item, 'DESC')">
@@ -109,7 +109,7 @@
             </div>
         </div>
 
-        <md-button data-ng-if="options.components.fieldManagerBtn == true" class="md-fab g-settings-btn" aria-label="drag modal"
+        <md-button data-ng-if="components.fieldManagerBtn == true" class="md-fab g-settings-btn" aria-label="drag modal"
                    data-ng-click="openModalSettings($event)">
             <ng-md-icon icon="view_week"></ng-md-icon>
         </md-button>

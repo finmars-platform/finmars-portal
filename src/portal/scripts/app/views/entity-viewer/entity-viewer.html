@@ -1,0 +1,63 @@
+<div data-ng-controller="EntityViewer2Controller as vm" class="entity-viewer-holder">
+    <div>
+        <div data-ng-if="!vm.isReport">
+            <md-button aria-label="add entity" class="md-fab md-fab-bottom-right" data-ng-click="vm.addEntity($event)"
+                       data-ng-if="vm.checkAddEntityBtn()">
+                <ng-md-icon icon="add"></ng-md-icon>
+            </md-button>
+            <div data-ng-if="vm.options.components.splitPanel" class="lock-size g-table-dial" layout="row"
+                 layout-align="center center">
+                <md-fab-speed-dial md-direction="up"
+                                   md-open="false"
+                                   class="md-scale">
+                    <md-fab-trigger>
+                        <md-button aria-label="menu" class="md-fab" data-ng-if="vm.checkAdditionStatus()">
+                            <ng-md-icon icon="keyboard_arrow_up"></ng-md-icon>
+                        </md-button>
+                        <md-button aria-label="menu" class="md-fab" data-ng-if="!vm.checkAdditionStatus()"
+                                   data-ng-click="vm.hideAdditions()">
+                            <ng-md-icon icon="keyboard_arrow_down"></ng-md-icon>
+                        </md-button>
+                    </md-fab-trigger>
+                    <md-fab-actions>
+                        <md-button aria-label=""
+                                   class="md-fab md-raised md-mini"
+                                   data-ng-click="vm.openPermissionEditor()">
+                            <ng-md-icon icon="perm_identity"></ng-md-icon>
+                            <md-tooltip md-direction="right">Open permission editor</md-tooltip>
+                        </md-button>
+                        <md-button aria-label="" class="md-fab md-raised md-mini"
+                                   data-ng-click="vm.openDataViewPanel()">
+                            <ng-md-icon icon="work"></ng-md-icon>
+                            <md-tooltip md-direction="right">Open data view panel</md-tooltip>
+                        </md-button>
+                        <md-button aria-label="" class="md-fab md-raised md-mini"
+                                   data-ng-click="vm.openEditorViewPanel()">
+                            <ng-md-icon icon="view_stream"></ng-md-icon>
+                            <md-tooltip md-direction="right">Open editor split panel</md-tooltip>
+                        </md-button>
+                        <!--<md-button aria-label=""-->
+                        <!--data-ng-repeat="customButton in vm.customButtons"-->
+                        <!--class="md-fab md-raised md-mini"-->
+                        <!--data-ng-click="vm.openCustomAdditionsView($event, customButton)">-->
+                        <!--<ng-md-icon icon="{{customButton.icon}}"></ng-md-icon>-->
+                        <!--<md-tooltip md-direction="right">{{customButton.caption}}</md-tooltip>-->
+                        <!--</md-button>-->
+                    </md-fab-actions>
+                </md-fab-speed-dial>
+            </div>
+        </div>
+        <div data-ng-if="vm.tableIsReady" class="g-group-table-holder">
+            <!--<group-table items="vm.getProjection()" options="vm.options" report-options="vm.reportOptions"></group-table>-->
+            <group-table
+                    ev-data-service="vm.entityViewerDataService"
+                    ev-event-service="vm.entityViewerEventService"
+            ></group-table>
+        </div>
+        <div data-ng-if="!vm.tableIsReady">
+            <div class="e-data-loader" layout="row" layout-sm="column" layout-align="space-around">
+                <md-progress-circular md-diameter="100" md-mode="indeterminate"></md-progress-circular>
+            </div>
+        </div>
+    </div>
+</div>

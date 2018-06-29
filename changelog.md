@@ -1,5 +1,15 @@
 # Changelog
 
+## 08.06.2018
+
+- Build date label at sidenav
+- **BUGFIX** PNL report sidebar settings
+- **BUGFIX** View Constructor in P&L Report is not showing up
+
+## 07.06.2018
+
+- **BUGFIX** View Constructor in Balance Report is not showing up
+
 ## 05.06.2018
 
 - Entity Viewer Event Model

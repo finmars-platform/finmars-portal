@@ -19,8 +19,15 @@
             link: function (scope, elem, attrs) {
 
                 scope.grouping = scope.evDataService.getGroups();
-                scope.sorting = scope.options.sorting;
-                scope.folding = scope.options.folding;
+                scope.components = scope.evDataService.getComponents();
+
+                if (scope.options) {
+
+                    scope.sorting = scope.options.sorting;
+                    scope.folding = scope.options.folding;
+
+                }
+
                 scope.entityType = scope.evDataService.getEntityType();
                 scope.isReport = ['balance-report',
                     'cash-flow-projection-report',
@@ -37,52 +44,67 @@
                     }
                     group.options.sort = sort;
 
-                    if (group.hasOwnProperty('columnType') && group.columnType == 'custom-field') {
-                        scope.sorting.group = {};
-                        scope.sorting.group.id = null;
-                        scope.sorting.group.key = group.name;
-                        scope.sorting.group.sort = sort;
-                    } else {
 
-                        if (group.hasOwnProperty('id')) {
-                            scope.sorting.group = {};
-                            scope.sorting.group.id = group.id;
-                            scope.sorting.group.key = null;
-                            scope.sorting.group.sort = sort;
-                        } else {
-                            scope.sorting.group = {};
-                            scope.sorting.group.id = null;
-                            scope.sorting.group.key = group.key;
-                            scope.sorting.group.sort = sort;
+                    // if (group.hasOwnProperty('columnType') && group.columnType == 'custom-field') {
+                    //     scope.sorting.group = {};
+                    //     scope.sorting.group.id = null;
+                    //     scope.sorting.group.key = group.name;
+                    //     scope.sorting.group.sort = sort;
+                    // } else {
+                    //
+                    //     if (group.hasOwnProperty('id')) {
+                    //         scope.sorting.group = {};
+                    //         scope.sorting.group.id = group.id;
+                    //         scope.sorting.group.key = null;
+                    //         scope.sorting.group.sort = sort;
+                    //     } else {
+                    //         scope.sorting.group = {};
+                    //         scope.sorting.group.id = null;
+                    //         scope.sorting.group.key = group.key;
+                    //         scope.sorting.group.sort = sort;
+                    //     }
+                    // }
+
+
+                    var groups = scope.evDataService.getGroups();
+
+                    groups.forEach(function (item) {
+
+                        if (group.key === item.key || group.id === item.id) {
+                            item = group
                         }
-                    }
 
-                    scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+                    });
+
+                    scope.evDataService.setGroups(groups);
+                    scope.evDataService.setActiveGroupTypeSort(group);
+
+                    scope.evEventService.dispatchEvent(evEvents.GROUP_TYPE_SORT_CHANGE);
                 };
 
                 scope.openGroupSettings = function ($mdOpenMenu, ev) {
                     $mdOpenMenu(ev);
                 };
 
-                scope.$watchCollection('grouping', function () {
-
-                    if (scope.isReport == true) {
-                        scope.grouping.forEach(function (group) {
-
-                            if (!group.hasOwnProperty('report_settings') && !group.report_settings) {
-                                group.report_settings = {subtotal_type: 'area'};
-                            } else {
-                                if (group.report_settings.subtotal_type == undefined) {
-                                    group.report_settings.subtotal_type = 'area';
-                                }
-
-                            }
-
-                        })
-                    }
-
-                    scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
-                });
+                // scope.$watchCollection('grouping', function () {
+                //
+                //     if (scope.isReport == true) {
+                //         scope.grouping.forEach(function (group) {
+                //
+                //             if (!group.hasOwnProperty('report_settings') && !group.report_settings) {
+                //                 group.report_settings = {subtotal_type: 'area'};
+                //             } else {
+                //                 if (group.report_settings.subtotal_type == undefined) {
+                //                     group.report_settings.subtotal_type = 'area';
+                //                 }
+                //
+                //             }
+                //
+                //         })
+                //     }
+                //
+                //     scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+                // });
 
                 scope.toggleGroupFold = function () {
                     scope.folding = !scope.folding;
@@ -325,6 +347,15 @@
                     scope.evEventService.addEventListener(evEvents.GROUPS_CHANGE, function () {
 
                         scope.grouping = scope.evDataService.getGroups();
+
+                        scope.evDataService.resetData();
+                        scope.evDataService.resetRequestParameters();
+
+                        var rootGroup = scope.evDataService.getRootGroupData();
+
+                        scope.evDataService.setActiveRequestParametersId(rootGroup.___id);
+
+                        scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE);
 
                     })
 
