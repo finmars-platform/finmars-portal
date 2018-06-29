@@ -6,6 +6,7 @@
     var evDataHelper = require('../../helpers/ev-data.helper');
     var entityViewerDataResolver = require('../entityViewerDataResolver');
     var stringHelper = require('../../helpers/stringHelper');
+    var queryParamsHelper = require('../../helpers/queryParamsHelper');
 
     var detectLevelChange = function (entityViewerDataService, entityViewerEventService) {
 
@@ -59,8 +60,11 @@
 
             if (item.options && item.options.enabled) {
 
-                if (item.options.query) {
-                    newRequestParametersBody[item.key] = item.options.query
+                if (item.options.query && item.options.enabled) {
+
+                    var key = queryParamsHelper.entityPluralToSingular(item.key);
+
+                    newRequestParametersBody[key] = item.options.query
                 }
 
             }

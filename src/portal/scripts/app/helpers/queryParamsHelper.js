@@ -5,6 +5,32 @@
 
     'use strict';
 
+    var entityPluralToSingular = function (key) {
+        switch (key) {
+            case 'instruments':
+                return 'instrument';
+            case 'accounts':
+                return 'account';
+                break;
+            case 'portfolios':
+                return 'portfolio';
+                break;
+            case 'responsibles':
+                return 'responsible';
+                break;
+            case 'counterparties':
+                return 'counterparty';
+                break;
+            case 'tags':
+                return 'tag';
+            case 'content_types':
+                return 'content_type';
+            default:
+                return key;
+                break;
+        }
+    };
+
     var toQueryParamsString = function (params) {
 
         var resultArr = [];
@@ -46,7 +72,8 @@
     };
 
     module.exports = {
-        toQueryParamsString: toQueryParamsString
+        toQueryParamsString: toQueryParamsString,
+        entityPluralToSingular: entityPluralToSingular
     }
 
 }());
