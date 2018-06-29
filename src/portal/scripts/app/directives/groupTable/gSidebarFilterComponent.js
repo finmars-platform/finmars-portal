@@ -175,7 +175,14 @@
                     if (scope.isReport === true) {
                         scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE)
                     } else {
+
                         scope.evDataService.resetData();
+                        scope.evDataService.resetRequestParameters();
+
+                        var rootGroup = scope.evDataService.getRootGroupData();
+
+                        scope.evDataService.setActiveRequestParametersId(rootGroup.___id);
+
                         scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE)
                     }
                 };
