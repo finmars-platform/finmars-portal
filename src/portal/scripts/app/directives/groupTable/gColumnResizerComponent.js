@@ -135,8 +135,8 @@
 
                     var resultWidth = areaWidth + dropNewFieldWidth;
 
-                    console.log('resultWidth', resultWidth);
-                    console.log('scrollableArea', scrollableArea);
+                    // console.log('resultWidth', resultWidth);
+                    // console.log('scrollableArea', scrollableArea);
 
                     var wrapperWidth = $('.ev-viewport').width();
 
