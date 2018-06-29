@@ -300,10 +300,24 @@
 
     var calculateTotalHeight = function (evDataService) {
 
-        var limit = evDataService.getVirtualScrollLimit();
+        var unfoldedGroups = evDataHelper.getUnfoldedGroups(evDataService);
+
+        var count = 0;
+
+        unfoldedGroups.forEach(function (group) {
+
+            count = count + group.count;
+
+        });
+
+        // console.log('calculateTotalHeight.unfoldedGroups', unfoldedGroups);
+        //
+        // console.log('calculateTotalHeight.count', count);
+
+
         var rowHeight = evDataService.getRowHeight();
 
-        return Math.floor(rowHeight * limit);
+        return Math.floor(rowHeight * count);
 
     };
 
