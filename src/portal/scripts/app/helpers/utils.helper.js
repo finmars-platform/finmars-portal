@@ -64,12 +64,6 @@
 
         var index = 0;
 
-        console.log('insertItemInNode.data', data);
-        console.log('insertItemInNode.node', node);
-        console.log('insertItemInNode.group', data[node.___parentId]);
-
-        console.log('node.___id', node.___id);
-
         data[node.___parentId].results.forEach(function (item, i) {
 
             if (item.___id === node.___id) {
@@ -78,9 +72,7 @@
 
         });
 
-
         list[map[node.___parentId]].results[index] = node;
-
 
     }
 
@@ -115,8 +107,6 @@
 
         });
 
-        console.log('convertToTree._data', _data);
-
         var extendedKeys = Object.keys(_data);
 
         extendedKeys.forEach(function (key) {
@@ -145,8 +135,6 @@
                 }
             }
         }
-
-        console.log('list', list);
 
         return roots[0];
 
