@@ -438,32 +438,57 @@
 
         var groups = evDataHelper.getGroupsByLevel(level, entityViewerDataService);
 
-        console.log('sortGroupType.groups', groups);
+        var requestsParameters = entityViewerDataService.getAllRequestParameters();
 
-        var parentId = groups[0].___parentId ? groups[0].___parentId : groups[0].___id; // could be root
+        var requestParametersForUnfoldedGroups = [];
 
-        var parentGroup = entityViewerDataService.getData(parentId);
+        Object.keys(requestsParameters).forEach(function (key) {
 
-        console.log('sortGroupType.parentGroup', parentGroup);
+            groups.forEach(function (group) {
 
-        parentGroup.results = [];
+                if (group.___id === requestsParameters[key].id) {
 
-        entityViewerDataService.setData(parentGroup);
+                    requestsParameters[key].event.___id = group.___id;
+                    requestsParameters[key].event.groupName = group.group_name;
+                    requestsParameters[key].event.parentGroupId = group.___parentId;
 
-        var requestParameters = entityViewerDataService.getRequestParameters(parentId);
+                    requestParametersForUnfoldedGroups.push(requestsParameters[key]);
+                }
 
-        requestParameters.body.groups_order = activeGroupSort.options.sort.toLocaleLowerCase();
 
-        entityViewerDataService.setRequestParameters(requestParameters);
+            })
 
-        console.log('sortGroupType.requestParameters', requestParameters);
+        });
 
-        getGroups(requestParameters, entityViewerDataService, entityViewerDataService).then(function () {
+        requestParametersForUnfoldedGroups.forEach(function (item) {
+
+            item.body.page = 1;
+
+            item.body.groups_order = activeGroupSort.options.sort.toLocaleLowerCase();
+
+            entityViewerDataService.setRequestParameters(item);
+
+        });
+
+        groups.forEach(function (group) {
+
+            group.results = [];
+
+            entityViewerDataService.setData(group)
+
+        });
+
+        var promises = [];
+
+        requestParametersForUnfoldedGroups.forEach(function (requestParameters) {
+
+            promises.push(getGroups(requestParameters, entityViewerDataService, entityViewerEventService))
+
+        });
+
+        Promise.all(promises).then(function () {
 
             entityViewerEventService.dispatchEvent(evEvents.DATA_LOAD_END);
-
-            console.log(entityViewerDataService.getData());
-
 
         });
 
