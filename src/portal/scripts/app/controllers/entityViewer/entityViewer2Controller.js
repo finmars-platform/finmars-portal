@@ -46,11 +46,6 @@
             vm.entityViewerDataService = entityViewerDataService;
             vm.entityViewerEventService = entityViewerEventService;
 
-            entityViewerEventService.addEventListener(evEvents.REDRAW_TABLE, function () {
-
-                evDataProviderService.updateDataStructure(entityViewerDataService, entityViewerEventService);
-
-            });
 
             entityViewerEventService.addEventListener(evEvents.UPDATE_TABLE, function () {
 

@@ -44,6 +44,16 @@
 
                 });
 
+                scope.evEventService.addEventListener(evEvents.REDRAW_TABLE, function () {
+
+                    projection = evDataHelper.getProjection(scope.evDataService);
+
+                    evDomManager.calculateScroll(elements, scope.evDataService);
+
+                    evRenderer.render(contentElem, projection, scope.evDataService, scope.evEventService);
+
+                });
+
                 evDomManager.initEventDelegation(contentElem, scope.evDataService, scope.evEventService);
                 evDomManager.initContextMenuEventDelegation(contentElem, scope.evDataService, scope.evEventService);
 

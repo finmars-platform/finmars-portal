@@ -3,8 +3,8 @@ module.exports = {
     'FILTERS_CHANGE': 'FILTERS_CHANGE',
     'GROUPS_CHANGE': 'GROUPS_CHANGE',
 
-    'UPDATE_TABLE': 'UPDATE_TABLE',
-    'REDRAW_TABLE': 'REDRAW_TABLE',
+    'UPDATE_TABLE': 'UPDATE_TABLE', // async download
+    'REDRAW_TABLE': 'REDRAW_TABLE', // inmemory redraw
 
     'PAGE_CHANGE': 'PAGE_CHANGE',
     'ADDITIONS_CHANGE': 'ADDITIONS_CHANGE',
