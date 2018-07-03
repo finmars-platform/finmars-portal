@@ -11,19 +11,15 @@
 
     function requestGroups(groupHashId, parentGroupHashId, evDataService, evEventService) {
 
-        console.log('Request groups');
-
-        var item = evDataService.getData(groupHashId);
-
         var oldRequestParameters = evDataService.getActiveRequestParameters();
 
         var currentGroupName = evDataHelper.getGroupNameFromParent(groupHashId, parentGroupHashId, evDataService);
-        var currentGroupId = evDataHelper.getGroupIdFromParent(groupHashId, parentGroupHashId, evDataService);
+        var currentGroupId = evDataHelper.getGroupIdFromParent(groupHashId, parentGroupHashId, evDataService); // for classifiers
 
         var event = {
-            groupId: groupHashId,
             parentGroupId: parentGroupHashId,
-            groupName: currentGroupName
+            groupName: currentGroupName,
+            groupId: groupHashId
         };
 
         var newRequestParameters = {
@@ -33,7 +29,7 @@
                 ___id: groupHashId,
                 parentGroupId: parentGroupHashId,
                 groupName: currentGroupName,
-                groupId: currentGroupId
+                groupId: currentGroupId // for classifiers, nullable
             },
             body: {
                 groups_types: evDataHelper.getGroupTypes(groupHashId, parentGroupHashId, evDataService),
@@ -43,11 +39,9 @@
 
         var requestParameters = Object.assign({}, oldRequestParameters, newRequestParameters);
 
-        console.log('requestParameters', requestParameters);
-
         evDataService.setRequestParameters(requestParameters);
         evDataService.setLastClickInfo(event);
-        evDataService.setActiveRequestParametersId(event.groupId);
+        evDataService.setActiveRequestParametersId(requestParameters.id);
 
         evEventService.dispatchEvent(evEvents.UPDATE_TABLE)
 
@@ -102,16 +96,60 @@
 
         console.log('foldChildGroups.childrens', childrens);
 
+        var item;
+
         childrens.forEach(function (children) {
 
-            if (children.results.length) { // only for requested groups
-                children.is_open = false;
-                evDataService.setData(children);
+            if (children.___type === 'group') {
+
+                item = evDataService.getData(children.___id);
+
+                if (item) {
+                    item.is_open = false;
+                    evDataService.setData(item);
+                } else {
+                    children.is_open = false;
+                    evDataService.setData(children);
+                }
+
+
             }
 
         })
 
     }
+
+    var getClickData = function (event) {
+
+        var clickData = {};
+
+        if (event.target.offsetParent.classList.contains('ev-viewport')) {
+
+            clickData.___type = event.target.dataset.type;
+            clickData.___id = event.target.dataset.groupHashId;
+            clickData.___parentId = event.target.dataset.parentGroupHashId;
+
+        }
+
+        if (event.target.offsetParent.classList.contains('g-row')) {
+
+            clickData.___type = event.target.offsetParent.dataset.type;
+            clickData.___id = event.target.offsetParent.dataset.objectId;
+            clickData.___parentId = event.target.offsetParent.dataset.parentGroupHashId;
+
+        }
+
+        if (event.target.classList.contains('ev-fold-button')) {
+            clickData.___type = event.target.parentElement.dataset.type;
+            clickData.___id = event.target.parentElement.dataset.groupHashId;
+            clickData.___parentId = event.target.parentElement.dataset.parentGroupHashId;
+        }
+
+        console.log('getClickData.clickData', clickData);
+
+        return clickData;
+
+    };
 
     var initEventDelegation = function (elem, evDataService, evEventService) {
 
@@ -119,35 +157,13 @@
 
             console.log('event', event);
 
-            var dataType;
-            var objectId;
-            var parentGroupHashId;
+            var clickData = getClickData(event);
 
-            if (event.target.offsetParent.classList.contains('ev-viewport')) {
+            if (clickData.___type === 'group') {
 
-                dataType = event.target.dataset.type;
-                objectId = event.target.dataset.objectId;
-                parentGroupHashId = event.target.dataset.parentGroupHashId;
+                var group = evDataService.getData(clickData.___id);
 
-            } else {
-
-                if (event.target.offsetParent.classList.contains('g-row')) {
-
-                    dataType = event.target.offsetParent.dataset.type;
-                    objectId = event.target.offsetParent.dataset.objectId;
-                    parentGroupHashId = event.target.offsetParent.dataset.parentGroupHashId;
-
-                }
-
-            }
-
-            console.log('dataType', dataType);
-
-            if (dataType === 'group') {
-
-                var groupHashId = event.target.dataset.groupHashId;
-
-                var group = evDataService.getData(groupHashId);
+                console.log('group', group);
 
                 if (group && group.is_open) {
 
@@ -159,11 +175,11 @@
 
                     foldChildGroups(group.___id, evDataService);
 
-                    evEventService.dispatchEvent(evEvents.UPDATE_TABLE)
+                    evEventService.dispatchEvent(evEvents.REDRAW_TABLE)
 
                 } else {
 
-                    var parents = evDataHelper.getParents(parentGroupHashId, evDataService);
+                    var parents = evDataHelper.getParents(clickData.___parentId, evDataService);
                     var groups = evDataService.getGroups();
 
                     if (group) { // initialized only first data request
@@ -178,20 +194,20 @@
 
                     if (parents.length < groups.length) {
 
-                        requestGroups(groupHashId, parentGroupHashId, evDataService, evEventService);
+                        requestGroups(clickData.___id, clickData.___parentId, evDataService, evEventService);
 
                     } else {
 
-                        requestObjects(groupHashId, parentGroupHashId, evDataService, evEventService)
+                        requestObjects(clickData.___id, clickData.___parentId, evDataService, evEventService)
                     }
 
                 }
 
             }
 
-            if (dataType === 'object') {
+            if (clickData.___type === 'object') {
 
-                var obj = evDataHelper.getObject(objectId, parentGroupHashId, evDataService);
+                var obj = evDataHelper.getObject(clickData.___id, clickData.___parentId, evDataService);
 
                 console.log('obj', obj);
 
@@ -344,9 +360,9 @@
 
         });
 
-        // console.log('calculateTotalHeight.unfoldedGroups', unfoldedGroups);
-        //
-        // console.log('calculateTotalHeight.count', count);
+        console.log('calculateTotalHeight.unfoldedGroups', unfoldedGroups);
+
+        console.log('calculateTotalHeight.count', count);
 
 
         var rowHeight = evDataService.getRowHeight();

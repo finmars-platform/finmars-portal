@@ -137,7 +137,7 @@
 
         var item = evDataService.getData(parentGroupId);
 
-        if (item && item.results.length) {
+        if (item && item.___type === 'group' && item.results) {
 
             item.results.forEach(function (child) {
 
@@ -323,7 +323,7 @@
 
         _list = _list.filter(function (item) {
 
-            if (item.___type === 'group' && item.is_open === false) {
+            if (item.___type === 'group' && !item.is_open) {
                 foldedGroupsIds.push(item.___id);
             }
 
@@ -354,6 +354,8 @@
         console.log('getFlatStructure.list', list);
 
         list = removeItemsFromFoldedGroups(list);
+
+        console.log('list', list);
 
         return list;
 

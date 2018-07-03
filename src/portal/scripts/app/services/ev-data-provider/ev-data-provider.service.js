@@ -29,7 +29,7 @@
         // console.log('detectLevelChange.groupData', groupData);
         // console.log('detectLevelChange.groupData', groupData && groupData.___parentId !== null && !groupData.next && groupData.results.lengt);
 
-        if (groupData && groupData.___parentId !== null && !groupData.next && groupData.results.length) {
+        if (groupData && groupData.___parentId !== null && !groupData.next && groupData.results && groupData.results.length) {
 
             var parent = entityViewerDataService.getData(groupData.___parentId);
 
@@ -325,6 +325,8 @@
     };
 
     var updateDataStructure = function (entityViewerDataService, entityViewerEventService) {
+
+        console.log(entityViewerDataService.getData())
 
         detectLevelChange(entityViewerDataService, entityViewerEventService);
         injectRegularFilters(entityViewerDataService, entityViewerEventService);
