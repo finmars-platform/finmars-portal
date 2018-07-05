@@ -9,6 +9,11 @@
             }
 
             if (typeof obj[column.key] === 'number') {
+
+                if (obj[column.key + '_object'] && obj[column.key + '_object'].user_code) {
+                    return obj[column.key + '_object'].user_code;
+                }
+
                 return obj[column.key]
             }
 

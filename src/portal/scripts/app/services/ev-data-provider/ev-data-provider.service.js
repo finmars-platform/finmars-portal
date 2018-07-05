@@ -442,7 +442,9 @@
 
         console.log('sortGroupType.level', level);
 
-        var groups = evDataHelper.getGroupsByLevel(level, entityViewerDataService);
+        var parentLevel = level - 1;
+
+        var groups = evDataHelper.getGroupsByLevel(parentLevel , entityViewerDataService);
 
         var requestsParameters = entityViewerDataService.getAllRequestParameters();
 
