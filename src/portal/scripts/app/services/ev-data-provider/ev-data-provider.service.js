@@ -434,17 +434,22 @@
 
         groupsTypes.forEach(function (item, index) {
 
-            if (item.key === activeGroupSort.key || item.id === activeGroupSort.id) {
+            if (activeGroupSort.key && item.key === activeGroupSort.key) {
                 level = index;
+
+            } else {
+
+                if (activeGroupSort.id && item.id === activeGroupSort.id) {
+                    level = index;
+                }
+
             }
 
         });
 
         console.log('sortGroupType.level', level);
 
-        var parentLevel = level - 1;
-
-        var groups = evDataHelper.getGroupsByLevel(parentLevel , entityViewerDataService);
+        var groups = evDataHelper.getGroupsByLevel(level, entityViewerDataService);
 
         var requestsParameters = entityViewerDataService.getAllRequestParameters();
 
