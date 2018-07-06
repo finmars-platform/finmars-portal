@@ -55,8 +55,8 @@
                             additionsBox.height(spaceLeft - mouseMoveY + 88 - 15);
                             additionsBoxTableSection.height(spaceLeft - mouseMoveY + 88);
                             additionsBoxSidebarBox.height(spaceLeft - mouseMoveY + 88);
-                            $('.g-workarea.main-area .group-table-body').first().height(mouseMoveY - $('.header').height() - $('.g-columns-component.g-thead').height() - 88);
-                            $('.g-additions-workarea .group-table-body').last().height($(window).height() - mouseMoveY - $('.g-additions-workarea .g-columns-component.g-thead').height());
+                            // $('.g-workarea.main-area .group-table-body').first().height(mouseMoveY - $('.header').height() - $('.g-columns-component.g-thead').height() - 88);
+                            // $('.g-additions-workarea .group-table-body').last().height($(window).height() - mouseMoveY - $('.g-additions-workarea .g-columns-component.g-thead').height());
                             mainAreaBox.height(mouseMoveY - headerBoxHeight - 88);
                             if (groupingSectionBoxHeight < (mouseMoveY + groupingSectionBoxHeight - headerBoxHeight - 88)) {
                                 mainAreaSidebarBox.height(mouseMoveY + groupingSectionBoxHeight - headerBoxHeight - 88);
@@ -77,7 +77,7 @@
 
                     var upperFilterSidebar = $(elem).find('.g-filter-sidebar').first();
                     var upperTableSection = $(elem).find('.g-table-section').first();
-                    var upperGroupTableBody = $(elem).find('.group-table-body').first();
+                    // var upperGroupTableBody = $(elem).find('.group-table-body').first();
                     var upperGroupSection = $(elem).find('.g-grouping-section').first();
 
                     workAreaHeight = $(elem).parents('.entity-viewer-holder').height();
@@ -86,7 +86,7 @@
                     upperFilterSidebar.height(workAreaHeight);
                     upperTableSection.height(workAreaWithoutGrouping);
 
-                    upperGroupTableBody.height(workAreaWithoutGrouping - 76);
+                    // upperGroupTableBody.height(workAreaWithoutGrouping - 76);
 
                 }
 
