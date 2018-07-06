@@ -746,7 +746,9 @@
 
                     //console.log('scope.options.reportIsReady', scope.options.reportIsReady);
 
-                    if (scope.isReport && scope.evDataService.getStatusData() !== 'loaded' && scope.evDataService.getStatusData() !== 'loading') {
+                    var status = scope.evDataService.getStatusData();
+
+                    if (scope.isReport && status === 'loaded') {
                         return true;
                     }
 
@@ -757,7 +759,7 @@
                     if (scope.readyStatus.cellsFirstReady &&
                         scope.readyStatus.cellsSecondReady &&
                         scope.readyStatus.classifiersReady &&
-                        scope.evDataService.getStatusData() === 'loaded' &&
+                        status === 'loaded' &&
                         scope.readyStatus.attributeTypesReady) {
 
                         return true;
