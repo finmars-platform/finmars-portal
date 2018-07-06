@@ -7,8 +7,9 @@
                                 ev-event-service="evEventService"></group-grouping>
             </div>
             <div class="g-table-section">
-                <div data-custom-scroll class="custom-scrollbar" data-scroll-y="false">
-                    <div class="g-table-wrap" data-group-column-resizer data-options="options" ev-data-service="evDataService"
+                <div>
+                    <div class="g-table-wrap" data-group-column-resizer data-options="options"
+                         ev-data-service="evDataService"
                          ev-event-service="evEventService">
                         <group-columns options="options"
                                        items="items"
@@ -53,7 +54,7 @@
             <div data-ng-include="'views/entity-viewer/entity-viewer-view.html'" class="min-height"></div>
         </div>
         <!--<div class="g-extra-features" data-ng-if="findSelectedFeature().isOpened">-->
-            <!--<div data-ng-include="{{findSelectedFeature().templateUrl}}"></div>-->
+        <!--<div data-ng-include="{{findSelectedFeature().templateUrl}}"></div>-->
         <!--</div>-->
     </div>
 </div>

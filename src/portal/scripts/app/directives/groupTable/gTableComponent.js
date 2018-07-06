@@ -23,6 +23,7 @@
                 scope.additions = scope.evDataService.getAdditions();
                 scope.components = scope.evDataService.getComponents();
                 scope.editorEntityId = scope.evDataService.getEditorEntityId();
+                scope.entityType = scope.evDataService.getEntityType();
 
                 scope.findSelectedFeature = function () {
                     // var selected = {isOpened: false, templateUrl: ''};
@@ -69,6 +70,11 @@
                 scope.evEventService.addEventListener(evEvents.ADDITIONS_EDITOR_ENTITY_ID_CHANGE, function () {
 
                     scope.editorEntityId = scope.evDataService.getEditorEntityId();
+
+                    scope.$broadcast('rootEditorEntityIdDown', {
+                        editorEntityId: scope.editorEntityId,
+                        entityType: scope.entityType
+                    });
 
                 });
 

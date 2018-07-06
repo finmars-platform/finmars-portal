@@ -8,6 +8,7 @@
     var evEvents = require('../../services/entityViewerEvents');
     var evRenderer = require('../../services/ev-renderer/ev.renderer');
     var evDomManager = require('../../services/ev-dom-manager/ev-dom.manager');
+    var evDataHelper = require('../../helpers/ev-data.helper');
 
     module.exports = function ($mdDialog) {
         return {
@@ -16,39 +17,47 @@
                 evDataService: '=',
                 evEventService: '='
             },
-            template: '<div><div class="ev-scroll-top"></div>' +
+            template: '<div>' +
             '<div class="ev-viewport">' +
             '<div class="ev-content"></div>' +
             '</div>' +
-            '<div class="ev-scroll-bottom"></div>' +
             '</div>',
-            link: function (scope, elem, attrs) {
-
-                var vm = this;
-
-                vm.groups = scope.evDataService.getGroups();
-                vm.columns = scope.evDataService.getColumns();
-
+            link: function (scope, elem) {
 
                 var viewportElem = elem[0].querySelector('.ev-viewport');
                 var contentElem = elem[0].querySelector('.ev-content');
-                var scrollTopElem = elem[0].querySelector('.ev-scroll-top');
-                var scrollBottomElem = elem[0].querySelector('.ev-scroll-bottom');
+
+                var elements = {
+                    viewportElem: viewportElem,
+                    contentElem: contentElem
+                };
+
+                var projection;
 
                 scope.evEventService.addEventListener(evEvents.DATA_LOAD_END, function () {
 
-                    vm.data = scope.evDataService.getData();
+                    projection = evDataHelper.getProjection(scope.evDataService);
 
-                    console.log('vm.data', vm.data);
-                    console.log('evRenderer', evRenderer);
+                    evDomManager.calculateScroll(elements, scope.evDataService);
 
-                    evDomManager.calculateScroll(viewportElem, scrollTopElem, scrollBottomElem, scope.evDataService);
-                    evRenderer.render(contentElem, vm.data.results);
+                    evRenderer.render(contentElem, projection, scope.evDataService, scope.evEventService);
+
+                });
+
+                scope.evEventService.addEventListener(evEvents.REDRAW_TABLE, function () {
+
+                    projection = evDataHelper.getProjection(scope.evDataService);
+
+                    evDomManager.calculateScroll(elements, scope.evDataService);
+
+                    evRenderer.render(contentElem, projection, scope.evDataService, scope.evEventService);
 
                 });
 
                 evDomManager.initEventDelegation(contentElem, scope.evDataService, scope.evEventService);
-                evDomManager.calculateScroll(viewportElem, scrollTopElem, scrollBottomElem, scope.evDataService);
+                evDomManager.initContextMenuEventDelegation(contentElem, scope.evDataService, scope.evEventService);
+
+                evDomManager.addScrollListener(elements, scope.evDataService, scope.evEventService);
 
             }
         }

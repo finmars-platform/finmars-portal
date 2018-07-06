@@ -5,6 +5,32 @@
 
     'use strict';
 
+    var entityPluralToSingular = function (key) {
+        switch (key) {
+            case 'instruments':
+                return 'instrument';
+            case 'accounts':
+                return 'account';
+                break;
+            case 'portfolios':
+                return 'portfolio';
+                break;
+            case 'responsibles':
+                return 'responsible';
+                break;
+            case 'counterparties':
+                return 'counterparty';
+                break;
+            case 'tags':
+                return 'tag';
+            case 'content_types':
+                return 'content_type';
+            default:
+                return key;
+                break;
+        }
+    };
+
     var toQueryParamsString = function (params) {
 
         var resultArr = [];
@@ -20,17 +46,21 @@
 
             values = params[keys[i]];
 
-            valuesLen = values.length;
-
-            if (typeof values === 'string') {
+            if (typeof values === 'string' || typeof values === 'number') {
 
                 resultArr.push(keys[i] + '=' + values)
 
             } else {
 
-                for (x = 0; x < valuesLen; x = x + 1) {
+                if (values) {
 
-                    resultArr.push(keys[i] + '=' + values[x])
+                    valuesLen = values.length;
+
+                    for (x = 0; x < valuesLen; x = x + 1) {
+
+                        resultArr.push(keys[i] + '=' + values[x])
+
+                    }
 
                 }
             }
@@ -42,7 +72,8 @@
     };
 
     module.exports = {
-        toQueryParamsString: toQueryParamsString
+        toQueryParamsString: toQueryParamsString,
+        entityPluralToSingular: entityPluralToSingular
     }
 
 }());

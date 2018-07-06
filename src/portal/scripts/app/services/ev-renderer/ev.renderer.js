@@ -3,20 +3,38 @@
     'use strict';
 
     var groupRender = require('./group.renderer');
+    var objectRender = require('./object.renderer');
+    var evEvents = require('../../services/entityViewerEvents');
 
-    var render = function (elem, items) {
+    var render = function (elem, projection, evDataService, evEventService) {
 
-        var rows = items.map(function (item) {
+        console.log('render.projection.length', projection.length);
 
-            return groupRender.render(item);
+        console.time("Rendering projection");
+
+        var columns = evDataService.getColumns();
+
+        var rows = projection.map(function (item) {
+
+
+            if (item.___type === 'group') {
+
+                return groupRender.render(item);
+
+            }
+
+            if (item.___type === 'object') {
+
+                return objectRender.render(item, columns);
+            }
 
         });
 
-        console.log('elem', {elem: elem});
-        console.log('rows', rows);
-
         elem.innerHTML = rows.join('');
 
+        console.timeEnd("Rendering projection");
+
+        evEventService.dispatchEvent(evEvents.UPDATE_COLUMNS_SIZE);
 
     };
 
