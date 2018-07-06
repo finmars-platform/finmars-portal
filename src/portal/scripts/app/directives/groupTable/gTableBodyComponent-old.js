@@ -612,6 +612,8 @@
 
                 function syncGroupsAndColumns() {
 
+                    console.log('syncGroupsAndColumns');
+
                     var promises = [];
 
                     promises.push(getFieldDisplayNamesArray());
@@ -738,6 +740,9 @@
                 };
 
                 scope.checkReady = function () {
+
+                    // console.log('scope.readyStatus', scope.readyStatus);
+                    // console.log('scope.evDataService.getStatusData()s', scope.evDataService.getStatusData());
 
                     //console.log('scope.options.reportIsReady', scope.options.reportIsReady);
 
@@ -1341,7 +1346,13 @@
 
                 };
 
-                scope.evEventService.addEventListener(evEvents.DATA_LOAD_END, function () {
+                console.log('ABLE BODY OL evEventService', scope.evEventService);
+
+                scope.updateState = function () {
+
+                    syncGroupsAndColumns();
+
+                    console.log('TABLE BODY OLD HERE??????');
 
                     scope.items = scope.evDataService.getProjection();
 
@@ -1349,6 +1360,20 @@
 
                         scope.reportItems = groupTableReportService.transformItems(scope.items);
                     }
+
+                };
+
+                scope.init = function () {
+
+                    scope.updateState();
+
+                };
+
+                scope.init();
+
+                scope.evEventService.addEventListener(evEvents.DATA_LOAD_END, function () {
+
+                    scope.updateState();
 
                 });
 
