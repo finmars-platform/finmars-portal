@@ -1,7 +1,7 @@
 (function () {
 
     var getValue = function (obj, column) {
-
+        
         if (obj[column.key]) {
 
             if (typeof obj[column.key] === 'string') {
