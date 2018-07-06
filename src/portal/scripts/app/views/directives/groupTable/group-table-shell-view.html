@@ -16,11 +16,21 @@
                                        ev-data-service="evDataService"
                                        ev-event-service="evEventService"
                         ></group-columns>
+
                         <group-table-body class="group-table-body"
+                                          data-ng-if="entityType == 'portfolio' || entityType == 'account'"
                                           options="options"
                                           ev-data-service="evDataService"
                                           ev-event-service="evEventService"
                         ></group-table-body>
+
+                        <group-table-body-old class="group-table-body"
+                                              data-ng-if="entityType !== 'portfolio' && entityType !== 'account'"
+                                              options="options"
+                                              ev-data-service="evDataService"
+                                              ev-event-service="evEventService"
+                        ></group-table-body-old>
+
                     </div>
                 </div>
             </div>
