@@ -2,23 +2,15 @@
 
     'use strict';
 
-    var evDataHelper = require('../../helpers/ev-data.helper');
-    var evEvents = require('../../services/entityViewerEvents');
-
-    var ROW_HEIGHT = 24;
-
     module.exports = function () {
 
         var viewportElem;
         var viewportHeight;
         var viewportWidth;
 
-        var scrollTopElem;
-        var scrollTopElemHeight;
-
-        var scrollBottomElem;
-        var scrollBottomElemHeight;
-
+        var contentElem;
+        var contentElemHeight;
+        var contentElemPaddingTop;
 
         function setViewportElem(elem) {
             viewportElem = elem
@@ -29,6 +21,7 @@
         }
 
         function setViewportHeight(height) {
+
             viewportHeight = height;
             viewportElem.style.height = height + 'px';
         }
@@ -39,49 +32,44 @@
 
         function setViewportWidth(width) {
             viewportWidth = width;
-            viewportElem.style.height = width + 'px';
+            viewportElem.style.width = width + 'px';
         }
 
         function getViewportWidth() {
             return viewportWidth;
         }
 
-        function setScrollTopElem(elem) {
-            scrollTopElem = elem
+        function setContentElem(elem) {
+            contentElem = elem
         }
 
-        function getScrollTopElem() {
-            return scrollTopElem;
+        function getContentElem() {
+            return contentElem
         }
 
-        function setScrollTopElemHeight(height) {
-            scrollTopElemHeight = height;
-            scrollTopElem.style.height = height + 'px';
+        function setContentElemHeight(height) {
+
+            contentElemHeight = height;
+            contentElem.style.height = height + 'px';
         }
 
-        function getScrollTopElemHeight() {
-            return scrollTopElemHeight;
+        function getContentElemHeight() {
+            return contentElemHeight;
         }
 
-        function setScrollBottomElem(elem) {
-            scrollBottomElem = elem
+        function setContentElemPaddingTop(padding) {
+
+            contentElemPaddingTop = padding;
+            contentElem.style.paddingTop = padding + 'px';
         }
 
-        function getScrollBottomElem() {
-            return scrollBottomElem;
+        function getContentElemPaddingTop() {
+            return contentElemPaddingTop;
         }
-
-        function setScrollBottomElemHeight(height) {
-            scrollBottomElem = height;
-            scrollBottomElemHeight.style.height = height + 'px';
-        }
-
-        function getScrollBottomElemHeight() {
-            return scrollBottomElemHeight;
-        }
-
 
         return {
+
+            // viewport elem
 
             setViewportElem: setViewportElem,
             getViewportElem: getViewportElem,
@@ -91,18 +79,19 @@
 
             setViewportWidth: setViewportWidth,
             getViewportWidth: getViewportWidth,
-            
-            setScrollTopElem: setScrollTopElem,
-            getScrollTopElem: getScrollTopElem,
 
-            setScrollTopElemHeight: setScrollTopElemHeight,
-            getScrollTopElemHeight: getScrollTopElemHeight,
 
-            setScrollBottomElem: setScrollBottomElem,
-            getScrollBottomElem: getScrollBottomElem,
+            // content elem
 
-            setScrollBottomElemHeight: setScrollBottomElemHeight,
-            getScrollBottomElemHeight: getScrollBottomElemHeight
+            setContentElem: setContentElem,
+            getContentElem: getContentElem,
+
+            setContentElemHeight: setContentElemHeight,
+            getContentElemHeight: getContentElemHeight,
+
+            setContentElemPaddingTop: setContentElemPaddingTop,
+            getContentElemPaddingTop: getContentElemPaddingTop
+
 
         }
 

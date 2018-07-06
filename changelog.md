@@ -1,5 +1,9 @@
 # Changelog
 
+## 06.07.2018
+
+- First version of Entity Viewer 2.0
+
 ## 08.06.2018
 
 - Build date label at sidenav

@@ -44,27 +44,42 @@
                     }
                     group.options.sort = sort;
 
-                    if (group.hasOwnProperty('columnType') && group.columnType == 'custom-field') {
-                        scope.sorting.group = {};
-                        scope.sorting.group.id = null;
-                        scope.sorting.group.key = group.name;
-                        scope.sorting.group.sort = sort;
-                    } else {
 
-                        if (group.hasOwnProperty('id')) {
-                            scope.sorting.group = {};
-                            scope.sorting.group.id = group.id;
-                            scope.sorting.group.key = null;
-                            scope.sorting.group.sort = sort;
-                        } else {
-                            scope.sorting.group = {};
-                            scope.sorting.group.id = null;
-                            scope.sorting.group.key = group.key;
-                            scope.sorting.group.sort = sort;
+                    // if (group.hasOwnProperty('columnType') && group.columnType == 'custom-field') {
+                    //     scope.sorting.group = {};
+                    //     scope.sorting.group.id = null;
+                    //     scope.sorting.group.key = group.name;
+                    //     scope.sorting.group.sort = sort;
+                    // } else {
+                    //
+                    //     if (group.hasOwnProperty('id')) {
+                    //         scope.sorting.group = {};
+                    //         scope.sorting.group.id = group.id;
+                    //         scope.sorting.group.key = null;
+                    //         scope.sorting.group.sort = sort;
+                    //     } else {
+                    //         scope.sorting.group = {};
+                    //         scope.sorting.group.id = null;
+                    //         scope.sorting.group.key = group.key;
+                    //         scope.sorting.group.sort = sort;
+                    //     }
+                    // }
+
+
+                    var groups = scope.evDataService.getGroups();
+
+                    groups.forEach(function (item) {
+
+                        if (group.key === item.key || group.id === item.id) {
+                            item = group
                         }
-                    }
 
-                    scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+                    });
+
+                    scope.evDataService.setGroups(groups);
+                    scope.evDataService.setActiveGroupTypeSort(group);
+
+                    scope.evEventService.dispatchEvent(evEvents.GROUP_TYPE_SORT_CHANGE);
                 };
 
                 scope.openGroupSettings = function ($mdOpenMenu, ev) {
@@ -332,6 +347,15 @@
                     scope.evEventService.addEventListener(evEvents.GROUPS_CHANGE, function () {
 
                         scope.grouping = scope.evDataService.getGroups();
+
+                        scope.evDataService.resetData();
+                        scope.evDataService.resetRequestParameters();
+
+                        var rootGroup = scope.evDataService.getRootGroupData();
+
+                        scope.evDataService.setActiveRequestParametersId(rootGroup.___id);
+
+                        scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE);
 
                     })
 

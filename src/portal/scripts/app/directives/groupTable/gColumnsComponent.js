@@ -77,17 +77,31 @@
                     }
                     column.options.sort = sort;
 
-                    if (column.hasOwnProperty('id')) {
-                        scope.sorting.column.id = column.id;
-                        scope.sorting.column.key = null;
-                        scope.sorting.column.sort = sort;
-                    } else {
-                        scope.sorting.column.id = null;
-                        scope.sorting.column.key = column.key;
-                        scope.sorting.column.sort = sort;
-                    }
+                    // if (column.hasOwnProperty('id')) {
+                    //     scope.sorting.column.id = column.id;
+                    //     scope.sorting.column.key = null;
+                    //     scope.sorting.column.sort = sort;
+                    // } else {
+                    //     scope.sorting.column.id = null;
+                    //     scope.sorting.column.key = column.key;
+                    //     scope.sorting.column.sort = sort;
+                    // }
 
-                    scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+                    var columns = scope.evDataService.getColumns();
+
+                    columns.forEach(function (item) {
+
+                        if (column.key === item.key || column.id === item.id) {
+                            item = column
+                        }
+
+                    });
+
+                    scope.evDataService.setActiveColumnSort(column);
+
+                    scope.evDataService.setColumns(columns);
+
+                    scope.evEventService.dispatchEvent(evEvents.COLUMN_SORT_CHANGE);
                 };
 
                 scope.selectSubtotalType = function (column, type) {

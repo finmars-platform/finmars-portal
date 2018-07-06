@@ -25,11 +25,12 @@
         var uiService = require('../../services/uiService');
         var evEvents = require('../../services/entityViewerEvents');
 
-        var groupsService = require('../../services/ev-data-provider/groups.service');
 
         var EntityViewerDataService = require('../../services/entityViewerDataService');
         var EntityViewerEventService = require('../../services/entityViewerEventService');
         var evDataHelper = require('../../helpers/ev-data.helper');
+        var evDataProviderService = require('../../services/ev-data-provider/ev-data-provider.service');
+
 
         module.exports = function ($scope, $mdDialog) {
 
@@ -45,30 +46,71 @@
             vm.entityViewerDataService = entityViewerDataService;
             vm.entityViewerEventService = entityViewerEventService;
 
-            entityViewerEventService.addEventListener(evEvents.REDRAW_TABLE, function () {
-
-                var requestParameters = entityViewerDataService.getRequestParameters();
-
-                if (requestParameters.requestType === 'objects') {
-                    vm.getObjects();
-                }
-
-                if (requestParameters.requestType === 'groups') {
-                    vm.getGroups();
-                }
-
-            });
 
             entityViewerEventService.addEventListener(evEvents.UPDATE_TABLE, function () {
 
-                var requestParameters = entityViewerDataService.getRequestParameters();
+                evDataProviderService.updateDataStructure(entityViewerDataService, entityViewerEventService);
 
-                if (requestParameters.requestType === 'objects') {
-                    vm.getObjects();
+            });
+
+            entityViewerEventService.addEventListener(evEvents.COLUMN_SORT_CHANGE, function () {
+
+                evDataProviderService.sortObjects(entityViewerDataService, entityViewerEventService);
+
+            });
+
+            entityViewerEventService.addEventListener(evEvents.GROUP_TYPE_SORT_CHANGE, function () {
+
+                evDataProviderService.sortGroupType(entityViewerDataService, entityViewerEventService);
+
+            });
+
+            entityViewerEventService.addEventListener(evEvents.ACTIVE_OBJECT_CHANGE, function () {
+
+                var activeObject = entityViewerDataService.getActiveObject();
+
+                if (activeObject.action === 'delete') {
+
+                    $mdDialog.show({
+                        controller: 'EntityViewerDeleteDialogController as vm',
+                        templateUrl: 'views/entity-viewer/entity-viewer-entity-delete-dialog-view.html',
+                        parent: angular.element(document.body),
+                        targetEvent: activeObject.event,
+                        //clickOutsideToClose: true,
+                        locals: {
+                            entity: {
+                                id: activeObject.id,
+                                name: activeObject.name
+                            },
+                            entityType: vm.entityType
+                        }
+                    }).then(function (res) {
+                        if (res.status === 'agree') {
+                            scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE);
+                        }
+                    })
+
+
                 }
 
-                if (requestParameters.requestType === 'groups') {
-                    vm.getGroups();
+                if (activeObject.action === 'edit') {
+
+                    $mdDialog.show({
+                        controller: 'EntityViewerEditDialogController as vm',
+                        templateUrl: 'views/entity-viewer/entity-viewer-dialog-view.html',
+                        parent: angular.element(document.body),
+                        targetEvent: activeObject.event,
+                        //clickOutsideToClose: true,
+                        locals: {
+                            entityType: vm.entityType,
+                            entityId: activeObject.id
+                        }
+                    }).then(function (res) {
+                        if (res && res.res === 'agree') {
+                            scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE);
+                        }
+                    });
+
                 }
 
             });
@@ -125,6 +167,8 @@
                     };
 
                     entityViewerDataService.setComponents(vm.options.components);
+                    entityViewerDataService.setEditorTemplateUrl('views/additions-editor-view.html');
+                    entityViewerDataService.setRootEntityViewer(true);
 
                     if (vm.options.components.layoutManager === true) {
                         vm.saveLayoutAsManager();
@@ -135,106 +179,11 @@
 
                     console.log('vm', vm);
 
-                    vm.getGroups();
+                    evDataProviderService.updateDataStructure(entityViewerDataService, entityViewerEventService);
 
                     $scope.$apply()
 
                 });
-
-            };
-
-            vm.getObjects = function () {
-
-                var requestParameters = entityViewerDataService.getRequestParameters();
-
-                var options = requestParameters.body;
-
-                entityViewerDataResolver.getList(vm.entityType, options).then(function (data) {
-                    console.log('data');
-                })
-
-            };
-
-            vm.getGroups = function () {
-
-                var requestParameters = entityViewerDataService.getRequestParameters();
-
-                var options = requestParameters.body;
-                var event = requestParameters.event;
-
-                console.log('options', options);
-
-                groupsService.getList(vm.entityType, options).then(function (data) {
-
-                    console.log('data', data);
-
-                    if (data.status !== 404) {
-
-                        var obj = {};
-
-                        if (!event.groupId) {
-
-                            var rootHash = stringHelper.toHash('root');
-
-                            var rootGroupData = entityViewerDataService.getData(rootHash);
-
-                            if (rootGroupData) {
-
-                                obj = Object.assign({}, rootGroupData);
-
-                                obj.count = data.count;
-                                obj.next = data.next;
-                                obj.previous = data.previous;
-                                obj.results = obj.results.concat(data.results);
-
-                            } else {
-
-                                obj = Object.assign({}, data);
-                                obj.group_name = 'root';
-                                obj.is_open = true;
-                                obj.___id = rootHash;
-                                obj.___parentId = null;
-                                obj.___type = 'group';
-
-                            }
-
-                        } else {
-
-                            var groupData = entityViewerDataService.getData(event.groupId);
-
-                            if (groupData) {
-
-                                obj = Object.assign({}, groupData);
-
-                                obj.count = data.count;
-                                obj.next = data.next;
-                                obj.previous = data.previous;
-                                obj.results = obj.results.concat(data.results);
-
-                            } else {
-
-                                obj = Object.assign({}, data);
-                                obj.group_name = event.groupName;
-                                obj.is_open = true;
-
-                                obj.___parentId = event.parentGroupId;
-                                obj.___type = 'group';
-                                obj.___id = evDataHelper.getGroupId(event.groupId)
-                            }
-                        }
-
-                        obj.results = obj.results.map(function (item) {
-                            item.___parentId = obj.___id;
-                            item.___id = evDataHelper.getGroupId(item);
-                            return item
-                        });
-
-                        entityViewerDataService.setData(obj);
-                        entityViewerEventService.dispatchEvent(evEvents.DATA_LOAD_END);
-
-                    }
-
-                })
 
             };
 
