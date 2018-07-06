@@ -187,6 +187,10 @@
 
             };
 
+            vm.checkAddEntityBtn = function () {
+                return vm.options.components && vm.options.components.addEntityBtn;
+            };
+
             vm.addEntity = function (ev) {
 
                 $mdDialog.show({
