@@ -57,7 +57,7 @@
         obj.previous = null;
         obj.results = [];
         obj.group_name = 'root';
-        obj.is_open = true;
+        obj.___is_open = true;
         obj.___id = rootHash;
         obj.___parentId = null;
         obj.___type = 'group';
@@ -83,6 +83,7 @@
             status: {
                 data: null
             },
+            allRowsSelected: false,
             rootEntityViewer: false,
             additions: {},
             report: {},
@@ -218,6 +219,14 @@
             return data.status.data;
         }
 
+        function getSelectAllRowsState() {
+            return data.allRowsSelected;
+        }
+
+        function setSelectAllRowsState(state) {
+            data.allRowsSelected = state;
+        }
+
         function setProjection(projection) {
             data.projection = projection
         }
@@ -233,6 +242,51 @@
             data.data[obj.___id] = obj
         }
 
+        function setAllData(data) {
+            data.data = data;
+        }
+
+        function setObject(obj) {
+
+            console.log('setData.obj', obj);
+
+            if (data.data[obj.___parentId] && data.data[obj.___parentId].results && data.data[obj.___parentId].results.length) {
+
+                data.data[obj.___parentId].results.forEach(function (item, index) {
+
+                    if (item.___id === obj.___id) {
+                        item = obj;
+                    }
+
+                })
+
+            } else {
+                throw Error('Trying to set not existing object')
+            }
+
+        }
+
+        function getObject(objectId, parentId) {
+
+            if (data.data[parentId] && data.data[parentId].results && data.data[parentId].results.length) {
+
+                var result;
+
+                data.data[parentId].results.forEach(function (item) {
+
+                    if (item.___id === objectId) {
+                        result = item
+                    }
+
+                });
+
+                return result;
+
+            } else {
+                throw Error('Object is not exist')
+            }
+        }
+
         function getData(hashId) {
 
             if (hashId) {
@@ -240,6 +294,22 @@
             }
 
             return data.data;
+        }
+
+        function getDataAsList() {
+
+            var keys = Object.keys(data.data);
+
+            var result = [];
+            var i;
+            var keysLen = keys.length;
+
+            for (i = 0; i < keysLen; i = i + 1) {
+                result[i] = data.data[keys[i]]
+            }
+
+            return result;
+
         }
 
         function resetData() {
@@ -359,6 +429,17 @@
             data.activeObject = obj
         }
 
+        function clearActiveObject() {
+
+            var activeObject = getActiveObject();
+
+            if (activeObject) {
+                activeObject.___is_activated = false;
+                setObject(activeObject);
+            }
+
+        }
+
         function setActiveColumnSort(column) {
             data.activeColumnSort = column;
         }
@@ -464,9 +545,17 @@
             setProjection: setProjection,
             getProjection: getProjection,
 
+            getSelectAllRowsState: getSelectAllRowsState,
+            setSelectAllRowsState: setSelectAllRowsState,
+
             setData: setData,
+            setAllData: setAllData,
             resetData: resetData,
             getData: getData,
+            getDataAsList: getDataAsList,
+
+            setObject: setObject,
+            getObject: getObject,
 
             getRootGroupData: getRootGroupData,
 
@@ -484,6 +573,7 @@
 
             setActiveObject: setActiveObject,
             getActiveObject: getActiveObject,
+            clearActiveObject: clearActiveObject,
 
             getRowHeight: getRowHeight,
             getRequestThreshold: getRequestThreshold,

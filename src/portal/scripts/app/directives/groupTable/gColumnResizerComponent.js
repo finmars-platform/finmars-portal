@@ -19,7 +19,7 @@
             },
             link: function (scope, elem, attr) {
 
-                var evContent = elem.find('.ev-content');
+                var evContent = elem[0].querySelector('.ev-content');
                 var scrollableArea = $(elem).find('.g-scrollable-area');
                 var scrollWrapper = $(elem).find('.g-scroll-wrapper');
 
@@ -147,6 +147,11 @@
                     }
 
                     $(scrollableArea).width(resultWidth);
+
+                    if (!evContent) {
+                        evContent = elem[0].querySelector('.ev-content');
+                    }
+
                     $(evContent).width(resultWidth + buttonSelectAllWidth);
 
 

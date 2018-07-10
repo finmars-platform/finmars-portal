@@ -6,76 +6,121 @@
     'use strict';
 
     var logService = require('../../../../../core/services/logService');
+    var evDataHelper = require('../../helpers/ev-data.helper');
 
     module.exports = function () {
         return {
             restrict: 'A',
             scope: {
-                items: '=',
-                columns: '='
+                evDataService: '=',
+                evEventService: '='
             },
             link: function (scope, elem, attrs) {
 
-                var handler = function (e) {
+                var handler = function (event) {
 
-                    if (e) {
+                    console.log('event', event);
+                    console.log('evDataService', scope.evDataService);
+                    console.log('evEventService', scope.evEventService);
 
-                        var copiedItems = [];
+                    console.time('Copying to buffer');
 
-                        scope.items.forEach(function (item) {
-                            //console.log('item', item);
-                            if (item.hasOwnProperty('groups')) {
-                                if (item.selectedRow === true) {
-                                    copiedItems.push({type: 'group', data: item.groups});
-                                }
-                                item.items.forEach(function (row) {
-                                    //console.log('row', row);
-                                    if (row.selectedRow === true) {
-                                        copiedItems.push(row);
-                                    }
-                                })
-                            } else {
-                                if (item.selectedRow === true) {
-                                    copiedItems.push(item);
-                                }
-                            }
+                    var items = evDataHelper.getProjection(scope.evDataService).filter(function (item) {
+                        return item.___is_selected;
+                    });
+
+                    var columns = scope.evDataService.getColumns();
+
+                    if (items.length) {
+                        //console.log(copiedItems);
+
+                        var result = '<table>';
+
+                        var row = '<tr>';
+
+                        columns.forEach(function (column) {
+                            row = row + '<td>' + column.name + '</td>';
                         });
 
-                        if (copiedItems.length) {
-                            //console.log(copiedItems);
+                        row = row + '</tr>';
+                        result = result + row;
 
-                            var result = '<table>';
-                            copiedItems.forEach(function (item) {
-                                var row = '<tr>';
+                        items.forEach(function (item) {
+                            row = '<tr>';
 
-                                if (item.hasOwnProperty('type')) {
-                                    row = row + '<td>' + item.data.map(function (item) {
-                                            return item.value
-                                        }).join(' ') + '</td>';
+                            columns.forEach(function (column) {
+                                if (column.hasOwnProperty('key')) {
+                                    if (item[column.key]) {
+                                        row = row + '<td>' + item[column.key] + '</td>';
+                                    } else {
+                                        row = row + '<td></td>';
+                                    }
                                 } else {
-                                    scope.columns.forEach(function (column) {
-                                        if (column.hasOwnProperty('key')) {
-                                            row = row + '<td>' + item[column.key] + '</td>';
-                                        } else {
-                                            row = row + '<td>' + item[column.name] + '</td>';
+
+                                    item.attributes.forEach(function (attr) {
+
+                                        if (attr.attribute_type_object.id === column.id) {
+
+                                            if (attr.attribute_type_object.value_type === 10) {
+
+                                                if (attr.value_string) {
+                                                    row = row + '<td>' + attr.value_string + '</td>';
+                                                } else {
+                                                    row = row + '<td></td>';
+                                                }
+                                            }
+
+                                            if (attr.attribute_type_object.value_type === 20) {
+
+                                                if (attr.value_float) {
+                                                    row = row + '<td>' + attr.value_float + '</td>';
+                                                } else {
+                                                    row = row + '<td></td>';
+                                                }
+
+                                            }
+
+                                            if (attr.attribute_type_object.value_type === 30) {
+                                                if (attr.classifier_object) {
+                                                    row = row + '<td>' + attr.classifier_object.name + '</td>';
+                                                } else {
+                                                    row = row + '<td></td>';
+                                                }
+
+                                            }
+
+                                            if (attr.attribute_type_object.value_type === 40) {
+                                                if (attr.value_date) {
+                                                    row = row + '<td>' + attr.value_date + '</td>';
+                                                } else {
+                                                    row = row + '<td></td>';
+                                                }
+                                            }
+
+
                                         }
+
                                     });
+
+
                                 }
-
-
-                                row = row + '</tr>';
-                                result = result + row;
                             });
-                            result = result + '</table';
 
-                            console.log('result', result);
-                            if (e.clipboardData) {
-                                e.clipboardData.setData('text/html', result);
-                            }
-                            console.log('e', e);
-                            e.preventDefault(); // We want our data, not data from any selection, to be written to the clipboard
+                            row = row + '</tr>';
+                            result = result + row;
+                        });
+                        result = result + '</table';
+
+                        if (event.clipboardData) {
+                            event.clipboardData.setData('text/html', result);
                         }
+
+                        event.preventDefault(); // We want our data, not data from any selection, to be written to the clipboard
+
+                        console.timeEnd('Copying to buffer');
+
                     }
+
                 };
 
                 document.addEventListener('copy', handler);
@@ -86,6 +131,8 @@
                     $(document).unbind('copy');
                     document.removeEventListener('copy');
                 })
+
+
             }
         }
 

@@ -1,0 +1,16 @@
+<div data-ng-controller="ReportViewerController as vm" class="entity-viewer-holder">
+    <div>
+        <div data-ng-if="vm.tableIsReady" class="g-group-table-holder">
+            <!--<group-table items="vm.getProjection()" options="vm.options" report-options="vm.reportOptions"></group-table>-->
+            <group-table
+                    ev-data-service="vm.entityViewerDataService"
+                    ev-event-service="vm.entityViewerEventService"
+            ></group-table>
+        </div>
+        <div data-ng-if="!vm.tableIsReady">
+            <div class="e-data-loader" layout="row" layout-sm="column" layout-align="space-around">
+                <md-progress-circular md-diameter="100" md-mode="indeterminate"></md-progress-circular>
+            </div>
+        </div>
+    </div>
+</div>

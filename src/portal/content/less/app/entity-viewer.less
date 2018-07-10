@@ -15,6 +15,29 @@
 .g-wrapper .g-group-holder {
   line-height: initial;
   padding-top: 4px;
+
+  padding-left: 30px;
+
+  .g-row-selection {
+    position: absolute;
+    background: #fff;
+    top: 0;
+    left: 0;
+    height: 23px;
+  }
+
+  &.selected {
+
+    background: rgba(205, 136, 99, .4);
+
+    .g-row-selection {
+      background: #ffeee8;
+      fill: #4C334D;
+
+    }
+
+  }
+
 }
 
 .ev-viewport {
@@ -87,3 +110,27 @@
     background: #ddd;
   }
 }
+
+.g-cell-wrap {
+  background: transparent;
+}
+
+.g-wrapper .g-row-selection {
+  background: transparent;
+}
+
+.g-row {
+
+  &.selected {
+    background: #ffeee8;
+
+    .g-row-selection {
+      fill: #4C334D;
+    }
+  }
+
+  &.activated {
+    background: #ffeee8;
+  }
+}
+

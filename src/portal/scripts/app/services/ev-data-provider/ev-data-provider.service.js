@@ -169,7 +169,8 @@
                         obj = Object.assign({}, data);
                         obj.group_name = event.groupName ? event.groupName : '-';
                         obj.group_id = event.groupId;
-                        obj.is_open = true;
+                        obj.___is_open = true;
+                        obj.___is_selected = evDataHelper.isGroupSelected(event.___id, event.parentGroupId, entityViewerDataService);
 
                         obj.___parentId = event.parentGroupId;
                         obj.___type = 'group';
@@ -183,6 +184,7 @@
                 obj.results = obj.results.map(function (item) {
 
                     item.group_name = item.group_name ? item.group_name : '-';
+                    item.___is_selected = evDataHelper.isSelected(entityViewerDataService);
 
                     item.___parentId = obj.___id;
                     item.___type = 'object';
@@ -249,7 +251,8 @@
                             obj = Object.assign({}, data);
                             obj.group_name = event.groupName ? event.groupName : '-';
                             obj.group_id = event.groupId;
-                            obj.is_open = true;
+                            obj.___is_open = true;
+                            obj.___is_selected = evDataHelper.isGroupSelected(event.___id, event.parentGroupId, entityViewerDataService);
 
                             obj.___parentId = event.parentGroupId;
                             obj.___type = 'group';
@@ -272,6 +275,8 @@
 
                         item.___parentId = obj.___id;
                         item.group_name = item.group_name ? item.group_name : '-';
+
+                        item.___is_selected = evDataHelper.isSelected(entityViewerDataService);
 
 
                         item.___level = obj.___level + 1;
@@ -325,8 +330,6 @@
     };
 
     var updateDataStructure = function (entityViewerDataService, entityViewerEventService) {
-
-        console.log(entityViewerDataService.getData())
 
         detectLevelChange(entityViewerDataService, entityViewerEventService);
         injectRegularFilters(entityViewerDataService, entityViewerEventService);
