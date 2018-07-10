@@ -7,6 +7,17 @@
     var evEvents = require('../../services/entityViewerEvents');
     var EvScrollManager = require('./ev-scroll.manager');
 
+    var clickTargets = {
+        'FOLD_BUTTON': 'FOLD_BUTTON',
+        'ROW_SELECTION_OBJECT_BUTTON': 'ROW_SELECTION_OBJECT_BUTTON',
+        'ROW_SELECTION_GROUP_BUTTON': 'ROW_SELECTION_GROUP_BUTTON',
+        'ROW_SELECTION_OBJECT_SVG': 'ROW_SELECTION_OBJECT_SVG',
+        'ROW_SELECTION_GROUP_SVG': 'ROW_SELECTION_GROUP_SVG',
+        'ROW_OBJECT': 'ROW_OBJECT',
+        'ROW_CELL': 'ROW_CELL',
+        'ROW_GROUP': 'ROW_GROUP'
+    };
+
     var evScrollManager = new EvScrollManager();
 
     function requestGroups(groupHashId, parentGroupHashId, evDataService, evEventService) {
@@ -105,10 +116,10 @@
                 item = evDataService.getData(children.___id);
 
                 if (item) {
-                    item.is_open = false;
+                    item.___is_open = false;
                     evDataService.setData(item);
                 } else {
-                    children.is_open = false;
+                    children.___is_open = false;
                     evDataService.setData(children);
                 }
 
@@ -119,33 +130,258 @@
 
     }
 
+    function handleGroupSelection(clickData, evDataService, evEventService) {
+
+        var group = evDataService.getData(clickData.___id);
+
+        if (group) {
+
+            group.___is_selected = !group.___is_selected;
+
+            evDataService.setData(group);
+
+        } else {
+
+            var parentGroup = evDataService.getData(clickData.___parentId);
+
+            parentGroup.results.forEach(function (item) {
+
+                if (item.___id === clickData.___id) {
+                    item.___is_selected = !item.___is_selected;
+                }
+
+            });
+
+            evDataService.setData(parentGroup);
+
+        }
+
+        evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+
+    }
+
+    function handleGroupFold(clickData, evDataService, evEventService) {
+
+        var group = evDataService.getData(clickData.___id);
+
+        group.___is_open = false;
+
+        evDataService.setData(group);
+
+        foldChildGroups(group.___id, evDataService);
+
+        evEventService.dispatchEvent(evEvents.REDRAW_TABLE)
+
+    }
+
+    function handleObjectSelection(clickData, evDataService, evEventService) {
+
+        var obj = evDataHelper.getObject(clickData.___id, clickData.___parentId, evDataService);
+
+        evDataService.clearActiveObject();
+
+        obj.___is_selected = !obj.___is_selected;
+        obj.___is_activated = obj.___is_selected;
+
+        evDataService.setObject(obj);
+
+        if (obj.___is_activated) {
+            evDataService.setActiveObject(obj);
+        } else {
+            evDataService.setActiveObject(null);
+        }
+
+        evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+
+    }
+
+    function handleObjectActive(clickData, evDataService) {
+
+        var obj = evDataHelper.getObject(clickData.___id, clickData.___parentId, evDataService);
+
+        var activeObject = evDataService.getActiveObject();
+
+        if (activeObject) {
+            activeObject.___is_activated = false;
+            evDataService.setObject(activeObject);
+        }
+
+        if (activeObject && activeObject.___id !== obj.___id) {
+            obj.___is_activated = true;
+        }
+
+        evDataService.setObject(obj);
+
+        if (obj.___is_activated) {
+            evDataService.setActiveObject(obj);
+        } else {
+            evDataService.setActiveObject(null);
+        }
+
+    }
+
+    function handleGroupClick(clickData, evDataService, evEventService) {
+
+        if (clickData.target === clickTargets.ROW_SELECTION_GROUP_BUTTON || clickData.target === clickTargets.ROW_SELECTION_GROUP_SVG) {
+
+            handleGroupSelection(clickData, evDataService, evEventService);
+
+        } else {
+
+            var group = evDataService.getData(clickData.___id);
+
+            if (group && group.___is_open) {
+
+                handleGroupFold(clickData, evDataService, evEventService);
+
+            } else {
+
+                var parents = evDataHelper.getParents(clickData.___parentId, evDataService);
+                var groups = evDataService.getGroups();
+
+                if (group) { // initialized only first data request
+
+                    group.___is_open = true;
+
+                    console.log('Unfold Group');
+
+                    evDataService.setData(group);
+
+                }
+
+                if (parents.length < groups.length) {
+
+                    requestGroups(clickData.___id, clickData.___parentId, evDataService, evEventService);
+
+                } else {
+
+                    requestObjects(clickData.___id, clickData.___parentId, evDataService, evEventService)
+                }
+
+            }
+
+        }
+
+    }
+
+    function handleObjectClick(clickData, evDataService, evEventService) {
+
+        if (clickData.target === clickTargets.ROW_SELECTION_OBJECT_BUTTON || clickData.target === clickTargets.ROW_SELECTION_OBJECT_SVG) {
+
+            handleObjectSelection(clickData, evDataService, evEventService);
+
+        } else {
+
+            var obj = evDataHelper.getObject(clickData.___id, clickData.___parentId, evDataService);
+
+            handleObjectActive(clickData, evDataService);
+
+            evDataService.setEditorEntityId(obj.id);
+            evEventService.dispatchEvent(evEvents.ADDITIONS_EDITOR_ENTITY_ID_CHANGE);
+
+            evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+        }
+
+    }
+
+    var getClickTarget = function (event) {
+
+        console.log('getClickTarget.event', event);
+
+        var result = '';
+
+        if (event.target.classList.contains('g-group-holder')) {
+            result = clickTargets.ROW_GROUP;
+        }
+
+        if (event.target.classList.contains('ev-fold-button')) {
+            result = clickTargets.FOLD_BUTTON;
+        }
+
+        if (event.target.classList.contains('g-row')) {
+            result = clickTargets.ROW_OBJECT;
+        }
+
+        if (event.target.classList.contains('g-cell')) {
+            result = clickTargets.ROW_CELL;
+        }
+
+        if (event.target.classList.contains('g-row-selection') && event.target.parentElement.classList.contains('g-row')) {
+            result = clickTargets.ROW_SELECTION_OBJECT_BUTTON;
+        }
+
+        if (event.target.tagName === 'svg' && event.target.parentElement.parentElement.classList.contains('g-row')) {
+            result = clickTargets.ROW_SELECTION_OBJECT_SVG;
+        }
+
+        if (event.target.classList.contains('g-row-selection') && event.target.parentElement.classList.contains('g-group-holder')) {
+            result = clickTargets.ROW_SELECTION_GROUP_BUTTON;
+        }
+
+        if (event.target.tagName === 'svg' && event.target.parentElement.parentElement.classList.contains('g-group-holder')) {
+            result = clickTargets.ROW_SELECTION_GROUP_SVG;
+        }
+
+        return result;
+    };
+
     var getClickData = function (event) {
 
         var clickData = {};
 
-        if (event.target.offsetParent.classList.contains('ev-viewport')) {
+        var clickTarget = getClickTarget(event);
 
-            clickData.___type = event.target.dataset.type;
-            clickData.___id = event.target.dataset.groupHashId;
-            clickData.___parentId = event.target.dataset.parentGroupHashId;
+        switch (clickTarget) {
 
-        }
+            case clickTargets.ROW_CELL:
 
-        if (event.target.offsetParent.classList.contains('g-row')) {
+                console.log('event.target.offsetParent', event.target.offsetParent);
 
-            clickData.___type = event.target.offsetParent.dataset.type;
-            clickData.___id = event.target.offsetParent.dataset.objectId;
-            clickData.___parentId = event.target.offsetParent.dataset.parentGroupHashId;
-
-        }
-
-        if (event.target.classList.contains('ev-fold-button')) {
-            clickData.___type = event.target.parentElement.dataset.type;
-            clickData.___id = event.target.parentElement.dataset.groupHashId;
-            clickData.___parentId = event.target.parentElement.dataset.parentGroupHashId;
+                clickData.___type = event.target.offsetParent.dataset.type;
+                clickData.___id = event.target.offsetParent.dataset.objectId;
+                clickData.___parentId = event.target.offsetParent.dataset.parentGroupHashId;
+                break;
+            case clickTargets.ROW_OBJECT:
+                clickData.___type = event.target.dataset.type;
+                clickData.___id = event.target.dataset.objectId;
+                clickData.___parentId = event.target.dataset.parentGroupHashId;
+                break;
+            case clickTargets.ROW_GROUP:
+                clickData.___type = event.target.dataset.type;
+                clickData.___id = event.target.dataset.groupHashId;
+                clickData.___parentId = event.target.dataset.parentGroupHashId;
+                break;
+            case clickTargets.FOLD_BUTTON:
+                clickData.___type = event.target.parentElement.dataset.type;
+                clickData.___id = event.target.parentElement.dataset.groupHashId;
+                clickData.___parentId = event.target.parentElement.dataset.parentGroupHashId;
+                break;
+            case clickTargets.ROW_SELECTION_OBJECT_BUTTON:
+                clickData.___type = event.target.offsetParent.dataset.type;
+                clickData.___id = event.target.offsetParent.dataset.objectId;
+                clickData.___parentId = event.target.offsetParent.dataset.parentGroupHashId;
+                break;
+            case clickTargets.ROW_SELECTION_GROUP_BUTTON:
+                clickData.___type = event.target.parentElement.dataset.type;
+                clickData.___id = event.target.parentElement.dataset.groupHashId;
+                clickData.___parentId = event.target.parentElement.dataset.parentGroupHashId;
+                break;
+            case clickTargets.ROW_SELECTION_OBJECT_SVG:
+                clickData.___type = event.target.parentElement.parentElement.dataset.type;
+                clickData.___id = event.target.parentElement.parentElement.dataset.objectId;
+                clickData.___parentId = event.target.parentElement.parentElement.dataset.parentGroupHashId;
+                break;
+            case clickTargets.ROW_SELECTION_GROUP_SVG:
+                clickData.___type = event.target.parentElement.parentElement.dataset.type;
+                clickData.___id = event.target.parentElement.parentElement.dataset.groupHashId;
+                clickData.___parentId = event.target.parentElement.parentElement.dataset.parentGroupHashId;
+                break;
         }
 
         console.log('getClickData.clickData', clickData);
+        console.log('getClickData.clickTarget', clickTarget);
+
+        clickData.target = clickTarget;
 
         return clickData;
 
@@ -155,69 +391,21 @@
 
         elem.addEventListener('click', function (event) {
 
-            console.log('event', event);
-
             var clickData = getClickData(event);
 
             if (clickData.___type === 'group') {
 
-                var group = evDataService.getData(clickData.___id);
-
-                console.log('group', group);
-
-                if (group && group.is_open) {
-
-                    group.is_open = false;
-
-                    console.log('Fold groups');
-
-                    evDataService.setData(group);
-
-                    foldChildGroups(group.___id, evDataService);
-
-                    evEventService.dispatchEvent(evEvents.REDRAW_TABLE)
-
-                } else {
-
-                    var parents = evDataHelper.getParents(clickData.___parentId, evDataService);
-                    var groups = evDataService.getGroups();
-
-                    if (group) { // initialized only first data request
-
-                        group.is_open = true;
-
-                        console.log('Unfold Group');
-
-                        evDataService.setData(group);
-
-                    }
-
-                    if (parents.length < groups.length) {
-
-                        requestGroups(clickData.___id, clickData.___parentId, evDataService, evEventService);
-
-                    } else {
-
-                        requestObjects(clickData.___id, clickData.___parentId, evDataService, evEventService)
-                    }
-
-                }
+                handleGroupClick(clickData, evDataService, evEventService);
 
             }
 
             if (clickData.___type === 'object') {
 
-                var obj = evDataHelper.getObject(clickData.___id, clickData.___parentId, evDataService);
+                handleObjectClick(clickData, evDataService, evEventService);
 
-                console.log('obj', obj);
-
-                evDataService.setEditorEntityId(obj.id);
-                evEventService.dispatchEvent(evEvents.ADDITIONS_EDITOR_ENTITY_ID_CHANGE);
             }
 
-
         })
-
 
     };
 
@@ -306,14 +494,17 @@
 
                 var obj = evDataHelper.getObject(objectId, parentGroupHashId, evDataService);
 
-                evDataService.setActiveObject({
-                    action: dropdownAction,
-                    event: event,
-                    id: obj.id,
-                    name: obj.name, // for delete dialog
-                    ___id: objectId,
-                    ___parentId: parentGroupHashId
-                });
+                // evDataService.setActiveObject({
+                //     action: dropdownAction,
+                //     event: event,
+                //     id: obj.id,
+                //     name: obj.name, // for delete dialog
+                //     ___id: objectId,
+                //     ___parentId: parentGroupHashId
+                // });
+
+                evDataService.setActiveObject(obj);
+
                 evEventService.dispatchEvent(evEvents.ACTIVE_OBJECT_CHANGE);
 
                 clearDropdowns();

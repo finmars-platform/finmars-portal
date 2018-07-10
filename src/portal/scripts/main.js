@@ -98,6 +98,7 @@ app.controller('EntityMappingCreateDialogController', ['$scope', '$mdDialog', re
 
 app.controller('EntityViewerController', ['$scope', '$mdDialog', require('./app/controllers/entityViewer/entityViewerController')]);
 app.controller('EntityViewer2Controller', ['$scope', '$mdDialog', require('./app/controllers/entityViewer/entityViewer2Controller')]);
+app.controller('ReportViewerController', ['$scope', '$mdDialog', require('./app/controllers/entityViewer/reportViewerController')]);
 app.controller('EntityViewerAddDialogController', ['$scope', '$mdDialog', 'entityType', '$state', require('./app/controllers/entityViewer/entityViewerAddDialogController')]);
 app.controller('EntityViewerEditDialogController', ['$scope', '$mdDialog', 'entityType', 'entityId', '$state', require('./app/controllers/entityViewer/entityViewerEditDialogController')]);
 app.controller('EntityViewerDeleteDialogController', ['$scope', '$mdDialog', 'entity', 'entityType', require('./app/controllers/entityViewer/entityViewerDeleteDialogController')]);
@@ -147,6 +148,7 @@ app.controller('TransactionsAuditController', ['$scope', '$stateParams', require
 app.controller('InstrumentsAuditController', ['$scope', '$stateParams', require('./app/controllers/system/auditInstrumentsController')]);
 
 app.controller('BalanceReportController', ['$scope', '$stateParams', require('./app/controllers/reports/balanceReportController')]);
+app.controller('BalanceReportControllerOld', ['$scope', '$stateParams', require('./app/controllers/reports/balanceReportController-old')]);
 app.controller('ReportCustomAttrController', ['$scope', '$stateParams', '$mdDialog', require('./app/controllers/reports/reportCustomAttrController')]);
 app.controller('BalanceReportDialogCustomAttrController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/balanceReportAddDialogCustomAttrController')]);
 

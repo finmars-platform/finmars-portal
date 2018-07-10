@@ -1,7 +1,9 @@
 <div class="g-wrapper" data-group-height-aligner ev-data-service="evDataService"
      ev-event-service="evEventService">
     <div class="g-workarea-wrap">
-        <div class="g-workarea main-area" data-group-clipboard-handler data-items="items" data-columns="columns">
+        <div class="g-workarea main-area" data-group-clipboard-handler
+             ev-data-service="evDataService"
+             ev-event-service="evEventService">
             <div class="g-grouping-section" data-ng-if="components.groupingArea">
                 <group-grouping options="options" ev-data-service="evDataService"
                                 ev-event-service="evEventService"></group-grouping>

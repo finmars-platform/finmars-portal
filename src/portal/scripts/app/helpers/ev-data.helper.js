@@ -282,7 +282,7 @@
         });
 
         return items.filter(function (item) {
-            return item.is_open
+            return item.___is_open
         })
 
     };
@@ -323,7 +323,7 @@
 
         _list = _list.filter(function (item) {
 
-            if (item.___type === 'group' && !item.is_open) {
+            if (item.___type === 'group' && !item.___is_open) {
                 foldedGroupsIds.push(item.___id);
             }
 
@@ -395,6 +395,34 @@
 
     };
 
+    var isGroupSelected = function (groupId, parentGroupId, evDataService) {
+
+        if (isSelected(evDataService)) {
+            return true
+        }
+
+        var parentGroup = evDataService.getData(parentGroupId);
+
+        var selected = false;
+
+        parentGroup.results.forEach(function (item) {
+
+            if (item.___id === groupId) {
+                selected = item.___is_selected;
+            }
+
+        });
+
+        return selected;
+
+    };
+
+    var isSelected = function (evDataService) {
+
+        return evDataService.getSelectAllRowsState();
+
+    };
+
     module.exports = {
 
         getParents: getParents,
@@ -418,7 +446,10 @@
         getEvId: getEvId,
         getGroupTypes: getGroupTypes,
         getGroupValues: getGroupValues,
-        getProjection: getProjection
+        getProjection: getProjection,
+
+        isGroupSelected: isGroupSelected,
+        isSelected: isSelected
     }
 
 

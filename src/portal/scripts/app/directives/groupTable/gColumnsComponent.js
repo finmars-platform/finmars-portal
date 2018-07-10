@@ -41,20 +41,44 @@
                 }
                 entityAttrs = metaService.getEntityAttrs(scope.entityType);
 
-                scope.isAllSelected = false;
+                scope.isAllSelected = scope.evDataService.getSelectAllRowsState();
+                ;
 
                 scope.selectAllRows = function () {
+
+                    console.time('Selecting all rows');
+
+                    var dataList = scope.evDataService.getDataAsList();
+
+                    scope.isAllSelected = scope.evDataService.getSelectAllRowsState();
+
                     scope.isAllSelected = !scope.isAllSelected;
-                    scope.items.forEach(function (item) {
-                        if (item.hasOwnProperty('groups')) {
-                            item.selectedRow = scope.isAllSelected;
-                            item.items.forEach(function (row) {
-                                row.selectedRow = scope.isAllSelected;
+
+                    var groups = scope.evDataService.getGroups();
+
+                    dataList.forEach(function (item) {
+
+                        item.___is_selected = scope.isAllSelected;
+
+                        if (item.results && item.results.length && item.___level === groups.length) {
+
+                            item.results.forEach(function (childItem) {
+
+                                childItem.___is_selected = scope.isAllSelected;
+
                             })
-                        } else {
-                            item.selectedRow = scope.isAllSelected;
+
                         }
-                    })
+
+                    });
+
+                    scope.evDataService.setSelectAllRowsState(scope.isAllSelected);
+                    scope.evDataService.setAllData(dataList);
+
+                    scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+
+                    console.timeEnd('Selecting all rows');
+
                 };
 
                 scope.isColumnFloat = function (column) {

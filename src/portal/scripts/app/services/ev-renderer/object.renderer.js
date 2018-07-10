@@ -1,7 +1,11 @@
 (function () {
 
+    var renderHelper = require('../../helpers/render.helper');
+
+    var checkIcon = renderHelper.getCheckIcon();
+
     var getValue = function (obj, column) {
-        
+
         if (obj[column.key]) {
 
             if (typeof obj[column.key] === 'string') {
@@ -77,10 +81,27 @@
 
     var render = function (obj, columns) {
 
-        var result = '<div class="g-row" data-type="object" data-object-id="' + obj.___id + '" data-parent-group-hash-id="' + obj.___parentId + '">';
+        var classList = ['g-row'];
+
+        var rowSelection;
+
+        if (obj.___is_selected) {
+            classList.push('selected');
+            rowSelection = '<div class="g-row-selection">' + checkIcon + '</div>';
+        } else {
+            rowSelection = '<div class="g-row-selection"></div>';
+        }
+
+        if (obj.___is_activated) {
+            classList.push('activated');
+        }
+
+        var classes = classList.join(' ');
+
+        var result = '<div class="' + classes + '" data-type="object" data-object-id="' + obj.___id + '" data-parent-group-hash-id="' + obj.___parentId + '">';
         var cell;
 
-        result = result + '<div class="g-row-selection"></div>';
+        result = result + rowSelection;
 
         columns.forEach(function (column) {
 
