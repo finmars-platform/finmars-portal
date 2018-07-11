@@ -8,6 +8,7 @@
 - Active row
 - All row selection
 - **BUGFIX** Horizontal scroll
+- **BUGFIX** Folding subgroups
 
 ## 06.07.2018
 
