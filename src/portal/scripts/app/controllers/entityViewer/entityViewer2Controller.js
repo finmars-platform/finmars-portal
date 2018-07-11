@@ -68,8 +68,9 @@
             entityViewerEventService.addEventListener(evEvents.ACTIVE_OBJECT_CHANGE, function () {
 
                 var activeObject = entityViewerDataService.getActiveObject();
+                var action = entityViewerDataService.getActiveObjectAction();
 
-                if (activeObject.action === 'delete') {
+                if (action === 'delete') {
 
                     $mdDialog.show({
                         controller: 'EntityViewerDeleteDialogController as vm',
@@ -86,6 +87,13 @@
                         }
                     }).then(function (res) {
                         if (res.status === 'agree') {
+                            scope.evDataService.resetData();
+                            scope.evDataService.resetRequestParameters();
+
+                            var rootGroup = scope.evDataService.getRootGroupData();
+
+                            scope.evDataService.setActiveRequestParametersId(rootGroup.___id);
+
                             scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE);
                         }
                     })
@@ -93,7 +101,7 @@
 
                 }
 
-                if (activeObject.action === 'edit') {
+                if (action === 'edit') {
 
                     $mdDialog.show({
                         controller: 'EntityViewerEditDialogController as vm',
@@ -107,6 +115,13 @@
                         }
                     }).then(function (res) {
                         if (res && res.res === 'agree') {
+                            scope.evDataService.resetData();
+                            scope.evDataService.resetRequestParameters();
+
+                            var rootGroup = scope.evDataService.getRootGroupData();
+
+                            scope.evDataService.setActiveRequestParametersId(rootGroup.___id);
+
                             scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE);
                         }
                     });

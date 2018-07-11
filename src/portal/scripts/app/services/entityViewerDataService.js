@@ -440,6 +440,14 @@
 
         }
 
+        function setActiveObjectAction(action) {
+            data.activeObjectAction = action;
+        }
+
+        function getActiveObjectAction() {
+            return data.activeObjectAction;
+        }
+
         function setActiveColumnSort(column) {
             data.activeColumnSort = column;
         }
@@ -574,6 +582,8 @@
             setActiveObject: setActiveObject,
             getActiveObject: getActiveObject,
             clearActiveObject: clearActiveObject,
+            setActiveObjectAction: setActiveObjectAction,
+            getActiveObjectAction: getActiveObjectAction,
 
             getRowHeight: getRowHeight,
             getRequestThreshold: getRequestThreshold,
