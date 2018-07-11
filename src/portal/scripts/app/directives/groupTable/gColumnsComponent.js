@@ -450,6 +450,7 @@
                     scope.evEventService.addEventListener(evEvents.COLUMNS_CHANGE, function () {
 
                         scope.updateColumnsIds();
+                        scope.setColumnsDefaultWidth();
 
                         scope.columns = scope.evDataService.getColumns();
 
