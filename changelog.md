@@ -1,5 +1,14 @@
 # Changelog
 
+## 11.07.2018
+
+- New resize logic
+- Copy to clipboard
+- Row selection
+- Active row
+- All row selection
+- **BUGFIX** Horizontal scroll
+
 ## 06.07.2018
 
 - First version of Entity Viewer 2.0
