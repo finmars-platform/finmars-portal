@@ -16,7 +16,8 @@
                 <div class="g-columns-holder">
                     <!--<div data-ng-init="initDragula()" class="g-columns-holder">-->
                     <md-card class="g-cell g-column" data-ng-repeat="column in columns" on-finish-render
-                             data-callback="triggerResizeTableHeadColumns()">
+                             data-ng-style="column.style"
+                             data-callback="triggerResizeTableHeadColumns()" data-column-id="{{column.___column_id}}">
                         <div class="g-column-content">
                             <div class="column-left-content">
                                 <div class="sort" data-ng-if="isSortable(column)">
@@ -417,7 +418,9 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="resize-slider"></div>
+                        <div class="resize-slider" data-group-column-resizer
+                             ev-data-service="evDataService"
+                             ev-event-service="evEventService"></div>
                     </md-card>
                 </div>
                 <div class="drop-new-field" id="columnsbag" data-ng-if="!isItemAddition">

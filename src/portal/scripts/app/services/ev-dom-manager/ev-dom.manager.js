@@ -551,11 +551,6 @@
 
         });
 
-        console.log('calculateTotalHeight.unfoldedGroups', unfoldedGroups);
-
-        console.log('calculateTotalHeight.count', count);
-
-
         var rowHeight = evDataService.getRowHeight();
 
         return Math.floor(rowHeight * count);
@@ -600,7 +595,7 @@
             evEventService.dispatchEvent(evEvents.UPDATE_TABLE);
 
 
-        }, 100);
+        }, 50);
 
         var scrollXHandler = function () {
 

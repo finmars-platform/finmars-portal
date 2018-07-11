@@ -105,7 +105,7 @@
 
         columns.forEach(function (column) {
 
-            cell = '<div class="g-cell-wrap"><div class="g-cell">' + getValue(obj, column) + '</div></div>';
+            cell = '<div class="g-cell-wrap" style="width: ' + column.style.width + '"><div class="g-cell">' + getValue(obj, column) + '</div></div>';
 
             result = result + cell
 
