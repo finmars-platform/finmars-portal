@@ -87,14 +87,14 @@
                         }
                     }).then(function (res) {
                         if (res.status === 'agree') {
-                            scope.evDataService.resetData();
-                            scope.evDataService.resetRequestParameters();
+                            entityViewerDataService.resetData();
+                            entityViewerDataService.resetRequestParameters();
 
-                            var rootGroup = scope.evDataService.getRootGroupData();
+                            var rootGroup = entityViewerDataService.getRootGroupData();
 
-                            scope.evDataService.setActiveRequestParametersId(rootGroup.___id);
+                            entityViewerDataService.setActiveRequestParametersId(rootGroup.___id);
 
-                            scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE);
+                            entityViewerEventService.dispatchEvent(evEvents.UPDATE_TABLE);
                         }
                     })
 
@@ -115,14 +115,14 @@
                         }
                     }).then(function (res) {
                         if (res && res.res === 'agree') {
-                            scope.evDataService.resetData();
-                            scope.evDataService.resetRequestParameters();
+                            entityViewerDataService.resetData();
+                            entityViewerDataService.resetRequestParameters();
 
-                            var rootGroup = scope.evDataService.getRootGroupData();
+                            var rootGroup = entityViewerDataService.getRootGroupData();
 
-                            scope.evDataService.setActiveRequestParametersId(rootGroup.___id);
+                            entityViewerDataService.setActiveRequestParametersId(rootGroup.___id);
 
-                            scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE);
+                            entityViewerEventService.dispatchEvent(evEvents.UPDATE_TABLE);
                         }
                     });
 
