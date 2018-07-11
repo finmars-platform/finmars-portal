@@ -40,6 +40,8 @@
 
                     evDomManager.calculateScroll(elements, scope.evDataService);
 
+                    console.log('projection', projection);
+
                     evRenderer.render(contentElem, projection, scope.evDataService, scope.evEventService);
 
                 });
@@ -47,6 +49,8 @@
                 scope.evEventService.addEventListener(evEvents.REDRAW_TABLE, function () {
 
                     projection = evDataHelper.getProjection(scope.evDataService);
+
+                    console.log('projection', projection);
 
                     evDomManager.calculateScroll(elements, scope.evDataService);
 

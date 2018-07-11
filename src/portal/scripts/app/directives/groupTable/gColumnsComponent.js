@@ -6,6 +6,7 @@
     'use strict';
 
     var evEvents = require('../../services/entityViewerEvents');
+    var evDataHelper = require('../../helpers/ev-data.helper');
 
     var metaService = require('../../services/metaService');
 
@@ -29,6 +30,70 @@
                 scope.entityType = scope.evDataService.getEntityType();
                 scope.components = scope.evDataService.getComponents();
 
+                scope.setColumnsDefaultWidth = function () {
+
+                    var columns = scope.evDataService.getColumns();
+
+                    var groupsWidth = metaService.columnsWidthGroups();
+
+                    var defaultWidth = 100;
+
+                    columns.forEach(function (column) {
+
+                        if(!column.style) {
+                            column.style = {}
+                        }
+
+                        if (!column.style.width) {
+
+
+                            if (column.hasOwnProperty('key')) {
+                                column.style.width = defaultWidth + 'px';
+                            }
+
+                            if (column.hasOwnProperty('id')) {
+
+                                switch (column.value_type) {
+                                    case 10:
+                                        column.style.width = groupsWidth.groupThree;
+                                        break;
+                                    case 20:
+                                        column.style.width = defaultWidth + 'px';
+                                        break;
+                                    case 40:
+                                        column.style.width = groupsWidth.groupFive;
+                                        break;
+                                    case 30:
+                                        column.style.width = groupsWidth.groupFive;
+                                        break;
+                                }
+
+                            }
+
+                        }
+
+                    });
+
+                    console.log('columns', columns);
+
+                    scope.evDataService.setColumns(columns);
+
+                };
+
+                scope.updateColumnsIds = function () {
+
+                    var columns = scope.evDataService.getColumns();
+
+                    columns.forEach(function (item) {
+
+                        item.___column_id = evDataHelper.getColumnId(item);
+
+                    });
+
+                    scope.evDataService.setColumns(columns);
+
+                };
+
                 scope.isReport = ['balance-report',
                     'cash-flow-projection-report',
                     'performance-report', 'pnl-report',
@@ -42,7 +107,7 @@
                 entityAttrs = metaService.getEntityAttrs(scope.entityType);
 
                 scope.isAllSelected = scope.evDataService.getSelectAllRowsState();
-                ;
+
 
                 scope.selectAllRows = function () {
 
@@ -54,13 +119,11 @@
 
                     scope.isAllSelected = !scope.isAllSelected;
 
-                    var groups = scope.evDataService.getGroups();
-
                     dataList.forEach(function (item) {
 
                         item.___is_selected = scope.isAllSelected;
 
-                        if (item.results && item.results.length && item.___level === groups.length) {
+                        if (item.results && item.results.length) {
 
                             item.results.forEach(function (childItem) {
 
@@ -253,11 +316,52 @@
                             $(target).removeClass('active');
                         });
 
-                        this.dragula.on('dragend', function (el) {
+                        this.dragula.on('dragend', function (element) {
 
-                            console.log(scope.columns);
+                            var parent = element.parentElement;
 
-                            scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+                            var elemItems = parent.querySelectorAll('.g-column');
+
+                            console.log('elemItems', elemItems);
+
+                            var result = [];
+                            var columns = scope.evDataService.getColumns();
+
+                            for (var i = 0; i < elemItems.length; i = i + 1) {
+
+                                for (var x = 0; x < columns.length; x = x + 1) {
+
+                                    if (elemItems[i].dataset.columnId === columns[x].___column_id) {
+                                        result.push(columns[x]);
+                                    }
+
+                                }
+
+                            }
+
+                            var isChanged = false;
+
+                            console.log('result', result);
+                            console.log('columns', columns);
+
+                            result.forEach(function (resultItem, index) {
+
+                                if (resultItem.___column_id !== columns[index].___column_id) {
+                                    isChanged = true;
+                                }
+
+
+                            });
+
+                            if (isChanged) {
+
+                                scope.evDataService.setColumns(result);
+
+                                scope.evEventService.dispatchEvent(evEvents.COLUMNS_CHANGE);
+
+                                scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+
+                            }
 
                         })
                     },
@@ -339,7 +443,13 @@
 
                 var init = function () {
 
+                    scope.updateColumnsIds();
+
+                    scope.setColumnsDefaultWidth();
+
                     scope.evEventService.addEventListener(evEvents.COLUMNS_CHANGE, function () {
+
+                        scope.updateColumnsIds();
 
                         scope.columns = scope.evDataService.getColumns();
 

@@ -200,6 +200,47 @@
 
     };
 
+    var getGroupTypeId = function (groupType) {
+
+        var pattern;
+
+        if (groupType.hasOwnProperty('key')) {
+
+            pattern = [groupType.name, stringHelper.toHash(groupType.key)].join('');
+
+        }
+
+        if (groupType.hasOwnProperty('id')) {
+
+            pattern = [groupType.name, stringHelper.toHash(groupType.id)].join('');
+
+        }
+
+        return stringHelper.toHash(pattern)
+
+    };
+
+    var getColumnId = function (column) {
+
+        var pattern;
+
+        if (column.hasOwnProperty('key')) {
+
+            pattern = [column.name, stringHelper.toHash(column.key)].join('');
+
+        }
+
+        if (column.hasOwnProperty('id')) {
+
+            pattern = [column.name, stringHelper.toHash(column.id)].join('');
+
+        }
+
+        return stringHelper.toHash(pattern)
+
+    };
+
+
     var getGroupTypes = function (id, parentId, evDataService) {
 
         var result = [];
@@ -444,6 +485,9 @@
         getNextPage: getNextPage,
 
         getEvId: getEvId,
+        getGroupTypeId: getGroupTypeId,
+        getColumnId: getColumnId,
+
         getGroupTypes: getGroupTypes,
         getGroupValues: getGroupValues,
         getProjection: getProjection,
