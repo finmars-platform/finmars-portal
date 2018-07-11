@@ -504,6 +504,7 @@
                 // });
 
                 evDataService.setActiveObject(obj);
+                evDataService.setActiveObjectAction(dropdownAction);
 
                 evEventService.dispatchEvent(evEvents.ACTIVE_OBJECT_CHANGE);
 
