@@ -16,7 +16,6 @@
 
         var rows = projection.map(function (item) {
 
-
             if (item.___type === 'group') {
 
                 return groupRender.render(item);

@@ -30,56 +30,6 @@
                 scope.entityType = scope.evDataService.getEntityType();
                 scope.components = scope.evDataService.getComponents();
 
-                scope.setColumnsDefaultWidth = function () {
-
-                    var columns = scope.evDataService.getColumns();
-
-                    var groupsWidth = metaService.columnsWidthGroups();
-
-                    var defaultWidth = 100;
-
-                    columns.forEach(function (column) {
-
-                        if(!column.style) {
-                            column.style = {}
-                        }
-
-                        if (!column.style.width) {
-
-
-                            if (column.hasOwnProperty('key')) {
-                                column.style.width = defaultWidth + 'px';
-                            }
-
-                            if (column.hasOwnProperty('id')) {
-
-                                switch (column.value_type) {
-                                    case 10:
-                                        column.style.width = groupsWidth.groupThree;
-                                        break;
-                                    case 20:
-                                        column.style.width = defaultWidth + 'px';
-                                        break;
-                                    case 40:
-                                        column.style.width = groupsWidth.groupFive;
-                                        break;
-                                    case 30:
-                                        column.style.width = groupsWidth.groupFive;
-                                        break;
-                                }
-
-                            }
-
-                        }
-
-                    });
-
-                    console.log('columns', columns);
-
-                    scope.evDataService.setColumns(columns);
-
-                };
-
                 scope.updateColumnsIds = function () {
 
                     var columns = scope.evDataService.getColumns();
