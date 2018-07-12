@@ -77,11 +77,7 @@
                                 <md-checkbox ng-model="item.groups" aria="groups" class="md-g-green"
                                              data-ng-change="vm.updateAttrs()">
                                 </md-checkbox>
-                                <md-checkbox data-ng-if="vm.isReport == true" ng-model="item.filters" aria="filters"
-                                             class="md-primary" data-ng-change="vm.updateAttrs()">
-                                </md-checkbox>
-                                <md-checkbox data-ng-if="vm.isReport == false" style="visibility: hidden"
-                                             ng-model="item.filters" aria="filters"
+                                <md-checkbox ng-model="item.filters" aria="filters"
                                              class="md-primary" data-ng-change="vm.updateAttrs()">
                                 </md-checkbox>
                             </div>

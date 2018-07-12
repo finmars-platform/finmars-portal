@@ -167,6 +167,14 @@
                     if (scope.isReport === true) {
                         scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE)
                     } else {
+
+                        scope.evDataService.resetData();
+                        scope.evDataService.resetRequestParameters();
+
+                        var rootGroup = scope.evDataService.getRootGroupData();
+
+                        scope.evDataService.setActiveRequestParametersId(rootGroup.___id);
+
                         scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE)
                     }
                 };
@@ -345,6 +353,15 @@
                     scope.evEventService.addEventListener(evEvents.FILTERS_CHANGE, function () {
 
                         scope.filters = scope.evDataService.getFilters();
+                        scope.filters.forEach(function (item) {
+
+                            if (item.hasOwnProperty('id')) {
+                                item.key = '___da_' + item.id;
+                            }
+
+                        });
+
+                        scope.evDataService.setFilters(scope.filters);
 
                         var promises = [];
 
