@@ -333,6 +333,7 @@
 
             addColumn();
 
+            evDataHelper.updateColumnsIds(EntityViewerDataService);
             evDataHelper.setColumnsDefaultWidth(EntityViewerDataService);
 
             EntityViewerEventService.dispatchEvent(evEvents.COLUMNS_CHANGE);
@@ -413,6 +414,7 @@
                                 }
                             }
                             syncAttrs();
+                            evDataHelper.updateColumnsIds(EntityViewerDataService);
                             evDataHelper.setColumnsDefaultWidth(EntityViewerDataService);
                             EntityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
                         }
@@ -431,6 +433,7 @@
                                 }
                             }
                             syncAttrs();
+                            evDataHelper.updateColumnsIds(EntityViewerDataService);
                             evDataHelper.setColumnsDefaultWidth(EntityViewerDataService);
                             EntityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
                         }
@@ -449,6 +452,7 @@
                                 }
                             }
                             syncAttrs();
+                            evDataHelper.updateColumnsIds(EntityViewerDataService);
                             evDataHelper.setColumnsDefaultWidth(EntityViewerDataService);
                             EntityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
                         }

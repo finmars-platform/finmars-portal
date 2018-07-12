@@ -513,6 +513,20 @@
 
     };
 
+    var updateColumnsIds = function (evDataService) {
+
+        var columns = evDataService.getColumns();
+
+        columns.forEach(function (item) {
+
+            item.___column_id = getColumnId(item);
+
+        });
+
+        evDataService.setColumns(columns);
+
+    };
+
     module.exports = {
 
         getParents: getParents,
@@ -542,6 +556,7 @@
         getProjection: getProjection,
 
         setColumnsDefaultWidth: setColumnsDefaultWidth,
+        updateColumnsIds: updateColumnsIds,
 
         isGroupSelected: isGroupSelected,
         isSelected: isSelected
