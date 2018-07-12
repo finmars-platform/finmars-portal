@@ -39,28 +39,24 @@
 
                     if (item.attribute_type === column.id) {
 
-                        if (column.value_type === 20) {
+                        if (column.value_type === 20 && item.value_float) {
 
                             result = item.value_float;
 
                         }
 
-                        if (column.value_type === 10) {
+                        if (column.value_type === 10 && item.value_string) {
 
                             result = item.value_string;
 
                         }
 
-                        if (column.value_type === 30) {
+                        if (column.value_type === 30 && item.classifier_object) {
 
-                            if (item.classifier_object) {
-
-                                result = item.classifier_object.name;
-
-                            }
+                            result = item.classifier_object.name;
                         }
 
-                        if (column.value_type === 40) {
+                        if (column.value_type === 40 && item.value_date) {
 
                             result = item.value_date;
 

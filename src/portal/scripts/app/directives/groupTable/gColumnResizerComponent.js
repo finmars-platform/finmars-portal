@@ -201,6 +201,8 @@
 
                     initColumnSliderListener();
 
+                    resizeScrollableArea();
+
                     $(window).on('resize', function () {
                         resizeWorkarea();
                     });
