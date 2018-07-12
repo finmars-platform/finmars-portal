@@ -1,6 +1,7 @@
 (function () {
 
     var stringHelper = require('../helpers/stringHelper');
+    var metaService = require('../services/metaService');
 
     var getDefaultInterfaceLayout = function () {
 
@@ -46,6 +47,7 @@
         }
 
     };
+
 
     var getDefaultRootGroup = function () {
 

@@ -2,6 +2,7 @@
 
     var stringHelper = require('./stringHelper');
     var utilsHelper = require('./utils.helper');
+    var metaService = require('../services/metaService');
 
     var getNextPage = function (options, event, entityViewerDataService) {
 
@@ -464,6 +465,54 @@
 
     };
 
+    var setColumnsDefaultWidth = function (evDataService) {
+
+        var columns = evDataService.getColumns();
+
+        var groupsWidth = metaService.columnsWidthGroups();
+
+        var defaultWidth = 100;
+
+        columns.forEach(function (column) {
+
+            if (!column.style) {
+                column.style = {}
+            }
+
+            if (!column.style.width) {
+
+
+                if (column.hasOwnProperty('key')) {
+                    column.style.width = defaultWidth + 'px';
+                }
+
+                if (column.hasOwnProperty('id')) {
+
+                    switch (column.value_type) {
+                        case 10:
+                            column.style.width = groupsWidth.groupThree;
+                            break;
+                        case 20:
+                            column.style.width = defaultWidth + 'px';
+                            break;
+                        case 40:
+                            column.style.width = groupsWidth.groupFive;
+                            break;
+                        case 30:
+                            column.style.width = groupsWidth.groupFive;
+                            break;
+                    }
+
+                }
+
+            }
+
+        });
+
+        evDataService.setColumns(columns);
+
+    };
+
     module.exports = {
 
         getParents: getParents,
@@ -491,6 +540,8 @@
         getGroupTypes: getGroupTypes,
         getGroupValues: getGroupValues,
         getProjection: getProjection,
+
+        setColumnsDefaultWidth: setColumnsDefaultWidth,
 
         isGroupSelected: isGroupSelected,
         isSelected: isSelected

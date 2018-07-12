@@ -8,6 +8,7 @@
     var logService = require('../../../../../core/services/logService');
 
     var uiService = require('../../services/uiService');
+    var evDataHelper = require('../../helpers/ev-data.helper');
     var evEvents = require('../../services/entityViewerEvents');
 
     var metaService = require('../../services/metaService');
@@ -159,6 +160,7 @@
 
                     vm.attrs = data.results;
                     attrsList = attrsList.concat(vm.entityAttrs);
+                    attrsList = attrsList.concat(vm.attrs);
                     restoreAttrs();
                     syncAttrs();
 
@@ -331,6 +333,8 @@
 
             addColumn();
 
+            evDataHelper.setColumnsDefaultWidth(EntityViewerDataService);
+
             EntityViewerEventService.dispatchEvent(evEvents.COLUMNS_CHANGE);
             EntityViewerEventService.dispatchEvent(evEvents.FILTERS_CHANGE);
             EntityViewerEventService.dispatchEvent(evEvents.GROUPS_CHANGE);
@@ -409,6 +413,7 @@
                                 }
                             }
                             syncAttrs();
+                            evDataHelper.setColumnsDefaultWidth(EntityViewerDataService);
                             EntityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
                         }
                         if (target === document.querySelector('#groupsbag') ||
@@ -426,6 +431,7 @@
                                 }
                             }
                             syncAttrs();
+                            evDataHelper.setColumnsDefaultWidth(EntityViewerDataService);
                             EntityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
                         }
                         if (target === document.querySelector('#filtersbag .drop-new-filter') ||
@@ -443,10 +449,13 @@
                                 }
                             }
                             syncAttrs();
+                            evDataHelper.setColumnsDefaultWidth(EntityViewerDataService);
                             EntityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
                         }
                         $scope.$apply();
                     }
+
+
                     $scope.$apply();
                 });
 
