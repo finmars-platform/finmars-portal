@@ -206,9 +206,12 @@
             evDataService.setObject(activeObject);
         }
 
-        if (activeObject && activeObject.___id !== obj.___id) {
+        if (!activeObject || activeObject && activeObject.___id !== obj.___id) {
             obj.___is_activated = true;
         }
+
+
+        // console.log('handleObjectActive.obj', obj);
 
         evDataService.setObject(obj);
 
