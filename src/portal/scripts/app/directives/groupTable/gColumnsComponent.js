@@ -30,19 +30,6 @@
                 scope.entityType = scope.evDataService.getEntityType();
                 scope.components = scope.evDataService.getComponents();
 
-                scope.updateColumnsIds = function () {
-
-                    var columns = scope.evDataService.getColumns();
-
-                    columns.forEach(function (item) {
-
-                        item.___column_id = evDataHelper.getColumnId(item);
-
-                    });
-
-                    scope.evDataService.setColumns(columns);
-
-                };
 
                 scope.isReport = ['balance-report',
                     'cash-flow-projection-report',
@@ -393,13 +380,13 @@
 
                 var init = function () {
 
-                    scope.updateColumnsIds();
+                    evDataHelper.updateColumnsIds(scope.evDataService);
 
                     scope.setColumnsDefaultWidth();
 
                     scope.evEventService.addEventListener(evEvents.COLUMNS_CHANGE, function () {
 
-                        scope.updateColumnsIds();
+                        evDataHelper.updateColumnsIds(scope.evDataService);
                         scope.setColumnsDefaultWidth();
 
                         scope.columns = scope.evDataService.getColumns();
