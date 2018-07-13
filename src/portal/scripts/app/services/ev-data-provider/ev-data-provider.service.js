@@ -395,6 +395,16 @@
                     item.body.ordering = '-' + activeColumnSort.key
                 }
 
+            } else {
+
+                if (activeColumnSort.id) {
+                    if (activeColumnSort.options.sort === 'ASC') {
+                        item.body.ordering = '___da_' + activeColumnSort.id
+                    } else {
+                        item.body.ordering = '-' + '___da_' + activeColumnSort.id
+                    }
+                }
+
             }
 
             entityViewerDataService.setRequestParameters(item);
