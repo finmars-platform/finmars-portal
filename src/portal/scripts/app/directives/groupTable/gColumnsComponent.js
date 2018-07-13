@@ -111,6 +111,9 @@
                     //     scope.sorting.column.sort = sort;
                     // }
 
+
+                    console.log('sortHandler.column', column);
+
                     var columns = scope.evDataService.getColumns();
 
                     columns.forEach(function (item) {
@@ -316,23 +319,34 @@
                 }, 500);
 
                 scope.isSortable = function (column) {
-                    var b, e;
-                    if (baseAttrs && baseAttrs.length) {
-                        for (b = 0; b < baseAttrs.length; b = b + 1) {
-                            if (baseAttrs[b].key === column.key && baseAttrs[b].key !== 'notes') {
-                                return true;
-                            }
+
+                    if (column.hasOwnProperty('key')) {
+
+                        if (['accounts', 'counterparties', 'responsibles', 'transaction_types', 'portfolios'].indexOf(column.key) !== -1) {
+                            return false;
                         }
-                    }
-                    if (entityAttrs && entityAttrs.length) {
-                        for (e = 0; e < entityAttrs.length; e = e + 1) {
-                            if (entityAttrs[e].key === column.key) {
-                                return true;
-                            }
-                        }
+
                     }
 
-                    return false;
+                    return true;
+
+                    // var b, e;
+                    // if (baseAttrs && baseAttrs.length) {
+                    //     for (b = 0; b < baseAttrs.length; b = b + 1) {
+                    //         if (baseAttrs[b].key === column.key && baseAttrs[b].key !== 'notes') {
+                    //             return true;
+                    //         }
+                    //     }
+                    // }
+                    // if (entityAttrs && entityAttrs.length) {
+                    //     for (e = 0; e < entityAttrs.length; e = e + 1) {
+                    //         if (entityAttrs[e].key === column.key) {
+                    //             return true;
+                    //         }
+                    //     }
+                    // }
+                    //
+                    // return false;
                 };
 
                 scope.removeColumn = function (column) {
