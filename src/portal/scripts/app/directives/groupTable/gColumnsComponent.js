@@ -381,13 +381,12 @@
                 var init = function () {
 
                     evDataHelper.updateColumnsIds(scope.evDataService);
-
-                    scope.setColumnsDefaultWidth();
+                    evDataHelper.setColumnsDefaultWidth(scope.evDataService);
 
                     scope.evEventService.addEventListener(evEvents.COLUMNS_CHANGE, function () {
 
                         evDataHelper.updateColumnsIds(scope.evDataService);
-                        scope.setColumnsDefaultWidth();
+                        evDataHelper.setColumnsDefaultWidth(scope.evDataService);
 
                         scope.columns = scope.evDataService.getColumns();
 
