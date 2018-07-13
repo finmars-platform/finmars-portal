@@ -227,6 +227,7 @@ app.directive('groupGrouping', ['$mdDialog', require('./app/directives/groupTabl
 app.directive('groupColumns', [require('./app/directives/groupTable/gColumnsComponent')]);
 app.directive('groupClipboardHandler', [require('./app/directives/groupTable/gClipboardHandlerComponent')]);
 app.directive('groupColumnResizer', [require('./app/directives/groupTable/gColumnResizerComponent')]);
+app.directive('groupLayoutResizer', [require('./app/directives/groupTable/gLayoutResizerComponent')]);
 app.directive('gDialogDraggable', [require('./app/directives/groupTable/gDialogDraggableComponent')]);
 app.directive('groupHeightAligner', [require('./app/directives/groupTable/gHeightAlignerComponent')]);
 app.directive('groupVerticalScroll', [require('./app/directives/groupTable/gVerticalScrollComponent')]);
