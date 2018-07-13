@@ -348,54 +348,66 @@
                     dragAndDrop.init();
                 }, 500);
 
+                var syncFilters = function () {
+
+                    scope.filters = scope.evDataService.getFilters();
+                    scope.filters.forEach(function (item) {
+
+                        if (item.hasOwnProperty('id')) {
+                            item.key = '___da_' + item.id;
+                        }
+
+                    });
+
+                    scope.evDataService.setFilters(scope.filters);
+
+                    var promises = [];
+
+                    scope.filters.forEach(function (item) {
+
+                        if (!scope.fields.hasOwnProperty(item.key)) {
+                            if (item['value_type'] === "mc_field" || item['value_type'] === "field") {
+                                if (item.key === 'tags') {
+                                    promises.push(fieldResolverService.getFields(item.key, {entityType: scope.entityType}));
+                                } else {
+                                    promises.push(fieldResolverService.getFields(item.key));
+                                }
+                            }
+
+                        }
+                    });
+
+                    console.log('scope.fields', scope.fields);
+
+                    Promise.all(promises).then(function (data) {
+
+                        data.forEach(function (item) {
+                            scope.fields[item.key] = item.data;
+                        });
+
+                        console.log('scope.fields finish', scope.fields);
+
+                        scope.$apply(
+                            function () {
+                                setTimeout(function () {
+                                    $(elem).find('.md-select-search-pattern').on('keydown', function (ev) {
+                                        ev.stopPropagation();
+                                    });
+                                }, 100);
+                            }
+                        )
+                        ;
+                    });
+
+                };
+
                 var init = function () {
+
+                    syncFilters();
 
                     scope.evEventService.addEventListener(evEvents.FILTERS_CHANGE, function () {
 
-                        scope.filters = scope.evDataService.getFilters();
-                        scope.filters.forEach(function (item) {
-
-                            if (item.hasOwnProperty('id')) {
-                                item.key = '___da_' + item.id;
-                            }
-
-                        });
-
-                        scope.evDataService.setFilters(scope.filters);
-
-                        var promises = [];
-
-                        scope.filters.forEach(function (item) {
-
-                            if (!scope.fields.hasOwnProperty(item.key)) {
-                                if (item['value_type'] === "mc_field" || item['value_type'] === "field") {
-                                    if (item.key === 'tags') {
-                                        promises.push(fieldResolverService.getFields(item.key, {entityType: scope.entityType}));
-                                    } else {
-                                        promises.push(fieldResolverService.getFields(item.key));
-                                    }
-                                }
-
-                            }
-                        });
-
-                        Promise.all(promises).then(function (data) {
-
-                            data.forEach(function (item) {
-                                scope.fields[item.key] = item.data;
-                            });
-                            scope.$apply(
-                                function () {
-                                    setTimeout(function () {
-                                        $(elem).find('.md-select-search-pattern').on('keydown', function (ev) {
-                                            ev.stopPropagation();
-                                        });
-                                    }, 100);
-                                }
-                            )
-                            ;
-                        });
-
+                        syncFilters();
 
                     })
 
