@@ -22,6 +22,14 @@
                 var evContent;
                 var minWidth = 65;
 
+                function resizeWorkarea() {
+                    var workAreaElem = elem.parents('.g-workarea-wrap');
+                    workAreaElem.width($(elem).parents('.entity-viewer-holder').width() - $(elem).parents('.g-wrapper').find('.g-filter-sidebar.main-sidebar').width());
+                    var wrapperWidth = $(elem).find('.g-columns-component.g-thead').width() - $(elem).find('.g-cell-select.all').width();
+                    $(elem).find('.g-scroll-wrapper').width(wrapperWidth);
+                    $(elem).find('.g-scrollable-area').width(wrapperWidth);
+                }
+
                 function findColumnById(columnId) {
 
                     var columns = scope.evDataService.getColumns();
@@ -189,9 +197,15 @@
 
                 var init = function () {
 
+                    resizeWorkarea();
+
                     initColumnSliderListener();
 
                     resizeScrollableArea();
+
+                    $(window).on('resize', function () {
+                        resizeWorkarea();
+                    });
 
                     scope.evEventService.addEventListener(evEvents.REDRAW_TABLE, function () {
 
