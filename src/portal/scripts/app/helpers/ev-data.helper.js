@@ -260,12 +260,14 @@
 
         for (var i = 0; i < groupsCount; i = i + 1) {
 
-            if (groups[i].key) {
-                result.push(groups[i].key)
-            }
-
             if (groups[i].id) {
                 result.push(groups[i].id)
+            } else {
+
+                if (groups[i].key) {
+                    result.push(groups[i].key)
+                }
+
             }
         }
 
