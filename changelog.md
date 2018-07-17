@@ -1,5 +1,10 @@
 # Changelog
 
+## 17.07.2018
+- Dynamic attributes sorting
+- Dynamic attributes filtering
+- Entity attributes sorting
+
 ## 11.07.2018
 
 - New resize logic
