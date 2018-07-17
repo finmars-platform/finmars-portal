@@ -52,6 +52,8 @@
 
         var requestParameters = entityViewerDataService.getActiveRequestParameters();
 
+        console.log('injectRegularFilters.requestParameters', requestParameters);
+
         var newRequestParametersBody = Object.assign({}, requestParameters.body);
 
         var filters = entityViewerDataService.getFilters();
