@@ -537,6 +537,8 @@
             reservePadding = reserveTop * rowHeight;
         }
 
+        console.log('calculatePaddingTop.reservePadding', reservePadding);
+
         var fullPaddingTop = Math.floor(offset * rowHeight);
 
         return fullPaddingTop - reservePadding;

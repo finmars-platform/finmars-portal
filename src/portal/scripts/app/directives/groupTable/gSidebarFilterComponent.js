@@ -11,6 +11,8 @@
     var pricingPolicyService = require('../../services/pricingPolicyService');
     var currencyService = require('../../services/currencyService');
 
+    var attributeTypeService = require('../../services/attributeTypeService');
+
     module.exports = function ($mdDialog) {
         return {
             restrict: 'AE',
@@ -361,6 +363,8 @@
 
                     scope.evDataService.setFilters(scope.filters);
 
+                    console.log('scope.filters', scope.filters);
+
                     var promises = [];
 
                     scope.filters.forEach(function (item) {
@@ -374,6 +378,19 @@
                                 }
                             }
 
+                            if (item.value_type === 30) {
+
+                                promises.push(attributeTypeService.getByKey(scope.entityType, item.id).then(function (data) {
+
+                                    var result = data;
+                                    result.key = item.key;
+
+                                    return result;
+
+                                }))
+
+                            }
+
                         }
                     });
 
@@ -381,8 +398,16 @@
 
                     Promise.all(promises).then(function (data) {
 
+                        console.log('sidebar filters data', data);
+
                         data.forEach(function (item) {
-                            scope.fields[item.key] = item.data;
+
+                            if (item.hasOwnProperty('classifiers_flat')) {
+                                scope.fields[item.key] = item.classifiers_flat
+                            } else {
+                                scope.fields[item.key] = item.data;
+                            }
+
                         });
 
                         console.log('scope.fields finish', scope.fields);

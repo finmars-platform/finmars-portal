@@ -91,7 +91,7 @@
             report: {},
             data: {},
             virtualScroll: {
-                reserveTop: 20,
+                reserveTop: 10,
                 reserveBottom: 20,
                 requestThreshold: 20,
                 lastRequestOffset: 0,
