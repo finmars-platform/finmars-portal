@@ -57,7 +57,7 @@
                         if (!scope.grouping[i].options) {
                             scope.grouping[i].options = {};
                         }
-                        scope.grouping[i].options.sort = null;
+                        // scope.grouping[i].options.sort = null;
                     }
                     group.options.sort = sort;
 
