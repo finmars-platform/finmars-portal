@@ -560,8 +560,6 @@
 
         });
 
-        count = count - 1; // root group is hidden;
-
         console.log('calculateTotalHeight.count', count);
 
         var rowHeight = evDataService.getRowHeight();
