@@ -36,7 +36,12 @@
 
                 scope.evEventService.addEventListener(evEvents.DATA_LOAD_END, function () {
 
-                    projection = evDataHelper.getProjection(scope.evDataService);
+                    var flatList = evDataHelper.getFlatStructure(scope.evDataService);
+                    flatList.shift(); // remove root group
+
+                    scope.evDataService.setFlatList(flatList);
+
+                    projection = evDataHelper.calculateProjection(flatList, scope.evDataService);
 
                     evDomManager.calculateScroll(elements, scope.evDataService);
 
@@ -48,7 +53,12 @@
 
                 scope.evEventService.addEventListener(evEvents.REDRAW_TABLE, function () {
 
-                    projection = evDataHelper.getProjection(scope.evDataService);
+                    var flatList = evDataHelper.getFlatStructure(scope.evDataService);
+                    flatList.shift(); // remove root group
+
+                    scope.evDataService.setFlatList(flatList);
+
+                    projection = evDataHelper.calculateProjection(flatList, scope.evDataService);
 
                     console.log('projection', projection);
 

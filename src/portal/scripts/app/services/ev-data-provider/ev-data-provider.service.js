@@ -89,10 +89,11 @@
         var options = requestParameters.body;
         var event = requestParameters.event;
 
-        var nextPage = evDataHelper.getNextPage(options, event, entityViewerDataService);
+        if (!requestParameters.requestedPages) {
+            requestParameters.requestedPages = [];
+        }
 
-        console.log('options.page ', options.page);
-        console.log('nextPage', nextPage);
+        var currentPage = evDataHelper.calculatePageFromOffset(requestParameters, entityViewerDataService);
 
         if (evDataHelper.ifFirstRequestForRootGroup(event, entityViewerDataService) || evDataHelper.isFirstRequestForObjects(event, entityViewerDataService)) {
 
@@ -104,9 +105,10 @@
 
         } else {
 
-            if (options.page < nextPage) {
+            if (requestParameters.requestedPages.indexOf(currentPage) === -1) {
 
-                options.page = nextPage;
+                options.page = currentPage;
+                requestParameters.requestedPages.push(currentPage);
 
                 requestParameters.body = options;
 
@@ -135,6 +137,18 @@
             var options = requestParameters.body;
             var event = requestParameters.event;
 
+            var page = new Number(options.page) - 1;
+            // var pagination = entityViewerDataService.getPagination();
+            var step = 40;
+            var i;
+
+            console.log('getObjects.options', options);
+
+            console.log('from ', page * step);
+            console.log('to ', (page + 1) * step);
+            console.log('step ', step);
+            console.log('page', page);
+
             objectsService.getList(entityType, options).then(function (data) {
 
                 var groupData = entityViewerDataService.getData(event.___id);
@@ -150,8 +164,12 @@
                     obj.count = data.count;
                     obj.next = data.next;
                     obj.previous = data.previous;
-                    obj.results = obj.results.concat(data.results);
 
+                    for (i = 0; i < step; i = i + 1) {
+                        if (page * step + i < obj.count) {
+                            obj.results[page * step + i] = data.results[i];
+                        }
+                    }
 
                 } else {
 
@@ -164,7 +182,12 @@
                         obj.count = data.count;
                         obj.next = data.next;
                         obj.previous = data.previous;
-                        obj.results = obj.results.concat(data.results)
+
+                        for (i = 0; i < step; i = i + 1) {
+                            if (page * step + i < obj.count) {
+                                obj.results[page * step + i] = data.results[i];
+                            }
+                        }
 
                     } else {
 
@@ -183,15 +206,21 @@
 
                 }
 
+                evDataHelper.setDefaultObjects(obj);
+
                 obj.results = obj.results.map(function (item) {
 
-                    item.group_name = item.group_name ? item.group_name : '-';
-                    item.___is_selected = evDataHelper.isSelected(entityViewerDataService);
+                    if (item.___type !== 'placeholder_object') {
 
-                    item.___parentId = obj.___id;
-                    item.___type = 'object';
-                    item.___id = evDataHelper.getEvId(item);
-                    item.___level = obj.___level + 1;
+                        item.group_name = item.group_name ? item.group_name : '-';
+                        item.___is_selected = evDataHelper.isSelected(entityViewerDataService);
+
+                        item.___parentId = obj.___id;
+                        item.___type = 'object';
+                        item.___id = evDataHelper.getEvId(item);
+                        item.___level = obj.___level + 1;
+
+                    }
 
                     return item
                 });
@@ -208,12 +237,21 @@
 
     var getGroups = function (requestParameters, entityViewerDataService, entityViewerEventService) {
 
+        requestParameters.status = 'loading';
+
+        entityViewerDataService.setRequestParameters(requestParameters);
+
         return new Promise(function (resolve, reject) {
 
             var entityType = entityViewerDataService.getEntityType();
 
             var options = requestParameters.body;
             var event = requestParameters.event;
+
+            var page = new Number(options.page) - 1;
+            // var pagination = entityViewerDataService.getPagination();
+            var step = 40;
+            var i;
 
             groupsService.getList(entityType, options).then(function (data) {
 
@@ -230,7 +268,11 @@
                         obj.count = data.count;
                         obj.next = data.next;
                         obj.previous = data.previous;
-                        obj.results = obj.results.concat(data.results);
+                        for (i = 0; i < step; i = i + 1) {
+                            if (page * step + i < obj.count) {
+                                obj.results[page * step + i] = data.results[i];
+                            }
+                        }
 
 
                     } else {
@@ -246,7 +288,13 @@
                             obj.count = data.count;
                             obj.next = data.next;
                             obj.previous = data.previous;
-                            obj.results = obj.results.concat(data.results);
+
+                            for (i = 0; i < step; i = i + 1) {
+                                if (page * step + i < obj.count) {
+                                    obj.results[page * step + i] = data.results[i];
+                                }
+                            }
+
 
                         } else {
 
@@ -273,28 +321,38 @@
 
                     parents.push(obj);
 
+                    evDataHelper.setDefaultGroups(obj);
+
                     obj.results = obj.results.map(function (item) {
 
-                        item.___parentId = obj.___id;
-                        item.group_name = item.group_name ? item.group_name : '-';
+                        if (item.___type !== 'placeholder_group') {
 
-                        item.___is_selected = evDataHelper.isSelected(entityViewerDataService);
+                            item.___parentId = obj.___id;
+                            item.group_name = item.group_name ? item.group_name : '-';
+
+                            item.___is_selected = evDataHelper.isSelected(entityViewerDataService);
 
 
-                        item.___level = obj.___level + 1;
+                            item.___level = obj.___level + 1;
 
-                        if (groups.length >= parents.length) {
-                            item.___type = 'group';
-                        } else {
-                            item.___type = 'object';
+                            if (groups.length >= parents.length) {
+                                item.___type = 'group';
+                            } else {
+                                item.___type = 'object';
+                            }
+
+                            item.___id = evDataHelper.getEvId(item);
+
                         }
-
-                        item.___id = evDataHelper.getEvId(item);
 
                         return item
                     });
 
                     entityViewerDataService.setData(obj);
+
+                    requestParameters.status = 'loaded';
+
+                    entityViewerDataService.setRequestParameters(requestParameters);
 
                     resolve(obj);
 
