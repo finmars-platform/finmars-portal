@@ -83,6 +83,7 @@
 
         requestParameters.requestType = 'objects';
         requestParameters.id = groupHashId;
+
         requestParameters.event = {
             ___id: groupHashId,
             parentGroupId: parentGroupHashId,
@@ -556,6 +557,8 @@
             count = count + group.count;
 
         });
+
+        console.log('calculateTotalHeight.count', count);
 
         var rowHeight = evDataService.getRowHeight();
 

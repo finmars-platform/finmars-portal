@@ -185,13 +185,13 @@
 
         var pattern;
 
-        if (item.___type === 'group') {
+        if (item.___type === 'group' || item.___type === 'placeholder_group') {
 
             pattern = [item.___parentId, stringHelper.toHash(item.group_name)].join('');
 
         }
 
-        if (item.___type === 'object') {
+        if (item.___type === 'object' || item.___type === 'placeholder_object') {
 
             pattern = [item.___parentId, stringHelper.toHash(item.id)].join('');
 
@@ -405,12 +405,9 @@
 
     };
 
-    var getProjection = function (evDataService) {
+    var calculateProjection = function (flatList, evDataService) {
 
         console.time('Creating projection');
-
-        var flatList = getFlatStructure(evDataService);
-        flatList.shift(); // remove root group
 
         var reserveTop = evDataService.getVirtualScrollReserveTop();
         var reserveBottom = evDataService.getVirtualScrollReserveBottom();
@@ -429,7 +426,7 @@
             to = to + reserveBottom;
         }
 
-        evDataService.setVirtualScrollLimit(flatList);
+        evDataService.setVirtualScrollLimit(flatList.length);
 
         var items = flatList.slice(from, to);
 
@@ -529,6 +526,101 @@
 
     };
 
+    var setDefaultObjects = function (obj) {
+
+        var i;
+        for (i = 0; i < obj.count; i = i + 1) {
+
+            if (!obj.results[i]) {
+                obj.results[i] = {
+                    id: '___placeholder_object_' + i,
+                    ___type: 'placeholder_object',
+                    ___parentId: obj.___id
+                };
+
+                obj.results[i].___id = getEvId(obj.results[i]);
+            }
+
+        }
+
+    };
+
+    var setDefaultGroups = function (obj) {
+
+        var i;
+        for (i = 0; i < obj.count; i = i + 1) {
+
+            if (!obj.results[i]) {
+                obj.results[i] = {
+                    group_name: '___placeholder_group_' + i,
+                    ___type: 'placeholder_group',
+                    ___parentId: obj.___id,
+                    results: []
+                };
+
+                obj.results[i].___id = getEvId(obj.results[i]);
+            }
+
+        }
+
+        console.log('setDefaultGroups.obj', obj);
+
+    };
+
+    var calculatePageFromOffset = function (requestParameters, evDataService) {
+
+        console.log('calculatePageFromOffset.requestParameters', requestParameters);
+
+        var group = evDataService.getGroup(requestParameters.id);
+
+        if (group && group.results.length) {
+
+            var offset = evDataService.getVirtualScrollOffset();
+            var flatList = evDataService.getFlatList();
+            var step = 40;
+            var resultPage;
+
+            var pivotItem;
+            var pivotItemIndex;
+
+            if (offset > flatList.length) {
+
+                pivotItemIndex = flatList.length - 1;
+                pivotItem = flatList[pivotItemIndex];
+
+                resultPage = Math.ceil(group.count / step);
+
+            } else {
+                pivotItemIndex = offset;
+                pivotItem = flatList[offset];
+
+                resultPage = Math.ceil(pivotItemIndex / step);
+
+                if (flatList.length - offset < 40) {
+                    resultPage = resultPage + 1;
+                }
+
+            }
+
+            // console.log('calculatePageFromOffset.flatList.length', flatList.length);
+            // console.log('calculatePageFromOffset.offset', offset);
+            // console.log('calculatePageFromOffset.pivotItem', pivotItem);
+            // console.log('calculatePageFromOffset.group', group);
+            // console.log('calculatePageFromOffset.resultPage', resultPage);
+
+            if (resultPage === 0) {
+                resultPage = 1;
+            }
+
+            return resultPage;
+
+        } else {
+            return 1;
+        }
+
+
+    };
+
     module.exports = {
 
         getParents: getParents,
@@ -555,10 +647,15 @@
 
         getGroupTypes: getGroupTypes,
         getGroupValues: getGroupValues,
-        getProjection: getProjection,
+        calculateProjection: calculateProjection,
 
         setColumnsDefaultWidth: setColumnsDefaultWidth,
         updateColumnsIds: updateColumnsIds,
+
+        calculatePageFromOffset: calculatePageFromOffset,
+
+        setDefaultGroups: setDefaultGroups,
+        setDefaultObjects: setDefaultObjects,
 
         isGroupSelected: isGroupSelected,
         isSelected: isSelected

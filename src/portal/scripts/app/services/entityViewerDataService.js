@@ -237,6 +237,14 @@
             return data.projection;
         }
 
+        function setFlatList(flatList) {
+            data.flatList = flatList
+        }
+
+        function getFlatList() {
+            return data.flatList;
+        }
+
         function setData(obj) {
 
             console.log('setData.obj', obj);
@@ -298,6 +306,10 @@
             return data.data;
         }
 
+        function getGroup(hashId) {
+            return data.data[hashId];
+        }
+
         function getDataAsList() {
 
             var keys = Object.keys(data.data);
@@ -346,6 +358,22 @@
 
         function resetRequestParameters() {
             data.requestParameters = {};
+        }
+
+        function getRequestParametersAsList() {
+
+            var keys = Object.keys(data.requestParameters);
+
+            var result = [];
+            var i;
+            var keysLen = keys.length;
+
+            for (i = 0; i < keysLen; i = i + 1) {
+                result[i] = data.requestParameters[keys[i]]
+            }
+
+            return result;
+
         }
 
         function getRequestParameters(id) {
@@ -514,6 +542,8 @@
             return data.virtualScroll.limit;
         }
 
+
+
         return {
 
             setRootEntityViewer: setRootEntityViewer,
@@ -555,9 +585,13 @@
             setProjection: setProjection,
             getProjection: getProjection,
 
+            setFlatList: setFlatList,
+            getFlatList: getFlatList,
+
             getSelectAllRowsState: getSelectAllRowsState,
             setSelectAllRowsState: setSelectAllRowsState,
 
+            getGroup: getGroup,
             setData: setData,
             setAllData: setAllData,
             resetData: resetData,
@@ -574,6 +608,7 @@
 
             setRequestParameters: setRequestParameters,
             getRequestParameters: getRequestParameters,
+            getRequestParametersAsList: getRequestParametersAsList,
 
             getActiveRequestParameters: getActiveRequestParameters,
             setActiveRequestParametersId: setActiveRequestParametersId,

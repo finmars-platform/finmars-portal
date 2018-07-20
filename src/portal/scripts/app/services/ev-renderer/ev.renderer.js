@@ -16,6 +16,10 @@
 
         var rows = projection.map(function (item) {
 
+            if(item.___type === 'placeholder_group' || item.___type === 'placeholder_object') {
+                return '<div class="placeholder-row"></div>'
+            }
+
             if (item.___type === 'group') {
 
                 return groupRender.render(item);

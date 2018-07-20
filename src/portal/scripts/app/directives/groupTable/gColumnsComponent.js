@@ -260,7 +260,7 @@
 
                             var parent = element.parentElement;
 
-                            var elemItems = parent.querySelectorAll('.g-column');
+                            var elemItems = parent.querySelectorAll('.g-cell.g-column');
 
                             console.log('elemItems', elemItems);
 
@@ -269,7 +269,11 @@
 
                             for (var i = 0; i < elemItems.length; i = i + 1) {
 
+                                // console.log('elemItems[i].dataset.columnId', elemItems[i].dataset.columnId);
+
                                 for (var x = 0; x < columns.length; x = x + 1) {
+
+                                    // console.log('columns[x].___column_id', columns[x].___column_id);
 
                                     if (elemItems[i].dataset.columnId === columns[x].___column_id) {
                                         result.push(columns[x]);
@@ -292,6 +296,8 @@
 
 
                             });
+
+                            console.log('isChanged', isChanged);
 
                             if (isChanged) {
 
@@ -359,16 +365,18 @@
                         }).filter(function (item) {
                             return !!item;
                         });
-                    }
-                    if (column.key) {
-                        scope.columns = scope.columns.map(function (item) {
-                            if (item.key === column.key) {
-                                return undefined
-                            }
-                            return item
-                        }).filter(function (item) {
-                            return !!item;
-                        });
+                    } else {
+                        if (column.key) {
+                            scope.columns = scope.columns.map(function (item) {
+                                if (item.key === column.key) {
+                                    return undefined
+                                }
+                                return item
+                            }).filter(function (item) {
+                                return !!item;
+                            });
+                        }
+
                     }
 
                     scope.evDataService.setColumns(scope.columns);

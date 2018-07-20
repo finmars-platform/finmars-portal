@@ -64,9 +64,14 @@
 
         var index = 0;
 
+        // console.log('insertItemInNode.node', node);
+
+        // console.log('data[node.___parentId]', data[node.___parentId]);
+        // console.log('node', node);
+
         data[node.___parentId].results.forEach(function (item, i) {
 
-            if (item.___id === node.___id) {
+            if (item && item.___id === node.___id) {
                 index = i;
             }
 
@@ -86,8 +91,11 @@
         var list = [];
 
         _rootGroup.results.forEach(function (item) {
-            if (!_data[item.___id] && item.___type === 'group') {
-                _data[item.___id] = item;
+            if (!_data[item.___id]) {
+
+                if (item.___type === 'group' || item.___type === 'placeholder_group') {
+                    _data[item.___id] = item;
+                }
             }
         });
 
@@ -95,13 +103,17 @@
 
         originalKeys.forEach(function (key) {
 
-            if (_data[key].___type === 'group' && _data[key].hasOwnProperty('results')) {
+            if (_data[key].___type === 'group' || _data[key].___type === 'placeholder_group') {
 
-                _data[key].results.forEach(function (item) {
-                    if (!_data[item.___id]) {
-                        _data[item.___id] = item;
-                    }
-                });
+                if (_data[key].hasOwnProperty('results')) {
+
+                    _data[key].results.forEach(function (item) {
+                        if (!_data[item.___id]) {
+                            _data[item.___id] = item;
+                        }
+                    });
+
+                }
 
             }
 
@@ -123,16 +135,20 @@
         for (i = 0; i < list.length; i += 1) {
             node = list[i];
 
-            // console.log('node', node);
+            if (node.___parentId !== null) {
 
-            if (node.___parentId !== null && node.___type === 'group') {
-                insertItemInNode(list, map, node, _dataOrderEthalon)
-            } else {
-                if (node.___parentId !== null && node.___type === 'object') {
-                    list[map[node.___parentId]].results.push(node)
-                } else {
-                    roots.push(node);
+                if (node.___type === 'group' || node.___type === 'placeholder_group') {
+                    insertItemInNode(list, map, node, _dataOrderEthalon)
                 }
+
+                if (node.___type === 'object' || node.___type === 'placeholder_object') {
+                    list[map[node.___parentId]].results.push(node)
+                }
+
+            } else {
+
+                roots.push(node);
+
             }
         }
 
