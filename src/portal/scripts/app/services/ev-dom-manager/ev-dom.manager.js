@@ -554,6 +554,8 @@
 
         unfoldedGroups.forEach(function (group) {
 
+            console.log('group', group);
+
             count = count + group.count;
 
         });

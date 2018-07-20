@@ -99,6 +99,8 @@
 
             requestParameters.body = options;
 
+            requestParameters.requestedPages = [1];
+
             entityViewerDataService.setRequestParameters(requestParameters);
 
             callback(entityViewerDataService, entityViewerEventService);
