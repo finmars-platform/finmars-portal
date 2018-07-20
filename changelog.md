@@ -1,5 +1,9 @@
 # Changelog
 
+## 20.07.2018
+
+- New entities
+
 ## 17.07.2018
 - Dynamic attributes sorting
 - Dynamic attributes filtering
