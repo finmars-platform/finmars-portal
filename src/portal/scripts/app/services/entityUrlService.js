@@ -34,7 +34,7 @@
             case 'transaction-type':
                 return 'transactions/transaction-type';
             case 'complex-transaction':
-                return 'transaction/complex-transaction';
+                return 'transactions/complex-transaction';
             case 'currency':
                 return 'currencies/currency';
             case 'currency-history':
