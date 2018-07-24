@@ -138,7 +138,7 @@
 
                         vm.listView = res.results[0];
 
-                        if (res.results[0].data.hasOwnProperty('table') && Object.keys(res.results[0].data.table).length) {
+                        if (res.results[0].data.hasOwnProperty('table') && Object.keys(res.results[0].data.table).length && Object.keys(res.results[0].data).length === 1) {
 
                             vm.options = Object.assign(vm.options, res.results[0].data.table, res.results[0].tableAdditions);
                             vm.options.entityType = vm.entityType;
@@ -160,6 +160,7 @@
 
                     }
 
+                    console.log('vm.getView.options', vm.options);
 
                     var reportOptions = entityViewerDataService.getReportOptions();
                     var newReportOptions = Object.assign({}, reportOptions, vm.options.reportOptions);
@@ -371,9 +372,8 @@
 
                     vm.options.columnsWidth = thWidths;
 
-                    if (!vm.listView) {
-                        vm.listView = {data: {}};
-                    }
+                    console.log('vm.listView', vm.listView);
+
                     vm.listView.data = vm.options;
 
                     if (vm.listView.hasOwnProperty('id')) {

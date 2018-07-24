@@ -132,6 +132,8 @@
 
     var getObjects = function (requestParameters, entityViewerDataService, entityViewerEventService) {
 
+        entityViewerEventService.dispatchEvent(evEvents.DATA_LOAD_START);
+
         return new Promise(function (resolve, reject) {
 
             var entityType = entityViewerDataService.getEntityType();
@@ -242,6 +244,8 @@
         requestParameters.status = 'loading';
 
         entityViewerDataService.setRequestParameters(requestParameters);
+
+        entityViewerEventService.dispatchEvent(evEvents.DATA_LOAD_START);
 
         return new Promise(function (resolve, reject) {
 
