@@ -7,6 +7,7 @@
 
     var evEvents = require('../../services/entityViewerEvents');
     var evDataHelper = require('../../helpers/ev-data.helper');
+    var evLoaderHelper = require('../../helpers/ev-loader.helper');
 
     module.exports = function ($mdDialog) {
         return {
@@ -21,7 +22,6 @@
 
                 scope.grouping = scope.evDataService.getGroups();
                 scope.components = scope.evDataService.getComponents();
-
 
 
                 scope.updateGroupTypeIds = function () {
@@ -406,6 +406,21 @@
                 var init = function () {
 
                     scope.updateGroupTypeIds();
+
+                    scope.evEventService.addEventListener(evEvents.DATA_LOAD_START, function () {
+
+                        scope.dataLoader = evLoaderHelper.isDataLoading(scope.evDataService)
+
+                    });
+
+
+                    scope.evEventService.addEventListener(evEvents.DATA_LOAD_END, function () {
+
+                        scope.dataLoader = evLoaderHelper.isDataLoading(scope.evDataService);
+
+                        scope.$apply();
+
+                    });
 
                     scope.evEventService.addEventListener(evEvents.GROUPS_CHANGE, function () {
 

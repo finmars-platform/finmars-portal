@@ -241,7 +241,6 @@
 
     };
 
-
     var getGroupTypes = function (id, parentId, evDataService) {
 
         var result = [];

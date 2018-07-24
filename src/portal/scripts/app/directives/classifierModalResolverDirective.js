@@ -36,6 +36,7 @@
                         targetEvent: event,
                         preserveScope: true,
                         autoWrap: true,
+                        multiple: true,
                         skipHide: true,
                         locals: {
                             data: {
