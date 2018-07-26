@@ -19,13 +19,30 @@
             vm.entityId = '';
             vm.evAction = 'update';
 
+            vm.entityId = $scope.evDataService.getEditorEntityId();
+
+            console.log('vm.entityId', vm.entityId);
+
+            if (vm.entityId !== undefined) {
+                vm.evAction = 'update';
+                vm.readyStatus.entityId = true;
+            }
+
+            console.log('$scope.$parent.evEventService', $scope.$parent.evEventService);
+
             $scope.$parent.evEventService.addEventListener(evEvents.ADDITIONS_EDITOR_ENTITY_ID_CHANGE, function () {
 
+                // console.log('ADDITIONS_EDITOR_ENTITY_ID_CHANGE', vm.entityId);
+
                 vm.readyStatus.entityId = false;
+                vm.entityId = undefined;
+                $scope.$apply();
 
                 setTimeout(function () {
 
-                    vm.entityId = $scope.evDataService.getEditorEntityId();
+                    vm.entityId = $scope.$parent.evDataService.getEditorEntityId();
+
+                    // console.log('entityId', vm.entityId);
 
                     if (vm.entityId !== undefined) {
                         vm.evAction = 'update';
@@ -33,6 +50,8 @@
                     }
 
                     $scope.$apply();
+
+                    // console.log('HEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEREEEEEEEEEEEEEEEEEEEEE??');
 
                 }, 100)
 

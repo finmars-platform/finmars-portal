@@ -71,11 +71,6 @@
 
                     scope.editorEntityId = scope.evDataService.getEditorEntityId();
 
-                    scope.$broadcast('rootEditorEntityIdDown', {
-                        editorEntityId: scope.editorEntityId,
-                        entityType: scope.entityType
-                    });
-
                 });
 
 

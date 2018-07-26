@@ -139,7 +139,7 @@
 
                     scope.evDataService.setReportOptions(reportOptions);
 
-                    scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE);
+                    scope.evEventService.dispatchEvent(evEvents.REQUEST_REPORT);
                     // scope.evEventService.dispatchEvent(evEvents.CALCULATE_REPORT);
 
                 };

@@ -272,7 +272,7 @@
                         var controllerName = '';
                         var templateUrl = '';
 
-                        switch (scope.options.entityType) {
+                        switch (scope.entityType) {
                             case 'balance-report':
                                 controllerName = 'gModalReportController as vm';
                                 templateUrl = 'views/directives/groupTable/modal-report-view.html';

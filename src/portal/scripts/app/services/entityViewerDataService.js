@@ -395,6 +395,7 @@
                         id: id,
                         groups_level: 1, // 0 is for root
                         event: {
+                            ___id: null,
                             groupName: null,
                             groupId: null,
                             parentGroupId: null
@@ -541,7 +542,6 @@
         function getVirtualScrollLimit() {
             return data.virtualScroll.limit;
         }
-
 
 
         return {

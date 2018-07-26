@@ -20,7 +20,8 @@
                 scope.isRootEntityViewer = scope.evDataService.isRootEntityViewer();
 
                 var lastMouseMoveEvent = null;
-                
+                var isOpened = false;
+
                 function activateHeightSlider() {
 
                     $('.g-height-slider').bind('mousedown', function (e) {
@@ -113,11 +114,20 @@
 
                 function resolveHeight() {
 
-                    if (scope.additions.reportWizard || scope.additions.editor || scope.additions.permissionEditor) {
+                    var additions = scope.evDataService.getAdditions();
 
-                        setSplitHeights();
+                    console.log('additions', additions);
+
+                    if (additions.reportWizard || additions.editor || additions.permissionEditor) {
+
+                        if (isOpened === false) {
+                            isOpened = true;
+                            setSplitHeights();
+                        }
 
                     } else {
+
+                        isOpened = false;
 
                         setDefaultHeights()
                     }
@@ -153,16 +163,16 @@
                     })
 
                 }
-                
+
                 scope.evEventService.addEventListener(evEvents.ADDITIONS_RENDER, function () {
 
                     scope.additions = scope.evDataService.getAdditions();
-                    
-                    if(scope.additions.additionsState === true) {
+
+                    if (scope.additions.additionsState === true) {
 
                         activateHeightSlider()
                     }
-                    
+
                 });
 
             }
