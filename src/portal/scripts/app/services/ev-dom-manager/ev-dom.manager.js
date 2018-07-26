@@ -280,6 +280,8 @@
 
             handleObjectActive(clickData, evDataService);
 
+            console.log('setEditorEntityId.obj', obj);
+
             evDataService.setEditorEntityId(obj.id);
             evEventService.dispatchEvent(evEvents.ADDITIONS_EDITOR_ENTITY_ID_CHANGE);
 

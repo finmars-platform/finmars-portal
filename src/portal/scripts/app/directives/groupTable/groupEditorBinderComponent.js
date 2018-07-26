@@ -16,6 +16,7 @@
             restrict: 'AE',
             link: function (scope, elem, attrs) {
 
+
                 var editorTemplateUrl = scope.evDataService.getEditorTemplateUrl();
 
                 console.log('editorTemplateUrl', editorTemplateUrl);

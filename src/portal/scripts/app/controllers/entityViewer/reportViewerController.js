@@ -65,6 +65,13 @@
 
             });
 
+            entityViewerEventService.addEventListener(evEvents.REQUEST_REPORT, function () {
+
+                rvDataProviderService.requestReport(entityViewerDataService, entityViewerEventService);
+
+            });
+
+
             vm.getView = function () {
 
                 uiService.getActiveListLayout(vm.entityType).then(function (res) {
