@@ -18,6 +18,8 @@
 
             entityViewerDataResolver.getList(entityType, reportOptions).then(function (data) {
 
+                console.log('requestData.data', data);
+
                 var reportOptions = entityViewerDataService.getReportOptions();
 
                 reportOptions = Object.assign({}, reportOptions, data);
@@ -26,7 +28,7 @@
 
                 if (!data.hasOwnProperty('non_field_errors')) {
 
-                    if (data.task_status !== 'SUCCESS') {
+                    if (data.hasOwnProperty('task_status') && data.task_status !== 'SUCCESS') {
 
                         setTimeout(function () {
                             resolve(requestData(entityViewerDataService));
@@ -39,7 +41,11 @@
                     }
                 }
 
-            });
+            }).catch(function (reason) {
+
+                console.log('here?');
+
+            })
         });
 
 
