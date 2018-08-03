@@ -4,7 +4,7 @@
     var groupsService = require('../ev-data-provider/groups.service');
     var objectsService = require('../ev-data-provider/objects.service');
     var evDataHelper = require('../../helpers/ev-data.helper');
-    var evRvDataHelper = require('../../helpers/ev-rv-common.helper');
+    var evRvCommonHelper = require('../../helpers/ev-rv-common.helper');
     var entityViewerDataResolver = require('../entityViewerDataResolver');
     var stringHelper = require('../../helpers/stringHelper');
     var queryParamsHelper = require('../../helpers/queryParamsHelper');
@@ -348,7 +348,7 @@
                                 item.___type = 'object';
                             }
 
-                            item.___id = evRvDataHelper.getId(item);
+                            item.___id = evRvCommonHelper.getId(item);
 
                         }
 
