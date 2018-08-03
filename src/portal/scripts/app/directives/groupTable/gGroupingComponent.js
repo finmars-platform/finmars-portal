@@ -395,7 +395,7 @@
                         scope.updateGroupTypeIds();
 
                         scope.grouping = scope.evDataService.getGroups();
-                        setDefaultGroupType();
+                        setDefaultGroupType(scope.evDataService);
 
                         scope.evDataService.resetData();
                         scope.evDataService.resetRequestParameters();
