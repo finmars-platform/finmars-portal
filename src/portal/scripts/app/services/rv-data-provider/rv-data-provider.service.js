@@ -9,6 +9,9 @@
     var stringHelper = require('../../helpers/stringHelper');
     var queryParamsHelper = require('../../helpers/queryParamsHelper');
 
+    var reportHelper = require('../../helpers/reportHelper');
+    var transactionReportHelper = require('../../helpers/transactionReportHelper');
+
     console.log('evRvCommonHelper', evRvCommonHelper);
 
     var requestData = function (evDataService) {
@@ -96,6 +99,11 @@
             var reportOptions = entityViewerDataService.getReportOptions();
 
             reportOptions = Object.assign({}, reportOptions, {task_id: null});
+
+            reportOptions.items = transactionReportHelper.injectIntoItems(reportOptions.items, data);
+            reportOptions.items = reportHelper.releaseEntityObjects(reportOptions.items);
+
+            console.log('reportOptions.items', reportOptions.items);
 
             entityViewerDataService.setReportOptions(reportOptions);
 

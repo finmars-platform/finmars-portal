@@ -28,8 +28,6 @@
             console.log('groups fold')
 
 
-
-
         });
 
         entityViewerEventService.addEventListener(evEvents.GROUPS_LEVEL_UNFOLD, function () {
@@ -57,7 +55,7 @@
                             id: activeObject.id,
                             name: activeObject.name
                         },
-                        entityType: vm.entityType
+                        entityType: entityViewerDataService.getEntityType()
                     }
                 }).then(function (res) {
                     if (res.status === 'agree') {
@@ -84,7 +82,7 @@
                     targetEvent: activeObject.event,
                     //clickOutsideToClose: true,
                     locals: {
-                        entityType: vm.entityType,
+                        entityType: entityViewerDataService.getEntityType(),
                         entityId: activeObject.id
                     }
                 }).then(function (res) {
