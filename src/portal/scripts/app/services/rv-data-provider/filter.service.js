@@ -50,8 +50,8 @@
                     key = options.groups_types[i];
                     value = options.groups_values[i];
 
-                    console.log('item[key]', item[key]);
-                    console.log('value', value);
+                    // console.log('item[key]', item[key]);
+                    // console.log('value', value);
 
                     if (value === '-') {
 
