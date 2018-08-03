@@ -20,13 +20,13 @@
 
                 console.log('requestData.data', data);
 
-                var reportOptions = entityViewerDataService.getReportOptions();
-
-                reportOptions = Object.assign({}, reportOptions, data);
-
-                entityViewerDataService.setReportOptions(reportOptions);
-
                 if (!data.hasOwnProperty('non_field_errors')) {
+
+                    var reportOptions = entityViewerDataService.getReportOptions();
+
+                    reportOptions = Object.assign({}, reportOptions, data);
+
+                    entityViewerDataService.setReportOptions(reportOptions);
 
                     if (data.hasOwnProperty('task_status') && data.task_status !== 'SUCCESS') {
 
