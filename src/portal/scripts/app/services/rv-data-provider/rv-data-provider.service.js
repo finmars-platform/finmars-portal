@@ -9,6 +9,8 @@
     var stringHelper = require('../../helpers/stringHelper');
     var queryParamsHelper = require('../../helpers/queryParamsHelper');
 
+    console.log('evRvCommonHelper', evRvCommonHelper);
+
     var requestData = function (entityViewerDataService) {
 
         return new Promise(function (resolve, reject) {
