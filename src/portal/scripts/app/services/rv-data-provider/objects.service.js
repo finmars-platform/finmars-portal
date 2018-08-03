@@ -22,7 +22,7 @@
 
             var reportOptions = entityViewerDataService.getReportOptions();
 
-            var items = reportOptions.items.concat();
+            var items = JSON.parse(JSON.stringify(reportOptions.items));
 
             items = filterService.filterByRegularFilters(items, regularFilters);
 
