@@ -83,7 +83,7 @@
 
         entityViewerDataService.setRequestParameters(requestParameters);
 
-        // console.log('injectRegularFilters.filters', filters);
+        console.log('injectRegularFilters.filters', filters);
         // console.log('injectRegularFilters.newRequestParameters', requestParameters);
 
     };
@@ -578,6 +578,7 @@
     };
 
     module.exports = {
+        createDataStructure: createDataStructure,
         requestReport: requestReport,
         updateDataStructure: updateDataStructure,
         sortObjects: sortObjects,
