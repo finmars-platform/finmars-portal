@@ -20,6 +20,9 @@
                 evEventService: '='
             },
             template: '<div>' +
+            '<div class="ev-progressbar-holder" layout="row" layout-sm="column">\n' +
+            '            <md-progress-linear class="ev-progressbar"  md-mode="indeterminate"></md-progress-linear>\n' +
+            '        </div>' +
             '<div class="ev-viewport">' +
             '<div class="ev-content"></div>' +
             '</div>' +
@@ -28,6 +31,7 @@
 
                 var viewportElem = elem[0].querySelector('.ev-viewport');
                 var contentElem = elem[0].querySelector('.ev-content');
+                var progressBar = elem[0].querySelector('.ev-progressbar');
 
                 var elements = {
                     viewportElem: viewportElem,
@@ -88,7 +92,17 @@
                     }
                 }
 
+                scope.evEventService.addEventListener(evEvents.DATA_LOAD_START, function () {
+
+
+                    progressBar.style.display = 'block';
+
+
+                });
+
                 scope.evEventService.addEventListener(evEvents.DATA_LOAD_END, function () {
+
+                    progressBar.style.display = 'none';
 
                     updateTableContent();
 
