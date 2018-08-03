@@ -11,12 +11,12 @@
 
     console.log('evRvCommonHelper', evRvCommonHelper);
 
-    var requestData = function (entityViewerDataService) {
+    var requestData = function (evDataService) {
 
         return new Promise(function (resolve, reject) {
 
-            var entityType = entityViewerDataService.getEntityType();
-            var reportOptions = entityViewerDataService.getReportOptions();
+            var entityType = evDataService.getEntityType();
+            var reportOptions = evDataService.getReportOptions();
 
             entityViewerDataResolver.getList(entityType, reportOptions).then(function (data) {
 
@@ -24,16 +24,16 @@
 
                 if (!data.hasOwnProperty('non_field_errors')) {
 
-                    var reportOptions = entityViewerDataService.getReportOptions();
+                    var reportOptions = evDataService.getReportOptions();
 
                     reportOptions = Object.assign({}, reportOptions, data);
 
-                    entityViewerDataService.setReportOptions(reportOptions);
+                    evDataService.setReportOptions(reportOptions);
 
                     if (data.hasOwnProperty('task_status') && data.task_status !== 'SUCCESS') {
 
                         setTimeout(function () {
-                            resolve(requestData(entityViewerDataService));
+                            resolve(requestData(evDataService));
                         }, 1000)
 
                     } else {
@@ -89,7 +89,9 @@
 
         // console.log('requestReport started');
 
-        requestData(entityViewerDataService).then(function (data) {
+        entityViewerEventService.dispatchEvent(evEvents.DATA_LOAD_START);
+
+        requestData(entityViewerDataService, entityViewerEventService).then(function (data) {
 
             var reportOptions = entityViewerDataService.getReportOptions();
 
