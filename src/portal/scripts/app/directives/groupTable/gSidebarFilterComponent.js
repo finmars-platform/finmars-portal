@@ -166,35 +166,29 @@
                 };
 
                 scope.toggleFilterState = function () {
-                    if (scope.isReport === true) {
-                        scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE)
-                    } else {
 
-                        scope.evDataService.resetData();
-                        scope.evDataService.resetRequestParameters();
+                    scope.evDataService.resetData();
+                    scope.evDataService.resetRequestParameters();
 
-                        var rootGroup = scope.evDataService.getRootGroupData();
+                    var rootGroup = scope.evDataService.getRootGroupData();
 
-                        scope.evDataService.setActiveRequestParametersId(rootGroup.___id);
+                    scope.evDataService.setActiveRequestParametersId(rootGroup.___id);
 
-                        scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE)
-                    }
+                    scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE)
+
                 };
 
                 scope.filterChange = function (filter) {
-                    if (scope.isReport === true) {
-                        scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE)
-                    } else {
 
-                        scope.evDataService.resetData();
-                        scope.evDataService.resetRequestParameters();
+                    scope.evDataService.resetData();
+                    scope.evDataService.resetRequestParameters();
 
-                        var rootGroup = scope.evDataService.getRootGroupData();
+                    var rootGroup = scope.evDataService.getRootGroupData();
 
-                        scope.evDataService.setActiveRequestParametersId(rootGroup.___id);
+                    scope.evDataService.setActiveRequestParametersId(rootGroup.___id);
 
-                        scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE)
-                    }
+                    scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE)
+
                 };
 
                 scope.selectAll = function () {
@@ -205,11 +199,8 @@
                     scope.evDataService.setFilters(scope.filters);
                     scope.evEventService.dispatchEvent(evEvents.FILTERS_CHANGE);
 
-                    if (scope.isReport === true) {
-                        scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE)
-                    } else {
-                        scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE)
-                    }
+                    scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE)
+
                 };
 
                 scope.clearAll = function () {
@@ -220,11 +211,8 @@
                     scope.evDataService.setFilters(scope.filters);
                     scope.evEventService.dispatchEvent(evEvents.FILTERS_CHANGE);
 
-                    if (scope.isReport === true) {
-                        scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE)
-                    } else {
-                        scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE)
-                    }
+                    scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE)
+
                 };
 
                 scope.deselectAll = function () {
@@ -236,11 +224,8 @@
                     scope.evDataService.setFilters(scope.filters);
                     scope.evEventService.dispatchEvent(evEvents.FILTERS_CHANGE);
 
-                    if (scope.isReport === true) {
-                        scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE)
-                    } else {
-                        scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE)
-                    }
+                    scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE)
+
                 };
 
                 if (scope.options && scope.options.isRootEntityViewer === false) {
@@ -259,7 +244,7 @@
 
                         });
 
-                        scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE)
+                        scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE)
 
                     });
                 }
@@ -272,7 +257,7 @@
 
                     filter.options.useFromAbove = !filter.options.useFromAbove;
 
-                    scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE)
+                    scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE)
                 };
 
                 scope.removeFilter = function (filter) {
@@ -291,7 +276,7 @@
 
                     scope.evDataService.setFilters(scope.filters);
                     scope.evEventService.dispatchEvent(evEvents.FILTERS_CHANGE);
-                    scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE)
+                    scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE)
                 };
 
                 scope.getFilterType = function (filterType) {
@@ -327,7 +312,7 @@
 
                         this.dragula.on('dragend', function (el) {
 
-                            scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE)
+                            scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE)
 
                         })
                     },

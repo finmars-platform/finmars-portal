@@ -1,30 +1,44 @@
 (function () {
 
+    var filterService = require('./filter.service');
+
+    var sortItems = function () {
+
+    };
+
+
     var getList = function (entityType, options, entityViewerDataService) {
 
         return new Promise(function (resolve, reject) {
 
             var result = {
-                status: '200',
                 next: null,
                 previous: null,
                 count: 0,
                 results: []
             };
 
+            var regularFilters = filterService.getRegularFilters(options);
+
             var reportOptions = entityViewerDataService.getReportOptions();
 
+            var items = reportOptions.items.concat();
 
-            if (options.groups_types.length) {
+            items = filterService.filterByRegularFilters(items, regularFilters);
 
-            } else {
-                result.count = reportOptions.items.length;
-                result.results = reportOptions.items;
-            }
+            console.log('rv-data-provider-objects-service.getList.items.length after regular filters', items.length);
 
-            console.log('rv-data-provider-objects-service.getList', entityViewerDataService);
+            items = filterService.filterByGroupsFilters(items, options);
+
+            console.log('rv-data-provider-objects-service.getList.items.length after groups filters', items.length);
+
+            result.count = items.length;
+            result.results = items;
+
             console.log('rv-data-provider-objects-service.getList', options);
             console.log('rv-data-provider-objects-service.getList', entityType);
+            console.log('rv-data-provider-objects-service.getList.result', result);
+
 
             resolve(result)
 

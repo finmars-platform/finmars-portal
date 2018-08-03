@@ -35,7 +35,7 @@
             //{
             //    "key": "carry_with_sign",
             //    "name": "Carry with sign",
-            //    "value_type": "float"
+            //    "value_type": 20
             //},
             {
                 "key": "item_type_name",
@@ -45,17 +45,17 @@
             {
                 "key": "cash_consideration",
                 "name": "Cash consideration",
-                "value_type": "float"
+                "value_type": 20
             },
             {
                 "key": "cash_consideration_after",
                 "name": "Cash consideration after",
-                "value_type": "float"
+                "value_type": 20
             },
             {
                 "key": "cash_consideration_before",
                 "name": "Cash consideration before",
-                "value_type": "float"
+                "value_type": 20
             }
             //{
             //    "key": "cash_date",
@@ -85,7 +85,7 @@
             //{
             //    "key": "overheads_with_sign",
             //    "name": "Overheads with sign",
-            //    "value_type": "float"
+            //    "value_type": 20
             //},
             //{
             //    "key": "portfolio",
@@ -95,7 +95,7 @@
             //{
             //    "key": "reference_fx_rate",
             //    "name": "Reference fx rate",
-            //    "value_type": "float"
+            //    "value_type": 20
             //},
             //{
             //    "key": "responsible",
@@ -145,7 +145,7 @@
             //{
             //    "key": "transaction_code",
             //    "name": "Transaction code",
-            //    "value_type": "float"
+            //    "value_type": 20
             //},
             //{
             //    "key": "transaction_currency",

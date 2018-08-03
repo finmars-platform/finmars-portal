@@ -10,7 +10,7 @@
             {
                 "key": "code",
                 "name": "Code",
-                "value_type": "float"
+                "value_type": 20
             },
             {
                 "key": "date",

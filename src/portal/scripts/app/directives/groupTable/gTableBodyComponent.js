@@ -7,8 +7,10 @@
 
     var evEvents = require('../../services/entityViewerEvents');
     var evRenderer = require('../../services/ev-renderer/ev.renderer');
+    var rvRenderer = require('../../services/rv-renderer/rv.renderer');
     var evDomManager = require('../../services/ev-dom-manager/ev-dom.manager');
     var evDataHelper = require('../../helpers/ev-data.helper');
+    var rvDataHelper = require('../../helpers/rv-data.helper');
 
     module.exports = function ($mdDialog) {
         return {
@@ -33,8 +35,35 @@
                 };
 
                 var projection;
+                var entityType = scope.evDataService.getEntityType();
 
-                scope.evEventService.addEventListener(evEvents.DATA_LOAD_END, function () {
+                function renderReportViewer() {
+
+                    console.log('renderReportViewer');
+
+                    var flatList = rvDataHelper.getFlatStructure(scope.evDataService);
+                    flatList.shift(); // remove root group
+
+                    flatList = flatList.filter(function (item) {
+                        return item.___type !== 'group';
+                    });
+
+                    scope.evDataService.setFlatList(flatList);
+
+                    projection = evDataHelper.calculateProjection(flatList, scope.evDataService);
+
+                    console.log('projection', projection);
+
+                    evDomManager.calculateScroll(elements, scope.evDataService);
+
+                    rvRenderer.render(contentElem, projection, scope.evDataService, scope.evEventService);
+
+
+                }
+
+                function renderEntityViewer() {
+
+                    console.log('renderEntityViewer');
 
                     var flatList = evDataHelper.getFlatStructure(scope.evDataService);
                     flatList.shift(); // remove root group
@@ -48,23 +77,26 @@
                     console.log('projection', projection);
 
                     evRenderer.render(contentElem, projection, scope.evDataService, scope.evEventService);
+
+                }
+
+                function updateTableContent() {
+                    if (['balance-report'].indexOf(entityType) === -1) {
+                        renderEntityViewer();
+                    } else {
+                        renderReportViewer();
+                    }
+                }
+
+                scope.evEventService.addEventListener(evEvents.DATA_LOAD_END, function () {
+
+                    updateTableContent();
 
                 });
 
                 scope.evEventService.addEventListener(evEvents.REDRAW_TABLE, function () {
 
-                    var flatList = evDataHelper.getFlatStructure(scope.evDataService);
-                    flatList.shift(); // remove root group
-
-                    scope.evDataService.setFlatList(flatList);
-
-                    projection = evDataHelper.calculateProjection(flatList, scope.evDataService);
-
-                    console.log('projection', projection);
-
-                    evDomManager.calculateScroll(elements, scope.evDataService);
-
-                    evRenderer.render(contentElem, projection, scope.evDataService, scope.evEventService);
+                    updateTableContent();
 
                 });
 

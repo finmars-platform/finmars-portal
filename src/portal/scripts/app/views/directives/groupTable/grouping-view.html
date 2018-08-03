@@ -50,9 +50,20 @@
                             <ng-md-icon class="c-down" icon="keyboard_arrow_down"></ng-md-icon>
                         </md-button>
                     </div>
+
+                    <div class="sort">
+                        <md-button class="group-sort" data-ng-show="item.options.fold"
+                                   aria-label="open settings" data-ng-click="toggleFold(item)">
+                            -
+                        </md-button>
+                        <md-button class="group-sort group-both-sorted" data-ng-show="!item.options.fold"
+                                   aria-label="open settings" data-ng-click="toggleFold(item)">
+                            +
+                        </md-button>
+                    </div>
                     <div class="caption">{{item.name}}</div>
                     <div class="settings-btn">
-                        <md-menu data-ng-if="options.isReport">
+                        <md-menu data-ng-if="isReport">
                             <md-button aria-label="Open phone interactions menu" class="md-icon-button"
                                        ng-click="openGroupSettings($mdOpenMenu, $event)">
                                 <ng-md-icon icon="settings"></ng-md-icon>
@@ -88,7 +99,7 @@
                                 </md-menu-item>
                             </md-menu-content>
                         </md-menu>
-                        <md-menu data-ng-if="!options.isReport">
+                        <md-menu data-ng-if="!isReport">
                             <md-button aria-label="Open phone interactions menu" class="md-icon-button"
                                        ng-click="openGroupSettings($mdOpenMenu, $event)">
                                 <ng-md-icon icon="settings"></ng-md-icon>

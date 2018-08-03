@@ -2,6 +2,7 @@
 
     var stringHelper = require('./stringHelper');
     var utilsHelper = require('./utils.helper');
+    var evRvCommonHelper = require('./ev-rv-common.helper');
     var metaService = require('../services/metaService');
 
     var getNextPage = function (options, event, entityViewerDataService) {
@@ -181,26 +182,6 @@
 
     };
 
-    var getEvId = function (item) {
-
-        var pattern;
-
-        if (item.___type === 'group' || item.___type === 'placeholder_group') {
-
-            pattern = [item.___parentId, stringHelper.toHash(item.group_name)].join('');
-
-        }
-
-        if (item.___type === 'object' || item.___type === 'placeholder_object') {
-
-            pattern = [item.___parentId, stringHelper.toHash(item.id)].join('');
-
-        }
-
-        return stringHelper.toHash(pattern)
-
-    };
-
     var getGroupTypeId = function (groupType) {
 
         var pattern;
@@ -351,6 +332,10 @@
         keys.forEach(function (key) {
             items.push(data[key])
         });
+
+        console.log('getGroupsByLevel.items', items);
+        console.log('getGroupsByLevel.items.length', items.length);
+        console.log('getGroupsByLevel.level', level);
 
         return items.filter(function (group) {
             return group.___level === level;
@@ -537,7 +522,7 @@
                     ___parentId: obj.___id
                 };
 
-                obj.results[i].___id = getEvId(obj.results[i]);
+                obj.results[i].___id = evRvCommonHelper.getId(obj.results[i]);
             }
 
         }
@@ -557,7 +542,7 @@
                     results: []
                 };
 
-                obj.results[i].___id = getEvId(obj.results[i]);
+                obj.results[i].___id = evRvCommonHelper.getId(obj.results[i]);
             }
 
         }
@@ -620,6 +605,60 @@
 
     };
 
+    var getGroupTypesToLevel = function (level, evDataService) {
+
+        var groups = evDataService.getGroups();
+        var group_types = [];
+
+        console.log('getGroupTypesToLevel.level', level);
+        console.log('getGroupTypesToLevel.groups', groups);
+
+        var to = level;
+
+        if (level >= groups.length) {
+            to = groups.length - 1;
+        }
+
+        for (var i = 0; i <= to; i = i + 1) {
+
+            if (groups[i].hasOwnProperty('id')) {
+                group_types.push(groups[i].id)
+            } else {
+                group_types.push(groups[i].key)
+            }
+        }
+
+        return group_types;
+
+    };
+
+    var getGroupValuesByItem = function (item, evDataService) {
+
+        var parents = getParents(item.___parentId, evDataService);
+        var group_values = [];
+
+        console.log('getGroupValuesByItem.parents', parents);
+
+        parents.forEach(function (parentItem) {
+
+            if (parentItem.___parentId) {
+
+                if (parentItem.group_id) {
+                    group_values.push(parentItem.group_id);
+                } else {
+                    group_values.push(parentItem.group_name);
+                }
+
+            }
+
+        });
+
+        console.log('getGroupValuesByItem.group_values', group_values);
+
+        return group_values.reverse();
+
+    };
+
     module.exports = {
 
         getParents: getParents,
@@ -640,7 +679,6 @@
 
         getNextPage: getNextPage,
 
-        getEvId: getEvId,
         getGroupTypeId: getGroupTypeId,
         getColumnId: getColumnId,
 
@@ -657,7 +695,10 @@
         setDefaultObjects: setDefaultObjects,
 
         isGroupSelected: isGroupSelected,
-        isSelected: isSelected
+        isSelected: isSelected,
+
+        getGroupTypesToLevel: getGroupTypesToLevel,
+        getGroupValuesByItem: getGroupValuesByItem
     }
 
 

@@ -20,27 +20,27 @@
             {
                 "key": "position_size_with_sign",
                 "name": "Position Size with sign",
-                "value_type": "float"
+                "value_type": 20
             },
             {
                 "key": "cash_consideration",
                 "name": "Cash consideration",
-                "value_type": "float"
+                "value_type": 20
             },
             {
                 "key": "principal_with_sign",
                 "name": "Principal with sign",
-                "value_type": "float"
+                "value_type": 20
             },
             {
                 "key": "carry_with_sign",
                 "name": "Carry with sign",
-                "value_type": "float"
+                "value_type": 20
             },
             {
                 "key": "overheads_with_sign",
                 "name": "Overheads with sign",
-                "value_type": "float"
+                "value_type": 20
             },
             {
                 "key": "accounting_date",

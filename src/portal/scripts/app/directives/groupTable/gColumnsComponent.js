@@ -36,6 +36,8 @@
                     'performance-report', 'pnl-report',
                     'transaction-report'].indexOf(scope.entityType) !== -1;
 
+                console.log('COLUMNS scope.isReport', scope.isReport);
+
                 var baseAttrs = [];
                 var entityAttrs = [];
                 if (metaService.getEntitiesWithoutBaseAttrsList().indexOf(scope.entityType) === -1) {
@@ -83,11 +85,7 @@
 
                 scope.isColumnFloat = function (column) {
 
-                    if (column.value_type == 'float' || column.value_type == 20) {
-                        return true
-                    }
-
-                    return false;
+                    return column.value_type == 20
                 };
 
                 scope.sortHandler = function (column, sort) {

@@ -14,13 +14,15 @@
     var balanceReportCustomAttrService = require('../../services/reports/balanceReportCustomAttrService');
     var dynamicAttributesForReportsService = require('../../services/groupTable/dynamicAttributesForReportsService');
 
-    module.exports = function ($scope, $mdDialog, EntityViewerDataService, EntityViewerEventService) {
+    var evDataHelper = require('../../helpers/ev-data.helper');
+
+    module.exports = function ($scope, $mdDialog, entityViewerDataService, entityViewerEventService) {
 
         var vm = this;
         vm.readyStatus = {content: false};
 
         vm.tabs = [];
-        vm.entityType = EntityViewerDataService.getEntityType();
+        vm.entityType = entityViewerDataService.getEntityType();
 
         vm.general = [];
         vm.attrs = [];
@@ -125,10 +127,10 @@
 
         // end refactore
 
-        var columns = EntityViewerDataService.getColumns();
+        var columns = entityViewerDataService.getColumns();
         var currentColumnsWidth = columns.length;
-        var filters = EntityViewerDataService.getFilters();
-        var grouping = EntityViewerDataService.getGroups();
+        var filters = entityViewerDataService.getFilters();
+        var grouping = entityViewerDataService.getGroups();
 
         var attrsList = [];
 
@@ -455,24 +457,7 @@
                             }
                         }
                     }
-                    //else if (typeAttrs[i].name === grouping[g].name) {
-                    //
-                    //    groupExist = true;
-                    //    if (typeAttrs[i].groups === false) {
-                    //        grouping.splice(c, 1);
-                    //        g = g - 1;
-                    //    }
-                    //}
-                    //
-                    //else {
-                    //    //if (typeAttrs[i].id === grouping[g].id) {
-                    //    //    groupExist = true;
-                    //    //    if (typeAttrs[i].groups === false) {
-                    //    //        grouping.splice(g, 1);
-                    //    //        g = g - 1;
-                    //    //    }
-                    //    //}
-                    //}
+
                 }
                 if (!groupExist) {
                     if (typeAttrs[i].groups === true) {
@@ -507,6 +492,10 @@
                     }
                 }
             }
+
+            entityViewerDataService.setColumns(columns);
+            entityViewerDataService.setGroups(grouping);
+            entityViewerDataService.setFilters(filters);
 
             // console.log('attributes in modal ', vm.attrs, vm.baseAttrs, vm.entityAttrs, parentScope);
         }
@@ -543,15 +532,15 @@
 
             addColumn();
 
+            evDataHelper.updateColumnsIds(entityViewerDataService);
+            evDataHelper.setColumnsDefaultWidth(entityViewerDataService);
+
+            entityViewerEventService.dispatchEvent(evEvents.COLUMNS_CHANGE);
+            entityViewerEventService.dispatchEvent(evEvents.FILTERS_CHANGE);
+            entityViewerEventService.dispatchEvent(evEvents.GROUPS_CHANGE);
+
             entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
 
-            // callback({
-            //     silent: true, options: {
-            //         columns: columns,
-            //         filters: filters,
-            //         grouping: grouping
-            //     }
-            // });
         };
 
 
@@ -577,11 +566,6 @@
                     $(target).removeClass('active');
                     var name = $(elem).html();
                     var i;
-
-                    //console.log('elem111111111111111111111111111111', elem);
-                    //console.log('columns111111111111111111111111111111', columns);
-                    //console.log('grouping111111111111111111111111111111', grouping);
-                    //console.log('filters111111111111111111111111111111', filters);
 
                     var identifier;
                     if ($(elem).attr('data-key-identifier')) {
@@ -663,7 +647,9 @@
                                 }
                             }
                             syncAttrs();
-                            callback({silent: true});
+                            evDataHelper.updateColumnsIds(entityViewerDataService);
+                            evDataHelper.setColumnsDefaultWidth(entityViewerDataService);
+                            entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
                         }
                         if (target === document.querySelector('#groupsbag') ||
                             target === document.querySelector('.g-groups-holder')) {
@@ -692,7 +678,9 @@
                                 }
                             }
                             syncAttrs();
-                            callback({silent: true});
+                            evDataHelper.updateColumnsIds(entityViewerDataService);
+                            evDataHelper.setColumnsDefaultWidth(entityViewerDataService);
+                            entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
                         }
                         if (target === document.querySelector('#filtersbag .drop-new-filter') ||
                             target === document.querySelector('.g-filters-holder')) {
@@ -721,7 +709,9 @@
                                 }
                             }
                             syncAttrs();
-                            callback({silent: true});
+                            evDataHelper.updateColumnsIds(entityViewerDataService);
+                            evDataHelper.setColumnsDefaultWidth(entityViewerDataService);
+                            entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
                         }
                         $scope.$apply();
                     }
@@ -735,13 +725,6 @@
             },
 
             dragula: function () {
-                //var items = [
-                //    document.querySelector('.g-columns-holder'),
-                //    //document.querySelector('#columnsbag'),
-                //    document.querySelector('#groupsbag'),
-                //    document.querySelector('#filtersbag .drop-new-filter')
-                //];
-
 
                 var items = [
                     document.querySelector('.g-columns-holder'),
@@ -775,7 +758,7 @@
             },
 
             destroy: function () {
-                console.log('this.dragula', this.dragula)
+                console.log('this.dragula', this.dragula);
                 this.dragula.destroy();
             }
         };
@@ -788,15 +771,8 @@
 
         var addColumn = function () {
 
-
-            //console.log('parentScope.columns', parentScope.columns);
-
-            //if (currentColumnsWidth < parentScope.columns.length) {
             metaService.columnsWidthGroups(true);
-            //}
-            //else {
-            //    metaService.columnsWidthGroups(false);
-            //}
+
         };
 
 
@@ -812,23 +788,23 @@
 
         var init = function () {
 
-            EntityViewerEventService.addEventListener(evEvents.COLUMNS_CHANGE, function () {
+            entityViewerEventService.addEventListener(evEvents.COLUMNS_CHANGE, function () {
 
-                columns = EntityViewerDataService.getColumns();
+                columns = entityViewerDataService.getColumns();
                 syncAttrs();
 
             });
 
-            EntityViewerEventService.addEventListener(evEvents.GROUPS_CHANGE, function () {
+            entityViewerEventService.addEventListener(evEvents.GROUPS_CHANGE, function () {
 
-                grouping = EntityViewerDataService.getGroups();
+                grouping = entityViewerDataService.getGroups();
                 syncAttrs();
 
             });
 
-            EntityViewerEventService.addEventListener(evEvents.FILTERS_CHANGE, function () {
+            entityViewerEventService.addEventListener(evEvents.FILTERS_CHANGE, function () {
 
-                filters = EntityViewerDataService.getFilters();
+                filters = entityViewerDataService.getFilters();
                 syncAttrs();
 
             });
