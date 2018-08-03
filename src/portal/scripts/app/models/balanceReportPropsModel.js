@@ -70,7 +70,7 @@
             {
                 "key": "position_size",
                 "name": "Position size",
-                "value_type": "float"
+                "value_type": 20
             },
             {
                 "key": "pricing_currency",
@@ -80,70 +80,70 @@
             //{
             //    "key": "instrument_principal",
             //    "name": "Current Price",
-            //    "value_type": "float"
+            //    "value_type": 20
             //},
             //{
             //    "key": "instrument_accrued",
             //    "name": "Current Accrued",
-            //    "value_type": "float"
+            //    "value_type": 20
             //},
             {
                 "key": "instrument_pricing_currency_fx_rate",
                 "name": "Pricing currency fx rate",
-                "value_type": "float"
+                "value_type": 20
             },
             {
                 "key": "instrument_accrued_currency_fx_rate",
                 "name": "Accrued currency FX rate",
-                "value_type": "float"
+                "value_type": 20
             },
 
             {
                 "key": "instrument_accrual_object_accrual_size",
                 "name": "Current Payment Size",
-                "value_type": "float"
+                "value_type": 20
             },
             {
                 "key": "instrument_accrual_object_periodicity_object_name",
                 "name": "Current Payment Frequency",
-                "value_type": "float"
+                "value_type": 20
             },
             {
                 "key": "instrument_accrual_object_periodicity_n",
                 "name": "Current Payment Periodicity N",
-                "value_type": "float"
+                "value_type": 20
             },
 
 
             //{
             //    "key": "report_currency_fx_rate",
             //    "name": "Report currency fx rate",
-            //    "value_type": "float"
+            //    "value_type": 20
             //},
             //{
             //    "key": "instrument_price_history_principal_price",
             //    "name": "Instrument price history principal price",
-            //    "value_type": "float"
+            //    "value_type": 20
             //},
             //{
             //    "key": "instrument_price_history_accrued_price",
             //    "name": "Instrument price history accrued price",
-            //    "value_type": "float"
+            //    "value_type": 20
             //},
             //{
             //    "key": "instrument_pricing_currency_fx_rate",
             //    "name": "Instrument pricing currency fx rate",
-            //    "value_type": "float"
+            //    "value_type": 20
             //},
             //{
             //    "key": "instrument_accrued_currency_fx_rate",
             //    "name": "Instrument accrued currency fx rate",
-            //    "value_type": "float"
+            //    "value_type": 20
             //},
             //{
             //    "key": "currency_fx_rate",
             //    "name": "Currency fx rate",
-            //    "value_type": "float"
+            //    "value_type": 20
             //},
 
 
@@ -155,12 +155,12 @@
             {
                 "key": "ytm",
                 "name": "YTM",
-                "value_type": "float"
+                "value_type": 20
             },
             {
                 "key": "modified_duration",
                 "name": "Modified duration",
-                "value_type": "float"
+                "value_type": 20
             },
 
             {
@@ -171,32 +171,32 @@
             //{
             //    "key": "gross_cost_price",
             //    "name": "Gross cost price",
-            //    "value_type": "float"
+            //    "value_type": 20
             //},
             {
                 "key": "gross_cost_price_loc",
                 "name": "Gross cost price (LOC)",
-                "value_type": "float"
+                "value_type": 20
             },
             {
                 "key": "ytm_at_cost",
                 "name": "YTM at cost",
-                "value_type": "float"
+                "value_type": 20
             },
             {
                 "key": "time_invested",
                 "name": "Time invested",
-                "value_type": "float"
+                "value_type": 20
             },
             //{
             //    "key": "net_cost_price",
             //    "name": "Net cost price",
-            //    "value_type": "float"
+            //    "value_type": 20
             //},
             {
                 "key": "net_cost_price_loc",
                 "name": "Net cost price (LOC)",
-                "value_type": "float"
+                "value_type": 20
             },
             {
                 "key": "currency",
@@ -247,73 +247,73 @@
             {
                 "key": "principal_invested",
                 "name": "Principal invested",
-                "value_type": "float"
+                "value_type": 20
             },
             {
                 "key": "principal_invested_loc",
                 "name": "Principal invested (LOC)",
-                "value_type": "float"
+                "value_type": 20
             },
             {
                 "key": "amount_invested",
                 "name": "Amount invested",
-                "value_type": "float"
+                "value_type": 20
             },
             {
                 "key": "amount_invested_loc",
                 "name": "Amount invested (LOC)",
-                "value_type": "float"
+                "value_type": 20
             },
 
             {
                 "key": "market_value",
                 "name": "Market value",
-                "value_type": "float"
+                "value_type": 20
             },
             {
                 "key": "market_value_loc",
                 "name": "Market value (LOC)",
-                "value_type": "float"
+                "value_type": 20
             },
             {
                 "key": "market_value_percent",
                 "name": "Market value %",
-                "value_type": "float"
+                "value_type": 20
             },
             {
                 "key": "exposure",
                 "name": "Exposure",
-                "value_type": "float"
+                "value_type": 20
             },
             {
                 "key": "exposure_percent",
                 "name": "Exposure %",
-                "value_type": "float"
+                "value_type": 20
             },
             {
                 "key": "exposure_loc",
                 "name": "Exposure (LOC)",
-                "value_type": "float"
+                "value_type": 20
             },
             {
                 "key": "instrument_principal_price",
                 "name": "Current Price",
-                "value_type": "float"
+                "value_type": 20
             },
             {
                 "key": "instrument_accrued_price",
                 "name": "Current Accrued",
-                "value_type": "float"
+                "value_type": 20
             },
             {
                 "key": "pricing_currency_fx_rate",
                 "name": "Pricing Ccy FX rate",
-                "value_type": "float"
+                "value_type": 20
             },
             {
                 "key": "instrument_accrued_currency_fx_rate",
                 "name": "Accrued currency FX rate",
-                "value_type": "float"
+                "value_type": 20
             },
             {
                 "key": "detail",

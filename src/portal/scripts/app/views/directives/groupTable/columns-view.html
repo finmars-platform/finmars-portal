@@ -43,7 +43,7 @@
                                 </div>
                             </div>
                             <div class="settings-btn">
-                                <md-menu data-ng-if="options.isReport && isColumnFloat(column)">
+                                <md-menu data-ng-if="isReport && column.value_type == 20">
                                     <md-button aria-label="Open phone interactions menu"
                                                class="md-icon-button column-btns"
                                                ng-click="$mdOpenMenu($event)">
@@ -377,11 +377,12 @@
                                         </md-menu-item>
                                     </md-menu-content>
                                 </md-menu>
-                                <md-menu data-ng-if="options.isReport && !isColumnFloat(column)">
+                                <md-menu data-ng-if="isReport && column.value_type != 20">
                                     <md-button aria-label="Open phone interactions menu"
                                                class="md-icon-button column-btns"
                                                ng-click="$mdOpenMenu($event)">
                                         <ng-md-icon icon="settings"></ng-md-icon>
+                                        {{column.value_type}}
                                     </md-button>
                                     <md-menu-content>
                                         <md-menu-item>
@@ -396,7 +397,7 @@
                                         </md-menu-item>
                                     </md-menu-content>
                                 </md-menu>
-                                <md-menu data-ng-if="!options.isReport">
+                                <md-menu data-ng-if="!isReport">
                                     <md-button aria-label="Open phone interactions menu"
                                                class="md-icon-button column-btns"
                                                ng-click="$mdOpenMenu($event)">

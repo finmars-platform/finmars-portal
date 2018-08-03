@@ -1,5 +1,10 @@
 # Changelog
 
+
+## 03.08.2018
+
+- Report Viewer 2.0
+
 ## 20.07.2018
 
 - New entities

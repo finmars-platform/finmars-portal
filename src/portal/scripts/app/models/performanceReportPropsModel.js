@@ -60,67 +60,67 @@
             {
                 "key": "return_pl",
                 "name": "Return (P&L), %",
-                "value_type": "float"
+                "value_type": 20
             },
             {
                 "key": "return_nav",
                 "name": "Return (NAV chng ex CF), %",
-                "value_type": "float"
+                "value_type": 20
             },
             {
                 "key": "pl_in_period",
                 "name": "P&L in Period",
-                "value_type": "float"
+                "value_type": 20
             },
             {
                 "key": "nav_change",
                 "name": "NAV change ex Cash Flows",
-                "value_type": "float"
+                "value_type": 20
             },
             {
                 "key": "nav_period_end",
                 "name": "NAV - period start",
-                "value_type": "float"
+                "value_type": 20
             },
             {
                 "key": "nav_period_start",
                 "name": "NAV - period end",
-                "value_type": "float"
+                "value_type": 20
             },
             {
                 "key": "cash_inflows",
                 "name": "Cash Inflows",
-                "value_type": "float"
+                "value_type": 20
             },
             {
                 "key": "cash_outflows",
                 "name": "Cash Outflows",
-                "value_type": "float"
+                "value_type": 20
             },
             {
                 "key": "time_weighted_cash_inflows",
                 "name": "Time-Weighted Cash Inflows",
-                "value_type": "float"
+                "value_type": 20
             },
             {
                 "key": "time_weighted_cash_outflows",
                 "name": "Time-Weighted Cash Outflows",
-                "value_type": "float"
+                "value_type": 20
             },
             {
                 "key": "avg_nav_in_period",
                 "name": "Average NAV in Period",
-                "value_type": "float"
+                "value_type": 20
             },
             {
                 "key": "cumulative_return_pl",
                 "name": "Cummulative Return (P&L), %",
-                "value_type": "float"
+                "value_type": 20
             },
             {
                 "key": "cumulative_return_nav",
                 "name": "Cummulative Return (NAV chng ex CF), %",
-                "value_type": "float"
+                "value_type": 20
             }
         ]
     };
@@ -132,4 +132,4 @@
     }
 
 
-}())
+}());

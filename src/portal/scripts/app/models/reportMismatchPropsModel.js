@@ -7,7 +7,7 @@
             {
                 "key": "mismatch",
                 "name": "Mismatch",
-                "value_type": "float"
+                "value_type": 20
             },
             {
                 "key": "mismatch_portfolio",

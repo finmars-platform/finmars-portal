@@ -64,11 +64,6 @@
 
         var index = 0;
 
-        // console.log('insertItemInNode.node', node);
-
-        // console.log('data[node.___parentId]', data[node.___parentId]);
-        // console.log('node', node);
-
         data[node.___parentId].results.forEach(function (item, i) {
 
             if (item && item.___id === node.___id) {
@@ -85,8 +80,7 @@
 
         var _rootGroup = JSON.parse(JSON.stringify(rootGroup));
         var _data = JSON.parse(JSON.stringify(data));
-        var _dataOrderEthalon = JSON.parse(JSON.stringify(data));
-
+        var _dataOrderReference = JSON.parse(JSON.stringify(data));
 
         var list = [];
 
@@ -138,11 +132,17 @@
             if (node.___parentId !== null) {
 
                 if (node.___type === 'group' || node.___type === 'placeholder_group') {
-                    insertItemInNode(list, map, node, _dataOrderEthalon)
+                    insertItemInNode(list, map, node, _dataOrderReference)
                 }
 
-                if (node.___type === 'object' || node.___type === 'placeholder_object') {
-                    list[map[node.___parentId]].results.push(node)
+                if (node.___type === 'object' || node.___type === 'placeholder_object' || node.___type === 'subtotal') {
+
+                    if (node.___type === 'subtotal' && node.___subtotal_type === 'line') {
+                        list[map[node.___parentId]].results.unshift(node)
+                    } else {
+                        list[map[node.___parentId]].results.push(node)
+                    }
+
                 }
 
             } else {

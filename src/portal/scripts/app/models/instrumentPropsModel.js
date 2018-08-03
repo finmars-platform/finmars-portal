@@ -55,7 +55,7 @@
             {
                 "key": "price_multiplier",
                 "name": "Price multiplier",
-                "value_type": "float"
+                "value_type": 20
             },
             {
                 "key": "accrued_currency",
@@ -70,12 +70,12 @@
             {
                 "key": "maturity_price",
                 "name": "Maturity price",
-                "value_type": "float"
+                "value_type": 20
             },
             {
                 "key": "accrued_multiplier",
                 "name": "Accrued multiplier",
-                "value_type": "float"
+                "value_type": 20
             },
             {
                 "key": "daily_pricing_model",
@@ -90,12 +90,12 @@
             {
                 "key": "default_price",
                 "name": "Default price",
-                "value_type": "float"
+                "value_type": 20
             },
             {
                 "key": "default_accrued",
                 "name": "Default accrued",
-                "value_type": "float"
+                "value_type": 20
             },
             {
                 "key": "user_text_1",

@@ -25,17 +25,17 @@
             {
                 "key": "principal_price",
                 "name": "Principal price",
-                "value_type": "float"
+                "value_type": 20
             },
             {
                 "key": "accrued_price",
                 "name": "Accrued price",
-                "value_type": "float"
+                "value_type": 20
             }
             //{
             //    "key": "factor",
             //    "name": "Factor",
-            //    "value_type": "float"
+            //    "value_type": 20
             //}
         ]
     };

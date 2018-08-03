@@ -35,7 +35,7 @@
             {
                 "key": "fx_rate",
                 "name": "Fx rate",
-                "value_type": "float"
+                "value_type": 20
             },
             {
                 "key": "pricing_policy",

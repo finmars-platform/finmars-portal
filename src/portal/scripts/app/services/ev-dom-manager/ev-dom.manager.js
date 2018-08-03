@@ -88,7 +88,7 @@
             ___id: groupHashId,
             parentGroupId: parentGroupHashId,
             groupName: currentGroupName,
-            groupId: groupHashId
+            groupId: currentGroupId
         };
         requestParameters.body = {
             groups_types: groupTypes,
