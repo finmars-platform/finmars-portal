@@ -2,7 +2,7 @@
 
     var filterByRegularFilters = function (items, regularFilters) {
 
-        console.log('filterItems.regularFilters', regularFilters);
+        // console.log('filterItems.regularFilters', regularFilters);
 
         var match;
 
@@ -50,9 +50,9 @@
                     key = options.groups_types[i];
                     value = options.groups_values[i];
 
-                    console.log('item[key]', item[key]);
-                    console.log('key', key);
-                    console.log('value', value);
+                    // console.log('item[key]', item[key]);
+                    // console.log('key', key);
+                    // console.log('value', value);
 
                     if (value === '-') {
 

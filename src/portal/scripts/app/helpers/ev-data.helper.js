@@ -309,9 +309,9 @@
             items.push(data[key])
         });
 
-        console.log('getGroupsByLevel.items', items);
-        console.log('getGroupsByLevel.items.length', items.length);
-        console.log('getGroupsByLevel.level', level);
+        // console.log('getGroupsByLevel.items', items);
+        // console.log('getGroupsByLevel.items.length', items.length);
+        // console.log('getGroupsByLevel.level', level);
 
         return items.filter(function (group) {
             return group.___level === level;
@@ -523,7 +523,7 @@
 
         }
 
-        console.log('setDefaultGroups.obj', obj);
+        // console.log('setDefaultGroups.obj', obj);
 
     };
 
@@ -586,8 +586,8 @@
         var groups = evDataService.getGroups();
         var group_types = [];
 
-        console.log('getGroupTypesToLevel.level', level);
-        console.log('getGroupTypesToLevel.groups', groups);
+        // console.log('getGroupTypesToLevel.level', level);
+        // console.log('getGroupTypesToLevel.groups', groups);
 
         var to = level;
 
@@ -613,7 +613,7 @@
         var parents = evRvCommonHelper.getParents(item.___parentId, evDataService);
         var group_values = [];
 
-        console.log('getGroupValuesByItem.parents', parents);
+        // console.log('getGroupValuesByItem.parents', parents);
 
         parents.forEach(function (parentItem) {
 
@@ -629,7 +629,7 @@
 
         });
 
-        console.log('getGroupValuesByItem.group_values', group_values);
+        // console.log('getGroupValuesByItem.group_values', group_values);
 
         return group_values.reverse();
 
