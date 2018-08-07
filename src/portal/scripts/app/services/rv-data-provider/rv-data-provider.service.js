@@ -206,20 +206,22 @@
 
                 obj.results = obj.results.map(function (item) {
 
-                    if (item.___type !== 'placeholder_object') {
 
-                        item.group_name = item.group_name ? item.group_name : '-';
-                        item.___is_selected = evDataHelper.isSelected(entityViewerDataService);
+                    item.group_name = item.group_name ? item.group_name : '-';
+                    item.___is_selected = evDataHelper.isSelected(entityViewerDataService);
 
-                        item.___parentId = obj.___id;
-                        item.___type = 'object';
-                        item.___id = evRvCommonHelper.getId(item);
-                        item.___level = obj.___level + 1;
-
-                    }
+                    item.___parentId = obj.___id;
+                    item.___type = 'object';
+                    item.___id = evRvCommonHelper.getId(item);
+                    item.___level = obj.___level + 1;
+                    item.___is_first = false;
 
                     return item
                 });
+
+                if (obj.results.length) {
+                    obj.results[0].___is_first = true;
+                }
 
                 entityViewerDataService.setData(obj);
 

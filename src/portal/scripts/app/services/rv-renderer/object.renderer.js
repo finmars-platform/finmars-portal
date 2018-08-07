@@ -8,6 +8,79 @@
     var checkIcon = renderHelper.getCheckIcon();
     var REPORT_BG_CSS_SELECTOR = 'report-bg-level';
 
+    var getDynamicAttributeValue = function (obj, column) {
+
+        var result = '';
+
+        if (column.id && obj.attributes) {
+
+            obj.attributes.forEach(function (item) {
+
+                if (item.attribute_type === column.id) {
+
+                    if (column.value_type === 20 && item.value_float) {
+
+                        result = item.value_float;
+
+                    }
+
+                    if (column.value_type === 10 && item.value_string) {
+
+                        result = item.value_string;
+
+                    }
+
+                    if (column.value_type === 30 && item.classifier_object) {
+
+                        result = item.classifier_object.name;
+                    }
+
+                    if (column.value_type === 40 && item.value_date) {
+
+                        result = item.value_date;
+
+                    }
+                }
+
+            });
+
+        }
+
+        return result;
+
+    };
+
+    var getEntityAttributeValue = function (obj, column) {
+
+        var result = '';
+
+        if (typeof obj[column.key] === 'string') {
+            result = obj[column.key]
+        } else {
+
+            if (typeof obj[column.key] === 'number') {
+
+                if (obj[column.key + '_object'] && obj[column.key + '_object'].user_code) {
+                    result = obj[column.key + '_object'].user_code;
+                } else {
+                    result = obj[column.key]
+                }
+            } else {
+
+                if (Array.isArray(obj[column.key])) {
+
+                    result = '[' + obj[column.key].length + ']';
+
+                }
+
+            }
+
+        }
+
+        return result;
+
+    };
+
     var getValue = function (evDataService, obj, column, columnNumber, groups) {
 
         var result = '';
@@ -16,7 +89,7 @@
 
         console.log('ObjectRender.areaGroupsBefore', areaGroupsBefore);
 
-        if (areaGroupsBefore.length && areaGroupsBefore.indexOf(columnNumber) !== -1) {
+        if (areaGroupsBefore.length && areaGroupsBefore.indexOf(columnNumber) !== -1 && obj.___is_first) {
 
             var parents = evRvCommonHelper.getParents(obj.___parentId, evDataService);
 
@@ -31,67 +104,17 @@
             if (columnNumber < groups.length) {
                 result = '';
             } else {
+
                 if (obj[column.key]) {
 
-                    if (typeof obj[column.key] === 'string') {
-                        result = obj[column.key]
-                    } else {
+                    result = getEntityAttributeValue(obj, column);
 
-                        if (typeof obj[column.key] === 'number') {
-
-                            if (obj[column.key + '_object'] && obj[column.key + '_object'].user_code) {
-                                result = obj[column.key + '_object'].user_code;
-                            } else {
-                                result = obj[column.key]
-                            }
-                        } else {
-
-                            if (Array.isArray(obj[column.key])) {
-
-                                result = '[' + obj[column.key].length + ']';
-
-                            }
-
-                        }
-
-                    }
                 } else {
 
-                    if (column.id && obj.attributes) {
-
-                        obj.attributes.forEach(function (item) {
-
-                            if (item.attribute_type === column.id) {
-
-                                if (column.value_type === 20 && item.value_float) {
-
-                                    result = item.value_float;
-
-                                }
-
-                                if (column.value_type === 10 && item.value_string) {
-
-                                    result = item.value_string;
-
-                                }
-
-                                if (column.value_type === 30 && item.classifier_object) {
-
-                                    result = item.classifier_object.name;
-                                }
-
-                                if (column.value_type === 40 && item.value_date) {
-
-                                    result = item.value_date;
-
-                                }
-                            }
-
-                        });
-
-                    }
+                    result = getDynamicAttributeValue(obj, column);
 
                 }
+
             }
 
         }
