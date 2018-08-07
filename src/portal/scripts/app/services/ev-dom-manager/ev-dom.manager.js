@@ -6,6 +6,7 @@
     var utilsHelper = require('../../helpers/utils.helper');
     var evEvents = require('../../services/entityViewerEvents');
     var EvScrollManager = require('./ev-scroll.manager');
+    var evRvCommonHelper = require('../../helpers/ev-rv-common.helper');
 
     var clickTargets = {
         'FOLD_BUTTON': 'FOLD_BUTTON',
@@ -65,7 +66,7 @@
         var requestParameters = evDataService.getRequestParameters(groupHashId);
 
         var groups = evDataService.getGroups();
-        var parents = evDataHelper.getParents(parentGroupHashId, evDataService);
+        var parents = evRvCommonHelper.getParents(parentGroupHashId, evDataService);
         // var currentGroup = groups[parents.length + 1];
         var currentGroup = groups[parents.length - 1]; // +1 from root group
         var currentGroupIdentifier = currentGroup.hasOwnProperty('key') ? currentGroup.key : currentGroup.id;
@@ -240,7 +241,7 @@
 
             } else {
 
-                var parents = evDataHelper.getParents(clickData.___parentId, evDataService);
+                var parents = evRvCommonHelper.getParents(clickData.___parentId, evDataService);
                 var groups = evDataService.getGroups();
 
                 if (group) { // initialized only first data request

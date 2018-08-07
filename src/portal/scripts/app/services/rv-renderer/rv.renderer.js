@@ -35,7 +35,7 @@
 
             if (item.___type === 'subtotal') {
 
-                return subtotalRender.render(item, columns, groups);
+                return subtotalRender.render(evDataService, item, columns, groups);
             }
 
         });

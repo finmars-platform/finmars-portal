@@ -2,20 +2,52 @@
 
     var renderHelper = require('../../helpers/render.helper');
 
+    var evRvCommonHelper = require('../../helpers/ev-rv-common.helper');
+
     var checkIcon = renderHelper.getCheckIcon();
 
     var REPORT_BG_CSS_SELECTOR = 'report-bg-level';
 
-    var getValue = function (obj, column, columnNumber) {
-
-        if (columnNumber < obj.___level) {
-            return '';
-        }
+    var getValue = function (evDataService, obj, column, columnNumber) {
 
         var result = '';
 
-        if (obj.hasOwnProperty(column.key)) {
-            result = obj[column.key];
+        if (obj.___subtotal_type === 'line') {
+
+            var areaGroupsBefore = renderHelper.getAreaGroupsBefore(evDataService, obj.___level - 1);
+
+            console.log('areaGroupsBefore', areaGroupsBefore);
+
+            if (areaGroupsBefore.length && areaGroupsBefore.indexOf(columnNumber) !== -1) {
+
+                var parents = evRvCommonHelper.getParents(obj.___parentId, evDataService);
+
+                parents.forEach(function (parent) {
+                    if (parent.___level === columnNumber) {
+                        result = parent.group_name;
+                    }
+                });
+
+            }
+
+            if (columnNumber === obj.___level - 1) {
+
+                var parent = evDataService.getData(obj.___parentId);
+
+                result = parent.group_name;
+
+            }
+
+        } else {
+
+            if (columnNumber < obj.___level) {
+                result = '';
+            }
+
+            if (obj.hasOwnProperty(column.key)) {
+                result = obj[column.key];
+            }
+
         }
 
         return result;
@@ -24,10 +56,9 @@
 
     var getBgColor = function (obj, columnNumber, groups) {
 
-
         var result = '';
 
-        if (columnNumber < groups.length && columnNumber < obj.___level) {
+        if (columnNumber < groups.length && columnNumber < obj.___level - 1) {
 
             if (groups[columnNumber - 1].report_settings.subtotal_type === 'area') {
                 result = REPORT_BG_CSS_SELECTOR + '-' + columnNumber;
@@ -42,7 +73,7 @@
 
     };
 
-    var render = function (obj, columns, groups) {
+    var render = function (evDataService, obj, columns, groups) {
 
         var classList = ['g-row'];
 
@@ -68,7 +99,7 @@
 
         columns.forEach(function (column, index) {
 
-            cell = '<div class="g-cell-wrap ' + getBgColor(obj, index + 1, groups) + '" style="width: ' + column.style.width + '"><div class="g-cell">' + getValue(obj, column, index + 1) + '</div></div>';
+            cell = '<div class="g-cell-wrap ' + getBgColor(obj, index + 1, groups) + '" style="width: ' + column.style.width + '"><div class="g-cell">' + getValue(evDataService, obj, column, index + 1) + '</div></div>';
 
             result = result + cell
 

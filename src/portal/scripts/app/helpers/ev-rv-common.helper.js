@@ -2,6 +2,32 @@
 
     var stringHelper = require('./stringHelper');
 
+    var _getParent = function (parentId, evDataService, results) {
+
+        var item = evDataService.getData(parentId);
+
+        results.push(item);
+
+        if (item.___parentId !== null) {
+
+            _getParent(item.___parentId, evDataService, results);
+
+        }
+
+        return results;
+
+    };
+
+    var getParents = function (parentId, evDataService) {
+
+        var results = [];
+
+        results = _getParent(parentId, evDataService, results);
+
+        return results;
+
+    };
+
     var getId = function (item) {
 
         var pattern;
@@ -27,7 +53,8 @@
     };
 
     module.exports = {
-        getId: getId
+        getId: getId,
+        getParents: getParents
     }
 
 

@@ -109,31 +109,7 @@
 
     };
 
-    var _getParent = function (parentId, evDataService, results) {
 
-        var item = evDataService.getData(parentId);
-
-        results.push(item);
-
-        if (item.___parentId !== null) {
-
-            _getParent(item.___parentId, evDataService, results);
-
-        }
-
-        return results;
-
-    };
-
-    var getParents = function (parentId, evDataService) {
-
-        var results = [];
-
-        results = _getParent(parentId, evDataService, results);
-
-        return results;
-
-    };
 
     var _getChildrenGroups = function (parentGroupId, evDataService, results) {
 
@@ -228,7 +204,7 @@
 
         var groups = evDataService.getGroups();
 
-        var parentsCount = getParents(parentId, evDataService).length;
+        var parentsCount = evRvCommonHelper.getParents(parentId, evDataService).length;
 
         var groupsCount;
 
@@ -257,7 +233,7 @@
 
     var getGroupValues = function (id, parentId, evDataService) {
 
-        var parents = getParents(parentId, evDataService).reverse();
+        var parents = evRvCommonHelper.getParents(parentId, evDataService).reverse();
 
         var result = [];
 
@@ -634,7 +610,7 @@
 
     var getGroupValuesByItem = function (item, evDataService) {
 
-        var parents = getParents(item.___parentId, evDataService);
+        var parents = evRvCommonHelper.getParents(item.___parentId, evDataService);
         var group_values = [];
 
         console.log('getGroupValuesByItem.parents', parents);
@@ -661,7 +637,6 @@
 
     module.exports = {
 
-        getParents: getParents,
         getGroupNameFromParent: getGroupNameFromParent,
         getGroupIdFromParent: getGroupIdFromParent,
 
