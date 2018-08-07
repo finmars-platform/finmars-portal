@@ -49,7 +49,7 @@
 
             entityViewerEventService.addEventListener(evEvents.UPDATE_TABLE, function () {
 
-                rvDataProviderService.updateDataStructure(entityViewerDataService, entityViewerEventService);
+                rvDataProviderService.createDataStructure(entityViewerDataService, entityViewerEventService);
 
             });
 

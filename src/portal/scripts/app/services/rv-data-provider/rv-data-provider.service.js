@@ -433,7 +433,6 @@
 
         } else {
 
-
             requestParameters = {
                 requestType: 'objects',
                 id: id,
@@ -511,6 +510,9 @@
     };
 
     var createDataStructure = function (evDataService, evEventService) {
+
+        evDataService.resetData();
+        evDataService.resetRequestParameters();
 
         var defaultRootRequestParameters = evDataService.getActiveRequestParameters();
         var groups = evDataService.getGroups();
