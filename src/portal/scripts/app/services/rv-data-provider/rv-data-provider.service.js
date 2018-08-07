@@ -83,7 +83,7 @@
 
         entityViewerDataService.setRequestParameters(requestParameters);
 
-        console.log('injectRegularFilters.filters', filters);
+        // console.log('injectRegularFilters.filters', filters);
         // console.log('injectRegularFilters.newRequestParameters', requestParameters);
 
     };
@@ -91,8 +91,6 @@
     var requestReport = function (entityViewerDataService, entityViewerEventService) {
 
         // console.log('requestReport started');
-
-        entityViewerEventService.dispatchEvent(evEvents.DATA_LOAD_START);
 
         requestData(entityViewerDataService, entityViewerEventService).then(function (data) {
 
@@ -108,7 +106,6 @@
             entityViewerDataService.setReportOptions(reportOptions);
 
             entityViewerDataService.setStatusData('loaded');
-            entityViewerEventService.dispatchEvent(evEvents.DATA_LOAD_END);
 
             // console.log('requestReport finished');
 
@@ -119,8 +116,6 @@
     };
 
     var getObjects = function (requestParameters, entityViewerDataService, entityViewerEventService) {
-
-        entityViewerEventService.dispatchEvent(evEvents.DATA_LOAD_START);
 
         requestParameters.status = 'loading';
 
@@ -238,8 +233,6 @@
     };
 
     var getGroups = function (requestParameters, entityViewerDataService, entityViewerEventService) {
-
-        entityViewerEventService.dispatchEvent(evEvents.DATA_LOAD_START);
 
         requestParameters.status = 'loading';
 
@@ -373,23 +366,13 @@
         // console.log('evDataProviderService.getObjects');
 
         return getObjects(requestParameters, entityViewerDataService, entityViewerEventService)
-            .then(function (data) {
-                entityViewerEventService.dispatchEvent(evEvents.DATA_LOAD_END);
 
-                return data;
-            })
 
     };
 
     var getGroupsByRequestParameters = function (requestParameters, entityViewerDataService, entityViewerEventService) {
 
-        return getGroups(requestParameters, entityViewerDataService, entityViewerEventService).then(function (data) {
-
-            entityViewerEventService.dispatchEvent(evEvents.DATA_LOAD_END);
-
-            return data;
-
-        })
+        return getGroups(requestParameters, entityViewerDataService, entityViewerEventService)
 
     };
 
@@ -463,51 +446,73 @@
 
     var recursiveRequest = function (items, level, evDataService, evEventService) {
 
-        var promises = [];
-        var requestParameters;
+        return new Promise(function (resolve, reject) {
 
-        items.forEach(function (item) {
+            var promises = [];
+            var requestParameters;
 
-            requestParameters = createRequestParameters(item, level, evDataService, evEventService);
-            promises.push(updateDataStructureByRequestParameters(requestParameters, evDataService, evEventService));
+            items.forEach(function (item) {
 
-        });
+                requestParameters = createRequestParameters(item, level, evDataService, evEventService);
+                promises.push(updateDataStructureByRequestParameters(requestParameters, evDataService, evEventService));
+
+            });
 
 
-        Promise.all(promises).then(function (data) {
+            Promise.all(promises).then(function (data) {
 
-            var groups = evDataService.getGroups();
+                var groups = evDataService.getGroups();
 
-            level = level + 1;
+                level = level + 1;
 
-            if (level < groups.length) {
+                if (level < groups.length) {
 
-                // console.log('to next level!', level);
+                    // console.log('to next level!', level);
 
-                items = evDataHelper.getGroupsByLevel(level, evDataService);
+                    items = evDataHelper.getGroupsByLevel(level, evDataService);
 
-                // console.log('recursiveRequest.items', items);
+                    // console.log('recursiveRequest.items', items);
 
-                items.forEach(function (item) {
+                    var recursiveRequestPromises = [];
 
-                    // console.log('item!', item.group_name);
+                    items.forEach(function (item) {
 
-                    recursiveRequest(item.results, level, evDataService, evEventService);
+                        // console.log('item!', item.group_name);
 
-                })
+                        recursiveRequestPromises.push(recursiveRequest(item.results, level, evDataService, evEventService));
 
-            }
+                    });
 
-        });
+                    Promise.all(recursiveRequestPromises).then(function (data) {
+                        resolve(data);
+                    })
+
+
+                } else {
+
+                    resolve([])
+                }
+
+            });
+
+        })
 
     };
 
     var initRecursiveRequestParametersCreation = function (evDataService, evEventService) {
 
+        console.time('Creating Data Structure');
+
         var rootGroup = evDataService.getRootGroupData();
         var level = 0;
 
-        recursiveRequest(rootGroup.results, level, evDataService, evEventService);
+        return recursiveRequest(rootGroup.results, level, evDataService, evEventService).then(function (data) {
+
+            console.timeEnd('Creating Data Structure');
+
+            return data;
+
+        })
 
     };
 
@@ -523,7 +528,11 @@
 
             getGroups(defaultRootRequestParameters, evDataService, evEventService).then(function () {
 
-                initRecursiveRequestParametersCreation(evDataService, evEventService);
+                initRecursiveRequestParametersCreation(evDataService, evEventService).then(function () {
+
+                    evEventService.dispatchEvent(evEvents.DATA_LOAD_END);
+
+                })
 
             });
 

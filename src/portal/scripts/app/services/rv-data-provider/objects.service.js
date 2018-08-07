@@ -26,18 +26,18 @@
 
             items = filterService.filterByRegularFilters(items, regularFilters);
 
-            console.log('rv-data-provider-objects-service.getList.items.length after regular filters', items.length);
+            // console.log('rv-data-provider-objects-service.getList.items.length after regular filters', items.length);
 
             items = filterService.filterByGroupsFilters(items, options);
 
-            console.log('rv-data-provider-objects-service.getList.items.length after groups filters', items.length);
+            // console.log('rv-data-provider-objects-service.getList.items.length after groups filters', items.length);
 
             result.count = items.length;
             result.results = items;
 
-            console.log('rv-data-provider-objects-service.getList', options);
-            console.log('rv-data-provider-objects-service.getList', entityType);
-            console.log('rv-data-provider-objects-service.getList.result', result);
+            // console.log('rv-data-provider-objects-service.getList', options);
+            // console.log('rv-data-provider-objects-service.getList', entityType);
+            // console.log('rv-data-provider-objects-service.getList.result', result);
 
             resolve(result)
 
