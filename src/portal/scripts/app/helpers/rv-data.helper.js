@@ -26,8 +26,6 @@
 
             item.subtotal = rvSubtotalHelper.calculate(item.results, columns);
 
-            console.log('calculateItemSubtotal.item', item);
-
             evDataService.setData(item);
 
         } else {
@@ -123,7 +121,7 @@
 
         });
 
-        console.log('insertSubtotalsToResults.data', data);
+        // console.log('insertSubtotalsToResults.data', data);
 
         return data;
 
@@ -135,7 +133,7 @@
 
         var data = JSON.parse(JSON.stringify(evDataService.getData()));
 
-        console.log('getFLatStructure.groups', groups);
+        // console.log('getFLatStructure.groups', groups);
 
         if (groups.length) {
             calculateSubtotals(evDataService);
