@@ -196,7 +196,7 @@
                         obj.___parentId = event.parentGroupId;
                         obj.___type = 'group';
                         obj.___id = event.___id;
-                        obj.___level = evDataHelper.getParents(event.parentGroupId, entityViewerDataService).length;
+                        obj.___level = evRvCommonHelper.getParents(event.parentGroupId, entityViewerDataService).length;
 
                     }
 
@@ -309,7 +309,7 @@
                             obj.___parentId = event.parentGroupId;
                             obj.___type = 'group';
                             obj.___id = event.___id;
-                            obj.___level = evDataHelper.getParents(event.parentGroupId, entityViewerDataService).length;
+                            obj.___level = evRvCommonHelper.getParents(event.parentGroupId, entityViewerDataService).length;
 
                         }
                     }
@@ -318,7 +318,7 @@
                     var parents = [];
 
                     if (obj.___parentId !== null) {
-                        parents = evDataHelper.getParents(obj.___parentId, entityViewerDataService);
+                        parents = evRvCommonHelper.getParents(obj.___parentId, entityViewerDataService);
                     }
 
                     parents.push(obj);
