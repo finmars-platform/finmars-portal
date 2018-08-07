@@ -2,82 +2,102 @@
 
     var renderHelper = require('../../helpers/render.helper');
 
+    var evRvCommonHelper = require('../../helpers/ev-rv-common.helper');
+
+
     var checkIcon = renderHelper.getCheckIcon();
     var REPORT_BG_CSS_SELECTOR = 'report-bg-level';
 
-    var getValue = function (obj, column, index, groups) {
+    var getValue = function (evDataService, obj, column, columnNumber, groups) {
 
-        if (index < groups.length) {
-            return '';
-        }
+        var result = '';
 
+        var areaGroupsBefore = renderHelper.getAreaGroupsBefore(evDataService, obj.___level - 1);
 
-        if (obj[column.key]) {
+        console.log('ObjectRender.areaGroupsBefore', areaGroupsBefore);
 
-            if (typeof obj[column.key] === 'string') {
-                return obj[column.key]
-            }
+        if (areaGroupsBefore.length && areaGroupsBefore.indexOf(columnNumber) !== -1) {
 
-            if (typeof obj[column.key] === 'number') {
+            var parents = evRvCommonHelper.getParents(obj.___parentId, evDataService);
 
-                if (obj[column.key + '_object'] && obj[column.key + '_object'].user_code) {
-                    return obj[column.key + '_object'].user_code;
+            parents.forEach(function (parent) {
+                if (parent.___level === columnNumber) {
+                    result = parent.group_name;
                 }
+            });
 
-                return obj[column.key]
-            }
+        } else {
 
-            if (Array.isArray(obj[column.key])) {
+            if (columnNumber < groups.length) {
+                result = '';
+            } else {
+                if (obj[column.key]) {
 
-                return '[' + obj[column.key].length + ']';
+                    if (typeof obj[column.key] === 'string') {
+                        result = obj[column.key]
+                    } else {
 
-            }
+                        if (typeof obj[column.key] === 'number') {
 
-        }
+                            if (obj[column.key + '_object'] && obj[column.key + '_object'].user_code) {
+                                result = obj[column.key + '_object'].user_code;
+                            } else {
+                                result = obj[column.key]
+                            }
+                        } else {
 
-        if (column.id) {
+                            if (Array.isArray(obj[column.key])) {
 
-            var result = '';
+                                result = '[' + obj[column.key].length + ']';
 
-            if (obj.attributes) {
-
-                obj.attributes.forEach(function (item) {
-
-                    if (item.attribute_type === column.id) {
-
-                        if (column.value_type === 20 && item.value_float) {
-
-                            result = item.value_float;
-
-                        }
-
-                        if (column.value_type === 10 && item.value_string) {
-
-                            result = item.value_string;
+                            }
 
                         }
 
-                        if (column.value_type === 30 && item.classifier_object) {
+                    }
+                } else {
 
-                            result = item.classifier_object.name;
-                        }
+                    if (column.id && obj.attributes) {
 
-                        if (column.value_type === 40 && item.value_date) {
+                        obj.attributes.forEach(function (item) {
 
-                            result = item.value_date;
+                            if (item.attribute_type === column.id) {
 
-                        }
+                                if (column.value_type === 20 && item.value_float) {
+
+                                    result = item.value_float;
+
+                                }
+
+                                if (column.value_type === 10 && item.value_string) {
+
+                                    result = item.value_string;
+
+                                }
+
+                                if (column.value_type === 30 && item.classifier_object) {
+
+                                    result = item.classifier_object.name;
+                                }
+
+                                if (column.value_type === 40 && item.value_date) {
+
+                                    result = item.value_date;
+
+                                }
+                            }
+
+                        });
+
                     }
 
-                });
-
-                return result;
-
+                }
             }
 
         }
 
-        return '';
+
+        return result;
 
     };
 
@@ -98,7 +118,7 @@
 
     };
 
-    var render = function (obj, columns, groups) {
+    var render = function (evDataService, obj, columns, groups) {
 
         var classList = ['g-row'];
 
@@ -124,7 +144,7 @@
 
         columns.forEach(function (column, index) {
 
-            cell = '<div class="g-cell-wrap ' + getBgColor(obj, index + 1, groups) + '" style="width: ' + column.style.width + '"><div class="g-cell">' + getValue(obj, column, index, groups) + '</div></div>';
+            cell = '<div class="g-cell-wrap ' + getBgColor(obj, index + 1, groups) + '" style="width: ' + column.style.width + '"><div class="g-cell">' + getValue(evDataService, obj, column, index + 1, groups) + '</div></div>';
 
             result = result + cell
 

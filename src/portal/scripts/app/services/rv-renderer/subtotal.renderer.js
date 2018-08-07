@@ -16,7 +16,7 @@
 
             var areaGroupsBefore = renderHelper.getAreaGroupsBefore(evDataService, obj.___level - 1);
 
-            console.log('areaGroupsBefore', areaGroupsBefore);
+            // console.log('areaGroupsBefore', areaGroupsBefore);
 
             if (areaGroupsBefore.length && areaGroupsBefore.indexOf(columnNumber) !== -1) {
 
