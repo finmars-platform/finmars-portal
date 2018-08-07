@@ -562,13 +562,11 @@
 
         unfoldedGroups.forEach(function (group) {
 
-            console.log('group', group);
-
             count = count + group.count;
 
         });
 
-        console.log('calculateTotalHeight.count', count);
+        // console.log('calculateTotalHeight.count', count);
 
         var rowHeight = evDataService.getRowHeight();
 

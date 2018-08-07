@@ -247,7 +247,7 @@
 
         function setData(obj) {
 
-            console.log('setData.obj', obj);
+            // console.log('setData.obj', obj);
 
             data.data[obj.___id] = obj
         }
@@ -258,7 +258,7 @@
 
         function setObject(obj) {
 
-            console.log('setData.obj', obj);
+            // console.log('setData.obj', obj);
 
             if (data.data[obj.___parentId] && data.data[obj.___parentId].results && data.data[obj.___parentId].results.length) {
 
