@@ -30,7 +30,7 @@
 
             if (item.___type === 'object') {
 
-                return objectRender.render(item, columns, groups);
+                return objectRender.render(evDataService, item, columns, groups);
             }
 
             if (item.___type === 'subtotal') {
