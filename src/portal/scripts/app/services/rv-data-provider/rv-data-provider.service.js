@@ -446,7 +446,7 @@
 
     var recursiveRequest = function (items, level, evDataService, evEventService) {
 
-        return new Promise(function (resolve, reject) {
+        return new Promise(function RecursiveRequestPromise (resolve, reject) {
 
             var promises = [];
             var requestParameters;
@@ -482,6 +482,9 @@
                         recursiveRequestPromises.push(recursiveRequest(item.results, level, evDataService, evEventService));
 
                     });
+
+                    console.log('recursiveRequest.level', level);
+                    console.log('recursiveRequest.recursiveRequestPromises', recursiveRequestPromises.length);
 
                     Promise.all(recursiveRequestPromises).then(function (data) {
                         resolve(data);
