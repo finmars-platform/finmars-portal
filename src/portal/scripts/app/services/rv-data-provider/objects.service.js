@@ -39,7 +39,6 @@
             console.log('rv-data-provider-objects-service.getList', entityType);
             console.log('rv-data-provider-objects-service.getList.result', result);
 
-
             resolve(result)
 
         });

@@ -91,7 +91,7 @@
 
             groups.forEach(function (group, index) {
 
-                if (item.___level === index && item.___level < groups.length) {
+                if (item.___level === index + 1 && item.___level <= groups.length) {
 
                     subtotalObj = Object.assign({}, item.subtotal, {
                         ___type: 'subtotal',
@@ -131,11 +131,17 @@
 
     var getFlatStructure = function (evDataService) {
 
-        calculateSubtotals(evDataService);
+        var groups = evDataService.getGroups();
 
         var data = JSON.parse(JSON.stringify(evDataService.getData()));
 
-        data = insertSubtotalsToResults(data, evDataService);
+        console.log('getFLatStructure.groups', groups);
+
+        if (groups.length) {
+            calculateSubtotals(evDataService);
+            data = insertSubtotalsToResults(data, evDataService);
+        }
+
 
         var rootGroup = JSON.parse(JSON.stringify(evDataService.getRootGroupData()));
 

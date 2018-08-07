@@ -1,5 +1,9 @@
 # Changelog
 
+## 07.08.2018
+
+- New grouping logic for Relation in Report Viewer
+- **BUGFIX** Incorrect subtotal insertion
 
 ## 03.08.2018
 

@@ -50,18 +50,19 @@
                     key = options.groups_types[i];
                     value = options.groups_values[i];
 
-                    // console.log('item[key]', item[key]);
-                    // console.log('value', value);
+                    console.log('item[key]', item[key]);
+                    console.log('key', key);
+                    console.log('value', value);
 
                     if (value === '-') {
 
-                        if (item[key] !== null) {
+                        if (item[key] !== null && item[key] !== undefined) {
                             match = false;
                         }
 
                     } else {
 
-                        if (item[key].toString().indexOf(value) === -1) {
+                        if (!item.hasOwnProperty(key) || item[key].toString().indexOf(value) === -1) {
                             match = false;
                         }
                     }

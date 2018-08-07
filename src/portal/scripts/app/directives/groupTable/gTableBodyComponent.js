@@ -94,9 +94,7 @@
 
                 scope.evEventService.addEventListener(evEvents.DATA_LOAD_START, function () {
 
-
                     progressBar.style.display = 'block';
-
 
                 });
 

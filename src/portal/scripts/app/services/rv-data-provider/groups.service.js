@@ -9,10 +9,23 @@
         var resultStrings = [];
         var result = [];
 
+        var resultStr;
+
         items.forEach(function (item) {
 
+            if (!item.hasOwnProperty(group) || item[group] === null || item[group] === undefined) {
+
+                resultStr = null;
+
+            } else {
+
+                resultStr = item[group].toString();
+
+            }
+
             if (resultStrings.indexOf(item[group]) === -1) {
-                resultStrings.push(item[group].toString());
+
+                resultStrings.push(resultStr)
             }
 
         });

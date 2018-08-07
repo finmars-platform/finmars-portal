@@ -35,7 +35,7 @@
             }
 
         } else {
-            result = REPORT_BG_CSS_SELECTOR + '-' + obj.___level;
+            result = REPORT_BG_CSS_SELECTOR + '-' + (obj.___level - 1);
         }
 
         return result;

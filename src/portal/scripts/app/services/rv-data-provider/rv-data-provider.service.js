@@ -122,6 +122,10 @@
 
         entityViewerEventService.dispatchEvent(evEvents.DATA_LOAD_START);
 
+        requestParameters.status = 'loading';
+
+        entityViewerDataService.setRequestParameters(requestParameters);
+
         return new Promise(function (resolve, reject) {
 
             var entityType = entityViewerDataService.getEntityType();
@@ -219,6 +223,10 @@
 
                 entityViewerDataService.setData(obj);
 
+                requestParameters.status = 'loaded';
+
+                entityViewerDataService.setRequestParameters(requestParameters);
+
                 resolve(obj);
 
             })
@@ -229,11 +237,11 @@
 
     var getGroups = function (requestParameters, entityViewerDataService, entityViewerEventService) {
 
+        entityViewerEventService.dispatchEvent(evEvents.DATA_LOAD_START);
+
         requestParameters.status = 'loading';
 
         entityViewerDataService.setRequestParameters(requestParameters);
-
-        entityViewerEventService.dispatchEvent(evEvents.DATA_LOAD_START);
 
         return new Promise(function (resolve, reject) {
 
@@ -505,12 +513,25 @@
     var createDataStructure = function (evDataService, evEventService) {
 
         var defaultRootRequestParameters = evDataService.getActiveRequestParameters();
+        var groups = evDataService.getGroups();
 
-        getGroups(defaultRootRequestParameters, evDataService, evEventService).then(function () {
+        if (groups.length) {
 
-            initRecursiveRequestParametersCreation(evDataService, evEventService);
+            getGroups(defaultRootRequestParameters, evDataService, evEventService).then(function () {
 
-        });
+                initRecursiveRequestParametersCreation(evDataService, evEventService);
+
+            });
+
+        } else {
+
+            getObjects(defaultRootRequestParameters, evDataService, evEventService).then(function () {
+
+                evEventService.dispatchEvent(evEvents.DATA_LOAD_END);
+
+            })
+
+        }
 
 
     };
