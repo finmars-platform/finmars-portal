@@ -9,6 +9,7 @@
     var evRenderer = require('../../services/ev-renderer/ev.renderer');
     var rvRenderer = require('../../services/rv-renderer/rv.renderer');
     var evDomManager = require('../../services/ev-dom-manager/ev-dom.manager');
+    var rvDomManager = require('../../services/rv-dom-manager/rv-dom.manager');
     var evDataHelper = require('../../helpers/ev-data.helper');
     var rvDataHelper = require('../../helpers/rv-data.helper');
 
@@ -40,6 +41,8 @@
 
                 var projection;
                 var entityType = scope.evDataService.getEntityType();
+
+                var isReport = ['balance-report'].indexOf(entityType) !== -1;
 
                 function renderReportViewer() {
 
@@ -85,12 +88,23 @@
                 }
 
                 function updateTableContent() {
-                    if (['balance-report'].indexOf(entityType) === -1) {
-                        renderEntityViewer();
-                    } else {
+                    if (isReport) {
                         renderReportViewer();
+                    } else {
+                        renderEntityViewer();
                     }
                 }
+
+                scope.evEventService.addEventListener(evEvents.UPDATE_PROJECTION, function () {
+
+                    var flatList = scope.evDataService.getFlatList();
+
+                    projection = evDataHelper.calculateProjection(flatList, scope.evDataService);
+                    evDomManager.calculateScroll(elements, scope.evDataService);
+
+                    rvRenderer.render(contentElem, projection, scope.evDataService, scope.evEventService);
+
+                });
 
                 scope.evEventService.addEventListener(evEvents.DATA_LOAD_START, function () {
 
@@ -115,7 +129,11 @@
                 evDomManager.initEventDelegation(contentElem, scope.evDataService, scope.evEventService);
                 evDomManager.initContextMenuEventDelegation(contentElem, scope.evDataService, scope.evEventService);
 
-                evDomManager.addScrollListener(elements, scope.evDataService, scope.evEventService);
+                if (isReport) {
+                    rvDomManager.addScrollListener(elements, scope.evDataService, scope.evEventService);
+                } else {
+                    evDomManager.addScrollListener(elements, scope.evDataService, scope.evEventService);
+                }
 
             }
         }
