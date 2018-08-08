@@ -5,6 +5,7 @@ module.exports = {
 
     'UPDATE_TABLE': 'UPDATE_TABLE', // async download
     'REDRAW_TABLE': 'REDRAW_TABLE', // inmemory redraw
+    'UPDATE_PROJECTION': 'UPDATE_PROJECTION',
 
     'PAGE_CHANGE': 'PAGE_CHANGE',
     'ADDITIONS_CHANGE': 'ADDITIONS_CHANGE',

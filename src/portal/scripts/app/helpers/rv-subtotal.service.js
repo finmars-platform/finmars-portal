@@ -15,7 +15,7 @@
 
         });
 
-        console.log('sum.result', result);
+        // console.log('sum.result', result);
 
         return result
 
@@ -246,7 +246,7 @@
 
         var result = {};
 
-        console.log('calculate.columns', columns);
+        // console.log('calculate.columns', columns);
 
         columns.forEach(function (column) {
 
