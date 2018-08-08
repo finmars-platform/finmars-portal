@@ -113,7 +113,7 @@
 
                 });
 
-                if (childOfCurrentParent && childOfCurrentParent.___is_first) {
+                if (childOfCurrentParent && childOfCurrentParent.___is_first && currentParent.report_settings.subtotal_type === 'area') {
                     result = currentParent.group_name
                 }
 
