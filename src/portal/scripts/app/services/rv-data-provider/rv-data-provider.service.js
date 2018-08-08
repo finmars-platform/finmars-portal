@@ -208,8 +208,6 @@
 
                 }
 
-                evDataHelper.setDefaultObjects(obj);
-
                 obj.results = obj.results.map(function (item) {
 
 
@@ -342,8 +340,6 @@
                     }
 
                     parents.push(obj);
-
-                    evDataHelper.setDefaultGroups(obj);
 
                     obj.results = obj.results.map(function (item) {
 
