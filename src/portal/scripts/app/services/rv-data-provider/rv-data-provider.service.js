@@ -322,28 +322,31 @@
 
                     obj.results = obj.results.map(function (item) {
 
-                        if (item.___type !== 'placeholder_group') {
+                        item.___parentId = obj.___id;
+                        item.group_name = item.group_name ? item.group_name : '-';
 
-                            item.___parentId = obj.___id;
-                            item.group_name = item.group_name ? item.group_name : '-';
-
-                            item.___is_selected = evDataHelper.isSelected(entityViewerDataService);
+                        item.___is_selected = evDataHelper.isSelected(entityViewerDataService);
 
 
-                            item.___level = obj.___level + 1;
+                        item.___level = obj.___level + 1;
 
-                            if (groups.length >= parents.length) {
-                                item.___type = 'group';
-                            } else {
-                                item.___type = 'object';
-                            }
-
-                            item.___id = evRvCommonHelper.getId(item);
-
+                        if (groups.length >= parents.length) {
+                            item.___type = 'group';
+                        } else {
+                            item.___type = 'object';
                         }
+
+                        item.___id = evRvCommonHelper.getId(item);
+
+                        item.___is_first = false;
 
                         return item
                     });
+
+                    if (obj.results.length) {
+                        obj.results[0].___is_first = true;
+                    }
+
 
                     entityViewerDataService.setData(obj);
 
@@ -446,7 +449,7 @@
 
     var recursiveRequest = function (items, level, evDataService, evEventService) {
 
-        return new Promise(function RecursiveRequestPromise (resolve, reject) {
+        return new Promise(function RecursiveRequestPromise(resolve, reject) {
 
             var promises = [];
             var requestParameters;
