@@ -114,6 +114,18 @@
                     result = currentParent.group_name
                 }
 
+            } else {
+
+                if (obj[column.key]) {
+
+                    result = getEntityAttributeValue(obj, column);
+
+                } else {
+
+                    result = getDynamicAttributeValue(obj, column);
+
+                }
+
             }
 
 
