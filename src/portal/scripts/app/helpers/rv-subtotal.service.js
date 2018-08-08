@@ -15,6 +15,8 @@
 
         });
 
+        console.log('sum.result', result);
+
         return result
 
     }
@@ -25,7 +27,7 @@
 
         items.forEach(function (item) {
 
-            if (item["market_value"]) {
+            if (item.hasOwnProperty("market_value")) {
 
                 result = result + parseFloat(item[column.key]) * parseFloat(item["market_value"]);
             } else {
@@ -62,7 +64,7 @@
 
         items.forEach(function (item) {
 
-            if (item["exposure"]) {
+            if (item.hasOwnProperty("exposure")) {
 
                 result = result + parseFloat(groupedItem[column.key]) * parseFloat(groupedItem["exposure"]);
 
@@ -105,7 +107,7 @@
 
         items.forEach(function (item) {
 
-            if (item["market_value"]) {
+            if (item.hasOwnProperty("market_value")) {
                 total = total + parseFloat(item["market_value"]);
             } else {
                 throw Error("market_value is not set");
@@ -160,7 +162,7 @@
 
         items.forEach(function (item) {
 
-            if (item["exposure"]) {
+            if (item.hasOwnProperty("exposure")) {
                 total = total + parseFloat(item["exposure"]);
             } else {
                 throw Error("exposure is not set");
@@ -209,6 +211,8 @@
 
     function resolveSubtotalFunction(items, column) {
 
+        console.log('resolveSubtotalFunction.column', column);
+
         if (column.report_settings && column.report_settings.subtotal_formula_id) {
 
             switch (column.report_settings.subtotal_formula_id) {
@@ -241,6 +245,8 @@
     var calculate = function (items, columns) {
 
         var result = {};
+
+        console.log('calculate.columns', columns);
 
         columns.forEach(function (column) {
 
