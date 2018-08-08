@@ -95,21 +95,30 @@
 
             var isFirst = true;
 
-            parents.forEach(function (parent, index) {
 
-                if(!parent.___is_first && parent.___level >= columnNumber) {
-                    isFirst = false
+            if (columnNumber + 1 < parents.length) {
+
+                var currentParent;
+                var childOfCurrentParent;
+
+                parents.forEach(function (parent) {
+
+                    if (parent.___level === columnNumber) {
+                        currentParent = parent
+                    }
+
+                    if (parent.___level === columnNumber + 1) {
+                        childOfCurrentParent = parent;
+                    }
+
+                });
+
+                if (childOfCurrentParent && childOfCurrentParent.___is_first) {
+                    result = currentParent.group_name
                 }
 
-            });
+            }
 
-            parents.forEach(function (parent, index) {
-
-                if (parent.___level === columnNumber && isFirst) {
-                    result = parent.group_name;
-                }
-
-            });
 
         } else {
 
