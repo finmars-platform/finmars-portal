@@ -23,7 +23,7 @@
 
             entityViewerDataResolver.getList(entityType, reportOptions).then(function (data) {
 
-                console.log('requestData.data', data);
+                // console.log('requestData.data', data);
 
                 if (!data.hasOwnProperty('non_field_errors')) {
 
@@ -182,6 +182,16 @@
 
                     } else {
 
+                        var parentGroup = entityViewerDataService.getData(event.parentGroupId);
+
+                        var parentItemIsFirst = false;
+
+                        parentGroup.results.forEach(function (item) {
+                            if (event.___id === item.___id) {
+                                parentItemIsFirst = item.___is_first
+                            }
+                        });
+
                         obj = Object.assign({}, data);
                         obj.group_name = event.groupName ? event.groupName : '-';
                         obj.group_id = event.groupId;
@@ -192,6 +202,7 @@
                         obj.___type = 'group';
                         obj.___id = event.___id;
                         obj.___level = evRvCommonHelper.getParents(event.parentGroupId, entityViewerDataService).length;
+                        obj.___is_first = parentItemIsFirst;
 
                     }
 
@@ -256,6 +267,7 @@
 
                     var obj = {};
 
+
                     if (!event.___id) {
 
                         var rootGroupData = entityViewerDataService.getRootGroupData();
@@ -276,6 +288,7 @@
 
                         var groupData = entityViewerDataService.getData(event.___id);
 
+
                         if (groupData) {
 
                             obj = Object.assign({}, groupData);
@@ -295,6 +308,17 @@
 
                         } else {
 
+
+                            var parentGroup = entityViewerDataService.getData(event.parentGroupId);
+
+                            var parentItemIsFirst = false;
+
+                            parentGroup.results.forEach(function (item) {
+                                if (event.___id === item.___id) {
+                                    parentItemIsFirst = item.___is_first
+                                }
+                            });
+
                             obj = Object.assign({}, data);
                             obj.group_name = event.groupName ? event.groupName : '-';
                             obj.group_id = event.groupId;
@@ -305,6 +329,7 @@
                             obj.___type = 'group';
                             obj.___id = event.___id;
                             obj.___level = evRvCommonHelper.getParents(event.parentGroupId, entityViewerDataService).length;
+                            obj.___is_first = parentItemIsFirst;
 
                         }
                     }
@@ -562,6 +587,8 @@
         return new Promise(function (resolve, reject) {
 
             injectRegularFilters(requestParameters, evDataService, evEventService);
+
+            // console.log('requestParameters.requestType', requestParameters.requestType);
 
             if (requestParameters.requestType === 'objects') {
 
