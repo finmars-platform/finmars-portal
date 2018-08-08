@@ -97,7 +97,7 @@
 
             parents.forEach(function (parent, index) {
 
-                if(!parent.___is_first && index + 1 >= columnNumber) {
+                if(!parent.___is_first && parent.___level >= columnNumber) {
                     isFirst = false
                 }
 
