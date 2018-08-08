@@ -87,14 +87,11 @@
 
         var areaGroupsBefore = renderHelper.getAreaGroupsBefore(evDataService, obj.___level - 1);
 
-        // console.log('ObjectRender.areaGroupsBefore', areaGroupsBefore);
-
         if (areaGroupsBefore.length && areaGroupsBefore.indexOf(columnNumber) !== -1 && obj.___is_first) {
 
             var parents = evRvCommonHelper.getParents(obj.___parentId, evDataService);
 
-            var isFirst = true;
-
+            var groups = evDataService.getGroups();
 
             if (columnNumber + 1 < parents.length) {
 
@@ -113,7 +110,7 @@
 
                 });
 
-                if (childOfCurrentParent && childOfCurrentParent.___is_first && currentParent.report_settings.subtotal_type === 'area') {
+                if (childOfCurrentParent && childOfCurrentParent.___is_first && groups[columnNumber].report_settings.subtotal_type === 'area') {
                     result = currentParent.group_name
                 }
 
@@ -122,7 +119,7 @@
 
         } else {
 
-            if (columnNumber <= groups.length && !obj.___is_first) {
+            if (columnNumber <= groups.length) {
                 result = '';
             } else {
 
