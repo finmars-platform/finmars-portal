@@ -218,7 +218,7 @@
                     vm.options.grouping = entityViewerDataService.getGroups();
                     vm.options.filters = entityViewerDataService.getFilters();
 
-                    vm.options.reportOptions = JSON.stringify(JSON.parse(entityViewerDataService.getReportOptions()));
+                    vm.options.reportOptions = JSON.parse(JSON.stringify(entityViewerDataService.getReportOptions()));
 
                     delete vm.options.reportOptions.items;
                     delete vm.options.reportOptions.item_strategies3;
@@ -301,7 +301,7 @@
                     vm.options.grouping = entityViewerDataService.getGroups();
                     vm.options.filters = entityViewerDataService.getFilters();
 
-                    vm.options.reportOptions = JSON.stringify(JSON.parse(entityViewerDataService.getReportOptions()));
+                    vm.options.reportOptions = JSON.parse(JSON.stringify(entityViewerDataService.getReportOptions()));
 
                     delete vm.options.reportOptions.items;
                     delete vm.options.reportOptions.item_strategies3;
