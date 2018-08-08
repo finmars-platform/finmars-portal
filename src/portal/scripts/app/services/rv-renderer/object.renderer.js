@@ -105,10 +105,10 @@
 
             parents.forEach(function (parent, index) {
 
-
-                if (parent.___level === columnNumber && parent.___is_first) {
+                if (parent.___level === columnNumber && isFirst) {
                     result = parent.group_name;
                 }
+
             });
 
         } else {
