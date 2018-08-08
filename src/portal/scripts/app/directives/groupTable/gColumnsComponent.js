@@ -147,7 +147,7 @@
                 scope.checkSubtotalFormula = function (column, type) {
 
                     if (column.hasOwnProperty('report_settings') && column.report_settings) {
-                        if (column.report_settings.subtotal_formula_id == type) {
+                        if (column.report_settings.subtotal_formula_id === type) {
                             return true;
                         }
 

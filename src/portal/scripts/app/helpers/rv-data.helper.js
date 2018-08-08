@@ -131,15 +131,27 @@
 
         var groups = evDataService.getGroups();
 
-        var data = JSON.parse(JSON.stringify(evDataService.getData()));
+        var data;
 
         // console.log('getFLatStructure.groups', groups);
 
         if (groups.length) {
-            calculateSubtotals(evDataService);
-            data = insertSubtotalsToResults(data, evDataService);
-        }
 
+            console.time("Calculating subtotals");
+
+            calculateSubtotals(evDataService);
+
+            data = JSON.parse(JSON.stringify(evDataService.getData()));
+
+            data = insertSubtotalsToResults(data, evDataService);
+
+            console.timeEnd("Calculating subtotals");
+
+            console.log('data', data);
+
+        } else {
+            data = JSON.parse(JSON.stringify(evDataService.getData()));
+        }
 
         var rootGroup = JSON.parse(JSON.stringify(evDataService.getRootGroupData()));
 
