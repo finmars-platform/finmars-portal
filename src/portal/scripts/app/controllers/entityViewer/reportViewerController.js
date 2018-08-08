@@ -218,7 +218,19 @@
                     vm.options.grouping = entityViewerDataService.getGroups();
                     vm.options.filters = entityViewerDataService.getFilters();
 
-                    vm.options.reportOptions = entityViewerDataService.getReportOptions();
+                    vm.options.reportOptions = JSON.stringify(JSON.parse(entityViewerDataService.getReportOptions()));
+
+                    delete vm.options.reportOptions.items;
+                    delete vm.options.reportOptions.item_strategies3;
+                    delete vm.options.reportOptions.item_strategies2;
+                    delete vm.options.reportOptions.item_strategies1;
+                    delete vm.options.reportOptions.item_portfolios;
+                    delete vm.options.reportOptions.item_instruments;
+                    delete vm.options.reportOptions.item_instrument_pricings;
+                    delete vm.options.reportOptions.item_instrument_accruals;
+                    delete vm.options.reportOptions.item_currency_fx_rates;
+                    delete vm.options.reportOptions.item_currencies;
+                    delete vm.options.reportOptions.item_accounts;
 
                     vm.options.columnsWidth = thWidths;
 
@@ -289,7 +301,19 @@
                     vm.options.grouping = entityViewerDataService.getGroups();
                     vm.options.filters = entityViewerDataService.getFilters();
 
-                    vm.options.reportOptions = entityViewerDataService.getReportOptions();
+                    vm.options.reportOptions = JSON.stringify(JSON.parse(entityViewerDataService.getReportOptions()));
+
+                    delete vm.options.reportOptions.items;
+                    delete vm.options.reportOptions.item_strategies3;
+                    delete vm.options.reportOptions.item_strategies2;
+                    delete vm.options.reportOptions.item_strategies1;
+                    delete vm.options.reportOptions.item_portfolios;
+                    delete vm.options.reportOptions.item_instruments;
+                    delete vm.options.reportOptions.item_instrument_pricings;
+                    delete vm.options.reportOptions.item_instrument_accruals;
+                    delete vm.options.reportOptions.item_currency_fx_rates;
+                    delete vm.options.reportOptions.item_currencies;
+                    delete vm.options.reportOptions.item_accounts;
 
                     vm.options.columnsWidth = thWidths;
 
