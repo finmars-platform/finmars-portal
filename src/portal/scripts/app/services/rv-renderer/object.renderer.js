@@ -93,7 +93,19 @@
 
             var parents = evRvCommonHelper.getParents(obj.___parentId, evDataService);
 
-            parents.forEach(function (parent) {
+            var isFirst = true;
+
+            parents.forEach(function (parent, index) {
+
+                if(!parent.___is_first && index + 1 >= columnNumber) {
+                    isFirst = false
+                }
+
+            });
+
+            parents.forEach(function (parent, index) {
+
+
                 if (parent.___level === columnNumber && parent.___is_first) {
                     result = parent.group_name;
                 }
