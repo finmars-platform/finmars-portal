@@ -30,12 +30,6 @@
 
         if (options.groups_values.length) {
 
-            var len = options.groups_types.length;
-
-            if (options.groups_types.length > options.groups_values.length) {
-                len = len - 1;
-            }
-
             var match;
 
             var key;
@@ -45,18 +39,18 @@
 
                 match = true;
 
-                for (i = 0; i < len; i = i + 1) {
+                for (i = 0; i < options.groups_values.length; i = i + 1) {
 
                     key = options.groups_types[i];
                     value = options.groups_values[i];
 
-                    // console.log('item[key]', item[key]);
-                    // console.log('key', key);
-                    // console.log('value', value);
+                    console.log('item[key]', item[key]);
+                    console.log('key', key);
+                    console.log('value', value);
 
                     if (value === '-') {
 
-                        if (item[key] !== null && item[key] !== undefined) {
+                        if (item[key] !== null && item[key] !== undefined && item[key] !== '-') {
                             match = false;
                         }
 
