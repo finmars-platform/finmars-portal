@@ -93,39 +93,23 @@
 
             var groups = evDataService.getGroups();
 
-            if (columnNumber + 1 < parents.length) {
+            var currentParent;
+            var childOfCurrentParent;
 
-                var currentParent;
-                var childOfCurrentParent;
+            parents.forEach(function (parent) {
 
-                parents.forEach(function (parent) {
-
-                    if (parent.___level === columnNumber) {
-                        currentParent = parent
-                    }
-
-                    if (parent.___level === columnNumber + 1) {
-                        childOfCurrentParent = parent;
-                    }
-
-                });
-
-                if (childOfCurrentParent && childOfCurrentParent.___is_first && groups[columnNumber].report_settings.subtotal_type === 'area') {
-                    result = currentParent.group_name
+                if (parent.___level === columnNumber) {
+                    currentParent = parent
                 }
 
-            } else {
-
-                if (obj[column.key]) {
-
-                    result = getEntityAttributeValue(obj, column);
-
-                } else {
-
-                    result = getDynamicAttributeValue(obj, column);
-
+                if (parent.___level === columnNumber + 1) {
+                    childOfCurrentParent = parent;
                 }
 
+            });
+
+            if (childOfCurrentParent && childOfCurrentParent.___is_first && groups[columnNumber].report_settings.subtotal_type === 'area') {
+                result = currentParent.group_name
             }
 
 

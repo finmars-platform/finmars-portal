@@ -90,6 +90,10 @@
 
     var requestReport = function (entityViewerDataService, entityViewerEventService) {
 
+        var reportOptions = entityViewerDataService.getReportOptions();
+        reportOptions.task_id = null;
+        entityViewerDataService.setReportOptions(reportOptions);
+
         // console.log('requestReport started');
 
         requestData(entityViewerDataService, entityViewerEventService).then(function (data) {
