@@ -36,8 +36,8 @@
             vm.accountsPosition = 0;
         }
 
-        console.log('vm.accountsCash', vm.accountsCash);
-        console.log('vm.accountsPosition', vm.accountsPosition);
+        // console.log('vm.accountsCash', vm.accountsCash);
+        // console.log('vm.accountsPosition', vm.accountsPosition);
 
         vm.selectOptions = [
             {
@@ -230,9 +230,9 @@
 
         vm.saveSettings = function () {
 
-            console.log('saveSettings.reportOptions', vm.reportOptions);
-            console.log('saveSettings.accountsCash', vm.accountsCash);
-            console.log('saveSettings.accountsPosition', vm.accountsPosition);
+            // console.log('saveSettings.reportOptions', vm.reportOptions);
+            // console.log('saveSettings.accountsCash', vm.accountsCash);
+            // console.log('saveSettings.accountsPosition', vm.accountsPosition);
 
             if (vm.accountsCash === 1) {
                 vm.reportOptions.accounts_cash[0] = 1;

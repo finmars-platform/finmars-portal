@@ -638,6 +638,84 @@
 
     var sortObjects = function (entityViewerDataService, entityViewerEventService) {
 
+        var level = entityViewerDataService.getGroups().length;
+
+        var unfoldedGroups = evDataHelper.getUnfoldedGroupsByLevel(level, entityViewerDataService);
+
+        var activeColumnSort = entityViewerDataService.getActiveColumnSort();
+
+        var requestsParameters = entityViewerDataService.getAllRequestParameters();
+
+        var requestParametersForUnfoldedGroups = [];
+
+        Object.keys(requestsParameters).forEach(function (key) {
+
+            unfoldedGroups.forEach(function (group) {
+
+                if (group.___id === requestsParameters[key].id) {
+
+                    requestsParameters[key].event.___id = group.___id;
+                    requestsParameters[key].event.groupName = group.group_name;
+                    requestsParameters[key].event.parentGroupId = group.___parentId;
+
+                    requestParametersForUnfoldedGroups.push(requestsParameters[key]);
+                }
+
+
+            })
+
+        });
+
+        requestParametersForUnfoldedGroups.forEach(function (item) {
+
+            item.body.page = 1;
+
+            if (activeColumnSort.key) {
+
+                if (activeColumnSort.options.sort === 'ASC') {
+                    item.body.ordering = activeColumnSort.key
+                } else {
+                    item.body.ordering = '-' + activeColumnSort.key
+                }
+
+            } else {
+
+                if (activeColumnSort.id) {
+                    if (activeColumnSort.options.sort === 'ASC') {
+                        item.body.ordering = '___da_' + activeColumnSort.id
+                    } else {
+                        item.body.ordering = '-' + '___da_' + activeColumnSort.id
+                    }
+                }
+
+            }
+
+            entityViewerDataService.setRequestParameters(item);
+
+        });
+
+        unfoldedGroups.forEach(function (group) {
+
+            group.results = [];
+
+            entityViewerDataService.setData(group)
+
+        });
+
+        var promises = [];
+
+        requestParametersForUnfoldedGroups.forEach(function (requestParameters) {
+
+            promises.push(getObjects(requestParameters, entityViewerDataService, entityViewerEventService))
+
+        });
+
+        Promise.all(promises).then(function () {
+
+            entityViewerEventService.dispatchEvent(evEvents.DATA_LOAD_END);
+
+        })
+
     };
 
     var sortGroupType = function (entityViewerDataService, entityViewerEventService) {

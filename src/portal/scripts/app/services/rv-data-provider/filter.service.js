@@ -12,7 +12,7 @@
 
             Object.keys(regularFilters).forEach(function (key) {
 
-                if (item[key].toString().indexOf(regularFilters[key]) === -1) {
+                if (key !== 'ordering' && item[key].toString().indexOf(regularFilters[key]) === -1) {
                     match = false;
                 }
 
@@ -44,9 +44,9 @@
                     key = options.groups_types[i];
                     value = options.groups_values[i];
 
-                    console.log('item[key]', item[key]);
-                    console.log('key', key);
-                    console.log('value', value);
+                    // console.log('item[key]', item[key]);
+                    // console.log('key', key);
+                    // console.log('value', value);
 
                     if (value === '-') {
 
