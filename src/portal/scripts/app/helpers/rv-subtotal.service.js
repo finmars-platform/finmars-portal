@@ -211,7 +211,7 @@
 
     function resolveSubtotalFunction(items, column) {
 
-        console.log('resolveSubtotalFunction.column', column);
+        // console.log('resolveSubtotalFunction.column', column);
 
         if (column.report_settings && column.report_settings.subtotal_formula_id) {
 
