@@ -148,7 +148,7 @@
 
         if (isColumnEqualLastGroup(columnNumber, groups)) {
 
-            if (groups[columnNumber - 1].report_settings.subtotal_type === 'area') {
+            if (groups[columnNumber - 1].report_settings.subtotal_type === 'area' && obj.___is_first) {
 
                 var parent = evDataService.getData(obj.___parentId);
 

@@ -13,7 +13,7 @@
 
         items.forEach(function (item) {
 
-            if (!item.hasOwnProperty(group) || item[group] === null || item[group] === undefined) {
+            if (!item.hasOwnProperty(group) || item[group] === null || item[group] === undefined || item[group] === '-') {
 
                 resultStr = null;
 
