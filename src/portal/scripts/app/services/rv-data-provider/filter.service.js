@@ -56,9 +56,23 @@
 
                     } else {
 
-                        if (!item.hasOwnProperty(key) || item[key].toString().indexOf(value) === -1) {
+                        if (!item.hasOwnProperty(key)) {
                             match = false;
+                        } else {
+
+                            if (item[key] === null || item[key] === undefined) {
+                                match = false
+
+                            } else {
+
+                                if (item[key].toString().indexOf(value) === -1) {
+                                    match = false
+                                }
+
+                            }
+
                         }
+
                     }
 
                 }

@@ -2,43 +2,76 @@
 
     var filterService = require('./filter.service');
 
+    function keyIsEntityField(key) {
+
+        return ['type', 'instrument_type', 'currency', 'instrument_object_instrument_type', 'account_object_type', 'group'].indexOf(key) !== -1
+
+    }
+
+    function groupAlreadyExist(resultGroup, result) {
+
+        var exist = false;
+
+        result.forEach(function (item) {
+
+            if (item.hasOwnProperty('group_id') && resultGroup.hasOwnProperty('group_id')) {
+
+                if (item.group_id === resultGroup.group_id) {
+                    exist = true;
+                }
+            } else {
+
+                if (item.group_name === resultGroup.group_name) {
+                    exist = true;
+                }
+
+            }
+
+        });
+
+
+        return exist;
+    }
+
     var getUniqueGroups = function (items, group) {
 
         // console.log('resultStrings.group', group);
 
-        var resultStrings = [];
         var result = [];
 
-        var resultStr;
+        var resultGroup;
 
         items.forEach(function (item) {
 
-            if (!item.hasOwnProperty(group) || item[group] === null || item[group] === undefined || item[group] === '-') {
+            resultGroup = {
+                group_name: null
+            };
 
-                resultStr = null;
-
+            if (keyIsEntityField(group)) {
+                resultGroup.group_id = item[group];
+                resultGroup.group_name = item[group + '_object_user_code'];
             } else {
 
-                resultStr = item[group].toString();
+                if (item.hasOwnProperty(group) &&
+                    item[group] !== null &&
+                    item[group] !== undefined &&
+                    item[group] !== '-') {
+
+                    resultGroup.group_name = item[group].toString();
+
+                }
 
             }
 
-            if (resultStrings.indexOf(item[group]) === -1) {
+            if (!groupAlreadyExist(resultGroup, result)) {
 
-                resultStrings.push(resultStr)
+                result.push(resultGroup)
             }
 
         });
 
-        resultStrings.forEach(function (item) {
 
-            result.push({
-                group_name: item
-            })
-
-        });
-
-        // console.log('getUniqueGroups.result', result);
+        console.log('getUniqueGroups.result', result);
 
         return result;
 
