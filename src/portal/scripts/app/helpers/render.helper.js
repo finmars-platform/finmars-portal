@@ -40,6 +40,24 @@
 
     };
 
+    var noLineGroups = function (evDataService) {
+
+        var groups = evDataService.getGroups();
+
+        var result = true;
+
+        groups.forEach(function (group) {
+
+            if (group.report_settings.subtotal_type === 'line') {
+                result = false;
+            }
+
+        });
+
+        return result
+
+    };
+
     var anyLineGroupsBefore = function (evDataService, level) {
 
         var lineGroupExist = false;
@@ -67,6 +85,7 @@
 
     module.exports = {
         getCheckIcon: getCheckIcon,
+        noLineGroups: noLineGroups,
         anyLineGroupsBefore: anyLineGroupsBefore,
         getAreaGroupsBefore: getAreaGroupsBefore
     }
