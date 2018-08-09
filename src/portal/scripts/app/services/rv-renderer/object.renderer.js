@@ -107,8 +107,8 @@
 
         if (isColumnInGroupsList(columnNumber, groups)) {
 
-            console.log('isColumnInGroupsList.columnNumber', columnNumber);
-            console.log('isColumnInGroupsList.areaGroupsBefore', areaGroupsBefore);
+            // console.log('isColumnInGroupsList.columnNumber', columnNumber);
+            // console.log('isColumnInGroupsList.areaGroupsBefore', areaGroupsBefore);
 
             if (areaGroupsBefore.length && areaGroupsBefore.indexOf(columnNumber) !== -1 && obj.___is_first && renderHelper.noLineGroups(evDataService)) {
 

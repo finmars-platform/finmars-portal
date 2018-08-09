@@ -28,13 +28,24 @@
                     }
                 });
 
-            }
+            } else {
 
-            if (columnNumber === obj.___level - 1) {
+                if (columnNumber === obj.___level - 1) {
 
-                var parent = evDataService.getData(obj.___parentId);
+                    var parent = evDataService.getData(obj.___parentId);
 
-                result = parent.group_name;
+                    result = parent.group_name;
+
+                } else {
+
+                    if (columnNumber < obj.___level) {
+                        result = '';
+                    }
+
+                    if (obj.hasOwnProperty(column.key)) {
+                        result = obj[column.key];
+                    }
+                }
 
             }
 
