@@ -81,58 +81,96 @@
 
     };
 
+    function isColumnInGroupsList(columnNumber, groups) {
+
+        return groups.length > columnNumber - 1;
+
+    }
+
+    function isColumnEqualLastGroup(columnNumber, groups) {
+
+        return groups.length === columnNumber
+
+    }
+
+    function isColumnAfterGroupsList(columnNumber, groups) {
+
+        return groups.length < columnNumber;
+
+    }
+
     var getValue = function (evDataService, obj, column, columnNumber, groups) {
 
         var result = '';
 
-        var areaGroupsBefore = renderHelper.getAreaGroupsBefore(evDataService, obj.___level - 1);
+        var areaGroupsBefore = renderHelper.getAreaGroupsBefore(evDataService, groups.length);
 
-        if (areaGroupsBefore.length && areaGroupsBefore.indexOf(columnNumber) !== -1 && obj.___is_first) {
+        if (isColumnInGroupsList(columnNumber, groups)) {
 
-            var parents = evRvCommonHelper.getParents(obj.___parentId, evDataService);
+            console.log('isColumnInGroupsList.columnNumber', columnNumber);
+            console.log('isColumnInGroupsList.areaGroupsBefore', areaGroupsBefore);
 
-            var groups = evDataService.getGroups();
+            if (areaGroupsBefore.length && areaGroupsBefore.indexOf(columnNumber) !== -1 && obj.___is_first && renderHelper.noLineGroups(evDataService)) {
 
-            var currentParent;
-            var childOfCurrentParent;
+                var parents = evRvCommonHelper.getParents(obj.___parentId, evDataService);
 
-            parents.forEach(function (parent) {
+                var groups = evDataService.getGroups();
 
-                if (parent.___level === columnNumber) {
-                    currentParent = parent
+                var currentParent;
+                var childOfCurrentParent;
+
+                parents.forEach(function (parent) {
+
+                    if (parent.___level === columnNumber) {
+                        currentParent = parent
+                    }
+
+                    if (parent.___level === columnNumber + 1) {
+                        childOfCurrentParent = parent;
+                    }
+
+                });
+
+                if (childOfCurrentParent && childOfCurrentParent.___is_first && groups[columnNumber].report_settings.subtotal_type === 'area') {
+                    result = currentParent.group_name
                 }
 
-                if (parent.___level === columnNumber + 1) {
-                    childOfCurrentParent = parent;
-                }
 
-            });
-
-            if (childOfCurrentParent && childOfCurrentParent.___is_first && groups[columnNumber].report_settings.subtotal_type === 'area') {
-                result = currentParent.group_name
-            }
-
-
-        } else {
-
-            if (columnNumber <= groups.length) {
-                result = '';
             } else {
 
-                if (obj[column.key]) {
-
-                    result = getEntityAttributeValue(obj, column);
-
-                } else {
-
-                    result = getDynamicAttributeValue(obj, column);
-
+                if (columnNumber < groups.length) {
+                    result = '';
                 }
 
             }
 
         }
 
+        if (isColumnEqualLastGroup(columnNumber, groups)) {
+
+            if (groups[columnNumber - 1].report_settings.subtotal_type === 'area') {
+
+                var parent = evDataService.getData(obj.___parentId);
+
+                result = parent.group_name;
+
+            }
+
+        }
+
+        if (isColumnAfterGroupsList(columnNumber, groups)) {
+
+            if (obj[column.key]) {
+
+                result = getEntityAttributeValue(obj, column);
+
+            } else {
+
+                result = getDynamicAttributeValue(obj, column);
+
+            }
+
+        }
 
         return result;
 
