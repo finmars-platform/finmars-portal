@@ -1,6 +1,7 @@
 (function () {
 
     var filterService = require('./filter.service');
+    var sortService = require('./sort.service');
 
     var sortItems = function () {
 
@@ -31,6 +32,10 @@
             items = filterService.filterByGroupsFilters(items, options);
 
             // console.log('rv-data-provider-objects-service.getList.items.length after groups filters', items.length);
+
+
+            items = sortService.sortItems(items, options);
+
 
             result.count = items.length;
             result.results = items;
