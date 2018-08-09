@@ -20,10 +20,51 @@
 
         var vm = this;
 
-
         console.log('reportOptions', reportOptions);
 
-        vm.reportOptions = Object.assign({}, reportOptions);
+        vm.reportOptions = JSON.parse(JSON.stringify(reportOptions));
+
+        if (vm.reportOptions.accounts_cash.length) {
+            vm.accountsCash = vm.reportOptions.accounts_cash[0];
+        } else {
+            vm.accountsCash = 0;
+        }
+
+        if (vm.reportOptions.accounts_position.length) {
+            vm.accountsPosition = vm.reportOptions.accounts_position[0];
+        } else {
+            vm.accountsPosition = 0;
+        }
+
+        console.log('vm.accountsCash', vm.accountsCash);
+        console.log('vm.accountsPosition', vm.accountsPosition);
+
+        vm.selectOptions = [
+            {
+                value: 0,
+                caption: "Ignore"
+            },
+            {
+                value: 1,
+                caption: "Independent"
+            }
+        ];
+
+        vm.strategiesSelectOptions = [
+            {
+                value: 0,
+                caption: "Ignore"
+            },
+            {
+                value: 1,
+                caption: "Independent"
+            },
+            {
+                value: 2,
+                caption: 'Offsetting (Interdependent - 0/100, 100/0, 50/50)'
+            }
+        ];
+
 
         vm.entityType = options.entityType;
 
@@ -188,6 +229,23 @@
 
 
         vm.saveSettings = function () {
+
+            console.log('saveSettings.reportOptions', vm.reportOptions);
+            console.log('saveSettings.accountsCash', vm.accountsCash);
+            console.log('saveSettings.accountsPosition', vm.accountsPosition);
+
+            if (vm.accountsCash === 1) {
+                vm.reportOptions.accounts_cash[0] = 1;
+            } else {
+                vm.reportOptions.accounts_cash = [];
+            }
+
+            if (vm.accountsPosition === 1) {
+                vm.reportOptions.accounts_position[0] = 1;
+            } else {
+                vm.reportOptions.accounts_position = [];
+            }
+
             $mdDialog.hide({status: 'agree', data: vm.reportOptions});
         };
 
