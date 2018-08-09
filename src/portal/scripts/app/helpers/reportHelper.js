@@ -205,6 +205,16 @@
 
                 }
 
+                if (item.hasOwnProperty('currency_object') && item.currency_object) {
+
+                    var currencyObjectKeys = Object.keys(item.currency_object);
+
+                    currencyObjectKeys.forEach(function (currencyObjectKeyItem) {
+                        item['currency_object_' + currencyObjectKeyItem] = item.currency_object[currencyObjectKeyItem];
+                    });
+
+                }
+
                 if (item.hasOwnProperty('transaction_currency_object') && item.transaction_currency_object) {
 
                     var transactionCurrencyObjectKeys = Object.keys(item.transaction_currency_object);

@@ -501,6 +501,7 @@
         }
 
         vm.updateAttrs = function () {
+
             updateTypeAttrs(vm.balanceAttrs);
             updateTypeAttrs(vm.balancePerformanceAttrs);
             updateTypeAttrs(vm.balanceMismatchAttrs);

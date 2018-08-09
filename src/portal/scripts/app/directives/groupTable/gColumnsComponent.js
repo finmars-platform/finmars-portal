@@ -410,6 +410,8 @@
 
                         scope.columns = scope.evDataService.getColumns();
 
+                        console.log('gColumnsComponent.columns', scope.columns)
+
                     });
 
 
