@@ -81,24 +81,21 @@
                                 <md-input-container style="margin-bottom: 20px;">
                                     <label for="">Portfolio mode</label>
                                     <md-select data-ng-model="vm.reportOptions.portfolio_mode">
-                                        <md-option ng-value="0">Ignore</md-option>
-                                        <md-option ng-value="1" selected>Independent</md-option>
+                                        <md-option ng-value="opt.value" ng-repeat="opt in vm.selectOptions">{{opt.caption}}</md-option>
                                     </md-select>
                                 </md-input-container>
 
                                 <md-input-container style="margin-bottom: 20px;">
                                     <label for="">Account position</label>
-                                    <md-select data-ng-model="vm.reportOptions.accounts_position">
-                                        <md-option ng-value="[]">Ignore</md-option>
-                                        <md-option ng-value="[1]" selected>Independent</md-option>
+                                    <md-select data-ng-model="vm.accountsPosition">
+                                        <md-option ng-value="opt.value" ng-repeat="opt in vm.selectOptions">{{opt.caption}}</md-option>
                                     </md-select>
                                 </md-input-container>
 
                                 <md-input-container style="margin-bottom: 20px;">
                                     <label for="">Account cash</label>
-                                    <md-select data-ng-model="vm.reportOptions.accounts_cash">
-                                        <md-option ng-value="[]">Ignore</md-option>
-                                        <md-option ng-value="[1]" selected>Independent</md-option>
+                                    <md-select data-ng-model="vm.accountsCash">
+                                        <md-option ng-value="opt.value" ng-repeat="opt in vm.selectOptions">{{opt.caption}}</md-option>
                                     </md-select>
                                 </md-input-container>
 
@@ -109,19 +106,14 @@
                                 <md-input-container style="margin-bottom: 20px;">
                                     <label for="">Strategy 1 mode</label>
                                     <md-select data-ng-model="vm.reportOptions.strategy1_mode">
-                                        <md-option ng-value="0">Ignore</md-option>
-                                        <md-option ng-value="1" selected>Independent</md-option>
-                                        <md-option ng-value="2">Offsetting (Interdependent - 0/100, 100/0, 50/50)
-                                        </md-option>
+                                        <md-option ng-value="opt.value" ng-repeat="opt in vm.strategiesSelectOptions">{{opt.caption}}</md-option>
                                     </md-select>
                                 </md-input-container>
 
                                 <md-input-container style="margin-bottom: 20px;">
                                     <label for="">Strategy 2 mode</label>
                                     <md-select data-ng-model="vm.reportOptions.strategy2_mode">
-                                        <md-option ng-value="0">Ignore</md-option>
-                                        <md-option ng-value="1" selected>Independent</md-option>
-                                        <md-option ng-value="2">Offsetting (Interdependent - 0/100, 100/0, 50/50)
+                                        <md-option ng-value="opt.value" ng-repeat="opt in vm.strategiesSelectOptions">{{opt.caption}}</md-option>
                                         </md-option>
                                     </md-select>
                                 </md-input-container>
@@ -129,9 +121,7 @@
                                 <md-input-container style="margin-bottom: 20px;">
                                     <label for="">Strategy 3 mode</label>
                                     <md-select data-ng-model="vm.reportOptions.strategy3_mode">
-                                        <md-option ng-value="0">Ignore</md-option>
-                                        <md-option ng-value="1" selected>Independent</md-option>
-                                        <md-option ng-value="2">Offsetting (Interdependent - 0/100, 100/0, 50/50)
+                                        <md-option ng-value="opt.value" ng-repeat="opt in vm.strategiesSelectOptions">{{opt.caption}}</md-option>
                                         </md-option>
                                     </md-select>
                                 </md-input-container>
@@ -144,7 +134,7 @@
                                     <label for="">Offsetting size</label>
                                     <md-select data-ng-model="vm.reportOptions.approach_multiplier">
                                         <md-option ng-value="0">0/100</md-option>
-                                        <md-option ng-value="0.5" selected>50/50</md-option>
+                                        <md-option ng-value="0.5">50/50</md-option>
                                         <md-option ng-value="1">100/0</md-option>
                                     </md-select>
                                 </md-input-container>
