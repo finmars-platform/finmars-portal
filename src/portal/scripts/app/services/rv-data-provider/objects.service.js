@@ -35,7 +35,7 @@
             result.count = items.length;
             result.results = items;
 
-            console.log('rv-data-provider-objects-service.getList', options);
+            // console.log('rv-data-provider-objects-service.getList', options);
             // console.log('rv-data-provider-objects-service.getList', entityType);
             // console.log('rv-data-provider-objects-service.getList.result', result);
 
