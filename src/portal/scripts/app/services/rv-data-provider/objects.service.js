@@ -3,11 +3,6 @@
     var filterService = require('./filter.service');
     var sortService = require('./sort.service');
 
-    var sortItems = function () {
-
-    };
-
-
     var getList = function (entityType, options, entityViewerDataService) {
 
         return new Promise(function (resolve, reject) {
@@ -33,9 +28,9 @@
 
             // console.log('rv-data-provider-objects-service.getList.items.length after groups filters', items.length);
 
-
-            items = sortService.sortItems(items, options);
-
+            if (options.ordering) {
+                items = sortService.sortItems(items, options.ordering);
+            }
 
             result.count = items.length;
             result.results = items;

@@ -2,6 +2,8 @@
 
     var filterService = require('./filter.service');
 
+    var sortService = require('./sort.service');
+
     function keyIsEntityField(key) {
 
         return ['type', 'instrument_type', 'currency', 'instrument_object_instrument_type', 'account_object_type', 'group'].indexOf(key) !== -1
@@ -70,7 +72,6 @@
 
         });
 
-
         console.log('getUniqueGroups.result', result);
 
         return result;
@@ -101,10 +102,16 @@
 
             var groups = getUniqueGroups(items, group);
 
+            if (options.groups_order === 'desc') {
+                groups = sortService.sortItems(groups, '-group_name');
+            } else {
+                groups = sortService.sortItems(groups, 'group_name');
+            }
+
             result.count = groups.length;
             result.results = groups;
 
-            // console.log('rv-data-provider-groups-service.getList.options', options);
+            console.log('rv-data-provider-groups-service.getList.options', options);
             // console.log('rv-data-provider-groups-service.getList.entityType', entityType);
             // console.log('rv-data-provider-groups-service.getList.result', result);
 
