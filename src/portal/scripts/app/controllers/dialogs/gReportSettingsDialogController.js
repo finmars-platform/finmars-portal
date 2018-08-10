@@ -24,13 +24,13 @@
 
         vm.reportOptions = JSON.parse(JSON.stringify(reportOptions));
 
-        if (vm.reportOptions.accounts_cash.length) {
+        if (vm.reportOptions.accounts_cash && vm.reportOptions.accounts_cash.length) {
             vm.accountsCash = vm.reportOptions.accounts_cash[0];
         } else {
             vm.accountsCash = 0;
         }
 
-        if (vm.reportOptions.accounts_position.length) {
+        if (vm.reportOptions.accounts_position && vm.reportOptions.accounts_position.length) {
             vm.accountsPosition = vm.reportOptions.accounts_position[0];
         } else {
             vm.accountsPosition = 0;
