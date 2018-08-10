@@ -72,7 +72,7 @@
 
         });
 
-        console.log('getUniqueGroups.result', result);
+        // console.log('getUniqueGroups.result', result);
 
         return result;
 
@@ -111,7 +111,7 @@
             result.count = groups.length;
             result.results = groups;
 
-            console.log('rv-data-provider-groups-service.getList.options', options);
+            // console.log('rv-data-provider-groups-service.getList.options', options);
             // console.log('rv-data-provider-groups-service.getList.entityType', entityType);
             // console.log('rv-data-provider-groups-service.getList.result', result);
 
