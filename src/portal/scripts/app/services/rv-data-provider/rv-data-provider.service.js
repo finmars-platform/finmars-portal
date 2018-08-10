@@ -720,6 +720,87 @@
 
     var sortGroupType = function (entityViewerDataService, entityViewerEventService) {
 
+        var activeGroupSort = entityViewerDataService.getActiveGroupTypeSort();
+
+        console.log('sortGroupType.activeGroupSort', activeGroupSort);
+
+        var groupsTypes = entityViewerDataService.getGroups();
+
+        var level = 0;
+
+        groupsTypes.forEach(function (item, index) {
+
+            if (activeGroupSort.key && item.key === activeGroupSort.key) {
+                level = index;
+
+            } else {
+
+                if (activeGroupSort.id && item.id === activeGroupSort.id) {
+                    level = index;
+                }
+
+            }
+
+        });
+
+        console.log('sortGroupType.level', level);
+
+        var groups = evDataHelper.getGroupsByLevel(level, entityViewerDataService);
+
+        var requestsParameters = entityViewerDataService.getAllRequestParameters();
+
+        var requestParametersForUnfoldedGroups = [];
+
+        Object.keys(requestsParameters).forEach(function (key) {
+
+            groups.forEach(function (group) {
+
+                if (group.___id === requestsParameters[key].id) {
+
+                    requestsParameters[key].event.___id = group.___id;
+                    requestsParameters[key].event.groupName = group.group_name;
+                    requestsParameters[key].event.parentGroupId = group.___parentId;
+
+                    requestParametersForUnfoldedGroups.push(requestsParameters[key]);
+                }
+
+
+            })
+
+        });
+
+        requestParametersForUnfoldedGroups.forEach(function (item) {
+
+            item.body.page = 1;
+
+            item.body.groups_order = activeGroupSort.options.sort.toLocaleLowerCase();
+
+            entityViewerDataService.setRequestParameters(item);
+
+        });
+
+        groups.forEach(function (group) {
+
+            group.results = [];
+
+            entityViewerDataService.setData(group)
+
+        });
+
+        var promises = [];
+
+        requestParametersForUnfoldedGroups.forEach(function (requestParameters) {
+
+            promises.push(getGroups(requestParameters, entityViewerDataService, entityViewerEventService))
+
+        });
+
+        Promise.all(promises).then(function () {
+
+            entityViewerEventService.dispatchEvent(evEvents.DATA_LOAD_END);
+
+        });
+
     };
 
     module.exports = {
