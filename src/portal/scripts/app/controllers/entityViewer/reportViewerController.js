@@ -221,6 +221,9 @@
                     vm.options.reportOptions = JSON.parse(JSON.stringify(entityViewerDataService.getReportOptions()));
 
                     delete vm.options.reportOptions.items;
+                    delete vm.options.reportOptions.item_complex_transactions;
+                    delete vm.options.reportOptions.item_counterparties;
+                    delete vm.options.reportOptions.item_responsibles;
                     delete vm.options.reportOptions.item_strategies3;
                     delete vm.options.reportOptions.item_strategies2;
                     delete vm.options.reportOptions.item_strategies1;
@@ -304,6 +307,9 @@
                     vm.options.reportOptions = JSON.parse(JSON.stringify(entityViewerDataService.getReportOptions()));
 
                     delete vm.options.reportOptions.items;
+                    delete vm.options.reportOptions.item_complex_transactions;
+                    delete vm.options.reportOptions.item_counterparties;
+                    delete vm.options.reportOptions.item_responsibles;
                     delete vm.options.reportOptions.item_strategies3;
                     delete vm.options.reportOptions.item_strategies2;
                     delete vm.options.reportOptions.item_strategies1;
