@@ -13,6 +13,8 @@
     var evDataHelper = require('../../helpers/ev-data.helper');
     var rvDataHelper = require('../../helpers/rv-data.helper');
 
+    var metaService = require('../../services/metaService')
+
     module.exports = function ($mdDialog) {
         return {
             restrict: 'AE',
@@ -42,7 +44,7 @@
                 var projection;
                 var entityType = scope.evDataService.getEntityType();
 
-                var isReport = ['balance-report'].indexOf(entityType) !== -1;
+                var isReport = metaService.isReport(entityType);
 
                 function renderReportViewer() {
 

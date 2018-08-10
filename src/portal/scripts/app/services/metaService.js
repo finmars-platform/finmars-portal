@@ -148,11 +148,21 @@
         return metaRepository.getEntitiesWithSimpleFields();
     };
 
-    var getFieldsWithTagGrouping = function(){
+    var getFieldsWithTagGrouping = function () {
         return metaRepository.getFieldsWithTagGrouping();
     };
 
+    var isReport = function (entityType) {
+
+        return ['balance-report',
+            'cash-flow-projection-report',
+            'performance-report', 'pnl-report',
+            'transaction-report'].indexOf(entityType) !== -1
+
+    };
+
     module.exports = {
+        isReport: isReport,
         getMenu: getMenu,
         getBaseAttrs: getBaseAttrs,
         getEntityAttrs: getEntityAttrs,

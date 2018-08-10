@@ -16,7 +16,9 @@
     var balanceReportCustomAttrService = require('../../services/reports/balanceReportCustomAttrService');
     var dynamicAttributesForReportsService = require('../../services/groupTable/dynamicAttributesForReportsService');
 
-    module.exports = function ($scope, $mdDialog, EntityViewerDataService, EntityViewerEventService) {
+    var evDataHelper = require('../../helpers/ev-data.helper');
+
+    module.exports = function ($scope, $mdDialog, entityViewerDataService, entityViewerEventService) {
 
         logService.controller('gModalController', 'initialized');
 
@@ -24,7 +26,7 @@
         vm.readyStatus = {content: false};
 
         vm.tabs = [];
-        vm.entityType = EntityViewerDataService.getEntityType();
+        vm.entityType = entityViewerDataService.getEntityType();
 
         //console.log('parentScope', parentScope);
         //console.log('vm', vm);
@@ -41,10 +43,7 @@
         vm.accountDynamicAttrs = [];
         vm.portfolioDynamicAttrs = [];
 
-        vm.isReport = ['balance-report',
-            'cash-flow-projection-report',
-            'performance-report', 'pnl-report',
-            'transaction-report'].indexOf(vm.entityType) !== -1;
+        vm.isReport = metaService.isReport(vm.entityType);
 
         vm.tabAttrsReady = false;
 
@@ -134,10 +133,10 @@
 
         // end refactore
 
-        var columns = EntityViewerDataService.getColumns();
+        var columns = entityViewerDataService.getColumns();
         var currentColumnsWidth = columns.length;
-        var filters = EntityViewerDataService.getFilters();
-        var grouping = EntityViewerDataService.getGroups();
+        var filters = entityViewerDataService.getFilters();
+        var grouping = entityViewerDataService.getGroups();
 
         var attrsList = [];
 
@@ -553,15 +552,14 @@
 
             addColumn();
 
-            entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+            evDataHelper.updateColumnsIds(entityViewerDataService);
+            evDataHelper.setColumnsDefaultWidth(entityViewerDataService);
 
-            // callback({
-            //     silent: true, options: {
-            //         columns: columns,
-            //         filters: filters,
-            //         grouping: grouping
-            //     }
-            // });
+            entityViewerEventService.dispatchEvent(evEvents.COLUMNS_CHANGE);
+            entityViewerEventService.dispatchEvent(evEvents.FILTERS_CHANGE);
+            entityViewerEventService.dispatchEvent(evEvents.GROUPS_CHANGE);
+
+            entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
         };
 
         vm.cancel = function () {
@@ -677,7 +675,9 @@
                                 }
                             }
                             syncAttrs();
-                            callback({silent: true});
+                            evDataHelper.updateColumnsIds(entityViewerDataService);
+                            evDataHelper.setColumnsDefaultWidth(entityViewerDataService);
+                            entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
                         }
                         if (target === document.querySelector('#groupsbag') ||
                             target === document.querySelector('.g-groups-holder')) {
@@ -706,7 +706,9 @@
                                 }
                             }
                             syncAttrs();
-                            callback({silent: true});
+                            evDataHelper.updateColumnsIds(entityViewerDataService);
+                            evDataHelper.setColumnsDefaultWidth(entityViewerDataService);
+                            entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
                         }
                         if (target === document.querySelector('#filtersbag .drop-new-filter') ||
                             target === document.querySelector('.g-filters-holder')) {
@@ -735,7 +737,9 @@
                                 }
                             }
                             syncAttrs();
-                            callback({silent: true});
+                            evDataHelper.updateColumnsIds(entityViewerDataService);
+                            evDataHelper.setColumnsDefaultWidth(entityViewerDataService);
+                            entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
                         }
                         $scope.$apply();
                     }
@@ -811,23 +815,23 @@
 
         var init = function () {
 
-            EntityViewerEventService.addEventListener(evEvents.COLUMNS_CHANGE, function () {
+            entityViewerEventService.addEventListener(evEvents.COLUMNS_CHANGE, function () {
 
-                columns = EntityViewerDataService.getColumns();
+                columns = entityViewerDataService.getColumns();
                 syncAttrs();
 
             });
 
-            EntityViewerEventService.addEventListener(evEvents.GROUPS_CHANGE, function () {
+            entityViewerEventService.addEventListener(evEvents.GROUPS_CHANGE, function () {
 
-                grouping = EntityViewerDataService.getGroups();
+                grouping = entityViewerDataService.getGroups();
                 syncAttrs();
 
             });
 
-            EntityViewerEventService.addEventListener(evEvents.FILTERS_CHANGE, function () {
+            entityViewerEventService.addEventListener(evEvents.FILTERS_CHANGE, function () {
 
-                filters = EntityViewerDataService.getFilters();
+                filters = entityViewerDataService.getFilters();
                 syncAttrs();
 
             });

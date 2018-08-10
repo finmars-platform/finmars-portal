@@ -154,6 +154,11 @@
         }
 
         function getGroups() {
+
+            if (!data.groups) {
+                data.groups = [];
+            }
+
             return data.groups;
         }
 
