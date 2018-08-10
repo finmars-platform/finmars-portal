@@ -149,7 +149,7 @@
                         item['account_position_object_' + accountObjectKeyItem] = item.account_position_object[accountObjectKeyItem];
                     });
 
-                    if (item.account_position_object.hasOwnProperty('type_object') && account_position_object.type_object) {
+                    if (item.account_position_object.hasOwnProperty('type_object') && item.account_position_object.type_object) {
                         var accountPositionTypeObjectKeys = Object.keys(item.account_position_object.type_object);
 
                         accountPositionTypeObjectKeys.forEach(function (accountTypeObjectKeyItem) {
