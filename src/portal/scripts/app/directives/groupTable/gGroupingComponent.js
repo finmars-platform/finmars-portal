@@ -289,6 +289,70 @@
 
                 }
 
+                function syncColumnsWithGroups() {
+
+                    console.log('herere soonq?');
+
+                    var columns = scope.evDataService.getColumns();
+                    var groups = scope.evDataService.getGroups();
+
+                    console.log('syncColumnsWithGroups.columns', columns);
+                    console.log('syncColumnsWithGroups.groups', groups);
+
+                    var newColumnList = [];
+
+                    groups.forEach(function (group, index) {
+
+                        newColumnList.push({
+                            name: group.name,
+                            key: group.key,
+                            value_type: group.value_type
+                        })
+
+                    });
+
+                    newColumnList.forEach(function (newColumn) {
+
+                        columns.forEach(function (column) {
+
+                            if (newColumn.key === column.key) {
+                                newColumn.___column_id = column.___column_id;
+                                newColumn.style = column.style;
+                            }
+
+                        })
+
+                    })
+
+                    var oldColumns = columns.filter(function (oldColumn) {
+
+                        var exists = false;
+
+                        newColumnList.forEach(function (newColumn) {
+
+                            if (newColumn.___column_id === oldColumn.___column_id) {
+                                exists = true;
+                            }
+
+                        });
+
+                        return !exists;
+
+                    });
+
+                    var resultColumns = newColumnList.concat(oldColumns);
+
+                    console.log('syncColumnsWithGroups.resultColumns', resultColumns);
+
+                    scope.evDataService.setColumns(resultColumns);
+
+                    evDataHelper.updateColumnsIds(scope.evDataService);
+                    evDataHelper.setColumnsDefaultWidth(scope.evDataService);
+
+                    scope.evEventService.dispatchEvent(evEvents.COLUMNS_CHANGE);
+
+                }
+
                 var dragAndDrop = {
 
                     init: function () {
@@ -403,6 +467,12 @@
                         var rootGroup = scope.evDataService.getRootGroupData();
 
                         scope.evDataService.setActiveRequestParametersId(rootGroup.___id);
+
+                        if (scope.isReport) {
+
+                            syncColumnsWithGroups();
+
+                        }
 
                         scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE);
 
