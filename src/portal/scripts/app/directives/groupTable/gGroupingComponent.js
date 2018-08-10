@@ -9,6 +9,8 @@
     var evDataHelper = require('../../helpers/ev-data.helper');
     var evLoaderHelper = require('../../helpers/ev-loader.helper');
 
+    var metaService = require('../../services/metaService');
+
     module.exports = function ($mdDialog) {
         return {
             restrict: 'AE',
@@ -68,10 +70,7 @@
                 }
 
                 scope.entityType = scope.evDataService.getEntityType();
-                scope.isReport = ['balance-report',
-                    'cash-flow-projection-report',
-                    'performance-report', 'pnl-report',
-                    'transaction-report'].indexOf(scope.entityType) !== -1;
+                scope.isReport = metaService.isReport(scope.entityType);
 
                 scope.sortHandler = function (group, sort) {
 
@@ -228,6 +227,8 @@
 
                         var controllerName = '';
                         var templateUrl = '';
+
+                        console.log('scope.openModalSettings.entityType', scope.entityType);
 
                         switch (scope.entityType) {
                             case 'balance-report':

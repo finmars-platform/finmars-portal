@@ -8,6 +8,8 @@
     var EvScrollManager = require('./ev-scroll.manager');
     var evRvCommonHelper = require('../../helpers/ev-rv-common.helper');
 
+    var metaService = require('../../services/metaService');
+
     var clickTargets = {
         'FOLD_BUTTON': 'FOLD_BUTTON',
         'ROW_SELECTION_OBJECT_BUTTON': 'ROW_SELECTION_OBJECT_BUTTON',
@@ -430,7 +432,7 @@
 
         var entityType = evDataService.getEntityType();
 
-        if (['balance-report'].indexOf(entityType) === -1) {
+        if (!metaService.isReport(entityType)) {
 
             elem.addEventListener('contextmenu', function (ev) {
 

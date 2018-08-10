@@ -12,6 +12,7 @@
     var currencyService = require('../../services/currencyService');
 
     var attributeTypeService = require('../../services/attributeTypeService');
+    var metaService = require('../../services/metaService');
 
     module.exports = function ($mdDialog) {
         return {
@@ -31,10 +32,7 @@
 
                 console.log('scope.reportOptions', scope.reportOptions);
 
-                scope.isReport = ['balance-report',
-                    'cash-flow-projection-report',
-                    'performance-report', 'pnl-report',
-                    'transaction-report'].indexOf(scope.entityType) !== -1;
+                scope.isReport = metaService.isReport(scope.evDataService.getEntityType());
 
 
                 console.log('scope.isReport', scope.isReport);
