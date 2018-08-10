@@ -24,6 +24,12 @@
 
         vm.reportOptions = JSON.parse(JSON.stringify(reportOptions));
 
+        if (vm.reportOptions.cost_method && vm.reportOptions.cost_method.length) {
+            if (vm.reportOptions.cost_method[0].indexOf('Incorrect type') !== -1) {
+                vm.reportOptions.cost_method = []
+            }
+        }
+
         if (vm.reportOptions.accounts_cash && vm.reportOptions.accounts_cash.length) {
             vm.accountsCash = vm.reportOptions.accounts_cash[0];
         } else {
