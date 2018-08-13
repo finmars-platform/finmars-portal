@@ -25,17 +25,20 @@
 
         var result = 0;
 
-        items.forEach(function (item) {
+        var i;
 
-            if (item.hasOwnProperty("market_value")) {
+        for (i = 0; i < items.length; i = i + 1) {
 
-                result = result + parseFloat(item[column.key]) * parseFloat(item["market_value"]);
+            if (items[i].hasOwnProperty("market_value")) {
+
+                result = result + parseFloat(items[i][column.key]) * parseFloat(items[i]["market_value"]);
+
             } else {
 
                 throw Error("market_value is not set");
             }
 
-        });
+        }
 
         return result;
 
@@ -45,35 +48,40 @@
 
         var result = 0;
 
-        items.forEach(function (item) {
+        var i;
 
-            if (item["market_value_percent"]) {
+        for (i = 0; i < items.length; i = i + 1) {
 
-                result = result + parseFloat(groupedItem[column.key]) * parseFloat(groupedItem["market_value_percent"]);
+            if (items[i]["market_value_percent"]) {
+
+                result = result + parseFloat(items[i][column.key]) * parseFloat(items[i]["market_value_percent"]);
+
             } else {
 
                 throw Error("market_value_percent is not set")
             }
 
-        });
+        }
     }
 
     function weightedExposure(items, column) {
 
         var result = 0;
 
-        items.forEach(function (item) {
+        var i;
 
-            if (item.hasOwnProperty("exposure")) {
+        for (i = 0; i < items.length; i = i + 1) {
 
-                result = result + parseFloat(groupedItem[column.key]) * parseFloat(groupedItem["exposure"]);
+            if (items[i].hasOwnProperty("exposure")) {
+
+                result = result + parseFloat(items[i][column.key]) * parseFloat(items[i]["exposure"]);
 
             } else {
 
                 throw Error('exposure is not set')
             }
 
-        });
+        }
 
         return result
 
@@ -83,18 +91,20 @@
 
         var result = 0;
 
-        items.forEach(function (item) {
+        var i;
 
-            if (item["exposure_percent"]) {
+        for (i = 0; i < items.length; i = i + 1) {
 
-                result = result + parseFloat(item[column.key]) * parseFloat(item["exposure_percent"]);
+            if (items[i]["exposure_percent"]) {
+
+                result = result + parseFloat(items[i][column.key]) * parseFloat(items[i]["exposure_percent"]);
 
             } else {
 
                 throw Error("exposure_percent is not set");
             }
 
-        });
+        }
 
         return result
 
@@ -105,23 +115,25 @@
         var result = 0;
         var total = 0;
 
-        items.forEach(function (item) {
+        var i;
 
-            if (item.hasOwnProperty("market_value")) {
-                total = total + parseFloat(item["market_value"]);
+        for (i = 0; i < items.length; i = i + 1) {
+
+            if (items[i].hasOwnProperty("market_value")) {
+                total = total + parseFloat(items[i]["market_value"]);
             } else {
                 throw Error("market_value is not set");
             }
 
-        });
+        }
 
-        items.forEach(function (item) {
+        for (i = 0; i < items.length; i = i + 1) {
 
-            var average = parseFloat(item["market_value"]) / total;
+            var average = parseFloat(items[i]["market_value"]) / total;
 
-            result = result + parseFloat(item[column.key]) * average;
+            result = result + parseFloat(items[i][column.key]) * average;
 
-        });
+        }
 
         return result;
 
@@ -132,24 +144,26 @@
         var result = 0;
         var total = 0;
 
-        items.forEach(function (item) {
+        var i;
 
-            if (item["market_value_percent"]) {
-                total = total + parseFloat(item["market_value_percent"]);
+        for (i = 0; i < items.length; i = i + 1) {
+
+            if (items[i]["market_value_percent"]) {
+                total = total + parseFloat(items[i]["market_value_percent"]);
             } else {
                 throw Error("market_value_percent is not set");
             }
 
-        });
+        }
 
-        items.forEach(function (item) {
+        for (i = 0; i < items.length; i = i + 1) {
 
-            var average = parseFloat(item["market_value_percent"]) / total;
+            var average = parseFloat(items[i]["market_value_percent"]) / total;
 
-            result = result + parseFloat(item[column.key]) * average;
+            result = result + parseFloat(items[i][column.key]) * average;
 
 
-        });
+        }
 
         return result;
 
@@ -160,23 +174,25 @@
         var result = 0;
         var total = 0;
 
-        items.forEach(function (item) {
+        var i;
 
-            if (item.hasOwnProperty("exposure")) {
-                total = total + parseFloat(item["exposure"]);
+        for (i = 0; i < items.length; i = i + 1) {
+
+            if (items[i].hasOwnProperty("exposure")) {
+                total = total + parseFloat(items[i]["exposure"]);
             } else {
                 throw Error("exposure is not set");
             }
 
-        });
+        }
 
-        items.forEach(function (item) {
+        for (i = 0; i < items.length; i = i + 1) {
 
-            var average = parseFloat(item["exposure"]) / total;
+            var average = parseFloat(items[i]["exposure"]) / total;
 
-            result = result + parseFloat(item[column.key]) * average;
+            result = result + parseFloat(items[i][column.key]) * average;
 
-        });
+        }
 
         return result;
 
@@ -187,23 +203,25 @@
         var result = 0;
         var total = 0;
 
-        items.forEach(function (item) {
+        var i;
 
-            if (item["exposure_percent"]) {
-                total = total + parseFloat(item["exposure_percent"]);
+        for (i = 0; i < items.length; i = i + 1) {
+
+            if (items[i]["exposure_percent"]) {
+                total = total + parseFloat(items[i]["exposure_percent"]);
             } else {
                 throw Error("exposure_percent is not set");
             }
 
-        });
+        }
 
-        items.forEach(function (item) {
+        for (i = 0; i < items.length; i = i + 1) {
 
-            var average = parseFloat(item["exposure_percent"]) / total;
+            var average = parseFloat(items[i]["exposure_percent"]) / total;
 
-            result = result + parseFloat(item[column.key]) * average;
+            result = result + parseFloat(items[i][column.key]) * average;
 
-        });
+        }
 
         return result;
 
