@@ -9,13 +9,13 @@
 
         var result = 0;
 
-        items.forEach(function (item) {
+        var i;
 
-            result = result + parseFloat(item[column.key]);
+        for (i = 0; i < items.length; i = i + 1) {
 
-        });
+            result = result + parseFloat(items[i][column.key]);
 
-        // console.log('sum.result', result);
+        }
 
         return result
 
