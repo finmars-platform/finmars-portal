@@ -87,37 +87,41 @@
 
         dataList.forEach(function (item) {
 
-            groups.forEach(function (group, index) {
+            if (item.results.length) {
 
-                if (item.___level === index + 1 && item.___level <= groups.length) {
+                groups.forEach(function (group, index) {
 
-                    subtotalObj = Object.assign({}, item.subtotal, {
-                        ___type: 'subtotal',
-                        ___parentId: item.___id,
-                        ___level: item.___level + 1
-                    });
+                    if (item.___level === index + 1 && item.___level <= groups.length) {
 
-                    subtotalObj.___id = evRvCommonHelper.getId(subtotalObj);
+                        subtotalObj = Object.assign({}, item.subtotal, {
+                            ___type: 'subtotal',
+                            ___parentId: item.___id,
+                            ___level: item.___level + 1
+                        });
 
-                    if (group.report_settings.subtotal_type === 'line') {
+                        subtotalObj.___id = evRvCommonHelper.getId(subtotalObj);
 
-                        subtotalObj.___subtotal_type = 'line';
+                        if (group.report_settings.subtotal_type === 'line') {
 
-                        item.results.unshift(subtotalObj);
+                            subtotalObj.___subtotal_type = 'line';
+
+                            item.results.unshift(subtotalObj);
+
+                        }
+
+                        if (group.report_settings.subtotal_type === 'area') {
+
+                            subtotalObj.___subtotal_type = 'area';
+
+                            item.results.push(subtotalObj);
+
+                        }
 
                     }
 
-                    if (group.report_settings.subtotal_type === 'area') {
+                })
 
-                        subtotalObj.___subtotal_type = 'area';
-
-                        item.results.push(subtotalObj);
-
-                    }
-
-                }
-
-            })
+            }
 
         });
 
