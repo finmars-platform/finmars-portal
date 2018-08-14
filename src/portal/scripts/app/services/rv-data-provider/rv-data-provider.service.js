@@ -91,6 +91,20 @@
     var requestReport = function (entityViewerDataService, entityViewerEventService) {
 
         var reportOptions = entityViewerDataService.getReportOptions();
+        delete reportOptions.items;
+        delete reportOptions.item_complex_transactions;
+        delete reportOptions.item_counterparties;
+        delete reportOptions.item_responsibles;
+        delete reportOptions.item_strategies3;
+        delete reportOptions.item_strategies2;
+        delete reportOptions.item_strategies1;
+        delete reportOptions.item_portfolios;
+        delete reportOptions.item_instruments;
+        delete reportOptions.item_instrument_pricings;
+        delete reportOptions.item_instrument_accruals;
+        delete reportOptions.item_currency_fx_rates;
+        delete reportOptions.item_currencies;
+        delete reportOptions.item_accounts;
         reportOptions.task_id = null;
         entityViewerDataService.setReportOptions(reportOptions);
 
