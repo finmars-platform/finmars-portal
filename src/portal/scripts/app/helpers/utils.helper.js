@@ -160,11 +160,47 @@
         return flattenTree(tree, 'results');
     }
 
+    function toNextLevel(item, result) {
+
+        if (item.hasOwnProperty('results')) {
+
+            result[item.___id] = item;
+
+            item.results.forEach(function (child) {
+
+                toNextLevel(child, result);
+
+            })
+
+        }
+
+    }
+
+    function convertTreeToTreeList(tree) {
+
+        var resultAsObj = {};
+        var result = [];
+
+        toNextLevel(tree, resultAsObj);
+
+        console.log('convertTreeToTreeList.resultAsObj', resultAsObj);
+
+        Object.keys(resultAsObj).forEach(function (key) {
+            result.push(resultAsObj[key]);
+        });
+
+        console.log('convertTreeToTreeList.result', resultAsObj);
+
+        return result;
+
+    }
+
     module.exports = {
         floor10: floor10,
         debounce: debounce,
         convertToTree: convertToTree,
-        convertTreeToList: convertTreeToList
+        convertTreeToList: convertTreeToList,
+        convertTreeToTreeList: convertTreeToTreeList
     }
 
 
