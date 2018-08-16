@@ -380,6 +380,11 @@
                     <input data-ng-model="filter.options.query" data-ng-change="filterChange(filter)"
                            data-ng-model-options="{debounce: 1000}">
                 </div>
+                <div data-ng-if="filter['value_type'] === 40">
+
+                    <zh-date-picker data-ng-model="filter.options.query" position="left"
+                                    ng-change="filterChange(filter)"></zh-date-picker>
+                </div>
             </md-input-container>
             <div class="settings-btn" flex="20">
                 <md-menu data-ng-if="options.isRootEntityViewer">
