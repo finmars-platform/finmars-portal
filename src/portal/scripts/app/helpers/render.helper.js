@@ -83,11 +83,106 @@
 
     };
 
+    var formatRounding = function (value, column) {
+
+        if (column.report_settings) {
+
+            if (column.report_settings.round_format_id === 0) {
+                return value
+            }
+
+            if (column.report_settings.round_format_id === 1) {
+                return parseInt(value, 10);
+            }
+
+            if (column.report_settings.round_format_id === 2) {
+                return parseFloat(value).toFixed(2);
+            }
+
+        }
+
+        return value
+
+    };
+
+    var formatZero = function (value, column) {
+
+        if (column.report_settings) {
+
+            if (value === 0) {
+
+                if (column.report_settings.zero_format_id === 0) {
+                    return value
+                }
+
+                if (column.report_settings.zero_format_id === 1) {
+                    return '-'
+                }
+
+                if (column.report_settings.zero_format_id === 2) {
+                    return ''
+                }
+
+            }
+
+        }
+
+        return value;
+
+    };
+
+    var formatNegative = function (value, column) {
+
+        if (column.report_settings) {
+
+
+            if (value < 0) {
+
+                if (column.report_settings.negative_format_id === 0) {
+                    return value;
+                }
+
+                if (column.report_settings.negative_format_id === 1) {
+
+                    value = value + '';
+
+                    value = '(' + value.slice(1, value.length) + ')';
+
+                    return value;
+                }
+
+
+            }
+
+        }
+
+        return value
+
+    };
+
+    var formatValue = function (obj, column) {
+
+        var value = obj[column.key];
+
+        value = formatRounding(value, column);
+
+        value = formatZero(value, column);
+
+        value = formatNegative(value, column);
+
+        return value;
+
+    };
+
     module.exports = {
         getCheckIcon: getCheckIcon,
         noLineGroups: noLineGroups,
         anyLineGroupsBefore: anyLineGroupsBefore,
-        getAreaGroupsBefore: getAreaGroupsBefore
+        getAreaGroupsBefore: getAreaGroupsBefore,
+        formatRounding: formatRounding,
+        formatNegative: formatNegative,
+        formatZero: formatZero,
+        formatValue: formatValue
     }
 
 }());

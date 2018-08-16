@@ -888,48 +888,7 @@
 
             };
 
-            vm.openDataViewPanel = function () {
 
-                var additions = {
-                    additionsState: true,
-                    reportWizard: true,
-                    editor: false,
-                    permissionEditor: false
-                };
-
-                entityViewerDataService.setAdditions(additions);
-                entityViewerEventService.dispatchEvent(evEvents.ADDITIONS_CHANGE);
-
-            };
-
-            vm.openPermissionEditor = function () {
-
-                var additions = {
-                    additionsState: true,
-                    reportWizard: false,
-                    editor: false,
-                    permissionEditor: true
-                };
-
-                entityViewerDataService.setAdditions(additions);
-                entityViewerEventService.dispatchEvent(evEvents.ADDITIONS_CHANGE);
-
-            };
-
-            vm.openEditorViewPanel = function () {
-
-                var additions = {
-                    additionsState: true,
-                    reportWizard: false,
-                    editor: true,
-                    permissionEditor: false
-                };
-
-                entityViewerDataService.setAdditions(additions);
-                entityViewerEventService.dispatchEvent(evEvents.ADDITIONS_CHANGE);
-
-
-            };
 
             vm.hideAdditions = function () {
 

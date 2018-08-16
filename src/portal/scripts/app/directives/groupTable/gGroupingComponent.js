@@ -11,7 +11,7 @@
 
     var metaService = require('../../services/metaService');
 
-    module.exports = function ($mdDialog) {
+    module.exports = function () {
         return {
             restrict: 'AE',
             scope: {
@@ -221,63 +221,6 @@
 
                 };
 
-                scope.openModalSettings = function (ev) {
-
-                    if (scope.isReport) {
-
-                        var controllerName = '';
-                        var templateUrl = '';
-
-                        console.log('scope.openModalSettings.entityType', scope.entityType);
-
-                        switch (scope.entityType) {
-                            case 'balance-report':
-                                controllerName = 'gModalReportController as vm';
-                                templateUrl = 'views/directives/groupTable/modal-report-view.html';
-                                break;
-                            case 'pnl-report':
-                                controllerName = 'gModalReportPnlController as vm';
-                                templateUrl = 'views/directives/groupTable/modal-report-view.html';
-                                break;
-                            case 'performance-report':
-                                controllerName = 'gModalReportPerformanceController as vm';
-                                templateUrl = 'views/directives/groupTable/modal-report-performance-view.html';
-                                break;
-                            case 'cash-flow-projection-report':
-                                controllerName = 'gModalReportCashFlowProjectionController as vm';
-                                templateUrl = 'views/directives/groupTable/modal-report-cash-flow-projection-view.html';
-                                break;
-                            case 'transaction-report':
-                                controllerName = 'gModalReportTransactionController as vm';
-                                templateUrl = 'views/directives/groupTable/modal-report-transaction-view.html';
-                                break;
-                        }
-
-                        $mdDialog.show({
-                            controller: controllerName,
-                            templateUrl: templateUrl,
-                            parent: angular.element(document.body),
-                            targetEvent: ev,
-                            locals: {
-                                entityViewerDataService: scope.evDataService,
-                                entityViewerEventService: scope.evEventService
-                            }
-                        });
-
-
-                    } else {
-                        $mdDialog.show({
-                            controller: 'gModalController as vm', // ../directives/gTable/gModalComponents
-                            templateUrl: 'views/directives/groupTable/modal-view.html',
-                            parent: angular.element(document.body),
-                            targetEvent: ev,
-                            locals: {
-                                entityViewerDataService: scope.evDataService,
-                                entityViewerEventService: scope.evEventService
-                            }
-                        });
-                    }
-                };
 
                 function createDefaultOptions() {
 

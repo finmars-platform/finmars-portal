@@ -33,8 +33,10 @@
             <!--</div>-->
             <!--<div dragula="'group-bag'" dragula-model="grouping">-->
             <div class="g-groups-holder">
+
                 <md-card data-ng-repeat="item in grouping track by $index" class="group-item card"
                          data-group-type-id="{{item.___group_type_id}}">
+
                     <div class="sort">
                         <md-button class="group-sort" data-ng-show="item.options.sort === 'ASC'"
                                    aria-label="open settings" data-ng-click="sortHandler(item, 'DESC')">
@@ -51,7 +53,7 @@
                         </md-button>
                     </div>
 
-                    <div class="sort">
+                    <div class="sort" data-ng-if="!isReport">
                         <md-button class="group-sort" data-ng-show="item.options.fold"
                                    aria-label="open settings" data-ng-click="toggleFold(item)">
                             -
@@ -61,6 +63,7 @@
                             +
                         </md-button>
                     </div>
+
                     <div class="caption">{{item.name}}</div>
                     <div class="settings-btn">
                         <md-menu data-ng-if="isReport">
@@ -122,10 +125,10 @@
             </div>
         </div>
 
-        <md-button data-ng-if="components.fieldManagerBtn == true" class="md-fab g-settings-btn" aria-label="drag modal"
-                   data-ng-click="openModalSettings($event)">
-            <ng-md-icon icon="view_week"></ng-md-icon>
-        </md-button>
+        <!--<md-button data-ng-if="components.fieldManagerBtn == true" class="md-fab g-settings-btn" aria-label="drag modal"-->
+                   <!--data-ng-click="openModalSettings($event)">-->
+            <!--<ng-md-icon icon="view_week"></ng-md-icon>-->
+        <!--</md-button>-->
 
         <div class="ev-loader" data-ng-show="dataLoader"></div>
 

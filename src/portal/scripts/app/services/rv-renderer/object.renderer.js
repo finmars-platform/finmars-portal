@@ -50,6 +50,8 @@
 
     };
 
+
+
     var getEntityAttributeValue = function (obj, column) {
 
         var result = '';
@@ -63,8 +65,11 @@
                 if (obj[column.key + '_object'] && obj[column.key + '_object'].user_code) {
                     result = obj[column.key + '_object'].user_code;
                 } else {
-                    result = obj[column.key]
+
+                    result = renderHelper.formatValue(obj, column);
+
                 }
+
             } else {
 
                 if (Array.isArray(obj[column.key])) {
