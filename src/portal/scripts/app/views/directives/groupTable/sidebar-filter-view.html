@@ -1,5 +1,8 @@
 <div class="g-sidebar-filter-component" layout="column">
 
+    <group-actions-block ev-data-service="evDataService"
+                         ev-event-service="evEventService"></group-actions-block>
+
     <div data-ng-if="isReport" layout="column">
 
         <div data-ng-if="entityType == 'balance-report' || entityType == 'pnl-report'">
@@ -94,7 +97,8 @@
 
                             <label for="">Begin date</label>
 
-                            <zh-date-picker data-ng-model="reportOptions.begin_date" position="left" ng-change="updateReportOptions()"></zh-date-picker>
+                            <zh-date-picker data-ng-model="reportOptions.begin_date" position="left"
+                                            ng-change="updateReportOptions()"></zh-date-picker>
 
                         </md-input-container>
 
@@ -102,7 +106,8 @@
 
                             <label for="">End date</label>
 
-                            <zh-date-picker data-ng-model="reportOptions.end_date" position="left" ng-change="updateReportOptions()"></zh-date-picker>
+                            <zh-date-picker data-ng-model="reportOptions.end_date" position="left"
+                                            ng-change="updateReportOptions()"></zh-date-picker>
 
                         </md-input-container>
 
@@ -136,7 +141,8 @@
 
                             <label for="">Begin date</label>
 
-                            <zh-date-picker data-ng-model="reportOptions.begin_date" position="left" ng-change="updateReportOptions()"></zh-date-picker>
+                            <zh-date-picker data-ng-model="reportOptions.begin_date" position="left"
+                                            ng-change="updateReportOptions()"></zh-date-picker>
 
                         </md-input-container>
 
@@ -144,7 +150,8 @@
 
                             <label for="">End date</label>
 
-                            <zh-date-picker data-ng-model="reportOptions.end_date" position="left" ng-change="updateReportOptions()"></zh-date-picker>
+                            <zh-date-picker data-ng-model="reportOptions.end_date" position="left"
+                                            ng-change="updateReportOptions()"></zh-date-picker>
 
                         </md-input-container>
 
@@ -152,7 +159,8 @@
 
                             <label for="">Balance date</label>
 
-                            <zh-date-picker data-ng-model="reportOptions.balance_date" position="left" ng-change="updateReportOptions()"></zh-date-picker>
+                            <zh-date-picker data-ng-model="reportOptions.balance_date" position="left"
+                                            ng-change="updateReportOptions()"></zh-date-picker>
 
                         </md-input-container>
 
@@ -160,7 +168,8 @@
 
                             <label for="">Report date</label>
 
-                            <zh-date-picker data-ng-model="reportOptions.report_date" position="left" ng-change="updateReportOptions()"></zh-date-picker>
+                            <zh-date-picker data-ng-model="reportOptions.report_date" position="left"
+                                            ng-change="updateReportOptions()"></zh-date-picker>
 
                         </md-input-container>
 
@@ -205,7 +214,8 @@
 
                             <label for="">End Date</label>
 
-                            <zh-date-picker data-ng-model="reportOptions.end_date" position="left" ng-change="updateReportOptions()"></zh-date-picker>
+                            <zh-date-picker data-ng-model="reportOptions.end_date" position="left"
+                                            ng-change="updateReportOptions()"></zh-date-picker>
 
                         </md-input-container>
 
@@ -214,7 +224,8 @@
 
                             <label for="">Currency</label>
 
-                            <md-select data-ng-model="reportOptions.report_currency" md-on-close="searchTerm = ''" ng-change="updateReportOptions()">
+                            <md-select data-ng-model="reportOptions.report_currency" md-on-close="searchTerm = ''"
+                                       ng-change="updateReportOptions()">
                                 <md-select-header>
                                     <input data-ng-model="searchTerm"
                                            type="search"

@@ -12,51 +12,55 @@
 
         var result = '';
 
-        if (obj.___subtotal_type === 'line') {
+        if (column.report_settings && !column.report_settings.hide_subtotal) {
 
-            var areaGroupsBefore = renderHelper.getAreaGroupsBefore(evDataService, obj.___level - 1);
+            if (obj.___subtotal_type === 'line') {
 
-            // console.log('areaGroupsBefore', areaGroupsBefore);
+                var areaGroupsBefore = renderHelper.getAreaGroupsBefore(evDataService, obj.___level - 1);
 
-            if (areaGroupsBefore.length && areaGroupsBefore.indexOf(columnNumber) !== -1) {
+                // console.log('areaGroupsBefore', areaGroupsBefore);
 
-                var parents = evRvCommonHelper.getParents(obj.___parentId, evDataService);
+                if (areaGroupsBefore.length && areaGroupsBefore.indexOf(columnNumber) !== -1) {
 
-                parents.forEach(function (parent) {
-                    if (parent.___level === columnNumber) {
-                        result = parent.group_name;
-                    }
-                });
+                    var parents = evRvCommonHelper.getParents(obj.___parentId, evDataService);
 
-            } else {
-
-                if (columnNumber === obj.___level - 1) {
-
-                    var parent = evDataService.getData(obj.___parentId);
-
-                    result = parent.group_name;
+                    parents.forEach(function (parent) {
+                        if (parent.___level === columnNumber) {
+                            result = parent.group_name;
+                        }
+                    });
 
                 } else {
 
-                    if (columnNumber < obj.___level) {
-                        result = '';
+                    if (columnNumber === obj.___level - 1) {
+
+                        var parent = evDataService.getData(obj.___parentId);
+
+                        result = parent.group_name;
+
+                    } else {
+
+                        if (columnNumber < obj.___level) {
+                            result = '';
+                        }
+
+                        if (obj.hasOwnProperty(column.key)) {
+                            result = renderHelper.formatValue(obj, column);
+                        }
                     }
 
-                    if (obj.hasOwnProperty(column.key)) {
-                        result = obj[column.key];
-                    }
                 }
 
-            }
+            } else {
 
-        } else {
+                if (columnNumber < obj.___level) {
+                    result = '';
+                }
 
-            if (columnNumber < obj.___level) {
-                result = '';
-            }
+                if (obj.hasOwnProperty(column.key)) {
+                    result = renderHelper.formatValue(obj, column);
+                }
 
-            if (obj.hasOwnProperty(column.key)) {
-                result = obj[column.key];
             }
 
         }

@@ -15,12 +15,12 @@
                 <!--<div dragula="'columns-bag'" dragula-model="columns" class="g-columns-holder">-->
                 <div class="g-columns-holder">
                     <!--<div data-ng-init="initDragula()" class="g-columns-holder">-->
-                    <md-card class="g-cell g-column" data-ng-repeat="column in columns" on-finish-render
+                    <md-card class="g-cell g-column" data-ng-repeat="column in columns track by $index" on-finish-render
                              data-ng-style="column.style"
                              data-callback="triggerResizeTableHeadColumns()" data-column-id="{{column.___column_id}}">
                         <div class="g-column-content">
                             <div class="column-left-content">
-                                <div class="sort" data-ng-if="isSortable(column)">
+                                <div class="sort" data-ng-if="isSortable(column) && checkReportSortButton(column, $index)">
                                     <md-button class="column-sort column-btns"
                                                data-ng-show="column.options.sort === 'ASC'"
                                                aria-label="open settings" data-ng-click="sortHandler(column, 'DESC')">
@@ -365,7 +365,7 @@
                                                 <md-menu-content style="display: none"></md-menu-content>
                                             </md-menu>
                                         </md-menu-item>
-                                        <md-menu-item>
+                                        <md-menu-item data-ng-if="checkReportRemoveButton(column, $index)">
                                             <md-menu>
                                                 <md-button ng-click="removeColumn(column)"
                                                            class="g-settings-option-btn">
@@ -377,7 +377,7 @@
                                         </md-menu-item>
                                     </md-menu-content>
                                 </md-menu>
-                                <md-menu data-ng-if="isReport && column.value_type != 20">
+                                <md-menu data-ng-if="isReport && column.value_type != 20 && checkReportRemoveButton(column, $index)">
                                     <md-button aria-label="Open phone interactions menu"
                                                class="md-icon-button column-btns"
                                                ng-click="$mdOpenMenu($event)">

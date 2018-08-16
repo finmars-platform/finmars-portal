@@ -29,7 +29,7 @@
                 scope.columns = scope.evDataService.getColumns();
                 scope.entityType = scope.evDataService.getEntityType();
                 scope.components = scope.evDataService.getComponents();
-
+                scope.groups = scope.evDataService.getGroups();
 
                 scope.isReport = ['balance-report',
                     'cash-flow-projection-report',
@@ -47,6 +47,39 @@
 
                 scope.isAllSelected = scope.evDataService.getSelectAllRowsState();
 
+                scope.checkReportRemoveButton = function (column, index) {
+
+                    if (scope.isReport && index < scope.groups.length) {
+
+                        if (column.key === scope.groups[index].key) {
+                            return false;
+                        }
+
+                        return true;
+
+                    }
+
+
+                    return true;
+
+                };
+
+                scope.checkReportSortButton = function (column, index) {
+
+                    if (scope.isReport && index < scope.groups.length) {
+
+                        if (column.key === scope.groups[index].key) {
+                            return false;
+                        }
+
+                        return true;
+
+                    }
+
+
+                    return true;
+
+                };
 
                 scope.selectAllRows = function () {
 
@@ -392,6 +425,8 @@
 
                     column.report_settings.hide_subtotal = !column.report_settings.hide_subtotal;
 
+                    scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+
                 };
 
                 scope.triggerResizeTableHeadColumns = function () {
@@ -413,6 +448,12 @@
                         console.log('gColumnsComponent.columns', scope.columns)
 
                     });
+
+                    scope.evEventService.addEventListener(evEvents.GROUPS_LEVEL_UNFOLD, function () {
+
+                        scope.groups = scope.evDataService.getGroups();
+
+                    })
 
 
                 };

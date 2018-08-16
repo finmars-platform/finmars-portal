@@ -223,8 +223,9 @@ app.directive('groupTableBody', ['$mdDialog', require('./app/directives/groupTab
 app.directive('groupTableBodyOld', ['$mdDialog', require('./app/directives/groupTable/gTableBodyComponent-old')]);
 app.directive('groupSidebarFilter', ['$mdDialog', require('./app/directives/groupTable/gSidebarFilterComponent')]);
 app.directive('groupReportSettings', [require('./app/directives/groupTable/gReportSettingsComponent')]);
-app.directive('groupGrouping', ['$mdDialog', require('./app/directives/groupTable/gGroupingComponent')]);
+app.directive('groupGrouping', [require('./app/directives/groupTable/gGroupingComponent')]);
 app.directive('groupColumns', [require('./app/directives/groupTable/gColumnsComponent')]);
+app.directive('groupActionsBlock', ['$mdDialog', require('./app/directives/groupTable/gActionsBlockComponent')]);
 app.directive('groupClipboardHandler', [require('./app/directives/groupTable/gClipboardHandlerComponent')]);
 app.directive('groupColumnResizer', [require('./app/directives/groupTable/gColumnResizerComponent')]);
 app.directive('groupLayoutResizer', [require('./app/directives/groupTable/gLayoutResizerComponent')]);
