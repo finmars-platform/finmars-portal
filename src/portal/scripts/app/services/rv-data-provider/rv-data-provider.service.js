@@ -488,82 +488,71 @@
 
     var recursiveRequest = function (items, level, evDataService, evEventService) {
 
-        // return new Promise(function RecursiveRequestPromise(resolve, reject) {
+        return new Promise(function RecursiveRequestPromise(resolve, reject) {
 
-        // var promises = [];
-        var requestParameters;
-
-        items.forEach(function (item) {
-
-            requestParameters = createRequestParameters(item, level, evDataService, evEventService);
-            updateDataStructureByRequestParameters(requestParameters, evDataService, evEventService)
-
-        });
-
-
-        // Promise.all(promises).then(function (data) {
-
-        var groups = evDataService.getGroups();
-
-        level = level + 1;
-
-        if (level < groups.length) {
-
-            // console.log('to next level!', level);
-
-            items = evDataHelper.getGroupsByLevel(level, evDataService);
-
-            // console.log('recursiveRequest.items', items);
-
-            var recursiveRequestPromises = [];
+            var promises = [];
+            var requestParameters;
 
             items.forEach(function (item) {
 
-                // console.log('item!', item.group_name);
-
-                // recursiveRequestPromises.push(recursiveRequest(item.results, level, evDataService, evEventService));
-                recursiveRequest(item.results, level, evDataService, evEventService)
+                requestParameters = createRequestParameters(item, level, evDataService, evEventService);
+                promises.push(updateDataStructureByRequestParameters(requestParameters, evDataService, evEventService));
 
             });
 
-            // Promise.all(recursiveRequestPromises).then(function (data) {
-            //     resolve(data);
-            // })
+
+            Promise.all(promises).then(function (data) {
+
+                var groups = evDataService.getGroups();
+
+                level = level + 1;
+
+                if (level < groups.length) {
+
+                    // console.log('to next level!', level);
+
+                    items = evDataHelper.getGroupsByLevel(level, evDataService);
+
+                    // console.log('recursiveRequest.items', items);
+
+                    var recursiveRequestPromises = [];
+
+                    items.forEach(function (item) {
+
+                        // console.log('item!', item.group_name);
+
+                        recursiveRequestPromises.push(recursiveRequest(item.results, level, evDataService, evEventService));
+
+                    });
+
+                    Promise.all(recursiveRequestPromises).then(function (data) {
+                        resolve(data);
+                    })
 
 
-        } else {
+                } else {
 
-            // resolve([])
-        }
+                    resolve([])
+                }
 
-        // });
+            });
 
-        // })
+        })
 
     };
 
     var initRecursiveRequestParametersCreation = function (evDataService, evEventService) {
 
-        return new Promise(function (resolve) {
+        console.time('Creating Data Structure');
 
-            console.time('Creating Data Structure');
+        var rootGroup = evDataService.getRootGroupData();
+        var level = 0;
 
-            var rootGroup = evDataService.getRootGroupData();
-            var level = 0;
-
-            // return recursiveRequest(rootGroup.results, level, evDataService, evEventService).then(function (data) {
-            //
-            //     console.timeEnd('Creating Data Structure');
-            //
-            //     return data;
-            //
-            // })
-
-            recursiveRequest(rootGroup.results, level, evDataService, evEventService)
+        return recursiveRequest(rootGroup.results, level, evDataService, evEventService).then(function (data) {
 
             console.timeEnd('Creating Data Structure');
 
-            resolve([])
+            return data;
 
         })
 
