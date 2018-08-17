@@ -417,7 +417,9 @@
 
                         syncFilters();
 
-                    })
+                    });
+
+                    scope.evEventService.dispatchEvent(evEvents.UPDATE_EV_UI);
 
                 };
 
