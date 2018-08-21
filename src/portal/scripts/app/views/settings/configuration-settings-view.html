@@ -1,0 +1,45 @@
+<div>
+
+    <p class="md-headline">Configuration settings</p>
+
+    <div class="md-title">Import actions</div>
+
+    <div style="min-height: 200px; padding-top: 16px;" layout="row">
+
+        <div style="width: 300px; margin-right: 24px">
+
+            <md-input-container flex="40" style="margin-bottom: 0" class="ng-hide">
+                <input type="file" id="importDataUploadInput" input-file-directive read-file="vm.configurationFile">
+            </md-input-container>
+            <div class="input-upload-file-container">
+                <p class="importDataUploadInput">Select file</p>
+                <label for="importDataUploadInput" class="md-button md-raised md-primary IFUlabel">
+                    <ng-md-icon icon="file_upload"></ng-md-icon>
+                    <span>BROWSE</span></label>
+            </div>
+
+        </div>
+
+        <div style="width: 300px;">
+
+            <button style="margin-top: 0"
+                    class="md-raised clear-all full-width md-button md-ink-ripple {{vm.loadIsAvailable() ? '' : 'disabled-btn' }}"
+                    type="button"
+                    data-ng-click="vm.importConfiguration($event)">Import configuration
+            </button>
+
+        </div>
+
+    </div>
+
+    <div class="md-title">Export section</div>
+
+    <div style="min-height: 200px; padding-top: 16px">
+
+        <a class="md-raised clear-all full-width md-button md-ink-ripple" type="button"
+           href="/api/v1/export/configuration/" download>Export all as file
+        </a>
+
+    </div>
+
+</div>

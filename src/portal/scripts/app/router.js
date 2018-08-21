@@ -352,6 +352,15 @@
                     }
                 }
             })
+            .state('app.settings.general.configuration', {
+                url: '/configuration',
+                views: {
+                    'configuration': {
+                        templateUrl: 'views/settings/configuration-settings-view.html',
+                        controller: 'SettingsGeneralConfigurationController as vm'
+                    }
+                }
+            })
             .state('app.settings.form-design', {
                 url: '/form',
                 templateUrl: 'views/settings/form-design-view.html',

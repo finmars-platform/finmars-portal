@@ -1,5 +1,9 @@
 # Changelog
 
+## 21.08.2018
+
+- Configuration Import / Export page
+
 ## 07.08.2018
 
 - New grouping logic for Relation in Report Viewer
