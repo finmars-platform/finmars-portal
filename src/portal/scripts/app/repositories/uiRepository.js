@@ -29,9 +29,7 @@
         })
     };
 
-    var createEditLayout = function (entity, ui) {
-
-        ui.content_type = metaContentTypesService.findContentTypeByEntity(entity, 'ui');
+    var createEditLayout = function (ui) {
 
         return window.fetch(baseUrl + 'ui/edit-layout/',
             {
@@ -132,9 +130,7 @@
         })
     };
 
-    var createListLayout = function (entity, ui) {
-
-        ui.content_type = metaContentTypesService.findContentTypeByEntity(entity, 'ui');
+    var createListLayout = function (ui) {
 
         return window.fetch(baseUrl + 'ui/list-layout/',
             {

@@ -82,6 +82,7 @@
                 preserveScope: true,
                 autoWrap: true,
                 skipHide: true,
+                multiple: true,
                 locals: {}
             }).then(function (res) {
                 if (res.status === 'agree') {

@@ -32,7 +32,11 @@
                         templateUrl: 'views/dialogs/bookmarks-wizard-dialog-view.html',
                         parent: angular.element(document.body),
                         targetEvent: $event,
-                        locals: {}
+                        locals: {},
+                        preserveScope: true,
+                        multiple: true,
+                        autoWrap: true,
+                        skipHide: true
                     }).then(function (res) {
                         if (res.status === 'agree') {
                             scope.getBookmarks();

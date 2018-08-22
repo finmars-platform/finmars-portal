@@ -5,8 +5,11 @@
 
     'use strict';
 
-
+    var entitySchemeService = require('../../services/import/entitySchemeService');
+    var priceDownloadSchemeService = require('../../services/import/priceDownloadSchemeService');
+    var instrumentSchemeService = require('../../services/import/instrumentSchemeService');
     var entityResolverService = require('../../services/entityResolverService');
+    var uiRepository = require('../../repositories/uiRepository');
 
     module.exports = function ($scope, $mdDialog, file) {
 
@@ -16,13 +19,35 @@
 
         vm.items = file.body;
 
-        vm.resolveName = function (item) {
+        vm.getEntityName = function (item) {
 
             switch (item.entity) {
                 case 'transactions.transactiontype':
                     return "Transaction Types";
+                case 'ui.editlayout':
+                    return "Edit Layouts";
+                case 'ui.listlayout':
+                    return "List Layouts";
+                case 'csv_import.scheme':
+                    return "CSV Import Schemes";
+                case 'integrations.instrumentdownloadscheme':
+                    return "Instrument Download Schemes";
+                case 'integrations.pricedownloadscheme':
+                    return "Price Download Schemes";
                 default:
                     return "Unknown"
+            }
+
+        };
+
+        vm.getItemName = function (item) {
+
+            if (item.hasOwnProperty('user_code')) {
+                return item.user_code
+            }
+
+            if (item.hasOwnProperty('name')) {
+                return item.name
             }
 
         };
@@ -53,85 +78,40 @@
         };
 
         function handleTransactionType(item) {
-
             return new Promise(function (resolve, reject) {
-
-                console.log('handle transaction type', item);
-
-                // var obj = Object.assign({}, item.fields);
-                //
-                // obj.inputs = item.inputs.map(function (item) {
-                //     return item.fields
-                // });
-                //
-                // obj.actions = [];
-                //
-                // var order = item.actions_order.map(function (item) {
-                //     return item.fields
-                // });
-                // var instruments = item.actions_instrument.map(function (item) {
-                //     return item.fields
-                // });
-                // var transactions = item.actions_transaction.map(function (item) {
-                //     return item.fields
-                // });
-                //
-                // order.forEach(function (orderItem) {
-                //
-                //     var result;
-                //
-                //     instruments.forEach(function (actionInstrument) {
-                //
-                //         if (orderItem.action_notes === actionInstrument.action_notes) {
-                //             result = actionInstrument
-                //         }
-                //
-                //     });
-                //
-                //     transactions.forEach(function (actionTransaction) {
-                //
-                //         if (orderItem.action_notes === actionTransaction.action_notes) {
-                //             result = actionTransaction
-                //         }
-                //
-                //     });
-                //
-                //     if (result) {
-                //
-                //         var action = {
-                //             action_notes: orderItem.action_notes,
-                //             order: orderItem.order,
-                //             instrument: null,
-                //             transaction: null
-                //         };
-                //
-                //         if (result.hasOwnProperty('transaction_class')) {
-                //             action.transaction = result;
-                //         } else {
-                //             action.instrument = result;
-                //         }
-                //
-                //         obj.actions[orderItem.order] = action;
-                //
-                //
-                //     }
-                //
-                // });
-                //
-                // Object.keys(obj).forEach(function (key) {
-                //
-                //     if (obj[key] === null || obj[key] === undefined) {
-                //         delete obj[key]
-                //     }
-                //
-                // });
-                //
-                // console.log('result obj', obj);
-
                 resolve(entityResolverService.create('transaction-type', item))
-
             })
 
+        }
+
+        function handleListLayout(item) {
+            return new Promise(function (resolve) {
+                resolve(uiRepository.createListLayout(item))
+            })
+        }
+
+        function handleEditLayout(item) {
+            return new Promise(function (resolve) {
+                resolve(uiRepository.createEditLayout(item))
+            })
+        }
+
+        function handleCsvImportScheme(item) {
+            return new Promise(function (resolve) {
+                resolve(entitySchemeService.create(item))
+            })
+        }
+
+        function handleInstrumentDownloadScheme(item) {
+            return new Promise(function (resolve) {
+                resolve(instrumentSchemeService.create(item))
+            })
+        }
+
+        function handlePriceDownloadScheme(item) {
+            return new Promise(function (resolve) {
+                resolve(priceDownloadSchemeService.create(item))
+            })
         }
 
         vm.agree = function () {
@@ -148,6 +128,21 @@
 
                             case 'transactions.transactiontype':
                                 promises.push(handleTransactionType(item));
+                                break;
+                            case 'ui.editlayout':
+                                promises.push(handleEditLayout(item));
+                                break;
+                            case 'ui.listlayout':
+                                promises.push(handleListLayout(item));
+                                break;
+                            case 'csv_import.scheme':
+                                promises.push(handleCsvImportScheme(item));
+                                break;
+                            case 'integrations.instrumentdownloadscheme':
+                                promises.push(handleInstrumentDownloadScheme(item));
+                                break;
+                            case 'integrations.pricedownloadscheme':
+                                promises.push(handlePriceDownloadScheme(item));
                                 break;
 
                         }
