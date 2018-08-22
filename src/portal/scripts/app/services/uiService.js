@@ -5,6 +5,8 @@
 
     'use strict';
 
+    var metaContentTypesService = require('./metaContentTypesService');
+
     var uiRepository = require('../repositories/uiRepository');
 
     var getEditLayout = function (entity) {
@@ -12,7 +14,10 @@
     };
 
     var createEditLayout = function (entity, ui) {
-        return uiRepository.createEditLayout(entity, ui);
+
+        ui.content_type = metaContentTypesService.findContentTypeByEntity(entity, 'ui');
+
+        return uiRepository.createEditLayout(ui);
     };
 
     var updateEditLayout = function (id, ui) {
@@ -32,7 +37,10 @@
     };
 
     var createListLayout = function (entity, ui) {
-        return uiRepository.createListLayout(entity, ui);
+
+        ui.content_type = metaContentTypesService.findContentTypeByEntity(entity, 'ui');
+
+        return uiRepository.createListLayout(ui);
     };
 
     var updateListLayout = function (id, ui) {
