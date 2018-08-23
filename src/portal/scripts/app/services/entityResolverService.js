@@ -75,6 +75,9 @@
             case 'price-download-scheme':
                 return priceDownloadSchemeService.getList(options);
                 break;
+            case 'transaction-type-group':
+                return transactionTypeGroupService.getList(options);
+                break;
             case 'strategy-1':
                 return strategyService.getList(1);
                 break;
