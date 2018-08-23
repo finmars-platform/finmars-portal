@@ -9,6 +9,7 @@
     var priceDownloadSchemeService = require('../../services/import/priceDownloadSchemeService');
     var instrumentSchemeService = require('../../services/import/instrumentSchemeService');
     var entityResolverService = require('../../services/entityResolverService');
+    var md5helper = require('../../helpers/md5.helper');
     var uiRepository = require('../../repositories/uiRepository');
 
     module.exports = function ($scope, $mdDialog, file) {
@@ -131,7 +132,7 @@
                         groups.forEach(function (group) {
 
                             if (group.user_code === depGroup.user_code) {
-                                groupsExists.push(depGroup.user_code)
+                                groupsExists.push(md5helper.md5(depGroup.user_code))
                             }
 
                         })
@@ -140,10 +141,37 @@
 
                     var promises = [];
 
-                    depGroups.forEach(function (depGroup) {
+                    // console.log('groupsExists', groupsExists);
 
-                        if (groupsExists.indexOf(depGroup.user_code) === -1) {
+                    var groupsToCreate = depGroups.filter(function (group) {
+                        return groupsExists.indexOf(md5helper.md5(group.user_code)) === -1
+                    });
+
+                    // console.log('groupsToCreate', groupsToCreate);
+
+                    groupsToCreate.forEach(function (depGroup) {
+
+                        var itemIsSelected = false;
+
+                        transactionTypeEntity.content.forEach(function (item) {
+
+                            if (item.hasOwnProperty('___group_user_code')) {
+
+                                if (depGroup.user_code === item.___group_user_code) {
+
+                                    if (!itemIsSelected) {
+                                        itemIsSelected = item.active;
+                                    }
+
+                                }
+
+                            }
+                        });
+
+                        if (itemIsSelected) {
+
                             promises.push(entityResolverService.create('transaction-type-group', depGroup))
+
                         }
 
                     });
