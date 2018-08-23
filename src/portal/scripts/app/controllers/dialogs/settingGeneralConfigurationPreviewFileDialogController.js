@@ -311,9 +311,9 @@
 
             initPreparations(vm.items).then(function (value) {
 
-                // importConfiguration(vm.items).then(function (value) {
-                //     $mdDialog.hide({status: 'agree', data: {}});
-                // })
+                importConfiguration(vm.items).then(function (value) {
+                    $mdDialog.hide({status: 'agree', data: {}});
+                })
 
             })
 
