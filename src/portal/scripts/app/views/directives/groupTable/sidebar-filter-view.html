@@ -352,6 +352,31 @@
                         </div>
                     </div>
                 </div>
+                <div data-ng-if="filter['value_type'] === 'field'">
+                    <div data-ng-if="fields[filter.key]">
+                        <md-select data-ng-model="filter.options.query"
+                                   md-on-close="searchTerm = ''"
+                                   data-ng-change="filterChange(filter)"
+                        >
+                            <md-select-header>
+                                <input data-ng-model="searchTerm"
+                                       type="search"
+                                       placeholder="Search for a ..."
+                                       class="md-text md-select-search-pattern">
+                            </md-select-header>
+                            <md-option
+                                    data-ng-repeat="field in fields[filter.key] | orderBy:'-'+field.name | filter:{ name:searchTerm}"
+                                    ng-value="resolveFilterValue(field)">
+                                {{field.name}}
+                            </md-option>
+                        </md-select>
+                    </div>
+                    <div data-ng-if="!fields[filter.key]">
+                        <div layout="row" layout-sm="column" layout-align="space-around">
+                            <md-progress-circular md-mode="indeterminate"></md-progress-circular>
+                        </div>
+                    </div>
+                </div>
                 <div data-ng-if="filter['value_type'] === 30">
                     <div data-ng-if="fields[filter.key]">
                         <md-select data-ng-model="filter.options.query"

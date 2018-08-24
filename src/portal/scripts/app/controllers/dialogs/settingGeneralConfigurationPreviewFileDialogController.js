@@ -35,6 +35,8 @@
                     return "Instrument Download Schemes";
                 case 'integrations.pricedownloadscheme':
                     return "Price Download Schemes";
+                case 'integrations.complextransactionimportscheme':
+                    return "Complex Transaction Import Scheme";
                 default:
                     return "Unknown"
             }
@@ -53,6 +55,10 @@
 
             if (item.hasOwnProperty('content_type')) {
                 return item.content_type
+            }
+
+            if (item.hasOwnProperty('scheme_name')) {
+                return item.scheme_name;
             }
 
         };

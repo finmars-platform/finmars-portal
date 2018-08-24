@@ -352,13 +352,18 @@
 
                     scope.filters.forEach(function (item) {
 
+                        console.log('item', item);
+
                         if (!scope.fields.hasOwnProperty(item.key)) {
+
                             if (item['value_type'] === "mc_field" || item['value_type'] === "field") {
-                                if (item.key === 'tags') {
+
+                                if (item.key === 'tags' || item.key === 'group') {
                                     promises.push(fieldResolverService.getFields(item.key, {entityType: scope.entityType}));
                                 } else {
                                     promises.push(fieldResolverService.getFields(item.key));
                                 }
+
                             }
 
                             if (item.value_type === 30) {

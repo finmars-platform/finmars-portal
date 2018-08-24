@@ -43,7 +43,7 @@
 
                 if (entity === 'transaction') {
 
-                    if (options.key === 'group') {
+                    if (fieldKey === 'group') {
                         transactionTypeGroupRepository.getList().then(function (data) {
                             resolve({type: 'id', key: 'group', data: data.results});
                         });
@@ -56,13 +56,13 @@
 
                     console.log('strategyNumber', strategyNumber);
 
-                    if (options.key === 'group') {
+                    if (fieldKey === 'group') {
                         strategyGroupRepository.getList(strategyNumber).then(function (data) {
                             resolve({type: 'id', key: 'group', data: data.results});
                         });
                     }
 
-                    if (options.key === 'subgroup') {
+                    if (fieldKey === 'subgroup') {
                         strategySubgroupRepository.getList(strategyNumber).then(function (data) {
                             resolve({type: 'id', key: 'subgroup', data: data.results});
                         });
@@ -70,7 +70,7 @@
                 }
 
                 if (entity === 'counterparty') {
-                    if (options.key === 'group') {
+                    if (fieldKey === 'group') {
                         counterpartyGroupRepository.getList().then(function (data) {
                             resolve({type: 'id', key: 'group', data: data.results});
                         });
@@ -78,7 +78,7 @@
                 }
 
                 if (entity === 'responsible') {
-                    if (options.key === 'group') {
+                    if (fieldKey === 'group') {
                         responsibleGroupRepository.getList().then(function (data) {
                             resolve({type: 'id', key: 'group', data: data.results});
                         });
