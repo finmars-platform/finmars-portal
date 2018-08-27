@@ -41,52 +41,38 @@
         switch (entityType) {
             case 'portfolio':
                 return portfolioService.getList(options);
-                break;
             case 'account':
                 return accountService.getList(options);
-                break;
             case 'responsible':
                 return responsibleService.getList(options);
-                break;
             case 'counterparty':
                 return counterpartyService.getList(options);
-                break;
             case 'currency':
                 return currencyService.getList(options);
-                break;
             case 'instrument':
                 return instrumentService.getList(options);
-                break;
             case 'instrument-type':
                 return instrumentTypeService.getList(options);
-                break;
+            case 'transaction-type':
+                return transactionTypeService.getList(options);
             case 'periodicity':
                 return instrumentPeriodicityService.getList(options);
-                break;
             case 'accrual-calculation-model':
                 return accrualCalculationModelService.getList(options);
-                break;
             case 'daily-pricing-model':
                 return instrumentDailyPricingModelService.getList(options);
-                break;
             case 'payment-size-detail':
                 return instrumentPaymentSizeDetailService.getList(options);
-                break;
             case 'price-download-scheme':
                 return priceDownloadSchemeService.getList(options);
-                break;
             case 'transaction-type-group':
                 return transactionTypeGroupService.getList(options);
-                break;
             case 'strategy-1':
                 return strategyService.getList(1);
-                break;
             case 'strategy-2':
                 return strategyService.getList(2);
-                break;
             case 'strategy-3':
                 return strategyService.getList(3);
-                break;
         }
     };
 
