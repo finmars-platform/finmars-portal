@@ -374,17 +374,33 @@
                 columns.map(function (item) {
                     //console.log('item', item);
                     //console.log('attrs[i]', attrs[i]);
-                    if (attrs[i].name === item.name) {
-                        attrs[i].columns = true;
+
+                    if (item.hasOwnProperty('key')) {
+                        if (attrs[i].key === item.key) {
+                            attrs[i].columns = true;
+                        }
+                    } else {
+                        if (attrs[i].name === item.name) {
+                            attrs[i].columns = true;
+                        }
                     }
                     return item;
                 });
+
                 filters.map(function (item) {
-                    if (attrs[i].name === item.name) {
-                        attrs[i].filters = true;
+
+                    if (item.hasOwnProperty('key')) {
+                        if (attrs[i].key === item.key) {
+                            attrs[i].filters = true;
+                        }
+                    } else {
+                        if (attrs[i].name === item.name) {
+                            attrs[i].filters = true;
+                        }
                     }
                     return item;
                 });
+
                 grouping.map(function (item) {
                     if (item.hasOwnProperty('key')) {
                         if (attrs[i].key === item.key) {
@@ -530,8 +546,6 @@
             updateTypeAttrs(vm.strategy3attrs);
             updateTypeAttrs(vm.strategy3subgroupAttrs);
             updateTypeAttrs(vm.strategy3groupAttrs);
-
-            addColumn();
 
             evDataHelper.updateColumnsIds(entityViewerDataService);
             evDataHelper.setColumnsDefaultWidth(entityViewerDataService);
@@ -769,13 +783,6 @@
             dragAndDrop.destroy();
             $mdDialog.cancel();
         };
-
-        var addColumn = function () {
-
-            metaService.columnsWidthGroups(true);
-
-        };
-
 
         vm.initDnd = function () {
             setTimeout(function () {
