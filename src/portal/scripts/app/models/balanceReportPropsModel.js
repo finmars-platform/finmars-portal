@@ -94,7 +94,7 @@
             },
             {
                 "key": "instrument_accrued_currency_fx_rate",
-                "name": "Accrued currency FX rate",
+                "name": "Accrued currency fx rate",
                 "value_type": 20
             },
 
@@ -113,8 +113,6 @@
                 "name": "Current Payment Periodicity N",
                 "value_type": 20
             },
-
-
             //{
             //    "key": "report_currency_fx_rate",
             //    "name": "Report currency fx rate",
