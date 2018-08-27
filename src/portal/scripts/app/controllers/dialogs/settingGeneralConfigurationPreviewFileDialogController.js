@@ -9,6 +9,7 @@
     var priceDownloadSchemeService = require('../../services/import/priceDownloadSchemeService');
     var instrumentSchemeService = require('../../services/import/instrumentSchemeService');
     var entityResolverService = require('../../services/entityResolverService');
+    var transactionSchemeService = require('../../services/import/transactionSchemeService');
     var md5helper = require('../../helpers/md5.helper');
     var uiRepository = require('../../repositories/uiRepository');
 
@@ -120,9 +121,133 @@
 
         }
 
-        function handleTransactionTypeGroupDependency(transactionTypeEntity, depGroups) {
+        function handleTransactionTypeDependency(entity, dependency) {
 
             return new Promise(function (resolve, reject) {
+
+                resolveTransactionTypeDependencies(dependency).then(function (data) {
+
+                    var depTransactionTypes = dependency.content;
+
+                    entityResolverService.getList('transaction-type').then(function (data) {
+
+                        var transactionTypes = data.results;
+
+                        var transactionTypesExists = [];
+
+                        depTransactionTypes.forEach(function (dep_transaction_type) {
+
+                            transactionTypes.forEach(function (transaction_type) {
+
+                                if (transaction_type.user_code === dep_transaction_type.user_code) {
+                                    transactionTypesExists.push(md5helper.md5(dep_transaction_type.user_code))
+                                }
+
+                            })
+
+                        });
+
+                        var promises = [];
+
+                        // console.log('groupsExists', groupsExists);
+
+                        var transactionTypesToCreate = depTransactionTypes.filter(function (transaction_type) {
+                            return transactionTypesExists.indexOf(md5helper.md5(transaction_type.user_code)) === -1
+                        });
+
+                        // console.log('groupsToCreate', groupsToCreate);
+
+                        transactionTypesToCreate.forEach(function (depTransactionType) {
+
+                            var itemIsSelected = false;
+
+                            dependency.content.forEach(function (item) {
+
+                                if (item.hasOwnProperty('___transaction_type_user_code')) {
+
+                                    if (depTransactionType.user_code === item.___transaction_type_user_code) {
+
+                                        if (!itemIsSelected) {
+                                            itemIsSelected = item.active;
+                                        }
+
+                                    }
+
+                                }
+                            });
+
+                            if (itemIsSelected) {
+
+                                promises.push(entityResolverService.create('transaction-type', depTransactionType))
+
+                            }
+
+                        });
+
+                        Promise.all(promises).then(function (data) {
+
+                            entityResolverService.getList('transaction-type').then(function (data) {
+
+                                var transactionTypes = data.results;
+
+                                console.log('Transaction Type groups created');
+                                console.log('Transaction Types created');
+
+                                if (entity.entity === 'integrations.complextransactionimportscheme') {
+
+                                    entity.content.forEach(function (entityItem) {
+
+                                        entityItem.rules.forEach(function (rule) {
+
+                                            transactionTypes.forEach(function (transactionType) {
+
+                                                if (rule.___transaction_type_user_code === transactionType.user_code) {
+                                                    rule.transaction_type = transactionType.id;
+
+                                                    rule.fields.forEach(function (field) {
+
+                                                        transactionType.inputs.forEach(function (input) {
+
+                                                            if (field.___input_name === input.name) {
+                                                                field.transaction_type_input = input.id;
+                                                            }
+
+                                                        })
+
+
+                                                    })
+
+                                                }
+
+                                            })
+
+
+                                        })
+
+                                    });
+
+                                }
+
+                                resolve(entity);
+
+                            });
+
+                        });
+
+
+                    });
+
+                })
+
+            })
+
+        }
+
+        function handleTransactionTypeGroupDependency(transactionTypeEntity, dependency) {
+
+            return new Promise(function (resolve, reject) {
+
+                var depGroups = dependency.content;
 
                 entityResolverService.getList('transaction-type-group').then(function (data) {
 
@@ -256,6 +381,12 @@
             })
         }
 
+        function handleComplexTransactionImportScheme(item) {
+            return new Promise(function (resolve) {
+                resolve(transactionSchemeService.create(item))
+            })
+        }
+
         function importConfiguration(items) {
 
             return new Promise(function (resolve, reject) {
@@ -288,6 +419,9 @@
                                 case 'integrations.pricedownloadscheme':
                                     promises.push(handlePriceDownloadScheme(item));
                                     break;
+                                case 'integrations.complextransactionimportscheme':
+                                    promises.push(handleComplexTransactionImportScheme(item));
+                                    break;
 
                             }
 
@@ -310,27 +444,84 @@
 
         }
 
+        function resolveTransactionTypeDependencies(transactionTypeEntity) {
+
+            console.time("Transaction Type dependencies resolved");
+
+            return new Promise(function (resolve, reject) {
+
+                var promises = [];
+
+                transactionTypeEntity.dependencies.forEach(function (dependency) {
+
+                    switch (dependency.entity) {
+
+                        case 'transactions.transactiontypegroup':
+                            promises.push(handleTransactionTypeGroupDependency(transactionTypeEntity, dependency));
+                            break;
+                    }
+
+                });
+
+                Promise.all(promises).then(function (data) {
+
+                    console.timeEnd("Transaction Type dependencies resolved");
+
+                    resolve(data);
+
+                })
+
+            })
+
+        }
+
+        function resolveComplexTransactionImportSchemeDependencies(complexTransactionImportSchemeEntity) {
+
+            console.time("Complex Transaction Import Scheme dependencies resolved");
+
+            return new Promise(function (resolve, reject) {
+
+                var promises = [];
+
+                complexTransactionImportSchemeEntity.dependencies.forEach(function (dependency) {
+
+                    switch (dependency.entity) {
+
+                        case 'transactions.transactiontype':
+                            promises.push(handleTransactionTypeDependency(complexTransactionImportSchemeEntity, dependency));
+                            break;
+                    }
+
+                });
+
+                Promise.all(promises).then(function (data) {
+
+                    console.timeEnd("Complex Transaction Import Scheme dependencies resolved");
+
+                    resolve(data);
+
+                })
+
+            });
+
+        }
+
         function initPreparations(items) {
 
             return new Promise(function (resolve, reject) {
 
                 var transactionTypeEntity = findEntity(items, 'transactions.transactiontype');
 
+                var complexTransactionImportSchemeEntity = findEntity(items, 'integrations.complextransactionimportscheme');
+
                 var promises = [];
 
                 if (isEntitySelected(transactionTypeEntity) && transactionTypeEntity.dependencies.length) {
+                    promises.push(resolveTransactionTypeDependencies(transactionTypeEntity));
+                }
 
-                    transactionTypeEntity.dependencies.forEach(function (dependency) {
-
-                        switch (dependency.entity) {
-
-                            case 'transactions.transactiontypegroup':
-                                promises.push(handleTransactionTypeGroupDependency(transactionTypeEntity, dependency.content));
-                                break;
-                        }
-
-                    });
-
+                if (isEntitySelected(complexTransactionImportSchemeEntity) && complexTransactionImportSchemeEntity.dependencies.length) {
+                    promises.push(resolveComplexTransactionImportSchemeDependencies(complexTransactionImportSchemeEntity));
                 }
 
                 Promise.all(promises).then(function (data) {
