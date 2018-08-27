@@ -516,36 +516,9 @@
             // console.log('attributes in modal ', vm.attrs, vm.baseAttrs, vm.entityAttrs, parentScope);
         }
 
-        vm.updateAttrs = function () {
+        vm.updateAttrs = function (attrs) {
 
-            updateTypeAttrs(vm.balanceAttrs);
-            updateTypeAttrs(vm.balancePerformanceAttrs);
-            updateTypeAttrs(vm.balanceMismatchAttrs);
-            updateTypeAttrs(vm.custom);
-            updateTypeAttrs(vm.allocationAttrs);
-
-            updateTypeAttrs(vm.instrumentAttrs);
-            updateTypeAttrs(vm.instrumentTypeAttrs);
-            updateTypeAttrs(vm.instrumentDynamicAttrs);
-
-            updateTypeAttrs(vm.accountAttrs);
-            updateTypeAttrs(vm.accountTypeAttrs);
-            updateTypeAttrs(vm.accountDynamicAttrs);
-
-            updateTypeAttrs(vm.portfolioAttrs);
-            updateTypeAttrs(vm.portfolioDynamicAttrs);
-
-            updateTypeAttrs(vm.strategy1attrs);
-            updateTypeAttrs(vm.strategy1subgroupAttrs);
-            updateTypeAttrs(vm.strategy1groupAttrs);
-
-            updateTypeAttrs(vm.strategy2attrs);
-            updateTypeAttrs(vm.strategy2subgroupAttrs);
-            updateTypeAttrs(vm.strategy2groupAttrs);
-
-            updateTypeAttrs(vm.strategy3attrs);
-            updateTypeAttrs(vm.strategy3subgroupAttrs);
-            updateTypeAttrs(vm.strategy3groupAttrs);
+            updateTypeAttrs(attrs);
 
             evDataHelper.updateColumnsIds(entityViewerDataService);
             evDataHelper.setColumnsDefaultWidth(entityViewerDataService);
