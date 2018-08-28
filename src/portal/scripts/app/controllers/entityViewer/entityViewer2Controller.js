@@ -20,7 +20,6 @@
 
         var reportHelper = require('../../helpers/reportHelper');
         var stringHelper = require('../../helpers/stringHelper');
-        var transactionReportHelper = require('../../helpers/transactionReportHelper');
 
         var uiService = require('../../services/uiService');
         var evEvents = require('../../services/entityViewerEvents');

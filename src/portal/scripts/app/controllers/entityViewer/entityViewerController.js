@@ -21,7 +21,6 @@
         var pricingPolicyService = require('../../services/pricingPolicyService');
 
         var reportHelper = require('../../helpers/reportHelper');
-        var transactionReportHelper = require('../../helpers/transactionReportHelper');
 
         var uiService = require('../../services/uiService');
         var evEvents = require('../../services/entityViewerEvents');
@@ -425,7 +424,7 @@
                             var filteredData = entity;
 
                             //if (vm.entityType == 'transaction-report' || vm.entityType == 'cash-flow-projection-report') {
-                            filteredData = transactionReportHelper.injectIntoItems(filteredData, data);
+                            filteredData = reportHelper.injectIntoItems(filteredData, data);
                             //}
 
                             if (filteredData.length) {

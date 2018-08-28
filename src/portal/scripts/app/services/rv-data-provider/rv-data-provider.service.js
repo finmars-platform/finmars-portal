@@ -10,7 +10,6 @@
     var queryParamsHelper = require('../../helpers/queryParamsHelper');
 
     var reportHelper = require('../../helpers/reportHelper');
-    var transactionReportHelper = require('../../helpers/transactionReportHelper');
 
     console.log('evRvCommonHelper', evRvCommonHelper);
 
@@ -116,10 +115,13 @@
 
             reportOptions = Object.assign({}, reportOptions, {task_id: null});
 
-            reportOptions.items = transactionReportHelper.injectIntoItems(reportOptions.items, data);
+            reportOptions.items = reportHelper.injectIntoItems(reportOptions.items, reportOptions);
             reportOptions.items = reportHelper.releaseEntityObjects(reportOptions.items);
 
+            reportOptions.items = reportHelper.calculateMarketValueAndExposurePercents(reportOptions.items, reportOptions);
+
             console.log('reportOptions.items', reportOptions.items);
+
 
             entityViewerDataService.setReportOptions(reportOptions);
 
