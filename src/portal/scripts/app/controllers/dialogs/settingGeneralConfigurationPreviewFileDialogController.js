@@ -373,9 +373,9 @@
 
                     });
 
-                });
+                    resolve(instrumentDownloadSchemeEntity);
 
-                resolve(instrumentDownloadSchemeEntity);
+                });
 
             })
 
@@ -388,6 +388,7 @@
                 var promises = [];
 
                 items.forEach(function (entityItem) {
+
 
                     entityItem.content.forEach(function (item) {
 
@@ -490,9 +491,9 @@
 
                 Promise.all(promises).then(function (data) {
 
-                    console.timeEnd("Instrument download scheme dependencies resolved");
-
                     mapPriceDownloadSchemeToInstrumentDownloadScheme(instrumentDownloadSchemeEntity).then(function () {
+
+                        console.timeEnd("Instrument download scheme dependencies resolved");
 
                         resolve(data);
 
