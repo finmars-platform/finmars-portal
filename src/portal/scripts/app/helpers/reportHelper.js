@@ -167,7 +167,7 @@
                         item['account_cash_object_' + accountObjectKeyItem] = item.account_cash_object[accountObjectKeyItem];
                     });
 
-                    if (item.account_cash_object.hasOwnProperty('type_object')) {
+                    if (item.account_cash_object.hasOwnProperty('type_object') && item.account_cash_object.type_object) {
                         var accountCashTypeObjectKeys = Object.keys(item.account_cash_object.type_object);
 
                         accountCashTypeObjectKeys.forEach(function (accountTypeObjectKeyItem) {
@@ -185,7 +185,7 @@
                         item['account_interim_object_' + accountObjectKeyItem] = item.account_interim_object[accountObjectKeyItem];
                     });
 
-                    if (item.account_interim_object.hasOwnProperty('type_object')) {
+                    if (item.account_interim_object.hasOwnProperty('type_object') && item.account_interim_object.type_object) {
                         var accountInterimTypeObjectKeys = Object.keys(item.account_interim_object.type_object);
 
                         accountInterimTypeObjectKeys.forEach(function (accountTypeObjectKeyItem) {
@@ -243,14 +243,14 @@
                         item['strategy1_object_' + strategy1ObjectKeyItem] = item.strategy1_object[strategy1ObjectKeyItem];
                     });
 
-                    if (item.strategy1_object.hasOwnProperty('subgroup_object')) {
+                    if (item.strategy1_object.hasOwnProperty('subgroup_object') && item.strategy1_object.subgroup_object) {
                         var strategy1subgroupObjectKeys = Object.keys(item.strategy1_object.subgroup_object);
 
                         strategy1subgroupObjectKeys.forEach(function (strategy1subgroupObjectKeyItem) {
                             item['strategy1_subgroup_object_' + strategy1subgroupObjectKeyItem] = item.strategy1_object.subgroup_object[strategy1subgroupObjectKeyItem];
                         });
 
-                        if (item.strategy1_object.subgroup_object.hasOwnProperty('group_object')) {
+                        if (item.strategy1_object.subgroup_object.hasOwnProperty('group_object') && item.strategy1_object.subgroup_object.group_object) {
                             var strategy1groupObjectKeys = Object.keys(item.strategy1_object.subgroup_object.group_object);
 
                             strategy1groupObjectKeys.forEach(function (strategy1groupObjectKeyItem) {
@@ -290,14 +290,14 @@
                         item['strategy2_object_' + strategy2ObjectKeyItem] = item.strategy2_object[strategy2ObjectKeyItem];
                     });
 
-                    if (item.strategy2_object.hasOwnProperty('subgroup_object')) {
+                    if (item.strategy2_object.hasOwnProperty('subgroup_object') && item.strategy2_object.subgroup_object) {
                         var strategy2subgroupObjectKeys = Object.keys(item.strategy2_object.subgroup_object);
 
                         strategy2subgroupObjectKeys.forEach(function (strategy2subgroupObjectKeyItem) {
                             item['strategy2_subgroup_object_' + strategy2subgroupObjectKeyItem] = item.strategy2_object.subgroup_object[strategy2subgroupObjectKeyItem];
                         });
 
-                        if (item.strategy2_object.subgroup_object.hasOwnProperty('group_object')) {
+                        if (item.strategy2_object.subgroup_object.hasOwnProperty('group_object') && item.strategy2_object.subgroup_object.group_object) {
                             var strategy2groupObjectKeys = Object.keys(item.strategy2_object.subgroup_object.group_object);
 
                             strategy2groupObjectKeys.forEach(function (strategy2groupObjectKeyItem) {
@@ -336,14 +336,14 @@
                         item['strategy3_object_' + strategy3ObjectKeyItem] = item.strategy3_object[strategy3ObjectKeyItem];
                     });
 
-                    if (item.strategy3_object.hasOwnProperty('subgroup_object')) {
+                    if (item.strategy3_object.hasOwnProperty('subgroup_object') && item.strategy3_object.subgroup_object) {
                         var strategy3subgroupObjectKeys = Object.keys(item.strategy3_object.subgroup_object);
 
                         strategy3subgroupObjectKeys.forEach(function (strategy3subgroupObjectKeyItem) {
                             item['strategy3_subgroup_object_' + strategy3subgroupObjectKeyItem] = item.strategy3_object.subgroup_object[strategy3subgroupObjectKeyItem];
                         });
 
-                        if (item.strategy3_object.subgroup_object.hasOwnProperty('group_object')) {
+                        if (item.strategy3_object.subgroup_object.hasOwnProperty('group_object') && item.strategy3_object.subgroup_object.group_object) {
                             var strategy3groupObjectKeys = Object.keys(item.strategy3_object.subgroup_object.group_object);
 
                             strategy3groupObjectKeys.forEach(function (strategy3groupObjectKeyItem) {
