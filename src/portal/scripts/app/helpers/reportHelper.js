@@ -131,7 +131,7 @@
                         item['account_object_' + accountObjectKeyItem] = item.account_object[accountObjectKeyItem];
                     });
 
-                    if (item.account_object.hasOwnProperty('type_object')) {
+                    if (item.account_object.hasOwnProperty('type_object') && item.account_object.type_object) {
                         var accountTypeObjectKeys = Object.keys(item.account_object.type_object);
 
                         accountTypeObjectKeys.forEach(function (accountTypeObjectKeyItem) {
