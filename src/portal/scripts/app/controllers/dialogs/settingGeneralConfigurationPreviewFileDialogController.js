@@ -309,45 +309,49 @@
 
         function mapTransactionTypeToComplexTransactionImportScheme(complexTransactionImportSchemeEntity) {
 
-            entityResolverService.getList('transaction-type').then(function (data) {
+            return new Promise(function (resolve, reject) {
 
-                var transactionTypes = data.results;
+                entityResolverService.getList('transaction-type').then(function (data) {
 
-                console.log('Transaction Type groups created');
-                console.log('Transaction Types created');
+                    var transactionTypes = data.results;
 
-                complexTransactionImportSchemeEntity.content.forEach(function (entityItem) {
+                    console.log('Transaction Type groups created');
+                    console.log('Transaction Types created');
 
-                    entityItem.rules.forEach(function (rule) {
+                    complexTransactionImportSchemeEntity.content.forEach(function (entityItem) {
 
-                        transactionTypes.forEach(function (transactionType) {
+                        entityItem.rules.forEach(function (rule) {
 
-                            if (rule.___transaction_type__user_code === transactionType.user_code) {
-                                rule.transaction_type = transactionType.id;
+                            transactionTypes.forEach(function (transactionType) {
 
-                                rule.fields.forEach(function (field) {
+                                if (rule.___transaction_type__user_code === transactionType.user_code) {
+                                    rule.transaction_type = transactionType.id;
 
-                                    transactionType.inputs.forEach(function (input) {
+                                    rule.fields.forEach(function (field) {
 
-                                        if (field.___input__name === input.name) {
-                                            field.transaction_type_input = input.id;
-                                        }
+                                        transactionType.inputs.forEach(function (input) {
+
+                                            if (field.___input__name === input.name) {
+                                                field.transaction_type_input = input.id;
+                                            }
+
+                                        })
+
 
                                     })
 
+                                }
 
-                                })
+                            })
 
-                            }
 
                         })
 
+                    });
 
-                    })
+                    resolve(complexTransactionImportSchemeEntity);
 
                 });
-
-                resolve(complexTransactionImportSchemeEntity);
 
             });
 
