@@ -3,7 +3,7 @@
     var evEvents = require('../../services/entityViewerEvents');
     var evDataProviderService = require('../../services/ev-data-provider/ev-data-provider.service');
 
-    var initReducer = function (entityViewerDataService, entityViewerEventService, $mdDialog) {
+    var initReducer = function (entityViewerDataService, entityViewerEventService, $mdDialog, getView) {
 
         entityViewerEventService.addEventListener(evEvents.UPDATE_TABLE, function () {
 
@@ -101,6 +101,12 @@
             }
 
         });
+
+        entityViewerEventService.addEventListener(evEvents.LIST_LAYOUT_CHANGE, function () {
+
+            getView();
+
+        })
 
     };
 

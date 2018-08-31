@@ -1,62 +1,112 @@
-<div style="border-bottom: 2px solid #4C334D;">
+<div class="actions-block-holder">
 
-    <div layout="row" class="filters-control-btn s-f-expanded-btns layout-row">
-        <button class="md-raised clear-all full-width md-button md-ink-ripple" type="button"
-                data-ng-click="openViewConstructor($event)">View Constructor
-        </button>
-    </div>
+    <div class="actions-block-scrollable-area">
 
-    <div layout="row" class="filters-control-btn s-f-expanded-btns layout-row" data-ng-if="!isReport">
-        <button class="md-raised clear-all full-width md-button md-ink-ripple" type="button"
-                data-ng-click="addEntity($event)">Add Entity
-        </button>
-    </div>
+        <div layout="row" class="filters-control-btn s-f-expanded-btns layout-row">
+            <button class="md-raised clear-all full-width md-button md-ink-ripple" type="button"
+                    data-ng-click="openViewConstructor($event)">View Constructor
+            </button>
+        </div>
 
-    <div layout="row" class="filters-control-btn s-f-expanded-btns layout-row" data-ng-if="!isReport">
-        <md-menu class="full-width">
-            <md-button class="md-raised clear-all full-width md-button md-ink-ripple" type="button"
-                       ng-click="openActions($mdOpenMenu, $event)">
-                Actions
-            </md-button>
-            <md-menu-content width="4">
-                <md-menu-item>
-                    <md-button ng-click="openPermissionEditor($event)" class="g-settings-option-btn">
-                        <ng-md-icon icon="done"
-                                    data-ng-show="!currentAdditions.permissionEditor"
-                                    class="z-menu-icon"
-                                    style="visibility: hidden;"></ng-md-icon>
-                        <ng-md-icon icon="done"
-                                    data-ng-show="currentAdditions.permissionEditor"
-                                    class="z-menu-icon"></ng-md-icon>
-                        <span>Open permission editor</span>
-                    </md-button>
-                </md-menu-item>
-                <md-menu-item>
-                    <md-button ng-click="openDataViewPanel($event)" class="g-settings-option-btn">
-                        <ng-md-icon icon="done"
-                                    data-ng-show="!currentAdditions.reportWizard"
-                                    class="z-menu-icon"
-                                    style="visibility: hidden;"></ng-md-icon>
-                        <ng-md-icon icon="done"
-                                    data-ng-show="currentAdditions.reportWizard"
-                                    class="z-menu-icon"></ng-md-icon>
-                        <span>Open data view panel</span>
-                    </md-button>
-                </md-menu-item>
-                <md-menu-item>
-                    <md-button ng-click="openEditorViewPanel($event)" class="g-settings-option-btn">
-                        <ng-md-icon icon="done"
-                                    data-ng-show="!currentAdditions.editor"
-                                    class="z-menu-icon"
-                                    style="visibility: hidden;"></ng-md-icon>
-                        <ng-md-icon icon="done"
-                                    data-ng-show="currentAdditions.editor"
-                                    class="z-menu-icon"></ng-md-icon>
-                        <span>Open editor split panel</span>
-                    </md-button>
-                </md-menu-item>
-            </md-menu-content>
-        </md-menu>
+        <div layout="row" class="filters-control-btn s-f-expanded-btns layout-row">
+            <md-menu class="full-width" layout="row">
+                <md-button class="md-raised clear-all full-width md-button md-ink-ripple" type="button"
+                           ng-click="openActions($mdOpenMenu, $event)">
+                    Layouts
+                </md-button>
+                <md-menu-content width="4">
+                    <md-menu-item>
+                        <md-button ng-click="openLayoutList($event)" class="g-settings-option-btn">
+                            <span>Open layout</span>
+                        </md-button>
+                    </md-menu-item>
+                    <md-menu-item>
+                        <md-button ng-click="saveLayoutList($event)" class="g-settings-option-btn">
+                            <span>Save</span>
+                        </md-button>
+                    </md-menu-item>
+                    <md-menu-item>
+                        <md-button ng-click="saveAsLayoutList($event)" class="g-settings-option-btn">
+                            <span>Save as</span>
+                        </md-button>
+                    </md-menu-item>
+                </md-menu-content>
+            </md-menu>
+        </div>
+
+
+        <div layout="row" class="filters-control-btn s-f-expanded-btns layout-row" data-ng-if="!isReport">
+            <button class="md-raised clear-all full-width md-button md-ink-ripple" type="button"
+                    data-ui-sref="app.attributesManager({entityType: entityType})">Manage Attributes
+            </button>
+        </div>
+
+        <div layout="row" class="filters-control-btn s-f-expanded-btns layout-row" data-ng-if="!isReport">
+            <button class="md-raised clear-all full-width md-button md-ink-ripple" type="button"
+                    data-ng-click="addEntity($event)">Add Entity
+            </button>
+        </div>
+
+        <div layout="row" class="filters-control-btn s-f-expanded-btns layout-row" data-ng-if="!isReport">
+            <md-menu class="full-width" layout="row">
+                <md-button class="md-raised clear-all full-width md-button md-ink-ripple" type="button"
+                           ng-click="openActions($mdOpenMenu, $event)">
+                    Split Panel
+                </md-button>
+                <md-menu-content width="4">
+                    <md-menu-item>
+                        <md-button ng-click="openPermissionEditor($event)" class="g-settings-option-btn">
+                            <ng-md-icon icon="done"
+                                        data-ng-show="!currentAdditions.permissionEditor"
+                                        class="z-menu-icon"
+                                        style="visibility: hidden;"></ng-md-icon>
+                            <ng-md-icon icon="done"
+                                        data-ng-show="currentAdditions.permissionEditor"
+                                        class="z-menu-icon"></ng-md-icon>
+                            <span>Open permission editor</span>
+                        </md-button>
+                    </md-menu-item>
+                    <md-menu-item>
+                        <md-button ng-click="openDataViewPanel($event)" class="g-settings-option-btn">
+                            <ng-md-icon icon="done"
+                                        data-ng-show="!currentAdditions.reportWizard"
+                                        class="z-menu-icon"
+                                        style="visibility: hidden;"></ng-md-icon>
+                            <ng-md-icon icon="done"
+                                        data-ng-show="currentAdditions.reportWizard"
+                                        class="z-menu-icon"></ng-md-icon>
+                            <span>Open data view panel</span>
+                        </md-button>
+                    </md-menu-item>
+                    <md-menu-item>
+                        <md-button ng-click="openEditorViewPanel($event)" class="g-settings-option-btn">
+                            <ng-md-icon icon="done"
+                                        data-ng-show="!currentAdditions.editor"
+                                        class="z-menu-icon"
+                                        style="visibility: hidden;"></ng-md-icon>
+                            <ng-md-icon icon="done"
+                                        data-ng-show="currentAdditions.editor"
+                                        class="z-menu-icon"></ng-md-icon>
+                            <span>Open editor split panel</span>
+                        </md-button>
+                    </md-menu-item>
+                </md-menu-content>
+            </md-menu>
+        </div>
+
+        <div data-ng-if="isReport">
+
+            <div layout="column">
+
+                <md-button data-ng-click="openReportSettings($event)" class=" md-raised">Settings
+                </md-button>
+
+                <md-button data-ng-click="calculateReport()" class="md-primary md-raised">Calculate</md-button>
+
+            </div>
+
+        </div>
+
     </div>
 
 </div>

@@ -102,46 +102,6 @@
 
                 };
 
-                scope.openReportSettings = function ($event) {
-
-                    var reportOptions = scope.evDataService.getReportOptions();
-
-                    $mdDialog.show({
-                        controller: 'GReportSettingsDialogController as vm',
-                        templateUrl: 'views/dialogs/g-report-settings-dialog-view.html',
-                        parent: angular.element(document.body),
-                        targetEvent: $event,
-                        locals: {
-                            reportOptions: reportOptions,
-                            options: {
-                                entityType: scope.entityType
-                            }
-                        }
-                    }).then(function (res) {
-
-                        reportOptions = res.data;
-
-                        scope.evDataService.setReportOptions(reportOptions);
-
-                        scope.reportOptions = reportOptions;
-
-                    })
-
-                };
-
-                scope.calculateReport = function () {
-
-                    var reportOptions = scope.evDataService.getReportOptions();
-
-                    reportOptions = Object.assign({}, reportOptions, {task_id: null});
-
-                    scope.evDataService.setReportOptions(reportOptions);
-
-                    scope.evEventService.dispatchEvent(evEvents.REQUEST_REPORT);
-                    // scope.evEventService.dispatchEvent(evEvents.CALCULATE_REPORT);
-
-                };
-
                 scope.resizeFilterSideNav = function (actionType) {
                     if (actionType === 'collapse') {
                         $('body').addClass('filter-side-nav-collapsed');
@@ -421,6 +381,12 @@
                     scope.evEventService.addEventListener(evEvents.FILTERS_CHANGE, function () {
 
                         syncFilters();
+
+                    });
+
+                    scope.evEventService.addEventListener(evEvents.REPORT_OPTIONS_CHANGE, function () {
+
+                        scope.reportOptions = scope.evDataService.getReportOptions();
 
                     });
 
