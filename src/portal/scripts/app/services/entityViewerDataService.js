@@ -90,6 +90,7 @@
             additions: {},
             report: {},
             data: {},
+            listLayout: {},
             virtualScroll: {
                 reserveTop: 10,
                 reserveBottom: 20,
@@ -142,7 +143,13 @@
 
 
         function setColumns(columns) {
-            data.columns = columns;
+
+            if (columns) {
+                data.columns = columns;
+            } else {
+                console.error("Set columns error", columns);
+                data.columns = [];
+            }
         }
 
         function getColumns() {
@@ -150,20 +157,29 @@
         }
 
         function setGroups(groups) {
-            data.groups = groups;
+
+            if (groups) {
+                data.groups = groups;
+            } else {
+                console.error("Set groups error", groups);
+                data.groups = [];
+            }
         }
 
         function getGroups() {
-
-            if (!data.groups) {
-                data.groups = [];
-            }
-
             return data.groups;
         }
 
         function setFilters(filters) {
-            data.filters = filters;
+
+            if (filters) {
+                data.filters = filters;
+            } else {
+                console.error("Set filters error", filters);
+                data.filters = [];
+            }
+
+
         }
 
         function getFilters() {
@@ -548,6 +564,14 @@
             return data.virtualScroll.limit;
         }
 
+        function setListLayout(listLayout) {
+            data.listLayout = listLayout;
+        }
+
+        function getListLayout() {
+            return data.listLayout;
+        }
+
 
         return {
 
@@ -649,7 +673,11 @@
             setVirtualScrollLimit: setVirtualScrollLimit,
             getVirtualScrollLimit: getVirtualScrollLimit,
 
-            getInterfaceLayout: getInterfaceLayout
+            getInterfaceLayout: getInterfaceLayout,
+
+
+            setListLayout: setListLayout,
+            getListLayout: getListLayout
 
         }
     }

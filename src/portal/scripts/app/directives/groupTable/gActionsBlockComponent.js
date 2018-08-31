@@ -8,7 +8,11 @@
     var metaService = require('../../services/metaService');
     var evEvents = require('../../services/entityViewerEvents');
 
-    module.exports = function ($mdDialog) {
+    var metaContentTypesService = require('../../services/metaContentTypesService');
+
+    var uiService = require('../../services/uiService');
+
+    module.exports = function ($mdDialog, $state) {
         return {
             restrict: 'AE',
             scope: {
@@ -197,6 +201,218 @@
 
                 };
 
+                scope.calculateReport = function () {
+
+                    var reportOptions = scope.evDataService.getReportOptions();
+
+                    reportOptions = Object.assign({}, reportOptions, {task_id: null});
+
+                    scope.evDataService.setReportOptions(reportOptions);
+
+                    scope.evEventService.dispatchEvent(evEvents.REQUEST_REPORT);
+                    // scope.evEventService.dispatchEvent(evEvents.CALCULATE_REPORT);
+
+                };
+
+                scope.openReportSettings = function ($event) {
+
+                    var reportOptions = scope.evDataService.getReportOptions();
+
+                    $mdDialog.show({
+                        controller: 'GReportSettingsDialogController as vm',
+                        templateUrl: 'views/dialogs/g-report-settings-dialog-view.html',
+                        parent: angular.element(document.body),
+                        targetEvent: $event,
+                        locals: {
+                            reportOptions: reportOptions,
+                            options: {
+                                entityType: scope.entityType
+                            }
+                        }
+                    }).then(function (res) {
+
+                        reportOptions = res.data;
+
+                        scope.evDataService.setReportOptions(reportOptions);
+
+                        scope.reportOptions = reportOptions;
+
+                        scope.evEventService.dispatchEvent(evEvents.REPORT_OPTIONS_CHANGE)
+
+                    })
+
+                };
+
+                scope.openLayoutList = function ($event) {
+
+                    var entityType = metaContentTypesService.getContentTypeUIByState($state.current.name);
+
+                    $mdDialog.show({
+                        controller: 'UiLayoutListDialogController as vm',
+                        templateUrl: 'views/dialogs/ui/ui-layout-list-view.html',
+                        parent: angular.element(document.body),
+                        targetEvent: $event,
+                        locals: {
+                            options: {
+                                entityType: entityType
+                            }
+                        }
+                    }).then(function (res) {
+                        if (res.status == 'agree') {
+                            $state.reload($state.current.name);
+                        }
+
+                    })
+                };
+
+                scope.saveLayoutList = function ($event) {
+
+                    // saving columns widths
+                    var tHead = $('.g-columns-component');
+                    var th = $('.g-columns-component.g-thead').find('.g-cell');
+                    var thWidths = [];
+                    for (var i = 0; i < th.length; i = i + 1) {
+                        var thWidth = $(th[i]).width();
+                        thWidths.push(thWidth);
+                    }
+
+                    var listLayout = scope.evDataService.getListLayout();
+
+                    listLayout.data.columns = scope.evDataService.getColumns();
+                    listLayout.data.grouping = scope.evDataService.getGroups();
+                    listLayout.data.filters = scope.evDataService.getFilters();
+
+                    if(scope.isReport) {
+
+                        listLayout.data.reportOptions = JSON.parse(JSON.stringify(scope.evDataService.getReportOptions()));
+
+                        delete listLayout.data.reportOptions.items;
+                        delete listLayout.data.reportOptions.item_complex_transactions;
+                        delete listLayout.data.reportOptions.item_counterparties;
+                        delete listLayout.data.reportOptions.item_responsibles;
+                        delete listLayout.data.reportOptions.item_strategies3;
+                        delete listLayout.data.reportOptions.item_strategies2;
+                        delete listLayout.data.reportOptions.item_strategies1;
+                        delete listLayout.data.reportOptions.item_portfolios;
+                        delete listLayout.data.reportOptions.item_instruments;
+                        delete listLayout.data.reportOptions.item_instrument_pricings;
+                        delete listLayout.data.reportOptions.item_instrument_accruals;
+                        delete listLayout.data.reportOptions.item_currency_fx_rates;
+                        delete listLayout.data.reportOptions.item_currencies;
+                        delete listLayout.data.reportOptions.item_accounts;
+
+                    }
+
+                    listLayout.data.columnsWidth = thWidths;
+
+                    if (listLayout.hasOwnProperty('id')) {
+                        uiService.updateListLayout(listLayout.id, listLayout)
+                    } else {
+                        uiService.createListLayout(scope.entityType, listLayout)
+                    }
+
+                    $mdDialog.show({
+                        controller: 'SaveLayoutDialogController as vm',
+                        templateUrl: 'views/save-layout-dialog-view.html',
+                        targetEvent: $event,
+                        clickOutsideToClose: true
+                    }).then(function () {
+
+                        scope.evEventService.dispatchEvent(evEvents.LIST_LAYOUT_CHANGE);
+
+                    });
+
+
+                };
+
+                scope.saveAsLayoutList = function ($event) {
+
+                    var tHead = $('.g-columns-component');
+                    var th = $('.g-columns-component.g-thead').find('.g-cell');
+                    var thWidths = [];
+                    for (var i = 0; i < th.length; i = i + 1) {
+                        var thWidth = $(th[i]).width();
+                        thWidths.push(thWidth);
+                    }
+
+                    var listLayout = scope.evDataService.getListLayout();
+
+                    listLayout.data.columns = scope.evDataService.getColumns();
+                    listLayout.data.grouping = scope.evDataService.getGroups();
+                    listLayout.data.filters = scope.evDataService.getFilters();
+
+                    if(scope.isReport) {
+
+                        listLayout.data.reportOptions = JSON.parse(JSON.stringify(scope.evDataService.getReportOptions()));
+
+                        delete listLayout.data.reportOptions.items;
+                        delete listLayout.data.reportOptions.item_complex_transactions;
+                        delete listLayout.data.reportOptions.item_counterparties;
+                        delete listLayout.data.reportOptions.item_responsibles;
+                        delete listLayout.data.reportOptions.item_strategies3;
+                        delete listLayout.data.reportOptions.item_strategies2;
+                        delete listLayout.data.reportOptions.item_strategies1;
+                        delete listLayout.data.reportOptions.item_portfolios;
+                        delete listLayout.data.reportOptions.item_instruments;
+                        delete listLayout.data.reportOptions.item_instrument_pricings;
+                        delete listLayout.data.reportOptions.item_instrument_accruals;
+                        delete listLayout.data.reportOptions.item_currency_fx_rates;
+                        delete listLayout.data.reportOptions.item_currencies;
+                        delete listLayout.data.reportOptions.item_accounts;
+
+                    }
+
+                    listLayout.data.columnsWidth = thWidths;
+
+                    $mdDialog.show({
+                        controller: 'UiLayoutSaveAsDialogController as vm',
+                        templateUrl: 'views/dialogs/ui/ui-layout-save-as-view.html',
+                        parent: angular.element(document.body),
+                        targetEvent: $event,
+                        locals: {
+                            options: {}
+                        },
+                        clickOutsideToClose: false
+                    }).then(function (res) {
+
+                        if (res.status === 'agree') {
+
+                            if (listLayout.id) {
+                                listLayout.is_default = false;
+
+                                uiService.updateListLayout(listLayout.id, listLayout).then(function () {
+
+                                }).then(function () {
+
+                                    listLayout.name = res.data.name;
+                                    listLayout.is_default = true;
+                                    delete listLayout.id;
+
+                                    uiService.createListLayout(scope.entityType, listLayout).then(function () {
+
+                                        scope.evEventService.dispatchEvent(evEvents.LIST_LAYOUT_CHANGE);
+
+                                    });
+
+                                })
+
+                            } else {
+
+                                listLayout.name = res.data.name;
+                                listLayout.is_default = true;
+
+                                uiService.createListLayout(scope.entityType, listLayout).then(function () {
+
+                                    scope.evEventService.dispatchEvent(evEvents.LIST_LAYOUT_CHANGE);
+
+                                });
+                            }
+                        }
+
+                    });
+
+
+                };
 
             }
         }
