@@ -1,4 +1,4 @@
-<md-dialog aria-label="" ng-cloak class="automated-uploads-manager-dialog-view draggable-dialog" drag-dialog>
+<md-dialog aria-label="" ng-cloak class="configuration-import-dialog-view draggable-dialog" drag-dialog>
     <md-toolbar>
         <div class="md-toolbar-tools">
             <h2>Configuration import preview</h2>
@@ -9,10 +9,10 @@
 
         <div data-ng-repeat="item in vm.items">
 
-            <div>
+            <div class="cie-entity-holder">
                 <md-checkbox ng-model="item.active" data-ng-change="vm.toggleActiveForChilds(item)" aria-label="checkbox">
                 </md-checkbox>
-                <span data-ng-bind="vm.getEntityName(item)"></span> ({{item.count}})
+                <span data-ng-bind="vm.getEntityName(item)"></span> <span class="cie-dependency" data-ng-bind="vm.getEntityDependenciesCaptions(item)"></span> ({{item.count}})
                 <md-button class="md-raised" ng-click="item.displayItems = !item.displayItems"><span
                         data-ng-if="!item.displayItems">Show</span><span data-ng-if="item.displayItems">Hide</span>
                 </md-button>

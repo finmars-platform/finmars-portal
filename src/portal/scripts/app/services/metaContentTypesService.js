@@ -73,7 +73,7 @@
             result = state.split('.')[2];
         }
 
-        if(state == 'app.dashboard') {
+        if (state == 'app.dashboard') {
             result = state.split('.')[1];
         }
 
@@ -121,6 +121,71 @@
         });
     };
 
+    var getEntityNameByContentType = function (contentType) {
+
+        var result = '';
+
+        switch (contentType) {
+
+            case 'accounts.account':
+                result = 'Account';
+                break;
+            case 'accounts.accounttype':
+                result = 'Account Type';
+                break;
+            case 'counterparties.responsible':
+                result = 'Responsible';
+                break;
+            case 'counterparties.counterparty':
+                result = 'Counterparty';
+                break;
+            case 'currencies.currencyhistory':
+                result = 'Currency History';
+                break;
+            case 'instruments.pricingpolicy':
+                result = 'Pricing Policy';
+                break;
+            case 'instruments.instrumenttype':
+                result = 'Instrument Type';
+                break;
+            case 'instruments.pricehistory':
+                result = 'Price History';
+                break;
+            case 'instruments.instrument':
+                result = 'Instrument';
+                break;
+            case 'portfolios.portfolio':
+                result = 'Portfolio';
+                break;
+            case 'strategies.strategy1':
+                result = 'Strategy 1';
+                break;
+            case 'strategies.strategy2':
+                result = 'Strategy 2';
+                break;
+            case 'strategies.strategy3':
+                result = 'Strategy 3';
+                break;
+            case 'transactions.transactiontype':
+                result = 'Transaction Type';
+                break;
+            case 'integrations.pricedownloadscheme':
+                result = 'Price Download Sceme';
+                break;
+            case 'transactions.transactiontypegroup':
+                result = 'Transaction Type Group';
+                break;
+
+        }
+
+        if (!result) {
+            result = contentType;
+        }
+
+        return result
+
+    };
+
     module.exports = {
         getListForTags: getListForTags,
         getListForUi: getListForUi,
@@ -133,7 +198,9 @@
 
         getContentTypeUIByState: getContentTypeUIByState,
 
-        getContentTypeList: getContentTypeList
+        getContentTypeList: getContentTypeList,
+
+        getEntityNameByContentType: getEntityNameByContentType
     }
 
 

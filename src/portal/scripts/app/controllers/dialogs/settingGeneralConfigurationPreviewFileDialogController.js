@@ -11,6 +11,7 @@
     var entityResolverService = require('../../services/entityResolverService');
     var transactionSchemeService = require('../../services/import/transactionSchemeService');
     var pricingAutomatedScheduleService = require('../../services/import/pricingAutomatedScheduleService');
+    var metaContentTypesService = require('../../services/metaContentTypesService');
     var md5helper = require('../../helpers/md5.helper');
     var uiRepository = require('../../repositories/uiRepository');
 
@@ -60,18 +61,23 @@
             }
 
             if (item.hasOwnProperty('name')) {
+
+                if (item.hasOwnProperty('csv_fields')) {
+                    return item.name + ' (' + metaContentTypesService.getEntityNameByContentType(item.content_type) + ')'
+                }
+
                 return item.name
             }
 
             if (item.hasOwnProperty('content_type')) {
-                return item.content_type
+                return metaContentTypesService.getEntityNameByContentType(item.content_type)
             }
 
             if (item.hasOwnProperty('scheme_name')) {
                 return item.scheme_name;
             }
 
-            if (item.entity === 'import.pricingautomatedschedule') {
+            if (item.hasOwnProperty('last_run_at')) { // import.pricingautomatedschedule
                 return "Schedule"
             }
 
@@ -99,6 +105,33 @@
 
             parent.active = active;
 
+
+        };
+
+        vm.getEntityDependenciesCaptions = function (entity) {
+
+            var result = '';
+
+            if (entity.dependencies && entity.dependencies.length) {
+
+                result = result + '(Depends on: ';
+
+                var dependenciesList = [];
+
+                entity.dependencies.forEach(function (dependency) {
+
+                    dependenciesList.push(metaContentTypesService.getEntityNameByContentType(dependency.entity))
+
+                });
+
+                result = result + dependenciesList.join(', ');
+
+                result = result + ')';
+
+            }
+
+
+            return result;
 
         };
 
