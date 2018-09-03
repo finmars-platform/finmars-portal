@@ -10,6 +10,7 @@
     var instrumentSchemeService = require('../../services/import/instrumentSchemeService');
     var entityResolverService = require('../../services/entityResolverService');
     var transactionSchemeService = require('../../services/import/transactionSchemeService');
+    var pricingAutomatedScheduleService = require('../../services/import/pricingAutomatedScheduleService');
     var md5helper = require('../../helpers/md5.helper');
     var uiRepository = require('../../repositories/uiRepository');
 
@@ -26,12 +27,20 @@
             switch (item.entity) {
                 case 'transactions.transactiontype':
                     return "Transaction Types";
+                case 'accounts.accounttype':
+                    return "Account Types";
+                case 'instruments.instrumenttype':
+                    return "Instrument Types";
+                case 'import.pricingautomatedschedule':
+                    return 'Automated uploads schedule ';
                 case 'ui.editlayout':
-                    return "Edit Layouts";
+                    return "Input form layouts";
                 case 'ui.listlayout':
-                    return "List Layouts";
+                    return "Entity viewer layouts";
+                case 'ui.reportlayout':
+                    return "Report builder layouts";
                 case 'csv_import.scheme':
-                    return "CSV Import Schemes";
+                    return "Data import from CSV schemes";
                 case 'integrations.instrumentdownloadscheme':
                     return "Instrument Download Schemes";
                 case 'integrations.pricedownloadscheme':
@@ -60,6 +69,10 @@
 
             if (item.hasOwnProperty('scheme_name')) {
                 return item.scheme_name;
+            }
+
+            if (item.entity === 'import.pricingautomatedschedule') {
+                return "Schedule"
             }
 
         };
@@ -402,6 +415,15 @@
 
                                 case 'transactions.transactiontype':
                                     promises.push(entityResolverService.create('transaction-type', item));
+                                    break;
+                                case 'accounts.accounttype':
+                                    promises.push(entityResolverService.create('account-type', item));
+                                    break;
+                                case 'instruments.instrumenttype':
+                                    promises.push(entityResolverService.create('instrument-type', item));
+                                    break;
+                                case 'import.pricingautomatedschedule':
+                                    promises.push(pricingAutomatedScheduleService.updateSchedule(item));
                                     break;
                                 case 'ui.editlayout':
                                     promises.push(uiRepository.createEditLayout(item));
