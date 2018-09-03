@@ -176,6 +176,38 @@
                 result = 'Transaction Type Group';
                 break;
 
+            case 'integrations.portfoliomapping':
+                result = 'Portfolio Mapping';
+                break;
+            case 'integrations.currencymapping':
+                result = 'Currency Mapping';
+                break;
+            case 'instrumenttypemapping':
+                result = 'Instrument Type Mapping';
+                break;
+            case 'integrations.accountmapping':
+                result = 'Account Mapping';
+                break;
+            case 'integrations.instrumentmapping':
+                result = 'Instrument Mapping';
+                break;
+            case 'integrations.counterpartymapping':
+                result = 'Counterparty Mapping';
+                break;
+            case 'integrations.responsiblemapping':
+                result = 'Responsible Mapping';
+                break;
+            case 'integrations.strategy1mapping':
+                result = 'Strategy 1 Mapping';
+                break;
+            case 'integrations.strategy2mapping':
+                result = 'Strategy 2 Mapping';
+                break;
+            case 'integrations.strategy3mapping':
+                result = 'Strategy 3 Mapping';
+                break;
+
+
         }
 
         if (!result) {
