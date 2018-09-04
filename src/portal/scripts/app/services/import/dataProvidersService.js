@@ -19,10 +19,15 @@
         return dataProvidersRepository.setConfig(providerId, provider);
     };
 
+    var createConfig = function (provider) {
+        return dataProvidersRepository.createConfig(provider)
+    };
+
     module.exports = {
         getList: getList,
         getConfig: getConfig,
-        setConfig: setConfig
+        setConfig: setConfig,
+        createConfig: createConfig
     }
 
 }());
