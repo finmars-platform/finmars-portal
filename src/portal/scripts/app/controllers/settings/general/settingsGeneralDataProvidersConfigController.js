@@ -15,53 +15,90 @@
 
         vm.providerId = $stateParams.dataProviderId;
 
-        vm.provider = [];
+        vm.provider = {};
 
         vm.readyStatus = {provider: false};
 
-        dataProvidersService.getConfig(vm.providerId).then(function(data){
+        dataProvidersService.getConfig(vm.providerId).then(function (data) {
             vm.provider = data.results[0];
 
             vm.readyStatus.provider = true;
             $scope.$apply();
         });
 
-        vm.saveConfig = function($event){
+        vm.saveConfig = function ($event) {
 
             $event.preventDefault();
             $event.stopPropagation();
 
             var formData = new FormData();
 
+            if (!vm.provider.provider) {
+
+                vm.provider.provider = 1;
+            }
+
             formData.append('p12cert', vm.provider.p12cert);
             formData.append('password', vm.provider.password);
             formData.append('provider', vm.provider.provider);
 
-            dataProvidersService.setConfig(vm.provider.id, formData).then(function(data){
+            if (vm.provider.id) {
 
-                console.log('test!', data);
+                dataProvidersService.setConfig(vm.provider.id, formData).then(function (data) {
 
-                if (data.status == 200 || data.status == 201) {
-                    $mdDialog.show({
-                        controller: 'SuccessDialogController as vm',
-                        templateUrl: 'views/dialogs/success-dialog-view.html',
-                        targetEvent: $event,
-                        locals: {
-                            success: {
-                                title: "",
-                                description: "You have you have successfully add sertificate"
-                            }
-                        },
-                        preserveScope: true,
-                        autoWrap: true,
-                        skipHide: true
-                    }).then(function () {
-                        $state.go('app.settings.general.data-providers');
-                    });
+                    console.log('test!', data);
 
-                }
+                    if (data.status == 200 || data.status == 201) {
+                        $mdDialog.show({
+                            controller: 'SuccessDialogController as vm',
+                            templateUrl: 'views/dialogs/success-dialog-view.html',
+                            targetEvent: $event,
+                            locals: {
+                                success: {
+                                    title: "",
+                                    description: "You have you have successfully add sertificate"
+                                }
+                            },
+                            preserveScope: true,
+                            autoWrap: true,
+                            skipHide: true
+                        }).then(function () {
+                            $state.go('app.settings.general.data-providers');
+                        });
 
-            });
+                    }
+
+                });
+
+            } else {
+
+                dataProvidersService.createConfig(formData).then(function (value) {
+
+                    if (data.status == 200 || data.status == 201) {
+                        $mdDialog.show({
+                            controller: 'SuccessDialogController as vm',
+                            templateUrl: 'views/dialogs/success-dialog-view.html',
+                            targetEvent: $event,
+                            locals: {
+                                success: {
+                                    title: "",
+                                    description: "You have you have successfully add sertificate"
+                                }
+                            },
+                            preserveScope: true,
+                            autoWrap: true,
+                            skipHide: true
+                        }).then(function () {
+                            $state.go('app.settings.general.data-providers');
+                        });
+
+                    }
+
+                });
+
+            }
+
+
         }
 
 

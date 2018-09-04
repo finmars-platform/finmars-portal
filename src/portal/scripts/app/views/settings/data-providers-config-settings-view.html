@@ -4,18 +4,32 @@
             <form action="" data-ng-submit="vm.saveConfig($event)" name="sertForm">
                 <md-card-content>
                     <!-- <md-input-container class="md-block"> -->
-                    <div class="sett-data-prov-choose-file">
+                    <div style="width: 300px;  margin-bottom: 24px;">
                         <h4>Certificate</h4>
-                        <!--<input type="file" id="providerConfigFile" file-read="vm.provider.p12cert" input-file-directive>-->
-                        <input type="file" id="providerConfigFile" input-file-directive read-file="vm.provider.p12cert">
-                        <label for="providerConfigFile" class="md-button md-raised md-primary">Choose a file</label>
-                        <p>No chosen files</p>
+
+                        <md-input-container flex="40" style="margin-bottom: 0" class="ng-hide">
+                            <input type="file" id="configurationFileImport" input-file-directive
+                                   read-file="vm.provider.p12cert">
+                        </md-input-container>
+                        <div class="input-upload-file-container">
+                            <p class="configurationFileImport">Select file</p>
+                            <label for="configurationFileImport" class="md-button md-raised md-primary IFUlabel">
+                                <ng-md-icon icon="file_upload"></ng-md-icon>
+                                <span>BROWSE</span></label>
+                        </div>
+
                     </div>
                     <!-- </md-input-container> -->
-                    <md-input-container class="md-block">
-                        <label>Password</label>
-                        <input type="password" data-ng-model="vm.provider.password">
-                    </md-input-container>
+
+                    <div style="width: 300px;">
+
+                        <md-input-container class="md-block">
+                            <label>Password</label>
+                            <input type="password" data-ng-model="vm.provider.password">
+                        </md-input-container>
+
+                    </div>
+
                 </md-card-content>
                 <md-card-actions>
                     <div layout="row" layout-align="end center">

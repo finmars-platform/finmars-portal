@@ -39,7 +39,7 @@
         })
     };
 
-    var setConfig = function(providerId, provider) {
+    var setConfig = function (providerId, provider) {
 
         return window.fetch(baseUrl + 'import/config/' + providerId + '/',
             {
@@ -63,10 +63,35 @@
 
     };
 
+    var createConfig = function (provider) {
+
+        return window.fetch(baseUrl + 'import/config/',
+            {
+                method: 'POST',
+                credentials: 'include',
+                headers: {
+                    'X-CSRFToken': cookieService.getCookie('csrftoken')
+                },
+                body: provider
+            }).then(function (data) {
+            return new Promise(function (resolve, reject) {
+                data.json().then(function (result) {
+                    resolve({
+                        response: result,
+                        status: data.status
+                    })
+                })
+            });
+        })
+
+
+    };
+
     module.exports = {
         getList: getList,
         getConfig: getConfig,
-        setConfig: setConfig
+        setConfig: setConfig,
+        createConfig: createConfig
     }
 
 }());
