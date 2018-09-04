@@ -72,7 +72,7 @@
 
             } else {
 
-                dataProvidersService.createConfig(formData).then(function (value) {
+                dataProvidersService.createConfig(formData).then(function (data) {
 
                     if (data.status == 200 || data.status == 201) {
                         $mdDialog.show({
