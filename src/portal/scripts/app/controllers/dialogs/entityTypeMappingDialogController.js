@@ -193,9 +193,7 @@
 
                     if (['periodicity', 'accrual-calculation-model',
                             'daily-pricing-model', 'payment-size-detail'].indexOf(vm.entityMapDashed) === -1) {
-
-                        if (!data.next && data.count) return reject('End of list');
-
+                        
                         vm.entityItems = vm.entityItems.concat(data.results);
                     } else {
                         vm.entityItems = vm.entityItems.concat(data);
