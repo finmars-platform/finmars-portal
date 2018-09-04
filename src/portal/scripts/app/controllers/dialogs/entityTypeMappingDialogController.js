@@ -76,7 +76,7 @@
                 return item.scheme_name;
             }
 
-            if(item.hasOwnProperty('user_code')) {
+            if (item.hasOwnProperty('user_code')) {
                 return item.name + ' (' + item.user_code + ')'
             }
 
@@ -191,9 +191,15 @@
 
                 entityResolverService.getList(vm.entityMapDashed, vm.options).then(function (data) {
 
-                    if (!data.results) return reject('End of list');
+                    if (['periodicity', 'accrual-calculation-model',
+                            'daily-pricing-model', 'payment-size-detail'].indexOf(vm.entityMapDashed) === -1) {
 
-                    vm.entityItems = vm.entityItems.concat(data.results);
+                        if (!data.next && data.count) return reject('End of list');
+
+                        vm.entityItems = vm.entityItems.concat(data.results);
+                    } else {
+                        vm.entityItems = vm.entityItems.concat(data);
+                    }
 
                     console.log('vm.entityItems', vm.entityItems);
 
