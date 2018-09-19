@@ -1,5 +1,11 @@
 # Changelog
 
+## 19.09.2018
+
+- Configuration Import / Export bugfixes
+- Mappings Import / Export
+- Instrument Parameters Mapping custom handler
+
 ## 21.08.2018
 
 - Configuration Import / Export page

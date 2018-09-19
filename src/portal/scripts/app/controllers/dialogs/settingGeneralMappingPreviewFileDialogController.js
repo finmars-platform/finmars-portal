@@ -18,6 +18,8 @@
 
         vm.items = file.body;
 
+        vm.overwriteOption = false;
+
         vm.getEntityName = function (item) {
 
             return metaContentTypesService.getEntityNameByContentType(item.entity)
@@ -35,6 +37,7 @@
                 if (item.hasOwnProperty('csv_fields')) {
                     return item.name + ' (' + metaContentTypesService.getEntityNameByContentType(item.content_type) + ')'
                 }
+
 
                 return item.name
             }
@@ -82,33 +85,80 @@
 
             return new Promise(function (resolve, reject) {
 
-                var options = {
-                    filters: {
+                var options = {};
+
+                if (item.___user_code) {
+                    options.filters = {
                         'user_code': item.___user_code
                     }
-                };
+                }
 
                 entityResolverService.getList(entity, options).then(function (data) {
 
-                    if (data.results.length) {
+                    if (item.___user_code) {
 
-                        item.content_object = data.results[0].id;
+                        if (data.results.length) {
 
-                        setTimeout(function () {
+                            item.content_object = data.results[0].id;
 
-                            resolve(entityTypeMappingResolveService.create(entity, item))
+                        } else {
 
-                        }, 500)
+                            console.warn('User code ' + item.___user_code + ' is not exist');
+
+                            resolve([]);
+                        }
 
                     } else {
 
-                        console.warn('User code ' + item.___user_code + ' is not exist');
+                        data.forEach(function (dataItem) {
 
-                        resolve([]);
+                            if (item.___system_code === dataItem.system_code) {
+                                item.content_object = dataItem.id;
+                            }
+
+                        })
+
                     }
 
+                    setTimeout(function () {
+
+                        if (vm.overwriteOption) {
+
+                            var mappingOptions = {
+                                filters: {
+                                    'content_object': item.content_object
+                                }
+                            };
+
+                            entityTypeMappingResolveService.getList(entity, mappingOptions).then(function (data) {
+
+                                if (data.results.length) {
+
+                                    data.results.forEach(function (oldMappingItem) {
+
+                                        entityTypeMappingResolveService.deleteByKey(entity, oldMappingItem.id);
+
+                                    });
+
+                                }
+
+                                resolve(entityTypeMappingResolveService.create(entity, item))
+
+                            });
+
+                        } else {
+
+                            resolve(entityTypeMappingResolveService.create(entity, item))
+
+                        }
+                    }, 500)
+
+
                 })
+
+
             })
+
 
         }
 
@@ -156,6 +206,19 @@
                                     break;
                                 case 'integrations.strategy3mapping':
                                     promises.push(handleItem('strategy-3', item));
+                                    break;
+
+                                case 'integrations.periodicitymapping':
+                                    promises.push(handleItem('periodicity', item));
+                                    break;
+                                case 'integrations.dailypricingmodelmapping':
+                                    promises.push(handleItem('daily-pricing-model', item));
+                                    break;
+                                case 'integrations.paymentsizedetailmapping':
+                                    promises.push(handleItem('payment-size-detail', item));
+                                    break;
+                                case 'integrations.accrualcalculationmodelmapping':
+                                    promises.push(handleItem('accrual-calculation-model', item));
                                     break;
 
                             }
