@@ -1494,3 +1494,13 @@ md-menu-content md-menu.md-menu {
   text-align: center;
   margin: 16px;
 }
+
+.active-button, .active-button.md-button {
+  background-color: #269f42;
+  color: #fff;
+
+  &:not([disabled]):hover, &:not([disabled]):active {
+    background-color: #269f42;
+    opacity: .8;
+  }
+}

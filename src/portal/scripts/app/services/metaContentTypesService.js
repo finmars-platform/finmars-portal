@@ -206,7 +206,18 @@
             case 'integrations.strategy3mapping':
                 result = 'Strategy 3 Mapping';
                 break;
-
+            case 'integrations.periodicitymapping':
+                result = 'Periodicity Mapping';
+                break;
+            case 'integrations.dailypricingmodelmapping':
+                result = 'Daily Pricing Model Mapping';
+                break;
+            case 'integrations.paymentsizedetailmapping':
+                result = 'Payment Size Detail Mapping';
+                break;
+            case 'integrations.accrualcalculationmodelmapping':
+                result = 'Accrual Calculation Model Mapping';
+                break;
 
         }
 

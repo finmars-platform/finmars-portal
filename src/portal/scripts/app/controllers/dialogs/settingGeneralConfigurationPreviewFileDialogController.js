@@ -60,9 +60,17 @@
                 return item.user_code
             }
 
+            if (item.hasOwnProperty('scheme_name')) {
+                return item.scheme_name;
+            }
+
             if (item.hasOwnProperty('name')) {
 
                 if (item.hasOwnProperty('csv_fields')) {
+                    return item.name + ' (' + metaContentTypesService.getEntityNameByContentType(item.content_type) + ')'
+                }
+
+                if (item.hasOwnProperty('data')) {
                     return item.name + ' (' + metaContentTypesService.getEntityNameByContentType(item.content_type) + ')'
                 }
 
@@ -71,10 +79,6 @@
 
             if (item.hasOwnProperty('content_type')) {
                 return metaContentTypesService.getEntityNameByContentType(item.content_type)
-            }
-
-            if (item.hasOwnProperty('scheme_name')) {
-                return item.scheme_name;
             }
 
             if (item.hasOwnProperty('last_run_at')) { // import.pricingautomatedschedule
@@ -431,6 +435,73 @@
 
         }
 
+        function mapTransactionTypeEventsToInstrumentType(instrumentTypeEntity) {
+
+            return new Promise(function (resolve, reject) {
+
+                entityResolverService.getList('transaction-type').then(function (data) {
+
+                    var transactionTypes = data.results;
+
+                    console.log('Transaction Type groups created');
+                    console.log('Transaction Types created');
+
+                    instrumentTypeEntity.content.forEach(function (entityItem) {
+
+                        transactionTypes.forEach(function (transactionType) {
+
+
+                            if (entityItem.hasOwnProperty('___one_off_event__user_code')) {
+
+                                if (entityItem.___one_off_event__user_code === transactionType.user_code) {
+                                    entityItem.one_off_event = transactionType.id;
+                                }
+
+                            }
+
+                            if (entityItem.hasOwnProperty('___regular_event__user_code')) {
+
+                                if (entityItem.___regular_event__user_code === transactionType.user_code) {
+                                    entityItem.regular_event = transactionType.id;
+                                }
+
+                            }
+
+                            if (entityItem.hasOwnProperty('___factor_same__user_code')) {
+
+                                if (entityItem.___factor_same__user_code === transactionType.user_code) {
+                                    entityItem.factor_same = transactionType.id;
+                                }
+
+                            }
+
+                            if (entityItem.hasOwnProperty('___factor_up__user_code')) {
+
+                                if (entityItem.___factor_up__user_code === transactionType.user_code) {
+                                    entityItem.factor_up = transactionType.id;
+                                }
+                            }
+
+                            if (entityItem.hasOwnProperty('___factor_down__user_code')) {
+
+                                if (entityItem.___factor_down__user_code === transactionType.user_code) {
+                                    entityItem.factor_down = transactionType.id;
+                                }
+                            }
+
+
+                        });
+
+                    });
+
+                    resolve(instrumentTypeEntity);
+
+                });
+
+            });
+
+        }
+
         function importConfiguration(items) {
 
             return new Promise(function (resolve, reject) {
@@ -599,6 +670,42 @@
 
         }
 
+        function resolveInstrumentTypeDependencies(instrumentTypeEntity) {
+
+            console.time("Instrument type dependencies resolved");
+
+            return new Promise(function (resolve, reject) {
+
+                var promises = [];
+
+                instrumentTypeEntity.dependencies.forEach(function (dependency) {
+
+                    switch (dependency.entity) {
+
+                        case 'transactions.transactiontype':
+                            promises.push(handleTransactionTypeDependency(instrumentTypeEntity, dependency));
+                            break;
+                    }
+
+                });
+
+                Promise.all(promises).then(function (data) {
+
+                    mapTransactionTypeEventsToInstrumentType(instrumentTypeEntity).then(function () {
+
+                        console.timeEnd("Instrument type dependencies resolved");
+
+                        resolve(data);
+
+                    });
+
+                })
+
+            })
+
+        }
+
+
         function initPreparations(items) {
 
             return new Promise(function (resolve, reject) {
@@ -606,6 +713,7 @@
                 var transactionTypeEntity = findEntity(items, 'transactions.transactiontype');
                 var complexTransactionImportSchemeEntity = findEntity(items, 'integrations.complextransactionimportscheme');
                 var instrumentDownloadSchemeEntity = findEntity(items, 'integrations.instrumentdownloadscheme');
+                var instrumentTypeEntity = findEntity(items, 'instruments.instrumenttype');
 
                 var promises = [];
 
@@ -621,6 +729,10 @@
                     promises.push(resolveInstrumentDownloadSchemeDependencies(instrumentDownloadSchemeEntity));
                 }
 
+                if (isEntitySelected(instrumentTypeEntity) && instrumentTypeEntity.dependencies.length) {
+                    promises.push(resolveInstrumentTypeDependencies(instrumentTypeEntity));
+                }
+
                 Promise.all(promises).then(function (data) {
                     resolve(data);
                 })
@@ -629,12 +741,45 @@
 
         }
 
-        vm.agree = function () {
+        vm.agree = function ($event) {
 
             initPreparations(vm.items).then(function (value) {
 
-                importConfiguration(vm.items).then(function (value) {
-                    $mdDialog.hide({status: 'agree', data: {}});
+                importConfiguration(vm.items).then(function (data) {
+
+                    var allSuccess = true;
+
+                    if (data.length) {
+                        data.forEach(function (dataItem) {
+
+                            if (dataItem.status === 400) {
+                                allSuccess = false;
+                            }
+
+                        })
+                    }
+
+                    if (allSuccess) {
+                        $mdDialog.hide({status: 'agree', data: {}});
+                    } else {
+
+                        var errorMessage = {};
+
+                        $mdDialog.show({
+                            controller: 'ValidationDialogController as vm',
+                            templateUrl: 'views/dialogs/validation-dialog-view.html',
+                            targetEvent: $event,
+                            locals: {
+                                validationData: data
+                            },
+                            preserveScope: true,
+                            autoWrap: true,
+                            skipHide: true
+                        })
+
+                    }
+
+
                 })
 
             })

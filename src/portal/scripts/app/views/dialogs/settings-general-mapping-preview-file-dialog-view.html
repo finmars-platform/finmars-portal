@@ -37,13 +37,27 @@
         </div>
 
     </md-dialog-content>
-    <md-dialog-actions layout="row">
-        <md-button class="md-raised" ng-click="vm.cancel()">
-            Cancel
-        </md-button>
+    <md-dialog-actions layout="row" layout-align="space-between">
 
-        <md-button class="md-raised" ng-click="vm.agree($event)" style="margin-right:20px;">
-            Import
-        </md-button>
+        <div>
+
+            <md-button class="md-raised {{vm.overwriteOption ? 'active-button' : ''}}"
+                       ng-click="vm.overwriteOption = !vm.overwriteOption" style="margin-right:20px;">
+                Overwrite
+            </md-button>
+
+        </div>
+
+        <div layout="row">
+
+            <md-button class="md-raised" ng-click="vm.cancel()">
+                Cancel
+            </md-button>
+
+            <md-button class="md-raised" ng-click="vm.agree($event)" style="margin-right:20px;">
+                Import
+            </md-button>
+
+        </div>
     </md-dialog-actions>
 </md-dialog>
