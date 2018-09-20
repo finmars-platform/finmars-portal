@@ -163,23 +163,27 @@
 
     var formatThousandsSeparator = function (value, column) {
 
-        if (column.report_settings.thousands_separator_format_id === 0) {
-            return value
-        }
+        if (column.report_settings) {
 
-        if (column.report_settings.thousands_separator_format_id === 1) {
+            if (column.report_settings.thousands_separator_format_id === 0) {
+                return value
+            }
 
-            var parts = value.toString().split(".");
-            parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, " ");
-            return parts.join(".");
+            if (column.report_settings.thousands_separator_format_id === 1) {
 
-        }
+                var parts = value.toString().split(".");
+                parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+                return parts.join(".");
 
-        if (column.report_settings.thousands_separator_format_id === 2) {
+            }
 
-            var parts = value.toString().split(".");
-            parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, "'");
-            return parts.join(".");
+            if (column.report_settings.thousands_separator_format_id === 2) {
+
+                var parts = value.toString().split(".");
+                parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, "'");
+                return parts.join(".");
+
+            }
 
         }
 
