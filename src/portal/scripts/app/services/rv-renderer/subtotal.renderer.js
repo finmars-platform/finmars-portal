@@ -114,7 +114,7 @@
 
         columns.forEach(function (column, index) {
 
-            cell = '<div class="g-cell-wrap ' + getBgColor(obj, index + 1, groups) + '" style="width: ' + column.style.width + '"><div class="g-cell">' + getValue(evDataService, obj, column, index + 1) + '</div></div>';
+            cell = '<div class="g-cell-wrap ' + getBgColor(obj, index + 1, groups) + '" style="width: ' + column.style.width + '"><div class="g-cell"><b>' + getValue(evDataService, obj, column, index + 1) + '</b></div></div>';
 
             result = result + cell
 

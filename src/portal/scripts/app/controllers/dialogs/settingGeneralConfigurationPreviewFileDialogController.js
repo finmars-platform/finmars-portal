@@ -717,20 +717,28 @@
 
                 var promises = [];
 
-                if (isEntitySelected(transactionTypeEntity) && transactionTypeEntity.dependencies.length) {
-                    promises.push(resolveTransactionTypeDependencies(transactionTypeEntity));
+                if (transactionTypeEntity) {
+                    if (isEntitySelected(transactionTypeEntity) && transactionTypeEntity.dependencies.length) {
+                        promises.push(resolveTransactionTypeDependencies(transactionTypeEntity));
+                    }
                 }
 
-                if (isEntitySelected(complexTransactionImportSchemeEntity) && complexTransactionImportSchemeEntity.dependencies.length) {
-                    promises.push(resolveComplexTransactionImportSchemeDependencies(complexTransactionImportSchemeEntity));
+                if (complexTransactionImportSchemeEntity) {
+                    if (isEntitySelected(complexTransactionImportSchemeEntity) && complexTransactionImportSchemeEntity.dependencies.length) {
+                        promises.push(resolveComplexTransactionImportSchemeDependencies(complexTransactionImportSchemeEntity));
+                    }
                 }
 
-                if (isEntitySelected(instrumentDownloadSchemeEntity) && instrumentDownloadSchemeEntity.dependencies.length) {
-                    promises.push(resolveInstrumentDownloadSchemeDependencies(instrumentDownloadSchemeEntity));
+                if (instrumentDownloadSchemeEntity) {
+                    if (isEntitySelected(instrumentDownloadSchemeEntity) && instrumentDownloadSchemeEntity.dependencies.length) {
+                        promises.push(resolveInstrumentDownloadSchemeDependencies(instrumentDownloadSchemeEntity));
+                    }
                 }
 
-                if (isEntitySelected(instrumentTypeEntity) && instrumentTypeEntity.dependencies.length) {
-                    promises.push(resolveInstrumentTypeDependencies(instrumentTypeEntity));
+                if (instrumentTypeEntity) {
+                    if (isEntitySelected(instrumentTypeEntity) && instrumentTypeEntity.dependencies.length) {
+                        promises.push(resolveInstrumentTypeDependencies(instrumentTypeEntity));
+                    }
                 }
 
                 Promise.all(promises).then(function (data) {
