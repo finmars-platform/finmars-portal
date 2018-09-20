@@ -307,6 +307,61 @@
                                                     <ng-md-icon icon="done"
                                                                 class="z-menu-icon"
                                                                 style="visibility: hidden;"></ng-md-icon>
+                                                    <span>Number formatting</span>
+                                                    <ng-md-icon icon="arrow_drop_up"
+                                                                class="z-dropdown-icon"></ng-md-icon>
+                                                </md-button>
+                                                <md-menu-content width="3">
+                                                    <md-menu-item>
+                                                        <md-button ng-click="selectThousandsSeparatorFormat(column, 0)"
+                                                                   class="g-settings-option-btn">
+                                                            <ng-md-icon icon="done"
+                                                                        data-ng-show="!checkThousandsSeparatorFormat(column, 0)"
+                                                                        class="z-menu-icon"
+                                                                        style="visibility: hidden;"></ng-md-icon>
+                                                            <ng-md-icon icon="done"
+                                                                        data-ng-show="checkThousandsSeparatorFormat(column, 0)"
+                                                                        class="z-menu-icon"></ng-md-icon>
+                                                            <span>Default</span>
+                                                        </md-button>
+                                                    </md-menu-item>
+                                                    <md-menu-item>
+                                                        <md-button ng-click="selectThousandsSeparatorFormat(column, 1)"
+                                                                   class="g-settings-option-btn">
+                                                            <ng-md-icon icon="done"
+                                                                        data-ng-show="!checkThousandsSeparatorFormat(column, 1)"
+                                                                        class="z-menu-icon"
+                                                                        style="visibility: hidden;"></ng-md-icon>
+                                                            <ng-md-icon icon="done"
+                                                                        data-ng-show="checkThousandsSeparatorFormat(column, 1)"
+                                                                        class="z-menu-icon"></ng-md-icon>
+                                                            <span>Space</span>
+                                                        </md-button>
+                                                    </md-menu-item>
+                                                    <md-menu-item>
+                                                        <md-button ng-click="selectThousandsSeparatorFormat(column, 2)"
+                                                                   class="g-settings-option-btn">
+                                                            <ng-md-icon icon="done"
+                                                                        data-ng-show="!checkThousandsSeparatorFormat(column, 2)"
+                                                                        class="z-menu-icon"
+                                                                        style="visibility: hidden;"></ng-md-icon>
+                                                            <ng-md-icon icon="done"
+                                                                        data-ng-show="checkThousandsSeparatorFormat(column, 2)"
+                                                                        class="z-menu-icon"></ng-md-icon>
+                                                            <span>Apostrophe</span>
+                                                        </md-button>
+                                                    </md-menu-item>
+                                                </md-menu-content>
+                                            </md-menu>
+                                        </md-menu-item>
+                                        <md-menu-item>
+                                            <md-menu>
+                                                <md-button aria-label="Open phone interactions menu"
+                                                           class=""
+                                                           ng-click="$mdOpenMenu($event)">
+                                                    <ng-md-icon icon="done"
+                                                                class="z-menu-icon"
+                                                                style="visibility: hidden;"></ng-md-icon>
                                                     <span>Format zero</span>
                                                     <ng-md-icon icon="arrow_drop_up"
                                                                 class="z-dropdown-icon"></ng-md-icon>
