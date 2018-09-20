@@ -51,7 +51,6 @@
     };
 
 
-
     var getEntityAttributeValue = function (obj, column) {
 
         var result = '';
@@ -224,7 +223,13 @@
 
         columns.forEach(function (column, index) {
 
-            cell = '<div class="g-cell-wrap" style="width: ' + column.style.width + '"><div class="g-cell">' + getValue(evDataService, obj, column, index + 1, groups) + '</div></div>';
+            var textAlign = '';
+
+            if (column.value_type === 20) {
+                textAlign = 'text-right'
+            }
+
+            cell = '<div class="g-cell-wrap" style="width: ' + column.style.width + '"><div class="g-cell ' + textAlign + '">' + getValue(evDataService, obj, column, index + 1, groups) + '</div></div>';
 
             result = result + cell
 
