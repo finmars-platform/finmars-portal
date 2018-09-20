@@ -184,6 +184,7 @@
                         var result = {
                             entity: item.entity,
                             content: [],
+                            dependencies: item.dependencies,
                             count: 0
                         };
 
