@@ -81,7 +81,7 @@
         //     }
         //
         // } else {
-            result = REPORT_BG_CSS_SELECTOR + '-' + (obj.___level - 1);
+        result = REPORT_BG_CSS_SELECTOR + '-' + (obj.___level - 1);
         // }
 
         return result;
@@ -114,7 +114,13 @@
 
         columns.forEach(function (column, index) {
 
-            cell = '<div class="g-cell-wrap ' + getBgColor(obj, index + 1, groups) + '" style="width: ' + column.style.width + '"><div class="g-cell"><b>' + getValue(evDataService, obj, column, index + 1) + '</b></div></div>';
+            var textAlign = '';
+
+            if (column.value_type === 20) {
+                textAlign = 'text-right'
+            }
+
+            cell = '<div class="g-cell-wrap ' + getBgColor(obj, index + 1, groups) + '" style="width: ' + column.style.width + '"><div class="g-cell ' + textAlign + '"><b>' + getValue(evDataService, obj, column, index + 1) + '</b></div></div>';
 
             result = result + cell
 
