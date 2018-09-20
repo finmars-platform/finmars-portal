@@ -73,16 +73,16 @@
 
         var result = '';
 
-        if (columnNumber < groups.length && columnNumber < obj.___level - 1) {
-
-            if (groups[columnNumber - 1].report_settings.subtotal_type === 'area') {
-                result = REPORT_BG_CSS_SELECTOR + '-' + columnNumber;
-
-            }
-
-        } else {
+        // if (columnNumber < groups.length && columnNumber < obj.___level - 1) {
+        //
+        //     if (groups[columnNumber - 1].report_settings.subtotal_type === 'area') {
+        //         result = REPORT_BG_CSS_SELECTOR + '-' + columnNumber;
+        //
+        //     }
+        //
+        // } else {
             result = REPORT_BG_CSS_SELECTOR + '-' + (obj.___level - 1);
-        }
+        // }
 
         return result;
 
