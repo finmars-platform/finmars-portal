@@ -215,6 +215,31 @@
                     return false
                 };
 
+                scope.selectThousandsSeparatorFormat = function (column, type) {
+                    if (!column.hasOwnProperty('report_settings')) {
+                        column.report_settings = {};
+                    }
+
+                    if (column.report_settings.thousands_separator_format_id === type) {
+                        column.report_settings.thousands_separator_format_id = null;
+                    } else {
+                        column.report_settings.thousands_separator_format_id = type;
+                    }
+
+                    scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+                };
+
+                scope.checkThousandsSeparatorFormat = function (column, type) {
+
+                    if (column.hasOwnProperty('report_settings') && column.report_settings) {
+                        if (column.report_settings.thousands_separator_format_id === type) {
+                            return true;
+                        }
+
+                    }
+                    return false
+                };
+
                 scope.selectNegativeFormat = function (column, type) {
                     if (!column.hasOwnProperty('report_settings')) {
                         column.report_settings = {};
