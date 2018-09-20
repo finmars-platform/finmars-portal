@@ -184,6 +184,7 @@ app.controller('SettingsGeneralInstrumentImportController', ['$scope', '$mdDialo
 app.controller('SettingsGeneralTransactionImportController', ['$scope', '$mdDialog', require('./app/controllers/settings/general/settingsGeneralTransactionImportController')]);
 app.controller('SettingsGeneralConfigurationController', ['$scope', '$mdDialog', require('./app/controllers/settings/general/settingsGeneralConfigurationController')]);
 app.controller('SettingGeneralConfigurationPreviewFileDialogController', ['$scope', '$mdDialog', 'file', require('./app/controllers/dialogs/settingGeneralConfigurationPreviewFileDialogController')]);
+app.controller('SettingGeneralConfigurationExportFileDialogController', ['$scope', '$mdDialog', 'file', require('./app/controllers/dialogs/settingGeneralConfigurationExportFileDialogController')]);
 app.controller('SettingGeneralMappingPreviewFileDialogController', ['$scope', '$mdDialog', 'file', require('./app/controllers/dialogs/settingGeneralMappingPreviewFileDialogController')]);
 
 app.controller('SettingsFormDesignController', ['$scope', '$state', require('./app/controllers/settings/settingsFormDesignController')]);
@@ -218,6 +219,10 @@ app.directive('addTabEc', ['$compile', require('./app/directives/addTabEcDirecti
 
 app.directive('fileRead', [require('./app/directives/fileReadDirective')]);
 app.directive('onFinishRender', [require('./app/directives/onFinishRenderDirective')]);
+
+// Controls
+
+app.directive('expressionEditorButton', ['$mdDialog', require('./app/controls/expression-editor-button/expression-editor-button')]);
 
 // GROUP TABLE START
 

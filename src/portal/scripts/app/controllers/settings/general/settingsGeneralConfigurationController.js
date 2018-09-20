@@ -20,7 +20,7 @@
             return vm.mappingFile !== null && vm.mappingFile !== undefined
         };
 
-        vm.importConfiguration = function ($event) {
+        vm.openImportConfigurationManager = function ($event) {
 
             var reader = new FileReader();
 
@@ -76,7 +76,7 @@
 
         };
 
-        vm.importMapping = function ($event) {
+        vm.openImportMappingManager = function ($event) {
 
             var reader = new FileReader();
 
@@ -130,7 +130,28 @@
 
             }
 
-        }
+        };
+
+        vm.openExportConfigurationManager = function ($event) {
+
+            configurationService.getConfigurationData().then(function (data) {
+
+                $mdDialog.show({
+                    controller: 'SettingGeneralConfigurationExportFileDialogController as vm',
+                    templateUrl: 'views/dialogs/settings-general-configuration-export-file-dialog-view.html',
+                    parent: angular.element(document.body),
+                    targetEvent: $event,
+                    preserveScope: true,
+                    autoWrap: true,
+                    skipHide: true,
+                    locals: {
+                        file: data
+                    }
+                })
+
+            })
+
+        };
 
     }
 

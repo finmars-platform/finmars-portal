@@ -128,10 +128,9 @@
                         <label for="">Default value</label>
                         <input type="text" data-ng-model="item.value">
                     </md-input-container>
-                    <md-button data-ng-if="item.value_type != 100" class="md-raised md-primary expr-btn"
-                               data-ng-click="vm.openExpressionDialog($event, item, {key: 'value'})">
-                        ...
-                    </md-button>
+
+                    <expression-editor-button data-ng-if="item.value_type != 100" data-item="item.value"></expression-editor-button>
+
                     <md-input-container data-ng-if="item.value_type == 100" style="margin-top: -25px">
                         <label for="">Default value</label>
                         <md-select data-ng-model="item[vm.resolveRelation(item)]"
@@ -148,10 +147,9 @@
                         <label for="">Input expr</label>
                         <input type="text" data-ng-model="item.value_expr">
                     </md-input-container>
-                    <md-button class="md-raised md-primary expr-btn"
-                               data-ng-click="vm.openExpressionDialog($event, item, {key: 'value_expr'})">
-                        ...
-                    </md-button>
+
+                    <expression-editor-button data-item="item.value_expr"></expression-editor-button>
+
                 </td>
                 <td data-ng-if="item.editStatus" class="edit-state-td">
                     <md-input-container>
@@ -197,10 +195,9 @@
                     <md-input-container data-ng-if="vm.newItem.value_type != 100">
                         <input type="text" data-ng-model="vm.newItem.value">
                     </md-input-container>
-                    <md-button data-ng-if="vm.newItem.value_type != 100" class="md-raised md-primary expr-btn"
-                               data-ng-click="vm.openExpressionDialog($event, vm.newItem, {key: 'value'})">
-                        ...
-                    </md-button>
+
+                    <expression-editor-button data-ng-if="vm.newItem.value_type != 100" data-item="vm.newItem.value"></expression-editor-button>
+
                     <md-input-container data-ng-if="vm.newItem.value_type == 100" style="margin-top: -25px">
                         <md-select data-ng-model="vm.newItem[vm.resolveRelation(vm.newItem)]"
                                    md-on-open="vm.loadRelation(vm.resolveRelation(vm.newItem))">
@@ -212,14 +209,14 @@
                     </md-input-container>
                 </td>
                 <td>
+
                     <md-input-container>
                         <label for="">Input expr</label>
                         <input type="text" data-ng-model="vm.newItem.value_expr">
                     </md-input-container>
-                    <md-button class="md-raised md-primary expr-btn"
-                               data-ng-click="vm.openExpressionDialog($event, vm.newItem, {key: 'value_expr'})">
-                        ...
-                    </md-button>
+
+                    <expression-editor-button data-item="vm.newItem.value_expr"></expression-editor-button>
+
                 </td>
                 <td>
                     <md-input-container>
