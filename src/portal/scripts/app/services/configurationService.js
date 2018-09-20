@@ -22,9 +22,25 @@
             })
 
     };
-    
+
+    var getConfigurationData = function () {
+
+        return window.fetch(baseUrl + 'export/configuration/', {
+            method: 'GET',
+            credentials: 'include',
+            headers: {
+                Accept: 'application/json',
+                'Content-type': 'application/json'
+            }
+        }).then(function (data) {
+            return data.json();
+        })
+
+    };
+
     module.exports = {
-        exportAll: exportAll
+        exportAll: exportAll,
+        getConfigurationData: getConfigurationData
     }
 
 

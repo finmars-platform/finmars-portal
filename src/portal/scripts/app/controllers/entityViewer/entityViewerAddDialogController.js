@@ -100,7 +100,9 @@
                         if (data.status == 200 || data.status == 201) {
 
                             if (options.entityType == 'complex-transaction') {
+
                                 if (data.response.hasOwnProperty('has_errors') && data.response.has_errors == true) {
+
                                     $mdDialog.show({
                                         controller: 'ValidationDialogController as vm',
                                         templateUrl: 'views/dialogs/validation-dialog-view.html',
@@ -112,10 +114,12 @@
                                                 transactions_errors: data.response.transactions_errors
                                             }
                                         },
+                                        multiple: true,
                                         preserveScope: true,
                                         autoWrap: true,
                                         skipHide: true
                                     })
+
                                 } else {
 
                                     $mdDialog.hide({res: 'agree'});
@@ -134,6 +138,7 @@
                                     validationData: data.response
                                 },
                                 preserveScope: true,
+                                multiple: true,
                                 autoWrap: true,
                                 skipHide: true
                             })
