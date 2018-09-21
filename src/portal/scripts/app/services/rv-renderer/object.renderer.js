@@ -110,9 +110,6 @@
 
         if (isColumnInGroupsList(columnNumber, groups)) {
 
-            // console.log('isColumnInGroupsList.columnNumber', columnNumber);
-            // console.log('isColumnInGroupsList.areaGroupsBefore', areaGroupsBefore);
-
             if (areaGroupsBefore.length && areaGroupsBefore.indexOf(columnNumber) !== -1 && obj.___is_first && renderHelper.noLineGroups(evDataService)) {
 
                 var parents = evRvCommonHelper.getParents(obj.___parentId, evDataService);
@@ -200,15 +197,12 @@
 
         var result = '';
 
-        if (columnNumber <= groups.length && columnNumber <= obj.___level) {
+        if (columnNumber <= groups.length) {
 
-            if (groups[columnNumber - 1].report_settings.subtotal_type === 'area') {
-
-                if (nextItem && nextItem.___type !== 'subtotal') {
-                    result = 'border-bottom-transparent';
-                }
-
+            if (nextItem && nextItem.___type !== 'subtotal') {
+                result = 'border-bottom-transparent';
             }
+
         }
 
         return result;
