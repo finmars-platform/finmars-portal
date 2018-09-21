@@ -16,29 +16,38 @@
         var columns = evDataService.getColumns();
         var groups = evDataService.getGroups();
 
-        var rows = projection.map(function (item) {
+        var rows = [];
 
-            if(item.___type === 'placeholder_group' || item.___type === 'placeholder_object') {
-                return '<div class="placeholder-row"></div>'
+        for (var i = 0; i < projection.length; i = i + 1) {
+
+            var item = projection[i];
+            var nextItem;
+
+            if (i + 1 < projection.length) {
+                nextItem = projection[i + 1];
+            }
+
+            if (item.___type === 'placeholder_group' || item.___type === 'placeholder_object') {
+                rows.push('<div class="placeholder-row"></div>')
             }
 
             if (item.___type === 'group') {
 
-                return groupRender.render(item);
+                rows.push(groupRender.render(item))
 
             }
 
             if (item.___type === 'object') {
 
-                return objectRender.render(evDataService, item, columns, groups);
+                rows.push(objectRender.render(evDataService, item, columns, groups, nextItem));
             }
 
             if (item.___type === 'subtotal') {
 
-                return subtotalRender.render(evDataService, item, columns, groups);
+                rows.push(subtotalRender.render(evDataService, item, columns, groups));
             }
 
-        });
+        }
 
         elem.innerHTML = rows.join('');
 
