@@ -119,19 +119,25 @@
                 var currentParent;
                 var childOfCurrentParent;
 
+                var is_first = true;
+
                 parents.forEach(function (parent) {
 
                     if (parent.___level === columnNumber) {
                         currentParent = parent
-                    }
+                    } else {
 
-                    if (parent.___level === columnNumber + 1) {
-                        childOfCurrentParent = parent;
+                        if (parent.___level > columnNumber + 1) {
+                            if (!parent.___is_first) {
+                                is_first = false;
+                            }
+                        }
+
                     }
 
                 });
 
-                if (childOfCurrentParent && childOfCurrentParent.___is_first && groups[columnNumber].report_settings.subtotal_type === 'area') {
+                if (is_first && groups[columnNumber].report_settings.subtotal_type === 'area') {
                     result = '<b>' + currentParent.group_name + '</b>'
                 }
 
