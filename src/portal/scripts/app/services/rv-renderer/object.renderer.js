@@ -224,12 +224,26 @@
         columns.forEach(function (column, index) {
 
             var textAlign = '';
+            var colorNegative = '';
 
             if (column.value_type === 20) {
                 textAlign = 'text-right'
             }
 
-            cell = '<div class="g-cell-wrap" style="width: ' + column.style.width + '"><div class="g-cell ' + textAlign + '">' + getValue(evDataService, obj, column, index + 1, groups) + '</div></div>';
+            if (column.report_settings && column.report_settings.negative_color_format_id === 1) {
+
+                if (column.value_type === 20) {
+
+                    if (parseInt(obj[column.key]) < 0) {
+
+                        colorNegative = 'negative-red'
+
+                    }
+
+                }
+            }
+
+            cell = '<div class="g-cell-wrap" style="width: ' + column.style.width + '"><div class="g-cell ' + textAlign + ' ' + colorNegative + '">' + getValue(evDataService, obj, column, index + 1, groups) + '</div></div>';
 
             result = result + cell
 
