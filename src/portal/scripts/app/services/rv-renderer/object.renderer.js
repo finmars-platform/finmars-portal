@@ -110,6 +110,9 @@
 
         if (isColumnInGroupsList(columnNumber, groups)) {
 
+            // console.log('isColumnInGroupsList.columnNumber', columnNumber);
+            // console.log('isColumnInGroupsList.areaGroupsBefore', areaGroupsBefore);
+
             if (areaGroupsBefore.length && areaGroupsBefore.indexOf(columnNumber) !== -1 && obj.___is_first && renderHelper.noLineGroups(evDataService)) {
 
                 var parents = evRvCommonHelper.getParents(obj.___parentId, evDataService);
@@ -118,20 +121,23 @@
 
                 var currentParent;
                 var childOfCurrentParent;
+                var isFirst = true;
 
                 parents.forEach(function (parent) {
+
+                    console.log('parent', parent);
 
                     if (parent.___level === columnNumber) {
                         currentParent = parent
                     }
 
-                    if (parent.___level === columnNumber + 1) {
-                        childOfCurrentParent = parent;
+                    if (!parent.___is_first && parent.___parentId != null && parent.___level !== 1) {
+                        isFirst = false;
                     }
 
                 });
 
-                if (childOfCurrentParent && childOfCurrentParent.___is_first && groups[columnNumber].report_settings.subtotal_type === 'area') {
+                if (isFirst && groups[columnNumber].report_settings.subtotal_type === 'area') {
                     result = '<b>' + currentParent.group_name + '</b>'
                 }
 
@@ -197,12 +203,15 @@
 
         var result = '';
 
-        if (columnNumber <= groups.length) {
+        if (columnNumber <= groups.length && columnNumber <= obj.___level) {
 
-            if (nextItem && nextItem.___type !== 'subtotal') {
-                result = 'border-bottom-transparent';
+            if (groups[columnNumber - 1].report_settings.subtotal_type === 'area') {
+
+                if (nextItem && nextItem.___type !== 'subtotal') {
+                    result = 'border-bottom-transparent';
+                }
+
             }
-
         }
 
         return result;
