@@ -50,7 +50,6 @@
 
     };
 
-
     var getEntityAttributeValue = function (obj, column) {
 
         var result = '';
@@ -136,7 +135,7 @@
                 });
 
                 if (childOfCurrentParent && childOfCurrentParent.___is_first && groups[columnNumber].report_settings.subtotal_type === 'area') {
-                    result = currentParent.group_name
+                    result = '<b>' + currentParent.group_name + '</b>'
                 }
 
 
@@ -156,7 +155,7 @@
 
                 var parent = evDataService.getData(obj.___parentId);
 
-                result = parent.group_name;
+                result = '<b>' + parent.group_name + '</b>';
 
             }
 
@@ -197,7 +196,47 @@
 
     };
 
-    var render = function (evDataService, obj, columns, groups) {
+    var getBorderBottomTransparent = function (obj, columnNumber, groups, nextItem) {
+
+        var result = '';
+
+        if (columnNumber <= groups.length && columnNumber <= obj.___level) {
+
+            if (groups[columnNumber - 1].report_settings.subtotal_type === 'area') {
+
+                if (nextItem && nextItem.___type !== 'subtotal') {
+                    result = 'border-bottom-transparent';
+                }
+
+            }
+        }
+
+        return result;
+
+    };
+
+    var getColorNegativeNumber = function (obj, column) {
+
+        var result = '';
+
+        if (column.report_settings && column.report_settings.negative_color_format_id === 1) {
+
+            if (column.value_type === 20) {
+
+                if (parseInt(obj[column.key]) < 0) {
+
+                    result = 'negative-red'
+
+                }
+
+            }
+        }
+
+        return result;
+
+    };
+
+    var render = function (evDataService, obj, columns, groups, nextItem) {
 
         var classList = ['g-row'];
 
@@ -224,26 +263,15 @@
         columns.forEach(function (column, index) {
 
             var textAlign = '';
-            var colorNegative = '';
+            var colorNegative = getColorNegativeNumber(obj, column);
+            var borderBottomTransparent = getBorderBottomTransparent(obj, index + 1, groups, nextItem);
 
             if (column.value_type === 20) {
                 textAlign = 'text-right'
             }
 
-            if (column.report_settings && column.report_settings.negative_color_format_id === 1) {
 
-                if (column.value_type === 20) {
-
-                    if (parseInt(obj[column.key]) < 0) {
-
-                        colorNegative = 'negative-red'
-
-                    }
-
-                }
-            }
-
-            cell = '<div class="g-cell-wrap" style="width: ' + column.style.width + '"><div class="g-cell ' + textAlign + ' ' + colorNegative + '">' + getValue(evDataService, obj, column, index + 1, groups) + '</div></div>';
+            cell = '<div class="g-cell-wrap" style="width: ' + column.style.width + '"><div class="g-cell ' + textAlign + ' ' + colorNegative + ' ' + borderBottomTransparent + '">' + getValue(evDataService, obj, column, index + 1, groups) + '</div></div>';
 
             result = result + cell
 
