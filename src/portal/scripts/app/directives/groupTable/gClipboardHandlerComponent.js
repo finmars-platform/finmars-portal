@@ -8,6 +8,8 @@
     var logService = require('../../../../../core/services/logService');
     var evDataHelper = require('../../helpers/ev-data.helper');
 
+    var metaService = require('../../services/metaService');
+
     module.exports = function () {
         return {
             restrict: 'A',
@@ -17,120 +19,131 @@
             },
             link: function (scope, elem, attrs) {
 
-                var handler = function (event) {
+                scope.entityType = scope.evDataService.getEntityType();
+                scope.isReport = metaService.isReport(scope.entityType);
 
-                    console.log('event', event);
-                    console.log('evDataService', scope.evDataService);
-                    console.log('evEventService', scope.evEventService);
+                if (scope.isReport) {
 
-                    console.time('Copying to buffer');
 
-                    var items = evDataHelper.getProjection(scope.evDataService).filter(function (item) {
-                        return item.___is_selected;
-                    });
 
-                    var columns = scope.evDataService.getColumns();
+                } else {
 
-                    if (items.length) {
-                        //console.log(copiedItems);
+                    var handler = function (event) {
 
-                        var result = '<table>';
+                        console.log('event', event);
+                        console.log('evDataService', scope.evDataService);
+                        console.log('evEventService', scope.evEventService);
 
-                        var row = '<tr>';
+                        console.time('Copying to buffer');
 
-                        columns.forEach(function (column) {
-                            row = row + '<td>' + column.name + '</td>';
+                        var items = evDataHelper.getProjection(scope.evDataService).filter(function (item) {
+                            return item.___is_selected;
                         });
 
-                        row = row + '</tr>';
-                        result = result + row;
+                        var columns = scope.evDataService.getColumns();
 
-                        items.forEach(function (item) {
-                            row = '<tr>';
+                        if (items.length) {
+                            //console.log(copiedItems);
+
+                            var result = '<table>';
+
+                            var row = '<tr>';
 
                             columns.forEach(function (column) {
-                                if (column.hasOwnProperty('key')) {
-                                    if (item[column.key]) {
-                                        row = row + '<td>' + item[column.key] + '</td>';
-                                    } else {
-                                        row = row + '<td></td>';
-                                    }
-                                } else {
-
-                                    item.attributes.forEach(function (attr) {
-
-                                        if (attr.attribute_type_object.id === column.id) {
-
-                                            if (attr.attribute_type_object.value_type === 10) {
-
-                                                if (attr.value_string) {
-                                                    row = row + '<td>' + attr.value_string + '</td>';
-                                                } else {
-                                                    row = row + '<td></td>';
-                                                }
-                                            }
-
-                                            if (attr.attribute_type_object.value_type === 20) {
-
-                                                if (attr.value_float) {
-                                                    row = row + '<td>' + attr.value_float + '</td>';
-                                                } else {
-                                                    row = row + '<td></td>';
-                                                }
-
-                                            }
-
-                                            if (attr.attribute_type_object.value_type === 30) {
-                                                if (attr.classifier_object) {
-                                                    row = row + '<td>' + attr.classifier_object.name + '</td>';
-                                                } else {
-                                                    row = row + '<td></td>';
-                                                }
-
-                                            }
-
-                                            if (attr.attribute_type_object.value_type === 40) {
-                                                if (attr.value_date) {
-                                                    row = row + '<td>' + attr.value_date + '</td>';
-                                                } else {
-                                                    row = row + '<td></td>';
-                                                }
-                                            }
-
-
-                                        }
-
-                                    });
-
-
-                                }
+                                row = row + '<td>' + column.name + '</td>';
                             });
 
                             row = row + '</tr>';
                             result = result + row;
-                        });
-                        result = result + '</table';
 
-                        if (event.clipboardData) {
-                            event.clipboardData.setData('text/html', result);
+                            items.forEach(function (item) {
+                                row = '<tr>';
+
+                                columns.forEach(function (column) {
+                                    if (column.hasOwnProperty('key')) {
+                                        if (item[column.key]) {
+                                            row = row + '<td>' + item[column.key] + '</td>';
+                                        } else {
+                                            row = row + '<td></td>';
+                                        }
+                                    } else {
+
+                                        item.attributes.forEach(function (attr) {
+
+                                            if (attr.attribute_type_object.id === column.id) {
+
+                                                if (attr.attribute_type_object.value_type === 10) {
+
+                                                    if (attr.value_string) {
+                                                        row = row + '<td>' + attr.value_string + '</td>';
+                                                    } else {
+                                                        row = row + '<td></td>';
+                                                    }
+                                                }
+
+                                                if (attr.attribute_type_object.value_type === 20) {
+
+                                                    if (attr.value_float) {
+                                                        row = row + '<td>' + attr.value_float + '</td>';
+                                                    } else {
+                                                        row = row + '<td></td>';
+                                                    }
+
+                                                }
+
+                                                if (attr.attribute_type_object.value_type === 30) {
+                                                    if (attr.classifier_object) {
+                                                        row = row + '<td>' + attr.classifier_object.name + '</td>';
+                                                    } else {
+                                                        row = row + '<td></td>';
+                                                    }
+
+                                                }
+
+                                                if (attr.attribute_type_object.value_type === 40) {
+                                                    if (attr.value_date) {
+                                                        row = row + '<td>' + attr.value_date + '</td>';
+                                                    } else {
+                                                        row = row + '<td></td>';
+                                                    }
+                                                }
+
+
+                                            }
+
+                                        });
+
+
+                                    }
+                                });
+
+                                row = row + '</tr>';
+                                result = result + row;
+                            });
+                            result = result + '</table';
+
+                            if (event.clipboardData) {
+                                event.clipboardData.setData('text/html', result);
+                            }
+
+                            event.preventDefault(); // We want our data, not data from any selection, to be written to the clipboard
+
+                            console.timeEnd('Copying to buffer');
+
                         }
 
-                        event.preventDefault(); // We want our data, not data from any selection, to be written to the clipboard
+                    };
 
-                        console.timeEnd('Copying to buffer');
+                    document.addEventListener('copy', handler);
 
-                    }
+                    $(document).bind('copy', handler);
 
-                };
+                    scope.$on("destroy", function () {
+                        $(document).unbind('copy');
+                        document.removeEventListener('copy');
+                    })
 
-                document.addEventListener('copy', handler);
-
-                $(document).bind('copy', handler);
-
-                scope.$on("destroy", function () {
-                    $(document).unbind('copy');
-                    document.removeEventListener('copy');
-                })
+                }
 
 
             }

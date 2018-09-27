@@ -48,6 +48,20 @@
                     return "Price Download Schemes";
                 case 'integrations.complextransactionimportscheme':
                     return "Complex Transaction Import Scheme";
+                case 'obj_attrs.portfolioattributetype':
+                    return "Portfolio Dynamic Attributes";
+                case 'obj_attrs.accountattributetype':
+                    return "Account Dynamic Attributes";
+                case 'obj_attrs.accounttypeattributetype':
+                    return "Account Type Dynamic Attributes";
+                case 'obj_attrs.responsibleattributetype':
+                    return "Responsible Dynamic Attributes";
+                case 'obj_attrs.counterpartyattributetype':
+                    return "Counterparty Dynamic Attributes";
+                case 'obj_attrs.instrumentattributetype':
+                    return "Instrument Dynamic Attributes";
+                case 'obj_attrs.instrumenttypeattributetype':
+                    return "Instrument Type Dynamic Attributes";
                 default:
                     return "Unknown"
             }
