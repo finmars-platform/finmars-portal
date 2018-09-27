@@ -248,23 +248,23 @@
                 return strategySubgroupService.create(3, entity);
                 break;
             case 'complex-transaction':
-                return transactionTypeService.bookTransaction(entity.transaction_type, entity);
-            //console.log('entity', entity);
-            //
-            //return new Promise(function (resolve, reject) {
-            //    transactionTypeService.getBookTransaction(entity._transaction_type_id).then(function (data) {
-            //
-            //        var res = Object.assign(data, entity);
-            //
-            //        console.log('res------------------', res);
-            //
-            //        var i;
-            //
-            //        transactionTypeService.bookTransaction(entity._transaction_type_id, res).then(function (data) {
-            //            resolve(data);
-            //        });
-            //    });
-            //});
+                // return transactionTypeService.bookTransaction(entity.transaction_type, entity);
+                console.log('entity', entity);
+
+                return new Promise(function (resolve, reject) {
+                    transactionTypeService.getBookTransaction(entity.transaction_type).then(function (data) {
+
+                        var res = Object.assign(data, entity);
+
+                        console.log('res------------------', res);
+
+                        var i;
+
+                        transactionTypeService.bookTransaction(entity.transaction_type, res).then(function (data) {
+                            resolve(data);
+                        });
+                    });
+                });
             case 'tag':
                 return tagService.create(entity);
                 break;
@@ -310,39 +310,39 @@
             case 'complex-transaction-default':
                 return complexTransactionService.update(entity.id, entity);
             case 'complex-transaction':
-                return complexTransactionService.bookComplexTransaction(entity.id, entity);
-            //return new Promise(function (resolve, reject) {
-            //    transactionTypeService.getBookTransaction(entity.transaction_type).then(function (data) {
-            //
-            //        var originValues = JSON.parse(JSON.stringify(entity.values))
-            //
-            //        var res = entity;
-            //
-            //        var i;
-            //
-            //
-            //        res.transactions = data.transactions;
-            //        res.values = data.values;
-            //
-            //        var originValuesKeys = Object.keys(originValues);
-            //        var defaultValuesKeys = Object.keys(res.values);
-            //
-            //        originValuesKeys.forEach(function (originVal) {
-            //            defaultValuesKeys.forEach(function (defaultVal) {
-            //
-            //                if (originVal == defaultVal) {
-            //                    res.values[defaultVal] = originValues[originVal];
-            //                }
-            //
-            //            })
-            //        });
-            //
-            //        transactionTypeService.bookTransaction(entity.transaction_type, res).then(function (data) {
-            //            resolve(data);
-            //        });
-            //    });
-            //});
-            //break;
+                // return complexTransactionService.bookComplexTransaction(entity.id, entity);
+                return new Promise(function (resolve, reject) {
+                    transactionTypeService.getBookTransaction(entity.transaction_type).then(function (data) {
+
+                        var originValues = JSON.parse(JSON.stringify(entity.values))
+
+                        var res = entity;
+
+                        var i;
+
+
+                        res.transactions = data.transactions;
+                        res.values = data.values;
+
+                        var originValuesKeys = Object.keys(originValues);
+                        var defaultValuesKeys = Object.keys(res.values);
+
+                        originValuesKeys.forEach(function (originVal) {
+                            defaultValuesKeys.forEach(function (defaultVal) {
+
+                                if (originVal == defaultVal) {
+                                    res.values[defaultVal] = originValues[originVal];
+                                }
+
+                            })
+                        });
+
+                        transactionTypeService.bookTransaction(entity.transaction_type, res).then(function (data) {
+                            resolve(data);
+                        });
+                    });
+                });
+                break;
             case 'transaction-type':
 
                 return transactionTypeService.update(id, entity);

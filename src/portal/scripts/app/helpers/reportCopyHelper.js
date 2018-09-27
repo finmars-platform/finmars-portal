@@ -4,11 +4,11 @@
 
     var copy = function (event) {
 
-        var rows = document.querySelectorAll('.g-table-body-component group-bind-report-row');
+        var rows = document.querySelectorAll('.ev-content .g-row');
 
         var table = '<table>';
 
-        var columns = document.querySelectorAll('.g-scroll-wrapper .g-cell');
+        var columns = document.querySelectorAll('.g-columns-holder .g-cell');
 
         table = table + '<thead>';
         table = table + '<tr>';
@@ -36,7 +36,7 @@
 
             for (var c = 0; c < cells.length; c = c + 1) {
 
-                bg = getComputedStyle(cells[c]).backgroundColor;
+                bg = getComputedStyle(cells[c].parentElement).backgroundColor;
 
                 if (cells[c].querySelector('b')) {
                     tr = tr + '<td bgcolor="' + bg + '"><b>' + cells[c].innerText + '</b></td>'

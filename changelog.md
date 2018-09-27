@@ -1,5 +1,10 @@
 # Changelog
 
+## 27.08.2018
+- Dynamic attributes Import / Export
+- UI improvements
+- **BUGFIX** Copy/Paste in Report Builder
+
 ## 19.09.2018
 
 - Configuration Import / Export bugfixes

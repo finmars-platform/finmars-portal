@@ -12,6 +12,7 @@
     var transactionSchemeService = require('../../services/import/transactionSchemeService');
     var pricingAutomatedScheduleService = require('../../services/import/pricingAutomatedScheduleService');
     var metaContentTypesService = require('../../services/metaContentTypesService');
+    var attributeTypeService = require('../../services/attributeTypeService');
     var md5helper = require('../../helpers/md5.helper');
     var uiRepository = require('../../repositories/uiRepository');
 
@@ -48,6 +49,20 @@
                     return "Price Download Schemes";
                 case 'integrations.complextransactionimportscheme':
                     return "Complex Transaction Import Scheme";
+                case 'obj_attrs.portfolioattributetype':
+                    return "Portfolio Dynamic Attributes";
+                case 'obj_attrs.accountattributetype':
+                    return "Account Dynamic Attributes";
+                case 'obj_attrs.accounttypeattributetype':
+                    return "Account Type Dynamic Attributes";
+                case 'obj_attrs.responsibleattributetype':
+                    return "Responsible Dynamic Attributes";
+                case 'obj_attrs.counterpartyattributetype':
+                    return "Counterparty Dynamic Attributes";
+                case 'obj_attrs.instrumentattributetype':
+                    return "Instrument Dynamic Attributes";
+                case 'obj_attrs.instrumenttypeattributetype':
+                    return "Instrument Type Dynamic Attributes";
                 default:
                     return "Unknown"
             }
@@ -547,6 +562,28 @@
                                 case 'integrations.complextransactionimportscheme':
                                     promises.push(transactionSchemeService.create(item));
                                     break;
+                                case 'obj_attrs.portfolioattributetype':
+                                    promises.push(attributeTypeService.create('portfolio', item));
+                                    break;
+                                case 'obj_attrs.accountattributetype':
+                                    promises.push(attributeTypeService.create('account', item));
+                                    break;
+                                case 'obj_attrs.accounttypeattributetype':
+                                    promises.push(attributeTypeService.create('account-type', item));
+                                    break;
+                                case 'obj_attrs.responsibleattributetype':
+                                    promises.push(attributeTypeService.create('responsible', item));
+                                    break;
+                                case 'obj_attrs.counterpartyattributetype':
+                                    promises.push(attributeTypeService.create('counterparty', item));
+                                    break;
+                                case 'obj_attrs.instrumentattributetype':
+                                    promises.push(attributeTypeService.create('instrument', item));
+                                    break;
+                                case 'obj_attrs.instrumenttypeattributetype':
+                                    promises.push(attributeTypeService.create('instrument-type', item));
+                                    break;
+
 
                             }
 

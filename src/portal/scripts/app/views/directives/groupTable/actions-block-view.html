@@ -4,7 +4,7 @@
 
         <div layout="row" class="filters-control-btn s-f-expanded-btns layout-row">
             <button class="md-raised clear-all full-width md-button md-ink-ripple" type="button"
-                    data-ng-click="openViewConstructor($event)">View Constructor
+                    data-ng-click="openViewConstructor($event)">Columns/Groups/Filters
             </button>
         </div>
 
@@ -43,7 +43,7 @@
 
         <div layout="row" class="filters-control-btn s-f-expanded-btns layout-row" data-ng-if="!isReport">
             <button class="md-raised clear-all full-width md-button md-ink-ripple" type="button"
-                    data-ng-click="addEntity($event)">Add Entity
+                    data-ng-click="addEntity($event)">Add {{getEntityNameByState()}}
             </button>
         </div>
 
