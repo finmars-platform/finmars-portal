@@ -57,6 +57,8 @@
                         return item.___type !== 'group';
                     });
 
+                    console.log('renderReportViewer.flatList', flatList);
+
                     scope.evDataService.setFlatList(flatList);
 
                     projection = evDataHelper.calculateProjection(flatList, scope.evDataService);
