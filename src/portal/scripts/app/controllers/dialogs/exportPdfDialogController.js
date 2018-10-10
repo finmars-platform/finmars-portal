@@ -14,6 +14,7 @@
 
         vm.settings.layout = 'landscape';
 
+        vm.settings.data.groups = evDataService.getGroups();
         vm.settings.data.columns = evDataService.getColumns();
         vm.settings.data.content = evDataService.getFlatList();
 
