@@ -8,12 +8,14 @@
 
         var vm = this;
 
-        vm.settings = {};
+        vm.settings = {
+            data: {}
+        };
 
         vm.settings.layout = 'landscape';
 
-        vm.settings.columns = evDataService.getColumns();
-        vm.settings.content = evDataService.getFlatList();
+        vm.settings.data.columns = evDataService.getColumns();
+        vm.settings.data.content = evDataService.getFlatList();
 
         vm.layouts = [
             {
@@ -36,24 +38,24 @@
 
             console.log('vm.settings', vm.settings);
 
-            vm.settings.reportOptions = JSON.parse(JSON.stringify(evDataService.getReportOptions()));
+            vm.settings.data.reportOptions = JSON.parse(JSON.stringify(evDataService.getReportOptions()));
 
-            delete vm.settings.reportOptions.items;
-            delete vm.settings.reportOptions.item_complex_transactions;
-            delete vm.settings.reportOptions.item_counterparties;
-            delete vm.settings.reportOptions.item_responsibles;
-            delete vm.settings.reportOptions.item_strategies3;
-            delete vm.settings.reportOptions.item_strategies2;
-            delete vm.settings.reportOptions.item_strategies1;
-            delete vm.settings.reportOptions.item_portfolios;
-            delete vm.settings.reportOptions.item_instruments;
-            delete vm.settings.reportOptions.item_instrument_pricings;
-            delete vm.settings.reportOptions.item_instrument_accruals;
-            delete vm.settings.reportOptions.item_currency_fx_rates;
-            delete vm.settings.reportOptions.item_currencies;
-            delete vm.settings.reportOptions.item_accounts;
+            delete vm.settings.data.reportOptions.items;
+            delete vm.settings.data.reportOptions.item_complex_transactions;
+            delete vm.settings.data.reportOptions.item_counterparties;
+            delete vm.settings.data.reportOptions.item_responsibles;
+            delete vm.settings.data.reportOptions.item_strategies3;
+            delete vm.settings.data.reportOptions.item_strategies2;
+            delete vm.settings.data.reportOptions.item_strategies1;
+            delete vm.settings.data.reportOptions.item_portfolios;
+            delete vm.settings.data.reportOptions.item_instruments;
+            delete vm.settings.data.reportOptions.item_instrument_pricings;
+            delete vm.settings.data.reportOptions.item_instrument_accruals;
+            delete vm.settings.data.reportOptions.item_currency_fx_rates;
+            delete vm.settings.data.reportOptions.item_currencies;
+            delete vm.settings.data.reportOptions.item_accounts;
 
-            exportPdfService.generatePdf(vm.settings).then(function () {
+            exportPdfService.generatePdf().then(function () {
                 $mdDialog.cancel();
             })
 
