@@ -171,6 +171,9 @@ app.controller('InstrumentSelectDialogController', ['$scope', '$mdDialog', requi
 app.controller('ClassifierSelectDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/classifierSelectDialogController')]);
 app.controller('SaveLayoutDialogController', ['$scope', '$mdDialog', require('./app/controllers/dialogs/saveLayoutDialogController')]);
 
+
+app.controller('ExportPdfDialogController', ['$scope', '$mdDialog', 'evDataService', require('./app/controllers/dialogs/exportPdfDialogController')]);
+
 app.controller('AuditController', ['$scope', require('./app/controllers/system/auditController')]);
 app.controller('NotificationsController', ['$scope', '$state', '$stateParams', require('./app/controllers/system/notificationsController')]);
 app.controller('HeaderNotificationsDialogController', ['$scope', '$mdDialog', require('./app/controllers/dialogs/headerNotificationsDialogController')]);

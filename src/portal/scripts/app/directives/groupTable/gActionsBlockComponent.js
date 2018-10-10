@@ -87,7 +87,7 @@
 
                 scope.getEntityNameByState = function () {
 
-                     switch ($state.current.name) {
+                    switch ($state.current.name) {
                         case 'app.data.portfolio':
                             return "PORTFOLIO";
                             break;
@@ -354,7 +354,7 @@
                     listLayout.data.grouping = scope.evDataService.getGroups();
                     listLayout.data.filters = scope.evDataService.getFilters();
 
-                    if(scope.isReport) {
+                    if (scope.isReport) {
 
                         listLayout.data.reportOptions = JSON.parse(JSON.stringify(scope.evDataService.getReportOptions()));
 
@@ -413,7 +413,7 @@
                     listLayout.data.grouping = scope.evDataService.getGroups();
                     listLayout.data.filters = scope.evDataService.getFilters();
 
-                    if(scope.isReport) {
+                    if (scope.isReport) {
 
                         listLayout.data.reportOptions = JSON.parse(JSON.stringify(scope.evDataService.getReportOptions()));
 
@@ -485,6 +485,20 @@
 
 
                 };
+
+                scope.exportAsPdf = function ($event) {
+
+                    $mdDialog.show({
+                        controller: 'ExportPdfDialogController as vm',
+                        templateUrl: 'views/dialogs/export-pdf-dialog-view.html',
+                        parent: angular.element(document.body),
+                        targetEvent: $event,
+                        locals: {
+                           evDataService: scope.evDataService
+                        }
+                    })
+
+                }
 
             }
         }
