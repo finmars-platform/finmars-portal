@@ -55,7 +55,7 @@
             delete vm.settings.data.reportOptions.item_currencies;
             delete vm.settings.data.reportOptions.item_accounts;
 
-            exportPdfService.generatePdf().then(function () {
+            exportPdfService.generatePdf(vm.settings).then(function () {
                 $mdDialog.cancel();
             })
 
