@@ -36,7 +36,7 @@
 
             console.log('vm.settings', vm.settings);
 
-            vm.settings.reportOptions = JSON.parse(JSON.stringify(scope.evDataService.getReportOptions()));
+            vm.settings.reportOptions = JSON.parse(JSON.stringify(evDataService.getReportOptions()));
 
             delete vm.settings.reportOptions.items;
             delete vm.settings.reportOptions.item_complex_transactions;
