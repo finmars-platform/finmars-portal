@@ -26,6 +26,7 @@
 
                         instrumentTypeObjectKeys.forEach(function (instrumentObjectKeyItem) {
                             item['instrument_type_object_' + instrumentObjectKeyItem] = item.instrument_object.instrument_type_object[instrumentObjectKeyItem];
+                            item['instrument_object_instrument_type_object_' + instrumentObjectKeyItem] = item.instrument_object.instrument_type_object[instrumentObjectKeyItem];
                         })
                     }
 
