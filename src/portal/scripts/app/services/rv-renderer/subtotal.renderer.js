@@ -81,7 +81,13 @@
         //     }
         //
         // } else {
-        result = REPORT_BG_CSS_SELECTOR + '-' + (obj.___level - 1);
+
+        if (columnNumber >= obj.___level - 1) {
+
+            result = REPORT_BG_CSS_SELECTOR + '-' + (obj.___level - 1);
+
+        }
+
         // }
 
         return result;
