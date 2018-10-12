@@ -13,6 +13,7 @@
         };
 
         vm.settings.layout = 'landscape';
+        vm.settings.zoom = 1;
 
         vm.settings.data.groups = evDataService.getGroups();
         vm.settings.data.columns = evDataService.getColumns();
@@ -28,6 +29,25 @@
             {
                 value: 'landscape',
                 name: ' Landscape'
+            }
+        ];
+
+        vm.zoomOptions = [
+            {
+                value: 1,
+                name: '100%'
+            },
+            {
+                value: 0.75,
+                name: '75%'
+            },
+            {
+                value: 0.5,
+                name: '50%'
+            },
+            {
+                value: 0.25,
+                name: '25%'
             }
         ];
 
