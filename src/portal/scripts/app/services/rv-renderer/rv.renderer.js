@@ -44,7 +44,7 @@
 
             if (item.___type === 'subtotal') {
 
-                rows.push(subtotalRender.render(evDataService, item, columns, groups));
+                rows.push(subtotalRender.render(evDataService, item, columns, groups, nextItem));
             }
 
         }
