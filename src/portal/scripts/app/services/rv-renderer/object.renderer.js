@@ -207,7 +207,7 @@
 
             if (groups[columnNumber - 1].report_settings.subtotal_type === 'area') {
 
-                if (nextItem && nextItem.___type !== 'subtotal' && nextItem.___level !== obj.___level) {
+                if (nextItem && nextItem.___type !== 'subtotal' && nextItem.___level === obj.___level) {
                     result = 'border-bottom-transparent';
                 }
 
