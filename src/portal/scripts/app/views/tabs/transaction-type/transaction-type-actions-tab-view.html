@@ -121,10 +121,9 @@
                                             <label for="">Position size with sign</label>
                                             <input type="text" data-ng-model="item.transaction.position_size_with_sign">
                                         </md-input-container>
-                                        <md-button class="md-raised md-primary expr-btn"
-                                                   data-ng-click="vm.openExpressionDialog($event, item.transaction.position_size_with_sign, {obj: item.transaction, prop: 'position_size_with_sign'})">
-                                            ...
-                                        </md-button>
+
+                                        <expression-editor-button data-item="item.transaction.position_size_with_sign"></expression-editor-button>
+
                                     </div>
                                     <div flex="33" layout="row">
                                         <div flex="20">
@@ -355,30 +354,21 @@
                                             <label for="">Trade price</label>
                                             <input type="text" data-ng-model="item.transaction.trade_price">
                                         </md-input-container>
-                                        <md-button class="md-raised md-primary expr-btn"
-                                                   data-ng-click="vm.openExpressionDialog($event, item.transaction.trade_price, {obj: item.transaction, prop: 'trade_price'})">
-                                            ...
-                                        </md-button>
+                                        <expression-editor-button data-item="item.transaction.trade_price"></expression-editor-button>
                                     </div>
                                     <div flex="33">
                                         <md-input-container class="expression-input-container">
                                             <label for="">Factor</label>
                                             <input type="text" data-ng-model="item.transaction.factor">
                                         </md-input-container>
-                                        <md-button class="md-raised md-primary expr-btn"
-                                                   data-ng-click="vm.openExpressionDialog($event, item.transaction.factor, {obj: item.transaction, prop: 'factor'})">
-                                            ...
-                                        </md-button>
+                                        <expression-editor-button data-item="item.transaction.factor"></expression-editor-button>
                                     </div>
                                     <div flex="33">
                                         <md-input-container class="expression-input-container">
                                             <label for="">Position amount</label>
                                             <input type="text" data-ng-model="item.transaction.position_amount">
                                         </md-input-container>
-                                        <md-button class="md-raised md-primary expr-btn"
-                                                   data-ng-click="vm.openExpressionDialog($event, item.transaction.position_amount, {obj: item.transaction, prop: 'position_amount'})">
-                                            ...
-                                        </md-button>
+                                        <expression-editor-button data-item="item.transaction.position_amount"></expression-editor-button>
                                     </div>
                                 </div>
                                 <div layout="row">
@@ -388,10 +378,7 @@
                                             <input type="text" style="color: grey"
                                                    data-ng-model="item.transaction.accounting_date">
                                         </md-input-container>
-                                        <md-button class="md-raised md-primary expr-btn"
-                                                   data-ng-click="vm.openExpressionDialog($event, item.transaction.accounting_date, {obj: item.transaction, prop: 'accounting_date'})">
-                                            ...
-                                        </md-button>
+                                        <expression-editor-button data-item="item.transaction.accounting_date"></expression-editor-button>
                                     </div>
                                     <div flex="33" layout="row">
                                         <div flex="20">
@@ -587,10 +574,7 @@
                                             <label for="">Notes</label>
                                             <input type="text" data-ng-model="item.transaction.notes">
                                         </md-input-container>
-                                        <md-button class="md-raised md-primary expr-btn"
-                                                   data-ng-click="vm.openExpressionDialog($event, item.transaction.notes, {obj: item.transaction, prop: 'notes'})">
-                                            ...
-                                        </md-button>
+                                        <expression-editor-button data-item="item.transaction.notes"></expression-editor-button>
                                     </div>
                                 </div>
                             </div>
@@ -780,20 +764,14 @@
                                             <label for="">Cash consideration</label>
                                             <input type="text" data-ng-model="item.transaction.cash_consideration">
                                         </md-input-container>
-                                        <md-button class="md-raised md-primary expr-btn"
-                                                   data-ng-click="vm.openExpressionDialog($event, item.transaction.cash_consideration, {obj: item.transaction, prop: 'cash_consideration'})">
-                                            ...
-                                        </md-button>
+                                        <expression-editor-button data-item="item.transaction.cash_consideration"></expression-editor-button>
                                     </div>
                                     <div flex="33">
                                         <md-input-container class="expression-input-container">
                                             <label for="">Reference fx-rate</label>
                                             <input type="text" data-ng-model="item.transaction.reference_fx_rate">
                                         </md-input-container>
-                                        <md-button class="md-raised md-primary expr-btn"
-                                                   data-ng-click="vm.openExpressionDialog($event, item.transaction.reference_fx_rate, {obj: item.transaction, prop: 'reference_fx_rate'})">
-                                            ...
-                                        </md-button>
+                                        <expression-editor-button data-item="item.transaction.reference_fx_rate"></expression-editor-button>
                                     </div>
                                 </div>
                                 <div layout="row">
@@ -802,30 +780,21 @@
                                             <label for="">Principal with sign</label>
                                             <input type="text" data-ng-model="item.transaction.principal_with_sign">
                                         </md-input-container>
-                                        <md-button class="md-raised md-primary expr-btn"
-                                                   data-ng-click="vm.openExpressionDialog($event, item.transaction.principal_with_sign, {obj: item.transaction, prop: 'principal_with_sign'})">
-                                            ...
-                                        </md-button>
+                                        <expression-editor-button data-item="item.transaction.principal_with_sign"></expression-editor-button>
                                     </div>
                                     <div flex="33">
                                         <md-input-container class="expression-input-container">
                                             <label for="">Carry with sign</label>
                                             <input type="text" data-ng-model="item.transaction.carry_with_sign">
                                         </md-input-container>
-                                        <md-button class="md-raised md-primary expr-btn"
-                                                   data-ng-click="vm.openExpressionDialog($event, item.transaction.carry_with_sign, {obj: item.transaction, prop: 'carry_with_sign'})">
-                                            ...
-                                        </md-button>
+                                        <expression-editor-button data-item="item.transaction.carry_with_sign"></expression-editor-button>
                                     </div>
                                     <div flex="33">
                                         <md-input-container class="expression-input-container">
                                             <label for="">Overheads with sign</label>
                                             <input type="text" data-ng-model="item.transaction.overheads_with_sign">
                                         </md-input-container>
-                                        <md-button class="md-raised md-primary expr-btn"
-                                                   data-ng-click="vm.openExpressionDialog($event, item.transaction.overheads_with_sign, {obj: item.transaction, prop: 'overheads_with_sign'})">
-                                            ...
-                                        </md-button>
+                                        <expression-editor-button data-item="item.transaction.overheads_with_sign"></expression-editor-button>
                                     </div>
                                 </div>
                                 <div layout="row">
@@ -834,30 +803,21 @@
                                             <label for="">Principal amount</label>
                                             <input type="text" data-ng-model="item.transaction.principal_amount">
                                         </md-input-container>
-                                        <md-button class="md-raised md-primary expr-btn"
-                                                   data-ng-click="vm.openExpressionDialog($event, item.transaction.principal_amount, {obj: item.transaction, prop: 'principal_amount'})">
-                                            ...
-                                        </md-button>
+                                        <expression-editor-button data-item="item.transaction.principal_amount"></expression-editor-button>
                                     </div>
                                     <div flex="33">
                                         <md-input-container class="expression-input-container">
                                             <label for="">Carry amount</label>
                                             <input type="text" data-ng-model="item.transaction.carry_amount">
                                         </md-input-container>
-                                        <md-button class="md-raised md-primary expr-btn"
-                                                   data-ng-click="vm.openExpressionDialog($event, item.transaction.carry_amount, {obj: item.transaction, prop: 'carry_amount'})">
-                                            ...
-                                        </md-button>
+                                        <expression-editor-button data-item="item.transaction.carry_amount"></expression-editor-button>
                                     </div>
                                     <div flex="33">
                                         <md-input-container class="expression-input-container">
                                             <label for="">Overheads</label>
                                             <input type="text" data-ng-model="item.transaction.overheads">
                                         </md-input-container>
-                                        <md-button class="md-raised md-primary expr-btn"
-                                                   data-ng-click="vm.openExpressionDialog($event, item.transaction.overheads, {obj: item.transaction, prop: 'overheads'})">
-                                            ...
-                                        </md-button>
+                                        <expression-editor-button data-item="item.transaction.overheads"></expression-editor-button>
                                     </div>
                                 </div>
                                 <div layout="row">
@@ -867,10 +827,7 @@
                                             <input type="text" style="color: grey;"
                                                    data-ng-model="item.transaction.cash_date">
                                         </md-input-container>
-                                        <md-button class="md-raised md-primary expr-btn"
-                                                   data-ng-click="vm.openExpressionDialog($event, item.transaction.cash_date, {obj: item.transaction, prop: 'cash_date'})">
-                                            ...
-                                        </md-button>
+                                        <expression-editor-button data-item="item.transaction.cash_date"></expression-editor-button>
                                     </div>
                                     <div flex="33" layout="row">
                                         <div flex="20">
@@ -1160,10 +1117,7 @@
                                             <label for="">User code</label>
                                             <input type="text" data-ng-model="item.instrument.user_code">
                                         </md-input-container>
-                                        <md-button class="md-raised md-primary expr-btn"
-                                                   data-ng-click="vm.openExpressionDialog($event, item.instrument.user_code, {obj: item.instrument, prop: 'user_code'})">
-                                            ...
-                                        </md-button>
+                                        <expression-editor-button data-item="item.instrument.user_code"></expression-editor-button>
                                     </div>
                                 </div>
                                 <div layout="row">
@@ -1172,30 +1126,21 @@
                                             <label for="">Name</label>
                                             <input type="text" data-ng-model="item.instrument.name">
                                         </md-input-container>
-                                        <md-button class="md-raised md-primary expr-btn"
-                                                   data-ng-click="vm.openExpressionDialog($event, item.instrument.name, {obj: item.instrument, prop: 'name'})">
-                                            ...
-                                        </md-button>
+                                        <expression-editor-button data-item="item.instrument.name"></expression-editor-button>
                                     </div>
                                     <div flex="33">
                                         <md-input-container class="expression-input-container">
                                             <label for="">Short name</label>
                                             <input type="text" data-ng-model="item.instrument.short_name">
                                         </md-input-container>
-                                        <md-button class="md-raised md-primary expr-btn"
-                                                   data-ng-click="vm.openExpressionDialog($event, item.instrument.short_name, {obj: item.instrument, prop: 'short_name'})">
-                                            ...
-                                        </md-button>
+                                        <expression-editor-button data-item="item.instrument.short_name"></expression-editor-button>
                                     </div>
                                     <div flex="33">
                                         <md-input-container class="expression-input-container">
                                             <label for="">Public name</label>
                                             <input type="text" data-ng-model="item.instrument.public_name">
                                         </md-input-container>
-                                        <md-button class="md-raised md-primary expr-btn"
-                                                   data-ng-click="vm.openExpressionDialog($event, item.instrument.public_name, {obj: item.instrument, prop: 'public_name'})">
-                                            ...
-                                        </md-button>
+                                        <expression-editor-button data-item="item.instrument.public_name"></expression-editor-button>
                                     </div>
                                 </div>
                                 <div layout="row">
@@ -1204,30 +1149,21 @@
                                             <label for="">User text1</label>
                                             <input type="text" data-ng-model="item.instrument.user_text_1">
                                         </md-input-container>
-                                        <md-button class="md-raised md-primary expr-btn"
-                                                   data-ng-click="vm.openExpressionDialog($event, item.instrument.user_text_1, {obj: item.instrument, prop: 'user_text_1'})">
-                                            ...
-                                        </md-button>
+                                        <expression-editor-button data-item="item.instrument.user_text_1"></expression-editor-button>
                                     </div>
                                     <div flex="33">
                                         <md-input-container class="expression-input-container">
                                             <label for="">User text2</label>
                                             <input type="text" data-ng-model="item.instrument.user_text_2">
                                         </md-input-container>
-                                        <md-button class="md-raised md-primary expr-btn"
-                                                   data-ng-click="vm.openExpressionDialog($event, item.instrument.user_text_2, {obj: item.instrument, prop: 'user_text_2'})">
-                                            ...
-                                        </md-button>
+                                        <expression-editor-button data-item="item.instrument.user_text_2"></expression-editor-button>
                                     </div>
                                     <div flex="33">
                                         <md-input-container class="expression-input-container">
                                             <label for="">User text3</label>
                                             <input type="text" data-ng-model="item.instrument.user_text_3">
                                         </md-input-container>
-                                        <md-button class="md-raised md-primary expr-btn"
-                                                   data-ng-click="vm.openExpressionDialog($event, item.instrument.user_text_3, {obj: item.instrument, prop: 'user_text_3'})">
-                                            ...
-                                        </md-button>
+                                        <expression-editor-button data-item="item.instrument.user_text_3"></expression-editor-button>
                                     </div>
                                 </div>
                                 <div layout="row">
@@ -1236,10 +1172,7 @@
                                             <label for="">Notes</label>
                                             <input type="text" data-ng-model="item.instrument.notes">
                                         </md-input-container>
-                                        <md-button class="md-raised md-primary expr-btn"
-                                                   data-ng-click="vm.openExpressionDialog($event, item.instrument.notes, {obj: item.instrument, prop: 'notes'})">
-                                            ...
-                                        </md-button>
+                                        <expression-editor-button data-item="item.instrument.notes"></expression-editor-button>
                                     </div>
                                 </div>
                             </div>
@@ -1341,10 +1274,7 @@
                                             <input type="text"
                                                    data-ng-model="item.instrument.reference_for_pricing">
                                         </md-input-container>
-                                        <md-button class="md-raised md-primary expr-btn"
-                                                   data-ng-click="vm.openExpressionDialog($event, item.instrument.reference_for_pricing, {obj: item.instrument, prop: 'reference_for_pricing'})">
-                                            ...
-                                        </md-button>
+                                        <expression-editor-button data-item="item.instrument.reference_for_pricing"></expression-editor-button>
                                     </div>
                                 </div>
                                 <div layout="row">
@@ -1398,20 +1328,14 @@
                                             <label for="">Price multiplier</label>
                                             <input type="text" data-ng-model="item.instrument.price_multiplier">
                                         </md-input-container>
-                                        <md-button class="md-raised md-primary expr-btn"
-                                                   data-ng-click="vm.openExpressionDialog($event, item.instrument.price_multiplier, {obj: item.instrument, prop: 'price_multiplier'})">
-                                            ...
-                                        </md-button>
+                                        <expression-editor-button data-item="item.instrument.price_multiplier"></expression-editor-button>
                                     </div>
                                     <div flex="33">
                                         <md-input-container class="expression-input-container">
                                             <label for="">Default price</label>
                                             <input type="text" data-ng-model="item.instrument.default_price">
                                         </md-input-container>
-                                        <md-button class="md-raised md-primary expr-btn"
-                                                   data-ng-click="vm.openExpressionDialog($event, item.instrument.default_price, {obj: item.instrument, prop: 'default_price'})">
-                                            ...
-                                        </md-button>
+                                        <expression-editor-button data-item="item.instrument.default_price"></expression-editor-button>
                                     </div>
                                 </div>
                                 <div layout="row">
@@ -1465,20 +1389,14 @@
                                             <label for="">Accrued multiplier</label>
                                             <input type="text" data-ng-model="item.instrument.accrued_multiplier">
                                         </md-input-container>
-                                        <md-button class="md-raised md-primary expr-btn"
-                                                   data-ng-click="vm.openExpressionDialog($event, item.instrument.accrued_multiplier, {obj: item.instrument, prop: 'accrued_multiplier'})">
-                                            ...
-                                        </md-button>
+                                        <expression-editor-button data-item="item.instrument.accrued_multiplier"></expression-editor-button>
                                     </div>
                                     <div flex="33">
                                         <md-input-container class="expression-input-container">
                                             <label for="">Default accrued</label>
                                             <input type="text" data-ng-model="item.instrument.default_accrued">
                                         </md-input-container>
-                                        <md-button class="md-raised md-primary expr-btn"
-                                                   data-ng-click="vm.openExpressionDialog($event, item.instrument.default_accrued, {obj: item.instrument, prop: 'default_accrued'})">
-                                            ...
-                                        </md-button>
+                                        <expression-editor-button data-item="item.instrument.default_accrued"></expression-editor-button>
                                     </div>
                                 </div>
                                 <div layout="row">
@@ -1538,10 +1456,7 @@
                                             <input type="text" style="color: grey"
                                                    data-ng-model="item.instrument.maturity_date">
                                         </md-input-container>
-                                        <md-button class="md-raised md-primary expr-btn"
-                                                   data-ng-click="vm.openExpressionDialog($event, item.instrument.maturity_date, {obj: item.instrument, prop: 'maturity_date'})">
-                                            ...
-                                        </md-button>
+                                        <expression-editor-button data-item="item.instrument.maturity_date"></expression-editor-button>
                                     </div>
                                 </div>
                             </div>

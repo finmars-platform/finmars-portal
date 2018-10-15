@@ -12,53 +12,62 @@
 
         var result = '';
 
-        if (column.report_settings && !column.report_settings.hide_subtotal) {
+        if (columnNumber === obj.___level - 1) {
 
-            if (obj.___subtotal_type === 'line') {
+            result = obj.group_name;
 
-                var areaGroupsBefore = renderHelper.getAreaGroupsBefore(evDataService, obj.___level - 1);
+        } else {
 
-                // console.log('areaGroupsBefore', areaGroupsBefore);
+            if (column.report_settings && !column.report_settings.hide_subtotal) {
 
-                if (areaGroupsBefore.length && areaGroupsBefore.indexOf(columnNumber) !== -1) {
+                if (obj.___subtotal_type === 'line') {
 
-                    var parents = evRvCommonHelper.getParents(obj.___parentId, evDataService);
+                    var areaGroupsBefore = renderHelper.getAreaGroupsBefore(evDataService, obj.___level - 1);
 
-                    parents.forEach(function (parent) {
-                        if (parent.___level === columnNumber) {
-                            result = parent.group_name;
-                        }
-                    });
+                    // console.log('areaGroupsBefore', areaGroupsBefore);
 
-                } else {
+                    if (areaGroupsBefore.length && areaGroupsBefore.indexOf(columnNumber) !== -1) {
 
-                    if (columnNumber === obj.___level - 1) {
+                        var parents = evRvCommonHelper.getParents(obj.___parentId, evDataService);
 
-                        var parent = evDataService.getData(obj.___parentId);
-
-                        result = parent.group_name;
+                        parents.forEach(function (parent) {
+                            if (parent.___level === columnNumber) {
+                                result = parent.group_name;
+                            }
+                        });
 
                     } else {
 
-                        if (columnNumber < obj.___level) {
-                            result = '';
+                        if (columnNumber === obj.___level - 1) {
+
+                            var parent = evDataService.getData(obj.___parentId);
+
+                            result = parent.group_name;
+
+                        } else {
+
+                            if (columnNumber < obj.___level) {
+                                result = '';
+                            }
+
+
+                            if (obj.hasOwnProperty(column.key)) {
+                                result = renderHelper.formatValue(obj, column);
+                            }
                         }
 
-                        if (obj.hasOwnProperty(column.key)) {
-                            result = renderHelper.formatValue(obj, column);
-                        }
                     }
 
-                }
+                } else {
 
-            } else {
+                    if (columnNumber < obj.___level) {
+                        result = '';
+                    }
 
-                if (columnNumber < obj.___level) {
-                    result = '';
-                }
+                    if (obj.hasOwnProperty(column.key)) {
+                        result = renderHelper.formatValue(obj, column);
+                    }
 
-                if (obj.hasOwnProperty(column.key)) {
-                    result = renderHelper.formatValue(obj, column);
                 }
 
             }

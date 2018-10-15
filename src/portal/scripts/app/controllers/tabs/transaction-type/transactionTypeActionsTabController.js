@@ -27,39 +27,10 @@
             }
         };
 
-        vm.preventSpace = function($event){
+        vm.preventSpace = function ($event) {
             //$event.preventDefault();
             $event.stopPropagation();
             //return false;
-        };
-
-        vm.openExpressionDialog = function ($event, item, options) {
-
-            var itemObj = {expression: ''};
-            if (item) {
-                itemObj = {expression: JSON.parse(JSON.stringify(item))};
-            }
-
-            $mdDialog.show({
-                controller: 'ExpressionEditorDialogController as vm',
-                templateUrl: 'views/dialogs/expression-editor-dialog-view.html',
-                parent: angular.element(document.body),
-                targetEvent: $event,
-                preserveScope: true,
-                autoWrap: true,
-                skipHide: true,
-                locals: {
-                    item: itemObj
-                }
-            }).then(function (res) {
-                if (res.status === 'agree') {
-                    console.log("res", res.data);
-                    if (options) {
-                        options.obj[options.prop] = res.data.item.expression;
-                    }
-                }
-                console.log('item', item);
-            });
         };
 
         vm.entity.actions.forEach(function (action) {
@@ -134,6 +105,7 @@
                 targetEvent: $event,
                 preserveScope: true,
                 autoWrap: true,
+                multiple: true,
                 skipHide: true,
                 locals: {
                     warning: {
