@@ -27,11 +27,7 @@
 
                 <label for="">Zoom</label>
 
-                <md-select data-ng-model="vm.settings.zoom">
-                    <md-option data-ng-repeat="item in vm.zoomOptions" ng-value="item.value">
-                        {{item.name}}
-                    </md-option>
-                </md-select>
+                <input type="text" data-ng-model="vm.settings.zoom" placeholder="100">
 
             </md-input-container>
 
