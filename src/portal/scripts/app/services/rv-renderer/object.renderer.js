@@ -207,7 +207,15 @@
 
             if (groups[columnNumber - 1].report_settings.subtotal_type === 'area') {
 
-                if (nextItem && nextItem.___type !== 'subtotal' && nextItem.___level === obj.___level && columnNumber !== obj.___level) {
+                if (nextItem && nextItem.___type !== 'subtotal' && nextItem.___level === obj.___level) {
+                    result = 'border-bottom-transparent';
+                }
+
+                if (nextItem && nextItem.___type === 'subtotal' && columnNumber < obj.___level - 1) {
+                    result = 'border-bottom-transparent';
+                }
+
+                if (obj.___type === 'subtotal' && columnNumber < obj.___level - 1) {
                     result = 'border-bottom-transparent';
                 }
 

@@ -8,6 +8,26 @@
 
     var REPORT_BG_CSS_SELECTOR = 'report-bg-level';
 
+    var getBorderBottomTransparent = function (obj, columnNumber, groups, nextItem) {
+
+        var result = '';
+
+        if (columnNumber <= groups.length && columnNumber <= obj.___level) {
+
+            if (groups[columnNumber - 1].report_settings.subtotal_type === 'area') {
+
+                if (obj.___type === 'subtotal' && columnNumber < obj.___level - 1
+                    && columnNumber < nextItem.___level - 1) {
+                    result = 'border-bottom-transparent';
+                }
+
+            }
+        }
+
+        return result;
+
+    };
+
     var getValue = function (evDataService, obj, column, columnNumber) {
 
         var result = '';
@@ -103,7 +123,7 @@
 
     };
 
-    var render = function (evDataService, obj, columns, groups) {
+    var render = function (evDataService, obj, columns, groups, nextItem) {
 
         var classList = ['g-row'];
 
@@ -135,7 +155,9 @@
                 textAlign = 'text-right'
             }
 
-            cell = '<div class="g-cell-wrap ' + getBgColor(obj, index + 1, groups) + '" style="width: ' + column.style.width + '"><div class="g-cell ' + textAlign + '"><b>' + getValue(evDataService, obj, column, index + 1) + '</b></div></div>';
+            var borderBottomTransparent = getBorderBottomTransparent(obj, index + 1, groups, nextItem);
+
+            cell = '<div class="g-cell-wrap ' + getBgColor(obj, index + 1, groups) + '" style="width: ' + column.style.width + '"><div class="g-cell ' + textAlign + ' ' + borderBottomTransparent + ' "><b>' + getValue(evDataService, obj, column, index + 1) + '</b></div></div>';
 
             result = result + cell
 
