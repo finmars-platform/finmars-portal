@@ -65,7 +65,7 @@
 
                     console.log('projection', projection);
 
-                    evDomManager.calculateScroll(elements, scope.evDataService);
+                    rvDomManager.calculateScroll(elements, scope.evDataService);
 
                     rvRenderer.render(contentElem, projection, scope.evDataService, scope.evEventService);
 
@@ -104,9 +104,15 @@
                     var flatList = scope.evDataService.getFlatList();
 
                     projection = evDataHelper.calculateProjection(flatList, scope.evDataService);
-                    evDomManager.calculateScroll(elements, scope.evDataService);
 
-                    rvRenderer.render(contentElem, projection, scope.evDataService, scope.evEventService);
+                    if (isReport) {
+                        rvDomManager.calculateScroll(elements, scope.evDataService);
+                        rvRenderer.render(contentElem, projection, scope.evDataService, scope.evEventService);
+                    } else {
+                        evDomManager.calculateScroll(elements, scope.evDataService);
+                        evRenderer.render(contentElem, projection, scope.evDataService, scope.evEventService);
+                    }
+
 
                 });
 
@@ -130,12 +136,17 @@
 
                 });
 
-                evDomManager.initEventDelegation(contentElem, scope.evDataService, scope.evEventService);
-                evDomManager.initContextMenuEventDelegation(contentElem, scope.evDataService, scope.evEventService);
-
                 if (isReport) {
+
+                    rvDomManager.initEventDelegation(contentElem, scope.evDataService, scope.evEventService);
+
                     rvDomManager.addScrollListener(elements, scope.evDataService, scope.evEventService);
+
                 } else {
+
+                    evDomManager.initEventDelegation(contentElem, scope.evDataService, scope.evEventService);
+                    evDomManager.initContextMenuEventDelegation(contentElem, scope.evDataService, scope.evEventService);
+
                     evDomManager.addScrollListener(elements, scope.evDataService, scope.evEventService);
                 }
 

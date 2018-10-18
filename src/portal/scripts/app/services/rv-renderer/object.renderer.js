@@ -108,6 +108,10 @@
 
         var areaGroupsBefore = renderHelper.getAreaGroupsBefore(evDataService, groups.length);
 
+        var group = evDataService.getData(obj.___parentId);
+
+        var foldButton = '';
+
         if (isColumnInGroupsList(columnNumber, groups)) {
 
             // console.log('isColumnInGroupsList.columnNumber', columnNumber);
@@ -137,8 +141,15 @@
 
                 });
 
+                if (group.___is_open) {
+                    foldButton = '<div class="ev-fold-button" data-type="foldbutton" data-object-id="' + currentParent.___id + '" data-parent-group-hash-id="' + currentParent.___parentId +'">-</div>';
+                } else {
+                    foldButton = '<div class="ev-fold-button" data-type="foldbutton" data-object-id="' + currentParent.___id + '" data-parent-group-hash-id="' + currentParent.___parentId +'">+</div>';
+                }
+
+
                 if (isFirst && groups[columnNumber].report_settings.subtotal_type === 'area') {
-                    result = '<b>' + currentParent.group_name + '</b>'
+                    result = foldButton + '<b>' + currentParent.group_name + '</b>'
                 }
 
 
@@ -158,7 +169,13 @@
 
                 var parent = evDataService.getData(obj.___parentId);
 
-                result = '<b>' + parent.group_name + '</b>';
+                if (group.___is_open) {
+                    foldButton = '<div class="ev-fold-button" data-type="foldbutton" data-object-id="' + parent.___id + '" data-parent-group-hash-id="' + parent.___parentId +'">-</div>';
+                } else {
+                    foldButton = '<div class="ev-fold-button" data-type="foldbutton" data-object-id="' + parent.___id + '" data-parent-group-hash-id="' + parent.___parentId +'">+</div>';
+                }
+
+                result = foldButton + '<b>' + parent.group_name + '</b>';
 
             }
 
@@ -205,21 +222,21 @@
 
         if (columnNumber <= groups.length && columnNumber <= obj.___level) {
 
-            if (groups[columnNumber - 1].report_settings.subtotal_type === 'area') {
+            // if (groups[columnNumber - 1].report_settings.subtotal_type === 'area') {
 
-                if (nextItem && nextItem.___type !== 'subtotal' && nextItem.___level === obj.___level) {
-                    result = 'border-bottom-transparent';
-                }
-
-                if (nextItem && nextItem.___type === 'subtotal' && columnNumber < obj.___level - 1) {
-                    result = 'border-bottom-transparent';
-                }
-
-                if (obj.___type === 'subtotal' && columnNumber < obj.___level - 1) {
-                    result = 'border-bottom-transparent';
-                }
-
+            if (nextItem && nextItem.___type !== 'subtotal' && nextItem.___level === obj.___level) {
+                result = 'border-bottom-transparent';
             }
+
+            if (nextItem && nextItem.___type === 'subtotal' && columnNumber < obj.___level - 1) {
+                result = 'border-bottom-transparent';
+            }
+
+            if (obj.___type === 'subtotal' && columnNumber < obj.___level - 1) {
+                result = 'border-bottom-transparent';
+            }
+
+            // }
         }
 
         return result;

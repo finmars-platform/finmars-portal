@@ -218,6 +218,25 @@
                     scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE)
                 };
 
+                scope.renameFilter = function (filter, $mdMenu, $event) {
+
+                    $mdMenu.close();
+
+
+                    $mdDialog.show({
+                        controller: 'RenameDialogController as vm',
+                        templateUrl: 'views/dialogs/rename-dialog-view.html',
+                        parent: angular.element(document.body),
+                        targetEvent: $event,
+                        locals: {
+                            data: filter
+                        }
+                    })
+
+
+                };
+
+
                 scope.removeFilter = function (filter) {
                     //console.log('filter to remove is ', filter);
                     scope.filters = scope.filters.map(function (item) {

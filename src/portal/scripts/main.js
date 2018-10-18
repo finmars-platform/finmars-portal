@@ -170,6 +170,7 @@ app.controller('InfoDialogController', ['$scope', '$mdDialog', 'info', require('
 app.controller('InstrumentSelectDialogController', ['$scope', '$mdDialog', require('./app/controllers/dialogs/instrumentSelectDialogController')]);
 app.controller('ClassifierSelectDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/classifierSelectDialogController')]);
 app.controller('SaveLayoutDialogController', ['$scope', '$mdDialog', require('./app/controllers/dialogs/saveLayoutDialogController')]);
+app.controller('RenameDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/renameDialogController')]);
 
 
 app.controller('ExportPdfDialogController', ['$scope', '$mdDialog', 'evDataService', require('./app/controllers/dialogs/exportPdfDialogController')]);
@@ -234,8 +235,8 @@ app.directive('groupTableBody', ['$mdDialog', require('./app/directives/groupTab
 app.directive('groupTableBodyOld', ['$mdDialog', require('./app/directives/groupTable/gTableBodyComponent-old')]);
 app.directive('groupSidebarFilter', ['$mdDialog', require('./app/directives/groupTable/gSidebarFilterComponent')]);
 app.directive('groupReportSettings', [require('./app/directives/groupTable/gReportSettingsComponent')]);
-app.directive('groupGrouping', [require('./app/directives/groupTable/gGroupingComponent')]);
-app.directive('groupColumns', [require('./app/directives/groupTable/gColumnsComponent')]);
+app.directive('groupGrouping', ['$mdDialog', require('./app/directives/groupTable/gGroupingComponent')]);
+app.directive('groupColumns', ['$mdDialog', require('./app/directives/groupTable/gColumnsComponent')]);
 app.directive('groupActionsBlock', ['$mdDialog', '$state', require('./app/directives/groupTable/gActionsBlockComponent')]);
 app.directive('groupClipboardHandler', [require('./app/directives/groupTable/gClipboardHandlerComponent')]);
 app.directive('groupColumnResizer', [require('./app/directives/groupTable/gColumnResizerComponent')]);

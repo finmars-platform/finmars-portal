@@ -11,7 +11,7 @@
 
     var metaService = require('../../services/metaService');
 
-    module.exports = function () {
+    module.exports = function ($mdDialog) {
         return {
             restrict: 'AE',
             scope: {
@@ -104,6 +104,41 @@
                     scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
                 };
 
+                scope.reportSetBlankLineType = function (group, type, $index) {
+
+                    if (!group.hasOwnProperty('report_settings') || group.report_settings === undefined) {
+                        group.report_settings = {};
+                    }
+
+                    if (group.report_settings.blankline_type === type) {
+                        group.report_settings.blankline_type = false;
+                    } else {
+                        group.report_settings.blankline_type = type;
+                    }
+
+
+                    scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+
+                };
+
+                scope.renameGroup = function (group, $mdMenu, $event) {
+
+                    $mdMenu.close();
+
+
+                    $mdDialog.show({
+                        controller: 'RenameDialogController as vm',
+                        templateUrl: 'views/dialogs/rename-dialog-view.html',
+                        parent: angular.element(document.body),
+                        targetEvent: $event,
+                        locals: {
+                            data: group
+                        }
+                    })
+
+
+                };
+
                 scope.removeGroup = function (group) {
 
                     if (group.id) {
@@ -137,11 +172,11 @@
 
                 scope.reportSetSubtotalType = function (group, type, $index) {
 
-                    if (!group.hasOwnProperty('report_settings') || group.report_settings == undefined) {
+                    if (!group.hasOwnProperty('report_settings') || group.report_settings === undefined) {
                         group.report_settings = {};
                     }
 
-                    if (type == 'area') {
+                    if (type === 'area') {
 
                         scope.grouping.forEach(function (groupItem, $itemIndex) {
 
@@ -166,7 +201,7 @@
                         });
                     }
 
-                    if (type == 'line') {
+                    if (type === 'line') {
 
                         scope.grouping.forEach(function (groupItem, $itemIndex) {
 
@@ -177,7 +212,7 @@
                         });
                     }
 
-                    if (group.report_settings.subtotal_type == type) {
+                    if (group.report_settings.subtotal_type === type) {
                         group.report_settings.subtotal_type = false;
                     } else {
                         group.report_settings.subtotal_type = type;
