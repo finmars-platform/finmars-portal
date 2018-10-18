@@ -14,14 +14,19 @@
 
         if (columnNumber <= groups.length && columnNumber <= obj.___level) {
 
-            if (groups[columnNumber - 1].report_settings.subtotal_type === 'area') {
+            // if (groups[columnNumber - 1].report_settings.subtotal_type === 'area') {
 
-                if (obj.___type === 'subtotal' && columnNumber < obj.___level - 1
+            if (nextItem) {
+
+                if (obj.___type === 'subtotal'
+                    && columnNumber < obj.___level - 1
                     && columnNumber < nextItem.___level - 1) {
                     result = 'border-bottom-transparent';
                 }
 
             }
+
+            // }
         }
 
         return result;
@@ -32,62 +37,73 @@
 
         var result = '';
 
+        if (columnNumber < obj.___level - 1) {
+
+
+            if (obj.___subtotal_type === 'line' || (obj.___subtotal_type === 'arealine' && obj.___subtotal_subtype === 'line')) {
+
+                var groups = evDataService.getGroups();
+
+                console.log("Level (-1)", obj.___level - 1);
+
+                var groupLevel = obj.___level - 1;
+                var previousGroupLevel = groupLevel - 1;
+                var previousGroupIndex = previousGroupLevel - 1;
+
+                var resultsGroupsIndexes = [];
+
+                for (var i = previousGroupIndex; i >= 0; i = i - 1) {
+
+                    if (groups[i].report_settings.subtotal_type === 'area') {
+                        resultsGroupsIndexes.push(i)
+                    } else {
+                        break;
+                    }
+
+                }
+
+                if (resultsGroupsIndexes.indexOf(columnNumber - 1) !== -1) {
+
+                    var parents = evRvCommonHelper.getParents(obj.___parentId, evDataService);
+
+                    parents.forEach(function (parent) {
+
+                        if (parent.___level === columnNumber) {
+
+                            var group = evDataService.getData(parent.___parentId);
+
+                            var foldButton = '';
+
+                            if (group.___is_open) {
+                                foldButton = '<div class="ev-fold-button" data-type="foldbutton" data-object-id="' + parent.___id + '" data-parent-group-hash-id="' + parent.___parentId +'">-</div>';
+                            } else {
+                                foldButton = '<div class="ev-fold-button" data-type="foldbutton" data-object-id="' + parent.___id + '" data-parent-group-hash-id="' + parent.___parentId +'">+</div>';
+                            }
+
+                            result = foldButton + '<b>' + parent.group_name + '</b>'
+                        }
+
+                    })
+
+
+                }
+
+            }
+
+        }
+
         if (columnNumber === obj.___level - 1) {
 
             result = obj.group_name;
 
-        } else {
+        }
+
+        if (columnNumber > obj.___level - 1) {
 
             if (column.report_settings && !column.report_settings.hide_subtotal) {
 
-                if (obj.___subtotal_type === 'line') {
-
-                    var areaGroupsBefore = renderHelper.getAreaGroupsBefore(evDataService, obj.___level - 1);
-
-                    // console.log('areaGroupsBefore', areaGroupsBefore);
-
-                    if (areaGroupsBefore.length && areaGroupsBefore.indexOf(columnNumber) !== -1) {
-
-                        var parents = evRvCommonHelper.getParents(obj.___parentId, evDataService);
-
-                        parents.forEach(function (parent) {
-                            if (parent.___level === columnNumber) {
-                                result = parent.group_name;
-                            }
-                        });
-
-                    } else {
-
-                        if (columnNumber === obj.___level - 1) {
-
-                            var parent = evDataService.getData(obj.___parentId);
-
-                            result = parent.group_name;
-
-                        } else {
-
-                            if (columnNumber < obj.___level) {
-                                result = '';
-                            }
-
-
-                            if (obj.hasOwnProperty(column.key)) {
-                                result = renderHelper.formatValue(obj, column);
-                            }
-                        }
-
-                    }
-
-                } else {
-
-                    if (columnNumber < obj.___level) {
-                        result = '';
-                    }
-
-                    if (obj.hasOwnProperty(column.key)) {
-                        result = renderHelper.formatValue(obj, column);
-                    }
-
+                if (obj.hasOwnProperty(column.key)) {
+                    result = renderHelper.formatValue(obj, column);
                 }
 
             }
@@ -125,6 +141,16 @@
 
     var render = function (evDataService, obj, columns, groups, nextItem) {
 
+        var foldButton = '';
+
+        var group = evDataService.getData(obj.___parentId);
+
+        if (group.___is_open) {
+            foldButton = '<div class="ev-fold-button" data-type="foldbutton" data-object-id="' + group.___id + '" data-parent-group-hash-id="' + group.___parentId + '">-</div>';
+        } else {
+            foldButton = '<div class="ev-fold-button" data-type="foldbutton" data-object-id="' + group.___id + '" data-parent-group-hash-id="' + group.___parentId + '">+</div>';
+        }
+
         var classList = ['g-row'];
 
         var rowSelection;
@@ -142,7 +168,7 @@
 
         var classes = classList.join(' ');
 
-        var result = '<div class="' + classes + '" data-type="object" data-object-id="' + obj.___id + '" data-parent-group-hash-id="' + obj.___parentId + '">';
+        var result = '<div class="' + classes + '" data-type="subtotal" data-object-id="' + obj.___id + '" data-parent-group-hash-id="' + obj.___parentId + '">';
         var cell;
 
         result = result + rowSelection;
@@ -150,14 +176,25 @@
         columns.forEach(function (column, index) {
 
             var textAlign = '';
+            var columnNumber = index + 1;
+            var foldButtonStr = '';
 
             if (column.value_type === 20) {
                 textAlign = 'text-right'
             }
 
-            var borderBottomTransparent = getBorderBottomTransparent(obj, index + 1, groups, nextItem);
+            if (obj.___level - 1 === columnNumber) {
+                foldButtonStr = foldButton
+            } else {
+                foldButtonStr = ''
+            }
 
-            cell = '<div class="g-cell-wrap ' + getBgColor(obj, index + 1, groups) + '" style="width: ' + column.style.width + '"><div class="g-cell ' + textAlign + ' ' + borderBottomTransparent + ' "><b>' + getValue(evDataService, obj, column, index + 1) + '</b></div></div>';
+            var borderBottomTransparent = getBorderBottomTransparent(obj, columnNumber, groups, nextItem);
+
+            cell = '<div class="g-cell-wrap ' + getBgColor(obj, columnNumber, groups) + '" style="width: ' + column.style.width + '"><div class="g-cell ' + textAlign + ' ' + borderBottomTransparent + ' ">' +
+                foldButtonStr + '<b>' + getValue(evDataService, obj, column, columnNumber) + '</b>' +
+                '</div>' +
+                '</div>';
 
             result = result + cell
 

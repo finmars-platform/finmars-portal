@@ -10,7 +10,7 @@
 
     var metaService = require('../../services/metaService');
 
-    module.exports = function () {
+    module.exports = function ($mdDialog) {
         return {
             restrict: 'AE',
             scope: {
@@ -187,6 +187,25 @@
                     }
 
                     return false
+
+                };
+
+                scope.renameColumn = function (column, $mdMenu, $event) {
+
+                    $mdMenu.close();
+
+                    console.log('renameColumn', column);
+
+                    $mdDialog.show({
+                        controller: 'RenameDialogController as vm',
+                        templateUrl: 'views/dialogs/rename-dialog-view.html',
+                        parent: angular.element(document.body),
+                        targetEvent: $event,
+                        locals: {
+                            data: column
+                        }
+                    })
+
 
                 };
 

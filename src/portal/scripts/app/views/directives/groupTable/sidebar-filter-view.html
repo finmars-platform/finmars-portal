@@ -104,15 +104,6 @@
 
                     </div>
 
-                    <div layout="column" style="margin-top: 16px;">
-
-                        <md-button data-ng-click="openReportSettings($event)" class="md-primary md-raised">Settings
-                        </md-button>
-
-                        <md-button data-ng-click="calculateReport()" class="md-raised">Calculate</md-button>
-
-                    </div>
-
                 </md-card-content>
 
             </md-card>
@@ -164,15 +155,6 @@
 
                         </md-input-container>
 
-
-                    </div>
-
-                    <div layout="column" style="margin-top: 16px;">
-
-                        <md-button data-ng-click="openReportSettings($event)" class="md-primary md-raised">Settings
-                        </md-button>
-
-                        <md-button data-ng-click="calculateReport()" class="md-raised">Calculate</md-button>
 
                     </div>
 
@@ -249,12 +231,6 @@
                         <md-button data-ng-click="openPeriodsDialog($event)" class="md-primary md-raised">Periodicity
                         </md-button>
 
-
-                        <md-button data-ng-click="openReportSettings($event)" class="md-primary md-raised">Settings
-                        </md-button>
-
-                        <md-button data-ng-click="calculateReport()" class="md-raised">Calculate</md-button>
-
                     </div>
 
                 </md-card-content>
@@ -317,7 +293,12 @@
                          ng-change="toggleFilterState(filter)" flex="15">
             </md-checkbox>
             <md-input-container flex="65">
-                <label data-ng-bind="filter.name"></label>
+                <label>
+
+                    <span data-ng-if="!filter.layout_name">{{filter.name}}</span>
+                    <span data-ng-if="filter.layout_name">{{filter.layout_name}}</span>
+
+                </label>
                 <div data-ng-if="filter['value_type'] === 'mc_field'">
                     <div data-ng-if="fields[filter.key]">
                         <md-select data-ng-model="filter.options.query"
@@ -410,6 +391,17 @@
                     </md-button>
                     <md-menu-content width="3">
                         <md-menu-item>
+                            <md-menu>
+                                <md-button ng-click="renameFilter(filter, $mdMenu, $event)"
+                                           class="g-settings-option-btn">
+                                    <ng-md-icon icon="visibility_off"
+                                                style="visibility: hidden;"></ng-md-icon>
+                                    <span>Rename</span>
+                                </md-button>
+                                <md-menu-content style="display: none"></md-menu-content>
+                            </md-menu>
+                        </md-menu-item>
+                        <md-menu-item>
                             <md-button ng-click="removeFilter(filter)" class="g-settings-option-btn">
                                 <ng-md-icon icon="visibility_off"></ng-md-icon>
                                 <span>Remove</span>
@@ -423,6 +415,17 @@
                         <ng-md-icon icon="settings"></ng-md-icon>
                     </md-button>
                     <md-menu-content width="3">
+                        <md-menu-item>
+                            <md-menu>
+                                <md-button ng-click="renameFilter(filter, $mdMenu, $event)"
+                                           class="g-settings-option-btn">
+                                    <ng-md-icon icon="visibility_off"
+                                                style="visibility: hidden;"></ng-md-icon>
+                                    <span>Rename</span>
+                                </md-button>
+                                <md-menu-content style="display: none"></md-menu-content>
+                            </md-menu>
+                        </md-menu-item>
                         <md-menu-item>
                             <md-button ng-click="removeFilter(filter)" class="g-settings-option-btn">
                                 <ng-md-icon icon="visibility_off"></ng-md-icon>

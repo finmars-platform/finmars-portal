@@ -48,7 +48,20 @@
         }
 
         if (item.___type === 'subtotal') {
-            pattern = [item.___parentId, stringHelper.toHash('subtotal')].join('');
+
+            if (item.___subtotal_subtype) {
+                pattern = [item.___parentId, stringHelper.toHash(item.___type + '_' + item.___subtotal_type + '_' + item.___subtotal_subtype)].join('');
+
+                // console.log('pattern', pattern);
+
+            } else {
+                pattern = [item.___parentId, stringHelper.toHash(item.___type + '_' + item.___subtotal_type)].join('');
+            }
+
+        }
+
+        if (item.___type === 'blankline') {
+            pattern = [item.___parentId, stringHelper.toHash(item.___type + '_' + item.___blankline_type)].join('');
         }
 
         return stringHelper.toHash(pattern)

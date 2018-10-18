@@ -20,7 +20,8 @@
                              data-callback="triggerResizeTableHeadColumns()" data-column-id="{{column.___column_id}}">
                         <div class="g-column-content">
                             <div class="column-left-content">
-                                <div class="sort" data-ng-if="isSortable(column) && checkReportSortButton(column, $index)">
+                                <div class="sort"
+                                     data-ng-if="isSortable(column) && checkReportSortButton(column, $index)">
                                     <md-button class="column-sort column-btns"
                                                data-ng-show="column.options.sort === 'ASC'"
                                                aria-label="open settings" data-ng-click="sortHandler(column, 'DESC')">
@@ -39,7 +40,8 @@
                                     </md-button>
                                 </div>
                                 <div class="caption">
-                                    {{column.name}}
+                                    <span data-ng-if="!column.layout_name">{{column.name}}</span>
+                                    <span data-ng-if="column.layout_name">{{column.layout_name}}</span>
                                 </div>
                             </div>
                             <div class="settings-btn">
@@ -462,6 +464,17 @@
                                                 <md-menu-content style="display: none"></md-menu-content>
                                             </md-menu>
                                         </md-menu-item>
+                                        <md-menu-item>
+                                            <md-menu>
+                                                <md-button ng-click="renameColumn(column, $mdMenu, $event)"
+                                                           class="g-settings-option-btn">
+                                                    <ng-md-icon icon="visibility_off"
+                                                                style="visibility: hidden;"></ng-md-icon>
+                                                    <span>Rename</span>
+                                                </md-button>
+                                                <md-menu-content style="display: none"></md-menu-content>
+                                            </md-menu>
+                                        </md-menu-item>
                                         <md-menu-item data-ng-if="checkReportRemoveButton(column, $index)">
                                             <md-menu>
                                                 <md-button ng-click="removeColumn(column)"
@@ -474,7 +487,8 @@
                                         </md-menu-item>
                                     </md-menu-content>
                                 </md-menu>
-                                <md-menu data-ng-if="isReport && column.value_type != 20 && checkReportRemoveButton(column, $index)">
+                                <md-menu
+                                        data-ng-if="isReport && column.value_type != 20">
                                     <md-button aria-label="Open phone interactions menu"
                                                class="md-icon-button column-btns"
                                                ng-click="$mdOpenMenu($event)">
@@ -484,6 +498,17 @@
                                     <md-menu-content>
                                         <md-menu-item>
                                             <md-menu>
+                                                <md-button ng-click="renameColumn(column, $mdMenu, $event)"
+                                                           class="g-settings-option-btn">
+                                                    <ng-md-icon icon="visibility_off"
+                                                                style="visibility: hidden;"></ng-md-icon>
+                                                    <span>Rename</span>
+                                                </md-button>
+                                                <md-menu-content style="display: none"></md-menu-content>
+                                            </md-menu>
+                                        </md-menu-item>
+                                        <md-menu-item data-ng-if="checkReportRemoveButton(column, $index)">
+                                            <md-menu>
                                                 <md-button ng-click="removeColumn(column)"
                                                            class="g-settings-option-btn">
                                                     <ng-md-icon icon="visibility_off"></ng-md-icon>
@@ -492,6 +517,7 @@
                                                 <md-menu-content style="display: none"></md-menu-content>
                                             </md-menu>
                                         </md-menu-item>
+
                                     </md-menu-content>
                                 </md-menu>
                                 <md-menu data-ng-if="!isReport">
@@ -501,6 +527,17 @@
                                         <ng-md-icon icon="settings"></ng-md-icon>
                                     </md-button>
                                     <md-menu-content width="4">
+                                        <md-menu-item>
+                                            <md-menu>
+                                                <md-button ng-click="renameColumn(column, $mdMenu, $event)"
+                                                           class="g-settings-option-btn">
+                                                    <ng-md-icon icon="visibility_off"
+                                                                style="visibility: hidden;"></ng-md-icon>
+                                                    <span>Rename</span>
+                                                </md-button>
+                                                <md-menu-content style="display: none"></md-menu-content>
+                                            </md-menu>
+                                        </md-menu-item>
                                         <md-menu-item>
                                             <md-button ng-click="removeColumn(column)" class="g-settings-option-btn">
                                                 <ng-md-icon icon="visibility_off"></ng-md-icon>

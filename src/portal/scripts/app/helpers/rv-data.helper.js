@@ -100,9 +100,9 @@
                             ___level: item.___level + 1
                         });
 
-                        subtotalObj.___id = evRvCommonHelper.getId(subtotalObj);
-
                         if (group.report_settings.subtotal_type === 'line') {
+
+                            subtotalObj.___id = evRvCommonHelper.getId(subtotalObj);
 
                             subtotalObj.___subtotal_type = 'line';
 
@@ -112,7 +112,83 @@
 
                         if (group.report_settings.subtotal_type === 'area') {
 
+                            subtotalObj.___id = evRvCommonHelper.getId(subtotalObj);
+
                             subtotalObj.___subtotal_type = 'area';
+
+                            item.results.push(subtotalObj);
+
+                        }
+
+                        if (group.report_settings.subtotal_type === 'arealine') {
+
+                            subtotalObj.___subtotal_type = 'arealine';
+
+                            subtotalObj.___subtotal_subtype = 'line';
+                            subtotalObj.___id = evRvCommonHelper.getId(subtotalObj);
+
+                            // console.log('group.report_settings.subtotal_type before unshift', item.results.length);
+
+                            item.results.unshift(JSON.parse(JSON.stringify(subtotalObj)));
+
+                            subtotalObj.___subtotal_subtype = 'area';
+                            subtotalObj.___id = evRvCommonHelper.getId(subtotalObj);
+
+                            // console.log('group.report_settings.subtotal_type before pusn', item.results.length);
+
+                            item.results.push(subtotalObj);
+
+                            // console.log('group.report_settings.subtotal_type here?', item.results);
+
+                        }
+
+
+                    }
+
+                })
+
+            }
+
+        });
+
+        // console.log('insertSubtotalsToResults.data', data);
+
+        return data;
+
+    };
+
+    var insertBlankLinesToResults = function (data, evDataService) {
+
+        var dataList = [];
+        var groups = evDataService.getGroups();
+
+        Object.keys(data).forEach(function (key) {
+            dataList.push(data[key])
+        });
+
+        var subtotalObj;
+
+        dataList.forEach(function (item) {
+
+            if (item.results.length) {
+
+                groups.forEach(function (group, index) {
+
+                    if (item.___level === index + 1 && item.___level <= groups.length) {
+
+                        subtotalObj = Object.assign({}, {
+                            group_name: item.group_name,
+                            ___type: 'blankline',
+                            ___parentId: item.___id,
+                            ___level: item.___level + 1
+                        });
+
+
+                        if (group.report_settings.blankline_type === 'area') {
+
+                            subtotalObj.___id = evRvCommonHelper.getId(subtotalObj);
+
+                            subtotalObj.___blankline_type = 'area';
 
                             item.results.push(subtotalObj);
 
@@ -126,9 +202,84 @@
 
         });
 
-        // console.log('insertSubtotalsToResults.data', data);
-
         return data;
+
+    };
+
+    var removeItemsFromFoldedGroups = function (list, evDataService) {
+
+        var _list = list.concat();
+
+        var foldedGroupsIds = [];
+
+        var groups = evDataService.getGroups();
+
+        _list = _list.filter(function (item) {
+
+            if (item.___type === 'group' && !item.___is_open && item.___parentId) {
+                foldedGroupsIds.push(item.___id);
+            }
+
+            if (foldedGroupsIds.indexOf(item.___parentId) !== -1) {
+
+                var parentGroup = evDataService.getData(item.___parentId);
+
+                console.log('item', item);
+                console.log('parentGroup', parentGroup);
+
+                if (item.___type === 'subtotal') {
+
+                    var linesBeforeExist = false;
+
+                    groups.forEach(function (group, index) {
+
+                        if (index < item.___level - 2 && group.report_settings.subtotal_type === 'line' || group.report_settings.subtotal_type === 'arealine') {
+                            linesBeforeExist = true
+                        }
+
+                    });
+
+                    if (parentGroup.___parentId && foldedGroupsIds.indexOf(parentGroup.___parentId) !== -1) {
+
+                        if (linesBeforeExist === false) {
+                            return true
+                        }
+
+                        return false;
+                    }
+
+                }
+
+                if (item.___type === 'subtotal' && item.___subtotal_type === 'line') {
+                    return true;
+                }
+
+                if (item.___type === 'subtotal' && item.___subtotal_type === 'arealine') {
+                    if (item.___subtotal_subtype === 'line') {
+                        return true;
+                    }
+                }
+
+                if (item.___type === 'object' && groups[item.___level - 2].report_settings.subtotal_type === 'area') {
+
+                    console.log('parentGroup.results[0].___id', parentGroup.results[0].___id);
+                    console.log('item.___id', item.___id);
+
+                    if (parentGroup.results[0].___id === item.___id) {
+                        return true;
+                    }
+
+                }
+
+                return false;
+
+            }
+
+            return true;
+
+        });
+
+        return _list;
 
     };
 
@@ -152,6 +303,12 @@
 
             console.timeEnd("Calculating subtotals");
 
+            console.time("Calculating blankline");
+
+            data = insertBlankLinesToResults(data, evDataService);
+
+            console.timeEnd("Calculating blankline");
+
             // console.log('data', data);
 
         } else {
@@ -167,6 +324,8 @@
         var list = utilsHelper.convertTreeToList(tree);
 
         console.log('getFlatStructure.list', list);
+
+        list = removeItemsFromFoldedGroups(list, evDataService);
 
         return list;
 

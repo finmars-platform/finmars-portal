@@ -1,0 +1,30 @@
+/**
+ * Created by szhitenev on 08.06.2016.
+ */
+(function () {
+
+    'use strict';
+
+    module.exports = function ($scope, $mdDialog, data) {
+
+        console.log('data', data);
+
+        var vm = this;
+
+        vm.data = data;
+
+        vm.layout_name = vm.data.layout_name;
+
+        vm.cancel = function () {
+            $mdDialog.cancel();
+        };
+
+        vm.agree = function () {
+
+            vm.data.layout_name = vm.layout_name;
+
+            $mdDialog.hide({status: 'agree'});
+        };
+    }
+
+}());

@@ -23,7 +23,7 @@
 
     var evScrollManager = new EvScrollManager();
 
-    function requestGroups(groupHashId, parentGroupHashId, evDataService, evEventService) {
+    var requestGroups = function (groupHashId, parentGroupHashId, evDataService, evEventService) {
 
         var oldRequestParameters = evDataService.getActiveRequestParameters();
 
@@ -59,9 +59,9 @@
 
         evEventService.dispatchEvent(evEvents.UPDATE_TABLE)
 
-    }
+    };
 
-    function requestObjects(groupHashId, parentGroupHashId, evDataService, evEventService) {
+    var requestObjects = function (groupHashId, parentGroupHashId, evDataService, evEventService) {
 
         console.log('Request objects');
 
@@ -103,9 +103,9 @@
 
         evEventService.dispatchEvent(evEvents.UPDATE_TABLE)
 
-    }
+    };
 
-    function foldChildGroups(parentGroupId, evDataService) {
+    var foldChildGroups = function (parentGroupId, evDataService) {
 
         var childrens = evDataHelper.getAllChildrenGroups(parentGroupId, evDataService);
 
@@ -132,9 +132,9 @@
 
         })
 
-    }
+    };
 
-    function handleGroupSelection(clickData, evDataService, evEventService) {
+    var handleGroupSelection = function (clickData, evDataService, evEventService) {
 
         var group = evDataService.getData(clickData.___id);
 
@@ -162,9 +162,9 @@
 
         evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
 
-    }
+    };
 
-    function handleGroupFold(clickData, evDataService, evEventService) {
+    var handleGroupFold = function (clickData, evDataService, evEventService) {
 
         var group = evDataService.getData(clickData.___id);
 
@@ -176,9 +176,9 @@
 
         evEventService.dispatchEvent(evEvents.REDRAW_TABLE)
 
-    }
+    };
 
-    function handleObjectSelection(clickData, evDataService, evEventService) {
+    var handleObjectSelection = function (clickData, evDataService, evEventService) {
 
         var obj = evDataHelper.getObject(clickData.___id, clickData.___parentId, evDataService);
 
@@ -197,9 +197,9 @@
 
         evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
 
-    }
+    };
 
-    function handleObjectActive(clickData, evDataService) {
+    var handleObjectActive = function (clickData, evDataService) {
 
         var obj = evDataHelper.getObject(clickData.___id, clickData.___parentId, evDataService);
 
@@ -225,9 +225,9 @@
             evDataService.setActiveObject(null);
         }
 
-    }
+    };
 
-    function handleGroupClick(clickData, evDataService, evEventService) {
+    var handleGroupClick = function (clickData, evDataService, evEventService) {
 
         if (clickData.target === clickTargets.ROW_SELECTION_GROUP_BUTTON || clickData.target === clickTargets.ROW_SELECTION_GROUP_SVG) {
 
@@ -269,9 +269,9 @@
 
         }
 
-    }
+    };
 
-    function handleObjectClick(clickData, evDataService, evEventService) {
+    var handleObjectClick = function (clickData, evDataService, evEventService) {
 
         if (clickData.target === clickTargets.ROW_SELECTION_OBJECT_BUTTON || clickData.target === clickTargets.ROW_SELECTION_OBJECT_SVG) {
 
@@ -291,7 +291,7 @@
             evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
         }
 
-    }
+    };
 
     var getClickTarget = function (event) {
 
@@ -568,8 +568,6 @@
             count = count + group.count;
 
         });
-
-        // console.log('calculateTotalHeight.count', count);
 
         var rowHeight = evDataService.getRowHeight();
 

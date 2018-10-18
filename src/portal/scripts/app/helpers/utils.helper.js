@@ -135,11 +135,31 @@
                     insertItemInNode(list, map, node, _dataOrderReference)
                 }
 
-                if (node.___type === 'object' || node.___type === 'placeholder_object' || node.___type === 'subtotal') {
+                if (node.___type === 'object' || node.___type === 'placeholder_object') {
+                    list[map[node.___parentId]].results.push(node)
+                }
 
-                    if (node.___type === 'subtotal' && node.___subtotal_type === 'line') {
+                if (node.___type === 'blankline' && node.___blankline_type === 'area') {
+
+                    list[map[node.___parentId]].results.push(node)
+
+                }
+
+                if (node.___type === 'subtotal' && node.___subtotal_type === 'line') {
+                    list[map[node.___parentId]].results.unshift(node)
+                }
+
+                if (node.___type === 'subtotal' && node.___subtotal_type === 'area') {
+                    list[map[node.___parentId]].results.push(node)
+                }
+
+                if (node.___type === 'subtotal' && node.___subtotal_type === 'arealine') {
+
+                    if (node.___subtotal_subtype === 'line') {
                         list[map[node.___parentId]].results.unshift(node)
-                    } else {
+                    }
+
+                    if (node.___subtotal_subtype === 'area') {
                         list[map[node.___parentId]].results.push(node)
                     }
 
