@@ -1,5 +1,12 @@
 # Changelog
 
+## 19.10.2018
+
+- Report Builder fold / unfold
+- New colors in Report Builder
+- Report Builder improvements
+- New Expression Editor
+
 ## 27.08.2018
 - Dynamic attributes Import / Export
 - UI improvements
