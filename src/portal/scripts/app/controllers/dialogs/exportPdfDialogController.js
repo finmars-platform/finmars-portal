@@ -3,8 +3,9 @@
     'use strict';
 
     var exportPdfService = require('../../services/exportPdfService')
+    var rvRenderer = require('../../services/rv-renderer/rv.renderer');
 
-    module.exports = function ($scope, $mdDialog, evDataService) {
+    module.exports = function ($scope, $mdDialog, evDataService, evEventService) {
 
         var vm = this;
 
@@ -99,6 +100,14 @@
             delete vm.settings.data.reportOptions.item_currency_fx_rates;
             delete vm.settings.data.reportOptions.item_currencies;
             delete vm.settings.data.reportOptions.item_accounts;
+
+            var elem = {};
+
+            rvRenderer.render(elem, vm.settings.data.content, evDataService, evEventService);
+
+            vm.settings.data.content = evDataService.getFlatList();
+
+            console.log('export pdf content', vm.settings.data.content);
 
             exportPdfService.generatePdf(vm.settings).then(function (blob) {
 

@@ -75,9 +75,9 @@
                             var foldButton = '';
 
                             if (group.___is_open) {
-                                foldButton = '<div class="ev-fold-button" data-type="foldbutton" data-object-id="' + parent.___id + '" data-parent-group-hash-id="' + parent.___parentId +'">-</div>';
+                                foldButton = '<div class="ev-fold-button" data-type="foldbutton" data-object-id="' + parent.___id + '" data-parent-group-hash-id="' + parent.___parentId + '">-</div>';
                             } else {
-                                foldButton = '<div class="ev-fold-button" data-type="foldbutton" data-object-id="' + parent.___id + '" data-parent-group-hash-id="' + parent.___parentId +'">+</div>';
+                                foldButton = '<div class="ev-fold-button" data-type="foldbutton" data-object-id="' + parent.___id + '" data-parent-group-hash-id="' + parent.___parentId + '">+</div>';
                             }
 
                             result = foldButton + '<b>' + parent.group_name + '</b>'
@@ -173,6 +173,8 @@
 
         result = result + rowSelection;
 
+        obj.___cells_values = [];
+
         columns.forEach(function (column, index) {
 
             var textAlign = '';
@@ -191,14 +193,20 @@
 
             var borderBottomTransparent = getBorderBottomTransparent(obj, columnNumber, groups, nextItem);
 
+            var value = getValue(evDataService, obj, column, columnNumber);
+
+            obj.___cells_values.push(value);
+
             cell = '<div class="g-cell-wrap ' + getBgColor(obj, columnNumber, groups) + '" style="width: ' + column.style.width + '"><div class="g-cell ' + textAlign + ' ' + borderBottomTransparent + ' ">' +
-                foldButtonStr + '<b>' + getValue(evDataService, obj, column, columnNumber) + '</b>' +
+                foldButtonStr + '<b>' + value + '</b>' +
                 '</div>' +
                 '</div>';
 
             result = result + cell
 
         });
+
+        evDataService.updateItemInFlatList(obj);
 
         result = result + '</div>';
 
