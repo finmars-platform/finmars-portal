@@ -142,9 +142,9 @@
                 });
 
                 if (group.___is_open) {
-                    foldButton = '<div class="ev-fold-button" data-type="foldbutton" data-object-id="' + currentParent.___id + '" data-parent-group-hash-id="' + currentParent.___parentId +'">-</div>';
+                    foldButton = '<div class="ev-fold-button" data-type="foldbutton" data-object-id="' + currentParent.___id + '" data-parent-group-hash-id="' + currentParent.___parentId + '">-</div>';
                 } else {
-                    foldButton = '<div class="ev-fold-button" data-type="foldbutton" data-object-id="' + currentParent.___id + '" data-parent-group-hash-id="' + currentParent.___parentId +'">+</div>';
+                    foldButton = '<div class="ev-fold-button" data-type="foldbutton" data-object-id="' + currentParent.___id + '" data-parent-group-hash-id="' + currentParent.___parentId + '">+</div>';
                 }
 
 
@@ -170,9 +170,9 @@
                 var parent = evDataService.getData(obj.___parentId);
 
                 if (group.___is_open) {
-                    foldButton = '<div class="ev-fold-button" data-type="foldbutton" data-object-id="' + parent.___id + '" data-parent-group-hash-id="' + parent.___parentId +'">-</div>';
+                    foldButton = '<div class="ev-fold-button" data-type="foldbutton" data-object-id="' + parent.___id + '" data-parent-group-hash-id="' + parent.___parentId + '">-</div>';
                 } else {
-                    foldButton = '<div class="ev-fold-button" data-type="foldbutton" data-object-id="' + parent.___id + '" data-parent-group-hash-id="' + parent.___parentId +'">+</div>';
+                    foldButton = '<div class="ev-fold-button" data-type="foldbutton" data-object-id="' + parent.___id + '" data-parent-group-hash-id="' + parent.___parentId + '">+</div>';
                 }
 
                 result = foldButton + '<b>' + parent.group_name + '</b>';
@@ -288,6 +288,8 @@
 
         result = result + rowSelection;
 
+        obj.___cells_values = [];
+
         columns.forEach(function (column, index) {
 
             var textAlign = '';
@@ -298,12 +300,17 @@
                 textAlign = 'text-right'
             }
 
+            var value = getValue(evDataService, obj, column, index + 1, groups);
 
-            cell = '<div class="g-cell-wrap" style="width: ' + column.style.width + '"><div class="g-cell ' + textAlign + ' ' + colorNegative + ' ' + borderBottomTransparent + '">' + getValue(evDataService, obj, column, index + 1, groups) + '</div></div>';
+            obj.___cells_values.push(value);
+
+            cell = '<div class="g-cell-wrap" style="width: ' + column.style.width + '"><div class="g-cell ' + textAlign + ' ' + colorNegative + ' ' + borderBottomTransparent + '">' + value + '</div></div>';
 
             result = result + cell
 
         });
+
+        evDataService.updateItemInFlatList(obj);
 
         result = result + '</div>';
 

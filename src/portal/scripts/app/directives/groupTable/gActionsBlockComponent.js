@@ -494,7 +494,8 @@
                         parent: angular.element(document.body),
                         targetEvent: $event,
                         locals: {
-                           evDataService: scope.evDataService
+                            evDataService: scope.evDataService,
+                            evEventService: scope.evEventService
                         }
                     })
 

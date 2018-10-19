@@ -266,6 +266,18 @@
             return data.flatList;
         }
 
+        function updateItemInFlatList(item) {
+
+            data.flatList.forEach(function (row) {
+
+                if (row.___id === item.___id) {
+                    row = item;
+                }
+
+            })
+
+        }
+
         function setData(obj) {
 
             // console.log('setData.obj', obj);
@@ -616,6 +628,8 @@
 
             setFlatList: setFlatList,
             getFlatList: getFlatList,
+
+            updateItemInFlatList: updateItemInFlatList,
 
             getSelectAllRowsState: getSelectAllRowsState,
             setSelectAllRowsState: setSelectAllRowsState,
