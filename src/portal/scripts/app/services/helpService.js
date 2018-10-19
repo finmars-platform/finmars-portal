@@ -5,14 +5,21 @@
 
     'use strict';
 
-    var helpRepository = require('../repositories/helpRepository');
-
-    var getFunctionsHelp = function(){
-        return helpRepository.getFunctionsHelp();
+    var getFunctionsItems = function () {
+        return window.fetch('portal/content/json/functions_items.json').then(function (data) {
+            return data.json();
+        })
     };
 
+    var getFunctionsGroups = function () {
+        return window.fetch('portal/content/json/functions_groups.json').then(function (data) {
+            return data.json();
+        })
+    };
+    
     module.exports = {
-        getFunctionsHelp: getFunctionsHelp
+        getFunctionsItems: getFunctionsItems,
+        getFunctionsGroups: getFunctionsGroups
     }
 
 }());

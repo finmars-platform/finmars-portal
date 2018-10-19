@@ -1,0 +1,22 @@
+[
+  {
+    "name": "Text",
+    "key": "text"
+  },
+  {
+    "name": "Date",
+    "key": "date"
+  },
+  {
+    "name": "Number",
+    "key": "number"
+  },
+  {
+    "name": "Instrument Formulas",
+    "key": "instrument_formulas"
+  },
+  {
+    "name": "Instrument",
+    "key": "instrument_default"
+  }
+]

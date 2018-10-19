@@ -5,30 +5,40 @@
 
     'use strict';
 
-    var logService = require('../../../../../core/services/logService');
-
     var helpService = require('../../services/helpService');
 
     module.exports = function ($scope, $mdDialog, item) {
 
-        logService.controller('ExpressionEditorDialogController', 'initialized');
-
         var vm = this;
 
-        vm.readyStatus = {expression: false};
+        vm.readyStatus = {expressions: false, groups: false};
+
+        vm.expressionsHistory = [];
 
         vm.item = item;
 
-        helpService.getFunctionsHelp().then(function (data) {
+        helpService.getFunctionsItems().then(function (data) {
+
             vm.expressions = data;
 
-            vm.readyStatus.expression = true;
+            vm.readyStatus.expressions = true;
 
             vm.selectedHelpItem = vm.expressions[0];
             $scope.$apply();
         });
 
+        helpService.getFunctionsGroups().then(function (data) {
+
+            vm.groups = data;
+
+            vm.readyStatus.groups = true;
+
+            vm.selectedHelpGroup = vm.groups[0];
+            $scope.$apply();
+        });
+
         vm.selectHelpItem = function (item) {
+
             vm.expressions.forEach(function (expr) {
                 expr.isSelected = false;
             });
@@ -38,7 +48,31 @@
             vm.selectedHelpItem = item;
         };
 
+        vm.selectHelpGroup = function (item) {
+
+            vm.groups.forEach(function (expr) {
+                expr.isSelected = false;
+            });
+
+            item.isSelected = true;
+
+            vm.selectedHelpGroup = item;
+        };
+
+        vm.undo = function () {
+
+            var result = vm.expressionsHistory.pop();
+
+            if (result !== undefined && result !== null) {
+                vm.item.expression = result
+            }
+
+        };
+
         vm.appendFunction = function (item) {
+
+
+            vm.expressionsHistory.push(vm.item.expression);
 
             console.log(this);
             var val = $('#editorExpressionInput')[0].value;
@@ -50,6 +84,8 @@
                 vm.item.expression = vm.item.expression.slice(0, cursorPosition) + item.func + vm.item.expression.slice(cursorPosition);
 
             }
+
+
         };
 
         vm.cancel = function () {
