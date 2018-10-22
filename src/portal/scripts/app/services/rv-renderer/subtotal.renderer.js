@@ -39,7 +39,7 @@
 
         var isFirst = true;
 
-        if(previousItem && obj.___level < previousItem.___level) {
+        if(previousItem && obj.___level <= previousItem.___level) {
             isFirst = false
         }
 
