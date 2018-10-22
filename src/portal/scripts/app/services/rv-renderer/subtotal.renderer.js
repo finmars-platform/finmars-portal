@@ -37,12 +37,17 @@
 
         var result = '';
 
-        if (columnNumber < obj.___level - 1) {
+        var isFirst = true;
 
+        if(previousItem && obj.___level < previousItem.___level) {
+            isFirst = false
+        }
+
+        if (columnNumber < obj.___level - 1) {
 
             if (obj.___subtotal_type === 'line' || (obj.___subtotal_type === 'arealine' && obj.___subtotal_subtype === 'line')) {
 
-                if (obj.___level > previousItem.___level) {
+                if (isFirst) {
 
                     var groups = evDataService.getGroups();
 
