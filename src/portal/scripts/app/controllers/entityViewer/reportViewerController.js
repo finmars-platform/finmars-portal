@@ -85,6 +85,8 @@
                     entityViewerDataService.setGroups(listLayout.data.grouping);
                     entityViewerDataService.setFilters(listLayout.data.filters);
 
+                    entityViewerDataService.setListLayout(listLayout);
+
                     listLayout.data.components = {
                         sidebar: true,
                         groupingArea: true,

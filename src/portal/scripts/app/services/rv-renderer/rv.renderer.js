@@ -18,6 +18,7 @@
         var groups = evDataService.getGroups();
 
         var nextItem;
+        var previousItem;
         var item;
 
         var rows = [];
@@ -30,6 +31,12 @@
                 nextItem = projection[i + 1];
             } else {
                 nextItem = null;
+            }
+
+            if (i > 0) {
+                previousItem = projection[i - 1];
+            } else {
+                previousItem = null;
             }
 
             if (item.___type === 'placeholder_group' || item.___type === 'placeholder_object') {
@@ -49,7 +56,7 @@
             }
 
             if (item.___type === 'subtotal') {
-                rows.push(subtotalRender.render(evDataService, item, columns, groups, nextItem));
+                rows.push(subtotalRender.render(evDataService, item, columns, groups, nextItem, previousItem));
             }
 
         }
