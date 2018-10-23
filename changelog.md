@@ -1,5 +1,9 @@
 # Changelog
 
+## 23.10.2018
+
+- New Fold/Unfold system in Report Builder
+
 ## 19.10.2018
 
 - Report Builder fold / unfold

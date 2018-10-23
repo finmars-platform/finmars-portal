@@ -20,13 +20,17 @@
 
     };
 
-    var getBorderBottomTransparent = function (obj, columnNumber, groups, nextItem) {
+    var getBorderBottomTransparent = function (evDataService, obj, columnNumber, groups) {
 
         var result = '';
+        var nextItem = null;
+        var flatList = evDataService.getFlatList();
+
+        if (flatList.length > obj.___flat_list_index + 1) {
+            nextItem = flatList[obj.___flat_list_index + 1]
+        }
 
         if (columnNumber <= groups.length && columnNumber <= obj.___level) {
-
-            // if (groups[columnNumber - 1].report_settings.subtotal_type === 'area') {
 
             if (nextItem && nextItem.___type !== 'subtotal' && nextItem.___level === obj.___level) {
                 result = 'border-bottom-transparent';
@@ -40,7 +44,6 @@
                 result = 'border-bottom-transparent';
             }
 
-            // }
         }
 
         return result;
@@ -48,7 +51,10 @@
     };
 
 
-    var render = function (evDataService, obj, columns, groups, nextItem) {
+    var render = function (evDataService, obj) {
+
+        var columns = evDataService.getColumns();
+        var groups = evDataService.getGroups();
 
         var classList = ['g-row'];
 
@@ -74,7 +80,7 @@
 
         columns.forEach(function (column, index) {
 
-            var borderBottomTransparent = getBorderBottomTransparent(obj, index + 1, groups, nextItem);
+            var borderBottomTransparent = getBorderBottomTransparent(evDataService, obj, index + 1, groups);
             var borderRightTransparent = getBorderRightTransparent(obj, index + 1);
 
             cell = '<div class="g-cell-wrap" style="width: ' + column.style.width + '"><div class="g-cell ' + borderBottomTransparent + ' ' + borderRightTransparent + '">&nbsp;</div></div>';

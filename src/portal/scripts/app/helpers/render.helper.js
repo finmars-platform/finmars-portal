@@ -3,60 +3,16 @@
  */
 (function () {
 
+    var evRvCommonHelper = require('./ev-rv-common.helper');
+    var rvHelper = require('./rv.helper');
+
     var checkIcon = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"></path></svg>';
 
     var getCheckIcon = function () {
         return checkIcon;
     };
 
-    var getAreaGroupsBefore = function (evDataService, level) {
 
-        var groups = evDataService.getGroups();
-
-        // console.log('getAreaGroupsBefore.groups', groups);
-
-        var groupsBefore = groups.filter(function (group, index) {
-            return index + 1 < level;
-        });
-
-        var areaGroupsBefore = [];
-        var i;
-
-        // console.log('getAreaGroupsBefore.groupsBefore', groupsBefore);
-
-        for (i = groupsBefore.length - 1; i >= 0; i = i - 1) {
-
-            if (groupsBefore[i].report_settings.subtotal_type === 'line') {
-                break;
-            }
-
-            if (groupsBefore[i].report_settings.subtotal_type === 'area') {
-                areaGroupsBefore.push(i + 1)
-            }
-
-        }
-
-        return areaGroupsBefore;
-
-    };
-
-    var noLineGroups = function (evDataService) {
-
-        var groups = evDataService.getGroups();
-
-        var result = true;
-
-        groups.forEach(function (group) {
-
-            if (group.report_settings.subtotal_type === 'line') {
-                result = false;
-            }
-
-        });
-
-        return result
-
-    };
 
     var anyLineGroupsBefore = function (evDataService, level) {
 
@@ -160,7 +116,6 @@
 
     };
 
-
     var formatThousandsSeparator = function (value, column) {
 
         if (column.report_settings) {
@@ -207,15 +162,96 @@
 
     };
 
+
+    var isFirstInWholeChain = function (evDataService, obj, levelFrom) {
+
+        var result = true;
+
+        var parents = evRvCommonHelper.getParents(obj.___parentId, evDataService);
+
+        var relativeRootParent = parents.find(function (item) {
+            return item.___level === levelFrom
+        });
+
+        result = _checkChildInWholeChain(evDataService, obj, relativeRootParent, result);
+
+        return result;
+
+    };
+
+    var _checkChildInWholeChain = function (evDataService, obj, relativeRootParent, result) {
+
+        if (obj.___level - relativeRootParent.___level === 1) {
+
+            if (relativeRootParent.results[0].___id === obj.___id) {
+
+                result = true;
+
+            } else {
+
+                result = false;
+
+            }
+
+        } else {
+
+            var firstChild = evDataService.getData(relativeRootParent.results[0].___id);
+
+            var parents = evRvCommonHelper.getParents(obj.___parentId, evDataService);
+
+            var newRelativeParent = parents.find(function (item) {
+                return item.___level === relativeRootParent.___level + 1
+            });
+
+            if (newRelativeParent.___id === firstChild.___id) {
+
+                if (newRelativeParent !== obj.___level + 1) {
+                    result = _checkChildInWholeChain(evDataService, obj, newRelativeParent, result);
+                }
+
+
+            } else {
+
+                result = false;
+            }
+
+        }
+
+        return result
+
+    };
+
+    var isColumnInGroupsList = function (columnNumber, groups) {
+
+        return groups.length >= columnNumber;
+
+    };
+
+    var isColumnEqualLastGroup = function (columnNumber, groups) {
+
+        return groups.length === columnNumber
+
+    };
+
+    var isColumnAfterGroupsList = function (columnNumber, groups) {
+
+        return groups.length < columnNumber;
+
+    };
+
     module.exports = {
+        isFirstInWholeChain: isFirstInWholeChain,
+
         getCheckIcon: getCheckIcon,
-        noLineGroups: noLineGroups,
         anyLineGroupsBefore: anyLineGroupsBefore,
-        getAreaGroupsBefore: getAreaGroupsBefore,
         formatRounding: formatRounding,
         formatNegative: formatNegative,
         formatZero: formatZero,
-        formatValue: formatValue
+        formatValue: formatValue,
+
+        isColumnInGroupsList: isColumnInGroupsList,
+        isColumnEqualLastGroup: isColumnEqualLastGroup,
+        isColumnAfterGroupsList: isColumnAfterGroupsList
     }
 
 }());

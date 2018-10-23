@@ -5,6 +5,7 @@
     var evRvCommonHelper = require('./ev-rv-common.helper');
     var metaService = require('../services/metaService');
     var rvSubtotalHelper = require('./rv-subtotal.service');
+    var rvHelper = require('./rv.helper');
 
     var getGroupsByParent = function (parentId, evDataService) {
 
@@ -103,7 +104,6 @@
                         if (group.report_settings.subtotal_type === 'line') {
 
                             subtotalObj.___id = evRvCommonHelper.getId(subtotalObj);
-
                             subtotalObj.___subtotal_type = 'line';
 
                             item.results.unshift(subtotalObj);
@@ -112,9 +112,15 @@
 
                         if (group.report_settings.subtotal_type === 'area') {
 
+                            subtotalObj.___subtotal_type = 'proxyline';
                             subtotalObj.___id = evRvCommonHelper.getId(subtotalObj);
 
+                            item.results.unshift(JSON.parse(JSON.stringify(subtotalObj)));
+
+
                             subtotalObj.___subtotal_type = 'area';
+                            subtotalObj.___id = evRvCommonHelper.getId(subtotalObj);
+
 
                             item.results.push(subtotalObj);
 
@@ -124,21 +130,18 @@
 
                             subtotalObj.___subtotal_type = 'arealine';
 
+
                             subtotalObj.___subtotal_subtype = 'line';
                             subtotalObj.___id = evRvCommonHelper.getId(subtotalObj);
 
-                            // console.log('group.report_settings.subtotal_type before unshift', item.results.length);
-
                             item.results.unshift(JSON.parse(JSON.stringify(subtotalObj)));
+
 
                             subtotalObj.___subtotal_subtype = 'area';
                             subtotalObj.___id = evRvCommonHelper.getId(subtotalObj);
 
-                            // console.log('group.report_settings.subtotal_type before pusn', item.results.length);
-
                             item.results.push(subtotalObj);
 
-                            // console.log('group.report_settings.subtotal_type here?', item.results);
 
                         }
 
@@ -206,68 +209,196 @@
 
     };
 
-    var removeItemsFromFoldedGroups = function (list, evDataService) {
+    var getGroupsIdsToFold = function (list) {
 
-        var _list = list.concat();
+        var result = [];
 
-        var foldedGroupsIds = [];
+        list.forEach(function (item) {
 
-        var groups = evDataService.getGroups();
-
-        _list = _list.filter(function (item) {
-
-            if (item.___type === 'group' && !item.___is_open && item.___parentId) {
-                foldedGroupsIds.push(item.___id);
+            if (item.___type === 'group' && item.___parentId !== null && item.___is_open === false) {
+                result.push(item.___id)
             }
 
-            if (foldedGroupsIds.indexOf(item.___parentId) !== -1) {
+        });
 
-                var parentGroup = evDataService.getData(item.___parentId);
+        return result;
 
-                console.log('item', item);
-                console.log('parentGroup', parentGroup);
+    };
+
+    var isItemInGroupsToFold = function (groupsIdsToFold, item) {
+
+        return groupsIdsToFold.indexOf(item.___parentId) !== -1
+
+    };
+
+    var lookupProxyline = function (evDataService, list, i) {
+
+        var result = false;
+
+        var groupsToCheck = [];
+
+        for (; i > 0; i = i - 1) {
+
+            if (list[i].___type === 'subtotal' && list[i].___subtotal_type === 'proxyline') {
+                groupsToCheck.push(list[i].___parentId);
+            } else {
+                if (list[i].___type !== 'group') {
+                    break;
+                }
+            }
+
+
+        }
+
+        groupsToCheck.forEach(function (groupIp) {
+
+            var item = evDataService.getData(groupIp);
+
+            var parent = evDataService.getData(item.___parentId);
+
+            console.log('groupsToCheck.parent', parent);
+
+            if (parent.___is_open) {
+                result = true;
+            }
+
+        });
+
+
+        return result;
+
+    };
+
+    var getItemIndexFromList = function (item, list) {
+
+        var itemIndex;
+
+        for (var i = 0; i < list.length; i = i + 1) {
+
+            if (list[i].___id === item.___id) {
+                itemIndex = i;
+                break;
+            }
+
+        }
+
+        return itemIndex;
+
+    };
+
+    var handleFoldForObject = function (evDataService, item, list) {
+
+        var result = true;
+
+        var currentGroup = evDataService.getData(item.___parentId);
+
+        var itemIndex = getItemIndexFromList(item, list);
+
+        var itemParent;
+
+        for (var x = itemIndex - 1; x > 0; x = x - 1) {
+
+            itemParent = evDataService.getData(list[x].___parentId);
+
+            if (list[x].___type === 'subtotal' && list[x].___subtotal_type === 'proxyline') {
+
+                if (lookupProxyline(evDataService, list, x)) {
+                    result = true;
+                    break;
+                }
+
+            }
+
+            if (list[x].___type === 'object') {
+                result = false;
+                break;
+            }
+
+            if (list[x].___type === 'subtotal' && list[x].___subtotal_type === 'line') {
+                result = false;
+                break;
+            }
+
+            if (itemParent.___is_open === false && list[x].___type === 'subtotal' && list[x].___subtotal_type === 'arealine' && list[x].___subtotal_subtype === 'line') {
+                result = false;
+                break;
+            }
+
+        }
+
+
+        return result;
+    };
+
+    var handleFoldForSubtotal = function (evDataService, item, list) {
+
+        var result = false;
+
+        var currentGroup = evDataService.getData(item.___parentId);
+        var parentGroup = evDataService.getData(currentGroup.___parentId);
+
+        var itemIndex = getItemIndexFromList(item, list);
+
+        if (item.___subtotal_type === 'line') {
+
+            if (parentGroup.___is_open) {
+                result = true;
+            }
+
+            if (lookupProxyline(evDataService, list, itemIndex - 1)) {
+                result = true;
+
+            }
+
+        }
+
+        if (item.___subtotal_type === 'arealine' && item.___subtotal_subtype === 'line') {
+
+            if (parentGroup.___is_open) {
+                result = true;
+            }
+
+            if (lookupProxyline(evDataService, list, itemIndex - 1)) {
+                result = true;
+
+            }
+        }
+
+        if (item.___subtotal_type === 'area') {
+            result = false;
+        }
+
+        if (item.___subtotal_type === 'arealine' && item.___subtotal_subtype === 'area') {
+            result = false;
+        }
+
+        if (item.___subtotal_type === 'proxyline') {
+            result = true;
+        }
+
+        return result;
+
+    };
+
+    var removeItemsFromFoldedGroups = function (list, evDataService) {
+
+        var result = list.concat();
+
+        var groupsIdsToFold = getGroupsIdsToFold(list);
+
+        result = result.filter(function (item) {
+
+            if (isItemInGroupsToFold(groupsIdsToFold, item)) {
 
                 if (item.___type === 'subtotal') {
 
-                    var linesBeforeExist = false;
-
-                    groups.forEach(function (group, index) {
-
-                        if (index < item.___level - 2 && group.report_settings.subtotal_type === 'line' || group.report_settings.subtotal_type === 'arealine') {
-                            linesBeforeExist = true
-                        }
-
-                    });
-
-                    if (parentGroup.___parentId && foldedGroupsIds.indexOf(parentGroup.___parentId) !== -1) {
-
-                        if (linesBeforeExist === false) {
-                            return true
-                        }
-
-                        return false;
-                    }
+                    return handleFoldForSubtotal(evDataService, item, list);
 
                 }
 
-                if (item.___type === 'subtotal' && item.___subtotal_type === 'line') {
-                    return true;
-                }
+                if (item.___type === 'object') {
 
-                if (item.___type === 'subtotal' && item.___subtotal_type === 'arealine') {
-                    if (item.___subtotal_subtype === 'line') {
-                        return true;
-                    }
-                }
-
-                if (item.___type === 'object' && groups[item.___level - 2].report_settings.subtotal_type === 'area') {
-
-                    console.log('parentGroup.results[0].___id', parentGroup.results[0].___id);
-                    console.log('item.___id', item.___id);
-
-                    if (parentGroup.results[0].___id === item.___id) {
-                        return true;
-                    }
+                    return handleFoldForObject(evDataService, item, list);
 
                 }
 
@@ -279,7 +410,7 @@
 
         });
 
-        return _list;
+        return result;
 
     };
 
@@ -288,8 +419,6 @@
         var groups = evDataService.getGroups();
 
         var data;
-
-        // console.log('getFLatStructure.groups', groups);
 
         if (groups.length) {
 
