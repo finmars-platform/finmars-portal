@@ -145,6 +145,10 @@
 
                 }
 
+                if (node.___type === 'subtotal' && node.___subtotal_type === 'proxyline') {
+                    list[map[node.___parentId]].results.unshift(node)
+                }
+
                 if (node.___type === 'subtotal' && node.___subtotal_type === 'line') {
                     list[map[node.___parentId]].results.unshift(node)
                 }

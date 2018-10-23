@@ -1,9 +1,9 @@
 (function () {
 
     var renderHelper = require('../../helpers/render.helper');
+    var rvHelper = require('../../helpers/rv.helper');
 
     var evRvCommonHelper = require('../../helpers/ev-rv-common.helper');
-
 
     var checkIcon = renderHelper.getCheckIcon();
     var REPORT_BG_CSS_SELECTOR = 'report-bg-level';
@@ -84,104 +84,75 @@
 
     };
 
-    function isColumnInGroupsList(columnNumber, groups) {
+    var handleColumnInGroupList = function (evDataService, obj, column, columnNumber) {
 
-        return groups.length > columnNumber - 1;
+        var result = '';
+        var groups = evDataService.getGroups();
 
-    }
+        if (groups[columnNumber - 1].report_settings.subtotal_type === 'area') {
 
-    function isColumnEqualLastGroup(columnNumber, groups) {
+            var flatList = evDataService.getFlatList();
+            var proxyLineSubtotal;
 
-        return groups.length === columnNumber
+            var skip = false;
 
-    }
+            for (var i = obj.___flat_list_index - 1; i >= 0; i = i - 1) {
 
-    function isColumnAfterGroupsList(columnNumber, groups) {
+                if (flatList[i].___type === 'object' || flatList[i].___type === 'subtotal') {
 
-        return groups.length < columnNumber;
+                    if (flatList[i].___subtotal_type !== 'proxyline') {
 
-    }
+                        skip = true;
+                        break;
+                    }
+
+                }
+
+                if (flatList[i].___level === columnNumber + 1 && flatList[i].___subtotal_type === 'proxyline') {
+
+                    proxyLineSubtotal = flatList[i];
+
+                    break;
+                }
+
+
+            }
+
+            if (skip === false) {
+
+                var foldButton = '';
+
+                var currentGroup = evDataService.getData(proxyLineSubtotal.___parentId);
+                var group = evDataService.getData(currentGroup.___parentId);
+
+                if (group.___is_open) {
+                    foldButton = '<div class="ev-fold-button" data-type="foldbutton" data-object-id="' + currentGroup.___id + '" data-parent-group-hash-id="' + currentGroup.___parentId + '">-</div>';
+                } else {
+                    foldButton = '<div class="ev-fold-button" data-type="foldbutton" data-object-id="' + currentGroup.___id + '" data-parent-group-hash-id="' + currentGroup.___parentId + '">+</div>';
+                }
+
+                result = foldButton + '<b>' + currentGroup.group_name + '</b>';
+
+            }
+
+        }
+
+        return result;
+
+    };
 
     var getValue = function (evDataService, obj, column, columnNumber, groups) {
 
         var result = '';
 
-        var areaGroupsBefore = renderHelper.getAreaGroupsBefore(evDataService, groups.length);
 
-        var group = evDataService.getData(obj.___parentId);
+        if (renderHelper.isColumnInGroupsList(columnNumber, groups)) {
 
-        var foldButton = '';
-
-        if (isColumnInGroupsList(columnNumber, groups)) {
-
-            // console.log('isColumnInGroupsList.columnNumber', columnNumber);
-            // console.log('isColumnInGroupsList.areaGroupsBefore', areaGroupsBefore);
-
-            if (areaGroupsBefore.length && areaGroupsBefore.indexOf(columnNumber) !== -1 && obj.___is_first && renderHelper.noLineGroups(evDataService)) {
-
-                var parents = evRvCommonHelper.getParents(obj.___parentId, evDataService);
-
-                var groups = evDataService.getGroups();
-
-                var currentParent;
-                var childOfCurrentParent;
-                var isFirst = true;
-
-                parents.forEach(function (parent) {
-
-                    console.log('parent', parent);
-
-                    if (parent.___level === columnNumber) {
-                        currentParent = parent
-                    }
-
-                    if (!parent.___is_first && parent.___parentId != null && parent.___level !== 1) {
-                        isFirst = false;
-                    }
-
-                });
-
-                if (group.___is_open) {
-                    foldButton = '<div class="ev-fold-button" data-type="foldbutton" data-object-id="' + currentParent.___id + '" data-parent-group-hash-id="' + currentParent.___parentId + '">-</div>';
-                } else {
-                    foldButton = '<div class="ev-fold-button" data-type="foldbutton" data-object-id="' + currentParent.___id + '" data-parent-group-hash-id="' + currentParent.___parentId + '">+</div>';
-                }
-
-
-                if (isFirst && groups[columnNumber].report_settings.subtotal_type === 'area') {
-                    result = foldButton + '<b>' + currentParent.group_name + '</b>'
-                }
-
-
-            } else {
-
-                if (columnNumber < groups.length) {
-                    result = '';
-                }
-
-            }
+            result = handleColumnInGroupList(evDataService, obj, column, columnNumber);
 
         }
 
-        if (isColumnEqualLastGroup(columnNumber, groups)) {
-
-            if (groups[columnNumber - 1].report_settings.subtotal_type === 'area' && obj.___is_first) {
-
-                var parent = evDataService.getData(obj.___parentId);
-
-                if (group.___is_open) {
-                    foldButton = '<div class="ev-fold-button" data-type="foldbutton" data-object-id="' + parent.___id + '" data-parent-group-hash-id="' + parent.___parentId + '">-</div>';
-                } else {
-                    foldButton = '<div class="ev-fold-button" data-type="foldbutton" data-object-id="' + parent.___id + '" data-parent-group-hash-id="' + parent.___parentId + '">+</div>';
-                }
-
-                result = foldButton + '<b>' + parent.group_name + '</b>';
-
-            }
-
-        }
-
-        if (isColumnAfterGroupsList(columnNumber, groups)) {
+        if (renderHelper.isColumnAfterGroupsList(columnNumber, groups)) {
 
             if (obj[column.key]) {
 
@@ -216,13 +187,17 @@
 
     };
 
-    var getBorderBottomTransparent = function (obj, columnNumber, groups, nextItem) {
+    var getBorderBottomTransparent = function (evDataService, obj, columnNumber, groups) {
 
         var result = '';
+        var nextItem = null;
+        var flatList = evDataService.getFlatList();
+
+        if (flatList.length > obj.___flat_list_index + 1) {
+            nextItem = flatList[obj.___flat_list_index + 1]
+        }
 
         if (columnNumber <= groups.length && columnNumber <= obj.___level) {
-
-            // if (groups[columnNumber - 1].report_settings.subtotal_type === 'area') {
 
             if (nextItem && nextItem.___type !== 'subtotal' && nextItem.___level === obj.___level) {
                 result = 'border-bottom-transparent';
@@ -236,7 +211,6 @@
                 result = 'border-bottom-transparent';
             }
 
-            // }
         }
 
         return result;
@@ -264,9 +238,12 @@
 
     };
 
-    var render = function (evDataService, obj, columns, groups, nextItem) {
+    var render = function (evDataService, obj) {
 
         var classList = ['g-row'];
+
+        var columns = evDataService.getColumns();
+        var groups = evDataService.getGroups();
 
         var rowSelection;
 
@@ -290,17 +267,17 @@
 
         obj.___cells_values = [];
 
-        columns.forEach(function (column, index) {
+        columns.forEach(function (column, columnIndex) {
 
             var textAlign = '';
             var colorNegative = getColorNegativeNumber(obj, column);
-            var borderBottomTransparent = getBorderBottomTransparent(obj, index + 1, groups, nextItem);
+            var borderBottomTransparent = getBorderBottomTransparent(evDataService, obj, columnIndex + 1, groups);
 
             if (column.value_type === 20) {
                 textAlign = 'text-right'
             }
 
-            var value = getValue(evDataService, obj, column, index + 1, groups);
+            var value = getValue(evDataService, obj, column, columnIndex + 1, groups);
 
             obj.___cells_values.push(value);
 

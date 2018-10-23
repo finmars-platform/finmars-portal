@@ -1,6 +1,7 @@
 (function () {
 
     var renderHelper = require('../../helpers/render.helper');
+    var rvHelper = require('../../helpers/rv.helper');
 
     var evRvCommonHelper = require('../../helpers/ev-rv-common.helper');
 
@@ -8,13 +9,18 @@
 
     var REPORT_BG_CSS_SELECTOR = 'report-bg-level';
 
-    var getBorderBottomTransparent = function (obj, columnNumber, groups, nextItem) {
+    var getBorderBottomTransparent = function (evDataService, obj, columnNumber, groups) {
 
         var result = '';
 
-        if (columnNumber <= groups.length && columnNumber <= obj.___level) {
+        var nextItem = null;
+        var flatList = evDataService.getFlatList();
 
-            // if (groups[columnNumber - 1].report_settings.subtotal_type === 'area') {
+        if (flatList.length > obj.___flat_list_index + 1) {
+            nextItem = flatList[obj.___flat_list_index + 1]
+        }
+
+        if (columnNumber <= groups.length && columnNumber <= obj.___level) {
 
             if (nextItem) {
 
@@ -26,78 +32,69 @@
 
             }
 
-            // }
         }
 
         return result;
 
     };
 
-    var getValue = function (evDataService, obj, column, columnNumber, nextItem, previousItem) {
+    var getValue = function (evDataService, obj, column, columnNumber) {
 
         var result = '';
 
-        var isFirst = true;
-
-        if(previousItem && obj.___level <= previousItem.___level) {
-            isFirst = false
-        }
+        var isFirst = rvHelper.isFirst(evDataService, obj);
 
         if (columnNumber < obj.___level - 1) {
 
-            if (obj.___subtotal_type === 'line' || (obj.___subtotal_type === 'arealine' && obj.___subtotal_subtype === 'line')) {
+            var groups = evDataService.getGroups();
 
-                if (isFirst) {
+            if (groups[columnNumber - 1].report_settings.subtotal_type === 'area') {
 
-                    var groups = evDataService.getGroups();
+                var flatList = evDataService.getFlatList();
+                var proxyLineSubtotal;
 
-                    console.log("Level (-1)", obj.___level - 1);
+                var skip = false;
 
-                    var groupLevel = obj.___level - 1;
-                    var previousGroupLevel = groupLevel - 1;
-                    var previousGroupIndex = previousGroupLevel - 1;
+                for (var i = obj.___flat_list_index - 1; i >= 0; i = i - 1) {
 
-                    var resultsGroupsIndexes = [];
+                    if (flatList[i].___type === 'subtotal') {
 
-                    for (var i = previousGroupIndex; i >= 0; i = i - 1) {
+                        if (flatList[i].___subtotal_type !== 'proxyline') {
 
-                        if (groups[i].report_settings.subtotal_type === 'area') {
-                            resultsGroupsIndexes.push(i)
-                        } else {
+                            skip = true;
                             break;
                         }
 
                     }
 
-                    if (resultsGroupsIndexes.indexOf(columnNumber - 1) !== -1) {
 
-                        var parents = evRvCommonHelper.getParents(obj.___parentId, evDataService);
-
-                        parents.forEach(function (parent) {
-
-                            if (parent.___level === columnNumber) {
-
-                                var group = evDataService.getData(parent.___parentId);
-
-                                var foldButton = '';
-
-                                if (group.___is_open) {
-                                    foldButton = '<div class="ev-fold-button" data-type="foldbutton" data-object-id="' + parent.___id + '" data-parent-group-hash-id="' + parent.___parentId + '">-</div>';
-                                } else {
-                                    foldButton = '<div class="ev-fold-button" data-type="foldbutton" data-object-id="' + parent.___id + '" data-parent-group-hash-id="' + parent.___parentId + '">+</div>';
-                                }
-
-                                result = foldButton + '<b>' + parent.group_name + '</b>'
-                            }
-
-                        })
-
-
+                    if (flatList[i].___level === columnNumber + 1 && flatList[i].___subtotal_type === 'proxyline') {
+                        proxyLineSubtotal = flatList[i];
+                        break;
                     }
 
                 }
 
+                if (skip === false) {
+
+                    var foldButton = '';
+
+                    var currentGroup = evDataService.getData(proxyLineSubtotal.___parentId);
+                    var group = evDataService.getData(currentGroup.___parentId);
+
+                    if (group.___is_open) {
+                        foldButton = '<div class="ev-fold-button" data-type="foldbutton" data-object-id="' + currentGroup.___id + '" data-parent-group-hash-id="' + currentGroup.___parentId + '">-</div>';
+                    } else {
+                        foldButton = '<div class="ev-fold-button" data-type="foldbutton" data-object-id="' + currentGroup.___id + '" data-parent-group-hash-id="' + currentGroup.___parentId + '">+</div>';
+                    }
+
+                    result = foldButton + '<b>' + currentGroup.group_name + '</b>';
+
+                }
+
             }
+
+            return result;
 
         }
 
@@ -127,28 +124,21 @@
 
         var result = '';
 
-        // if (columnNumber < groups.length && columnNumber < obj.___level - 1) {
-        //
-        //     if (groups[columnNumber - 1].report_settings.subtotal_type === 'area') {
-        //         result = REPORT_BG_CSS_SELECTOR + '-' + columnNumber;
-        //
-        //     }
-        //
-        // } else {
-
         if (columnNumber >= obj.___level - 1) {
 
             result = REPORT_BG_CSS_SELECTOR + '-' + (obj.___level - 1);
 
         }
 
-        // }
 
         return result;
 
     };
 
-    var render = function (evDataService, obj, columns, groups, nextItem, previousItem) {
+    var render = function (evDataService, obj) {
+
+        var columns = evDataService.getColumns();
+        var groups = evDataService.getGroups();
 
         var foldButton = '';
 
@@ -161,6 +151,10 @@
         }
 
         var classList = ['g-row'];
+
+        if (obj.___subtotal_type === 'proxyline') {
+            classList.push('proxyline')
+        }
 
         var rowSelection;
 
@@ -200,9 +194,9 @@
                 foldButtonStr = ''
             }
 
-            var borderBottomTransparent = getBorderBottomTransparent(obj, columnNumber, groups, nextItem);
+            var borderBottomTransparent = getBorderBottomTransparent(evDataService, obj, columnNumber, groups);
 
-            var value = getValue(evDataService, obj, column, columnNumber, nextItem, previousItem);
+            var value = getValue(evDataService, obj, column, columnNumber);
 
             obj.___cells_values.push(value);
 

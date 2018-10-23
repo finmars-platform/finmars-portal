@@ -27,18 +27,6 @@
 
             item = projection[i];
 
-            if (i + 1 < projection.length) {
-                nextItem = projection[i + 1];
-            } else {
-                nextItem = null;
-            }
-
-            if (i > 0) {
-                previousItem = projection[i - 1];
-            } else {
-                previousItem = null;
-            }
-
             if (item.___type === 'placeholder_group' || item.___type === 'placeholder_object') {
                 rows.push('<div class="placeholder-row"></div>')
             }
@@ -48,15 +36,16 @@
             }
 
             if (item.___type === 'blankline') {
-                rows.push(blanlineRender.render(evDataService, item, columns, groups, nextItem))
+                rows.push(blanlineRender.render(evDataService, item))
             }
 
             if (item.___type === 'object') {
-                rows.push(objectRender.render(evDataService, item, columns, groups, nextItem));
+                rows.push(objectRender.render(evDataService, item));
             }
 
-            if (item.___type === 'subtotal') {
-                rows.push(subtotalRender.render(evDataService, item, columns, groups, nextItem, previousItem));
+            if (item.___type === 'subtotal' && item.___subtotal_type !== 'proxyline') {
+            // if (item.___type === 'subtotal') {
+                rows.push(subtotalRender.render(evDataService, item));
             }
 
         }

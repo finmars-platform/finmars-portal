@@ -23,51 +23,7 @@
 
     var calculateTotalHeight = function (evDataService) {
 
-        var unfoldedGroups = evDataHelper.getUnfoldedGroups(evDataService);
-        var groups = evDataService.getGroups();
-
-        var count = 0;
-
-        unfoldedGroups.forEach(function (unfoldedGroup) {
-
-            var subtotalCount = 0;
-            var blankLinesCount = 0
-
-            groups.forEach(function (group, index) {
-
-                if (index + 1 === unfoldedGroup.___level) {
-
-                    if (group.report_settings.subtotal_type === 'area') {
-                        subtotalCount = 1;
-                    }
-
-                    if (group.report_settings.subtotal_type === 'line') {
-                        subtotalCount = 1;
-                    }
-
-                    if (group.report_settings.subtotal_type === 'arealine') {
-                        subtotalCount = 2;
-                    }
-
-                    if (group.report_settings.blankline_type === 'area') {
-                        blankLinesCount = 1;
-                    }
-
-                }
-
-            });
-
-            var current = 1;
-
-            if (unfoldedGroup.___parentId === null) {
-                current = 0;
-            }
-
-            count = count + unfoldedGroup.count + subtotalCount + blankLinesCount - current;
-
-        });
-
-        // console.log('calculateTotalHeight.count', count);
+        var count = evDataService.getFlatList().length;
 
         var rowHeight = evDataService.getRowHeight();
 
