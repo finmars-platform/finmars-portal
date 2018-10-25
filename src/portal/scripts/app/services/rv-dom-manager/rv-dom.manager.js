@@ -23,7 +23,15 @@
 
     var calculateTotalHeight = function (evDataService) {
 
-        var count = evDataService.getFlatList().length;
+        var count = evDataService.getFlatList().filter(function (item) {
+
+            if (item.___type === 'subtotal' && item.___subtotal_type === 'proxyline') {
+                return false;
+            }
+
+            return true;
+
+        }).length;
 
         var rowHeight = evDataService.getRowHeight();
 
