@@ -25,7 +25,7 @@
 
         entityViewerEventService.addEventListener(evEvents.GROUPS_LEVEL_FOLD, function () {
 
-            console.log('groups fold')
+            // console.log('groups fold')
 
 
         });
@@ -33,7 +33,7 @@
         entityViewerEventService.addEventListener(evEvents.GROUPS_LEVEL_UNFOLD, function () {
 
 
-            console.log('groups unfold')
+            // console.log('groups unfold')
 
         });
 

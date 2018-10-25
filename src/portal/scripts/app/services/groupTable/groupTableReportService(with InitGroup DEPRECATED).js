@@ -470,7 +470,7 @@
                                                 groupObject = groupItem;
                                             }
 
-                                            console.log('groupItem', groupItem);
+                                            // console.log('groupItem', groupItem);
 
                                             if (groupItem.hasOwnProperty('report_settings')) {
                                                 groupObject.level = $index;

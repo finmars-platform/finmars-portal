@@ -308,13 +308,13 @@
 
                 function syncColumnsWithGroups() {
 
-                    console.log('herere soonq?');
+                    // console.log('herere soonq?');
 
                     var columns = scope.evDataService.getColumns();
                     var groups = scope.evDataService.getGroups();
 
-                    console.log('syncColumnsWithGroups.columns', columns);
-                    console.log('syncColumnsWithGroups.groups', groups);
+                    // console.log('syncColumnsWithGroups.columns', columns);
+                    // console.log('syncColumnsWithGroups.groups', groups);
 
                     var newColumnList = [];
 
@@ -428,10 +428,10 @@
 
                                 scope.evDataService.setGroups(result);
 
-                                console.log('groups', groups);
-                                console.log('elemItems', elemItems);
-
-                                console.log('element', element);
+                                // console.log('groups', groups);
+                                // console.log('elemItems', elemItems);
+                                //
+                                // console.log('element', element);
 
                                 scope.evEventService.dispatchEvent(evEvents.GROUPS_CHANGE);
 

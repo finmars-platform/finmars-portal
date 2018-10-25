@@ -18,7 +18,7 @@
 
 			membersAndGroupsService.getMemberOrGroupByKey('groups', groupId).then(function (data) {
 				vm.groups = data;
-				console.log('groups is', data);
+				// console.log('groups is', data);
 				var assignedMembersIds = vm.groups.members;
 				// separate assinged members from available
 				if (assignedMembersIds && assignedMembersIds.length > 0) {
