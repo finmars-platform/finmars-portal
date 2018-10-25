@@ -28,6 +28,7 @@
             }
 
             if(taskId !== reportOptions.task_id) {
+                taskId = reportOptions.task_id;
                 items = metaHelper.recursiveDeepCopy(reportOptions.items);
             }
 
