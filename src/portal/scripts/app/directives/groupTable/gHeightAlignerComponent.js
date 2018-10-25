@@ -116,7 +116,7 @@
 
                     var additions = scope.evDataService.getAdditions();
 
-                    console.log('additions', additions);
+                    // console.log('additions', additions);
 
                     if (additions.reportWizard || additions.editor || additions.permissionEditor) {
 

@@ -453,7 +453,7 @@
 
         var list = utilsHelper.convertTreeToList(tree);
 
-        console.log('getFlatStructure.list', list);
+        // console.log('getFlatStructure.list', list);
 
         list = removeItemsFromFoldedGroups(list, evDataService);
 

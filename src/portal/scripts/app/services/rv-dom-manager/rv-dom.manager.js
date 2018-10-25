@@ -159,13 +159,13 @@
 
         var group = evDataService.getData(clickData.___id);
 
-        console.log('group', group);
+        // console.log('group', group);
 
         if (group) { // initialized only first data request
 
             var groups = evDataService.getGroups();
 
-            console.log('group.___is_open', group.___is_open);
+            // console.log('group.___is_open', group.___is_open);
 
             if (group.___is_open) {
 
@@ -173,7 +173,7 @@
 
                 evDataService.setData(group);
 
-                console.log('folld?');
+                // console.log('folld?');
 
                 foldChildGroups(group.___id, evDataService);
 
@@ -197,7 +197,7 @@
 
         }
 
-        console.log('group', group);
+        // console.log('group', group);
 
     };
 

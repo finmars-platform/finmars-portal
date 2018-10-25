@@ -21,7 +21,7 @@
             return _options.page;
         }
 
-        console.log('groupData', groupData);
+        // console.log('groupData', groupData);
 
         if (groupData.___parentId === null && groupData.next === null && groupData.results.length === 0) {
             _options.page = _options.page + 1;
@@ -355,7 +355,7 @@
 
         var list = utilsHelper.convertTreeToList(tree);
 
-        console.log('getFlatStructure.list', list);
+        // console.log('getFlatStructure.list', list);
 
         list = removeItemsFromFoldedGroups(list);
 

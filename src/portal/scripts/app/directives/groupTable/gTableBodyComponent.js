@@ -48,7 +48,7 @@
 
                 function renderReportViewer() {
 
-                    console.log('renderReportViewer');
+                    // console.log('renderReportViewer');
 
                     rvDataHelper.syncLevelFold(scope.evDataService);
 
