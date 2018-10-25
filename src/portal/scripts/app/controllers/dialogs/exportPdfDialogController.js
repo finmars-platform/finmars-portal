@@ -4,6 +4,7 @@
 
     var exportPdfService = require('../../services/exportPdfService')
     var rvRenderer = require('../../services/rv-renderer/rv.renderer');
+    var uiService = require('../../services/uiService');
 
     module.exports = function ($scope, $mdDialog, evDataService, evEventService) {
 
@@ -13,8 +14,11 @@
             data: {}
         };
 
+        vm.zoomPercent = 100;
+
         vm.settings.layout = 'landscape';
         vm.settings.zoom = 1;
+        vm.settings.margin = 4;
 
         vm.settings.data.groups = evDataService.getGroups();
         vm.settings.data.columns = evDataService.getColumns();
@@ -107,15 +111,32 @@
 
             vm.settings.data.content = evDataService.getFlatList();
 
+            vm.settings.zoom = parseInt(vm.zoomPercent, 10) / 100;
+
             console.log('export pdf content', vm.settings.data.content);
+            console.log('vm.settings.zoom', vm.settings.zoom);
 
-            exportPdfService.generatePdf(vm.settings).then(function (blob) {
+            uiService.getActiveListLayout(vm.entityType).then(function (res) {
 
-                showFile(blob);
+                if (res.results.length) {
 
+                    vm.settings.data.layoutName = res.results[0].name;
 
-                $mdDialog.cancel();
-            })
+                } else {
+
+                    vm.settings.data.layoutName = 'Default'
+
+                }
+
+                exportPdfService.generatePdf(vm.settings).then(function (blob) {
+
+                    showFile(blob);
+
+                    $mdDialog.cancel();
+
+                })
+
+            });
 
         }
 

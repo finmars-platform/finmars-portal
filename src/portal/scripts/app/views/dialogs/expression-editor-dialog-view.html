@@ -8,7 +8,7 @@
         <div>
             <md-input-container class="md-block m-t-16 none-max-height">
                 <label>Expression</label>
-                <textarea id="editorExpressionInput" cols="30" rows="10"
+                <textarea id="editorExpressionInput" cols="30" rows="4"
                           data-ng-model="vm.item.expression"></textarea>
             </md-input-container>
         </div>
@@ -16,7 +16,7 @@
         <h2 class="text-center">Available functions</h2>
         <div class="expression-functions-block" layout="row">
 
-            <div class="expression-editor-column " layout="column" flex="30">
+            <div class="expression-editor-column " layout="column" flex="20">
 
                 <div class="{{item.isSelected ? 'selected' : ''}} help-item-menu-item"
                      data-ng-repeat="item in vm.groups"
@@ -25,19 +25,23 @@
                 </div>
             </div>
 
-            <div class="expression-editor-column p-t-8" layout="column" flex="30">
+            <div class="expression-editor-column p-t-8" layout="column" flex="20">
                 <md-input-container class="help-search-control">
                     <input type="text" data-ng-model="vm.searchExpr" placeholder="Search">
                 </md-input-container>
                 <div>
                     <div class="{{item.isSelected ? 'selected' : ''}} help-item-menu-item"
-                         data-ng-repeat="item in vm.expressions | filter: { name: vm.searchExpr, group: vm.selectedHelpGroup.key }"
+                         data-ng-repeat="item in vm.expressions | filter: vm.getFilters()"
                          data-ng-click="vm.selectHelpItem(item)">
                         {{item.name}}
                     </div>
                 </div>
             </div>
-            <div class="expression-editor-column description-column" layout="column" flex="30">
+            <div class="expression-editor-column description-column" layout="column" flex="50">
+
+                <div class="description-column-header" data-ng-bind-html="vm.selectedHelpItem.func">
+
+                </div>
 
                 <div class="description-column-body"
                      data-ng-bind-html="vm.selectedHelpItem.description | trustAsHtml">

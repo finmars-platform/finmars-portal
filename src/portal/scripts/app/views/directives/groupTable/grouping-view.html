@@ -64,6 +64,13 @@
                         </md-button>
                     </div>
 
+                    <div class="ev-fold-button m-t-8" data-ng-if="item.report_settings.is_level_folded"
+                         data-ng-click="unfoldLevel(item, $index)">+
+                    </div>
+                    <div class="ev-fold-button m-t-8" data-ng-if="!item.report_settings.is_level_folded"
+                         data-ng-click="foldLevel(item, $index)">-
+                    </div>
+
                     <div class="caption">
 
                         <span data-ng-if="!item.layout_name">{{item.name}}</span>

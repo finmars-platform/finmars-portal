@@ -1,5 +1,11 @@
 # Changelog
 
+## 25.10.2018
+
+- Update PDF export
+- Improvements in Fold/Unfold system in Report Builder
+- Updates in Expression Editor
+
 ## 23.10.2018
 
 - New Fold/Unfold system in Report Builder

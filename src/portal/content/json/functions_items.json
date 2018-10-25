@@ -2,7 +2,7 @@
   {
     "name": "To string",
     "description": "<p>str(<value>) -> <Result: string> </p> <p><Result: String>: String - text converted from any variable of other class (date, number, boolean). For example, 2018-01-01 as a date object gets converted to '2018-01-01' as a text data. This fucntion is used to convert any non-text variables to text for writing it to any text variables. For example user wants to auto-write transaction date (as a date object in variable <transaction_date> to the text object in variable <notes> - he can use expression str(transaction_date) </p> <p><value> - any value or variable used by user in this expression</p> <p>Examples:</br> str('abcde') for getting data as a text object abcde</br> str(transaction_date) for getting data as a text object which is contained in date variable with name <transaction_date></br> str(coupon_size) for getting data as a text object which is contained in number variable with name <coupon_size></br> str(compare_result) for getting data as a text object which is contained in boolean variable with name <compare_result></br> </p>",
-    "group": "text",
+    "groups": "text",
     "func": "str(a)"
   },
   {
