@@ -50,6 +50,8 @@
 
                     console.log('renderReportViewer');
 
+                    rvDataHelper.syncLevelFold(scope.evDataService);
+
                     var flatList = rvDataHelper.getFlatStructure(scope.evDataService);
                     flatList.shift(); // remove root group
 

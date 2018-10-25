@@ -228,34 +228,72 @@
 
                 };
 
-                scope.toggleFold = function (group) {
+                scope.foldLevel = function (item, $index) {
 
-                    createDefaultOptions();
-
-                    group.options.fold = !group.options.fold;
+                    item.report_settings.is_level_folded = true;
 
                     var groups = scope.evDataService.getGroups();
 
-                    groups.forEach(function (item) {
+                    for (; $index < groups.length; $index = $index + 1) {
 
-                        if (group.key === item.key || group.id === item.id) {
-                            item = group
-                        }
+                        groups[$index].report_settings.is_level_folded = true;
 
-                    });
+                        var groupsContent = evDataHelper.getGroupsByLevel($index + 1, scope.evDataService);
 
-                    scope.evDataService.setGroups(groups);
+                        groupsContent.forEach(function (groupItem) {
+                            groupItem.___is_open = false;
 
-                    scope.evEventService.dispatchEvent(evEvents.GROUPS_CHANGE);
+                            var childrens = evDataHelper.getAllChildrenGroups(groupItem.___id, scope.evDataService);
 
-                    if (group.options.fold) {
-                        scope.evEventService.dispatchEvent(evEvents.GROUPS_LEVEL_FOLD);
-                    } else {
-                        scope.evEventService.dispatchEvent(evEvents.GROUPS_LEVEL_UNFOLD);
+                            childrens.forEach(function (children) {
+
+                                if (children.___type === 'group') {
+
+                                    item = scope.evDataService.getData(children.___id);
+
+                                    if (item) {
+                                        item.___is_open = false;
+                                        scope.evDataService.setData(item);
+                                    } else {
+                                        children.___is_open = false;
+                                        scope.evDataService.setData(children);
+                                    }
+
+
+                                }
+
+                            })
+
+
+                        });
+
                     }
+
+                    scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
 
                 };
 
+                scope.unfoldLevel = function (item, $index) {
+
+                    item.report_settings.is_level_folded = false;
+
+                    var groups = scope.evDataService.getGroups();
+
+                    for (; $index >= 0; $index = $index - 1) {
+
+                        var groupsContent = evDataHelper.getGroupsByLevel($index + 1, scope.evDataService);
+                        groups[$index].report_settings.is_level_folded = false;
+
+                        groupsContent.forEach(function (groupItem) {
+                            groupItem.___is_open = true;
+                            scope.evDataService.setData(groupItem);
+                        });
+
+                    }
+
+                    scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+
+                };
 
                 function createDefaultOptions() {
 

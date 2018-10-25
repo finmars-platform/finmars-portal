@@ -163,6 +163,8 @@
 
         if (group) { // initialized only first data request
 
+            var groups = evDataService.getGroups();
+
             console.log('group.___is_open', group.___is_open);
 
             if (group.___is_open) {
@@ -171,19 +173,27 @@
 
                 evDataService.setData(group);
 
+                console.log('folld?');
+
                 foldChildGroups(group.___id, evDataService);
 
             } else {
 
                 group.___is_open = true;
 
+                groups[group.___level - 1].report_settings.is_level_folded = false;
+
                 console.log('Unfold Group');
 
                 evDataService.setData(group);
 
+                evDataService.setGroups(groups);
+
+                evEventService.dispatchEvent(evEvents.GROUPS_CHANGE);
+
             }
 
-            evEventService.dispatchEvent(evEvents.REDRAW_TABLE)
+            evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
 
         }
 

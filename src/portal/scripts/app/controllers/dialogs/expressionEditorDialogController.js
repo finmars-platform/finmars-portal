@@ -15,13 +15,38 @@
 
         vm.expressionsHistory = [];
 
+        vm.searchExpr = '';
+
         vm.item = item;
+
+        vm.getFilters = function () {
+
+            var result = {};
+
+            result.search_index = vm.searchExpr;
+            // result.formula = vm.searchExpr;
+
+            if (vm.selectedHelpGroup && vm.selectedHelpGroup.key !== 'all') {
+                result.group = vm.selectedHelpGroup.key;
+            }
+
+            return result;
+
+        };
 
         helpService.getFunctionsItems().then(function (data) {
 
             vm.expressions = data;
 
             vm.readyStatus.expressions = true;
+
+            vm.expressions = vm.expressions.map(function (item) {
+
+                item.search_index = item.name + ' ' + item.func;
+
+                return item;
+
+            })
 
             vm.selectedHelpItem = vm.expressions[0];
             $scope.$apply();

@@ -135,6 +135,27 @@
 
     };
 
+    var getColorNegativeNumber = function (obj, column) {
+
+        var result = '';
+
+        if (column.report_settings && column.report_settings.negative_color_format_id === 1) {
+
+            if (column.value_type === 20) {
+
+                if (parseInt(obj[column.key]) < 0) {
+
+                    result = 'negative-red'
+
+                }
+
+            }
+        }
+
+        return result;
+
+    };
+
     var render = function (evDataService, obj) {
 
         var columns = evDataService.getColumns();
@@ -183,6 +204,7 @@
             var textAlign = '';
             var columnNumber = index + 1;
             var foldButtonStr = '';
+            var colorNegative = getColorNegativeNumber(obj, column);
 
             if (column.value_type === 20) {
                 textAlign = 'text-right'
@@ -198,9 +220,13 @@
 
             var value = getValue(evDataService, obj, column, columnNumber);
 
-            obj.___cells_values.push(value);
+            obj.___cells_values.push({
+                width: column.style.width,
+                classList: [textAlign, colorNegative, borderBottomTransparent],
+                value: value
+            });
 
-            cell = '<div class="g-cell-wrap ' + getBgColor(obj, columnNumber, groups) + '" style="width: ' + column.style.width + '"><div class="g-cell ' + textAlign + ' ' + borderBottomTransparent + ' ">' +
+            cell = '<div class="g-cell-wrap ' + getBgColor(obj, columnNumber, groups) + '" style="width: ' + column.style.width + '"><div class="g-cell ' + textAlign + ' ' + colorNegative + ' ' + borderBottomTransparent + ' ">' +
                 foldButtonStr + '<b>' + value + '</b>' +
                 '</div>' +
                 '</div>';

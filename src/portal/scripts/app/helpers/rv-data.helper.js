@@ -6,6 +6,7 @@
     var metaService = require('../services/metaService');
     var rvSubtotalHelper = require('./rv-subtotal.service');
     var rvHelper = require('./rv.helper');
+    var evDataHelper = require('./ev-data.helper');
 
     var getGroupsByParent = function (parentId, evDataService) {
 
@@ -460,7 +461,61 @@
 
     };
 
+    var syncLevelFold = function (evDataService) {
+
+        var groups = evDataService.getGroups();
+
+        if (groups.length) {
+
+            for (var i = 0; i < groups.length; i = i + 1) {
+
+                if (groups[i].report_settings) {
+
+                    if (groups[i].report_settings.is_level_folded === true) {
+
+                        var groupsContent = evDataHelper.getGroupsByLevel(i + 1, evDataService);
+
+                        groupsContent.forEach(function (groupItem) {
+                            groupItem.___is_open = false;
+
+                            var childrens = evDataHelper.getAllChildrenGroups(groupItem.___id, evDataService);
+
+                            childrens.forEach(function (children) {
+
+                                if (children.___type === 'group') {
+
+                                    var item = evDataService.getData(children.___id);
+
+                                    if (item) {
+                                        item.___is_open = false;
+                                        evDataService.setData(item);
+                                    } else {
+                                        children.___is_open = false;
+                                        evDataService.setData(children);
+                                    }
+
+
+                                }
+
+                            })
+
+
+                        });
+
+                        break;
+
+                    }
+
+                }
+
+            }
+
+        }
+
+    };
+
     module.exports = {
+        syncLevelFold: syncLevelFold,
         getFlatStructure: getFlatStructure
     }
 

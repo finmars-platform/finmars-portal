@@ -154,13 +154,45 @@
 
         if (renderHelper.isColumnAfterGroupsList(columnNumber, groups)) {
 
-            if (obj[column.key]) {
+            var parent = evDataService.getData(obj.___parentId);
 
-                result = getEntityAttributeValue(obj, column);
+            if (parent.___is_open) {
+
+                if (obj[column.key]) {
+
+                    result = getEntityAttributeValue(obj, column);
+
+                } else {
+
+                    result = getDynamicAttributeValue(obj, column);
+
+                }
+
 
             } else {
 
-                result = getDynamicAttributeValue(obj, column);
+                if (column.report_settings && !column.report_settings.hide_subtotal) {
+
+                    var subtotal;
+
+                    var flatList = evDataService.getFlatList();
+
+                    for (var i = 0; i < flatList.length; i = i + 1) {
+
+                        if (flatList[i].___level === obj.___level &&
+                            flatList[i].___parentId === obj.___parentId &&
+                            flatList[i].___type === 'subtotal') {
+                            subtotal = flatList[i];
+                            break;
+                        }
+
+                    }
+
+                    if (obj.hasOwnProperty(column.key)) {
+                        result = renderHelper.formatValue(subtotal, column);
+                    }
+
+                }
 
             }
 
@@ -279,7 +311,11 @@
 
             var value = getValue(evDataService, obj, column, columnIndex + 1, groups);
 
-            obj.___cells_values.push(value);
+            obj.___cells_values.push({
+                width: column.style.width,
+                classList: [textAlign, colorNegative, borderBottomTransparent],
+                value: value
+            });
 
             cell = '<div class="g-cell-wrap" style="width: ' + column.style.width + '"><div class="g-cell ' + textAlign + ' ' + colorNegative + ' ' + borderBottomTransparent + '">' + value + '</div></div>';
 
