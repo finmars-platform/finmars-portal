@@ -2,6 +2,7 @@
 
     var filterService = require('./filter.service');
     var sortService = require('./sort.service');
+    var metaHelper = require('../../helpers/meta.helper')
 
     var getList = function (entityType, options, entityViewerDataService) {
 
@@ -18,15 +19,11 @@
 
             var reportOptions = entityViewerDataService.getReportOptions();
 
-            var items = JSON.parse(JSON.stringify(reportOptions.items));
+            var items = metaHelper.recursiveDeepCopy(reportOptions.items);
 
             items = filterService.filterByRegularFilters(items, regularFilters);
 
-            // console.log('rv-data-provider-objects-service.getList.items.length after regular filters', items.length);
-
             items = filterService.filterByGroupsFilters(items, options);
-
-            // console.log('rv-data-provider-objects-service.getList.items.length after groups filters', items.length);
 
             if (options.ordering) {
                 items = sortService.sortItems(items, options.ordering);
@@ -34,10 +31,6 @@
 
             result.count = items.length;
             result.results = items;
-
-            // console.log('rv-data-provider-objects-service.getList', options);
-            // console.log('rv-data-provider-objects-service.getList', entityType);
-            // console.log('rv-data-provider-objects-service.getList.result', result);
 
             resolve(result)
 
