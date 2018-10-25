@@ -113,7 +113,7 @@
 
             var reportOptions = entityViewerDataService.getReportOptions();
 
-            reportOptions = Object.assign({}, reportOptions, {task_id: null});
+            reportOptions = Object.assign({}, reportOptions);
 
             reportOptions.items = reportHelper.injectIntoItems(reportOptions.items, reportOptions);
             reportOptions.items = reportHelper.releaseEntityObjects(reportOptions.items);
