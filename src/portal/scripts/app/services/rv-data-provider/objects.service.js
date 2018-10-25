@@ -4,6 +4,9 @@
     var sortService = require('./sort.service');
     var metaHelper = require('../../helpers/meta.helper')
 
+    var taskId = null;
+    var items = [];
+
     var getList = function (entityType, options, entityViewerDataService) {
 
         return new Promise(function (resolve, reject) {
@@ -19,7 +22,16 @@
 
             var reportOptions = entityViewerDataService.getReportOptions();
 
-            var items = metaHelper.recursiveDeepCopy(reportOptions.items);
+            if (taskId == null) {
+                taskId = reportOptions.task_id;
+                items = metaHelper.recursiveDeepCopy(reportOptions.items);
+            }
+
+            if(taskId !== reportOptions.task_id) {
+                items = metaHelper.recursiveDeepCopy(reportOptions.items);
+            }
+
+            // items = metaHelper.recursiveDeepCopy(reportOptions.items);
 
             items = filterService.filterByRegularFilters(items, regularFilters);
 
