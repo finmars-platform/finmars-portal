@@ -6,6 +6,7 @@
 
     var taskId = null;
     var items = [];
+    var itemsCache = [];
 
     var getList = function (entityType, options, entityViewerDataService) {
 
@@ -24,13 +25,17 @@
 
             if (taskId == null) {
                 taskId = reportOptions.task_id;
-                items = metaHelper.recursiveDeepCopy(reportOptions.items);
+                itemsCache = metaHelper.recursiveDeepCopy(reportOptions.items);
             }
 
-            if(taskId !== reportOptions.task_id) {
+            if (taskId !== reportOptions.task_id) {
                 taskId = reportOptions.task_id;
-                items = metaHelper.recursiveDeepCopy(reportOptions.items);
+                itemsCache = metaHelper.recursiveDeepCopy(reportOptions.items);
             }
+
+            items = itemsCache.map(function (item) {
+                return item
+            });
 
             // items = metaHelper.recursiveDeepCopy(reportOptions.items);
 
