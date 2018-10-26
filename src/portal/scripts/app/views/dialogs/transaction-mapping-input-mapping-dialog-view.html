@@ -13,7 +13,7 @@
 
                     <h2>Expression / <span data-ng-bind="vm.transactionType.name"></span></h2>
 
-                    <div data-ng-repeat="item in vm.transactionType.inputs">
+                    <div data-ng-repeat="item in vm.inputs">
 
                         <div layout="row">
 
@@ -29,10 +29,7 @@
                                     </md-input-container>
                                 </div>
                                 <div flex="20">
-                                    <md-button class="md-raised md-primary expr-btn"
-                                               data-ng-click="vm.openExpressionDialog($event, item)">
-                                        ...
-                                    </md-button>
+                                    <expression-editor-button data-item="item.mapping.expression"></expression-editor-button>
                                 </div>
                             </div>
                             <div flex="10" data-ng-if="item.value_type == 100">
