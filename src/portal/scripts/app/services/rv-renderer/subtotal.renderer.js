@@ -75,6 +75,10 @@
 
                 }
 
+                if (proxyLineSubtotal && proxyLineSubtotal.___level < obj.___level && obj.___type === 'subtotal' && obj.___subtotal_type === 'area') {
+                    skip = true;
+                }
+
                 if (skip === false) {
 
                     var foldButton = '';
