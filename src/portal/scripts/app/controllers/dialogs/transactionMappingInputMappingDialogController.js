@@ -21,6 +21,8 @@
         vm.data = data;
         vm.item = JSON.parse(JSON.stringify(vm.data.item));
 
+        vm.inputs = [];
+
         transactionTypeService.getByKey(vm.item.transaction_type).then(function (data) {
             vm.transactionType = data;
 
@@ -29,13 +31,17 @@
 
                 vm.transactionType.inputs.forEach(function (input) {
 
-                    if (input.id == field.transaction_type_input) {
+                    if (input.id === field.transaction_type_input) {
 
-                        if (!input.hasOwnProperty('mapping')) {
-                            input.mapping = {expression: ''};
+                        var inputObject = Object.assign({}, input);
+
+                        if (!inputObject.hasOwnProperty('mapping')) {
+                            inputObject.mapping = {expression: ''};
                         }
 
-                        input.mapping.expression = field.value_expr;
+                        inputObject.mapping.expression = field.value_expr;
+
+                        vm.inputs.push(inputObject);
 
                     }
 
@@ -66,39 +72,9 @@
             }
         };
 
-        vm.openExpressionDialog = function ($event, item) {
-
-            if (!item.hasOwnProperty('mapping')) {
-                item.mapping = {expression: ''};
-            }
-
-            $mdDialog.show({
-                controller: 'ExpressionEditorDialogController as vm',
-                templateUrl: 'views/dialogs/expression-editor-dialog-view.html',
-                parent: angular.element(document.body),
-                targetEvent: $event,
-                preserveScope: true,
-                autoWrap: true,
-                skipHide: true,
-                locals: {
-                    item: {
-                        expression: item.mapping.expression
-                    }
-                }
-            }).then(function (res) {
-                if (res.status === 'agree') {
-                    console.log("res", res.data);
-                    if (res.data) {
-                        item.value = res.data.item.expression;
-                    }
-                    $scope.$apply();
-                }
-            });
-        };
-
         vm.openMapping = function (item, $event) {
 
-            if (item.value_type == 100) {
+            if (item.value_type === 100) {
 
                 $mdDialog.show({
                     controller: 'EntityTypeMappingDialogController as vm',
@@ -108,6 +84,7 @@
                     preserveScope: true,
                     autoWrap: true,
                     skipHide: true,
+                    multiple: true,
                     locals: {
                         mapItem: {complexExpressionEntity: metaContentTypesService.findEntityByContentType(item.content_type, 'ui')}
                     }
@@ -143,24 +120,18 @@
             return vm.readyStatus.transactionType
         };
 
-        console.log('data', data);
-
         vm.cancel = function () {
             $mdDialog.cancel();
         };
 
         vm.agree = function () {
 
-            vm.transactionType.inputs.forEach(function (input) {
-
-                var exist = false;
+            vm.inputs.forEach(function (input) {
 
                 vm.item.fields.forEach(function (field) {
 
                     if (field.transaction_type_input_object) {
-                        if (input.id == field.transaction_type_input) {
-
-                            exist = true;
+                        if (input.id === field.transaction_type_input) {
 
                             if (input.hasOwnProperty('mapping')) {
                                 field.value_expr = input.mapping.expression;
@@ -169,17 +140,6 @@
                     }
 
                 });
-
-                if (!exist) {
-                    if (input.hasOwnProperty('mapping')) {
-                        if (input.mapping.expression != '') {
-                            vm.item.fields.push({
-                                transaction_type_input: input.id,
-                                value_expr: input.mapping.expression
-                            })
-                        }
-                    }
-                }
 
             });
 
