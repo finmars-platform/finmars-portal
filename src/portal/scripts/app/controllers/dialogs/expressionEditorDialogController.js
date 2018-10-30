@@ -6,6 +6,7 @@
     'use strict';
 
     var helpService = require('../../services/helpService');
+    var expressionService = require('../../services/expression.service');
 
     module.exports = function ($scope, $mdDialog, item) {
 
@@ -14,6 +15,8 @@
         vm.readyStatus = {expressions: false, groups: false};
 
         vm.expressionsHistory = [];
+
+        vm.error = false;
 
         vm.searchExpr = '';
 
@@ -46,7 +49,7 @@
 
                 return item;
 
-            })
+            });
 
             vm.selectedHelpItem = vm.expressions[0];
             $scope.$apply();
@@ -117,8 +120,34 @@
             $mdDialog.cancel();
         };
 
+        vm.validate = function () {
+
+            expressionService.validate(vm.item).then(function (data) {
+
+                // console.log('data', data);
+
+                vm.error = false;
+                vm.success = true;
+
+                $scope.$apply();
+
+            }).catch(function (reason) {
+
+                // console.log('reason', reason);
+
+                vm.error = true;
+                vm.success = false;
+
+                $scope.$apply();
+
+            })
+
+        };
+
         vm.agree = function () {
+
             $mdDialog.hide({status: 'agree', data: {item: vm.item}});
+
         };
 
         vm.openHelp = function ($event) {

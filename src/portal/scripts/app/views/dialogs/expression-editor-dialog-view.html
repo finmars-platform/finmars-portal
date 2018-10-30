@@ -1,4 +1,4 @@
-<md-dialog aria-label="" ng-cloak class="expression-editor-dialog draggable-dialog" drag-dialog style="width: 50%">
+<md-dialog aria-label="" ng-cloak class="expression-editor-dialog draggable-dialog" drag-dialog style="width: 75%">
     <md-toolbar>
         <div class="md-toolbar-tools">
             <h2>Expression editor</h2>
@@ -9,14 +9,19 @@
             <md-input-container class="md-block m-t-16 none-max-height">
                 <label>Expression</label>
                 <textarea id="editorExpressionInput" cols="30" rows="4"
-                          data-ng-model="vm.item.expression"></textarea>
+                          data-ng-model="vm.item.expression"
+                          data-ng-change="vm.error = false; vm.success = false;"></textarea>
             </md-input-container>
+
+            <div style="color: red" class="p-16 absolute" data-ng-if="vm.error">Invalid expression</div>
+            <div style="color: green" class="p-16 absolute" data-ng-if="vm.success">Expression is valid</div>
+
         </div>
 
         <h2 class="text-center">Available functions</h2>
         <div class="expression-functions-block" layout="row">
 
-            <div class="expression-editor-column " layout="column" flex="20">
+            <div class="expression-editor-column expression-editor-groups-column" layout="column" flex="20">
 
                 <div class="{{item.isSelected ? 'selected' : ''}} help-item-menu-item"
                      data-ng-repeat="item in vm.groups"
@@ -29,15 +34,17 @@
                 <md-input-container class="help-search-control">
                     <input type="text" data-ng-model="vm.searchExpr" placeholder="Search">
                 </md-input-container>
-                <div>
-                    <div class="{{item.isSelected ? 'selected' : ''}} help-item-menu-item"
-                         data-ng-repeat="item in vm.expressions | filter: vm.getFilters()"
-                         data-ng-click="vm.selectHelpItem(item)">
-                        {{item.name}}
+                <div class="help-functions-holder">
+                    <div>
+                        <div class="{{item.isSelected ? 'selected' : ''}} help-item-menu-item"
+                             data-ng-repeat="item in vm.expressions | filter: vm.getFilters()"
+                             data-ng-click="vm.selectHelpItem(item)">
+                            {{item.name}}
+                        </div>
                     </div>
                 </div>
             </div>
-            <div class="expression-editor-column description-column" layout="column" flex="50">
+            <div class="expression-editor-column description-column" layout="column" flex="60">
 
                 <div class="description-column-header" data-ng-bind-html="vm.selectedHelpItem.func">
 
@@ -59,6 +66,11 @@
             <!--<md-button ng-click="vm.openHelp($event)" class="md-raised md-primary">-->
             <!--Help-->
             <!--</md-button>-->
+
+            <md-button ng-click="vm.validate($event)"
+                       class="md-raised">
+                Validate
+            </md-button>
 
             <md-button ng-click="vm.undo($event)"
                        class="md-raised {{vm.expressionsHistory.length ? '' : 'disabled-btn'}}">
