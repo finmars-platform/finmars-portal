@@ -183,30 +183,30 @@
 
         };
 
-        vm.resolveInstrumentProp = function (item, prop) {
+        vm.resolveInstrumentProp = function (item, key, prop) {
 
-            if (prop == 'instrument') {
-                if (item.transaction.instrument_input !== null) {
+            if (prop === 'instrument') {
+                if (item[key].instrument_input !== null) {
                     return 'instrument_input'
                 }
                 return 'instrument_phantom'
             }
 
-            if (prop == 'linked_instrument') {
-                if (item.transaction.linked_instrument_input !== null) {
+            if (prop === 'linked_instrument') {
+                if (item[key].linked_instrument_input !== null) {
                     return 'linked_instrument_input'
                 }
                 return 'linked_instrument_phantom'
             }
-            if (prop == 'allocation_pl') {
-                if (item.transaction.allocation_pl_input !== null) {
+            if (prop === 'allocation_pl') {
+                if (item[key].allocation_pl_input !== null) {
                     return 'allocation_pl_input'
                 }
                 return 'allocation_pl_phantom'
             }
 
-            if (prop == 'allocation_balance') {
-                if (item.transaction.allocation_balance_input !== null) {
+            if (prop === 'allocation_balance') {
+                if (item[key].allocation_balance_input !== null) {
                     return 'allocation_balance_input'
                 }
                 return 'allocation_balance_phantom'
