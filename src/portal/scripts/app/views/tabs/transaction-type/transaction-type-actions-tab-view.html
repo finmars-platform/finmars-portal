@@ -94,7 +94,7 @@
                                                     <md-input-container>
                                                         <label for="">Instrument</label>
                                                         <md-select
-                                                                data-ng-model="item.transaction[vm.resolveInstrumentProp(item, 'instrument')]">
+                                                                data-ng-model="item.transaction[vm.resolveInstrumentProp(item, 'transaction', 'instrument')]">
                                                             <md-optgroup label="Inputs">
                                                                 <md-option
                                                                         data-ng-click="vm.setTransactionInstrumentInput(item, inputItem.name, 'instrument')"
@@ -209,7 +209,7 @@
                                                     <md-input-container>
                                                         <label for="">Linked instrument</label>
                                                         <md-select
-                                                                data-ng-model="item.transaction[vm.resolveInstrumentProp(item, 'linked_instrument')]">
+                                                                data-ng-model="item.transaction[vm.resolveInstrumentProp(item, 'transaction', 'linked_instrument')]">
                                                             <md-optgroup label="Inputs">
                                                                 <md-option
                                                                         data-ng-click="vm.setTransactionInstrumentInput(item, inputItem.name, 'linked_instrument')"
@@ -267,7 +267,7 @@
                                                     <md-input-container>
                                                         <label for="">Allocation-P&L</label>
                                                         <md-select
-                                                                data-ng-model="item.transaction[vm.resolveInstrumentProp(item, 'allocation_pl')]">
+                                                                data-ng-model="item.transaction[vm.resolveInstrumentProp(item, 'transaction', 'allocation_pl')]">
                                                             <md-optgroup label="Inputs">
                                                                 <md-option
                                                                         data-ng-click="vm.setTransactionInstrumentInput(item, inputItem.name, 'allocation_pl')"
@@ -1533,7 +1533,7 @@
                                                     <md-input-container>
                                                         <label for="">Instrument</label>
                                                         <md-select
-                                                                data-ng-model="item.instrument_factor_schedule[vm.resolveInstrumentProp(item, 'instrument')]">
+                                                                data-ng-model="item.instrument_factor_schedule[vm.resolveInstrumentProp(item, 'transaction', 'instrument_factor_schedule', 'instrument')]">
                                                             <md-optgroup label="Inputs">
                                                                 <md-option
                                                                         data-ng-click="vm.setItemInstrumentInput(item, 'instrument_factor_schedule', inputItem.name, 'instrument')"
