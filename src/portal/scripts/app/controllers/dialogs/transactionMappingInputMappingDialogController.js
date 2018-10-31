@@ -130,6 +130,23 @@
 
         vm.agree = function () {
 
+            if (!vm.item.fields.length) {
+                vm.inputs.forEach(function (input) {
+
+                    var expression = '';
+
+                    if (input.mapping && input.mapping.expression) {
+                        expression = input.mapping.expression;
+                    }
+
+                    vm.item.fields.push({
+                        transaction_type_input: input.id,
+                        value_expr: expression
+                    })
+
+                });
+            }
+
             vm.inputs.forEach(function (input) {
 
                 vm.item.fields.forEach(function (field) {
@@ -146,6 +163,7 @@
                 });
 
             });
+
 
             $mdDialog.hide(
                 {
