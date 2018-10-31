@@ -16,25 +16,27 @@
         var vm = this;
         vm.entity = $scope.$parent.vm.entity;
 
+        vm.relationItems = {};
+
         vm.contentTypes = metaContentTypesService.getListForTransactionTypeInputs();
 
         vm.toggleItem = function (pane, item) {
             pane.toggle();
-            if (item.isPaneExpanded == true) {
-                item.isPaneExpanded = false;
-            } else {
-                item.isPaneExpanded = true;
-            }
+
+            item.isPaneExpanded = !item.isPaneExpanded;
+
         };
 
         vm.preventSpace = function ($event) {
-            //$event.preventDefault();
+
             $event.stopPropagation();
-            //return false;
+
         };
 
         vm.entity.actions.forEach(function (action) {
+
             var keys;
+
             if (action.instrument !== null) {
                 keys = Object.keys(action.instrument);
 
@@ -45,7 +47,9 @@
                         }
                     }
                 })
-            } else {
+            }
+
+            if (action.transaction !== null) {
                 keys = Object.keys(action.transaction);
                 keys.forEach(function (key) {
                     if (action.transaction.hasOwnProperty(key + '_input')) {
@@ -55,6 +59,18 @@
                     }
                 })
             }
+
+            if (action.instrument_factor_schedule !== null) {
+                keys = Object.keys(action.instrument_factor_schedule);
+                keys.forEach(function (key) {
+                    if (action.instrument_factor_schedule.hasOwnProperty(key + '_input')) {
+                        if (action.instrument_factor_schedule[key] !== null) {
+                            action.instrument_factor_schedule[key + '_toggle'] = true;
+                        }
+                    }
+                })
+            }
+
         });
 
         vm.resetProperty = function (item, propertyName, fieldName) {
@@ -122,31 +138,44 @@
         };
 
         vm.addAction = function (actionType) {
+
             $scope.accordion.collapseAll();
-            if (actionType == 'instrument') {
+
+            if (actionType === 'instrument') {
                 vm.entity.actions.push({
                     isPaneExpanded: true,
                     instrument: {}
                 })
-            } else {
+            }
+
+            if (actionType === 'transaction') {
                 vm.entity.actions.push({
                     isPaneExpanded: true,
                     transaction: {}
                 })
             }
+
+            if (actionType === 'instrument_factor_schedule') {
+                vm.entity.actions.push({
+                    isPaneExpanded: true,
+                    instrument_factor_schedule: {}
+                })
+            }
+
             vm.findPhantoms();
         };
 
-        vm.relationItems = {};
-
         vm.moveDown = function (item, $index) {
+
             var swap = JSON.parse(JSON.stringify(item));
             vm.entity.actions[$index] = vm.entity.actions[$index + 1];
             vm.entity.actions[$index + 1] = swap;
             vm.findPhantoms();
+
         };
 
         vm.moveUp = function (item, $index) {
+
             var swap = JSON.parse(JSON.stringify(item));
             vm.entity.actions[$index] = vm.entity.actions[$index - 1];
             vm.entity.actions[$index - 1] = swap;
@@ -236,6 +265,25 @@
                 item.transaction.allocation_balance_input = null;
                 item.transaction.allocation_balance_phantom = positionOrder;
                 item.transaction.allocation_balance = null;
+            }
+
+        };
+
+        vm.setItemInstrumentInput = function (item, key, name, prop) {
+
+            if (prop === 'instrument') {
+                item[key].instrument_input = name;
+                item[key].instrument_phantom = null;
+                item[key].instrument = null;
+            }
+        };
+
+        vm.setItemInstrumentPhantom = function (item, key, positionOrder, prop) {
+
+            if (prop === 'instrument') {
+                item[key].instrument_input = null;
+                item[key].instrument_phantom = positionOrder;
+                item[key].instrument = null;
             }
 
         };

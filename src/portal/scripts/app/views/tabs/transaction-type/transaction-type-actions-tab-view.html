@@ -3,12 +3,13 @@
         <v-accordion class="vAccordion--default" multiple control="accordion">
 
             <v-pane data-ng-repeat="item in vm.entity.actions" expanded="item.isPaneExpanded">
-                <v-pane-header inactive class="transaction-type-action-pane" >
+                <v-pane-header inactive class="transaction-type-action-pane">
                     <div layout="row" layout-align="space-between center">
                         <div layout="row">
                             <span data-ng-if="item.isPaneExpanded">
                                 <md-input-container>
-                                    <input ng-keydown="vm.preventSpace($event)" type="text" data-ng-model="item.action_notes" placeholder="Action notes">
+                                    <input ng-keydown="vm.preventSpace($event)" type="text"
+                                           data-ng-model="item.action_notes" placeholder="Action notes">
                                 </md-input-container>
                             </span>
                             <span data-ng-if="!item.isPaneExpanded" data-ng-bind="item.action_notes"></span>
@@ -122,7 +123,8 @@
                                             <input type="text" data-ng-model="item.transaction.position_size_with_sign">
                                         </md-input-container>
 
-                                        <expression-editor-button data-item="item.transaction.position_size_with_sign"></expression-editor-button>
+                                        <expression-editor-button
+                                                data-item="item.transaction.position_size_with_sign"></expression-editor-button>
 
                                     </div>
                                     <div flex="33" layout="row">
@@ -354,21 +356,24 @@
                                             <label for="">Trade price</label>
                                             <input type="text" data-ng-model="item.transaction.trade_price">
                                         </md-input-container>
-                                        <expression-editor-button data-item="item.transaction.trade_price"></expression-editor-button>
+                                        <expression-editor-button
+                                                data-item="item.transaction.trade_price"></expression-editor-button>
                                     </div>
                                     <div flex="33">
                                         <md-input-container class="expression-input-container">
                                             <label for="">Factor</label>
                                             <input type="text" data-ng-model="item.transaction.factor">
                                         </md-input-container>
-                                        <expression-editor-button data-item="item.transaction.factor"></expression-editor-button>
+                                        <expression-editor-button
+                                                data-item="item.transaction.factor"></expression-editor-button>
                                     </div>
                                     <div flex="33">
                                         <md-input-container class="expression-input-container">
                                             <label for="">Position amount</label>
                                             <input type="text" data-ng-model="item.transaction.position_amount">
                                         </md-input-container>
-                                        <expression-editor-button data-item="item.transaction.position_amount"></expression-editor-button>
+                                        <expression-editor-button
+                                                data-item="item.transaction.position_amount"></expression-editor-button>
                                     </div>
                                 </div>
                                 <div layout="row">
@@ -378,7 +383,8 @@
                                             <input type="text" style="color: grey"
                                                    data-ng-model="item.transaction.accounting_date">
                                         </md-input-container>
-                                        <expression-editor-button data-item="item.transaction.accounting_date"></expression-editor-button>
+                                        <expression-editor-button
+                                                data-item="item.transaction.accounting_date"></expression-editor-button>
                                     </div>
                                     <div flex="33" layout="row">
                                         <div flex="20">
@@ -574,7 +580,8 @@
                                             <label for="">Notes</label>
                                             <input type="text" data-ng-model="item.transaction.notes">
                                         </md-input-container>
-                                        <expression-editor-button data-item="item.transaction.notes"></expression-editor-button>
+                                        <expression-editor-button
+                                                data-item="item.transaction.notes"></expression-editor-button>
                                     </div>
                                 </div>
                             </div>
@@ -764,14 +771,16 @@
                                             <label for="">Cash consideration</label>
                                             <input type="text" data-ng-model="item.transaction.cash_consideration">
                                         </md-input-container>
-                                        <expression-editor-button data-item="item.transaction.cash_consideration"></expression-editor-button>
+                                        <expression-editor-button
+                                                data-item="item.transaction.cash_consideration"></expression-editor-button>
                                     </div>
                                     <div flex="33">
                                         <md-input-container class="expression-input-container">
                                             <label for="">Reference fx-rate</label>
                                             <input type="text" data-ng-model="item.transaction.reference_fx_rate">
                                         </md-input-container>
-                                        <expression-editor-button data-item="item.transaction.reference_fx_rate"></expression-editor-button>
+                                        <expression-editor-button
+                                                data-item="item.transaction.reference_fx_rate"></expression-editor-button>
                                     </div>
                                 </div>
                                 <div layout="row">
@@ -780,21 +789,24 @@
                                             <label for="">Principal with sign</label>
                                             <input type="text" data-ng-model="item.transaction.principal_with_sign">
                                         </md-input-container>
-                                        <expression-editor-button data-item="item.transaction.principal_with_sign"></expression-editor-button>
+                                        <expression-editor-button
+                                                data-item="item.transaction.principal_with_sign"></expression-editor-button>
                                     </div>
                                     <div flex="33">
                                         <md-input-container class="expression-input-container">
                                             <label for="">Carry with sign</label>
                                             <input type="text" data-ng-model="item.transaction.carry_with_sign">
                                         </md-input-container>
-                                        <expression-editor-button data-item="item.transaction.carry_with_sign"></expression-editor-button>
+                                        <expression-editor-button
+                                                data-item="item.transaction.carry_with_sign"></expression-editor-button>
                                     </div>
                                     <div flex="33">
                                         <md-input-container class="expression-input-container">
                                             <label for="">Overheads with sign</label>
                                             <input type="text" data-ng-model="item.transaction.overheads_with_sign">
                                         </md-input-container>
-                                        <expression-editor-button data-item="item.transaction.overheads_with_sign"></expression-editor-button>
+                                        <expression-editor-button
+                                                data-item="item.transaction.overheads_with_sign"></expression-editor-button>
                                     </div>
                                 </div>
                                 <div layout="row">
@@ -803,21 +815,24 @@
                                             <label for="">Principal amount</label>
                                             <input type="text" data-ng-model="item.transaction.principal_amount">
                                         </md-input-container>
-                                        <expression-editor-button data-item="item.transaction.principal_amount"></expression-editor-button>
+                                        <expression-editor-button
+                                                data-item="item.transaction.principal_amount"></expression-editor-button>
                                     </div>
                                     <div flex="33">
                                         <md-input-container class="expression-input-container">
                                             <label for="">Carry amount</label>
                                             <input type="text" data-ng-model="item.transaction.carry_amount">
                                         </md-input-container>
-                                        <expression-editor-button data-item="item.transaction.carry_amount"></expression-editor-button>
+                                        <expression-editor-button
+                                                data-item="item.transaction.carry_amount"></expression-editor-button>
                                     </div>
                                     <div flex="33">
                                         <md-input-container class="expression-input-container">
                                             <label for="">Overheads</label>
                                             <input type="text" data-ng-model="item.transaction.overheads">
                                         </md-input-container>
-                                        <expression-editor-button data-item="item.transaction.overheads"></expression-editor-button>
+                                        <expression-editor-button
+                                                data-item="item.transaction.overheads"></expression-editor-button>
                                     </div>
                                 </div>
                                 <div layout="row">
@@ -827,7 +842,8 @@
                                             <input type="text" style="color: grey;"
                                                    data-ng-model="item.transaction.cash_date">
                                         </md-input-container>
-                                        <expression-editor-button data-item="item.transaction.cash_date"></expression-editor-button>
+                                        <expression-editor-button
+                                                data-item="item.transaction.cash_date"></expression-editor-button>
                                     </div>
                                     <div flex="33" layout="row">
                                         <div flex="20">
@@ -1117,7 +1133,8 @@
                                             <label for="">User code</label>
                                             <input type="text" data-ng-model="item.instrument.user_code">
                                         </md-input-container>
-                                        <expression-editor-button data-item="item.instrument.user_code"></expression-editor-button>
+                                        <expression-editor-button
+                                                data-item="item.instrument.user_code"></expression-editor-button>
                                     </div>
                                 </div>
                                 <div layout="row">
@@ -1126,21 +1143,24 @@
                                             <label for="">Name</label>
                                             <input type="text" data-ng-model="item.instrument.name">
                                         </md-input-container>
-                                        <expression-editor-button data-item="item.instrument.name"></expression-editor-button>
+                                        <expression-editor-button
+                                                data-item="item.instrument.name"></expression-editor-button>
                                     </div>
                                     <div flex="33">
                                         <md-input-container class="expression-input-container">
                                             <label for="">Short name</label>
                                             <input type="text" data-ng-model="item.instrument.short_name">
                                         </md-input-container>
-                                        <expression-editor-button data-item="item.instrument.short_name"></expression-editor-button>
+                                        <expression-editor-button
+                                                data-item="item.instrument.short_name"></expression-editor-button>
                                     </div>
                                     <div flex="33">
                                         <md-input-container class="expression-input-container">
                                             <label for="">Public name</label>
                                             <input type="text" data-ng-model="item.instrument.public_name">
                                         </md-input-container>
-                                        <expression-editor-button data-item="item.instrument.public_name"></expression-editor-button>
+                                        <expression-editor-button
+                                                data-item="item.instrument.public_name"></expression-editor-button>
                                     </div>
                                 </div>
                                 <div layout="row">
@@ -1149,21 +1169,24 @@
                                             <label for="">User text1</label>
                                             <input type="text" data-ng-model="item.instrument.user_text_1">
                                         </md-input-container>
-                                        <expression-editor-button data-item="item.instrument.user_text_1"></expression-editor-button>
+                                        <expression-editor-button
+                                                data-item="item.instrument.user_text_1"></expression-editor-button>
                                     </div>
                                     <div flex="33">
                                         <md-input-container class="expression-input-container">
                                             <label for="">User text2</label>
                                             <input type="text" data-ng-model="item.instrument.user_text_2">
                                         </md-input-container>
-                                        <expression-editor-button data-item="item.instrument.user_text_2"></expression-editor-button>
+                                        <expression-editor-button
+                                                data-item="item.instrument.user_text_2"></expression-editor-button>
                                     </div>
                                     <div flex="33">
                                         <md-input-container class="expression-input-container">
                                             <label for="">User text3</label>
                                             <input type="text" data-ng-model="item.instrument.user_text_3">
                                         </md-input-container>
-                                        <expression-editor-button data-item="item.instrument.user_text_3"></expression-editor-button>
+                                        <expression-editor-button
+                                                data-item="item.instrument.user_text_3"></expression-editor-button>
                                     </div>
                                 </div>
                                 <div layout="row">
@@ -1172,7 +1195,8 @@
                                             <label for="">Notes</label>
                                             <input type="text" data-ng-model="item.instrument.notes">
                                         </md-input-container>
-                                        <expression-editor-button data-item="item.instrument.notes"></expression-editor-button>
+                                        <expression-editor-button
+                                                data-item="item.instrument.notes"></expression-editor-button>
                                     </div>
                                 </div>
                             </div>
@@ -1274,7 +1298,8 @@
                                             <input type="text"
                                                    data-ng-model="item.instrument.reference_for_pricing">
                                         </md-input-container>
-                                        <expression-editor-button data-item="item.instrument.reference_for_pricing"></expression-editor-button>
+                                        <expression-editor-button
+                                                data-item="item.instrument.reference_for_pricing"></expression-editor-button>
                                     </div>
                                 </div>
                                 <div layout="row">
@@ -1328,14 +1353,16 @@
                                             <label for="">Price multiplier</label>
                                             <input type="text" data-ng-model="item.instrument.price_multiplier">
                                         </md-input-container>
-                                        <expression-editor-button data-item="item.instrument.price_multiplier"></expression-editor-button>
+                                        <expression-editor-button
+                                                data-item="item.instrument.price_multiplier"></expression-editor-button>
                                     </div>
                                     <div flex="33">
                                         <md-input-container class="expression-input-container">
                                             <label for="">Default price</label>
                                             <input type="text" data-ng-model="item.instrument.default_price">
                                         </md-input-container>
-                                        <expression-editor-button data-item="item.instrument.default_price"></expression-editor-button>
+                                        <expression-editor-button
+                                                data-item="item.instrument.default_price"></expression-editor-button>
                                     </div>
                                 </div>
                                 <div layout="row">
@@ -1389,14 +1416,16 @@
                                             <label for="">Accrued multiplier</label>
                                             <input type="text" data-ng-model="item.instrument.accrued_multiplier">
                                         </md-input-container>
-                                        <expression-editor-button data-item="item.instrument.accrued_multiplier"></expression-editor-button>
+                                        <expression-editor-button
+                                                data-item="item.instrument.accrued_multiplier"></expression-editor-button>
                                     </div>
                                     <div flex="33">
                                         <md-input-container class="expression-input-container">
                                             <label for="">Default accrued</label>
                                             <input type="text" data-ng-model="item.instrument.default_accrued">
                                         </md-input-container>
-                                        <expression-editor-button data-item="item.instrument.default_accrued"></expression-editor-button>
+                                        <expression-editor-button
+                                                data-item="item.instrument.default_accrued"></expression-editor-button>
                                     </div>
                                 </div>
                                 <div layout="row">
@@ -1456,8 +1485,103 @@
                                             <input type="text" style="color: grey"
                                                    data-ng-model="item.instrument.maturity_date">
                                         </md-input-container>
-                                        <expression-editor-button data-item="item.instrument.maturity_date"></expression-editor-button>
+                                        <expression-editor-button
+                                                data-item="item.instrument.maturity_date"></expression-editor-button>
                                     </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div data-ng-if="item.instrument_factor_schedule != null">
+                        <div layout="row">
+                            <div flex="50">
+                                <div layout="row">
+                                    <div flex="50">
+                                        <div layout="row">
+                                            <div flex="20">
+                                                <md-button
+                                                        class="md-icon-button md-raised {{!!item.instrument_factor_schedule.instrument_toggle ? 'ref' : ''}}"
+                                                        style="transform: scale(0.7,0.7)"
+                                                        data-ng-click="vm.resetPropertyBtn(item, 'instrument_factor_schedule', 'instrument')">
+                                                    <span data-ng-if="!!item.instrument_factor_schedule.instrument_toggle">R</span>
+                                                    <span data-ng-if="!!!item.instrument_factor_schedule.instrument_toggle">I</span>
+                                                </md-button>
+                                            </div>
+                                            <div flex="80">
+                                                <div data-ng-if="item.instrument_factor_schedule.instrument_toggle">
+                                                    <md-input-container>
+                                                        <label for="">Instrument</label>
+                                                        <md-select
+                                                                data-ng-model="item.instrument_factor_schedule.instrument"
+                                                                md-on-open="vm.loadRelation('instrument')">
+                                                            <md-option
+                                                                    data-ng-if="!vm.relationItems['instrument'].length"
+                                                                    ng-value="item.instrument_factor_schedule.instrument_object.id">
+                                                                {{item.transaction.instrument_object.name}}
+                                                            </md-option>
+                                                            <md-option
+                                                                    data-ng-if="vm.relationItems['instrument'].length"
+                                                                    data-ng-repeat="relationItem in vm.relationItems['instrument']"
+                                                                    ng-value="relationItem.id">
+                                                                {{relationItem.name}}
+                                                            </md-option>
+                                                        </md-select>
+                                                    </md-input-container>
+                                                </div>
+                                                <div data-ng-if="!item.instrument_factor_schedule.instrument_toggle">
+                                                    <md-input-container>
+                                                        <label for="">Instrument</label>
+                                                        <md-select
+                                                                data-ng-model="item.instrument_factor_schedule[vm.resolveInstrumentProp(item, 'instrument')]">
+                                                            <md-optgroup label="Inputs">
+                                                                <md-option
+                                                                        data-ng-click="vm.setItemInstrumentInput(item, 'instrument_factor_schedule', inputItem.name, 'instrument')"
+                                                                        data-ng-repeat="inputItem in vm.findInputs('instrument')"
+                                                                        ng-value="inputItem.name">
+                                                                    {{inputItem.name}}
+                                                                </md-option>
+                                                            </md-optgroup>
+                                                            <md-optgroup label="Phantoms">
+                                                                <md-option
+                                                                        data-ng-click="vm.setItemInstrumentPhantom(item, 'instrument_factor_schedule', phantomItem.positionOrder, 'instrument')"
+                                                                        data-ng-repeat="phantomItem in vm.findPhantoms()"
+                                                                        ng-value="phantomItem.positionOrder">
+                                                                    {{phantomItem.action_notes}}
+                                                                </md-option>
+                                                            </md-optgroup>
+                                                        </md-select>
+                                                    </md-input-container>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div layout="row">
+                                    <div flex="50">
+                                        <div layout="row">
+                                            <div flex="50">
+                                                <md-input-container class="expression-input-container">
+                                                    <label for="">Factor</label>
+                                                    <input type="text"
+                                                           data-ng-model="item.instrument_factor_schedule.factor_value">
+                                                </md-input-container>
+                                                <expression-editor-button
+                                                        data-item="item.instrument_factor_schedule.factor_value"></expression-editor-button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div flex="50">
+                                <div flex="50" layout="row">
+                                    <md-input-container class="expression-input-container">
+                                        <label for="">Effective date</label>
+                                        <input type="text" style="color: grey;"
+                                               data-ng-model="item.instrument_factor_schedule.effective_date">
+                                    </md-input-container>
+                                    <expression-editor-button
+                                            data-item="item.instrument_factor_schedule.effective_date"></expression-editor-button>
                                 </div>
                             </div>
                         </div>
@@ -1474,6 +1598,12 @@
             </md-button>
             <md-button class="md-raised" data-ng-click="vm.addAction('instrument')">
                 Add new instrument action
+            </md-button>
+        </div>
+
+        <div layout="row" layout-align="end center" class="m-t-24">
+            <md-button class="md-raised" data-ng-click="vm.addAction('instrument_factor_schedule')">
+                Add new instrument factor schedule action
             </md-button>
         </div>
 
