@@ -26,22 +26,26 @@
         transactionTypeService.getByKey(vm.item.transaction_type).then(function (data) {
             vm.transactionType = data;
 
+            vm.transactionType.inputs.forEach(function (input) {
+
+                var inputObject = Object.assign({}, input);
+
+                if (!inputObject.hasOwnProperty('mapping')) {
+                    inputObject.mapping = {expression: ''};
+                }
+
+                vm.inputs.push(inputObject);
+
+            });
+
 
             vm.item.fields.forEach(function (field) {
 
-                vm.transactionType.inputs.forEach(function (input) {
+                vm.inputs.forEach(function (input) {
 
                     if (input.id === field.transaction_type_input) {
 
-                        var inputObject = Object.assign({}, input);
-
-                        if (!inputObject.hasOwnProperty('mapping')) {
-                            inputObject.mapping = {expression: ''};
-                        }
-
-                        inputObject.mapping.expression = field.value_expr;
-
-                        vm.inputs.push(inputObject);
+                        input.mapping.expression = field.value_expr;
 
                     }
 
