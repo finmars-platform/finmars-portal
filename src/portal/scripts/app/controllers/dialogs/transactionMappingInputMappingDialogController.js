@@ -124,45 +124,67 @@
             return vm.readyStatus.transactionType
         };
 
+        vm.createFieldsIfNotExist = function () {
+
+            vm.inputs.forEach(function (input) {
+
+                var exist = false;
+
+                vm.item.fields.forEach(function (field) {
+
+                    if (input.id === field.transaction_type_input) {
+                        exist = true;
+                    }
+
+                });
+
+                if (!exist) {
+
+                    if (input.mapping && input.mapping.expression) {
+
+                        vm.item.fields.push({
+                            transaction_type_input: input.id,
+                            value_expr: input.mapping.expression
+                        })
+
+                    }
+
+                }
+
+
+            });
+
+        };
+
+        vm.updateFields = function () {
+
+            vm.inputs.forEach(function (input) {
+
+                vm.item.fields.forEach(function (field) {
+
+                    if (input.id === field.transaction_type_input) {
+
+                        if (input.hasOwnProperty('mapping')) {
+                            field.value_expr = input.mapping.expression;
+                        }
+                    }
+
+
+                });
+
+            });
+
+        };
+
         vm.cancel = function () {
             $mdDialog.cancel();
         };
 
         vm.agree = function () {
 
-            if (!vm.item.fields.length) {
-                vm.inputs.forEach(function (input) {
+            vm.createFieldsIfNotExist();
 
-                    var expression = '';
-
-                    if (input.mapping && input.mapping.expression) {
-                        expression = input.mapping.expression;
-                    }
-
-                    vm.item.fields.push({
-                        transaction_type_input: input.id,
-                        value_expr: expression
-                    })
-
-                });
-            }
-
-            vm.inputs.forEach(function (input) {
-
-                vm.item.fields.forEach(function (field) {
-
-                    if (field.transaction_type_input_object) {
-                        if (input.id === field.transaction_type_input) {
-
-                            if (input.hasOwnProperty('mapping')) {
-                                field.value_expr = input.mapping.expression;
-                            }
-                        }
-                    }
-
-                });
-
-            });
+            vm.updateFields();
 
 
             $mdDialog.hide(

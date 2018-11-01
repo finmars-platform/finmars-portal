@@ -1,0 +1,204 @@
+<div layout="row">
+    <div flex="50">
+        <div layout="row">
+            <div flex="50">
+                <div layout="row">
+                    <div flex="20">
+                        <md-button
+                                class="md-icon-button md-raised {{!!item.instrument_accrual_calculation_schedules.instrument_toggle ? 'ref' : ''}}"
+                                style="transform: scale(0.7,0.7)"
+                                data-ng-click="vm.resetPropertyBtn(item, 'instrument_accrual_calculation_schedules', 'instrument')">
+                            <span data-ng-if="!!item.instrument_accrual_calculation_schedules.instrument_toggle">R</span>
+                            <span data-ng-if="!!!item.instrument_accrual_calculation_schedules.instrument_toggle">I</span>
+                        </md-button>
+                    </div>
+                    <div flex="80">
+                        <div data-ng-if="item.instrument_accrual_calculation_schedules.instrument_toggle">
+                            <md-input-container>
+                                <label for="">Instrument</label>
+                                <md-select
+                                        data-ng-model="item.instrument_accrual_calculation_schedules.instrument"
+                                        md-on-open="vm.loadRelation('instrument')">
+                                    <md-option
+                                            data-ng-if="!vm.relationItems['instrument'].length"
+                                            ng-value="item.instrument_accrual_calculation_schedules.instrument_object.id">
+                                        {{item.instrument_accrual_calculation_schedules.instrument_object.name}}
+                                    </md-option>
+                                    <md-option
+                                            data-ng-if="vm.relationItems['instrument'].length"
+                                            data-ng-repeat="relationItem in vm.relationItems['instrument']"
+                                            ng-value="relationItem.id">
+                                        {{relationItem.name}}
+                                    </md-option>
+                                </md-select>
+                            </md-input-container>
+                        </div>
+                        <div data-ng-if="!item.instrument_accrual_calculation_schedules.instrument_toggle">
+                            <md-input-container>
+                                <label for="">Instrument</label>
+                                <md-select
+                                        data-ng-model="item.instrument_accrual_calculation_schedules[vm.resolveInstrumentProp(item, 'instrument_accrual_calculation_schedules', 'instrument')]">
+                                    <md-optgroup label="Inputs">
+                                        <md-option
+                                                data-ng-click="vm.setItemInstrumentInput(item, 'instrument_accrual_calculation_schedules', inputItem.name, 'instrument')"
+                                                data-ng-repeat="inputItem in vm.findInputs('instrument')"
+                                                ng-value="inputItem.name">
+                                            {{inputItem.name}}
+                                        </md-option>
+                                    </md-optgroup>
+                                    <md-optgroup label="Phantoms">
+                                        <md-option
+                                                data-ng-click="vm.setItemInstrumentPhantom(item, 'instrument_accrual_calculation_schedules', phantomItem.positionOrder, 'instrument')"
+                                                data-ng-repeat="phantomItem in vm.findPhantoms()"
+                                                ng-value="phantomItem.positionOrder">
+                                            {{phantomItem.action_notes}}
+                                        </md-option>
+                                    </md-optgroup>
+                                </md-select>
+                            </md-input-container>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div layout="row">
+            <div flex="33">
+                <md-input-container class="expression-input-container">
+                    <label for="">Accrual start date</label>
+                    <input type="text" data-ng-model="item.instrument_accrual_calculation_schedules.accrual_start_date">
+                </md-input-container>
+                <expression-editor-button
+                        data-item="item.instrument_accrual_calculation_schedules.accrual_start_date"></expression-editor-button>
+            </div>
+            <div flex="33">
+                <md-input-container class="expression-input-container">
+                    <label for="">First payment date</label>
+                    <input type="text" data-ng-model="item.instrument_accrual_calculation_schedules.first_payment_date">
+                </md-input-container>
+                <expression-editor-button
+                        data-item="item.instrument_accrual_calculation_schedules.first_payment_date"></expression-editor-button>
+            </div>
+            <div flex="33">
+                <md-input-container class="expression-input-container">
+                    <label for="">Accrual size</label>
+                    <input type="text" data-ng-model="item.instrument_accrual_calculation_schedules.accrual_size">
+                </md-input-container>
+                <expression-editor-button
+                        data-item="item.instrument_accrual_calculation_schedules.accrual_size"></expression-editor-button>
+            </div>
+        </div>
+    </div>
+    <div flex="50">
+        <div flex="50" layout="row">
+            <md-input-container class="expression-input-container">
+                <label for="">Notes</label>
+                <input type="text" style="color: grey;"
+                       data-ng-model="item.instrument_accrual_calculation_schedules.notes">
+            </md-input-container>
+            <expression-editor-button
+                    data-item="item.instrument_accrual_calculation_schedules.notes"></expression-editor-button>
+        </div>
+        <div layout="row">
+            <div flex="33">
+                <md-input-container class="expression-input-container">
+                    <label for="">Periodicity n</label>
+                    <input type="text" data-ng-model="item.instrument_accrual_calculation_schedules.periodicity_n">
+                </md-input-container>
+                <expression-editor-button
+                        data-item="item.instrument_accrual_calculation_schedules.periodicity_n"></expression-editor-button>
+            </div>
+            <div flex="33">
+                <div flex="20">
+                    <md-button
+                            class="md-icon-button md-raised {{!!item.instrument_accrual_calculation_schedules.periodicity_toggle ? 'ref' : ''}}"
+                            style="transform: scale(0.7,0.7)"
+                            data-ng-click="vm.resetPropertyBtn(item, 'instrument_accrual_calculation_schedules', 'periodicity')">
+                        <span data-ng-if="!!item.instrument_accrual_calculation_schedules.periodicity_toggle">R</span>
+                        <span data-ng-if="!!!item.instrument_accrual_calculation_schedules.periodicity_toggle">I</span>
+                    </md-button>
+                </div>
+                <div flex="80">
+                    <div data-ng-if="item.instrument_accrual_calculation_schedules.periodicity_toggle">
+                        <md-input-container>
+                            <label for="">Periodicity</label>
+                            <md-select data-ng-model="item.instrument_accrual_calculation_schedules.periodicity"
+                                       md-on-open="vm.loadRelation('periodicity')">
+                                <md-option
+                                        data-ng-if="!vm.relationItems['periodicity'].length"
+                                        ng-value="item.instrument_accrual_calculation_schedules.periodicity_object.id">
+                                    {{item.instrument_accrual_calculation_schedules.periodicity_object.name}}
+                                </md-option>
+                                <md-option
+                                        data-ng-if="vm.relationItems['periodicity'].length"
+                                        data-ng-repeat="relationItem in vm.relationItems['periodicity']"
+                                        ng-value="relationItem.id">
+                                    {{relationItem.name}}
+                                </md-option>
+                            </md-select>
+                        </md-input-container>
+                    </div>
+                    <div data-ng-if="!item.instrument_accrual_calculation_schedules.periodicity_toggle">
+                        <md-input-container>
+                            <label for="">Periodicity</label>
+                            <md-select
+                                    data-ng-model="item.instrument_accrual_calculation_schedules.periodicity_input">
+                                <md-option
+                                        data-ng-repeat="inputItem in vm.findInputs('periodicity')"
+                                        ng-value="inputItem.name">
+                                    {{inputItem.name}}
+                                </md-option>
+                            </md-select>
+                        </md-input-container>
+                    </div>
+                </div>
+            </div>
+            <div flex="33">
+
+                <div flex="20">
+                    <md-button
+                            class="md-icon-button md-raised {{!!item.instrument_accrual_calculation_schedules.accrual_calculation_model_toggle ? 'ref' : ''}}"
+                            style="transform: scale(0.7,0.7)"
+                            data-ng-click="vm.resetPropertyBtn(item, 'instrument_accrual_calculation_schedules', 'accrual_calculation_model')">
+                        <span data-ng-if="!!item.instrument_accrual_calculation_schedules.accrual_calculation_model_toggle">R</span>
+                        <span data-ng-if="!!!item.instrument_accrual_calculation_schedules.accrual_calculation_model_toggle">I</span>
+                    </md-button>
+                </div>
+                <div flex="80">
+                    <div data-ng-if="item.instrument_accrual_calculation_schedules.accrual_calculation_model_toggle">
+                        <md-input-container>
+                            <label for="">Accrual calculation model</label>
+                            <md-select data-ng-model="item.instrument_accrual_calculation_schedules.accrual_calculation_model"
+                                       md-on-open="vm.loadRelation('accrual_calculation_model')">
+                                <md-option
+                                        data-ng-if="!vm.relationItems['accrual_calculation_model'].length"
+                                        ng-value="item.instrument_accrual_calculation_schedules.accrual_calculation_model_object.id">
+                                    {{item.instrument_accrual_calculation_schedules.accrual_calculation_model_object.name}}
+                                </md-option>
+                                <md-option
+                                        data-ng-if="vm.relationItems['accrual_calculation_model'].length"
+                                        data-ng-repeat="relationItem in vm.relationItems['accrual_calculation_model']"
+                                        ng-value="relationItem.id">
+                                    {{relationItem.name}}
+                                </md-option>
+                            </md-select>
+                        </md-input-container>
+                    </div>
+                    <div data-ng-if="!item.instrument_accrual_calculation_schedules.accrual_calculation_model_toggle">
+                        <md-input-container>
+                            <label for="">Accrual calculation model</label>
+                            <md-select
+                                    data-ng-model="item.instrument_accrual_calculation_schedules.accrual_calculation_model_input">
+                                <md-option
+                                        data-ng-repeat="inputItem in vm.findInputs('periodicity')"
+                                        ng-value="inputItem.name">
+                                    {{inputItem.name}}
+                                </md-option>
+                            </md-select>
+                        </md-input-container>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>

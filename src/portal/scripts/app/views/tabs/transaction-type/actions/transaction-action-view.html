@@ -1,0 +1,1038 @@
+<div layout="row">
+    <div flex="50">
+        <div layout="row">
+            <md-input-container>
+                <label for="">Transaction class</label>
+                <md-select data-ng-model="item.transaction.transaction_class"
+                           md-on-open="vm.loadRelation('transaction_class')">
+                    <md-option
+                            data-ng-if="!vm.relationItems['transaction_class'].length"
+                            ng-value="item.transaction.transaction_class_object.id">
+                        {{item.transaction.transaction_class_object.name}}
+                    </md-option>
+                    <md-option
+                            data-ng-if="vm.relationItems['transaction_class'].length"
+                            data-ng-repeat="relationItem in vm.relationItems['transaction_class']"
+                            ng-value="relationItem.value">
+                        {{relationItem.name}}
+                    </md-option>
+                </md-select>
+            </md-input-container>
+        </div>
+        <div layout="row">
+            <div flex="33">
+                <div layout="row">
+                    <div flex="20">
+                        <md-button
+                                class="md-icon-button md-raised {{!!item.transaction.instrument_toggle ? 'ref' : ''}}"
+                                style="transform: scale(0.7,0.7)"
+                                data-ng-click="vm.resetPropertyBtn(item, 'transaction', 'instrument')">
+                            <span data-ng-if="!!item.transaction.instrument_toggle">R</span>
+                            <span data-ng-if="!!!item.transaction.instrument_toggle">I</span>
+                        </md-button>
+                    </div>
+                    <div flex="80">
+                        <div data-ng-if="item.transaction.instrument_toggle">
+                            <md-input-container>
+                                <label for="">Instrument</label>
+                                <md-select data-ng-model="item.transaction.instrument"
+                                           md-on-open="vm.loadRelation('instrument')">
+                                    <md-option
+                                            data-ng-if="!vm.relationItems['instrument'].length"
+                                            ng-value="item.transaction.instrument_object.id">
+                                        {{item.transaction.instrument_object.name}}
+                                    </md-option>
+                                    <md-option
+                                            data-ng-if="vm.relationItems['instrument'].length"
+                                            data-ng-repeat="relationItem in vm.relationItems['instrument']"
+                                            ng-value="relationItem.id">
+                                        {{relationItem.name}}
+                                    </md-option>
+                                </md-select>
+                            </md-input-container>
+                        </div>
+                        <div data-ng-if="!item.transaction.instrument_toggle">
+                            <md-input-container>
+                                <label for="">Instrument</label>
+                                <md-select
+                                        data-ng-model="item.transaction[vm.resolveInstrumentProp(item, 'transaction', 'instrument')]">
+                                    <md-optgroup label="Inputs">
+                                        <md-option
+                                                data-ng-click="vm.setTransactionInstrumentInput(item, inputItem.name, 'instrument')"
+                                                data-ng-repeat="inputItem in vm.findInputs('instrument')"
+                                                ng-value="inputItem.name">
+                                            {{inputItem.name}}
+                                        </md-option>
+                                    </md-optgroup>
+                                    <md-optgroup label="Phantoms">
+                                        <md-option
+                                                data-ng-click="vm.setTransactionInstrumentPhantom(item, phantomItem.positionOrder, 'instrument')"
+                                                data-ng-repeat="phantomItem in vm.findPhantoms()"
+                                                ng-value="phantomItem.positionOrder">
+                                            {{phantomItem.action_notes}}
+                                        </md-option>
+                                    </md-optgroup>
+                                </md-select>
+                            </md-input-container>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div flex="33">
+                <md-input-container class="expression-input-container">
+                    <label for="">Position size with sign</label>
+                    <input type="text" data-ng-model="item.transaction.position_size_with_sign">
+                </md-input-container>
+
+                <expression-editor-button
+                        data-item="item.transaction.position_size_with_sign"></expression-editor-button>
+
+            </div>
+            <div flex="33" layout="row">
+                <div flex="20">
+                    <md-button
+                            class="md-icon-button md-raised {{!!item.transaction.transaction_currency_toggle ? 'ref' : ''}}"
+                            style="transform: scale(0.7,0.7)"
+                            data-ng-click="vm.resetPropertyBtn(item, 'transaction', 'transaction_currency')">
+                        <span data-ng-if="!!item.transaction.transaction_currency_toggle">R</span>
+                        <span data-ng-if="!!!item.transaction.transaction_currency_toggle">I</span>
+                    </md-button>
+                </div>
+                <div flex="80">
+                    <div data-ng-if="item.transaction.transaction_currency_toggle">
+                        <md-input-container>
+                            <label for="">Transaction currency</label>
+                            <md-select data-ng-model="item.transaction.transaction_currency"
+                                       md-on-open="vm.loadRelation('transaction_currency')">
+                                <md-option
+                                        data-ng-if="!vm.relationItems['transaction_currency'].length"
+                                        ng-value="item.transaction.transaction_currency_object.id">
+                                    {{item.transaction.transaction_currency_object.name}}
+                                </md-option>
+                                <md-option
+                                        data-ng-if="vm.relationItems['transaction_currency'].length"
+                                        data-ng-repeat="relationItem in vm.relationItems['transaction_currency']"
+                                        ng-value="relationItem.id">
+                                    {{relationItem.name}}
+                                </md-option>
+                            </md-select>
+                        </md-input-container>
+                    </div>
+                    <div data-ng-if="!item.transaction.transaction_currency_toggle">
+                        <md-input-container>
+                            <label for="">Transaction currency</label>
+                            <md-select
+                                    data-ng-model="item.transaction.transaction_currency_input">
+                                <md-option
+                                        data-ng-repeat="inputItem in vm.findInputs('currency')"
+                                        ng-value="inputItem.name">
+                                    {{inputItem.name}}
+                                </md-option>
+                            </md-select>
+                        </md-input-container>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div layout="row">
+            <div flex="33">
+                <div layout="row">
+                    <div flex="20">
+                        <md-button
+                                class="md-icon-button md-raised {{!!item.transaction.linked_instrument_toggle ? 'ref' : ''}}"
+                                style="transform: scale(0.7,0.7)"
+                                data-ng-click="vm.resetPropertyBtn(item, 'transaction', 'linked_instrument')">
+                            <span data-ng-if="!!item.transaction.linked_instrument_toggle">R</span>
+                            <span data-ng-if="!!!item.transaction.linked_instrument_toggle">I</span>
+                        </md-button>
+                    </div>
+                    <div flex="80">
+                        <div data-ng-if="item.transaction.linked_instrument_toggle">
+                            <md-input-container>
+                                <label for="">Linked instrument</label>
+                                <md-select data-ng-model="item.transaction.linked_instrument"
+                                           md-on-open="vm.loadRelation('instrument')">
+                                    <md-option
+                                            data-ng-if="!vm.relationItems['instrument'].length"
+                                            ng-value="item.transaction.linked_instrument_object.id">
+                                        {{item.transaction.instrument_object.name}}
+                                    </md-option>
+                                    <md-option
+                                            data-ng-if="vm.relationItems['instrument'].length"
+                                            data-ng-repeat="relationItem in vm.relationItems['instrument']"
+                                            ng-value="relationItem.id">
+                                        {{relationItem.name}}
+                                    </md-option>
+                                </md-select>
+                            </md-input-container>
+                        </div>
+                        <div data-ng-if="!item.transaction.linked_instrument_toggle">
+                            <md-input-container>
+                                <label for="">Linked instrument</label>
+                                <md-select
+                                        data-ng-model="item.transaction[vm.resolveInstrumentProp(item, 'transaction', 'linked_instrument')]">
+                                    <md-optgroup label="Inputs">
+                                        <md-option
+                                                data-ng-click="vm.setTransactionInstrumentInput(item, inputItem.name, 'linked_instrument')"
+                                                data-ng-repeat="inputItem in vm.findInputs('instrument')"
+                                                ng-value="inputItem.name">
+                                            {{inputItem.name}}
+                                        </md-option>
+                                    </md-optgroup>
+                                    <md-optgroup label="Phantoms">
+                                        <md-option
+                                                data-ng-click="vm.setTransactionInstrumentPhantom(item, phantomItem.positionOrder, 'linked_instrument')"
+                                                data-ng-repeat="phantomItem in vm.findPhantoms()"
+                                                ng-value="phantomItem.positionOrder">
+                                            {{phantomItem.action_notes}}
+                                        </md-option>
+                                    </md-optgroup>
+                                </md-select>
+                            </md-input-container>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div flex="33">
+                <div layout="row">
+                    <div flex="20">
+                        <md-button
+                                class="md-icon-button md-raised {{!!item.transaction.allocation_pl_toggle ? 'ref' : ''}}"
+                                style="transform: scale(0.7,0.7)"
+                                data-ng-click="vm.resetPropertyBtn(item, 'transaction', 'allocation_pl')">
+                            <span data-ng-if="!!item.transaction.allocation_pl_toggle">R</span>
+                            <span data-ng-if="!!!item.transaction.allocation_pl_toggle">I</span>
+                        </md-button>
+                    </div>
+                    <div flex="80">
+                        <div data-ng-if="item.transaction.allocation_pl_toggle">
+                            <md-input-container>
+                                <label for="">Allocation-P&L</label>
+                                <md-select data-ng-model="item.transaction.allocation_pl"
+                                           md-on-open="vm.loadRelation('instrument')">
+                                    <md-option
+                                            data-ng-if="!vm.relationItems['instrument'].length"
+                                            ng-value="item.transaction.instrument_object.id">
+                                        {{item.transaction.instrument_object.name}}
+                                    </md-option>
+                                    <md-option
+                                            data-ng-if="vm.relationItems['instrument'].length"
+                                            data-ng-repeat="relationItem in vm.relationItems['instrument']"
+                                            ng-value="relationItem.id">
+                                        {{relationItem.name}}
+                                    </md-option>
+                                </md-select>
+                            </md-input-container>
+                        </div>
+                        <div data-ng-if="!item.transaction.allocation_pl_toggle">
+                            <md-input-container>
+                                <label for="">Allocation-P&L</label>
+                                <md-select
+                                        data-ng-model="item.transaction[vm.resolveInstrumentProp(item, 'transaction', 'allocation_pl')]">
+                                    <md-optgroup label="Inputs">
+                                        <md-option
+                                                data-ng-click="vm.setTransactionInstrumentInput(item, inputItem.name, 'allocation_pl')"
+                                                data-ng-repeat="inputItem in vm.findInputs('instrument')"
+                                                ng-value="inputItem.name">
+                                            {{inputItem.name}}
+                                        </md-option>
+                                    </md-optgroup>
+                                    <md-optgroup label="Phantoms">
+                                        <md-option
+                                                data-ng-click="vm.setTransactionInstrumentPhantom(item, phantomItem.positionOrder, 'allocation_pl')"
+                                                data-ng-repeat="phantomItem in vm.findPhantoms()"
+                                                ng-value="phantomItem.positionOrder">
+                                            {{phantomItem.action_notes}}
+                                        </md-option>
+                                    </md-optgroup>
+                                </md-select>
+                            </md-input-container>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div flex="33">
+                <div layout="row">
+                    <div flex="20">
+                        <md-button
+                                class="md-icon-button md-raised {{!!item.transaction.allocation_balance_toggle ? 'ref' : ''}}"
+                                style="transform: scale(0.7,0.7)"
+                                data-ng-click="vm.resetPropertyBtn(item, 'transaction', 'allocation_balance')">
+                            <span data-ng-if="!!item.transaction.allocation_balance_toggle">R</span>
+                            <span data-ng-if="!!!item.transaction.allocation_balance_toggle">I</span>
+                        </md-button>
+                    </div>
+                    <div flex="80">
+                        <div data-ng-if="item.transaction.allocation_balance_toggle">
+                            <md-input-container>
+                                <label for="">Allocation-Balance</label>
+                                <md-select
+                                        data-ng-model="item.transaction.allocation_balance"
+                                        md-on-open="vm.loadRelation('instrument')">
+                                    <md-option
+                                            data-ng-if="!vm.relationItems['instrument'].length"
+                                            ng-value="item.transaction.instrument_object.id">
+                                        {{item.transaction.instrument_object.name}}
+                                    </md-option>
+                                    <md-option
+                                            data-ng-if="vm.relationItems['instrument'].length"
+                                            data-ng-repeat="relationItem in vm.relationItems['instrument']"
+                                            ng-value="relationItem.id">
+                                        {{relationItem.name}}
+                                    </md-option>
+                                </md-select>
+                            </md-input-container>
+                        </div>
+                        <div data-ng-if="!item.transaction.allocation_balance_toggle">
+                            <md-input-container>
+                                <label for="">Allocation-Balance</label>
+                                <md-select
+                                        data-ng-model="item.transaction[vm.resolveInstrumentProp(item, 'allocation_balance')]">
+                                    <md-optgroup label="Inputs">
+                                        <md-option
+                                                data-ng-click="vm.setTransactionInstrumentInput(item, inputItem.name, 'allocation_balance')"
+                                                data-ng-repeat="inputItem in vm.findInputs('instrument')"
+                                                ng-value="inputItem.name">
+                                            {{inputItem.name}}
+                                        </md-option>
+                                    </md-optgroup>
+                                    <md-optgroup label="Phantoms">
+                                        <md-option
+                                                data-ng-click="vm.setTransactionInstrumentPhantom(item, phantomItem.positionOrder, 'allocation_balance')"
+                                                data-ng-repeat="phantomItem in vm.findPhantoms()"
+                                                ng-value="phantomItem.positionOrder">
+                                            {{phantomItem.action_notes}}
+                                        </md-option>
+                                    </md-optgroup>
+                                </md-select>
+                            </md-input-container>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div layout="row">
+            <div flex="33">
+                <md-input-container class="expression-input-container">
+                    <label for="">Trade price</label>
+                    <input type="text" data-ng-model="item.transaction.trade_price">
+                </md-input-container>
+                <expression-editor-button
+                        data-item="item.transaction.trade_price"></expression-editor-button>
+            </div>
+            <div flex="33">
+                <md-input-container class="expression-input-container">
+                    <label for="">Factor</label>
+                    <input type="text" data-ng-model="item.transaction.factor">
+                </md-input-container>
+                <expression-editor-button
+                        data-item="item.transaction.factor"></expression-editor-button>
+            </div>
+            <div flex="33">
+                <md-input-container class="expression-input-container">
+                    <label for="">Position amount</label>
+                    <input type="text" data-ng-model="item.transaction.position_amount">
+                </md-input-container>
+                <expression-editor-button
+                        data-item="item.transaction.position_amount"></expression-editor-button>
+            </div>
+        </div>
+        <div layout="row">
+            <div flex="33">
+                <md-input-container class="expression-input-container">
+                    <label for="">Accounting date</label>
+                    <input type="text" style="color: grey"
+                           data-ng-model="item.transaction.accounting_date">
+                </md-input-container>
+                <expression-editor-button
+                        data-item="item.transaction.accounting_date"></expression-editor-button>
+            </div>
+            <div flex="33" layout="row">
+                <div flex="20">
+                    <md-button
+                            class="md-icon-button md-raised {{!!item.transaction.account_position_toggle ? 'ref' : ''}}"
+                            style="transform: scale(0.7,0.7)"
+                            data-ng-click="vm.resetPropertyBtn(item, 'transaction', 'account_position')">
+                        <span data-ng-if="!!item.transaction.account_position_toggle">R</span>
+                        <span data-ng-if="!!!item.transaction.account_position_toggle">I</span>
+                    </md-button>
+                </div>
+                <div flex="80">
+                    <div data-ng-if="item.transaction.account_position_toggle">
+                        <md-input-container>
+                            <label for="">Account position</label>
+                            <md-select data-ng-model="item.transaction.account_position"
+                                       md-on-open="vm.loadRelation('account_position')">
+                                <md-option
+                                        data-ng-if="!vm.relationItems['account_position'].length"
+                                        ng-value="item.transaction.account_position_object.id">
+                                    {{item.transaction.account_position_object.name}}
+                                </md-option>
+                                <md-option
+                                        data-ng-if="vm.relationItems['account_position'].length"
+                                        data-ng-repeat="relationItem in vm.relationItems['account_position']"
+                                        ng-value="relationItem.id">
+                                    {{relationItem.name}}
+                                </md-option>
+                            </md-select>
+                        </md-input-container>
+                    </div>
+                    <div data-ng-if="!item.transaction.account_position_toggle">
+                        <md-input-container>
+                            <label for="">Account position</label>
+                            <md-select
+                                    data-ng-model="item.transaction.account_position_input">
+                                <md-option
+                                        data-ng-repeat="inputItem in vm.findInputs('account')"
+                                        ng-value="inputItem.name">
+                                    {{inputItem.name}}
+                                </md-option>
+                            </md-select>
+                        </md-input-container>
+                    </div>
+                </div>
+            </div>
+            <div flex="33">
+                <md-input-container>
+                    <label for="">&nbsp;</label>
+                </md-input-container>
+            </div>
+        </div>
+        <div layout="row">
+            <div flex="33" layout="row">
+                <div flex="20">
+                    <md-button
+                            class="md-icon-button md-raised {{!!item.transaction.strategy1_position_toggle ? 'ref' : ''}}"
+                            style="transform: scale(0.7,0.7)"
+                            data-ng-click="vm.resetPropertyBtn(item, 'transaction', 'strategy1_position')">
+                        <span data-ng-if="!!item.transaction.strategy1_position_toggle">R</span>
+                        <span data-ng-if="!!!item.transaction.strategy1_position_toggle">I</span>
+                    </md-button>
+                </div>
+                <div flex="80">
+                    <div data-ng-if="item.transaction.strategy1_position_toggle">
+                        <md-input-container>
+                            <label for="">Strategy1 position</label>
+                            <md-select data-ng-model="item.transaction.strategy1_position"
+                                       md-on-open="vm.loadRelation('strategy1_position')">
+                                <md-option
+                                        data-ng-if="!vm.relationItems['strategy1_position'].length"
+                                        ng-value="item.transaction.strategy1_position_object.id">
+                                    {{item.transaction.strategy1_position_object.name}}
+                                </md-option>
+                                <md-option
+                                        data-ng-if="vm.relationItems['strategy1_position'].length"
+                                        data-ng-repeat="relationItem in vm.relationItems['strategy1_position']"
+                                        ng-value="relationItem.id">
+                                    {{relationItem.name}}
+                                </md-option>
+                            </md-select>
+                        </md-input-container>
+                    </div>
+                    <div data-ng-if="!item.transaction.strategy1_position_toggle">
+                        <md-input-container>
+                            <label for="">Strategy1 position</label>
+                            <md-select
+                                    data-ng-model="item.transaction.strategy1_position_input">
+                                <md-option
+                                        data-ng-repeat="inputItem in vm.findInputs('strategy-1')"
+                                        ng-value="inputItem.name">
+                                    {{inputItem.name}}
+                                </md-option>
+                            </md-select>
+                        </md-input-container>
+                    </div>
+                </div>
+            </div>
+            <div flex="33" layout="row">
+                <div flex="20">
+                    <md-button
+                            class="md-icon-button md-raised {{!!item.transaction.strategy2_position_toggle ? 'ref' : ''}}"
+                            style="transform: scale(0.7,0.7)"
+                            data-ng-click="vm.resetPropertyBtn(item, 'transaction', 'strategy2_position')">
+                        <span data-ng-if="!!item.transaction.strategy2_position_toggle">R</span>
+                        <span data-ng-if="!!!item.transaction.strategy2_position_toggle">I</span>
+                    </md-button>
+                </div>
+                <div flex="80">
+                    <div data-ng-if="item.transaction.strategy2_position_toggle">
+                        <md-input-container>
+                            <label for="">Strategy2 position</label>
+                            <md-select data-ng-model="item.transaction.strategy2_position"
+                                       md-on-open="vm.loadRelation('strategy2_position')">
+                                <md-option
+                                        data-ng-if="!vm.relationItems['strategy2_position'].length"
+                                        ng-value="item.transaction.strategy2_position_object.id">
+                                    {{item.transaction.strategy2_position_object.name}}
+                                </md-option>
+                                <md-option
+                                        data-ng-if="vm.relationItems['strategy2_position'].length"
+                                        data-ng-repeat="relationItem in vm.relationItems['strategy2_position']"
+                                        ng-value="relationItem.id">
+                                    {{relationItem.name}}
+                                </md-option>
+                            </md-select>
+                        </md-input-container>
+                    </div>
+                    <div data-ng-if="!item.transaction.strategy2_position_toggle">
+                        <md-input-container>
+                            <label for="">Strategy2 position</label>
+                            <md-select
+                                    data-ng-model="item.transaction.strategy2_position_input">
+                                <md-option
+                                        data-ng-repeat="inputItem in vm.findInputs('strategy-2')"
+                                        ng-value="inputItem.name">
+                                    {{inputItem.name}}
+                                </md-option>
+                            </md-select>
+                        </md-input-container>
+                    </div>
+                </div>
+            </div>
+            <div flex="33" layout="row">
+                <div flex="20">
+                    <md-button
+                            class="md-icon-button md-raised {{!!item.transaction.strategy3_position_toggle ? 'ref' : ''}}"
+                            style="transform: scale(0.7,0.7)"
+                            data-ng-click="vm.resetPropertyBtn(item, 'transaction', 'strategy3_position')">
+                        <span data-ng-if="!!item.transaction.strategy3_position_toggle">R</span>
+                        <span data-ng-if="!!!item.transaction.strategy3_position_toggle">I</span>
+                    </md-button>
+                </div>
+                <div flex="80">
+                    <div data-ng-if="item.transaction.strategy3_position_toggle">
+                        <md-input-container>
+                            <label for="">Strategy3 position</label>
+                            <md-select data-ng-model="item.transaction.strategy3_position"
+                                       md-on-open="vm.loadRelation('strategy3_position')">
+                                <md-option
+                                        data-ng-if="!vm.relationItems['strategy3_position'].length"
+                                        ng-value="item.transaction.strategy3_position_object.id">
+                                    {{item.transaction.strategy3_position_object.name}}
+                                </md-option>
+                                <md-option
+                                        data-ng-if="vm.relationItems['strategy3_position'].length"
+                                        data-ng-repeat="relationItem in vm.relationItems['strategy3_position']"
+                                        ng-value="relationItem.id">
+                                    {{relationItem.name}}
+                                </md-option>
+                            </md-select>
+                        </md-input-container>
+                    </div>
+                    <div data-ng-if="!item.transaction.strategy3_position_toggle">
+                        <md-input-container>
+                            <label for="">Strategy3 position</label>
+                            <md-select
+                                    data-ng-model="item.transaction.strategy3_position_input">
+                                <md-option
+                                        data-ng-repeat="inputItem in vm.findInputs('strategy-3')"
+                                        ng-value="inputItem.name">
+                                    {{inputItem.name}}
+                                </md-option>
+                            </md-select>
+                        </md-input-container>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div layout="row">
+            <div flex="100">
+                <md-input-container class="expression-input-container">
+                    <label for="">Notes</label>
+                    <input type="text" data-ng-model="item.transaction.notes">
+                </md-input-container>
+                <expression-editor-button
+                        data-item="item.transaction.notes"></expression-editor-button>
+            </div>
+        </div>
+    </div>
+    <div flex="50">
+        <div layout="row">
+            <div flex="33" layout="row">
+                <div flex="20">
+                    <md-button
+                            class="md-icon-button md-raised {{!!item.transaction.portfolio_toggle ? 'ref' : ''}}"
+                            style="transform: scale(0.7,0.7)"
+                            data-ng-click="vm.resetPropertyBtn(item, 'transaction', 'portfolio')">
+                        <span data-ng-if="!!item.transaction.portfolio_toggle">R</span>
+                        <span data-ng-if="!!!item.transaction.portfolio_toggle">I</span>
+                    </md-button>
+                </div>
+                <div flex="80">
+                    <div data-ng-if="item.transaction.portfolio_toggle">
+                        <md-input-container>
+                            <label for="">Portfolio</label>
+                            <md-select data-ng-model="item.transaction.portfolio"
+                                       md-on-open="vm.loadRelation('portfolio')">
+                                <md-option data-ng-if="!vm.relationItems['portfolio'].length"
+                                           ng-value="item.transaction.portfolio_object.id">
+                                    {{item.transaction.portfolio_object.name}}
+                                </md-option>
+                                <md-option
+                                        data-ng-if="vm.relationItems['portfolio'].length"
+                                        data-ng-repeat="relationItem in vm.relationItems['portfolio']"
+                                        ng-value="relationItem.id">
+                                    {{relationItem.name}}
+                                </md-option>
+                            </md-select>
+                        </md-input-container>
+                    </div>
+                    <div data-ng-if="!item.transaction.portfolio_toggle">
+                        <md-input-container>
+                            <label for="">Portfolio</label>
+                            <md-select
+                                    data-ng-model="item.transaction.portfolio_input">
+                                <md-option
+                                        data-ng-repeat="inputItem in vm.findInputs('portfolio')"
+                                        ng-value="inputItem.name">
+                                    {{inputItem.name}}
+                                </md-option>
+                            </md-select>
+                        </md-input-container>
+                    </div>
+                </div>
+            </div>
+            <div flex="33" layout="row">
+                <div flex="20">
+                    <md-button
+                            class="md-icon-button md-raised {{!!item.transaction.counterparty_toggle ? 'ref' : ''}}"
+                            style="transform: scale(0.7,0.7)"
+                            data-ng-click="vm.resetPropertyBtn(item, 'transaction', 'counterparty')">
+                        <span data-ng-if="!!item.transaction.counterparty_toggle">R</span>
+                        <span data-ng-if="!!!item.transaction.counterparty_toggle">I</span>
+                    </md-button>
+                </div>
+                <div flex="80">
+                    <div data-ng-if="item.transaction.counterparty_toggle">
+                        <md-input-container>
+                            <label for="">Counterparty</label>
+                            <md-select data-ng-model="item.transaction.counterparty"
+                                       md-on-open="vm.loadRelation('counterparty')">
+                                <md-option data-ng-if="!vm.relationItems['counterparty'].length"
+                                           ng-value="item.transaction.counterparty_object.id">
+                                    {{item.transaction.counterparty_object.name}}
+                                </md-option>
+                                <md-option
+                                        data-ng-if="vm.relationItems['counterparty'].length"
+                                        data-ng-repeat="relationItem in vm.relationItems['counterparty']"
+                                        ng-value="relationItem.id">
+                                    {{relationItem.name}}
+                                </md-option>
+                            </md-select>
+                        </md-input-container>
+                    </div>
+                    <div data-ng-if="!item.transaction.counterparty_toggle">
+                        <md-input-container>
+                            <label for="">Counterparty</label>
+                            <md-select
+                                    data-ng-model="item.transaction.counterparty_input">
+                                <md-option
+                                        data-ng-repeat="inputItem in vm.findInputs('counterparty')"
+                                        ng-value="inputItem.name">
+                                    {{inputItem.name}}
+                                </md-option>
+                            </md-select>
+                        </md-input-container>
+                    </div>
+                </div>
+            </div>
+            <div flex="33" layout="row">
+                <div flex="20">
+                    <md-button
+                            class="md-icon-button md-raised {{!!item.transaction.responsible_toggle ? 'ref' : ''}}"
+                            style="transform: scale(0.7,0.7)"
+                            data-ng-click="vm.resetPropertyBtn(item, 'transaction', 'responsible')">
+                        <span data-ng-if="!!item.transaction.responsible_toggle">R</span>
+                        <span data-ng-if="!!!item.transaction.responsible_toggle">I</span>
+                    </md-button>
+                </div>
+                <div flex="80">
+                    <div data-ng-if="item.transaction.responsible_toggle">
+                        <md-input-container>
+                            <label for="">Responsible</label>
+                            <md-select data-ng-model="item.transaction.responsible"
+                                       md-on-open="vm.loadRelation('responsible')">
+                                <md-option data-ng-if="!vm.relationItems['responsible'].length"
+                                           ng-value="item.transaction.responsible_object.id">
+                                    {{item.transaction.responsible_object.name}}
+                                </md-option>
+                                <md-option
+                                        data-ng-if="vm.relationItems['responsible'].length"
+                                        data-ng-repeat="relationItem in vm.relationItems['responsible']"
+                                        ng-value="relationItem.id">
+                                    {{relationItem.name}}
+                                </md-option>
+                            </md-select>
+                        </md-input-container>
+                    </div>
+                    <div data-ng-if="!item.transaction.responsible_toggle">
+                        <md-input-container>
+                            <label for="">Responsible</label>
+                            <md-select
+                                    data-ng-model="item.transaction.responsible_input">
+                                <md-option
+                                        data-ng-repeat="inputItem in vm.findInputs('responsible')"
+                                        ng-value="inputItem.name">
+                                    {{inputItem.name}}
+                                </md-option>
+                            </md-select>
+                        </md-input-container>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div layout="row">
+            <div flex="33" layout="row">
+                <div flex="20">
+                    <md-button
+                            class="md-icon-button md-raised {{!!item.transaction.settlement_currency_toggle ? 'ref' : ''}}"
+                            style="transform: scale(0.7,0.7)"
+                            data-ng-click="vm.resetPropertyBtn(item, 'transaction', 'settlement_currency')">
+                        <span data-ng-if="!!item.transaction.settlement_currency_toggle">R</span>
+                        <span data-ng-if="!!!item.transaction.settlement_currency_toggle">I</span>
+                    </md-button>
+                </div>
+                <div flex="80">
+                    <div data-ng-if="item.transaction.settlement_currency_toggle">
+                        <md-input-container>
+                            <label for="">Settlement currency</label>
+                            <md-select data-ng-model="item.transaction.settlement_currency"
+                                       md-on-open="vm.loadRelation('settlement_currency')">
+                                <md-option
+                                        data-ng-if="!vm.relationItems['settlement_currency'].length"
+                                        ng-value="item.transaction.settlement_currency_object.id">
+                                    {{item.transaction.settlement_currency_object.name}}
+                                </md-option>
+                                <md-option
+                                        data-ng-if="vm.relationItems['settlement_currency'].length"
+                                        data-ng-repeat="relationItem in vm.relationItems['settlement_currency']"
+                                        ng-value="relationItem.id">
+                                    {{relationItem.name}}
+                                </md-option>
+                            </md-select>
+                        </md-input-container>
+                    </div>
+                    <div data-ng-if="!item.transaction.settlement_currency_toggle">
+                        <md-input-container>
+                            <label for="">Settlement currency</label>
+                            <md-select
+                                    data-ng-model="item.transaction.settlement_currency_input">
+                                <md-option
+                                        data-ng-repeat="inputItem in vm.findInputs('currency')"
+                                        ng-value="inputItem.name">
+                                    {{inputItem.name}}
+                                </md-option>
+                            </md-select>
+                        </md-input-container>
+                    </div>
+                </div>
+            </div>
+            <div flex="33">
+                <md-input-container class="expression-input-container">
+                    <label for="">Cash consideration</label>
+                    <input type="text" data-ng-model="item.transaction.cash_consideration">
+                </md-input-container>
+                <expression-editor-button
+                        data-item="item.transaction.cash_consideration"></expression-editor-button>
+            </div>
+            <div flex="33">
+                <md-input-container class="expression-input-container">
+                    <label for="">Reference fx-rate</label>
+                    <input type="text" data-ng-model="item.transaction.reference_fx_rate">
+                </md-input-container>
+                <expression-editor-button
+                        data-item="item.transaction.reference_fx_rate"></expression-editor-button>
+            </div>
+        </div>
+        <div layout="row">
+            <div flex="33">
+                <md-input-container class="expression-input-container">
+                    <label for="">Principal with sign</label>
+                    <input type="text" data-ng-model="item.transaction.principal_with_sign">
+                </md-input-container>
+                <expression-editor-button
+                        data-item="item.transaction.principal_with_sign"></expression-editor-button>
+            </div>
+            <div flex="33">
+                <md-input-container class="expression-input-container">
+                    <label for="">Carry with sign</label>
+                    <input type="text" data-ng-model="item.transaction.carry_with_sign">
+                </md-input-container>
+                <expression-editor-button
+                        data-item="item.transaction.carry_with_sign"></expression-editor-button>
+            </div>
+            <div flex="33">
+                <md-input-container class="expression-input-container">
+                    <label for="">Overheads with sign</label>
+                    <input type="text" data-ng-model="item.transaction.overheads_with_sign">
+                </md-input-container>
+                <expression-editor-button
+                        data-item="item.transaction.overheads_with_sign"></expression-editor-button>
+            </div>
+        </div>
+        <div layout="row">
+            <div flex="33">
+                <md-input-container class="expression-input-container">
+                    <label for="">Principal amount</label>
+                    <input type="text" data-ng-model="item.transaction.principal_amount">
+                </md-input-container>
+                <expression-editor-button
+                        data-item="item.transaction.principal_amount"></expression-editor-button>
+            </div>
+            <div flex="33">
+                <md-input-container class="expression-input-container">
+                    <label for="">Carry amount</label>
+                    <input type="text" data-ng-model="item.transaction.carry_amount">
+                </md-input-container>
+                <expression-editor-button
+                        data-item="item.transaction.carry_amount"></expression-editor-button>
+            </div>
+            <div flex="33">
+                <md-input-container class="expression-input-container">
+                    <label for="">Overheads</label>
+                    <input type="text" data-ng-model="item.transaction.overheads">
+                </md-input-container>
+                <expression-editor-button
+                        data-item="item.transaction.overheads"></expression-editor-button>
+            </div>
+        </div>
+        <div layout="row">
+            <div flex="33" layout="row">
+                <md-input-container class="expression-input-container">
+                    <label for="">Cash date</label>
+                    <input type="text" style="color: grey;"
+                           data-ng-model="item.transaction.cash_date">
+                </md-input-container>
+                <expression-editor-button
+                        data-item="item.transaction.cash_date"></expression-editor-button>
+            </div>
+            <div flex="33" layout="row">
+                <div flex="20">
+                    <md-button
+                            class="md-icon-button md-raised {{!!item.transaction.account_cash_toggle ? 'ref' : ''}}"
+                            style="transform: scale(0.7,0.7)"
+                            data-ng-click="vm.resetPropertyBtn(item, 'transaction', 'account_cash')">
+                        <span data-ng-if="!!item.transaction.account_cash_toggle">R</span>
+                        <span data-ng-if="!!!item.transaction.account_cash_toggle">I</span>
+                    </md-button>
+                </div>
+                <div flex="80">
+                    <div data-ng-if="item.transaction.account_cash_toggle">
+                        <md-input-container>
+                            <label for="">Account cash</label>
+                            <md-select data-ng-model="item.transaction.account_cash"
+                                       md-on-open="vm.loadRelation('account_cash')">
+                                <md-option data-ng-if="!vm.relationItems['account_cash'].length"
+                                           ng-value="item.transaction.account_cash_object.id">
+                                    {{item.transaction.account_cash_object.name}}
+                                </md-option>
+                                <md-option
+                                        data-ng-if="vm.relationItems['account_cash'].length"
+                                        data-ng-repeat="relationItem in vm.relationItems['account_cash']"
+                                        ng-value="relationItem.id">
+                                    {{relationItem.name}}
+                                </md-option>
+                            </md-select>
+                        </md-input-container>
+                    </div>
+                    <div data-ng-if="!item.transaction.account_cash_toggle">
+                        <md-input-container>
+                            <label for="">Account cash</label>
+                            <md-select
+                                    data-ng-model="item.transaction.account_cash_input">
+                                <md-option
+                                        data-ng-repeat="inputItem in vm.findInputs('account')"
+                                        ng-value="inputItem.name">
+                                    {{inputItem.name}}
+                                </md-option>
+                            </md-select>
+                        </md-input-container>
+                    </div>
+                </div>
+            </div>
+            <div flex="33" layout="row">
+                <div flex="20">
+                    <md-button
+                            class="md-icon-button md-raised {{!!item.transaction.account_interim_toggle ? 'ref' : ''}}"
+                            style="transform: scale(0.7,0.7)"
+                            data-ng-click="vm.resetPropertyBtn(item, 'transaction', 'account_interim')">
+                        <span data-ng-if="!!item.transaction.account_interim_toggle">R</span>
+                        <span data-ng-if="!!!item.transaction.account_interim_toggle">I</span>
+                    </md-button>
+                </div>
+                <div flex="80">
+                    <div data-ng-if="item.transaction.account_interim_toggle">
+                        <md-input-container>
+                            <label for="">Account interim</label>
+                            <md-select data-ng-model="item.transaction.account_interim"
+                                       md-on-open="vm.loadRelation('account_interim')">
+                                <md-option
+                                        data-ng-if="!vm.relationItems['account_interim'].length"
+                                        ng-value="item.transaction.account_interim_object.id">
+                                    {{item.transaction.account_interim_object.name}}
+                                </md-option>
+                                <md-option
+                                        data-ng-if="vm.relationItems['account_interim'].length"
+                                        data-ng-repeat="relationItem in vm.relationItems['account_interim']"
+                                        ng-value="relationItem.id">
+                                    {{relationItem.name}}
+                                </md-option>
+                            </md-select>
+                        </md-input-container>
+                    </div>
+                    <div data-ng-if="!item.transaction.account_interim_toggle">
+                        <md-input-container>
+                            <label for="">Account interim</label>
+                            <md-select
+                                    data-ng-model="item.transaction.account_interim_input">
+                                <md-option
+                                        data-ng-repeat="inputItem in vm.findInputs('account')"
+                                        ng-value="inputItem.name">
+                                    {{inputItem.name}}
+                                </md-option>
+                            </md-select>
+                        </md-input-container>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div layout="row">
+
+            <div flex="33" layout="row">
+                <div flex="20">
+                    <md-button
+                            class="md-icon-button md-raised {{!!item.transaction.strategy1_cash_toggle ? 'ref' : ''}}"
+                            style="transform: scale(0.7,0.7)"
+                            data-ng-click="vm.resetPropertyBtn(item, 'transaction', 'strategy1_cash')">
+                        <span data-ng-if="!!item.transaction.strategy1_cash_toggle">R</span>
+                        <span data-ng-if="!!!item.transaction.strategy1_cash_toggle">I</span>
+                    </md-button>
+                </div>
+                <div flex="80">
+                    <div data-ng-if="item.transaction.strategy1_cash_toggle">
+                        <md-input-container>
+                            <label for="">Strategy1 cash</label>
+                            <md-select data-ng-model="item.transaction.strategy1_cash"
+                                       md-on-open="vm.loadRelation('strategy1_cash')">
+                                <md-option
+                                        data-ng-if="!vm.relationItems['strategy1_cash'].length"
+                                        ng-value="item.transaction.strategy1_cash_object.id">
+                                    {{item.transaction.strategy1_cash_object.name}}
+                                </md-option>
+                                <md-option
+                                        data-ng-if="vm.relationItems['strategy1_cash'].length"
+                                        data-ng-repeat="relationItem in vm.relationItems['strategy1_cash']"
+                                        ng-value="relationItem.id">
+                                    {{relationItem.name}}
+                                </md-option>
+                            </md-select>
+                        </md-input-container>
+                    </div>
+                    <div data-ng-if="!item.transaction.strategy1_cash_toggle">
+                        <md-input-container>
+                            <label for="">Strategy1 cash</label>
+                            <md-select
+                                    data-ng-model="item.transaction.strategy1_cash_input">
+                                <md-option
+                                        data-ng-repeat="inputItem in vm.findInputs('strategy-1')"
+                                        ng-value="inputItem.name">
+                                    {{inputItem.name}}
+                                </md-option>
+                            </md-select>
+                        </md-input-container>
+                    </div>
+                </div>
+            </div>
+            <div flex="33" layout="row">
+                <div flex="20">
+                    <md-button
+                            class="md-icon-button md-raised {{!!item.transaction.strategy2_cash_toggle ? 'ref' : ''}}"
+                            style="transform: scale(0.7,0.7)"
+                            data-ng-click="vm.resetPropertyBtn(item, 'transaction', 'strategy2_cash')">
+                        <span data-ng-if="!!item.transaction.strategy2_cash_toggle">R</span>
+                        <span data-ng-if="!!!item.transaction.strategy2_cash_toggle">I</span>
+                    </md-button>
+                </div>
+                <div flex="80">
+                    <div data-ng-if="item.transaction.strategy2_cash_toggle">
+                        <md-input-container>
+                            <label for="">Strategy2 cash</label>
+                            <md-select data-ng-model="item.transaction.strategy2_cash"
+                                       md-on-open="vm.loadRelation('strategy2_cash')">
+                                <md-option
+                                        data-ng-if="!vm.relationItems['strategy2_cash'].length"
+                                        ng-value="item.transaction.strategy2_cash_object.id">
+                                    {{item.transaction.strategy2_cash_object.name}}
+                                </md-option>
+                                <md-option
+                                        data-ng-if="vm.relationItems['strategy2_cash'].length"
+                                        data-ng-repeat="relationItem in vm.relationItems['strategy2_cash']"
+                                        ng-value="relationItem.id">
+                                    {{relationItem.name}}
+                                </md-option>
+                            </md-select>
+                        </md-input-container>
+                    </div>
+                    <div data-ng-if="!item.transaction.strategy2_cash_toggle">
+                        <md-input-container>
+                            <label for="">Strategy2 cash</label>
+                            <md-select
+                                    data-ng-model="item.transaction.strategy2_cash_input">
+                                <md-option
+                                        data-ng-repeat="inputItem in vm.findInputs('strategy-2')"
+                                        ng-value="inputItem.name">
+                                    {{inputItem.name}}
+                                </md-option>
+                            </md-select>
+                        </md-input-container>
+                    </div>
+                </div>
+            </div>
+            <div flex="33" layout="row">
+                <div flex="20">
+                    <md-button
+                            class="md-icon-button md-raised {{!!item.transaction.strategy3_cash_toggle ? 'ref' : ''}}"
+                            style="transform: scale(0.7,0.7)"
+                            data-ng-click="vm.resetPropertyBtn(item, 'transaction', 'strategy3_cash')">
+                        <span data-ng-if="!!item.transaction.strategy3_cash_toggle">R</span>
+                        <span data-ng-if="!!!item.transaction.strategy3_cash_toggle">I</span>
+                    </md-button>
+                </div>
+                <div flex="80">
+                    <div data-ng-if="item.transaction.strategy3_cash_toggle">
+                        <md-input-container>
+                            <label for="">Strategy3 cash</label>
+                            <md-select data-ng-model="item.transaction.strategy3_cash"
+                                       md-on-open="vm.loadRelation('strategy3_cash')">
+                                <md-option
+                                        data-ng-if="!vm.relationItems['strategy3_cash'].length"
+                                        ng-value="item.transaction.strategy3_cash_object.id">
+                                    {{item.transaction.strategy3_cash_object.name}}
+                                </md-option>
+                                <md-option
+                                        data-ng-if="vm.relationItems['strategy3_cash'].length"
+                                        data-ng-repeat="relationItem in vm.relationItems['strategy3_cash']"
+                                        ng-value="relationItem.id">
+                                    {{relationItem.name}}
+                                </md-option>
+                            </md-select>
+                        </md-input-container>
+                    </div>
+                    <div data-ng-if="!item.transaction.strategy3_cash_toggle">
+                        <md-input-container>
+                            <label for="">Strategy3 cash</label>
+                            <md-select
+                                    data-ng-model="item.transaction.strategy3_cash_input">
+                                <md-option
+                                        data-ng-repeat="inputItem in vm.findInputs('strategy-3')"
+                                        ng-value="inputItem.name">
+                                    {{inputItem.name}}
+                                </md-option>
+                            </md-select>
+                        </md-input-container>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

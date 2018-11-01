@@ -28,6 +28,9 @@
     var strategyGroupRepository = require('../repositories/strategyGroupRepository');
     var strategySubgroupRepository = require('../repositories/strategySubgroupRepository');
 
+    var accrualCalculationModelRepository = require('../repositories/accrualCalculationModelRepository');
+    var instrumentPeriodicityRepository = require('../repositories/instrumentPeriodicityRepository');
+
     var getFields = function (fieldKey, options) {
 
         return new Promise(function (resolve, reject) {
@@ -106,6 +109,16 @@
                 case 'transaction_class':
                     entityFieldsRepository.getTransactionClassList().then(function (data) {
                         resolve({type: 'key-value', key: 'transaction_class', data: data});
+                    });
+                    break;
+                case 'periodicity':
+                    instrumentPeriodicityRepository.getList().then(function (data) {
+                        resolve({type: 'id', key: 'periodicity', data: data});
+                    });
+                    break;
+                case 'accrual_calculation_model':
+                    accrualCalculationModelRepository.getList().then(function (data) {
+                        resolve({type: 'id', key: 'accrual_calculation_model', data: data});
                     });
                     break;
                 case 'instrument':
@@ -310,6 +323,7 @@
                         resolve({type: 'multiple-ids', key: 'responsibles', data: data.results});
                     });
                     break;
+
             }
 
         });

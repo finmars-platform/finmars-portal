@@ -1,0 +1,413 @@
+<div layout="row">
+    <div flex="50">
+        <div layout="row">
+            <div flex="33" layout="row">
+                <div flex="20">
+                    <md-button
+                            class="md-icon-button md-raised {{!!item.instrument.instrument_type_toggle ? 'ref' : ''}}"
+                            style="transform: scale(0.7,0.7)"
+                            data-ng-click="vm.resetPropertyBtn(item, 'instrument', 'instrument_type')">
+                        <span data-ng-if="!!item.instrument.instrument_type_toggle">R</span>
+                        <span data-ng-if="!!!item.instrument.instrument_type_toggle">I</span>
+                    </md-button>
+                </div>
+                <div flex="80">
+                    <div>
+                        <div data-ng-if="item.instrument.instrument_type_toggle">
+                            <md-input-container>
+                                <label for="">Instrument type</label>
+                                <md-select data-ng-model="item.instrument.instrument_type"
+                                           md-on-open="vm.loadRelation('instrument_type')">
+                                    <md-option
+                                            data-ng-if="!vm.relationItems['instrument_type'].length"
+                                            ng-value="item.instrument.instrument_type_object.id">
+                                        {{item.instrument.instrument_type_object.name}}
+                                    </md-option>
+                                    <md-option
+                                            data-ng-if="vm.relationItems['instrument_type'].length"
+                                            data-ng-repeat="relationItem in vm.relationItems['instrument_type']"
+                                            ng-value="relationItem.id">
+                                        {{relationItem.name}}
+                                    </md-option>
+                                </md-select>
+                            </md-input-container>
+                        </div>
+                        <div data-ng-if="!item.instrument.instrument_type_toggle">
+                            <md-input-container>
+                                <label for="">Instrument type</label>
+                                <md-select
+                                        data-ng-model="item.instrument.instrument_type_input">
+                                    <md-option
+                                            data-ng-repeat="inputItem in vm.findInputs('instrument-type')"
+                                            ng-value="inputItem.name">
+                                        {{inputItem.name}}
+                                    </md-option>
+                                </md-select>
+                            </md-input-container>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div flex="33">
+                <md-input-container class="expression-input-container">
+                    <label for="">User code</label>
+                    <input type="text" data-ng-model="item.instrument.user_code">
+                </md-input-container>
+                <expression-editor-button
+                        data-item="item.instrument.user_code"></expression-editor-button>
+            </div>
+        </div>
+        <div layout="row">
+            <div flex="33">
+                <md-input-container class="expression-input-container">
+                    <label for="">Name</label>
+                    <input type="text" data-ng-model="item.instrument.name">
+                </md-input-container>
+                <expression-editor-button
+                        data-item="item.instrument.name"></expression-editor-button>
+            </div>
+            <div flex="33">
+                <md-input-container class="expression-input-container">
+                    <label for="">Short name</label>
+                    <input type="text" data-ng-model="item.instrument.short_name">
+                </md-input-container>
+                <expression-editor-button
+                        data-item="item.instrument.short_name"></expression-editor-button>
+            </div>
+            <div flex="33">
+                <md-input-container class="expression-input-container">
+                    <label for="">Public name</label>
+                    <input type="text" data-ng-model="item.instrument.public_name">
+                </md-input-container>
+                <expression-editor-button
+                        data-item="item.instrument.public_name"></expression-editor-button>
+            </div>
+        </div>
+        <div layout="row">
+            <div flex="33">
+                <md-input-container class="expression-input-container">
+                    <label for="">User text1</label>
+                    <input type="text" data-ng-model="item.instrument.user_text_1">
+                </md-input-container>
+                <expression-editor-button
+                        data-item="item.instrument.user_text_1"></expression-editor-button>
+            </div>
+            <div flex="33">
+                <md-input-container class="expression-input-container">
+                    <label for="">User text2</label>
+                    <input type="text" data-ng-model="item.instrument.user_text_2">
+                </md-input-container>
+                <expression-editor-button
+                        data-item="item.instrument.user_text_2"></expression-editor-button>
+            </div>
+            <div flex="33">
+                <md-input-container class="expression-input-container">
+                    <label for="">User text3</label>
+                    <input type="text" data-ng-model="item.instrument.user_text_3">
+                </md-input-container>
+                <expression-editor-button
+                        data-item="item.instrument.user_text_3"></expression-editor-button>
+            </div>
+        </div>
+        <div layout="row">
+            <div flex="100">
+                <md-input-container class="expression-input-container">
+                    <label for="">Notes</label>
+                    <input type="text" data-ng-model="item.instrument.notes">
+                </md-input-container>
+                <expression-editor-button
+                        data-item="item.instrument.notes"></expression-editor-button>
+            </div>
+        </div>
+    </div>
+    <div flex="50">
+        <div layout="row">
+            <div flex="33" layout="row">
+                <div flex="20">
+                    <md-button
+                            class="md-icon-button md-raised {{!!item.instrument.daily_pricing_model_toggle ? 'ref' : ''}}"
+                            style="transform: scale(0.7,0.7)"
+                            data-ng-click="vm.resetPropertyBtn(item, 'instrument', 'daily_pricing_model')">
+                        <span data-ng-if="!!item.instrument.daily_pricing_model_toggle">R</span>
+                        <span data-ng-if="!!!item.instrument.daily_pricing_model_toggle">I</span>
+                    </md-button>
+                </div>
+                <div flex="80">
+                    <div data-ng-if="item.instrument.daily_pricing_model_toggle">
+                        <md-input-container>
+                            <label for="">Daily pricing model</label>
+                            <md-select data-ng-model="item.instrument.daily_pricing_model"
+                                       md-on-open="vm.loadRelation('daily_pricing_model')">
+                                <md-option
+                                        data-ng-if="!vm.relationItems['daily_pricing_model'].length"
+                                        ng-value="item.instrument.daily_pricing_model_object.id">
+                                    {{item.instrument.daily_pricing_model_object.name}}
+                                </md-option>
+                                <md-option
+                                        data-ng-if="vm.relationItems['daily_pricing_model'].length"
+                                        data-ng-repeat="relationItem in vm.relationItems['daily_pricing_model']"
+                                        ng-value="relationItem.id">
+                                    {{relationItem.name}}
+                                </md-option>
+                            </md-select>
+                        </md-input-container>
+                    </div>
+                    <div data-ng-if="!item.instrument.daily_pricing_model_toggle">
+                        <md-input-container>
+                            <label for="">Daily pricing model</label>
+                            <md-select
+                                    data-ng-model="item.instrument.daily_pricing_model_input">
+                                <md-option
+                                        data-ng-repeat="inputItem in vm.findInputs('daily_pricing_model')"
+                                        ng-value="inputItem.name">
+                                    {{inputItem.name}}
+                                </md-option>
+                            </md-select>
+                        </md-input-container>
+                    </div>
+                </div>
+            </div>
+            <div flex="33" layout="row">
+                <div flex="20">
+                    <md-button
+                            class="md-icon-button md-raised {{!!item.instrument.price_download_scheme_toggle ? 'ref' : ''}}"
+                            style="transform: scale(0.7,0.7)"
+                            data-ng-click="vm.resetPropertyBtn(item, 'instrument', 'price_download_scheme')">
+                        <span data-ng-if="!!item.instrument.price_download_scheme_toggle">R</span>
+                        <span data-ng-if="!!!item.instrument.price_download_scheme_toggle">I</span>
+                    </md-button>
+                </div>
+                <div flex="80">
+                    <div data-ng-if="item.instrument.price_download_scheme_toggle">
+                        <md-input-container>
+                            <label for="">Price download scheme</label>
+                            <md-select data-ng-model="item.instrument.price_download_scheme"
+                                       md-on-open="vm.loadRelation('price_download_scheme')">
+                                <md-option
+                                        data-ng-if="!vm.relationItems['price_download_scheme'].length"
+                                        ng-value="item.instrument.price_download_scheme_object.id">
+                                    {{item.instrument.price_download_scheme_object.scheme_name}}
+                                </md-option>
+                                <md-option
+                                        data-ng-if="vm.relationItems['price_download_scheme'].length"
+                                        data-ng-repeat="relationItem in vm.relationItems['price_download_scheme']"
+                                        ng-value="relationItem.id">
+                                    {{relationItem.scheme_name}}
+                                </md-option>
+                            </md-select>
+                        </md-input-container>
+                    </div>
+                    <div data-ng-if="!item.instrument.price_download_scheme_toggle">
+                        <md-input-container>
+                            <label for="">Price download scheme</label>
+                            <md-select
+                                    data-ng-model="item.instrument.price_download_scheme_input">
+                                <md-option
+                                        data-ng-repeat="inputItem in vm.findInputs('price_download_scheme')"
+                                        ng-value="inputItem.name">
+                                    {{inputItem.name}}
+                                </md-option>
+                            </md-select>
+                        </md-input-container>
+                    </div>
+                </div>
+            </div>
+            <div flex="33">
+                <md-input-container class="expression-input-container">
+                    <label for="">Reference for pricing</label>
+                    <input type="text"
+                           data-ng-model="item.instrument.reference_for_pricing">
+                </md-input-container>
+                <expression-editor-button
+                        data-item="item.instrument.reference_for_pricing"></expression-editor-button>
+            </div>
+        </div>
+        <div layout="row">
+            <div flex="33" layout="row">
+                <div flex="20">
+                    <md-button
+                            class="md-icon-button md-raised {{!!item.instrument.pricing_currency_toggle ? 'ref' : ''}}"
+                            style="transform: scale(0.7,0.7)"
+                            data-ng-click="vm.resetPropertyBtn(item, 'instrument', 'pricing_currency')">
+                        <span data-ng-if="!!item.instrument.pricing_currency_toggle">R</span>
+                        <span data-ng-if="!!!item.instrument.pricing_currency_toggle">I</span>
+                    </md-button>
+                </div>
+                <div flex="80">
+                    <div data-ng-if="item.instrument.pricing_currency_toggle">
+                        <md-input-container>
+                            <label for="">Pricing currency</label>
+                            <md-select data-ng-model="item.instrument.pricing_currency"
+                                       md-on-open="vm.loadRelation('pricing_currency')">
+                                <md-option
+                                        data-ng-if="!vm.relationItems['pricing_currency'].length"
+                                        ng-value="item.instrument.pricing_currency_object.id">
+                                    {{item.instrument.pricing_currency_object.name}}
+                                </md-option>
+                                <md-option
+                                        data-ng-if="vm.relationItems['pricing_currency'].length"
+                                        data-ng-repeat="relationItem in vm.relationItems['pricing_currency']"
+                                        ng-value="relationItem.id">
+                                    {{relationItem.name}}
+                                </md-option>
+                            </md-select>
+                        </md-input-container>
+                    </div>
+                    <div data-ng-if="!item.instrument.pricing_currency_toggle">
+                        <md-input-container>
+                            <label for="">Pricing currency</label>
+                            <md-select
+                                    data-ng-model="item.instrument.pricing_currency_input">
+                                <md-option
+                                        data-ng-repeat="inputItem in vm.findInputs('currency')"
+                                        ng-value="inputItem.name">
+                                    {{inputItem.name}}
+                                </md-option>
+                            </md-select>
+                        </md-input-container>
+                    </div>
+                </div>
+            </div>
+            <div flex="33">
+                <md-input-container class="expression-input-container">
+                    <label for="">Price multiplier</label>
+                    <input type="text" data-ng-model="item.instrument.price_multiplier">
+                </md-input-container>
+                <expression-editor-button
+                        data-item="item.instrument.price_multiplier"></expression-editor-button>
+            </div>
+            <div flex="33">
+                <md-input-container class="expression-input-container">
+                    <label for="">Default price</label>
+                    <input type="text" data-ng-model="item.instrument.default_price">
+                </md-input-container>
+                <expression-editor-button
+                        data-item="item.instrument.default_price"></expression-editor-button>
+            </div>
+        </div>
+        <div layout="row">
+            <div flex="33" layout="row">
+                <div flex="20">
+                    <md-button
+                            class="md-icon-button md-raised {{!!item.instrument.accrued_currency_toggle ? 'ref' : ''}}"
+                            style="transform: scale(0.7,0.7)"
+                            data-ng-click="vm.resetPropertyBtn(item, 'instrument', 'accrued_currency')">
+                        <span data-ng-if="!!item.instrument.accrued_currency_toggle">R</span>
+                        <span data-ng-if="!!!item.instrument.accrued_currency_toggle">I</span>
+                    </md-button>
+                </div>
+                <div flex="80">
+                    <div data-ng-if="item.instrument.accrued_currency_toggle">
+                        <md-input-container>
+                            <label for="">Accrued currency</label>
+                            <md-select data-ng-model="item.instrument.accrued_currency"
+                                       md-on-open="vm.loadRelation('accrued_currency')">
+                                <md-option
+                                        data-ng-if="!vm.relationItems['accrued_currency'].length"
+                                        ng-value="item.instrument.accrued_currency_object.id">
+                                    {{item.instrument.accrued_currency_object.name}}
+                                </md-option>
+                                <md-option
+                                        data-ng-if="vm.relationItems['accrued_currency'].length"
+                                        data-ng-repeat="relationItem in vm.relationItems['accrued_currency']"
+                                        ng-value="relationItem.id">
+                                    {{relationItem.name}}
+                                </md-option>
+                            </md-select>
+                        </md-input-container>
+                    </div>
+                    <div data-ng-if="!item.instrument.accrued_currency_toggle">
+                        <md-input-container>
+                            <label for="">Accrued currency</label>
+                            <md-select
+                                    data-ng-model="item.instrument.accrued_currency_input">
+                                <md-option
+                                        data-ng-repeat="inputItem in vm.findInputs('currency')"
+                                        ng-value="inputItem.name">
+                                    {{inputItem.name}}
+                                </md-option>
+                            </md-select>
+                        </md-input-container>
+                    </div>
+                </div>
+            </div>
+            <div flex="33">
+                <md-input-container class="expression-input-container">
+                    <label for="">Accrued multiplier</label>
+                    <input type="text" data-ng-model="item.instrument.accrued_multiplier">
+                </md-input-container>
+                <expression-editor-button
+                        data-item="item.instrument.accrued_multiplier"></expression-editor-button>
+            </div>
+            <div flex="33">
+                <md-input-container class="expression-input-container">
+                    <label for="">Default accrued</label>
+                    <input type="text" data-ng-model="item.instrument.default_accrued">
+                </md-input-container>
+                <expression-editor-button
+                        data-item="item.instrument.default_accrued"></expression-editor-button>
+            </div>
+        </div>
+        <div layout="row">
+            <div flex="33" layout="row">
+                <div flex="20">
+                    <md-button
+                            class="md-icon-button md-raised {{!!item.instrument.payment_size_detail_toggle ? 'ref' : ''}}"
+                            style="transform: scale(0.7,0.7)"
+                            data-ng-click="vm.resetPropertyBtn(item, 'instrument', 'payment_size_detail')">
+                        <span data-ng-if="!!item.instrument.payment_size_detail_toggle">R</span>
+                        <span data-ng-if="!!!item.instrument.payment_size_detail_toggle">I</span>
+                    </md-button>
+                </div>
+                <div flex="80">
+                    <div data-ng-if="item.instrument.payment_size_detail_toggle">
+                        <md-input-container>
+                            <label for="">Payment size details</label>
+                            <md-select data-ng-model="item.instrument.payment_size_detail"
+                                       md-on-open="vm.loadRelation('payment_size_detail')">
+                                <md-option
+                                        data-ng-if="!vm.relationItems['payment_size_detail'].length"
+                                        ng-value="item.instrument.payment_size_detail_object.id">
+                                    {{item.instrument.payment_size_detail_object.name}}
+                                </md-option>
+                                <md-option
+                                        data-ng-if="vm.relationItems['payment_size_detail'].length"
+                                        data-ng-repeat="relationItem in vm.relationItems['payment_size_detail']"
+                                        ng-value="relationItem.id">
+                                    {{relationItem.name}}
+                                </md-option>
+                            </md-select>
+                        </md-input-container>
+                    </div>
+                    <div data-ng-if="!item.instrument.payment_size_detail_toggle">
+                        <md-input-container>
+                            <label for="">Payment size details</label>
+                            <md-select
+                                    data-ng-model="item.instrument.payment_size_detail_input">
+                                <md-option
+                                        data-ng-repeat="inputItem in vm.findInputs('payment_size_detail')"
+                                        ng-value="inputItem.name">
+                                    {{inputItem.name}}
+                                </md-option>
+                            </md-select>
+                        </md-input-container>
+                    </div>
+                </div>
+            </div>
+            <div flex="33">
+                <md-input-container>
+                    <label for="">&nbsp;</label>
+                </md-input-container>
+            </div>
+            <div flex="33">
+                <md-input-container class="expression-input-container">
+                    <label for="">Maturity date</label>
+                    <input type="text" style="color: grey"
+                           data-ng-model="item.instrument.maturity_date">
+                </md-input-container>
+                <expression-editor-button
+                        data-item="item.instrument.maturity_date"></expression-editor-button>
+            </div>
+        </div>
+    </div>
+</div>

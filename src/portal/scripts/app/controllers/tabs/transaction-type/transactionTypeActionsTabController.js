@@ -71,6 +71,28 @@
                 })
             }
 
+            if (action.instrument_manual_pricing_formula !== null) {
+                keys = Object.keys(action.instrument_manual_pricing_formula);
+                keys.forEach(function (key) {
+                    if (action.instrument_manual_pricing_formula.hasOwnProperty(key + '_input')) {
+                        if (action.instrument_manual_pricing_formula[key] !== null) {
+                            action.instrument_manual_pricing_formula[key + '_toggle'] = true;
+                        }
+                    }
+                })
+            }
+
+            if (action.instrument_accrual_calculation_schedules !== null) {
+                keys = Object.keys(action.instrument_accrual_calculation_schedules);
+                keys.forEach(function (key) {
+                    if (action.instrument_accrual_calculation_schedules.hasOwnProperty(key + '_input')) {
+                        if (action.instrument_accrual_calculation_schedules[key] !== null) {
+                            action.instrument_accrual_calculation_schedules[key + '_toggle'] = true;
+                        }
+                    }
+                })
+            }
+
         });
 
         vm.resetProperty = function (item, propertyName, fieldName) {
@@ -141,26 +163,13 @@
 
             $scope.accordion.collapseAll();
 
-            if (actionType === 'instrument') {
-                vm.entity.actions.push({
-                    isPaneExpanded: true,
-                    instrument: {}
-                })
-            }
+            var result = {
+                isPaneExpanded: true
+            };
 
-            if (actionType === 'transaction') {
-                vm.entity.actions.push({
-                    isPaneExpanded: true,
-                    transaction: {}
-                })
-            }
+            result[actionType] = {};
 
-            if (actionType === 'instrument_factor_schedule') {
-                vm.entity.actions.push({
-                    isPaneExpanded: true,
-                    instrument_factor_schedule: {}
-                })
-            }
+            vm.entity.actions.push(result);
 
             vm.findPhantoms();
         };
@@ -301,7 +310,7 @@
 
         vm.loadRelation = function (field) {
 
-            //console.log('entity', entity);
+            console.log('field', field);
 
             return new Promise(function (resolve, reject) {
                 if (!vm.relationItems[field]) {
