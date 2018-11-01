@@ -1,0 +1,91 @@
+<div layout="row">
+    <div flex="50">
+        <div layout="row">
+            <div flex="50">
+                <div layout="row">
+                    <div flex="20">
+                        <md-button
+                                class="md-icon-button md-raised {{!!item.instrument_factor_schedule.instrument_toggle ? 'ref' : ''}}"
+                                style="transform: scale(0.7,0.7)"
+                                data-ng-click="vm.resetPropertyBtn(item, 'instrument_factor_schedule', 'instrument')">
+                            <span data-ng-if="!!item.instrument_factor_schedule.instrument_toggle">R</span>
+                            <span data-ng-if="!!!item.instrument_factor_schedule.instrument_toggle">I</span>
+                        </md-button>
+                    </div>
+                    <div flex="80">
+                        <div data-ng-if="item.instrument_factor_schedule.instrument_toggle">
+                            <md-input-container>
+                                <label for="">Instrument</label>
+                                <md-select
+                                        data-ng-model="item.instrument_factor_schedule.instrument"
+                                        md-on-open="vm.loadRelation('instrument')">
+                                    <md-option
+                                            data-ng-if="!vm.relationItems['instrument'].length"
+                                            ng-value="item.instrument_factor_schedule.instrument_object.id">
+                                        {{item.transaction.instrument_object.name}}
+                                    </md-option>
+                                    <md-option
+                                            data-ng-if="vm.relationItems['instrument'].length"
+                                            data-ng-repeat="relationItem in vm.relationItems['instrument']"
+                                            ng-value="relationItem.id">
+                                        {{relationItem.name}}
+                                    </md-option>
+                                </md-select>
+                            </md-input-container>
+                        </div>
+                        <div data-ng-if="!item.instrument_factor_schedule.instrument_toggle">
+                            <md-input-container>
+                                <label for="">Instrument</label>
+                                <md-select
+                                        data-ng-model="item.instrument_factor_schedule[vm.resolveInstrumentProp(item, 'instrument_factor_schedule', 'instrument')]">
+                                    <md-optgroup label="Inputs">
+                                        <md-option
+                                                data-ng-click="vm.setItemInstrumentInput(item, 'instrument_factor_schedule', inputItem.name, 'instrument')"
+                                                data-ng-repeat="inputItem in vm.findInputs('instrument')"
+                                                ng-value="inputItem.name">
+                                            {{inputItem.name}}
+                                        </md-option>
+                                    </md-optgroup>
+                                    <md-optgroup label="Phantoms">
+                                        <md-option
+                                                data-ng-click="vm.setItemInstrumentPhantom(item, 'instrument_factor_schedule', phantomItem.positionOrder, 'instrument')"
+                                                data-ng-repeat="phantomItem in vm.findPhantoms()"
+                                                ng-value="phantomItem.positionOrder">
+                                            {{phantomItem.action_notes}}
+                                        </md-option>
+                                    </md-optgroup>
+                                </md-select>
+                            </md-input-container>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div layout="row">
+            <div flex="50">
+                <div layout="row">
+                    <div flex="50">
+                        <md-input-container class="expression-input-container">
+                            <label for="">Factor</label>
+                            <input type="text"
+                                   data-ng-model="item.instrument_factor_schedule.factor_value">
+                        </md-input-container>
+                        <expression-editor-button
+                                data-item="item.instrument_factor_schedule.factor_value"></expression-editor-button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div flex="50">
+        <div flex="50" layout="row">
+            <md-input-container class="expression-input-container">
+                <label for="">Effective date</label>
+                <input type="text" style="color: grey;"
+                       data-ng-model="item.instrument_factor_schedule.effective_date">
+            </md-input-container>
+            <expression-editor-button
+                    data-item="item.instrument_factor_schedule.effective_date"></expression-editor-button>
+        </div>
+    </div>
+</div>

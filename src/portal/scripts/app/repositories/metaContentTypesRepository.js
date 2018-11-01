@@ -63,18 +63,33 @@
             },
             {
                 name: 'Daily pricing model',
-                entity: 'daily-pricing-model',
+                entity: 'daily_pricing_model',
                 key: 'instruments.dailypricingmodel'
             },
             {
                 name: 'Payment size detail',
-                entity: 'payment-size-detail',
+                entity: 'payment_size_detail',
                 key: 'instruments.paymentsizedetail'
             },
             {
                 name: 'Price download scheme',
-                entity: 'price-download-scheme',
+                entity: 'price_download_scheme',
                 key: 'integrations.pricedownloadscheme'
+            },
+            {
+                name: 'Pricing policy',
+                entity: 'pricing_policy',
+                key: 'instruments.pricingpolicy'
+            },
+            {
+                name: 'Periodicity',
+                entity: 'periodicity',
+                key: 'instruments.periodicity'
+            },
+            {
+                name: 'Accrual calculation model',
+                entity: 'accrual_calculation_model',
+                key: 'instruments.accrualcalculationmodel'
             }
         ]
     };
@@ -385,8 +400,8 @@
                     Accept: 'application/json',
                     'Content-type': 'application/json'
                 }
-            }).then(function(data){
-                return data.json();
+            }).then(function (data) {
+            return data.json();
         })
     };
 

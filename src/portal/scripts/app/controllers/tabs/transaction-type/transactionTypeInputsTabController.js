@@ -32,7 +32,8 @@
             strategy3: null,
             daily_pricing_model: null,
             payment_size_detail: null,
-            price_download_scheme: null
+            price_download_scheme: null,
+            pricing_policy: null
         };
 
         vm.valueTypes = [
@@ -209,6 +210,7 @@
                 daily_pricing_model: vm.newItem.daily_pricing_model,
                 payment_size_detail: vm.newItem.payment_size_detail,
                 price_download_scheme: vm.newItem.price_download_scheme,
+                pricing_policy: vm.newItem.pricing_policy,
                 value: vm.newItem.value,
                 value_expr: vm.newItem.value_expr
             });
@@ -231,6 +233,7 @@
             vm.newItem.daily_pricing_model = null;
             vm.newItem.payment_size_detail = null;
             vm.newItem.price_download_scheme = null;
+            vm.newItem.pricing_policy = null;
             vm.newItem.value = null;
             vm.newItem.value_expr = null;
         }

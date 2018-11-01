@@ -1,0 +1,137 @@
+<div layout="row">
+    <div flex="50">
+        <div layout="row">
+            <div flex="50">
+                <div layout="row">
+                    <div flex="20">
+                        <md-button
+                                class="md-icon-button md-raised {{!!item.instrument_manual_pricing_formula.instrument_toggle ? 'ref' : ''}}"
+                                style="transform: scale(0.7,0.7)"
+                                data-ng-click="vm.resetPropertyBtn(item, 'instrument_manual_pricing_formula', 'instrument')">
+                            <span data-ng-if="!!item.instrument_manual_pricing_formula.instrument_toggle">R</span>
+                            <span data-ng-if="!!!item.instrument_manual_pricing_formula.instrument_toggle">I</span>
+                        </md-button>
+                    </div>
+                    <div flex="80">
+                        <div data-ng-if="item.instrument_manual_pricing_formula.instrument_toggle">
+                            <md-input-container>
+                                <label for="">Instrument</label>
+                                <md-select
+                                        data-ng-model="item.instrument_manual_pricing_formula.instrument"
+                                        md-on-open="vm.loadRelation('instrument')">
+                                    <md-option
+                                            data-ng-if="!vm.relationItems['instrument'].length"
+                                            ng-value="item.instrument_manual_pricing_formula.instrument_object.id">
+                                        {{item.transaction.instrument_object.name}}
+                                    </md-option>
+                                    <md-option
+                                            data-ng-if="vm.relationItems['instrument'].length"
+                                            data-ng-repeat="relationItem in vm.relationItems['instrument']"
+                                            ng-value="relationItem.id">
+                                        {{relationItem.name}}
+                                    </md-option>
+                                </md-select>
+                            </md-input-container>
+                        </div>
+                        <div data-ng-if="!item.instrument_manual_pricing_formula.instrument_toggle">
+                            <md-input-container>
+                                <label for="">Instrument</label>
+                                <md-select
+                                        data-ng-model="item.instrument_manual_pricing_formula[vm.resolveInstrumentProp(item, 'instrument_manual_pricing_formula', 'instrument')]">
+                                    <md-optgroup label="Inputs">
+                                        <md-option
+                                                data-ng-click="vm.setItemInstrumentInput(item, 'instrument_manual_pricing_formula', inputItem.name, 'instrument')"
+                                                data-ng-repeat="inputItem in vm.findInputs('instrument')"
+                                                ng-value="inputItem.name">
+                                            {{inputItem.name}}
+                                        </md-option>
+                                    </md-optgroup>
+                                    <md-optgroup label="Phantoms">
+                                        <md-option
+                                                data-ng-click="vm.setItemInstrumentPhantom(item, 'instrument_manual_pricing_formula', phantomItem.positionOrder, 'instrument')"
+                                                data-ng-repeat="phantomItem in vm.findPhantoms()"
+                                                ng-value="phantomItem.positionOrder">
+                                            {{phantomItem.action_notes}}
+                                        </md-option>
+                                    </md-optgroup>
+                                </md-select>
+                            </md-input-container>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div layout="row">
+            <div flex="50">
+                <div layout="row">
+                    <div flex="50">
+                        <md-input-container class="expression-input-container">
+                            <label for="">Expression</label>
+                            <input type="text"
+                                   data-ng-model="item.instrument_manual_pricing_formula.expr">
+                        </md-input-container>
+                        <expression-editor-button
+                                data-item="item.instrument_manual_pricing_formula.expr"></expression-editor-button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div flex="50">
+        <div flex="50" layout="row">
+            <md-input-container class="expression-input-container">
+                <label for="">Notes</label>
+                <input type="text" style="color: grey;"
+                       data-ng-model="item.instrument_manual_pricing_formula.notes">
+            </md-input-container>
+            <expression-editor-button
+                    data-item="item.instrument_manual_pricing_formula.notes"></expression-editor-button>
+        </div>
+        <div flex="33" layout="row">
+            <div flex="20">
+                <md-button
+                        class="md-icon-button md-raised {{!!item.instrument_manual_pricing_formula.pricing_policy_toggle ? 'ref' : ''}}"
+                        style="transform: scale(0.7,0.7)"
+                        data-ng-click="vm.resetPropertyBtn(item, 'instrument_manual_pricing_formula', 'pricing_policy')">
+                    <span data-ng-if="!!item.instrument_manual_pricing_formula.pricing_policy_toggle">R</span>
+                    <span data-ng-if="!!!item.instrument_manual_pricing_formula.pricing_policy_toggle">I</span>
+                </md-button>
+            </div>
+            <div flex="80">
+                <div data-ng-if="item.instrument_manual_pricing_formula.pricing_policy_toggle">
+                    <md-input-container>
+                        <label for="">Pricing Policy</label>
+                        <md-select
+                                data-ng-model="item.instrument_manual_pricing_formula.pricing_policy"
+                                md-on-open="vm.loadRelation('pricing_policy')">
+                            <md-option
+                                    data-ng-if="!vm.relationItems['pricing_policy'].length"
+                                    ng-value="item.instrument_manual_pricing_formula.pricing_policy_object.id">
+                                {{item.instrument_manual_pricing_formula.pricing_policy_object.name}}
+                            </md-option>
+                            <md-option
+                                    data-ng-if="vm.relationItems['pricing_policy'].length"
+                                    data-ng-repeat="relationItem in vm.relationItems['pricing_policy']"
+                                    ng-value="relationItem.id">
+                                {{relationItem.name}}
+                            </md-option>
+                        </md-select>
+                    </md-input-container>
+                </div>
+                <div data-ng-if="!item.instrument_manual_pricing_formula.pricing_policy_toggle">
+                    <md-input-container>
+                        <label for="">Pricing Policy</label>
+                        <md-select
+                                data-ng-model="item.instrument_manual_pricing_formula.pricing_policy_input">
+                            <md-option
+                                    data-ng-repeat="inputItem in vm.findInputs('pricing_policy')"
+                                    ng-value="inputItem.name">
+                                {{inputItem.name}}
+                            </md-option>
+                        </md-select>
+                    </md-input-container>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
