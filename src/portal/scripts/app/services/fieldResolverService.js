@@ -121,6 +121,11 @@
                         resolve({type: 'id', key: 'accrual_calculation_model', data: data});
                     });
                     break;
+                case 'accrualcalculationmodel':
+                    accrualCalculationModelRepository.getList().then(function (data) {
+                        resolve({type: 'id', key: 'accrualcalculationmodel', data: data});
+                    });
+                    break;
                 case 'instrument':
                     instrumentRepository.getList().then(function (data) {
                         resolve({type: 'id', key: 'instrument', data: data.results});
