@@ -160,7 +160,6 @@
         "type": "link",
         "icon": ""
       },
-
       {
         "state": "",
         "title": "Strategy 1",
@@ -241,7 +240,6 @@
       }
     ]
   },
-
   {
     "state": "app.actions",
     "title": "Actions",
@@ -300,7 +298,7 @@
       },
       {
         "state": "app.data.transaction",
-        "title": "T-Components",
+        "title": "Base transactions",
         "type": "link",
         "icon": ""
       },

@@ -60,6 +60,12 @@
                          data-ng-include="'views/tabs/transaction-type/actions/instrument-event-schedule-action-view.html'">
                     </div>
 
+                    <div data-ng-if="item.instrument_event_schedule_action != null"
+                         data-ng-include="'views/tabs/transaction-type/actions/instrument-event-schedule-action-action-view.html'">
+
+                    </div>
+
+
                 </v-pane-content>
             </v-pane>
 
@@ -101,6 +107,12 @@
                 </md-button>
                 <md-button class="md-raised" data-ng-click="vm.addAction('instrument_event_schedule')">
                     Create event
+                </md-button>
+            </div>
+
+            <div layout="row" layout-align="end center">
+                <md-button class="md-raised" data-ng-click="vm.addAction('instrument_event_schedule_action')">
+                    Create Event Action
                 </md-button>
             </div>
 

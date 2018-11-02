@@ -124,8 +124,6 @@
                             value_type: input_value_type
                         });
 
-                        console.log("here? vm.userInputs", vm.userInputs);
-
                     });
                     $scope.$apply();
                 });

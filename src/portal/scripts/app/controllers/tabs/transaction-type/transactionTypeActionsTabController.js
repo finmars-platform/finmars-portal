@@ -33,6 +33,29 @@
 
         };
 
+        vm.instrumentTypeTransactionTypes = [
+            {
+                name: 'One Off Event',
+                value: 'one_off_event'
+            },
+            {
+                name: 'Regular Event',
+                value: 'regular_event'
+            },
+            {
+                name: 'Factor up',
+                value: 'factor_up'
+            },
+            {
+                name: 'Factor same',
+                value: 'factor_same'
+            },
+            {
+                name: 'Factor down',
+                value: 'factor_down'
+            }
+        ];
+
         vm.actionsKeysList = [
             'instrument',
             'transaction',
@@ -40,7 +63,7 @@
             'instrument_manual_pricing_formula',
             'instrument_accrual_calculation_schedules',
             'instrument_event_schedule',
-            'instrument_event_action'
+            'instrument_event_schedule_action'
         ];
 
         vm.entity.actions.forEach(function (action) {
@@ -272,6 +295,17 @@
             vm.entity.actions.forEach(function (action, $index) {
                 action.positionOrder = $index;
                 if (action.instrument !== null) {
+                    result.push(action);
+                }
+            });
+            return result;
+        };
+
+        vm.findEventSchedulePhantoms = function () {
+            var result = [];
+            vm.entity.actions.forEach(function (action, $index) {
+                action.positionOrder = $index;
+                if (action.instrument_event_schedule !== null) {
                     result.push(action);
                 }
             });
