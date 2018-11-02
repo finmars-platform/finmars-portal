@@ -56,36 +56,55 @@
                          data-ng-include="'views/tabs/transaction-type/actions/instrument-accrual-calculation-schedules-action-view.html'">
                     </div>
 
+                    <div data-ng-if="item.instrument_event_schedule != null"
+                         data-ng-include="'views/tabs/transaction-type/actions/instrument-event-schedule-action-view.html'">
+                    </div>
+
                 </v-pane-content>
             </v-pane>
 
         </v-accordion>
 
-        <div layout="row" layout-align="end center">
-            <md-button class="md-raised" data-ng-click="vm.addAction('transaction')">
-                Create base transaction
-            </md-button>
-            <md-button class="md-raised" data-ng-click="vm.addAction('instrument')">
-                Create instrument
-            </md-button>
+        <div class="transaction-type-operations-block">
+
+            <p class="text-right text-weight-bold m-b-16">General operations:</p>
+
+            <div layout="row" layout-align="end center">
+                <md-button class="md-raised" data-ng-click="vm.addAction('transaction')">
+                    Create base transaction
+                </md-button>
+                <md-button class="md-raised" data-ng-click="vm.addAction('instrument')">
+                    Create instrument
+                </md-button>
+            </div>
+
         </div>
 
-        <div layout="row" layout-align="end center" class="m-t-24">
-            <md-button class="md-raised" data-ng-click="vm.addAction('instrument_factor_schedule')">
-                Create instrument factor schedule
-            </md-button>
-        </div>
-        <div layout="row" layout-align="end center">
-            <md-button class="md-raised" data-ng-click="vm.addAction('instrument_manual_pricing_formula')">
-                Create instrument pricing
-            </md-button>
-        </div>
-        <div layout="row" layout-align="end center">
-            <md-button class="md-raised" data-ng-click="vm.addAction('instrument_accrual_calculation_schedules')">
-                Create instrument accrual calculation schedule
-            </md-button>
-        </div>
+        <div class="transaction-type-operations-block m-t-24">
 
+            <p class="text-right text-weight-bold m-b-16">Instrument operations:</p>
+
+            <div layout="row" layout-align="end center">
+                <md-button class="md-raised" data-ng-click="vm.addAction('instrument_factor_schedule')">
+                    Create factor
+                </md-button>
+
+                <md-button class="md-raised" data-ng-click="vm.addAction('instrument_manual_pricing_formula')">
+                    Create pricing
+                </md-button>
+            </div>
+
+
+            <div layout="row" layout-align="end center">
+                <md-button class="md-raised" data-ng-click="vm.addAction('instrument_accrual_calculation_schedules')">
+                    Create accrual
+                </md-button>
+                <md-button class="md-raised" data-ng-click="vm.addAction('instrument_event_schedule')">
+                    Create event
+                </md-button>
+            </div>
+
+        </div>
 
     </div>
 </div>

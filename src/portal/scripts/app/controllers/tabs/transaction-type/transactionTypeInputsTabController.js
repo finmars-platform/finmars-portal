@@ -137,7 +137,13 @@
             return new Promise(function (resolve, reject) {
                 if (!vm.relationItems[entity]) {
                     entityResolverService.getList(entity).then(function (data) {
-                        vm.relationItems[entity] = data.results;
+
+                        if (data.hasOwnProperty('results')) {
+                            vm.relationItems[entity] = data.results;
+                        } else {
+                            vm.relationItems[entity] = data;
+                        }
+
                         resolve(vm.relationItems[entity]);
                     })
                 } else {

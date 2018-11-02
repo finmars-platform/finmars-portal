@@ -30,6 +30,8 @@
 
     var accrualCalculationModelRepository = require('../repositories/accrualCalculationModelRepository');
     var instrumentPeriodicityRepository = require('../repositories/instrumentPeriodicityRepository');
+    var metaEventClassRepository = require('../repositories/metaEventClassRepository');
+    var metaNotificationClassRepository = require('../repositories/metaNotificationClassRepository');
 
     var getFields = function (fieldKey, options) {
 
@@ -121,9 +123,14 @@
                         resolve({type: 'id', key: 'accrual_calculation_model', data: data});
                     });
                     break;
-                case 'accrualcalculationmodel':
-                    accrualCalculationModelRepository.getList().then(function (data) {
-                        resolve({type: 'id', key: 'accrualcalculationmodel', data: data});
+                case 'event_class':
+                    metaEventClassRepository.getList().then(function (data) {
+                        resolve({type: 'id', key: 'event_class', data: data});
+                    });
+                    break;
+                case 'notification_class':
+                    metaNotificationClassRepository.getList().then(function (data) {
+                        resolve({type: 'id', key: 'notification_class', data: data});
                     });
                     break;
                 case 'instrument':

@@ -233,7 +233,6 @@
                 } else {
                     entityResolverService.getByKey('transaction-type-book', vm.editLayoutEntityInstanceId).then(function (data) {
 
-
                         vm.complexTransactionOptions.transactionType = data.transaction_type;
                         vm.editLayoutEntityInstanceId = data.transaction_type;
                         vm.entity = data.complex_transaction;
@@ -337,9 +336,6 @@
 
         if (vm.entityType !== 'transaction-type') {
 
-            //console.log('1231321321 editLayoutEntityInstanceId?', vm.editLayoutEntityInstanceId);
-            //console.log('1231321321 editLayoutByEntityInsance?', vm.editLayoutByEntityInsance);
-
             if (vm.editLayoutByEntityInsance == true) {
                 if (vm.editLayoutEntityInstanceId) {
                     vm.getEditListByInstanceId();
@@ -397,9 +393,6 @@
                         }
                     });
                 });
-
-                //console.log('vm.complexTransactionOptions', vm.complexTransactionOptions);
-                //console.log('vm.entity', vm.entity);
 
                 var inputsWithCalculations = data.transaction_type_object.inputs;
 

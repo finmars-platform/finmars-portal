@@ -10,7 +10,6 @@
             restrict: 'A',
             require: '?ngModel',
             link: function (scope, elem, attrs, ngModelCtrl) {
-                console.log('RESOLVER INSTRUMENT MODAL', ngModelCtrl);
 
                 $(elem).on('click', function (event) {
                     event.preventDefault();
@@ -28,19 +27,13 @@
                         preserveScope: true,
                         autoWrap: true,
                         skipHide: true,
+                        multiple: true,
                         clickOutsideToClose: true,
                         locals: {
-                            eventActions: ngModelCtrl,
+                            eventActions: ngModelCtrl
                         }
-                    }).then(function (res) {
-                        if (res.status === 'agree') {
-                            ngModelCtrl.$setViewValue(res.data.item.id);
-                            ngModelCtrl.$render();
-                            console.log('ngModelCtrl', ngModelCtrl);
-                        }
-                    });
+                    })
 
-                    console.log('START MODAL!');
                 })
 
             }

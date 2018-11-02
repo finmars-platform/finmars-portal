@@ -91,24 +91,41 @@
                             input_value_type = 'field'
                         }
 
-                        var contentType = undefined;
-                        var uniqueKey = input.name.split(' ').join('_').toLowerCase();
+                        var contentType;
 
                         if (input.content_type && input.content_type !== undefined) {
                             contentType = input.content_type.split('.')[1];
-                            uniqueKey = input.name.split(' ').join('_').toLowerCase() + '_' + input.content_type;
+
+                            if (contentType === 'eventclass') {
+                                contentType = 'event_class';
+                            }
+
+                            if (contentType === 'notificationclass') {
+                                contentType = 'notification_class';
+                            }
+
+                            if (contentType === 'accrualcalculationmodel') {
+                                contentType = 'accrual_calculation_model';
+                            }
+
+                            if (contentType === 'pricingpolicy') {
+                                contentType = 'pricing_policy';
+                            }
+
                         } else {
                             contentType = input.name.split(' ').join('_').toLowerCase();
                         }
 
                         vm.userInputs.push({
-                            unique_key: uniqueKey,
                             key: contentType,
                             name: input.name,
                             verbose_name: input.verbose_name,
                             content_type: input.content_type,
                             value_type: input_value_type
-                        })
+                        });
+
+                        console.log("here? vm.userInputs", vm.userInputs);
+
                     });
                     $scope.$apply();
                 });
