@@ -1,0 +1,77 @@
+<div layout="row">
+    <div flex="50">
+
+        <div layout="row">
+
+            <div flex="50">
+
+                <md-input-container>
+                    <label for="">Event (Phantom)</label>
+                    <md-select data-ng-model="item.instrument_event_schedule_action.event_schedule_phantom">
+                        <md-option
+                                data-ng-repeat="phantomItem in vm.findEventSchedulePhantoms()"
+                                ng-value="phantomItem.positionOrder">
+                            {{phantomItem.action_notes}}
+                        </md-option>
+                    </md-select>
+                </md-input-container>
+
+            </div>
+
+            <div flex="50">
+                <div layout="row">
+
+                    <md-input-container>
+                        <label for="">Transaction Type</label>
+                        <md-select
+                                data-ng-model="item.instrument_event_schedule_action.transaction_type_from_instrument_type">
+                            <md-option data-ng-repeat="item in vm.instrumentTypeTransactionTypes"
+                                       ng-value="item.value">
+                                {{item.name}}
+                            </md-option>
+                        </md-select>
+                    </md-input-container>
+
+                </div>
+            </div>
+        </div>
+        <div layout="row">
+            <div flex="33">
+                <md-input-container class="expression-input-container">
+                    <label for="">Action is sent to pending</label>
+                    <input type="text" data-ng-model="item.instrument_event_schedule_action.is_sent_to_pending">
+                </md-input-container>
+                <expression-editor-button
+                        data-item="item.instrument_event_schedule_action.is_sent_to_pending"></expression-editor-button>
+            </div>
+            <div flex="33">
+                <md-input-container class="expression-input-container">
+                    <label for="">Action is book automatic</label>
+                    <input type="text" data-ng-model="item.instrument_event_schedule_action.is_book_automatic">
+                </md-input-container>
+                <expression-editor-button
+                        data-item="item.instrument_event_schedule_action.is_book_automatic"></expression-editor-button>
+            </div>
+        </div>
+    </div>
+    <div flex="50">
+        <div layout="row">
+            <div flex="33" layout="row">
+                <md-input-container class="expression-input-container">
+                    <label for="">Button position</label>
+                    <input type="text" data-ng-model="item.instrument_event_schedule_action.button_position">
+                </md-input-container>
+                <expression-editor-button
+                        data-item="item.instrument_event_schedule_action.button_position"></expression-editor-button>
+            </div>
+            <div flex="33" layout="row">
+                <md-input-container class="expression-input-container">
+                    <label for="">Text</label>
+                    <input type="text" data-ng-model="item.instrument_event_schedule_action.text">
+                </md-input-container>
+                <expression-editor-button
+                        data-item="item.instrument_event_schedule_action.text"></expression-editor-button>
+            </div>
+        </div>
+    </div>
+</div>
