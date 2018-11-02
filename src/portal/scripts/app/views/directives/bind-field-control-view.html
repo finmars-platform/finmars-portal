@@ -88,8 +88,6 @@
             <!--<label data-ng-if="!entity[getModelKey()]" data-ng-bind="getName()"></label>-->
             <label data-ng-bind="getName()"></label>
             <zh-date-picker data-ng-change="changeWatcher()" ng-model="entity[getModelKey()]"></zh-date-picker>
-            <!--<mdp-date-picker mdp-placeholder="Enter date" ng-model="entity[getModelKey()]" mdp-format="YYYY/MM/DD" data-ng-change="dateFormatter()"></mdp-date-picker>-->
-            <!--<md-datepicker ng-model="entity[getModelKey()]" md-placeholder="Enter date" data-ng-change="dateFormatter()"></md-datepicker>-->
             <div class="date-pick-buttons-block">
                 <md-button data-ng-if="item.options.dateTodayMinus" data-ng-click="setDateMinus()">
                     T - 1

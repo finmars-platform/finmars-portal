@@ -27,7 +27,7 @@
 
             items.forEach(function (item) {
 
-                console.log('item', item);
+                // console.log('item', item);
 
                 if (item.group_object) {
 
@@ -60,7 +60,7 @@
                 return !!item
             });
 
-            console.log('groups', groupsList);
+            // console.log('groups', groupsList);
 
             return groupsList;
 
@@ -109,7 +109,7 @@
         };
 
         $scope.$parent.$watchCollection('vm.complexTransactionOptions', function () {
-            console.log('hererer?');
+
             vm.complexTransactionOptions = $scope.$parent.vm.complexTransactionOptions;
 
             vm.loadTransactionTypes();

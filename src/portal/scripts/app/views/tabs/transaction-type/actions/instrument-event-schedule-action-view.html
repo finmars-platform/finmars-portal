@@ -1,0 +1,258 @@
+<div layout="row">
+    <div flex="50">
+        <div layout="row">
+            <div flex="50">
+                <div layout="row">
+                    <div flex="20">
+                        <md-button
+                                class="md-icon-button md-raised {{!!item.instrument_event_schedule.instrument_toggle ? 'ref' : ''}}"
+                                style="transform: scale(0.7,0.7)"
+                                data-ng-click="vm.resetPropertyBtn(item, 'instrument_event_schedule', 'instrument')">
+                            <span data-ng-if="!!item.instrument_event_schedule.instrument_toggle">R</span>
+                            <span data-ng-if="!!!item.instrument_event_schedule.instrument_toggle">I</span>
+                        </md-button>
+                    </div>
+                    <div flex="80">
+                        <div data-ng-if="item.instrument_event_schedule.instrument_toggle">
+                            <md-input-container>
+                                <label for="">Instrument</label>
+                                <md-select
+                                        data-ng-model="item.instrument_event_schedule.instrument"
+                                        md-on-open="vm.loadRelation('instrument')">
+                                    <md-option
+                                            data-ng-if="!vm.relationItems['instrument'].length"
+                                            ng-value="item.instrument_event_schedule.instrument_object.id">
+                                        {{item.instrument_accrual_calculation_schedules.instrument_object.name}}
+                                    </md-option>
+                                    <md-option
+                                            data-ng-if="vm.relationItems['instrument'].length"
+                                            data-ng-repeat="relationItem in vm.relationItems['instrument']"
+                                            ng-value="relationItem.id">
+                                        {{relationItem.name}}
+                                    </md-option>
+                                </md-select>
+                            </md-input-container>
+                        </div>
+                        <div data-ng-if="!item.instrument_event_schedule.instrument_toggle">
+                            <md-input-container>
+                                <label for="">Instrument</label>
+                                <md-select
+                                        data-ng-model="item.instrument_event_schedule[vm.resolveInstrumentProp(item, 'instrument_event_schedule', 'instrument')]">
+                                    <md-optgroup label="Inputs">
+                                        <md-option
+                                                data-ng-click="vm.setItemInstrumentInput(item, 'instrument_event_schedule', inputItem.name, 'instrument')"
+                                                data-ng-repeat="inputItem in vm.findInputs('instrument')"
+                                                ng-value="inputItem.name">
+                                            {{inputItem.name}}
+                                        </md-option>
+                                    </md-optgroup>
+                                    <md-optgroup label="Phantoms">
+                                        <md-option
+                                                data-ng-click="vm.setItemInstrumentPhantom(item, 'instrument_event_schedule', phantomItem.positionOrder, 'instrument')"
+                                                data-ng-repeat="phantomItem in vm.findPhantoms()"
+                                                ng-value="phantomItem.positionOrder">
+                                            {{phantomItem.action_notes}}
+                                        </md-option>
+                                    </md-optgroup>
+                                </md-select>
+                            </md-input-container>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div layout="row">
+            <div flex="33">
+                <md-input-container class="expression-input-container">
+                    <label for="">Effective date</label>
+                    <input type="text" data-ng-model="item.instrument_event_schedule.effective_date">
+                </md-input-container>
+                <expression-editor-button
+                        data-item="item.instrument_event_schedule.effective_date"></expression-editor-button>
+            </div>
+            <div flex="33">
+                <md-input-container class="expression-input-container">
+                    <label for="">Final date</label>
+                    <input type="text" data-ng-model="item.instrument_event_schedule.final_date">
+                </md-input-container>
+                <expression-editor-button
+                        data-item="item.instrument_event_schedule.final_date"></expression-editor-button>
+            </div>
+        </div>
+        <div layout="row">
+            <div flex="33">
+                <md-input-container class="expression-input-container">
+                    <label for="">Name</label>
+                    <input type="text" data-ng-model="item.instrument_event_schedule.name">
+                </md-input-container>
+                <expression-editor-button
+                        data-item="item.instrument_event_schedule.name"></expression-editor-button>
+            </div>
+            <div flex="33">
+                <md-input-container class="expression-input-container">
+                    <label for="">Description</label>
+                    <input type="text" data-ng-model="item.instrument_event_schedule.description">
+                </md-input-container>
+                <expression-editor-button
+                        data-item="item.instrument_event_schedule.description"></expression-editor-button>
+            </div>
+        </div>
+    </div>
+    <div flex="50">
+        <div layout="row">
+            <div flex="33" layout="row">
+                <md-input-container class="expression-input-container">
+                    <label for="">Periodicity n</label>
+                    <input type="text" data-ng-model="item.instrument_event_schedule.periodicity_n">
+                </md-input-container>
+                <expression-editor-button
+                        data-item="item.instrument_event_schedule.periodicity_n"></expression-editor-button>
+            </div>
+            <div flex="33" layout="row">
+                <div flex="20">
+                    <md-button
+                            class="md-icon-button md-raised {{!!item.instrument_event_schedule.periodicity_toggle ? 'ref' : ''}}"
+                            style="transform: scale(0.7,0.7)"
+                            data-ng-click="vm.resetPropertyBtn(item, 'instrument_event_schedule', 'periodicity')">
+                        <span data-ng-if="!!item.instrument_event_schedule.periodicity_toggle">R</span>
+                        <span data-ng-if="!!!item.instrument_event_schedule.periodicity_toggle">I</span>
+                    </md-button>
+                </div>
+                <div flex="80">
+                    <div data-ng-if="item.instrument_event_schedule.periodicity_toggle">
+                        <md-input-container>
+                            <label for="">Periodicity</label>
+                            <md-select data-ng-model="item.instrument_event_schedule.periodicity"
+                                       md-on-open="vm.loadRelation('periodicity')">
+                                <md-option
+                                        data-ng-if="!vm.relationItems['periodicity'].length"
+                                        ng-value="item.instrument_event_schedule.periodicity_object.id">
+                                    {{item.instrument_event_schedule.periodicity_object.name}}
+                                </md-option>
+                                <md-option
+                                        data-ng-if="vm.relationItems['periodicity'].length"
+                                        data-ng-repeat="relationItem in vm.relationItems['periodicity']"
+                                        ng-value="relationItem.id">
+                                    {{relationItem.name}}
+                                </md-option>
+                            </md-select>
+                        </md-input-container>
+                    </div>
+                    <div data-ng-if="!item.instrument_event_schedule.periodicity_toggle">
+                        <md-input-container>
+                            <label for="">Periodicity</label>
+                            <md-select
+                                    data-ng-model="item.instrument_event_schedule.periodicity_input">
+                                <md-option
+                                        data-ng-repeat="inputItem in vm.findInputs('periodicity')"
+                                        ng-value="inputItem.name">
+                                    {{inputItem.name}}
+                                </md-option>
+                            </md-select>
+                        </md-input-container>
+                    </div>
+                </div>
+            </div>
+            <div flex="33" layout="row">
+                <div flex="20">
+                    <md-button
+                            class="md-icon-button md-raised {{!!item.instrument_event_schedule.notification_class_toggle ? 'ref' : ''}}"
+                            style="transform: scale(0.7,0.7)"
+                            data-ng-click="vm.resetPropertyBtn(item, 'instrument_event_schedule', 'notification_class')">
+                        <span data-ng-if="!!item.instrument_event_schedule.notification_class_toggle">R</span>
+                        <span data-ng-if="!!!item.instrument_event_schedule.notification_class_toggle">I</span>
+                    </md-button>
+                </div>
+                <div flex="80">
+                    <div data-ng-if="item.instrument_event_schedule.notification_class_toggle">
+                        <md-input-container>
+                            <label for="">Notification Class</label>
+                            <md-select data-ng-model="item.instrument_event_schedule.notification_class"
+                                       md-on-open="vm.loadRelation('notification_class')">
+                                <md-option
+                                        data-ng-if="!vm.relationItems['notification_class'].length"
+                                        ng-value="item.instrument_event_schedule.notification_class_object.id">
+                                    {{item.instrument_event_schedule.notification_class_object.name}}
+                                </md-option>
+                                <md-option
+                                        data-ng-if="vm.relationItems['notification_class'].length"
+                                        data-ng-repeat="relationItem in vm.relationItems['notification_class']"
+                                        ng-value="relationItem.id">
+                                    {{relationItem.name}}
+                                </md-option>
+                            </md-select>
+                        </md-input-container>
+                    </div>
+                    <div data-ng-if="!item.instrument_event_schedule.notification_class_toggle">
+                        <md-input-container>
+                            <label for="">Notification Class</label>
+                            <md-select
+                                    data-ng-model="item.instrument_event_schedule.notification_class_input">
+                                <md-option
+                                        data-ng-repeat="inputItem in vm.findInputs('notification_class')"
+                                        ng-value="inputItem.name">
+                                    {{inputItem.name}}
+                                </md-option>
+                            </md-select>
+                        </md-input-container>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div layout="row">
+            <div flex="33" layout="row">
+                <md-input-container class="expression-input-container">
+                    <label for="">Notify in N days</label>
+                    <input type="text" data-ng-model="item.instrument_event_schedule.notify_in_n_days">
+                </md-input-container>
+                <expression-editor-button
+                        data-item="item.instrument_event_schedule.notify_in_n_days"></expression-editor-button>
+            </div>
+            <div flex="33" layout="row">
+                <div flex="20">
+                    <md-button
+                            class="md-icon-button md-raised {{!!item.instrument_event_schedule.event_class_toggle ? 'ref' : ''}}"
+                            style="transform: scale(0.7,0.7)"
+                            data-ng-click="vm.resetPropertyBtn(item, 'instrument_event_schedule', 'event_class')">
+                        <span data-ng-if="!!item.instrument_event_schedule.event_class_toggle">R</span>
+                        <span data-ng-if="!!!item.instrument_event_schedule.event_class_toggle">I</span>
+                    </md-button>
+                </div>
+                <div flex="80">
+                    <div data-ng-if="item.instrument_event_schedule.event_class_toggle">
+                        <md-input-container>
+                            <label for="">Event Class</label>
+                            <md-select data-ng-model="item.instrument_event_schedule.event_class"
+                                       md-on-open="vm.loadRelation('event_class')">
+                                <md-option
+                                        data-ng-if="!vm.relationItems['event_class'].length"
+                                        ng-value="item.instrument_event_schedule.event_class_object.id">
+                                    {{item.instrument_event_schedule.event_class_object.name}}
+                                </md-option>
+                                <md-option
+                                        data-ng-if="vm.relationItems['event_class'].length"
+                                        data-ng-repeat="relationItem in vm.relationItems['event_class']"
+                                        ng-value="relationItem.id">
+                                    {{relationItem.name}}
+                                </md-option>
+                            </md-select>
+                        </md-input-container>
+                    </div>
+                    <div data-ng-if="!item.instrument_event_schedule.event_class_toggle">
+                        <md-input-container>
+                            <label for="">Event Class</label>
+                            <md-select
+                                    data-ng-model="item.instrument_event_schedule.event_class_input">
+                                <md-option
+                                        data-ng-repeat="inputItem in vm.findInputs('event_class')"
+                                        ng-value="inputItem.name">
+                                    {{inputItem.name}}
+                                </md-option>
+                            </md-select>
+                        </md-input-container>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -28,10 +28,6 @@
                 scope.readyStatus = {content: false, tags: false};
                 scope.type = '';
 
-                //logService.property('field scope', scope.item);
-                //logService.property('field entity', scope.entity);
-                //logService.property('field options', scope.options);
-
                 scope.resolveMultiple = function () {
                     if (scope.$parent.entityType !== 'instrument-type') { // refactor this
                         return true
@@ -48,8 +44,6 @@
 
                         var entityType = scope.item.key.replace('_', '-'); // refactor this
 
-                        console.log('ENTITYTYPE------------------------------------------', entityType);
-
                         if (entityType === 'transaction-types') {
                             entityType = 'transaction-type'
                         }
@@ -58,8 +52,6 @@
                             scope.tags = data.results;
 
                             scope.groups = bindFieldsHelper.groupFieldsByTagsWithDuplicates(scope.fields, scope.tags);
-
-                            console.log('test?');
 
                             scope.readyStatus.tags = true;
 
@@ -77,51 +69,24 @@
 
                 scope.searchTerm = '';
 
-                //scope.onOpen = function () {
+                fieldResolverService.getFields(scope.item.key, scope.options).then(function (res) {
+                    logService.collection('DATA', res);
+                    scope.type = res.type;
+                    scope.fields = res.data;
+                    scope.readyStatus.content = true;
 
-                    //if (scope.item.content_type) {
+                    scope.getFieldsGrouped();
 
-                        //console.log('scope.item.content_type', scope.item.content_type);
-                        //
-                        //fieldResolverService.getFieldsByContentType(scope.item.content_type, scope.options).then(function (res) {
-                        //    logService.collection('DATA', res);
-                        //    scope.type = res.type;
-                        //    scope.fields = res.data;
-                        //    scope.readyStatus.content = true;
-                        //
-                        //    scope.getFieldsGrouped();
-                        //
-                        //    scope.$apply(function () {
-                        //
-                        //        setTimeout(function () {
-                        //            $(elem).find('.md-select-search-pattern').on('keydown', function (ev) {
-                        //                ev.stopPropagation();
-                        //            });
-                        //        }, 100);
-                        //    });
-                        //});
-                    //}
-                    //} else {
-                //
-                        fieldResolverService.getFields(scope.item.key, scope.options).then(function (res) {
-                            logService.collection('DATA', res);
-                            scope.type = res.type;
-                            scope.fields = res.data;
-                            scope.readyStatus.content = true;
+                    scope.$apply(function () {
 
-                            scope.getFieldsGrouped();
-
-                            scope.$apply(function () {
-
-                                setTimeout(function () {
-                                    $(elem).find('.md-select-search-pattern').on('keydown', function (ev) {
-                                        ev.stopPropagation();
-                                    });
-                                }, 100);
+                        setTimeout(function () {
+                            $(elem).find('.md-select-search-pattern').on('keydown', function (ev) {
+                                ev.stopPropagation();
                             });
-                        });
-                //    }
-                //};
+                        }, 100);
+                    });
+                });
+
 
                 scope.resolveSort = function (field) {
                     if (field) {
@@ -217,7 +182,7 @@
                     else {
                         return scope.getName();
                     }
-                }
+                };
 
                 scope.getModelKey = scope.$parent.getModelKey;
 

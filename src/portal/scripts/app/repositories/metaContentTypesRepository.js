@@ -90,6 +90,16 @@
                 name: 'Accrual calculation model',
                 entity: 'accrual_calculation_model',
                 key: 'instruments.accrualcalculationmodel'
+            },
+            {
+                name: 'Event Class',
+                entity: 'event_class',
+                key: 'transactions.eventclass'
+            },
+            {
+                name: 'Notification Class',
+                entity: 'notification_class',
+                key: 'transactions.notificationclass'
             }
         ]
     };

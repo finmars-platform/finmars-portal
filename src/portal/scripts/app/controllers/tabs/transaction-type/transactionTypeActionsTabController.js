@@ -33,65 +33,35 @@
 
         };
 
+        vm.actionsKeysList = [
+            'instrument',
+            'transaction',
+            'instrument_factor_schedule',
+            'instrument_manual_pricing_formula',
+            'instrument_accrual_calculation_schedules',
+            'instrument_event_schedule',
+            'instrument_event_action'
+        ];
+
         vm.entity.actions.forEach(function (action) {
 
             var keys;
 
-            if (action.instrument !== null) {
-                keys = Object.keys(action.instrument);
+            vm.actionsKeysList.forEach(function (actionKey) {
 
-                keys.forEach(function (key) {
-                    if (action.instrument.hasOwnProperty(key + '_input')) {
-                        if (action.instrument[key] !== null) {
-                            action.instrument[key + '_toggle'] = true;
-                        }
-                    }
-                })
-            }
+                if (action[actionKey] !== null) {
+                    keys = Object.keys(action[actionKey]);
 
-            if (action.transaction !== null) {
-                keys = Object.keys(action.transaction);
-                keys.forEach(function (key) {
-                    if (action.transaction.hasOwnProperty(key + '_input')) {
-                        if (action.transaction[key] !== null) {
-                            action.transaction[key + '_toggle'] = true;
+                    keys.forEach(function (key) {
+                        if (action[actionKey].hasOwnProperty(key + '_input')) {
+                            if (action[actionKey][key] !== null) {
+                                action[actionKey][key + '_toggle'] = true;
+                            }
                         }
-                    }
-                })
-            }
+                    })
+                }
 
-            if (action.instrument_factor_schedule !== null) {
-                keys = Object.keys(action.instrument_factor_schedule);
-                keys.forEach(function (key) {
-                    if (action.instrument_factor_schedule.hasOwnProperty(key + '_input')) {
-                        if (action.instrument_factor_schedule[key] !== null) {
-                            action.instrument_factor_schedule[key + '_toggle'] = true;
-                        }
-                    }
-                })
-            }
-
-            if (action.instrument_manual_pricing_formula !== null) {
-                keys = Object.keys(action.instrument_manual_pricing_formula);
-                keys.forEach(function (key) {
-                    if (action.instrument_manual_pricing_formula.hasOwnProperty(key + '_input')) {
-                        if (action.instrument_manual_pricing_formula[key] !== null) {
-                            action.instrument_manual_pricing_formula[key + '_toggle'] = true;
-                        }
-                    }
-                })
-            }
-
-            if (action.instrument_accrual_calculation_schedules !== null) {
-                keys = Object.keys(action.instrument_accrual_calculation_schedules);
-                keys.forEach(function (key) {
-                    if (action.instrument_accrual_calculation_schedules.hasOwnProperty(key + '_input')) {
-                        if (action.instrument_accrual_calculation_schedules[key] !== null) {
-                            action.instrument_accrual_calculation_schedules[key + '_toggle'] = true;
-                        }
-                    }
-                })
-            }
+            })
 
         });
 

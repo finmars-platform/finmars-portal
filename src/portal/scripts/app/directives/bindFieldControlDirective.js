@@ -32,7 +32,6 @@
 
                 if (scope.item) {
                     scope.fieldType = null;
-                    //console.log(scope.item);
                     scope.attribute = scope.item;
 
                     var i;
@@ -92,19 +91,10 @@
 
                 };
 
-                scope.dateFormatter = function () {
-                    //console.log('scope.entity[scope.getModelKey()]', scope.entity[scope.getModelKey()]);
-
-                    //scope.entity[scope.getModelKey()] = moment(new Date(scope.entity[scope.getModelKey()])).format('YYYY-MM-DD');
-                };
-
                 scope.getModelKey = function () {
 
                     if (scope.item) {
                         if (scope.item.hasOwnProperty('id') && scope.item.id !== null) {
-
-                            //console.log('scope,entity', scope.entity);
-
                             return scope.item.name
                         } else {
                             var i, l, e, u;
@@ -151,19 +141,14 @@
                 }
 
                 scope.setDateToday = function () {
-                    console.log('1232', scope.entity[scope.getModelKey()]);
-                    //scope.entity[scope.getModelKey()] = new Date();
                     scope.entity[scope.getModelKey()] = moment(new Date()).format('YYYY-MM-DD');
-                    //console.log('1232', scope.entity[scope.getModelKey()])
                 };
 
                 scope.setDatePlus = function () {
-                    //scope.entity[scope.getModelKey()] = new Date(new Date().setDate(new Date(scope.entity[scope.getModelKey()]).getDate() + 1));
                     scope.entity[scope.getModelKey()] = moment(new Date(scope.entity[scope.getModelKey()])).add(1, 'days').format('YYYY-MM-DD');
                 };
 
                 scope.setDateMinus = function () {
-                    //scope.entity[scope.getModelKey()] = new Date(new Date().setDate(new Date(scope.entity[scope.getModelKey()]).getDate() - 1));
                     scope.entity[scope.getModelKey()] = moment(new Date(scope.entity[scope.getModelKey()])).subtract(1, 'days').format('YYYY-MM-DD');
                 };
 
