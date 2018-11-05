@@ -175,6 +175,10 @@
 
             // console.log('group.___is_open', group.___is_open);
 
+            console.log('handleFoldButtonClick.group', groups[group.___level - 1])
+
+            groups[group.___level - 1].report_settings.is_level_folded = null;
+
             if (group.___is_open) {
 
                 group.___is_open = false;
@@ -189,15 +193,13 @@
 
                 group.___is_open = true;
 
-                groups[group.___level - 1].report_settings.is_level_folded = false;
-
                 console.log('Unfold Group');
 
                 evDataService.setData(group);
 
                 evDataService.setGroups(groups);
 
-                evEventService.dispatchEvent(evEvents.GROUPS_CHANGE);
+                // evEventService.dispatchEvent(evEvents.GROUPS_CHANGE);
 
             }
 
