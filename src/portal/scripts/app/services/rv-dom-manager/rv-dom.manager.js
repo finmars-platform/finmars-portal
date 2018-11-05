@@ -175,7 +175,7 @@
 
             // console.log('group.___is_open', group.___is_open);
 
-            console.log('handleFoldButtonClick.group', groups[group.___level - 1])
+            console.log('handleFoldButtonClick.group type', groups[group.___level - 1])
 
             groups[group.___level - 1].report_settings.is_level_folded = null;
 
@@ -202,6 +202,8 @@
                 // evEventService.dispatchEvent(evEvents.GROUPS_CHANGE);
 
             }
+
+            console.log('handleFoldButtonClick.clicked group', group);
 
             evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
 
