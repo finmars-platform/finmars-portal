@@ -84,9 +84,8 @@
                     var foldButton = '';
 
                     var currentGroup = evDataService.getData(proxyLineSubtotal.___parentId);
-                    var group = evDataService.getData(currentGroup.___parentId);
 
-                    if (group.___is_open) {
+                    if (currentGroup.___is_open) {
                         foldButton = '<div class="ev-fold-button" data-type="foldbutton" data-object-id="' + currentGroup.___id + '" data-parent-group-hash-id="' + currentGroup.___parentId + '">-</div>';
                     } else {
                         foldButton = '<div class="ev-fold-button" data-type="foldbutton" data-object-id="' + currentGroup.___id + '" data-parent-group-hash-id="' + currentGroup.___parentId + '">+</div>';
