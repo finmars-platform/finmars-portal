@@ -1,5 +1,9 @@
 # Changelog
 
+## 08.11.2018
+
+- Rebook Reactions in Transaction Type Actions
+
 ## 25.10.2018
 
 - Update PDF export

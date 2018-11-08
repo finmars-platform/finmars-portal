@@ -33,6 +33,36 @@
 
         };
 
+        vm.rebookInstrumentReactions = [
+            {
+                name: "Proceed (Overwrite if exists)",
+                id: 2
+            },
+            {
+                name: "Skip",
+                id: 1
+            },
+            {
+                name: "Proceed (Skip if exists)",
+                id: 4
+            }
+        ];
+
+        vm.rebookOtherReactions = [
+            {
+                name: "Append",
+                id: 0
+            },
+            {
+                name: "Skip",
+                id: 1
+            },
+            {
+                name: "Clear & Append",
+                id: 3
+            }
+        ];
+
         vm.instrumentTypeTransactionTypes = [
             {
                 name: 'One Off Event',

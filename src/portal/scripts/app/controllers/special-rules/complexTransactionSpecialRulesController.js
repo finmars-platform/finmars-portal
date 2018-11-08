@@ -13,11 +13,12 @@
 
         var vm = this;
 
-        vm.complexTransactionOptions = {
+        vm.filters = {
             portfolio: $scope.$parent.vm.complexTransactionOptions.portfolio,
-            instrumentType: $scope.$parent.vm.complexTransactionOptions.instrumentType,
-            transactionType: $scope.$parent.vm.complexTransactionOptions.transactionType
+            instrument_type: $scope.$parent.vm.complexTransactionOptions.instrumentType
         };
+
+        vm.transactionTypeId = $scope.$parent.vm.complexTransactionOptions.transactionTypeId;
 
         $scope.$parent.vm.specialRulesReady = false;
 
@@ -26,8 +27,6 @@
             var groups = {};
 
             items.forEach(function (item) {
-
-                // console.log('item', item);
 
                 if (item.group_object) {
 
@@ -60,8 +59,6 @@
                 return !!item
             });
 
-            // console.log('groups', groupsList);
-
             return groupsList;
 
         }
@@ -79,23 +76,20 @@
 
         transactionTypeService.getList().then(function (data) {
 
-            console.log('DATA', data);
-
             vm.transactionGroups = getGroupsFromItems(data.results);
             $scope.$apply();
+
         });
 
 
         vm.loadTransactionTypes = function () {
 
             var options = {
-                filters: {
-                    portfolio: vm.complexTransactionOptions.portfolio,
-                    'instrument_type': vm.complexTransactionOptions.instrumentType
-                }
+                filters: vm.filters
             };
 
             transactionTypeService.getList(options).then(function (data) {
+
                 vm.transactionGroups = getGroupsFromItems(data.results);
 
                 $scope.$apply(function () {
@@ -106,27 +100,15 @@
                     }, 100);
                 });
             })
+
         };
 
-        $scope.$parent.$watchCollection('vm.complexTransactionOptions', function () {
-
-            vm.complexTransactionOptions = $scope.$parent.vm.complexTransactionOptions;
-
-            vm.loadTransactionTypes();
-        });
-
-
         vm.transactionTypeHandler = function () {
-            $scope.$parent.vm.specialRulesReady = false;
-            setTimeout(function () {
-                $scope.$parent.vm.complexTransactionOptions.transactionType = vm.complexTransactionOptions.transactionType;
-                $scope.$parent.vm.editLayoutEntityInstanceId = vm.complexTransactionOptions.transactionType;
-                $scope.$parent.vm.specialRulesReady = true;
-                $scope.$parent.vm.entity._transaction_type_id = vm.complexTransactionOptions.transactionType;
-                console.log('PARENT', $scope.$parent.vm);
-                $scope.$parent.vm.getEditListByInstanceId();
-                $scope.$apply();
-            }, 200); // but why?
+
+            $scope.$parent.vm.complexTransactionOptions.transactionTypeId = vm.transactionTypeId;
+            $scope.$parent.vm.specialRulesReady = true;
+
+            $scope.$parent.vm.getEditListByInstanceId();
 
         }
 

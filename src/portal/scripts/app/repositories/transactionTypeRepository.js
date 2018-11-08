@@ -124,11 +124,8 @@
             return new Promise(function (resolve, reject) {
                 resolve({status: 'deleted'});
             });
-            //return data.json();
         })
     };
-
-    // TODO bookTransaction GET BOOK
 
     var getBookTransaction = function (id) {
         return window.fetch(baseUrl + 'transactions/transaction-type/' + id + '/book/',
@@ -167,9 +164,6 @@
             });
         })
     };
-
-
-
 
     module.exports = {
         getList: getList,

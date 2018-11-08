@@ -161,15 +161,18 @@
 
                     $mdDialog.show({
                         controller: 'EntityViewerAddDialogController as vm',
-                        templateUrl: 'views/entity-viewer/entity-viewer-dialog-view.html',
+                        templateUrl: 'views/entity-viewer/add-entity-viewer-dialog-view.html',
                         parent: angular.element(document.body),
                         targetEvent: ev,
                         locals: {
-                            entityType: scope.entityType
+                            entityType: scope.entityType,
+                            entity: {}
                         }
-                    }).then(function () {
+                    }).then(function (res) {
 
-                        scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE);
+                        if (res && res.res === 'agree') {
+                            scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE);
+                        }
 
                     })
 

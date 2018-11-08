@@ -248,17 +248,11 @@
                 return strategySubgroupService.create(3, entity);
                 break;
             case 'complex-transaction':
-                // return transactionTypeService.bookTransaction(entity.transaction_type, entity);
-                console.log('entity', entity);
 
                 return new Promise(function (resolve, reject) {
                     transactionTypeService.getBookTransaction(entity.transaction_type).then(function (data) {
 
                         var res = Object.assign(data, entity);
-
-                        console.log('res------------------', res);
-
-                        var i;
 
                         transactionTypeService.bookTransaction(entity.transaction_type, res).then(function (data) {
                             resolve(data);
@@ -312,54 +306,34 @@
             case 'complex-transaction':
                 // return complexTransactionService.bookComplexTransaction(entity.id, entity);
                 return new Promise(function (resolve, reject) {
-                    transactionTypeService.getBookTransaction(entity.transaction_type).then(function (data) {
+                    return complexTransactionService.getBookComplexTransaction(id).then(function (data) {
 
-                        var originValues = JSON.parse(JSON.stringify(entity.values))
+                        var originValues = JSON.parse(JSON.stringify(entity.values));
 
-                        var res = entity;
-
-                        var i;
-
-
-                        res.transactions = data.transactions;
-                        res.values = data.values;
+                        entity.transactions = data.response.transactions;
+                        entity.values = data.response.values;
 
                         var originValuesKeys = Object.keys(originValues);
-                        var defaultValuesKeys = Object.keys(res.values);
+                        var defaultValuesKeys = Object.keys(entity.values);
 
                         originValuesKeys.forEach(function (originVal) {
                             defaultValuesKeys.forEach(function (defaultVal) {
 
-                                if (originVal == defaultVal) {
-                                    res.values[defaultVal] = originValues[originVal];
+                                if (originVal === defaultVal) {
+                                    entity.values[defaultVal] = originValues[originVal];
                                 }
 
                             })
                         });
 
-                        transactionTypeService.bookTransaction(entity.transaction_type, res).then(function (data) {
+                        complexTransactionService.bookComplexTransaction(id, entity).then(function (data) {
                             resolve(data);
                         });
                     });
                 });
                 break;
             case 'transaction-type':
-
                 return transactionTypeService.update(id, entity);
-                //return new Promise(function (resolve, reject) {
-                //    transactionTypeService.getBookTransaction(id).then(function (data) {
-                //
-                //        var res = Object.assign(data, entity);
-                //
-                //        console.log('res------------------', res);
-                //
-                //        var i;
-                //
-                //        transactionTypeService.bookTransaction(id, res).then(function (data) {
-                //            resolve(data);
-                //        });
-                //    });
-                //});
                 break;
             case 'transaction-type-group':
                 return transactionTypeGroupService.update(id, entity);

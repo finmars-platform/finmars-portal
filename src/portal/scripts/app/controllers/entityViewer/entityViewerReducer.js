@@ -77,7 +77,7 @@
 
                 $mdDialog.show({
                     controller: 'EntityViewerEditDialogController as vm',
-                    templateUrl: 'views/entity-viewer/entity-viewer-dialog-view.html',
+                    templateUrl: 'views/entity-viewer/edit-entity-viewer-dialog-view.html',
                     parent: angular.element(document.body),
                     targetEvent: activeObject.event,
                     //clickOutsideToClose: true,
