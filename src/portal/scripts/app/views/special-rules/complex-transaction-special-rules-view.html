@@ -3,55 +3,6 @@
 
     <div layout="row">
 
-        <div flex="50">
-
-            <fieldset class="fieldset-event-settings m-b-24">
-
-                <legend>Filters</legend>
-
-                <div layout="row">
-                    <div layout="row" flex="50">
-                        <md-input-container>
-                            <label for="">Portfolio</label>
-                            <md-select multiple data-ng-model="vm.filters.portfolio"
-                                       md-on-close="searchTerm = ''">
-                                <md-select-header>
-                                    <input data-ng-model="searchTerm"
-                                           type="search"
-                                           placeholder="Search for a ..."
-                                           class="md-text md-select-search-pattern">
-                                </md-select-header>
-                                <md-option data-ng-repeat="item in vm.portfolios | filter:{name: searchTerm}"
-                                           ng-value="item.id">
-                                    {{item.name}}
-                                </md-option>
-                            </md-select>
-                        </md-input-container>
-                    </div>
-                    <div layout="row" flex="50">
-                        <md-input-container>
-                            <label for="">Instrument Type</label>
-                            <md-select multiple data-ng-model="vm.filters.instrument_type"
-                                       md-on-close="searchTerm = ''">
-                                <md-select-header>
-                                    <input data-ng-model="searchTerm"
-                                           type="search"
-                                           placeholder="Search for a ..."
-                                           class="md-text md-select-search-pattern">
-                                </md-select-header>
-                                <md-option data-ng-repeat="item in vm.instrumentTypes | filter:{name: searchTerm}"
-                                           ng-value="item.id">
-                                    {{item.user_code}}
-                                </md-option>
-                            </md-select>
-                        </md-input-container>
-                    </div>
-                </div>
-
-            </fieldset>
-
-        </div>
-
         <div layout="row" flex="50" class="p-t-24">
             <md-input-container>
                 <label for="">Transaction type</label>
@@ -72,6 +23,61 @@
                     </md-optgroup>
                 </md-select>
             </md-input-container>
+        </div>
+
+        <div flex="50">
+
+            <fieldset class="fieldset-event-settings m-b-24">
+
+                <legend>Filters</legend>
+
+                <div layout="row">
+                    <div layout="row" flex="40">
+                        <md-input-container>
+                            <label for="">Portfolio</label>
+                            <md-select multiple data-ng-model="vm.filters.portfolio"
+                                       md-on-close="searchTerm = ''">
+                                <md-select-header>
+                                    <input data-ng-model="searchTerm"
+                                           type="search"
+                                           placeholder="Search for a ..."
+                                           class="md-text md-select-search-pattern">
+                                </md-select-header>
+                                <md-option data-ng-repeat="item in vm.portfolios | filter:{name: searchTerm}"
+                                           ng-value="item.id">
+                                    {{item.name}}
+                                </md-option>
+                            </md-select>
+                        </md-input-container>
+                    </div>
+                    <div layout="row" flex="40">
+                        <md-input-container>
+                            <label for="">Instrument Type</label>
+                            <md-select multiple data-ng-model="vm.filters.instrument_type"
+                                       md-on-close="searchTerm = ''">
+                                <md-select-header>
+                                    <input data-ng-model="searchTerm"
+                                           type="search"
+                                           placeholder="Search for a ..."
+                                           class="md-text md-select-search-pattern">
+                                </md-select-header>
+                                <md-option data-ng-repeat="item in vm.instrumentTypes | filter:{name: searchTerm}"
+                                           ng-value="item.id">
+                                    {{item.user_code}}
+                                </md-option>
+                            </md-select>
+                        </md-input-container>
+                    </div>
+
+                    <div layout="row" flex="20" layout-align="center start">
+                        <md-button class="md-raised"
+                                   data-ng-click="vm.filters.portfolio = null; vm.filters.instrument_type = null;">Clear
+                        </md-button>
+                    </div>
+                </div>
+
+            </fieldset>
+
         </div>
 
 

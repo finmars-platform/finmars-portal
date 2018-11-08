@@ -89,6 +89,8 @@
 
     var requestReport = function (entityViewerDataService, entityViewerEventService) {
 
+        entityViewerEventService.dispatchEvent(evEvents.DATA_LOAD_START);
+
         var reportOptions = entityViewerDataService.getReportOptions();
         delete reportOptions.items;
         delete reportOptions.item_complex_transactions;

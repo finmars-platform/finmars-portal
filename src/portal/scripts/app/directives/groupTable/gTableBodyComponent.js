@@ -135,12 +135,14 @@
                 scope.evEventService.addEventListener(evEvents.DATA_LOAD_START, function () {
 
                     progressBar.style.display = 'block';
+                    contentElem.style.opacity = '0.7';
 
                 });
 
                 scope.evEventService.addEventListener(evEvents.DATA_LOAD_END, function () {
 
                     progressBar.style.display = 'none';
+                    contentElem.style.opacity = '1';
 
                     updateTableContent();
 
