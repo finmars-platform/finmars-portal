@@ -1,4 +1,15 @@
 <div layout="row">
+    <md-input-container>
+        <label for="">Rebook reaction</label>
+        <md-select data-ng-model="item.rebook_reaction">
+            <md-option data-ng-repeat="item in vm.rebookOtherReactions"
+                       ng-value="item.id">
+                {{item.name}}
+            </md-option>
+        </md-select>
+    </md-input-container>
+</div>
+<div layout="row">
     <div flex="50">
 
         <div layout="row">

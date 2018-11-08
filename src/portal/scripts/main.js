@@ -96,15 +96,13 @@ app.controller('TransactionMappingInputMappingDialogController', ['$scope', '$md
 app.controller('EntityMappingEditDialogController', ['$scope', '$mdDialog', 'schemeId', require('./app/controllers/dialogs/entityMappingEditDialogController')]);
 app.controller('EntityMappingCreateDialogController', ['$scope', '$mdDialog', require('./app/controllers/dialogs/entityMappingCreateDialogController')]);
 
-app.controller('EntityViewerController', ['$scope', '$mdDialog', require('./app/controllers/entityViewer/entityViewerController')]);
 app.controller('EntityViewer2Controller', ['$scope', '$mdDialog', require('./app/controllers/entityViewer/entityViewer2Controller')]);
 app.controller('ReportViewerController', ['$scope', '$mdDialog', require('./app/controllers/entityViewer/reportViewerController')]);
-app.controller('EntityViewerAddDialogController', ['$scope', '$mdDialog', 'entityType', '$state', require('./app/controllers/entityViewer/entityViewerAddDialogController')]);
-app.controller('EntityViewerEditDialogController', ['$scope', '$mdDialog', 'entityType', 'entityId', '$state', require('./app/controllers/entityViewer/entityViewerEditDialogController')]);
+app.controller('EntityViewerAddDialogController', ['$scope', '$mdDialog', '$state', 'entityType', 'entity', require('./app/controllers/entityViewer/entityViewerAddDialogController')]);
+app.controller('EntityViewerEditDialogController', ['$scope', '$mdDialog', '$state', 'entityType', 'entityId', require('./app/controllers/entityViewer/entityViewerEditDialogController')]);
 app.controller('EntityViewerDeleteDialogController', ['$scope', '$mdDialog', 'entity', 'entityType', require('./app/controllers/entityViewer/entityViewerDeleteDialogController')]);
 app.controller('ReportWizardController', ['$scope', require('./app/controllers/entityViewer/onBeforeLoadActions/reportWizardController')]);
 
-app.controller('EntityEditorController', ['$scope', '$state', require('./app/controllers/entityEditorController')]);
 app.controller('EntityViewerPermissionEditorController', ['$scope', require('./app/controllers/entityViewer/entityViewerPermissionEditorController')]);
 
 app.controller('ComplexTransactionSpecialRulesController', ['$scope', require('./app/controllers/special-rules/complexTransactionSpecialRulesController')]);

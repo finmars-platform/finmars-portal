@@ -30,7 +30,7 @@
 
                 $mdDialog.show({
                     controller: 'EntityViewerAddDialogController as vm',
-                    templateUrl: 'views/entity-viewer/entity-viewer-dialog-view.html',
+                    templateUrl: 'views/entity-viewer/add-entity-viewer-dialog-view.html',
                     parent: angular.element(document.body),
                     targetEvent: $event,
                     //clickOutsideToClose: true,
@@ -38,7 +38,7 @@
                     autoWrap: true,
                     skipHide: true,
                     locals: {
-                        parentScope: $scope
+                        entity: {}
                     }
                 }).then(function (res) {
 
