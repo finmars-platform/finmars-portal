@@ -2,7 +2,7 @@
     <div flex="50">
         <div layout="row">
             <md-input-container>
-                <label for="">Transaction class</label>
+                <label for="" content-title>Transaction class</label>
                 <md-select data-ng-model="item.transaction.transaction_class"
                            md-on-open="vm.loadRelation('transaction_class')">
                     <md-option
@@ -34,7 +34,7 @@
                     <div flex="80">
                         <div data-ng-if="item.transaction.instrument_toggle">
                             <md-input-container>
-                                <label for="">Instrument</label>
+                                <label for="" content-title>Instrument</label>
                                 <md-select data-ng-model="item.transaction.instrument"
                                            md-on-open="vm.loadRelation('instrument')">
                                     <md-option
@@ -53,7 +53,7 @@
                         </div>
                         <div data-ng-if="!item.transaction.instrument_toggle">
                             <md-input-container>
-                                <label for="">Instrument</label>
+                                <label for="" content-title>Instrument</label>
                                 <md-select
                                         data-ng-model="item.transaction[vm.resolveInstrumentProp(item, 'transaction', 'instrument')]">
                                     <md-optgroup label="Inputs">
@@ -80,7 +80,7 @@
             </div>
             <div flex="33">
                 <md-input-container class="expression-input-container">
-                    <label for="">Position size with sign</label>
+                    <label for="" content-title>Position size with sign</label>
                     <input type="text" data-ng-model="item.transaction.position_size_with_sign">
                 </md-input-container>
 
@@ -101,7 +101,7 @@
                 <div flex="80">
                     <div data-ng-if="item.transaction.transaction_currency_toggle">
                         <md-input-container>
-                            <label for="">Transaction currency</label>
+                            <label for="" content-title>Transaction currency</label>
                             <md-select data-ng-model="item.transaction.transaction_currency"
                                        md-on-open="vm.loadRelation('transaction_currency')">
                                 <md-option
@@ -120,7 +120,7 @@
                     </div>
                     <div data-ng-if="!item.transaction.transaction_currency_toggle">
                         <md-input-container>
-                            <label for="">Transaction currency</label>
+                            <label for="" content-title>Transaction currency</label>
                             <md-select
                                     data-ng-model="item.transaction.transaction_currency_input">
                                 <md-option
@@ -149,7 +149,7 @@
                     <div flex="80">
                         <div data-ng-if="item.transaction.linked_instrument_toggle">
                             <md-input-container>
-                                <label for="">Linked instrument</label>
+                                <label for="" content-title>Linked instrument</label>
                                 <md-select data-ng-model="item.transaction.linked_instrument"
                                            md-on-open="vm.loadRelation('instrument')">
                                     <md-option
@@ -168,7 +168,7 @@
                         </div>
                         <div data-ng-if="!item.transaction.linked_instrument_toggle">
                             <md-input-container>
-                                <label for="">Linked instrument</label>
+                                <label for="" content-title>Linked instrument</label>
                                 <md-select
                                         data-ng-model="item.transaction[vm.resolveInstrumentProp(item, 'transaction', 'linked_instrument')]">
                                     <md-optgroup label="Inputs">
@@ -207,7 +207,7 @@
                     <div flex="80">
                         <div data-ng-if="item.transaction.allocation_pl_toggle">
                             <md-input-container>
-                                <label for="">Allocation-P&L</label>
+                                <label for="" content-title>Allocation-P&L</label>
                                 <md-select data-ng-model="item.transaction.allocation_pl"
                                            md-on-open="vm.loadRelation('instrument')">
                                     <md-option
@@ -226,7 +226,7 @@
                         </div>
                         <div data-ng-if="!item.transaction.allocation_pl_toggle">
                             <md-input-container>
-                                <label for="">Allocation-P&L</label>
+                                <label for="" content-title>Allocation-P&L</label>
                                 <md-select
                                         data-ng-model="item.transaction[vm.resolveInstrumentProp(item, 'transaction', 'allocation_pl')]">
                                     <md-optgroup label="Inputs">
@@ -265,7 +265,7 @@
                     <div flex="80">
                         <div data-ng-if="item.transaction.allocation_balance_toggle">
                             <md-input-container>
-                                <label for="">Allocation-Balance</label>
+                                <label for="" content-title>Allocation-Balance</label>
                                 <md-select
                                         data-ng-model="item.transaction.allocation_balance"
                                         md-on-open="vm.loadRelation('instrument')">
@@ -285,7 +285,7 @@
                         </div>
                         <div data-ng-if="!item.transaction.allocation_balance_toggle">
                             <md-input-container>
-                                <label for="">Allocation-Balance</label>
+                                <label for="" content-title>Allocation-Balance</label>
                                 <md-select
                                         data-ng-model="item.transaction[vm.resolveInstrumentProp(item, 'allocation_balance')]">
                                     <md-optgroup label="Inputs">
@@ -314,7 +314,7 @@
         <div layout="row">
             <div flex="33">
                 <md-input-container class="expression-input-container">
-                    <label for="">Trade price</label>
+                    <label for="" content-title>Trade price</label>
                     <input type="text" data-ng-model="item.transaction.trade_price">
                 </md-input-container>
                 <expression-editor-button
@@ -322,7 +322,7 @@
             </div>
             <div flex="33">
                 <md-input-container class="expression-input-container">
-                    <label for="">Factor</label>
+                    <label for="" content-title>Factor</label>
                     <input type="text" data-ng-model="item.transaction.factor">
                 </md-input-container>
                 <expression-editor-button
@@ -330,7 +330,7 @@
             </div>
             <div flex="33">
                 <md-input-container class="expression-input-container">
-                    <label for="">Position amount</label>
+                    <label for="" content-title>Position amount</label>
                     <input type="text" data-ng-model="item.transaction.position_amount">
                 </md-input-container>
                 <expression-editor-button
@@ -340,7 +340,7 @@
         <div layout="row">
             <div flex="33">
                 <md-input-container class="expression-input-container">
-                    <label for="">Accounting date</label>
+                    <label for="" content-title>Accounting date</label>
                     <input type="text" style="color: grey"
                            data-ng-model="item.transaction.accounting_date">
                 </md-input-container>
@@ -360,7 +360,7 @@
                 <div flex="80">
                     <div data-ng-if="item.transaction.account_position_toggle">
                         <md-input-container>
-                            <label for="">Account position</label>
+                            <label for="" content-title>Account position</label>
                             <md-select data-ng-model="item.transaction.account_position"
                                        md-on-open="vm.loadRelation('account_position')">
                                 <md-option
@@ -379,7 +379,7 @@
                     </div>
                     <div data-ng-if="!item.transaction.account_position_toggle">
                         <md-input-container>
-                            <label for="">Account position</label>
+                            <label for="" content-title>Account position</label>
                             <md-select
                                     data-ng-model="item.transaction.account_position_input">
                                 <md-option
@@ -394,7 +394,7 @@
             </div>
             <div flex="33">
                 <md-input-container>
-                    <label for="">&nbsp;</label>
+                    <label for="" content-title>&nbsp;</label>
                 </md-input-container>
             </div>
         </div>
@@ -412,7 +412,7 @@
                 <div flex="80">
                     <div data-ng-if="item.transaction.strategy1_position_toggle">
                         <md-input-container>
-                            <label for="">Strategy1 position</label>
+                            <label for="" content-title>Strategy1 position</label>
                             <md-select data-ng-model="item.transaction.strategy1_position"
                                        md-on-open="vm.loadRelation('strategy1_position')">
                                 <md-option
@@ -431,7 +431,7 @@
                     </div>
                     <div data-ng-if="!item.transaction.strategy1_position_toggle">
                         <md-input-container>
-                            <label for="">Strategy1 position</label>
+                            <label for="" content-title>Strategy1 position</label>
                             <md-select
                                     data-ng-model="item.transaction.strategy1_position_input">
                                 <md-option
@@ -457,7 +457,7 @@
                 <div flex="80">
                     <div data-ng-if="item.transaction.strategy2_position_toggle">
                         <md-input-container>
-                            <label for="">Strategy2 position</label>
+                            <label for="" content-title>Strategy2 position</label>
                             <md-select data-ng-model="item.transaction.strategy2_position"
                                        md-on-open="vm.loadRelation('strategy2_position')">
                                 <md-option
@@ -476,7 +476,7 @@
                     </div>
                     <div data-ng-if="!item.transaction.strategy2_position_toggle">
                         <md-input-container>
-                            <label for="">Strategy2 position</label>
+                            <label for="" content-title>Strategy2 position</label>
                             <md-select
                                     data-ng-model="item.transaction.strategy2_position_input">
                                 <md-option
@@ -502,7 +502,7 @@
                 <div flex="80">
                     <div data-ng-if="item.transaction.strategy3_position_toggle">
                         <md-input-container>
-                            <label for="">Strategy3 position</label>
+                            <label for="" content-title>Strategy3 position</label>
                             <md-select data-ng-model="item.transaction.strategy3_position"
                                        md-on-open="vm.loadRelation('strategy3_position')">
                                 <md-option
@@ -521,7 +521,7 @@
                     </div>
                     <div data-ng-if="!item.transaction.strategy3_position_toggle">
                         <md-input-container>
-                            <label for="">Strategy3 position</label>
+                            <label for="" content-title>Strategy3 position</label>
                             <md-select
                                     data-ng-model="item.transaction.strategy3_position_input">
                                 <md-option
@@ -538,7 +538,7 @@
         <div layout="row">
             <div flex="100">
                 <md-input-container class="expression-input-container">
-                    <label for="">Notes</label>
+                    <label for="" content-title>Notes</label>
                     <input type="text" data-ng-model="item.transaction.notes">
                 </md-input-container>
                 <expression-editor-button
@@ -561,7 +561,7 @@
                 <div flex="80">
                     <div data-ng-if="item.transaction.portfolio_toggle">
                         <md-input-container>
-                            <label for="">Portfolio</label>
+                            <label for="" content-title>Portfolio</label>
                             <md-select data-ng-model="item.transaction.portfolio"
                                        md-on-open="vm.loadRelation('portfolio')">
                                 <md-option data-ng-if="!vm.relationItems['portfolio'].length"
@@ -579,7 +579,7 @@
                     </div>
                     <div data-ng-if="!item.transaction.portfolio_toggle">
                         <md-input-container>
-                            <label for="">Portfolio</label>
+                            <label for="" content-title>Portfolio</label>
                             <md-select
                                     data-ng-model="item.transaction.portfolio_input">
                                 <md-option
@@ -605,7 +605,7 @@
                 <div flex="80">
                     <div data-ng-if="item.transaction.counterparty_toggle">
                         <md-input-container>
-                            <label for="">Counterparty</label>
+                            <label for="" content-title>Counterparty</label>
                             <md-select data-ng-model="item.transaction.counterparty"
                                        md-on-open="vm.loadRelation('counterparty')">
                                 <md-option data-ng-if="!vm.relationItems['counterparty'].length"
@@ -623,7 +623,7 @@
                     </div>
                     <div data-ng-if="!item.transaction.counterparty_toggle">
                         <md-input-container>
-                            <label for="">Counterparty</label>
+                            <label for="" content-title>Counterparty</label>
                             <md-select
                                     data-ng-model="item.transaction.counterparty_input">
                                 <md-option
@@ -649,7 +649,7 @@
                 <div flex="80">
                     <div data-ng-if="item.transaction.responsible_toggle">
                         <md-input-container>
-                            <label for="">Responsible</label>
+                            <label for="" content-title>Responsible</label>
                             <md-select data-ng-model="item.transaction.responsible"
                                        md-on-open="vm.loadRelation('responsible')">
                                 <md-option data-ng-if="!vm.relationItems['responsible'].length"
@@ -667,7 +667,7 @@
                     </div>
                     <div data-ng-if="!item.transaction.responsible_toggle">
                         <md-input-container>
-                            <label for="">Responsible</label>
+                            <label for="" content-title>Responsible</label>
                             <md-select
                                     data-ng-model="item.transaction.responsible_input">
                                 <md-option
@@ -695,7 +695,7 @@
                 <div flex="80">
                     <div data-ng-if="item.transaction.settlement_currency_toggle">
                         <md-input-container>
-                            <label for="">Settlement currency</label>
+                            <label for="" content-title>Settlement currency</label>
                             <md-select data-ng-model="item.transaction.settlement_currency"
                                        md-on-open="vm.loadRelation('settlement_currency')">
                                 <md-option
@@ -714,7 +714,7 @@
                     </div>
                     <div data-ng-if="!item.transaction.settlement_currency_toggle">
                         <md-input-container>
-                            <label for="">Settlement currency</label>
+                            <label for="" content-title>Settlement currency</label>
                             <md-select
                                     data-ng-model="item.transaction.settlement_currency_input">
                                 <md-option
@@ -729,7 +729,7 @@
             </div>
             <div flex="33">
                 <md-input-container class="expression-input-container">
-                    <label for="">Cash consideration</label>
+                    <label for="" content-title>Cash consideration</label>
                     <input type="text" data-ng-model="item.transaction.cash_consideration">
                 </md-input-container>
                 <expression-editor-button
@@ -737,7 +737,7 @@
             </div>
             <div flex="33">
                 <md-input-container class="expression-input-container">
-                    <label for="">Reference fx-rate</label>
+                    <label for="" content-title>Reference fx-rate</label>
                     <input type="text" data-ng-model="item.transaction.reference_fx_rate">
                 </md-input-container>
                 <expression-editor-button
@@ -747,7 +747,7 @@
         <div layout="row">
             <div flex="33">
                 <md-input-container class="expression-input-container">
-                    <label for="">Principal with sign</label>
+                    <label for="" content-title>Principal with sign</label>
                     <input type="text" data-ng-model="item.transaction.principal_with_sign">
                 </md-input-container>
                 <expression-editor-button
@@ -755,7 +755,7 @@
             </div>
             <div flex="33">
                 <md-input-container class="expression-input-container">
-                    <label for="">Carry with sign</label>
+                    <label for="" content-title>Carry with sign</label>
                     <input type="text" data-ng-model="item.transaction.carry_with_sign">
                 </md-input-container>
                 <expression-editor-button
@@ -763,7 +763,7 @@
             </div>
             <div flex="33">
                 <md-input-container class="expression-input-container">
-                    <label for="">Overheads with sign</label>
+                    <label for="" content-title>Overheads with sign</label>
                     <input type="text" data-ng-model="item.transaction.overheads_with_sign">
                 </md-input-container>
                 <expression-editor-button
@@ -773,7 +773,7 @@
         <div layout="row">
             <div flex="33">
                 <md-input-container class="expression-input-container">
-                    <label for="">Principal amount</label>
+                    <label for="" content-title>Principal amount</label>
                     <input type="text" data-ng-model="item.transaction.principal_amount">
                 </md-input-container>
                 <expression-editor-button
@@ -781,7 +781,7 @@
             </div>
             <div flex="33">
                 <md-input-container class="expression-input-container">
-                    <label for="">Carry amount</label>
+                    <label for="" content-title>Carry amount</label>
                     <input type="text" data-ng-model="item.transaction.carry_amount">
                 </md-input-container>
                 <expression-editor-button
@@ -789,7 +789,7 @@
             </div>
             <div flex="33">
                 <md-input-container class="expression-input-container">
-                    <label for="">Overheads</label>
+                    <label for="" content-title>Overheads</label>
                     <input type="text" data-ng-model="item.transaction.overheads">
                 </md-input-container>
                 <expression-editor-button
@@ -799,7 +799,7 @@
         <div layout="row">
             <div flex="33" layout="row">
                 <md-input-container class="expression-input-container">
-                    <label for="">Cash date</label>
+                    <label for="" content-title>Cash date</label>
                     <input type="text" style="color: grey;"
                            data-ng-model="item.transaction.cash_date">
                 </md-input-container>
@@ -819,7 +819,7 @@
                 <div flex="80">
                     <div data-ng-if="item.transaction.account_cash_toggle">
                         <md-input-container>
-                            <label for="">Account cash</label>
+                            <label for="" content-title>Account cash</label>
                             <md-select data-ng-model="item.transaction.account_cash"
                                        md-on-open="vm.loadRelation('account_cash')">
                                 <md-option data-ng-if="!vm.relationItems['account_cash'].length"
@@ -837,7 +837,7 @@
                     </div>
                     <div data-ng-if="!item.transaction.account_cash_toggle">
                         <md-input-container>
-                            <label for="">Account cash</label>
+                            <label for="" content-title>Account cash</label>
                             <md-select
                                     data-ng-model="item.transaction.account_cash_input">
                                 <md-option
@@ -863,7 +863,7 @@
                 <div flex="80">
                     <div data-ng-if="item.transaction.account_interim_toggle">
                         <md-input-container>
-                            <label for="">Account interim</label>
+                            <label for="" content-title>Account interim</label>
                             <md-select data-ng-model="item.transaction.account_interim"
                                        md-on-open="vm.loadRelation('account_interim')">
                                 <md-option
@@ -882,7 +882,7 @@
                     </div>
                     <div data-ng-if="!item.transaction.account_interim_toggle">
                         <md-input-container>
-                            <label for="">Account interim</label>
+                            <label for="" content-title>Account interim</label>
                             <md-select
                                     data-ng-model="item.transaction.account_interim_input">
                                 <md-option
@@ -911,7 +911,7 @@
                 <div flex="80">
                     <div data-ng-if="item.transaction.strategy1_cash_toggle">
                         <md-input-container>
-                            <label for="">Strategy1 cash</label>
+                            <label for="" content-title>Strategy1 cash</label>
                             <md-select data-ng-model="item.transaction.strategy1_cash"
                                        md-on-open="vm.loadRelation('strategy1_cash')">
                                 <md-option
@@ -930,7 +930,7 @@
                     </div>
                     <div data-ng-if="!item.transaction.strategy1_cash_toggle">
                         <md-input-container>
-                            <label for="">Strategy1 cash</label>
+                            <label for="" content-title>Strategy1 cash</label>
                             <md-select
                                     data-ng-model="item.transaction.strategy1_cash_input">
                                 <md-option
@@ -956,7 +956,7 @@
                 <div flex="80">
                     <div data-ng-if="item.transaction.strategy2_cash_toggle">
                         <md-input-container>
-                            <label for="">Strategy2 cash</label>
+                            <label for="" content-title>Strategy2 cash</label>
                             <md-select data-ng-model="item.transaction.strategy2_cash"
                                        md-on-open="vm.loadRelation('strategy2_cash')">
                                 <md-option
@@ -975,7 +975,7 @@
                     </div>
                     <div data-ng-if="!item.transaction.strategy2_cash_toggle">
                         <md-input-container>
-                            <label for="">Strategy2 cash</label>
+                            <label for="" content-title>Strategy2 cash</label>
                             <md-select
                                     data-ng-model="item.transaction.strategy2_cash_input">
                                 <md-option
@@ -1001,7 +1001,7 @@
                 <div flex="80">
                     <div data-ng-if="item.transaction.strategy3_cash_toggle">
                         <md-input-container>
-                            <label for="">Strategy3 cash</label>
+                            <label for="" content-title>Strategy3 cash</label>
                             <md-select data-ng-model="item.transaction.strategy3_cash"
                                        md-on-open="vm.loadRelation('strategy3_cash')">
                                 <md-option
@@ -1020,7 +1020,7 @@
                     </div>
                     <div data-ng-if="!item.transaction.strategy3_cash_toggle">
                         <md-input-container>
-                            <label for="">Strategy3 cash</label>
+                            <label for="" content-title>Strategy3 cash</label>
                             <md-select
                                     data-ng-model="item.transaction.strategy3_cash_input">
                                 <md-option

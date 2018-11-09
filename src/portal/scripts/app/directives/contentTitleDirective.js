@@ -1,0 +1,14 @@
+(function () {
+
+    'use strict';
+
+    module.exports = function ($timeout) {
+        return {
+            link: function(scope, element) {
+                $timeout(function() {
+                    element[0].title = element[0].textContent;
+                });
+            }
+        };
+    }
+}());
