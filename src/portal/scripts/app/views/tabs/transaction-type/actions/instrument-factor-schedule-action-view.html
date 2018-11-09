@@ -1,6 +1,6 @@
 <div layout="row">
     <md-input-container>
-        <label for="">Rebook reaction</label>
+        <label for="" content-title>Rebook reaction</label>
         <md-select data-ng-model="item.rebook_reaction">
             <md-option data-ng-repeat="item in vm.rebookOtherReactions"
                        ng-value="item.id">
@@ -26,7 +26,7 @@
                     <div flex="80">
                         <div data-ng-if="item.instrument_factor_schedule.instrument_toggle">
                             <md-input-container>
-                                <label for="">Instrument</label>
+                                <label for="" content-title>Instrument</label>
                                 <md-select
                                         data-ng-model="item.instrument_factor_schedule.instrument"
                                         md-on-open="vm.loadRelation('instrument')">
@@ -46,7 +46,7 @@
                         </div>
                         <div data-ng-if="!item.instrument_factor_schedule.instrument_toggle">
                             <md-input-container>
-                                <label for="">Instrument</label>
+                                <label for="" content-title>Instrument</label>
                                 <md-select
                                         data-ng-model="item.instrument_factor_schedule[vm.resolveInstrumentProp(item, 'instrument_factor_schedule', 'instrument')]">
                                     <md-optgroup label="Inputs">
@@ -77,7 +77,7 @@
                 <div layout="row">
                     <div flex="50">
                         <md-input-container class="expression-input-container">
-                            <label for="">Factor</label>
+                            <label for="" content-title>Factor</label>
                             <input type="text"
                                    data-ng-model="item.instrument_factor_schedule.factor_value">
                         </md-input-container>
@@ -91,7 +91,7 @@
     <div flex="50">
         <div flex="50" layout="row">
             <md-input-container class="expression-input-container">
-                <label for="">Effective date</label>
+                <label for="" content-title>Effective date</label>
                 <input type="text" style="color: grey;"
                        data-ng-model="item.instrument_factor_schedule.effective_date">
             </md-input-container>

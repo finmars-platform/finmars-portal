@@ -1,6 +1,6 @@
 <div layout="row">
     <md-input-container>
-        <label for="">Rebook reaction</label>
+        <label for="" content-title>Rebook reaction</label>
         <md-select data-ng-model="item.rebook_reaction">
             <md-option data-ng-repeat="item in vm.rebookOtherReactions"
                        ng-value="item.id">
@@ -17,7 +17,7 @@
             <div flex="50">
 
                 <md-input-container>
-                    <label for="">Event (Phantom)</label>
+                    <label for="" content-title>Event (Phantom)</label>
                     <md-select data-ng-model="item.instrument_event_schedule_action.event_schedule_phantom">
                         <md-option
                                 data-ng-repeat="phantomItem in vm.findEventSchedulePhantoms()"
@@ -33,7 +33,7 @@
                 <div layout="row">
 
                     <md-input-container>
-                        <label for="">Transaction Type</label>
+                        <label for="" content-title>Transaction Type</label>
                         <md-select
                                 data-ng-model="item.instrument_event_schedule_action.transaction_type_from_instrument_type">
                             <md-option data-ng-repeat="item in vm.instrumentTypeTransactionTypes"
@@ -49,7 +49,7 @@
         <div layout="row">
             <div flex="33">
                 <md-input-container class="expression-input-container">
-                    <label for="">Action is sent to pending</label>
+                    <label for="" content-title>Action is sent to pending</label>
                     <input type="text" data-ng-model="item.instrument_event_schedule_action.is_sent_to_pending">
                 </md-input-container>
                 <expression-editor-button
@@ -57,7 +57,7 @@
             </div>
             <div flex="33">
                 <md-input-container class="expression-input-container">
-                    <label for="">Action is book automatic</label>
+                    <label for="" content-title>Action is book automatic</label>
                     <input type="text" data-ng-model="item.instrument_event_schedule_action.is_book_automatic">
                 </md-input-container>
                 <expression-editor-button
@@ -69,7 +69,7 @@
         <div layout="row">
             <div flex="33" layout="row">
                 <md-input-container class="expression-input-container">
-                    <label for="">Button position</label>
+                    <label for="" content-title>Button position</label>
                     <input type="text" data-ng-model="item.instrument_event_schedule_action.button_position">
                 </md-input-container>
                 <expression-editor-button
@@ -77,7 +77,7 @@
             </div>
             <div flex="33" layout="row">
                 <md-input-container class="expression-input-container">
-                    <label for="">Text</label>
+                    <label for="" content-title>Text</label>
                     <input type="text" data-ng-model="item.instrument_event_schedule_action.text">
                 </md-input-container>
                 <expression-editor-button
