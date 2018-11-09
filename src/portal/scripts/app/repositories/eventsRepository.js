@@ -6,7 +6,7 @@
     var baseUrl = baseUrlService.resolve();
 
     var getList = function () {
-        return window.fetch(baseUrl + 'instruments/generated-event/',
+        return window.fetch(baseUrl + 'instruments/generated-event/?ordering=-effective_date',
             {
                 method: 'GET',
                 credentials: 'include',
