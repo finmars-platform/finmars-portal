@@ -1,5 +1,7 @@
 (function () {
 
+    var evRvCommonHelper = require('./ev-rv-common.helper');
+
     var noLineGroups = function (evDataService) {
 
         var groups = evDataService.getGroups();
@@ -74,10 +76,43 @@
     };
 
 
+    var lookUpForSubtotal = function (evDataService, obj, column, columnNumber) {
+
+        var result;
+
+        var flatList = evDataService.getFlatList();
+        var parents = evRvCommonHelper.getParents(obj.___parentId, evDataService);
+
+        var firstOpenParent;
+        var i;
+
+        for (i = 0; i < parents.length; i = i + 1) {
+
+            if (parents[i].___is_open === true) {
+                firstOpenParent = parents[i - 1];
+                break;
+            }
+        }
+
+        for (i = obj.___flat_list_index; i >= 0; i = i - 1) {
+
+            if (flatList[i].___type === 'subtotal' &&
+                flatList[i].___parentId === firstOpenParent.___id) {
+                result = flatList[i];
+                break;
+            }
+
+        }
+
+        return result;
+
+    };
+
     module.exports = {
         isFirst: isFirst,
         noLineGroups: noLineGroups,
-        getAreaGroupsBefore: getAreaGroupsBefore
+        getAreaGroupsBefore: getAreaGroupsBefore,
+        lookUpForSubtotal: lookUpForSubtotal
     }
 
 

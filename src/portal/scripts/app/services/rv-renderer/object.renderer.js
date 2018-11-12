@@ -93,6 +93,7 @@
 
             var flatList = evDataService.getFlatList();
             var proxyLineSubtotal;
+            var proxyLineSubtotalIndex;
 
             var skip = false;
 
@@ -104,6 +105,7 @@
 
                         skip = true;
                         break;
+
                     }
 
                 }
@@ -111,6 +113,7 @@
                 if (flatList[i].___level === columnNumber + 1 && flatList[i].___subtotal_type === 'proxyline') {
 
                     proxyLineSubtotal = flatList[i];
+                    proxyLineSubtotalIndex = i;
 
                     break;
                 }
@@ -120,18 +123,22 @@
 
             if (skip === false) {
 
-                var foldButton = '';
-
                 var currentGroup = evDataService.getData(proxyLineSubtotal.___parentId);
+                var parentGroup = evDataService.getData(currentGroup.___parentId);
 
-                if (currentGroup.___is_open) {
-                    foldButton = '<div class="ev-fold-button" data-type="foldbutton" data-object-id="' + currentGroup.___id + '" data-parent-group-hash-id="' + currentGroup.___parentId + '">-</div>';
-                } else {
-                    foldButton = '<div class="ev-fold-button" data-type="foldbutton" data-object-id="' + currentGroup.___id + '" data-parent-group-hash-id="' + currentGroup.___parentId + '">+</div>';
+                if (parentGroup.___is_open) {
+
+                    var foldButton = '';
+
+                    if (currentGroup.___is_open) {
+                        foldButton = '<div class="ev-fold-button" data-type="foldbutton" data-object-id="' + currentGroup.___id + '" data-parent-group-hash-id="' + currentGroup.___parentId + '">-</div>';
+                    } else {
+                        foldButton = '<div class="ev-fold-button" data-type="foldbutton" data-object-id="' + currentGroup.___id + '" data-parent-group-hash-id="' + currentGroup.___parentId + '">+</div>';
+                    }
+
+                    result = foldButton + '<b>' + currentGroup.group_name + '</b>';
+
                 }
-
-                result = foldButton + '<b>' + currentGroup.group_name + '</b>';
-
             }
 
         }
@@ -174,18 +181,7 @@
 
                     var subtotal;
 
-                    var flatList = evDataService.getFlatList();
-
-                    for (var i = 0; i < flatList.length; i = i + 1) {
-
-                        if (flatList[i].___level === obj.___level &&
-                            flatList[i].___parentId === obj.___parentId &&
-                            flatList[i].___type === 'subtotal') {
-                            subtotal = flatList[i];
-                            break;
-                        }
-
-                    }
+                    subtotal = rvHelper.lookUpForSubtotal(evDataService, obj, column, columnNumber);
 
                     if (obj.hasOwnProperty(column.key)) {
                         result = renderHelper.formatValue(subtotal, column);
@@ -201,20 +197,44 @@
 
     };
 
-    var getBgColor = function (obj, columnNumber, groups) {
+    var getBgColor = function (evDataService, obj, columnNumber) {
 
         var result = '';
 
-        if (columnNumber <= groups.length && columnNumber <= obj.___level) {
+        var parents = evRvCommonHelper.getParents(obj.___parentId, evDataService);
 
-            if (groups[columnNumber - 1].report_settings.subtotal_type === 'area') {
+        var foldedParents = [];
+        var i;
 
-                result = REPORT_BG_CSS_SELECTOR + '-' + columnNumber;
+        for (i = 0; i < parents.length; i = i + 1) {
 
+            if (parents[i].___is_open === false) {
+                foldedParents.push(parents[i]);
             }
+
+        }
+
+        var firstFoldedParent = foldedParents[foldedParents.length - 1];
+
+        console.log('firstFoldedParent', firstFoldedParent);
+
+        if (firstFoldedParent && columnNumber >= firstFoldedParent.___level) {
+            result = REPORT_BG_CSS_SELECTOR + '-' + (firstFoldedParent.___level);
         }
 
         return result;
+
+    };
+
+    var getTextAlign = function (column) {
+
+        var result = '';
+
+        if (column.value_type === 20) {
+            result = 'text-right'
+        }
+
+        return result
 
     };
 
@@ -294,21 +314,23 @@
         var result = '<div class="' + classes + '" data-type="object" data-object-id="' + obj.___id + '" data-parent-group-hash-id="' + obj.___parentId + '">';
         var cell;
 
+        var textAlign;
+        var columnNumber;
+        var colorNegative;
+        var borderBottomTransparent;
+        var value;
+
         result = result + rowSelection;
 
         obj.___cells_values = [];
 
         columns.forEach(function (column, columnIndex) {
 
-            var textAlign = '';
-            var colorNegative = getColorNegativeNumber(obj, column);
-            var borderBottomTransparent = getBorderBottomTransparent(evDataService, obj, columnIndex + 1, groups);
-
-            if (column.value_type === 20) {
-                textAlign = 'text-right'
-            }
-
-            var value = getValue(evDataService, obj, column, columnIndex + 1, groups);
+            columnNumber = columnIndex + 1;
+            colorNegative = getColorNegativeNumber(obj, column);
+            borderBottomTransparent = getBorderBottomTransparent(evDataService, obj, columnNumber, groups);
+            textAlign = getTextAlign(column);
+            value = getValue(evDataService, obj, column, columnNumber, groups);
 
             obj.___cells_values.push({
                 width: column.style.width,
@@ -316,7 +338,7 @@
                 value: value
             });
 
-            cell = '<div class="g-cell-wrap" style="width: ' + column.style.width + '"><div class="g-cell ' + textAlign + ' ' + colorNegative + ' ' + borderBottomTransparent + '">' + value + '</div></div>';
+            cell = '<div class="g-cell-wrap ' + getBgColor(evDataService, obj, columnNumber) + '" style="width: ' + column.style.width + '"><div class="g-cell ' + textAlign + ' ' + colorNegative + ' ' + borderBottomTransparent + '">' + value + '</div></div>';
 
             result = result + cell
 
