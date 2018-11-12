@@ -205,7 +205,7 @@
             "icon": ""
           },
           {
-            "state": "app.data.strategy({strategyNumber: 3})",
+            "state": "app.data.strategy({strategyNumber: 2})",
             "title": "Strategy",
             "type": "link",
             "icon": ""
