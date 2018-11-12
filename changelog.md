@@ -1,5 +1,9 @@
 # Changelog
 
+## 12.11.2018
+
+- New logic for subtotal on bottom in Report Builder
+
 ## 08.11.2018
 
 - Rebook Reactions in Transaction Type Actions
