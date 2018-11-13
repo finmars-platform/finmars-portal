@@ -560,6 +560,9 @@
                                 case 'ui.listlayout':
                                     promises.push(uiRepository.createListLayout(item));
                                     break;
+                                case 'ui.reportlayout':
+                                    promises.push(uiRepository.createListLayout(item));
+                                    break;
                                 case 'csv_import.scheme':
                                     promises.push(entitySchemeService.create(item));
                                     break;
