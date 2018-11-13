@@ -24,6 +24,16 @@
 
         vm.items = file.body;
 
+        vm.items.forEach(function (item) {
+
+            item.active = false;
+
+            item.content.forEach(function (child) {
+                child.active = false;
+            });
+
+        });
+
         vm.getEntityName = function (item) {
 
             switch (item.entity) {
@@ -742,8 +752,8 @@
 
         }
 
-
         function initPreparations(items) {
+
 
             return new Promise(function (resolve, reject) {
 
