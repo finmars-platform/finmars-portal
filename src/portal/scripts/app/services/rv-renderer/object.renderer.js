@@ -93,7 +93,6 @@
 
             var flatList = evDataService.getFlatList();
             var proxyLineSubtotal;
-            var proxyLineSubtotalIndex;
 
             var skip = false;
 
@@ -113,9 +112,8 @@
                 if (flatList[i].___level === columnNumber + 1 && flatList[i].___subtotal_type === 'proxyline') {
 
                     proxyLineSubtotal = flatList[i];
-                    proxyLineSubtotalIndex = i;
-
                     break;
+
                 }
 
 
@@ -216,7 +214,7 @@
 
         var firstFoldedParent = foldedParents[foldedParents.length - 1];
 
-        console.log('firstFoldedParent', firstFoldedParent);
+        // console.log('firstFoldedParent', firstFoldedParent);
 
         if (firstFoldedParent && columnNumber >= firstFoldedParent.___level) {
             result = REPORT_BG_CSS_SELECTOR + '-' + (firstFoldedParent.___level);

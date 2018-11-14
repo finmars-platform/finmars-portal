@@ -81,17 +81,22 @@
 
                 if (skip === false) {
 
-                    var foldButton = '';
-
                     var currentGroup = evDataService.getData(proxyLineSubtotal.___parentId);
+                    var parentGroup = evDataService.getData(currentGroup.___parentId);
 
-                    if (currentGroup.___is_open) {
-                        foldButton = '<div class="ev-fold-button" data-type="foldbutton" data-object-id="' + currentGroup.___id + '" data-parent-group-hash-id="' + currentGroup.___parentId + '">-</div>';
-                    } else {
-                        foldButton = '<div class="ev-fold-button" data-type="foldbutton" data-object-id="' + currentGroup.___id + '" data-parent-group-hash-id="' + currentGroup.___parentId + '">+</div>';
+                    if (parentGroup.___is_open) {
+
+                        var foldButton = '';
+
+                        if (currentGroup.___is_open) {
+                            foldButton = '<div class="ev-fold-button" data-type="foldbutton" data-object-id="' + currentGroup.___id + '" data-parent-group-hash-id="' + currentGroup.___parentId + '">-</div>';
+                        } else {
+                            foldButton = '<div class="ev-fold-button" data-type="foldbutton" data-object-id="' + currentGroup.___id + '" data-parent-group-hash-id="' + currentGroup.___parentId + '">+</div>';
+                        }
+
+                        result = foldButton + '<b>' + currentGroup.group_name + '</b>';
+
                     }
-
-                    result = foldButton + '<b>' + currentGroup.group_name + '</b>';
 
                 }
 
@@ -103,7 +108,29 @@
 
         if (columnNumber === obj.___level - 1) {
 
-            result = obj.group_name;
+            var foldButton = '';
+            var foldButtonStr = '';
+
+            var group = evDataService.getData(obj.___parentId);
+            var parentGroup = evDataService.getData(group.___parentId);
+
+            if (parentGroup.___is_open) {
+
+                if (group.___is_open) {
+                    foldButton = '<div class="ev-fold-button" data-type="foldbutton" data-object-id="' + group.___id + '" data-parent-group-hash-id="' + group.___parentId + '">-</div>';
+                } else {
+                    foldButton = '<div class="ev-fold-button" data-type="foldbutton" data-object-id="' + group.___id + '" data-parent-group-hash-id="' + group.___parentId + '">+</div>';
+                }
+
+                if (obj.___level - 1 === columnNumber) {
+                    foldButtonStr = foldButton
+                } else {
+                    foldButtonStr = ''
+                }
+
+                result = foldButtonStr + '<b>' + obj.group_name + '</b>';
+
+            }
 
         }
 
@@ -123,16 +150,49 @@
 
     };
 
-    var getBgColor = function (obj, columnNumber, groups) {
+    var getBgColor = function (evDataService, obj, columnNumber) {
+
+        // var result = '';
+        //
+        // if (columnNumber >= obj.___level - 1) {
+        //
+        //     result = REPORT_BG_CSS_SELECTOR + '-' + (obj.___level - 1);
+        //
+        // }
+        //
+        //
+        // return result;
 
         var result = '';
 
-        if (columnNumber >= obj.___level - 1) {
+        var parents = evRvCommonHelper.getParents(obj.___parentId, evDataService);
 
-            result = REPORT_BG_CSS_SELECTOR + '-' + (obj.___level - 1);
+        var foldedParents = [];
+        var i;
+
+        for (i = 0; i < parents.length; i = i + 1) {
+
+            if (parents[i].___is_open === false) {
+                foldedParents.push(parents[i]);
+            }
 
         }
 
+        var firstFoldedParent = foldedParents[foldedParents.length - 1];
+
+        // console.log('firstFoldedParent', firstFoldedParent);
+
+        if (firstFoldedParent && columnNumber >= firstFoldedParent.___level) {
+            result = REPORT_BG_CSS_SELECTOR + '-' + (firstFoldedParent.___level);
+        } else {
+
+            if (columnNumber >= obj.___level - 1) {
+
+                result = REPORT_BG_CSS_SELECTOR + '-' + (obj.___level - 1);
+
+            }
+
+        }
 
         return result;
 
@@ -163,16 +223,6 @@
 
         var columns = evDataService.getColumns();
         var groups = evDataService.getGroups();
-
-        var foldButton = '';
-
-        var group = evDataService.getData(obj.___parentId);
-
-        if (group.___is_open) {
-            foldButton = '<div class="ev-fold-button" data-type="foldbutton" data-object-id="' + group.___id + '" data-parent-group-hash-id="' + group.___parentId + '">-</div>';
-        } else {
-            foldButton = '<div class="ev-fold-button" data-type="foldbutton" data-object-id="' + group.___id + '" data-parent-group-hash-id="' + group.___parentId + '">+</div>';
-        }
 
         var classList = ['g-row'];
 
@@ -206,17 +256,10 @@
 
             var textAlign = '';
             var columnNumber = index + 1;
-            var foldButtonStr = '';
             var colorNegative = getColorNegativeNumber(obj, column);
 
             if (column.value_type === 20) {
                 textAlign = 'text-right'
-            }
-
-            if (obj.___level - 1 === columnNumber) {
-                foldButtonStr = foldButton
-            } else {
-                foldButtonStr = ''
             }
 
             var borderBottomTransparent = getBorderBottomTransparent(evDataService, obj, columnNumber, groups);
@@ -229,8 +272,8 @@
                 value: value
             });
 
-            cell = '<div class="g-cell-wrap ' + getBgColor(obj, columnNumber, groups) + '" style="width: ' + column.style.width + '"><div class="g-cell ' + textAlign + ' ' + colorNegative + ' ' + borderBottomTransparent + ' ">' +
-                foldButtonStr + '<b>' + value + '</b>' +
+            cell = '<div class="g-cell-wrap ' + getBgColor(evDataService, obj, columnNumber) + '" style="width: ' + column.style.width + '"><div class="g-cell ' + textAlign + ' ' + colorNegative + ' ' + borderBottomTransparent + ' ">' +
+                value +
                 '</div>' +
                 '</div>';
 
