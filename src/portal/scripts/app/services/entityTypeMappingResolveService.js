@@ -33,10 +33,10 @@
             case 'currency':
                 return currencyMappingService.getList(options);
                 break;
-            case 'instrument-type':
+            case 'instrument_type':
                 return instrumentTypeMappingService.getList(options);
                 break;
-            case 'accrual-calculation-model':
+            case 'accrual_calculation_model':
                 return accrualCalculationModelService.getList(options);
                 break;
             case 'periodicity':
@@ -60,22 +60,22 @@
             case 'portfolio':
                 return portfolioMappingService.getList(options);
                 break;
-            case 'strategy-1':
+            case 'strategy_1':
                 return strategy1MappingService.getList(options);
                 break;
-            case 'strategy-2':
+            case 'strategy_2':
                 return strategy2MappingService.getList(options);
                 break;
-            case 'strategy-3':
+            case 'strategy_3':
                 return strategy3MappingService.getList(options);
                 break;
-            case 'daily-pricing-model':
+            case 'daily_pricing_model':
                 return dailyPricingModelMappingService.getList(options);
                 break;
-            case 'payment-size-detail':
+            case 'payment_size_detail':
                 return paymentSizeDetailMappingService.getList(options);
                 break;
-            case 'price-download-scheme':
+            case 'price_download_scheme':
                 return priceDownloadSchemeMappingService.getList(options);
                 break;
         }
@@ -87,10 +87,10 @@
             case 'currency':
                 return currencyMappingService.getByKey(id);
                 break;
-            case 'instrument-type':
+            case 'instrument_type':
                 return instrumentTypeMappingService.getByKey(id);
                 break;
-            case 'accrual-calculation-model':
+            case 'accrual_calculation_model':
                 return accrualCalculationModelService.getByKey(id);
                 break;
             case 'periodicity':
@@ -114,22 +114,22 @@
             case 'portfolio':
                 return portfolioMappingService.getByKey(id);
                 break;
-            case 'strategy-1':
+            case 'strategy_1':
                 return strategy1MappingService.getByKey(id);
                 break;
-            case 'strategy-2':
+            case 'strategy_2':
                 return strategy2MappingService.getByKey(id);
                 break;
-            case 'strategy-3':
+            case 'strategy_3':
                 return strategy3MappingService.getByKey(id);
                 break;
-            case 'daily-pricing-model':
+            case 'daily_pricing_model':
                 return dailyPricingModelMappingService.getByKey(id);
                 break;
-            case 'payment-size-detail':
+            case 'payment_size_detail':
                 return paymentSizeDetailMappingService.getByKey(id);
                 break;
-            case 'price-download-scheme':
+            case 'price_download_scheme':
                 return priceDownloadSchemeMappingService.getByKey(id);
                 break;
         }
@@ -141,10 +141,10 @@
             case 'currency':
                 return currencyMappingService.create(map);
                 break;
-            case 'instrument-type':
+            case 'instrument_type':
                 return instrumentTypeMappingService.create(map);
                 break;
-            case 'accrual-calculation-model':
+            case 'accrual_calculation_model':
                 return accrualCalculationModelService.create(map);
                 break;
             case 'periodicity':
@@ -168,22 +168,22 @@
             case 'portfolio':
                 return portfolioMappingService.create(map);
                 break;
-            case 'strategy-1':
+            case 'strategy_1':
                 return strategy1MappingService.create(map);
                 break;
-            case 'strategy-2':
+            case 'strategy_2':
                 return strategy2MappingService.create(map);
                 break;
-            case 'strategy-3':
+            case 'strategy_3':
                 return strategy3MappingService.create(map);
                 break;
-            case 'daily-pricing-model':
+            case 'daily_pricing_model':
                 return dailyPricingModelMappingService.create(map);
                 break;
-            case 'payment-size-detail':
+            case 'payment_size_detail':
                 return paymentSizeDetailMappingService.create(map);
                 break;
-            case 'price-download-scheme':
+            case 'price_download_scheme':
                 return priceDownloadSchemeMappingService.create(map);
                 break;
         }
@@ -195,10 +195,10 @@
             case 'currency':
                 return currencyMappingService.update(id, map);
                 break;
-            case 'instrument-type':
+            case 'instrument_type':
                 return instrumentTypeMappingService.update(id, map);
                 break;
-            case 'accrual-calculation-model':
+            case 'accrual_calculation_model':
                 return accrualCalculationModelService.update(id, map);
                 break;
             case 'periodicity':
@@ -222,22 +222,22 @@
             case 'portfolio':
                 return portfolioMappingService.update(id, map);
                 break;
-            case 'strategy-1':
+            case 'strategy_1':
                 return strategy1MappingService.update(id, map);
                 break;
-            case 'strategy-2':
+            case 'strategy_2':
                 return strategy2MappingService.update(id, map);
                 break;
-            case 'strategy-3':
+            case 'strategy_3':
                 return strategy3MappingService.update(id, map);
                 break;
-            case 'daily-pricing-model':
+            case 'daily_pricing_model':
                 return dailyPricingModelMappingService.update(id, map);
                 break;
-            case 'payment-size-detail':
+            case 'payment_size_detail':
                 return paymentSizeDetailMappingService.update(id, map);
                 break;
-            case 'price-download-scheme':
+            case 'price_download_scheme':
                 return priceDownloadSchemeMappingService.update(id, map);
                 break;
         }
@@ -249,10 +249,10 @@
             case 'currency':
                 return currencyMappingService.deleteByKey(id);
                 break;
-            case 'instrument-type':
+            case 'instrument_type':
                 return instrumentTypeMappingService.deleteByKey(id);
                 break;
-            case 'accrual-calculation-model':
+            case 'accrual_calculation_model':
                 return accrualCalculationModelService.deleteByKey(id);
                 break;
             case 'periodicity':
@@ -276,22 +276,22 @@
             case 'portfolio':
                 return portfolioMappingService.deleteByKey(id);
                 break;
-            case 'strategy-1':
+            case 'strategy_1':
                 return strategy1MappingService.deleteByKey(id);
                 break;
-            case 'strategy-2':
+            case 'strategy_2':
                 return strategy2MappingService.deleteByKey(id);
                 break;
-            case 'strategy-3':
+            case 'strategy_3':
                 return strategy3MappingService.deleteByKey(id);
                 break;
-            case 'daily-pricing-model':
+            case 'daily_pricing_model':
                 return dailyPricingModelMappingService.deleteByKey(id);
                 break;
-            case 'payment-size-detail':
+            case 'payment_size_detail':
                 return paymentSizeDetailMappingService.deleteByKey(id);
                 break;
-            case 'price-download-scheme':
+            case 'price_download_scheme':
                 return priceDownloadSchemeMappingService.deleteByKey(id);
                 break;
         }
