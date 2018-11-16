@@ -182,7 +182,7 @@
                     subtotal = rvHelper.lookUpForSubtotal(evDataService, obj, column, columnNumber);
 
                     if (obj.hasOwnProperty(column.key)) {
-                        result = renderHelper.formatValue(subtotal, column);
+                        result = '<b>' + renderHelper.formatValue(subtotal, column) + '</b>';
                     }
 
                 }

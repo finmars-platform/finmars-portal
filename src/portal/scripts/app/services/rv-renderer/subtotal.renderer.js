@@ -139,7 +139,7 @@
             if (column.report_settings && !column.report_settings.hide_subtotal) {
 
                 if (obj.hasOwnProperty(column.key)) {
-                    result = renderHelper.formatValue(obj, column);
+                    result = '<b>' + renderHelper.formatValue(obj, column) + '</b>';
                 }
 
             }

@@ -1,0 +1,188 @@
+[
+  {
+    "name": "To string",
+    "description": "<p>str(<value>) -> <Result: string> </p> <p><Result: String>: String - text converted from any variable of other class (date, number, boolean). For example, 2018-01-01 as a date object gets converted to '2018-01-01' as a text data. This fucntion is used to convert any non-text variables to text for writing it to any text variables. For example user wants to auto-write transaction date (as a date object in variable <transaction_date> to the text object in variable <notes> - he can use expression str(transaction_date) </p> <p><value> - any value or variable used by user in this expression</p> <p>Examples:</br> str('abcde') for getting data as a text object abcde</br> str(transaction_date) for getting data as a text object which is contained in date variable with name <transaction_date></br> str(coupon_size) for getting data as a text object which is contained in number variable with name <coupon_size></br> str(compare_result) for getting data as a text object which is contained in boolean variable with name <compare_result></br> </p>",
+    "groups": "text",
+    "func": "str(a)"
+  },
+  {
+    "name": "To uppercase",
+    "description": "<p>upper(<string>) -> <Result: String></p> <p><Result: String>:String - the same text (string) with upper letters</p> <p><string> - any string or string variable, used by user in this expression</p> <p>Examples: <br/> upper(notes) for getting the same string as wriitten in string variable with name <notes> but with upper letters <br/> upper('abcd') for getting the same string with upper letters (ABCD) <br/> </p>",
+    "group": "text",
+    "func": "upper(a)"
+  },
+  {
+    "name": "To lowercase",
+    "description": "<p>lower(<string>) -> <Result: String></p> <p><Result: String>:String - the same text (string) with lower letters</p> <p><string> - any string or string variable, used by user in this expression</p> <p>Examples:<br/> lower(user_text_1) for getting the same string as wriitten in string variable with name <(user_text_1> but with lower letters<br/> lower('EFGH') for getting the same string with lower letters (efgh)<br/> </p>",
+    "group": "text",
+    "func": "upper(a)"
+  },
+  {
+    "name": "Contains",
+    "description": "<p>String a contains or not in string b</p>",
+    "group": "text",
+    "func": "contains(a, b)"
+  },
+  {
+    "name": "To integer",
+    "description": "<p>Convert string to integer</p>",
+    "group": "number",
+    "func": "int(a)"
+  },
+  {
+    "name": "Get random number",
+    "description": "",
+    "group": "number",
+    "func": "random()"
+  },
+  {
+    "name": "Get minimum number",
+    "description": "",
+    "group": "number",
+    "func": "min(<number_1>, <number_2>)"
+  },
+  {
+    "name": "Get maximum number",
+    "description": "",
+    "group": "number",
+    "func": "max(<number_1>, <number_2>)"
+  },
+  {
+    "name": "To float",
+    "description": "<p>Convert string to number</p>",
+    "group": "number",
+    "func": "float(a)"
+  },
+  {
+    "name": "Round",
+    "description": "<p>Match round float</p>",
+    "group": "number",
+    "func": "round(number)"
+  },
+  {
+    "name": "Trunc",
+    "description": "<p>Match truncate float</p>",
+    "group": "number",
+    "func": "trunc(a)"
+  },
+  {
+    "name": "Is close",
+    "description": "<p>Compare to float numbers to equality</p>",
+    "group": "number",
+    "func": "isclose(a, b)"
+  },
+  {
+    "name": "iff",
+    "description": "<p>Return a if x is True else v2</p>",
+    "group": "logic",
+    "func": "iff(expr, a, b)"
+  },
+  {
+    "name": "Now",
+    "description": "<p>Current date</p>",
+    "group": "date",
+    "func": "now()"
+  },
+  {
+    "name": "Date",
+    "description": "<p>Create date object</p>",
+    "group": "date",
+    "func": "date(year, month=1, day=1)"
+  },
+  {
+    "name": "Days",
+    "description": "<p>Create timedelta object for operations with dates <br/> now() - days(10)<br/> now() + days(10)</p>",
+    "group": "date",
+    "func": "days(a)"
+  },
+  {
+    "name": "Weeks",
+    "description": "<p>Create timedelta object for operations with dates <br/> now() - weeks(10)<br/> now() + weeks(10)</p>",
+    "group": "date",
+    "func": "weeks(a)"
+  },
+  {
+    "name": "Months",
+    "description": "<p>Create timedelta object for operations with dates <br/> now() - months(10)<br/> now() + months(10)</p>",
+    "group": "date",
+    "func": "months(a)"
+  },
+  {
+    "name": "Timedelta",
+    "description": "<p>General timedelta creation</p><p>years, months, weeks, days:<br/> Relative information, may be negative (argument is plural); adding or subtracting a relativedelta with relative information performs the corresponding aritmetic operation on the original datetime value with the information in the relativedelta.</p><p>leapdays:<br/> Will add given days to the date found, if year is a leap year, and the date found is post 28 of february.</p>",
+    "group": "date",
+    "func": "timedelta(years=0, months=0, days=0, leapdays=0, weeks=0)"
+  },
+  {
+    "name": "Add days",
+    "description": "<p>Same as date + days(x)</p>",
+    "group": "date",
+    "func": "add_days(date, days)"
+  },
+  {
+    "name": "Add weeks",
+    "description": "<p>Same as d + days(x * 7)</p>",
+    "group": "date",
+    "func": "add_weeks(date, days)"
+  },
+  {
+    "name": "Add workdays",
+    "description": "<p>Add 'x' work days to d</p>",
+    "group": "date",
+    "func": "add_workdays(date, workdays)"
+  },
+  {
+    "name": "Format date",
+    "description": "<p>format date (default format is '%Y-%m-%d')</p>",
+    "group": "date",
+    "func": "format_date(date, format='%Y-%m-%d')"
+  },
+  {
+    "name": "Parse date",
+    "description": "<p>parse date from string (default format is '%Y-%m-%d')</p>",
+    "group": "date",
+    "func": "parse_date(date_string, format='%Y-%m-%d')"
+  },
+  {
+    "name": "Format number",
+    "description": "<p>format float number<br/> <br/> decimal_sep:<br/> Decimal separator symbol (for example '.')<br/> decimal_pos:<br/> Number of decimal positions<br/> grouping:<br/> Number of digits in every group limited by thousand separator<br/> thousand_sep:<br/> Thousand separator symbol (for example ',')<br/> use_grouping:<br/> use thousand separator</p>",
+    "group": "number",
+    "func": "format_number(number, decimal_sep='.', decimal_pos=None, grouping=3, thousand_sep='', use_grouping=False)"
+  },
+  {
+    "name": "Parse number",
+    "description": "<p>same as float(a)</p>",
+    "group": "number",
+    "func": "parse_number(a)"
+  },
+  {
+    "name": "Simple price",
+    "description": "<p>simple_price(<date>, <date1>, <price1>, <date2>, <price2>) -> <Result: Number></p> <p><Result: Number>:Number - average price for a date <date> within a date range (<date1> and <date2>) with known prices (<price1> for <date1> and <price2> for <date2>). </p> <p><date1>,<date2> - any date variable used by user in this expression (eg, transaction_date, maturity_date) or a date as a text (string) in format 'YY-mm-dd' <price1>,<price2>: Number - any numbers or number variables used in system </p> <p>Examples: <br/> simple_price('2018-01-02', '2018-01-01', 10, '2018-01-03', 20) - to get average price for date between two dates (2018-01-02 and 2018-01-03) with theese prices (10 and 20). The result in this case - 15 <br/> simple_price('2018-09-01', transaction_date, price, maturity_date, maturity_price) - to get average price for date 2018-09-01 based on prices written in variables with names <price> (for transaction_date) and <maturity_price> (for maturity_date) </p>",
+    "group": "instrument_formulas",
+    "func": "simple_price(date, date1, value1, date2, value2)"
+  },
+  {
+    "name": "Get Coupon Size",
+    "description": "<p>get_instrument_coupon(<instr>, <effective_date>) -> <Result: coupon_size> <br/> <Result: coupon_size>:Number - coupon size for 1 quantity of the <instr> as of the <effective_date> as per the <instr> Accrual Schedule </p> <p> <instr>:Instrument - instrument for which the coupon is calculated <br/> <effective_date>:Date - as of date for the coupon calculation <br/> </p> <p> Examples: get_instrument_coupon(instrument, trade_date) <br/> get_instrument_coupon(instrument, '2019-01-01') <br/> </p> <p> ! if <effective_date> doesn't equal to any coupon date of the instrumnet (as per the Accrual Schedule), then <Result: coupon_size> equal to 0 </p> ",
+    "group": "instrument_formulas",
+    "func": "get_instrument_coupon(<instr>, <effective_date>)"
+  },
+  {
+    "name": "Get Accruals Size",
+    "description": "<p> get_instrument_accrued_price(<instr>, <trade_date>) -> <Result: accrued_price><br/> <Result: accrued_price>:Number - accrued price (part of the total price of trade) for 1 quantity of the <instr> as of the <trade_date> </p> <p> <instr>:Instrument - instrument for which the accrued price is calculated<br/> <trade_date>:Date - as of date for the accrued price calculation (usually trade date or settlement date) - date variable or date as a string object in format 'YY-mm-dd' </p> <p> Examples: get_instrument_accrued_price(instrument, trade_date)<br/> get_instrument_accrued_price(instrument, '2019-01-01')<br/> </p> <p> ! if user or system didn't set coupon size of the instrument (Settings for instrument), then <Result: accrued_price> equal to 0 </p>",
+    "group": "instrument_formulas",
+    "func": "get_instrument_accrued_price(<instr>, <trade_date>)"
+  },
+  {
+    "name": "Get instrument user code",
+    "description": "<p><instrument> - variable contains instrument (instrument unique user code) defined by user in scheme, transaction type - user can address to the attributes of this object/entity (instrument) via theese functions </p> <p> Examples: <br/> instrument.user_code - if name of variable is <instrument> </p>",
+    "group": "instrument_default",
+    "func": "<instrument>.user_code"
+  },
+  {
+    "name": "Get default price for instrument",
+    "description": "<p>instrument.default_price: Number - default price of instrument, it ca у used in cases when current prices for the instrument are unavailable </p> <p> Examples: <br/> instrument.default_price<br/> instr.default_price </p> <p> ! If this parameter was not specified in Instrument settings then result equal to 0 </p>",
+    "group": "instrument_default",
+    "func": "<instrument>.default_price"
+  }
+]
