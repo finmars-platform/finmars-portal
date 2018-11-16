@@ -13,7 +13,6 @@
     };
 
 
-
     var anyLineGroupsBefore = function (evDataService, level) {
 
         var lineGroupExist = false;
@@ -91,8 +90,14 @@
 
         if (column.report_settings) {
 
+            var localValue = value;
 
-            if (value < 0) {
+            if (value.toString().indexOf("'") !== -1) {
+                localValue = value.split("'").join('')
+            }
+
+
+            if (localValue < 0) {
 
                 if (column.report_settings.negative_format_id === 0) {
                     return value;

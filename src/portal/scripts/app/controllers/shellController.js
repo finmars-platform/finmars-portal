@@ -35,6 +35,7 @@
             setTimeout(function () {
                 //usersService.login('dev1', 'Itein9Ha4eige6Aiph5a').then(function () {
                 usersService.login('admin', 'superuser').then(function () {
+                // usersService.login('test4', '12345678abc').then(function () {
                 // usersService.login('mars2', 'superuser').then(function () {
                 //     usersService.login('admin_dev', 'superuser').then(function () {
 
