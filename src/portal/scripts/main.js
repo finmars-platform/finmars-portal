@@ -248,6 +248,7 @@ app.directive('groupEditorBinder', ['$templateCache', '$compile', require('./app
 
 app.directive('groupBindReportRow', [require('./app/directives/groupTable/gBindReportRowDirective.js')]);
 app.directive('contentTitle', ['$timeout', require('./app/directives/contentTitleDirective.js')]);
+app.directive('valueTitle', ['$timeout', require('./app/directives/valueTitleDirective.js')]);
 
 app.controller('GReportSettingsDialogController', ['$scope', '$mdDialog', 'reportOptions', 'options', require('./app/controllers/dialogs/gReportSettingsDialogController')]);
 app.controller('PeriodsEditorDialogController', ['$scope', '$mdDialog', 'options', require('./app/controllers/dialogs/periodsEditorDialogController')]);
