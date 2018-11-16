@@ -1,188 +1,648 @@
 [
   {
-    "name": "To string",
-    "description": "<p>str(<value>) -> <Result: string> </p> <p><Result: String>: String - text converted from any variable of other class (date, number, boolean). For example, 2018-01-01 as a date object gets converted to '2018-01-01' as a text data. This fucntion is used to convert any non-text variables to text for writing it to any text variables. For example user wants to auto-write transaction date (as a date object in variable <transaction_date> to the text object in variable <notes> - he can use expression str(transaction_date) </p> <p><value> - any value or variable used by user in this expression</p> <p>Examples:</br> str('abcde') for getting data as a text object abcde</br> str(transaction_date) for getting data as a text object which is contained in date variable with name <transaction_date></br> str(coupon_size) for getting data as a text object which is contained in number variable with name <coupon_size></br> str(compare_result) for getting data as a text object which is contained in boolean variable with name <compare_result></br> </p>",
-    "groups": "text",
-    "func": "str(a)"
+    "name": "Get today's Date",
+    "description": "now() - > <Result: current date><br/><br/><Result: current date>: Date - date when the function was triggered. This function can be used as an attribute of transaction (for example as a default transaction date) or as a parameter of other function - for example for converting current date to string to write it to any string variable).<br/><br/>Examples:<br/>now() - to get a current date as a date object<br/>str(now()) - to get a current date as a string, in system format it returns string '2018-01-01' for current date 2018-01-01",
+    "groups": "date",
+    "func": "now()"
   },
   {
-    "name": "To uppercase",
-    "description": "<p>upper(<string>) -> <Result: String></p> <p><Result: String>:String - the same text (string) with upper letters</p> <p><string> - any string or string variable, used by user in this expression</p> <p>Examples: <br/> upper(notes) for getting the same string as wriitten in string variable with name <notes> but with upper letters <br/> upper('abcd') for getting the same string with upper letters (ABCD) <br/> </p>",
-    "group": "text",
-    "func": "upper(a)"
+    "name": "Convert String to Date",
+    "description": "parse_date(<date_string>, <format='%Y-%m-%d'>)  - > <Result: date><br/><br/><Result: date>: Date - date as a date object, converted from string object<br/>This function may be used in:<br/>- importing any objects (transactions, accounts, portfolio) with date attributes<br/>- converting string attributes to date attributes<br/><br/><date_string>: String - string with date in text format<br/><format>: String - reflects format in which <date_string> is written<br/><br/>Examples: <br/>parse_date(string_variable, format='%Y-%m-%d') for string variable with name string_variable, which contains this text - 2018-01-01<br/>parse_date(string_variable, format='%d-%m-%Y') for this text - 01-01-2018<br/>parse_date(string_variable, format='%Y/%m/%d') for this text - 2018/01/01<br/>parse_date(string_variable, format='%d.%m.%Y') for this text - 01.01.2018<br/>parse_date(string_variable, format='%Y.%m.%d') for this text - 2018.01.01<br/><br/>parse_date('18.01.01', format='%y.%m.%d') for this text - 18.01.01<br/>parse_date('2018/September/01', format='%Y/%B/%d') for this text - 2018/September/01<br/>parse_date('01/September/18', format='%d/%b/%Y') for this text - 01/September/2018",
+    "groups": "date",
+    "func": "parse_date(<date_string>, <format='%Y-%m-%d'>)"
   },
   {
-    "name": "To lowercase",
-    "description": "<p>lower(<string>) -> <Result: String></p> <p><Result: String>:String - the same text (string) with lower letters</p> <p><string> - any string or string variable, used by user in this expression</p> <p>Examples:<br/> lower(user_text_1) for getting the same string as wriitten in string variable with name <(user_text_1> but with lower letters<br/> lower('EFGH') for getting the same string with lower letters (efgh)<br/> </p>",
-    "group": "text",
-    "func": "upper(a)"
+    "name": "Date plus/minus N days",
+    "description": "<date>+days(<number>) - > <Result: date_after><br/><date>-days(<number>) - > <Result: date_before><br/><br/><Result: date_after, date_before>: Date - date differs from <date> by <number> calendar days<br/><br/><date>: Date - any date variable, used by user in this expression (eg, transaction_date)<br/><number>: Number - any number or number variable, used by user in this expression (eg, 1, 2, 3... or number_variable)<br/><br/>Examples:<br/>transaction_date+days(2) - for getting date, which differs from transaction date by 2 days<br/>deposit_date+days(duration) - for getting date, which differs from deposit_date by number of days, which is written in variable with name <duration><br/>now()-days(10)- for getting date, which differs from current date by 10 days<br/>now()+days(rent_period)- for getting date, which differs from current date by number of days, which is written in variable with name <rent_period><br/>",
+    "groups": "date",
+    "func": "<date>+days(<number>)"
   },
   {
-    "name": "Contains",
-    "description": "<p>String a contains or not in string b</p>",
-    "group": "text",
-    "func": "contains(a, b)"
-  },
-  {
-    "name": "To integer",
-    "description": "<p>Convert string to integer</p>",
-    "group": "number",
-    "func": "int(a)"
+    "name": "Date plus/minus N Work-days",
+    "description": "add_workdays(<date>,<number_workdays>) - > <Result: date_plus_workdays><br/><br/><Result: date_plus_workdays>: Date - date differs from <date> by <number_workdays> working days<br/><br/><date> - any date variable, used by user in this expression (eg, issue_date)<br/><number_workdays> - any number or number variable, used by user in this expression (eg, 1, 2, 3... or number_variable)<br/><br/>Examples:<br/>add_workdays(now(), 30) - for getting date, which differs from current date by 30 working days<br/>add_workdays(tr_date, 100) - for getting date, which differs from date written in date variable with name <tr_date> by 100 working days<br/>add_workdays(instrument.maturity_date, delay_period) - for getting date, which differs from date in instrument parameter <maturity_date> by number of working days, which is written in variable with name <delay_period>",
+    "groups": "date",
+    "func": "add_workdays(<date>,<number_workdays>)"
   },
   {
     "name": "Get random number",
-    "description": "",
-    "group": "number",
+    "description": "random() -> <Result: number><br/><br/><Result: number>: Number - random number generated by the system (range of returned value =  0.0-1.0). It can be used in constructing any notes, user codes of entities.<br/><br/>Examples:<br/>random()<br/>random()*10<br/>random()+5<br/>coupon_size-random() - where coupon_size is any number variable used by user in his expressions",
+    "groups": "number",
     "func": "random()"
   },
   {
     "name": "Get minimum number",
-    "description": "",
-    "group": "number",
+    "description": "min(<number_1>, <number_2>) -> <Result: minimum_number - <number_1> or <number_2>><br/><br/><Result: minimum_number>: Number - minimum number of the set of numbers in <number_1> and  <number_2> <br/><br/><number_1>,<number_2>: Number - any numbers or number variables used in system<br/><br/>Examples:<br/>min(price, 100) - to get a minimum number from the set of two numbers - 100 and a number in variable with name <price><br/>min(5, 10) - to get a minimum number from this set (5 in this example)<br/>min(current_price, target_price) - to get a minimum of numbers written in variables with names <current_price> and <target_price>",
+    "groups": "number",
     "func": "min(<number_1>, <number_2>)"
   },
   {
     "name": "Get maximum number",
-    "description": "",
-    "group": "number",
+    "description": "max(<number_1>, <number_2>) -> <Result: maximum_number - <number_1> or <number_2>><br/><br/><Result:  maximum_number>: Number - maximum number of the set of numbers in <number_1> and  <number_2> <br/><br/><number_1>,<number_2>: Number - any numbers or number variables used in system<br/><br/>Examples:<br/>max(price_factor, 1) - to get a maximum number from the set of two numbers - 1 and a number in variable with name <price_factor><br/>max(maturity_price, trade_price) - to get a maximum of numbers written in variables with names <maturity_price> and <trade_price>",
+    "groups": "number",
     "func": "max(<number_1>, <number_2>)"
   },
   {
-    "name": "To float",
-    "description": "<p>Convert string to number</p>",
-    "group": "number",
-    "func": "float(a)"
+    "name": "Round number with decimals",
+    "description": "round(<number>,<decimals_number>) -> <Result: rounded_number><br/><br/><Result: rounded_number>: Number - rounded number (by math rule). For example, 23.5 gets rounded to 24, and −23.5 gets rounded to −24.<br/><br/><number>: Number - any number or number variable, used by user in this expression (eg, 1.17, 1.56, 1.9987... or number_variable)<br/><decimals_number>: Number - optional parameter - number of decimals, needed after rounding. User may not skip writing default value (0) in this function<br/><br/>Examples:<br/>round(23.5) for getting rounded result 24<br/>round(price) for getting rounded price of instrument written in variable with name <price><br/>round(price,2) for getting rounded price with 2 decimals after rounding",
+    "groups": "number",
+    "func": "round(<number>,<decimals_number>)"
   },
   {
-    "name": "Round",
-    "description": "<p>Match round float</p>",
-    "group": "number",
-    "func": "round(number)"
+    "name": "Truncate Decimals",
+    "description": "trunc(<number>) -> <Result: truncated_number><br/><br/><Result: truncated_number>: Number - number without decimals (truncated number). For example, 13.2 gets truncated to 13, and 13.99999 gets truncated also to 13 (without using math rules of rounding.<br/><br/><number>: Number - any number or number variable, used by user in this expression (eg, 2.37, 5.687... or number_variable)<br/><br/>Examples:<br/>trunc(23.5) for getting truncated result 23<br/>trunc(price) for getting truncated price of instrument written in variable with name <price>",
+    "groups": "number",
+    "func": "trunc(<number>)"
   },
   {
-    "name": "Trunc",
-    "description": "<p>Match truncate float</p>",
-    "group": "number",
-    "func": "trunc(a)"
+    "name": "Compare numbers",
+    "description": "isclose(<number_1>, <number_2>) -> <Result: equality_boolean><br/><br/><Result: equality_boolean>: Boolean - True or False. In case of equality <number_1> and <number_2> result of this function is 'True', otherwise the result is 'False'. This function can be used as a parameter of other functions, for example user can compare coupon size of some instrument with target and use the result of it in other function. <br/><br/><number_1>,<number_2>: Number - any number or variable used in system<br/><br/>Examples:<br/>isclose(maturity_price, 100) - to compare number written in variable with name <maturity_price> with 100<br/>isclose (5, 5) - to compare two equal numbers (5) - the result is 'True' <br/>isclose(current_price, target_price) - to compare numbers written in variables with names <current_price> and <target_price>",
+    "groups": "number",
+    "func": "isclose(<number_1>, <number_2>)"
   },
   {
-    "name": "Is close",
-    "description": "<p>Compare to float numbers to equality</p>",
-    "group": "number",
-    "func": "isclose(a, b)"
+    "name": "Convert String to Number",
+    "description": "int(<string>) -> <Result: number_from_string><br/><br/><Result: number_from_string>: Number - number converted from string. For example, '10' gets converted to 10 as a number data, and '13.999' gets converted to 13. This function is used to convert any string variables (for example notes, where user can wrote numbers, but for the system it is still string data)<br/><br/><string> - any string or string variable, used by user in this expression<br/><br/>Examples:<br/>int('25') for getting data as a number object 25<br/>float('25.09') for getting data as a number object 25.09<br/>int(notes) for getting data as a number object from string variable with name <notes><br/>float(notes) for getting data as a number object from string variable with name <notes>",
+    "groups": "number",
+    "func": "int(<string>)"
   },
   {
-    "name": "iff",
-    "description": "<p>Return a if x is True else v2</p>",
-    "group": "logic",
-    "func": "iff(expr, a, b)"
+    "name": "Get absolute value of number",
+    "description": "abs(<number>) -> <Result: absolute_number><br/><br/><Result: absolute_number>: Number - absolute number without sign. For example, -11.5 gets absolute number 11.5<br/><br/><number>: Number - any number or number variable, used by user in this expression<br/><br/>Examples:<br/>abs(-10.599) for getting result 10.599<br/>abs(change_price) for getting absolute change of price written in variable with name <change_price>",
+    "groups": "number",
+    "func": "abs(<number>)"
   },
   {
-    "name": "Now",
-    "description": "<p>Current date</p>",
-    "group": "date",
-    "func": "now()"
+    "name": "Get value depends on logical test",
+    "description": "iff(<any_variable>==<user_target>, <returned_value_if_true>, <returned_value_if_false>) -> <Result: returned_value_if_true or returned_value_if_false><br/><br/><Result: returned_value_if_true or returned_value_if_false>: String, date, boolean or number - as a value or variable contains any value. In case of true result of <any_variable>==<user_target> the system returns <returned_value_if_true>, otherwise it will be <returned_value_if_false><br/><br/><any_variable> - String, date, boolean or number - as a variable contains any value<br/><user_target> - String, date, boolean or number - as a value or variable contains any value<br/><br/>Examples:<br/>iff(3==3, 1, 2)  - in this case result of 3==3 expression is true and the system returns 1<br/>iff(3==4, 1, 2)  - in this case result of 3==4 expression is false and the system returns 2<br/>iff(maturity_price==0, 'set maturity price!', 'maturity price is setted') - in this case the system compare value in variable with name maturity_price and a) if it is 0 returns string 'set maturity price!' b) if it is not 0 returns string  'maturity price is setted'<br/>iff(maturity_date==now(), maturity_price , 0) - in this case the system compare date in variable with name maturity_date and a) if they are equal returns number in variable with name <maturity_price> b) otherwise returns 0<br/>iff(price>target_price, 0) - in this case the system compare date in variable with name maturity_date and a) if they are equal returns number in variable with name <maturity_price> b) otherwise returns 0<br/>iff(5>4, 1, 2)  - in this case result of 5>4 expression is true and the system returns 1 (you can use not only == in expression, but also < and >)<br/>",
+    "groups": "number",
+    "func": "iff(<any_variable>==<user_target>, <returned_value_if_true>, <returned_value_if_false>)"
   },
   {
-    "name": "Date",
-    "description": "<p>Create date object</p>",
-    "group": "date",
-    "func": "date(year, month=1, day=1)"
+    "name": "Convert any value to string (date, number, boolean)",
+    "description": "str(<value>) -> <Result: string><br/><br/><Result: String>: String - text converted from any variable of other class (date, number, boolean). For example, 2018-01-01 as a date object gets converted to '2018-01-01' as a text data. This function is used to convert any non-text variables to text for writing it to any text variables. For example user wants to auto-write transaction date (as a date object in variable <transaction_date> to the text object in variable <notes> - he can use expression str(transaction_date) <br/><br/><value> - any value or variable used by user in this expression<br/><br/>Examples:<br/>str('abcde') for getting data as a text object abcde<br/>str(transaction_date) for getting data as a text object which is contained in date variable with name <transaction_date><br/>str(now()) for getting current date as a string<br/>str(coupon_size) for getting data as a text object which is contained in number variable with name <coupon_size><br/>str(compare_result) for getting data as a text object which is contained in boolean variable with name <compare_result>",
+    "groups": "text",
+    "func": "str(<value>)"
   },
   {
-    "name": "Days",
-    "description": "<p>Create timedelta object for operations with dates <br/> now() - days(10)<br/> now() + days(10)</p>",
-    "group": "date",
-    "func": "days(a)"
+    "name": "Get text with upper letters",
+    "description": "upper(<string>) -> <Result: String><br/><br/><Result: String>: String - the same text (string) with upper letters<br/><string>: String - any string or string variable, used by user in this expression<br/><br/>Examples:<br/>upper(notes) for getting the same string as written in string variable with name <notes> but with upper letters<br/>upper('abcd') for getting the same string with upper letters (ABCD)",
+    "groups": "text",
+    "func": "upper(<string>)"
   },
   {
-    "name": "Weeks",
-    "description": "<p>Create timedelta object for operations with dates <br/> now() - weeks(10)<br/> now() + weeks(10)</p>",
-    "group": "date",
-    "func": "weeks(a)"
+    "name": "Get text with lower letters",
+    "description": "lower(<string>) -> <Result: String><br/><br/><Result: String>:String - the same text (string) with lower letters<br/><string>: String - any string or string variable, used by user in this expression<br/><br/>Examples:<br/>lower(user_text_1) for getting the same string as written in string variable with name <(user_text_1> but with lower letters<br/>lower('EFGH') for getting the same string with lower letters (efgh)",
+    "groups": "text",
+    "func": "lower(<string>)"
   },
   {
-    "name": "Months",
-    "description": "<p>Create timedelta object for operations with dates <br/> now() - months(10)<br/> now() + months(10)</p>",
-    "group": "date",
-    "func": "months(a)"
-  },
-  {
-    "name": "Timedelta",
-    "description": "<p>General timedelta creation</p><p>years, months, weeks, days:<br/> Relative information, may be negative (argument is plural); adding or subtracting a relativedelta with relative information performs the corresponding aritmetic operation on the original datetime value with the information in the relativedelta.</p><p>leapdays:<br/> Will add given days to the date found, if year is a leap year, and the date found is post 28 of february.</p>",
-    "group": "date",
-    "func": "timedelta(years=0, months=0, days=0, leapdays=0, weeks=0)"
-  },
-  {
-    "name": "Add days",
-    "description": "<p>Same as date + days(x)</p>",
-    "group": "date",
-    "func": "add_days(date, days)"
-  },
-  {
-    "name": "Add weeks",
-    "description": "<p>Same as d + days(x * 7)</p>",
-    "group": "date",
-    "func": "add_weeks(date, days)"
-  },
-  {
-    "name": "Add workdays",
-    "description": "<p>Add 'x' work days to d</p>",
-    "group": "date",
-    "func": "add_workdays(date, workdays)"
-  },
-  {
-    "name": "Format date",
-    "description": "<p>format date (default format is '%Y-%m-%d')</p>",
-    "group": "date",
-    "func": "format_date(date, format='%Y-%m-%d')"
-  },
-  {
-    "name": "Parse date",
-    "description": "<p>parse date from string (default format is '%Y-%m-%d')</p>",
-    "group": "date",
-    "func": "parse_date(date_string, format='%Y-%m-%d')"
-  },
-  {
-    "name": "Format number",
-    "description": "<p>format float number<br/> <br/> decimal_sep:<br/> Decimal separator symbol (for example '.')<br/> decimal_pos:<br/> Number of decimal positions<br/> grouping:<br/> Number of digits in every group limited by thousand separator<br/> thousand_sep:<br/> Thousand separator symbol (for example ',')<br/> use_grouping:<br/> use thousand separator</p>",
-    "group": "number",
-    "func": "format_number(number, decimal_sep='.', decimal_pos=None, grouping=3, thousand_sep='', use_grouping=False)"
-  },
-  {
-    "name": "Parse number",
-    "description": "<p>same as float(a)</p>",
-    "group": "number",
-    "func": "parse_number(a)"
-  },
-  {
-    "name": "Simple price",
-    "description": "<p>simple_price(<date>, <date1>, <price1>, <date2>, <price2>) -> <Result: Number></p> <p><Result: Number>:Number - average price for a date <date> within a date range (<date1> and <date2>) with known prices (<price1> for <date1> and <price2> for <date2>). </p> <p><date1>,<date2> - any date variable used by user in this expression (eg, transaction_date, maturity_date) or a date as a text (string) in format 'YY-mm-dd' <price1>,<price2>: Number - any numbers or number variables used in system </p> <p>Examples: <br/> simple_price('2018-01-02', '2018-01-01', 10, '2018-01-03', 20) - to get average price for date between two dates (2018-01-02 and 2018-01-03) with theese prices (10 and 20). The result in this case - 15 <br/> simple_price('2018-09-01', transaction_date, price, maturity_date, maturity_price) - to get average price for date 2018-09-01 based on prices written in variables with names <price> (for transaction_date) and <maturity_price> (for maturity_date) </p>",
-    "group": "instrument_formulas",
-    "func": "simple_price(date, date1, value1, date2, value2)"
+    "name": "Compare two strings (does one contain the other)",
+    "description": "contains(<string1>, <string2>) -> <Result: contain_boolean><br/><br/><Result: contain_boolean>: Boolean - True or False. If <string1> contains <string2> so result of this function is 'True', otherwise the result is 'False'. This function can be used as a parameter of other functions, for example user can check if notes (as an attribute of instrument or transaction) contain any important info. <br/><br/><string1>, <string2>: String - any string or string variable, used by user in this expression<br/><br/>Examples:<br/>contains('CDABEF','AB') - the result is boolean 'True'<br/>contains('CDEF','AB') - the result is boolean 'False'<br/>contains(instrument,'swap') - the result is boolean 'True' (if name of instrument in variable with such name contains string 'swap') or 'False'<br/>",
+    "groups": "text",
+    "func": "contains(<string1>,<string2>)"
   },
   {
     "name": "Get Coupon Size",
-    "description": "<p>get_instrument_coupon(<instr>, <effective_date>) -> <Result: coupon_size> <br/> <Result: coupon_size>:Number - coupon size for 1 quantity of the <instr> as of the <effective_date> as per the <instr> Accrual Schedule </p> <p> <instr>:Instrument - instrument for which the coupon is calculated <br/> <effective_date>:Date - as of date for the coupon calculation <br/> </p> <p> Examples: get_instrument_coupon(instrument, trade_date) <br/> get_instrument_coupon(instrument, '2019-01-01') <br/> </p> <p> ! if <effective_date> doesn't equal to any coupon date of the instrumnet (as per the Accrual Schedule), then <Result: coupon_size> equal to 0 </p> ",
-    "group": "instrument_formulas",
+    "description": "get_instrument_coupon(<instr>, <effective_date>) -> <Result: coupon_size><br/><Result: coupon_size>: Number - coupon size for 1 quantity of the <instr> as of the <effective_date> as per the <instr> Accrual Schedule<br/><br/><instr>: Instrument - instrument for which the coupon is calculated<br/><effective_date>: Date - as of date for the coupon calculation<br/><br/>Examples:<br/>get_instrument_coupon(instrument, trade_date)<br/>get_instrument_coupon(instrument, '2019-01-01')<br/><br/>! if  <effective_date> doesn't equal to any coupon date of the instrument (as per the Accrual Schedule), then <Result: coupon_size> equal to 0",
+    "groups": "instr_formulas",
     "func": "get_instrument_coupon(<instr>, <effective_date>)"
   },
   {
     "name": "Get Accruals Size",
-    "description": "<p> get_instrument_accrued_price(<instr>, <trade_date>) -> <Result: accrued_price><br/> <Result: accrued_price>:Number - accrued price (part of the total price of trade) for 1 quantity of the <instr> as of the <trade_date> </p> <p> <instr>:Instrument - instrument for which the accrued price is calculated<br/> <trade_date>:Date - as of date for the accrued price calculation (usually trade date or settlement date) - date variable or date as a string object in format 'YY-mm-dd' </p> <p> Examples: get_instrument_accrued_price(instrument, trade_date)<br/> get_instrument_accrued_price(instrument, '2019-01-01')<br/> </p> <p> ! if user or system didn't set coupon size of the instrument (Settings for instrument), then <Result: accrued_price> equal to 0 </p>",
-    "group": "instrument_formulas",
+    "description": "get_instrument_accrued_price(<instr>, <trade_date>) -> <Result: accrued_price><br/><Result: accrued_price>: Number - accrued price (part of the total price of trade) for 1 quantity of the <instr> as of the <trade_date><br/><br/><instr>: Instrument - instrument for which the accrued price is calculated<br/><trade_date>: Date - as of date for the accrued price calculation (usually trade date or settlement date) - date variable or date as a string object in format 'YY-mm-dd'<br/><br/>Examples:<br/>get_instrument_accrued_price(instrument, trade_date)<br/>get_instrument_accrued_price(instrument, '2019-01-01')<br/><br/>! if  user or system didn't set coupon size of the instrument (Settings for instrument), then <Result: accrued_price> equal to 0",
+    "groups": "instr_formulas",
     "func": "get_instrument_accrued_price(<instr>, <trade_date>)"
   },
   {
-    "name": "Get instrument user code",
-    "description": "<p><instrument> - variable contains instrument (instrument unique user code) defined by user in scheme, transaction type - user can address to the attributes of this object/entity (instrument) via theese functions </p> <p> Examples: <br/> instrument.user_code - if name of variable is <instrument> </p>",
-    "group": "instrument_default",
+    "name": "Calculate Linear Price",
+    "description": "simple_price(<date>, <date1>, <price1>, <date2>, <price2>) -> <Result: simple_price><br/><br/><Result: simple_price>: Number - linear price for a date <date> within a date range (<date1> and <date2>) with known prices (<price1> for <date1> and <price2> for <date2>). <br/><br/><date1>,<date2>: Date - any date variable used by user in this expression (eg, transaction_date, maturity_date) or a date as a text (string) in format 'YY-mm-dd'<br/><price1>,<price2>: Number - any numbers or number variables used in system<br/><br/>Examples:<br/>simple_price('2018-01-02', '2018-01-01', 10, '2018-01-03', 20) - to get linear price for date between two dates (2018-01-02 and 2018-01-03) with these prices (10 and 20). The result in this case = 15<br/><br/>simple_price('2018-09-01', transaction_date, price, maturity_date, maturity_price)  - to get linear price for date 2018-09-01 based on prices written in variables with names <price> (for transaction_date) and <maturity_price> (for maturity_date)",
+    "groups": "instr_formulas",
+    "func": "simple_price(<date>, <date1>, <price1>, <date2>, <price2>)"
+  },
+  {
+    "name": "Name",
+    "description": "<instrument>.name: Text - name for instrument<br/><br/><instrument>: Instrument - variable contains instrument (instrument unique user code) defined by user in scheme, transaction type - user can address to the attributes of this object/entity (instrument) via these functions<br/><br/>Examples: <br/>instrument.name - if name of variable is <instrument><br/>instr.name  - if name of variable is <instr>",
+    "groups": "instr",
+    "func": "<instrument>.name"
+  },
+  {
+    "name": "Short name",
+    "description": "<instrument>.short_name: Text - system short name for instrument<br/><br/><instrument>: Instrument - variable contains instrument (instrument unique user code) defined by user in scheme, transaction type - user can address to the attributes of this object/entity (instrument) via these functions<br/><br/>Examples: <br/>instrument.short_name - if name of variable is <instrument><br/>instr_2000.short_name - if name of variable is <instr_2000>",
+    "groups": "instr",
+    "func": "<instrument>.short_name"
+  },
+  {
+    "name": "User code",
+    "description": "<instrument>.user_code: Text - system unique user code for instrument<br/><br/><instrument>: Instrument - variable contains instrument (instrument unique user code) defined by user in scheme, transaction type - user can address to the attributes of this object/entity (instrument) via these functions<br/><br/>Examples: <br/>instrument.user_code - if name of variable is <instrument><br/>instr_2000.user_code - if name of variable is <instr_2000>",
+    "groups": "instr",
     "func": "<instrument>.user_code"
   },
   {
-    "name": "Get default price for instrument",
-    "description": "<p>instrument.default_price: Number - default price of instrument, it ca у used in cases when current prices for the instrument are unavailable </p> <p> Examples: <br/> instrument.default_price<br/> instr.default_price </p> <p> ! If this parameter was not specified in Instrument settings then result equal to 0 </p>",
-    "group": "instrument_default",
+    "name": "Pricing currency user code",
+    "description": "<instrument>.pricing_currency.user_code: Text - unique user code for instrument pricing currency<br/><br/><instrument>: Instrument - variable contains instrument (instrument unique user code) defined by user in scheme, transaction type - user can address to the attributes of this object/entity (instrument) via these functions<br/><br/>Examples: <br/>instrument.pricing_currency.user_code - if name of variable is <instrument><br/>instr.pricing_currency.user_code  - if name of variable is <instr>",
+    "groups": "instr",
+    "func": "<instrument>.pricing_currency.user_code"
+  },
+  {
+    "name": "Pricing currency name",
+    "description": "<instrument>.pricing_currency.name: Text - name for instrument pricing currency<br/><br/><instrument> - variable contains instrument (instrument unique user code) defined by user in scheme, transaction type - user can address to the attributes of this object/entity (instrument) via these functions<br/><br/>Examples: <br/>instrument.pricing_currency.name - if name of variable is <instrument><br/>instr.accrued_currency.name  - if name of variable is <instr>",
+    "groups": "instr",
+    "func": "<instrument>.pricing_currency.name"
+  },
+  {
+    "name": "Accrued currency user code",
+    "description": "<instrument>.accrued_currency.user_code: Text - unique user code for instrument accrued currency<br/><br/><instrument>: Instrument - variable contains instrument (instrument unique user code) defined by user in scheme, transaction type - user can address to the attributes of this object/entity (instrument) via these functions<br/><br/>Examples: <br/>instrument.accrued_currency.user_code - if name of variable is <instrument><br/>instr.accrued_currency.name  - if name of variable is <instr>",
+    "groups": "instr",
+    "func": "<instrument>.accrued_currency.user_code"
+  },
+  {
+    "name": "Accrued currency name",
+    "description": "<instrument>.accrued_currency.name: Text - name for instrument accrued currency<br/><br/><instrument>: Instrument - variable contains instrument (instrument unique user code) defined by user in scheme, transaction type - user can address to the attributes of this object/entity (instrument) via these functions<br/><br/>Examples: <br/>instrument.accrued_currency.name - if name of variable is <instrument><br/>instr.accrued_currency.name  - if name of variable is <instr>",
+    "groups": "instr",
+    "func": "<instrument>.accrued_currency.name"
+  },
+  {
+    "name": "Reference for pricing",
+    "description": "<instrument>.reference_for_pricing: Text - system reference for pricing for instrument, used in downloading prices from external providers<br/><br/><instrument>: Instrument - variable contains instrument (instrument unique user code) defined by user in scheme, transaction type - user can address to the attributes of this object/entity (instrument) via these functions. For example for bond instrument YPF SOCIEDAD ANONIMA  3.75%  30-Sep-2019 (with user_code CH0336352825 - it's ISIN) result  of instrument.reference_for_pricing is 'CH0336352825 Corp' - code used in downloading prices from external providers<br/><br/>Examples: <br/>instrument.reference_for_pricing - if name of variable is <instrument><br/>instr.reference_for_pricing - if name of variable is <instr>",
+    "groups": "instr",
+    "func": "<instrument>.reference_for_pricing"
+  },
+  {
+    "name": "Price multiplier",
+    "description": "<instrument>.price_multiplier: Number - multiplier applied for the Instrument price when valuing the Instrument. For example, for bonds which are priced as % of notional, the  price_multiplier should be  0.01<br/><br/><instrument>: Instrument - variable contains instrument (instrument unique user code) defined by user in scheme, transaction type - user can address to the attributes of this object/entity (instrument) via these functions<br/><br/>Examples:<br/>instrument.price_multiplier<br/>instr.price_multiplier<br/><br/>! If this parameter was not specified in Instrument settings then result equal to 1",
+    "groups": "instr",
+    "func": "<instrument>.price_multiplier"
+  },
+  {
+    "name": "Accrued price multiplier",
+    "description": "<instrument>.accrued_multiplier: Number  - multiplier applied for the Instrument accrued price<br/><br/><instrument>: Instrument - variable contains instrument (instrument unique user code) defined by user in scheme, transaction type - user can address to the attributes of this object/entity (instrument) via these functions<br/><br/>Examples:<br/>instrument.accrued_multiplier<br/>instr.accrued_multiplier<br/><br/>! If this parameter was not specified in Instrument settings then result equal to 1",
+    "groups": "instr",
+    "func": "<instrument>.accrued_multiplier"
+  },
+  {
+    "name": "Maturity date",
+    "description": "<instrument>.maturity_date: Date - date of maturity (redemption) of the instrument. Maturity date allows user and system to create maturity transaction at this date and prompt the user to book it automatically<br/><br/><instrument>: Instrument - variable contains instrument (instrument unique user code) defined by user in scheme, transaction type - user can address to the attributes of this object/entity (instrument) via these functions<br/><br/>Examples:<br/>instrument.maturity_date<br/>instr.maturity_date",
+    "groups": "instr",
+    "func": "<instrument>.maturity_date"
+  },
+  {
+    "name": "Maturity price",
+    "description": "<instrument>.maturity_price: Number - price of maturity (redemption) of the instrument, this parameter can be used in transaction types for instruments maturity<br/><br/><instrument>: Instrument - variable contains instrument (instrument unique user code) defined by user in scheme, transaction type - user can address to the attributes of this object/entity (instrument) via these functions<br/><br/>Examples:<br/>instrument.maturity_price<br/>instr.maturity_price<br/><br/>! If this parameter was not specified in Instrument settings then result equal to 0",
+    "groups": "instr",
+    "func": "<instrument>.maturity_price"
+  },
+  {
+    "name": "Default price",
+    "description": "<instrument>.default_price: Number - default price of instrument, it ca у used in cases when current prices for the instrument are unavailable<br/><br/><instrument>: Instrument - variable contains instrument (instrument unique user code) defined by user in scheme, transaction type - user can address to the attributes of this object/entity (instrument) via these functions<br/><br/>Examples:<br/>instrument.default_price<br/>instr.default_price<br/><br/>! If this parameter was not specified in Instrument settings then result equal to 0",
+    "groups": "instr",
     "func": "<instrument>.default_price"
+  },
+  {
+    "name": "Name",
+    "description": "<account>.name: Text - name for account<br/><br/><account>: Account - variable contains account (account unique user code) defined by user in scheme, transaction type - user can address to the attributes of this object/entity (account) via these functions<br/><br/>Examples: <br/>account.name - if name of variable is <account><br/>acc.name  - if name of variable is <acc>",
+    "groups": "account",
+    "func": "<account>.name"
+  },
+  {
+    "name": "Short name",
+    "description": "<account>.short_name: Text - system short name for account<br/><br/><account>: Account - variable contains account (account unique user code) defined by user in scheme, transaction type - user can address to the attributes of this object/entity (account) via these functions<br/><br/>Examples: <br/>account.short_name - if name of variable is <account><br/>acc.short_name - if name of variable is <acc>",
+    "groups": "account",
+    "func": "<account>.short_name"
+  },
+  {
+    "name": "User code",
+    "description": "<account>.user_code: Text - system unique user code for account<br/><br/><account>: Account - variable contains account (account unique user code) defined by user in scheme, transaction type - user can address to the attributes of this object/entity (account) via these functions<br/><br/>Examples: <br/>account.user_code - if name of variable is <account><br/>acc.user_code - if name of variable is <acc>",
+    "groups": "account",
+    "func": "<account>.user_code"
+  },
+  {
+    "name": "Public name",
+    "description": "<account>.public_name: Text - system public name for account shown when the user has no rights to see it`s real name<br/><br/><account>: Account - variable contains account (account unique user code) defined by user in scheme, transaction type - user can address to the attributes of this object/entity (account) via these functions<br/><br/>Examples: <br/>account.public_name - if name of variable is <account><br/>acc.public_name - if name of variable is <acc>",
+    "groups": "account",
+    "func": "<account>.public_name"
+  },
+  {
+    "name": "Name",
+    "description": "<portfolio>.name: Text - name for portfolio<br/><br/><portfolio>: Portfolio - variable contains portfolio (portfolio unique user code) defined by user in scheme, transaction type - user can address to the attributes of this object/entity (portfolio) via these functions<br/><br/>Examples: <br/>portfolio.name - if name of variable is <portfolio><br/>prtf.name  - if name of variable is <prtf>",
+    "groups": "portfolio",
+    "func": "<portfolio>.name"
+  },
+  {
+    "name": "Short name",
+    "description": "<portfolio>.short_name: Text - system short name for portfolio<br/><br/><portfolio>: Portfolio - variable contains portfolio (portfolio unique user code) defined by user in scheme, transaction type - user can address to the attributes of this object/entity (portfolio) via these functions<br/><br/>Examples: <br/>portfolio.short_name - if name of variable is <portfolio><br/>prtf.short_name - if name of variable is <prtf>",
+    "groups": "portfolio",
+    "func": "<portfolio>.short_name"
+  },
+  {
+    "name": "User code",
+    "description": "<portfolio>.user_code: Text - system unique user code for portfolio<br/><br/><portfolio>: Portfolio - variable contains portfolio (portfolio unique user code) defined by user in scheme, transaction type - user can address to the attributes of this object/entity (portfolio) via these functions<br/><br/>Examples: <br/>portfolio.user_code - if name of variable is <portfolio><br/>prtf.user_code - if name of variable is <prtf>",
+    "groups": "portfolio",
+    "func": "<portfolio>.user_code"
+  },
+  {
+    "name": "Name",
+    "description": "<responsible>.name: Text - name for responsible<br/><br/><responsible>: Responsible - variable contains responsible (responsible unique user code) defined by user in scheme, transaction type - user can address to the attributes of this object/entity (responsible) via these functions<br/><br/>Examples: <br/>responsible.name - if name of variable is <responsible><br/>resp.name  - if name of variable is <resp>",
+    "groups": "responsible",
+    "func": "<responsible>.name"
+  },
+  {
+    "name": "Short name",
+    "description": "<responsible>.short_name: Text - system short name for responsible<br/><br/><responsible>: Responsible - variable contains responsible (responsible unique user code) defined by user in scheme, transaction type - user can address to the attributes of this object/entity (responsible) via these functions<br/><br/>Examples: <br/>responsible.short_name - if name of variable is <responsible><br/>resp.short_name - if name of variable is <resp>",
+    "groups": "responsible",
+    "func": "<responsible>.short_name"
+  },
+  {
+    "name": "User code",
+    "description": "<responsible>.user_code: Text - system unique user code for responsible<br/><br/><responsible>: Responsible - variable contains responsible (responsible unique user code) defined by user in scheme, transaction type - user can address to the attributes of this object/entity (responsible) via these functions<br/><br/>Examples: <br/>responsible.user_code - if name of variable is <responsible><br/>resp.user_code - if name of variable is <resp>",
+    "groups": "responsible",
+    "func": "<responsible>.user_code"
+  },
+  {
+    "name": "Name",
+    "description": "<counterparty>.name: Text - name for counterparty<br/><br/><counterparty>: Counterparty - variable contains counterparty  (counterparty unique user code) defined by user in scheme, transaction type - user can address to the attributes of this object/entity (counterparty) via these functions<br/><br/>Examples: <br/>counterparty.name - if name of variable is <counterparty><br/>ctpy.name  - if name of variable is <ctpy>",
+    "groups": "counterparty",
+    "func": "<counterparty>.name"
+  },
+  {
+    "name": "Short name",
+    "description": "<counterparty>.short_name: Text - system short name for counterparty<br/><br/><counterparty>: Counterparty - variable contains counterparty (counterparty unique user code) defined by user in scheme, transaction type - user can address to the attributes of this object/entity (counterparty) via these functions<br/><br/>Examples: <br/>counterparty.short_name - if name of variable is <counterparty><br/>ctpy.short_name - if name of variable is <ctpy>",
+    "groups": "counterparty",
+    "func": "<counterparty>.short_name"
+  },
+  {
+    "name": "User code",
+    "description": "<counterparty>.user_code: Text - system unique user code for counterparty<br/><br/><counterparty>: Counterparty - variable contains counterparty counterparty unique user code) defined by user in scheme, transaction type - user can address to the attributes of this object/entity (counterparty) via these functions<br/><br/>Examples: <br/>counterparty.user_code - if name of variable is <counterparty><br/>ctpy.user_code - if name of variable is <ctpy>",
+    "groups": "counterparty",
+    "func": "<counterparty>.user_code"
+  },
+  {
+    "name": "Name",
+    "description": "<currency>.name: Text - name for currency<br/><br/><currency>: Currency - variable contains currency  (currency unique user code) defined by user in scheme, transaction type - user can address to the attributes of this object/entity (currency) via these functions<br/><br/>Examples: <br/>currency.name - if name of variable is <currency><br/>tr_currency.name  - if name of variable is <tr_currency>",
+    "groups": "currency",
+    "func": "<currency>.name"
+  },
+  {
+    "name": "Reference FX rate",
+    "description": "<currency>.reference_for_pricing: Text - system reference for pricing for currency (for pair currency-USD), used in downloading rates from external providers<br/><br/><currency>: Currency - variable contains currency (currency unique user code) defined by user in scheme, transaction type - user can address to the attributes of this object/entity (currency) via these functions. For example for swiss franc (with user_code CHF) result  of currency.reference_for_pricing is 'CHFUSD Curncy' - code used in downloading rates  from external providers<br/><br/>Examples: <br/>currency.reference_for_pricing - if name of variable is <currency><br/>ccy_deal.reference_for_pricing - if name of variable is <ccy_deal>",
+    "groups": "currency",
+    "func": "<currency>.reference_for_pricing"
+  },
+  {
+    "name": "User code",
+    "description": "<currency>.user_code: Text - system unique user code for currency<br/><br/><currency>: Currency - variable contains currency (currency unique user code) defined by user in scheme, transaction type - user can address to the attributes of this object/entity (currency) via these functions<br/><br/>Examples: <br/>currency.user_code - if name of variable is <currency><br/>ccy.user_code - if name of variable is <ccy>",
+    "groups": "currency",
+    "func": "<currency>.user_code"
+  },
+  {
+    "name": "Instrument user code",
+    "description": "transactions[0].instrument.user_code: Text - system unique user code for instrument<br/>",
+    "groups": "transact_des",
+    "func": "transactions[0].instrument.user_code"
+  },
+  {
+    "name": "Instrument name",
+    "description": "transactions[0].instrument.name: Text - system name for instrument",
+    "groups": "transact_des",
+    "func": "transactions[0].instrument.name"
+  },
+  {
+    "name": "Instrument short name",
+    "description": "transactions[0].instrument.short_name: Text - short name for instrument<br/> <br/>",
+    "groups": "transact_des",
+    "func": "transactions[0].instrument.short_name"
+  },
+  {
+    "name": "Instrument maturity date",
+    "description": "transactions[0].instrument.maturity_date: Date - maturity date for instrument<br/>",
+    "groups": "transact_des",
+    "func": "transactions[0].instrument.maturity_date"
+  },
+  {
+    "name": "Portfolio user code",
+    "description": "transactions[0].portfolio.user_code: Text - system unique user code for portfolio",
+    "groups": "transact_des",
+    "func": "transactions[0].portfolio.user_code"
+  },
+  {
+    "name": "Portfolio name",
+    "description": "transactions[0].portfolio.name: Text - name for portfolio",
+    "groups": "transact_des",
+    "func": "transactions[0].portfolio.name"
+  },
+  {
+    "name": "Portfolio short name",
+    "description": "transactions[0].portfolio.short_name: Text - short name for portfolio",
+    "groups": "transact_des",
+    "func": "transactions[0].portfolio.short_name"
+  },
+  {
+    "name": "Account cash user code",
+    "description": "transactions[0].account_cash.user_code: Text - system unique user code for account cash",
+    "groups": "transact_des",
+    "func": "transactions[0].account_cash.user_code"
+  },
+  {
+    "name": "Account cash name",
+    "description": "transactions[0].account_cash.name: Text - name for account cash",
+    "groups": "transact_des",
+    "func": "transactions[0].account_cash.name"
+  },
+  {
+    "name": "Account cash short name",
+    "description": "transactions[0].account_cash.short_name: Text - short name for account cash<br/>",
+    "groups": "transact_des",
+    "func": "transactions[0].account_cash.short_name"
+  },
+  {
+    "name": "Account cash public name",
+    "description": "transactions[0].account_cash.public_name: Text - public name for account cash",
+    "groups": "transact_des",
+    "func": "transactions[0].account_cash.public_name"
+  },
+  {
+    "name": "Account position user code",
+    "description": "transactions[0].account_cash.user_code: Text - system unique user code for account position",
+    "groups": "transact_des",
+    "func": "transactions[0].account_position.user_code"
+  },
+  {
+    "name": "Account position name",
+    "description": "transactions[0].account_cash.name: Text - name for account position",
+    "groups": "transact_des",
+    "func": "transactions[0].account_position.name"
+  },
+  {
+    "name": "Account position short name",
+    "description": "transactions[0].account_cash.short_name: Text - short name for account position<br/>",
+    "groups": "transact_des",
+    "func": "transactions[0].account_position.short_name"
+  },
+  {
+    "name": "Account position public name",
+    "description": "transactions[0].account_cash.public_name: Text - public name for account position",
+    "groups": "transact_des",
+    "func": "transactions[0].account_position.public_name"
+  },
+  {
+    "name": "Account interim user code",
+    "description": "transactions[0].account_cash.user_code: Text - system unique user code for account interim",
+    "groups": "transact_des",
+    "func": "transactions[0].account_interim.user_code"
+  },
+  {
+    "name": "Account interim name",
+    "description": "transactions[0].account_cash.name: Text - name for account interim",
+    "groups": "transact_des",
+    "func": "transactions[0].account_interim.name"
+  },
+  {
+    "name": "Account interim short name",
+    "description": "transactions[0].account_cash.short_name: Text - short name for account interim<br/>",
+    "groups": "transact_des",
+    "func": "transactions[0].account_interim.short_name"
+  },
+  {
+    "name": "Account interim public name",
+    "description": "transactions[0].account_cash.public_name: Text - public name for account interim",
+    "groups": "transact_des",
+    "func": "transactions[0].account_interim.public_name"
+  },
+  {
+    "name": "Counterparty user code",
+    "description": "transactions[0].counterparty.user_code: Text - system unique user code for counterparty",
+    "groups": "transact_des",
+    "func": "transactions[0].counterparty.user_code"
+  },
+  {
+    "name": "Counterparty name",
+    "description": "transactions[0].counterparty.name: Text - name for counterparty",
+    "groups": "transact_des",
+    "func": "transactions[0].counterparty.name"
+  },
+  {
+    "name": "Counterparty short name",
+    "description": "transactions[0].counterparty.short_name: Text - short name for counterparty",
+    "groups": "transact_des",
+    "func": "transactions[0].counterparty.short_name"
+  },
+  {
+    "name": "Responsible user code",
+    "description": "transactions[0].responsible.user_code: Text - system unique user code for responsible",
+    "groups": "transact_des",
+    "func": "transactions[0].responsible.user_code"
+  },
+  {
+    "name": "Responsible name",
+    "description": "transactions[0].responsible.name: Text - name for responsible",
+    "groups": "transact_des",
+    "func": "transactions[0].responsible.name"
+  },
+  {
+    "name": "Responsible short name",
+    "description": "transactions[0].responsible.short_name: Text - short name for responsible",
+    "groups": "transact_des",
+    "func": "transactions[0].responsible.short_name"
+  },
+  {
+    "name": "Accounting (trade) date",
+    "description": "transactions[0].accounting_date: Date - accounting (trade) date for transaction",
+    "groups": "transact_des",
+    "func": "transactions[0].accounting_date"
+  },
+  {
+    "name": "Cash (settlement) date",
+    "description": "transactions[0].cash_date: Date - cash (settlement) date for transaction",
+    "groups": "transact_des",
+    "func": "transactions[0].cash_date"
+  },
+  {
+    "name": "Notes",
+    "description": "transactions[0].notes: Text - notes for transaction",
+    "groups": "transact_des",
+    "func": "transactions[0].notes"
+  },
+  {
+    "name": "Position",
+    "description": "transactions[0].position_size_with_sign: Number - position size with sign (change of position as the result of transaction)",
+    "groups": "transact_des",
+    "func": "transactions[0].position_size_with_sign"
+  },
+  {
+    "name": "Principal",
+    "description": "transactions[0].principal_with_sign: Number - principal size with sign (change of principal as the result of transaction)<br/>",
+    "groups": "transact_des",
+    "func": "transactions[0].principal_with_sign"
+  },
+  {
+    "name": "Carry (accrued)",
+    "description": "transactions[0].carry_with_sign: Number - carry (accrued) with sign (change of carry (accrued) as the result of transaction)<br/>",
+    "groups": "transact_des",
+    "func": "transactions[0].carry_with_sign"
+  },
+  {
+    "name": "Overheads (commission)",
+    "description": "transactions[0].overheads_with_sign: Number - overheads with sign (commission)",
+    "groups": "transact_des",
+    "func": "transactions[0].overheads_with_sign"
+  },
+  {
+    "name": "Cash consideration",
+    "description": "transactions[0].cash_consideration: Number - cash consideration with sign (change of cash as the result of transaction)",
+    "groups": "transact_des",
+    "func": "transactions[0].cash_consideration"
+  },
+  {
+    "name": "Transaction currency name",
+    "description": "transactions[0].transaction_currency.name: Text - name for transaction currency",
+    "groups": "transact_des",
+    "func": "transactions[0].transaction_currency.name"
+  },
+  {
+    "name": "Transaction currency user code",
+    "description": "transactions[0].transaction_currency.user_code: Text - system unique user code for transaction currency",
+    "groups": "transact_des",
+    "func": "transactions[0].transaction_currency.user_code"
+  },
+  {
+    "name": "Settlement currency name",
+    "description": "transactions[0].settlement_currency.name: Text - name for settlement currency",
+    "groups": "transact_des",
+    "func": "transactions[0].settlement_currency.name"
+  },
+  {
+    "name": "Settlement currency user code",
+    "description": "transactions[0].settlement_currency.user_code: Text - system unique user code for settlement currency",
+    "groups": "transact_des",
+    "func": "transactions[0].settlement_currency.user_code"
+  },
+  {
+    "name": "Date",
+    "description": "any date in format 'YY-mm-dd' , whereas dd - day, mm - month, yy - year with century",
+    "groups": "data_types",
+    "func": " "
+  },
+  {
+    "name": "Number",
+    "description": "any number in format  ### (integer) and ###.### (float number with decimals). Don`t use other format, eg ###,### or ###-### or ### ###",
+    "groups": "data_types",
+    "func": " "
+  },
+  {
+    "name": "Text",
+    "description": "any sequence of symbols, max 256 symbols. String should start and end with apostrophe (')",
+    "groups": "data_types",
+    "func": " "
+  },
+  {
+    "name": "List",
+    "description": "fixed list of the possible parameter values",
+    "groups": "data_types",
+    "func": " "
+  },
+  {
+    "name": "Boolean (Logical)",
+    "description": "boolean parameter - 'true' of 'false' in computer format (not as a string!). It can be used by the system or user in his expressions as a parameter of complicated functions",
+    "groups": "data_types",
+    "func": " "
+  },
+  {
+    "name": "System Entities",
+    "description": "The System Entities are the fundamental elements of FinMARS. They include:<br/>- Portfolio<br/>- Account<br/>- Instrument<br/>- Counterparty<br/>- Responsible<br/>- Currency<br/>- Transactions<br/><br/>The user can address any parameter of the System Entities used in the code of the Expression Builder.<br/>For example, if <instr>:Instrument, the user can get <instr> parameter called 'Accrued Price Multiplier' by typing instr.accrued_multiplier. <br/>The list of parameters is provided separately for each entity.",
+    "groups": "data_types",
+    "func": "System Entities"
+  },
+  {
+    "name": "Instrument",
+    "description": "System entity Instrument include these attributes-parameters:<br/>- user_code<br/>- name<br/>- short_name<br/>- pricing_currency.name<br/>- pricing_currency.user_code<br/>- reference_for_pricing<br/>- price_multiplier<br/>- accrued_currency.user_code<br/>- accrued_currency.name<br/>- accrued_multiplier<br/>- default_price<br/>- default_accrued<br/>- maturity_date<br/>- maturity_price<br/><br/>The user can get these parameters for each instrument by using expression <instrument>.name_of_parameter where <instrument> is a variable contains instrument (see examples for Instrument)",
+    "groups": "data_types",
+    "func": "System Entities"
+  },
+  {
+    "name": "Portfolio",
+    "description": "System entity Portfolio include these attributes-parameters:<br/>- user_code<br/>- name<br/>- short_name<br/><br/>The user can get these parameters for each instrument by using expression <portfolio>.name_of_parameter where <portfolio> is a variable contains portfolio (see examples for portfolio)",
+    "groups": "data_types",
+    "func": "System Entities"
+  },
+  {
+    "name": "Account",
+    "description": "System entity Account include these attributes-parameters:<br/>- user_code<br/>- name<br/>- short_name<br/>- public_name<br/><br/>The user can get these parameters for each account by using expression <account>.name_of_parameter where <account> is a variable contains account (see examples for account)",
+    "groups": "data_types",
+    "func": "System Entities"
+  },
+  {
+    "name": "Responsible",
+    "description": "System entity Responsible include these attributes-parameters:<br/>- user_code<br/>- name<br/>- short_name<br/><br/>The user can get these parameters for each responsible by using expression <responsible>.name_of_parameter where <responsible> is a variable contains responsible (see examples for responsible)",
+    "groups": "data_types",
+    "func": "System Entities"
+  },
+  {
+    "name": "Counterparty",
+    "description": "System entity Counterparty include these attributes-parameters:<br/>- user_code<br/>- name<br/>- short_name<br/><br/>The user can get these parameters for each counterparty by using expression <counterparty>.name_of_parameter where <counterparty> is a variable contains counterparty (see examples for counterparty)",
+    "groups": "data_types",
+    "func": "System Entities"
+  },
+  {
+    "name": "Currency",
+    "description": "System entity Currency include these attributes-parameters:<br/>- user_code<br/>- name<br/>- reference_for_pricing<br/><br/>The user can get these parameters for each currency by using expression <currency>.name_of_parameter where <currency> is a variable contains currency (see examples for currency)",
+    "groups": "data_types",
+    "func": "System Entities"
+  },
+  {
+    "name": "Transaction",
+    "description": "System entity Transactions include these attributes-parameters:<br/><br/>- instrument (via request of it`s parameter):<br/> instrument.user_code<br/> instrument.name<br/> instrument.short_name<br/> instrument.maturity_date<br/><br/>- portfolio (via request of it`s parameter):<br/> portfolio.user_code<br/> portfolio.name<br/> portfolio.short_name<br/> <br/>- account_position (via request of it`s parameter):<br/> account_position.user_code<br/> account_position.name<br/> account_position.short_name<br/> account_position.public_name<br/><br/>- account_cash (via request of it`s parameter):<br/> account_cash.user_code<br/> account_cash.name<br/> account_cash.short_name<br/> account_cash.public_name<br/><br/>- account_interim (via request of it`s parameter):<br/> account_interim.user_code<br/> account_interim.name<br/> account_interim.short_name<br/> account_interim.public_name<br/><br/>- responsible (via request of it`s parameter):<br/> responsible.user_code<br/> responsible.name<br/> responsible.short_name<br/><br/>- counterparty (via request of it`s parameter):<br/> counterparty.user_code<br/> counterparty.name<br/> counterparty.short_name<br/><br/>- accounting_date<br/><br/>- cash_date<br/><br/>- transaction_currency<br/>  name<br/>  user_code<br/><br/>- settlement_currency<br/>  name<br/>  user_code<br/><br/>- position_size_with_sign<br/>- principal_with_sign<br/>- carry_with_sign<br/>- overheads_with_sign<br/>- position_size_with_sign<br/>- cash_consideration<br/><br/>- notes<br/><br/>The user can get these parameters for described transaction by using expression transactions[0].name_of_parameter (see examples for Transactions)",
+    "groups": "data_types",
+    "func": "System Entities"
+  },
+  {
+    "name": "Position",
+    "description": "<position> -> <Result: <position>><br/><br/><Result: <position>>:  Number - number variable autofilled from context, in this case context is an event generated by the system for instrument with predefined events in settings. Each event contains user code of instrument - then the system check in which portfolios and accounts this instrument is detected on the date of event - and what is the position of this instrument. And this position is transmitted from context variable to user`s variable <position> used in transaction type for event transaction<br/><br/><position>: Number - any position variable, used by user in this expression<br/><br/>Examples:<br/><position><br/><pos><br/><pos_coupon_event>",
+    "groups": "context_var",
+    "func": "<position>"
+  },
+  {
+    "name": "Instrument",
+    "description": "<instrument> -> <Result: <instrument>><br/><br/><Result: <instrument>>:  Instrument - variable of Instrument type autofilled from context, in this case context is an event  generated by the system for instrument with predefined events in settings. Each event contains user code of instrument. And this user code is transmitted from context variable to user`s variable <instrument> <br/><br/><instrument>: Instrument - any instrument variable, used by user in this expression<br/><br/>Examples:<br/><instrument><br/><instr><br/><instrument_coupon_event><br/><instrument_maturity>",
+    "groups": "context_var",
+    "func": "<instrument>"
+  },
+  {
+    "name": "Portfolio",
+    "description": "<portfolio> -> <Result: <portfolio>><br/><br/><Result: <portfolio>>:  Portfolio - portfolio variable autofilled from context, in this case context is an event generated by the system for instrument with predefined events in settings. Each event contains user code of instrument - then the system check in which portfolios and accounts this instrument is detected on the date of event. And portfolios (it`s user code) with instrument in it is transmitted from context variable to user`s variable <portfolio> used in transaction type for event transaction<br/><br/><portfolio>: Portfolio - any portfolio variable, used by user in this expression<br/><br/>Examples:<br/><portfolio><br/><prt><br/><prt_coupon_event>",
+    "groups": "context_var",
+    "func": "<portfolio>"
+  },
+  {
+    "name": "Account",
+    "description": "<account> -> <Result: <account>><br/><br/><Result: <account>>:  Account - account variable autofilled from context, in this case context is an event generated by the system for instrument with predefined events in settings. Each event contains user code of instrument - then the system check in which portfolios and accounts this instrument is detected on the date of event. And account with instrument is transmitted from context variable to user`s variable <account> used in transaction type for event transaction<br/><br/><account>: Account - any account variable, used by user in this expression<br/><br/>Examples:<br/><account><br/><acc><br/><acc_coupon_event>",
+    "groups": "context_var",
+    "func": "<account>"
+  },
+  {
+    "name": "Currency",
+    "description": "<currency> -> <Result: <currency>><br/><br/><Result: <currency>>:  Currency - account variable autofilled from context, in this case context is an event generated by the system for instrument with predefined events in settings. Each instrument has the parameter accrued_currency. And this parameter is transmitted from context variable to user`s variable <currency> used in transaction type for event transaction<br/><br/><currency>: Currency - any currency variable, used by user in this expression<br/><br/>Examples:<br/><currency><br/><ccy>",
+    "groups": "context_var",
+    "func": "<currency>"
+  },
+  {
+    "name": "Effective Date",
+    "description": "<effective_date> -> <Result: <effective_date>><br/><br/><Result: <effective_date>>:  Effective_date - variable autofilled from context, in this case context is an event generated by the system for instrument with predefined events in settings. Events are generated on a specific date according to a schedule of events (for example, a coupon payment schedule) created in the settings of each instrument. And this date is transmitted from context variable to user`s variable <effective_date> used in transaction type for event transaction<br/><br/><effective_date>: Date  - any date variable, used by user in this expression<br/><br/>Examples:<br/><effective_date><br/><e_date><br/><coupon_date>",
+    "groups": "context_var",
+    "func": "<effective_date>"
+  },
+  {
+    "name": "Notification date",
+    "description": "<notification_date> -> <Result: <notification_date>><br/><br/><Result: <notification_date>>:  Notification date - variable autofilled from context, in this case context is an event (notification) generated by the system for instrument with predefined events in settings.  Date of notification (according to settings of notification for each instrument) is transmitted from context variable to user`s variable <notification_date> used in transaction type for event transaction<br/><br/><notification_date>: Date  - any date variable, used by user in this expression<br/><br/>Examples:<br/><notification_date><br/><not_date>",
+    "groups": "context_var",
+    "func": "<notification_date>"
+  },
+  {
+    "name": "Convert String to Number",
+    "description": "float(<string>) -> <Result: number_from_string><br/><br/><Result: number_from_string>: Number - number converted from string. For example, '10' gets converted to 10 as a number data, and '13.999' gets converted to 13.999. This function is used to convert any string variables (for example notes, where user can wrote numbers, but for the system it is still string data)<br/><br/><string> - any string or string variable, used by user in this expression<br/><br/>Examples:<br/>int('25') for getting data as a number object 25<br/>float('25.09') for getting data as a number object 25.09<br/>int(notes) for getting data as a number object from string variable with name <notes><br/>float(notes) for getting data as a number object from string variable with name <notes>",
+    "groups": "number",
+    "func": "float(<string>)"
   }
 ]
+
+
+
+

@@ -30,7 +30,7 @@
             // result.formula = vm.searchExpr;
 
             if (vm.selectedHelpGroup && vm.selectedHelpGroup.key !== 'all') {
-                result.group = vm.selectedHelpGroup.key;
+                result.groups = vm.selectedHelpGroup.key;
             }
 
             return result;
@@ -50,6 +50,8 @@
                 return item;
 
             });
+
+            console.log('expressions', vm.expressions);
 
             vm.selectedHelpItem = vm.expressions[0];
             $scope.$apply();
@@ -85,6 +87,8 @@
             item.isSelected = true;
 
             vm.selectedHelpGroup = item;
+
+            console.log('vm.selectedHelpGroup', vm.selectedHelpGroup);
         };
 
         vm.undo = function () {

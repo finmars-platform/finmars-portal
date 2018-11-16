@@ -4,10 +4,6 @@
     "key": "all"
   },
   {
-    "name": "Text",
-    "key": "text"
-  },
-  {
     "name": "Date",
     "key": "date"
   },
@@ -16,11 +12,47 @@
     "key": "number"
   },
   {
+    "name": "Text",
+    "key": "text"
+  },
+  {
     "name": "Instrument Formulas",
-    "key": "instrument_formulas"
+    "key": "instr_formulas"
   },
   {
     "name": "Instrument",
-    "key": "instrument_default"
+    "key": "instr"
+  },
+  {
+    "name": "Account",
+    "key": "account"
+  },
+  {
+    "name": "Portfolio",
+    "key": "portfolio"
+  },
+  {
+    "name": "Responsible",
+    "key": "responsible"
+  },
+  {
+    "name": "Counterparty",
+    "key": "counterparty"
+  },
+  {
+    "name": "Currency",
+    "key": "currency"
+  },
+  {
+    "name": "Transaction description elements",
+    "key": "transact_des"
+  },
+  {
+    "name": "Data Types",
+    "key": "data_types"
+  },
+  {
+    "name": "Context Variables",
+    "key": "context_var"
   }
 ]
