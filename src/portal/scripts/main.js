@@ -4,6 +4,7 @@
 'use strict';
 
 require('../../forum/scripts/main.js');
+require('../../profile/scripts/main.js');
 
 require('../../core/context-menu/index.js')
 
@@ -23,7 +24,8 @@ var app = angular.module('portal', [
     'io.dennis.contextmenu',
     angularDragula(angular),
 
-    'forum'
+    'forum',
+    'profile'
 ]);
 
 
