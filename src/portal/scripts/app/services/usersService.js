@@ -51,6 +51,11 @@
         return usersRepository.deleteByKey(id);
     };
 
+
+    var createMasterUser = function (user) {
+        return usersRepository.createMasterUser(user);
+    };
+
     var getMasterList = function () {
         return usersRepository.getMasterList();
     };
@@ -115,6 +120,8 @@
         patch: patch,
         deleteByKey: deleteByKey,
 
+
+        createMasterUser: createMasterUser,
         getMasterList: getMasterList,
         getMasterByKey: getMasterByKey,
         updateMaster: updateMaster,

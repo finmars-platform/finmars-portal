@@ -1,0 +1,35 @@
+<div>
+
+    <div data-ng-if="vm.readyStatus.content">
+
+        <div style="max-width: 960px; margin: 0 auto; overflow:hidden;">
+
+            <div class="overflow-hidden">
+                <md-button class="md-raised md-primary float-right" data-ng-click="vm.createDatabase($event)">Create Database
+                </md-button>
+            </div>
+
+            <md-card data-ng-repeat="item in vm.masters" style="width: 48%; float: left; margin: 8px 1%">
+                <md-card-title>
+                    <md-card-title-text>
+                        <span class="md-headline">{{item.name}}</span>
+                    </md-card-title-text>
+                </md-card-title>
+                <md-card-actions layout="row" layout-align="space-between center">
+                    <!--<md-button>Leave</md-button>-->
+                    <md-button class="md-raised md-primary" data-ng-click="vm.activateDatabase(item)">Activate
+                    </md-button>
+                </md-card-actions>
+            </md-card>
+
+        </div>
+
+    </div>
+
+    <div data-ng-if="!vm.readyStatus.content" class="dialog-loader">
+        <div layout="row" layout-sm="column" layout-align="space-around">
+            <md-progress-circular md-mode="indeterminate"></md-progress-circular>
+        </div>
+    </div>
+
+</div>

@@ -23,6 +23,8 @@
 
         vm.readyStatus = {masters: false};
 
+        vm.currentState = 'portal';
+
         vm.logout = function () {
             console.log('Logged out');
             usersService.logout();
@@ -35,9 +37,9 @@
             setTimeout(function () {
                 //usersService.login('dev1', 'Itein9Ha4eige6Aiph5a').then(function () {
                 usersService.login('admin', 'superuser').then(function () {
-                // usersService.login('test4', '12345678abc').then(function () {
-                // usersService.login('mars2', 'superuser').then(function () {
-                //     usersService.login('admin_dev', 'superuser').then(function () {
+                    // usersService.login('test4', '12345678abc').then(function () {
+                    // usersService.login('mars2', 'superuser').then(function () {
+                    //     usersService.login('admin_dev', 'superuser').then(function () {
 
 
                     //usersService.login('dev1', 'Uethohk0').then(function () {
@@ -71,6 +73,16 @@
 
         vm.currentState = function () {
             return '';
+        };
+
+        vm.getCurrentState = function () {
+
+            if ($state.current.name.indexOf('app.profile') !== -1) {
+                return 'profile'
+            }
+
+            return 'portal';
+
         };
 
         vm.currentLocation = function () {

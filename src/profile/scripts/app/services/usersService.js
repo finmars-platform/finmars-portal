@@ -7,7 +7,7 @@
     'use strict';
 
     var cookieService = require('../../../../core/services/cookieService');
-    var baseUrlService = require('../services/baseUrlService');
+    var baseUrlService = require('./baseUrlService');
 
     var baseUrl = baseUrlService.resolve();
 
@@ -194,10 +194,11 @@
     };
 
     var createMasterUser = function (user) {
-        return window.fetch(baseUrl + 'users/master-user/', {
+        return window.fetch(baseUrl + 'users/master-user-create/', {
             method: 'POST',
             credentials: 'include',
             headers: {
+                'X-CSRFToken': cookieService.getCookie('csrftoken'),
                 Accept: 'application/json',
                 'Content-type': 'application/json'
             },
@@ -382,7 +383,6 @@
         update: update,
         patch: patch,
         deleteByKey: deleteByKey,
-
 
         createMasterUser: createMasterUser,
         getMasterList: getMasterList,

@@ -29,6 +29,7 @@
     var browserify = require('browserify');
 
     var forumTasks = require('./forum.js');
+    var profileTasks = require('./profile.js');
 
     var environments = {
         string: 'env'
@@ -103,6 +104,10 @@
 
     gulp.task('portal-forum-HTML-to-JS', function () {
         forumTasks.forumHtmlToJs();
+    });
+
+    gulp.task('portal-profile-HTML-to-JS', function () {
+        profileTasks.forumHtmlToJs();
     });
 
     function left_pad(num) {

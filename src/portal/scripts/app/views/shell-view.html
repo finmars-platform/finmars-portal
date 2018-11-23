@@ -1,74 +1,122 @@
-<div layout="row" class="min-height">
-    <div layout="row" class="sidenav-wrapper" data-ng-controller="SideNavController as vm"
-         data-ng-include="'views/side-nav-view.html'"></div>
-    <div layout="column" class="relative" layout-fill role="main">
-        <md-toolbar ng-show="!showSearch" class="header" layout="columns">
+<div data-ng-if="vm.getCurrentState() == 'profile'" class="min-height">
 
-            <div class="md-toolbar-tools" flex="70" layout="start center">
-                <h2 data-ng-if="vm.currentLocation().length > 0" data-ng-bind="vm.currentLocation()"></h2>
+    <md-toolbar class="header" layout="columns">
+
+        <div class="md-toolbar-tools" flex="70" layout="start center">
+            <h2 data-ng-if="vm.currentLocation().length > 0" data-ng-bind="vm.currentLocation()"></h2>
+        </div>
+
+        <div class="md-toolbar-tools" flex="30" layout-align="end center">
+
+            <div class="header-misc" layout="row">
+
+                <div class="header-profile">
+                    <md-menu>
+                        <md-button class="md-button header-account-btn" ng-click="$mdOpenMenu($event)">
+                            <ng-md-icon icon="account_circle" size="48"></ng-md-icon>
+                            <span class="header-profile-name" data-ng-bind="vm.user.username"></span>
+                        </md-button>
+                        <md-menu-content>
+                            <md-menu-item data-ng-repeat="item in vm.masters">
+                                <md-button data-ng-click="vm.selectMaster(item)">
+                                    <span data-ng-if="item.is_current"><b>{{item.name}}</b></span>
+                                    <span data-ng-if="!item.is_current">{{item.name}}</span>
+                                </md-button>
+                            </md-menu-item>
+                            <md-menu-item>
+                                <md-button data-ng-click="vm.logOutMethod()">Log Out</md-button>
+                            </md-menu-item>
+                        </md-menu-content>
+                    </md-menu>
+                </div>
             </div>
 
-            <div class="md-toolbar-tools" flex="30" layout-align="end center">
+        </div>
+    </md-toolbar>
+    <md-content flex data-custom-scroll class="app-md-content custom-scrollbar">
 
-                <div class="header-misc" layout="row">
-                    <!--<md-button data-ui-sref="app.system.notifications" aria-label="Notifications">-->
-                    <!--<ng-md-icon icon="mail_outline"></ng-md-icon>-->
-                    <!--</md-button>-->
+        <div data-ui-view class="shell-view"></div>
 
-                    <bookmarks></bookmarks>
+    </md-content>
 
-                    <md-button class="md-button header-help-btn" data-ng-click="vm.openHelp($event)"
-                               aria-label="Notifications">
-                        <ng-md-icon icon="help" size="24">
-                            <md-tooltip class="tooltip_1" md-direction="bottom">Open help menu</md-tooltip>
-                        </ng-md-icon>
-                    </md-button>
+</div>
 
-                    <md-button data-ng-if="vm.isReport()" class="md-button header-help-btn"
-                               data-ng-click="vm.copyReport($event)"
-                               aria-label="Copy report">
-                        <ng-md-icon icon="content_copy" size="24">
-                            <md-tooltip class="tooltip_1" md-direction="bottom">Copy report in buffer</md-tooltip>
-                        </ng-md-icon>
-                    </md-button>
+<div data-ng-if="vm.getCurrentState() == 'portal'" class="min-height">
 
-                    <md-button style="margin-left: 0"
-                               data-ui-sref="app.system.notifications({notificationsListType: 'unreaded'})"
-                               aria-label="Notifications">
-                        <ng-md-icon icon="flag"></ng-md-icon>
-                        <span data-ng-show="vm.unreadedNotificationsAmount"
-                              data-ng-bind="vm.unreadedNotificationsAmount"
-                              class="unreaded-notifications-number"></span>
-                    </md-button>
+    <div layout="row" class="min-height">
+        <div layout="row" class="sidenav-wrapper" data-ng-controller="SideNavController as vm"
+             data-ng-include="'views/side-nav-view.html'"></div>
+        <div layout="column" class="relative" layout-fill role="main">
+            <md-toolbar ng-show="!showSearch" class="header" layout="columns">
 
-                    <div class="header-profile">
-                        <md-menu>
-                            <md-button class="md-button header-account-btn" ng-click="$mdOpenMenu($event)">
-                                <ng-md-icon icon="account_circle" size="48"></ng-md-icon>
-                                <span class="header-profile-name" data-ng-bind="vm.user.username"></span>
-                            </md-button>
-                            <md-menu-content>
-                                <md-menu-item data-ng-repeat="item in vm.masters">
-                                    <md-button data-ng-click="vm.selectMaster(item)">
-                                        <span data-ng-if="item.is_current"><b>{{item.name}}</b></span>
-                                        <span data-ng-if="!item.is_current">{{item.name}}</span>
-                                    </md-button>
-                                </md-menu-item>
-                                <md-menu-item>
-                                    <md-button data-ng-click="vm.logOutMethod()">Log Out</md-button>
-                                </md-menu-item>
-                            </md-menu-content>
-                        </md-menu>
-                    </div>
+                <div class="md-toolbar-tools" flex="70" layout="start center">
+                    <h2 data-ng-if="vm.currentLocation().length > 0" data-ng-bind="vm.currentLocation()"></h2>
                 </div>
 
-                <!--<a href="#" data-ng-click="vm.logout()">Log out</a>-->
-            </div>
-        </md-toolbar>
-        <md-content flex data-custom-scroll class="app-md-content custom-scrollbar">
+                <div class="md-toolbar-tools" flex="30" layout-align="end center">
 
-            <div data-ui-view class="shell-view"></div>
+                    <div class="header-misc" layout="row">
+                        <!--<md-button data-ui-sref="app.system.notifications" aria-label="Notifications">-->
+                        <!--<ng-md-icon icon="mail_outline"></ng-md-icon>-->
+                        <!--</md-button>-->
 
-        </md-content>
+                        <bookmarks></bookmarks>
+
+                        <md-button class="md-button header-help-btn" data-ng-click="vm.openHelp($event)"
+                                   aria-label="Notifications">
+                            <ng-md-icon icon="help" size="24">
+                                <md-tooltip class="tooltip_1" md-direction="bottom">Open help menu</md-tooltip>
+                            </ng-md-icon>
+                        </md-button>
+
+                        <md-button data-ng-if="vm.isReport()" class="md-button header-help-btn"
+                                   data-ng-click="vm.copyReport($event)"
+                                   aria-label="Copy report">
+                            <ng-md-icon icon="content_copy" size="24">
+                                <md-tooltip class="tooltip_1" md-direction="bottom">Copy report in buffer</md-tooltip>
+                            </ng-md-icon>
+                        </md-button>
+
+                        <md-button style="margin-left: 0"
+                                   data-ui-sref="app.system.notifications({notificationsListType: 'unreaded'})"
+                                   aria-label="Notifications">
+                            <ng-md-icon icon="flag"></ng-md-icon>
+                            <span data-ng-show="vm.unreadedNotificationsAmount"
+                                  data-ng-bind="vm.unreadedNotificationsAmount"
+                                  class="unreaded-notifications-number"></span>
+                        </md-button>
+
+                        <div class="header-profile">
+                            <md-menu>
+                                <md-button class="md-button header-account-btn" ng-click="$mdOpenMenu($event)">
+                                    <ng-md-icon icon="account_circle" size="48"></ng-md-icon>
+                                    <span class="header-profile-name" data-ng-bind="vm.user.username"></span>
+                                </md-button>
+                                <md-menu-content>
+                                    <md-menu-item data-ng-repeat="item in vm.masters">
+                                        <md-button data-ng-click="vm.selectMaster(item)">
+                                            <span data-ng-if="item.is_current"><b>{{item.name}}</b></span>
+                                            <span data-ng-if="!item.is_current">{{item.name}}</span>
+                                        </md-button>
+                                    </md-menu-item>
+                                    <md-menu-item>
+                                        <md-button data-ng-click="vm.logOutMethod()">Log Out</md-button>
+                                    </md-menu-item>
+                                </md-menu-content>
+                            </md-menu>
+                        </div>
+                    </div>
+
+                    <!--<a href="#" data-ng-click="vm.logout()">Log out</a>-->
+                </div>
+            </md-toolbar>
+            <md-content flex data-custom-scroll class="app-md-content custom-scrollbar">
+
+                <div data-ui-view class="shell-view"></div>
+
+            </md-content>
+        </div>
     </div>
+
 </div>
+

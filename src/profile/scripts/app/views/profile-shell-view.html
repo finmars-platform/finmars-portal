@@ -1,0 +1,29 @@
+<md-tabs md-dynamic-height md-border-bottom md-selected="1" md-center-tabs="true">
+    <md-tab label="Personal data">
+        <md-content class="md-padding">
+
+            <div data-ng-include="'views/profile-settings-view.html'"
+                 data-ng-controller="ProfileSettingsController as vm">
+
+            </div>
+
+        </md-content>
+    </md-tab>
+    <md-tab label="Databases">
+        <md-content class="md-padding">
+
+            <div data-ng-include="'views/profile-databases-view.html'"
+                 data-ng-controller="ProfileDatabasesController as vm">
+
+            </div>
+
+        </md-content>
+    </md-tab>
+    <md-tab label="Billing">
+        <md-content class="md-padding">
+
+            Coming soon
+
+        </md-content>
+    </md-tab>
+</md-tabs>

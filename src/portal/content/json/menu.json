@@ -18,6 +18,12 @@
         "icon": ""
       },
       {
+        "state": "app.reports.transaction-report",
+        "title": "Transaction",
+        "type": "link",
+        "icon": ""
+      },
+      {
         "state": "app.reports.performance-report",
         "title": "Performance",
         "type": "link",
@@ -26,12 +32,6 @@
       {
         "state": "app.reports.cash-flow-projection-report",
         "title": "Cash flow",
-        "type": "link",
-        "icon": ""
-      },
-      {
-        "state": "app.reports.transaction-report",
-        "title": "Transaction",
         "type": "link",
         "icon": ""
       }
