@@ -1,0 +1,127 @@
+<md-dialog aria-label="" ng-cloak class="instrument-select-dialog-view">
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            <h2>Generated events</h2>
+            <span flex></span>
+        </div>
+    </md-toolbar>
+    <md-dialog-content data-custom-scroll class="custom-scrollbar">
+        <div layout="column">
+            <div>
+
+                <div>
+                    <md-input-container>
+                        <label for="">Effective date</label>
+                        <zh-date-picker data-ng-model="vm.effective_date"
+                                        data-ng-change="vm.updateTable()"></zh-date-picker>
+                    </md-input-container>
+                </div>
+
+                <table class="bordered">
+                    <thead>
+                    <tr>
+                        <th>
+                            <md-checkbox class="md-primary m-0" data-ng-click="vm.toggleAll()">
+                            </md-checkbox>
+                        </th>
+                        <th>
+                            Instrument
+                        </th>
+                        <th>
+                            Position
+                        </th>
+                        <th>
+                            Portfolio
+                        </th>
+                        <th>
+                            Account
+                        </th>
+                        <th>
+                            Strategy 1
+                        </th>
+                        <th>
+                            Strategy 2
+                        </th>
+                        <th>
+                            Strategy 3
+                        </th>
+                        <th>
+                            Effective date
+                        </th>
+                        <th>
+                            Notification date
+                        </th>
+                        <th>
+                            Event class
+                        </th>
+                        <th>
+                            Name
+                        </th>
+                        <th>
+                            Description
+                        </th>
+                        <th>
+                            Notification class
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr data-ng-repeat="item in vm.events" class="{{item.active ? 'active' : ''}}" style="height: 40px">
+                        <th>
+                            <md-checkbox ng-model="item.selected" aria="filters"
+                                         class="md-primary m-0">
+                            </md-checkbox>
+                        </th>
+                        <td>
+                            <span data-ng-if="item.instrument_object"
+                                  data-ng-bind="item.instrument_object.user_code"></span>&nbsp;
+                        </td>
+                        <td><span data-ng-bind="item.position"></span>&nbsp;</td>
+                        <td><span data-ng-if="item.portfolio_object"
+                                  data-ng-bind="item.portfolio_object.user_code"></span>&nbsp;
+                        </td>
+                        <td><span data-ng-if="item.account_object"
+                                  data-ng-bind="item.account_object.user_code"></span>&nbsp;
+                        </td>
+                        <td><span data-ng-if="item.strategy1_object"
+                                  data-ng-bind="item.strategy1_object.user_code"></span>&nbsp;
+                        </td>
+                        <td><span data-ng-if="item.strategy2_object"
+                                  data-ng-bind="item.strategy2_object.user_code"></span>&nbsp;
+                        </td>
+                        <td><span data-ng-if="item.strategy3_object"
+                                  data-ng-bind="item.strategy3_object.user_code"></span>&nbsp;
+                        </td>
+
+                        <td><span data-ng-bind="item.effective.date"></span>&nbsp;</td>
+                        <td><span data-ng-bind="item.notification_date"></span>&nbsp;</td>
+                        <td>
+                            <span data-ng-if="item.event_schedule_object && item.event_schedule_object.event_class_object"
+                                  data-ng-bind="item.event_schedule_object.event_class_object.name"></span>&nbsp;
+                        </td>
+                        <td><span data-ng-if="item.event_schedule_object"
+                                  data-ng-bind="item.event_schedule_object.name"></span>&nbsp;
+                        </td>
+                        <td><span data-ng-if="item.event_schedule_object"
+                                  data-ng-bind="item.event_schedule_object.description"></span>&nbsp;
+                        </td>
+                        <td><span
+                                data-ng-if="item.event_schedule_object && item.event_schedule_object.notification_class_object"
+                                data-ng-bind="item.event_schedule_object.notification_class_object.name"></span>&nbsp;
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div data-ng-if="!vm.events.length" style="text-align: center; margin-top: 20px">No result found</div>
+        </div>
+    </md-dialog-content>
+    <md-dialog-actions layout="row">
+        <md-button class="md-raised" ng-click="vm.cancel()">
+            Cancel
+        </md-button>
+        <md-button class="md-raised md-primary" ng-click="vm.agree()" style="margin-right:20px;">
+            Save
+        </md-button>
+    </md-dialog-actions>
+</md-dialog>

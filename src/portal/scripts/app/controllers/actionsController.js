@@ -135,17 +135,28 @@
             })
         };
 
-        vm.checkForEvents = function (target) {
-            eventsService.getList().then(function (data) {
-                vm.eventsList = data.results;
-                $scope.$apply();
-                data.results.map(function (event) {
-                    if (event.is_need_reaction == true) {
-                        var eventActions = event.event_schedule_object['actions']; // button in event dialog
-                        vm.openEventWindow(target, event.id, eventActions);
-                    }
-                });
-            });
+        vm.checkForEvents = function ($event) {
+
+            $mdDialog.show({
+                controller: 'CheckEventsDialogController as vm',
+                templateUrl: 'views/dialogs/check-events-dialog-view.html',
+                parent: angular.element(document.body),
+                targetEvent: $event,
+                preserveScope: true,
+                autoWrap: true,
+                skipHide: true
+            })
+
+            // eventsService.getList().then(function (data) {
+            //     vm.eventsList = data.results;
+            //     $scope.$apply();
+            //     data.results.map(function (event) {
+            //         if (event.is_need_reaction == true) {
+            //             var eventActions = event.event_schedule_object['actions']; // button in event dialog
+            //             vm.openEventWindow(target, event.id, eventActions);
+            //         }
+            //     });
+            // });
         };
 
         vm.generateEvents = function ($event) {

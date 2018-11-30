@@ -4,9 +4,10 @@
     var cookieService = require('../../../../core/services/cookieService');
     var baseUrlService = require('../services/baseUrlService');
     var baseUrl = baseUrlService.resolve();
+    var configureRepositoryUrlService = require('../services/configureRepositoryUrlService');
 
-    var getList = function () {
-        return window.fetch(baseUrl + 'instruments/generated-event/?ordering=-effective_date',
+    var getList = function (options) {
+        return window.fetch(configureRepositoryUrlService.configureUrl(baseUrl + 'instruments/generated-event/', options),
             {
                 method: 'GET',
                 credentials: 'include',
