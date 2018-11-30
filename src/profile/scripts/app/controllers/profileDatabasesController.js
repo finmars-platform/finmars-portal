@@ -11,15 +11,31 @@
 
         var vm = this;
 
-        vm.readyStatus = {content: false};
+        vm.readyStatus = {masterUsers: false, invites: false};
 
         vm.getMasterUsersList = function () {
 
+            vm.readyStatus.masterUsers = false;
+
             usersService.getMasterList().then(function (data) {
                 vm.masters = data.results;
-                vm.readyStatus.content = true;
+                vm.readyStatus.masterUsers = true;
                 $scope.$apply();
             });
+
+        };
+
+        vm.getInvites = function () {
+
+            vm.readyStatus.invites = false;
+
+            usersService.getInviteToMasterUserList().then(function (data) {
+
+                vm.invites = data.results;
+                vm.readyStatus.invites = true;
+                $scope.$apply();
+
+            })
 
         };
 
@@ -47,7 +63,78 @@
 
         };
 
-        vm.getMasterUsersList();
+        vm.leaveMasterUser = function ($event, item) {
+
+            $mdDialog.show({
+                controller: 'WarningDialogController as vm',
+                templateUrl: 'views/dialogs/warning-dialog-view.html',
+                parent: angular.element(document.body),
+                locals: {
+                    warning: {
+                        title: 'Warning!',
+                        description: "Are you sure to leave from " + item.name + ' database?'
+                    }
+                },
+                targetEvent: $event
+            }).then(function (value) {
+
+                usersService.leaveMasterUserList(item.id).then(function () {
+
+                    vm.getMasterUsersList();
+
+                })
+
+            })
+
+
+        };
+
+        vm.updateDescription = function (item) {
+
+            item.description = item.description_tmp;
+
+            usersService.updateMaster(item.id, item).then(function (data) {
+
+                item.description_tmp = '';
+                item.descriptionEdit = false;
+
+                $scope.$apply();
+
+            })
+
+        };
+
+        vm.declineInvite = function (item) {
+
+            item.status = 2; // Decline code
+
+            usersService.updateInviteToMasterUserByKey(item.id, item).then(function () {
+
+                vm.getInvites();
+
+            })
+
+        };
+
+        vm.acceptInvite = function (item) {
+
+            item.status = 1; // Accept code
+
+            usersService.updateInviteToMasterUserByKey(item.id, item).then(function () {
+
+                vm.getInvites();
+                vm.getMasterUsersList();
+
+            })
+
+        };
+
+        vm.init = function () {
+            vm.getMasterUsersList();
+            vm.getInvites();
+        };
+
+        vm.init();
 
 
     }

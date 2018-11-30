@@ -11,7 +11,7 @@
 
         vm.agree = function ($event) {
 
-            membersAndGroupsService.create('members', {username: vm.memberName}).then(function (data) {
+            membersAndGroupsService.inviteUser(vm.memberName).then(function (data) {
 
                 if (data.status == 400) {
                     $mdDialog.show({
@@ -26,7 +26,23 @@
                         skipHide: true
                     })
                 } else {
-                    $mdDialog.hide({status: 'agree', data: {}});
+                    $mdDialog.show({
+                        controller: 'SuccessDialogController as vm',
+                        templateUrl: 'views/dialogs/success-dialog-view.html',
+                        locals: {
+                            success: {
+                                title: "",
+                                description: "You successfully send an invitation"
+                            }
+                        },
+                        targetEvent: $event,
+                        preserveScope: true,
+                        multiple: true,
+                        autoWrap: true,
+                        skipHide: true
+                    }).then(function () {
+                        $mdDialog.hide({res: 'agree'});
+                    });
                 }
             });
 

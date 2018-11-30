@@ -42,7 +42,7 @@
             return false;
         };
 
-        vm.contentTypes = metaContentTypesService.getListForTransactionTypeInputs();
+        vm.contentTypes = metaContentTypesService.getListForDataImport();
 
         vm.getSchemeList = function () {
             entitySchemeService.getEntitiesSchemesList(vm.activeContentType).then(function (data) {

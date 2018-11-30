@@ -1,5 +1,11 @@
 # Changelog
 
+## 30.11.2018
+
+- Profile Page
+- Invite system for databases
+- Leave Database option
+
 ## 12.11.2018
 
 - New logic for subtotal on bottom in Report Builder
