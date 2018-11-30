@@ -2,8 +2,8 @@
 
     var eventsRepository = require('../repositories/eventsRepository');
 
-    var getList = function () {
-        return eventsRepository.getList();
+    var getList = function (options) {
+        return eventsRepository.getList(options);
     };
 
     var getEventAction = function (url) {

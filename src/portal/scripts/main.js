@@ -171,6 +171,7 @@ app.controller('InstrumentSelectDialogController', ['$scope', '$mdDialog', requi
 app.controller('ClassifierSelectDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/classifierSelectDialogController')]);
 app.controller('SaveLayoutDialogController', ['$scope', '$mdDialog', require('./app/controllers/dialogs/saveLayoutDialogController')]);
 app.controller('RenameDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/renameDialogController')]);
+app.controller('CheckEventsDialogController', ['$scope', '$mdDialog', require('./app/controllers/dialogs/checkEventsDialogController')]);
 
 
 app.controller('ExportPdfDialogController', ['$scope', '$mdDialog', 'evDataService', 'evEventService', require('./app/controllers/dialogs/exportPdfDialogController')]);
