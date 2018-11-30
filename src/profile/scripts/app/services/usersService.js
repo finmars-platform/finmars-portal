@@ -235,10 +235,11 @@
     };
 
     var updateMaster = function (id, user) {
-        return window.fetch(baseUrl + 'users/master-user/' + id, {
+        return window.fetch(baseUrl + 'users/master-user/' + id + '/', {
             method: 'PUT',
             credentials: 'include',
             headers: {
+                'X-CSRFToken': cookieService.getCookie('csrftoken'),
                 Accept: 'application/json',
                 'Content-type': 'application/json'
             },
@@ -249,10 +250,11 @@
     };
 
     var patchMaster = function (id, user) {
-        return window.fetch(baseUrl + 'users/master-user/' + id, {
+        return window.fetch(baseUrl + 'users/master-user/' + id + '/', {
             method: 'PATCH',
             credentials: 'include',
             headers: {
+                'X-CSRFToken': cookieService.getCookie('csrftoken'),
                 Accept: 'application/json',
                 'Content-type': 'application/json'
             },
@@ -263,7 +265,7 @@
     };
 
     var deleteMasterByKey = function (id) {
-        return window.fetch(baseUrl + 'users/master-user/' + id, {
+        return window.fetch(baseUrl + 'users/master-user/' + id + '/', {
             method: 'DELETE',
             credentials: 'include',
             headers: {
@@ -369,6 +371,47 @@
         })
     };
 
+    var getInviteToMasterUserList = function () {
+        return window.fetch(baseUrl + 'users/invite-to-master-user/', {
+            method: 'GET',
+            credentials: 'include',
+            headers: {
+                Accept: 'application/json',
+                'Content-type': 'application/json'
+            }
+        }).then(function (data) {
+            return data.json();
+        })
+    };
+
+    var updateInviteToMasterUserByKey = function (id, invite) {
+        return window.fetch(baseUrl + 'users/invite-to-master-user/' + id + '/', {
+            method: 'PUT',
+            credentials: 'include',
+            headers: {
+                'X-CSRFToken': cookieService.getCookie('csrftoken'),
+                Accept: 'application/json',
+                'Content-type': 'application/json'
+            },
+            body: JSON.stringify(invite)
+        }).then(function (data) {
+            return data.json();
+        })
+    };
+
+    var leaveMasterUserList = function (masterUserId) {
+        return window.fetch(baseUrl + 'users/master-user-leave/' + masterUserId + '/', {
+            method: 'GET',
+            credentials: 'include',
+            headers: {
+                Accept: 'application/json',
+                'Content-type': 'application/json'
+            }
+        }).then(function (data) {
+            return data.json();
+        })
+    };
+
     module.exports = {
         login: login,
         logout: logout,
@@ -398,8 +441,10 @@
         patchMember: patchMember,
         deleteMemberByKey: deleteMemberByKey,
 
-        getGroupList: getGroupList
-
+        getGroupList: getGroupList,
+        getInviteToMasterUserList: getInviteToMasterUserList,
+        updateInviteToMasterUserByKey: updateInviteToMasterUserByKey,
+        leaveMasterUserList: leaveMasterUserList
     }
 
 }());

@@ -18,6 +18,8 @@
     app.controller('ProfileDatabasesController', ['$scope', '$state', '$mdDialog', require('./app/controllers/profileDatabasesController')]);
     app.controller('CreateMasterUserDialogController', ['$scope', '$mdDialog', require('./app/controllers/dialogs/createMasterUserDialogController')]);
 
+    app.controller('WarningDialogController', ['$scope', '$mdDialog', 'warning', require('./app/controllers/dialogs/createMasterUserDialogController')]);
+
     require('./templates.min.js');
 
 }());

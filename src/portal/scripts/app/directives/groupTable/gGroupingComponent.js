@@ -176,42 +176,6 @@
                         group.report_settings = {};
                     }
 
-                    if (type === 'area') {
-
-                        scope.grouping.forEach(function (groupItem, $itemIndex) {
-
-                            if ($itemIndex > $index) {
-                                groupItem.disableLineSubtotal = true;
-
-                                //console.log('group', groupItem);
-
-                                if (groupItem.hasOwnProperty('report_settings')) {
-
-                                    if (groupItem.report_settings.subtotal_type === 'line') {
-                                        groupItem.report_settings.subtotal_type = false;
-                                    }
-                                }
-                            } else {
-                                if ($itemIndex < $index) {
-                                    groupItem.disableLineSubtotal = false;
-                                }
-                            }
-
-
-                        });
-                    }
-
-                    if (type === 'line') {
-
-                        scope.grouping.forEach(function (groupItem, $itemIndex) {
-
-                            if ($itemIndex > $index) {
-                                groupItem.disableLineSubtotal = false;
-                            }
-
-                        });
-                    }
-
                     if (group.report_settings.subtotal_type === type) {
                         group.report_settings.subtotal_type = false;
                     } else {

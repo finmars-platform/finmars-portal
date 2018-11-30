@@ -9,11 +9,11 @@
 
 	var getMemberOrGroupByKey = function (type, id) {
 		return membersAndGroupsRepository.getMemberOrGroupByKey(type, id);
-	}
+	};
 
 	var create = function (type, data) {
 		return membersAndGroupsRepository.create(type, data);
-	}
+	};
 
 	var update = function (type, id, data) {
 		return membersAndGroupsRepository.update(type, id, data);
@@ -23,11 +23,16 @@
 		return membersAndGroupsRepository.deleteByKey(type, id);
 	};
 
+	var inviteUser = function (username) {
+		return membersAndGroupsRepository.inviteUser(username);
+    };
+
 	module.exports = {
 		getList: getList,
 		getMemberOrGroupByKey: getMemberOrGroupByKey,
 		create: create,
 		update: update,
-		deleteByKey: deleteByKey
+		deleteByKey: deleteByKey,
+		inviteUser: inviteUser
 	}
 }());

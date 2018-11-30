@@ -62,6 +62,10 @@
         return metaContentTypesRepository.getListForTransactionTypeInputs();
     };
 
+    var getListForDataImport = function () {
+        return metaContentTypesRepository.getListForDataImport();
+    }
+
     var getContentTypeUIByState = function (state) {
 
         var result = '';
@@ -243,7 +247,8 @@
 
         getContentTypeList: getContentTypeList,
 
-        getEntityNameByContentType: getEntityNameByContentType
+        getEntityNameByContentType: getEntityNameByContentType,
+        getListForDataImport: getListForDataImport
     }
 
 

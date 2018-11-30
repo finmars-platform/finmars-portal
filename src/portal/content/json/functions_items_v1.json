@@ -640,24 +640,8 @@
     "description": "float(<string>) -> <Result: number_from_string><br/><br/><Result: number_from_string>: Number - number converted from string. For example, '10' gets converted to 10 as a number data, and '13.999' gets converted to 13.999. This function is used to convert any string variables (for example notes, where user can wrote numbers, but for the system it is still string data)<br/><br/><string> - any string or string variable, used by user in this expression<br/><br/>Examples:<br/>int('25') for getting data as a number object 25<br/>float('25.09') for getting data as a number object 25.09<br/>int(notes) for getting data as a number object from string variable with name <notes><br/>float(notes) for getting data as a number object from string variable with name <notes>",
     "groups": "number",
     "func": "float(<string>)"
-  },
-  {
-    "name": "Convert Date to String",
-    "description": "format_date(<date>, <format>='%Y-%m-%d') -> <Result: formatted date><br/><br/><Result: formatted date>: String - <date> is converted into String as per the specified format <format><br/><br/><date>:Date - date to convert<br/><format>:String - date specification of the date format (see Date/Formats)",
-    "groups": "date",
-    "func": "format_date(<date>, <format>='%Y-%m-%d')"
-  },
-  {
-    "name": "Formats",
-    "description": "The following reserved combinations of the symbols are used in Date formatting either to parse date or to convert Date variable to String <br/><br/>%a  : Weekday as locale’s abbreviated name. (Ex: Mon)<br/>%A  : Weekday as locale’s full name. (Ex: Monday)<br/>%d  : Day of the month. (Ex: 30)<br/>%b  : Month as locale’s abbreviated name. (Ex: Sep)<br/>%B  : Month as locale’s full name. (Ex: September)<br/>%m  : Month as a number. (Ex: 9)<br/>%y  : Year without century number. (Ex: 13)<br/>%Y  : Year with century number. (Ex: 2013)<br/>%j  : Day of the year. (Ex: 273)<br/>%W  : Week number of the year. All days < first Monday are considered to be in week 0. (Ex: 39)<br/>%x  : Locale’s appropriate date representation. (Ex: 9/30/2018)",
-    "groups": "date",
-    "func": " "
   }
 ]
-
-
-
-
 
 
 
