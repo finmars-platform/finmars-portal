@@ -10,7 +10,10 @@
 
     var getDynamicAttributeValue = function (obj, column) {
 
-        var result = '';
+        var result = {
+            'html_result': '',
+            'numeric_result': null
+        };
 
         if (column.id && obj.attributes) {
 
@@ -20,24 +23,25 @@
 
                     if (column.value_type === 20 && item.value_float) {
 
-                        result = item.value_float;
+                        result.html_result = item.value_float;
+                        result.numeric_result = item.value_float;
 
                     }
 
                     if (column.value_type === 10 && item.value_string) {
 
-                        result = item.value_string;
+                        result.html_result = item.value_string;
 
                     }
 
                     if (column.value_type === 30 && item.classifier_object) {
 
-                        result = item.classifier_object.name;
+                        result.html_result = item.classifier_object.name;
                     }
 
                     if (column.value_type === 40 && item.value_date) {
 
-                        result = item.value_date;
+                        result.html_result = item.value_date;
 
                     }
                 }
@@ -52,7 +56,10 @@
 
     var getEntityAttributeValue = function (obj, column) {
 
-        var result = '';
+        var result = {
+            'html_result': '',
+            'numeric_result': null
+        };
 
         if (typeof obj[column.key] === 'string') {
             result = obj[column.key]
@@ -61,10 +68,11 @@
             if (typeof obj[column.key] === 'number') {
 
                 if (obj[column.key + '_object'] && obj[column.key + '_object'].user_code) {
-                    result = obj[column.key + '_object'].user_code;
+                    result.html_result = obj[column.key + '_object'].user_code;
                 } else {
 
-                    result = renderHelper.formatValue(obj, column);
+                    result.html_result = renderHelper.formatValue(obj, column);
+                    result.numeric_result = obj[column.key];
 
                 }
 
@@ -72,7 +80,7 @@
 
                 if (Array.isArray(obj[column.key])) {
 
-                    result = '[' + obj[column.key].length + ']';
+                    result.html_result = '[' + obj[column.key].length + ']';
 
                 }
 
@@ -86,7 +94,10 @@
 
     var handleColumnInGroupList = function (evDataService, obj, column, columnNumber) {
 
-        var result = '';
+        var result = {
+            html_result: '',
+            numeric_result: null
+        };
         var groups = evDataService.getGroups();
 
         if (groups[columnNumber - 1].report_settings.subtotal_type === 'area') {
@@ -134,7 +145,7 @@
                         foldButton = '<div class="ev-fold-button" data-type="foldbutton" data-object-id="' + currentGroup.___id + '" data-parent-group-hash-id="' + currentGroup.___parentId + '">+</div>';
                     }
 
-                    result = foldButton + '<b>' + currentGroup.group_name + '</b>';
+                    result.html_result = foldButton + '<b>' + currentGroup.group_name + '</b>';
 
                 }
             }
@@ -147,7 +158,10 @@
 
     var getValue = function (evDataService, obj, column, columnNumber, groups) {
 
-        var result = '';
+        var result = {
+            html_result: '',
+            numeric_result: null
+        };
 
 
         if (renderHelper.isColumnInGroupsList(columnNumber, groups)) {
@@ -182,7 +196,8 @@
                     subtotal = rvHelper.lookUpForSubtotal(evDataService, obj, column, columnNumber);
 
                     if (obj.hasOwnProperty(column.key)) {
-                        result = '<b>' + renderHelper.formatValue(subtotal, column) + '</b>';
+                        result.html_result = '<b>' + renderHelper.formatValue(subtotal, column) + '</b>';
+                        result.numeric_result = subtotal[column.key];
                     }
 
                 }
@@ -266,7 +281,7 @@
 
     };
 
-    var getColorNegativeNumber = function (obj, column) {
+    var getColorNegativeNumber = function (val, column) {
 
         var result = '';
 
@@ -274,7 +289,7 @@
 
             if (column.value_type === 20) {
 
-                if (parseInt(obj[column.key]) < 0) {
+                if (parseInt(val) < 0) {
 
                     result = 'negative-red'
 
@@ -316,7 +331,7 @@
         var columnNumber;
         var colorNegative;
         var borderBottomTransparent;
-        var value;
+        var value_obj;
 
         result = result + rowSelection;
 
@@ -325,18 +340,22 @@
         columns.forEach(function (column, columnIndex) {
 
             columnNumber = columnIndex + 1;
-            colorNegative = getColorNegativeNumber(obj, column);
+
             borderBottomTransparent = getBorderBottomTransparent(evDataService, obj, columnNumber, groups);
             textAlign = getTextAlign(column);
-            value = getValue(evDataService, obj, column, columnNumber, groups);
+            value_obj = getValue(evDataService, obj, column, columnNumber, groups);
+
+            if(value_obj.numeric_result != null) {
+                colorNegative = getColorNegativeNumber(value_obj.numeric_result, column);
+            }
 
             obj.___cells_values.push({
                 width: column.style.width,
                 classList: [textAlign, colorNegative, borderBottomTransparent],
-                value: value
+                value: value_obj.html_result
             });
 
-            cell = '<div class="g-cell-wrap ' + getBgColor(evDataService, obj, columnNumber) + '" style="width: ' + column.style.width + '"><div class="g-cell ' + textAlign + ' ' + colorNegative + ' ' + borderBottomTransparent + '">' + value + '</div></div>';
+            cell = '<div class="g-cell-wrap ' + getBgColor(evDataService, obj, columnNumber) + '" style="width: ' + column.style.width + '"><div class="g-cell ' + textAlign + ' ' + colorNegative + ' ' + borderBottomTransparent + '">' + value_obj.html_result + '</div></div>';
 
             result = result + cell
 
