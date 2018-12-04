@@ -345,7 +345,7 @@
             textAlign = getTextAlign(column);
             value_obj = getValue(evDataService, obj, column, columnNumber, groups);
 
-            if(value_obj.numeric_result != null) {
+            if (value_obj.numeric_result != null && value_obj.numeric_result != undefined) {
                 colorNegative = getColorNegativeNumber(value_obj.numeric_result, column);
             }
 
