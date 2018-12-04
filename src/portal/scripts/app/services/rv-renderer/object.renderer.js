@@ -345,7 +345,7 @@
             textAlign = getTextAlign(column);
             value_obj = getValue(evDataService, obj, column, columnNumber, groups);
 
-            if (value_obj.numeric_result != null && value_obj.numeric_result != undefined) {
+            if (value_obj.numeric_result !== null && value_obj.numeric_result !== undefined) {
                 colorNegative = getColorNegativeNumber(value_obj.numeric_result, column);
             }
 
@@ -355,7 +355,7 @@
                 value: value_obj.html_result
             });
 
-            cell = '<div class="g-cell-wrap ' + getBgColor(evDataService, obj, columnNumber) + '" style="width: ' + column.style.width + '"><div class="g-cell ' + textAlign + ' ' + colorNegative + ' ' + borderBottomTransparent + '">' + value_obj.html_result + '</div></div>';
+            cell = '<div class="g-cell-wrap ' + getBgColor(evDataService, obj, columnNumber) + '" style="width: ' + column.style.width + '"><div class="g-cell ' + textAlign + ' ' + colorNegative + ' ' + borderBottomTransparent + '">' + (value_obj.html_result ? value_obj.html_result : '') + '</div></div>';
 
             result = result + cell
 
