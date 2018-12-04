@@ -114,13 +114,17 @@
 
         vm.toggleActiveForChilds = function (item) {
 
+            item.active = !item.active;
+
             item.content.forEach(function (child) {
                 child.active = item.active;
             })
 
         };
 
-        vm.updateActiveForParent = function (parent) {
+        vm.updateActiveForParent = function (item, parent) {
+
+            item.active = !item.active;
 
             var active = true;
 
@@ -555,7 +559,29 @@
                                     promises.push(pricingAutomatedScheduleService.updateSchedule(item));
                                     break;
                                 case 'ui.editlayout':
-                                    promises.push(uiRepository.createEditLayout(item));
+
+                                    var entityType = metaContentTypesService.findEntityByContentType(item.content_type, 'ui');
+
+                                    var promise = new Promise(function (resolve, reject) {
+
+                                        uiRepository.getEditLayout(entityType).then(function (data) {
+
+                                            if (data.results.length) {
+                                                uiRepository.updateEditLayout(data.results[0].id, item).then(function (item) {
+                                                    resolve({})
+                                                })
+                                            } else {
+                                                uiRepository.createEditLayout(item).then(function (item) {
+                                                    resolve({})
+                                                })
+                                            }
+
+                                        });
+
+                                    });
+
+                                    promises.push(promise);
+
                                     break;
                                 case 'ui.listlayout':
                                     promises.push(uiRepository.createListLayout(item));
@@ -755,6 +781,99 @@
 
         }
 
+        function handleEditLayoutMap(layout) {
+
+            return new Promise(function (resolve) {
+
+                var entityType = metaContentTypesService.findEntityByContentType(layout.content_type, 'ui');
+
+                attributeTypeService.getList(entityType).then(function (data) {
+
+                    var layoutAttrs = data.results;
+
+                    layout.data.forEach(function (tab) {
+
+                        tab.layout.fields.forEach(function (field) {
+
+                            if (field.attribute && field.attribute.id) {
+
+                                var mapped = false;
+
+                                layoutAttrs.forEach(function (layoutAttr) {
+
+                                    if (layoutAttr.user_code === field.attribute.user_code) {
+                                        field.attribute = layoutAttr;
+                                        field.id = layoutAttr.id;
+                                        mapped = true;
+                                    }
+
+                                });
+
+                                if (mapped === false) {
+                                    field.attribute = null;
+                                    field.id = null;
+                                    field.attribute_class = null;
+                                    field.type = "empty"
+                                }
+
+
+                            }
+
+                        })
+
+                    });
+
+                    resolve(layout);
+
+                });
+
+            })
+
+        }
+
+        function handleListLayoutMap(layout) {
+
+            return new Promise(function (resolve) {
+                resolve(layout);
+            })
+
+        }
+
+        function mapLayouts(entity) {
+            return new Promise(function (resolve) {
+
+                var promises = [];
+
+                entity.content.forEach(function (item) {
+
+                    if (item.active) {
+                        console.log("things to map", item.data);
+
+                        if (entity.entity === 'ui.editlayout') {
+
+                            promises.push(handleEditLayoutMap(item));
+
+                        } else {
+
+                            promises.push(handleListLayoutMap(item));
+
+                        }
+
+                    }
+
+                });
+
+                Promise.all(promises).then(function (data) {
+                    console.log("Update Mappings to local master user data", entity);
+
+                    resolve({});
+
+                })
+
+            })
+
+        }
+
         function initPreparations(items) {
 
 
@@ -764,6 +883,10 @@
                 var complexTransactionImportSchemeEntity = findEntity(items, 'integrations.complextransactionimportscheme');
                 var instrumentDownloadSchemeEntity = findEntity(items, 'integrations.instrumentdownloadscheme');
                 var instrumentTypeEntity = findEntity(items, 'instruments.instrumenttype');
+
+                var listLayoutEntity = findEntity(items, 'ui.listlayout');
+                var reportLayoutEntity = findEntity(items, 'ui.reportlayout');
+                var editLayoutEntity = findEntity(items, 'ui.editlayout');
 
                 var promises = [];
 
@@ -791,6 +914,18 @@
                     }
                 }
 
+                if (listLayoutEntity && isEntitySelected(listLayoutEntity)) {
+                    promises.push(mapLayouts(listLayoutEntity))
+                }
+
+                if (reportLayoutEntity && isEntitySelected(reportLayoutEntity)) {
+                    promises.push(mapLayouts(reportLayoutEntity))
+                }
+
+                if (editLayoutEntity && isEntitySelected(editLayoutEntity)) {
+                    promises.push(mapLayouts(editLayoutEntity))
+                }
+
                 Promise.all(promises).then(function (data) {
                     resolve(data);
                 })
@@ -802,6 +937,9 @@
         vm.agree = function ($event) {
 
             initPreparations(vm.items).then(function (value) {
+
+                // $mdDialog.hide({status: 'agree', data: {}});
+                // return;
 
                 importConfiguration(vm.items).then(function (data) {
 
