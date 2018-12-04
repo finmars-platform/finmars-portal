@@ -93,6 +93,13 @@
                                     <span class="header-profile-name" data-ng-bind="vm.user.username"></span>
                                 </md-button>
                                 <md-menu-content>
+
+                                    <md-menu-item style="border-bottom: 1px solid #ddd;">
+                                        <md-button data-ui-sref="app.profile">
+                                            Profile
+                                        </md-button>
+                                    </md-menu-item>
+
                                     <md-menu-item data-ng-repeat="item in vm.masters">
                                         <md-button data-ng-click="vm.selectMaster(item)">
                                             <span data-ng-if="item.is_current"><b>{{item.name}}</b></span>

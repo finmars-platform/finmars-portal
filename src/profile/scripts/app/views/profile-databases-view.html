@@ -99,10 +99,11 @@
                     <md-card-actions layout="row" layout-align="space-between center">
                         <!--<md-button>Leave</md-button>-->
 
-                        <md-button data-ng-if="!item.is_owner" class="md-raised md-warn" data-ng-click="vm.leaveMasterUser($event, item)">Dismiss
+                        <md-button data-ng-if="!item.is_owner" class="md-raised md-warn"
+                                   data-ng-click="vm.leaveMasterUser($event, item)">Dismiss
                         </md-button>
 
-                        <md-button class="md-raised md-primary" data-ng-click="vm.activateDatabase(item)">Activate
+                        <md-button class="md-raised md-primary" data-ng-click="vm.activateDatabase(item)">Open
                         </md-button>
                     </md-card-actions>
                 </md-card>
