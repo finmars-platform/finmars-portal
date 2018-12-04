@@ -233,7 +233,6 @@ app.directive('expressionEditorButton', ['$mdDialog', require('./app/controls/ex
 
 app.directive('groupTable', [require('./app/directives/groupTable/gTableComponent')]);
 app.directive('groupTableBody', ['$mdDialog', require('./app/directives/groupTable/gTableBodyComponent')]);
-app.directive('groupTableBodyOld', ['$mdDialog', require('./app/directives/groupTable/gTableBodyComponent-old')]);
 app.directive('groupSidebarFilter', ['$mdDialog', require('./app/directives/groupTable/gSidebarFilterComponent')]);
 app.directive('groupReportSettings', [require('./app/directives/groupTable/gReportSettingsComponent')]);
 app.directive('groupGrouping', ['$mdDialog', require('./app/directives/groupTable/gGroupingComponent')]);

@@ -168,6 +168,18 @@
                     evDomManager.addScrollListener(elements, scope.evDataService, scope.evEventService);
                 }
 
+                window.on('resize', function () {
+
+                    if (isReport) {
+                        rvDomManager.calculateScroll(elements, scope.evDataService);
+                        rvRenderer.render(contentElem, projection, scope.evDataService, scope.evEventService);
+                    } else {
+                        evDomManager.calculateScroll(elements, scope.evDataService);
+                        evRenderer.render(contentElem, projection, scope.evDataService, scope.evEventService);
+                    }
+
+                })
+
             }
         }
     }
