@@ -13,18 +13,23 @@
 
             membersAndGroupsService.inviteUser(vm.memberName).then(function (data) {
 
-                if (data.status == 400) {
+                console.log('data', data);
+
+                if (data.hasOwnProperty('user_to')) {
                     $mdDialog.show({
                         controller: 'ValidationDialogController as vm',
                         templateUrl: 'views/dialogs/validation-dialog-view.html',
                         targetEvent: $event,
                         locals: {
-                            validationData: data.response
+                            validationData: data
                         },
                         preserveScope: true,
                         autoWrap: true,
-                        skipHide: true
-                    })
+                        skipHide: true,
+                        multiple: true
+                    }).then(function () {
+                        $mdDialog.hide({res: 'agree'});
+                    });
                 } else {
                     $mdDialog.show({
                         controller: 'SuccessDialogController as vm',

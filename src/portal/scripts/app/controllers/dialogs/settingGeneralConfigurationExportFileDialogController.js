@@ -103,13 +103,21 @@
 
         vm.toggleActiveForChilds = function (item) {
 
+            console.log('item', item);
+
+            item.active = !item.active;
+
             item.content.forEach(function (child) {
                 child.active = item.active;
             })
 
         };
 
-        vm.updateActiveForParent = function (parent) {
+        vm.updateActiveForParent = function (child, parent) {
+
+            child.active = !child.active;
+
+            console.log('parent', parent);
 
             var active = true;
 
