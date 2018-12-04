@@ -10,7 +10,7 @@
         <div data-ng-repeat="item in vm.items">
 
             <div class="cie-entity-holder">
-                <md-checkbox ng-model="item.active" data-ng-change="vm.toggleActiveForChilds(item)" aria-label="checkbox">
+                <md-checkbox ng-checked="item.active" data-ng-click="vm.toggleActiveForChilds(item)" aria-label="checkbox">
                 </md-checkbox>
                 <span data-ng-bind="vm.getEntityName(item)"></span> <span class="cie-dependency" data-ng-bind="vm.getEntityDependenciesCaptions(item)"></span> ({{item.count}})
                 <md-button class="md-raised" ng-click="item.displayItems = !item.displayItems"><span
@@ -22,7 +22,7 @@
             <div data-ng-show="item.displayItems" style="padding-left: 20px">
 
                 <div data-ng-repeat="child in item.content">
-                    <md-checkbox ng-model="child.active" data-ng-change="vm.updateActiveForParent(item)" aria-label="checkbox">
+                    <md-checkbox ng-checked="child.active" data-ng-click="vm.updateActiveForParent(child, item)" aria-label="checkbox">
                     </md-checkbox> {{vm.getItemName(child)}}
                 </div>
 
