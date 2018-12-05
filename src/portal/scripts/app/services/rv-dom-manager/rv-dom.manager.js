@@ -261,6 +261,9 @@
         var viewportWidth = document.body.clientWidth - interfaceLayout.sidebar.width - interfaceLayout.filterArea.width;
         var viewportHeight = Math.floor(document.body.clientHeight - interfaceLayout.columnArea.top - interfaceLayout.columnArea.height);
 
+        console.log('calculateScroll.viewportHeight', viewportHeight);
+        console.log('calculateScroll.viewportWidth', viewportWidth);
+
         rvScrollManager.setViewportHeight(viewportHeight);
         if (viewportWidth) {
             rvScrollManager.setViewportWidth(viewportWidth);
