@@ -937,11 +937,11 @@
 
                         }
 
-                        layout.portfolios = [];
-                        layout.accounts = [];
-                        layout.strategies1 = [];
-                        layout.strategies2 = [];
-                        layout.strategies3 = [];
+                        layout.data.reportOptions.portfolios = [];
+                        layout.data.reportOptions.accounts = [];
+                        layout.data.reportOptions.strategies1 = [];
+                        layout.data.reportOptions.strategies2 = [];
+                        layout.data.reportOptions.strategies3 = [];
 
                         console.log('here??');
 
