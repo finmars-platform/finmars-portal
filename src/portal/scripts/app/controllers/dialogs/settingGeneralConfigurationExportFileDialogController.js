@@ -103,8 +103,6 @@
 
         vm.toggleActiveForChilds = function (item) {
 
-            console.log('item', item);
-
             item.active = !item.active;
 
             item.content.forEach(function (child) {
@@ -117,8 +115,6 @@
 
             child.active = !child.active;
 
-            console.log('parent', parent);
-
             var active = true;
 
             parent.content.forEach(function (item) {
@@ -130,7 +126,6 @@
             });
 
             parent.active = active;
-
 
         };
 

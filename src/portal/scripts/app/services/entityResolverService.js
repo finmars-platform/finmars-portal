@@ -36,6 +36,8 @@
     var instrumentPaymentSizeDetailService = require('./instrument/instrumentPaymentSizeDetailService');
     var priceDownloadSchemeService = require('./import/priceDownloadSchemeService');
 
+    var costMethodService = require('./instrument/instrumentCostMethodService');
+
     var getList = function (entityType, options) {
 
         switch (entityType) {
@@ -73,6 +75,10 @@
                 return strategyService.getList(2);
             case 'strategy-3':
                 return strategyService.getList(3);
+            case 'pricing-policy':
+                return pricingPolicyService.getList(options);
+            case 'cost-method':
+                return costMethodService.getList(options);
         }
     };
 

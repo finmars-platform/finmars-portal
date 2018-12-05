@@ -16,6 +16,7 @@
     var md5helper = require('../../helpers/md5.helper');
     var uiRepository = require('../../repositories/uiRepository');
 
+
     module.exports = function ($scope, $mdDialog, file) {
 
         console.log("file", file);
@@ -781,6 +782,81 @@
 
         }
 
+        function updatePricingPolicyLayout(layout) {
+
+            return new Promise(function (resolve) {
+
+                entityResolverService.getList('pricing-policy', {
+                    filters: {
+                        "user_code": layout.data.reportOptions.pricing_policy_object.user_code
+                    }
+                }).then(function (data) {
+
+                    if (data.results.length) {
+                        layout.data.reportOptions.pricing_policy = data.results[0].id;
+                        layout.data.reportOptions.pricing_policy_object = data.results[0];
+                    }
+
+                    resolve(layout);
+
+                })
+
+            })
+
+        }
+
+        function updateCurrencyLayout(layout) {
+
+            return new Promise(function (resolve) {
+
+                entityResolverService.getList('currency', {
+                    filters: {
+                        "user_code": layout.data.reportOptions.report_currency_object.user_code
+                    }
+                }).then(function (data) {
+
+                    if (data.results.length) {
+                        layout.data.reportOptions.report_currency = data.results[0].id;
+                        layout.data.reportOptions.report_currency_object = data.results[0];
+                    }
+
+                    resolve(layout)
+
+                })
+
+            })
+
+        }
+
+        function updateCostMethodLayout(layout) {
+
+            return new Promise(function (resolve) {
+
+                entityResolverService.getList('cost-method').then(function (data) {
+
+                    var costMethod;
+
+                    data.forEach(function (item) {
+
+                        if (item.system_code === layout.data.reportOptions.cost_method_object.system_code) {
+                            costMethod = item;
+                        }
+
+                    });
+
+                    if (costMethod) {
+                        layout.data.reportOptions.cost_method = costMethod.id;
+                        layout.data.reportOptions.cost_method_object = costMethod;
+                    }
+
+                    resolve(layout)
+
+                })
+
+            });
+
+        }
+
         function handleEditLayoutMap(layout) {
 
             return new Promise(function (resolve) {
@@ -833,8 +909,57 @@
 
         function handleListLayoutMap(layout) {
 
+            console.log('handleListLayoutMap', layout);
+
             return new Promise(function (resolve) {
-                resolve(layout);
+
+                if (layout.data) {
+
+                    if (layout.data.reportOptions) {
+
+                        var promises = [];
+
+                        if (layout.data.reportOptions.pricing_policy_object) {
+
+                            promises.push(updatePricingPolicyLayout(layout))
+
+                        }
+
+                        if (layout.data.reportOptions.report_currency_object) {
+
+                            promises.push(updateCurrencyLayout(layout))
+
+                        }
+
+                        if (layout.data.reportOptions.cost_method_object) {
+
+                            promises.push(updateCostMethodLayout(layout))
+
+                        }
+
+                        layout.portfolios = [];
+                        layout.accounts = [];
+                        layout.strategies1 = [];
+                        layout.strategies2 = [];
+                        layout.strategies3 = [];
+
+                        console.log('here??');
+
+                        Promise.all(promises).then(function () {
+                            resolve(layout)
+                        })
+
+                    } else {
+
+                        resolve(layout);
+
+                    }
+
+                } else {
+
+                    resolve(layout);
+
+                }
             })
 
         }
