@@ -6,11 +6,11 @@
         return eventsRepository.getList(options);
     };
 
-    var getEventAction = function (url) {
+    var getEventAction = function (eventId, actionId) {
         return eventsRepository.getEventAction(url);
     };
 
-    var putEventAction = function (url, data) {
+    var putEventAction = function (eventId, actionId, data) {
         return eventsRepository.putEventAction(url, data);
     };
 
