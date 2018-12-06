@@ -18,6 +18,10 @@
 
         var eventId = data.eventId;
 
+        vm.cancel = function () {
+            $mdDialog.cancel();
+        };
+
         vm.eventAction = function ($event, actionId) {
 
             eventsService.getEventAction(vm.event.id, actionId).then(function (event) {
@@ -26,7 +30,7 @@
 
                 eventsService.putEventAction(vm.event.id, actionId, event).then(function () {
                     console.log('event action done');
-                    vm.cancel();
+                    $mdDialog.hide({status: 'agree'});
                 }).catch(function () {
                     vm.cancel();
                 })
@@ -38,7 +42,7 @@
 
             eventsService.ignoreEventAction(vm.event.id).then(function () {
                 console.log('event action done');
-                vm.cancel();
+                $mdDialog.hide({status: 'agree'});
             });
 
         };
