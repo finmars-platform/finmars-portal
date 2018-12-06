@@ -39,7 +39,7 @@
             });
 
 
-            Promise.all(function () {
+            Promise.all(promises).then(function () {
                 $mdDialog.hide();
             })
 
