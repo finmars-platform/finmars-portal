@@ -66,7 +66,7 @@
 
         vm.toggleAll = function () {
 
-            var state = vm.isAllChecked();
+            var state = !vm.isAllChecked();
 
             for (var i = 0; i < vm.events.length; i = i + 1) {
                 vm.events[i].selected = state;
