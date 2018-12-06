@@ -103,7 +103,11 @@
                     data: {
                         event: event
                     }
-                }
+                },
+                preserveScope: true,
+                autoWrap: true,
+                skipHide: true,
+                multiple: true
             })
         };
 
