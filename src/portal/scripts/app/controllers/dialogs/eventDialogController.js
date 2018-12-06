@@ -20,9 +20,15 @@
 
         vm.eventAction = function ($event, actionId) {
 
-            eventsService.putEventAction(vm.event.id, actionId, vm.event).then(function () {
-                console.log('event action done');
-                vm.hide({res: 'agree'});
+            eventsService.getEventAction(vm.event.id, actionId).then(function (event) {
+
+                console.log('event', event);
+
+                eventsService.putEventAction(vm.event.id, actionId, event).then(function () {
+                    console.log('event action done');
+                    vm.cancel();
+                });
+
             });
         };
 
