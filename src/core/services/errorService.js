@@ -7,21 +7,20 @@
     function ErrorObject(message, status, statusText) {
         this.status = status;
         this.statusText = statusText;
-        this.message = message || 'Сообщение по умолчанию';
+        this.message = message || 'Oops something went wrong, please try again.';
         this.stack = (new Error()).stack;
     }
 
     ErrorObject.prototype = Object.create(Error.prototype);
     ErrorObject.prototype.constructor = ErrorObject;
 
-
     'use strict';
 
     var handleXhrErrors = function (response) {
 
-        return new Promise(function (resolve, reject) {
+        console.log('handleXhrErrors.response', response)
 
-            console.log('response', response);
+        return new Promise(function (resolve, reject) {
 
             if (response.status === 500) {
 
@@ -40,13 +39,9 @@
 
             } else {
 
-                console.log('response', response);
-
                 if (response.status !== 204) {
 
                     response.json().then(function (data) {
-
-                        console.log('data', data);
 
                         if (!response.ok) {
 
@@ -75,9 +70,6 @@
 
     var notifyError = function (reason) {
 
-        console.log('reason??', reason);
-        console.log('code', reason.status);
-
         var message = reason.statusText + ' (' + reason.status + ')';
 
         if (reason.hasOwnProperty('message')) {
@@ -100,8 +92,6 @@
 
 
         }
-
-        console.log('message', message);
 
         toastr.error(message);
 
