@@ -87,8 +87,12 @@
                 Object.keys(reason.message).forEach(function (key) {
 
                     message = message + '<br/>';
-                    message = message + key + ': ' + reason.message[key].join('. ');
 
+                    if (Array.isArray(reason.message[key])) {
+                        message = message + key + ': ' + reason.message[key].join('. ');
+                    } else {
+                        message = message + key + ': ' + reason.message[key]
+                    }
 
                 })
 
