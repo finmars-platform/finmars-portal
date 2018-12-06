@@ -72,6 +72,7 @@
 
             filters.effective_date_0 = vm.effective_date;
             filters.effective_date_1 = vm.effective_date;
+            filters.status = 1; // look only for status NEW
 
             eventsService.getList({filters: filters}).then(function (data) {
                 vm.events = data.results;
