@@ -57,7 +57,7 @@
                     Accept: 'application/json',
                     'Content-type': 'application/json'
                 },
-                body: JSON.stringify({})
+                body: JSON.stringify(data)
             })
     };
 
