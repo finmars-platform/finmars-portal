@@ -10,7 +10,7 @@
             <div>
 
                 <div layout="row">
-                    <md-input-container data-ng-class="{'disabled-btn': !vm.loading}">
+                    <md-input-container data-ng-class="{'disabled-btn': vm.loading}">
                         <label for="">Effective date</label>
                         <zh-date-picker data-ng-model="vm.effective_date"
                                         data-ng-change="vm.updateTable()"></zh-date-picker>
