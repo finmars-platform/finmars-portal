@@ -5,58 +5,25 @@
     var eventsService = require('../../services/eventsService');
 
     module.exports = function ($scope, $mdDialog, data) {
+
         console.log('id for event buttons', data);
 
         var vm = this;
 
-        vm.entityType = 'complex-transaction';
-        vm.isEventBook = true;
+        vm.event = data.event;
 
-        vm.actionsBtns = data.eventActions;
-        console.log('event button is', vm.actionsBtns);
+        vm.actionButtons = vm.event.event_schedule_object.actions;
+
+        console.log('vm.event', vm.event);
+
         var eventId = data.eventId;
 
-
         vm.eventAction = function ($event, actionId) {
-            var actionUrl = {
-                eventId: eventId,
-                actionId: actionId
-            };
-            eventsService.getEventAction(actionUrl).then(function (data) {
-                var currentDate = moment(new Date()).format('YYYY-MM-DD');
-                data.values['date'] = currentDate;
 
-                vm.eventBook = data;
-
-                $mdDialog.show({
-                    controller: 'EntityViewerAddDialogController as vm',
-                    templateUrl: 'views/entity-viewer/add-entity-viewer-dialog-view.html',
-                    parent: angular.element(document.body),
-                    targetEvent: $event,
-                    //clickOutsideToClose: true,
-                    preserveScope: true,
-                    autoWrap: true,
-                    skipHide: true,
-                    locals: {
-                        entity: {}
-                    }
-                }).then(function (res) {
-
-                    if (res.status == 'agree') {
-                        eventsService.putEventAction(actionUrl, res.data.eventBook).then(function () {
-                            console.log('event action done');
-                            vm.cancel();
-                        });
-                    }
-
-                });
-
-
+            eventsService.putEventAction(vm.event.id, actionId).then(function () {
+                console.log('event action done');
+                vm.hide({res: 'agree'});
             });
-        };
-
-        vm.cancel = function () {
-            $mdDialog.cancel();
         };
 
         vm.ignore = function () {
@@ -65,7 +32,9 @@
                 console.log('event action done');
                 vm.cancel();
             });
+
         };
 
     }
+
 }());

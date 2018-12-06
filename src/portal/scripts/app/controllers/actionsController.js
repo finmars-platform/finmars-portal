@@ -147,16 +147,7 @@
                 skipHide: true
             })
 
-            // eventsService.getList().then(function (data) {
-            //     vm.eventsList = data.results;
-            //     $scope.$apply();
-            //     data.results.map(function (event) {
-            //         if (event.is_need_reaction == true) {
-            //             var eventActions = event.event_schedule_object['actions']; // button in event dialog
-            //             vm.openEventWindow(target, event.id, eventActions);
-            //         }
-            //     });
-            // });
+
         };
 
         vm.generateEvents = function ($event) {
@@ -177,20 +168,7 @@
             })
         };
 
-        vm.openEventWindow = function ($event, eventId, eventActions) {
-            $mdDialog.show({
-                controller: 'EventDialogController as vm',
-                templateUrl: 'views/dialogs/event-dialog-view.html',
-                parent: angular.element(document.body),
-                targetEvent: $event,
-                locals: {
-                    data: {
-                        eventId: eventId,
-                        eventActions: eventActions
-                    }
-                }
-            })
-        };
+
 
     }
 

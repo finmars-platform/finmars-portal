@@ -28,9 +28,13 @@
         vm.selectedItem = {};
 
 
-        vm.agree = function () {
+        vm.agree = function ($event) {
 
-
+            vm.events.map(function (event) {
+                if (event.is_need_reaction) {
+                    vm.openEventWindow($event, event);
+                }
+            });
 
 
         };
@@ -80,6 +84,20 @@
                 vm.loading = false;
 
                 $scope.$apply();
+            })
+        };
+
+        vm.openEventWindow = function ($event, event) {
+            $mdDialog.show({
+                controller: 'EventDialogController as vm',
+                templateUrl: 'views/dialogs/event-dialog-view.html',
+                parent: angular.element(document.body),
+                targetEvent: $event,
+                locals: {
+                    data: {
+                        event: event
+                    }
+                }
             })
         };
 

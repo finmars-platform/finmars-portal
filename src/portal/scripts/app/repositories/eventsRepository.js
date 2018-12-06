@@ -34,8 +34,9 @@
     // 		return data.json();
     // 	});
     // }
-    var getEventAction = function (url) {
-        return xhrService.fetch(baseUrl + 'instruments/generated-event/' + url.eventId + '/book/?action=' + url.actionId,
+
+    var getEventAction = function (eventId, actionId) {
+        return xhrService.fetch(baseUrl + 'instruments/generated-event/' + eventId + '/book/?action=' + actionId,
             {
                 method: 'GET',
                 credentials: 'include',
@@ -46,8 +47,8 @@
             })
     };
 
-    var putEventAction = function (url, data) {
-        return xhrService.fetch(baseUrl + 'instruments/generated-event/' + url.eventId + '/book/?action=' + url.actionId,
+    var putEventAction = function (eventId, actionId, data) {
+        return xhrService.fetch(baseUrl + 'instruments/generated-event/' + eventId + '/book/?action=' + actionId,
             {
                 method: 'PUT',
                 credentials: 'include',
@@ -56,7 +57,7 @@
                     Accept: 'application/json',
                     'Content-type': 'application/json'
                 },
-                body: JSON.stringify(data)
+                body: JSON.stringify({})
             })
     };
 

@@ -6,16 +6,13 @@
     </md-toolbar>
     <md-dialog-content data-custom-scroll class="custom-scrollbar md-padding">
         <div layout="row">
-            <md-button aria-label="event button" data-ng-repeat="button in vm.actionsBtns" class="md-raised"
+            <md-button aria-label="event button" data-ng-repeat="button in vm.actionButtons" class="md-raised"
                        data-ng-bind="button.display_text" data-ng-click="vm.eventAction($event, button.id)"></md-button>
         </div>
     </md-dialog-content>
     <md-dialog-actions layout="row" layout-align="space-between center">
         <md-button aria-label="cancel" class="md-raised" data-ng-click="vm.ignore()">
             Ignore
-        </md-button>
-        <md-button aria-label="cancel" class="md-raised" data-ng-click="vm.cancel()">
-            Cancel
         </md-button>
     </md-dialog-actions>
 </md-dialog>
