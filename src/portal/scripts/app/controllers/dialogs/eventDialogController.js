@@ -27,7 +27,9 @@
                 eventsService.putEventAction(vm.event.id, actionId, event).then(function () {
                     console.log('event action done');
                     vm.cancel();
-                });
+                }).catch(function () {
+                    vm.cancel();
+                })
 
             });
         };
