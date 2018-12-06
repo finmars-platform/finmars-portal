@@ -2,6 +2,7 @@
     'use strict';
 
     var cookieService = require('../../../../core/services/cookieService');
+    var xhrService = require('../../../../core/services/xhrService');
     var baseUrlService = require('../services/baseUrlService');
 
     var baseUrl = baseUrlService.resolve();
@@ -9,7 +10,7 @@
     var getList = function (type) {
         var fetchUrl = '';
         type === 'members' ? fetchUrl = 'users/member/' : fetchUrl = 'users/group/';
-        return window.fetch(baseUrl + fetchUrl,
+        return xhrService.fetch(baseUrl + fetchUrl,
             {
                 method: 'GET',
                 credentials: 'include',
@@ -17,15 +18,13 @@
                     Accept: 'application/json',
                     'Content-type': 'application/json'
                 }
-            }).then(function (data) {
-            return data.json();
-        })
+            })
     };
 
     var getMemberOrGroupByKey = function (type, id) {
         var fetchUrl = '';
         type === 'members' ? fetchUrl = 'users/member/' : fetchUrl = 'users/group/';
-        return window.fetch(baseUrl + fetchUrl + id + '/',
+        return xhrService.fetch(baseUrl + fetchUrl + id + '/',
             {
                 method: 'GET',
                 credentials: 'include',
@@ -33,16 +32,14 @@
                     Accept: 'application/json',
                     'Content-type': 'application/json'
                 }
-            }).then(function (data) {
-            return data.json();
-        });
+            });
     }
 
     var create = function (type, data) {
         var fetchUrl = '';
         type === 'members' ? fetchUrl = 'users/member/' : fetchUrl = 'users/group/';
         console.log('url is', baseUrl + fetchUrl);
-        return window.fetch(baseUrl + fetchUrl,
+        return xhrService.fetch(baseUrl + fetchUrl,
             {
                 method: 'POST',
                 credentials: 'include',
@@ -52,22 +49,13 @@
                     'Content-type': 'application/json'
                 },
                 body: JSON.stringify(data)
-            }).then(function (data) {
-            return new Promise(function (resolve, reject) {
-                data.json().then(function (result) {
-                    resolve({
-                        response: result,
-                        status: data.status
-                    })
-                })
-            });
-        });
+            })
     };
 
     var update = function (type, id, data) {
         var fetchUrl = '';
         type === 'members' ? fetchUrl = 'users/member/' : fetchUrl = 'users/group/';
-        return window.fetch(baseUrl + fetchUrl + id + '/',
+        return xhrService.fetch(baseUrl + fetchUrl + id + '/',
             {
                 method: 'PUT',
                 credentials: 'include',
@@ -77,22 +65,13 @@
                     'Content-type': 'application/json'
                 },
                 body: JSON.stringify(data)
-            }).then(function (data) {
-            return new Promise(function (resolve, reject) {
-                data.json().then(function (result) {
-                    resolve({
-                        response: result,
-                        status: data.status
-                    })
-                })
-            });
-        })
+            })
     };
 
     var deleteByKey = function (type, id) {
         var fetchUrl = '';
         type === 'members' ? fetchUrl = 'users/member/' : fetchUrl = 'users/group/';
-        return window.fetch(baseUrl + fetchUrl + id + '/',
+        return xhrService.fetch(baseUrl + fetchUrl + id + '/',
             {
                 method: 'DELETE',
                 credentials: 'include',
@@ -111,7 +90,7 @@
 
     var inviteUser = function (username) {
 
-        return window.fetch(baseUrl + 'users/create-invite-to-master-user/', {
+        return xhrService.fetch(baseUrl + 'users/create-invite-to-master-user/', {
             method: 'POST',
             credentials: 'include',
             headers: {
@@ -120,8 +99,6 @@
                 'Content-type': 'application/json'
             },
             body: JSON.stringify({username: username})
-        }).then(function (data) {
-            return data.json();
         })
 
     };

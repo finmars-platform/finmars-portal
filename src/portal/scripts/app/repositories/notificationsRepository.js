@@ -8,6 +8,7 @@
 
     var baseUrl = baseUrlService.resolve();
     var cookieService = require('../../../../core/services/cookieService');
+    var xhrService = require('../../../../core/services/xhrService');
 
     var getList = function (page, type) {
         var listUrl = '';
@@ -19,7 +20,7 @@
                 listUrl = '?all=true&page=' + page
         }
         console.log('notification list url is', listUrl);
-        return window.fetch(baseUrl + 'notifications/notification/' + listUrl,
+        return xhrService.fetch(baseUrl + 'notifications/notification/' + listUrl,
             {
                 method: 'GET',
                 credentials: 'include',
@@ -27,14 +28,12 @@
                     Accept: 'application/json',
                     'Content-type': 'application/json'
                 }
-            }).then(function (data) {
-            return data.json();
-        })
+            })
     };
 
     var markAsReaded = function (url, data) {
         var markUrl;
-        return window.fetch(baseUrl + 'notifications/notification/' + url + '/mark-as-read/',
+        return xhrService.fetch(baseUrl + 'notifications/notification/' + url + '/mark-as-read/',
             {
                 method: 'POST',
                 credentials: 'include',
@@ -44,15 +43,13 @@
                     'Content-type': 'application/json'
                 },
                 body: JSON.stringify(data)
-            }).then(function (data) {
-            return data.json();
-        });
+            });
     }
 
     var markAllAsReaded = function () {
         var markUrl;
-        //return window.fetch(baseUrl + 'notifications/notification/mark-as-read/',
-        return window.fetch(baseUrl + 'notifications/notification/mark-all-as-read/',
+        //return xhrService.fetch(baseUrl + 'notifications/notification/mark-as-read/',
+        return xhrService.fetch(baseUrl + 'notifications/notification/mark-all-as-read/',
             {
                 method: 'POST',
                 credentials: 'include',
@@ -62,9 +59,7 @@
                     'Content-type': 'application/json'
                 },
                 body: JSON.stringify({})
-            }).then(function (data) {
-            return data.json();
-        });
+            });
     }
 
     module.exports = {

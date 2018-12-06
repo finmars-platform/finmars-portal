@@ -6,13 +6,14 @@
     'use strict';
 
     var cookieService = require('../../../../core/services/cookieService');
+    var xhrService = require('../../../../core/services/xhrService');
     var configureRepositoryUrlService = require('../services/configureRepositoryUrlService');
     var baseUrlService = require('../services/baseUrlService');
 
     var baseUrl = baseUrlService.resolve();
 
     var getList = function () {
-        return window.fetch(baseUrl + 'transactions/event-class/',
+        return xhrService.fetch(baseUrl + 'transactions/event-class/',
             {
                 method: 'GET',
                 credentials: 'include',
@@ -20,9 +21,7 @@
                     Accept: 'application/json',
                     'Content-type': 'application/json'
                 }
-            }).then(function (data) {
-            return data.json();
-        })
+            })
     };
 
     module.exports = {

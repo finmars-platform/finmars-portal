@@ -5,14 +5,14 @@
 
     'use strict';
 
-    var cookieService = require('../../../../core/services/cookieService');
+    var cookieService = require('../../../../core/services/cookieService'); var xhrService = require('../../../../core/services/xhrService');
     var configureRepositoryUrlService = require('../services/configureRepositoryUrlService');
     var baseUrlService = require('../services/baseUrlService');
 
     var baseUrl = baseUrlService.resolve();
 
     var getList = function (options) {
-        return window.fetch(configureRepositoryUrlService.configureUrl(baseUrl + 'instruments/instrument/', options),
+        return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl + 'instruments/instrument/', options),
             {
                 method: 'GET',
                 credentials: 'include',
@@ -20,13 +20,11 @@
                     Accept: 'application/json',
                     'Content-type': 'application/json'
                 }
-            }).then(function (data) {
-            return data.json();
-        })
+            })
     };
 
     var getByKey = function (id) {
-        return window.fetch(baseUrl + 'instruments/instrument/' + id + '/',
+        return xhrService.fetch(baseUrl + 'instruments/instrument/' + id + '/',
             {
                 method: 'GET',
                 credentials: 'include',
@@ -34,13 +32,11 @@
                     Accept: 'application/json',
                     'Content-type': 'application/json'
                 }
-            }).then(function (data) {
-            return data.json();
-        })
+            })
     };
 
     var create = function (instrument) {
-        return window.fetch(baseUrl + 'instruments/instrument/',
+        return xhrService.fetch(baseUrl + 'instruments/instrument/',
             {
                 method: 'POST',
                 credentials: 'include',
@@ -50,20 +46,11 @@
                     'Content-type': 'application/json'
                 },
                 body: JSON.stringify(instrument)
-            }).then(function (data) {
-            return new Promise(function (resolve, reject) {
-                data.json().then(function (result) {
-                    resolve({
-                        response: result,
-                        status: data.status
-                    })
-                })
-            });
-        })
+            })
     };
 
     var update = function (id, instrument) {
-        return window.fetch(baseUrl + 'instruments/instrument/' + id + '/',
+        return xhrService.fetch(baseUrl + 'instruments/instrument/' + id + '/',
             {
                 method: 'PUT',
                 credentials: 'include',
@@ -73,20 +60,11 @@
                     'Content-type': 'application/json'
                 },
                 body: JSON.stringify(instrument)
-            }).then(function (data) {
-            return new Promise(function (resolve, reject) {
-                data.json().then(function (result) {
-                    resolve({
-                        response: result,
-                        status: data.status
-                    })
-                })
-            });
-        })
+            })
     };
 
     var updateBulk = function (instruments) {
-        return window.fetch(baseUrl + 'instruments/instrument/bulk-update/',
+        return xhrService.fetch(baseUrl + 'instruments/instrument/bulk-update/',
             {
                 method: 'PATCH',
                 credentials: 'include',
@@ -96,20 +74,11 @@
                     'Content-type': 'application/json'
                 },
                 body: JSON.stringify(instruments)
-            }).then(function (data) {
-            return new Promise(function (resolve, reject) {
-                data.json().then(function (result) {
-                    resolve({
-                        response: result,
-                        status: data.status
-                    })
-                })
-            });
-        })
+            })
     };
 
     var deleteByKey = function (id) {
-        return window.fetch(baseUrl + 'instruments/instrument/' + id + '/',
+        return xhrService.fetch(baseUrl + 'instruments/instrument/' + id + '/',
             {
                 method: 'DELETE',
                 credentials: 'include',

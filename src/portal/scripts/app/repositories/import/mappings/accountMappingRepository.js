@@ -6,13 +6,14 @@
     'use strict';
 
     var cookieService = require('../../../../../../core/services/cookieService');
+    var xhrService = require('../../../../../../core/services/xhrService');
     var configureRepositoryUrlService = require('../../../services/configureRepositoryUrlService');
     var baseUrlService = require('../../../services/baseUrlService');
 
     var baseUrl = baseUrlService.resolve();
 
     var getList = function (options) {
-        return window.fetch(baseUrl + 'import/account-mapping/?page_size=1000',
+        return xhrService.fetch(baseUrl + 'import/account-mapping/?page_size=1000',
             {
                 method: 'GET',
                 credentials: 'include',
@@ -20,12 +21,10 @@
                     Accept: 'application/json',
                     'Content-type': 'application/json'
                 }
-            }).then(function (data) {
-            return data.json();
-        })
+            })
     };
     var create = function (map) {
-        return window.fetch(baseUrl + 'import/account-mapping/',
+        return xhrService.fetch(baseUrl + 'import/account-mapping/',
             {
                 method: 'POST',
                 credentials: 'include',
@@ -35,13 +34,11 @@
                     'Content-type': 'application/json'
                 },
                 body: JSON.stringify(map)
-            }).then(function (data) {
-            return data.json();
-        })
+            })
     };
 
     var getByKey = function (id) {
-        return window.fetch(baseUrl + 'import/account-mapping/' + id + '/',
+        return xhrService.fetch(baseUrl + 'import/account-mapping/' + id + '/',
             {
                 method: 'GET',
                 credentials: 'include',
@@ -50,13 +47,11 @@
                     Accept: 'application/json',
                     'Content-type': 'application/json'
                 }
-            }).then(function (data) {
-            return data.json();
-        })
+            })
     };
 
     var update = function (id, map) {
-        return window.fetch(baseUrl + 'import/account-mapping/' + id + '/',
+        return xhrService.fetch(baseUrl + 'import/account-mapping/' + id + '/',
             {
                 method: 'PUT',
                 credentials: 'include',
@@ -66,13 +61,11 @@
                     'Content-type': 'application/json'
                 },
                 body: JSON.stringify(map)
-            }).then(function (data) {
-            return data.json();
-        })
+            })
     };
 
     var deleteByKey = function (id) {
-        return window.fetch(baseUrl + 'import/account-mapping/' + id + '/',
+        return xhrService.fetch(baseUrl + 'import/account-mapping/' + id + '/',
             {
                 method: 'DELETE',
                 credentials: 'include',
@@ -81,9 +74,7 @@
                     Accept: 'application/json',
                     'Content-type': 'application/json'
                 }
-            }).then(function (data) {
-            return data.json();
-        })
+            })
     };
 
     module.exports = {

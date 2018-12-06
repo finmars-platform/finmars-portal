@@ -48,25 +48,24 @@
 
                     console.log('test!', data);
 
-                    if (data.status == 200 || data.status == 201) {
-                        $mdDialog.show({
-                            controller: 'SuccessDialogController as vm',
-                            templateUrl: 'views/dialogs/success-dialog-view.html',
-                            targetEvent: $event,
-                            locals: {
-                                success: {
-                                    title: "",
-                                    description: "You have you have successfully add sertificate"
-                                }
-                            },
-                            preserveScope: true,
-                            autoWrap: true,
-                            skipHide: true
-                        }).then(function () {
-                            $state.go('app.settings.general.data-providers');
-                        });
+                    $mdDialog.show({
+                        controller: 'SuccessDialogController as vm',
+                        templateUrl: 'views/dialogs/success-dialog-view.html',
+                        targetEvent: $event,
+                        locals: {
+                            success: {
+                                title: "",
+                                description: "You have you have successfully add sertificate"
+                            }
+                        },
+                        multiple: true,
+                        preserveScope: true,
+                        autoWrap: true,
+                        skipHide: true
+                    }).then(function () {
+                        $state.go('app.settings.general.data-providers');
+                    });
 
-                    }
 
                 });
 
@@ -74,25 +73,24 @@
 
                 dataProvidersService.createConfig(formData).then(function (data) {
 
-                    if (data.status == 200 || data.status == 201) {
-                        $mdDialog.show({
-                            controller: 'SuccessDialogController as vm',
-                            templateUrl: 'views/dialogs/success-dialog-view.html',
-                            targetEvent: $event,
-                            locals: {
-                                success: {
-                                    title: "",
-                                    description: "You have you have successfully add sertificate"
-                                }
-                            },
-                            preserveScope: true,
-                            autoWrap: true,
-                            skipHide: true
-                        }).then(function () {
-                            $state.go('app.settings.general.data-providers');
-                        });
+                    $mdDialog.show({
+                        controller: 'SuccessDialogController as vm',
+                        templateUrl: 'views/dialogs/success-dialog-view.html',
+                        targetEvent: $event,
+                        locals: {
+                            success: {
+                                title: "",
+                                description: "You have you have successfully add sertificate"
+                            }
+                        },
+                        multiple: true,
+                        preserveScope: true,
+                        autoWrap: true,
+                        skipHide: true
+                    }).then(function () {
+                        $state.go('app.settings.general.data-providers');
+                    });
 
-                    }
 
                 });
 

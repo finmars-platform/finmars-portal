@@ -7,6 +7,7 @@
     'use strict';
 
     var cookieService = require('../../../../core/services/cookieService');
+    var xhrService = require('../../../../core/services/xhrService');
     var baseUrlService = require('../services/baseUrlService');
 
     var baseUrl = baseUrlService.resolve();
@@ -16,7 +17,7 @@
     };
 
     var login = function (login, password) {
-        return window.fetch(baseUrl + 'users/login/', {
+        return xhrService.fetch(baseUrl + 'users/login/', {
             method: 'POST',
             credentials: 'include',
             headers: {
@@ -25,16 +26,11 @@
                 'Content-type': 'application/json'
             },
             body: JSON.stringify({username: login, password: password})
-        }).then(function (data) {
-            return data.json();
-        }).catch(function () {
-            handleError('login');
-            return [];
         })
     };
 
     var logout = function () {
-        return window.fetch(baseUrl + 'users/logout/', {
+        return xhrService.fetch(baseUrl + 'users/logout/', {
             method: 'POST',
             credentials: 'include',
             headers: {
@@ -43,78 +39,66 @@
                 'Content-type': 'application/json'
             },
             body: JSON.stringify({})
-        }).then(function (data) {
-            return data.json();
         })
     };
 
     var ping = function () {
-        return window.fetch(baseUrl + 'users/ping/', {
+        return xhrService.fetch(baseUrl + 'users/ping/', {
             method: 'GET',
             credentials: 'include',
             headers: {
                 Accept: 'application/json',
                 'Content-type': 'application/json'
             }
-        }).then(function (data) {
-            return data.json();
         })
     };
 
     var protectedPing = function () {
-        return window.fetch(baseUrl + 'users/protected-ping/', {
+        return xhrService.fetch(baseUrl + 'users/protected-ping/', {
             method: 'GET',
             credentials: 'include',
             headers: {
                 Accept: 'application/json',
                 'Content-type': 'application/json'
             }
-        }).then(function (data) {
-            return data.json();
         })
     };
 
     var getList = function () {
-        return window.fetch(baseUrl + 'users/user/', {
+        return xhrService.fetch(baseUrl + 'users/user/', {
             method: 'GET',
             credentials: 'include',
             headers: {
                 Accept: 'application/json',
                 'Content-type': 'application/json'
             }
-        }).then(function (data) {
-            return data.json();
         })
     };
 
     var getByKey = function (id) {
-        return window.fetch(baseUrl + 'users/user/' + id + '/', {
+        return xhrService.fetch(baseUrl + 'users/user/' + id + '/', {
             method: 'GET',
             credentials: 'include',
             headers: {
                 Accept: 'application/json',
                 'Content-type': 'application/json'
             }
-        }).then(function (data) {
-            return data.json();
         })
     };
 
     var getMe = function () {
-        return window.fetch(baseUrl + 'users/user/0/', {
+        return xhrService.fetch(baseUrl + 'users/user/0/', {
             method: 'GET',
             credentials: 'include',
             headers: {
                 Accept: 'application/json',
                 'Content-type': 'application/json'
             }
-        }).then(function (data) {
-            return data.json();
         })
     };
 
     var changePassword = function (id, user) {
-        return window.fetch(baseUrl + 'users/user/' + id + '/set-password/', {
+        return xhrService.fetch(baseUrl + 'users/user/' + id + '/set-password/', {
             method: 'PUT',
             credentials: 'include',
             headers: {
@@ -145,7 +129,7 @@
     };
 
     var update = function (id, user) {
-        return window.fetch(baseUrl + 'users/user/' + id + '/', {
+        return xhrService.fetch(baseUrl + 'users/user/' + id + '/', {
             method: 'PUT',
             credentials: 'include',
             headers: {
@@ -154,20 +138,11 @@
                 'Content-type': 'application/json'
             },
             body: JSON.stringify(user)
-        }).then(function (data) {
-            return new Promise(function (resolve, reject) {
-                data.json().then(function (result) {
-                    resolve({
-                        response: result,
-                        status: data.status
-                    })
-                })
-            });
         })
     };
 
     var patch = function (id, user) {
-        return window.fetch(baseUrl + 'users/user/' + id + '/', {
+        return xhrService.fetch(baseUrl + 'users/user/' + id + '/', {
             method: 'PATCH',
             credentials: 'include',
             headers: {
@@ -175,26 +150,22 @@
                 'Content-type': 'application/json'
             },
             body: JSON.stringify(user)
-        }).then(function (data) {
-            return data.json();
         })
     };
 
     var deleteByKey = function (id) {
-        return window.fetch(baseUrl + 'users/user/' + id + '/', {
+        return xhrService.fetch(baseUrl + 'users/user/' + id + '/', {
             method: 'DELETE',
             credentials: 'include',
             headers: {
                 Accept: 'application/json',
                 'Content-type': 'application/json'
             }
-        }).then(function (data) {
-            return data.json();
         })
     };
 
     var createMasterUser = function (user) {
-        return window.fetch(baseUrl + 'users/master-user/', {
+        return xhrService.fetch(baseUrl + 'users/master-user/', {
             method: 'POST',
             credentials: 'include',
             headers: {
@@ -202,39 +173,33 @@
                 'Content-type': 'application/json'
             },
             body: JSON.stringify(user)
-        }).then(function (data) {
-            return data.json();
         })
     };
 
     var getMasterList = function () {
-        return window.fetch(baseUrl + 'users/master-user/', {
+        return xhrService.fetch(baseUrl + 'users/master-user/', {
             method: 'GET',
             credentials: 'include',
             headers: {
                 Accept: 'application/json',
                 'Content-type': 'application/json'
             }
-        }).then(function (data) {
-            return data.json();
         })
     };
 
     var getMasterByKey = function (id) {
-        return window.fetch(baseUrl + 'users/master-user/' + id, {
+        return xhrService.fetch(baseUrl + 'users/master-user/' + id, {
             method: 'GET',
             credentials: 'include',
             headers: {
                 Accept: 'application/json',
                 'Content-type': 'application/json'
             }
-        }).then(function (data) {
-            return data.json();
         })
     };
 
     var updateMaster = function (id, user) {
-        return window.fetch(baseUrl + 'users/master-user/' + id, {
+        return xhrService.fetch(baseUrl + 'users/master-user/' + id, {
             method: 'PUT',
             credentials: 'include',
             headers: {
@@ -242,13 +207,11 @@
                 'Content-type': 'application/json'
             },
             body: JSON.stringify(user)
-        }).then(function (data) {
-            return data.json();
         })
     };
 
     var patchMaster = function (id, user) {
-        return window.fetch(baseUrl + 'users/master-user/' + id, {
+        return xhrService.fetch(baseUrl + 'users/master-user/' + id, {
             method: 'PATCH',
             credentials: 'include',
             headers: {
@@ -256,26 +219,22 @@
                 'Content-type': 'application/json'
             },
             body: JSON.stringify(user)
-        }).then(function (data) {
-            return data.json();
         })
     };
 
     var deleteMasterByKey = function (id) {
-        return window.fetch(baseUrl + 'users/master-user/' + id, {
+        return xhrService.fetch(baseUrl + 'users/master-user/' + id, {
             method: 'DELETE',
             credentials: 'include',
             headers: {
                 Accept: 'application/json',
                 'Content-type': 'application/json'
             }
-        }).then(function (data) {
-            return data.json();
         })
     };
 
     var setMasterUser = function (id) {
-        return window.fetch(baseUrl + 'users/master-user/' + id + '/set-current/', {
+        return xhrService.fetch(baseUrl + 'users/master-user/' + id + '/set-current/', {
             method: 'PATCH',
             credentials: 'include',
             headers: {
@@ -283,39 +242,33 @@
                 Accept: 'application/json',
                 'Content-type': 'application/json'
             }
-        }).then(function (data) {
-            return data.json();
         })
     };
 
     var getMemberList = function () {
-        return window.fetch(baseUrl + 'users/member/', {
+        return xhrService.fetch(baseUrl + 'users/member/', {
             method: 'GET',
             credentials: 'include',
             headers: {
                 Accept: 'application/json',
                 'Content-type': 'application/json'
             }
-        }).then(function (data) {
-            return data.json();
         })
     };
 
     var getMemberByKey = function (id) {
-        return window.fetch(baseUrl + 'users/member/' + id, {
+        return xhrService.fetch(baseUrl + 'users/member/' + id, {
             method: 'GET',
             credentials: 'include',
             headers: {
                 Accept: 'application/json',
                 'Content-type': 'application/json'
             }
-        }).then(function (data) {
-            return data.json();
         })
     };
 
     var updateMember = function (id, user) {
-        return window.fetch(baseUrl + 'users/member/' + id, {
+        return xhrService.fetch(baseUrl + 'users/member/' + id, {
             method: 'PUT',
             credentials: 'include',
             headers: {
@@ -323,13 +276,11 @@
                 'Content-type': 'application/json'
             },
             body: JSON.stringify(user)
-        }).then(function (data) {
-            return data.json();
         })
     };
 
     var patchMember = function (id, user) {
-        return window.fetch(baseUrl + 'users/member/' + id, {
+        return xhrService.fetch(baseUrl + 'users/member/' + id, {
             method: 'PATCH',
             credentials: 'include',
             headers: {
@@ -337,34 +288,28 @@
                 'Content-type': 'application/json'
             },
             body: JSON.stringify(user)
-        }).then(function (data) {
-            return data.json();
         })
     };
 
     var deleteMemberByKey = function (id) {
-        return window.fetch(baseUrl + 'users/member/' + id, {
+        return xhrService.fetch(baseUrl + 'users/member/' + id, {
             method: 'DELETE',
             credentials: 'include',
             headers: {
                 Accept: 'application/json',
                 'Content-type': 'application/json'
             }
-        }).then(function (data) {
-            return data.json();
         })
     };
 
     var getGroupList = function () {
-        return window.fetch(baseUrl + 'users/group/', {
+        return xhrService.fetch(baseUrl + 'users/group/', {
             method: 'GET',
             credentials: 'include',
             headers: {
                 Accept: 'application/json',
                 'Content-type': 'application/json'
             }
-        }).then(function (data) {
-            return data.json();
         })
     };
 

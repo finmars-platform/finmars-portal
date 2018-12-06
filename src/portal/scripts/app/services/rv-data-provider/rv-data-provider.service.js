@@ -117,21 +117,26 @@
 
             reportOptions = Object.assign({}, reportOptions);
 
-            reportOptions.items = reportHelper.injectIntoItems(reportOptions.items, reportOptions);
-            reportOptions.items = reportHelper.releaseEntityObjects(reportOptions.items);
+            if (reportOptions.items && reportOptions.items.length) {
 
-            reportOptions.items = reportHelper.calculateMarketValueAndExposurePercents(reportOptions.items, reportOptions);
+                reportOptions.items = reportHelper.injectIntoItems(reportOptions.items, reportOptions);
+                reportOptions.items = reportHelper.releaseEntityObjects(reportOptions.items);
 
-            console.log('reportOptions.items', reportOptions.items);
+                reportOptions.items = reportHelper.calculateMarketValueAndExposurePercents(reportOptions.items, reportOptions);
+
+                console.log('reportOptions.items', reportOptions.items);
 
 
-            entityViewerDataService.setReportOptions(reportOptions);
+                entityViewerDataService.setReportOptions(reportOptions);
 
-            entityViewerDataService.setStatusData('loaded');
+                entityViewerDataService.setStatusData('loaded');
 
-            // console.log('requestReport finished');
+                // console.log('requestReport finished');
 
-            createDataStructure(entityViewerDataService, entityViewerEventService)
+                createDataStructure(entityViewerDataService, entityViewerEventService)
+            } else {
+                entityViewerDataService.setStatusData('loaded');
+            }
 
         });
 

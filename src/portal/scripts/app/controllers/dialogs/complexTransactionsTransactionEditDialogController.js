@@ -38,48 +38,48 @@
                 vm.saveCallback().then(function (options) {
 
                     entityResolverService.create(options.entityType, options.entity).then(function (data) {
-                        //console.log('DATA', data);
-                        if (data.status == 200 || data.status == 201) {
-                            $mdDialog.hide({res: 'agree'});
-                        }
-                        if (data.status == 400) {
-                            $mdDialog.show({
-                                controller: 'ValidationDialogController as vm',
-                                templateUrl: 'views/dialogs/validation-dialog-view.html',
-                                targetEvent: $event,
-                                locals: {
-                                    validationData: data.response
-                                },
-                                preserveScope: true,
-                                autoWrap: true,
-                                skipHide: true
-                            })
-                        }
-                    });
+                        $mdDialog.hide({res: 'agree'});
+                    }).catch(function (reason) {
+
+                        $mdDialog.show({
+                            controller: 'ValidationDialogController as vm',
+                            templateUrl: 'views/dialogs/validation-dialog-view.html',
+                            targetEvent: $event,
+                            locals: {
+                                validationData: reason.message
+                            },
+                            multiple: true,
+                            preserveScope: true,
+                            autoWrap: true,
+                            skipHide: true
+                        })
+
+                    })
 
                 })
             } else {
                 vm.saveCallback().then(function (options) {
 
                     entityResolverService.update(options.entityType, options.entityId, options.entity).then(function (data) {
-                        console.log('DATA', data);
-                        if (data.status == 200 || data.status == 201) {
-                            $mdDialog.hide({res: 'agree'});
-                        }
-                        if (data.status == 400) {
-                            $mdDialog.show({
-                                controller: 'ValidationDialogController as vm',
-                                templateUrl: 'views/dialogs/validation-dialog-view.html',
-                                targetEvent: $event,
-                                locals: {
-                                    validationData: data.response
-                                },
-                                preserveScope: true,
-                                autoWrap: true,
-                                skipHide: true
-                            })
-                        }
-                    });
+
+                        $mdDialog.hide({res: 'agree'});
+
+                    }).catch(function (reason) {
+
+                        $mdDialog.show({
+                            controller: 'ValidationDialogController as vm',
+                            templateUrl: 'views/dialogs/validation-dialog-view.html',
+                            targetEvent: $event,
+                            locals: {
+                                validationData: reason.message
+                            },
+                            multiple: true,
+                            preserveScope: true,
+                            autoWrap: true,
+                            skipHide: true
+                        })
+
+                    })
                 })
 
             }

@@ -6,13 +6,14 @@
     'use strict';
 
     var cookieService = require('../../../../../core/services/cookieService');
+    var xhrService = require('../../../../../core/services/xhrService');
     var configureRepositoryUrlService = require('../../services/configureRepositoryUrlService');
     var baseUrlService = require('../../services/baseUrlService');
 
     var baseUrl = baseUrlService.resolve();
 
     var getList = function (options) {
-        return window.fetch(configureRepositoryUrlService.configureUrl(baseUrl + 'instruments/instrument-class/', options),
+        return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl + 'instruments/instrument-class/', options),
             {
                 method: 'GET',
                 credentials: 'include',
@@ -20,13 +21,11 @@
                     Accept: 'application/json',
                     'Content-type': 'application/json'
                 }
-            }).then(function (data) {
-            return data.json();
-        })
+            })
     };
 
     var getByKey = function (id) {
-        return window.fetch(baseUrl + 'instruments/instrument-class/' + id + '/',
+        return xhrService.fetch(baseUrl + 'instruments/instrument-class/' + id + '/',
             {
                 method: 'GET',
                 credentials: 'include',
@@ -34,13 +33,11 @@
                     Accept: 'application/json',
                     'Content-type': 'application/json'
                 }
-            }).then(function (data) {
-            return data.json();
-        })
+            })
     };
 
     var create = function (account) {
-        return window.fetch(baseUrl + 'instruments/instrument-class/',
+        return xhrService.fetch(baseUrl + 'instruments/instrument-class/',
             {
                 method: 'POST',
                 credentials: 'include',
@@ -50,13 +47,11 @@
                     'Content-type': 'application/json'
                 },
                 body: JSON.stringify(account)
-            }).then(function (data) {
-            return data.json();
-        })
+            })
     };
 
     var update = function (id, account) {
-        return window.fetch(baseUrl + 'instruments/instrument-class/' + id + '/',
+        return xhrService.fetch(baseUrl + 'instruments/instrument-class/' + id + '/',
             {
                 method: 'PUT',
                 credentials: 'include',
@@ -66,13 +61,11 @@
                     'Content-type': 'application/json'
                 },
                 body: JSON.stringify(account)
-            }).then(function (data) {
-            return data.json();
-        })
+            })
     };
 
     var deleteByKey = function (id) {
-        return window.fetch(baseUrl + 'instruments/instrument-class/' + id + '/',
+        return xhrService.fetch(baseUrl + 'instruments/instrument-class/' + id + '/',
             {
                 method: 'DELETE',
                 credentials: 'include',
@@ -82,7 +75,7 @@
                     'Content-type': 'application/json'
                 }
             }).then(function (data) {
-            return new Promise(function(resolve,reject) {
+            return new Promise(function (resolve, reject) {
                 resolve({status: 'deleted'});
             });
             //return data.json();

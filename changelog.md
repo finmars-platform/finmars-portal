@@ -1,5 +1,9 @@
 # Changelog
 
+## 06.12.2018
+
+- New way of error handling
+
 ## 30.11.2018
 
 - Profile Page

@@ -12,7 +12,7 @@
         var vm = this;
 
         vm.effective_date = moment(new Date()).format('YYYY-MM-DD');
-
+        vm.loading = false;
         vm.filters = {};
 
         vm.search = {
@@ -42,6 +42,8 @@
 
         vm.updateTable = function () {
 
+            vm.loading = true;
+
             var filters = Object.assign({}, vm.search);
 
             filters.effective_date_0 = vm.effective_date;
@@ -49,6 +51,9 @@
 
             eventsService.getList({filters: filters}).then(function (data) {
                 vm.events = data.results;
+
+                vm.loading = false;
+
                 $scope.$apply();
             })
         };

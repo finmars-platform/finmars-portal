@@ -168,7 +168,7 @@
                     evDomManager.addScrollListener(elements, scope.evDataService, scope.evEventService);
                 }
 
-                window.on('resize', function () {
+                window.addEventListener('resize', function () {
 
                     if (isReport) {
                         rvDomManager.calculateScroll(elements, scope.evDataService);

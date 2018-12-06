@@ -6,12 +6,13 @@
     'use strict';
 
     var cookieService = require('../../../../core/services/cookieService');
+    var xhrService = require('../../../../core/services/xhrService');
     var baseUrlService = require('../services/baseUrlService');
 
     var baseUrl = baseUrlService.resolve();
 
     var getList = function (options) {
-        return window.fetch(baseUrl + 'reports/report/',
+        return xhrService.fetch(baseUrl + 'reports/report/',
             {
                 method: 'POST',
                 credentials: 'include',
@@ -21,13 +22,11 @@
                     'Content-type': 'application/json'
                 },
                 body: JSON.stringify(options)
-            }).then(function (data) {
-            return data.json();
-        })
+            })
     };
 
     var getBalanceReport = function (options) {
-        return window.fetch(baseUrl + 'reports/balance-report/',
+        return xhrService.fetch(baseUrl + 'reports/balance-report/',
             {
                 method: 'POST',
                 credentials: 'include',
@@ -37,13 +36,11 @@
                     'Content-type': 'application/json'
                 },
                 body: JSON.stringify(options)
-            }).then(function (data) {
-            return data.json();
-        })
+            })
     };
 
     var getPnlReport = function (options) {
-        return window.fetch(baseUrl + 'reports/pl-report/',
+        return xhrService.fetch(baseUrl + 'reports/pl-report/',
             {
                 method: 'POST',
                 credentials: 'include',
@@ -53,13 +50,11 @@
                     'Content-type': 'application/json'
                 },
                 body: JSON.stringify(options)
-            }).then(function (data) {
-            return data.json();
-        })
+            })
     };
 
     var getTransactionReport = function (options) {
-        return window.fetch(baseUrl + 'reports/transaction-report/',
+        return xhrService.fetch(baseUrl + 'reports/transaction-report/',
             {
                 method: 'POST',
                 credentials: 'include',
@@ -69,13 +64,11 @@
                     'Content-type': 'application/json'
                 },
                 body: JSON.stringify(options)
-            }).then(function (data) {
-            return data.json();
-        })
+            })
     };
 
     var getCashFlowProjectionReport = function (options) {
-        return window.fetch(baseUrl + 'reports/cash-flow-projection-report/',
+        return xhrService.fetch(baseUrl + 'reports/cash-flow-projection-report/',
             {
                 method: 'POST',
                 credentials: 'include',
@@ -85,13 +78,11 @@
                     'Content-type': 'application/json'
                 },
                 body: JSON.stringify(options)
-            }).then(function (data) {
-            return data.json();
-        })
+            })
     };
 
     var getPerformanceReport = function (options) {
-        return window.fetch(baseUrl + 'reports/performance-report/',
+        return xhrService.fetch(baseUrl + 'reports/performance-report/',
             {
                 method: 'POST',
                 credentials: 'include',
@@ -101,9 +92,7 @@
                     'Content-type': 'application/json'
                 },
                 body: JSON.stringify(options)
-            }).then(function (data) {
-            return data.json();
-        })
+            })
     };
 
     module.exports = {

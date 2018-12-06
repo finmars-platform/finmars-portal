@@ -7,6 +7,7 @@
     'use strict';
 
     var cookieService = require('../../../../core/services/cookieService');
+    var xhrService = require('../../../../core/services/xhrService');
     var configureRepositoryUrlService = require('../services/configureRepositoryUrlService');
 
     var metaRestrictionsService = require('../services/metaRestrictionsService');
@@ -41,7 +42,7 @@
             })
         }
 
-        return window.fetch(baseUrl + endPointResolver(entity),
+        return xhrService.fetch(baseUrl + endPointResolver(entity),
             {
                 method: 'GET',
                 credentials: 'include',
@@ -49,13 +50,11 @@
                     Accept: 'application/json',
                     'Content-type': 'application/json'
                 }
-            }).then(function (data) {
-            return data.json();
-        })
+            })
     };
 
     var getByKey = function (entity, id) {
-        return window.fetch(baseUrl + endPointResolver(entity) + id + '/',
+        return xhrService.fetch(baseUrl + endPointResolver(entity) + id + '/',
             {
                 method: 'GET',
                 credentials: 'include',
@@ -63,13 +62,11 @@
                     Accept: 'application/json',
                     'Content-type': 'application/json'
                 }
-            }).then(function (data) {
-            return data.json();
-        })
+            })
     };
 
     var create = function (entity, attributeType) {
-        return window.fetch(baseUrl + endPointResolver(entity),
+        return xhrService.fetch(baseUrl + endPointResolver(entity),
             {
                 method: 'POST',
                 credentials: 'include',
@@ -79,20 +76,11 @@
                     'Content-type': 'application/json'
                 },
                 body: JSON.stringify(attributeType)
-            }).then(function (data) {
-            return new Promise(function (resolve, reject) {
-                data.json().then(function (result) {
-                    resolve({
-                        response: result,
-                        status: data.status
-                    })
-                })
-            });
-        })
+            })
     };
 
     var update = function (entity, id, attributeType) {
-        return window.fetch(baseUrl + endPointResolver(entity) + id + '/',
+        return xhrService.fetch(baseUrl + endPointResolver(entity) + id + '/',
             {
                 method: 'PUT',
                 credentials: 'include',
@@ -102,20 +90,11 @@
                     'Content-type': 'application/json'
                 },
                 body: JSON.stringify(attributeType)
-            }).then(function (data) {
-            return new Promise(function (resolve, reject) {
-                data.json().then(function (result) {
-                    resolve({
-                        response: result,
-                        status: data.status
-                    })
-                })
-            });
-        })
+            })
     };
 
     var deleteByKey = function (entity, id) {
-        return window.fetch(baseUrl + endPointResolver(entity) + id + '/',
+        return xhrService.fetch(baseUrl + endPointResolver(entity) + id + '/',
             {
                 method: 'DELETE',
                 credentials: 'include',

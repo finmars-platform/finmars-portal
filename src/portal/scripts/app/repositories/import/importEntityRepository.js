@@ -6,6 +6,7 @@
     'use strict';
 
     var cookieService = require('../../../../../core/services/cookieService');
+    var xhrService = require('../../../../../core/services/xhrService');
     var configureRepositoryUrlService = require('../../services/configureRepositoryUrlService');
     var baseUrlService = require('../../services/baseUrlService');
 
@@ -15,7 +16,7 @@
 
         var status = null;
 
-        return window.fetch(baseUrl + 'import/csv/',
+        return xhrService.fetch(baseUrl + 'import/csv/',
             {
                 method: 'POST',
                 credentials: 'include',
@@ -23,20 +24,7 @@
                     'X-CSRFToken': cookieService.getCookie('csrftoken')
                 },
                 body: config
-            }).then(function (data) {
-
-            status = data.status;
-
-            return data.json()
-
-        }).then(function (data) {
-
-            return {
-                status: status,
-                response: data
-            }
-
-        })
+            })
     };
 
     module.exports = {

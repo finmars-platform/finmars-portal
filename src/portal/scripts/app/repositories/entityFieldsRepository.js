@@ -5,11 +5,11 @@
 
     'use strict';
     var baseUrlService = require('../services/baseUrlService');
-
+    var xhrService = require('../../../../core/services/xhrService');
     var baseUrl = baseUrlService.resolve();
 
     var getDailyPricingModelChoices = function () {
-        return window.fetch(baseUrl + 'instruments/daily-pricing-model/',
+        return xhrService.fetch(baseUrl + 'instruments/daily-pricing-model/',
             {
                 method: 'GET',
                 credentials: 'include',
@@ -17,13 +17,11 @@
                     Accept: 'application/json',
                     'Content-type': 'application/json'
                 }
-            }).then(function (data) {
-            return data.json();
-        })
+            })
     };
 
     var getPaymentSizeDetailChoices = function () {
-        return window.fetch(baseUrl + 'instruments/payment-size-detail/',
+        return xhrService.fetch(baseUrl + 'instruments/payment-size-detail/',
             {
                 method: 'GET',
                 credentials: 'include',
@@ -31,13 +29,11 @@
                     Accept: 'application/json',
                     'Content-type': 'application/json'
                 }
-            }).then(function (data) {
-            return data.json();
-        })
+            })
     };
 
-    var getTransactionClassList = function() {
-        return new Promise(function(resolve, reject) {
+    var getTransactionClassList = function () {
+        return new Promise(function (resolve, reject) {
             resolve([
                 {
                     "value": "1",

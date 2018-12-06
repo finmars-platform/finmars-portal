@@ -6,13 +6,14 @@
     'use strict';
 
     var cookieService = require('../../../../core/services/cookieService');
+    var xhrService = require('../../../../core/services/xhrService');
     var configureRepositoryUrlService = require('../services/configureRepositoryUrlService');
     var baseUrlService = require('../services/baseUrlService');
 
     var baseUrl = baseUrlService.resolve();
 
     var getList = function (options) {
-        return window.fetch(configureRepositoryUrlService.configureUrl(baseUrl + 'transactions/transaction-type/', options),
+        return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl + 'transactions/transaction-type/', options),
             {
                 method: 'GET',
                 credentials: 'include',
@@ -21,13 +22,11 @@
                     Accept: 'application/json',
                     'Content-type': 'application/json'
                 }
-            }).then(function (data) {
-            return data.json();
-        })
+            })
     };
 
     var getByKey = function (id) {
-        return window.fetch(baseUrl + 'transactions/transaction-type/' + id + '/',
+        return xhrService.fetch(baseUrl + 'transactions/transaction-type/' + id + '/',
             {
                 method: 'GET',
                 credentials: 'include',
@@ -36,13 +35,11 @@
                     Accept: 'application/json',
                     'Content-type': 'application/json'
                 }
-            }).then(function (data) {
-            return data.json();
-        })
+            })
     };
 
     var create = function (transaction) {
-        return window.fetch(baseUrl + 'transactions/transaction-type/',
+        return xhrService.fetch(baseUrl + 'transactions/transaction-type/',
             {
                 method: 'POST',
                 credentials: 'include',
@@ -52,20 +49,11 @@
                     'Content-type': 'application/json'
                 },
                 body: JSON.stringify(transaction)
-            }).then(function (data) {
-            return new Promise(function (resolve, reject) {
-                data.json().then(function (result) {
-                    resolve({
-                        response: result,
-                        status: data.status
-                    })
-                })
-            });
-        })
+            })
     };
 
     var update = function (id, transaction) {
-        return window.fetch(baseUrl + 'transactions/transaction-type/' + id + '/',
+        return xhrService.fetch(baseUrl + 'transactions/transaction-type/' + id + '/',
             {
                 method: 'PUT',
                 credentials: 'include',
@@ -75,20 +63,11 @@
                     'Content-type': 'application/json'
                 },
                 body: JSON.stringify(transaction)
-            }).then(function (data) {
-            return new Promise(function (resolve, reject) {
-                data.json().then(function (result) {
-                    resolve({
-                        response: result,
-                        status: data.status
-                    })
-                })
-            });
-        })
+            })
     };
 
     var updateBulk = function (transactionTypes) {
-        return window.fetch(baseUrl + 'transactions/transaction-type/bulk-update/',
+        return xhrService.fetch(baseUrl + 'transactions/transaction-type/bulk-update/',
             {
                 method: 'PATCH',
                 credentials: 'include',
@@ -98,20 +77,11 @@
                     'Content-type': 'application/json'
                 },
                 body: JSON.stringify(transactionTypes)
-            }).then(function (data) {
-            return new Promise(function (resolve, reject) {
-                data.json().then(function (result) {
-                    resolve({
-                        response: result,
-                        status: data.status
-                    })
-                })
-            });
-        })
+            })
     };
 
     var deleteByKey = function (id) {
-        return window.fetch(baseUrl + 'transactions/transaction-type/' + id + '/',
+        return xhrService.fetch(baseUrl + 'transactions/transaction-type/' + id + '/',
             {
                 method: 'DELETE',
                 credentials: 'include',
@@ -128,7 +98,7 @@
     };
 
     var getBookTransaction = function (id) {
-        return window.fetch(baseUrl + 'transactions/transaction-type/' + id + '/book/',
+        return xhrService.fetch(baseUrl + 'transactions/transaction-type/' + id + '/book/',
             {
                 method: 'GET',
                 credentials: 'include',
@@ -137,13 +107,11 @@
                     Accept: 'application/json',
                     'Content-type': 'application/json'
                 }
-            }).then(function (data) {
-            return data.json();
-        })
+            })
     };
 
     var bookTransaction = function (id, transaction) {
-        return window.fetch(baseUrl + 'transactions/transaction-type/' + id + '/book/',
+        return xhrService.fetch(baseUrl + 'transactions/transaction-type/' + id + '/book/',
             {
                 method: 'PUT',
                 credentials: 'include',
@@ -153,16 +121,7 @@
                     'Content-type': 'application/json'
                 },
                 body: JSON.stringify(transaction)
-            }).then(function (data) {
-            return new Promise(function (resolve, reject) {
-                data.json().then(function (result) {
-                    resolve({
-                        response: result,
-                        status: data.status
-                    })
-                })
-            });
-        })
+            })
     };
 
     module.exports = {

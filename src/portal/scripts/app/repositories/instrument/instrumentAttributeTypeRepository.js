@@ -6,13 +6,14 @@
     'use strict';
 
     var cookieService = require('../../../../../core/services/cookieService');
+    var xhrService = require('../../../../../core/services/xhrService');
     var configureRepositoryUrlService = require('../../services/configureRepositoryUrlService');
     var baseUrlService = require('../../services/baseUrlService');
 
     var baseUrl = baseUrlService.resolve();
 
     var getList = function (options) {
-        return window.fetch(configureRepositoryUrlService.configureUrl(baseUrl + 'instruments/instrument-attribute-type/', options),
+        return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl + 'instruments/instrument-attribute-type/', options),
             {
                 method: 'GET',
                 credentials: 'include',
@@ -21,16 +22,14 @@
                     Accept: 'application/json',
                     'Content-type': 'application/json'
                 }
-            }).then(function (data) {
-            return data.json();
-        })
+            })
     };
 
     var getListByAttributeType = function (options) {
 
         var filters = '?value_type=' + options[0];
 
-        return window.fetch(baseUrl + 'instruments/instrument-attribute-type/' + filters + '&show_classifiers=1',
+        return xhrService.fetch(baseUrl + 'instruments/instrument-attribute-type/' + filters + '&show_classifiers=1',
             {
                 method: 'GET',
                 credentials: 'include',
@@ -39,13 +38,11 @@
                     Accept: 'application/json',
                     'Content-type': 'application/json'
                 }
-            }).then(function (data) {
-            return data.json();
-        })
+            })
     };
 
     var getByKey = function (id) {
-        return window.fetch(baseUrl + 'instruments/instrument-attribute-type/' + id + '/',
+        return xhrService.fetch(baseUrl + 'instruments/instrument-attribute-type/' + id + '/',
             {
                 method: 'GET',
                 credentials: 'include',
@@ -53,13 +50,11 @@
                     Accept: 'application/json',
                     'Content-type': 'application/json'
                 }
-            }).then(function (data) {
-            return data.json();
-        })
+            })
     };
 
     var create = function (account) {
-        return window.fetch(baseUrl + 'instruments/instrument-attribute-type/',
+        return xhrService.fetch(baseUrl + 'instruments/instrument-attribute-type/',
             {
                 method: 'POST',
                 credentials: 'include',
@@ -69,13 +64,11 @@
                     'Content-type': 'application/json'
                 },
                 body: JSON.stringify(account)
-            }).then(function (data) {
-            return data.json();
-        })
+            })
     };
 
     var update = function (id, account) {
-        return window.fetch(baseUrl + 'instruments/instrument-attribute-type/' + id + '/',
+        return xhrService.fetch(baseUrl + 'instruments/instrument-attribute-type/' + id + '/',
             {
                 method: 'PUT',
                 credentials: 'include',
@@ -85,13 +78,11 @@
                     'Content-type': 'application/json'
                 },
                 body: JSON.stringify(account)
-            }).then(function (data) {
-            return data.json();
-        })
+            })
     };
 
     var deleteByKey = function (id) {
-        return window.fetch(baseUrl + 'instruments/instrument-attribute-type/' + id + '/',
+        return xhrService.fetch(baseUrl + 'instruments/instrument-attribute-type/' + id + '/',
             {
                 method: 'DELETE',
                 credentials: 'include',

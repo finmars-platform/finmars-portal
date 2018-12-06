@@ -6,6 +6,7 @@
     "use strict";
 
     var baseUrlService = require('../services/baseUrlService');
+    var xhrService = require('../../../../core/services/xhrService');
 
     var baseUrl = baseUrlService.resolve();
 
@@ -402,7 +403,7 @@
     };
 
     var getContentTypeList = function () {
-        return window.fetch(baseUrl + 'import/content_type/',
+        return xhrService.fetch(baseUrl + 'import/content_type/',
             {
                 method: 'GET',
                 credentials: 'include',
@@ -410,9 +411,7 @@
                     Accept: 'application/json',
                     'Content-type': 'application/json'
                 }
-            }).then(function (data) {
-            return data.json();
-        })
+            })
     };
 
     var getListForDataImport = function () {

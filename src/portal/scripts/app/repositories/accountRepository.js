@@ -6,13 +6,14 @@
     'use strict';
 
     var cookieService = require('../../../../core/services/cookieService');
+    var xhrService = require('../../../../core/services/xhrService');
     var configureRepositoryUrlService = require('../services/configureRepositoryUrlService');
     var baseUrlService = require('../services/baseUrlService');
 
     var baseUrl = baseUrlService.resolve();
 
     var getTypeList = function () {
-        return window.fetch(baseUrl + 'accounts/account-type/',
+        return xhrService.fetch(baseUrl + 'accounts/account-type/',
             {
                 method: 'GET',
                 credentials: 'include',
@@ -20,13 +21,11 @@
                     Accept: 'application/json',
                     'Content-type': 'application/json'
                 }
-            }).then(function (data) {
-            return data.json();
-        })
+            })
     };
 
     var getList = function (options) {
-        return window.fetch(configureRepositoryUrlService.configureUrl(baseUrl + 'accounts/account/', options),
+        return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl + 'accounts/account/', options),
             {
                 method: 'GET',
                 credentials: 'include',
@@ -34,13 +33,11 @@
                     Accept: 'application/json',
                     'Content-type': 'application/json'
                 }
-            }).then(function (data) {
-            return data.json();
-        })
+            })
     };
 
     var getByKey = function (id) {
-        return window.fetch(baseUrl + 'accounts/account/' + id + '/',
+        return xhrService.fetch(baseUrl + 'accounts/account/' + id + '/',
             {
                 method: 'GET',
                 credentials: 'include',
@@ -48,13 +45,11 @@
                     Accept: 'application/json',
                     'Content-type': 'application/json'
                 }
-            }).then(function (data) {
-            return data.json();
-        })
+            })
     };
 
     var create = function (account) {
-        return window.fetch(baseUrl + 'accounts/account/',
+        return xhrService.fetch(baseUrl + 'accounts/account/',
             {
                 method: 'POST',
                 credentials: 'include',
@@ -64,20 +59,11 @@
                     'Content-type': 'application/json'
                 },
                 body: JSON.stringify(account)
-            }).then(function (data) {
-            return new Promise(function (resolve, reject) {
-                data.json().then(function (result) {
-                    resolve({
-                        response: result,
-                        status: data.status
-                    })
-                })
-            });
-        });
+            })
     };
 
     var update = function (id, account) {
-        return window.fetch(baseUrl + 'accounts/account/' + id + '/',
+        return xhrService.fetch(baseUrl + 'accounts/account/' + id + '/',
             {
                 method: 'PUT',
                 credentials: 'include',
@@ -87,20 +73,11 @@
                     'Content-type': 'application/json'
                 },
                 body: JSON.stringify(account)
-            }).then(function (data) {
-            return new Promise(function (resolve, reject) {
-                data.json().then(function (result) {
-                    resolve({
-                        response: result,
-                        status: data.status
-                    })
-                })
-            });
-        })
+            })
     };
 
     var updateBulk = function (accounts) {
-        return window.fetch(baseUrl + 'accounts/account/bulk-update/',
+        return xhrService.fetch(baseUrl + 'accounts/account/bulk-update/',
             {
                 method: 'PATCH',
                 credentials: 'include',
@@ -110,20 +87,11 @@
                     'Content-type': 'application/json'
                 },
                 body: JSON.stringify(accounts)
-            }).then(function (data) {
-            return new Promise(function (resolve, reject) {
-                data.json().then(function (result) {
-                    resolve({
-                        response: result,
-                        status: data.status
-                    })
-                })
-            });
-        })
+            })
     };
 
     var deleteByKey = function (id) {
-        return window.fetch(baseUrl + 'accounts/account/' + id + '/',
+        return xhrService.fetch(baseUrl + 'accounts/account/' + id + '/',
             {
                 method: 'DELETE',
                 credentials: 'include',

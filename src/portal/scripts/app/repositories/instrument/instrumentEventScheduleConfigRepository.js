@@ -6,13 +6,14 @@
     'use strict';
 
     var cookieService = require('../../../../../core/services/cookieService');
+    var xhrService = require('../../../../../core/services/xhrService');
     var configureRepositoryUrlService = require('../../services/configureRepositoryUrlService');
     var baseUrlService = require('../../services/baseUrlService');
 
     var baseUrl = baseUrlService.resolve();
 
     var getList = function (options) {
-        return window.fetch(configureRepositoryUrlService.configureUrl(baseUrl + 'instruments/event-schedule-config/', options),
+        return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl + 'instruments/event-schedule-config/', options),
             {
                 method: 'GET',
                 credentials: 'include',
@@ -20,13 +21,11 @@
                     Accept: 'application/json',
                     'Content-type': 'application/json'
                 }
-            }).then(function (data) {
-            return data.json();
-        })
+            })
     };
 
     var getByKey = function (id) {
-        return window.fetch(baseUrl + 'instruments/event-schedule-config/' + id + '/',
+        return xhrService.fetch(baseUrl + 'instruments/event-schedule-config/' + id + '/',
             {
                 method: 'GET',
                 credentials: 'include',
@@ -34,13 +33,11 @@
                     Accept: 'application/json',
                     'Content-type': 'application/json'
                 }
-            }).then(function (data) {
-            return data.json();
-        })
+            })
     };
 
     var create = function (account) {
-        return window.fetch(baseUrl + 'instruments/event-schedule-config/',
+        return xhrService.fetch(baseUrl + 'instruments/event-schedule-config/',
             {
                 method: 'POST',
                 credentials: 'include',
@@ -50,13 +47,11 @@
                     'Content-type': 'application/json'
                 },
                 body: JSON.stringify(account)
-            }).then(function (data) {
-            return data.json();
-        })
+            })
     };
 
     var update = function (id, account) {
-        return window.fetch(baseUrl + 'instruments/event-schedule-config/' + id + '/',
+        return xhrService.fetch(baseUrl + 'instruments/event-schedule-config/' + id + '/',
             {
                 method: 'PUT',
                 credentials: 'include',
@@ -66,20 +61,11 @@
                     'Content-type': 'application/json'
                 },
                 body: JSON.stringify(account)
-            }).then(function (data) {
-            return new Promise(function (resolve, reject) {
-                data.json().then(function (result) {
-                    resolve({
-                        response: result,
-                        status: data.status
-                    })
-                })
-            });
-        })
+            })
     };
 
     var deleteByKey = function (id) {
-        return window.fetch(baseUrl + 'instruments/event-schedule-config/' + id + '/',
+        return xhrService.fetch(baseUrl + 'instruments/event-schedule-config/' + id + '/',
             {
                 method: 'DELETE',
                 credentials: 'include',
