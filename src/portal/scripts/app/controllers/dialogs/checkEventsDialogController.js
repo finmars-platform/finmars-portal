@@ -29,14 +29,38 @@
 
 
         vm.agree = function () {
-            $mdDialog.hide({status: 'agree', data: {item: vm.selectedItem}});
+
+
+
+
         };
 
         vm.cancel = function () {
             $mdDialog.cancel();
         };
 
-        vm.selectRow = function (item) {
+        vm.isAllChecked = function () {
+
+            var result = true;
+
+            for (var i = 0; i < vm.events.length; i = i + 1) {
+                if (!vm.events[i].selected) {
+                    result = false;
+                    break;
+                }
+            }
+
+            return result;
+
+        };
+
+        vm.toggleAll = function () {
+
+            var state = vm.isAllChecked();
+
+            for (var i = 0; i < vm.events.length; i = i + 1) {
+                vm.events[i].selected = state;
+            }
 
         };
 

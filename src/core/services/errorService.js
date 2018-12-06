@@ -18,7 +18,7 @@
 
     var handleXhrErrors = function (response) {
 
-        console.log('handleXhrErrors.response', response)
+        console.log('handleXhrErrors.response', response);
 
         return new Promise(function (resolve, reject) {
 
