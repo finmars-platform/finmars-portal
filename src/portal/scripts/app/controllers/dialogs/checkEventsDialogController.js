@@ -30,12 +30,18 @@
 
         vm.agree = function ($event) {
 
+            var promises = [];
+
             vm.events.map(function (event) {
                 if (event.is_need_reaction) {
-                    vm.openEventWindow($event, event);
+                    promises.push(vm.openEventWindow($event, event));
                 }
             });
 
+
+            Promise.all(function () {
+                $mdDialog.hide();
+            })
 
         };
 
@@ -88,7 +94,7 @@
         };
 
         vm.openEventWindow = function ($event, event) {
-            $mdDialog.show({
+            return $mdDialog.show({
                 controller: 'EventDialogController as vm',
                 templateUrl: 'views/dialogs/event-dialog-view.html',
                 parent: angular.element(document.body),
