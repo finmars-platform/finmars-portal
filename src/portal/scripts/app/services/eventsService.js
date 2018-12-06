@@ -7,11 +7,11 @@
     };
 
     var getEventAction = function (eventId, actionId) {
-        return eventsRepository.getEventAction(url);
+        return eventsRepository.getEventAction(eventId, actionId);
     };
 
     var putEventAction = function (eventId, actionId, data) {
-        return eventsRepository.putEventAction(url, data);
+        return eventsRepository.putEventAction(eventId, actionId, data);
     };
 
     var ignoreEventAction = function (id) {
