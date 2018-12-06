@@ -42,6 +42,18 @@ app.run(['$rootScope', function ($rootScope) {
 
     var usersService = require('./app/services/usersService');
 
+
+    window.onerror = function (msg, url, line, col, error) {
+
+        toastr.error(msg);
+
+        return true;
+    };
+
+    window.addEventListener('error', function (e) {
+        toastr.error(e.error);
+    });
+
     $rootScope.$on('$stateChangeStart', function (event) {
 
         //usersService.ping().then(function (data) {

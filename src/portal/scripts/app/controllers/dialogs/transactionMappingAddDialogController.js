@@ -142,25 +142,25 @@
             vm.scheme.rules = vm.mapFields;
 
             transactionSchemeService.create(vm.scheme).then(function (data) {
-                console.log('DATA', data);
-                if (data.status == 200 || data.status == 201) {
-                    $mdDialog.hide({status: 'agree'});
-                }
-                if (data.status == 400) {
-                    $mdDialog.show({
-                        controller: 'ValidationDialogController as vm',
-                        templateUrl: 'views/dialogs/validation-dialog-view.html',
-                        targetEvent: $event,
-                        locals: {
-                            validationData: data.response
-                        },
-                        preserveScope: true,
-                        autoWrap: true,
-                        multiple: true,
-                        skipHide: true
-                    })
-                }
-            });
+
+                $mdDialog.hide({status: 'agree'});
+
+            }).catch(function (reason) {
+
+                $mdDialog.show({
+                    controller: 'ValidationDialogController as vm',
+                    templateUrl: 'views/dialogs/validation-dialog-view.html',
+                    targetEvent: $event,
+                    locals: {
+                        validationData: reason.message
+                    },
+                    preserveScope: true,
+                    autoWrap: true,
+                    multiple: true,
+                    skipHide: true
+                })
+
+            })
 
         };
 

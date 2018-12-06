@@ -6,6 +6,7 @@
     'use strict';
 
     var cookieService = require('../../../../core/services/cookieService');
+    var xhrService = require('../../../../core/services/xhrService');
     var baseUrlService = require('../services/baseUrlService');
     var configureRepositoryUrlService = require('../services/configureRepositoryUrlService');
 
@@ -16,10 +17,10 @@
         if (!options) {
             options = {};
         }
-        
+
         options.pageSize = options.pageSize || 200;
 
-        return window.fetch(configureRepositoryUrlService.configureUrl(baseUrl + 'currencies/currency/', options),
+        return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl + 'currencies/currency/', options),
             {
                 method: 'GET',
                 credentials: 'include',
@@ -27,13 +28,11 @@
                     Accept: 'application/json',
                     'Content-type': 'application/json'
                 }
-            }).then(function (data) {
-            return data.json();
-        })
+            })
     };
 
     var getByKey = function (id) {
-        return window.fetch(baseUrl + 'currencies/currency/' + id + '/',
+        return xhrService.fetch(baseUrl + 'currencies/currency/' + id + '/',
             {
                 method: 'GET',
                 credentials: 'include',
@@ -41,13 +40,11 @@
                     Accept: 'application/json',
                     'Content-type': 'application/json'
                 }
-            }).then(function (data) {
-            return data.json();
-        })
+            })
     };
 
     var create = function (currency) {
-        return window.fetch(baseUrl + 'currencies/currency/',
+        return xhrService.fetch(baseUrl + 'currencies/currency/',
             {
                 method: 'POST',
                 credentials: 'include',
@@ -57,20 +54,11 @@
                     'Content-type': 'application/json'
                 },
                 body: JSON.stringify(currency)
-            }).then(function (data) {
-            return new Promise(function (resolve, reject) {
-                data.json().then(function (result) {
-                    resolve({
-                        response: result,
-                        status: data.status
-                    })
-                })
-            });
-        })
+            })
     };
 
     var update = function (id, currency) {
-        return window.fetch(baseUrl + 'currencies/currency/' + id + '/',
+        return xhrService.fetch(baseUrl + 'currencies/currency/' + id + '/',
             {
                 method: 'PUT',
                 credentials: 'include',
@@ -80,20 +68,11 @@
                     'Content-type': 'application/json'
                 },
                 body: JSON.stringify(currency)
-            }).then(function (data) {
-            return new Promise(function (resolve, reject) {
-                data.json().then(function (result) {
-                    resolve({
-                        response: result,
-                        status: data.status
-                    })
-                })
-            });
-        })
+            })
     };
 
     var deleteByKey = function (id) {
-        return window.fetch(baseUrl + 'currencies/currency/' + id + '/',
+        return xhrService.fetch(baseUrl + 'currencies/currency/' + id + '/',
             {
                 method: 'DELETE',
                 credentials: 'include',

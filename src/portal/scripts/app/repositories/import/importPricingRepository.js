@@ -6,13 +6,14 @@
     'use strict';
 
     var cookieService = require('../../../../../core/services/cookieService');
+    var xhrService = require('../../../../../core/services/xhrService');
     var configureRepositoryUrlService = require('../../services/configureRepositoryUrlService');
     var baseUrlService = require('../../services/baseUrlService');
 
     var baseUrl = baseUrlService.resolve();
 
     var create = function (price) {
-        return window.fetch(baseUrl + 'import/pricing/',
+        return xhrService.fetch(baseUrl + 'import/pricing/',
             {
                 method: 'POST',
                 credentials: 'include',
@@ -22,9 +23,7 @@
                     'Content-type': 'application/json'
                 },
                 body: JSON.stringify(price)
-            }).then(function (data) {
-            return data.json();
-        })
+            })
     };
 
     module.exports = {

@@ -6,12 +6,13 @@
     'use strict';
 
     var cookieService = require('../../../../../core/services/cookieService');
+    var xhrService = require('../../../../../core/services/xhrService');
     var baseUrlService = require('../../services/baseUrlService');
 
     var baseUrl = baseUrlService.resolve();
 
     var getSchemeFields = function (schemeId) {
-        return window.fetch(baseUrl + 'import/schema_fields/?schema_id=' + schemeId,
+        return xhrService.fetch(baseUrl + 'import/schema_fields/?schema_id=' + schemeId,
             {
                 method: 'GET',
                 credentials: 'include',
@@ -19,13 +20,11 @@
                     Accept: 'application/json',
                     'Content-type': 'application/json'
                 }
-            }).then(function (data) {
-            return data.json();
-        })
+            })
     };
 
     var create = function (fields) {
-        return window.fetch(baseUrl + 'import/schema_fields/',
+        return xhrService.fetch(baseUrl + 'import/schema_fields/',
             {
                 method: 'PATCH',
                 credentials: 'include',
@@ -35,13 +34,11 @@
                     'Content-type': 'application/json'
                 },
                 body: JSON.stringify(fields)
-            }).then(function (data) {
-            return data.json();
-        })
+            })
     };
 
     var deleteById = function (id) {
-        return window.fetch(baseUrl + 'import/schema_fields/' + id + '/',
+        return xhrService.fetch(baseUrl + 'import/schema_fields/' + id + '/',
             {
                 method: 'DELETE',
                 credentials: 'include',
@@ -50,9 +47,7 @@
                     Accept: 'application/json',
                     'Content-type': 'application/json'
                 }
-        }).then(function (data) {
-            return data.json();
-        })
+            })
     };
 
     module.exports = {
@@ -61,4 +56,4 @@
         deleteById: deleteById
     }
 
-} ());
+}());

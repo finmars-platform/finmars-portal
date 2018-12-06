@@ -6,6 +6,7 @@
     'use strict';
 
     var cookieService = require('../../../../../core/services/cookieService');
+    var xhrService = require('../../../../../core/services/xhrService');
     var baseUrlService = require('../../services/baseUrlService');
 
     var baseUrl = baseUrlService.resolve();
@@ -36,7 +37,7 @@
     };
 
     var create = function (attrs, schemeId) {
-        return window.fetch(baseUrl + 'import/schema_matching/?schema_id=' + schemeId,
+        return xhrService.fetch(baseUrl + 'import/schema_matching/?schema_id=' + schemeId,
             {
                 method: 'PATCH',
                 credentials: 'include',
@@ -46,9 +47,7 @@
                     'Content-type': 'application/json'
                 },
                 body: JSON.stringify(attrs)
-            }).then(function (data) {
-                return data.json();
-        })
+            })
     };
 
     module.exports = {

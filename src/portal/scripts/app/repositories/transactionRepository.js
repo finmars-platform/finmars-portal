@@ -6,13 +6,14 @@
     'use strict';
 
     var cookieService = require('../../../../core/services/cookieService');
+    var xhrService = require('../../../../core/services/xhrService');
     var configureRepositoryUrlService = require('../services/configureRepositoryUrlService');
     var baseUrlService = require('../services/baseUrlService');
 
     var baseUrl = baseUrlService.resolve();
 
     var getList = function (options) {
-        return window.fetch(configureRepositoryUrlService.configureUrl(baseUrl + 'transactions/transaction/', options),
+        return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl + 'transactions/transaction/', options),
             {
                 method: 'GET',
                 credentials: 'include',
@@ -20,13 +21,11 @@
                     Accept: 'application/json',
                     'Content-type': 'application/json'
                 }
-            }).then(function (data) {
-            return data.json();
-        })
+            })
     };
 
     var getByKey = function (id) {
-        return window.fetch(baseUrl + 'transactions/transaction/' + id + '/',
+        return xhrService.fetch(baseUrl + 'transactions/transaction/' + id + '/',
             {
                 method: 'GET',
                 credentials: 'include',
@@ -35,13 +34,11 @@
                     Accept: 'application/json',
                     'Content-type': 'application/json'
                 }
-            }).then(function (data) {
-            return data.json();
-        })
+            })
     };
 
     var create = function (transaction) {
-        return window.fetch(baseUrl + 'transactions/transaction/',
+        return xhrService.fetch(baseUrl + 'transactions/transaction/',
             {
                 method: 'POST',
                 credentials: 'include',
@@ -51,20 +48,11 @@
                     'Content-type': 'application/json'
                 },
                 body: JSON.stringify(transaction)
-            }).then(function (data) {
-            return new Promise(function (resolve, reject) {
-                data.json().then(function (result) {
-                    resolve({
-                        response: result,
-                        status: data.status
-                    })
-                })
-            });
-        })
+            })
     };
 
     var update = function (id, transaction) {
-        return window.fetch(baseUrl + 'transactions/transaction/' + id + '/',
+        return xhrService.fetch(baseUrl + 'transactions/transaction/' + id + '/',
             {
                 method: 'PUT',
                 credentials: 'include',
@@ -74,20 +62,11 @@
                     'Content-type': 'application/json'
                 },
                 body: JSON.stringify(transaction)
-            }).then(function (data) {
-            return new Promise(function (resolve, reject) {
-                data.json().then(function (result) {
-                    resolve({
-                        response: result,
-                        status: data.status
-                    })
-                })
-            });
-        })
+            })
     };
 
     var deleteByKey = function (id) {
-        return window.fetch(baseUrl + 'transactions/transaction/' + id + '/',
+        return xhrService.fetch(baseUrl + 'transactions/transaction/' + id + '/',
             {
                 method: 'DELETE',
                 credentials: 'include',
@@ -97,7 +76,7 @@
                     'Content-type': 'application/json'
                 }
             }).then(function (data) {
-            return new Promise(function(resolve,reject) {
+            return new Promise(function (resolve, reject) {
                 resolve({status: 'deleted'});
             });
             //return data.json();

@@ -620,53 +620,52 @@
 
                 entityResolverService.create(vm.entityType, resultEntity).then(function (data) {
 
-                    if (data.status === 200 || data.status === 201) {
+                    if (vm.entityType === 'complex-transaction') {
 
-                        if (vm.entityType === 'complex-transaction') {
+                        if (data.response.hasOwnProperty('has_errors') && data.response.has_errors === true) {
 
-                            if (data.response.hasOwnProperty('has_errors') && data.response.has_errors === true) {
+                            $mdDialog.show({
+                                controller: 'ValidationDialogController as vm',
+                                templateUrl: 'views/dialogs/validation-dialog-view.html',
+                                targetEvent: $event,
+                                locals: {
+                                    validationData: {
+                                        complex_transaction_errors: data.response.complex_transaction_errors,
+                                        instruments_errors: data.response.instruments_errors,
+                                        transactions_errors: data.response.transactions_errors
+                                    }
+                                },
+                                multiple: true,
+                                preserveScope: true,
+                                autoWrap: true,
+                                skipHide: true
+                            })
 
-                                $mdDialog.show({
-                                    controller: 'ValidationDialogController as vm',
-                                    templateUrl: 'views/dialogs/validation-dialog-view.html',
-                                    targetEvent: $event,
-                                    locals: {
-                                        validationData: {
-                                            complex_transaction_errors: data.response.complex_transaction_errors,
-                                            instruments_errors: data.response.instruments_errors,
-                                            transactions_errors: data.response.transactions_errors
-                                        }
-                                    },
-                                    multiple: true,
-                                    preserveScope: true,
-                                    autoWrap: true,
-                                    skipHide: true
-                                })
-
-                            } else {
-
-                                $mdDialog.hide({res: 'agree'});
-                            }
                         } else {
 
                             $mdDialog.hide({res: 'agree'});
                         }
+                    } else {
+
+                        $mdDialog.hide({res: 'agree'});
                     }
-                    if (data.status === 400) {
-                        $mdDialog.show({
-                            controller: 'ValidationDialogController as vm',
-                            templateUrl: 'views/dialogs/validation-dialog-view.html',
-                            targetEvent: $event,
-                            locals: {
-                                validationData: data.response
-                            },
-                            preserveScope: true,
-                            multiple: true,
-                            autoWrap: true,
-                            skipHide: true
-                        })
-                    }
-                });
+
+                }).catch(function (data) {
+
+                    $mdDialog.show({
+                        controller: 'ValidationDialogController as vm',
+                        templateUrl: 'views/dialogs/validation-dialog-view.html',
+                        targetEvent: $event,
+                        locals: {
+                            validationData: data.response
+                        },
+                        preserveScope: true,
+                        multiple: true,
+                        autoWrap: true,
+                        skipHide: true
+                    })
+
+                })
 
             }
 

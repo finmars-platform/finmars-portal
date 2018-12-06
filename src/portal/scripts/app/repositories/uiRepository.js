@@ -6,6 +6,7 @@
     'use strict';
 
     var cookieService = require('../../../../core/services/cookieService');
+    var xhrService = require('../../../../core/services/xhrService');
     var metaContentTypesService = require('../services/metaContentTypesService');
     var metaRestrictionsRepository = require('./metaRestrictionsRepository');
     var baseUrlService = require('../services/baseUrlService');
@@ -16,7 +17,7 @@
 
         var contentType = metaContentTypesService.findContentTypeByEntity(entity, 'ui');
 
-        return window.fetch(baseUrl + 'ui/edit-layout/?content_type=' + contentType,
+        return xhrService.fetch(baseUrl + 'ui/edit-layout/?content_type=' + contentType,
             {
                 method: 'GET',
                 credentials: 'include',
@@ -24,14 +25,12 @@
                     Accept: 'application/json',
                     'Content-type': 'application/json'
                 }
-            }).then(function (data) {
-            return data.json();
-        })
+            })
     };
 
     var createEditLayout = function (ui) {
 
-        return window.fetch(baseUrl + 'ui/edit-layout/',
+        return xhrService.fetch(baseUrl + 'ui/edit-layout/',
             {
                 method: 'POST',
                 credentials: 'include',
@@ -41,13 +40,11 @@
                     'Content-type': 'application/json'
                 },
                 body: JSON.stringify(ui)
-            }).then(function (data) {
-            return data.json();
-        })
+            })
     };
 
     var updateEditLayout = function (id, ui) {
-        return window.fetch(baseUrl + 'ui/edit-layout/' + id + '/',
+        return xhrService.fetch(baseUrl + 'ui/edit-layout/' + id + '/',
             {
                 method: 'PUT',
                 credentials: 'include',
@@ -57,16 +54,14 @@
                     'Content-type': 'application/json'
                 },
                 body: JSON.stringify(ui)
-            }).then(function (data) {
-            return data.json();
-        })
+            })
     };
 
 
     var getListLayout = function (entity) {
 
         if (entity == 'all') {
-            return window.fetch(baseUrl + 'ui/list-layout/',
+            return xhrService.fetch(baseUrl + 'ui/list-layout/',
                 {
                     method: 'GET',
                     credentials: 'include',
@@ -74,14 +69,12 @@
                         Accept: 'application/json',
                         'Content-type': 'application/json'
                     }
-                }).then(function (data) {
-                return data.json();
-            })
+                })
         } else {
 
             var contentType = metaContentTypesService.findContentTypeByEntity(entity, 'ui');
 
-            return window.fetch(baseUrl + 'ui/list-layout/?content_type=' + contentType,
+            return xhrService.fetch(baseUrl + 'ui/list-layout/?content_type=' + contentType,
                 {
                     method: 'GET',
                     credentials: 'include',
@@ -90,14 +83,12 @@
                         Accept: 'application/json',
                         'Content-type': 'application/json'
                     }
-                }).then(function (data) {
-                return data.json();
-            })
+                })
         }
     };
 
     var getListLayoutByKey = function (uiLayoutId) {
-        return window.fetch(baseUrl + 'ui/list-layout/' + uiLayoutId + '/',
+        return xhrService.fetch(baseUrl + 'ui/list-layout/' + uiLayoutId + '/',
             {
                 method: 'GET',
                 credentials: 'include',
@@ -106,16 +97,14 @@
                     Accept: 'application/json',
                     'Content-type': 'application/json'
                 }
-            }).then(function (data) {
-            return data.json();
-        })
+            })
     };
 
     var getActiveListLayout = function (entity) {
 
         var contentType = metaContentTypesService.findContentTypeByEntity(entity, 'ui');
 
-        return window.fetch(baseUrl + 'ui/list-layout/?is_default=2&content_type=' + contentType,
+        return xhrService.fetch(baseUrl + 'ui/list-layout/?is_default=2&content_type=' + contentType,
             {
                 method: 'GET',
                 credentials: 'include',
@@ -124,15 +113,12 @@
                     Accept: 'application/json',
                     'Content-type': 'application/json'
                 }
-            }).then(function (data) {
-            console.log('ui repository data', data);
-            return data.json();
-        })
+            })
     };
 
     var createListLayout = function (ui) {
 
-        return window.fetch(baseUrl + 'ui/list-layout/',
+        return xhrService.fetch(baseUrl + 'ui/list-layout/',
             {
                 method: 'POST',
                 credentials: 'include',
@@ -142,13 +128,11 @@
                     'Content-type': 'application/json'
                 },
                 body: JSON.stringify(ui)
-            }).then(function (data) {
-            return data.json();
-        })
+            })
     };
 
     var updateListLayout = function (id, ui) {
-        return window.fetch(baseUrl + 'ui/list-layout/' + id + '/',
+        return xhrService.fetch(baseUrl + 'ui/list-layout/' + id + '/',
             {
                 method: 'PUT',
                 credentials: 'include',
@@ -158,14 +142,12 @@
                     'Content-type': 'application/json'
                 },
                 body: JSON.stringify(ui)
-            }).then(function (data) {
-            return data.json();
-        })
+            })
     };
 
     var deleteListLayoutByKey = function (id) {
         return new Promise(function (resolve, reject) {
-            window.fetch(baseUrl + 'ui/list-layout/' + id + '/',
+            xhrService.fetch(baseUrl + 'ui/list-layout/' + id + '/',
                 {
                     method: 'DELETE',
                     credentials: 'include',
@@ -276,7 +258,7 @@
 
     var getEditLayoutByInstanceId = function (entityType, id) {
         if (entityType == 'complex-transaction') {
-            return window.fetch(baseUrl + 'transactions/transaction-type/' + id + '/',
+            return xhrService.fetch(baseUrl + 'transactions/transaction-type/' + id + '/',
                 {
                     method: 'GET',
                     credentials: 'include',
@@ -285,16 +267,14 @@
                         Accept: 'application/json',
                         'Content-type': 'application/json'
                     }
-                }).then(function (data) {
-                return data.json();
-            })
+                })
         }
     };
 
     var updateEditLayoutByInstanceId = function (entityType, id, editLayout) {
 
         if (entityType == 'complex-transaction') {
-            return window.fetch(baseUrl + 'transactions/transaction-type/' + id + '/',
+            return xhrService.fetch(baseUrl + 'transactions/transaction-type/' + id + '/',
                 {
                     method: 'PATCH',
                     credentials: 'include',
@@ -304,9 +284,7 @@
                         'Content-type': 'application/json'
                     },
                     body: JSON.stringify(editLayout)
-                }).then(function (data) {
-                return data.json();
-            })
+                })
         }
     };
 

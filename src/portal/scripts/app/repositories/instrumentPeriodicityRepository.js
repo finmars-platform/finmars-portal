@@ -5,14 +5,14 @@
 
     'use strict';
 
-    var cookieService = require('../../../../core/services/cookieService');
+    var cookieService = require('../../../../core/services/cookieService'); var xhrService = require('../../../../core/services/xhrService');
     var configureRepositoryUrlService = require('../services/configureRepositoryUrlService');
     var baseUrlService = require('../services/baseUrlService');
 
     var baseUrl = baseUrlService.resolve();
 
     var getList = function () {
-        return window.fetch(baseUrl + 'instruments/periodicity/',
+        return xhrService.fetch(baseUrl + 'instruments/periodicity/',
             {
                 method: 'GET',
                 credentials: 'include',
@@ -21,9 +21,6 @@
                     Accept: 'application/json',
                     'Content-type': 'application/json'
                 }
-            })
-            .then(function (data) {
-                return data.json();
             })
     };
 

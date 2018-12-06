@@ -9,12 +9,19 @@
         <div layout="column">
             <div>
 
-                <div>
+                <div layout="row">
                     <md-input-container>
                         <label for="">Effective date</label>
                         <zh-date-picker data-ng-model="vm.effective_date"
                                         data-ng-change="vm.updateTable()"></zh-date-picker>
                     </md-input-container>
+
+                    <div class="m-l-16" layout="row" layout-sm="column" layout-align="space-around"
+                         data-ng-if="vm.loading"
+                    >
+                        <md-progress-circular md-diameter="30" md-mode="indeterminate"></md-progress-circular>
+                    </div>
+
                 </div>
 
                 <table class="bordered">
@@ -121,7 +128,7 @@
             Cancel
         </md-button>
         <md-button class="md-raised md-primary" ng-click="vm.agree()" style="margin-right:20px;">
-            Save
+            Process
         </md-button>
     </md-dialog-actions>
 </md-dialog>

@@ -230,6 +230,7 @@
                         helpPageUrl: helpPageUrl
                     }
                 },
+                multiple: true,
                 preserveScope: true,
                 autoWrap: true,
                 skipHide: true
@@ -274,6 +275,7 @@
                 templateUrl: 'views/dialogs/ui/ui-layout-list-view.html',
                 parent: angular.element(document.body),
                 targetEvent: $event,
+                multiple: true,
                 locals: {
                     options: {
                         entityType: entityType

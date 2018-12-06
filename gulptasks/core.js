@@ -154,6 +154,7 @@
             'node_modules/perfect-scrollbar/dist/perfect-scrollbar.js',
             'node_modules/fancy-logger/dist/js/fancy-logger.js',
             'node_modules/jstree/dist/jstree.js',
+            'node_modules/toastr/build/toastr.min.js',
             'src/core/datepicker/pickmeup.js'
         ];
 
@@ -171,6 +172,7 @@
             //'node_modules/nanoscroller/bin/css/nanoscroller.css',
             'node_modules/perfect-scrollbar/css/perfect-scrollbar.css',
             'node_modules/jstree/dist/themes/default/style.css',
+            'node_modules/toastr/build/toastr.css',
             'node_modules/pickmeup/css/pickmeup.css'
         ];
 

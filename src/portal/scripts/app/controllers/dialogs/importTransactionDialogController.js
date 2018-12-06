@@ -246,42 +246,42 @@
 
         vm.agree = function ($event) {
             instrumentService.create(vm.config.instrument).then(function (data) {
-                console.log('DATA', data);
-                if (data.status == 200 || data.status == 201) {
-                    $mdDialog.show({
-                        controller: 'SuccessDialogController as vm',
-                        templateUrl: 'views/dialogs/success-dialog-view.html',
-                        locals: {
-                            success: {
-                                title: "",
-                                description: "You have you have successfully add instrument " + vm.config.instrument.user_code + " (user code)."
-                            }
-                        },
-                        targetEvent: $event,
-                        preserveScope: true,
-                        multiple: true,
-                        autoWrap: true,
-                        skipHide: true
-                    }).then(function () {
-                        $mdDialog.hide({res: 'agree'});
-                    });
 
-                }
-                if (data.status == 400 || data.status == 500) {
-                    $mdDialog.show({
-                        controller: 'ValidationDialogController as vm',
-                        templateUrl: 'views/dialogs/validation-dialog-view.html',
-                        locals: {
-                            validationData: data.response
-                        },
-                        targetEvent: $event,
-                        preserveScope: true,
-                        multiple: true,
-                        autoWrap: true,
-                        skipHide: true
-                    })
-                }
-            });
+                $mdDialog.show({
+                    controller: 'SuccessDialogController as vm',
+                    templateUrl: 'views/dialogs/success-dialog-view.html',
+                    locals: {
+                        success: {
+                            title: "",
+                            description: "You have you have successfully add instrument " + vm.config.instrument.user_code + " (user code)."
+                        }
+                    },
+                    targetEvent: $event,
+                    preserveScope: true,
+                    multiple: true,
+                    autoWrap: true,
+                    skipHide: true
+                }).then(function () {
+                    $mdDialog.hide({res: 'agree'});
+                });
+
+            }).catch(function (reason) {
+
+                $mdDialog.show({
+                    controller: 'ValidationDialogController as vm',
+                    templateUrl: 'views/dialogs/validation-dialog-view.html',
+                    locals: {
+                        validationData: reason.message
+                    },
+                    targetEvent: $event,
+                    preserveScope: true,
+                    multiple: true,
+                    autoWrap: true,
+                    skipHide: true
+                })
+
+
+            })
 
         };
 
