@@ -36,7 +36,7 @@
 
         vm.ignore = function () {
 
-            eventsService.ignoreEventAction(eventId).then(function () {
+            eventsService.ignoreEventAction(vm.event.id).then(function () {
                 console.log('event action done');
                 vm.cancel();
             });
