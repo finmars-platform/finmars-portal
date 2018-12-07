@@ -7,6 +7,7 @@
             <md-input-container style="font-size: 18px;">
                 <label for="">Transaction type</label>
                 <md-select data-ng-model="vm.transactionTypeId"
+                           md-container-class="big-select"
                            md-on-open="vm.loadTransactionTypes()" data-ng-change="vm.transactionTypeHandler()"
                            md-on-close="searchTerm = ''">
                     <md-select-header>
