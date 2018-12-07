@@ -316,8 +316,8 @@
 
                         var originValues = JSON.parse(JSON.stringify(entity.values));
 
-                        entity.transactions = data.response.transactions;
-                        entity.values = data.response.values;
+                        entity.transactions = data.transactions;
+                        entity.values = data.values;
 
                         var originValuesKeys = Object.keys(originValues);
                         var defaultValuesKeys = Object.keys(entity.values);

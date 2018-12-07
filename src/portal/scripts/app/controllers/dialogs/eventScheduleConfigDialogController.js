@@ -51,7 +51,7 @@
                     templateUrl: 'views/dialogs/validation-dialog-view.html',
                     targetEvent: $event,
                     locals: {
-                        validationData: data.response
+                        validationData: reason
                     },
                     multiple: true,
                     preserveScope: true,

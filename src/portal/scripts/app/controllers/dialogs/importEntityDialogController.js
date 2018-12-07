@@ -99,68 +99,62 @@
 
             importEntityService.startImport(formData).then(function (data) {
 
-                console.log('data', data);
+                vm.readyStatus.processing = false;
+                vm.dataIsImported = true;
 
-                if (data.status !== 500 && data.status !== 400) {
+                if (data.errors.length === 0) {
 
-                    vm.readyStatus.processing = false;
-                    vm.dataIsImported = true;
-
-                    if (data.response.errors.length == 0) {
-
-                        $mdDialog.show({
-                            controller: 'SuccessDialogController as vm',
-                            templateUrl: 'views/dialogs/success-dialog-view.html',
-                            targetEvent: $event,
-                            preserveScope: true,
-                            multiple: true,
-                            autoWrap: true,
-                            skipHide: true,
-                            locals: {
-                                success: {
-                                    title: "",
-                                    description: "You have successfully imported csv file"
-                                }
-                            }
-
-                        });
-
-                    } else {
-
-                        $mdDialog.show({
-                            controller: 'ImportEntityErrorsDialogController as vm',
-                            templateUrl: 'views/dialogs/import-entity-errors-dialog-view.html',
-                            targetEvent: $event,
-                            preserveScope: true,
-                            multiple: true,
-                            autoWrap: true,
-                            skipHide: true,
-                            locals: {
-                                data: data.response
-                            }
-                        })
-
-                    }
-
-                }
-
-
-                if (data.status === 500 || data.status === 400) {
                     $mdDialog.show({
-                        controller: 'ValidationDialogController as vm',
-                        templateUrl: 'views/dialogs/validation-dialog-view.html',
+                        controller: 'SuccessDialogController as vm',
+                        templateUrl: 'views/dialogs/success-dialog-view.html',
                         targetEvent: $event,
                         preserveScope: true,
                         multiple: true,
                         autoWrap: true,
                         skipHide: true,
                         locals: {
-                            validationData: {
-                                message: "An error occurred. Please try again later"
+                            success: {
+                                title: "",
+                                description: "You have successfully imported csv file"
                             }
                         }
+
+                    });
+
+                } else {
+
+                    $mdDialog.show({
+                        controller: 'ImportEntityErrorsDialogController as vm',
+                        templateUrl: 'views/dialogs/import-entity-errors-dialog-view.html',
+                        targetEvent: $event,
+                        preserveScope: true,
+                        multiple: true,
+                        autoWrap: true,
+                        skipHide: true,
+                        locals: {
+                            data: data
+                        }
                     })
+
                 }
+
+
+            }).catch(function (reason) {
+
+                $mdDialog.show({
+                    controller: 'ValidationDialogController as vm',
+                    templateUrl: 'views/dialogs/validation-dialog-view.html',
+                    targetEvent: $event,
+                    preserveScope: true,
+                    multiple: true,
+                    autoWrap: true,
+                    skipHide: true,
+                    locals: {
+                        validationData: {
+                            message: "An error occurred. Please try again later"
+                        }
+                    }
+                })
 
             })
         };

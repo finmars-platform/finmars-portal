@@ -157,55 +157,56 @@
             }
 
             importTransactionService.startImport(formData).then(function (data) {
-                console.log('data', data);
-                if (data.status != 500) {
-                    vm.config = data.response;
 
-                    if (vm.config.task_status == 'SUCCESS') {
+                vm.config = data;
 
-                        if (vm.config.error_rows.length == 0) {
-                            vm.finishedSuccess = true;
-                        } else {
+                if (vm.config.task_status === 'SUCCESS') {
 
-                            $mdDialog.show({
-                                controller: 'ImportTransactionErrorsDialogController as vm',
-                                templateUrl: 'views/dialogs/import-transaction-errors-dialog-view.html',
-                                locals: {
-                                    data: vm.config
-                                },
-                                targetEvent: $event,
-                                preserveScope: true,
-                                multiple: true,
-                                autoWrap: true,
-                                skipHide: true,
-                            })
-                        }
+                    if (vm.config.error_rows.length === 0) {
 
-                        vm.readyStatus.processing = false;
-                        vm.dataIsImported = true;
+                        vm.finishedSuccess = true;
 
                     } else {
-                        setTimeout(function () {
-                            vm.load();
-                        }, 1000)
 
+                        $mdDialog.show({
+                            controller: 'ImportTransactionErrorsDialogController as vm',
+                            templateUrl: 'views/dialogs/import-transaction-errors-dialog-view.html',
+                            locals: {
+                                data: vm.config
+                            },
+                            targetEvent: $event,
+                            preserveScope: true,
+                            multiple: true,
+                            autoWrap: true,
+                            skipHide: true,
+                        })
                     }
-                }
-                if (data.status == 500) {
-                    $mdDialog.show({
-                        controller: 'ValidationDialogController as vm',
-                        templateUrl: 'views/dialogs/validation-dialog-view.html',
-                        locals: {
-                            validationData: "An error occurred. Please try again later"
-                        },
-                        targetEvent: $event,
-                        preserveScope: true,
-                        multiple: true,
-                        autoWrap: true,
-                        skipHide: true,
-                    })
+
+                    vm.readyStatus.processing = false;
+                    vm.dataIsImported = true;
+
+                } else {
+                    setTimeout(function () {
+                        vm.load();
+                    }, 1000)
+
                 }
 
+
+            }).catch(function (reason) {
+
+                $mdDialog.show({
+                    controller: 'ValidationDialogController as vm',
+                    templateUrl: 'views/dialogs/validation-dialog-view.html',
+                    locals: {
+                        validationData: "An error occurred. Please try again later"
+                    },
+                    targetEvent: $event,
+                    preserveScope: true,
+                    multiple: true,
+                    autoWrap: true,
+                    skipHide: true,
+                })
 
             })
         };
