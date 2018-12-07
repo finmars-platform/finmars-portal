@@ -319,7 +319,7 @@
                     });
                     break;
                 case 'accounts':
-                    accountRepository.getList({pageSize: 1000}).then(function (data) {
+                    accountRepository.getList({pageSize: 10000}).then(function (data) {
                         resolve({type: 'multiple-ids', key: 'accounts', data: data.results});
                     });
                     break;
