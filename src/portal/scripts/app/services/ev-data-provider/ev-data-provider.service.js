@@ -85,35 +85,22 @@
 
     var fromMemoryDecorator = function (callback, entityViewerDataService, entityViewerEventService) {
 
-        var requestParameters = JSON.parse(JSON.stringify(entityViewerDataService.getActiveRequestParameters()));
+            var requestParameters = JSON.parse(JSON.stringify(entityViewerDataService.getActiveRequestParameters()));
 
-        var options = requestParameters.body;
-        var event = requestParameters.event;
+            var options = requestParameters.body;
+            var event = requestParameters.event;
 
-        if (!requestParameters.requestedPages) {
-            requestParameters.requestedPages = [];
-        }
+            if (!requestParameters.requestedPages) {
+                requestParameters.requestedPages = [];
+            }
 
-        var currentPage = evDataHelper.calculatePageFromOffset(requestParameters, entityViewerDataService);
+            var currentPage = evDataHelper.calculatePageFromOffset(requestParameters, entityViewerDataService);
 
-        if (evDataHelper.ifFirstRequestForRootGroup(event, entityViewerDataService) || evDataHelper.isFirstRequestForObjects(event, entityViewerDataService)) {
-
-            requestParameters.body = options;
-
-            requestParameters.requestedPages = [1];
-
-            entityViewerDataService.setRequestParameters(requestParameters);
-
-            callback(entityViewerDataService, entityViewerEventService);
-
-        } else {
-
-            if (requestParameters.requestedPages.indexOf(currentPage) === -1) {
-
-                options.page = currentPage;
-                requestParameters.requestedPages.push(currentPage);
+            if (evDataHelper.ifFirstRequestForRootGroup(event, entityViewerDataService) || evDataHelper.isFirstRequestForObjects(event, entityViewerDataService)) {
 
                 requestParameters.body = options;
+
+                requestParameters.requestedPages = [1];
 
                 entityViewerDataService.setRequestParameters(requestParameters);
 
@@ -121,13 +108,27 @@
 
             } else {
 
-                console.log('fromMemoryDecorator: From memory');
+                if (requestParameters.requestedPages.indexOf(currentPage) === -1) {
 
-                entityViewerEventService.dispatchEvent(evEvents.DATA_LOAD_END);
+                    options.page = currentPage;
+                    requestParameters.requestedPages.push(currentPage);
+
+                    requestParameters.body = options;
+
+                    entityViewerDataService.setRequestParameters(requestParameters);
+
+                    callback(entityViewerDataService, entityViewerEventService);
+
+                } else {
+
+                    console.log('fromMemoryDecorator: From memory');
+
+                    entityViewerEventService.dispatchEvent(evEvents.DATA_LOAD_END);
+
+                }
 
             }
 
-        }
 
     };
 
