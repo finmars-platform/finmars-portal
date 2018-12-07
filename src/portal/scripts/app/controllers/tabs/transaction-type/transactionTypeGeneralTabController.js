@@ -103,18 +103,22 @@
         };
 
         $scope.$watch('vm.entity.tags', function () {
-            vm.entity.tags.forEach(function (item) {
-                if (item.id == null) {
-                    tagService.create({
-                        name: item.name,
-                        content_types: ['transactions.transactiontype']
-                    })
-                }
-            })
+
+            if (vm.entity.tags) {
+                vm.entity.tags.forEach(function (item) {
+                    if (item.id == null) {
+                        tagService.create({
+                            name: item.name,
+                            content_types: ['transactions.transactiontype']
+                        })
+                    }
+                })
+
+            }
         });
 
         $scope.$watch('vm.entity.group', function () {
-            if (vm.entity.group.name != null) {
+            if (vm.entity.group && vm.entity.group.name != null) {
                 transactionTypeGroupService.create({
                     name: vm.entity.group.name
                 })

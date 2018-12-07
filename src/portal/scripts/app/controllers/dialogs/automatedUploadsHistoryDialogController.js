@@ -124,24 +124,24 @@
             }
 
             pricingAutomatedScheduleService.updateSchedule(vm.schedule).then(function (data) {
-                console.log('here?');
 
-                if (data.status == 400 || data.status == 500) {
-                    $mdDialog.show({
-                        controller: 'ValidationDialogController as vm',
-                        templateUrl: 'views/dialogs/validation-dialog-view.html',
-                        targetEvent: $event,
-                        locals: {
-                            validationData: data.response
-                        },
-                        preserveScope: true,
-                        autoWrap: true,
-                        skipHide: true
-                    })
-                } else {
-                    $mdDialog.hide({status: 'agree', data: 'success'});
-                    $scope.$apply();
-                }
+                $mdDialog.hide({status: 'agree', data: 'success'});
+                $scope.$apply();
+
+            }).catch(function (reason) {
+
+                $mdDialog.show({
+                    controller: 'ValidationDialogController as vm',
+                    templateUrl: 'views/dialogs/validation-dialog-view.html',
+                    targetEvent: $event,
+                    locals: {
+                        validationData: reason
+                    },
+                    preserveScope: true,
+                    autoWrap: true,
+                    skipHide: true
+                })
+
             })
         };
 
