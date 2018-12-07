@@ -204,22 +204,22 @@
 
             var handler = function (data) {
 
-                vm.complexTransactionOptions.transactionTypeId = data.response.transaction_type;
-                vm.editLayoutEntityInstanceId = data.response.transaction_type;
-                vm.entity = data.response.complex_transaction;
+                vm.complexTransactionOptions.transactionTypeId = data.transaction_type;
+                vm.editLayoutEntityInstanceId = data.transaction_type;
+                vm.entity = data.complex_transaction;
 
-                var inputsWithCalculations = data.response.transaction_type_object.inputs;
+                var inputsWithCalculations = data.transaction_type_object.inputs;
 
                 vm.readyStatus.entity = true;
                 vm.readyStatus.permissions = true;
 
-                var keys = Object.keys(data.response.values);
+                var keys = Object.keys(data.values);
 
                 keys.forEach(function (item) {
-                    vm.entity[item] = data.response.values[item];
+                    vm.entity[item] = data.values[item];
                 });
 
-                data.response.complex_transaction.attributes.forEach(function (item) {
+                data.complex_transaction.attributes.forEach(function (item) {
                     if (item.attribute_type_object.value_type === 10) {
                         vm.entity[item.attribute_type_object.name] = item.value_string;
                     }
@@ -234,7 +234,7 @@
                     }
                 });
 
-                vm.tabs = data.response.book_transaction_layout.data;
+                vm.tabs = data.book_transaction_layout.data;
                 vm.userInputs = [];
                 vm.tabs.forEach(function (tab) {
                     tab.layout.fields.forEach(function (field) {
@@ -303,19 +303,19 @@
 
                 entityResolverService.getByKey(vm.entityType, vm.entityId).then(function (data) {
 
-                    vm.complexTransactionOptions.transactionTypeId = data.response.transaction_type;
-                    vm.editLayoutEntityInstanceId = data.response.complex_transaction.id;
-                    vm.entity = data.response.complex_transaction;
+                    vm.complexTransactionOptions.transactionTypeId = data.transaction_type;
+                    vm.editLayoutEntityInstanceId = data.complex_transaction.id;
+                    vm.entity = data.complex_transaction;
 
-                    var inputsWithCalculations = data.response.transaction_type_object.inputs;
+                    var inputsWithCalculations = data.transaction_type_object.inputs;
 
-                    var keys = Object.keys(data.response.values);
+                    var keys = Object.keys(data.values);
 
                     keys.forEach(function (item) {
-                        vm.entity[item] = data.response.values[item];
+                        vm.entity[item] = data.values[item];
                     });
 
-                    data.response.complex_transaction.attributes.forEach(function (item) {
+                    data.complex_transaction.attributes.forEach(function (item) {
                         if (item.attribute_type_object.value_type === 10) {
                             vm.entity[item.attribute_type_object.name] = item.value_string;
                         }
@@ -330,7 +330,7 @@
                         }
                     });
 
-                    vm.tabs = data.response.book_transaction_layout.data;
+                    vm.tabs = data.book_transaction_layout.data;
                     vm.userInputs = [];
                     vm.tabs.forEach(function (tab) {
                         tab.layout.fields.forEach(function (field) {
@@ -525,9 +525,9 @@
                 targetEvent: $event,
                 locals: {
                     validationData: {
-                        complex_transaction_errors: data.response.complex_transaction_errors,
-                        instruments_errors: data.response.instruments_errors,
-                        transactions_errors: data.response.transactions_errors
+                        complex_transaction_errors: data.complex_transaction_errors,
+                        instruments_errors: data.instruments_errors,
+                        transactions_errors: data.transactions_errors
                     }
                 },
                 preserveScope: true,
@@ -545,7 +545,7 @@
                 templateUrl: 'views/dialogs/validation-dialog-view.html',
                 targetEvent: $event,
                 locals: {
-                    validationData: data.response
+                    validationData: data
                 },
                 preserveScope: true,
                 autoWrap: true,
@@ -670,7 +670,7 @@
 
                     if (vm.entityType === 'complex-transaction') {
 
-                        if (data.response.hasOwnProperty('has_errors') && data.response.has_errors === true) {
+                        if (data.hasOwnProperty('has_errors') && data.has_errors === true) {
 
                             vm.handleComplexTransactionErrors($event, data);
 
