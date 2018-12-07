@@ -189,7 +189,7 @@
                     });
                     break;
                 case 'account':
-                    accountRepository.getList({pageSize: 1000}).then(function (data) {
+                    accountRepository.getList({pageSize: 10000}).then(function (data) {
                         resolve({type: 'id', key: 'account', data: data.results});
                     });
                     break;
