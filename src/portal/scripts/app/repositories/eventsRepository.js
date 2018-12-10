@@ -89,11 +89,25 @@
             })
     };
 
+    var generateEventsRange = function (options) {
+        return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl + 'instruments/instrument/generate-events-range/', options),
+            {
+                method: 'POST',
+                credentials: 'include',
+                headers: {
+                    'X-CSRFToken': cookieService.getCookie('csrftoken'),
+                    Accept: 'application/json',
+                    'Content-type': 'application/json'
+                }
+            })
+    };
+
     module.exports = {
         getList: getList,
         getEventAction: getEventAction,
         putEventAction: putEventAction,
         ignoreEventAction: ignoreEventAction,
-        generateEvents: generateEvents
+        generateEvents: generateEvents,
+        generateEventsRange: generateEventsRange
     }
 }());

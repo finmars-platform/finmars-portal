@@ -1,20 +1,30 @@
-<md-dialog aria-label="" ng-cloak class="instrument-select-dialog-view">
+<md-dialog aria-label="" ng-cloak class="">
     <md-toolbar>
         <div class="md-toolbar-tools">
             <h2>Generated events</h2>
             <span flex></span>
         </div>
     </md-toolbar>
-    <md-dialog-content data-custom-scroll class="custom-scrollbar">
+    <md-dialog-content data-custom-scroll class="custom-scrollbar p-24">
         <div layout="column">
             <div>
 
-                <div layout="row">
+                <div layout="row" class="m-b-24">
+                    <md-input-container data-ng-class="{'disabled-btn': vm.loading}" class="m-r-16">
+                        <label for="">Effective date</label>
+                        <zh-date-picker data-ng-model="vm.effective_date_from"
+                        ></zh-date-picker>
+                    </md-input-container>
+
                     <md-input-container data-ng-class="{'disabled-btn': vm.loading}">
                         <label for="">Effective date</label>
-                        <zh-date-picker data-ng-model="vm.effective_date"
-                                        data-ng-change="vm.updateTable()"></zh-date-picker>
+                        <zh-date-picker data-ng-model="vm.effective_date_to"
+                        ></zh-date-picker>
                     </md-input-container>
+
+                    <md-button class="md-raised md-primary m-t-0" data-ng-class="{'disabled-btn': vm.loading}"
+                               data-ng-click="vm.updateTable($event)" style="height: 24px">Generate Events
+                    </md-button>
 
                     <div class="m-l-16" layout="row" layout-sm="column" layout-align="space-around"
                          data-ng-if="vm.loading"
@@ -60,16 +70,16 @@
                             Notification date
                         </th>
                         <th>
-                            Event class
-                        </th>
-                        <th>
-                            Name
+                            Status
                         </th>
                         <th>
                             Description
                         </th>
                         <th>
                             Notification class
+                        </th>
+                        <th>
+                            Event class
                         </th>
                     </tr>
                     </thead>
@@ -103,19 +113,18 @@
 
                         <td><span data-ng-bind="item.effective_date"></span>&nbsp;</td>
                         <td><span data-ng-bind="item.notification_date"></span>&nbsp;</td>
-                        <td>
-                            <span data-ng-if="item.event_schedule_object && item.event_schedule_object.event_class_object"
-                                  data-ng-bind="item.event_schedule_object.event_class_object.name"></span>&nbsp;
-                        </td>
-                        <td><span data-ng-if="item.event_schedule_object"
-                                  data-ng-bind="item.event_schedule_object.name"></span>&nbsp;
-                        </td>
+                        <td><span data-ng-bind="vm.getStatus(item.status)"></span>&nbsp;</td>
+
                         <td><span data-ng-if="item.event_schedule_object"
                                   data-ng-bind="item.event_schedule_object.description"></span>&nbsp;
                         </td>
                         <td><span
                                 data-ng-if="item.event_schedule_object && item.event_schedule_object.notification_class_object"
                                 data-ng-bind="item.event_schedule_object.notification_class_object.name"></span>&nbsp;
+                        </td>
+                        <td>
+                            <span data-ng-if="item.event_schedule_object && item.event_schedule_object.event_class_object"
+                                  data-ng-bind="item.event_schedule_object.event_class_object.name"></span>&nbsp;
                         </td>
                     </tr>
                     </tbody>

@@ -11,22 +11,12 @@
 
         var vm = this;
 
-        vm.effective_date = moment(new Date()).format('YYYY-MM-DD');
+        vm.effective_date_from = moment(new Date()).format('YYYY-MM-DD');
+        vm.effective_date_to = moment(new Date()).format('YYYY-MM-DD');
         vm.loading = false;
         vm.filters = {};
 
-        vm.search = {
-            'user_code': '',
-            'name': '',
-            'short_name': '',
-            'user_text_1': '',
-            'user_text_2': '',
-            'user_text_3': ''
-        };
-
         vm.events = [];
-        vm.selectedItem = {};
-
 
         vm.agree = function ($event) {
 
@@ -74,23 +64,83 @@
 
         };
 
-        vm.updateTable = function () {
+        vm.requestEvents = function () {
 
             vm.loading = true;
 
-            var filters = Object.assign({}, vm.search);
+            var filters = {};
 
-            filters.effective_date_0 = vm.effective_date;
-            filters.effective_date_1 = vm.effective_date;
-            // filters.status = "1"; // look only for status NEW
+            filters.effective_date_0 = vm.effective_date_from;
+            filters.effective_date_1 = vm.effective_date_to;
 
-            eventsService.getList({filters: filters}).then(function (data) {
-                vm.events = data.results;
+            eventsService.generateEventsRange({filters: filters}).then(function (eventsData) {
 
-                vm.loading = false;
+                var len = eventsData.tasks_ids.length;
+                var time = 2000;
 
-                $scope.$apply();
-            })
+                setTimeout(function () {
+
+                    eventsService.getList({filters: filters}).then(function (data) {
+
+                        vm.events = data.results;
+
+                        vm.loading = false;
+
+                        $scope.$apply();
+
+                    })
+
+                }, len * time)
+
+            });
+
+        };
+
+        vm.getStatus = function (status) {
+
+            switch (status) {
+                case 1:
+                    return 'New';
+                case 2:
+                    return 'Ignored';
+                case 3:
+                    return 'Pending (book)';
+                case 4:
+                    return 'Booked';
+
+            }
+
+        };
+
+        vm.updateTable = function ($event) {
+
+            if (vm.effective_date_from !== vm.effective_date_to) {
+
+                $mdDialog.show({
+                    controller: 'WarningDialogController as vm',
+                    templateUrl: 'views/warning-dialog-view.html',
+                    targetEvent: $event,
+                    locals: {
+                        warning: {
+                            title: 'Warning!',
+                            description: 'Calculation may take some time, are you sure?'
+                        }
+                    },
+                    preserveScope: true,
+                    autoWrap: true,
+                    skipHid: true,
+                    multiple: true
+                }).then(function (res) {
+                    if (res.status === 'agree') {
+                        vm.requestEvents();
+                    }
+                });
+
+            } else {
+                vm.requestEvents();
+            }
+
+
         };
 
         vm.openEventWindow = function ($event, event) {
@@ -111,7 +161,6 @@
             })
         };
 
-        vm.updateTable();
     };
 
 }());

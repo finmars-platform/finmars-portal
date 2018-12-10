@@ -22,12 +22,17 @@
         return eventsRepository.generateEvents();
     };
 
+    var generateEventsRange = function (options) {
+        return eventsRepository.generateEventsRange(options);
+    };
+
     module.exports = {
         getList: getList,
         getEventAction: getEventAction,
         putEventAction: putEventAction,
         ignoreEventAction: ignoreEventAction,
-        generateEvents: generateEvents
+        generateEvents: generateEvents,
+        generateEventsRange: generateEventsRange
     }
 
 

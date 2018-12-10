@@ -47,7 +47,7 @@
                 case 'import.pricingautomatedschedule':
                     return 'Automated uploads schedule ';
                 case 'ui.editlayout':
-                    return "Input form layouts";
+                    return "Input Form";
                 case 'ui.listlayout':
                     return "Entity viewer layouts";
                 case 'ui.reportlayout':
