@@ -59,7 +59,7 @@
             console.log('item', item);
 
             usersService.setMasterUser(item.id);
-            $state.go('app.data.portfolio');
+            $state.go('app.home');
 
         };
 

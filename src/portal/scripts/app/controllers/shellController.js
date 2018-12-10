@@ -65,9 +65,7 @@
         vm.selectMaster = function (master) {
 
             usersService.setMasterUser(master.id);
-            setTimeout(function () {
-                $state.reload();
-            }, 300);
+            $state.go('app.home');
 
         };
 

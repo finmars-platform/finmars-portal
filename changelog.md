@@ -1,5 +1,10 @@
 # Changelog
 
+## 10.12.2018
+
+- Home Page
+- New Check Events logic
+
 ## 06.12.2018
 
 - New way of error handling
