@@ -40,7 +40,10 @@
 
     var getValue = function (evDataService, obj, column, columnNumber) {
 
-        var result = '';
+        var result = {
+            html_result: '',
+            numeric_result: null
+        };
 
         var isFirst = rvHelper.isFirst(evDataService, obj);
 
@@ -94,7 +97,7 @@
                             foldButton = '<div class="ev-fold-button" data-type="foldbutton" data-object-id="' + currentGroup.___id + '" data-parent-group-hash-id="' + currentGroup.___parentId + '">+</div>';
                         }
 
-                        result = foldButton + '<b>' + currentGroup.group_name + '</b>';
+                        result.html_result = foldButton + '<b>' + currentGroup.group_name + '</b>';
 
                     }
 
@@ -128,7 +131,7 @@
                     foldButtonStr = ''
                 }
 
-                result = foldButtonStr + '<b>' + obj.group_name + '</b>';
+                result.html_result = foldButtonStr + '<b>' + obj.group_name + '</b>';
 
             }
 
@@ -139,7 +142,8 @@
             if (column.report_settings && !column.report_settings.hide_subtotal) {
 
                 if (obj.hasOwnProperty(column.key)) {
-                    result = '<b>' + renderHelper.formatValue(obj, column) + '</b>';
+                    result.html_result = '<b>' + renderHelper.formatValue(obj, column) + '</b>';
+                    result.numeric_result = obj[column.key];
                 }
 
             }
@@ -264,16 +268,22 @@
 
             var borderBottomTransparent = getBorderBottomTransparent(evDataService, obj, columnNumber, groups);
 
-            var value = getValue(evDataService, obj, column, columnNumber);
+            var value_obj = getValue(evDataService, obj, column, columnNumber);
 
             obj.___cells_values.push({
                 width: column.style.width,
                 classList: [textAlign, colorNegative, borderBottomTransparent],
-                value: value
+                value: value_obj.html_result
             });
 
+            var resultValue = '';
+
+            if (value_obj.html_result) {
+                resultValue = value_obj.html_result;
+            }
+
             cell = '<div class="g-cell-wrap ' + getBgColor(evDataService, obj, columnNumber) + '" style="width: ' + column.style.width + '"><div class="g-cell ' + textAlign + ' ' + colorNegative + ' ' + borderBottomTransparent + ' ">' +
-                value +
+                resultValue +
                 '</div>' +
                 '</div>';
 
