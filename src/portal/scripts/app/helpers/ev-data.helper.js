@@ -538,8 +538,15 @@
             var step = evDataService.getVirtualScrollStep();
             var maxPage = Math.ceil(group.results.length / step);
             var resultPage;
+            var newPageOffset;
 
-            resultPage = Math.ceil((offset / (step / 2)));
+            resultPage = Math.ceil(offset / step);
+
+            newPageOffset = resultPage * step;
+
+            if (newPageOffset / offset > 0.9) {
+                resultPage = resultPage + 1;
+            }
 
             if (resultPage === 0) {
                 resultPage = 1;
