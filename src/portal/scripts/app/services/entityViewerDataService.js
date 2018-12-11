@@ -99,7 +99,7 @@
                 rowHeight: 24,
                 offset: 0, // current position
                 limit: 0, // total rows
-                step: 40 // rows to render
+                step: 60 // rows to render
             },
             interfaceLayout: null,
             requestParameters: {},
@@ -463,7 +463,8 @@
                             groups_types: [],
                             page: 1,
                             groups_values: [],
-                            groups_order: 'asc'
+                            groups_order: 'asc',
+                            page_size: 60
                         }
                     };
 

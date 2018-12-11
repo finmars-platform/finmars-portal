@@ -110,7 +110,6 @@
     };
 
 
-
     var _getChildrenGroups = function (parentGroupId, evDataService, results) {
 
         var item = evDataService.getData(parentGroupId);
@@ -537,7 +536,7 @@
 
             var offset = evDataService.getVirtualScrollOffset();
             var flatList = evDataService.getFlatList();
-            var step = 40;
+            var step = evDataService.getVirtualScrollStep();
             var resultPage;
 
             var pivotItem;
@@ -551,12 +550,13 @@
                 resultPage = Math.ceil(group.count / step);
 
             } else {
+
                 pivotItemIndex = offset;
                 pivotItem = flatList[offset];
 
                 resultPage = Math.ceil(pivotItemIndex / step);
 
-                if (flatList.length - offset < 40) {
+                if (flatList.length - offset < step + step) {
                     resultPage = resultPage + 1;
                 }
 
