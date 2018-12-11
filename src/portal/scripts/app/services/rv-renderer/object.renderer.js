@@ -23,7 +23,7 @@
 
                     if (column.value_type === 20 && item.value_float) {
 
-                        result.html_result = item.value_float;
+                        result.html_result = item.value_float.toString();
                         result.numeric_result = item.value_float;
 
                     }
