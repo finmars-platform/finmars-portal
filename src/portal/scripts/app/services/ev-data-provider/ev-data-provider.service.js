@@ -145,7 +145,7 @@
 
             var page = new Number(options.page) - 1;
             // var pagination = entityViewerDataService.getPagination();
-            var step = 40;
+            var step = entityViewerDataService.getVirtualScrollStep();
             var i;
 
             console.log('getObjects.options', options);
