@@ -62,7 +62,7 @@
         };
 
         if (typeof obj[column.key] === 'string') {
-            result = obj[column.key]
+            result.html_result = obj[column.key]
         } else {
 
             if (typeof obj[column.key] === 'number') {
@@ -332,6 +332,7 @@
         var colorNegative;
         var borderBottomTransparent;
         var value_obj;
+        var resultValue;
 
         result = result + rowSelection;
 
@@ -355,7 +356,13 @@
                 value: value_obj.html_result
             });
 
-            cell = '<div class="g-cell-wrap ' + getBgColor(evDataService, obj, columnNumber) + '" style="width: ' + column.style.width + '"><div class="g-cell ' + textAlign + ' ' + colorNegative + ' ' + borderBottomTransparent + '">' + (value_obj.html_result ? value_obj.html_result : '') + '</div></div>';
+            resultValue = '';
+
+            if (value_obj.html_result) {
+                resultValue = value_obj.html_result;
+            }
+
+            cell = '<div class="g-cell-wrap ' + getBgColor(evDataService, obj, columnNumber) + '" style="width: ' + column.style.width + '"><div class="g-cell ' + textAlign + ' ' + colorNegative + ' ' + borderBottomTransparent + '">' + resultValue + '</div></div>';
 
             result = result + cell
 
