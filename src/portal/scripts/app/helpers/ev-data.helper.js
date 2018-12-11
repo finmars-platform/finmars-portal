@@ -535,41 +535,18 @@
         if (group && group.results.length) {
 
             var offset = evDataService.getVirtualScrollOffset();
-            var flatList = evDataService.getFlatList();
             var step = evDataService.getVirtualScrollStep();
+            var maxPage = Math.ceil(group.results.length / step);
             var resultPage;
 
-            var pivotItem;
-            var pivotItemIndex;
-
-            if (offset > flatList.length) {
-
-                pivotItemIndex = flatList.length - 1;
-                pivotItem = flatList[pivotItemIndex];
-
-                resultPage = Math.ceil(group.count / step);
-
-            } else {
-
-                pivotItemIndex = offset;
-                pivotItem = flatList[offset];
-
-                resultPage = Math.ceil(pivotItemIndex / step);
-
-                if (flatList.length - offset < step + step) {
-                    resultPage = resultPage + 1;
-                }
-
-            }
-
-            // console.log('calculatePageFromOffset.flatList.length', flatList.length);
-            // console.log('calculatePageFromOffset.offset', offset);
-            // console.log('calculatePageFromOffset.pivotItem', pivotItem);
-            // console.log('calculatePageFromOffset.group', group);
-            // console.log('calculatePageFromOffset.resultPage', resultPage);
+            resultPage = Math.ceil((offset / (step / 2)));
 
             if (resultPage === 0) {
                 resultPage = 1;
+            }
+
+            if (resultPage > maxPage) {
+                resultPage = maxPage;
             }
 
             return resultPage;
