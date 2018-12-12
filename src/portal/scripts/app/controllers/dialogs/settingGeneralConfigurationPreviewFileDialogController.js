@@ -452,6 +452,118 @@
 
         }
 
+        function get_input_prop_by_content_type(model) {
+
+            if (model === 'account') {
+                return {
+                    'prop': 'account',
+                    'code': 'user_code'
+                }
+            }
+            if (model === 'instrumenttype') {
+                return {
+                    'prop': 'instrument_type',
+                    'code': 'user_code'
+                }
+            }
+            if (model === 'instrument') {
+                return {
+                    'prop': 'instrument',
+                    'code': 'user_code'
+                }
+            }
+            if (model === 'currency') {
+                return {
+                    'prop': 'currency',
+                    'code': 'user_code'
+                }
+            }
+            if (model === 'counterparty') {
+                return {
+                    'prop': 'counterparty',
+                    'code': 'user_code'
+                }
+            }
+            if (model === 'responsible') {
+                return {
+                    'prop': 'responsible',
+                    'code': 'user_code'
+                }
+            }
+            if (model === 'portfolio') {
+                return {
+                    'prop': 'portfolio',
+                    'code': 'user_code'
+                }
+            }
+            if (model === 'strategy1') {
+                return {
+                    'prop': 'strategy1',
+                    'code': 'user_code'
+                }
+            }
+            if (model === 'strategy2') {
+                return {
+                    'prop': 'strategy2',
+                    'code': 'user_code'
+                }
+            }
+            if (model === 'strategy3') {
+                return {
+                    'prop': 'strategy3',
+                    'code': 'user_code'
+                }
+            }
+            if (model === 'dailypricingmodel') {
+                return {
+                    'prop': 'daily_pricing_model',
+                    'code': 'system_code'
+                }
+            }
+            if (model === 'paymentsizedetail') {
+                return {
+                    'prop': 'payment_size_detail',
+                    'code': 'system_code'
+                }
+            }
+            if (model === 'pricedownloadscheme') {
+                return {
+                    'prop': 'payment_size_detail',
+                    'code': 'scheme_name'
+                }
+            }
+            if (model === 'pricingpolicy') {
+                return {
+                    'prop': 'pricing_policy',
+                    'code': 'user_code'
+                }
+            }
+            if (model === 'periodicity') {
+                return {
+                    'prop': 'periodicity',
+                    'code': 'system_code'
+                }
+            }
+            if (model === 'accrualcalculationmodel') {
+                return {
+                    'prop': 'accrual_calculation_model',
+                    'code': 'system_code'
+                }
+            }
+            if (model === 'eventclass') {
+                return {
+                    'prop': 'event_class',
+                    'code': 'system_code'
+                }
+            }
+            if (model === 'notifitionclass') {
+                return {
+                    'prop': 'notification_class',
+                    'code': 'system_code'
+                }
+            }
+        }
+
         function mapTransactionTypeInputsRelations(transactionType) {
 
             return new Promise(function (resolve) {
@@ -464,7 +576,9 @@
 
                         var model = input.content_type.split('.')[1];
 
-                        var user_code_prop = '___' + model + '__user_code';
+                        var prop_data = get_input_prop_by_content_type(model);
+
+                        var user_code_prop = '___' + prop_data.prop + '__' + prop_data.code;
 
                         if (input.hasOwnProperty(user_code_prop)) {
 
@@ -473,13 +587,28 @@
                                 var user_code = input[user_code_prop];
                                 var entity = metaContentTypesService.findEntityByContentType(input.content_type);
 
-                                configurationImportHelper.getEntityByUserCode(user_code, entity).then(function (data) {
+                                if (prop_data.code === 'user_code') {
 
-                                    input[model] = data.id;
+                                    configurationImportHelper.getEntityByUserCode(user_code, entity).then(function (data) {
 
-                                    resolveRelation(input)
+                                        input[model] = data.id;
 
-                                });
+                                        resolveRelation(input)
+
+                                    });
+
+                                } else {
+
+                                    configurationImportHelper.getEntityBySystemCode(user_code, entity).then(function (data) {
+
+                                        input[model] = data.id;
+
+                                        resolveRelation(input)
+
+                                    });
+
+
+                                }
 
                             }));
 
@@ -620,6 +749,11 @@
                             'entity': 'responsible'
                         },
                         {
+                            'key': 'counterparty',
+                            'code_type': 'user_code',
+                            'entity': 'counterparty'
+                        },
+                        {
                             'key': 'settlement_currency',
                             'code_type': 'user_code',
                             'entity': 'currency'
@@ -724,17 +858,25 @@
 
                     var code_prop = '___' + propItem.key + '__' + propItem.code_type;
 
-                    if (propItem.hasOwnProperty(code_prop)) {
+                    console.log('code_prop', code_prop);
+                    console.log('action', action);
+
+                    if (action[key].hasOwnProperty(code_prop)) {
 
                         promises.push(new Promise(function (resolveRelation, reject) {
 
+                            console.log('propItem.code_type', propItem.code_type);
+
                             if (propItem.code_type === 'user_code') {
 
-                                var user_code = input[code_prop];
+                                var user_code = action[key][code_prop];
 
                                 configurationImportHelper.getEntityByUserCode(user_code, propItem.entity).then(function (data) {
 
-                                    action[propItem.key] = data.id;
+                                    console.log('data', data);
+                                    console.log('data', propItem);
+
+                                    action[key][propItem.key] = data.id;
 
                                     resolveRelation(action)
 
@@ -742,11 +884,11 @@
 
                             } else {
 
-                                var system_code = input[code_prop];
+                                var system_code = action[key][code_prop];
 
                                 configurationImportHelper.getEntityBySystemCode(system_code, propItem.entity).then(function (data) {
 
-                                    action[propItem.key] = data.id;
+                                    action[key][propItem.key] = data.id;
 
                                     resolveRelation(action)
 
