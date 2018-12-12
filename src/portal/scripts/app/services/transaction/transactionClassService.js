@@ -7,8 +7,8 @@
 
     var transactionClassRepository = require('../../repositories/transaction/transactionClassRepository');
 
-    var getList = function () {
-        return transactionClassRepository.getList();
+    var getList = function (options) {
+        return transactionClassRepository.getList(options);
     };
 
     var getListSync = function(){

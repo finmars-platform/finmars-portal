@@ -79,6 +79,8 @@
                 return pricingPolicyService.getList(options);
             case 'cost-method':
                 return costMethodService.getList(options);
+            case 'transaction-class':
+                return transactionClassService.getList(options)
         }
     };
 

@@ -5,6 +5,13 @@
 
     'use strict';
 
+    var cookieService = require('../../../../../core/services/cookieService');
+    var xhrService = require('../../../../../core/services/xhrService');
+    var configureRepositoryUrlService = require('../../services/configureRepositoryUrlService');
+    var baseUrlService = require('../../services/baseUrlService');
+
+    var baseUrl = baseUrlService.resolve();
+
     var transactionClasses = [
         {
             "value": "1",
@@ -44,10 +51,16 @@
         }
     ];
 
-    var getList = function () {
-        return new Promise(function (resolve, reject) {
-            resolve(transactionClasses)
-        })
+    var getList = function (options) {
+        return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl + 'transactions/transaction-class/', options),
+            {
+                method: 'GET',
+                credentials: 'include',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-type': 'application/json'
+                }
+            })
     };
 
     var getListSync = function () {
