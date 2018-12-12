@@ -240,7 +240,6 @@
 
         }
 
-
         vm.agree = function ($event) {
 
             exportConfiguration(vm.items).then(function (data) {

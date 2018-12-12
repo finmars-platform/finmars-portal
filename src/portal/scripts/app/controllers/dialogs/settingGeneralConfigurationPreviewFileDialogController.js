@@ -14,8 +14,8 @@
     var metaContentTypesService = require('../../services/metaContentTypesService');
     var attributeTypeService = require('../../services/attributeTypeService');
     var md5helper = require('../../helpers/md5.helper');
+    var configurationImportHelper = require('../../helpers/configuration-import.helper');
     var uiRepository = require('../../repositories/uiRepository');
-
 
     module.exports = function ($scope, $mdDialog, file) {
 
@@ -169,17 +169,23 @@
 
         };
 
-        function isEntitySelected(entity) {
+        function isEntityExistsAndSelected(items, entityName) {
+
+            var entity = findEntity(items, entityName);
 
             var result = false;
 
-            entity.content.forEach(function (item) {
+            if (entity) {
 
-                if (item.active) {
-                    result = true;
-                }
+                entity.content.forEach(function (item) {
 
-            });
+                    if (item.active) {
+                        result = true;
+                    }
+
+                });
+
+            }
 
             return result;
 
@@ -201,56 +207,563 @@
 
         }
 
-        function handleTransactionTypeDependency(entity, dependency) {
+        function mapComplexTransactionImportSchemeRelations(complexTransactionImportSchemeEntity) {
 
             return new Promise(function (resolve, reject) {
 
-                resolveTransactionTypeDependencies(dependency).then(function (data) {
+                var promises = [];
 
-                    var depTransactionTypes = dependency.content;
+                complexTransactionImportSchemeEntity.content.forEach(function (entityItem) {
 
-                    entityResolverService.getList('transaction-type').then(function (data) {
+                    if (entityItem.active) {
 
-                        var transactionTypes = data.results;
+                        entityItem.rules.forEach(function (rule) {
 
-                        var transactionTypesExists = [];
+                            if (rule.hasOwnProperty('___transaction_type__user_code')) {
 
-                        depTransactionTypes.forEach(function (dep_transaction_type) {
+                                promises.push(new Promise(function (resolveRelation, reject) {
 
-                            transactionTypes.forEach(function (transaction_type) {
+                                    var user_code = rule.___transaction_type__user_code;
 
-                                if (transaction_type.user_code === dep_transaction_type.user_code) {
-                                    transactionTypesExists.push(md5helper.md5(dep_transaction_type.user_code))
-                                }
+                                    configurationImportHelper.getEntityByUserCode(user_code, 'transaction-type').then(function (data) {
 
-                            })
+                                        rule.transaction_type = data.id;
 
-                        });
+                                        rule.fields.forEach(function (field) {
 
-                        var promises = [];
+                                            data.inputs.forEach(function (input) {
 
-                        console.log('transactionTypesExists', transactionTypesExists);
+                                                if (field.___input__name === input.name) {
+                                                    field.transaction_type_input = input.id;
+                                                }
 
-                        var transactionTypesToCreate = depTransactionTypes.filter(function (transaction_type) {
-                            return transactionTypesExists.indexOf(md5helper.md5(transaction_type.user_code)) === -1
-                        });
-
-                        console.log('transactionTypesToCreate', transactionTypesToCreate);
-
-                        transactionTypesToCreate.forEach(function (depTransactionType) {
-
-                            promises.push(entityResolverService.create('transaction-type', depTransactionType))
-
-                        });
-
-                        Promise.all(promises).then(function (data) {
-
-                            resolve(data);
-
-                        });
+                                            })
 
 
-                    });
+                                        });
+
+
+                                        resolveRelation(entityItem)
+
+                                    });
+
+                                }));
+
+                            }
+
+                        })
+
+                    }
+
+                });
+
+                Promise.all(promises).then(function (data) {
+                    resolve(data)
+                })
+
+            });
+        }
+
+        function mapInstrumentDownloadSchemeRelations(instrumentDownloadSchemeEntity) {
+
+            return new Promise(function (resolve, reject) {
+
+                resolve({})
+
+                // priceDownloadSchemeService.getList().then(function (data) {
+                //
+                //     var schemes = data.results;
+                //
+                //     instrumentDownloadSchemeEntity.content.forEach(function (entityItem) {
+                //
+                //         schemes.forEach(function (scheme) {
+                //
+                //             if (entityItem.___price_download_scheme__scheme_name === scheme.scheme_name) {
+                //                 entityItem.price_download_scheme = scheme.id;
+                //             }
+                //
+                //         })
+                //
+                //     });
+                //
+                //     resolve(instrumentDownloadSchemeEntity);
+                //
+                // });
+
+            })
+
+        }
+
+        function mapInstrumentTypeRelations(instrumentTypeEntity) {
+
+            return new Promise(function (resolve, reject) {
+
+                var promises = [];
+
+                instrumentTypeEntity.content.forEach(function (entityItem) {
+
+                    if (entityItem.active) {
+
+                        if (entityItem.hasOwnProperty('___one_off_event__user_code')) {
+
+                            promises.push(new Promise(function (resolveRelation, reject) {
+
+                                var user_code = entityItem.___one_off_event__user_code;
+
+                                configurationImportHelper.getEntityByUserCode(user_code, 'transaction-type').then(function (data) {
+
+                                    entityItem.one_off_event = data.id;
+
+                                    resolveRelation(entityItem)
+
+                                });
+
+                            }));
+
+                        }
+
+                        if (entityItem.hasOwnProperty('___regular_event__user_code')) {
+
+                            promises.push(new Promise(function (resolveRelation, reject) {
+
+                                var user_code = entityItem.___regular_event__user_code;
+
+                                configurationImportHelper.getEntityByUserCode(user_code, 'transaction-type').then(function (data) {
+
+                                    entityItem.regular_event = data.id;
+
+                                    resolveRelation(entityItem)
+
+                                });
+
+                            }));
+
+                        }
+
+                        if (entityItem.hasOwnProperty('___factor_same__user_code')) {
+
+                            promises.push(new Promise(function (resolveRelation, reject) {
+
+                                var user_code = entityItem.___factor_same__user_code;
+
+                                configurationImportHelper.getEntityByUserCode(user_code, 'transaction-type').then(function (data) {
+
+                                    entityItem.factor_same = data.id;
+
+                                    resolveRelation(entityItem)
+
+                                });
+
+                            }));
+
+                        }
+
+                        if (entityItem.hasOwnProperty('___factor_up__user_code')) {
+
+                            promises.push(new Promise(function (resolveRelation, reject) {
+
+                                var user_code = entityItem.___factor_up__user_code;
+
+                                configurationImportHelper.getEntityByUserCode(user_code, 'transaction-type').then(function (data) {
+
+                                    entityItem.factor_up = data.id;
+
+                                    resolveRelation(entityItem)
+
+                                });
+
+                            }));
+
+                        }
+
+                        if (entityItem.hasOwnProperty('___factor_down__user_code')) {
+
+                            promises.push(new Promise(function (resolveRelation, reject) {
+
+                                var user_code = entityItem.___factor_down__user_code;
+
+                                configurationImportHelper.getEntityByUserCode(user_code, 'transaction-type').then(function (data) {
+
+                                    entityItem.factor_down = data.id;
+
+                                    resolveRelation(entityItem)
+
+                                });
+
+                            }));
+
+                        }
+
+                    }
+
+                });
+
+                Promise.all(promises).then(function () {
+                    resolve(instrumentTypeEntity);
+                });
+
+            });
+
+        }
+
+        // transaction type map start
+
+        function mapTransactionTypeRelations(transactionTypeEntity) {
+
+            return new Promise(function (resolve) {
+
+                var promises = [];
+
+                transactionTypeEntity.content.forEach(function (entityItem) {
+
+                    if (entityItem.active) {
+
+                        if (entityItem.hasOwnProperty('___group__user_code')) {
+
+                            promises.push(new Promise(function (resolveRelation, reject) {
+
+                                var user_code = entityItem.___group__user_code;
+
+                                configurationImportHelper.getEntityByUserCode(user_code, 'transaction-type-group').then(function (data) {
+
+                                    entityItem.group = data.id;
+
+                                    resolveRelation(entityItem)
+
+                                });
+
+                            }));
+
+                        }
+
+                        promises.push(mapTransactionTypeInputsRelations(entityItem));
+
+                        promises.push(mapTransactionTypeActionsRelations(entityItem));
+
+                    }
+
+                });
+
+                Promise.all(promises).then(function (data) {
+                    resolve(data)
+                })
+
+            })
+
+        }
+
+        function mapTransactionTypeInputsRelations(transactionType) {
+
+            return new Promise(function (resolve) {
+
+                var promises = [];
+
+                transactionType.inputs.forEach(function (input) {
+
+                    if (input.value_type === 100) {
+
+                        var model = input.content_type.split('.')[1];
+
+                        var user_code_prop = '___' + model + '__user_code';
+
+                        if (input.hasOwnProperty(user_code_prop)) {
+
+                            promises.push(new Promise(function (resolveRelation, reject) {
+
+                                var user_code = input[user_code_prop];
+                                var entity = metaContentTypesService.findEntityByContentType(input.content_type);
+
+                                configurationImportHelper.getEntityByUserCode(user_code, entity).then(function (data) {
+
+                                    input[model] = data.id;
+
+                                    resolveRelation(input)
+
+                                });
+
+                            }));
+
+                        }
+
+                    }
+
+                });
+
+                Promise.all(promises).then(function (data) {
+                    resolve(data);
+                })
+
+            })
+
+        }
+
+        function mapTransactionTypeActionsRelations(transactionType) {
+
+            return new Promise(function (resolve) {
+
+                var promises = [];
+
+                var actionsWithRelations = [
+                    'instrument',
+                    'transaction',
+                    'instrument_accrual_calculation_schedules',
+                    'instrument_event_schedule',
+                    'instrument_factor_schedule',
+                    'instrument_manual_pricing_formula'
+                ];
+
+                transactionType.actions.forEach(function (action) {
+
+                    actionsWithRelations.forEach(function (key) {
+
+                        if (action[key]) {
+
+                            promises.push(mapActionRelations(action, key))
+
+                        }
+
+                    })
+
+
+                });
+
+                Promise.all(promises).then(function (data) {
+                    resolve(data);
+                })
+
+            })
+
+        }
+
+        function mapActionRelations(action, key) {
+
+            return new Promise(function (resolve) {
+
+                var promises = [];
+
+                var relationProps = {
+                    'instrument': [
+                        {
+                            'key': 'accrued_currency',
+                            'code_type': 'user_code',
+                            'entity': 'currency'
+                        },
+                        {
+                            'key': 'daily_pricing_model',
+                            'code_type': 'system_code',
+                            'entity': 'daily-pricing-model'
+                        },
+                        {
+                            'key': 'instrument_type',
+                            'code_type': 'user_code',
+                            'entity': 'instrument-type'
+                        },
+                        {
+                            'key': 'payment_size_detail',
+                            'code_type': 'system_code',
+                            'entity': 'payment-size-detail'
+                        },
+                        {
+                            'key': 'price_download_scheme',
+                            'code_type': 'scheme_name',
+                            'entity': 'price-download-scheme'
+                        },
+                        {
+                            'key': 'pricing_currency',
+                            'code_type': 'user_code',
+                            'entity': 'currency'
+                        }],
+                    'transaction': [
+                        {
+                            'key': 'account_cash',
+                            'code_type': 'user_code',
+                            'entity': 'account'
+                        },
+                        {
+                            'key': 'account_interim',
+                            'code_type': 'user_code',
+                            'entity': 'account'
+                        },
+                        {
+                            'key': 'account_position',
+                            'code_type': 'user_code',
+                            'entity': 'account'
+                        },
+                        {
+                            'key': 'allocation_balance',
+                            'code_type': 'user_code',
+                            'entity': 'instrument'
+                        },
+                        {
+                            'key': 'allocation_pl',
+                            'code_type': 'user_code',
+                            'entity': 'instrument'
+                        },
+                        {
+                            'key': 'instrument',
+                            'code_type': 'user_code',
+                            'entity': 'instrument'
+                        },
+                        {
+                            'key': 'linked_instrument',
+                            'code_type': 'user_code',
+                            'entity': 'instrument'
+                        },
+                        {
+                            'key': 'portfolio',
+                            'code_type': 'user_code',
+                            'entity': 'portfolio'
+                        },
+                        {
+                            'key': 'responsible',
+                            'code_type': 'user_code',
+                            'entity': 'responsible'
+                        },
+                        {
+                            'key': 'settlement_currency',
+                            'code_type': 'user_code',
+                            'entity': 'currency'
+                        },
+                        {
+                            'key': 'strategy1_cash',
+                            'code_type': 'user_code',
+                            'entity': 'strategy-1'
+                        },
+                        {
+                            'key': 'strategy1_position',
+                            'code_type': 'user_code',
+                            'entity': 'strategy-1'
+                        },
+                        {
+                            'key': 'strategy2_cash',
+                            'code_type': 'user_code',
+                            'entity': 'strategy-2'
+                        },
+                        {
+                            'key': 'strategy2_position',
+                            'code_type': 'user_code',
+                            'entity': 'strategy-2'
+                        },
+                        {
+                            'key': 'strategy3_cash',
+                            'code_type': 'user_code',
+                            'entity': 'strategy-3'
+                        },
+                        {
+                            'key': 'strategy3_position',
+                            'code_type': 'user_code',
+                            'entity': 'strategy-3'
+                        },
+                        {
+                            'key': 'transaction_class',
+                            'code_type': 'system_code',
+                            'entity': 'transaction-class'
+                        },
+                        {
+                            'key': 'transaction_currency',
+                            'code_type': 'user_code',
+                            'entity': 'currency'
+                        }
+                    ],
+                    'instrument_factor_schedule': [
+                        {
+                            'key': 'instrument',
+                            'code_type': 'user_code',
+                            'entity': 'instrument'
+                        }],
+                    'instrument_manual_pricing_formula': [
+                        {
+                            'key': 'instrument',
+                            'code_type': 'user_code',
+                            'entity': 'instrument'
+                        }, {
+                            'key': 'pricing_policy',
+                            'code_type': 'user_code',
+                            'entity': 'pricing-policy'
+                        }],
+                    'instrument_accrual_calculation_schedules': [
+                        {
+                            'key': 'instrument',
+                            'code_type': 'user_code',
+                            'entity': 'instrument'
+                        },
+                        {
+                            'key': 'periodicity',
+                            'code_type': 'system_code',
+                            'entity': 'periodicity'
+                        },
+                        {
+                            'key': 'accrual_calculation_model',
+                            'code_type': 'system_code',
+                            'entity': 'accrual-calculation-model'
+                        }],
+                    'instrument_event_schedule': [
+                        {
+                            'key': 'instrument',
+                            'code_type': 'user_code',
+                            'entity': 'instrument'
+                        },
+                        {
+                            'key': 'periodicity',
+                            'code_type': 'system_code',
+                            'entity': 'periodicity'
+                        },
+                        {
+                            'key': 'notification_class',
+                            'code_type': 'system_code',
+                            'entity': 'notification-class'
+                        },
+                        {
+                            'key': 'event_class',
+                            'code_type': 'system_code',
+                            'entity': 'event-class'
+                        }]
+                };
+
+                relationProps[key].forEach(function (propItem) {
+
+                    var code_prop = '___' + propItem.key + '__' + propItem.code_type;
+
+                    if (propItem.hasOwnProperty(code_prop)) {
+
+                        promises.push(new Promise(function (resolveRelation, reject) {
+
+                            if (propItem.code_type === 'user_code') {
+
+                                var user_code = input[code_prop];
+
+                                configurationImportHelper.getEntityByUserCode(user_code, propItem.entity).then(function (data) {
+
+                                    action[propItem.key] = data.id;
+
+                                    resolveRelation(action)
+
+                                });
+
+                            } else {
+
+                                var system_code = input[code_prop];
+
+                                configurationImportHelper.getEntityBySystemCode(system_code, propItem.entity).then(function (data) {
+
+                                    action[propItem.key] = data.id;
+
+                                    resolveRelation(action)
+
+                                });
+
+                            }
+
+                        }));
+
+                    }
+
+
+                });
+
+                Promise.all(promises).then(function (data) {
+
+                    resolve(action);
 
                 })
 
@@ -258,277 +771,245 @@
 
         }
 
-        function handleTransactionTypeGroupDependency(transactionTypeEntity, dependency) {
+        // transaction type map end
 
-            return new Promise(function (resolve, reject) {
+        function handleEditLayoutMap(layout) {
 
-                var depGroups = dependency.content;
+            return new Promise(function (resolve) {
 
-                entityResolverService.getList('transaction-type-group').then(function (data) {
+                var entityType = metaContentTypesService.findEntityByContentType(layout.content_type, 'ui');
 
-                    var groups = data.results;
+                attributeTypeService.getList(entityType).then(function (data) {
 
-                    console.log('transactionTypeEntity', transactionTypeEntity);
-                    console.log('depGroups', depGroups);
+                    var layoutAttrs = data.results;
 
-                    var groupsExists = [];
+                    layout.data.forEach(function (tab) {
 
-                    depGroups.forEach(function (depGroup) {
+                        tab.layout.fields.forEach(function (field) {
 
-                        groups.forEach(function (group) {
+                            if (field.attribute && field.attribute.id) {
 
-                            if (group.user_code === depGroup.user_code) {
-                                groupsExists.push(md5helper.md5(depGroup.user_code))
+                                var mapped = false;
+
+                                layoutAttrs.forEach(function (layoutAttr) {
+
+                                    if (layoutAttr.user_code === field.attribute.user_code) {
+                                        field.attribute = layoutAttr;
+                                        field.id = layoutAttr.id;
+                                        mapped = true;
+                                    }
+
+                                });
+
+                                if (mapped === false) {
+                                    field.attribute = null;
+                                    field.id = null;
+                                    field.attribute_class = null;
+                                    field.type = "empty"
+                                }
+
+
                             }
 
                         })
 
                     });
 
-                    var promises = [];
+                    resolve(layout);
 
-                    // console.log('groupsExists', groupsExists);
+                });
 
-                    var groupsToCreate = depGroups.filter(function (group) {
-                        return groupsExists.indexOf(md5helper.md5(group.user_code)) === -1
-                    });
+            })
 
-                    // console.log('groupsToCreate', groupsToCreate);
+        }
 
-                    groupsToCreate.forEach(function (depGroup) {
+        function handleListLayoutMap(layout) {
 
-                        promises.push(entityResolverService.create('transaction-type-group', depGroup))
+            console.log('handleListLayoutMap', layout);
 
-                    });
+            return new Promise(function (resolve) {
 
-                    Promise.all(promises).then(function (data) {
+                if (layout.data) {
 
-                        entityResolverService.getList('transaction-type-group').then(function (data) {
+                    if (layout.data.reportOptions) {
 
-                            var groups = data.results;
+                        var promises = [];
 
-                            transactionTypeEntity.content.forEach(function (item) {
+                        if (layout.data.reportOptions.pricing_policy_object) {
 
-                                groups.forEach(function (group) {
+                            promises.push(new Promise(function (resolve, reject) {
 
-                                    if (item.hasOwnProperty('___group__user_code')) {
+                                var user_code = layout.data.reportOptions.pricing_policy_object.user_code;
 
-                                        if (item.___group__user_code === group.user_code) {
-                                            item.group = group.id;
-                                        }
+                                configurationImportHelper.getEntityByUserCode(user_code, 'pricing-policy').then(function (data) {
 
-                                    }
+                                    layout.data.reportOptions.pricing_policy = data.id;
+                                    layout.data.reportOptions.pricing_policy_object = data;
+
+                                    resolve(layout)
 
                                 })
 
-                            });
+                            }))
 
-                            console.log(transactionTypeEntity);
+                        }
 
-                            resolve(transactionTypeEntity);
+                        if (layout.data.reportOptions.report_currency_object) {
 
-                        });
+                            promises.push(new Promise(function (resolve, reject) {
 
-                    });
+                                var user_code = layout.data.reportOptions.report_currency_object.user_code;
 
+                                configurationImportHelper.getEntityByUserCode(user_code, 'currency').then(function (data) {
+
+                                    layout.data.reportOptions.report_currency = data.id;
+                                    layout.data.reportOptions.report_currency_object = data;
+
+                                    resolve(layout)
+
+                                })
+
+                            }))
+
+                        }
+
+                        if (layout.data.reportOptions.cost_method_object) {
+
+                            promises.push(new Promise(function (resolve, reject) {
+
+                                var system_code = layout.data.reportOptions.cost_method_object.system_code;
+
+                                configurationImportHelper.getEntityBySystemCode(system_code, 'cost-method').then(function (data) {
+
+                                    layout.data.reportOptions.cost_method = data.id;
+                                    layout.data.reportOptions.cost_method_object = data;
+
+                                    resolve(layout)
+
+                                })
+
+                            }))
+
+                        }
+
+                        layout.data.reportOptions.portfolios = [];
+                        layout.data.reportOptions.accounts = [];
+                        layout.data.reportOptions.strategies1 = [];
+                        layout.data.reportOptions.strategies2 = [];
+                        layout.data.reportOptions.strategies3 = [];
+
+                        Promise.all(promises).then(function () {
+                            resolve(layout)
+                        })
+
+                    } else {
+
+                        resolve(layout);
+
+                    }
+
+                } else {
+
+                    resolve(layout);
+
+                }
+            })
+
+        }
+
+        function mapLayouts(entity) {
+            return new Promise(function (resolve) {
+
+                var promises = [];
+
+                entity.content.forEach(function (item) {
+
+                    if (item.active) {
+                        console.log("things to map", item.data);
+
+                        if (entity.entity === 'ui.editlayout') {
+
+                            promises.push(handleEditLayoutMap(item));
+
+                        } else {
+
+                            promises.push(handleListLayoutMap(item));
+
+                        }
+
+                    }
 
                 });
+
+                Promise.all(promises).then(function (data) {
+                    console.log("Update Mappings to local master user data", entity);
+
+                    resolve({});
+
+                })
 
             })
 
         }
 
-        function handlePriceDownloadSchemeDependency(entity, dependency) {
+        function initPreparations(items) {
 
             return new Promise(function (resolve, reject) {
 
-                var depItems = dependency.content;
+                var promises = [];
 
-                priceDownloadSchemeService.getList().then(function (data) {
+                if (isEntityExistsAndSelected(items, 'transactions.transactiontype')) {
 
-                    var items = data.results;
+                    var transactionTypeEntity = findEntity(items, 'transactions.transactiontype');
+                    promises.push(mapTransactionTypeRelations(transactionTypeEntity));
 
-                    var itemsExists = [];
+                }
 
-                    depItems.forEach(function (depItem) {
+                if (isEntityExistsAndSelected(items, 'integrations.complextransactionimportscheme')) {
 
-                        items.forEach(function (item) {
+                    var complexTransactionImportSchemeEntity = findEntity(items, 'integrations.complextransactionimportscheme')
+                    promises.push(mapComplexTransactionImportSchemeRelations(complexTransactionImportSchemeEntity));
 
-                            if (item.scheme_name === depItem.scheme_name) {
-                                itemsExists.push(md5helper.md5(depItem.scheme_name))
-                            }
+                }
 
-                        })
+                if (isEntityExistsAndSelected(items, 'integrations.instrumentdownloadscheme')) {
 
-                    });
+                    var instrumentDownloadSchemeEntity = findEntity(items, 'integrations.instrumentdownloadscheme');
+                    promises.push(mapInstrumentDownloadSchemeRelations(instrumentDownloadSchemeEntity));
 
-                    var promises = [];
+                }
 
-                    var itemsToCreate = depItems.filter(function (group) {
-                        return itemsExists.indexOf(md5helper.md5(group.scheme_name)) === -1
-                    });
+                if (isEntityExistsAndSelected(items, 'instruments.instrumenttype')) {
 
-                    itemsToCreate.forEach(function (item) {
+                    var instrumentTypeEntity = findEntity(items, 'instruments.instrumenttype');
+                    promises.push(mapInstrumentTypeRelations(instrumentTypeEntity));
 
-                        promises.push(priceDownloadSchemeService.create(item))
+                }
 
-                    });
+                if (isEntityExistsAndSelected(items, 'ui.listlayout')) {
 
-                    Promise.all(promises).then(function (data) {
+                    var listLayoutEntity = findEntity(items, 'ui.listlayout');
+                    promises.push(mapLayouts(listLayoutEntity))
 
-                        resolve(data);
+                }
 
-                    });
+                if (isEntityExistsAndSelected(items, 'ui.reportlayout')) {
+                    var reportLayoutEntity = findEntity(items, 'ui.reportlayout');
+                    promises.push(mapLayouts(reportLayoutEntity))
+                }
 
-                });
+                if (isEntityExistsAndSelected(items, 'ui.editlayout')) {
+
+                    var editLayoutEntity = findEntity(items, 'ui.editlayout');
+                    promises.push(mapLayouts(editLayoutEntity))
+
+                }
+
+                Promise.all(promises).then(function (data) {
+                    resolve(data);
+                })
 
             })
-
-
-        }
-
-        function mapTransactionTypeToComplexTransactionImportScheme(complexTransactionImportSchemeEntity) {
-
-            return new Promise(function (resolve, reject) {
-
-                entityResolverService.getList('transaction-type').then(function (data) {
-
-                    var transactionTypes = data.results;
-
-                    console.log('Transaction Type groups created');
-                    console.log('Transaction Types created');
-
-                    complexTransactionImportSchemeEntity.content.forEach(function (entityItem) {
-
-                        entityItem.rules.forEach(function (rule) {
-
-                            transactionTypes.forEach(function (transactionType) {
-
-                                if (rule.___transaction_type__user_code === transactionType.user_code) {
-                                    rule.transaction_type = transactionType.id;
-
-                                    rule.fields.forEach(function (field) {
-
-                                        transactionType.inputs.forEach(function (input) {
-
-                                            if (field.___input__name === input.name) {
-                                                field.transaction_type_input = input.id;
-                                            }
-
-                                        })
-
-
-                                    })
-
-                                }
-
-                            })
-
-
-                        })
-
-                    });
-
-                    resolve(complexTransactionImportSchemeEntity);
-
-                });
-
-            });
-
-        }
-
-        function mapPriceDownloadSchemeToInstrumentDownloadScheme(instrumentDownloadSchemeEntity) {
-
-            return new Promise(function (resolve, reject) {
-
-                priceDownloadSchemeService.getList().then(function (data) {
-
-                    var schemes = data.results;
-
-                    instrumentDownloadSchemeEntity.content.forEach(function (entityItem) {
-
-                        schemes.forEach(function (scheme) {
-
-                            if (entityItem.___price_download_scheme__scheme_name === scheme.scheme_name) {
-                                entityItem.price_download_scheme = scheme.id;
-                            }
-
-                        })
-
-                    });
-
-                    resolve(instrumentDownloadSchemeEntity);
-
-                });
-
-            })
-
-        }
-
-        function mapTransactionTypeEventsToInstrumentType(instrumentTypeEntity) {
-
-            return new Promise(function (resolve, reject) {
-
-                entityResolverService.getList('transaction-type').then(function (data) {
-
-                    var transactionTypes = data.results;
-
-                    console.log('Transaction Type groups created');
-                    console.log('Transaction Types created');
-
-                    instrumentTypeEntity.content.forEach(function (entityItem) {
-
-                        transactionTypes.forEach(function (transactionType) {
-
-
-                            if (entityItem.hasOwnProperty('___one_off_event__user_code')) {
-
-                                if (entityItem.___one_off_event__user_code === transactionType.user_code) {
-                                    entityItem.one_off_event = transactionType.id;
-                                }
-
-                            }
-
-                            if (entityItem.hasOwnProperty('___regular_event__user_code')) {
-
-                                if (entityItem.___regular_event__user_code === transactionType.user_code) {
-                                    entityItem.regular_event = transactionType.id;
-                                }
-
-                            }
-
-                            if (entityItem.hasOwnProperty('___factor_same__user_code')) {
-
-                                if (entityItem.___factor_same__user_code === transactionType.user_code) {
-                                    entityItem.factor_same = transactionType.id;
-                                }
-
-                            }
-
-                            if (entityItem.hasOwnProperty('___factor_up__user_code')) {
-
-                                if (entityItem.___factor_up__user_code === transactionType.user_code) {
-                                    entityItem.factor_up = transactionType.id;
-                                }
-                            }
-
-                            if (entityItem.hasOwnProperty('___factor_down__user_code')) {
-
-                                if (entityItem.___factor_down__user_code === transactionType.user_code) {
-                                    entityItem.factor_down = transactionType.id;
-                                }
-                            }
-
-
-                        });
-
-                    });
-
-                    resolve(instrumentTypeEntity);
-
-                });
-
-            });
 
         }
 
@@ -640,419 +1121,6 @@
                     resolve(data);
 
 
-                })
-
-            })
-
-        }
-
-        function resolveTransactionTypeDependencies(transactionTypeEntity) {
-
-            console.time("Transaction Type dependencies resolved");
-
-            return new Promise(function (resolve, reject) {
-
-                var promises = [];
-
-                transactionTypeEntity.dependencies.forEach(function (dependency) {
-
-                    switch (dependency.entity) {
-
-                        case 'transactions.transactiontypegroup':
-                            promises.push(handleTransactionTypeGroupDependency(transactionTypeEntity, dependency));
-                            break;
-                    }
-
-                });
-
-                Promise.all(promises).then(function (data) {
-
-                    console.timeEnd("Transaction Type dependencies resolved");
-
-                    resolve(data);
-
-                })
-
-            })
-
-        }
-
-        function resolveInstrumentDownloadSchemeDependencies(instrumentDownloadSchemeEntity) {
-
-            console.time("Instrument download scheme dependencies resolved");
-
-            return new Promise(function (resolve, reject) {
-
-                var promises = [];
-
-                instrumentDownloadSchemeEntity.dependencies.forEach(function (dependency) {
-
-                    switch (dependency.entity) {
-
-                        case 'integrations.pricedownloadscheme':
-                            promises.push(handlePriceDownloadSchemeDependency(instrumentDownloadSchemeEntity, dependency));
-                            break;
-                    }
-
-                });
-
-                Promise.all(promises).then(function (data) {
-
-                    mapPriceDownloadSchemeToInstrumentDownloadScheme(instrumentDownloadSchemeEntity).then(function () {
-
-                        console.timeEnd("Instrument download scheme dependencies resolved");
-
-                        resolve(data);
-
-                    });
-
-                })
-
-            })
-
-        }
-
-        function resolveComplexTransactionImportSchemeDependencies(complexTransactionImportSchemeEntity) {
-
-            console.time("Complex Transaction Import Scheme dependencies resolved");
-
-            return new Promise(function (resolve, reject) {
-
-                var promises = [];
-
-                complexTransactionImportSchemeEntity.dependencies.forEach(function (dependency) {
-
-                    switch (dependency.entity) {
-
-                        case 'transactions.transactiontype':
-                            promises.push(handleTransactionTypeDependency(complexTransactionImportSchemeEntity, dependency));
-                            break;
-                    }
-
-                });
-
-                Promise.all(promises).then(function (data) {
-
-                    console.timeEnd("Complex Transaction Import Scheme dependencies resolved");
-
-                    mapTransactionTypeToComplexTransactionImportScheme(complexTransactionImportSchemeEntity).then(function (value) {
-
-                        resolve(data);
-
-                    })
-
-                })
-
-            });
-
-        }
-
-        function resolveInstrumentTypeDependencies(instrumentTypeEntity) {
-
-            console.time("Instrument type dependencies resolved");
-
-            return new Promise(function (resolve, reject) {
-
-                var promises = [];
-
-                instrumentTypeEntity.dependencies.forEach(function (dependency) {
-
-                    switch (dependency.entity) {
-
-                        case 'transactions.transactiontype':
-                            promises.push(handleTransactionTypeDependency(instrumentTypeEntity, dependency));
-                            break;
-                    }
-
-                });
-
-                Promise.all(promises).then(function (data) {
-
-                    mapTransactionTypeEventsToInstrumentType(instrumentTypeEntity).then(function () {
-
-                        console.timeEnd("Instrument type dependencies resolved");
-
-                        resolve(data);
-
-                    });
-
-                })
-
-            })
-
-        }
-
-        function updatePricingPolicyLayout(layout) {
-
-            return new Promise(function (resolve) {
-
-                entityResolverService.getList('pricing-policy', {
-                    filters: {
-                        "user_code": layout.data.reportOptions.pricing_policy_object.user_code
-                    }
-                }).then(function (data) {
-
-                    if (data.results.length) {
-                        layout.data.reportOptions.pricing_policy = data.results[0].id;
-                        layout.data.reportOptions.pricing_policy_object = data.results[0];
-                    }
-
-                    resolve(layout);
-
-                })
-
-            })
-
-        }
-
-        function updateCurrencyLayout(layout) {
-
-            return new Promise(function (resolve) {
-
-                entityResolverService.getList('currency', {
-                    filters: {
-                        "user_code": layout.data.reportOptions.report_currency_object.user_code
-                    }
-                }).then(function (data) {
-
-                    if (data.results.length) {
-                        layout.data.reportOptions.report_currency = data.results[0].id;
-                        layout.data.reportOptions.report_currency_object = data.results[0];
-                    }
-
-                    resolve(layout)
-
-                })
-
-            })
-
-        }
-
-        function updateCostMethodLayout(layout) {
-
-            return new Promise(function (resolve) {
-
-                entityResolverService.getList('cost-method').then(function (data) {
-
-                    var costMethod;
-
-                    data.forEach(function (item) {
-
-                        if (item.system_code === layout.data.reportOptions.cost_method_object.system_code) {
-                            costMethod = item;
-                        }
-
-                    });
-
-                    if (costMethod) {
-                        layout.data.reportOptions.cost_method = costMethod.id;
-                        layout.data.reportOptions.cost_method_object = costMethod;
-                    }
-
-                    resolve(layout)
-
-                })
-
-            });
-
-        }
-
-        function handleEditLayoutMap(layout) {
-
-            return new Promise(function (resolve) {
-
-                var entityType = metaContentTypesService.findEntityByContentType(layout.content_type, 'ui');
-
-                attributeTypeService.getList(entityType).then(function (data) {
-
-                    var layoutAttrs = data.results;
-
-                    layout.data.forEach(function (tab) {
-
-                        tab.layout.fields.forEach(function (field) {
-
-                            if (field.attribute && field.attribute.id) {
-
-                                var mapped = false;
-
-                                layoutAttrs.forEach(function (layoutAttr) {
-
-                                    if (layoutAttr.user_code === field.attribute.user_code) {
-                                        field.attribute = layoutAttr;
-                                        field.id = layoutAttr.id;
-                                        mapped = true;
-                                    }
-
-                                });
-
-                                if (mapped === false) {
-                                    field.attribute = null;
-                                    field.id = null;
-                                    field.attribute_class = null;
-                                    field.type = "empty"
-                                }
-
-
-                            }
-
-                        })
-
-                    });
-
-                    resolve(layout);
-
-                });
-
-            })
-
-        }
-
-        function handleListLayoutMap(layout) {
-
-            console.log('handleListLayoutMap', layout);
-
-            return new Promise(function (resolve) {
-
-                if (layout.data) {
-
-                    if (layout.data.reportOptions) {
-
-                        var promises = [];
-
-                        if (layout.data.reportOptions.pricing_policy_object) {
-
-                            promises.push(updatePricingPolicyLayout(layout))
-
-                        }
-
-                        if (layout.data.reportOptions.report_currency_object) {
-
-                            promises.push(updateCurrencyLayout(layout))
-
-                        }
-
-                        if (layout.data.reportOptions.cost_method_object) {
-
-                            promises.push(updateCostMethodLayout(layout))
-
-                        }
-
-                        layout.data.reportOptions.portfolios = [];
-                        layout.data.reportOptions.accounts = [];
-                        layout.data.reportOptions.strategies1 = [];
-                        layout.data.reportOptions.strategies2 = [];
-                        layout.data.reportOptions.strategies3 = [];
-
-                        console.log('here??');
-
-                        Promise.all(promises).then(function () {
-                            resolve(layout)
-                        })
-
-                    } else {
-
-                        resolve(layout);
-
-                    }
-
-                } else {
-
-                    resolve(layout);
-
-                }
-            })
-
-        }
-
-        function mapLayouts(entity) {
-            return new Promise(function (resolve) {
-
-                var promises = [];
-
-                entity.content.forEach(function (item) {
-
-                    if (item.active) {
-                        console.log("things to map", item.data);
-
-                        if (entity.entity === 'ui.editlayout') {
-
-                            promises.push(handleEditLayoutMap(item));
-
-                        } else {
-
-                            promises.push(handleListLayoutMap(item));
-
-                        }
-
-                    }
-
-                });
-
-                Promise.all(promises).then(function (data) {
-                    console.log("Update Mappings to local master user data", entity);
-
-                    resolve({});
-
-                })
-
-            })
-
-        }
-
-        function initPreparations(items) {
-
-
-            return new Promise(function (resolve, reject) {
-
-                var transactionTypeEntity = findEntity(items, 'transactions.transactiontype');
-                var complexTransactionImportSchemeEntity = findEntity(items, 'integrations.complextransactionimportscheme');
-                var instrumentDownloadSchemeEntity = findEntity(items, 'integrations.instrumentdownloadscheme');
-                var instrumentTypeEntity = findEntity(items, 'instruments.instrumenttype');
-
-                var listLayoutEntity = findEntity(items, 'ui.listlayout');
-                var reportLayoutEntity = findEntity(items, 'ui.reportlayout');
-                var editLayoutEntity = findEntity(items, 'ui.editlayout');
-
-                var promises = [];
-
-                if (transactionTypeEntity) {
-                    if (isEntitySelected(transactionTypeEntity) && transactionTypeEntity.dependencies.length) {
-                        promises.push(resolveTransactionTypeDependencies(transactionTypeEntity));
-                    }
-                }
-
-                if (complexTransactionImportSchemeEntity) {
-                    if (isEntitySelected(complexTransactionImportSchemeEntity) && complexTransactionImportSchemeEntity.dependencies.length) {
-                        promises.push(resolveComplexTransactionImportSchemeDependencies(complexTransactionImportSchemeEntity));
-                    }
-                }
-
-                if (instrumentDownloadSchemeEntity) {
-                    if (isEntitySelected(instrumentDownloadSchemeEntity) && instrumentDownloadSchemeEntity.dependencies.length) {
-                        promises.push(resolveInstrumentDownloadSchemeDependencies(instrumentDownloadSchemeEntity));
-                    }
-                }
-
-                if (instrumentTypeEntity) {
-                    if (isEntitySelected(instrumentTypeEntity) && instrumentTypeEntity.dependencies.length) {
-                        promises.push(resolveInstrumentTypeDependencies(instrumentTypeEntity));
-                    }
-                }
-
-                if (listLayoutEntity && isEntitySelected(listLayoutEntity)) {
-                    promises.push(mapLayouts(listLayoutEntity))
-                }
-
-                if (reportLayoutEntity && isEntitySelected(reportLayoutEntity)) {
-                    promises.push(mapLayouts(reportLayoutEntity))
-                }
-
-                if (editLayoutEntity && isEntitySelected(editLayoutEntity)) {
-                    promises.push(mapLayouts(editLayoutEntity))
-                }
-
-                Promise.all(promises).then(function (data) {
-                    resolve(data);
                 })
 
             })

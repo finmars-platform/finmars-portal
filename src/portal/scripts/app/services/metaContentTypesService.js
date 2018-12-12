@@ -13,6 +13,10 @@
         return metaContentTypesRepository.getListForUi();
     };
 
+    var getList = function () {
+        return metaContentTypesRepository.getList();
+    };
+
     var findContentTypeByEntity = function (entity, type) {
 
         var contentTypes;
@@ -37,11 +41,12 @@
 
     var findEntityByContentType = function (contentType, type) {
 
-        var contentTypes;
-        if (type == 'tag') {
+        var contentTypes = getList();
+
+        if (type === 'tag') {
             contentTypes = getListForTags();
         } else {
-            if (type == 'ui') {
+            if (type === 'ui') {
                 contentTypes = getListForUi();
             }
         }
@@ -49,7 +54,7 @@
         var entity = null;
 
         contentTypes.forEach(function (item) {
-            if (item.key == contentType) {
+            if (item.key === contentType) {
                 entity = item.entity
             }
         });
@@ -236,6 +241,7 @@
     module.exports = {
         getListForTags: getListForTags,
         getListForUi: getListForUi,
+        getList: getList,
 
         findContentTypeByEntity: findContentTypeByEntity,
         findEntityByContentType: findEntityByContentType,
