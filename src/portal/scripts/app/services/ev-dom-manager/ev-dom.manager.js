@@ -539,11 +539,12 @@
 
     var calculatePaddingTop = function (evDataService) {
 
-        var offset = evDataService.getVirtualScrollOffset();
-        var rowHeight = evDataService.getRowHeight();
+        // var offset = evDataService.getVirtualScrollOffset();
+        // var rowHeight = evDataService.getRowHeight();
+        //
+        // return Math.floor(offset * rowHeight);
 
-        return Math.floor(offset * rowHeight);
-
+        return evDataService.getVirtualScrollOffsetPx();
     };
 
     var calculateTotalHeight = function (evDataService) {
