@@ -541,19 +541,8 @@
 
         var offset = evDataService.getVirtualScrollOffset();
         var rowHeight = evDataService.getRowHeight();
-        var reserveTop = evDataService.getVirtualScrollReserveTop();
 
-        var reservePadding = 0;
-
-        if (offset > reserveTop) {
-            reservePadding = reserveTop * rowHeight;
-        }
-
-        // console.log('calculatePaddingTop.reservePadding', reservePadding);
-
-        var fullPaddingTop = Math.floor(offset * rowHeight);
-
-        return fullPaddingTop - reservePadding;
+        return Math.floor(offset * rowHeight);
 
     };
 
