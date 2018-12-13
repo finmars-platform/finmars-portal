@@ -123,7 +123,7 @@
                     locals: {
                         warning: {
                             title: 'Warning!',
-                            description: 'Calculation may take some time, are you sure?'
+                            description: 'It can take a long time, confirm?'
                         }
                     },
                     preserveScope: true,

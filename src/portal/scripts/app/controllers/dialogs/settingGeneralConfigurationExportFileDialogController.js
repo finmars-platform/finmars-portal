@@ -14,14 +14,30 @@
     var metaContentTypesService = require('../../services/metaContentTypesService');
     var md5helper = require('../../helpers/md5.helper');
     var uiRepository = require('../../repositories/uiRepository');
+    var configurationService = require('../../services/configurationService');
+
 
     module.exports = function ($scope, $mdDialog, file) {
 
-        console.log("file", file);
-
         var vm = this;
 
-        vm.items = file.body;
+        vm.readyStatus = {content: false};
+
+        vm.getFile = function () {
+
+            configurationService.getConfigurationData().then(function (data) {
+
+                console.log('here?', data);
+
+                vm.items = data.body;
+
+                vm.readyStatus.content = true;
+
+                $scope.$apply();
+
+            });
+
+        };
 
         vm.getEntityName = function (item) {
 
@@ -253,6 +269,14 @@
         vm.cancel = function () {
             $mdDialog.cancel();
         };
+
+        vm.init = function () {
+
+            vm.getFile();
+
+        };
+
+        vm.init();
 
     }
 
