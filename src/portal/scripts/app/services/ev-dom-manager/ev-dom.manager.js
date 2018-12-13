@@ -599,6 +599,7 @@
 
             offset = Math.floor(viewportElem.scrollTop / rowHeight);
             evDataService.setVirtualScrollOffset(offset);
+            evDataService.setVirtualScrollOffsetPx(offset);
             evEventService.dispatchEvent(evEvents.UPDATE_TABLE);
 
 

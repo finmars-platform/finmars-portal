@@ -561,6 +561,15 @@
             return data.virtualScroll.offset;
         }
 
+        function setVirtualScrollOffsetPx(offset) {
+            data.virtualScroll.offsetPx = offset
+        }
+
+        function getVirtualScrollOffsetPx() {
+            return data.virtualScroll.offsetPx;
+        }
+
+
         function getVirtualScrollReserveTop() {
             return data.virtualScroll.reserveTop;
         }
@@ -672,6 +681,9 @@
 
             setLastRequestOffset: setLastRequestOffset,
             getLastRequestOffset: getLastRequestOffset,
+
+            setVirtualScrollOffsetPx: setVirtualScrollOffsetPx,
+            getVirtualScrollOffsetPx: getVirtualScrollOffsetPx,
 
             setActiveColumnSort: setActiveColumnSort,
             getActiveColumnSort: getActiveColumnSort,
