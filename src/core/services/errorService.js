@@ -68,6 +68,33 @@
         })
     };
 
+    var getFullErrorAsHtml = function (obj, message) {
+
+        // console.log('getFullErrorAsHtml.obj', obj);
+
+        Object.keys(obj).forEach(function (key) {
+
+            message = message + '<br/>';
+
+            if (Array.isArray(obj[key])) {
+                message = message + key + ': ' + obj[key].join('. ');
+            } else {
+
+                if (typeof obj[key] === 'object') {
+
+                    message = getFullErrorAsHtml(obj[key], message)
+
+                } else {
+                    message = message + key + ': ' + obj[key]
+                }
+            }
+
+        });
+
+        return message;
+
+    };
+
     var notifyError = function (reason) {
 
         var message = reason.statusText + ' (' + reason.status + ')';
@@ -76,17 +103,7 @@
 
             if (typeof reason.message === 'object') {
 
-                Object.keys(reason.message).forEach(function (key) {
-
-                    message = message + '<br/>';
-
-                    if (Array.isArray(reason.message[key])) {
-                        message = message + key + ': ' + reason.message[key].join('. ');
-                    } else {
-                        message = message + key + ': ' + reason.message[key]
-                    }
-
-                })
+                message = getFullErrorAsHtml(reason.message, message)
 
             }
 
