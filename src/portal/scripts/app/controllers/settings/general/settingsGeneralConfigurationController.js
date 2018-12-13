@@ -3,7 +3,6 @@
  */
 (function () {
 
-    var configurationService = require('../../../services/configurationService');
 
     module.exports = function ($scope, $mdDialog) {
 
@@ -134,22 +133,18 @@
 
         vm.openExportConfigurationManager = function ($event) {
 
-            configurationService.getConfigurationData().then(function (data) {
 
-                $mdDialog.show({
-                    controller: 'SettingGeneralConfigurationExportFileDialogController as vm',
-                    templateUrl: 'views/dialogs/settings-general-configuration-export-file-dialog-view.html',
-                    parent: angular.element(document.body),
-                    targetEvent: $event,
-                    preserveScope: true,
-                    autoWrap: true,
-                    skipHide: true,
-                    locals: {
-                        file: data
-                    }
-                })
+            $mdDialog.show({
+                controller: 'SettingGeneralConfigurationExportFileDialogController as vm',
+                templateUrl: 'views/dialogs/settings-general-configuration-export-file-dialog-view.html',
+                parent: angular.element(document.body),
+                targetEvent: $event,
+                preserveScope: true,
+                autoWrap: true,
+                skipHide: true,
 
             })
+
 
         };
 

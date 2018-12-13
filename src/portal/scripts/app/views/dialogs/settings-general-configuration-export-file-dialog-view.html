@@ -7,33 +7,43 @@
     </md-toolbar>
     <md-dialog-content style="background: #fff; padding: 16px">
 
-        <div data-ng-repeat="item in vm.items">
+        <div data-ng-if="vm.readyStatus.content">
 
-            <div class="cie-entity-holder">
-                <md-checkbox ng-checked="item.active" data-ng-click="vm.toggleActiveForChilds(item)"
-                             aria-label="checkbox">
-                </md-checkbox>
-                <span data-ng-bind="vm.getEntityName(item)"></span> <span class="cie-dependency"
-                                                                          data-ng-bind="vm.getEntityDependenciesCaptions(item)"></span>
-                ({{item.count}})
-                <md-button class="md-raised" ng-click="item.displayItems = !item.displayItems"><span
-                        data-ng-if="!item.displayItems">Show</span><span data-ng-if="item.displayItems">Hide</span>
-                </md-button>
-            </div>
+            <div data-ng-repeat="item in vm.items">
 
-
-            <div data-ng-show="item.displayItems" style="padding-left: 20px">
-
-                <div data-ng-repeat="child in item.content">
-                    <md-checkbox ng-checked="child.active" data-ng-click="vm.updateActiveForParent(child, item)"
+                <div class="cie-entity-holder">
+                    <md-checkbox ng-checked="item.active" data-ng-click="vm.toggleActiveForChilds(item)"
                                  aria-label="checkbox">
                     </md-checkbox>
-                    {{vm.getItemName(child)}}
+                    <span data-ng-bind="vm.getEntityName(item)"></span> <span class="cie-dependency"
+                                                                              data-ng-bind="vm.getEntityDependenciesCaptions(item)"></span>
+                    ({{item.count}})
+                    <md-button class="md-raised" ng-click="item.displayItems = !item.displayItems"><span
+                            data-ng-if="!item.displayItems">Show</span><span data-ng-if="item.displayItems">Hide</span>
+                    </md-button>
                 </div>
+
+
+                <div data-ng-show="item.displayItems" style="padding-left: 20px">
+
+                    <div data-ng-repeat="child in item.content">
+                        <md-checkbox ng-checked="child.active" data-ng-click="vm.updateActiveForParent(child, item)"
+                                     aria-label="checkbox">
+                        </md-checkbox>
+                        {{vm.getItemName(child)}}
+                    </div>
+
+                </div>
+
 
             </div>
 
+        </div>
 
+        <div data-ng-if="!vm.readyStatus.content">
+            <div layout="row" layout-sm="column" layout-align="space-around" class="m-large">
+                <md-progress-circular md-mode="indeterminate" md-diameter="96"></md-progress-circular>
+            </div>
         </div>
 
     </md-dialog-content>
