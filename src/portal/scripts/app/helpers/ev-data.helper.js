@@ -391,9 +391,9 @@
         var from = offset;
         var to = offset + step;
 
-        if (from > reserveTop) {
-            from = from - reserveTop;
-        }
+        // if (from > reserveTop) {
+        //     from = from - reserveTop;
+        // }
 
         if (visibleObjects >= to) {
             to = to + reserveBottom;
