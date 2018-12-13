@@ -51,6 +51,7 @@
 
             offset = Math.floor(viewportElem.scrollTop / rowHeight);
             evDataService.setVirtualScrollOffset(offset);
+            evDataService.setVirtualScrollOffsetPx(viewportElem.scrollTop);
             evEventService.dispatchEvent(evEvents.UPDATE_PROJECTION);
 
 
