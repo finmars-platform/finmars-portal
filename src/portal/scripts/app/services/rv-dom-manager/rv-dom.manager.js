@@ -54,8 +54,10 @@
             evDataService.setVirtualScrollOffsetPx(viewportElem.scrollTop);
             evEventService.dispatchEvent(evEvents.UPDATE_PROJECTION);
 
+            calculateScroll(elements, evDataService)
 
-        }, 50);
+
+        }, 25);
 
         var scrollXHandler = function () {
 
