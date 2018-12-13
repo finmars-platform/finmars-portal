@@ -374,6 +374,20 @@
         var offset = evDataService.getVirtualScrollOffset();
         var step = evDataService.getVirtualScrollStep();
 
+        var visibleObjects = 0;
+
+        flatList.forEach(function (item) {
+
+            if (item.___type === 'object') {
+                visibleObjects = visibleObjects + 1;
+            }
+
+            if (item.___type === 'subtotal' && item.___subtotal_type !== 'proxyline') {
+                visibleObjects = visibleObjects + 1;
+            }
+
+        });
+
         var from = offset;
         var to = offset + step;
 
@@ -381,11 +395,9 @@
             from = from - reserveTop;
         }
 
-        if (flatList.length >= to) {
+        if (visibleObjects >= to) {
             to = to + reserveBottom;
         }
-
-        evDataService.setVirtualScrollLimit(flatList.length);
 
         var items = flatList.slice(from, to);
 
