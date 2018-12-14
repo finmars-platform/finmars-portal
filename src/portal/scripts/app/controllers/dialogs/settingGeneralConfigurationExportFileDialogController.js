@@ -29,6 +29,8 @@
 
                 console.log('here?', data);
 
+                vm.file = data;
+
                 vm.items = data.body;
 
                 vm.readyStatus.content = true;
@@ -239,9 +241,9 @@
 
                 });
 
-                file.body = results;
+                vm.file.body = results;
 
-                var resultFile = JSON.stringify(file);
+                var resultFile = JSON.stringify(vm.file);
 
                 var a = document.getElementById("exportButton");
                 var result = new File([resultFile], {type: 'text/json;charset=utf-8'});
@@ -249,7 +251,7 @@
                 a.href = URL.createObjectURL(result);
                 a.download = "configuration.json";
 
-                resolve(file);
+                resolve(vm.file);
 
 
             })

@@ -915,6 +915,127 @@
 
         // transaction type map end
 
+        function mapReportOptions(layout) {
+
+            return new Promise(function (resolve) {
+
+                var promises = [];
+
+                if (layout.data.reportOptions) {
+
+                    if (layout.data.reportOptions.pricing_policy_object) {
+
+                        promises.push(new Promise(function (resolveRelation, reject) {
+
+                            var user_code = layout.data.reportOptions.pricing_policy_object.user_code;
+
+                            configurationImportHelper.getEntityByUserCode(user_code, 'pricing-policy').then(function (data) {
+
+                                layout.data.reportOptions.pricing_policy = data.id;
+                                layout.data.reportOptions.pricing_policy_object = data;
+
+                                resolveRelation(layout)
+
+                            })
+
+                        }))
+
+                    }
+
+                    if (layout.data.reportOptions.report_currency_object) {
+
+                        promises.push(new Promise(function (resolveRelation, reject) {
+
+                            var user_code = layout.data.reportOptions.report_currency_object.user_code;
+
+                            configurationImportHelper.getEntityByUserCode(user_code, 'currency').then(function (data) {
+
+                                layout.data.reportOptions.report_currency = data.id;
+                                layout.data.reportOptions.report_currency_object = data;
+
+                                resolveRelation(layout)
+
+                            })
+
+                        }))
+
+                    }
+
+                    if (layout.data.reportOptions.cost_method_object) {
+
+                        promises.push(new Promise(function (resolveRelation, reject) {
+
+                            var system_code = layout.data.reportOptions.cost_method_object.system_code;
+
+                            configurationImportHelper.getEntityBySystemCode(system_code, 'cost-method').then(function (data) {
+
+                                layout.data.reportOptions.cost_method = data.id;
+                                layout.data.reportOptions.cost_method_object = data;
+
+                                resolveRelation(layout)
+
+                            })
+
+                        }))
+
+                    }
+
+                    layout.data.reportOptions.portfolios = [];
+                    layout.data.reportOptions.accounts = [];
+                    layout.data.reportOptions.strategies1 = [];
+                    layout.data.reportOptions.strategies2 = [];
+                    layout.data.reportOptions.strategies3 = [];
+
+                }
+
+                Promise.all(promises).then(function () {
+                    resolve(layout)
+                })
+
+            })
+
+        }
+
+        function mapAttributeTypesInList(list, content_type) {
+
+            return new Promise(function (resolve) {
+
+                var promises = [];
+
+                list.forEach(function (item) {
+
+                    if (item.hasOwnProperty('id')) {
+
+                        promises.push(new Promise(function (resolveRelation, reject) {
+
+                            var user_code = item.user_code;
+
+                            var entity = metaContentTypesService.findEntityByContentType(content_type);
+
+                            configurationImportHelper.getAttributeTypeByUserCode(user_code, entity).then(function (data) {
+
+                                item.id = data.id;
+
+                                resolveRelation(item)
+
+                            });
+
+                        }));
+
+                    }
+
+                });
+
+                Promise.all(promises).then(function (data) {
+
+                    resolve(data);
+
+                })
+
+            })
+
+        }
+
         function handleEditLayoutMap(layout) {
 
             return new Promise(function (resolve) {
@@ -971,90 +1092,23 @@
 
             return new Promise(function (resolve) {
 
+                var promises = [];
+
                 if (layout.data) {
 
-                    if (layout.data.reportOptions) {
+                    promises.push(mapReportOptions(layout));
 
-                        var promises = [];
+                    promises.push(mapActionRelations(layout.data.columns, layout.content_type));
+                    promises.push(mapActionRelations(layout.data.grouping, layout.content_type));
 
-                        if (layout.data.reportOptions.pricing_policy_object) {
-
-                            promises.push(new Promise(function (resolve, reject) {
-
-                                var user_code = layout.data.reportOptions.pricing_policy_object.user_code;
-
-                                configurationImportHelper.getEntityByUserCode(user_code, 'pricing-policy').then(function (data) {
-
-                                    layout.data.reportOptions.pricing_policy = data.id;
-                                    layout.data.reportOptions.pricing_policy_object = data;
-
-                                    resolve(layout)
-
-                                })
-
-                            }))
-
-                        }
-
-                        if (layout.data.reportOptions.report_currency_object) {
-
-                            promises.push(new Promise(function (resolve, reject) {
-
-                                var user_code = layout.data.reportOptions.report_currency_object.user_code;
-
-                                configurationImportHelper.getEntityByUserCode(user_code, 'currency').then(function (data) {
-
-                                    layout.data.reportOptions.report_currency = data.id;
-                                    layout.data.reportOptions.report_currency_object = data;
-
-                                    resolve(layout)
-
-                                })
-
-                            }))
-
-                        }
-
-                        if (layout.data.reportOptions.cost_method_object) {
-
-                            promises.push(new Promise(function (resolve, reject) {
-
-                                var system_code = layout.data.reportOptions.cost_method_object.system_code;
-
-                                configurationImportHelper.getEntityBySystemCode(system_code, 'cost-method').then(function (data) {
-
-                                    layout.data.reportOptions.cost_method = data.id;
-                                    layout.data.reportOptions.cost_method_object = data;
-
-                                    resolve(layout)
-
-                                })
-
-                            }))
-
-                        }
-
-                        layout.data.reportOptions.portfolios = [];
-                        layout.data.reportOptions.accounts = [];
-                        layout.data.reportOptions.strategies1 = [];
-                        layout.data.reportOptions.strategies2 = [];
-                        layout.data.reportOptions.strategies3 = [];
-
-                        Promise.all(promises).then(function () {
-                            resolve(layout)
-                        })
-
-                    } else {
-
-                        resolve(layout);
-
-                    }
-
-                } else {
-
-                    resolve(layout);
 
                 }
+
+                Promise.all(promises).then(function (data) {
+
+                    resolve(data)
+
+                })
             })
 
         }
