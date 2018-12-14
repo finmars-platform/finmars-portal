@@ -6,12 +6,14 @@
             <span flex></span>
         </div>
     </md-toolbar>
-    <md-dialog-content>
+    <md-dialog-content style="height: 100%">
 
-        <div class="entity-editor-special-rules-holder" data-ng-if="vm.entitySpecialRules">
-            <div data-ng-include="vm.resolveSpecialRules()"></div>
-        </div>
-        <div data-ng-if="vm.specialRulesReady">
+        <div style="min-width: 1450px">
+
+            <div class="entity-editor-special-rules-holder" data-ng-if="vm.entitySpecialRules">
+                <div data-ng-include="vm.resolveSpecialRules()"></div>
+            </div>
+            <div data-ng-if="vm.specialRulesReady">
             <div data-ng-if="vm.checkReadyStatus()">
                 <md-tabs md-dynamic-height md-border-bottom class="tabs-colored">
                     <md-tab data-ng-repeat="tab in vm.tabs">
@@ -203,6 +205,8 @@
                     <md-progress-circular md-mode="indeterminate" md-diameter="96"></md-progress-circular>
                 </div>
             </div>
+        </div>
+
         </div>
 
     </md-dialog-content>
