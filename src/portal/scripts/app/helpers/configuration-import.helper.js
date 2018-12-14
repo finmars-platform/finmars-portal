@@ -6,6 +6,7 @@
     'use strict';
 
     var entityResolverService = require('../services/entityResolverService');
+    var attributeTypeService = require('../services/attributeTypeService');
 
     var getEntityByUserCode = function (user_code, entity) {
 
@@ -28,7 +29,7 @@
                         resolve(getEntityByUserCode('-', entity))
 
                     } else {
-                        reject("Entity with user code '-' is not exist")
+                        reject("Entity with user code '-' does not exist")
                     }
 
                 }
@@ -55,7 +56,33 @@
 
                 } else {
 
-                    reject("Entity is not exist")
+                    reject("Entity does not exist")
+
+                }
+
+            })
+
+        })
+
+    };
+
+    var getAttributeTypeByUserCode = function (user_code, entity) {
+
+        return new Promise(function (resolve, reject) {
+
+            attributeTypeService.getList(entity, {
+                filters: {
+                    "user_code": user_code
+                }
+            }).then(function (data) {
+
+                if (data.results.length) {
+
+                    resolve(data.results[0])
+
+                } else {
+
+                    reject("Attribute Type with user code " + user_code + " does not exist")
 
                 }
 
@@ -67,7 +94,8 @@
 
     module.exports = {
         getEntityByUserCode: getEntityByUserCode,
-        getEntityBySystemCode: getEntityBySystemCode
+        getEntityBySystemCode: getEntityBySystemCode,
+        getAttributeTypeByUserCode: getAttributeTypeByUserCode
     }
 
 }());

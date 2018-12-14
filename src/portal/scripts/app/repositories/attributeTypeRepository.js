@@ -34,7 +34,7 @@
         }
     }
 
-    var getList = function (entity) {
+    var getList = function (entity, options) {
 
         if (metaRestrictionsService.getEntitiesWithoutDynamicAttrsList().indexOf(entity) !== -1) {
             return new Promise(function (resolve) {
@@ -42,7 +42,7 @@
             })
         }
 
-        return xhrService.fetch(baseUrl + endPointResolver(entity),
+        return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl + endPointResolver(entity), options),
             {
                 method: 'GET',
                 credentials: 'include',

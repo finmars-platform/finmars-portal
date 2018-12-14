@@ -1,14 +1,14 @@
 /**
  * Created by szhitenev on 15.06.2016.
  */
-(function(){
+(function () {
 
     'use strict';
 
     var attributeTypeRepository = require('../repositories/attributeTypeRepository');
 
-    var getList = function (entity) {
-        return attributeTypeRepository.getList(entity);
+    var getList = function (entity, options) {
+        return attributeTypeRepository.getList(entity, options);
     };
 
     var getByKey = function (entity, id) {
