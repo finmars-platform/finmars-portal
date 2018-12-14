@@ -22,8 +22,8 @@
 
             var promises = [];
 
-            vm.events.map(function (event) {
-                if (event.is_need_reaction) {
+            vm.events.forEach(function (event) {
+                if (event.is_need_reaction && event.selected) {
                     promises.push(vm.openEventWindow($event, event));
                 }
             });
