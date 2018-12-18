@@ -122,8 +122,7 @@
 
             usersService.updateInviteToMasterUserByKey(item.id, item).then(function () {
 
-                vm.getInvites();
-                vm.getMasterUsersList();
+                $state.go('app.setup');
 
             })
 
