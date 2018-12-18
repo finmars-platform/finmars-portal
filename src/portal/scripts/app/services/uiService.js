@@ -75,6 +75,22 @@
 
     };
 
+    var getConfigurationList = function () {
+        return uiRepository.getConfigurationList();
+    };
+
+    var createConfiguration = function (data) {
+        return uiRepository.createConfiguration(data)
+    };
+
+    var updateConfiguration = function (id, data) {
+        return uiRepository.updateConfiguration(id, data);
+    };
+
+    var deleteConfigurationByKey = function (id) {
+        return uiRepository.deleteConfigurationByKey(id);
+    };
+
     module.exports = {
         getDefaultListLayout: getDefaultListLayout,
         getDefaultEditLayout: getDefaultEditLayout,
@@ -89,7 +105,13 @@
         updateEditLayoutByInstanceId: updateEditLayoutByInstanceId,
         getActiveListLayout: getActiveListLayout,
 
-        deleteListLayoutByKey: deleteListLayoutByKey
+        deleteListLayoutByKey: deleteListLayoutByKey,
+
+
+        getConfigurationList: getConfigurationList,
+        createConfiguration: createConfiguration,
+        updateConfiguration: updateConfiguration,
+        deleteConfigurationByKey: deleteConfigurationByKey
     }
 
 }());

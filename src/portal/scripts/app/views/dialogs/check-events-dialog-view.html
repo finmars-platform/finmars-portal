@@ -11,13 +11,14 @@
 
                 <div layout="row" class="m-b-24">
                     <md-input-container data-ng-class="{'disabled-btn': vm.loading}" class="m-r-16">
-                        <label for="">Effective date</label>
+                        <label for="">Effective date from</label>
                         <zh-date-picker data-ng-model="vm.effective_date_from"
+                                        data-ng-change="vm.effective_date_to = vm.effective_date_from"
                         ></zh-date-picker>
                     </md-input-container>
 
                     <md-input-container data-ng-class="{'disabled-btn': vm.loading}">
-                        <label for="">Effective date</label>
+                        <label for="">Effective date to</label>
                         <zh-date-picker data-ng-model="vm.effective_date_to"
                         ></zh-date-picker>
                     </md-input-container>
@@ -41,6 +42,12 @@
                             <md-checkbox ng-checked="vm.isAllChecked()" class="md-primary m-0"
                                          data-ng-click="vm.toggleAll()">
                             </md-checkbox>
+                        </th>
+                        <th>
+                            Status
+                        </th>
+                        <th>
+                            Description
                         </th>
                         <th>
                             Instrument
@@ -70,12 +77,6 @@
                             Notification date
                         </th>
                         <th>
-                            Status
-                        </th>
-                        <th>
-                            Description
-                        </th>
-                        <th>
                             Notification class
                         </th>
                         <th>
@@ -90,6 +91,11 @@
                                          class="md-primary m-0">
                             </md-checkbox>
                         </th>
+                        <td><span data-ng-bind="vm.getStatus(item.status)"></span>&nbsp;</td>
+
+                        <td><span data-ng-if="item.event_schedule_object"
+                                  data-ng-bind="item.event_schedule_object.description"></span>&nbsp;
+                        </td>
                         <td>
                             <span data-ng-if="item.instrument_object"
                                   data-ng-bind="item.instrument_object.user_code"></span>&nbsp;
@@ -113,11 +119,6 @@
 
                         <td><span data-ng-bind="item.effective_date"></span>&nbsp;</td>
                         <td><span data-ng-bind="item.notification_date"></span>&nbsp;</td>
-                        <td><span data-ng-bind="vm.getStatus(item.status)"></span>&nbsp;</td>
-
-                        <td><span data-ng-if="item.event_schedule_object"
-                                  data-ng-bind="item.event_schedule_object.description"></span>&nbsp;
-                        </td>
                         <td><span
                                 data-ng-if="item.event_schedule_object && item.event_schedule_object.notification_class_object"
                                 data-ng-bind="item.event_schedule_object.notification_class_object.name"></span>&nbsp;

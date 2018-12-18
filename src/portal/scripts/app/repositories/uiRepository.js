@@ -57,7 +57,6 @@
             })
     };
 
-
     var getListLayout = function (entity) {
 
         if (entity == 'all') {
@@ -288,6 +287,65 @@
         }
     };
 
+    var getConfigurationList = function () {
+
+        return xhrService.fetch(baseUrl + 'ui/configuration/',
+            {
+                method: 'GET',
+                credentials: 'include',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-type': 'application/json'
+                }
+            })
+    };
+
+    var createConfiguration = function (data) {
+
+        return xhrService.fetch(baseUrl + 'ui/configuration/',
+            {
+                method: 'POST',
+                credentials: 'include',
+                headers: {
+                    'X-CSRFToken': cookieService.getCookie('csrftoken'),
+                    Accept: 'application/json',
+                    'Content-type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+    };
+
+    var updateConfiguration = function (id, data) {
+        return xhrService.fetch(baseUrl + 'ui/configuration/' + id + '/',
+            {
+                method: 'PUT',
+                credentials: 'include',
+                headers: {
+                    'X-CSRFToken': cookieService.getCookie('csrftoken'),
+                    Accept: 'application/json',
+                    'Content-type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+    };
+
+    var deleteConfigurationByKey = function (id) {
+        return new Promise(function (resolve, reject) {
+            xhrService.fetch(baseUrl + 'ui/configuration/' + id + '/',
+                {
+                    method: 'DELETE',
+                    credentials: 'include',
+                    headers: {
+                        'X-CSRFToken': cookieService.getCookie('csrftoken'),
+                        Accept: 'application/json',
+                        'Content-type': 'application/json'
+                    }
+                }).then(function (data) {
+                resolve(undefined);
+            })
+        })
+    };
+
     module.exports = {
 
         getDefaultEditLayout: getDefaultEditLayout,
@@ -306,7 +364,12 @@
         getEditLayoutByInstanceId: getEditLayoutByInstanceId,
         updateEditLayoutByInstanceId: updateEditLayoutByInstanceId,
 
-        getActiveListLayout: getActiveListLayout
+        getActiveListLayout: getActiveListLayout,
+
+        getConfigurationList: getConfigurationList,
+        createConfiguration: createConfiguration,
+        updateConfiguration: updateConfiguration,
+        deleteConfigurationByKey: deleteConfigurationByKey
 
     }
 

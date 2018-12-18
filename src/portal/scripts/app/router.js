@@ -33,6 +33,12 @@
             controller: 'HomeController as vm'
         });
 
+        $stateProvider.state('app.setup', {
+            url: '/setup',
+            templateUrl: 'views/setup-view.html',
+            controller: 'SetupController as vm'
+        });
+
         $stateProvider.state('app.actions', {
             url: '/actions',
             templateUrl: 'views/actions-view.html',
@@ -356,6 +362,15 @@
                     'configuration': {
                         templateUrl: 'views/settings/configuration-settings-view.html',
                         controller: 'SettingsGeneralConfigurationController as vm'
+                    }
+                }
+            })
+            .state('app.settings.general.init-configuration', {
+                url: '/init-configuration',
+                views: {
+                    'init-configuration': {
+                        templateUrl: 'views/settings/init-configuration-settings-view.html',
+                        controller: 'SettingsGeneralInitConfigurationController as vm'
                     }
                 }
             })
