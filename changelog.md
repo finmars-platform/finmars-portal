@@ -1,5 +1,9 @@
 # Changelog
 
+## 18.12.2018
+- Init Configuration page
+- Init Configuration settings page
+
 ## 10.12.2018
 
 - Home Page

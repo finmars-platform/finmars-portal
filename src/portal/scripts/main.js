@@ -78,6 +78,7 @@ app.run(['$rootScope', function ($rootScope) {
 app.controller('ShellController', ['$scope', '$state', '$rootScope', '$mdDialog', require('./app/controllers/shellController')]);
 app.controller('SideNavController', ['$scope', '$mdDialog', require('./app/controllers/sideNavController')]);
 app.controller('HomeController', ['$scope', require('./app/controllers/homeController')]);
+app.controller('SetupController', ['$scope', '$state', require('./app/controllers/setupController')]);
 
 app.controller('DashboardController', ['$scope', '$mdDialog', require('./app/controllers/dashboardController')]);
 app.controller('ActionsController', ['$scope', '$mdDialog', require('./app/controllers/actionsController')]);
@@ -201,9 +202,12 @@ app.controller('SettingsGeneralDataProvidersConfigController', ['$scope', '$stat
 app.controller('SettingsGeneralInstrumentImportController', ['$scope', '$mdDialog', require('./app/controllers/settings/general/settingsGeneralInstrumentImportController')]);
 app.controller('SettingsGeneralTransactionImportController', ['$scope', '$mdDialog', require('./app/controllers/settings/general/settingsGeneralTransactionImportController')]);
 app.controller('SettingsGeneralConfigurationController', ['$scope', '$mdDialog', require('./app/controllers/settings/general/settingsGeneralConfigurationController')]);
+app.controller('SettingsGeneralInitConfigurationController', ['$scope', '$mdDialog', require('./app/controllers/settings/general/settingsGeneralInitConfigurationController')]);
 app.controller('SettingGeneralConfigurationPreviewFileDialogController', ['$scope', '$mdDialog', 'file', require('./app/controllers/dialogs/settingGeneralConfigurationPreviewFileDialogController')]);
 app.controller('SettingGeneralConfigurationExportFileDialogController', ['$scope', '$mdDialog', require('./app/controllers/dialogs/settingGeneralConfigurationExportFileDialogController')]);
 app.controller('SettingGeneralMappingPreviewFileDialogController', ['$scope', '$mdDialog', 'file', require('./app/controllers/dialogs/settingGeneralMappingPreviewFileDialogController')]);
+app.controller('CreateConfigurationDialogController', ['$scope', '$mdDialog', require('./app/controllers/dialogs/createConfigurationDialogController')]);
+app.controller('EditConfigurationDialogController', ['$scope', '$mdDialog', 'item', require('./app/controllers/dialogs/editConfigurationDialogController')]);
 
 app.controller('SettingsFormDesignController', ['$scope', '$state', require('./app/controllers/settings/settingsFormDesignController')]);
 app.controller('SettingBloombergImportInstrumentController', ['$scope', '$state', require('./app/controllers/settings/settingBloombergImportInstrumentController')]);
