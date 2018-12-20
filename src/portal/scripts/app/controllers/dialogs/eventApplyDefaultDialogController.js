@@ -34,6 +34,10 @@
             });
         };
 
+        vm.process = function () {
+
+        };
+
         vm.skip = function () {
             $mdDialog.cancel();
         };

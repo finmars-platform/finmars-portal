@@ -1,13 +1,19 @@
 <md-dialog aria-label="event">
     <md-toolbar>
         <div class="md-toolbar-tools">
-            <h2>Event (With Reaction)</h2>
+            <h2>Event (Apply Default)</h2>
         </div>
     </md-toolbar>
     <md-dialog-content data-custom-scroll class="custom-scrollbar md-padding">
-        <div layout="row">
-            <md-button aria-label="event button" data-ng-repeat="button in vm.actionButtons" class="md-raised"
-                       data-ng-bind="button.display_text" data-ng-click="vm.eventAction($event, button.id)"></md-button>
+
+        <p>
+            The following transactions will be booked:
+        </p>
+
+        <div layout="row" data-ng-repeat="item in vm.actionButtons">
+
+            {{item.display_text}}
+
         </div>
     </md-dialog-content>
     <md-dialog-actions layout="row" layout-align="space-between center">
@@ -16,6 +22,9 @@
         </md-button>
         <md-button aria-label="cancel" class="md-raised" data-ng-click="vm.ignore()">
             Ignore
+        </md-button>
+        <md-button aria-label="process" class="md-raised md-primary" data-ng-click="vm.process()">
+            Process
         </md-button>
     </md-dialog-actions>
 </md-dialog>

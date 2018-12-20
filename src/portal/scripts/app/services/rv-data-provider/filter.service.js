@@ -12,7 +12,13 @@
 
             Object.keys(regularFilters).forEach(function (key) {
 
-                if (key !== 'ordering' && item[key].toString().indexOf(regularFilters[key]) === -1) {
+                if (item.hasOwnProperty(key)) {
+
+                    if (key !== 'ordering' && item[key].toString().indexOf(regularFilters[key]) === -1) {
+                        match = false;
+                    }
+
+                } else {
                     match = false;
                 }
 

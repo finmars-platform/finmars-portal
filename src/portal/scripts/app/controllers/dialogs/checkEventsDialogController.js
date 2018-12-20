@@ -22,10 +22,34 @@
 
             var promises = [];
 
+            var dontReactActionsIds = [1, 6, 9, 14];
+            var applyDefaultActionsIds = [5, 8, 12, 13];
+
             vm.events.forEach(function (event) {
-                if (event.is_need_reaction && event.selected) {
-                    promises.push(vm.openEventWindow($event, event));
+
+                if (event.selected) {
+
+                    if (event.is_need_reaction) {
+                        return promises.push(vm.openEventReactWindow($event, event));
+
+                    }
+
+                    if (event.event_schedule_object) {
+
+                        var notification_class = event.event_schedule_object.notification_class;
+
+                        if (dontReactActionsIds.indexOf(notification_class) !== -1) {
+                            return promises.push(vm.openEventDismissWindow($event, event));
+                        }
+
+                        if (applyDefaultActionsIds.indexOf(notification_class) !== -1) {
+                            return promises.push(vm.openEventApplyDefaultWindow($event, event));
+                        }
+
+                    }
+
                 }
+
             });
 
 
@@ -143,7 +167,32 @@
 
         };
 
-        vm.openEventWindow = function ($event, event) {
+        vm.openEventDismissWindow = function ($event, item) {
+
+            return $mdDialog.show({
+                controller: 'SuccessDialogController as vm',
+                templateUrl: 'views/dialogs/event-dialog-view.html',
+                parent: angular.element(document.body),
+                targetEvent: $event,
+                locals: {
+                    success: {
+                        title: "Event (Don't react)",
+                        description: 'Nothing will be booked'
+                    }
+                },
+                preserveScope: true,
+                autoWrap: true,
+                skipHide: true,
+                multiple: true
+            })
+
+        };
+
+        vm.openEventApplyDefaultWindow = function ($event, item) {
+
+        };
+
+        vm.openEventReactWindow = function ($event, item) {
             return $mdDialog.show({
                 controller: 'EventDialogController as vm',
                 templateUrl: 'views/dialogs/event-dialog-view.html',
@@ -151,7 +200,7 @@
                 targetEvent: $event,
                 locals: {
                     data: {
-                        event: event
+                        event: item
                     }
                 },
                 preserveScope: true,
