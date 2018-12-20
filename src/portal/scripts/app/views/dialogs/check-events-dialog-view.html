@@ -87,8 +87,11 @@
                     <tbody>
                     <tr data-ng-repeat="item in vm.events" class="{{item.active ? 'active' : ''}}" style="height: 40px">
                         <th>
-                            <md-checkbox ng-model="item.selected"
+                            <md-checkbox ng-if="item.is_need_reaction" ng-model="item.selected"
                                          class="md-primary m-0">
+                            </md-checkbox>
+                            <md-checkbox ng-if="!item.is_need_reaction" ng-model="false"
+                                         class="md-primary m-0 disabled-btn">
                             </md-checkbox>
                         </th>
                         <td><span data-ng-bind="vm.getStatus(item.status)"></span>&nbsp;</td>
