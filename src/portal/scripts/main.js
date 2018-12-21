@@ -82,8 +82,8 @@ app.controller('SetupController', ['$scope', '$state', require('./app/controller
 
 app.controller('DashboardController', ['$scope', '$mdDialog', require('./app/controllers/dashboardController')]);
 app.controller('ActionsController', ['$scope', '$mdDialog', require('./app/controllers/actionsController')]);
-app.controller('ImportEntityDialogController', ['$scope', '$mdDialog', require('./app/controllers/dialogs/importEntityDialogController')]);
-app.controller('ImportEntityErrorsDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/importEntityErrorsDialogController')]);
+app.controller('SimpleEntityImportDialogController', ['$scope', '$mdDialog', require('./app/controllers/dialogs/simpleEntityImportDialogController')]);
+app.controller('SimpleEntityImportErrorsDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/simpleEntityImportErrorsDialogController')]);
 app.controller('ImportInstrumentDialogController', ['$scope', '$mdDialog', require('./app/controllers/dialogs/importInstrumentDialogController')]);
 app.controller('ImportTransactionDialogController', ['$scope', '$mdDialog', require('./app/controllers/dialogs/importTransactionDialogController')]);
 app.controller('ImportTransactionErrorsDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/importTransactionErrorsDialogController')]);
@@ -110,8 +110,8 @@ app.controller('TransactionMappingAddDialogController', ['$scope', '$mdDialog', 
 app.controller('TransactionMappingEditDialogController', ['$scope', '$mdDialog', 'schemeId', require('./app/controllers/dialogs/transactionMappingEditDialogController')]);
 app.controller('TransactionMappingInputMappingDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/transactionMappingInputMappingDialogController')]);
 
-app.controller('EntityMappingEditDialogController', ['$scope', '$mdDialog', 'schemeId', require('./app/controllers/dialogs/entityMappingEditDialogController')]);
-app.controller('EntityMappingCreateDialogController', ['$scope', '$mdDialog', require('./app/controllers/dialogs/entityMappingCreateDialogController')]);
+app.controller('SimpleEntityImportSchemeEditDialogController', ['$scope', '$mdDialog', 'schemeId', require('./app/controllers/dialogs/simpleEntityImportSchemeEditDialogController')]);
+app.controller('SimpleEntityImportSchemeCreateDialogController', ['$scope', '$mdDialog', require('./app/controllers/dialogs/simpleEntityImportSchemeCreateDialogController')]);
 
 app.controller('EntityViewer2Controller', ['$scope', '$mdDialog', require('./app/controllers/entityViewer/entityViewer2Controller')]);
 app.controller('ReportViewerController', ['$scope', '$mdDialog', require('./app/controllers/entityViewer/reportViewerController')]);

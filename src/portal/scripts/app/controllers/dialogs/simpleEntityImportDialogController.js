@@ -42,7 +42,7 @@
             return false;
         };
 
-        vm.contentTypes = metaContentTypesService.getListForDataImport();
+        vm.contentTypes = metaContentTypesService.getListForSimleEntityImport();
 
         vm.getSchemeList = function () {
             entitySchemeService.getEntitiesSchemesList(vm.activeContentType).then(function (data) {
@@ -104,6 +104,8 @@
 
                 if (data.errors.length === 0) {
 
+                    $mdDialog.hide();
+
                     $mdDialog.show({
                         controller: 'SuccessDialogController as vm',
                         templateUrl: 'views/dialogs/success-dialog-view.html',
@@ -125,7 +127,7 @@
 
                     $mdDialog.show({
                         controller: 'ImportEntityErrorsDialogController as vm',
-                        templateUrl: 'views/dialogs/import-entity-errors-dialog-view.html',
+                        templateUrl: 'views/dialogs/simple-entity-import-errors-dialog-view.html',
                         targetEvent: $event,
                         preserveScope: true,
                         multiple: true,
@@ -141,6 +143,8 @@
 
             }).catch(function (reason) {
 
+                vm.readyStatus.processing = false;
+
                 $mdDialog.show({
                     controller: 'ValidationDialogController as vm',
                     templateUrl: 'views/dialogs/validation-dialog-view.html',
@@ -154,7 +158,9 @@
                             message: "An error occurred. Please try again later"
                         }
                     }
-                })
+                });
+
+                $scope.$apply();
 
             })
         };
@@ -162,8 +168,8 @@
         vm.createScheme = function ($event) {
 
             $mdDialog.show({
-                controller: 'EntityMappingCreateDialogController as vm',
-                templateUrl: 'views/dialogs/entity-mapping-create-dialog-view.html',
+                controller: 'SimpleEntityImportSchemeCreateDialogController as vm',
+                templateUrl: 'views/dialogs/simple-entity-import-scheme-create-dialog-view.html',
                 targetEvent: $event,
                 preserveScope: true,
                 multiple: true,
@@ -182,8 +188,8 @@
 
         vm.openEditMapping = function ($event) {
             $mdDialog.show({
-                controller: 'EntityMappingEditDialogController as vm',
-                templateUrl: 'views/dialogs/entity-mapping-edit-dialog-view.html',
+                controller: 'SimpleEntityImportSchemeEditDialogController as vm',
+                templateUrl: 'views/dialogs/simple-entity-import-scheme-edit-dialog-view.html',
                 targetEvent: $event,
                 preserveScope: true,
                 multiple: true,

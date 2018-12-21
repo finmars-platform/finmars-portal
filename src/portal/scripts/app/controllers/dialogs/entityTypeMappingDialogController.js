@@ -104,7 +104,7 @@
         };
 
         vm.fancyEntity = function () {
-            return vm.mapEntityType.replace('_', ' ');
+            return vm.mapEntityType.replace('-', ' ');
         };
 
         function addChilds(classifier, item) {
@@ -187,12 +187,10 @@
 
             return new Promise(function (resolve, reject) {
 
-                vm.entityMapDashed = vm.mapEntityType.split('_').join('-');
-
-                entityResolverService.getList(vm.entityMapDashed, vm.options).then(function (data) {
+                entityResolverService.getList(vm.mapEntityType, vm.options).then(function (data) {
 
                     if (['periodicity', 'accrual-calculation-model',
-                            'daily-pricing-model', 'payment-size-detail'].indexOf(vm.entityMapDashed) === -1) {
+                            'daily-pricing-model', 'payment-size-detail'].indexOf(vm.mapEntityType) === -1) {
                         
                         vm.entityItems = vm.entityItems.concat(data.results);
                     } else {

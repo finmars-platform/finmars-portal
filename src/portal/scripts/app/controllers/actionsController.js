@@ -17,8 +17,8 @@
 
         vm.importEntity = function ($event) {
             $mdDialog.show({
-                controller: 'ImportEntityDialogController as vm',
-                templateUrl: 'views/dialogs/import-entity-dialog-view.html',
+                controller: 'SimpleEntityImportDialogController as vm',
+                templateUrl: 'views/dialogs/simple-entity-import-dialog-view.html',
                 targetEvent: $event,
                 multiple: true
             }).then(function (res) {

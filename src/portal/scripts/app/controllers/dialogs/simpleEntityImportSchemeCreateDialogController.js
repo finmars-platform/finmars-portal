@@ -37,15 +37,14 @@
 
         vm.readyStatus = {scheme: true, entitySchemeAttributes: false};
 
-        vm.contentTypes = metaContentTypesService.getListForTransactionTypeInputs();
+        vm.contentTypes = metaContentTypesService.getListForSimleEntityImport();
 
         vm.scheme.content_type = vm.contentTypes[0].key;
         vm.getAttrs();
 
         vm.updateEntityFields = function () {
 
-            var parts = vm.scheme.content_type.split('.');
-            var entity = parts[1];
+            var entity = metaContentTypesService.findEntityByContentType(vm.scheme.content_type);
 
             vm.scheme.entity_fields = metaService.getEntityAttrs(entity).filter(function (item) {
 
@@ -56,13 +55,17 @@
                 return {
                     expression: '',
                     system_property_key: item.key,
-                    name: item.name
+                    name: item.name,
+                    value_type: item.value_type
                 }
 
             });
 
-            vm.getAttrs();
+            if (vm.scheme.content_type !== 'instruments.pricehistory' && vm.scheme.content_type !== 'currencyhistorys.currencyhistory') {
 
+                vm.getAttrs();
+
+            }
         };
 
         vm.updateEntityFields();
@@ -95,12 +98,8 @@
 
         vm.hasMapping = function (item) {
 
-            // if (item.hasOwnProperty('system_property_key')) {
-            //     return ['accounts', 'responsibles', 'counterparties', 'transaction_types', 'portfolios'].indexOf(item.system_property_key) !== -1
-            // }
-
             if (item.hasOwnProperty('value_type')) {
-                return item.value_type == 30;
+                return item.value_type === 'field';
             }
 
         };
@@ -124,7 +123,7 @@
             });
 
             entitySchemeService.create(vm.scheme).then(function (data) {
-               
+
                 $mdDialog.hide({res: 'agree'});
 
             }).catch(function (reason) {
@@ -158,6 +157,22 @@
 
             if (item.system_property_key === 'counterparties') {
                 entity = 'counterparty'
+            }
+
+            if (item.system_property_key === 'pricing_policy') {
+                entity = 'pricing-policy'
+            }
+
+            if (item.system_property_key === 'instrument_type') {
+                entity = 'instrument-type'
+            }
+
+            if (item.system_property_key === 'instrument') {
+                entity = 'instrument'
+            }
+
+            if (item.system_property_key === 'currency') {
+                entity = 'currency'
             }
 
             $mdDialog.show({

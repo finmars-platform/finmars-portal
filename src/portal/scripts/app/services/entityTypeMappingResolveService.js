@@ -24,6 +24,7 @@
     var dailyPricingModelMappingService = require('./import/mappings/dailyPricingModelMappingService');
     var paymentSizeDetailMappingService = require('./import/mappings/paymentSizeDetailMappingService');
     var priceDownloadSchemeMappingService = require('./import/mappings/priceDownloadSchemeMappingService');
+    var pricingPolicyMappingService = require('./import/mappings/pricingPolicyMappingService');
 
     var getList = function (entityType, options) {
 
@@ -33,10 +34,10 @@
             case 'currency':
                 return currencyMappingService.getList(options);
                 break;
-            case 'instrument_type':
+            case 'instrument-type':
                 return instrumentTypeMappingService.getList(options);
                 break;
-            case 'accrual_calculation_model':
+            case 'accrual-calculation-model':
                 return accrualCalculationModelService.getList(options);
                 break;
             case 'periodicity':
@@ -60,23 +61,26 @@
             case 'portfolio':
                 return portfolioMappingService.getList(options);
                 break;
-            case 'strategy_1':
+            case 'strategy-1':
                 return strategy1MappingService.getList(options);
                 break;
-            case 'strategy_2':
+            case 'strategy-2':
                 return strategy2MappingService.getList(options);
                 break;
-            case 'strategy_3':
+            case 'strategy-3':
                 return strategy3MappingService.getList(options);
                 break;
-            case 'daily_pricing_model':
+            case 'daily-pricing-model':
                 return dailyPricingModelMappingService.getList(options);
                 break;
-            case 'payment_size_detail':
+            case 'payment-size-detail':
                 return paymentSizeDetailMappingService.getList(options);
                 break;
-            case 'price_download_scheme':
+            case 'price-download-scheme':
                 return priceDownloadSchemeMappingService.getList(options);
+                break;
+            case 'pricing-policy':
+                return pricingPolicyMappingService.getList(options);
                 break;
         }
 
@@ -87,10 +91,10 @@
             case 'currency':
                 return currencyMappingService.getByKey(id);
                 break;
-            case 'instrument_type':
+            case 'instrument-type':
                 return instrumentTypeMappingService.getByKey(id);
                 break;
-            case 'accrual_calculation_model':
+            case 'accrual-calculation-model':
                 return accrualCalculationModelService.getByKey(id);
                 break;
             case 'periodicity':
@@ -114,23 +118,26 @@
             case 'portfolio':
                 return portfolioMappingService.getByKey(id);
                 break;
-            case 'strategy_1':
+            case 'strategy-1':
                 return strategy1MappingService.getByKey(id);
                 break;
-            case 'strategy_2':
+            case 'strategy-2':
                 return strategy2MappingService.getByKey(id);
                 break;
-            case 'strategy_3':
+            case 'strategy-3':
                 return strategy3MappingService.getByKey(id);
                 break;
-            case 'daily_pricing_model':
+            case 'daily-pricing-model':
                 return dailyPricingModelMappingService.getByKey(id);
                 break;
-            case 'payment_size_detail':
+            case 'payment-size-detail':
                 return paymentSizeDetailMappingService.getByKey(id);
                 break;
-            case 'price_download_scheme':
+            case 'price-download-scheme':
                 return priceDownloadSchemeMappingService.getByKey(id);
+                break;
+            case 'pricing-policy':
+                return pricingPolicyMappingService.getByKey(id);
                 break;
         }
 
@@ -141,10 +148,10 @@
             case 'currency':
                 return currencyMappingService.create(map);
                 break;
-            case 'instrument_type':
+            case 'instrument-type':
                 return instrumentTypeMappingService.create(map);
                 break;
-            case 'accrual_calculation_model':
+            case 'accrual-calculation-model':
                 return accrualCalculationModelService.create(map);
                 break;
             case 'periodicity':
@@ -168,23 +175,26 @@
             case 'portfolio':
                 return portfolioMappingService.create(map);
                 break;
-            case 'strategy_1':
+            case 'strategy-1':
                 return strategy1MappingService.create(map);
                 break;
-            case 'strategy_2':
+            case 'strategy-2':
                 return strategy2MappingService.create(map);
                 break;
-            case 'strategy_3':
+            case 'strategy-3':
                 return strategy3MappingService.create(map);
                 break;
-            case 'daily_pricing_model':
+            case 'daily-pricing-model':
                 return dailyPricingModelMappingService.create(map);
                 break;
-            case 'payment_size_detail':
+            case 'payment-size-detail':
                 return paymentSizeDetailMappingService.create(map);
                 break;
-            case 'price_download_scheme':
+            case 'price-download-scheme':
                 return priceDownloadSchemeMappingService.create(map);
+                break;
+            case 'pricing-policy':
+                return pricingPolicyMappingService.create(map);
                 break;
         }
 
@@ -195,10 +205,10 @@
             case 'currency':
                 return currencyMappingService.update(id, map);
                 break;
-            case 'instrument_type':
+            case 'instrument-type':
                 return instrumentTypeMappingService.update(id, map);
                 break;
-            case 'accrual_calculation_model':
+            case 'accrual-calculation-model':
                 return accrualCalculationModelService.update(id, map);
                 break;
             case 'periodicity':
@@ -222,23 +232,26 @@
             case 'portfolio':
                 return portfolioMappingService.update(id, map);
                 break;
-            case 'strategy_1':
+            case 'strategy-1':
                 return strategy1MappingService.update(id, map);
                 break;
-            case 'strategy_2':
+            case 'strategy-2':
                 return strategy2MappingService.update(id, map);
                 break;
-            case 'strategy_3':
+            case 'strategy-3':
                 return strategy3MappingService.update(id, map);
                 break;
-            case 'daily_pricing_model':
+            case 'daily-pricing-model':
                 return dailyPricingModelMappingService.update(id, map);
                 break;
-            case 'payment_size_detail':
+            case 'payment-size-detail':
                 return paymentSizeDetailMappingService.update(id, map);
                 break;
-            case 'price_download_scheme':
+            case 'price-download-scheme':
                 return priceDownloadSchemeMappingService.update(id, map);
+                break;
+            case 'pricing-policy':
+                return pricingPolicyMappingService.update(id, map);
                 break;
         }
 
@@ -249,10 +262,10 @@
             case 'currency':
                 return currencyMappingService.deleteByKey(id);
                 break;
-            case 'instrument_type':
+            case 'instrument-type':
                 return instrumentTypeMappingService.deleteByKey(id);
                 break;
-            case 'accrual_calculation_model':
+            case 'accrual-calculation-model':
                 return accrualCalculationModelService.deleteByKey(id);
                 break;
             case 'periodicity':
@@ -276,23 +289,26 @@
             case 'portfolio':
                 return portfolioMappingService.deleteByKey(id);
                 break;
-            case 'strategy_1':
+            case 'strategy-1':
                 return strategy1MappingService.deleteByKey(id);
                 break;
-            case 'strategy_2':
+            case 'strategy-2':
                 return strategy2MappingService.deleteByKey(id);
                 break;
-            case 'strategy_3':
+            case 'strategy-3':
                 return strategy3MappingService.deleteByKey(id);
                 break;
-            case 'daily_pricing_model':
+            case 'daily-pricing-model':
                 return dailyPricingModelMappingService.deleteByKey(id);
                 break;
-            case 'payment_size_detail':
+            case 'payment-size-detail':
                 return paymentSizeDetailMappingService.deleteByKey(id);
                 break;
-            case 'price_download_scheme':
+            case 'price-download-scheme':
                 return priceDownloadSchemeMappingService.deleteByKey(id);
+                break;
+            case 'pricing-policy':
+                return pricingPolicyMappingService.deleteByKey(id);
                 break;
         }
 
