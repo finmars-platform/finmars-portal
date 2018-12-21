@@ -9,6 +9,8 @@
     var attributeTypeService = require('../../services/attributeTypeService');
     var configurationImportHelper = require('../../helpers/configuration-import.helper');
 
+    var toastNotificationService = require('../../../../../core/services/toastNotificationService');
+
 
     module.exports = function ($scope, $mdDialog, file) {
 
@@ -707,7 +709,13 @@
 
                         resolveRelation(item)
 
-                    });
+                    }).catch(function (reason) {
+
+                        toastNotificationService.error(reason);
+
+                        reject(reason)
+
+                    })
 
                 }));
 
@@ -1042,7 +1050,13 @@
 
                                 resolveRelation(item)
 
-                            });
+                            }).catch(function (reason) {
+
+                                toastNotificationService.error(reason);
+
+                                reject(reason)
+
+                            })
 
                         }));
 
@@ -1070,37 +1084,40 @@
 
                     var layoutAttrs = data.results;
 
-                    layout.data.forEach(function (tab) {
+                    if (layout.data) {
 
-                        tab.layout.fields.forEach(function (field) {
+                        layout.data.forEach(function (tab) {
 
-                            if (field.attribute && field.attribute.id) {
+                            tab.layout.fields.forEach(function (field) {
 
-                                var mapped = false;
+                                if (field.attribute && field.attribute.id) {
 
-                                layoutAttrs.forEach(function (layoutAttr) {
+                                    var mapped = false;
 
-                                    if (layoutAttr.user_code === field.attribute.user_code) {
-                                        field.attribute = layoutAttr;
-                                        field.id = layoutAttr.id;
-                                        mapped = true;
+                                    layoutAttrs.forEach(function (layoutAttr) {
+
+                                        if (layoutAttr.user_code === field.attribute.user_code) {
+                                            field.attribute = layoutAttr;
+                                            field.id = layoutAttr.id;
+                                            mapped = true;
+                                        }
+
+                                    });
+
+                                    if (mapped === false) {
+                                        field.attribute = null;
+                                        field.id = null;
+                                        field.attribute_class = null;
+                                        field.type = "empty"
                                     }
 
-                                });
 
-                                if (mapped === false) {
-                                    field.attribute = null;
-                                    field.id = null;
-                                    field.attribute_class = null;
-                                    field.type = "empty"
                                 }
 
+                            })
 
-                            }
-
-                        })
-
-                    });
+                        });
+                    }
 
                     resolve(layout);
 
