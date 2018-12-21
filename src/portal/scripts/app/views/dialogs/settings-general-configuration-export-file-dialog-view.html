@@ -9,6 +9,23 @@
 
         <div data-ng-if="vm.readyStatus.content">
 
+            <div>
+                <md-input-container class="width-80">
+                    <label>File Name</label>
+                    <input type="text" data-ng-model="vm.filename">
+                </md-input-container>
+            </div>
+
+            <div>
+
+                <md-checkbox ng-checked="vm.selectAllState" data-ng-click="vm.toggleSelectAll()"
+                             aria-label="checkbox">
+                </md-checkbox>
+
+                <b>Select all</b>
+
+            </div>
+
             <div data-ng-repeat="item in vm.items">
 
                 <div class="cie-entity-holder">

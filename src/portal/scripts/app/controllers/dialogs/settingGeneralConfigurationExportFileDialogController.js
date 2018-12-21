@@ -23,11 +23,13 @@
 
         vm.readyStatus = {content: false};
 
+        vm.selectAllState = false;
+
         vm.getFile = function () {
 
             configurationService.getConfigurationData().then(function (data) {
 
-                console.log('here?', data);
+                console.log('configurationService.getConfigurationData', data);
 
                 vm.file = data;
 
@@ -38,6 +40,46 @@
                 $scope.$apply();
 
             });
+
+        };
+
+        vm.toggleSelectAll = function () {
+
+            vm.selectAllState = !vm.selectAllState;
+
+            vm.items.forEach(function (item) {
+
+                item.active = vm.selectAllState;
+
+                item.content.forEach(function (child) {
+                    child.active = vm.selectAllState;
+                })
+
+            })
+
+        };
+
+        vm.checkSelectAll = function () {
+
+            var active = true;
+
+            vm.items.forEach(function (item) {
+
+                if (!item.active) {
+                    active = false;
+                }
+
+                item.content.forEach(function (child) {
+
+                    if (!child.active) {
+                        active = false;
+                    }
+
+                })
+
+            });
+
+            vm.selectAllState = active;
 
         };
 
@@ -125,7 +167,9 @@
 
             item.content.forEach(function (child) {
                 child.active = item.active;
-            })
+            });
+
+            vm.checkSelectAll();
 
         };
 
@@ -144,6 +188,8 @@
             });
 
             parent.active = active;
+
+            vm.checkSelectAll();
 
         };
 
@@ -249,7 +295,7 @@
                 var result = new File([resultFile], {type: 'text/json;charset=utf-8'});
 
                 a.href = URL.createObjectURL(result);
-                a.download = "configuration.json";
+                a.download = vm.filename ? vm.filename + '.json' : "configuration.json";
 
                 resolve(vm.file);
 

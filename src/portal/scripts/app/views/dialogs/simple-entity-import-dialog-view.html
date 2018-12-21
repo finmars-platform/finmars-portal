@@ -1,7 +1,7 @@
 <md-dialog aria-label="" ng-cloak class="transaction-import-manager-dialog-view draggable-dialog" drag-dialog>
     <md-toolbar>
         <div class="md-toolbar-tools">
-            <h2>Data import manager</h2>
+            <h2>Simple Import Entity Manager</h2>
             <span flex></span>
         </div>
     </md-toolbar>
@@ -55,9 +55,9 @@
                                         data-ng-click="vm.load($event)">
                                     Load
                                 </md-button>
-                                <div data-ng-if="vm.readyStatus.processing">
+                                <div data-ng-if="vm.readyStatus.processing" class="m-l-16 m-t-8">
                                     <md-progress-circular md-mode="indeterminate"
-                                                          md-diameter="48"></md-progress-circular>
+                                                          md-diameter="24"></md-progress-circular>
                                 </div>
                             </div>
                         </div>

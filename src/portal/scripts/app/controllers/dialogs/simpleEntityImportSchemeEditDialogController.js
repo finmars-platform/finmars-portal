@@ -9,6 +9,8 @@
     var entitySchemeService = require('../../services/import/entitySchemeService');
     var attributeTypeService = require('../../services/attributeTypeService');
 
+    var metaContentTypesService = require('../../services/metaContentTypesService');
+
 
     module.exports = function ($scope, $mdDialog, schemeId) {
 
@@ -18,13 +20,18 @@
         vm.scheme = {};
         vm.readyStatus = {scheme: false, entitySchemeAttributes: false};
 
+        vm.dynamicAttributes = [];
+
         entitySchemeService.getByKey(schemeId).then(function (data) {
 
             vm.scheme = data;
 
             vm.readyStatus.scheme = true;
 
-            vm.getAttrs();
+            if (vm.scheme.content_type !== 'instruments.pricehistory' && vm.scheme.content_type !== 'currencyhistorys.currencyhistory') {
+
+                vm.getAttrs();
+            }
 
             $scope.$apply();
 
@@ -32,12 +39,11 @@
 
         vm.getAttrs = function () {
 
-            var entity = vm.scheme.content_type.split('.')[1];
+            var entity = metaContentTypesService.findEntityByContentType(vm.scheme.content_type);
 
             attributeTypeService.getList(entity).then(function (data) {
 
                 vm.dynamicAttributes = data.results;
-
 
                 vm.extendEntityFields();
 
@@ -93,14 +99,8 @@
 
         vm.hasMapping = function (item) {
 
-            // if (item.system_property_key != null) {
-            //     return ['accounts', 'responsibles', 'counterparties', 'transaction_types', 'portfolios'].indexOf(item.system_property_key) !== -1
-            // }
-
-
             if (item.hasOwnProperty('value_type')) {
-                console.log('item', item);
-                return item.value_type === 30;
+                return item.value_type === 'field';
             }
 
         };
@@ -184,6 +184,22 @@
 
                 if (item.system_property_key === 'portfolios') {
                     entity = 'portfolio'
+                }
+
+                if(item.system_property_key === 'pricing_policy') {
+                    entity = 'pricing-policy'
+                }
+
+                if(item.system_property_key === 'instrument_type') {
+                    entity = 'instrument-type'
+                }
+
+                if(item.system_property_key === 'instrument') {
+                    entity = 'instrument'
+                }
+
+                if (item.system_property_key === 'currency') {
+                    entity = 'currency'
                 }
 
                 $mdDialog.show({

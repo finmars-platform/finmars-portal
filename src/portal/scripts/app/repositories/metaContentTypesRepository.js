@@ -584,7 +584,7 @@
             })
     };
 
-    var getListForDataImport = function () {
+    var getListForSimleEntityImport = function () {
 
         return [
             {
@@ -636,6 +636,16 @@
                 name: "Strategy 3",
                 entity: 'strategy-3',
                 key: "strategies.strategy3"
+            },
+            {
+                name: 'Price History',
+                entity: 'price-history',
+                key: 'instruments.pricehistory'
+            },
+            {
+                name: "Currency history",
+                entity: 'currency-history',
+                key: "currencies.currencyhistory"
             }
         ]
 
@@ -647,7 +657,7 @@
         getList: getList,
         getListForTransactionTypeInputs: getListForTransactionTypeInputs,
         getContentTypeList: getContentTypeList,
-        getListForDataImport: getListForDataImport
+        getListForSimleEntityImport: getListForSimleEntityImport
     }
 
 

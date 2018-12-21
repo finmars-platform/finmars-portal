@@ -657,6 +657,64 @@
 
         }
 
+        function mapRelation(item, key, entity, code_type, code) {
+
+            return new Promise(function (resolve) {
+
+                var promises = [];
+
+                promises.push(new Promise(function (resolveRelation, reject) {
+
+                    if (code_type === 'user_code') {
+
+                        configurationImportHelper.getEntityByUserCode(code, entity).then(function (data) {
+
+                            item[key] = data.id;
+
+                            resolveRelation(item)
+
+                        });
+
+                    } else {
+
+                        configurationImportHelper.getEntityBySystemCode(code, entity).then(function (data) {
+
+                            item[key] = data.id;
+
+                            resolveRelation(item)
+
+                        });
+
+                    }
+
+                }));
+
+            })
+
+        }
+
+        function mapAttributeType(item, key, entity, code) {
+
+            return new Promise(function (resolve) {
+
+                var promises = [];
+
+                promises.push(new Promise(function (resolveRelation, reject) {
+
+                    configurationImportHelper.getAttributeTypeByUserCode(code, entity).then(function (data) {
+
+                        item[key] = data.id;
+
+                        resolveRelation(item)
+
+                    });
+
+                }));
+
+            })
+
+        }
+
         function mapActionRelations(action, key) {
 
             return new Promise(function (resolve) {
@@ -856,40 +914,13 @@
 
                     if (action[key].hasOwnProperty(code_prop)) {
 
-                        promises.push(new Promise(function (resolveRelation, reject) {
+                        var code = action[key][code_prop];
+                        var code_type = propItem.code_type;
+                        var entity = propItem.entity;
+                        var item = action[key];
+                        var item_key = propItem.key;
 
-                            console.log('propItem.code_type', propItem.code_type);
-
-                            if (propItem.code_type === 'user_code') {
-
-                                var user_code = action[key][code_prop];
-
-                                configurationImportHelper.getEntityByUserCode(user_code, propItem.entity).then(function (data) {
-
-                                    console.log('data', data);
-                                    console.log('data', propItem);
-
-                                    action[key][propItem.key] = data.id;
-
-                                    resolveRelation(action)
-
-                                });
-
-                            } else {
-
-                                var system_code = action[key][code_prop];
-
-                                configurationImportHelper.getEntityBySystemCode(system_code, propItem.entity).then(function (data) {
-
-                                    action[key][propItem.key] = data.id;
-
-                                    resolveRelation(action)
-
-                                });
-
-                            }
-
-                        }));
+                        promises.push(mapRelation(item, item_key, entity, code_type, code))
 
                     }
 
@@ -1091,9 +1122,43 @@
 
                     promises.push(mapReportOptions(layout));
 
-                    promises.push(mapActionRelations(layout.data.columns, layout.content_type));
-                    promises.push(mapActionRelations(layout.data.grouping, layout.content_type));
+                    var code;
+                    var entity;
+                    var item;
+                    var item_key;
 
+
+                    layout.data.columns.forEach(function (column) {
+
+                        if (column.hasOwnProperty('id')) {
+
+                            code = column.user_code;
+                            entity = metaContentTypesService.findEntityByContentType(layout.content_type);
+                            item = column;
+                            item_key = 'id';
+
+                            promises.push(mapAttributeType(item, item_key, entity, code));
+
+                        }
+
+
+                    });
+
+
+                    layout.data.grouping.forEach(function (group) {
+
+                        if (group.hasOwnProperty('id')) {
+
+                            code = group.user_code;
+                            entity = metaContentTypesService.findEntityByContentType(layout.content_type);
+                            item = group;
+                            item_key = 'id';
+
+                            promises.push(mapAttributeType(item, item_key, entity, code));
+
+                        }
+
+                    });
 
                 }
 
