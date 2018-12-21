@@ -4,6 +4,8 @@
 
 (function () {
 
+    var toastNotificationService = require('./toastNotificationService');
+
     function ErrorObject(message, status, statusText) {
         this.status = status;
         this.statusText = statusText;
@@ -110,7 +112,7 @@
 
         }
 
-        toastr.error(message);
+        toastNotificationService.error(message);
 
         throw reason
 

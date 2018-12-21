@@ -209,6 +209,8 @@
                 resolve(data);
 
 
+            }).catch(function (reason) {
+                reject(reason);
             })
 
         })
