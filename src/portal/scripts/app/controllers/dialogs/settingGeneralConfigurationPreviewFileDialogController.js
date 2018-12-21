@@ -18,6 +18,8 @@
 
         var vm = this;
 
+        vm.processing = false;
+
         vm.items = file.body;
 
         vm.items.forEach(function (item) {
@@ -1280,45 +1282,37 @@
 
         vm.agree = function ($event) {
 
-            initPreparations(vm.items).then(function (value) {
+            vm.processing = true;
 
-                // $mdDialog.hide({status: 'agree', data: {}});
-                // return;
+            initPreparations(vm.items).then(function (value) {
 
                 configurationImportHelper.importConfiguration(vm.items).then(function (data) {
 
-                    var allSuccess = true;
+                    $mdDialog.hide({status: 'agree', data: {}});
 
-                    if (data.length) {
-                        data.forEach(function (dataItem) {
-
-                            if (dataItem.status === 400) {
-                                allSuccess = false;
+                    $mdDialog.show({
+                        controller: 'SuccessDialogController as vm',
+                        templateUrl: 'views/dialogs/success-dialog-view.html',
+                        targetEvent: $event,
+                        preserveScope: true,
+                        multiple: true,
+                        autoWrap: true,
+                        skipHide: true,
+                        locals: {
+                            success: {
+                                title: "",
+                                description: "You have successfully imported configuration file"
                             }
+                        }
 
-                        })
-                    }
+                    });
 
-                    if (allSuccess) {
-                        $mdDialog.hide({status: 'agree', data: {}});
-                    } else {
 
-                        var errorMessage = {};
+                }).catch(function (reason) {
 
-                        $mdDialog.show({
-                            controller: 'ValidationDialogController as vm',
-                            templateUrl: 'views/dialogs/validation-dialog-view.html',
-                            targetEvent: $event,
-                            locals: {
-                                validationData: data
-                            },
-                            preserveScope: true,
-                            autoWrap: true,
-                            skipHide: true
-                        })
+                    vm.processing = false;
 
-                    }
-
+                    $scope.$apply();
 
                 })
 
