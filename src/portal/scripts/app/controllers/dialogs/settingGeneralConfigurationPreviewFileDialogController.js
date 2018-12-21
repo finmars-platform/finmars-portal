@@ -661,35 +661,29 @@
 
         function mapRelation(item, key, entity, code_type, code) {
 
-            return new Promise(function (resolve) {
+            return new Promise(function (resolveRelation, reject) {
 
-                var promises = [];
+                if (code_type === 'user_code') {
 
-                promises.push(new Promise(function (resolveRelation, reject) {
+                    configurationImportHelper.getEntityByUserCode(code, entity).then(function (data) {
 
-                    if (code_type === 'user_code') {
+                        item[key] = data.id;
 
-                        configurationImportHelper.getEntityByUserCode(code, entity).then(function (data) {
+                        resolveRelation(item)
 
-                            item[key] = data.id;
+                    });
 
-                            resolveRelation(item)
+                } else {
 
-                        });
+                    configurationImportHelper.getEntityBySystemCode(code, entity).then(function (data) {
 
-                    } else {
+                        item[key] = data.id;
 
-                        configurationImportHelper.getEntityBySystemCode(code, entity).then(function (data) {
+                        resolveRelation(item)
 
-                            item[key] = data.id;
+                    });
 
-                            resolveRelation(item)
-
-                        });
-
-                    }
-
-                }));
+                }
 
             })
 
