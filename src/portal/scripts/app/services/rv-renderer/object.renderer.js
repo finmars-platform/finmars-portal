@@ -329,8 +329,8 @@
 
         var textAlign;
         var columnNumber;
-        var colorNegative;
-        var borderBottomTransparent;
+        var colorNegative = '';
+        var borderBottomTransparent = '';
         var value_obj;
         var resultValue;
 
