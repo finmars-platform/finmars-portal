@@ -79,7 +79,22 @@
             message = message + '<br/>';
 
             if (Array.isArray(obj[key])) {
-                message = message + key + ': ' + obj[key].join('. ');
+
+                if (obj[key].length) {
+
+                    if (typeof obj[key][0] === 'object') {
+
+                        obj[key].forEach(function (item) {
+
+                            message = getFullErrorAsHtml(item, message)
+
+                        })
+
+                    } else {
+
+                        message = message + key + ': ' + obj[key].join('. ');
+                    }
+                }
             } else {
 
                 if (typeof obj[key] === 'object') {
