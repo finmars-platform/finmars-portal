@@ -7,8 +7,8 @@
 
     var instrumentPeriodicityRepository = require('../repositories/instrumentPeriodicityRepository');
 
-    var getList = function () {
-        return instrumentPeriodicityRepository.getList();
+    var getList = function (options) {
+        return instrumentPeriodicityRepository.getList(options);
     };
 
     module.exports = {

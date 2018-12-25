@@ -11,8 +11,8 @@
 
     var baseUrl = baseUrlService.resolve();
 
-    var getList = function () {
-        return xhrService.fetch(baseUrl + 'instruments/periodicity/',
+    var getList = function (options) {
+        return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl + 'instruments/periodicity/', options),
             {
                 method: 'GET',
                 credentials: 'include',

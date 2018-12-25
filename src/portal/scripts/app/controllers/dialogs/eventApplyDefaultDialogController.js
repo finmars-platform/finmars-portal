@@ -16,25 +16,43 @@
 
         console.log('vm.event', vm.event);
 
-        var eventId = data.eventId;
+        vm.processAction = function (action) {
 
-        vm.eventAction = function ($event, actionId) {
+            return new Promise(function (resolve, reject) {
 
-            eventsService.getEventAction(vm.event.id, actionId).then(function (event) {
+                eventsService.getEventAction(vm.event.id, action.id).then(function (event) {
 
-                console.log('event', event);
+                    eventsService.putEventAction(vm.event.id, action.id, event).then(function (data) {
 
-                eventsService.putEventAction(vm.event.id, actionId, event).then(function () {
-                    console.log('event action done');
-                    $mdDialog.hide({status: 'agree'});
-                }).catch(function () {
-                    vm.cancel();
-                })
+                        resolve(data)
 
-            });
+                    }).catch(function () {
+                        vm.error = true;
+                        vm.errorActionText = action.display_text;
+                    })
+
+                });
+
+            })
+
+
         };
 
         vm.process = function () {
+
+            var promises = [];
+
+            vm.event.event_schedule_object.actions.forEach(function (action) {
+
+                promises.push(vm.processAction(action))
+
+            });
+
+            Promise.all(promises).then(function (value) {
+
+                $mdDialog.hide({status: 'agree'});
+
+            })
 
         };
 
@@ -45,8 +63,9 @@
         vm.ignore = function () {
 
             eventsService.ignoreEventAction(vm.event.id).then(function () {
-                console.log('event action done');
+
                 $mdDialog.hide({status: 'agree'});
+
             });
 
         };

@@ -7,8 +7,8 @@
 
     var accrualCalculationModelRepository = require('../repositories/accrualCalculationModelRepository');
 
-    var getList = function () {
-        return accrualCalculationModelRepository.getList();
+    var getList = function (options) {
+        return accrualCalculationModelRepository.getList(options);
     };
 
     module.exports = {

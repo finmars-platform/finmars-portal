@@ -27,6 +27,8 @@
 
             vm.events.forEach(function (event) {
 
+                console.log('event', event);
+
                 if (event.selected) {
 
                     if (event.is_need_reaction) {
@@ -55,6 +57,24 @@
 
             Promise.all(promises).then(function () {
                 $mdDialog.hide();
+
+                $mdDialog.show({
+                    controller: 'SuccessDialogController as vm',
+                    templateUrl: 'views/dialogs/success-dialog-view.html',
+                    targetEvent: $event,
+                    preserveScope: true,
+                    multiple: true,
+                    autoWrap: true,
+                    skipHide: true,
+                    locals: {
+                        success: {
+                            title: "",
+                            description: "Events were successfully processed"
+                        }
+                    }
+
+                });
+
             })
 
         };
@@ -97,26 +117,77 @@
             filters.effective_date_0 = vm.effective_date_from;
             filters.effective_date_1 = vm.effective_date_to;
 
-            eventsService.generateEventsRange({filters: filters}).then(function (eventsData) {
+            eventsService.getList({filters: filters}).then(function (data) {
 
-                var len = eventsData.tasks_ids.length;
-                var time = 2000;
+                vm.events = data.results;
 
-                setTimeout(function () {
+                vm.loading = false;
 
-                    eventsService.getList({filters: filters}).then(function (data) {
+                $scope.$apply();
 
-                        vm.events = data.results;
+            })
 
-                        vm.loading = false;
+        };
 
-                        $scope.$apply();
+        vm.generateEvents = function ($event) {
 
-                    })
+            var promise = new Promise(function (resolve, reject) {
 
-                }, len * time)
+                if (vm.effective_date_from !== vm.effective_date_to) {
+
+                    $mdDialog.show({
+                        controller: 'WarningDialogController as vm',
+                        templateUrl: 'views/warning-dialog-view.html',
+                        targetEvent: $event,
+                        locals: {
+                            warning: {
+                                title: 'Warning!',
+                                description: 'It can take a long time, confirm?'
+                            }
+                        },
+                        preserveScope: true,
+                        autoWrap: true,
+                        skipHid: true,
+                        multiple: true
+                    }).then(function (res) {
+                        if (res.status === 'agree') {
+                            resolve()
+                        } else {
+                            reject();
+                        }
+                    });
+
+                } else {
+                    resolve()
+                }
 
             });
+
+            promise.then(function (value) {
+
+                vm.loading = true;
+
+                var filters = {};
+
+                filters.effective_date_0 = vm.effective_date_from;
+                filters.effective_date_1 = vm.effective_date_to;
+
+                eventsService.generateEventsRange({filters: filters}).then(function (eventsData) {
+
+                    var len = eventsData.tasks_ids.length;
+                    var time = 2000;
+
+                    setTimeout(function () {
+
+                        vm.requestEvents();
+
+                    }, len * time)
+
+                });
+
+            }).catch(function (reason) {
+                console.log(reason);
+            })
 
         };
 
@@ -131,39 +202,10 @@
                     return 'Pending (book)';
                 case 4:
                     return 'Booked';
+                case 5:
+                    return 'Book (default)';
 
             }
-
-        };
-
-        vm.updateTable = function ($event) {
-
-            if (vm.effective_date_from !== vm.effective_date_to) {
-
-                $mdDialog.show({
-                    controller: 'WarningDialogController as vm',
-                    templateUrl: 'views/warning-dialog-view.html',
-                    targetEvent: $event,
-                    locals: {
-                        warning: {
-                            title: 'Warning!',
-                            description: 'It can take a long time, confirm?'
-                        }
-                    },
-                    preserveScope: true,
-                    autoWrap: true,
-                    skipHid: true,
-                    multiple: true
-                }).then(function (res) {
-                    if (res.status === 'agree') {
-                        vm.requestEvents();
-                    }
-                });
-
-            } else {
-                vm.requestEvents();
-            }
-
 
         };
 
@@ -189,6 +231,22 @@
         };
 
         vm.openEventApplyDefaultWindow = function ($event, item) {
+
+            return $mdDialog.show({
+                controller: 'EventApplyDefaultDialogController as vm',
+                templateUrl: 'views/dialogs/event-apply-default-dialog-view.html',
+                parent: angular.element(document.body),
+                targetEvent: $event,
+                locals: {
+                    data: {
+                        event: item
+                    }
+                },
+                preserveScope: true,
+                autoWrap: true,
+                skipHide: true,
+                multiple: true
+            })
 
         };
 
