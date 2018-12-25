@@ -210,7 +210,7 @@
 
 
             }).catch(function (reason) {
-                reject(reason);
+
             })
 
         })

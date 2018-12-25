@@ -12,8 +12,8 @@
 
     var baseUrl = baseUrlService.resolve();
 
-    var getList = function () {
-        return xhrService.fetch(baseUrl + 'instruments/accrual-calculation-model/',
+    var getList = function (options) {
+        return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl + 'instruments/accrual-calculation-model/', options),
             {
                 method: 'GET',
                 credentials: 'include',

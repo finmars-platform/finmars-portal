@@ -10,11 +10,14 @@
             The following transactions will be booked:
         </p>
 
-        <div layout="row">
-            <md-button aria-label="event button" data-ng-repeat="button in vm.actionButtons"
-                       class="md-raised {{buttons.is_sent_to_pending  ? 'md-primary': ''}}"
-                       data-ng-bind="button.display_text" data-ng-click="vm.eventAction($event, button.id)"></md-button>
+        <div layout="row" data-ng-repeat="item in vm.actionButtons">
+            {{item.display_text}}
         </div>
+
+        <div style="color: red" data-ng-if="vm.error">
+            Something wrong with: <b>{{vm.errorActionText}}</b> event
+        </div>
+
     </md-dialog-content>
     <md-dialog-actions layout="row" layout-align="space-between center">
         <md-button aria-label="cancel" class="md-raised" data-ng-click="vm.skip()">
@@ -23,8 +26,8 @@
         <md-button aria-label="cancel" class="md-raised" data-ng-click="vm.ignore()">
             Ignore
         </md-button>
-        <!--<md-button aria-label="process" class="md-raised md-primary" data-ng-click="vm.process()">-->
-            <!--Process-->
-        <!--</md-button>-->
+        <md-button aria-label="process" class="md-raised md-primary" data-ng-click="vm.process()">
+            Process
+        </md-button>
     </md-dialog-actions>
 </md-dialog>
