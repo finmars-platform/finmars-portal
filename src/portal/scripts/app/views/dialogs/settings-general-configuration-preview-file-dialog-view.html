@@ -7,6 +7,16 @@
     </md-toolbar>
     <md-dialog-content style="background: #fff; padding: 16px">
 
+        <div>
+
+            <md-checkbox ng-checked="vm.selectAllState" data-ng-click="vm.toggleSelectAll()"
+                         aria-label="checkbox">
+            </md-checkbox>
+
+            <b>Select all</b>
+
+        </div>
+
         <div data-ng-repeat="item in vm.items">
 
             <div class="cie-entity-holder">

@@ -101,6 +101,38 @@
 
     };
 
+    var getSchemeBySchemeName = function (scheme_name, entity) {
+
+        return new Promise(function (resolve, reject) {
+
+            entityResolverService.getList(entity, {
+                filters: {
+                    "scheme_name": scheme_name
+                }
+            }).then(function (data) {
+
+                if (data.results.length) {
+
+                    resolve(data.results[0])
+
+                } else {
+
+                    if (scheme_name !== '-') {
+
+                        resolve(getSchemeBySchemeName('-', entity))
+
+                    } else {
+                        reject("Scheme with name'-' does not exist")
+                    }
+
+                }
+
+            })
+
+        })
+
+    };
+
     var importConfiguration = function (items) {
 
         return new Promise(function (resolve, reject) {
@@ -221,6 +253,7 @@
         getEntityByUserCode: getEntityByUserCode,
         getEntityBySystemCode: getEntityBySystemCode,
         getAttributeTypeByUserCode: getAttributeTypeByUserCode,
+        getSchemeBySchemeName: getSchemeBySchemeName,
         importConfiguration: importConfiguration
     }
 
