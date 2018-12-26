@@ -20,6 +20,8 @@
 
         vm.processing = false;
 
+        vm.selectAllState = false;
+
         vm.items = file.body;
 
         vm.items.forEach(function (item) {
@@ -110,13 +112,55 @@
 
         };
 
+        vm.toggleSelectAll = function () {
+
+            vm.selectAllState = !vm.selectAllState;
+
+            vm.items.forEach(function (item) {
+
+                item.active = vm.selectAllState;
+
+                item.content.forEach(function (child) {
+                    child.active = vm.selectAllState;
+                })
+
+            })
+
+        };
+
+        vm.checkSelectAll = function () {
+
+            var active = true;
+
+            vm.items.forEach(function (item) {
+
+                if (!item.active) {
+                    active = false;
+                }
+
+                item.content.forEach(function (child) {
+
+                    if (!child.active) {
+                        active = false;
+                    }
+
+                })
+
+            });
+
+            vm.selectAllState = active;
+
+        };
+
         vm.toggleActiveForChilds = function (item) {
 
             item.active = !item.active;
 
             item.content.forEach(function (child) {
                 child.active = item.active;
-            })
+            });
+
+            vm.checkSelectAll();
 
         };
 
@@ -135,6 +179,8 @@
             });
 
             parent.active = active;
+
+            vm.checkSelectAll();
 
 
         };
@@ -665,9 +711,9 @@
 
             return new Promise(function (resolveRelation, reject) {
 
-                if (code_type === 'user_code') {
+                if (key === 'price_download_scheme') {
 
-                    configurationImportHelper.getEntityByUserCode(code, entity).then(function (data) {
+                    configurationImportHelper.getSchemeBySchemeName(code, entity).then(function (data) {
 
                         item[key] = data.id;
 
@@ -677,13 +723,28 @@
 
                 } else {
 
-                    configurationImportHelper.getEntityBySystemCode(code, entity).then(function (data) {
 
-                        item[key] = data.id;
+                    if (code_type === 'user_code') {
 
-                        resolveRelation(item)
+                        configurationImportHelper.getEntityByUserCode(code, entity).then(function (data) {
 
-                    });
+                            item[key] = data.id;
+
+                            resolveRelation(item)
+
+                        });
+
+                    } else {
+
+                        configurationImportHelper.getEntityBySystemCode(code, entity).then(function (data) {
+
+                            item[key] = data.id;
+
+                            resolveRelation(item)
+
+                        });
+
+                    }
 
                 }
 
@@ -925,6 +986,7 @@
                         var item_key = propItem.key;
 
                         promises.push(mapRelation(item, item_key, entity, code_type, code))
+
 
                     }
 

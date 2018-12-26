@@ -242,10 +242,29 @@
 
         }
 
-        vm.agree = function () {
+        vm.agree = function ($event) {
 
             importConfiguration(vm.items).then(function (value) {
                 $mdDialog.hide({status: 'agree', data: {}});
+
+                $mdDialog.show({
+                    controller: 'SuccessDialogController as vm',
+                    templateUrl: 'views/dialogs/success-dialog-view.html',
+                    targetEvent: $event,
+                    preserveScope: true,
+                    multiple: true,
+                    autoWrap: true,
+                    skipHide: true,
+                    locals: {
+                        success: {
+                            title: "",
+                            description: "You have successfully imported mapping file"
+                        }
+                    }
+
+                });
+
+
             })
 
         };
