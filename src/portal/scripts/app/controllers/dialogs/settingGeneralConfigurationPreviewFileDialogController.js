@@ -81,12 +81,12 @@
 
         vm.getItemName = function (item) {
 
-            if (item.hasOwnProperty('user_code')) {
-                return item.user_code
-            }
-
             if (item.hasOwnProperty('scheme_name')) {
                 return item.scheme_name;
+            }
+
+            if (item.hasOwnProperty('user_code')) {
+                return item.user_code
             }
 
             if (item.hasOwnProperty('name')) {
@@ -311,27 +311,31 @@
 
             return new Promise(function (resolve, reject) {
 
-                resolve({})
+                var promises = [];
 
-                // priceDownloadSchemeService.getList().then(function (data) {
-                //
-                //     var schemes = data.results;
-                //
-                //     instrumentDownloadSchemeEntity.content.forEach(function (entityItem) {
-                //
-                //         schemes.forEach(function (scheme) {
-                //
-                //             if (entityItem.___price_download_scheme__scheme_name === scheme.scheme_name) {
-                //                 entityItem.price_download_scheme = scheme.id;
-                //             }
-                //
-                //         })
-                //
-                //     });
-                //
-                //     resolve(instrumentDownloadSchemeEntity);
-                //
-                // });
+                instrumentDownloadSchemeEntity.content.forEach(function (item) {
+
+                    if (item.hasOwnProperty('___price_download_scheme__scheme_name')) {
+
+                        var code = '___price_download_scheme__scheme_name';
+                        var code_type = 'scheme_name';
+                        var entity = 'price-download-scheme';
+                        var item_key = 'price_download_scheme';
+
+                        promises.push(mapRelation(item, item_key, entity, code_type, code))
+
+                    }
+
+                });
+
+
+                Promise.all(promises).then(function (data) {
+
+                    resolve(instrumentDownloadSchemeEntity);
+
+                }).catch(function (reason) {
+                    throw reason;
+                })
 
             })
 

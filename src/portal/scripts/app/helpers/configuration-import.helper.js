@@ -242,7 +242,7 @@
 
 
             }).catch(function (reason) {
-
+                throw reason;
             })
 
         })
