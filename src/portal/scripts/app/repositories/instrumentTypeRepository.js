@@ -8,9 +8,12 @@
     var cookieService = require('../../../../core/services/cookieService'); var xhrService = require('../../../../core/services/xhrService');
     var baseUrlService = require('../services/baseUrlService');
 
+    var configureRepositoryUrlService = require('../services/configureRepositoryUrlService');
+
     var baseUrl = baseUrlService.resolve();
-    var getList = function () {
-        return xhrService.fetch(baseUrl + 'instruments/instrument-type/',
+    var getList = function (options) {
+
+        return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl + 'instruments/instrument-type/', options),
             {
                 method: 'GET',
                 credentials: 'include',

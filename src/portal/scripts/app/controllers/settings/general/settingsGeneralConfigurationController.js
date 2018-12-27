@@ -46,7 +46,11 @@
 
                         vm.configurationFile = null;
 
-                    });
+                    }).catch(function (reason) {
+
+                        vm.configurationFile = null;
+
+                    })
 
                 } catch (error) {
 
@@ -68,6 +72,7 @@
                     });
 
                     vm.configurationFile = null;
+
 
                 }
 
