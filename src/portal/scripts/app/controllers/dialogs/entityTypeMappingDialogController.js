@@ -109,7 +109,7 @@
 
         function addChilds(classifier, item) {
 
-            console.log('item', item);
+            // console.log('item', item);
 
             vm.entityItems.push({
                 value_type: classifier.value_type,

@@ -14,8 +14,6 @@
             },
             link: function (scope, elem) {
 
-                console.log('scope.scrollY', scope.scrollY);
-
                 //baron($(elem));
                 if (scope.scrollY === 'false') {
 

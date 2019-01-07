@@ -14,12 +14,12 @@
         var listUrl = '';
         switch (type) {
             case 'unreaded':
-                listUrl = '?all=false&page=' + page
+                listUrl = '?all=false&page=' + page;
                 break;
             default:
                 listUrl = '?all=true&page=' + page
         }
-        console.log('notification list url is', listUrl);
+
         return xhrService.fetch(baseUrl + 'notifications/notification/' + listUrl,
             {
                 method: 'GET',

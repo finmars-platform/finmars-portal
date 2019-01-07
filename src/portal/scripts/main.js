@@ -37,7 +37,7 @@ app.config(['$mdDateLocaleProvider', function ($mdDateLocaleProvider) {
 }]);
 
 app.run(['$rootScope', function ($rootScope) {
-    console.log('App initialized');
+
     localStorage.setItem('entityIsChanged', false);
 
     var usersService = require('./app/services/usersService');
@@ -261,9 +261,6 @@ app.directive('groupColumnResizer', [require('./app/directives/groupTable/gColum
 app.directive('groupLayoutResizer', [require('./app/directives/groupTable/gLayoutResizerComponent')]);
 app.directive('gDialogDraggable', [require('./app/directives/groupTable/gDialogDraggableComponent')]);
 app.directive('groupHeightAligner', [require('./app/directives/groupTable/gHeightAlignerComponent')]);
-app.directive('groupVerticalScroll', [require('./app/directives/groupTable/gVerticalScrollComponent')]);
-app.directive('groupHorizontalScroll', [require('./app/directives/groupTable/gHorizontalScrollComponent')]);
-app.directive('groupSecondVerticalScroll', [require('./app/directives/groupTable/gSecondVerticalScrollComponent')]);
 app.directive('groupEditorBinder', ['$templateCache', '$compile', require('./app/directives/groupTable/groupEditorBinderComponent')]);
 
 app.directive('groupBindReportRow', [require('./app/directives/groupTable/gBindReportRowDirective.js')]);

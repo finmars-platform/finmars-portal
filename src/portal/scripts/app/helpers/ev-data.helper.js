@@ -358,7 +358,7 @@
 
         list = removeItemsFromFoldedGroups(list);
 
-        console.log('list', list);
+        // console.log('list', list);
 
         return list;
 
@@ -368,42 +368,15 @@
 
         console.time('Creating projection');
 
-        var reserveTop = evDataService.getVirtualScrollReserveTop();
-        var reserveBottom = evDataService.getVirtualScrollReserveBottom();
-
-        var offset = evDataService.getVirtualScrollOffset();
+        var rowHeight = evDataService.getRowHeight();
+        var offsetPx = evDataService.getVirtualScrollOffsetPx();
+        var from = Math.ceil(offsetPx / rowHeight);
         var step = evDataService.getVirtualScrollStep();
-
-        var visibleObjects = 0;
-
-        flatList.forEach(function (item) {
-
-            if (item.___type === 'object') {
-                visibleObjects = visibleObjects + 1;
-            }
-
-            if (item.___type === 'subtotal' && item.___subtotal_type !== 'proxyline') {
-                visibleObjects = visibleObjects + 1;
-            }
-
-        });
-
-        var from = offset;
-        var to = offset + step;
-
-        // if (from > reserveTop) {
-        //     from = from - reserveTop;
-        // }
-
-        if (visibleObjects >= to) {
-            to = to + reserveBottom;
-        }
-
-        var items = flatList.slice(from, to);
+        var to = from + step;
 
         console.timeEnd('Creating projection');
 
-        return items;
+        return flatList.slice(from, to);
 
     };
 
@@ -540,23 +513,26 @@
 
     var calculatePageFromOffset = function (requestParameters, evDataService) {
 
-        console.log('calculatePageFromOffset.requestParameters', requestParameters);
+        // console.log('calculatePageFromOffset.requestParameters', requestParameters);
 
         var group = evDataService.getGroup(requestParameters.id);
 
         if (group && group.results.length) {
 
-            var offset = evDataService.getVirtualScrollOffset();
+            var rowHeight = evDataService.getRowHeight();
+
+            var offsetPx = evDataService.getVirtualScrollOffsetPx();
+            var offset = offsetPx / rowHeight;
+
             var step = evDataService.getVirtualScrollStep();
             var maxPage = Math.ceil(group.results.length / step);
             var resultPage;
             var newPageOffset;
-
             resultPage = Math.ceil(offset / step);
 
             newPageOffset = resultPage * step;
 
-            if (newPageOffset / offset > 0.9) {
+            if (newPageOffset - offset < step / 2) {
                 resultPage = resultPage + 1;
             }
 

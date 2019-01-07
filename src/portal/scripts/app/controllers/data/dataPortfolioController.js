@@ -9,8 +9,6 @@
 
     module.exports = function ($scope, $stateParams) {
 
-        console.log('{"controller": "DataPortfolioController", status: "initialized"}');
-
         var vm = this;
 
         vm.entityType = 'portfolio';

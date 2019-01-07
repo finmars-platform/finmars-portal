@@ -5,13 +5,9 @@
 
     'use strict';
 
-    var logService = require('../../../../core/services/logService');
-
     var metaService = require('../services/metaService');
 
     module.exports = function ($scope, $mdDialog) {
-
-        logService.controller('SideNavController', 'initialized');
 
         var vm = this;
         vm.sections = [];
@@ -62,7 +58,6 @@
 
         metaService.getMenu().then(function (data) {
             vm.sections = data;
-            //console.log('vm.sections', vm.sections);
             $scope.$apply();
         });
 

@@ -10,7 +10,7 @@
 
     var render = function (elem, projection, evDataService, evEventService) {
 
-        console.log('render.projection.length', projection.length);
+        // console.log('render.projection.length', projection.length);
 
         console.time("Rendering projection");
 

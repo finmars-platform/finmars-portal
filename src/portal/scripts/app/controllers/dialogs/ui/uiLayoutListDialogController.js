@@ -50,7 +50,8 @@
                 },
                 preserveScope: true,
                 autoWrap: true,
-                skipHide: true
+                skipHide: true,
+                multiple: true
             }).then(function (res) {
                 if (res.status === 'agree') {
                     uiService.deleteListLayoutByKey(item.id).then(function (data) {

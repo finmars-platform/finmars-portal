@@ -10,7 +10,7 @@
     app.config(['$stateProvider', require('./app/router.js')]);
 
     app.run(function () {
-        console.log('Forum initialized');
+
     });
 
     app.controller('ForumController', ['$scope', require('./app/controllers/forumController')]);

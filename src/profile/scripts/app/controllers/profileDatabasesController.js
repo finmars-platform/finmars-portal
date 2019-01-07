@@ -56,7 +56,7 @@
 
         vm.activateDatabase = function (item) {
 
-            console.log('item', item);
+            // console.log('item', item);
 
             usersService.setMasterUser(item.id);
             $state.go('app.home');

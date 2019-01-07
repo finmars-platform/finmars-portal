@@ -465,8 +465,6 @@
 
                                 uiService.updateListLayout(listLayout.id, listLayout).then(function () {
 
-                                }).then(function () {
-
                                     listLayout.name = res.data.name;
                                     listLayout.is_default = true;
                                     delete listLayout.id;

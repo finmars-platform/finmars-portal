@@ -48,7 +48,7 @@
 
             } else {
 
-                console.warn('Event ' + eventName + ' is not listened');
+                // console.warn('Event ' + eventName + ' is not listened');
                 // throw "Event is not listened"
             }
 

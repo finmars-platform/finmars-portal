@@ -16,9 +16,6 @@
 
     module.exports = function ($scope, $state, $rootScope, $mdDialog) {
 
-        logService.controller('ShellController', 'initialized', 1);
-        logService.controller('ShellController', 'working', 1);
-
         var vm = this;
 
         vm.readyStatus = {masters: false};
@@ -304,9 +301,6 @@
         $rootScope.$on('$stateChangeSuccess', function () {
             $mdDialog.cancel();
         });
-
-        // console.log('root scope is ', $rootScope);
-        console.log("Curent state is ", $state.current);
 
         vm.logOutMethod = function () {
             usersService.logout().then(function (data) {

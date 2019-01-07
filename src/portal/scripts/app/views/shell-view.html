@@ -12,7 +12,8 @@
 
                 <div class="header-profile">
                     <md-menu>
-                        <md-button class="md-button header-account-btn" ng-click="$mdOpenMenu($event)">
+                        <md-button class="md-button header-account-btn" aria-label="Account button"
+                                   ng-click="$mdOpenMenu($event)">
                             <ng-md-icon icon="account_circle" size="48"></ng-md-icon>
                             <span class="header-profile-name" data-ng-bind="vm.user.username"></span>
                         </md-button>
@@ -23,7 +24,7 @@
                                 </md-button>
                             </md-menu-item>
                             <md-menu-item data-ng-repeat="item in vm.masters">
-                                <md-button data-ng-click="vm.selectMaster(item)">
+                                <md-button data-ng-click="vm.selectMaster(item)" aria-label="Select master">
                                     <span>{{item.name}}</span>
                                 </md-button>
                             </md-menu-item>
@@ -37,7 +38,7 @@
 
         </div>
     </md-toolbar>
-    <md-content flex data-custom-scroll class="app-md-content custom-scrollbar">
+    <md-content flex class="app-md-content">
 
         <div data-ui-view class="shell-view"></div>
 
@@ -92,7 +93,8 @@
 
                         <div class="header-profile">
                             <md-menu>
-                                <md-button class="md-button header-account-btn" ng-click="$mdOpenMenu($event)">
+                                <md-button class="md-button header-account-btn" ng-click="$mdOpenMenu($event)"
+                                           aria-label="Account button">
                                     <ng-md-icon icon="account_circle" size="48"></ng-md-icon>
                                     <span class="header-profile-name" data-ng-bind="vm.user.username"></span>
                                 </md-button>
@@ -105,7 +107,7 @@
                                     </md-menu-item>
 
                                     <md-menu-item data-ng-repeat="item in vm.masters">
-                                        <md-button data-ng-click="vm.selectMaster(item)">
+                                        <md-button data-ng-click="vm.selectMaster(item)" aria-label="Select master">
                                             <span data-ng-if="item.is_current"><b>{{item.name}}</b></span>
                                             <span data-ng-if="!item.is_current">{{item.name}}</span>
                                         </md-button>
@@ -121,7 +123,7 @@
                     <!--<a href="#" data-ng-click="vm.logout()">Log out</a>-->
                 </div>
             </md-toolbar>
-            <md-content flex data-custom-scroll class="app-md-content custom-scrollbar">
+            <md-content flex class="app-md-content">
 
                 <div data-ui-view class="shell-view"></div>
 

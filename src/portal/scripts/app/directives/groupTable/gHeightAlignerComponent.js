@@ -85,7 +85,9 @@
                     workAreaWithoutGrouping = workAreaHeight - upperGroupSection.height();
 
                     upperFilterSidebar.height(workAreaHeight);
-                    upperTableSection.height(workAreaWithoutGrouping);
+                    // upperTableSection.height(workAreaWithoutGrouping);
+
+
 
                     // upperGroupTableBody.height(workAreaWithoutGrouping - 76);
 

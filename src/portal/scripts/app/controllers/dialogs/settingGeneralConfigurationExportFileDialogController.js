@@ -35,6 +35,20 @@
 
                 vm.items = data.body;
 
+                vm.items.forEach(function (parent) {
+
+                    parent.content = parent.content.filter(function (child) {
+
+                        if (child.hasOwnProperty('user_code') && child.user_code === '-') {
+                            return false
+                        }
+
+                        return true;
+
+                    })
+
+                });
+
                 vm.readyStatus.content = true;
 
                 $scope.$apply();
@@ -131,7 +145,13 @@
         vm.getItemName = function (item) {
 
             if (item.hasOwnProperty('user_code')) {
-                return item.user_code
+                var result = item.user_code;
+
+                if (item.hasOwnProperty('scheme_name')) {
+                    result = item.scheme_name;
+                }
+
+                return result;
             }
 
             if (item.hasOwnProperty('scheme_name')) {

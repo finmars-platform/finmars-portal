@@ -11,8 +11,6 @@
 
     var reportHelper = require('../../helpers/reportHelper');
 
-    console.log('evRvCommonHelper', evRvCommonHelper);
-
     var requestData = function (evDataService) {
 
         return new Promise(function (resolve, reject) {
@@ -413,8 +411,6 @@
     };
 
     var getObjectsByRequestParameters = function (requestParameters, entityViewerDataService, entityViewerEventService) {
-
-        // console.log('evDataProviderService.getObjects');
 
         return getObjects(requestParameters, entityViewerDataService, entityViewerEventService)
 

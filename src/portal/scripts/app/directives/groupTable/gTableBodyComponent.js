@@ -72,7 +72,7 @@
 
                     scope.evDataService.setProjection(projection);
 
-                    console.log('projection', projection);
+                    // console.log('projection', projection);
 
                     rvDomManager.calculateScroll(elements, scope.evDataService);
 
@@ -82,8 +82,6 @@
                 }
 
                 function renderEntityViewer() {
-
-                    console.log('renderEntityViewer');
 
                     var flatList = evDataHelper.getFlatStructure(scope.evDataService);
                     flatList.shift(); // remove root group
@@ -101,7 +99,7 @@
 
                     evDomManager.calculateScroll(elements, scope.evDataService);
 
-                    console.log('projection', projection);
+                    // console.log('projection', projection);
 
                     evRenderer.render(contentElem, projection, scope.evDataService, scope.evEventService);
 

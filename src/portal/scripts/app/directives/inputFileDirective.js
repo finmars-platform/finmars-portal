@@ -9,7 +9,6 @@
                 readFile: '='
             },
             link: function (scope, elem, attr) {
-                console.log('input file directive');
 
                 scope.$watch('readFile', function (value) {
 

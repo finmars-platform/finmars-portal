@@ -106,7 +106,7 @@
 
         vm.resolveAttributeNode = function (item) {
 
-            console.log('item', item);
+            // console.log('item', item);
 
             //return item.name;
 
