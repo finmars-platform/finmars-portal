@@ -53,7 +53,7 @@
 
         var requestParameters = entityViewerDataService.getActiveRequestParameters();
 
-        console.log('injectRegularFilters.requestParameters', requestParameters);
+        // console.log('injectRegularFilters.requestParameters', requestParameters);
 
         var newRequestParametersBody = Object.assign({}, requestParameters.body);
 
@@ -78,8 +78,8 @@
 
         entityViewerDataService.setRequestParameters(requestParameters);
 
-        console.log('injectRegularFilters.filters', filters);
-        console.log('injectRegularFilters.newRequestParameters', newRequestParametersBody);
+        // console.log('injectRegularFilters.filters', filters);
+        // console.log('injectRegularFilters.newRequestParameters', newRequestParametersBody);
 
     };
 
@@ -147,13 +147,6 @@
             // var pagination = entityViewerDataService.getPagination();
             var step = entityViewerDataService.getVirtualScrollStep();
             var i;
-
-            console.log('getObjects.options', options);
-
-            console.log('from ', page * step);
-            console.log('to ', (page + 1) * step);
-            console.log('step ', step);
-            console.log('page', page);
 
             objectsService.getList(entityType, options).then(function (data) {
 
@@ -374,8 +367,6 @@
 
     var getObjectsByRequestParameters = function (entityViewerDataService, entityViewerEventService) {
 
-        console.log('evDataProviderService.getObjects');
-
         var requestParameters = entityViewerDataService.getActiveRequestParameters();
 
         getObjects(requestParameters, entityViewerDataService, entityViewerEventService)
@@ -398,6 +389,8 @@
     };
 
     var updateDataStructure = function (entityViewerDataService, entityViewerEventService) {
+
+        console.time('Updating data structure');
 
         detectLevelChange(entityViewerDataService, entityViewerEventService);
         injectRegularFilters(entityViewerDataService, entityViewerEventService);

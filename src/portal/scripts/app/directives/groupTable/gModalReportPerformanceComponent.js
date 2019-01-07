@@ -786,7 +786,7 @@
             },
 
             destroy: function () {
-                console.log('this.dragula', this.dragula)
+                // console.log('this.dragula', this.dragula)
                 this.dragula.destroy();
             }
         };

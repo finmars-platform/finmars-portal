@@ -115,7 +115,7 @@
                         console.log("res", res.data);
                         item.mapping.expression = res.data.item.expression;
                     }
-                    console.log('item', item);
+                    // console.log('item', item);
                 });
             }
         };

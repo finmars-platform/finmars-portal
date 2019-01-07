@@ -36,7 +36,7 @@
 		vm.loadThreadList = function () {
 			return threadService.getList({threadGroup: threadsGroupId}).then(function(data) {
 				vm.threadList = data.results;
-				console.log('thread list is', vm.threadList);
+				// console.log('thread list is', vm.threadList);
 				vm.loadPermissions();
 			});
 		}

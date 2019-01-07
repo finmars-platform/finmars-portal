@@ -5,15 +5,11 @@
 
     'use strict';
 
-    var logService = require('../../../../../core/services/logService');
-
     var timeZonesService = require('../../services/timeZonesService');
 
     var usersService = require('../../services/usersService');
 
     module.exports = function ($scope, $state) {
-
-        logService.controller('SettingsGeneralController', 'initialized');
 
         var vm = this;
 

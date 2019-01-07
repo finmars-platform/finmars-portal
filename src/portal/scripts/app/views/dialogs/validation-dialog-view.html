@@ -5,7 +5,7 @@
             <span flex></span>
         </div>
     </md-toolbar>
-    <md-dialog-content data-custom-scroll class="custom-scrollbar">
+    <md-dialog-content  >
         <div class="warning-text">
             <p data-ng-repeat="item in vm.errorKeys">
                 <b data-ng-bind="item.caption" data-ng-if="item.caption != 'non field errors'"></b> - <span data-ng-bind-html="vm.bindValue(item) | trustAsHtml"></span>

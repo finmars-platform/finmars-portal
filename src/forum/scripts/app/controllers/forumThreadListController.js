@@ -59,7 +59,7 @@
 				if (res.status === 'agree') {
 					// console.log(res, res.data);
 					threadService.create({subject: res.data.threadListTitle, thread_group: vm.threadGroupId}).then(function () {
-						console.log('Thread list created');
+						// console.log('Thread list created');
 						vm.getList();
 					})
 				}

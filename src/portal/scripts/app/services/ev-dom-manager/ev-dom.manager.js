@@ -250,8 +250,6 @@
 
                     group.___is_open = true;
 
-                    console.log('Unfold Group');
-
                     evDataService.setData(group);
 
                 }
@@ -282,8 +280,6 @@
             var obj = evDataHelper.getObject(clickData.___id, clickData.___parentId, evDataService);
 
             handleObjectActive(clickData, evDataService);
-
-            console.log('setEditorEntityId.obj', obj);
 
             evDataService.setEditorEntityId(obj.id);
             evEventService.dispatchEvent(evEvents.ADDITIONS_EDITOR_ENTITY_ID_CHANGE);
@@ -386,9 +382,6 @@
                 clickData.___parentId = event.target.parentElement.parentElement.dataset.parentGroupHashId;
                 break;
         }
-
-        console.log('getClickData.clickData', clickData);
-        console.log('getClickData.clickTarget', clickTarget);
 
         clickData.target = clickTarget;
 
@@ -507,15 +500,6 @@
 
                     var obj = evDataHelper.getObject(objectId, parentGroupHashId, evDataService);
 
-                    // evDataService.setActiveObject({
-                    //     action: dropdownAction,
-                    //     event: event,
-                    //     id: obj.id,
-                    //     name: obj.name, // for delete dialog
-                    //     ___id: objectId,
-                    //     ___parentId: parentGroupHashId
-                    // });
-
                     evDataService.setActiveObject(obj);
                     evDataService.setActiveObjectAction(dropdownAction);
 
@@ -539,12 +523,8 @@
 
     var calculatePaddingTop = function (evDataService) {
 
-        // var offset = evDataService.getVirtualScrollOffset();
-        // var rowHeight = evDataService.getRowHeight();
-        //
-        // return Math.floor(offset * rowHeight);
-
         return evDataService.getVirtualScrollOffsetPx();
+
     };
 
     var calculateTotalHeight = function (evDataService) {
@@ -592,16 +572,12 @@
 
     var addScrollListener = function (elements, evDataService, evEventService) {
 
-        var offset;
-        var rowHeight = evDataService.getRowHeight();
         var viewportElem = elements.viewportElem;
 
         var columnBottomRow;
 
         var scrollYHandler = utilsHelper.debounce(function () {
 
-            offset = Math.floor(viewportElem.scrollTop / rowHeight);
-            evDataService.setVirtualScrollOffset(offset);
             evDataService.setVirtualScrollOffsetPx(viewportElem.scrollTop);
             evEventService.dispatchEvent(evEvents.UPDATE_TABLE);
 
@@ -621,7 +597,6 @@
         };
 
         viewportElem.addEventListener('scroll', scrollYHandler);
-
         viewportElem.addEventListener('scroll', scrollXHandler);
 
     };

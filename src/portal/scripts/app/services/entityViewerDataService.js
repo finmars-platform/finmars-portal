@@ -11,7 +11,7 @@
         var headerToolbarHeight = 64;
         var headerToolbarWidth = document.body.clientWidth - sidebarWidth;
 
-        var groupingAreaHeight = 86;
+        var groupingAreaHeight = 88;
         var columnAreaHeight = 70;
         var filterAreaWidth = 239;
         var filterAreaLeft = document.body.clientWidth - filterAreaWidth;
@@ -71,8 +71,6 @@
 
     module.exports = function () {
 
-        console.log('Entity Viewer Data Service started!');
-
         var data = {
             columns: [],
             groups: [],
@@ -98,6 +96,7 @@
                 lastRequestOffset: 0,
                 rowHeight: 24,
                 offset: 0, // current position
+                offsetPx: 0,
                 limit: 0, // total rows
                 step: 60 // rows to render
             },
@@ -107,8 +106,6 @@
             lastClickInfo: {}
         };
 
-        console.log('getInterfaceLayout', getDefaultInterfaceLayout());
-
         data.interfaceLayout = getDefaultInterfaceLayout();
 
         var rootHash = stringHelper.toHash('root');
@@ -116,9 +113,6 @@
 
         setData(defaultRootGroup);
         setActiveRequestParametersId(defaultRootGroup.___id);
-
-
-        console.log('Entity Viewer Data Service data', data);
 
         function getInterfaceLayout() {
             return data.interfaceLayout

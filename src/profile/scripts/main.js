@@ -10,7 +10,7 @@
     app.config(['$stateProvider', require('./app/router.js')]);
 
     app.run(function () {
-        console.log('Profile initialized');
+
     });
 
     app.controller('ProfileController', ['$scope', require('./app/controllers/profileController')]);

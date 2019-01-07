@@ -30,12 +30,7 @@
                 scope.entityType = scope.evDataService.getEntityType();
                 scope.reportOptions = scope.evDataService.getReportOptions();
 
-                console.log('scope.reportOptions', scope.reportOptions);
-
                 scope.isReport = metaService.isReport(scope.evDataService.getEntityType());
-
-
-                console.log('scope.isReport', scope.isReport);
 
                 scope.fields = {};
 
@@ -295,8 +290,6 @@
                     },
 
                     dragula: function () {
-                        console.log('COLUMSN DRAGULA INIT?');
-
                         var items = [document.querySelector('.g-filters-holder')];
                         var i;
                         //var itemsElem = document.querySelectorAll('.g-columns-holder md-card');
@@ -325,13 +318,9 @@
 
                     scope.evDataService.setFilters(scope.filters);
 
-                    console.log('scope.filters', scope.filters);
-
                     var promises = [];
 
                     scope.filters.forEach(function (item) {
-
-                        console.log('item', item);
 
                         if (!scope.fields.hasOwnProperty(item.key)) {
 
@@ -361,11 +350,7 @@
                         }
                     });
 
-                    console.log('scope.fields', scope.fields);
-
                     Promise.all(promises).then(function (data) {
-
-                        console.log('sidebar filters data', data);
 
                         data.forEach(function (item) {
 
@@ -376,8 +361,6 @@
                             }
 
                         });
-
-                        console.log('scope.fields finish', scope.fields);
 
                         scope.$apply(
                             function () {

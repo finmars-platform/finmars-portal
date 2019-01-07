@@ -38,7 +38,7 @@
                         resolve(getEntityByUserCode('-', entity))
 
                     } else {
-                        reject("Entity with user code '-' does not exist")
+                        reject(new Error("Entity with user code '-' does not exist"))
                     }
 
                 }
@@ -65,7 +65,7 @@
 
                 } else {
 
-                    reject("Entity does not exist")
+                    reject(new Error("Entity does not exist"))
 
                 }
 
@@ -91,7 +91,7 @@
 
                 } else {
 
-                    reject("Attribute Type with user code " + user_code + " does not exist")
+                    reject(new Error("Attribute Type with user code " + user_code + " does not exist"))
 
                 }
 
@@ -122,7 +122,7 @@
                         resolve(getSchemeBySchemeName('-', entity))
 
                     } else {
-                        reject("Scheme with name'-' does not exist")
+                        reject(new Error("Scheme with name'-' does not exist"))
                     }
 
                 }
@@ -186,7 +186,38 @@
 
                                 break;
                             case 'ui.listlayout':
-                                promises.push(uiRepository.createListLayout(item));
+                                promises.push(new Promise(function (resolve, reject) {
+
+                                    uiRepository.getListLayoutDefault({
+                                        filters: {
+                                            name: item.name,
+                                            content_type: item.content_type
+                                        }
+                                    }).then(function (data) {
+
+                                        if (data.results.length) {
+
+                                            var layout = data.results[0];
+                                            var name = layout.name.split(item.name)[1];
+
+                                            console.log('name', name);
+
+                                            if (data.results.length !== 1) {
+
+                                                item.name = item.name + ' (' + data.results.length + ')';
+
+                                            } else {
+
+                                                item.name = item.name + ' (1)'
+                                            }
+
+                                        }
+
+                                        resolve(uiRepository.createListLayout(item));
+
+                                    });
+
+                                }));
                                 break;
                             case 'ui.reportlayout':
                                 promises.push(uiRepository.createListLayout(item));
@@ -242,7 +273,10 @@
 
 
             }).catch(function (reason) {
-                throw reason;
+
+                console.log('importConfiguration.reason', reason);
+
+                reject(reason);
             })
 
         })

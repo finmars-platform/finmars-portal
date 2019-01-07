@@ -36,8 +36,6 @@
                     'performance-report', 'pnl-report',
                     'transaction-report'].indexOf(scope.entityType) !== -1;
 
-                console.log('COLUMNS scope.isReport', scope.isReport);
-
                 var baseAttrs = [];
                 var entityAttrs = [];
                 if (metaService.getEntitiesWithoutBaseAttrsList().indexOf(scope.entityType) === -1) {
@@ -131,17 +129,6 @@
                         scope.columns[i].options.sort = null;
                     }
                     column.options.sort = sort;
-
-                    // if (column.hasOwnProperty('id')) {
-                    //     scope.sorting.column.id = column.id;
-                    //     scope.sorting.column.key = null;
-                    //     scope.sorting.column.sort = sort;
-                    // } else {
-                    //     scope.sorting.column.id = null;
-                    //     scope.sorting.column.key = column.key;
-                    //     scope.sorting.column.sort = sort;
-                    // }
-
 
                     console.log('sortHandler.column', column);
 
@@ -337,9 +324,6 @@
                 var dragAndDrop = {
 
                     init: function () {
-
-                        console.log('Reinit dragula', this);
-
                         this.dragulaInit();
                         this.eventListeners();
                     },
@@ -436,23 +420,6 @@
 
                     return true;
 
-                    // var b, e;
-                    // if (baseAttrs && baseAttrs.length) {
-                    //     for (b = 0; b < baseAttrs.length; b = b + 1) {
-                    //         if (baseAttrs[b].key === column.key && baseAttrs[b].key !== 'notes') {
-                    //             return true;
-                    //         }
-                    //     }
-                    // }
-                    // if (entityAttrs && entityAttrs.length) {
-                    //     for (e = 0; e < entityAttrs.length; e = e + 1) {
-                    //         if (entityAttrs[e].key === column.key) {
-                    //             return true;
-                    //         }
-                    //     }
-                    // }
-                    //
-                    // return false;
                 };
 
                 scope.removeColumn = function (column) {

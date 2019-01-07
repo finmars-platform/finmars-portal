@@ -81,12 +81,18 @@
 
         vm.getItemName = function (item) {
 
-            if (item.hasOwnProperty('scheme_name')) {
-                return item.scheme_name;
+            if (item.hasOwnProperty('user_code')) {
+                var result = item.user_code;
+
+                if (item.hasOwnProperty('scheme_name')) {
+                    result = item.scheme_name;
+                }
+
+                return result;
             }
 
-            if (item.hasOwnProperty('user_code')) {
-                return item.user_code
+            if (item.hasOwnProperty('scheme_name')) {
+                return item.scheme_name;
             }
 
             if (item.hasOwnProperty('name')) {
@@ -758,27 +764,21 @@
 
         function mapAttributeType(item, key, entity, code) {
 
-            return new Promise(function (resolve) {
+            return new Promise(function (resolve, reject) {
 
-                var promises = [];
+                configurationImportHelper.getAttributeTypeByUserCode(code, entity).then(function (data) {
 
-                promises.push(new Promise(function (resolveRelation, reject) {
+                    item[key] = data.id;
 
-                    configurationImportHelper.getAttributeTypeByUserCode(code, entity).then(function (data) {
+                    resolve(item)
 
-                        item[key] = data.id;
+                }).catch(function (reason) {
 
-                        resolveRelation(item)
+                    toastNotificationService.error(reason);
 
-                    }).catch(function (reason) {
+                    reject(reason)
 
-                        toastNotificationService.error(reason);
-
-                        reject(reason)
-
-                    })
-
-                }));
+                })
 
             })
 
@@ -1193,7 +1193,7 @@
 
             console.log('handleListLayoutMap', layout);
 
-            return new Promise(function (resolve) {
+            return new Promise(function (resolve, reject) {
 
                 var promises = [];
 
@@ -1242,16 +1242,17 @@
                 }
 
                 Promise.all(promises).then(function (data) {
-
                     resolve(data)
+                }).catch(function (reason) {
 
+                    reject(reason)
                 })
             })
 
         }
 
         function mapLayouts(entity) {
-            return new Promise(function (resolve) {
+            return new Promise(function (resolve, reject) {
 
                 var promises = [];
 
@@ -1279,6 +1280,9 @@
 
                     resolve({});
 
+                }).catch(function (reason) {
+
+                    reject(reason);
                 })
 
             })
@@ -1340,6 +1344,9 @@
 
                 Promise.all(promises).then(function (data) {
                     resolve(data);
+                }).catch(function (reason) {
+
+                    reject(reason);
                 })
 
             })
@@ -1381,6 +1388,12 @@
                     $scope.$apply();
 
                 })
+
+            }).catch(function (reason) {
+
+                vm.processing = false;
+
+                $scope.$apply();
 
             })
 

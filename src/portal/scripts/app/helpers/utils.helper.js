@@ -21,8 +21,6 @@
 
     function debounce(func, wait, immediate) {
 
-        console.log('deboounce!', wait)
-
         var timeout;
         return function () {
             var context = this, args = arguments;

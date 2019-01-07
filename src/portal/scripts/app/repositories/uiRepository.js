@@ -11,6 +11,8 @@
     var metaRestrictionsRepository = require('./metaRestrictionsRepository');
     var baseUrlService = require('../services/baseUrlService');
 
+    var configureRepositoryUrlService = require('../services/configureRepositoryUrlService');
+
     var baseUrl = baseUrlService.resolve();
 
     var getEditLayout = function (entity) {
@@ -84,6 +86,20 @@
                     }
                 })
         }
+    };
+
+    var getListLayoutDefault = function (options) {
+
+        return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl + 'ui/list-layout/', options),
+            {
+                method: 'GET',
+                credentials: 'include',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-type': 'application/json'
+                }
+            })
+
     };
 
     var getListLayoutByKey = function (uiLayoutId) {
@@ -357,6 +373,7 @@
 
         getListLayout: getListLayout,
         getListLayoutByKey: getListLayoutByKey,
+        getListLayoutDefault: getListLayoutDefault,
         createListLayout: createListLayout,
         updateListLayout: updateListLayout,
         deleteListLayoutByKey: deleteListLayoutByKey,
