@@ -56,11 +56,53 @@
 
         };
 
+        vm.toggleSelectAll = function () {
+
+            vm.selectAllState = !vm.selectAllState;
+
+            vm.items.forEach(function (item) {
+
+                item.active = vm.selectAllState;
+
+                item.content.forEach(function (child) {
+                    child.active = vm.selectAllState;
+                })
+
+            })
+
+        };
+
+        vm.checkSelectAll = function () {
+
+            var active = true;
+
+            vm.items.forEach(function (item) {
+
+                if (!item.active) {
+                    active = false;
+                }
+
+                item.content.forEach(function (child) {
+
+                    if (!child.active) {
+                        active = false;
+                    }
+
+                })
+
+            });
+
+            vm.selectAllState = active;
+
+        };
+
         vm.toggleActiveForChilds = function (item) {
 
             item.content.forEach(function (child) {
                 child.active = item.active;
-            })
+            });
+
+            vm.checkSelectAll();
 
         };
 
@@ -78,6 +120,7 @@
 
             parent.active = active;
 
+            vm.checkSelectAll();
 
         };
 

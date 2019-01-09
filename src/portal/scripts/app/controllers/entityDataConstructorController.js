@@ -41,47 +41,57 @@
         // but it can be taken from different entity
         // e.g. transaction -> transaction-type.book_transaction_layout
 
-        if (vm.isntanceId) {
-            uiService.getEditLayoutByInstanceId(vm.entityType, vm.isntanceId).then(function (data) {
+        vm.getLayout = function () {
 
-                if (data) {
-                    vm.ui = data;
+            return new Promise(function (resolve) {
+
+                if (vm.isntanceId) {
+                    uiService.getEditLayoutByInstanceId(vm.entityType, vm.isntanceId).then(function (data) {
+
+                        if (data) {
+                            vm.ui = data;
+                        } else {
+                            vm.uiIsDefault = true;
+                            vm.ui = uiService.getDefaultEditLayout()[0];
+                        }
+                        vm.tabs = vm.ui.data || [];
+                        vm.tabs.forEach(function (tab) {
+                            tab.layout.fields.forEach(function (field) {
+                                field.editMode = false;
+                            })
+                        });
+
+                        addRowForTab();
+
+                        resolve(vm.tabs);
+
+                    });
                 } else {
-                    vm.uiIsDefault = true;
-                    vm.ui = uiService.getDefaultEditLayout()[0];
+                    uiService.getEditLayout(vm.entityType).then(function (data) {
+
+                        if (data.results.length) {
+                            vm.ui = data.results[0];
+                        } else {
+                            vm.uiIsDefault = true;
+                            vm.ui = uiService.getDefaultEditLayout()[0];
+                        }
+                        vm.tabs = vm.ui.data;
+                        vm.tabs.forEach(function (tab) {
+                            tab.layout.fields.forEach(function (field) {
+                                field.editMode = false;
+                            })
+                        });
+
+                        addRowForTab();
+
+                        resolve(vm.tabs);
+
+                    });
                 }
-                vm.tabs = vm.ui.data || [];
-                vm.tabs.forEach(function (tab) {
-                    tab.layout.fields.forEach(function (field) {
-                        field.editMode = false;
-                    })
-                });
 
-                addRowForTab();
+            })
 
-                $scope.$apply();
-            });
-        } else {
-            uiService.getEditLayout(vm.entityType).then(function (data) {
-
-                if (data.results.length) {
-                    vm.ui = data.results[0];
-                } else {
-                    vm.uiIsDefault = true;
-                    vm.ui = uiService.getDefaultEditLayout()[0];
-                }
-                vm.tabs = vm.ui.data;
-                vm.tabs.forEach(function (tab) {
-                    tab.layout.fields.forEach(function (field) {
-                        field.editMode = false;
-                    })
-                });
-
-                addRowForTab();
-
-                $scope.$apply();
-            });
-        }
+        };
 
         vm.cancel = function () {
             $state.go('app.data.' + vm.entityType);
@@ -223,6 +233,8 @@
                 tab.layout.columns = columns;
             }
 
+            vm.updateDrakeContainers();
+
         };
 
         vm.saveLayout = function () {
@@ -323,6 +335,9 @@
                 }
             });
             addRow(vm.tabs[vm.tabs.length - 1]);
+
+            vm.updateDrakeContainers();
+
         };
 
         vm.toggleEditTab = function (tab, action, $index) {
@@ -433,7 +448,6 @@
 
                     vm.syncItems();
 
-
                     vm.readyStatus.constructor = true;
 
                     $scope.$apply(function () {
@@ -464,6 +478,8 @@
             for (i = 0; i < cardsElem.length; i = i + 1) {
                 items.push(cardsElem[i]);
             }
+
+            console.log('emptyFieldsElem', emptyFieldsElem);
 
             return items;
 
@@ -567,8 +583,11 @@
 
 
                                         }
-                                    })
+                                    });
 
+                                    if (row === tab.layout.rows) {
+                                        addRow(tab)
+                                    }
                                 }
 
                             });
@@ -599,6 +618,21 @@
             }
         };
 
+        vm.updateDrakeContainers = function () {
+
+            if (vm.dragAndDrop.drake) {
+
+                setTimeout(function () {
+
+                    vm.dragAndDrop.drake.containers = [];
+                    vm.dragAndDrop.drake.containers = vm.getDrakeContainers();
+
+                }, 500)
+
+            }
+
+        };
+
         vm.syncItems = function () {
 
             vm.items = [];
@@ -626,17 +660,7 @@
 
             });
 
-            if (vm.dragAndDrop.drake) {
-
-                setTimeout(function () {
-
-                    vm.dragAndDrop.drake.containers = [];
-                    vm.dragAndDrop.drake.containers = vm.getDrakeContainers();
-
-                }, 500)
-
-
-            }
+            vm.updateDrakeContainers();
 
             console.log('syncItems.items', vm.items);
 
@@ -664,8 +688,11 @@
 
         vm.init = function () {
 
-            vm.getItems();
+            vm.getLayout().then(function () {
 
+                vm.getItems();
+
+            });
 
         };
 
