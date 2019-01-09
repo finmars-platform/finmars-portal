@@ -1,5 +1,8 @@
 # Changelog
 
+## 09.01.2019
+- Drag & Drop in form constructor
+
 ## 18.12.2018
 - Init Configuration page
 - Init Configuration settings page
