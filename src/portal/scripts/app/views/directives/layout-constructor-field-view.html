@@ -19,11 +19,11 @@
             </md-card>
         </div>
         <div data-ng-if="!item.attribute">
-            <md-card class="ec-attr-card">
-                <md-button aria-label="add field" data-ng-click="toggleEditMode()">
+            <div class="ec-attr-card ec-attr-empty" data-col="{{column}}" data-row="{{row}}">
+                <md-button aria-label="add field" data-ng-click="toggleEditMode()" class="width-100">
                     <ng-md-icon icon="add_circle"></ng-md-icon>
                 </md-button>
-            </md-card>
+            </div>
         </div>
     </div>
     <div data-ng-if="item.editMode">
@@ -33,23 +33,12 @@
                 <!--{{item.attribute}}-->
                 <md-select ng-model="item.attribute" ng-change="changeModel(item.attribute)" ng-focus="findAttrsLeft()">
                     <md-optgroup label="System" class="bold-field-select">
-                        <md-option ng-repeat="attr in baseAttrs" data-ng-if="baseAttrs.length" ng-value="attr"
-                                   class="{{attr.disabled ? 'disabled' : ''}}">
-                            {{attr.name}} ({{bindTypeByValueType(attr['value_type'])}})
-                        </md-option>
-
                         <md-option ng-repeat="attr in entityAttrs" ng-value="attr"
                                    class="{{attr.disabled ? 'disabled' : ''}}">
                             <!--{{attr}}-->
                             {{attr.name}} ({{bindTypeByValueType(attr['value_type'])}})
                         </md-option>
                     </md-optgroup>
-                    <!--<md-optgroup label="Specific">-->
-                    <!--<md-option ng-repeat="attr in entityAttrs" ng-value="attr" class="{{attr.disabled ? 'disabled' : ''}}">-->
-                    <!--&lt;!&ndash;{{attr}}&ndash;&gt;-->
-                    <!--{{attr.name}}-->
-                    <!--</md-option>                        -->
-                    <!--</md-optgroup>-->
                     <md-optgroup label="User attributes" class="bold-field-select" data-ng-if="attrs.length">
                         <md-option ng-repeat="attr in attrs" ng-value="attr"
                                    class="{{attr.disabled ? 'disabled' : ''}}">
@@ -71,7 +60,6 @@
                 </md-select>
             </md-input-container>
             <md-input-container class="md-block" flex-gt-sm>
-                <!--<label>Colspan</label>-->
                 <label>Element width</label>
                 <md-select ng-model="item.colspan">
                     <md-option ng-repeat="colspan in getCols()" value="{{colspan}}">

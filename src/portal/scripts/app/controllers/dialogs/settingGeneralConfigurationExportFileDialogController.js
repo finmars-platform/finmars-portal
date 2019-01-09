@@ -43,6 +43,10 @@
                             return false
                         }
 
+                        if (child.hasOwnProperty('scheme_name') && child.scheme_name === '-') {
+                            return false
+                        }
+
                         return true;
 
                     })

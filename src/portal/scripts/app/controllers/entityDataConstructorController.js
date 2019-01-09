@@ -16,10 +16,9 @@
 
     var gridHelperService = require('../services/gridHelperService');
     var routeResolver = require('../services/routeResolverService');
+    var layoutService = require('../services/layoutService');
 
     module.exports = function ($scope, $stateParams, $state, $mdDialog) {
-
-        logService.controller('EntityDataConstructorController', 'initialized');
 
         var vm = this;
         vm.boxColumns = [1, 2, 3, 4, 5, 6];
@@ -27,14 +26,15 @@
         vm.uiIsDefault = false;
 
         vm.attrs = [];
-        vm.baseAttrs = [];
         vm.entityAttrs = [];
         vm.userInputs = [];
 
-        console.log($stateParams);
+        vm.items = [];
 
         vm.entityType = $stateParams.entityType;
         vm.isntanceId = $stateParams.instanceId;
+
+        var choices = metaService.getTypeCaptions();
 
         // weirdo stuff
         // we took edit layout by instance id instead of entity content_type
@@ -43,7 +43,7 @@
 
         if (vm.isntanceId) {
             uiService.getEditLayoutByInstanceId(vm.entityType, vm.isntanceId).then(function (data) {
-                //console.log(data['json_data']);
+
                 if (data) {
                     vm.ui = data;
                 } else {
@@ -56,13 +56,14 @@
                         field.editMode = false;
                     })
                 });
+
                 addRowForTab();
-                //logService.collection('vm tabs', vm.tabs);
+
                 $scope.$apply();
             });
         } else {
             uiService.getEditLayout(vm.entityType).then(function (data) {
-                //console.log(data['json_data']);
+
                 if (data.results.length) {
                     vm.ui = data.results[0];
                 } else {
@@ -75,80 +76,16 @@
                         field.editMode = false;
                     })
                 });
+
                 addRowForTab();
-                //logService.collection('vm tabs', vm.tabs);
+
                 $scope.$apply();
             });
-        }
-
-        if (vm.isntanceId) {
-            if (vm.entityType === 'complex-transaction') {
-                entityResolverService.getByKey('transaction-type', vm.isntanceId).then(function (data) {
-                    var inputs = data.inputs;
-                    inputs.forEach(function (input) {
-                        var input_value_type = input.value_type;
-                        if (input.value_type == 100) {
-                            input_value_type = 'field'
-                        }
-
-                        var contentType;
-
-                        if (input.content_type && input.content_type !== undefined) {
-                            contentType = input.content_type.split('.')[1];
-
-                            if (contentType === 'eventclass') {
-                                contentType = 'event_class';
-                            }
-
-                            if (contentType === 'notificationclass') {
-                                contentType = 'notification_class';
-                            }
-
-                            if (contentType === 'accrualcalculationmodel') {
-                                contentType = 'accrual_calculation_model';
-                            }
-
-                            if (contentType === 'pricingpolicy') {
-                                contentType = 'pricing_policy';
-                            }
-
-                        } else {
-                            contentType = input.name.split(' ').join('_').toLowerCase();
-                        }
-
-                        vm.userInputs.push({
-                            key: contentType,
-                            name: input.name,
-                            verbose_name: input.verbose_name,
-                            content_type: input.content_type,
-                            value_type: input_value_type
-                        });
-
-                    });
-                    $scope.$apply();
-                });
-            }
         }
 
         vm.cancel = function () {
             $state.go('app.data.' + vm.entityType);
         };
-
-        attributeTypeService.getList(vm.entityType).then(function (data) {
-            logService.collection('data', data);
-            vm.attrs = data.results;
-
-            logService.collection('vm attrs', vm.attrs);
-
-            if (metaService.getEntitiesWithoutBaseAttrsList().indexOf(vm.entityType) === -1) {
-                vm.baseAttrs = metaService.getBaseAttrs();
-            }
-            logService.collection('vm.baseAttrs', vm.baseAttrs);
-            vm.entityAttrs = metaService.getEntityAttrs(vm.entityType);
-            logService.collection('vm.entityAttrs', vm.entityAttrs);
-            vm.readyStatus.constructor = true;
-            $scope.$apply();
-        });
 
         vm.checkColspan = function (tab, row, column) {
 
@@ -396,7 +333,7 @@
                 tab.captionName = tab.name;
             }
             if (action === 'back') {
-                console.log('??');
+
                 if (!tab.captionName && tab.name === '') {
                     vm.tabs.splice($index, 1);
                 } else {
@@ -414,10 +351,325 @@
             }
         };
 
-        vm.MABtnVisibility = function (entityType) {
+        vm.attributesAvailable = function (entityType) {
             return metaService.checkRestrictedEntityTypesForAM(entityType);
-        }
+        };
 
+        vm.getItems = function () {
+
+            attributeTypeService.getList(vm.entityType).then(function (data) {
+
+                vm.attrs = data.results;
+                vm.entityAttrs = metaService.getEntityAttrs(vm.entityType);
+                vm.layoutAttrs = layoutService.getLayoutAttrs();
+
+                if (vm.isntanceId && vm.entityType === 'complex-transaction') {
+
+                    entityResolverService.getByKey('transaction-type', vm.isntanceId).then(function (data) {
+
+                        var inputs = data.inputs;
+
+                        inputs.forEach(function (input) {
+
+                            var input_value_type = input.value_type;
+                            if (input.value_type === 100) {
+                                input_value_type = 'field'
+                            }
+
+                            var contentType;
+
+                            if (input.content_type && input.content_type !== undefined) {
+
+                                contentType = input.content_type.split('.')[1];
+
+                                if (contentType === 'eventclass') {
+                                    contentType = 'event_class';
+                                }
+
+                                if (contentType === 'notificationclass') {
+                                    contentType = 'notification_class';
+                                }
+
+                                if (contentType === 'accrualcalculationmodel') {
+                                    contentType = 'accrual_calculation_model';
+                                }
+
+                                if (contentType === 'pricingpolicy') {
+                                    contentType = 'pricing_policy';
+                                }
+
+                            } else {
+
+                                contentType = input.name.split(' ').join('_').toLowerCase();
+
+                            }
+
+                            vm.userInputs.push({
+                                key: contentType,
+                                name: input.name,
+                                verbose_name: input.verbose_name,
+                                content_type: input.content_type,
+                                value_type: input_value_type
+                            });
+
+                        });
+
+                        vm.syncItems();
+
+                        vm.readyStatus.constructor = true;
+
+                        $scope.$apply(function () {
+
+                            setTimeout(function () {
+                                vm.dragAndDrop.init();
+                            }, 500)
+
+                        });
+
+
+                    });
+
+                } else {
+
+                    vm.syncItems();
+
+
+                    vm.readyStatus.constructor = true;
+
+                    $scope.$apply(function () {
+
+                        setTimeout(function () {
+                            vm.dragAndDrop.init();
+                        }, 500)
+
+                    });
+
+                }
+
+            });
+
+        };
+
+        vm.getDrakeContainers = function () {
+
+            var items = [];
+
+            var emptyFieldsElem = document.querySelectorAll('.ec-attr-empty');
+            for (i = 0; i < emptyFieldsElem.length; i = i + 1) {
+                items.push(emptyFieldsElem[i]);
+            }
+
+            var i;
+            var cardsElem = document.querySelectorAll('.form-constructor-draggable-card');
+            for (i = 0; i < cardsElem.length; i = i + 1) {
+                items.push(cardsElem[i]);
+            }
+
+            return items;
+
+        };
+
+        vm.dragAndDrop = {
+
+            drake: null,
+
+            init: function () {
+
+                var items = vm.getDrakeContainers();
+
+                this.drake = dragula(items,
+                    {
+                        accepts: function (el, target, source, sibling) {
+
+                            if (target.classList.contains('.form-constructor-draggable-card')) {
+                                return false;
+                            }
+
+                            return true;
+                        },
+                        copy: true
+                    });
+
+                this.eventListeners();
+            },
+
+            eventListeners: function () {
+                var that = this;
+                this.drake.on('over', function (elem, container, source) {
+                    $(container).addClass('active');
+                    $(container).on('mouseleave', function () {
+                        $(this).removeClass('active');
+                    })
+
+                });
+
+                this.drake.on('out', function (elem, container, source) {
+                    $(container).removeClass('active')
+
+                });
+                this.drake.on('drop', function (elem, target) {
+
+                    console.log('target', target);
+
+                    var entityAttrsKeys = [];
+                    vm.entityAttrs.forEach(function (entityAttr) {
+                        entityAttrsKeys.push(entityAttr.key);
+                    });
+                    var layoutAttrsKeys = [];
+                    vm.layoutAttrs.forEach(function (layoutAttr) {
+                        layoutAttrsKeys.push(layoutAttr.key);
+                    });
+
+                    $(target).removeClass('active');
+                    var name = $(elem).html();
+
+                    if (target) {
+                        var a;
+
+                        var nodes = Array.prototype.slice.call(target.children);
+                        var index = nodes.indexOf(elem);
+
+                        if (target.classList.contains('ec-attr-empty')) {
+
+                            console.log('target.data', target.dataset);
+                            console.log('target.data', elem.dataset);
+
+                            var tabIndex = 0;
+                            var column = parseInt(target.dataset.col, 10);
+                            var row = parseInt(target.dataset.row, 10);
+                            var itemIndex = parseInt(elem.dataset.index, 10);
+
+                            vm.tabs.forEach(function (tab) {
+
+                                if (!tab.hasOwnProperty('editState') || (tab.hasOwnProperty('editState') && tab.editState)) {
+
+                                    tab.layout.fields.forEach(function (field) {
+
+                                        if (field.column === column && field.row === row) {
+
+                                            field.attribute = vm.items[itemIndex];
+                                            field.name = field.attribute.name;
+                                            field.attribute_class = 'userInput';
+                                            field.type = 'field';
+                                            field.colspan = 1;
+
+                                            if (field.attribute.hasOwnProperty('id')) {
+                                                field.attribute_class = 'attr';
+                                                field.id = field.attribute.id;
+                                            }
+
+                                            if (entityAttrsKeys.indexOf(field.attribute.key) !== -1) {
+                                                field.attribute_class = 'entityAttr';
+                                            }
+                                            if (layoutAttrsKeys.indexOf(field.attribute.key) !== -1) {
+                                                field.attribute_class = 'decorationAttr';
+                                            }
+
+
+                                        }
+                                    })
+
+                                }
+
+                            });
+
+                            vm.syncItems();
+
+                            $scope.$apply();
+
+
+                        }
+
+                    }
+
+
+                    $scope.$apply();
+                });
+
+                this.drake.on('dragend', function (el) {
+                    $scope.$apply();
+                    $(el).remove();
+                })
+            },
+
+            destroy: function () {
+                // console.log('this.dragula', this.dragula)
+                this.drake.destroy();
+
+            }
+        };
+
+        vm.syncItems = function () {
+
+            vm.items = [];
+
+            vm.items = vm.items.concat(vm.attrs);
+            vm.items = vm.items.concat(vm.entityAttrs);
+            vm.items = vm.items.concat(vm.userInputs);
+            vm.items = vm.items.concat(vm.layoutAttrs);
+
+            console.log('syncItems.items before', JSON.parse(JSON.stringify(vm.items)));
+
+            vm.items = vm.items.filter(function (item) {
+
+                var result = true;
+
+                vm.tabs.forEach(function (tab) {
+                    tab.layout.fields.forEach(function (field) {
+                        if (field.name === item.name) {
+                            result = false;
+                        }
+                    })
+                });
+
+                return result;
+
+            });
+
+            if (vm.dragAndDrop.drake) {
+
+                setTimeout(function () {
+
+                    vm.dragAndDrop.drake.containers = [];
+                    vm.dragAndDrop.drake.containers = vm.getDrakeContainers();
+
+                }, 500)
+
+
+            }
+
+            console.log('syncItems.items', vm.items);
+
+        };
+
+        vm.getFieldName = function (item) {
+
+            if (item.attribute.hasOwnProperty('verbose_name')) {
+                return item.attribute.verbose_name;
+            }
+
+            return item.attribute.name;
+        };
+
+        vm.getFieldType = function (valueType) {
+
+            var i;
+            for (i = 0; i < choices.length; i = i + 1) {
+                if (valueType === choices[i].value) {
+                    return choices[i]["caption_name"];
+                }
+            }
+
+        };
+
+        vm.init = function () {
+
+            vm.getItems();
+
+
+        };
+
+        vm.init();
     }
 
 }());
