@@ -139,8 +139,26 @@
 
             var promises = [];
 
+            var orderedItems = [];
+
             items.forEach(function (entityItem) {
 
+                if (entityItem.entity === 'transactions.transactiontype') {
+                    orderedItems.push(entityItem);
+                }
+
+            });
+
+            items.forEach(function (entityItem) {
+
+                if (entityItem.entity !== 'transactions.transactiontype') {
+                    orderedItems.push(entityItem);
+                }
+
+            });
+
+
+            orderedItems.forEach(function (entityItem) {
 
                 entityItem.content.forEach(function (item) {
 

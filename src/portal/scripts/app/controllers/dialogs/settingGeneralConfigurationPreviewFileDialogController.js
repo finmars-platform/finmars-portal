@@ -294,7 +294,9 @@
 
                                         resolveRelation(entityItem)
 
-                                    });
+                                    }).catch(function (reason) {
+                                        reject(reason);
+                                    })
 
                                 }));
 
