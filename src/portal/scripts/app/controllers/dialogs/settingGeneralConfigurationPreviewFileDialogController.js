@@ -278,7 +278,7 @@
 
                                         rule.transaction_type = data.id;
 
-                                        rule.fields.forEach(function (field) {
+                                        rule.fields = rule.fields.map(function (field) {
 
                                             data.inputs.forEach(function (input) {
 
@@ -286,8 +286,9 @@
                                                     field.transaction_type_input = input.id;
                                                 }
 
-                                            })
+                                            });
 
+                                            return field;
 
                                         });
 
