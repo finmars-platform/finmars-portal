@@ -29,7 +29,13 @@
 
                 if (data.results.length) {
 
-                    resolve(data.results[0])
+                    data.results.forEach(function (item) {
+
+                        if(item.user_code === user_code) {
+                            resolve(item)
+                        }
+
+                    })
 
                 } else {
 
