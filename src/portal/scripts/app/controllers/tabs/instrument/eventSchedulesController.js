@@ -20,6 +20,8 @@
 
         vm.entity = $scope.$parent.vm.entity;
 
+        var activeItemOriginal = null;
+
         vm.readyStatus = {notificationClasses: false, eventClasses: false};
 
         metaNotificationClassService.getList().then(function (data) {
@@ -87,8 +89,6 @@
             return name;
         };
 
-
-
         vm.newItem = {
             "name": '',
             "description": "",
@@ -106,9 +106,16 @@
 
         vm.editItem = function (item) {
             item.editStatus = true;
+
+            activeItemOriginal = JSON.stringify(item)
         };
 
         vm.saveItem = function (item) {
+
+            if (activeItemOriginal !== JSON.stringify(item)) {
+                item.is_auto_generated = false;
+            }
+
             item.editStatus = false;
         };
 

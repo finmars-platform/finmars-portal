@@ -1,0 +1,56 @@
+<div>
+    <div flex="20">
+        <md-button
+                class="md-icon-button md-raised" data-ng-class="{'ref': toggle}"
+                style="transform: scale(0.7,0.7)" data-ng-click="vm.switchControl()">
+            <span data-ng-if="toggle">R</span>
+            <span data-ng-if="!toggle">I</span>
+        </md-button>
+    </div>
+    <div flex="80">
+        <div data-ng-if="toggle">
+            <md-input-container>
+                <label for="" content-title>Instrument</label>
+                <md-select
+                        data-ng-model="item.instrument_factor_schedule.instrument"
+                        md-on-open="vm.loadRelation('instrument')">
+                    <md-option
+                            data-ng-if="!vm.relationItems['instrument'].length"
+                            ng-value="item.instrument_factor_schedule.instrument_object.id">
+                        {{item.transaction.instrument_object.name}}
+                    </md-option>
+                    <md-option
+                            data-ng-if="vm.relationItems['instrument'].length"
+                            data-ng-repeat="relationItem in vm.relationItems['instrument']"
+                            ng-value="relationItem.id">
+                        {{relationItem.name}}
+                    </md-option>
+                </md-select>
+            </md-input-container>
+        </div>
+        <div data-ng-if="!toggle">
+            <md-input-container>
+                <label for="" content-title>Instrument</label>
+                <md-select
+                        data-ng-model="item.instrument_factor_schedule[vm.resolveInstrumentProp(item, 'instrument_factor_schedule', 'instrument')]">
+                    <md-optgroup label="Inputs">
+                        <md-option
+                                data-ng-click="vm.setItemInstrumentInput(item, 'instrument_factor_schedule', inputItem.name, 'instrument')"
+                                data-ng-repeat="inputItem in vm.findInputs('instrument')"
+                                ng-value="inputItem.name">
+                            {{inputItem.name}}
+                        </md-option>
+                    </md-optgroup>
+                    <md-optgroup label="Phantoms">
+                        <md-option
+                                data-ng-click="vm.setItemInstrumentPhantom(item, 'instrument_factor_schedule', phantomItem.positionOrder, 'instrument')"
+                                data-ng-repeat="phantomItem in vm.findPhantoms()"
+                                ng-value="phantomItem.positionOrder">
+                            {{phantomItem.action_notes}}
+                        </md-option>
+                    </md-optgroup>
+                </md-select>
+            </md-input-container>
+        </div>
+    </div>
+</div>

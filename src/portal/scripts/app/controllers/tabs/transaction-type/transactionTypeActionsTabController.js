@@ -96,6 +96,10 @@
             'instrument_event_schedule_action'
         ];
 
+        vm.checkActionsIsNotNull = function () {
+            return false;
+        };
+
         vm.entity.actions.forEach(function (action) {
 
             var keys;
@@ -129,6 +133,10 @@
 
             item[propertyName][fieldName] = null;
             item[propertyName][fieldName + '_input'] = null;
+
+            if (item[propertyName].hasOwnProperty(fieldName + '_phantom')) {
+                item[propertyName][fieldName + '_phantom'] = null;
+            }
 
             item[propertyName][fieldName + '_toggle'] = !item[propertyName][fieldName + '_toggle'];
 

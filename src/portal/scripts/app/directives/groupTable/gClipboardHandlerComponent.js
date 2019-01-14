@@ -25,7 +25,6 @@
                 if (scope.isReport) {
 
 
-
                 } else {
 
                     var handler = function (event) {
@@ -36,7 +35,7 @@
 
                         console.time('Copying to buffer');
 
-                        var items = evDataHelper.getProjection(scope.evDataService).filter(function (item) {
+                        var items = scope.evDataService.getProjection().filter(function (item) {
                             return item.___is_selected;
                         });
 
@@ -121,6 +120,8 @@
                                 result = result + row;
                             });
                             result = result + '</table';
+
+                            console.log('result len ', result.length);
 
                             if (event.clipboardData) {
                                 event.clipboardData.setData('text/html', result);

@@ -27,7 +27,7 @@
 
         vm.getFile = function () {
 
-            configurationService.getConfigurationData().then(function (data) {
+            configurationService.getMappingData().then(function (data) {
 
                 console.log('configurationService.getConfigurationData', data);
 
@@ -103,65 +103,14 @@
 
         vm.getEntityName = function (item) {
 
-            switch (item.entity) {
-                case 'transactions.transactiontype':
-                    return "Transaction Types";
-                case 'accounts.accounttype':
-                    return "Account Types";
-                case 'instruments.pricingpolicy':
-                    return "Pricing Policy";
-                case 'instruments.instrumenttype':
-                    return "Instrument Types";
-                case 'import.pricingautomatedschedule':
-                    return 'Automated uploads schedule ';
-                case 'ui.editlayout':
-                    return "Input Form";
-                case 'ui.listlayout':
-                    return "Entity viewer layouts";
-                case 'ui.reportlayout':
-                    return "Report builder layouts";
-                case 'csv_import.scheme':
-                    return "Data import from CSV schemes";
-                case 'integrations.instrumentdownloadscheme':
-                    return "Instrument Download Schemes";
-                case 'integrations.pricedownloadscheme':
-                    return "Price Download Schemes";
-                case 'integrations.complextransactionimportscheme':
-                    return "Complex Transaction Import Scheme";
-                case 'obj_attrs.portfolioattributetype':
-                    return "Portfolio Dynamic Attributes";
-                case 'obj_attrs.accountattributetype':
-                    return "Account Dynamic Attributes";
-                case 'obj_attrs.accounttypeattributetype':
-                    return "Account Type Dynamic Attributes";
-                case 'obj_attrs.responsibleattributetype':
-                    return "Responsible Dynamic Attributes";
-                case 'obj_attrs.counterpartyattributetype':
-                    return "Counterparty Dynamic Attributes";
-                case 'obj_attrs.instrumentattributetype':
-                    return "Instrument Dynamic Attributes";
-                case 'obj_attrs.instrumenttypeattributetype':
-                    return "Instrument Type Dynamic Attributes";
-                default:
-                    return "Unknown"
-            }
+            return metaContentTypesService.getEntityNameByContentType(item.entity)
 
         };
 
         vm.getItemName = function (item) {
 
             if (item.hasOwnProperty('user_code')) {
-                var result = item.user_code;
-
-                if (item.hasOwnProperty('scheme_name')) {
-                    result = item.scheme_name;
-                }
-
-                return result;
-            }
-
-            if (item.hasOwnProperty('scheme_name')) {
-                return item.scheme_name;
+                return item.user_code
             }
 
             if (item.hasOwnProperty('name')) {
@@ -170,15 +119,16 @@
                     return item.name + ' (' + metaContentTypesService.getEntityNameByContentType(item.content_type) + ')'
                 }
 
-                if (item.hasOwnProperty('data')) {
-                    return item.name + ' (' + metaContentTypesService.getEntityNameByContentType(item.content_type) + ')'
-                }
 
                 return item.name
             }
 
             if (item.hasOwnProperty('content_type')) {
                 return metaContentTypesService.getEntityNameByContentType(item.content_type)
+            }
+
+            if (item.hasOwnProperty('scheme_name')) {
+                return item.scheme_name;
             }
 
             if (item.hasOwnProperty('last_run_at')) { // import.pricingautomatedschedule
@@ -307,6 +257,7 @@
                         results.push(result)
                     }
 
+
                 });
 
                 vm.file.body = results;
@@ -317,7 +268,7 @@
                 var result = new File([resultFile], {type: 'text/json;charset=utf-8'});
 
                 a.href = URL.createObjectURL(result);
-                a.download = vm.filename ? vm.filename + '.json' : "configuration.json";
+                a.download = vm.filename ? vm.filename + '.json' : "mapping.json";
 
                 resolve(vm.file);
 

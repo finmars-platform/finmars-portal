@@ -153,6 +153,23 @@
 
         };
 
+        vm.openExportMappingManager = function ($event) {
+
+            $mdDialog.show({
+                controller: 'SettingGeneralMappingExportFileDialogController as vm',
+                templateUrl: 'views/dialogs/settings-general-mapping-export-file-dialog-view.html',
+                parent: angular.element(document.body),
+                targetEvent: $event,
+                preserveScope: true,
+                autoWrap: true,
+                skipHide: true,
+
+            })
+
+
+        };
+
+
     }
 
 }());

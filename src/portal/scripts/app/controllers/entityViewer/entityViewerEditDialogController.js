@@ -40,6 +40,8 @@
         vm.editLayoutEntityInstanceId = null;
         vm.editLayoutByEntityInsance = false;
 
+        vm.formIsValid = true;
+
         vm.loadPermissions = function () {
 
             var promises = [];
