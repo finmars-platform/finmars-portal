@@ -41,6 +41,8 @@
                     return "Transaction Types";
                 case 'accounts.accounttype':
                     return "Account Types";
+                case 'instruments.pricingpolicy':
+                    return "Pricing Policy";
                 case 'instruments.instrumenttype':
                     return "Instrument Types";
                 case 'import.pricingautomatedschedule':

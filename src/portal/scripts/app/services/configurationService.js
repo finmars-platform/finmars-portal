@@ -38,9 +38,25 @@
 
     };
 
+    var getMappingData = function () {
+
+        return window.fetch(baseUrl + 'export/mapping/', {
+            method: 'GET',
+            credentials: 'include',
+            headers: {
+                Accept: 'application/json',
+                'Content-type': 'application/json'
+            }
+        }).then(function (data) {
+            return data.json();
+        })
+
+    };
+
     module.exports = {
         exportAll: exportAll,
-        getConfigurationData: getConfigurationData
+        getConfigurationData: getConfigurationData,
+        getMappingData: getMappingData
     }
 
 

@@ -178,6 +178,9 @@
                             case 'accounts.accounttype':
                                 promises.push(entityResolverService.create('account-type', item));
                                 break;
+                            case 'instruments.pricingpolicy':
+                                promises.push(entityResolverService.create('pricing-policy', item));
+                                break;
                             case 'instruments.instrumenttype':
                                 promises.push(entityResolverService.create('instrument-type', item));
                                 break;

@@ -42,8 +42,9 @@ app.run(['$rootScope', function ($rootScope) {
 
     var usersService = require('./app/services/usersService');
 
-
     window.onerror = function (msg, url, line, col, error) {
+
+        console.error(msg);
 
         toastr.error(msg);
 
@@ -207,6 +208,7 @@ app.controller('SettingsGeneralInitConfigurationController', ['$scope', '$mdDial
 app.controller('SettingGeneralConfigurationPreviewFileDialogController', ['$scope', '$mdDialog', 'file', require('./app/controllers/dialogs/settingGeneralConfigurationPreviewFileDialogController')]);
 app.controller('SettingGeneralConfigurationExportFileDialogController', ['$scope', '$mdDialog', require('./app/controllers/dialogs/settingGeneralConfigurationExportFileDialogController')]);
 app.controller('SettingGeneralMappingPreviewFileDialogController', ['$scope', '$mdDialog', 'file', require('./app/controllers/dialogs/settingGeneralMappingPreviewFileDialogController')]);
+app.controller('SettingGeneralMappingExportFileDialogController', ['$scope', '$mdDialog', require('./app/controllers/dialogs/settingGeneralMappingExportFileDialogController')]);
 app.controller('CreateConfigurationDialogController', ['$scope', '$mdDialog', require('./app/controllers/dialogs/createConfigurationDialogController')]);
 app.controller('EditConfigurationDialogController', ['$scope', '$mdDialog', 'item', require('./app/controllers/dialogs/editConfigurationDialogController')]);
 

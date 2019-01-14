@@ -652,9 +652,24 @@
                     tab.layout.fields.forEach(function (field) {
                         if (field.name === item.name) {
                             result = false;
+
+                            if (item.hasOwnProperty('key')) {
+                                if (item.key === 'layoutLine' || item.key === 'layoutLineWithLabel') {
+                                    result = true;
+                                }
+                            }
+
                         }
                     })
                 });
+
+                if (item.key === 'object_permissions_user') {
+                    result = false;
+                }
+
+                if (item.key === 'object_permissions_group') {
+                    result = false;
+                }
 
                 return result;
 

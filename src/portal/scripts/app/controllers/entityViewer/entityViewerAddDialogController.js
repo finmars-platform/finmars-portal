@@ -55,6 +55,8 @@
 
         vm.entityAttrs = metaService.getEntityAttrs(vm.entityType) || [];
 
+        vm.formIsValid = true;
+
         vm.loadPermissions = function () {
 
             var promises = [];

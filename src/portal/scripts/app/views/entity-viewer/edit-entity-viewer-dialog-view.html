@@ -225,7 +225,7 @@
             <md-button class="md-raised" ng-click="vm.cancel()">
                 Cancel
             </md-button>
-            <md-button class="md-raised m-r-24" ng-click="vm.save()">
+            <md-button class="md-raised m-r-24" data-ng-class="{'disabled-btn': !vm.formIsValid}" ng-click="vm.save()">
                 <span data-ng-if="vm.entityType != 'complex-transaction'">Save</span>
                 <span data-ng-if="vm.entityType == 'complex-transaction'">Rebook</span>
             </md-button>
