@@ -122,8 +122,6 @@
                     key = options.groups_types[i];
                     value = options.groups_values[i];
 
-                    console.log('item', item);
-
                     // TODO Integer Group Types are for Attribute Types
                     if (typeof key === 'number') {
 
@@ -133,26 +131,29 @@
 
                     } else {
 
-                        if (item.hasOwnProperty(key)) {
-
-                            if (item[key] === null || item[key] === undefined) {
-                                match = false
-
-                            }
-
-                            if (item[key] !== value) {
-                                match = false;
-                            }
-
-                        } else {
-                            match = false;
-                        }
-
-
                         if (value === '-') {
 
                             if (item[key] !== null && item[key] !== undefined && item[key] !== '-') {
                                 match = false;
+                            }
+
+                        } else {
+
+                            if (!item.hasOwnProperty(key)) {
+                                match = false;
+                            } else {
+
+                                if (item[key] === null || item[key] === undefined) {
+                                    match = false
+
+                                } else {
+
+                                    if (item[key].toString().indexOf(value) === -1) {
+                                        match = false
+                                    }
+
+                                }
+
                             }
 
                         }
@@ -164,8 +165,6 @@
                     }
 
                 }
-
-                console.log('match?', match);
 
                 return match
 
