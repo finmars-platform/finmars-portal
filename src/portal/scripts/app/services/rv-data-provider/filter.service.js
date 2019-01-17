@@ -30,83 +30,81 @@
 
     };
 
+    var getAttributeValue = function (attr, groupType) {
+
+        if (groupType.value_type === 10) {
+
+            return attr.value_string;
+
+        }
+
+        if (groupType.value_type === 20) {
+
+            return attr.value_float;
+
+        }
+
+        if (groupType.value_type === 30) {
+
+            if (attr.classifier_object) {
+                return attr.classifier_object.name;
+            } else {
+                return null;
+            }
+
+        }
+
+        if (groupType.value_type === 40) {
+
+            return attr.value_date;
+
+        }
+
+    };
+
     var getFilterMatchInAttributes = function (item, groupType, key, value) {
+
+        console.log('getFilterMatchInAttributes', item);
 
         var match = false;
 
         if (item.hasOwnProperty(groupType.entity + '_object')) {
 
-            var attrValue = undefined;
+            console.log('item', item.instrument_object.user_code);
+            console.log('key', key);
+            console.log('value', value);
 
-            item[groupType.entity + '_object'].attributes.forEach(function (attr) {
+            for (var i = 0; i < item[groupType.entity + '_object'].attributes.length; i = i + 1) {
+
+                var attr = item[groupType.entity + '_object'].attributes[i];
 
                 if (attr.attribute_type === key) {
 
-                    if (groupType.value_type === 10) {
+                    console.log('attr', attr);
 
-                        attrValue = attr.value_string;
+                    var attrValue = getAttributeValue(attr, groupType);
 
-                        if (attr.value_string && attr.value_string === value) {
+                    console.log('attrValue', attrValue);
+                    console.log('value', value);
 
+                    if (attrValue == null) {
+
+                        if (value === '-') {
                             match = true;
+                        }
 
+                    } else {
+
+                        if (attrValue === value) {
+                            match = true;
                         }
 
                     }
 
-                    if (groupType.value_type === 20) {
-
-                        attrValue = attr.value_float;
-
-                        if (attr.value_float && attr.value_float.toString() === value.toString()) {
-
-                            match = true;
-
-                        }
-
-                    }
-
-                    if (groupType.value_type === 30) {
-
-                        if (attrValue = attr.classifier_object) {
-                            attrValue = attr.classifier_object.name;
-                        } else {
-                            attrValue = null;
-                        }
-
-                        if (attr.classifier_object && attr.classifier_object.name === value) {
-                            match = true;
-                            attrValue = attr.classifier_object.name;
-                        }
-
-                    }
-
-                    if (groupType.value_type === 40) {
-
-                        attrValue = attr.value_date;
-
-                        if (attr.value_date && attr.value_date === value) {
-                            match = true;
-
-                        }
-
-                    }
+                    break;
 
                 }
 
-            });
-
-            if (value === '-') {
-
-                console.log('groupType.value_type', groupType);
-                console.log('item', item);
-                console.log('value', value);
-                console.log('attrValue', attrValue);
-
-            }
-
-            if (value === '-' && attrValue === null) {
-                match = true;
             }
 
         } else {
@@ -115,6 +113,8 @@
                 match = true;
             }
         }
+
+        console.log('match', match);
 
         return match;
 
