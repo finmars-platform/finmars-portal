@@ -921,10 +921,6 @@
 
         });
 
-        console.log('calccalculateMarketValueAndExposurePercents.groups', groups);
-        console.log('calccalculateMarketValueAndExposurePercents.groupsTotalMarketValue', groupsTotalMarketValue);
-        console.log('calccalculateMarketValueAndExposurePercents.groupsTotalExposure', groupsTotalExposure);
-
         return items.map(function (item) {
 
             var key = '-';

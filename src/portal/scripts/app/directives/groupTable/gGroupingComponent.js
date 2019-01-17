@@ -268,21 +268,19 @@
 
                 function syncColumnsWithGroups() {
 
-                    // console.log('herere soonq?');
-
                     var columns = scope.evDataService.getColumns();
                     var groups = scope.evDataService.getGroups();
 
-                    // console.log('syncColumnsWithGroups.columns', columns);
-                    // console.log('syncColumnsWithGroups.groups', groups);
-
                     var newColumnList = [];
+
+                    console.log('columns', columns);
 
                     groups.forEach(function (group, index) {
 
                         var column = {
                             name: group.name,
-                            value_type: group.value_type
+                            value_type: group.value_type,
+                            entity: group.entity
                         };
 
                         if (group.hasOwnProperty('key')) {
@@ -332,8 +330,6 @@
                     });
 
                     var resultColumns = newColumnList.concat(oldColumns);
-
-                    console.log('syncColumnsWithGroups.resultColumns', resultColumns);
 
                     scope.evDataService.setColumns(resultColumns);
 

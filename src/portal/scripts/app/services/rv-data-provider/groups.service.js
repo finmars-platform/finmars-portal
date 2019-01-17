@@ -21,18 +21,11 @@
                 if (item.group_id === resultGroup.group_id) {
                     exist = true;
                 }
+
             } else {
 
-                if (item.hasOwnProperty('attr_id') && resultGroup.hasOwnProperty('attr_id')) {
-                    if (item.attr_id === resultGroup.attr_id) {
-                        exist = true;
-                    }
-
-                } else {
-
-                    if (item.group_name === resultGroup.group_name) {
-                        exist = true;
-                    }
+                if (item.group_name === resultGroup.group_name) {
+                    exist = true;
                 }
 
             }
@@ -45,8 +38,8 @@
 
     var getUniqueGroups = function (items, group, groupType) {
 
-        console.log('resultStrings.group', group);
-        console.log('resultStrings.groupType', groupType);
+        // console.log('resultStrings.group', group);
+        // console.log('resultStrings.groupType', groupType);
 
         var result = [];
 
@@ -64,9 +57,8 @@
 
                     item[groupType.entity + '_object'].attributes.forEach(function (attr) {
 
-                        resultGroup.attr_id = attr.id;
-
                         if (attr.attribute_type === group) {
+
 
                             if (groupType.value_type === 20 && attr.value_float) {
 
@@ -117,6 +109,8 @@
                 }
             }
 
+            // console.log('resultGroup', resultGroup);
+
             if (!groupAlreadyExist(resultGroup, result)) {
 
                 result.push(resultGroup)
@@ -124,7 +118,7 @@
 
         });
 
-        console.log('getUniqueGroups.result', result);
+        // console.log('getUniqueGroups.result', result);
 
         return result;
 
@@ -151,9 +145,6 @@
 
             items = filterService.filterByRegularFilters(items, regularFilters);
             items = filterService.filterByGroupsFilters(items, options, groupTypes);
-
-            console.log('options.items', items);
-            console.log('options.groups_types', options.groups_types);
 
             var groupingAreaGroups = entityViewerDataService.getGroups();
 
