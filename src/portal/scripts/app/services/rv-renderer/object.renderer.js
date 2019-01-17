@@ -19,8 +19,6 @@
 
             obj[column.entity + '_object'].attributes.forEach(function (item) {
 
-                console.log('item', item);
-
                 if (item.attribute_type === column.id) {
 
                     if (column.value_type === 20 && item.value_float) {
