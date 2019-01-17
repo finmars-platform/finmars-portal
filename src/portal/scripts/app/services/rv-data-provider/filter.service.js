@@ -44,10 +44,11 @@
 
                     if (groupType.value_type === 10) {
 
-                        if (attr.value_string === value) {
+                        attrValue = attr.value_string;
+
+                        if (attr.value_string && attr.value_string === value) {
 
                             match = true;
-                            attrValue = attr.value_string;
 
                         }
 
@@ -55,10 +56,11 @@
 
                     if (groupType.value_type === 20) {
 
-                        if (attr.value_float.toString() === value.toString()) {
+                        attrValue = attr.value_float;
+
+                        if (attr.value_float && attr.value_float.toString() === value.toString()) {
 
                             match = true;
-                            attrValue = attr.value_float.toString()
 
                         }
 
@@ -66,23 +68,26 @@
 
                     if (groupType.value_type === 30) {
 
+                        if (attrValue = attr.classifier_object) {
+                            attrValue = attr.classifier_object.name;
+                        } else {
+                            attrValue = null;
+                        }
 
-                        if (attr.classifier_object) {
-
-                            if (attr.classifier_object.name === value) {
-                                match = true;
-                                attrValue = attr.classifier_object.name;
-                            }
-
+                        if (attr.classifier_object && attr.classifier_object.name === value) {
+                            match = true;
+                            attrValue = attr.classifier_object.name;
                         }
 
                     }
 
                     if (groupType.value_type === 40) {
 
-                        if (attr.value_date === value) {
+                        attrValue = attr.value_date;
+
+                        if (attr.value_date && attr.value_date === value) {
                             match = true;
-                            attrValue = attr.value_date;
+
                         }
 
                     }
