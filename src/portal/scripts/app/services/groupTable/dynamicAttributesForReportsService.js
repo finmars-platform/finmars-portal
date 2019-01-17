@@ -20,8 +20,6 @@
 
         return Promise.all(promises).then(function (data) {
 
-            console.log('attributes in report', data);
-
             reportAttrs['portfolio'] = data[0].results.map(function(item){
                 item.source_name = item.name;
                 item.entity = 'portfolio';

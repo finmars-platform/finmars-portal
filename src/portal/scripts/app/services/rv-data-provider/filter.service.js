@@ -64,15 +64,9 @@
 
     var getFilterMatchInAttributes = function (item, groupType, key, value) {
 
-        console.log('getFilterMatchInAttributes', item);
-
         var match = false;
 
         if (item.hasOwnProperty(groupType.entity + '_object')) {
-
-            console.log('item', item.instrument_object.user_code);
-            console.log('key', key);
-            console.log('value', value);
 
             for (var i = 0; i < item[groupType.entity + '_object'].attributes.length; i = i + 1) {
 
@@ -80,12 +74,7 @@
 
                 if (attr.attribute_type === key) {
 
-                    console.log('attr', attr);
-
                     var attrValue = getAttributeValue(attr, groupType);
-
-                    console.log('attrValue', attrValue);
-                    console.log('value', value);
 
                     if (attrValue == null) {
 
@@ -101,8 +90,6 @@
 
                     }
 
-                    break;
-
                 }
 
             }
@@ -113,8 +100,6 @@
                 match = true;
             }
         }
-
-        console.log('match', match);
 
         return match;
 

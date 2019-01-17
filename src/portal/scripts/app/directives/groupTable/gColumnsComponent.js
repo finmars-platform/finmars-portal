@@ -465,8 +465,6 @@
 
                         scope.columns = scope.evDataService.getColumns();
 
-                        console.log('gColumnsComponent.columns', scope.columns)
-
                     });
 
                     scope.evEventService.addEventListener(evEvents.GROUPS_LEVEL_UNFOLD, function () {

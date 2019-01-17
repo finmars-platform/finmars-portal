@@ -122,9 +122,6 @@
 
                 reportOptions.items = reportHelper.calculateMarketValueAndExposurePercents(reportOptions.items, reportOptions);
 
-                console.log('reportOptions.items', reportOptions.items);
-
-
                 entityViewerDataService.setReportOptions(reportOptions);
 
                 entityViewerDataService.setStatusData('loaded');
@@ -141,8 +138,6 @@
     };
 
     var getObjects = function (requestParameters, entityViewerDataService, entityViewerEventService) {
-
-        console.log('requestParameters', requestParameters)
 
         requestParameters.status = 'loading';
 
@@ -163,8 +158,6 @@
             objectsService.getList(entityType, options, entityViewerDataService).then(function (data) {
 
                 var groupData = entityViewerDataService.getData(event.___id);
-
-                console.log('groupData', groupData);
 
                 var obj;
 
