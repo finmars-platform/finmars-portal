@@ -215,8 +215,6 @@
                             }
                         });
 
-                        console.log('hererere?', event);
-
                         obj = Object.assign({}, data);
                         obj.group_name = event.groupName ? event.groupName : '-';
                         obj.group_id = event.groupId;

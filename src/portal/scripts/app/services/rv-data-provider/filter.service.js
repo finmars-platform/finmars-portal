@@ -45,21 +45,47 @@
                     if (groupType.value_type === 10) {
 
                         if (attr.value_string === value) {
+
                             match = true;
+
+                        }  else {
+
+                            if (attr.value_string !== null) {
+                                attributeTypeExists = true;
+                            }
+
                         }
 
                     }
 
                     if (groupType.value_type === 20) {
                         if (attr.value_float.toString() === value.toString()) {
+
                             match = true;
+
+                        } else {
+
+                            if (attr.value_float !== null) {
+                                attributeTypeExists = true;
+                            }
+
                         }
                     }
 
                     if (groupType.value_type === 30) {
 
-                        if (attr.classifier_object && attr.classifier_object.name === value) {
-                            match = true;
+                        if (attr.classifier_object) {
+
+                            if (attr.classifier_object.name === value) {
+                                match = true;
+                            } else {
+
+                                if (attr.classifier !== null) {
+                                    attributeTypeExists = true;
+                                }
+
+                            }
+
                         }
 
                     }
@@ -67,14 +93,26 @@
                     if (groupType.value_type === 40) {
                         if (attr.value_date === value) {
                             match = true;
+                        } else {
+                            if (attr.value_date !== null) {
+                                attributeTypeExists = true;
+                            }
+
                         }
                     }
-
-                    attributeTypeExists = true;
 
                 }
 
             });
+
+            if (value == '-') {
+
+                console.log('groupType.value_type', groupType);
+                console.log('item', item);
+                console.log('value', value);
+                console.log('attributeTypeExists', attributeTypeExists);
+
+            }
 
             if (value === '-' && !attributeTypeExists) {
                 match = true;
