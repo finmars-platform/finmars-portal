@@ -142,7 +142,7 @@
 
     var getObjects = function (requestParameters, entityViewerDataService, entityViewerEventService) {
 
-        console.log('requestParameters', requestParameters);
+        console.log('requestParameters', requestParameters)
 
         requestParameters.status = 'loading';
 
@@ -422,6 +422,8 @@
     };
 
     var createRequestParameters = function (item, level, evDataService, evEventService) {
+
+        // console.log('createRequestParameters.item', item);
 
         var groups = evDataService.getGroups();
 

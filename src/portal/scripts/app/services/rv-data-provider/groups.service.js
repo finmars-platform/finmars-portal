@@ -23,8 +23,16 @@
                 }
             } else {
 
-                if (item.group_name === resultGroup.group_name) {
-                    exist = true;
+                if (item.hasOwnProperty('attr_id') && resultGroup.hasOwnProperty('attr_id')) {
+                    if (item.attr_id === resultGroup.attr_id) {
+                        exist = true;
+                    }
+
+                } else {
+
+                    if (item.group_name === resultGroup.group_name) {
+                        exist = true;
+                    }
                 }
 
             }
@@ -55,6 +63,8 @@
                 if (item.hasOwnProperty(groupType.entity + '_object')) {
 
                     item[groupType.entity + '_object'].attributes.forEach(function (attr) {
+
+                        resultGroup.attr_id = attr.id;
 
                         if (attr.attribute_type === group) {
 

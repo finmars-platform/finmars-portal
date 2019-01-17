@@ -33,7 +33,9 @@
                 itemsCache = metaHelper.recursiveDeepCopy(reportOptions.items);
             }
 
-            items = itemsCache.map(function(item){return item});
+            items = itemsCache.map(function (item) {
+                return item
+            });
 
             // items = metaHelper.recursiveDeepCopy(reportOptions.items);
 
@@ -42,6 +44,8 @@
             items = filterService.filterByRegularFilters(items, regularFilters);
 
             items = filterService.filterByGroupsFilters(items, options, groupTypes);
+
+            console.log('object service', items);
 
             if (options.ordering) {
                 items = sortService.sortItems(items, options.ordering);
