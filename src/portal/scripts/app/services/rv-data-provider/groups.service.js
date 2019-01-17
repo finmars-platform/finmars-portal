@@ -55,10 +55,12 @@
 
                 if (item.hasOwnProperty(groupType.entity + '_object')) {
 
+                    console.log('item', item);
+                    console.log('item', item.item_type);
+
                     item[groupType.entity + '_object'].attributes.forEach(function (attr) {
 
                         if (attr.attribute_type === group) {
-
 
                             if (groupType.value_type === 20 && attr.value_float) {
 
@@ -86,7 +88,6 @@
                         }
 
                     })
-
 
                 }
 
@@ -152,9 +153,12 @@
 
             var group = options.groups_types[options.groups_types.length - 1];
 
+            // console.log('items', items);
+
             var groups = getUniqueGroups(items, group, groupType);
 
-            console.log('groups', groups);
+            // console.log('level', options.groups_types.length - 1);
+            // console.log('groups', groups);
 
             if (options.groups_order === 'desc') {
                 groups = sortService.sortItems(groups, '-group_name');
