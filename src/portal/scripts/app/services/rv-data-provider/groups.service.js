@@ -142,6 +142,7 @@
             items = filterService.filterByRegularFilters(items, regularFilters);
             items = filterService.filterByGroupsFilters(items, options, groupTypes);
 
+            console.log('options.items', items);
             console.log('options.groups_types', options.groups_types);
 
             var groupingAreaGroups = entityViewerDataService.getGroups();
