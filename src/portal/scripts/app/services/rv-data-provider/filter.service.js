@@ -73,10 +73,11 @@
 
             })
 
-        }
+        } else {
 
-        if (value === '-') {
-            match = true;
+            if (value === '-') {
+                match = true;
+            }
         }
 
         return match;

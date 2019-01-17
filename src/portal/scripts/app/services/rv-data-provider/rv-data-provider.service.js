@@ -425,8 +425,6 @@
 
     var createRequestParameters = function (item, level, evDataService, evEventService) {
 
-        console.log('createRequestParameters.item', item);
-
         var groups = evDataService.getGroups();
 
         var requestParameters;
