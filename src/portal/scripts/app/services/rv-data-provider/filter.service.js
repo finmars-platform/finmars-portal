@@ -68,9 +68,7 @@
 
         if (item.hasOwnProperty(groupType.entity + '_object')) {
 
-            for (var i = 0; i < item[groupType.entity + '_object'].attributes.length; i = i + 1) {
-
-                var attr = item[groupType.entity + '_object'].attributes[i];
+            item[groupType.entity + '_object'].attributes.forEach(function (attr) {
 
                 if (attr.attribute_type === key) {
 
@@ -80,10 +78,16 @@
                         match = true;
                     }
 
+                    if (value === '-') {
+                        if (attrValue === null || attrValue === undefined || attrValue === '-') {
+                            match = true;
+                        }
+                    }
 
                 }
 
-            }
+            })
+
 
         } else {
 
@@ -107,6 +111,8 @@
             var key;
             var value;
 
+            console.log('filterByGroupsFilters.options', JSON.parse(JSON.stringify(options)));
+
             items = items.filter(function (item) {
 
                 match = true;
@@ -115,6 +121,8 @@
 
                     key = options.groups_types[i];
                     value = options.groups_values[i];
+
+                    console.log('item', item);
 
                     // TODO Integer Group Types are for Attribute Types
                     if (typeof key === 'number') {
@@ -125,6 +133,21 @@
 
                     } else {
 
+                        if (item.hasOwnProperty(key)) {
+
+                            if (item[key] === null || item[key] === undefined) {
+                                match = false
+
+                            }
+
+                            if (item[key] !== value) {
+                                match = false;
+                            }
+
+                        } else {
+                            match = false;
+                        }
+
 
                         if (value === '-') {
 
@@ -132,36 +155,25 @@
                                 match = false;
                             }
 
-                        } else {
+                        }
 
-                            if (!item.hasOwnProperty(key)) {
-                                match = false;
-                            } else {
-
-                                if (item[key] === null || item[key] === undefined) {
-                                    match = false
-
-                                } else {
-
-                                    if (item[key].toString().indexOf(value) === -1) {
-                                        match = false
-                                    }
-
-                                }
-
-                            }
-
+                        if (match === false) {
+                            break;
                         }
 
                     }
 
                 }
 
+                console.log('match?', match);
+
                 return match
 
             });
 
         }
+
+        console.log('filterByGroupsFilters.items', JSON.parse(JSON.stringify(items)));
 
         return items;
 

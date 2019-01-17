@@ -870,10 +870,6 @@
 
     function calculateMarketValueAndExposurePercents(items, reportOptions) {
 
-        console.log('calculateMarketValueAndExposurePercents reportOptions', reportOptions);
-        console.log('calculateMarketValueAndExposurePercents items', items);
-
-        console.log('calculationGroup', reportOptions.calculationGroup);
 
         var groups = {};
 
