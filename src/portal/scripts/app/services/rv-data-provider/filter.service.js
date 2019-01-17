@@ -36,7 +36,7 @@
 
         if (item.hasOwnProperty(groupType.entity + '_object')) {
 
-            var attributeTypeExists = false;
+            var attrValue = undefined;
 
             item[groupType.entity + '_object'].attributes.forEach(function (attr) {
 
@@ -47,43 +47,31 @@
                         if (attr.value_string === value) {
 
                             match = true;
-
-                        }  else {
-
-                            if (attr.value_string !== null) {
-                                attributeTypeExists = true;
-                            }
+                            attrValue = attr.value_string;
 
                         }
 
                     }
 
                     if (groupType.value_type === 20) {
+
                         if (attr.value_float.toString() === value.toString()) {
 
                             match = true;
-
-                        } else {
-
-                            if (attr.value_float !== null) {
-                                attributeTypeExists = true;
-                            }
+                            attrValue = attr.value_float.toString()
 
                         }
+
                     }
 
                     if (groupType.value_type === 30) {
+
 
                         if (attr.classifier_object) {
 
                             if (attr.classifier_object.name === value) {
                                 match = true;
-                            } else {
-
-                                if (attr.classifier !== null) {
-                                    attributeTypeExists = true;
-                                }
-
+                                attrValue = attr.classifier_object.name;
                             }
 
                         }
@@ -91,30 +79,28 @@
                     }
 
                     if (groupType.value_type === 40) {
+
                         if (attr.value_date === value) {
                             match = true;
-                        } else {
-                            if (attr.value_date !== null) {
-                                attributeTypeExists = true;
-                            }
-
+                            attrValue = attr.value_date;
                         }
+
                     }
 
                 }
 
             });
 
-            if (value == '-') {
+            if (value === '-') {
 
                 console.log('groupType.value_type', groupType);
                 console.log('item', item);
                 console.log('value', value);
-                console.log('attributeTypeExists', attributeTypeExists);
+                console.log('attrValue', attrValue);
 
             }
 
-            if (value === '-' && !attributeTypeExists) {
+            if (value === '-' && attrValue === null) {
                 match = true;
             }
 

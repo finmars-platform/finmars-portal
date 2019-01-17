@@ -109,8 +109,6 @@
 
         var childrens = evDataHelper.getAllChildrenGroups(parentGroupId, evDataService);
 
-        console.log('foldChildGroups.childrens', childrens);
-
         var item;
 
         childrens.forEach(function (children) {

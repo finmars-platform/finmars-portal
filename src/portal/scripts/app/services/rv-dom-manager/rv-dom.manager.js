@@ -198,8 +198,6 @@
 
                 group.___is_open = true;
 
-                console.log('Unfold Group');
-
                 evDataService.setData(group);
 
                 evDataService.setGroups(groups);
@@ -207,8 +205,6 @@
                 // evEventService.dispatchEvent(evEvents.GROUPS_CHANGE);
 
             }
-
-            console.log('handleFoldButtonClick.clicked group', group);
 
             evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
 
