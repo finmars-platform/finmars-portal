@@ -14,7 +14,6 @@
     var metaService = require('../../services/metaService');
     var attributeTypeService = require('../../services/attributeTypeService');
     var balanceReportCustomAttrService = require('../../services/reports/balanceReportCustomAttrService');
-    var dynamicAttributesForReportsService = require('../../services/groupTable/dynamicAttributesForReportsService');
 
     module.exports = function ($scope, $mdDialog, entityViewerDataService, entityViewerEventService) {
 

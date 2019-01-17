@@ -103,7 +103,9 @@
             interfaceLayout: null,
             requestParameters: {},
             activeRequestParametersId: null,
-            lastClickInfo: {}
+            lastClickInfo: {},
+            flatList: [],
+            projection: []
         };
 
         data.interfaceLayout = getDefaultInterfaceLayout();

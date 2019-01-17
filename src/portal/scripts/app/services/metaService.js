@@ -161,6 +161,123 @@
 
     };
 
+    var getCurrentLocation = function ($state) {
+
+        var result = '';
+
+        if ($state.current.name.indexOf('app.forum') !== -1) {
+            result = 'Forum';
+        }
+
+        if ($state.current.name.indexOf('app.settings') !== -1) {
+            result = 'Settings';
+        }
+
+        switch ($state.current.name) {
+            case 'app.dashboard':
+                result = "Dashboard";
+                break;
+            case 'app.data.portfolio':
+                result = "Portfolio";
+                break;
+            case 'app.data.account':
+                result = "Account";
+                break;
+            case 'app.data.counterparty':
+                result = "Counterparty";
+                break;
+            case 'app.data.counterparty-group':
+                result = "Counterparty group";
+                break;
+            case 'app.data.responsible':
+                result = "Responsible";
+                break;
+            case 'app.data.responsible-group':
+                result = "Responsible group";
+                break;
+            case 'app.data.instrument':
+                result = "Instrument";
+                break;
+            case 'app.data.transaction':
+                result = "Transaction";
+                break;
+            case 'app.data.price-history':
+                result = "Price history";
+                break;
+            case 'app.data.currency-history':
+                result = "Currency history";
+                break;
+            case 'app.data.strategy':
+                result = "Strategy";
+                break;
+            case 'app.data.strategy-subgroup':
+                result = "Strategy subgroup";
+                break;
+            case 'app.data.strategy-group':
+                result = "Strategy group";
+                break;
+            case 'app.data.account-type':
+                result = "Account types";
+                break;
+            case 'app.data.instrument-type':
+                result = "Instrument types";
+                break;
+            case 'app.data.pricing-policy':
+                result = "Pricing policy";
+                break;
+            case 'app.data.transaction-type':
+                result = "Transaction type";
+                break;
+            case 'app.data.transaction-type-group':
+                result = "Transaction type groups";
+                break;
+            case 'app.data.currency':
+                result = "Currency";
+                break;
+            case 'app.data.complex-transaction':
+                result = "Transaction";
+                break;
+            case 'app.data.tag':
+                result = "Tags";
+                break;
+            case 'app.reports.balance-report':
+                result = "Balance report";
+                break;
+            case 'app.reports.pnl-report':
+                result = "P&L report";
+                break;
+            case 'app.reports.transaction-report':
+                result = "Transaction report";
+                break;
+            case 'app.reports.cash-flow-projection-report':
+                result = "Cash flow projection report";
+                break;
+            case 'app.reports.performance-report':
+                result = "Performance report";
+                break;
+            case 'app.actions':
+                result = 'Actions';
+                break;
+            case 'app.system.notifications':
+                break;
+            case 'app.system.transactions':
+                result = 'Audit transactions';
+                break;
+            case 'app.system.instruments':
+                result = 'Audit instruments';
+                break;
+            case 'app.settings.users-groups':
+                result = 'Users & Groups';
+                break;
+            default:
+                result = '';
+                break;
+        }
+
+        return result;
+
+    };
+
     module.exports = {
         isReport: isReport,
         getMenu: getMenu,
@@ -177,7 +294,8 @@
         getEntityTabs: getEntityTabs,
         getEntitiesWithSimpleFields: getEntitiesWithSimpleFields,
         checkRestrictedEntityTypesForAM: checkRestrictedEntityTypesForAM,
-        getFieldsWithTagGrouping: getFieldsWithTagGrouping
+        getFieldsWithTagGrouping: getFieldsWithTagGrouping,
+        getCurrentLocation: getCurrentLocation
     }
 
 }());

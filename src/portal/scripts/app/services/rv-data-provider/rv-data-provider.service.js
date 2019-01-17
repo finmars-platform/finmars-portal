@@ -142,6 +142,8 @@
 
     var getObjects = function (requestParameters, entityViewerDataService, entityViewerEventService) {
 
+        console.log('requestParameters', requestParameters);
+
         requestParameters.status = 'loading';
 
         entityViewerDataService.setRequestParameters(requestParameters);
@@ -153,21 +155,16 @@
             var options = requestParameters.body;
             var event = requestParameters.event;
 
-            var page = new Number(options.page) - 1;
-            // var pagination = entityViewerDataService.getPagination();
+            var page = parseInt(options.page.toString(), 10) - 1;
             var step = 40;
             var i;
 
-            // console.log('getObjects.options', options);
-            //
-            // console.log('from ', page * step);
-            // console.log('to ', (page + 1) * step);
-            // console.log('step ', step);
-            // console.log('page', page);
 
             objectsService.getList(entityType, options, entityViewerDataService).then(function (data) {
 
                 var groupData = entityViewerDataService.getData(event.___id);
+
+                console.log('groupData', groupData);
 
                 var obj;
 
@@ -194,6 +191,7 @@
                         obj = Object.assign({}, groupData);
 
                         obj.group_name = groupData.group_name ? groupData.group_name : '-';
+                        obj.group_id = groupData.id ? groupData.id : null;
 
                         obj.count = data.count;
                         obj.next = data.next;
@@ -216,6 +214,8 @@
                                 parentItemIsFirst = item.___is_first
                             }
                         });
+
+                        console.log('hererere?', event);
 
                         obj = Object.assign({}, data);
                         obj.group_name = event.groupName ? event.groupName : '-';
@@ -425,7 +425,7 @@
 
     var createRequestParameters = function (item, level, evDataService, evEventService) {
 
-        // console.log('createRequestParameters.item', item);
+        console.log('createRequestParameters.item', item);
 
         var groups = evDataService.getGroups();
 

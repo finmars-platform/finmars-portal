@@ -167,14 +167,14 @@
 
             vm.allocationAttrs = metaService.getEntityAttrs('instrument').map(function (item) {
                 item.name = 'Allocation.' + item.name;
-                item.attribute_entity = 'instrument';
+                item.entity = 'instrument';
                 item.key = 'allocation_object_' + item.key;
                 return item;
             });
 
             vm.instrumentAttrs = metaService.getEntityAttrs('instrument').map(function (item) {
                 item.name = 'Instrument.' + item.name;
-                item.attribute_entity = 'instrument';
+                item.entity = 'instrument';
                 item.key = 'instrument_object_' + item.key;
                 return item;
             });
@@ -187,7 +187,7 @@
 
             vm.accountAttrs = metaService.getEntityAttrs('account').map(function (item) {
                 item.name = 'Account.' + item.name;
-                item.attribute_entity = 'account';
+                item.entity = 'account';
                 item.key = 'account_object_' + item.key;
                 return item;
             });
@@ -200,7 +200,7 @@
 
             vm.portfolioAttrs = metaService.getEntityAttrs('portfolio').map(function (item) {
                 item.name = 'Portfolio.' + item.name;
-                item.attribute_entity = 'portfolio';
+                item.entity = 'portfolio';
                 item.key = 'portfolio_object_' + item.key;
                 return item;
             });

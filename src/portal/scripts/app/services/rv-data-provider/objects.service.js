@@ -37,9 +37,11 @@
 
             // items = metaHelper.recursiveDeepCopy(reportOptions.items);
 
+            var groupTypes = entityViewerDataService.getGroups();
+
             items = filterService.filterByRegularFilters(items, regularFilters);
 
-            items = filterService.filterByGroupsFilters(items, options);
+            items = filterService.filterByGroupsFilters(items, options, groupTypes);
 
             if (options.ordering) {
                 items = sortService.sortItems(items, options.ordering);

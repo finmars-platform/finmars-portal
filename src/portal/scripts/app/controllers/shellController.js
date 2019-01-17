@@ -14,6 +14,8 @@
 
     var reportCopyHelper = require('../helpers/reportCopyHelper');
 
+    var metaService = require('../services/metaService');
+
     module.exports = function ($scope, $state, $rootScope, $mdDialog) {
 
         var vm = this;
@@ -21,6 +23,7 @@
         vm.readyStatus = {masters: false};
 
         vm.currentState = 'portal';
+        vm.currentMasterUser = '';
 
         vm.logout = function () {
             console.log('Logged out');
@@ -48,11 +51,28 @@
         //     }, 1000);
         // });
 
-        usersService.getMasterList().then(function (data) {
-            vm.masters = data.results;
-            vm.readyStatus.masters = true;
-            $scope.$apply();
-        });
+        vm.getMasterUsersList = function () {
+
+            usersService.getMasterList().then(function (data) {
+                vm.masters = data.results;
+                vm.readyStatus.masters = true;
+                vm.updateCurrentMasterUser();
+                $scope.$apply();
+            });
+
+        };
+
+        vm.updateCurrentMasterUser = function () {
+
+            vm.masters.forEach(function (item) {
+
+                if (item.is_current) {
+                    vm.currentMasterUser = item;
+                }
+
+            });
+
+        };
 
         usersService.getList().then(function (data) {
             vm.user = data.results[0];
@@ -61,8 +81,15 @@
 
         vm.selectMaster = function (master) {
 
-            usersService.setMasterUser(master.id);
-            $state.go('app.home');
+            usersService.setMasterUser(master.id).then(function (value) {
+
+                $state.go('app.home');
+
+                vm.getMasterUsersList();
+
+
+            })
+
 
         };
 
@@ -81,131 +108,9 @@
         };
 
         vm.currentLocation = function () {
-            vm.currentLocationShowBtns = true;
-
-            if ($state.current.name.indexOf('app.forum') !== -1) {
-
-                vm.currentLocationShowBtns = false;
-
-                return 'FORUM';
-
-            }
-
-            if ($state.current.name.indexOf('app.settings') !== -1) {
-
-                vm.currentLocationShowBtns = false;
-
-                return 'SETTINGS';
-            }
-
-            switch ($state.current.name) {
-                case 'app.dashboard':
-                    return "DASHBOARD";
-                    break;
-                case 'app.data.portfolio':
-                    return "PORTFOLIO";
-                    break;
-                case 'app.data.account':
-                    return "ACCOUNT";
-                    break;
-                case 'app.data.counterparty':
-                    return "COUNTERPARTY";
-                    break;
-                case 'app.data.counterparty-group':
-                    return "COUNTERPARTY GROUP";
-                    break;
-                case 'app.data.responsible':
-                    return "RESPONSIBLE";
-                    break;
-                case 'app.data.responsible-group':
-                    return "RESPONSIBLE GROUP";
-                    break;
-                case 'app.data.instrument':
-                    return "INSTRUMENT";
-                    break;
-                case 'app.data.transaction':
-                    return "TRANSACTION";
-                    break;
-                case 'app.data.price-history':
-                    return "PRICE HISTORY";
-                    break;
-                case 'app.data.currency-history':
-                    return "CURRENCY HISTORY";
-                    break;
-                case 'app.data.strategy':
-                    return "STRATEGY";
-                    break;
-                case 'app.data.strategy-subgroup':
-                    return "STRATEGY SUBGROUP";
-                    break;
-                case 'app.data.strategy-group':
-                    return "STRATEGY GROUP";
-                    break;
-                case 'app.data.account-type':
-                    return "ACCOUNT TYPES";
-                    break;
-                case 'app.data.instrument-type':
-                    return "INSTRUMENT TYPES";
-                    break;
-                case 'app.data.pricing-policy':
-                    return "PRICING POLICY";
-                    break;
-                case 'app.data.transaction-type':
-                    return "TRANSACTION TYPE";
-                    break;
-                case 'app.data.transaction-type-group':
-                    return "TRANSACTION TYPE GROUPS";
-                    break;
-                case 'app.data.currency':
-                    return "CURRENCY";
-                    break;
-                case 'app.data.complex-transaction':
-                    return "Transaction";
-                    break;
-                case 'app.data.tag':
-                    return "Tags";
-                    break;
-                case 'app.reports.balance-report':
-                    return "BALANCE REPORT";
-                    break;
-                case 'app.reports.pnl-report':
-                    return "P&L REPORT";
-                    break;
-                case 'app.reports.transaction-report':
-                    return "TRANSACTION REPORT";
-                    break;
-                case 'app.reports.cash-flow-projection-report':
-                    return "CASH FLOW PROJECTION REPORT";
-                    break;
-                case 'app.reports.performance-report':
-                    return "PERFORMANCE REPORT";
-                    break;
-                case 'app.actions':
-                    vm.currentLocationShowBtns = false;
-                    return 'ACTIONS';
-                    break;
-                case 'app.system.notifications':
-                    vm.currentLocationShowBtns = false;
-                    return 'NOTIFICATIONS';
-                    break;
-                case 'app.system.transactions':
-                    vm.currentLocationShowBtns = false;
-                    return 'AUDIT TRANSACTIONS';
-                    break;
-                case 'app.system.instruments':
-                    vm.currentLocationShowBtns = false;
-                    return 'AUDIT INSTRUMENTS';
-                    break;
-                case 'app.settings.users-groups':
-                    vm.currentLocationShowBtns = false;
-                    return 'USERS & GROUPS';
-                    break;
-                default:
-                    vm.currentLocationShowBtns = false;
-                    return "";
-                    break;
-            }
+            return metaService.getCurrentLocation($state).toUpperCase();
         };
+
 
         vm.openHelp = function ($event) {
 
@@ -308,7 +213,13 @@
                 window.location.pathname = '/';
                 cookiesService.deleteCookie();
             });
-        }
+        };
+
+        vm.init = function () {
+            vm.getMasterUsersList();
+        };
+
+        vm.init();
     }
 
 }());

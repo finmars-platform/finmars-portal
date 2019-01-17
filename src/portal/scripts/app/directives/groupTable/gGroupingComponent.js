@@ -142,26 +142,22 @@
                 scope.removeGroup = function (group) {
 
                     if (group.id) {
-                        scope.grouping = scope.grouping.map(function (item) {
+                        scope.grouping = scope.grouping.filter(function (item) {
                             if (item.id === group.id) {
-                                item = undefined
+                                return false;
                             }
-                            return item
-                        }).filter(function (item) {
-                            return !!item;
-                        });
-                    }
-                    if (group.name) {
-                        scope.grouping = scope.grouping.map(function (item) {
-                            if (item.name === group.name) {
-                                item = undefined
-                            }
-                            return item
-                        }).filter(function (item) {
-                            return !!item;
-                        });
+                            return true
+                        })
                     }
 
+                    if (group.key) {
+                        scope.grouping = scope.grouping.filter(function (item) {
+                            if (item.key === group.key) {
+                                return false;
+                            }
+                            return true
+                        })
+                    }
 
                     scope.evDataService.setGroups(scope.grouping);
                     scope.evEventService.dispatchEvent(evEvents.GROUPS_CHANGE);
@@ -284,11 +280,20 @@
 
                     groups.forEach(function (group, index) {
 
-                        newColumnList.push({
+                        var column = {
                             name: group.name,
-                            key: group.key,
                             value_type: group.value_type
-                        })
+                        };
+
+                        if (group.hasOwnProperty('key')) {
+                            column.key = group.key;
+                        }
+
+                        if (group.hasOwnProperty('id')) {
+                            column.id = group.id;
+                        }
+
+                        newColumnList.push(column);
 
                     });
 
@@ -296,14 +301,19 @@
 
                         columns.forEach(function (column) {
 
-                            if (newColumn.key === column.key) {
+                            if (newColumn.hasOwnProperty('key') && newColumn.key === column.key) {
+                                newColumn.___column_id = column.___column_id;
+                                newColumn.style = column.style;
+                            }
+
+                            if (newColumn.hasOwnProperty('id') && newColumn.id === column.id) {
                                 newColumn.___column_id = column.___column_id;
                                 newColumn.style = column.style;
                             }
 
                         })
 
-                    })
+                    });
 
                     var oldColumns = columns.filter(function (oldColumn) {
 
