@@ -36,6 +36,8 @@
 
         if (item.hasOwnProperty(groupType.entity + '_object')) {
 
+            var attributeTypeExists = false;
+
             item[groupType.entity + '_object'].attributes.forEach(function (attr) {
 
                 if (attr.attribute_type === key) {
@@ -68,10 +70,15 @@
                         }
                     }
 
+                    attributeTypeExists = true;
 
                 }
 
-            })
+            });
+
+            if (value === '-' && !attributeTypeExists) {
+                match = true;
+            }
 
         } else {
 
