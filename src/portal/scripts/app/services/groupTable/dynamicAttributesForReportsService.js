@@ -24,21 +24,21 @@
 
             reportAttrs['portfolio'] = data[0].results.map(function(item){
                 item.source_name = item.name;
-                item.attribute_entity = 'portfolio';
+                item.entity = 'portfolio';
                 item.name = 'Portfolio.' + item.name;
                 return item;
             });
 
             reportAttrs['account'] = data[1].results.map(function(item){
                 item.source_name = item.name;
-                item.attribute_entity = 'account';
+                item.entity = 'account';
                 item.name = 'Account.' + item.name;
                 return item;
             });
 
             reportAttrs['instrument'] = data[2].results.map(function(item){
                 item.source_name = item.name;
-                item.attribute_entity = 'instrument';
+                item.entity = 'instrument';
                 item.name = 'Instrument.' + item.name;
                 return item;
             });

@@ -3,6 +3,9 @@
         <div class="md-toolbar-tools">
             <h2>Configuration import manager</h2>
             <span flex></span>
+            <div data-ng-if="vm.activeItemTotal">
+                {{vm.getCounter()}} / {{vm.activeItemTotal}}
+            </div>
         </div>
     </md-toolbar>
     <md-dialog-content style="background: #fff; padding: 16px">

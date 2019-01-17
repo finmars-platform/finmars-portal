@@ -30,11 +30,64 @@
 
     };
 
-    var filterByGroupsFilters = function (items, options) {
+    var getFilterMatchInAttributes = function (item, groupType, key, value) {
+
+        var match = false;
+
+        if (item.hasOwnProperty(groupType.entity + '_object')) {
+
+            item[groupType.entity + '_object'].attributes.forEach(function (attr) {
+
+                if (attr.attribute_type === key) {
+
+                    if (groupType.value_type === 10) {
+
+                        if (attr.value_string === value) {
+                            match = true;
+                        }
+
+                    }
+
+                    if (groupType.value_type === 20) {
+                        if (attr.value_float.toString() === value.toString()) {
+                            match = true;
+                        }
+                    }
+
+                    if (groupType.value_type === 30) {
+
+                        if (attr.classifier_object && attr.classifier_object.name === value) {
+                            match = true;
+                        }
+
+                    }
+
+                    if (groupType.value_type === 40) {
+                        if (attr.value_date === value) {
+                            match = true;
+                        }
+                    }
+
+
+                }
+
+            })
+
+        }
+
+        if (value === '-') {
+            match = true;
+        }
+
+        return match;
+
+    };
+
+    var filterByGroupsFilters = function (items, options, groupTypes) {
 
         var i;
 
-        if (options.groups_values.length) {
+        if (groupTypes.length && options.groups_values.length) {
 
             var match;
 
@@ -50,25 +103,37 @@
                     key = options.groups_types[i];
                     value = options.groups_values[i];
 
-                    if (value === '-') {
+                    // TODO Integer Group Types are for Attribute Types
+                    if (typeof key === 'number') {
 
-                        if (item[key] !== null && item[key] !== undefined && item[key] !== '-') {
-                            match = false;
-                        }
+                        var groupType = groupTypes[i];
+
+                        match = getFilterMatchInAttributes(item, groupType, key, value);
 
                     } else {
 
-                        if (!item.hasOwnProperty(key)) {
-                            match = false;
+
+                        if (value === '-') {
+
+                            if (item[key] !== null && item[key] !== undefined && item[key] !== '-') {
+                                match = false;
+                            }
+
                         } else {
 
-                            if (item[key] === null || item[key] === undefined) {
-                                match = false
-
+                            if (!item.hasOwnProperty(key)) {
+                                match = false;
                             } else {
 
-                                if (item[key].toString().indexOf(value) === -1) {
+                                if (item[key] === null || item[key] === undefined) {
                                     match = false
+
+                                } else {
+
+                                    if (item[key].toString().indexOf(value) === -1) {
+                                        match = false
+                                    }
+
                                 }
 
                             }

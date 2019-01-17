@@ -15,9 +15,11 @@
             'numeric_result': null
         };
 
-        if (column.id && obj.attributes) {
+        if (column.id && obj[column.entity + '_object']) {
 
-            obj.attributes.forEach(function (item) {
+            obj[column.entity + '_object'].attributes.forEach(function (item) {
+
+                console.log('item', item);
 
                 if (item.attribute_type === column.id) {
 
@@ -49,6 +51,7 @@
             });
 
         }
+
 
         return result;
 

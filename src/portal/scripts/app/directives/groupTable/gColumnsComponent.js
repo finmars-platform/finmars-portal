@@ -423,28 +423,12 @@
                 };
 
                 scope.removeColumn = function (column) {
-                    if (column.id) {
-                        scope.columns = scope.columns.map(function (item) {
-                            if (item.id === column.id || item.key === column.key) {
-                                item = undefined
-                            }
-                            return item
-                        }).filter(function (item) {
-                            return !!item;
-                        });
-                    } else {
-                        if (column.key) {
-                            scope.columns = scope.columns.map(function (item) {
-                                if (item.key === column.key) {
-                                    return undefined
-                                }
-                                return item
-                            }).filter(function (item) {
-                                return !!item;
-                            });
-                        }
 
-                    }
+                    scope.columns = scope.columns.filter(function (item) {
+
+                        return column.___column_id !== item.___column_id;
+
+                    });
 
                     scope.evDataService.setColumns(scope.columns);
                     scope.evEventService.dispatchEvent(evEvents.COLUMNS_CHANGE);

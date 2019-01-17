@@ -14,7 +14,6 @@
     var metaService = require('../../services/metaService');
     var attributeTypeService = require('../../services/attributeTypeService');
     var balanceReportCustomAttrService = require('../../services/reports/balanceReportCustomAttrService');
-    var dynamicAttributesForReportsService = require('../../services/groupTable/dynamicAttributesForReportsService');
 
     var evDataHelper = require('../../helpers/ev-data.helper');
 
@@ -209,28 +208,28 @@
 
             vm.portfolioAttrs = metaService.getEntityAttrs('portfolio').map(function (item) {
                 item.name = 'Portfolio.' + item.name;
-                item.attribute_entity = 'portfolio';
+                item.entity = 'portfolio';
                 item.key = 'portfolio_object_' + item.key;
                 return item;
             });
 
             vm.instrumentAttrs = metaService.getEntityAttrs('instrument').map(function (item) {
                 item.name = 'Instrument.' + item.name;
-                item.attribute_entity = 'instrument';
+                item.entity = 'instrument';
                 item.key = 'instrument_object_' + item.key;
                 return item;
             });
 
             vm.responsibleAttrs = metaService.getEntityAttrs('responsible').map(function (item) {
                 item.name = 'Responsible.' + item.name;
-                item.attribute_entity = 'responsible';
+                item.entity = 'responsible';
                 item.key = 'responsible_object_' + item.key;
                 return item;
             });
 
             vm.counterpartyAttrs = metaService.getEntityAttrs('counterparty').map(function (item) {
                 item.name = 'Counterparty.' + item.name;
-                item.attribute_entity = 'counterparty';
+                item.entity = 'counterparty';
                 item.key = 'counterparty_object_' + item.key;
                 return item;
             });
@@ -240,21 +239,21 @@
 
             vm.linkedInstrumentAttrs = metaService.getEntityAttrs('instrument').map(function (item) {
                 item.name = 'Linked instrument.' + item.name;
-                item.attribute_entity = 'instrument';
+                item.entity = 'instrument';
                 item.key = 'linked_instrument_object_' + item.key;
                 return item;
             });
 
             vm.allocationBalanceAttrs = metaService.getEntityAttrs('instrument').map(function (item) {
                 item.name = 'Allocation balance.' + item.name;
-                item.attribute_entity = 'instrument';
+                item.entity = 'instrument';
                 item.key = 'allocation_balance_object_' + item.key;
                 return item;
             });
 
             vm.allocationPlAttrs = metaService.getEntityAttrs('instrument').map(function (item) {
                 item.name = 'Allocation P&L.' + item.name;
-                item.attribute_entity = 'instrument';
+                item.entity = 'instrument';
                 item.key = 'allocation_pl_object_' + item.key;
                 return item;
             });
@@ -263,14 +262,14 @@
 
             vm.transactionCurrencyAttrs = metaService.getEntityAttrs('currency').map(function (item) {
                 item.name = 'Transaction currency.' + item.name;
-                item.attribute_entity = 'currency';
+                item.entity = 'currency';
                 item.key = 'transaction_currency_object_' + item.key;
                 return item;
             });
 
             vm.settlementCurrencyAttrs = metaService.getEntityAttrs('currency').map(function (item) {
                 item.name = 'Settlement currency.' + item.name;
-                item.attribute_entity = 'currency';
+                item.entity = 'currency';
                 item.key = 'settlement_currency_object_' + item.key;
                 return item;
             });
@@ -280,21 +279,21 @@
 
             vm.accountPositionAttrs = metaService.getEntityAttrs('account').map(function (item) {
                 item.name = 'Account Position.' + item.name;
-                item.attribute_entity = 'account';
+                item.entity = 'account';
                 item.key = 'account_position_object_' + item.key;
                 return item;
             });
 
             vm.accountCashAttrs = metaService.getEntityAttrs('account').map(function (item) {
                 item.name = 'Account Cash.' + item.name;
-                item.attribute_entity = 'account';
+                item.entity = 'account';
                 item.key = 'account_cash_object_' + item.key;
                 return item;
             });
 
             vm.accountInterimAttrs = metaService.getEntityAttrs('account').map(function (item) {
                 item.name = 'Account interim.' + item.name;
-                item.attribute_entity = 'account';
+                item.entity = 'account';
                 item.key = 'account_interim_object_' + item.key;
                 return item;
             });

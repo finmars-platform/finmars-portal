@@ -35,9 +35,10 @@
         return exist;
     }
 
-    var getUniqueGroups = function (items, group) {
+    var getUniqueGroups = function (items, group, groupType) {
 
-        // console.log('resultStrings.group', group);
+        console.log('resultStrings.group', group);
+        console.log('resultStrings.groupType', groupType);
 
         var result = [];
 
@@ -49,20 +50,61 @@
                 group_name: null
             };
 
-            if (keyIsEntityField(group)) {
-                resultGroup.group_id = item[group];
-                resultGroup.group_name = item[group + '_object_user_code'];
-            } else {
+            if (groupType.hasOwnProperty('id')) {
 
-                if (item.hasOwnProperty(group) &&
-                    item[group] !== null &&
-                    item[group] !== undefined &&
-                    item[group] !== '-') {
+                if (item.hasOwnProperty(groupType.entity + '_object')) {
 
-                    resultGroup.group_name = item[group].toString();
+                    item[groupType.entity + '_object'].attributes.forEach(function (attr) {
+
+                        if (attr.attribute_type === group) {
+
+                            if (groupType.value_type === 20 && attr.value_float) {
+
+                                resultGroup.group_name = attr.value_float.toString();
+
+                            }
+
+                            if (groupType.value_type === 10 && attr.value_string) {
+
+                                resultGroup.group_name = attr.value_string;
+
+                            }
+
+                            if (groupType.value_type === 30 && attr.classifier_object) {
+
+                                resultGroup.group_name = attr.classifier_object.name;
+                            }
+
+                            if (groupType.value_type === 40 && attr.value_date) {
+
+                                resultGroup.group_name = attr.value_date;
+
+                            }
+
+                        }
+
+                    })
+
 
                 }
 
+            } else {
+
+                if (keyIsEntityField(group)) {
+                    resultGroup.group_id = item[group];
+                    resultGroup.group_name = item[group + '_object_user_code'];
+                } else {
+
+                    if (item.hasOwnProperty(group) &&
+                        item[group] !== null &&
+                        item[group] !== undefined &&
+                        item[group] !== '-') {
+
+                        resultGroup.group_name = item[group].toString();
+
+                    }
+
+                }
             }
 
             if (!groupAlreadyExist(resultGroup, result)) {
@@ -72,7 +114,7 @@
 
         });
 
-        // console.log('getUniqueGroups.result', result);
+        console.log('getUniqueGroups.result', result);
 
         return result;
 
@@ -95,12 +137,22 @@
 
             var items = reportOptions.items.concat();
 
+            var groupTypes = entityViewerDataService.getGroups();
+
             items = filterService.filterByRegularFilters(items, regularFilters);
-            items = filterService.filterByGroupsFilters(items, options);
+            items = filterService.filterByGroupsFilters(items, options, groupTypes);
+
+            console.log('options.groups_types', options.groups_types);
+
+            var groupingAreaGroups = entityViewerDataService.getGroups();
+
+            var groupType = groupingAreaGroups[options.groups_types.length - 1];
 
             var group = options.groups_types[options.groups_types.length - 1];
 
-            var groups = getUniqueGroups(items, group);
+            var groups = getUniqueGroups(items, group, groupType);
+
+            console.log('groups', groups);
 
             if (options.groups_order === 'desc') {
                 groups = sortService.sortItems(groups, '-group_name');
@@ -110,10 +162,6 @@
 
             result.count = groups.length;
             result.results = groups;
-
-            // console.log('rv-data-provider-groups-service.getList.options', options);
-            // console.log('rv-data-provider-groups-service.getList.entityType', entityType);
-            // console.log('rv-data-provider-groups-service.getList.result', result);
 
             resolve(result)
 

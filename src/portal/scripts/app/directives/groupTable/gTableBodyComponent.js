@@ -168,12 +168,18 @@
 
                 window.addEventListener('resize', function () {
 
-                    if (isReport) {
-                        rvDomManager.calculateScroll(elements, scope.evDataService);
-                        rvRenderer.render(contentElem, projection, scope.evDataService, scope.evEventService);
-                    } else {
-                        evDomManager.calculateScroll(elements, scope.evDataService);
-                        evRenderer.render(contentElem, projection, scope.evDataService, scope.evEventService);
+                    console.log('projection', projection);
+
+                    if (projection) {
+
+                        if (isReport) {
+                            rvDomManager.calculateScroll(elements, scope.evDataService);
+                            rvRenderer.render(contentElem, projection, scope.evDataService, scope.evEventService);
+                        } else {
+                            evDomManager.calculateScroll(elements, scope.evDataService);
+                            evRenderer.render(contentElem, projection, scope.evDataService, scope.evEventService);
+                        }
+
                     }
 
                 })

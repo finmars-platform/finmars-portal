@@ -36,43 +36,46 @@ app.config(['$mdDateLocaleProvider', function ($mdDateLocaleProvider) {
     };
 }]);
 
-app.run(['$rootScope', function ($rootScope) {
+var metaService = require('./app/services/metaService');
+
+app.run(['$rootScope', '$transitions', '$state', function ($rootScope, $transitions, $state) {
 
     localStorage.setItem('entityIsChanged', false);
 
-    var usersService = require('./app/services/usersService');
+    document.title = metaService.getCurrentLocation($state);
 
-    window.onerror = function (msg, url, line, col, error) {
-
-        console.error(msg);
-
-        toastr.error(msg);
-
-        return true;
-    };
+    // window.onerror = function (msg, url, line, col, error) {
+    //
+    //     console.trace(msg);
+    //
+    //     toastr.error(msg);
+    //
+    //     return false;
+    // };
 
     window.addEventListener('error', function (e) {
         toastr.error(e.error);
     });
 
-    $rootScope.$on('$stateChangeStart', function (event) {
+    $transitions.onSuccess({}, function (trans) {
+        console.log('transitions?');
 
-        //usersService.ping().then(function (data) {
-        //
-        //    console.log('CHECK AUTH', data);
-        //
-        //    if (data.is_authenticated == false) {
-        //        event.preventDefault();
-        //        //window.location = '/';
-        //    }
-        //
-        //});
+        var location = metaService.getCurrentLocation($state);
 
+        var title = 'Finmars';
+
+        if (location !== '') {
+            title = title + ' - ' + location;
+        }
+
+        document.title = title;
 
         setTimeout(function () {
             $(window).trigger('resize');
         }, 300);
-    })
+
+    });
+
 }]);
 
 

@@ -38,6 +38,52 @@
 
     };
 
+    var getDynamicAttributeValue = function (obj, column) {
+
+        var result = {
+            'html_result': '',
+            'numeric_result': null
+        };
+
+        if (column.id && obj[column.entity + '_object']) {
+
+            obj[column.entity + '_object'].attributes.forEach(function (item) {
+
+                if (item.attribute_type === column.id) {
+
+                    if (column.value_type === 20 && item.value_float) {
+
+                        result.html_result = item.value_float.toString();
+                        result.numeric_result = item.value_float;
+
+                    }
+
+                    if (column.value_type === 10 && item.value_string) {
+
+                        result.html_result = item.value_string;
+
+                    }
+
+                    if (column.value_type === 30 && item.classifier_object) {
+
+                        result.html_result = item.classifier_object.name;
+                    }
+
+                    if (column.value_type === 40 && item.value_date) {
+
+                        result.html_result = item.value_date;
+
+                    }
+                }
+
+            });
+
+        }
+
+        return result;
+
+    };
+
     var getValue = function (evDataService, obj, column, columnNumber) {
 
         var result = {
@@ -144,6 +190,9 @@
                 if (obj.hasOwnProperty(column.key)) {
                     result.html_result = '<b>' + renderHelper.formatValue(obj, column) + '</b>';
                     result.numeric_result = obj[column.key];
+                } else {
+
+                    result = getDynamicAttributeValue(obj, column);
                 }
 
             }

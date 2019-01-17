@@ -439,7 +439,7 @@
 
             console.timeEnd("Calculating blankline");
 
-            // console.log('data', data);
+            console.log('data', data);
 
         } else {
             data = JSON.parse(JSON.stringify(evDataService.getData()));

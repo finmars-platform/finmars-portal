@@ -500,6 +500,12 @@
 
                     var obj = evDataHelper.getObject(objectId, parentGroupHashId, evDataService);
 
+                    if (!obj) {
+                        obj = {}
+                    }
+
+                    obj.event = event;
+
                     evDataService.setActiveObject(obj);
                     evDataService.setActiveObjectAction(dropdownAction);
 
