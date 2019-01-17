@@ -46,9 +46,9 @@
 
             items = filterService.filterByGroupsFilters(items, options, groupTypes);
 
-            console.log('options', options);
-            console.log('groupTypes', groupTypes);
-            console.log('objectService.items', items);
+            // console.log('options', options);
+            // console.log('groupTypes', groupTypes);
+            // console.log('objectService.items', items);
 
             if (options.ordering) {
                 items = sortService.sortItems(items, options.ordering);

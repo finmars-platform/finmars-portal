@@ -76,19 +76,10 @@
 
                     var attrValue = getAttributeValue(attr, groupType);
 
-                    if (attrValue == null) {
-
-                        if (value === '-') {
-                            match = true;
-                        }
-
-                    } else {
-
-                        if (attrValue === value) {
-                            match = true;
-                        }
-
+                    if (attrValue === value) {
+                        match = true;
                     }
+
 
                 }
 
