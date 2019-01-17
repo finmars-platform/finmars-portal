@@ -257,8 +257,6 @@
 
             var parent = evDataService.getData(item.___parentId);
 
-            console.log('groupsToCheck.parent', parent);
-
             if (parent.___is_open) {
                 result = true;
             }
