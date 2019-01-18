@@ -20,6 +20,16 @@
 
         vm.overwriteOption = false;
 
+        vm.items.forEach(function (item) {
+
+            item.active = false;
+
+            item.content.forEach(function (child) {
+                child.active = false;
+            });
+
+        });
+
         vm.getEntityName = function (item) {
 
             return metaContentTypesService.getEntityNameByContentType(item.entity)
