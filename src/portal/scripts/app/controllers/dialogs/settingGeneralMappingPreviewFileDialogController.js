@@ -191,7 +191,16 @@
 
                         } else {
 
-                            resolve(entityTypeMappingResolveService.create(entity, item))
+                            try {
+                                entityTypeMappingResolveService.create(entity, item).then(function (data) {
+
+                                    resolve(data);
+
+                                })
+                            } catch (error) {
+                                resolve(error)
+                            }
+
 
                         }
                     }, 500)
