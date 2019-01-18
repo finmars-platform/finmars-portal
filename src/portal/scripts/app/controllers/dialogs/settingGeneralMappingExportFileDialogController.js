@@ -149,9 +149,7 @@
 
         };
 
-        vm.updateActiveForParent = function (child, parent) {
-
-            child.active = !child.active;
+        vm.updateActiveForParent = function (parent) {
 
             var active = true;
 
