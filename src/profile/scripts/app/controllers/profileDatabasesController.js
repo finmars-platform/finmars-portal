@@ -58,8 +58,9 @@
 
             // console.log('item', item);
 
-            usersService.setMasterUser(item.id);
-            $state.go('app.home');
+            usersService.setMasterUser(item.id).then(function (value) {
+                $state.go('app.home');
+            })
 
         };
 
