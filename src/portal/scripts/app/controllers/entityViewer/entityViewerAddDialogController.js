@@ -319,6 +319,7 @@
                         entityType: vm.entityType,
                         instanceId: vm.editLayoutEntityInstanceId
                     });
+                    $mdDialog.hide();
                 };
 
                 $scope.$apply();
@@ -387,7 +388,9 @@
                                     entityType: 'complex-transaction',
                                     instanceId: data.id
                                 });
+                                $mdDialog.hide();
                             };
+
                         }
 
 

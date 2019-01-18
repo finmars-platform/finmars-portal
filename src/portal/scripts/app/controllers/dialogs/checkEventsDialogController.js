@@ -29,7 +29,7 @@
 
                 console.log('event', event);
 
-                if (event.selected) {
+                if (event.selected && event.status === 1) {
 
                     if (event.is_need_reaction) {
                         return promises.push(vm.openEventReactWindow($event, event));
