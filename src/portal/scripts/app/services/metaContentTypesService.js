@@ -194,6 +194,9 @@
             case 'instrumenttypemapping':
                 result = 'Instrument Type Mapping';
                 break;
+            case 'integrations.instrumenttypemapping':
+                result = 'Instrument Type Mapping';
+                break;
             case 'integrations.accountmapping':
                 result = 'Account Mapping';
                 break;

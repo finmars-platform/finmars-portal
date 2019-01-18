@@ -139,8 +139,6 @@
 
         vm.toggleActiveForChilds = function (item) {
 
-            item.active = !item.active;
-
             item.content.forEach(function (child) {
                 child.active = item.active;
             });
@@ -148,7 +146,6 @@
             vm.checkSelectAll();
 
         };
-
         vm.updateActiveForParent = function (parent) {
 
             var active = true;
@@ -166,7 +163,6 @@
             vm.checkSelectAll();
 
         };
-
         vm.getEntityDependenciesCaptions = function (entity) {
 
             var result = '';
