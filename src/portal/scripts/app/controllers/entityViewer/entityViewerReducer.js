@@ -42,7 +42,7 @@
             var activeObject = entityViewerDataService.getActiveObject();
             var action = entityViewerDataService.getActiveObjectAction();
 
-            if (action === 'delete') {
+            if (action === 'delete' && activeObject.id) {
 
                 $mdDialog.show({
                     controller: 'EntityViewerDeleteDialogController as vm',
@@ -73,7 +73,9 @@
 
             }
 
-            if (action === 'edit') {
+            if (action === 'edit' && activeObject.id) {
+
+                console.log('activeObject', activeObject);
 
                 $mdDialog.show({
                     controller: 'EntityViewerEditDialogController as vm',

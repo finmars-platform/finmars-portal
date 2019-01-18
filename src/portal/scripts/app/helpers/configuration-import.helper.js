@@ -1116,15 +1116,21 @@
 
             entity.content.forEach(function (item) {
 
-                mapFieldsInInstrumentType(item).then(function (updatedItem) {
+                promises.push(new Promise(function (resolve) {
 
-                    promises.push(importItem(item, entity.entity));
+                    mapFieldsInInstrumentType(item).then(function (updatedItem) {
 
-                })
+                        resolve(importItem(item, entity.entity))
+
+                    })
+
+                }))
 
             });
 
             Promise.all(promises).then(function (data) {
+
+                console.log('writeEmptyInstrumentTypes', data);
 
                 resolve(data);
 
