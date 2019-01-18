@@ -39,6 +39,8 @@
             switch (item.entity) {
                 case 'transactions.transactiontype':
                     return "Transaction Types";
+                case 'transactions.transactiontypegroup':
+                    return "Transaction Type Groups";
                 case 'accounts.accounttype':
                     return "Account Types";
                 case 'instruments.pricingpolicy':
