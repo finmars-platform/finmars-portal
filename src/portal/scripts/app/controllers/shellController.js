@@ -16,7 +16,7 @@
 
     var metaService = require('../services/metaService');
 
-    module.exports = function ($scope, $state, $rootScope, $mdDialog) {
+    module.exports = function ($scope, $state, $rootScope, $mdDialog, $transitions) {
 
         var vm = this;
 
@@ -52,6 +52,8 @@
         // });
 
         vm.getMasterUsersList = function () {
+
+            vm.readyStatus.masters = false;
 
             usersService.getMasterList().then(function (data) {
                 vm.masters = data.results;
@@ -205,6 +207,17 @@
 
         $rootScope.$on('$stateChangeSuccess', function () {
             $mdDialog.cancel();
+        });
+
+        $transitions.onSuccess({}, function (transition) {
+
+            var from = transition.from();
+
+            if (from.name === 'app.profile') {
+                vm.getMasterUsersList();
+            }
+
+
         });
 
         vm.logOutMethod = function () {

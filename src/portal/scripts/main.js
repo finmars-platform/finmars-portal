@@ -58,7 +58,6 @@ app.run(['$rootScope', '$transitions', '$state', function ($rootScope, $transiti
     });
 
     $transitions.onSuccess({}, function (trans) {
-        console.log('transitions?');
 
         var location = metaService.getCurrentLocation($state);
 
@@ -79,7 +78,7 @@ app.run(['$rootScope', '$transitions', '$state', function ($rootScope, $transiti
 }]);
 
 
-app.controller('ShellController', ['$scope', '$state', '$rootScope', '$mdDialog', require('./app/controllers/shellController')]);
+app.controller('ShellController', ['$scope', '$state', '$rootScope', '$mdDialog', '$transitions', require('./app/controllers/shellController')]);
 app.controller('SideNavController', ['$scope', '$mdDialog', require('./app/controllers/sideNavController')]);
 app.controller('HomeController', ['$scope', require('./app/controllers/homeController')]);
 app.controller('SetupController', ['$scope', '$state', require('./app/controllers/setupController')]);

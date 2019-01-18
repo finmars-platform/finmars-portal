@@ -367,6 +367,7 @@
                             entityType: vm.entityType,
                             instanceId: vm.complexTransactionOptions.transactionTypeId
                         });
+                        $mdDialog.hide();
                     };
 
                     vm.readyStatus.entity = true;
@@ -390,6 +391,7 @@
                                 entityType: 'complex-transaction',
                                 instanceId: data.id
                             });
+                            $mdDialog.hide();
                         };
                     }
 
