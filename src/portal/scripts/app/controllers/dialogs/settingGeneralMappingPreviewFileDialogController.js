@@ -134,9 +134,61 @@
 
         };
 
+        function deleteExisted() {
+
+            return new Promise(function (resolve, reject) {
+
+                entityTypeMappingResolveService.getList(entity, {pageSize: 10000}).then(function (data) {
+
+                    var promises = [];
+
+                    if (data.results.length) {
+
+                        data.results.forEach(function (oldMappingItem) {
+
+                            promises.push(entityTypeMappingResolveService.deleteByKey(entity, oldMappingItem.id));
+
+                        });
+
+                    }
+
+                    Promise.all(promises).then(function () {
+
+                        resolve()
+
+                    })
+
+                });
+
+            })
+
+        }
+
         function handleItem(entity, item) {
 
             return new Promise(function (resolve, reject) {
+
+                mapContentObj(entity, item).then(function () {
+
+                    createIfNotExists(entity, item).then(function () {
+
+                        console.log('entity', entity);
+                        console.log('item', item);
+
+                        resolve();
+
+                    })
+                })
+
+
+            })
+
+        }
+
+        function mapContentObj(entity, item) {
+
+            return new Promise(function (resolve, reject) {
+
 
                 var options = {};
 
@@ -157,8 +209,6 @@
                         } else {
 
                             console.warn('User code ' + item.___user_code + ' is not exist');
-
-                            resolve([]);
                         }
 
                     } else {
@@ -173,54 +223,58 @@
 
                     }
 
-                    setTimeout(function () {
+                    resolve([]);
 
-                        if (vm.overwriteOption) {
-
-                            var mappingOptions = {
-                                filters: {
-                                    'content_object': item.content_object
-                                }
-                            };
-
-                            entityTypeMappingResolveService.getList(entity, mappingOptions).then(function (data) {
-
-                                if (data.results.length) {
-
-                                    data.results.forEach(function (oldMappingItem) {
-
-                                        entityTypeMappingResolveService.deleteByKey(entity, oldMappingItem.id);
-
-                                    });
-
-                                }
-
-                                resolve(entityTypeMappingResolveService.create(entity, item))
-
-                            });
-
-                        } else {
-
-                            try {
-                                entityTypeMappingResolveService.create(entity, item).then(function (data) {
-
-                                    resolve(data);
-
-                                })
-                            } catch (error) {
-                                resolve(error)
-                            }
-
-
-                        }
-                    }, 500)
-
-
-                })
-
+                });
 
             })
+        }
 
+        function createIfNotExists(entity, item) {
+
+            return new Promise(function (resolve, reject) {
+
+                var mappingOptions = {
+                    filters: {
+                        'content_object': item.content_object,
+                        'value': item.value
+                    }
+                };
+
+                entityTypeMappingResolveService.getList(entity, mappingOptions).then(function (data) {
+
+                    var exist = false;
+
+                    if (data.results.length) {
+
+                        data.results.forEach(function (serverItem) {
+
+                            if (serverItem.value === item.value) {
+                                exist = true;
+                            }
+
+                        })
+
+                    }
+
+                    if (!exist) {
+
+                        entityTypeMappingResolveService.create(entity, item).then(function (data) {
+
+                            resolve(data);
+
+                        })
+
+                    } else {
+
+                        resolve();
+
+                    }
+
+
+                });
+
+            })
 
         }
 
@@ -231,7 +285,6 @@
                 var promises = [];
 
                 items.forEach(function (entityItem) {
-
 
                     entityItem.content.forEach(function (item) {
 
@@ -269,7 +322,6 @@
                                 case 'integrations.strategy3mapping':
                                     promises.push(handleItem('strategy-3', item));
                                     break;
-
                                 case 'integrations.periodicitymapping':
                                     promises.push(handleItem('periodicity', item));
                                     break;
@@ -307,6 +359,7 @@
         vm.agree = function ($event) {
 
             importConfiguration(vm.items).then(function (value) {
+
                 $mdDialog.hide({status: 'agree', data: {}});
 
                 $mdDialog.show({
