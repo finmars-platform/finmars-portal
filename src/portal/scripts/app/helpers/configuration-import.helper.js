@@ -15,6 +15,8 @@
     var pricingAutomatedScheduleService = require('../services/import/pricingAutomatedScheduleService');
     var metaContentTypesService = require('../services/metaContentTypesService');
 
+    var toastNotificationService = require('../../../../core/services/toastNotificationService');
+
     var uiRepository = require('../repositories/uiRepository');
 
     // transaction type map start
@@ -290,7 +292,7 @@
 
                 toastNotificationService.error(reason);
 
-                reject(reason)
+                resolve(reason)
 
             })
 

@@ -9,7 +9,7 @@
     var attributeTypeService = require('../../services/attributeTypeService');
     var configurationImportHelper = require('../../helpers/configuration-import.helper');
 
-    var toastNotificationService = require('../../../../../core/services/toastNotificationService');
+
 
 
     module.exports = function ($scope, $mdDialog, file) {
