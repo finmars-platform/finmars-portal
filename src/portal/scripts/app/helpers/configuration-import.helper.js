@@ -1476,12 +1476,23 @@
                 return item.entity === 'transactions.transactiontype';
             });
             var otherEntities = items.filter(function (item) {
-                return item.entity !== 'transactions.transactiontype' && item.entity !== 'instruments.instrumenttype';
+                return item.entity !== 'transactions.transactiontype' &&
+                    item.entity !== 'instruments.instrumenttype' &&
+                    item.entity !== 'ui.editlayout' &&
+                    item.entity !== 'ui.listlayout' &&
+                    item.entity !== 'ui.reportlayout'
+            });
+
+            var layoutEntities = items.filter(function (item) {
+                return item.entity === 'ui.editlayout' ||
+                    item.entity === 'ui.listlayout' ||
+                    item.entity === 'ui.reportlayout'
             });
 
             console.log('instrumentTypes', instrumentTypes);
             console.log('transactionTypes', transactionTypes);
             console.log('otherEntities', otherEntities);
+            console.log('layoutEntities', layoutEntities);
 
             writeEmptyInstrumentTypes(instrumentTypes[0]).then(function () {
 
@@ -1501,9 +1512,20 @@
 
                             importEntities(otherEntities).then(function (data) {
 
-                                console.log("import success", data);
+                                console.log("Entities import success", data);
 
-                                resolve(data);
+                                importEntities(layoutEntities).then(function (data) {
+
+                                    console.log("Layout import success", data);
+
+                                    resolve(data);
+
+                                }).catch(function (reason) {
+
+                                    console.log('importConfiguration.reason', reason);
+
+                                    reject(reason);
+                                })
 
 
                             }).catch(function (reason) {
