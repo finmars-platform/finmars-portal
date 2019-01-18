@@ -1248,19 +1248,7 @@
                     break;
                 case 'ui.editlayout':
 
-                    new Promise(function (resolveLocal, reject) {
-
-                        if (entity === 'ui.editlayout') {
-
-                            resolveLocal(handleEditLayoutMap(item));
-
-                        } else {
-
-                            resolveLocal(handleListLayoutMap(item));
-
-                        }
-
-                    }).then(function (value) {
+                    handleEditLayoutMap(item).then(function (value) {
 
                         var entityType = metaContentTypesService.findEntityByContentType(item.content_type, 'ui');
 
@@ -1290,39 +1278,82 @@
                 case 'ui.listlayout':
                     resolve(new Promise(function (resolve, reject) {
 
-                        uiRepository.getListLayoutDefault({
-                            filters: {
-                                name: item.name,
-                                content_type: item.content_type
-                            }
-                        }).then(function (data) {
+                        handleListLayoutMap(item).then(function (value) {
 
-                            if (data.results.length) {
+                            console.log('handleListLayoutMap', item);
 
-                                var layout = data.results[0];
-                                var name = layout.name.split(item.name)[1];
+                            uiRepository.getListLayoutDefault({
+                                filters: {
+                                    name: item.name,
+                                    content_type: item.content_type
+                                }
+                            }).then(function (data) {
 
-                                console.log('name', name);
+                                if (data.results.length) {
 
-                                if (data.results.length !== 1) {
+                                    var layout = data.results[0];
+                                    var name = layout.name.split(item.name)[1];
 
-                                    item.name = item.name + ' (' + data.results.length + ')';
+                                    console.log('name', name);
 
-                                } else {
+                                    if (data.results.length !== 1) {
 
-                                    item.name = item.name + ' (1)'
+                                        item.name = item.name + ' (' + data.results.length + ')';
+
+                                    } else {
+
+                                        item.name = item.name + ' (1)'
+                                    }
+
                                 }
 
-                            }
+                                resolve(uiRepository.createListLayout(item));
 
-                            resolve(uiRepository.createListLayout(item));
+                            });
 
-                        });
+                        })
 
                     }));
                     break;
                 case 'ui.reportlayout':
-                    resolve(uiRepository.createListLayout(item));
+                    resolve(new Promise(function (resolve, reject) {
+
+                        handleListLayoutMap(item).then(function (value) {
+
+                            console.log('handleListLayoutMap', item);
+
+                            uiRepository.getListLayoutDefault({
+                                filters: {
+                                    name: item.name,
+                                    content_type: item.content_type
+                                }
+                            }).then(function (data) {
+
+                                if (data.results.length) {
+
+                                    var layout = data.results[0];
+                                    var name = layout.name.split(item.name)[1];
+
+                                    console.log('name', name);
+
+                                    if (data.results.length !== 1) {
+
+                                        item.name = item.name + ' (' + data.results.length + ')';
+
+                                    } else {
+
+                                        item.name = item.name + ' (1)'
+                                    }
+
+                                }
+
+                                resolve(uiRepository.createListLayout(item));
+
+                            });
+
+                        })
+
+                    }));
                     break;
                 case 'csv_import.scheme':
                     resolve(entitySchemeService.create(item));
