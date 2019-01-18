@@ -763,44 +763,6 @@
 
     }
 
-    function findEntity(items, entityName) {
-
-        var result;
-
-        items.forEach(function (item) {
-
-            if (item.entity === entityName) {
-                result = item;
-            }
-
-        });
-
-        return result;
-
-    }
-
-    function isEntityExistsAndSelected(items, entityName) {
-
-        var entity = findEntity(items, entityName);
-
-        var result = false;
-
-        if (entity) {
-
-            entity.content.forEach(function (item) {
-
-                if (item.active) {
-                    result = true;
-                }
-
-            });
-
-        }
-
-        return result;
-
-    }
-
     var getEntityByUserCode = function (user_code, entity) {
 
         return new Promise(function (resolve, reject) {
@@ -1072,36 +1034,41 @@
 
         return new Promise(function (resolve, reject) {
 
+            if (entity) {
 
-            var instrumentTypes = entity.content.filter(function (item) {
-                return item.active;
-            });
+                var instrumentTypes = entity.content.filter(function (item) {
+                    return item.active;
+                });
 
-            console.log('instrumentTypes', instrumentTypes);
+                console.log('instrumentTypes', instrumentTypes);
 
-            getInstrumentsTypesWithIds(instrumentTypes).then(function (items) {
+                getInstrumentsTypesWithIds(instrumentTypes).then(function (items) {
 
-                console.log('instrumentTypes with ids', items);
+                    console.log('instrumentTypes with ids', items);
 
-                var promises = [];
+                    var promises = [];
 
-                items.forEach(function (item) {
+                    items.forEach(function (item) {
 
-                    mapFieldsInInstrumentType(item).then(function (updatedItem) {
+                        mapFieldsInInstrumentType(item).then(function (updatedItem) {
 
-                        promises.push(entityResolverService.update('instrument-type', updatedItem.id, updatedItem));
+                            promises.push(entityResolverService.update('instrument-type', updatedItem.id, updatedItem));
+
+                        })
+
+                    });
+
+                    Promise.all(promises).then(function (data) {
+
+                        resolve(data);
 
                     })
 
                 });
 
-                Promise.all(promises).then(function (data) {
-
-                    resolve(data);
-
-                })
-
-            });
+            } else {
+                resolve();
+            }
 
 
         })
@@ -1114,19 +1081,23 @@
 
             var promises = [];
 
-            entity.content.forEach(function (item) {
+            if (entity) {
 
-                promises.push(new Promise(function (resolve) {
+                entity.content.forEach(function (item) {
 
-                    mapFieldsInInstrumentType(item).then(function (updatedItem) {
+                    promises.push(new Promise(function (resolve) {
 
-                        resolve(importItem(item, entity.entity))
+                        mapFieldsInInstrumentType(item).then(function (updatedItem) {
 
-                    })
+                            resolve(importItem(item, entity.entity))
 
-                }))
+                        })
 
-            });
+                    }))
+
+                });
+
+            }
 
             Promise.all(promises).then(function (data) {
 
@@ -1233,6 +1204,10 @@
                         })
 
                     }));
+                    break;
+
+                case 'transactions.transactiontypegroup':
+                    resolve(entityResolverService.create('transaction-type-group', item));
                     break;
                 case 'accounts.accounttype':
                     resolve(entityResolverService.create('account-type', item));
@@ -1491,6 +1466,10 @@
                 return item.entity === 'instruments.instrumenttype';
             });
 
+            var instrumentTypeGroups = items.filter(function (item) {
+                return item.entity === 'instruments.instrumenttypegroup';
+            });
+
             var transactionTypes = items.filter(function (item) {
                 return item.entity === 'transactions.transactiontype';
             });
@@ -1506,28 +1485,34 @@
 
                 console.log("Instrument type import success");
 
-                importEntities(transactionTypes).then(function () {
+                importEntities(instrumentTypeGroups).then(function (value) {
 
-                    console.log("Transaction type import success");
+                    console.log("Transaction type groups import success");
 
-                    overwriteInstrumentTypes(instrumentTypes[0]).then(function () {
+                    importEntities(transactionTypes).then(function () {
 
-                        console.log("Instrument type overwrite success");
+                        console.log("Transaction type import success");
 
-                        importEntities(otherEntities).then(function (data) {
+                        overwriteInstrumentTypes(instrumentTypes[0]).then(function () {
 
-                            console.log("import success", data);
+                            console.log("Instrument type overwrite success");
 
-                            resolve(data);
+                            importEntities(otherEntities).then(function (data) {
+
+                                console.log("import success", data);
+
+                                resolve(data);
 
 
-                        }).catch(function (reason) {
+                            }).catch(function (reason) {
 
-                            console.log('importConfiguration.reason', reason);
+                                console.log('importConfiguration.reason', reason);
 
-                            reject(reason);
+                                reject(reason);
+                            })
+
+
                         })
-
 
                     })
 
