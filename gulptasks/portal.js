@@ -31,6 +31,8 @@
     var forumTasks = require('./forum.js');
     var profileTasks = require('./profile.js');
 
+    var credentials = require('../config/credentials');
+
     var environments = {
         string: 'env'
     };
@@ -40,6 +42,7 @@
 
     console.log('PROJECT_ENV: ' + PROJECT_ENV);
     console.log('API_HOST: ' + API_HOST);
+    console.log("credentials", credentials[PROJECT_ENV]);
 
     var appName = 'portal';
 
@@ -144,6 +147,9 @@
             .pipe(preprocess())
             .pipe(replace(/__API_HOST__/g, API_HOST))
             .pipe(replace(/__BUILD_DATE__/g, build_date))
+            .pipe(replace(/__PROJECT_ENV__/g, PROJECT_ENV))
+            .pipe(replace(/__LOGIN__/g, credentials[PROJECT_ENV].login))
+            .pipe(replace(/__PASS__/g, credentials[PROJECT_ENV].pass))
             .pipe(gulpif(PROJECT_ENV === 'production', uglify()))
             .pipe(rename({basename: 'main', suffix: '.min'}))
             .on('error', function (error) {

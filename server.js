@@ -11,7 +11,7 @@ var app = express();
 app.use(express.static(path.join(__dirname, 'dist')));
 app.use('/portal', express.static('dist'));
 
-var proxyOptions = url.parse('http://127.0.0.1:8000');
+var proxyOptions = url.parse('https://dev.finmars.com');
 
 proxyOptions.cookieRewrite = true;
 
