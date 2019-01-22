@@ -18,6 +18,6 @@ proxyOptions.headers = {Referer: 'https://dev.finmars.com'};
 
 app.use('/', proxy(proxyOptions));
 
-app.listen(8080, '0.0.0.0', function () {
+app.listen(8080, function () {
     console.info('Express server start at 8080 port');
 });
