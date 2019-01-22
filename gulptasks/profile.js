@@ -24,7 +24,7 @@
     var appName = 'profile';
 
     function forumHtmlToJs () {
-        console.log('Executing task index-HTML-templateCache...');
+        // console.log('Executing task index-HTML-templateCache...');
 
         var pathToHtml = ['src/' + appName + '/scripts/app/**/*.html'];
 
