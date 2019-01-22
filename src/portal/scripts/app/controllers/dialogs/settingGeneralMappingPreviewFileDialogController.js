@@ -189,12 +189,23 @@
 
             return new Promise(function (resolve, reject) {
 
-
                 var options = {};
 
                 if (item.___user_code) {
                     options.filters = {
                         'user_code': item.___user_code
+                    }
+                }
+
+                if(item.___system_code) {
+                    options.filters = {
+                        'system_code': item.___system_code
+                    }
+                }
+
+                if(item.___scheme_name) {
+                    options.filters = {
+                        'scheme_name': item.___scheme_name
                     }
                 }
 
@@ -211,7 +222,24 @@
                             console.warn('User code ' + item.___user_code + ' is not exist');
                         }
 
-                    } else {
+                    }
+
+                    if (item.___scheme_name) {
+
+                        if (data.results.length) {
+
+                            item.content_object = data.results[0].id;
+
+                        } else {
+
+                            console.warn('Scheme name ' + item.___scheme_name + ' is not exist');
+
+                        }
+
+                    }
+
+
+                    if(data.___system_code) {
 
                         data.forEach(function (dataItem) {
 
@@ -333,6 +361,9 @@
                                     break;
                                 case 'integrations.accrualcalculationmodelmapping':
                                     promises.push(handleItem('accrual-calculation-model', item));
+                                    break;
+                                case 'integrations.pricedownloadschememapping':
+                                    promises.push(handleItem('price-download-scheme', item));
                                     break;
 
                             }
