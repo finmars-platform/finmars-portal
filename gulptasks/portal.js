@@ -38,8 +38,8 @@
     var PROJECT_ENV = process.env.PROJECT_ENV || 'development';
     var API_HOST = process.env.API_HOST || 'http://0.0.0.0:8080';
 
-    console.log('PROJECT_ENV: ' + PROJECT_ENV);
-    console.log('API_HOST: ' + API_HOST);
+    // console.log('PROJECT_ENV: ' + PROJECT_ENV);
+    // console.log('API_HOST: ' + API_HOST);
 
     var appName = 'portal';
 
@@ -119,7 +119,7 @@
         return num;
     }
 
-    gulp.task(appName + '-js-min', [appName + '-HTML-to-JS'], function () {
+    gulp.task(appName + '-js-min', gulp.series(appName + '-HTML-to-JS', function () {
 
         var pathToJS = ['src/' + appName + '/scripts/main.js'];
 
@@ -152,7 +152,7 @@
             })
             .pipe(gulp.dest('dist/' + appName + '/scripts/'))
             .pipe(livereload());
-    });
+    }));
 
     gulp.task(appName + '-img-copy', function () {
 
@@ -185,11 +185,11 @@
         gulp.watch('src/forum/**/*.html', ['portal-forum-HTML-to-JS', appName + '-js-min']);
     });
 
-    gulp.task(appName + '-min-All', [
+    gulp.task(appName + '-min-All', gulp.parallel(
         appName + '-html-min',
         appName + '-less-to-css-min',
         appName + '-js-min',
         appName + '-json-min',
         appName + '-img-copy',
-        appName + '-fonts-copy']);
+        appName + '-fonts-copy'));
 }());
