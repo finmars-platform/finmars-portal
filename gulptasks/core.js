@@ -185,7 +185,7 @@
     });
 
 
-    gulp.task(appName + '-min-All', [
+    gulp.task(appName + '-min-All', gulp.parallel(
         appName + '-angular-js-min',
         appName + '-angular-css-min',
         appName + '-core-js-min',
@@ -197,6 +197,6 @@
         appName + '-plugins-css-min',
         appName + '-dragula-js-min',
         appName + '-dragula-css-min'
-    ])
+    ))
 
 }());
