@@ -230,6 +230,9 @@
             case 'integrations.accrualcalculationmodelmapping':
                 result = 'Accrual Calculation Model Mapping';
                 break;
+            case 'integrations.pricedownloadschememapping':
+                result = 'Price Download Scheme Mapping';
+                break;
 
         }
 

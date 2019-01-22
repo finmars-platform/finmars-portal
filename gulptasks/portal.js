@@ -38,7 +38,7 @@
     };
 
     var PROJECT_ENV = process.env.PROJECT_ENV || 'development';
-    var API_HOST = process.env.API_HOST || 'http://0.0.0.0:8080';
+    var API_HOST = process.env.API_HOST || 'http://0.0.0.0:8000';
 
     console.log('PROJECT_ENV: ' + PROJECT_ENV);
     console.log('API_HOST: ' + API_HOST);

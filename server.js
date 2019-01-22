@@ -11,12 +11,13 @@ var app = express();
 app.use(express.static(path.join(__dirname, 'dist')));
 app.use('/portal', express.static('dist'));
 
-var proxyOptions = url.parse('https://dev.finmars.com');
+// var proxyOptions = url.parse('https://dev.finmars.com');
 
-proxyOptions.cookieRewrite = true;
-proxyOptions.headers = {Referer: 'https://dev.finmars.com'};
 
-app.use('/', proxy(proxyOptions));
+// proxyOptions.cookieRewrite = true;
+// proxyOptions.headers = {Referer: 'https://dev.finmars.com'};
+
+// app.use('/', proxy(proxyOptions));
 
 app.listen(8080, '0.0.0.0', function () {
     console.info('Express server start at 8080 port');
