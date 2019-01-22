@@ -280,11 +280,17 @@
 
     function mapAttributeType(item, key, entity, code) {
 
+        console.log('code', code);
+        console.log('entity', entity);
+
         return new Promise(function (resolve, reject) {
 
             getAttributeTypeByUserCode(code, entity).then(function (data) {
 
                 item[key] = data.id;
+
+                console.log('here?.data', data);
+                console.log('here?.item', item);
 
                 resolve(item)
 
@@ -720,13 +726,14 @@
                 var item;
                 var item_key;
 
+                console.log('handleListLayoutMap', layout);
 
                 layout.data.columns.forEach(function (column) {
 
                     if (column.hasOwnProperty('id')) {
 
                         code = column.user_code;
-                        entity = metaContentTypesService.findEntityByContentType(layout.content_type);
+                        entity = column.entity;
                         item = column;
                         item_key = 'id';
 
@@ -743,7 +750,7 @@
                     if (group.hasOwnProperty('id')) {
 
                         code = group.user_code;
-                        entity = metaContentTypesService.findEntityByContentType(layout.content_type);
+                        entity = group.entity;
                         item = group;
                         item_key = 'id';
 
@@ -985,8 +992,6 @@
 
             Promise.all(promises).then(function (value) {
 
-                console.log('mapFieldsInInstrumentType.item', item);
-
                 resolve(item);
 
             })
@@ -1087,15 +1092,19 @@
 
                 entity.content.forEach(function (item) {
 
-                    promises.push(new Promise(function (resolve) {
+                    if (item.active) {
 
-                        mapFieldsInInstrumentType(item).then(function (updatedItem) {
+                        promises.push(new Promise(function (resolve) {
 
-                            resolve(importItem(item, entity.entity))
+                            mapFieldsInInstrumentType(item).then(function (updatedItem) {
 
-                        })
+                                resolve(importItem(item, entity.entity))
 
-                    }))
+                            })
+
+                        }))
+
+                    }
 
                 });
 
