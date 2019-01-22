@@ -122,7 +122,7 @@
         return num;
     }
 
-    gulp.task(appName + '-js-min', [appName + '-HTML-to-JS'], function () {
+    gulp.task(appName + '-js-min', gulp.series(appName + '-HTML-to-JS', function () {
 
         var pathToJS = ['src/' + appName + '/scripts/main.js'];
 
@@ -158,7 +158,7 @@
             })
             .pipe(gulp.dest('dist/' + appName + '/scripts/'))
             .pipe(livereload());
-    });
+    }));
 
     gulp.task(appName + '-img-copy', function () {
 
@@ -191,11 +191,11 @@
         gulp.watch('src/forum/**/*.html', ['portal-forum-HTML-to-JS', appName + '-js-min']);
     });
 
-    gulp.task(appName + '-min-All', [
+    gulp.task(appName + '-min-All', gulp.parallel(
         appName + '-html-min',
         appName + '-less-to-css-min',
         appName + '-js-min',
         appName + '-json-min',
         appName + '-img-copy',
-        appName + '-fonts-copy']);
+        appName + '-fonts-copy'));
 }());
