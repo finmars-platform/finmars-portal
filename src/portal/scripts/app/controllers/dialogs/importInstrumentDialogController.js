@@ -43,7 +43,7 @@
         vm.dataIsImported = false;
 
         vm.config = {
-            instrument_code: "USP16394AG62 Corp",
+            instrument_code: "",
             mode: 1,
 
         };

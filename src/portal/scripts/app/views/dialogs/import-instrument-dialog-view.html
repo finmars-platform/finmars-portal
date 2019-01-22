@@ -13,8 +13,8 @@
                         <div layout="row">
                             <div layout="column">
                                 <md-input-container flex="40" style="margin-bottom: 0">
-                                    <label for="">ISIN</label>
-                                    <input type="text" data-ng-model="vm.config.instrument_code">
+                                    <label for="IIMISINInput">ISIN</label>
+                                    <input id="IIMISINInput" type="text" data-ng-model="vm.config.instrument_code">
                                 </md-input-container>
                                 <div layout="row" layout-align="begin center">
                                     <md-button class="md-raised md-sm-btn" data-ng-click="vm.appendString('Equity')">
