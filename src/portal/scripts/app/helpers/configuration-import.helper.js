@@ -19,6 +19,9 @@
 
     var uiRepository = require('../repositories/uiRepository');
 
+
+    var configurationImportBackwardCompatibility = require('./configuration-import-backward-compatibility.helper');
+
     // transaction type map start
 
     function get_input_prop_by_content_type(model) {
@@ -133,7 +136,7 @@
         }
     }
 
-    function mapTransactionTypeInputsRelations(transactionType) {
+    function mapTransactionTypeInputsRelations(transactionType, cacheContainer) {
 
         return new Promise(function (resolve) {
 
@@ -158,7 +161,7 @@
 
                             if (prop_data.code === 'user_code') {
 
-                                getEntityByUserCode(user_code, entity).then(function (data) {
+                                getEntityByUserCode(user_code, entity, cacheContainer).then(function (data) {
 
                                     input[model] = data.id;
 
@@ -166,16 +169,17 @@
 
                                 });
 
-                            } else {
+                            }
 
-                                getEntityBySystemCode(user_code, entity).then(function (data) {
+                            if(prop_data.code === 'system_code') {
+
+                                getEntityBySystemCode(user_code, entity, cacheContainer).then(function (data) {
 
                                     input[model] = data.id;
 
                                     resolveRelation(input)
 
                                 });
-
 
                             }
 
@@ -195,7 +199,7 @@
 
     }
 
-    function mapTransactionTypeActionsRelations(transactionType) {
+    function mapTransactionTypeActionsRelations(transactionType, cacheContainer) {
 
         return new Promise(function (resolve) {
 
@@ -216,7 +220,7 @@
 
                     if (action[key]) {
 
-                        promises.push(mapActionRelations(action, key))
+                        promises.push(mapActionRelations(action, key, cacheContainer))
 
                     }
 
@@ -233,7 +237,7 @@
 
     }
 
-    function mapRelation(item, key, entity, code_type, code) {
+    function mapRelation(item, key, entity, code_type, code, cacheContainer) {
 
         return new Promise(function (resolveRelation, reject) {
 
@@ -252,7 +256,7 @@
 
                 if (code_type === 'user_code') {
 
-                    getEntityByUserCode(code, entity).then(function (data) {
+                    getEntityByUserCode(code, entity, cacheContainer).then(function (data) {
 
                         item[key] = data.id;
 
@@ -260,9 +264,11 @@
 
                     });
 
-                } else {
+                }
 
-                    getEntityBySystemCode(code, entity).then(function (data) {
+                if (code_type === 'system_code') {
+
+                    getEntityBySystemCode(code, entity, cacheContainer).then(function (data) {
 
                         item[key] = data.id;
 
@@ -289,9 +295,6 @@
 
                 item[key] = data.id;
 
-                console.log('here?.data', data);
-                console.log('here?.item', item);
-
                 resolve(item)
 
             }).catch(function (reason) {
@@ -306,7 +309,7 @@
 
     }
 
-    function mapActionRelations(action, key) {
+    function mapActionRelations(action, key, cacheContainer) {
 
         return new Promise(function (resolve) {
 
@@ -503,6 +506,8 @@
                 // console.log('code_prop', code_prop);
                 // console.log('action', action);
 
+                // TODO Make recursive like import method to make caching work properly
+
                 if (action[key].hasOwnProperty(code_prop)) {
 
                     var code = action[key][code_prop];
@@ -511,7 +516,7 @@
                     var item = action[key];
                     var item_key = propItem.key;
 
-                    promises.push(mapRelation(item, item_key, entity, code_type, code))
+                    promises.push(mapRelation(item, item_key, entity, code_type, code, cacheContainer))
 
 
                 }
@@ -531,7 +536,7 @@
 
     // transaction type map end
 
-    function mapReportOptions(layout) {
+    function mapReportOptions(layout, cacheContainer) {
 
         return new Promise(function (resolve) {
 
@@ -545,7 +550,7 @@
 
                         var user_code = layout.data.reportOptions.pricing_policy_object.user_code;
 
-                        getEntityByUserCode(user_code, 'pricing-policy').then(function (data) {
+                        getEntityByUserCode(user_code, 'pricing-policy', cacheContainer).then(function (data) {
 
                             layout.data.reportOptions.pricing_policy = data.id;
                             layout.data.reportOptions.pricing_policy_object = data;
@@ -564,7 +569,7 @@
 
                         var user_code = layout.data.reportOptions.report_currency_object.user_code;
 
-                        getEntityByUserCode(user_code, 'currency').then(function (data) {
+                        getEntityByUserCode(user_code, 'currency', cacheContainer).then(function (data) {
 
                             layout.data.reportOptions.report_currency = data.id;
                             layout.data.reportOptions.report_currency_object = data;
@@ -583,7 +588,7 @@
 
                         var system_code = layout.data.reportOptions.cost_method_object.system_code;
 
-                        getEntityBySystemCode(system_code, 'cost-method').then(function (data) {
+                        getEntityBySystemCode(system_code, 'cost-method', cacheContainer).then(function (data) {
 
                             layout.data.reportOptions.cost_method = data.id;
                             layout.data.reportOptions.cost_method_object = data;
@@ -606,52 +611,6 @@
 
             Promise.all(promises).then(function () {
                 resolve(layout)
-            })
-
-        })
-
-    }
-
-    function mapAttributeTypesInList(list, content_type) {
-
-        return new Promise(function (resolve) {
-
-            var promises = [];
-
-            list.forEach(function (item) {
-
-                if (item.hasOwnProperty('id')) {
-
-                    promises.push(new Promise(function (resolveRelation, reject) {
-
-                        var user_code = item.user_code;
-
-                        var entity = metaContentTypesService.findEntityByContentType(content_type);
-
-                        getAttributeTypeByUserCode(user_code, entity).then(function (data) {
-
-                            item.id = data.id;
-
-                            resolveRelation(item)
-
-                        }).catch(function (reason) {
-
-                            toastNotificationService.error(reason);
-
-                            reject(reason)
-
-                        })
-
-                    }));
-
-                }
-
-            });
-
-            Promise.all(promises).then(function (data) {
-
-                resolve(data);
-
             })
 
         })
@@ -711,7 +670,7 @@
 
     }
 
-    function handleListLayoutMap(layout) {
+    function handleListLayoutMap(layout, cacheContainer) {
 
         return new Promise(function (resolve, reject) {
 
@@ -719,7 +678,7 @@
 
             if (layout.data) {
 
-                promises.push(mapReportOptions(layout));
+                promises.push(mapReportOptions(layout, cacheContainer));
 
                 var code;
                 var entity;
@@ -772,65 +731,101 @@
 
     }
 
-    var getEntityByUserCode = function (user_code, entity) {
+    var getEntityByUserCode = function (user_code, entity, cacheContainer) {
+
+        if (!cacheContainer) {
+            cacheContainer = {}; // no cache then
+        }
 
         return new Promise(function (resolve, reject) {
 
-            entityResolverService.getList(entity, {
-                filters: {
-                    "user_code": user_code
-                }
-            }).then(function (data) {
+            if (!cacheContainer[entity]) {
+                cacheContainer[entity] = {};
+            }
 
-                if (data.results.length) {
+            console.log(JSON.parse(JSON.stringify(cacheContainer[entity])));
 
-                    data.results.forEach(function (item) {
+            if (cacheContainer[entity][user_code]) {
 
-                        if (item.user_code === user_code) {
-                            resolve(item)
-                        }
+                console.log('From cache: ', cacheContainer[entity][user_code]);
 
-                    })
+                resolve(cacheContainer[entity][user_code]);
 
-                } else {
+            } else {
 
-                    if (user_code !== '-') {
+                entityResolverService.getList(entity, {
+                    filters: {
+                        "user_code": user_code
+                    }
+                }).then(function (data) {
 
-                        resolve(getEntityByUserCode('-', entity))
+                    if (data.results.length) {
+
+                        data.results.forEach(function (item) {
+
+                            if (item.user_code === user_code) {
+                                cacheContainer[entity][user_code] = item;
+                                resolve(item)
+                            }
+
+                        })
 
                     } else {
-                        reject(new Error("Entity with user code '-' does not exist"))
+
+                        if (user_code !== '-') {
+
+                            resolve(getEntityByUserCode('-', entity))
+
+                        } else {
+                            reject(new Error("Entity with user code '-' does not exist"))
+                        }
+
                     }
 
-                }
-
-            })
+                })
+            }
 
         })
 
     };
 
-    var getEntityBySystemCode = function (system_code, entity) {
+    var getEntityBySystemCode = function (system_code, entity, cacheContainer) {
+
+        if (!cacheContainer) {
+            cacheContainer = {}; // no cache then
+        }
 
         return new Promise(function (resolve, reject) {
 
-            entityResolverService.getList(entity, {
-                filters: {
-                    "system_code": system_code
-                }
-            }).then(function (data) {
+            if (!cacheContainer[entity]) {
+                cacheContainer[entity] = {};
+            }
 
-                if (data.length) {
+            if (cacheContainer[entity][system_code]) {
 
-                    resolve(data[0])
+                resolve(cacheContainer[entity][system_code]);
 
-                } else {
+            } else {
 
-                    reject(new Error("Entity does not exist"))
+                entityResolverService.getList(entity, {
+                    filters: {
+                        "system_code": system_code
+                    }
+                }).then(function (data) {
 
-                }
+                    if (data.length) {
+                        cacheContainer[entity][system_code] = data[0];
+                        resolve(data[0])
 
-            })
+                    } else {
+
+                        reject(new Error("Entity does not exist"))
+
+                    }
+
+                })
+
+            }
 
         })
 
@@ -1082,48 +1077,36 @@
 
     };
 
-    var writeEmptyInstrumentTypes = function (entity) {
+    var recursiveImportItem = function (resolve, index, entityItem, cacheContainer) {
 
-        return new Promise(function (resolve, reject) {
+        var item = entityItem.content[index];
 
-            var promises = [];
+        index = index + 1;
 
-            if (entity) {
+        if (item.active) {
 
-                entity.content.forEach(function (item) {
+            importItem(item, entityItem.entity, cacheContainer).then(function () {
 
-                    if (item.active) {
+                window.importConfigurationCounter = window.importConfigurationCounter + 1;
 
-                        promises.push(new Promise(function (resolve) {
-
-                            mapFieldsInInstrumentType(item).then(function (updatedItem) {
-
-                                resolve(importItem(item, entity.entity))
-
-                            })
-
-                        }))
-
-                    }
-
-                });
-
-            }
-
-            Promise.all(promises).then(function (data) {
-
-                console.log('writeEmptyInstrumentTypes', data);
-
-                resolve(data);
+                if (index === entityItem.content.length) {
+                    resolve(item);
+                } else {
+                    recursiveImportItem(resolve, index, entityItem, cacheContainer)
+                }
 
             })
-
-
-        })
+        } else {
+            if (index === entityItem.content.length) {
+                resolve(item);
+            } else {
+                recursiveImportItem(resolve, index, entityItem, cacheContainer)
+            }
+        }
 
     };
 
-    var importEntities = function (entities) {
+    var importEntities = function (entities, cacheContainer) {
 
         return new Promise(function (resolve, reject) {
 
@@ -1131,43 +1114,24 @@
 
             entities.forEach(function (entityItem) {
 
-                entityItem.content.forEach(function (item) {
+                promises.push(new Promise(function (resolve, reject) {
 
-                    if (item.active) {
+                    var startIndex = 0;
 
-                        promises.push(new Promise(function (resolve, reject) {
-
-                            importItem(item, entityItem.entity).then(function (data) {
-
-                                // TODO refactor later
-
-                                window.importConfigurationCounter = window.importConfigurationCounter + 1;
-
-                                // console.log('window.counter', window.importConfigurationCounter);
-
-                                resolve(data);
-
-                            })
-
-                        }))
-
-                    }
-
-                })
+                    recursiveImportItem(resolve, startIndex, entityItem, cacheContainer)
+                }))
 
             });
 
             Promise.all(promises).then(function (data) {
-
-                resolve(data);
-
+                resolve(data)
             })
 
         })
 
     };
 
-    var importItem = function (item, entity) {
+    var importItem = function (item, entity, cacheContainer) {
 
         return new Promise(function (resolve, reject) {
 
@@ -1186,7 +1150,7 @@
 
                                     var user_code = item.___group__user_code;
 
-                                    getEntityByUserCode(user_code, 'transaction-type-group').then(function (data) {
+                                    getEntityByUserCode(user_code, 'transaction-type-group', cacheContainer).then(function (data) {
 
                                         item.group = data.id;
 
@@ -1198,9 +1162,9 @@
 
                             }
 
-                            promises.push(mapTransactionTypeInputsRelations(item));
+                            promises.push(mapTransactionTypeInputsRelations(item, cacheContainer));
 
-                            promises.push(mapTransactionTypeActionsRelations(item));
+                            promises.push(mapTransactionTypeActionsRelations(item, cacheContainer));
 
                             Promise.all(promises).then(function (data) {
 
@@ -1216,7 +1180,6 @@
 
                     }));
                     break;
-
                 case 'transactions.transactiontypegroup':
                     resolve(entityResolverService.create('transaction-type-group', item));
                     break;
@@ -1233,7 +1196,6 @@
                     resolve(pricingAutomatedScheduleService.updateSchedule(item));
                     break;
                 case 'ui.editlayout':
-
                     handleEditLayoutMap(item).then(function (value) {
 
                         var entityType = metaContentTypesService.findEntityByContentType(item.content_type, 'ui');
@@ -1259,12 +1221,10 @@
                         resolve(promise);
 
                     });
-
                     break;
                 case 'ui.listlayout':
                     resolve(new Promise(function (resolve, reject) {
-
-                        handleListLayoutMap(item).then(function (value) {
+                        handleListLayoutMap(item, cacheContainer).then(function (value) {
 
                             console.log('handleListLayoutMap', item);
 
@@ -1279,8 +1239,6 @@
 
                                     var layout = data.results[0];
                                     var name = layout.name.split(item.name)[1];
-
-                                    console.log('name', name);
 
                                     if (data.results.length !== 1) {
 
@@ -1298,13 +1256,11 @@
                             });
 
                         })
-
                     }));
                     break;
                 case 'ui.reportlayout':
                     resolve(new Promise(function (resolve, reject) {
-
-                        handleListLayoutMap(item).then(function (value) {
+                        handleListLayoutMap(item, cacheContainer).then(function (value) {
 
                             console.log('handleListLayoutMap', item);
 
@@ -1338,7 +1294,6 @@
                             });
 
                         })
-
                     }));
                     break;
                 case 'csv_import.scheme':
@@ -1358,7 +1313,7 @@
                                 var entity = 'price-download-scheme';
                                 var item_key = 'price_download_scheme';
 
-                                promises.push(mapRelation(item, item_key, entity, code_type, code))
+                                promises.push(mapRelation(item, item_key, entity, code_type, code, cacheContainer))
 
                             }
 
@@ -1394,7 +1349,7 @@
 
                                             var user_code = rule.___transaction_type__user_code;
 
-                                            getEntityByUserCode(user_code, 'transaction-type').then(function (data) {
+                                            getEntityByUserCode(user_code, 'transaction-type', cacheContainer).then(function (data) {
 
                                                 rule.transaction_type = data.id;
 
@@ -1471,63 +1426,78 @@
 
         return new Promise(function (resolve, reject) {
 
-            var promises = [];
+            configurationImportBackwardCompatibility.repairItems(items).then(function () {
 
-            var instrumentTypes = items.filter(function (item) {
-                return item.entity === 'instruments.instrumenttype';
-            });
+                console.log('Repair items success');
 
-            var instrumentTypeGroups = items.filter(function (item) {
-                return item.entity === 'instruments.instrumenttypegroup';
-            });
+                var promises = [];
 
-            var transactionTypes = items.filter(function (item) {
-                return item.entity === 'transactions.transactiontype';
-            });
-            var otherEntities = items.filter(function (item) {
-                return item.entity !== 'transactions.transactiontype' &&
-                    item.entity !== 'instruments.instrumenttype' &&
-                    item.entity !== 'ui.editlayout' &&
-                    item.entity !== 'ui.listlayout' &&
-                    item.entity !== 'ui.reportlayout'
-            });
+                var instrumentTypes = items.filter(function (item) {
+                    return item.entity === 'instruments.instrumenttype';
+                });
 
-            var layoutEntities = items.filter(function (item) {
-                return item.entity === 'ui.editlayout' ||
-                    item.entity === 'ui.listlayout' ||
-                    item.entity === 'ui.reportlayout'
-            });
+                var instrumentTypeGroups = items.filter(function (item) {
+                    return item.entity === 'instruments.instrumenttypegroup';
+                });
 
-            console.log('instrumentTypes', instrumentTypes);
-            console.log('transactionTypes', transactionTypes);
-            console.log('otherEntities', otherEntities);
-            console.log('layoutEntities', layoutEntities);
+                var transactionTypes = items.filter(function (item) {
+                    return item.entity === 'transactions.transactiontype';
+                });
 
-            writeEmptyInstrumentTypes(instrumentTypes[0]).then(function () {
+                var otherEntities = items.filter(function (item) {
+                    return item.entity !== 'transactions.transactiontype' &&
+                        item.entity !== 'instruments.instrumenttype' &&
+                        item.entity !== 'ui.editlayout' &&
+                        item.entity !== 'ui.listlayout' &&
+                        item.entity !== 'ui.reportlayout'
+                });
 
-                console.log("Instrument type import success");
+                var layoutEntities = items.filter(function (item) {
+                    return item.entity === 'ui.editlayout' ||
+                        item.entity === 'ui.listlayout' ||
+                        item.entity === 'ui.reportlayout'
+                });
 
-                importEntities(instrumentTypeGroups).then(function (value) {
+                console.log('instrumentTypes', instrumentTypes);
+                console.log('transactionTypes', transactionTypes);
+                console.log('otherEntities', otherEntities);
+                console.log('layoutEntities', layoutEntities);
 
-                    console.log("Transaction type groups import success");
+                var cacheContainer = {};
 
-                    importEntities(transactionTypes).then(function () {
+                importEntities(instrumentTypes, cacheContainer).then(function () {
 
-                        console.log("Transaction type import success");
+                    console.log("Instrument type import success");
 
-                        overwriteInstrumentTypes(instrumentTypes[0]).then(function () {
+                    importEntities(instrumentTypeGroups, cacheContainer).then(function (value) {
 
-                            console.log("Instrument type overwrite success");
+                        console.log("Transaction type groups import success");
 
-                            importEntities(otherEntities).then(function (data) {
+                        importEntities(transactionTypes, cacheContainer).then(function () {
 
-                                console.log("Entities import success", data);
+                            console.log("Transaction type import success");
 
-                                importEntities(layoutEntities).then(function (data) {
+                            overwriteInstrumentTypes(instrumentTypes[0]).then(function () {
 
-                                    console.log("Layout import success", data);
+                                console.log("Instrument type overwrite success");
 
-                                    resolve(data);
+                                importEntities(otherEntities, cacheContainer).then(function (data) {
+
+                                    console.log("Entities import success", data);
+
+                                    importEntities(layoutEntities, cacheContainer).then(function (data) {
+
+                                        console.log("Layout import success", data);
+
+                                        resolve(data);
+
+                                    }).catch(function (reason) {
+
+                                        console.log('importConfiguration.reason', reason);
+
+                                        reject(reason);
+                                    })
+
 
                                 }).catch(function (reason) {
 
@@ -1537,21 +1507,15 @@
                                 })
 
 
-                            }).catch(function (reason) {
-
-                                console.log('importConfiguration.reason', reason);
-
-                                reject(reason);
                             })
-
 
                         })
 
                     })
 
-                })
+                });
 
-            });
+            })
 
         })
 
