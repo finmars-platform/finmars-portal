@@ -122,8 +122,8 @@
         return num;
     }
 
-    gulp.task(appName + '-js-min', gulp.series(appName + '-HTML-to-JS', function () {
-
+    // gulp.task(appName + '-js-min', gulp.series(appName + '-HTML-to-JS', function () {
+    gulp.task(appName + '-js-min', function () {
         var pathToJS = ['src/' + appName + '/scripts/main.js'];
 
         var d = new Date();
@@ -158,7 +158,9 @@
             })
             .pipe(gulp.dest('dist/' + appName + '/scripts/'))
             .pipe(livereload());
-    }));
+    });
+
+    gulp.task(appName + '-js-min-All', gulp.series(appName + '-HTML-to-JS', appName + '-js-min'));
 
     gulp.task(appName + '-img-copy', function () {
 
@@ -180,19 +182,20 @@
 
     gulp.task(appName + '-watch-All', function () {
         livereload.listen();
-        gulp.watch('src/' + appName + '/**/*.less', [appName + '-less-to-css-min']);
-        gulp.watch('src/' + appName + '/**/*.js', [appName + '-js-min']);
-        // gulp.watch('src/' + appName + '/**/*.html', [appName + '-HTML-to-JS', appName + '-js-min']);
-        gulp.watch('src/index.html', [appName + '-html-min']);
+        gulp.watch('src/' + appName + '/**/*.less', gulp.series(appName + '-less-to-css-min'));
+        gulp.watch('src/' + appName + '/**/*.js', gulp.series(appName + '-js-min'));
+        gulp.watch('src/' + appName + '/**/*.html', gulp.series(appName + '-HTML-to-JS'));
+        gulp.watch('src/index.html', gulp.series(appName + '-html-min'));
     });
     gulp.task('forum-watch-All', function () {
-        gulp.watch('src/' + appName + '/**/*.less', [appName + '-less-to-css-min']);
-        gulp.watch('src/forum/**/*.js', [appName + '-js-min']);
-        gulp.watch('src/forum/**/*.html', ['portal-forum-HTML-to-JS', appName + '-js-min']);
+        gulp.watch('src/' + appName + '/**/*.less', gulp.series(appName + '-less-to-css-min'));
+        gulp.watch('src/forum/**/*.js', gulp.series(appName + '-js-min'));
+        gulp.watch('src/forum/**/*.html', gulp.series('portal-forum-HTML-to-JS', appName + '-js-min'));
     });
 
     gulp.task(appName + '-min-All', gulp.parallel(
         appName + '-html-min',
+        appName + '-HTML-to-JS',
         appName + '-less-to-css-min',
         appName + '-js-min',
         appName + '-json-min',
