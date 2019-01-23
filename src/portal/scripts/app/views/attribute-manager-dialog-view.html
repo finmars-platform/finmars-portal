@@ -18,6 +18,11 @@
                                     <input data-ng-model="vm.attribute.name">
                                 </md-input-container>
 
+                                <md-input-container class="md-block" flex-gt-sm>
+                                    <label>User code</label>
+                                    <input data-ng-model="vm.attribute.user_code" disabled>
+                                </md-input-container>
+
                                 <div data-ng-if="vm.editRestriction" flex-gt-sm>
                                     <md-input-container class="md-block">
                                         <label>Attribute type</label>
