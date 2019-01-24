@@ -40,7 +40,7 @@ var metaService = require('./app/services/metaService');
 
 app.run(['$rootScope', '$transitions', '$state', function ($rootScope, $transitions, $state) {
 
-    // localStorage.setItem('entityIsChanged', false);
+    localStorage.setItem('entityIsChanged', false);
 
     document.title = metaService.getCurrentLocation($state);
 
