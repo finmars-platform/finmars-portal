@@ -118,8 +118,8 @@
         return num;
     }
 
-    // gulp.task(appName + '-js-min', gulp.series(appName + '-HTML-to-JS', function () {
-    gulp.task(appName + '-js-min', function () {
+    gulp.task(appName + '-js-min', gulp.series(appName + '-HTML-to-JS', function () {
+    // gulp.task(appName + '-js-min', function () {
         var pathToJS = ['src/' + appName + '/scripts/main.js'];
 
         var d = new Date();
