@@ -157,7 +157,7 @@
 
 
 
-    });
+    }));
 
     gulp.task(appName + '-js-min-All', gulp.series(appName + '-HTML-to-JS', appName + '-js-min'));
 
