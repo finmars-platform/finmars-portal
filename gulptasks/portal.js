@@ -33,10 +33,6 @@
 
     var credentials = require('../config/credentials');
 
-    var environments = {
-        string: 'env'
-    };
-
     var PROJECT_ENV = process.env.PROJECT_ENV || 'development';
     var API_HOST = process.env.API_HOST || 'http://0.0.0.0:8000';
 
@@ -122,8 +118,8 @@
         return num;
     }
 
-    // gulp.task(appName + '-js-min', gulp.series(appName + '-HTML-to-JS', function () {
-    gulp.task(appName + '-js-min', function () {
+    gulp.task(appName + '-js-min', gulp.series(appName + '-HTML-to-JS', function () {
+    // gulp.task(appName + '-js-min', function () {
         var pathToJS = ['src/' + appName + '/scripts/main.js'];
 
         var d = new Date();
@@ -158,6 +154,9 @@
             })
             .pipe(gulp.dest('dist/' + appName + '/scripts/'))
             .pipe(livereload());
+
+
+
     });
 
     gulp.task(appName + '-js-min-All', gulp.series(appName + '-HTML-to-JS', appName + '-js-min'));
