@@ -13,7 +13,6 @@
 
     var metaService = require('../../services/metaService');
     var attributeTypeService = require('../../services/attributeTypeService');
-    var balanceReportCustomAttrService = require('../../services/reports/balanceReportCustomAttrService');
 
     module.exports = function ($scope, $mdDialog, entityViewerDataService, entityViewerEventService) {
 
@@ -32,7 +31,6 @@
         vm.general = [];
         vm.attrs = [];
         vm.entityAttrs = [];
-        vm.custom = [];
 
         vm.tabAttrsReady = false;
 
@@ -128,36 +126,18 @@
 
             vm.entityAttrs = metaService.getEntityAttrs(vm.entityType);
 
-            balanceReportCustomAttrService.getList().then(function (data) {
-                vm.custom = data.results;
-                vm.custom.forEach(function (customItem) {
-                    customItem.columnType = 'custom-field';
-                });
-                restoreAttrs();
-                syncAttrs();
-
-                $scope.$apply();
+            vm.entityAttrs.forEach(function (item) {
+                item.entity = vm.entityType;
             });
 
-            // if (['balance-report'].indexOf(vm.entityType) !== -1) {
-            //
-            //     vm.attrs = [];
-            //     dynamicAttributesForReportsService.getDynamicAttributes().then(function (data) {
-            //         vm.attrs = data;
-            //
-            //         attrsList = attrsList.concat(vm.entityAttrs);
-            //         restoreAttrs();
-            //         syncAttrs();
-            //
-            //         console.log('report balance new custom attr is', vm.attrs);
-            //         vm.readyStatus.content = true;
-            //         $scope.$apply();
-            //     });
-            //
-            // } else {
             attributeTypeService.getList(vm.entityType).then(function (data) {
 
                 vm.attrs = data.results;
+
+                vm.attrs.forEach(function (item) {
+                    item.entity = vm.entityType;
+                });
+
                 attrsList = attrsList.concat(vm.entityAttrs);
                 attrsList = attrsList.concat(vm.attrs);
                 restoreAttrs();
@@ -166,7 +146,6 @@
                 vm.readyStatus.content = true;
                 $scope.$apply();
             })
-            // }
 
         };
 
@@ -190,7 +169,6 @@
         var syncAttrs = function () {
             syncTypeAttrs(vm.entityAttrs);
             syncTypeAttrs(vm.attrs);
-            syncTypeAttrs(vm.custom);
         };
 
 
@@ -328,7 +306,6 @@
 
             updateTypeAttrs(vm.entityAttrs);
             updateTypeAttrs(vm.attrs);
-            updateTypeAttrs(vm.custom);
 
             addColumn();
 
@@ -529,7 +506,6 @@
         };
 
         vm.MABtnVisibility = function (entityType) {
-            //console.log('custom entity type', entityType);
             return metaService.checkRestrictedEntityTypesForAM(entityType);
         };
 
