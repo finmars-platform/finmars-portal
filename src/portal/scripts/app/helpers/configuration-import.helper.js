@@ -171,7 +171,7 @@
 
                             }
 
-                            if(prop_data.code === 'system_code') {
+                            if (prop_data.code === 'system_code') {
 
                                 getEntityBySystemCode(user_code, entity, cacheContainer).then(function (data) {
 
@@ -670,63 +670,118 @@
 
     }
 
+    function recursiveMapItemInLayout(resolve, items, index) {
+
+        if (items.length) {
+
+            if (items[index].hasOwnProperty('id')) {
+
+                var code = items[index].user_code;
+                var entity = items[index].entity;
+                var item = items[index];
+                var item_key = 'id';
+
+                if (entity) {
+
+                    mapAttributeType(item, item_key, entity, code).then(function () {
+
+                        if (index < items.length - 1) {
+                            index = index + 1;
+                            recursiveMapItemInLayout(resolve, items, index);
+                        } else {
+                            resolve(items);
+                        }
+
+                    }).catch(function (error) {
+
+                        items.splice(index, 1);
+
+                        index = index - 1;
+
+                        console.log('splice items', items);
+
+                        if (index < items.length - 1) {
+                            recursiveMapItemInLayout(resolve, items, index)
+                        } else {
+                            resolve(items);
+                        }
+
+                    })
+
+                } else {
+
+                    items.splice(index, 1);
+
+                    index = index - 1;
+
+                    console.log('splice items', items);
+
+                    if (index < items.length - 1) {
+                        recursiveMapItemInLayout(resolve, items, index)
+                    } else {
+                        resolve(items);
+                    }
+
+                }
+
+            } else {
+                if (index < items.length - 1) {
+
+                    index = index + 1;
+                    recursiveMapItemInLayout(resolve, items, index)
+
+                } else {
+
+                    resolve(items)
+
+                }
+            }
+
+        } else {
+            resolve(items)
+        }
+
+    }
+
+    function recursiveMapLayout(items) {
+
+        return new Promise(function (resolve, reject) {
+
+            var startIndex = 0;
+
+            recursiveMapItemInLayout(resolve, items, startIndex);
+
+        })
+
+    }
+
     function handleListLayoutMap(layout, cacheContainer) {
 
         return new Promise(function (resolve, reject) {
 
-            var promises = [];
-
             if (layout.data) {
 
-                promises.push(mapReportOptions(layout, cacheContainer));
+                mapReportOptions(layout, cacheContainer).then(function (layout) {
 
-                var code;
-                var entity;
-                var item;
-                var item_key;
+                    recursiveMapLayout(layout.data.columns).then(function (columns) {
 
-                console.log('handleListLayoutMap', layout);
+                        layout.data.columns = columns;
 
-                layout.data.columns.forEach(function (column) {
+                        recursiveMapLayout(layout.data.grouping).then(function (grouping) {
 
-                    if (column.hasOwnProperty('id')) {
+                            layout.data.grouping = grouping;
 
-                        code = column.user_code;
-                        entity = column.entity;
-                        item = column;
-                        item_key = 'id';
+                            resolve(layout)
 
-                        promises.push(mapAttributeType(item, item_key, entity, code));
-
-                    }
+                        })
 
 
-                });
+                    });
 
-
-                layout.data.grouping.forEach(function (group) {
-
-                    if (group.hasOwnProperty('id')) {
-
-                        code = group.user_code;
-                        entity = group.entity;
-                        item = group;
-                        item_key = 'id';
-
-                        promises.push(mapAttributeType(item, item_key, entity, code));
-
-                    }
-
-                });
-
+                })
+            } else {
+                resolve(layout)
             }
-
-            Promise.all(promises).then(function (data) {
-                resolve(data)
-            }).catch(function (reason) {
-
-                reject(reason)
-            })
         })
 
     }
