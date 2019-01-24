@@ -34,6 +34,7 @@
 
     var instrumentDailyPricingModelService = require('./instrument/instrumentDailyPricingModelService');
     var instrumentPaymentSizeDetailService = require('./instrument/instrumentPaymentSizeDetailService');
+    var instrumentClassService = require('./instrument/instrumentClassService');
     var priceDownloadSchemeService = require('./import/priceDownloadSchemeService');
 
     var costMethodService = require('./instrument/instrumentCostMethodService');
@@ -75,6 +76,8 @@
                 return strategyService.getList(2);
             case 'strategy-3':
                 return strategyService.getList(3);
+            case 'instrument-class':
+                return instrumentClassService.getList(options);
             case 'pricing-policy':
                 return pricingPolicyService.getList(options);
             case 'cost-method':
