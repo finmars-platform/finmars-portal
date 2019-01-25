@@ -5,17 +5,8 @@
 
     'use strict';
 
-    var entitySchemeService = require('../../services/import/entitySchemeService');
-    var priceDownloadSchemeService = require('../../services/import/priceDownloadSchemeService');
-    var instrumentSchemeService = require('../../services/import/instrumentSchemeService');
-    var entityResolverService = require('../../services/entityResolverService');
-    var transactionSchemeService = require('../../services/import/transactionSchemeService');
-    var pricingAutomatedScheduleService = require('../../services/import/pricingAutomatedScheduleService');
     var metaContentTypesService = require('../../services/metaContentTypesService');
-    var md5helper = require('../../helpers/md5.helper');
-    var uiRepository = require('../../repositories/uiRepository');
     var configurationService = require('../../services/configurationService');
-
 
     module.exports = function ($scope, $mdDialog, file) {
 
