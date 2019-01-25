@@ -21,7 +21,7 @@
 
         console.log('eventActions', eventActions);
 
-        vm.eventActions = eventActions.$viewValue || [];
+        vm.eventActions = eventActions || [];
 
         vm.toggleQuery = function () {
             vm.queryStatus = !vm.queryStatus;
@@ -52,8 +52,8 @@
         vm.newItem = {
             "transaction_type": '',
             "text": '',
-            "is_sent_to_pending": null,
-            "is_book_automatic": null,
+            "is_sent_to_pending": false,
+            "is_book_automatic": false,
             "button_position": ''
 
         };
@@ -93,18 +93,18 @@
             vm.newItem = {
                 "transaction_type": '',
                 "text": '',
-                "is_sent_to_pending": null,
-                "is_book_automatic": null,
+                "is_sent_to_pending": false,
+                "is_book_automatic": false,
                 "button_position": ''
             };
-        };
 
-        console.log('eventActions', eventActions);
+            console.log('eventActions', vm.eventActions);
+        };
 
         vm.agree = function () {
             //console.log('vm.attr', vm.attribute);
-            eventActions.$viewValue = vm.eventActions;
-            $mdDialog.hide({status: 'agree'});
+            eventActions = vm.eventActions;
+            $mdDialog.hide({status: 'agree', eventActions: eventActions});
         };
 
         vm.cancel = function () {
