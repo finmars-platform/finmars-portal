@@ -1152,11 +1152,13 @@
 
             })
         } else {
+
             if (index === entityItem.content.length) {
                 resolve(item);
             } else {
                 recursiveImportItem(resolve, index, entityItem, cacheContainer)
             }
+
         }
 
     };
@@ -1169,17 +1171,24 @@
 
             entities.forEach(function (entityItem) {
 
-                promises.push(new Promise(function (resolve, reject) {
+                promises.push(new Promise(function (resolveItem, reject) {
 
                     var startIndex = 0;
 
-                    recursiveImportItem(resolve, startIndex, entityItem, cacheContainer)
+                    recursiveImportItem(resolveItem, startIndex, entityItem, cacheContainer)
                 }))
 
             });
 
+            console.log('promises', promises);
+
             Promise.all(promises).then(function (data) {
+
+                console.log("importEntities?", data);
+
                 resolve(data)
+
+
             })
 
         })
@@ -1208,6 +1217,8 @@
                                     getEntityByUserCode(user_code, 'transaction-type-group', cacheContainer).then(function (data) {
 
                                         item.group = data.id;
+
+                                        console.log('___group__user_code', user_code);
 
                                         resolveRelation(item)
 
@@ -1485,14 +1496,12 @@
 
                 console.log('Repair items success');
 
-                var promises = [];
-
                 var instrumentTypes = items.filter(function (item) {
                     return item.entity === 'instruments.instrumenttype';
                 });
 
-                var instrumentTypeGroups = items.filter(function (item) {
-                    return item.entity === 'instruments.instrumenttypegroup';
+                var transactionTypeGroups = items.filter(function (item) {
+                    return item.entity === 'transactions.transactiontypegroup';
                 });
 
                 var transactionTypes = items.filter(function (item) {
@@ -1502,6 +1511,7 @@
                 var otherEntities = items.filter(function (item) {
                     return item.entity !== 'transactions.transactiontype' &&
                         item.entity !== 'instruments.instrumenttype' &&
+                        item.entity !== 'transactions.transactiontypegroup' &&
                         item.entity !== 'ui.editlayout' &&
                         item.entity !== 'ui.listlayout' &&
                         item.entity !== 'ui.reportlayout'
@@ -1514,6 +1524,7 @@
                 });
 
                 console.log('instrumentTypes', instrumentTypes);
+                console.log('transactionTypeGroups', transactionTypeGroups);
                 console.log('transactionTypes', transactionTypes);
                 console.log('otherEntities', otherEntities);
                 console.log('layoutEntities', layoutEntities);
@@ -1524,7 +1535,7 @@
 
                     console.log("Instrument type import success");
 
-                    importEntities(instrumentTypeGroups, cacheContainer).then(function (value) {
+                    importEntities(transactionTypeGroups, cacheContainer).then(function (value) {
 
                         console.log("Transaction type groups import success");
 
