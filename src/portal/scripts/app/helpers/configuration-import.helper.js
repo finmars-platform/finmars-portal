@@ -18,6 +18,7 @@
     var toastNotificationService = require('../../../../core/services/toastNotificationService');
 
     var uiRepository = require('../repositories/uiRepository');
+    var bookmarkRepository = require('../repositories/bookmarkRepository');
 
 
     var configurationImportBackwardCompatibility = require('./configuration-import-backward-compatibility.helper');
@@ -1362,6 +1363,30 @@
                         })
                     }));
                     break;
+                case 'ui.bookmark':
+                    resolve(new Promise(function (resolve, reject) {
+
+                        uiRepository.getListLayoutDefault({
+                            filters: {
+                                name: item.___layout_name,
+                                content_tye: item.___content_type
+                            }
+                        }).then(function (data) {
+
+                            if (data.results.length) {
+
+                                item.list_layout = data.results[0].id;
+
+                                resolve(bookmarkRepository.create(item));
+
+                            } else {
+                                resolve()
+                            }
+
+                        })
+
+                    }));
+                    break;
                 case 'csv_import.scheme':
                     resolve(entitySchemeService.create(item));
                     break;
@@ -1514,7 +1539,8 @@
                         item.entity !== 'transactions.transactiontypegroup' &&
                         item.entity !== 'ui.editlayout' &&
                         item.entity !== 'ui.listlayout' &&
-                        item.entity !== 'ui.reportlayout'
+                        item.entity !== 'ui.reportlayout' &&
+                        item.entity !== 'ui.ui.bookmark'
                 });
 
                 var layoutEntities = items.filter(function (item) {
@@ -1523,11 +1549,16 @@
                         item.entity === 'ui.reportlayout'
                 });
 
+                var bookmarks = items.filter(function (item) {
+                    return item.entity === 'ui.bookmark'
+                });
+
                 console.log('instrumentTypes', instrumentTypes);
                 console.log('transactionTypeGroups', transactionTypeGroups);
                 console.log('transactionTypes', transactionTypes);
                 console.log('otherEntities', otherEntities);
                 console.log('layoutEntities', layoutEntities);
+                console.log('bookmarks', bookmarks);
 
                 var cacheContainer = {};
 
@@ -1555,13 +1586,19 @@
 
                                         console.log("Layout import success", data);
 
-                                        resolve(data);
+                                        importEntities(bookmarks, cacheContainer).then(function (data) {
 
-                                    }).catch(function (reason) {
+                                            console.log("Bookmark import success", data);
 
-                                        console.log('importConfiguration.reason', reason);
+                                            resolve(data);
 
-                                        reject(reason);
+                                        }).catch(function (reason) {
+
+                                            console.log('importConfiguration.reason', reason);
+
+                                            reject(reason);
+                                        })
+
                                     })
 
 

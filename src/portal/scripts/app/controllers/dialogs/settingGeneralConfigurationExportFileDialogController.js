@@ -122,6 +122,8 @@
                     return "Entity viewer layouts";
                 case 'ui.reportlayout':
                     return "Report builder layouts";
+                case 'ui.bookmark':
+                    return "Bookmarks";
                 case 'csv_import.scheme':
                     return "Data import from CSV schemes";
                 case 'integrations.instrumentdownloadscheme':
