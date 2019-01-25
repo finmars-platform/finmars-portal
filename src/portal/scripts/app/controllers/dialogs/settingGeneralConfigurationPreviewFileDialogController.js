@@ -6,11 +6,7 @@
     'use strict';
 
     var metaContentTypesService = require('../../services/metaContentTypesService');
-    var attributeTypeService = require('../../services/attributeTypeService');
     var configurationImportHelper = require('../../helpers/configuration-import.helper');
-
-
-
 
     module.exports = function ($scope, $mdDialog, file) {
 
