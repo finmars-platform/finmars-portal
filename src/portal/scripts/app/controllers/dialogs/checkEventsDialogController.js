@@ -153,7 +153,6 @@
             options.filters.effective_date_1 = vm.effective_date_to;
 
             // options.filters = filters;
-            console.log('request events options is', options);
             eventsService.getList(options).then(function (data) {
 
                 vm.events = data.results;
