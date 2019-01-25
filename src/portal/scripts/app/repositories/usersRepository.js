@@ -295,6 +295,30 @@
         })
     };
 
+    var getOwnMemberSettings = function () {
+        return xhrService.fetch(baseUrl + 'users/user-member/', {
+            method: 'GET',
+            credentials: 'include',
+            headers: {
+                Accept: 'application/json',
+                'Content-type': 'application/json'
+            }
+        })
+    };
+
+    var updateOwnMemberSettings = function (id, member) {
+        return xhrService.fetch(baseUrl + 'users/user-member/' + id + '/', {
+            method: 'PUT',
+            credentials: 'include',
+            headers: {
+                'X-CSRFToken': cookieService.getCookie('csrftoken'),
+                Accept: 'application/json',
+                'Content-type': 'application/json'
+            },
+            body: JSON.stringify(member)
+        })
+    };
+
     module.exports = {
         login: login,
         logout: logout,
@@ -325,7 +349,10 @@
         patchMember: patchMember,
         deleteMemberByKey: deleteMemberByKey,
 
-        getGroupList: getGroupList
+        getGroupList: getGroupList,
+
+        getOwnMemberSettings: getOwnMemberSettings,
+        updateOwnMemberSettings: updateOwnMemberSettings
 
     }
 

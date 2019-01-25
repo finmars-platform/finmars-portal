@@ -15,18 +15,18 @@
 
         var vm = this;
 
-        vm.readyStatus = {user: false};
+        vm.readyStatus = {member: false};
 
         vm.timeZones = timeZonesService.getList();
 
-        usersService.getByKey(0).then(function (data) {
-            vm.user = data;
-            vm.readyStatus.user = true;
+        usersService.getOwnMemberSettings().then(function (data) {
+            vm.member = data.results[0];
+            vm.readyStatus.member = true;
             $scope.$apply();
         });
 
         vm.save = function () {
-            usersService.update(0, vm.user).then(function () {
+            usersService.updateOwnMemberSettings(vm.member.id, vm.member).then(function () {
                 $scope.$apply();
             })
         }
