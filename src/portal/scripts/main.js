@@ -136,7 +136,7 @@ app.controller('TransactionTypeGeneralTabController', ['$scope', '$mdDialog', re
 app.controller('TransactionTypeInputsTabController', ['$scope', '$mdDialog', require('./app/controllers/tabs/transaction-type/transactionTypeInputsTabController')]);
 
 app.controller('AccrualCalculationSchedulesTabController', ['$scope', require('./app/controllers/tabs/instrument/accrualCalculationSchedulesController')]);
-app.controller('EventSchedulesTabController', ['$scope', require('./app/controllers/tabs/instrument/eventSchedulesController')]);
+app.controller('EventSchedulesTabController', ['$scope', '$mdDialog', require('./app/controllers/tabs/instrument/eventSchedulesController')]);
 app.controller('FactorScheduleTabController', ['$scope', require('./app/controllers/tabs/instrument/factorScheduleTabController')]);
 app.controller('ManualPricingFormulasTabController', ['$scope', require('./app/controllers/tabs/instrument/manualPricingFormulasTabController')]);
 app.controller('InstrumentEventActionsDialogController', ['$scope', '$mdDialog', 'eventActions', require('./app/controllers/dialogs/instrumentEventActionsDialogController')]);

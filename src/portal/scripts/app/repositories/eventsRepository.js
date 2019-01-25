@@ -102,6 +102,10 @@
             })
     };
 
+    var sortEventsBy = function (options) {
+        return
+    };
+
     module.exports = {
         getList: getList,
         getEventAction: getEventAction,

@@ -32,7 +32,7 @@
     }
 
     function configureUrl(url, options) {
-
+        console.log('configureRepositoryUrlService options is', options);
         if (options) {
 
             url = url + '?page_size=' + options.pageSize;
@@ -41,6 +41,7 @@
 
             if (options.hasOwnProperty('filters')) {
                 keys = Object.keys(options.filters);
+                console.log('configureRepositoryUrlService keys is', keys);
                 keys.forEach(function (keysItem) {
                     if (options.filters[keysItem]) {
                         var filterItems = options.filters[keysItem];
