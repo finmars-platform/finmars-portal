@@ -11,7 +11,8 @@
 
             <div>
 
-                <md-checkbox ng-checked="vm.selectAllState" data-ng-click="vm.toggleSelectAll()"
+                <md-checkbox data-ng-checked="vm.selectAllState"
+                             data-ng-click="vm.toggleSelectAll()"
                              aria-label="checkbox">
                 </md-checkbox>
 
@@ -22,7 +23,9 @@
             <div data-ng-repeat="item in vm.items">
 
                 <div class="cie-entity-holder">
-                    <md-checkbox ng-model="item.active" data-ng-change="vm.toggleActiveForChilds(item)"
+                    <md-checkbox data-ng-checked="item.active"
+                                 data-ng-click="vm.toggleActiveForChilds(item)"
+                                 data-ng-class="item.someChildsActive"
                                  aria-label="checkbox">
                     </md-checkbox>
                     <span data-ng-bind="vm.getEntityName(item)"></span> <span class="cie-dependency"
@@ -37,7 +40,8 @@
                 <div data-ng-show="item.displayItems" style="padding-left: 20px">
 
                     <div data-ng-repeat="child in item.content">
-                        <md-checkbox ng-model="child.active" data-ng-change="vm.updateActiveForParent(item)"
+                        <md-checkbox data-ng-checked="child.active"
+                                     data-ng-click="vm.updateActiveForParent(child, item)"
                                      aria-label="checkbox">
                         </md-checkbox>
                         {{child.value}} - {{vm.getItemName(child)}}

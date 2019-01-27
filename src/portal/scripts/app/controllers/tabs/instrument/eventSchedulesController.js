@@ -12,7 +12,7 @@
     var metaEventClassService = require('../../../services/metaEventClassService');
     var instrumentPeriodicityService = require('../../../services/instrumentPeriodicityService');
 
-    module.exports = function ($scope) {
+    module.exports = function ($scope, $mdDialog) {
 
         logService.controller('AccrualCalculationSchedulesController', 'initialized');
 
@@ -123,6 +123,21 @@
             vm.entity.event_schedules.splice(index, 1);
         };
 
+        vm.createActions = function($event, actions) {
+            $mdDialog.show({
+                controller: 'InstrumentEventActionsDialogController as vm',
+                templateUrl: 'views/dialogs/instrument-event-actions-dialog-view.html',
+                targetEvent: $event,
+                preserveScope: true,
+                autoWrap: true,
+                multiple: true,
+                clickOutsideToClose: true,
+                locals: {
+                    eventActions: actions
+                }
+            });
+        };
+
         vm.addRow = function () {
             vm.entity.event_schedules.push({
                 "name": vm.newItem.name,
@@ -133,6 +148,7 @@
                 "event_class": vm.newItem.event_class,
                 "action_is_sent_to_pending": vm.newItem.action_is_sent_to_pending,
                 "action_is_book_automatic": vm.newItem.action_is_book_automatic,
+                "actions": vm.newItem.actions,
                 "effective_date": vm.newItem.effective_date,
                 "final_date": vm.newItem.final_date,
                 "periodicity": vm.newItem.periodicity,

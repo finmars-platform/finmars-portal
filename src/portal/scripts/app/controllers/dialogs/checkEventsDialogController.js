@@ -108,16 +108,52 @@
 
         };
 
-        vm.requestEvents = function () {
-
+        vm.sort;
+        vm.direction = true;
+        vm.sortBy = function (sortParameter) {
             vm.loading = true;
 
-            var filters = {};
+            var sortOrder = 'DSC';
+            if (vm.sort === sortParameter) {
+                vm.direction = !vm.direction;
+                if (vm.direction) {
+                    sortOrder = 'DSC';
+                }
+                else {
+                    sortOrder = 'ASC';
+                }
+            }
+            else {
+                vm.sort = sortParameter;
+            }
 
-            filters.effective_date_0 = vm.effective_date_from;
-            filters.effective_date_1 = vm.effective_date_to;
+            var sortingOptions = {
+                sort: {
+                    key: sortParameter,
+                    direction: sortOrder
+                }
+            };
 
-            eventsService.getList({filters: filters}).then(function (data) {
+            vm.requestEvents(sortingOptions);
+
+        };
+
+        vm.requestEvents = function (sortingOptions) {
+            vm.loading = true;
+
+            var options = {};
+            if (sortingOptions && sortingOptions.hasOwnProperty("sort")) {
+                options.sort = new Object();
+                options.sort = sortingOptions.sort;
+            }
+
+            // var filters = {};
+            options.filters = new Object();
+            options.filters.effective_date_0 = vm.effective_date_from;
+            options.filters.effective_date_1 = vm.effective_date_to;
+
+            // options.filters = filters;
+            eventsService.getList(options).then(function (data) {
 
                 vm.events = data.results;
 

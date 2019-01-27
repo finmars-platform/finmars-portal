@@ -113,6 +113,9 @@
                                 <md-card class="modal-dialog-card">{{::vm.bindReportItemName(item)}}</md-card>
                             </div>
                         </div>
+                        <div layout="row" class="view-constructor-attributes-separator" data-ng-show="vm.instrumentDynamicAttrs.length > 0">
+                            <p>User Attributes</p>
+                        </div>
                         <div class="g-checkbox-row" data-ng-repeat="item in vm.instrumentDynamicAttrs" layout="row">
                             <div>
                                 <md-checkbox ng-model="item.columns" aria-label="Columns" aria="columns"
@@ -174,6 +177,9 @@
                                 <md-card class="modal-dialog-card">{{::vm.bindReportItemName(item)}}</md-card>
                             </div>
                         </div>
+                        <div layout="row" class="view-constructor-attributes-separator" data-ng-show="vm.accountDynamicAttrs.length > 0">
+                            <p>User Attributes</p>
+                        </div>
                         <div class="g-checkbox-row" data-ng-repeat="item in vm.accountDynamicAttrs" layout="row">
                             <div>
                                 <md-checkbox ng-model="item.columns" aria-label="Columns" aria="columns"
@@ -217,6 +223,9 @@
                             <div class="g-modal-draggable-card">
                                 <md-card class="modal-dialog-card">{{::vm.bindReportItemName(item)}}</md-card>
                             </div>
+                        </div>
+                        <div layout="row" class="view-constructor-attributes-separator" data-ng-show="vm.portfolioDynamicAttrs.length > 0">
+                            <p>User Attributes</p>
                         </div>
                         <div class="g-checkbox-row" data-ng-repeat="item in vm.portfolioDynamicAttrs" layout="row">
                             <div>
@@ -401,7 +410,7 @@
                     </md-content>
                 </md-tab>
 
-                <md-tab label="Custom Attributes">
+                <md-tab label="Custom Columns">
                     <md-content class="md-padding">
                         <div class="g-th-checkbox-row">
                             <span class="g-meta-circle red">C</span>
