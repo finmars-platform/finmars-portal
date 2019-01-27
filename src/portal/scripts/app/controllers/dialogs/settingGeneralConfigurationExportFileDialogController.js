@@ -87,60 +87,64 @@
 
         vm.syncWithLayout = function () {
 
-            console.log('vm.activeLayout', vm.activeLayout);
+            if (vm.activeLayout) {
 
-            vm.layouts.forEach(function (item) {
-                item.is_default = false;
-            });
+                console.log('vm.activeLayout', vm.activeLayout);
 
-            vm.activeLayout.is_default = true;
+                vm.layouts.forEach(function (item) {
+                    item.is_default = false;
+                });
 
-            vm.items.forEach(function (entityItem) {
-                entityItem.active = false;
+                vm.activeLayout.is_default = true;
 
-                entityItem.content.forEach(function (childItem) {
-                    childItem.active = false;
-                })
-            });
+                vm.items.forEach(function (entityItem) {
+                    entityItem.active = false;
 
-            vm.items.forEach(function (entityItem) {
+                    entityItem.content.forEach(function (childItem) {
+                        childItem.active = false;
+                    })
+                });
 
-                if (vm.activeLayout.data[entityItem.entity]) {
+                vm.items.forEach(function (entityItem) {
 
-                    if (entityItem.content.length) {
+                    if (vm.activeLayout.data[entityItem.entity]) {
 
-                        entityItem.active = true;
+                        if (entityItem.content.length) {
+
+                            entityItem.active = true;
+
+                        }
+
+                        entityItem.content.forEach(function (childItem) {
+
+                            var name;
+
+                            if (childItem.hasOwnProperty('name')) {
+                                name = childItem.name
+                            }
+
+                            if (childItem.hasOwnProperty('user_code')) {
+                                name = childItem.user_code
+                            }
+
+                            if (childItem.hasOwnProperty('scheme_name')) {
+                                name = childItem.scheme_name
+                            }
+
+                            if (vm.activeLayout.data[entityItem.entity].indexOf(name) !== -1) {
+                                childItem.active = true
+                            } else {
+                                entityItem.active = false;
+                            }
+                        })
 
                     }
 
-                    entityItem.content.forEach(function (childItem) {
+                    vm.checkSelectAll();
 
-                        var name;
+                })
 
-                        if (childItem.hasOwnProperty('name')) {
-                            name = childItem.name
-                        }
-
-                        if (childItem.hasOwnProperty('user_code')) {
-                            name = childItem.user_code
-                        }
-
-                        if (childItem.hasOwnProperty('scheme_name')) {
-                            name = childItem.scheme_name
-                        }
-
-                        if (vm.activeLayout.data[entityItem.entity].indexOf(name) !== -1) {
-                            childItem.active = true
-                        } else {
-                            entityItem.active = false;
-                        }
-                    })
-
-                }
-
-                vm.checkSelectAll();
-
-            })
+            }
 
         };
 
