@@ -5,14 +5,7 @@
 
     'use strict';
 
-    var entitySchemeService = require('../../services/import/entitySchemeService');
-    var priceDownloadSchemeService = require('../../services/import/priceDownloadSchemeService');
-    var instrumentSchemeService = require('../../services/import/instrumentSchemeService');
-    var entityResolverService = require('../../services/entityResolverService');
-    var transactionSchemeService = require('../../services/import/transactionSchemeService');
-    var pricingAutomatedScheduleService = require('../../services/import/pricingAutomatedScheduleService');
     var metaContentTypesService = require('../../services/metaContentTypesService');
-    var md5helper = require('../../helpers/md5.helper');
     var uiRepository = require('../../repositories/uiRepository');
     var configurationService = require('../../services/configurationService');
 
@@ -21,13 +14,14 @@
 
         var vm = this;
 
-        vm.readyStatus = {content: false};
+        vm.readyStatus = {content: false, layouts: false};
+        vm.layouts = [];
 
         vm.selectAllState = false;
 
         vm.getFile = function () {
 
-            configurationService.getConfigurationData().then(function (data) {
+            return configurationService.getConfigurationData().then(function (data) {
 
                 console.log('configurationService.getConfigurationData', data);
 
@@ -58,6 +52,211 @@
                 $scope.$apply();
 
             });
+
+        };
+
+        vm.getConfigurationExportLayouts = function () {
+
+            vm.readyStatus.layouts = false;
+
+            uiRepository.getConfigurationExportLayoutList().then(function (data) {
+
+                vm.layouts = data.results;
+
+                if (vm.layouts.length) {
+
+                    vm.activeLayout = vm.layouts[0];
+
+                    vm.layouts.forEach(function (item) {
+                        if (item.is_default) {
+                            vm.activeLayout = item;
+                        }
+                    });
+                }
+
+                vm.syncWithLayout();
+
+                vm.readyStatus.layouts = true;
+
+                $scope.$apply();
+
+            });
+
+        };
+
+
+        vm.syncWithLayout = function () {
+
+            console.log('vm.activeLayout', vm.activeLayout);
+
+            vm.layouts.forEach(function (item) {
+                item.is_default = false;
+            });
+
+            vm.activeLayout.is_default = true;
+
+            vm.items.forEach(function (entityItem) {
+                entityItem.active = false;
+
+                entityItem.content.forEach(function (childItem) {
+                    childItem.active = false;
+                })
+            });
+
+            vm.items.forEach(function (entityItem) {
+
+                if (vm.activeLayout.data[entityItem.entity]) {
+
+                    if (entityItem.content.length) {
+
+                        entityItem.active = true;
+
+                    }
+
+                    entityItem.content.forEach(function (childItem) {
+
+                        var name;
+
+                        if (childItem.hasOwnProperty('name')) {
+                            name = childItem.name
+                        }
+
+                        if (childItem.hasOwnProperty('user_code')) {
+                            name = childItem.user_code
+                        }
+
+                        if (childItem.hasOwnProperty('scheme_name')) {
+                            name = childItem.scheme_name
+                        }
+
+                        if (vm.activeLayout.data[entityItem.entity].indexOf(name) !== -1) {
+                            childItem.active = true
+                        } else {
+                            entityItem.active = false;
+                        }
+                    })
+
+                }
+
+                vm.checkSelectAll();
+
+            })
+
+        };
+
+        vm.updateLayout = function ($event) {
+
+            vm.items.forEach(function (item) {
+
+                vm.activeLayout.data[item.entity] = [];
+
+                item.content.forEach(function (child) {
+
+                    if (child.active) {
+
+                        var name;
+
+                        if (child.hasOwnProperty('name')) {
+                            name = child.name
+                        }
+
+                        if (child.hasOwnProperty('user_code')) {
+                            name = child.user_code
+                        }
+
+                        if (child.hasOwnProperty('scheme_name')) {
+                            name = child.scheme_name
+                        }
+
+                        if (name) {
+                            vm.activeLayout.data[item.entity].push(name)
+                        }
+                    }
+
+                })
+
+            });
+
+            $mdDialog.show({
+                controller: 'SaveConfigurationExportLayoutDialogController as vm',
+                templateUrl: 'views/dialogs/save-configuration-export-layout-dialog-view.html',
+                targetEvent: $event,
+                locals: {
+                    data: {
+                        layout: vm.activeLayout
+                    }
+                },
+                multiple: true,
+                preserveScope: true,
+                autoWrap: true,
+                skipHide: true
+            }).then(function (res) {
+
+                if (res.status === 'agree') {
+                    vm.getConfigurationExportLayouts();
+                }
+            })
+
+        };
+
+        vm.createLayout = function ($event) {
+
+            var configuration = {};
+
+            vm.items.forEach(function (item) {
+
+                if (!configuration.hasOwnProperty(item.entity)) {
+                    configuration[item.entity] = [];
+                }
+
+                item.content.forEach(function (child) {
+
+                    if (child.active) {
+
+                        var name;
+
+                        if (child.hasOwnProperty('name')) {
+                            name = child.name
+                        }
+
+                        if (child.hasOwnProperty('user_code')) {
+                            name = child.user_code
+                        }
+
+                        if (child.hasOwnProperty('scheme_name')) {
+                            name = child.scheme_name
+                        }
+
+                        configuration[item.entity].push(name)
+                    }
+
+                })
+
+            });
+
+            console.log('createLayout.configuration', configuration);
+
+            $mdDialog.show({
+                controller: 'SaveConfigurationExportLayoutDialogController as vm',
+                templateUrl: 'views/dialogs/save-configuration-export-layout-dialog-view.html',
+                targetEvent: $event,
+                locals: {
+                    data: {
+                        layout: {
+                            data: configuration
+                        }
+                    }
+                },
+                multiple: true,
+                preserveScope: true,
+                autoWrap: true,
+                skipHide: true
+            }).then(function (res) {
+
+                if (res.status === 'agree') {
+                    vm.getConfigurationExportLayouts();
+                }
+            })
 
         };
 
@@ -346,7 +545,9 @@
 
         vm.init = function () {
 
-            vm.getFile();
+            vm.getFile().then(function () {
+                vm.getConfigurationExportLayouts();
+            })
 
         };
 
