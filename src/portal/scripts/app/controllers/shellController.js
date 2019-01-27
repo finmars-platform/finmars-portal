@@ -50,11 +50,12 @@
 
             vm.readyStatus.masters = false;
 
-            usersService.getMasterList().then(function (data) {
+            return usersService.getMasterList().then(function (data) {
                 vm.masters = data.results;
                 vm.readyStatus.masters = true;
                 vm.updateCurrentMasterUser();
                 $scope.$apply();
+
             });
 
         };
@@ -195,10 +196,13 @@
             });
         };
 
-        notificationsService.getList(1, 'unreaded').then(function (data) {
-            vm.unreadedNotificationsAmount = data.count;
-            $scope.$apply();
-        });
+        vm.getNotifications = function () {
+
+            notificationsService.getList(1, 'unreaded').then(function (data) {
+                vm.unreadedNotificationsAmount = data.count;
+                $scope.$apply();
+            });
+        }
 
         $rootScope.$on('$stateChangeSuccess', function () {
             $mdDialog.cancel();
@@ -224,7 +228,12 @@
         };
 
         vm.init = function () {
-            vm.getMasterUsersList();
+            vm.getMasterUsersList().then(function () {
+
+                if (vm.masters.length) {
+                    vm.getNotifications();
+                }
+            })
         };
 
         vm.init();
