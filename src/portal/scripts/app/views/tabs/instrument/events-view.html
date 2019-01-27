@@ -190,6 +190,9 @@
                     </md-input-container>
                 </td>
                 <td data-ng-if="item.editStatus" style="padding-top: 12px">
+                    <md-button data-ng-click="vm.createActions($event, item.actions)" class="ES-create-actions-btn">Edit</md-button>
+                </td>
+                <!--<td data-ng-if="item.editStatus" style="padding-top: 12px">
                     <md-input-container class="md-block">
                         <label data-ng-bind="getName()"></label>
                         <md-select data-ng-model="item.actions"
@@ -201,7 +204,7 @@
                             </md-option>
                         </md-select>
                     </md-input-container>
-                </td>
+                </td>-->
                 <td data-ng-if="item.editStatus" class="edit-state-td">
                     <md-input-container>
                         <!--<label for="">Notify in N days</label>-->
@@ -275,6 +278,10 @@
                     </md-input-container>
                 </td>
                 <td style="padding-top: 12px">
+                    <md-button data-ng-click="vm.createActions($event, vm.newItem.actions)" class="ES-create-actions-btn">Create</md-button>
+                </td>
+
+                <!--<td style="padding-top: 12px">
                     <md-input-container class="md-block">
                         <label data-ng-bind="getName()"></label>
                         <md-select data-ng-model="item.actions"
@@ -286,7 +293,7 @@
                             </md-option>
                         </md-select>
                     </md-input-container>
-                </td>
+                </td>-->
                 <td>
                     <md-input-container>
                         <!--<label for="">Periodicity</label>-->

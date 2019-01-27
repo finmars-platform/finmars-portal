@@ -32,7 +32,6 @@
     }
 
     function configureUrl(url, options) {
-
         if (options) {
 
             url = url + '?page_size=' + options.pageSize;

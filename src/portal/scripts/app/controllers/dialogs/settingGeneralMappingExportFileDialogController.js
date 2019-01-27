@@ -55,9 +55,8 @@
         vm.toggleSelectAll = function () {
 
             vm.selectAllState = !vm.selectAllState;
-
             vm.items.forEach(function (item) {
-
+                item.someChildsActive = undefined;
                 item.active = vm.selectAllState;
 
                 item.content.forEach(function (child) {
@@ -130,6 +129,8 @@
 
         vm.toggleActiveForChilds = function (item) {
 
+            item.active = !item.active;
+            item.someChildsActive = undefined;
             item.content.forEach(function (child) {
                 child.active = item.active;
             });
@@ -137,19 +138,36 @@
             vm.checkSelectAll();
 
         };
-        vm.updateActiveForParent = function (parent) {
+        vm.updateActiveForParent = function (child, parent) {
 
-            var active = true;
+            child.active = !child.active;
 
-            parent.content.forEach(function (item) {
+            var ChildIsActive = false;
+            var ChildIsNotActive = false;
+            var parentIsActive = false;
 
-                if (item.active === false) {
-                    active = false;
+            parent.content.forEach(function (item, itemIndex) {
+                if (item.active === true) {
+                    ChildIsActive = true;
                 }
-
+                else {
+                    ChildIsNotActive = true;
+                }
+                if (itemIndex == parent.content.length - 1) {
+                    if (ChildIsActive && !ChildIsNotActive) {
+                        parentIsActive = true;
+                    }
+                    else if (!ChildIsActive && ChildIsNotActive) {
+                        parent.someChildsActive = undefined;
+                    }
+                    else {
+                        parentIsActive = false;
+                        parent.someChildsActive = 'some-checkboxes-ticked';
+                    }
+                }
             });
 
-            parent.active = active;
+            parent.active = parentIsActive;
 
             vm.checkSelectAll();
 
