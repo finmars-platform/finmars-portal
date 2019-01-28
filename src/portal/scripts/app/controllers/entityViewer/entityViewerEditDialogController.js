@@ -41,6 +41,7 @@
         vm.editLayoutByEntityInsance = false;
 
         vm.formIsValid = true;
+        vm.TTGroupChosen = true;
 
         vm.loadPermissions = function () {
 
@@ -670,6 +671,10 @@
 
                 }
 
+                if (vm.entityType === 'transaction-type') {
+                    console.log('updating transaction-type');
+
+                }
                 entityResolverService.update(vm.entityType, result.id, result).then(function (data) {
 
                     if (vm.entityType === 'complex-transaction') {

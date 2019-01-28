@@ -32,7 +32,6 @@
                         templateUrl: 'views/dialogs/bookmarks-wizard-dialog-view.html',
                         parent: angular.element(document.body),
                         targetEvent: $event,
-                        locals: {},
                         preserveScope: true,
                         multiple: true,
                         autoWrap: true,

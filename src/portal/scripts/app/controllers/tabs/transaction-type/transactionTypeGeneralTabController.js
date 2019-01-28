@@ -16,6 +16,7 @@
         logService.controller('TransactionTypeGeneralTabController', 'initialized');
 
         var vm = this;
+
         vm.entity = $scope.$parent.vm.entity;
 
         vm.entity.book_transaction_layout = vm.entity.book_transaction_layout || '';
@@ -122,6 +123,12 @@
                 transactionTypeGroupService.create({
                     name: vm.entity.group.name
                 })
+            }
+            if (vm.entity.group === 14 || !vm.entity.group) {
+                $scope.$parent.vm.TTGroupChosen = false;
+            }
+            else {
+                $scope.$parent.vm.TTGroupChosen = true;
             }
         });
 
