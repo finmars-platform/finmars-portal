@@ -10,7 +10,10 @@
                 <div data-ng-if="item.children.length" layout="row" layout-align="start start">
                     <md-menu>
                         <!-- Trigger element is a md-button with an icon -->
-                        <md-button ng-click="$mdOpenMenu($event)" class="" aria-label="Open sample menu">
+                        <!--<md-button ng-click="$mdOpenMenu($event)" class="" aria-label="Open sample menu">
+                            {{item.name}}
+                        </md-button>-->
+                        <md-button ng-click="$mdMenu.open($event)" class="" aria-label="Open sample menu">
                             {{item.name}}
                         </md-button>
                         <md-menu-content>
