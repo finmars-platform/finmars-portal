@@ -59,10 +59,19 @@
             })
     };
 
-    var getListLayout = function (entity) {
-
+    var getListLayout = function (entity, options) {
+        console.log('uiRepository options is', options);
         if (entity == 'all') {
-            return xhrService.fetch(baseUrl + 'ui/list-layout/',
+            // return xhrService.fetch(baseUrl + 'ui/list-layout/',
+            //     {
+            //         method: 'GET',
+            //         credentials: 'include',
+            //         headers: {
+            //             Accept: 'application/json',
+            //             'Content-type': 'application/json'
+            //         }
+            //     })
+            return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl + 'ui/list-layout/', options),
                 {
                     method: 'GET',
                     credentials: 'include',
