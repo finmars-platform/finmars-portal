@@ -24,8 +24,8 @@
         return uiRepository.updateEditLayout(id, ui);
     };
 
-    var getListLayout = function (entity) {
-        return uiRepository.getListLayout(entity);
+    var getListLayout = function (entity, options) {
+        return uiRepository.getListLayout(entity, options);
     };
 
     var getListLayoutByKey = function (key) {
