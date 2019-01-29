@@ -105,6 +105,14 @@
         return usersRepository.getGroupList();
     };
 
+    var getOwnMemberSettings = function () {
+        return usersRepository.getOwnMemberSettings();
+    };
+
+    var updateOwnMemberSettings = function (id, member) {
+        return usersRepository.updateOwnMemberSettings(id, member);
+    };
+
     module.exports = {
         login: login,
         logout: logout,
@@ -135,7 +143,10 @@
         patchMember: patchMember,
         deleteMemberByKey: deleteMemberByKey,
 
-        getGroupList: getGroupList
+        getGroupList: getGroupList,
+
+        getOwnMemberSettings: getOwnMemberSettings,
+        updateOwnMemberSettings: updateOwnMemberSettings
     }
 
 }());

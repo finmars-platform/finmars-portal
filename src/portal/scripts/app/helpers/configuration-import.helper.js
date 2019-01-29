@@ -18,6 +18,7 @@
     var toastNotificationService = require('../../../../core/services/toastNotificationService');
 
     var uiRepository = require('../repositories/uiRepository');
+    var bookmarkRepository = require('../repositories/bookmarkRepository');
 
 
     var configurationImportBackwardCompatibility = require('./configuration-import-backward-compatibility.helper');
@@ -171,7 +172,7 @@
 
                             }
 
-                            if(prop_data.code === 'system_code') {
+                            if (prop_data.code === 'system_code') {
 
                                 getEntityBySystemCode(user_code, entity, cacheContainer).then(function (data) {
 
@@ -670,63 +671,118 @@
 
     }
 
+    function recursiveMapItemInLayout(resolve, items, index) {
+
+        if (items.length) {
+
+            if (items[index].hasOwnProperty('id')) {
+
+                var code = items[index].user_code;
+                var entity = items[index].entity;
+                var item = items[index];
+                var item_key = 'id';
+
+                if (entity) {
+
+                    mapAttributeType(item, item_key, entity, code).then(function () {
+
+                        if (index < items.length - 1) {
+                            index = index + 1;
+                            recursiveMapItemInLayout(resolve, items, index);
+                        } else {
+                            resolve(items);
+                        }
+
+                    }).catch(function (error) {
+
+                        items.splice(index, 1);
+
+                        index = index - 1;
+
+                        console.log('splice items', items);
+
+                        if (index < items.length - 1) {
+                            recursiveMapItemInLayout(resolve, items, index)
+                        } else {
+                            resolve(items);
+                        }
+
+                    })
+
+                } else {
+
+                    items.splice(index, 1);
+
+                    index = index - 1;
+
+                    console.log('splice items', items);
+
+                    if (index < items.length - 1) {
+                        recursiveMapItemInLayout(resolve, items, index)
+                    } else {
+                        resolve(items);
+                    }
+
+                }
+
+            } else {
+                if (index < items.length - 1) {
+
+                    index = index + 1;
+                    recursiveMapItemInLayout(resolve, items, index)
+
+                } else {
+
+                    resolve(items)
+
+                }
+            }
+
+        } else {
+            resolve(items)
+        }
+
+    }
+
+    function recursiveMapLayout(items) {
+
+        return new Promise(function (resolve, reject) {
+
+            var startIndex = 0;
+
+            recursiveMapItemInLayout(resolve, items, startIndex);
+
+        })
+
+    }
+
     function handleListLayoutMap(layout, cacheContainer) {
 
         return new Promise(function (resolve, reject) {
 
-            var promises = [];
-
             if (layout.data) {
 
-                promises.push(mapReportOptions(layout, cacheContainer));
+                mapReportOptions(layout, cacheContainer).then(function (layout) {
 
-                var code;
-                var entity;
-                var item;
-                var item_key;
+                    recursiveMapLayout(layout.data.columns).then(function (columns) {
 
-                console.log('handleListLayoutMap', layout);
+                        layout.data.columns = columns;
 
-                layout.data.columns.forEach(function (column) {
+                        recursiveMapLayout(layout.data.grouping).then(function (grouping) {
 
-                    if (column.hasOwnProperty('id')) {
+                            layout.data.grouping = grouping;
 
-                        code = column.user_code;
-                        entity = column.entity;
-                        item = column;
-                        item_key = 'id';
+                            resolve(layout)
 
-                        promises.push(mapAttributeType(item, item_key, entity, code));
-
-                    }
+                        })
 
 
-                });
+                    });
 
-
-                layout.data.grouping.forEach(function (group) {
-
-                    if (group.hasOwnProperty('id')) {
-
-                        code = group.user_code;
-                        entity = group.entity;
-                        item = group;
-                        item_key = 'id';
-
-                        promises.push(mapAttributeType(item, item_key, entity, code));
-
-                    }
-
-                });
-
+                })
+            } else {
+                resolve(layout)
             }
-
-            Promise.all(promises).then(function (data) {
-                resolve(data)
-            }).catch(function (reason) {
-
-                reject(reason)
-            })
         })
 
     }
@@ -1097,11 +1153,13 @@
 
             })
         } else {
+
             if (index === entityItem.content.length) {
                 resolve(item);
             } else {
                 recursiveImportItem(resolve, index, entityItem, cacheContainer)
             }
+
         }
 
     };
@@ -1114,17 +1172,24 @@
 
             entities.forEach(function (entityItem) {
 
-                promises.push(new Promise(function (resolve, reject) {
+                promises.push(new Promise(function (resolveItem, reject) {
 
                     var startIndex = 0;
 
-                    recursiveImportItem(resolve, startIndex, entityItem, cacheContainer)
+                    recursiveImportItem(resolveItem, startIndex, entityItem, cacheContainer)
                 }))
 
             });
 
+            console.log('promises', promises);
+
             Promise.all(promises).then(function (data) {
+
+                console.log("importEntities?", data);
+
                 resolve(data)
+
+
             })
 
         })
@@ -1153,6 +1218,8 @@
                                     getEntityByUserCode(user_code, 'transaction-type-group', cacheContainer).then(function (data) {
 
                                         item.group = data.id;
+
+                                        console.log('___group__user_code', user_code);
 
                                         resolveRelation(item)
 
@@ -1296,6 +1363,30 @@
                         })
                     }));
                     break;
+                case 'ui.bookmark':
+                    resolve(new Promise(function (resolve, reject) {
+
+                        uiRepository.getListLayoutDefault({
+                            filters: {
+                                name: item.___layout_name,
+                                content_tye: item.___content_type
+                            }
+                        }).then(function (data) {
+
+                            if (data.results.length) {
+
+                                item.list_layout = data.results[0].id;
+
+                                resolve(bookmarkRepository.create(item));
+
+                            } else {
+                                resolve()
+                            }
+
+                        })
+
+                    }));
+                    break;
                 case 'csv_import.scheme':
                     resolve(entitySchemeService.create(item));
                     break;
@@ -1430,14 +1521,12 @@
 
                 console.log('Repair items success');
 
-                var promises = [];
-
                 var instrumentTypes = items.filter(function (item) {
                     return item.entity === 'instruments.instrumenttype';
                 });
 
-                var instrumentTypeGroups = items.filter(function (item) {
-                    return item.entity === 'instruments.instrumenttypegroup';
+                var transactionTypeGroups = items.filter(function (item) {
+                    return item.entity === 'transactions.transactiontypegroup';
                 });
 
                 var transactionTypes = items.filter(function (item) {
@@ -1447,9 +1536,11 @@
                 var otherEntities = items.filter(function (item) {
                     return item.entity !== 'transactions.transactiontype' &&
                         item.entity !== 'instruments.instrumenttype' &&
+                        item.entity !== 'transactions.transactiontypegroup' &&
                         item.entity !== 'ui.editlayout' &&
                         item.entity !== 'ui.listlayout' &&
-                        item.entity !== 'ui.reportlayout'
+                        item.entity !== 'ui.reportlayout' &&
+                        item.entity !== 'ui.ui.bookmark'
                 });
 
                 var layoutEntities = items.filter(function (item) {
@@ -1458,10 +1549,16 @@
                         item.entity === 'ui.reportlayout'
                 });
 
+                var bookmarks = items.filter(function (item) {
+                    return item.entity === 'ui.bookmark'
+                });
+
                 console.log('instrumentTypes', instrumentTypes);
+                console.log('transactionTypeGroups', transactionTypeGroups);
                 console.log('transactionTypes', transactionTypes);
                 console.log('otherEntities', otherEntities);
                 console.log('layoutEntities', layoutEntities);
+                console.log('bookmarks', bookmarks);
 
                 var cacheContainer = {};
 
@@ -1469,7 +1566,7 @@
 
                     console.log("Instrument type import success");
 
-                    importEntities(instrumentTypeGroups, cacheContainer).then(function (value) {
+                    importEntities(transactionTypeGroups, cacheContainer).then(function (value) {
 
                         console.log("Transaction type groups import success");
 
@@ -1489,13 +1586,19 @@
 
                                         console.log("Layout import success", data);
 
-                                        resolve(data);
+                                        importEntities(bookmarks, cacheContainer).then(function (data) {
 
-                                    }).catch(function (reason) {
+                                            console.log("Bookmark import success", data);
 
-                                        console.log('importConfiguration.reason', reason);
+                                            resolve(data);
 
-                                        reject(reason);
+                                        }).catch(function (reason) {
+
+                                            console.log('importConfiguration.reason', reason);
+
+                                            reject(reason);
+                                        })
+
                                     })
 
 

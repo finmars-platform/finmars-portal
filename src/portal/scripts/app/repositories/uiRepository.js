@@ -371,6 +371,66 @@
         })
     };
 
+
+    var getConfigurationExportLayoutList = function () {
+
+        return xhrService.fetch(baseUrl + 'ui/configuration-export-layout/',
+            {
+                method: 'GET',
+                credentials: 'include',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-type': 'application/json'
+                }
+            })
+    };
+
+    var createConfigurationExportLayout = function (data) {
+
+        return xhrService.fetch(baseUrl + 'ui/configuration-export-layout/',
+            {
+                method: 'POST',
+                credentials: 'include',
+                headers: {
+                    'X-CSRFToken': cookieService.getCookie('csrftoken'),
+                    Accept: 'application/json',
+                    'Content-type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+    };
+
+    var updateConfigurationExportLayout = function (id, data) {
+        return xhrService.fetch(baseUrl + 'ui/configuration-export-layout/' + id + '/',
+            {
+                method: 'PUT',
+                credentials: 'include',
+                headers: {
+                    'X-CSRFToken': cookieService.getCookie('csrftoken'),
+                    Accept: 'application/json',
+                    'Content-type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+    };
+
+    var deleteConfigurationExportLayoutByKey = function (id) {
+        return new Promise(function (resolve, reject) {
+            xhrService.fetch(baseUrl + 'ui/configuration-export-layout/' + id + '/',
+                {
+                    method: 'DELETE',
+                    credentials: 'include',
+                    headers: {
+                        'X-CSRFToken': cookieService.getCookie('csrftoken'),
+                        Accept: 'application/json',
+                        'Content-type': 'application/json'
+                    }
+                }).then(function (data) {
+                resolve(undefined);
+            })
+        })
+    };
+
     module.exports = {
 
         getDefaultEditLayout: getDefaultEditLayout,
@@ -395,7 +455,12 @@
         getConfigurationList: getConfigurationList,
         createConfiguration: createConfiguration,
         updateConfiguration: updateConfiguration,
-        deleteConfigurationByKey: deleteConfigurationByKey
+        deleteConfigurationByKey: deleteConfigurationByKey,
+
+        getConfigurationExportLayoutList: getConfigurationExportLayoutList,
+        createConfigurationExportLayout: createConfigurationExportLayout,
+        updateConfigurationExportLayout: updateConfigurationExportLayout,
+        deleteConfigurationExportLayoutByKey: deleteConfigurationExportLayoutByKey
 
     }
 
