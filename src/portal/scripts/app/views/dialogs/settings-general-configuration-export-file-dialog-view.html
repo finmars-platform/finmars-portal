@@ -1,4 +1,4 @@
-<md-dialog aria-label="" ng-cloak class="configuration-import-dialog-view draggable-dialog" drag-dialog>
+<md-dialog aria-label="" ng-cloak class="configuration-import-dialog-view draggable-dialog width-80" drag-dialog>
     <md-toolbar>
         <div class="md-toolbar-tools">
             <h2>Configuration export manager</h2>
@@ -9,11 +9,55 @@
 
         <div data-ng-if="vm.readyStatus.content">
 
-            <div>
-                <md-input-container class="width-80">
-                    <label>File Name</label>
-                    <input type="text" data-ng-model="vm.filename">
-                </md-input-container>
+            <div layout="row">
+
+                <div class="width-50">
+                    <md-input-container class="width-80">
+                        <label>File Name</label>
+                        <input type="text" data-ng-model="vm.filename">
+                    </md-input-container>
+                </div>
+
+                <div class="width-50">
+
+                    <div data-ng-if="vm.readyStatus.layouts">
+
+                        <div data-ng-if="vm.layouts.length" layout="row">
+
+                            <div class="width-70">
+
+                                <md-input-container class="width-80">
+                                    <label>Layout</label>
+                                    <md-select data-ng-model="vm.activeLayout" data-ng-change="vm.syncWithLayout()">
+                                        <md-option data-ng-repeat="layout in vm.layouts" ng-value="layout">
+                                            {{ layout.name }}
+                                        </md-option>
+                                    </md-select>
+                                </md-input-container>
+
+                            </div>
+
+                            <div class="width-30">
+                                <md-button class="md-raised" data-ng-click="vm.updateLayout()">Save layout
+                                </md-button>
+                            </div>
+
+
+                        </div>
+                        <div data-ng-if="!vm.layouts.length">
+                            <md-button class="md-raised" data-ng-click="vm.createLayout()">Save layout
+                            </md-button>
+                        </div>
+                    </div>
+
+                    <div data-ng-if="!vm.readyStatus.layouts">
+                        <div layout="row" layout-sm="column" layout-align="space-around" class="">
+                            <md-progress-circular md-mode="indeterminate" md-diameter="24"></md-progress-circular>
+                        </div>
+                    </div>
+
+                </div>
+
             </div>
 
             <div>

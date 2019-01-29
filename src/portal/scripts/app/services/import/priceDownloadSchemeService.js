@@ -7,8 +7,8 @@
 
     var priceDownloadSchemeRepository = require('../../repositories/import/priceDownloadSchemeRepository');
 
-    var getList = function () {
-        return priceDownloadSchemeRepository.getList();
+    var getList = function (options) {
+        return priceDownloadSchemeRepository.getList(options);
     };
 
     var getByKey = function (id) {

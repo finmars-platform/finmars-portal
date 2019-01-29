@@ -71,7 +71,7 @@ app.run(['$rootScope', '$transitions', '$state', function ($rootScope, $transiti
 
         setTimeout(function () {
             $(window).trigger('resize');
-        }, 300);
+        }, 1000);
 
     });
 
@@ -190,6 +190,7 @@ app.controller('InstrumentSelectDialogController', ['$scope', '$mdDialog', requi
 app.controller('ClassifierSelectDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/classifierSelectDialogController')]);
 app.controller('SaveLayoutDialogController', ['$scope', '$mdDialog', require('./app/controllers/dialogs/saveLayoutDialogController')]);
 app.controller('RenameDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/renameDialogController')]);
+app.controller('SaveConfigurationExportLayoutDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/saveConfigurationExportLayoutDialogController')]);
 app.controller('CheckEventsDialogController', ['$scope', '$mdDialog', require('./app/controllers/dialogs/checkEventsDialogController')]);
 
 

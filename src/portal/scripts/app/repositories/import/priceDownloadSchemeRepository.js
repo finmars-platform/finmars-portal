@@ -12,8 +12,8 @@
 
     var baseUrl = baseUrlService.resolve();
 
-    var getList = function () {
-        return xhrService.fetch(baseUrl + 'import/price-download-scheme/?page_size=1000',
+    var getList = function (options) {
+        return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl + 'import/price-download-scheme/', options),
             {
                 method: 'GET',
                 credentials: 'include',
@@ -21,7 +21,7 @@
                     Accept: 'application/json',
                     'Content-type': 'application/json'
                 }
-            })
+            });
     };
     var create = function (map) {
         return xhrService.fetch(baseUrl + 'import/price-download-scheme/',

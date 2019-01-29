@@ -152,41 +152,11 @@
 
         };
 
-        function deleteExisted() {
-
-            return new Promise(function (resolve, reject) {
-
-                entityTypeMappingResolveService.getList(entity, {pageSize: 10000}).then(function (data) {
-
-                    var promises = [];
-
-                    if (data.results.length) {
-
-                        data.results.forEach(function (oldMappingItem) {
-
-                            promises.push(entityTypeMappingResolveService.deleteByKey(entity, oldMappingItem.id));
-
-                        });
-
-                    }
-
-                    Promise.all(promises).then(function () {
-
-                        resolve()
-
-                    })
-
-                });
-
-            })
-
-        }
-
         function handleItem(entity, item) {
 
             return new Promise(function (resolve, reject) {
 
-                mapContentObj(entity, item).then(function () {
+                mapContentObj(entity, item).then(function (item) {
 
                     createIfNotExists(entity, item).then(function () {
 
@@ -233,7 +203,11 @@
 
                         if (data.results.length) {
 
-                            item.content_object = data.results[0].id;
+                            data.results.forEach(function (dataItem) {
+
+                                item.content_object = dataItem.id;
+
+                            });
 
                         } else {
 
@@ -257,7 +231,7 @@
                     }
 
 
-                    if(data.___system_code) {
+                    if(item.___system_code) {
 
                         data.forEach(function (dataItem) {
 
@@ -269,7 +243,7 @@
 
                     }
 
-                    resolve([]);
+                    resolve(item);
 
                 });
 
