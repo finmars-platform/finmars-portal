@@ -17,7 +17,6 @@
         var entityType = metaContentTypesService.getContentTypeUIByState($state.current.name);
 
         vm.setLayout = function (layoutId) {
-            console.log('bookmarksController layout', layoutId, vm.entityUpdating);
             if (!vm.entityUpdating) {
                 vm.entityUpdating = true;
 
@@ -41,14 +40,12 @@
                     layouts.forEach(function (layout, index) {
                         if (layout.id === layoutId) {
                             layout.is_default = true;
-                            console.log('bookmarksController default layout', layout, layoutId);
                         }
                         else {
                             layout.is_default = false;
                         };
 
                         if (index === layouts.length - 1) {
-                            console.log('dataPortfolioController updated layout', layouts);
                             updateDefaultLayout(layouts);
                         };
 
