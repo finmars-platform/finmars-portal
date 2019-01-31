@@ -43,6 +43,8 @@
         vm.formIsValid = true;
         vm.TTGroupChosen = true;
 
+        console.log('entityViewerEdit entity type is', vm.entityType);
+
         vm.loadPermissions = function () {
 
             var promises = [];
@@ -639,6 +641,17 @@
             }
 
         };
+
+        if (vm.entityType === 'transaction-type') {
+            $scope.$watch('vm.entity.group', function () {
+                if (vm.entity.group === 14 || !vm.entity.group) {
+                    vm.TTGroupChosen = false;
+                }
+                else {
+                    vm.TTGroupChosen = true;
+                }
+            });
+        }
 
         vm.save = function ($event) {
 

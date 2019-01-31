@@ -141,6 +141,7 @@ app.controller('EventSchedulesTabController', ['$scope', '$mdDialog', require('.
 app.controller('FactorScheduleTabController', ['$scope', require('./app/controllers/tabs/instrument/factorScheduleTabController')]);
 app.controller('ManualPricingFormulasTabController', ['$scope', require('./app/controllers/tabs/instrument/manualPricingFormulasTabController')]);
 app.controller('InstrumentEventActionsDialogController', ['$scope', '$mdDialog', 'eventActions', require('./app/controllers/dialogs/instrumentEventActionsDialogController')]);
+app.controller('GenerateEventScheduleDialogController', ['$scope', '$mdDialog', require('./app/controllers/dialogs/generateEventScheduleDialogController')]);
 
 app.controller('DataPortfolioController', ['$scope', '$stateParams', require('./app/controllers/data/dataPortfolioController')]);
 app.controller('DataTagController', ['$scope', '$stateParams', require('./app/controllers/data/dataTagController')]);

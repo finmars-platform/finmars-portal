@@ -1,6 +1,6 @@
 <div data-ng-controller="EventSchedulesTabController as vm">
     <div class="" data-ng-if="vm.checkReadyStatus()">
-        <table class="bordered">
+        <table class="bordered margin-bottom-20">
             <thead>
             <tr>
                 <th data-ng-click="vm.setSort('name')">Name<span class="sortorder"
@@ -263,8 +263,8 @@
                         <zh-date-picker data-ng-model="vm.newItem.final_date"></zh-date-picker>
                     </md-input-container>
                 </td>
-                <td class="event-schedule-checkbox-td">
-                    <md-checkbox data-ng-model="vm.newItem.is_auto_generated" class="ES-add-new-checkbox" data-ng-disabled="true" aria-lable="is_auto_generated-checkbox"></md-checkbox>
+                <td class="add-event-schedule-checkbox-td">
+                    <!--<md-checkbox data-ng-model="vm.newItem.is_auto_generated" class="ES-add-new-checkbox" data-ng-disabled="true" aria-lable="is_auto_generated-checkbox"></md-checkbox>-->
                 </td>
                 <td style="padding-top: 12px">
                     <md-input-container>
@@ -333,6 +333,9 @@
 
             </tbody>
         </table>
+        <div layout="row" layout-align="end center">
+            <md-button data-ng-click="vm.generateEventsSchedule($event)" class="md-raised">Generate events schedule</md-button>
+        </div>
     </div>
     <div data-ng-if="!vm.checkReadyStatus()">
         <div layout="row" layout-sm="column" layout-align="space-around">
