@@ -643,6 +643,7 @@
         };
 
         if (vm.entityType === 'transaction-type') {
+            console.log('entity edit transaction type', vm.TTGroupChosen);
             $scope.$watch('vm.entity.group', function () {
                 if (vm.entity.group === 14 || !vm.entity.group) {
                     vm.TTGroupChosen = false;
