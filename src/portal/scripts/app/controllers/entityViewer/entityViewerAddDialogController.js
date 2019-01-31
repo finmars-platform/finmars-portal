@@ -56,6 +56,7 @@
         vm.entityAttrs = metaService.getEntityAttrs(vm.entityType) || [];
 
         vm.formIsValid = true;
+        vm.TTGroupChosen = true;
 
         vm.loadPermissions = function () {
 
@@ -591,6 +592,18 @@
             }
 
         };
+
+        if (vm.entityType === 'transaction-type') {
+            console.log('entity edit transaction type', vm.TTGroupChosen);
+            $scope.$watch('vm.entity.group', function () {
+                if (vm.entity.group === 14 || !vm.entity.group) {
+                    vm.TTGroupChosen = false;
+                }
+                else {
+                    vm.TTGroupChosen = true;
+                }
+            });
+        }
 
         vm.save = function ($event) {
 
