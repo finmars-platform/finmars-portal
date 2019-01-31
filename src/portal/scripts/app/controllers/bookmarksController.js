@@ -7,21 +7,35 @@
 
     var uiService = require('../services/uiService');
     var metaContentTypesService = require('../services/metaContentTypesService');
+    var bookmarkService = require('../services/bookmarkService');
 
-    module.exports = function ($scope, $state) {
+    module.exports = function ($scope, $mdDialog) {
 
         var vm = this;
 
         vm.entityUpdating = false;
 
-        var entityType = metaContentTypesService.getContentTypeUIByState($state.current.name);
+        vm.getBookmarks = function() {
 
-        vm.setLayout = function (layoutId) {
+            bookmarkService.getList().then(function (data) {
+                vm.items = data.results;
+                $scope.$apply();
+            });
+
+        };
+
+        vm.getBookmarks();
+
+        vm.setLayout = function (layoutInfo) {
+
+            var layoutId = layoutInfo.list_layout;
+            var stateToGo = layoutInfo.data.state;
+            var entityType = metaContentTypesService.getContentTypeUIByState(stateToGo);
+
             if (!vm.entityUpdating) {
                 vm.entityUpdating = true;
 
                 uiService.getListLayout(entityType).then(function (data) {
-
                     var layouts = data.results;
 
                     var updateDefaultLayout = function (layoutsToUpdate) {
@@ -32,12 +46,12 @@
                         });
 
                         Promise.all(promises).then(function () {
-                            $state.reload($state.current.game);
-                            vm.entityUpdating = true;
+                            vm.entityUpdating = false;
+                            $scope.$apply();
                         });
                     };
 
-                    layouts.forEach(function (layout, index) {
+                    layouts.forEach(function (layout) {
                         if (layout.id === layoutId) {
                             layout.is_default = true;
                         }
@@ -45,14 +59,38 @@
                             layout.is_default = false;
                         };
 
-                        if (index === layouts.length - 1) {
-                            updateDefaultLayout(layouts);
-                        };
-
                     });
+                    updateDefaultLayout(layouts);
 
                 });
             }
         };
+
+        vm.openSettings = function ($event) {
+
+            $mdDialog.show({
+                controller: 'BookmarksWizardDialogController as vm',
+                templateUrl: 'views/dialogs/bookmarks-wizard-dialog-view.html',
+                parent: angular.element(document.body),
+                targetEvent: $event,
+                preserveScope: true,
+                multiple: true,
+                autoWrap: true,
+                skipHide: true
+            }).then(function (res) {
+                if (res.status === 'agree') {
+                    vm.getBookmarks();
+                }
+            });
+
+        };
+
+        vm.getState = function (item) {
+
+            var uiState = item.data;
+
+            return uiState.state + '({listLayout: ' + item.list_layout + '})';
+        }
+
     }
 }());
