@@ -124,12 +124,6 @@
                     name: vm.entity.group.name
                 })
             }
-            if (vm.entity.group === 14 || !vm.entity.group) {
-                $scope.$parent.vm.TTGroupChosen = false;
-            }
-            else {
-                $scope.$parent.vm.TTGroupChosen = true;
-            }
         });
 
         vm.checkReadyStatus = function () {
