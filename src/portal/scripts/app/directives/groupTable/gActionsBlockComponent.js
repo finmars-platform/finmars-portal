@@ -342,7 +342,8 @@
                         }
                     }).then(function (res) {
                         if (res.status == 'agree') {
-                            $state.reload($state.current.name);
+                            // $state.reload($state.current.name);
+                            $state.reload();
                         }
 
                     })
