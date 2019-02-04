@@ -83,6 +83,7 @@ app.controller('BookmarksController', ['$scope', '$mdDialog', '$state', require(
 app.controller('SideNavController', ['$scope', '$mdDialog', require('./app/controllers/sideNavController')]);
 app.controller('HomeController', ['$scope', require('./app/controllers/homeController')]);
 app.controller('SetupController', ['$scope', '$state', require('./app/controllers/setupController')]);
+app.controller('NotFoundPageController', ['$scope', require('./app/controllers/notFoundPageController')]);
 
 app.controller('DashboardController', ['$scope', '$mdDialog', require('./app/controllers/dashboardController')]);
 app.controller('ActionsController', ['$scope', '$mdDialog', require('./app/controllers/actionsController')]);
