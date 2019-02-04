@@ -13,12 +13,12 @@
                         <!--<md-button ng-click="$mdOpenMenu($event)" class="" aria-label="Open sample menu">
                             {{item.name}}
                         </md-button>-->
-                        <md-button ng-click="$mdMenu.open($event)" class="" aria-label="Open sample menu">
+                        <md-button ng-click="$mdMenu.open($event)" aria-label="Open sample menu">
                             {{item.name}}
                         </md-button>
                         <md-menu-content>
                             <md-menu-item data-ng-repeat="subItem in item.children">
-                                <md-button data-ui-sref="{{vm.getState(subItem)}}" data-ng-click="vm.setLayout(item.list_layout)">{{subItem.name}}</md-button>
+                                <md-button data-ui-sref="{{vm.getState(subItem)}}" data-ng-click="vm.setLayout(subItem)">{{subItem.name}}</md-button>
                             </md-menu-item>
                         </md-menu-content>
                     </md-menu>

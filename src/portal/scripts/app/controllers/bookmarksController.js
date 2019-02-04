@@ -9,7 +9,7 @@
     var metaContentTypesService = require('../services/metaContentTypesService');
     var bookmarkService = require('../services/bookmarkService');
 
-    module.exports = function ($scope, $mdDialog) {
+    module.exports = function ($scope, $mdDialog, $state) {
 
         var vm = this;
 
@@ -31,7 +31,7 @@
             var layoutId = layoutInfo.list_layout;
             var stateToGo = layoutInfo.data.state;
             var entityType = metaContentTypesService.getContentTypeUIByState(stateToGo);
-
+            console.log('bookmarks data', layoutId, stateToGo, entityType);
             if (!vm.entityUpdating) {
                 vm.entityUpdating = true;
 
@@ -46,8 +46,14 @@
                         });
 
                         Promise.all(promises).then(function () {
+                            if ($state.current.name === stateToGo) {
+                                $state.reload(stateToGo);
+                                $scope.$apply();
+                            }
+                            else {
+                                $scope.$apply();
+                            }
                             vm.entityUpdating = false;
-                            $scope.$apply();
                         });
                     };
 
