@@ -91,7 +91,6 @@
                 if (vm.layouts.length) {
 
                     vm.activeLayout = vm.layouts[0];
-                    // console.log('downloaded config layouts', vm.activeLayout);
 
                     vm.layouts.forEach(function (item) {
                         if (item.is_default) {
@@ -211,7 +210,6 @@
 
                         // if (child.hasOwnProperty('name')) {
                         //     name = child.name
-                        //     console.log('import config child has name', typeof name, child.name);
                         // }
                         //
                         // if (child.hasOwnProperty('user_code')) {
@@ -224,7 +222,6 @@
 
                         var name = getECProperties(child);
                         // var name = child;
-                        // console.log('config export after child executed', name);
 
                         if (name || typeof name === "string") {
                             vm.activeLayout.data[item.entity].push(name)
@@ -234,7 +231,6 @@
                 });
 
             });
-            // console.log('import config update layout active layout', vm.activeLayout);
 
             $mdDialog.show({
                 controller: 'SaveConfigurationExportLayoutDialogController as vm',
@@ -471,7 +467,7 @@
             var parentIsActive = false;
 
             parent.content.forEach(function (item) {
-                if (item.active === true) {
+                if (item.active) {
                     ChildIsActive = true;
                 }
                 else {

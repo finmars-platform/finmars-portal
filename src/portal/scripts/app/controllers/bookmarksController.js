@@ -31,12 +31,24 @@
             var layoutId = layoutInfo.list_layout;
             var stateToGo = layoutInfo.data.state;
             var entityType = metaContentTypesService.getContentTypeUIByState(stateToGo);
+            var layoutExist = false;
             console.log('bookmarks data', layoutId, stateToGo, entityType);
             if (!vm.entityUpdating) {
                 vm.entityUpdating = true;
 
                 uiService.getListLayout(entityType).then(function (data) {
                     var layouts = data.results;
+
+                    layouts.forEach(function (layout) {
+                        if (layout.id === layoutId) {
+                            layout.is_default = true;
+                            layoutExist = true;
+                        }
+                        else {
+                            layout.is_default = false;
+                        };
+
+                    });
 
                     var updateDefaultLayout = function (layoutsToUpdate) {
                         var promises = [];
@@ -51,22 +63,18 @@
                                 $scope.$apply();
                             }
                             else {
+                                $state.go(stateToGo);
                                 $scope.$apply();
                             }
                             vm.entityUpdating = false;
                         });
                     };
 
-                    layouts.forEach(function (layout) {
-                        if (layout.id === layoutId) {
-                            layout.is_default = true;
-                        }
-                        else {
-                            layout.is_default = false;
-                        };
-
-                    });
-                    updateDefaultLayout(layouts);
+                    if (layoutExist) {
+                        updateDefaultLayout(layouts);
+                    } else {
+                        $state.go('app.not-found');
+                    }
 
                 });
             }
@@ -91,12 +99,12 @@
 
         };
 
-        vm.getState = function (item) {
-
-            var uiState = item.data;
-
-            return uiState.state + '({listLayout: ' + item.list_layout + '})';
-        }
+        // vm.getState = function (item) {
+        //
+        //     var uiState = item.data;
+        //
+        //     return uiState.state + '({listLayout: ' + item.list_layout + '})';
+        // }
 
     }
 }());

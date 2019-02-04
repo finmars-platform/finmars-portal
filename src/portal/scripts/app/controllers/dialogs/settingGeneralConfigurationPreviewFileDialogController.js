@@ -125,7 +125,7 @@
             vm.selectAllState = !vm.selectAllState;
 
             vm.items.forEach(function (item) {
-                item.someChildsActive = undefined;
+                item.someChildsActive = false;
                 item.active = vm.selectAllState;
                 item.content.forEach(function (child) {
                     child.active = vm.selectAllState;
@@ -162,7 +162,7 @@
         vm.toggleActiveForChilds = function (item) {
 
             item.active = !item.active;
-            item.someChildsActive = undefined;
+            item.someChildsActive = false;
             item.content.forEach(function (child) {
                 child.active = item.active;
             });
@@ -179,25 +179,25 @@
             var ChildIsNotActive = false;
             var parentIsActive = false;
 
-            parent.content.forEach(function (item, itemIndex) {
-                if (item.active === true) {
+            parent.content.forEach(function (item) {
+                if (item.active) {
                     ChildIsActive = true;
                 }
                 else {
                     ChildIsNotActive = true;
                 }
-                if (itemIndex == parent.content.length - 1) {
-                    if (ChildIsActive && !ChildIsNotActive) {
-                        parentIsActive = true;
-                    }
-                    else if (!ChildIsActive && ChildIsNotActive) {
-                        parent.someChildsActive = undefined;
-                    }
-                    else {
-                        parentIsActive = false;
-                        parent.someChildsActive = 'some-checkboxes-ticked';
-                    }
+
+                if (ChildIsActive && !ChildIsNotActive) {
+                    parentIsActive = true;
                 }
+                else if (!ChildIsActive && ChildIsNotActive) {
+                    parent.someChildsActive = false;
+                }
+                else {
+                    parentIsActive = false;
+                    parent.someChildsActive = true;
+                }
+
             });
 
             parent.active = parentIsActive;

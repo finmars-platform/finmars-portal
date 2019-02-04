@@ -113,11 +113,11 @@
 
     </md-dialog-content>
     <md-dialog-actions layout="row">
-        <md-button class="md-raised" ng-click="vm.cancel()">
+        <md-button class="md-raised" ng-click="vm.cancel()" aria-label="cancel button">
             Cancel
         </md-button>
 
-        <a class="md-raised md-button" id="exportButton" data-ng-click="vm.agree($event)">
+        <a class="md-raised md-button" id="exportButton" data-ng-click="vm.agree($event)" aria-label="export button">
             Export
         </a>
     </md-dialog-actions>

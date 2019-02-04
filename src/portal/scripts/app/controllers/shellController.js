@@ -109,6 +109,10 @@
             return metaService.getCurrentLocation($state).toUpperCase();
         };
 
+        vm.showBookmarks = false;
+        vm.toggleBookmarkPanel = function () {
+            vm.showBookmarks = !vm.showBookmarks;
+        };
 
         vm.openHelp = function ($event) {
 

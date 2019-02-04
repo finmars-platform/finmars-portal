@@ -18,13 +18,15 @@
                         </md-button>
                         <md-menu-content>
                             <md-menu-item data-ng-repeat="subItem in item.children">
-                                <md-button data-ui-sref="{{vm.getState(subItem)}}" data-ng-click="vm.setLayout(subItem)">{{subItem.name}}</md-button>
+                                <!--<md-button data-ui-sref="{{vm.getState(subItem)}}" data-ng-click="vm.setLayout(subItem)">{{subItem.name}}</md-button>-->
+                                <md-button data-ng-click="vm.setLayout(subItem)">{{subItem.name}}</md-button>
                             </md-menu-item>
                         </md-menu-content>
                     </md-menu>
                 </div>
                 <div data-ng-if="!item.children.length">
-                    <md-button data-ui-sref="{{vm.getState(item)}}" class="bookmark-a-btn" data-ng-click="vm.setLayout(item)">{{item.name}}</md-button>
+                    <!--<md-button data-ui-sref="{{vm.getState(item)}}" class="bookmark-a-btn" data-ng-click="vm.setLayout(item)">{{item.name}}</md-button>-->
+                    <md-button class="bookmark-a-btn" data-ng-click="vm.setLayout(item)">{{item.name}}</md-button>
                 </div>
             </div>
         </div>
