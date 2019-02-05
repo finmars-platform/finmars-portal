@@ -24,7 +24,7 @@
         // vm.entityType = data.entityType;
         
         vm.editRestriction = false;
-
+        vm.setUserCode = true;
         console.log('vm.attribute', vm.attribute);
 
 
