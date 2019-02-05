@@ -5,6 +5,7 @@
 
     'use strict';
 
+    var logService = require('../../../../core/services/logService');
     var uiService = require('../services/uiService');
     var metaContentTypesService = require('../services/metaContentTypesService');
     var bookmarkService = require('../services/bookmarkService');
@@ -12,6 +13,8 @@
     module.exports = function ($scope, $mdDialog, $state) {
 
         var vm = this;
+
+        logService.controller('BookmarksController', 'initialized');
 
         vm.entityUpdating = false;
 
