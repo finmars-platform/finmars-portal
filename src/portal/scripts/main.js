@@ -290,7 +290,7 @@ app.controller('gModalReportCashFlowProjectionController', ['$scope', '$mdDialog
 
 
 app.directive('evFieldResolver', [require('./app/directives/entityViewerFieldResolverDirective')]);
-app.directive('ismFieldResolver', [require('./app/directives/instrumentSchemeManagerFieldResolverDirective')]);
+app.directive('ismFieldResolver', ['$mdDialog', require('./app/directives/instrumentSchemeManagerFieldResolverDirective')]);
 app.directive('floatNumbers', [require('./app/directives/floatNumbersDirective')]);
 app.directive('instrumentModalResolver', ['$mdDialog', require('./app/directives/instrumentModalResolverDirective')]);
 app.directive('instrumentEventActionResolver', ['$mdDialog', require('./app/directives/instrumentEventActionResolverDirective')]);

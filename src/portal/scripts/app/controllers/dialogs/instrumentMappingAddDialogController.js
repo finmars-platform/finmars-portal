@@ -132,7 +132,7 @@
                 hasBackground: true,
                 value_type: "field",
                 expression: '',
-                complexExpressionEntity: false
+                complexExpressionEntity: 'daily_pricing_model'
             },
             {
                 key: 'price_download_scheme',
@@ -141,7 +141,7 @@
                 hasBackground: true,
                 value_type: "field",
                 expression: '',
-                complexExpressionEntity: false
+                complexExpressionEntity: 'price_download_scheme'
             },
             {
                 key: 'pricing_currency',
@@ -213,7 +213,7 @@
                 required: false,
                 hasBackground: true,
                 expression: '',
-                complexExpressionEntity: false
+                complexExpressionEntity: 'payment_size_detail'
             },
             {
                 key: 'user_text_1',
@@ -465,6 +465,7 @@
                 parent: angular.element(document.body),
                 targetEvent: $event,
                 preserveScope: true,
+                multiple: true,
                 autoWrap: true,
                 skipHide: true,
                 locals: {

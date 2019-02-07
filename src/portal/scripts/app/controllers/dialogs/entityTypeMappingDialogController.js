@@ -109,6 +109,11 @@
             return vm.mapEntityType.replace('-', ' ');
         };
 
+        var formatEntityForMapping = function () {
+            vm.mapEntityType = vm.mapEntityType.replace(/_/g, '-')
+        };
+        formatEntityForMapping();
+        console.log('newMapEntityType is', vm.mapEntityType);
         function addChilds(classifier, item) {
 
             // console.log('item', item);
@@ -190,6 +195,8 @@
             return new Promise(function (resolve, reject) {
 
                 entityResolverService.getList(vm.mapEntityType, vm.options).then(function (data) {
+
+                    console.log('type mapping entityResolverService', data);
 
                     if (['periodicity', 'accrual-calculation-model',
                             'daily-pricing-model', 'payment-size-detail'].indexOf(vm.mapEntityType) === -1) {

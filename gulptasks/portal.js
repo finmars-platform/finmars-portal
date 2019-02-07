@@ -227,7 +227,7 @@
     });
     gulp.task('forum-watch-All', function () {
         gulp.watch('src/' + appName + '/**/*.less', gulp.series(appName + '-less-to-css-min'));
-        gulp.watch('src/forum/**/*.js', gulp.series(appName + 'only-js-min'));
+        gulp.watch('src/forum/**/*.js', gulp.series(appName + '-only-js-min'));
         gulp.watch('src/forum/**/*.html', gulp.series('portal-forum-HTML-to-JS', appName + '-js-min'));
     });
 
