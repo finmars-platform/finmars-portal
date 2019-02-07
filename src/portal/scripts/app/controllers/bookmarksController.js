@@ -35,7 +35,7 @@
             var stateToGo = layoutInfo.data.state;
             var entityType = metaContentTypesService.getContentTypeUIByState(stateToGo);
             var layoutExist = false;
-            console.log('bookmarks data', layoutId, stateToGo, entityType);
+
             if (!vm.entityUpdating) {
                 vm.entityUpdating = true;
 
@@ -77,6 +77,7 @@
                         updateDefaultLayout(layouts);
                     } else {
                         $state.go('app.not-found');
+                        vm.entityUpdating = false;
                     }
 
                 });

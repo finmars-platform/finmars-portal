@@ -11,7 +11,7 @@
     var metaService = require('../services/metaService');
     var tagService = require('../services/tagService');
 
-    module.exports = function ($scope) {
+    module.exports = function ($mdDialog) {
 
         return {
             scope: {
@@ -159,6 +159,29 @@
                     }
 
                     return field.name
+                };
+
+                scope.openMapping = function ($event, item) {
+
+                    console.log('ITEEM', item);
+
+                    $mdDialog.show({
+                        controller: 'EntityTypeMappingDialogController as vm',
+                        templateUrl: 'views/dialogs/entity-type-mapping-dialog-view.html',
+                        parent: angular.element(document.body),
+                        targetEvent: $event,
+                        multiple: true,
+                        preserveScope: true,
+                        autoWrap: true,
+                        skipHide: true,
+                        locals: {
+                            mapItem: item
+                        }
+                    }).then(function (res) {
+                        if (res.status === 'agree') {
+                            console.log("res", res.data);
+                        }
+                    });
                 };
 
             }

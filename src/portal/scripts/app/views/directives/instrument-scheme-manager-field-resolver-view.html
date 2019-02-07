@@ -1,26 +1,27 @@
-<div>
-    <div data-ng-if="readyStatus.content">
-        <div data-ng-if="type === 'key-value'">
-            <md-input-container class="md-block">
-                <label data-ng-bind="getName()"></label>
-                <md-select data-ng-model="item.expression" md-on-close="searchTerm = ''"
-                           data-ng-change="changeWatcher()">
-                    <md-select-header>
-                        <input data-ng-model="searchTerm"
-                               type="search"
-                               placeholder="Search for a ..."
-                               class="md-text md-select-search-pattern">
-                    </md-select-header>
-                    <md-option data-ng-repeat="field in fields | orderBy:'-'+field.name | filter:{name: searchTerm}"
-                               ng-value="field.value">
-                        {{field.name}}
-                    </md-option>
-                </md-select>
-            </md-input-container>
-        </div>
-        <div data-ng-if="type === 'id'">
-            <div data-ng-if="item.key !== 'price_download_scheme'">
-                <md-input-container class="md-block">
+
+<div data-ng-if="readyStatus.content">
+    <div data-ng-if="type === 'key-value'">
+        <md-input-container class="md-block">
+            <label data-ng-bind="getName()"></label>
+            <md-select data-ng-model="item.expression" md-on-close="searchTerm = ''"
+                       data-ng-change="changeWatcher()">
+                <md-select-header>
+                    <input data-ng-model="searchTerm"
+                           type="search"
+                           placeholder="Search for a ..."
+                           class="md-text md-select-search-pattern">
+                </md-select-header>
+                <md-option data-ng-repeat="field in fields | orderBy:'-'+field.name | filter:{name: searchTerm}"
+                           ng-value="field.value">
+                    {{field.name}}
+                </md-option>
+            </md-select>
+        </md-input-container>
+    </div>
+    <div data-ng-if="type === 'id'">
+        <div data-ng-if="item.key !== 'price_download_scheme'" layout="row">
+            <div flex="50">
+                <md-input-container class="md-block" flex="90">
                     <label data-ng-bind="getName()"></label>
                     <md-select data-ng-change="changeWatcher()" md-on-close="searchTerm = ''"
                                data-ng-model="item.expression"
@@ -39,8 +40,16 @@
                     </md-select>
                 </md-input-container>
             </div>
-            <div data-ng-if="item.key  == 'price_download_scheme'">
-                <md-input-container class="md-block">
+            <div flex="50" data-ng-if="item.complexExpressionEntity === 'daily_pricing_model'">
+                <md-button class="md-raised md-primary complex-expr-btn"
+                           data-ng-click="openMapping($event, item)">
+                    Edit mapping
+                </md-button>
+            </div>
+        </div>
+        <div data-ng-if="item.key  == 'price_download_scheme'" layout="row">
+            <div flex="50">
+                <md-input-container class="md-block" flex="90">
                     <label data-ng-bind="getName()"></label>
                     <md-select data-ng-change="changeWatcher()" md-on-close="searchTerm = ''"
                                data-ng-model="item.expression">
@@ -58,12 +67,18 @@
                     </md-select>
                 </md-input-container>
             </div>
+            <div flex="50" data-ng-if="item.complexExpressionEntity">
+                <md-button class="md-raised md-primary complex-expr-btn"
+                           data-ng-click="openMapping($event, item)">
+                    Edit mapping
+                </md-button>
+            </div>
         </div>
     </div>
-    <div data-ng-if="!readyStatus.content">
-        <div layout="row" layout-sm="column" layout-align="space-around">
-            <md-progress-circular md-mode="indeterminate"></md-progress-circular>
-        </div>
-    </div>
-
 </div>
+<div data-ng-if="!readyStatus.content">
+    <div layout="row" layout-sm="column" layout-align="space-around">
+        <md-progress-circular md-mode="indeterminate"></md-progress-circular>
+    </div>
+</div>
+

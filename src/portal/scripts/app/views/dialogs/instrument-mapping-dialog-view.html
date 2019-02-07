@@ -175,18 +175,16 @@
                                                 <!--</md-input-container>-->
                                             </div>
                                             <div flex="50">
-                                                <div layout="row">
-                                                    <div flex="50">
-                                                        <div data-ng-if="item.value_type == 10">
-                                                            <md-input-container>
-                                                                <label for="">Default value</label>
-                                                                <input type="text" data-ng-model="item.expression">
-                                                            </md-input-container>
-                                                        </div>
-                                                        <div data-ng-if="item.value_type == 'field'">
-                                                            <div data-ism-field-resolver data-item="item"
-                                                                 data-options="options"></div>
-                                                        </div>
+                                                <div>
+                                                    <div data-ng-if="item.value_type == 10">
+                                                        <md-input-container>
+                                                            <label for="">Default value</label>
+                                                            <input type="text" data-ng-model="item.expression">
+                                                        </md-input-container>
+                                                    </div>
+                                                    <div data-ng-if="item.value_type == 'field'">
+                                                        <div data-ism-field-resolver data-item="item"
+                                                             data-options="options"></div>
                                                     </div>
                                                 </div>
                                             </div>

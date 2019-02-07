@@ -122,6 +122,7 @@
                 preserveScope: true,
                 autoWrap: true,
                 skipHide: true,
+                multiple: true,
                 locals: {
                     data: {
                         classifier: data.classifier,
