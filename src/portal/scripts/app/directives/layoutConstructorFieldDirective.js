@@ -309,11 +309,12 @@
                                 if (item.type === 'field') {
                                     if (userInput.key === item.attribute.key) {
                                         userInput.disabled = true;
+                                        return false;
                                     }
                                 }
                             })
                         })
-                    })
+                    });
 
                 };
 
