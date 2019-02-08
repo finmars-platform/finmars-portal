@@ -485,6 +485,7 @@
                 parent: angular.element(document.body),
                 targetEvent: $event,
                 preserveScope: true,
+                multiple: true,
                 autoWrap: true,
                 skipHide: true,
                 locals: {

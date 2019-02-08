@@ -706,6 +706,7 @@
             vm.getLayout().then(function () {
 
                 vm.getItems();
+                console.log('culling tabs are', vm.tabs);
 
             });
 
