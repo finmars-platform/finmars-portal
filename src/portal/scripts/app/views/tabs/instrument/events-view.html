@@ -1,6 +1,6 @@
 <div data-ng-controller="EventSchedulesTabController as vm">
     <div class="" data-ng-if="vm.checkReadyStatus()">
-        <table class="bordered">
+        <table class="bordered margin-bottom-20">
             <thead>
             <tr>
                 <th data-ng-click="vm.setSort('name')">Name<span class="sortorder"
@@ -18,6 +18,8 @@
                 <th data-ng-click="vm.setSort('final_date')">Final date<span class="sortorder"
                                                                              data-ng-show="vm.sort === 'final_date'"
                                                                              data-ng-class="{reverse: vm.direction}"></span>
+                </th>
+                <th>Is auto generated
                 </th>
                 <th data-ng-click="vm.setSort('notification_class_name')">Notification class<span class="sortorder"
                                                                                                   data-ng-show="vm.sort === 'notification_class_name'"
@@ -112,6 +114,7 @@
                 <td data-ng-if="!item.editStatus" data-ng-bind="item.description"></td>
                 <td data-ng-if="!item.editStatus" data-ng-bind="item.effective_date"></td>
                 <td data-ng-if="!item.editStatus" data-ng-bind="item.final_date"></td>
+                <td data-ng-if="!item.editStatus" class="event-schedule-checkbox-td"><md-checkbox data-ng-model="item.is_auto_generated" class="margin-0" data-ng-disabled="true" aria-label="not-edited-is_auto_generated-checkbox"></md-checkbox></td>
                 <td data-ng-if="!item.editStatus" data-ng-bind="vm.bindNotificationClass(item)"></td>
                 <td data-ng-if="!item.editStatus" data-ng-bind="vm.bindEventClass(item)"></td>
                 <td data-ng-if="!item.editStatus" data-ng-bind="[item.actions.length]"></td>
@@ -169,6 +172,9 @@
                         <zh-date-picker data-ng-model="item.final_date"></zh-date-picker>
                     </md-input-container>
                 </td>
+                <td data-ng-if="item.editStatus" class="edit-state-td event-schedule-checkbox-td">
+                    <md-checkbox data-ng-model="vm.item.is_auto_generated" aria-lable="edited-is_auto_generated-checkbox" data-ng-disabled="true"></md-checkbox>
+                </td>
                 <td data-ng-if="item.editStatus" class="edit-state-td" style="padding-top: 12px">
                     <md-input-container>
                         <label for="">Notification class</label>
@@ -211,7 +217,7 @@
                         <input type="text" data-ng-model="item.notify_in_n_days">
                     </md-input-container>
                 </td>
-                <td data-ng-if="item.editStatus" class="edit-state-td">
+                <td data-ng-if="item.editStatus" class="edit-state-td" style="padding-top: 12px">
                     <md-input-container>
                         <label for="">Periodicity</label>
                         <md-select data-ng-model="item.periodicity">
@@ -256,6 +262,9 @@
                         <!--<label for="">Final date</label>-->
                         <zh-date-picker data-ng-model="vm.newItem.final_date"></zh-date-picker>
                     </md-input-container>
+                </td>
+                <td class="add-event-schedule-checkbox-td">
+                    <!--<md-checkbox data-ng-model="vm.newItem.is_auto_generated" class="ES-add-new-checkbox" data-ng-disabled="true" aria-lable="is_auto_generated-checkbox"></md-checkbox>-->
                 </td>
                 <td style="padding-top: 12px">
                     <md-input-container>
@@ -324,6 +333,9 @@
 
             </tbody>
         </table>
+        <div layout="row" layout-align="end center">
+            <md-button data-ng-click="vm.generateEventsSchedule($event)" class="md-raised">Generate events schedule</md-button>
+        </div>
     </div>
     <div data-ng-if="!vm.checkReadyStatus()">
         <div layout="row" layout-sm="column" layout-align="space-around">

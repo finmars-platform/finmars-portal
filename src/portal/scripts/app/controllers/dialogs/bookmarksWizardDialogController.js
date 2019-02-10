@@ -15,7 +15,7 @@
         logService.controller('BookmarksWizardDialogController', 'initialized');
 
         vm.deletedNodes = [];
-
+        vm.bookmarks = [];
 
         bookmarkService.getList().then(function (data) {
 
@@ -29,6 +29,7 @@
                 return item
             }
 
+            vm.bookmarks = data.results;
             var items = data.results.map(setText);
 
             $('#jstree_demo').jstree({
@@ -127,7 +128,27 @@
                 return false;
             }
 
-            vm.deletedNodes.push(sel);
+            var delBookmarkId = parseInt(sel, 10);
+
+            // Check if bookmark to delete saved on server
+            vm.bookmarks.forEach(function (bookmark) {
+
+                if (bookmark.children && bookmark.children.length > 0) {
+
+                    bookmark.children.forEach(function (chBookmark) {
+                        if (chBookmark.id === delBookmarkId) {
+                            vm.deletedNodes.push(sel);
+                            return false
+                        }
+                    });
+
+                }
+                else if (bookmark.id = delBookmarkId) {
+                    vm.deletedNodes.push(sel);
+                    return false;
+                };
+
+            });
 
             ref.delete_node(sel);
         };
@@ -142,7 +163,6 @@
             var promisesDel = [];
 
             vm.deletedNodes.forEach(function (itemId) {
-
                 promisesDel.push(bookmarkService.deleteByKey(itemId))
 
             });

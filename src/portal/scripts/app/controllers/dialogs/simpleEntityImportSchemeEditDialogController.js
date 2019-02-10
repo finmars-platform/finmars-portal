@@ -76,9 +76,19 @@
         };
 
         vm.addCsvField = function () {
+            var csvFieldsLength = vm.scheme.csv_fields.length;
+            var lastFieldNumber;
+            var nextFieldNumber;
+            if (csvFieldsLength === 0) {
+                nextFieldNumber = 0;
+            } else {
+                lastFieldNumber = parseInt(vm.scheme.csv_fields[csvFieldsLength - 1].column);
+                nextFieldNumber = lastFieldNumber + 1;
+            }
+
             vm.scheme.csv_fields.push({
                 name: '',
-                column: vm.scheme.csv_fields.length
+                column: nextFieldNumber
             })
         };
 

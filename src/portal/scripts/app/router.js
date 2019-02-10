@@ -54,6 +54,12 @@
             controller: 'EntityDataConstructorController as vm'
         });
 
+        $stateProvider.state('app.not-found', {
+            url: '/layout-not-found',
+            templateUrl: 'views/not-found-page-view.html',
+            controller: 'NotFoundPageController as vm'
+        });
+
         $stateProvider
             .state('app.data', {
                 url: '/data',

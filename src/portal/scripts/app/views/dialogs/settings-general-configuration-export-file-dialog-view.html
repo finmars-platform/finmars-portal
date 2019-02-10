@@ -76,13 +76,13 @@
                 <div class="cie-entity-holder">
                     <md-checkbox data-ng-checked="item.active"
                                  data-ng-click="vm.toggleActiveForChilds(item)"
-                                 data-ng-class="item.someChildsActive"
+                                 data-ng-class="{'some-checkboxes-ticked': item.someChildsActive}"
                                  aria-label="checkbox">
                     </md-checkbox>
                     <span data-ng-bind="vm.getEntityName(item)"></span> <span class="cie-dependency"
                                                                               data-ng-bind="vm.getEntityDependenciesCaptions(item)"></span>
                     ({{item.count}})
-                    <md-button class="md-raised" ng-click="item.displayItems = !item.displayItems"><span
+                    <md-button class="md-raised" ng-click="item.displayItems = !item.displayItems" aria-label="checkboxes show hide button"><span
                             data-ng-if="!item.displayItems">Show</span><span data-ng-if="item.displayItems">Hide</span>
                     </md-button>
                 </div>
@@ -113,11 +113,11 @@
 
     </md-dialog-content>
     <md-dialog-actions layout="row">
-        <md-button class="md-raised" ng-click="vm.cancel()">
+        <md-button class="md-raised" ng-click="vm.cancel()" aria-label="cancel button">
             Cancel
         </md-button>
 
-        <a class="md-raised md-button" id="exportButton" data-ng-click="vm.agree($event)">
+        <a class="md-raised md-button" id="exportButton" data-ng-click="vm.agree($event)" aria-label="export button">
             Export
         </a>
     </md-dialog-actions>

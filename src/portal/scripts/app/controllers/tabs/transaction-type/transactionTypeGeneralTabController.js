@@ -16,6 +16,7 @@
         logService.controller('TransactionTypeGeneralTabController', 'initialized');
 
         var vm = this;
+
         vm.entity = $scope.$parent.vm.entity;
 
         vm.entity.book_transaction_layout = vm.entity.book_transaction_layout || '';

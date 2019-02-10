@@ -179,7 +179,9 @@
 
                             scope.evDataService.setActiveRequestParametersId(rootGroup.___id);
 
-                            scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE);
+                            // scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE);
+                            scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+
                         }
 
                     })
@@ -343,6 +345,7 @@
                     }).then(function (res) {
                         if (res.status == 'agree') {
                             $state.reload($state.current.name);
+                            // $state.reload();
                         }
 
                     })

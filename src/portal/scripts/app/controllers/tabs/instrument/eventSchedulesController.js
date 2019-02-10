@@ -138,6 +138,18 @@
             });
         };
 
+        vm.generateEventsSchedule = function ($event) {
+            $mdDialog.show({
+               controller: 'GenerateEventScheduleDialogController as vm',
+               templateUrl: 'views/dialogs/generate-event-schedule-dialog-view.html',
+               targetEvent: $event,
+               preserveScope: true,
+               autoWrap: true,
+               multiple: true,
+               clickOutsideToClose: true
+            })
+        };
+
         vm.addRow = function () {
             vm.entity.event_schedules.push({
                 "name": vm.newItem.name,

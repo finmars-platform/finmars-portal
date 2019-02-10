@@ -8,6 +8,9 @@
     var evEvents = require('../../services/entityViewerEvents');
     var evDataHelper = require('../../helpers/ev-data.helper');
     var evLoaderHelper = require('../../helpers/ev-loader.helper');
+    var evRvCommonHelper = require('../../helpers/ev-rv-common.helper');
+
+    var evDomManager = require('../../services/ev-dom-manager/ev-dom.manager')
 
     var metaService = require('../../services/metaService');
 
@@ -21,6 +24,9 @@
             },
             templateUrl: 'views/directives/groupTable/grouping-view.html',
             link: function (scope, elem, attrs) {
+
+                scope.entityType = scope.evDataService.getEntityType();
+                scope.isReport = metaService.isReport(scope.entityType);
 
                 scope.grouping = scope.evDataService.getGroups();
                 setDefaultGroupType(scope.evDataService);
@@ -40,6 +46,10 @@
 
                         if (!group.report_settings.subtotal_type) {
                             group.report_settings.subtotal_type = 'area';
+                        }
+
+                        if (!scope.isReport && !group.hasOwnProperty('ev_folded')) {
+                            group.ev_group_folded = true;
                         }
 
                     });
@@ -68,9 +78,6 @@
                     scope.folding = scope.options.folding;
 
                 }
-
-                scope.entityType = scope.evDataService.getEntityType();
-                scope.isReport = metaService.isReport(scope.entityType);
 
                 scope.sortHandler = function (group, sort) {
 
@@ -188,12 +195,103 @@
 
                 };
 
-                scope.foldLevel = function (item, $index) {
+                // Tentative entity viewer expand / collapse groups buttons fixes
+                scope.evFoldLevel = function (item, $index) {
+                    item.ev_group_folded = true;
+                    console.log('folding evfoldLevel item is', item);
 
-                    item.report_settings.is_level_folded = true;
+                    var groups = scope.evDataService.getGroups();
+                    for(; $index < groups.length - 1; $index = $index + 1) {
+                        groups[$index].ev_group_folded = true;
+                        var groupsContent = evDataHelper.getGroupsByLevel($index + 1, scope.evDataService);
+
+                        console.log('folding groupsContent', groupsContent);
+
+                        groupsContent.forEach(function (groupItem) {
+                            groupItem.___is_open = false;
+
+                            var childrens = evDataHelper.getAllChildrenGroups(groupItem.___id, scope.evDataService);
+                            console.log('folding childrens', childrens);
+                            childrens.forEach(function (children) {
+
+                                if (children.___type === 'group') {
+
+                                    item = scope.evDataService.getData(children.___id);
+
+                                    if (item) {
+                                        item.___is_open = false;
+                                        scope.evDataService.setData(item);
+                                    } else {
+                                        children.___is_open = false;
+                                        scope.evDataService.setData(children);
+                                    }
+
+
+                                }
+
+                            })
+
+                        });
+                    }
+
+                    scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+
+                };
+
+                scope.evUnfoldLevel = function (item, $index) {
+                    item.ev_group_folded = false;
+                    console.log('folding evUfoldLevel item is', item, $index);
 
                     var groups = scope.evDataService.getGroups();
 
+                    var index = 0;
+                    var dataToSet = {};
+                    for (; index <= $index; index = index + 1) {
+                        console.log('folding index and $index', index, $index);
+                        var groupsContent = evDataHelper.getGroupsByLevel(index + 1, scope.evDataService);
+                        console.log('folding UnfoldLevel group', groups[index], groupsContent);
+
+                        var nextLevelGroups = {};
+                        groupsContent.forEach(function (groupItem) {
+                            if (!groupItem.___is_open) {
+                                groupItem.___is_opne = true;
+
+                                var parent = evRvCommonHelper.getParents(groupItem.___parentId, scope.evDataService);
+
+                                if (parent.length < groups.length) {
+                                    evDomManager.requestGroups(groupItem.___id, groupItem.___parentId, scope.evDataService, scope.evEventService);
+                                } else {
+                                    evDomManager.requestObjects(groupItem.___id, groupItem.___parentId, scope.evDataService, scope.evEventService);
+                                }
+                                if (groupItem.___id) {
+                                    nextLevelGroups[groupItem.___id] = groupItem;
+                                }
+                            }
+                        });
+                        dataToSet = Object.assign(nextLevelGroups);
+                        console.log('folding dataToSet', dataToSet);
+                        scope.evDataService.setAllData(dataToSet);
+                        // var groupsContent = evDataHelper.getGroupsByLevel($index + 1, scope.evDataService);
+                        // groups[$index].ev_group_folded = false;
+                        // console.log('folding UnfoldLevel group', groups[$index], groupsContent);
+                        //
+                        // groupsContent.forEach(function (groupItem) {
+                        //     groupItem.___is_open = true;
+                        //     scope.evDataService.setData(groupItem);
+                        // });
+
+
+
+                    }
+
+                    // scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+                };
+                // ----------------------------------------------------
+
+                scope.foldLevel = function (item, $index) {
+                    item.report_settings.is_level_folded = true;
+
+                    var groups = scope.evDataService.getGroups();
                     for (; $index < groups.length; $index = $index + 1) {
 
                         groups[$index].report_settings.is_level_folded = true;
@@ -204,7 +302,6 @@
                             groupItem.___is_open = false;
 
                             var childrens = evDataHelper.getAllChildrenGroups(groupItem.___id, scope.evDataService);
-
                             childrens.forEach(function (children) {
 
                                 if (children.___type === 'group') {

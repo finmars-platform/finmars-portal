@@ -38,7 +38,14 @@
 
         vm.readyStatus = {content: false};
 
-        uiService.getListLayout('all').then(function (data) {
+        var sortLayoutsBy = {
+            sort: {
+                key: 'content_type',
+                direction: 'DSC'
+            }
+        };
+
+        uiService.getListLayout('all', sortLayoutsBy).then(function (data) {
             vm.items = data.results;
 
             vm.readyStatus.content = true;
