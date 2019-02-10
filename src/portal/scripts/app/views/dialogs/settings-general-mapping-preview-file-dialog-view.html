@@ -23,13 +23,13 @@
             <div class="cie-entity-holder">
                 <md-checkbox data-ng-checked="item.active"
                              data-ng-click="vm.toggleActiveForChilds(item)"
-                             data-ng-class="item.someChildsActive"
+                             data-ng-class="{'some-checkboxes-ticked': item.someChildsActive}"
                              aria-label="checkbox">
                 </md-checkbox>
                 <span data-ng-bind="vm.getEntityName(item)"></span> <span class="cie-dependency"
                                                                           data-ng-bind="vm.getEntityDependenciesCaptions(item)"></span>
                 ({{item.count}})
-                <md-button class="md-raised" ng-click="item.displayItems = !item.displayItems"><span
+                <md-button class="md-raised" ng-click="item.displayItems = !item.displayItems" aria-label="display item button"><span
                         data-ng-if="!item.displayItems">Show</span><span data-ng-if="item.displayItems">Hide</span>
                 </md-button>
             </div>
@@ -56,7 +56,7 @@
         <div>
 
             <md-button class="md-raised {{vm.overwriteOption ? 'active-button' : ''}}"
-                       ng-click="vm.overwriteOption = !vm.overwriteOption" style="margin-right:20px;">
+                       ng-click="vm.overwriteOption = !vm.overwriteOption" style="margin-right:20px;" aria-label="overwrite button">
                 Overwrite
             </md-button>
 
@@ -64,11 +64,11 @@
 
         <div layout="row">
 
-            <md-button class="md-raised" ng-click="vm.cancel()">
+            <md-button class="md-raised" ng-click="vm.cancel()" aria-label="cancel button">
                 Cancel
             </md-button>
 
-            <md-button class="md-raised" ng-click="vm.agree($event)" style="margin-right:20px;">
+            <md-button class="md-raised" ng-click="vm.agree($event)" style="margin-right:20px;" aria-label="import button">
                 Import
             </md-button>
 

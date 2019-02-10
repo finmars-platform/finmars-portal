@@ -20,7 +20,7 @@
 
                                 <md-input-container class="md-block" flex-gt-sm>
                                     <label>User code</label>
-                                    <input data-ng-model="vm.attribute.user_code" disabled>
+                                    <input data-ng-model="vm.attribute.user_code" data-ng-disabled="!vm.setUserCode">
                                 </md-input-container>
 
                                 <div data-ng-if="vm.editRestriction" flex-gt-sm>

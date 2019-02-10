@@ -268,14 +268,18 @@
             Deselect all
         </md-button>
     </div>
-    <div class="s-f-collpased-btns" layout="column">
+    <div class="s-f-collapsed-btns" layout="column">
         <md-button class="md-raised to-small-btn" data-ng-click="selectAll()">
             <ng-md-icon icon="select_all"></ng-md-icon>
-            <md-tooltip class="" md-direction="top">Select all</md-tooltip>
+            <md-tooltip md-direction="top">Select all</md-tooltip>
         </md-button>
         <md-button class="md-raised to-small-btn" data-ng-click="deselectAll()">
             <ng-md-icon icon="highlight_off"></ng-md-icon>
-            <md-tooltip class="" md-direction="top">Deselect all</md-tooltip>
+            <md-tooltip md-direction="top">Deselect all</md-tooltip>
+        </md-button>
+        <md-button class="md-raised to-small-btn clear-all" data-ng-click="clearAll()">
+            <ng-md-icon icon="clear_all"></ng-md-icon>
+            <md-tooltip md-direction="top">Clear all</md-tooltip>
         </md-button>
     </div>
     <div layout="row" class="filters-control-btn s-f-expanded-btns">
@@ -286,7 +290,8 @@
     <!--<div dragula="'filters-bag'" dragula-model="filters" class="filters-holder">-->
     <div class="g-filters-holder">
         <md-card data-ng-repeat="filter in filters"
-                 class="{{filter.options.enabled ? '' : 'f-disabled' }} g-filter-item" layout="row">
+                 class="{{filter.options.enabled ? '' : 'f-disabled' }} g-filter-item"
+                 layout="row">
             <md-tooltip data-ng-if="sideNavCollapsed" class="" md-direction="top">{{filter.name}}<span
                     data-ng-if="!getFilterType(filter['value_type'])">: {{filter.options.query}}</span></md-tooltip>
             <md-checkbox ng-model="filter.options.enabled" aria-label="filters" class="md-primary"

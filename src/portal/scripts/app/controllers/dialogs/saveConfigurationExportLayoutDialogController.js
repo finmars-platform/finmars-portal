@@ -52,8 +52,9 @@
 
             uiRepository.createConfigurationExportLayout(vm.layout).then(function () {
                 $mdDialog.hide({status: 'agree'});
-            })
-
+            }, function (rej) {
+                $mdDialog.hide();
+            });
         };
     }
 

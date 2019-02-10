@@ -94,6 +94,13 @@
             </md-menu>
         </div>
 
+        <div class="s-f-collapsed-btns" layout="column" data-ng-if="!isReport">
+            <md-button class="md-raised to-small-btn" data-ng-click="addEntity($event)">
+                <ng-md-icon icon="add_circle_outline"></ng-md-icon>
+                <md-tooltip md-direction="top">Add {{getEntityNameByState() | lowercase}}</md-tooltip>
+            </md-button>
+        </div>
+
         <div data-ng-if="isReport">
 
             <div layout="column">

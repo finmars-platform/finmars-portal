@@ -9,6 +9,7 @@
 
     var uiService = require('../../../services/uiService');
     var metaContentTypesService = require('../../../services/metaContentTypesService');
+    // var bookmarkService = require('../../../services/bookmarkService');
 
     module.exports = function ($scope, $mdDialog, options) {
 
@@ -32,6 +33,36 @@
 
         };
 
+        var deleteLayout = function (layoutId) {
+
+            // bookmarkService.getList().then(function (data){
+            //    if (data.results) {
+            //
+            //        var bookmarks = data.results;
+            //        var deleteBookmarksPromise = [];
+            //
+            //        bookmarks.forEach(function (bookmark){
+            //
+            //            if (bookmark.list_layout === layoutId) {
+            //                deleteBookmarksPromise.push(bookmarkService.deleteByKey(bookmark.id));
+            //            }
+            //
+            //        });
+            //
+            //        Promise.all(deleteBookmarksPromise).then(function (delBookmarksData) {
+            //
+            //            uiService.deleteListLayoutByKey(layoutId).then(function (data) {
+            //                vm.getList();
+            //
+            //            });
+            //        });
+            //    };
+            // });
+            uiService.deleteListLayoutByKey(layoutId).then(function (data) {
+                vm.getList();
+            });
+        };
+
         vm.getList();
 
         vm.deleteItem = function (ev, item) {
@@ -45,7 +76,7 @@
                 locals: {
                     warning: {
                         title: 'Warning',
-                        description: 'Are you sure to delete layout?'
+                        description: 'Are you sure want to delete this layout?'
                     }
                 },
                 preserveScope: true,
@@ -54,9 +85,10 @@
                 multiple: true
             }).then(function (res) {
                 if (res.status === 'agree') {
-                    uiService.deleteListLayoutByKey(item.id).then(function (data) {
-                        vm.getList();
-                    });
+                    // uiService.deleteListLayoutByKey(item.id).then(function (data) {
+                    //     vm.getList();
+                    // });
+                    deleteLayout(item.id);
                 }
             })
         };

@@ -26,6 +26,8 @@
             page_size: 40
         };
 
+        vm.lastPageReached = false;
+
         vm.itemsProvider = {
             get: function (index, count, callback) {
 
@@ -35,9 +37,10 @@
                 var endItem = index + count;
                 var startItem = (index < 0 ? 0 : index);
 
-                if (index > 0 && index + count > vm.entityItems.length - count * 2) {
+                if (index > 0 && index + count > vm.entityItems.length - count * 2 && !vm.lastPageReached) {
 
                     vm.options.page = vm.options.page + 1;
+
                     vm.getDataEntity().then(function (value) {
 
                         result = vm.entityItems.slice(startItem, endItem);
@@ -45,7 +48,6 @@
                         callback(result);
 
                     }).catch(function (reason) {
-
                         result = vm.entityItems.slice(startItem, endItem);
 
                         callback(result);
@@ -107,6 +109,11 @@
             return vm.mapEntityType.replace('-', ' ');
         };
 
+        var formatEntityForMapping = function () {
+            vm.mapEntityType = vm.mapEntityType.replace(/_/g, '-')
+        };
+        formatEntityForMapping();
+        console.log('newMapEntityType is', vm.mapEntityType);
         function addChilds(classifier, item) {
 
             // console.log('item', item);
@@ -189,6 +196,8 @@
 
                 entityResolverService.getList(vm.mapEntityType, vm.options).then(function (data) {
 
+                    console.log('type mapping entityResolverService', data);
+
                     if (['periodicity', 'accrual-calculation-model',
                             'daily-pricing-model', 'payment-size-detail'].indexOf(vm.mapEntityType) === -1) {
                         
@@ -228,9 +237,13 @@
                         resolve($scope.$apply());
 
                     });
+                }, function (error) {
+                    vm.lastPageReached = true;
+                    vm.options.page = vm.options.page -1;
+                    reject($scope.$apply());
                 });
 
-            })
+            });
 
         };
 

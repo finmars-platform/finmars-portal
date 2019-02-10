@@ -31,30 +31,38 @@
             <md-input-container class="md-block" flex-gt-sm>
                 <label>Please select Element</label>
                 <!--{{item.attribute}}-->
-                <md-select ng-model="item.attribute" ng-change="changeModel(item.attribute)" ng-focus="findAttrsLeft()">
+                <md-select ng-model="item.attribute"
+                           ng-change="changeModel(item.attribute)"
+                           ng-focus="findAttrsLeft()">
                     <md-optgroup label="System" class="bold-field-select">
-                        <md-option ng-repeat="attr in entityAttrs" ng-value="attr"
-                                   class="{{attr.disabled ? 'disabled' : ''}}">
+                        <md-option ng-repeat="entityAttr in entityAttrs"
+                                   ng-value="entityAttr"
+                                   class="{{entityAttr.disabled ? 'disabled' : ''}}">
                             <!--{{attr}}-->
-                            {{attr.name}} ({{bindTypeByValueType(attr['value_type'])}})
+                            {{entityAttr.name}} ({{bindTypeByValueType(entityAttr['value_type'])}})
                         </md-option>
                     </md-optgroup>
                     <md-optgroup label="User attributes" class="bold-field-select" data-ng-if="attrs.length">
-                        <md-option ng-repeat="attr in attrs" ng-value="attr"
+                        <md-option ng-repeat="attr in attrs"
+                                   ng-value="attr"
                                    class="{{attr.disabled ? 'disabled' : ''}}">
                             <!--{{attr}}-->
                             {{attr.name}} ({{bindTypeByValueType(attr['value_type'])}})
                         </md-option>
                     </md-optgroup>
                     <md-optgroup label="Inputs" class="bold-field-select" data-ng-if="userInputs.length">
-                        <md-option ng-repeat="userInput in userInputs" ng-value="userInput">
+                        <md-option ng-repeat="userInput in userInputs"
+                                   ng-value="userInput"
+                                   class="{{userInput.disabled ? 'disabled' : ''}}">
                             <!--{{attr}}-->
                             {{userInput.name}} ({{bindTypeByValueType(userInput['value_type'])}})
                         </md-option>
                     </md-optgroup>
                     <md-optgroup label="Layout" class="bold-field-select">
-                        <md-option ng-repeat="attr in layoutAttrs" ng-value="attr">
-                            {{attr.name}} ({{bindTypeByValueType(attr['value_type'])}})
+                        <md-option ng-repeat="layoutAttr in layoutAttrs"
+                                   ng-value="layoutAttr"
+                                   class="{{layoutAttr.disabled ? 'disabled' : ''}}">
+                            {{layoutAttr.name}} ({{bindTypeByValueType(layoutAttr['value_type'])}})
                         </md-option>
                     </md-optgroup>
                 </md-select>
@@ -76,11 +84,15 @@
             </div>
             <md-divider></md-divider>
             <div layout="row" layout-align="space-between center" class="constructor-card-actions">
-                <md-button aria-label="cancel" data-ng-click="cancel()">
+                <md-button aria-label="cancel"
+                           data-ng-click="cancel()"
+                           data-ng-class="{'CCA-small-btn': tab.layout.columns > 5}">
                     Cancel
                 </md-button>
-                <md-button class="ec-field-btn {{item.attribute ? '' : 'disabled'}}" aria-label="save layout"
-                           data-ng-click="saveField()">
+                <md-button class="ec-field-btn"
+                           aria-label="save layout"
+                           data-ng-click="saveField()"
+                           data-ng-class="{'disabled': !item.attribute, 'CCA-small-btn': tab.layout.columns > 5}">
                     <span>Ok</span>
                 </md-button>
             </div>

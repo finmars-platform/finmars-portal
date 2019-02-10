@@ -79,9 +79,11 @@ app.run(['$rootScope', '$transitions', '$state', function ($rootScope, $transiti
 
 
 app.controller('ShellController', ['$scope', '$state', '$rootScope', '$mdDialog', '$transitions', require('./app/controllers/shellController')]);
+app.controller('BookmarksController', ['$scope', '$mdDialog', '$state', require('./app/controllers/bookmarksController')]);
 app.controller('SideNavController', ['$scope', '$mdDialog', require('./app/controllers/sideNavController')]);
 app.controller('HomeController', ['$scope', require('./app/controllers/homeController')]);
 app.controller('SetupController', ['$scope', '$state', require('./app/controllers/setupController')]);
+app.controller('NotFoundPageController', ['$scope', require('./app/controllers/notFoundPageController')]);
 
 app.controller('DashboardController', ['$scope', '$mdDialog', require('./app/controllers/dashboardController')]);
 app.controller('ActionsController', ['$scope', '$mdDialog', require('./app/controllers/actionsController')]);
@@ -140,6 +142,7 @@ app.controller('EventSchedulesTabController', ['$scope', '$mdDialog', require('.
 app.controller('FactorScheduleTabController', ['$scope', require('./app/controllers/tabs/instrument/factorScheduleTabController')]);
 app.controller('ManualPricingFormulasTabController', ['$scope', require('./app/controllers/tabs/instrument/manualPricingFormulasTabController')]);
 app.controller('InstrumentEventActionsDialogController', ['$scope', '$mdDialog', 'eventActions', require('./app/controllers/dialogs/instrumentEventActionsDialogController')]);
+app.controller('GenerateEventScheduleDialogController', ['$scope', '$mdDialog', require('./app/controllers/dialogs/generateEventScheduleDialogController')]);
 
 app.controller('DataPortfolioController', ['$scope', '$stateParams', require('./app/controllers/data/dataPortfolioController')]);
 app.controller('DataTagController', ['$scope', '$stateParams', require('./app/controllers/data/dataTagController')]);
@@ -287,7 +290,7 @@ app.controller('gModalReportCashFlowProjectionController', ['$scope', '$mdDialog
 
 
 app.directive('evFieldResolver', [require('./app/directives/entityViewerFieldResolverDirective')]);
-app.directive('ismFieldResolver', [require('./app/directives/instrumentSchemeManagerFieldResolverDirective')]);
+app.directive('ismFieldResolver', ['$mdDialog', require('./app/directives/instrumentSchemeManagerFieldResolverDirective')]);
 app.directive('floatNumbers', [require('./app/directives/floatNumbersDirective')]);
 app.directive('instrumentModalResolver', ['$mdDialog', require('./app/directives/instrumentModalResolverDirective')]);
 app.directive('instrumentEventActionResolver', ['$mdDialog', require('./app/directives/instrumentEventActionResolverDirective')]);

@@ -47,7 +47,7 @@
             var entity = metaContentTypesService.findEntityByContentType(vm.scheme.content_type);
 
             vm.scheme.entity_fields = metaService.getEntityAttrs(entity).filter(function (item) {
-
+                console.log('import scheme entity attrs are', item);
                 return ['tags', 'transaction_types', 'object_permissions_user', 'object_permissions_group'].indexOf(item.key) === -1
 
             }).map(function (item) {
@@ -60,6 +60,7 @@
                 }
 
             });
+            console.log('import scheme scheme is', vm.scheme);
 
             if (vm.scheme.content_type !== 'instruments.pricehistory' && vm.scheme.content_type !== 'currencyhistorys.currencyhistory') {
 
@@ -75,9 +76,19 @@
         };
 
         vm.addCsvField = function () {
+            var csvFieldsLength = vm.scheme.csv_fields.length;
+            var lastFieldNumber;
+            var nextFieldNumber;
+            if (csvFieldsLength === 0) {
+                nextFieldNumber = 0;
+            } else {
+                lastFieldNumber = parseInt(vm.scheme.csv_fields[csvFieldsLength - 1].column);
+                nextFieldNumber = lastFieldNumber + 1;
+            }
+
             vm.scheme.csv_fields.push({
                 name: '',
-                column: vm.scheme.csv_fields.length
+                column: nextFieldNumber
             })
         };
 
@@ -99,7 +110,7 @@
         vm.hasMapping = function (item) {
 
             if (item.hasOwnProperty('value_type')) {
-                return item.value_type === 'field';
+                return item.value_type === 'mc_field';
             }
 
         };
@@ -144,7 +155,7 @@
         };
 
         vm.openMapping = function ($event, item) {
-
+            console.log('import scheme entity', item);
             var entity = '';
 
             if (item.system_property_key === 'accounts') {

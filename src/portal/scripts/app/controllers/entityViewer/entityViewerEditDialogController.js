@@ -41,6 +41,9 @@
         vm.editLayoutByEntityInsance = false;
 
         vm.formIsValid = true;
+        vm.TTGroupChosen = true;
+
+        console.log('entityViewerEdit entity type is', vm.entityType);
 
         vm.loadPermissions = function () {
 
@@ -639,6 +642,18 @@
 
         };
 
+        if (vm.entityType === 'transaction-type') {
+            console.log('entity edit transaction type', vm.TTGroupChosen);
+            $scope.$watch('vm.entity.group', function () {
+                if (vm.entity.group === 14 || !vm.entity.group) {
+                    vm.TTGroupChosen = false;
+                }
+                else {
+                    vm.TTGroupChosen = true;
+                }
+            });
+        }
+
         vm.save = function ($event) {
 
             vm.updateEntityBeforeSave();
@@ -670,6 +685,10 @@
 
                 }
 
+                if (vm.entityType === 'transaction-type') {
+                    console.log('updating transaction-type');
+
+                }
                 entityResolverService.update(vm.entityType, result.id, result).then(function (data) {
 
                     if (vm.entityType === 'complex-transaction') {

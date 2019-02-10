@@ -54,6 +54,31 @@
             });
 
         };
+        var getECProperties = function (config) {
+            var properties = {};
+            // var exportSettingsData = {};
+            if (config.hasOwnProperty('name')) {
+                properties.name = config.name
+            }
+
+            if (config.hasOwnProperty('content_type')) {
+                properties.content_type = config.content_type
+            }
+
+            if (config.hasOwnProperty('user_code')) {
+                properties.user_code = config.user_code
+            }
+
+            if (config.hasOwnProperty('scheme_name')) {
+                properties.scheme_name = config.scheme_name
+            }
+
+            if (config.hasOwnProperty('cron_expr')) {
+                properties.cron_expr = config.cron_expr
+            }
+
+            return properties;
+        };
 
         vm.getConfigurationExportLayouts = function () {
 
@@ -89,8 +114,6 @@
 
             if (vm.activeLayout) {
 
-                console.log('vm.activeLayout', vm.activeLayout);
-
                 vm.layouts.forEach(function (item) {
                     item.is_default = false;
                 });
@@ -99,6 +122,7 @@
 
                 vm.items.forEach(function (entityItem) {
                     entityItem.active = false;
+                    entityItem.someChildsActive = false;
 
                     entityItem.content.forEach(function (childItem) {
                         childItem.active = false;
@@ -107,43 +131,66 @@
 
                 vm.items.forEach(function (entityItem) {
 
-                    if (vm.activeLayout.data[entityItem.entity]) {
+                    if (vm.activeLayout.data[entityItem.entity] && vm.activeLayout.data[entityItem.entity].length > 0) {
 
                         if (entityItem.content.length) {
-
                             entityItem.active = true;
-
                         }
 
                         entityItem.content.forEach(function (childItem) {
+                            // Get unique set of properties from configuration item
+                            var properties = getECProperties(childItem);
 
-                            var name;
+                            var exportConfPropertiesList = Object.keys(properties);
 
-                            if (childItem.hasOwnProperty('name')) {
-                                name = childItem.name
-                            }
+                            // if (childItem.hasOwnProperty('name')) {
+                            //     name = childItem.name
+                            // }
+                            //
+                            // if (childItem.hasOwnProperty('user_code')) {
+                            //     name = childItem.user_code
+                            // }
+                            //
+                            // if (childItem.hasOwnProperty('scheme_name')) {
+                            //     name = childItem.scheme_name
+                            // }
+                            var itemIsActive = false;
+                            vm.activeLayout.data[entityItem.entity].forEach(function (activeItem) {
+                                var propertiesMatch = 0;
+                                // Check if all properties of childItem match with ones from layout
+                                exportConfPropertiesList.forEach(function (ECProperty) {
+                                    if (activeItem.hasOwnProperty(ECProperty) && activeItem[ECProperty] === properties[ECProperty]) {
+                                        propertiesMatch = propertiesMatch + 1;
+                                    }
+                                });
+                                // If all childItem properties match make it active
+                                if (exportConfPropertiesList.length === propertiesMatch) {
+                                    itemIsActive = true;
+                                    return false;
+                                }
 
-                            if (childItem.hasOwnProperty('user_code')) {
-                                name = childItem.user_code
-                            }
-
-                            if (childItem.hasOwnProperty('scheme_name')) {
-                                name = childItem.scheme_name
-                            }
-
-                            if (vm.activeLayout.data[entityItem.entity].indexOf(name) !== -1) {
-                                childItem.active = true
-                                entityItem.someChildsActive = 'some-checkboxes-ticked'; // TODO refactor here too
+                            });
+                            if (itemIsActive) {
+                                childItem.active = true;
+                                entityItem.someChildsActive = true;
                             } else {
                                 entityItem.active = false;
+                                entityItem.someChildsActive = false;
                             }
+                            // if (vm.activeLayout.data[entityItem.entity].indexOf(name) !== -1) {
+                            //     childItem.active = true
+                            //     entityItem.someChildsActive = true; // TODO refactor here too
+                            // } else {
+                            //     entityItem.active = false;
+                            //     entityItem.someChildsActive = false;
+                            // }
                         })
 
                     }
 
-                    vm.checkSelectAll();
+                });
 
-                })
+                vm.checkSelectAll();
 
             }
 
@@ -159,26 +206,29 @@
 
                     if (child.active) {
 
-                        var name;
+                        // var name;
 
-                        if (child.hasOwnProperty('name')) {
-                            name = child.name
-                        }
+                        // if (child.hasOwnProperty('name')) {
+                        //     name = child.name
+                        // }
+                        //
+                        // if (child.hasOwnProperty('user_code')) {
+                        //     name = child.user_code
+                        // }
+                        //
+                        // if (child.hasOwnProperty('scheme_name')) {
+                        //     name = child.scheme_name
+                        // }
 
-                        if (child.hasOwnProperty('user_code')) {
-                            name = child.user_code
-                        }
+                        var name = getECProperties(child);
+                        // var name = child;
 
-                        if (child.hasOwnProperty('scheme_name')) {
-                            name = child.scheme_name
-                        }
-
-                        if (name) {
+                        if (name || typeof name === "string") {
                             vm.activeLayout.data[item.entity].push(name)
                         }
                     }
 
-                })
+                });
 
             });
 
@@ -188,7 +238,7 @@
                 targetEvent: $event,
                 locals: {
                     data: {
-                        layout: vm.activeLayout
+                        layout: vm.activeLayout,
                     }
                 },
                 multiple: true,
@@ -218,19 +268,19 @@
 
                     if (child.active) {
 
-                        var name;
+                        var name = getECProperties(child);
 
-                        if (child.hasOwnProperty('name')) {
-                            name = child.name
-                        }
-
-                        if (child.hasOwnProperty('user_code')) {
-                            name = child.user_code
-                        }
-
-                        if (child.hasOwnProperty('scheme_name')) {
-                            name = child.scheme_name
-                        }
+                        // if (child.hasOwnProperty('name')) {
+                        //     name = child.name
+                        // }
+                        //
+                        // if (child.hasOwnProperty('user_code')) {
+                        //     name = child.user_code
+                        // }
+                        //
+                        // if (child.hasOwnProperty('scheme_name')) {
+                        //     name = child.scheme_name
+                        // }
 
                         configuration[item.entity].push(name)
                     }
@@ -261,7 +311,7 @@
                 if (res.status === 'agree') {
                     vm.getConfigurationExportLayouts();
                 }
-            })
+            });
 
         };
 
@@ -270,7 +320,7 @@
             vm.selectAllState = !vm.selectAllState;
 
             vm.items.forEach(function (item) {
-                item.someChildsActive = undefined;
+                item.someChildsActive = false;
                 item.active = vm.selectAllState;
 
 
@@ -399,7 +449,7 @@
         vm.toggleActiveForChilds = function (item) {
 
             item.active = !item.active;
-            item.someChildsActive = undefined;
+            item.someChildsActive = false;
             item.content.forEach(function (child) {
                 child.active = item.active;
             });
@@ -416,26 +466,26 @@
             var ChildIsNotActive = false;
             var parentIsActive = false;
 
-            parent.content.forEach(function (item, itemIndex) {
-                if (item.active === true) {
+            parent.content.forEach(function (item) {
+                if (item.active) {
                     ChildIsActive = true;
                 }
                 else {
                     ChildIsNotActive = true;
                 }
-                if (itemIndex === parent.content.length - 1) {
-                    if (ChildIsActive && !ChildIsNotActive) {
-                        parentIsActive = true;
-                    }
-                    else if (!ChildIsActive && ChildIsNotActive) {
-                        parent.someChildsActive = undefined;
-                    }
-                    else {
-                        parentIsActive = false;
-                        parent.someChildsActive = 'some-checkboxes-ticked';
-                    }
-                }
             });
+
+            if (ChildIsActive && !ChildIsNotActive) {
+                parentIsActive = true;
+            }
+            else if (!ChildIsActive && ChildIsNotActive) {
+                parent.someChildsActive = false;
+            }
+            else {
+                parentIsActive = false;
+                parent.someChildsActive = true;
+            }
+
 
             parent.active = parentIsActive;
 
