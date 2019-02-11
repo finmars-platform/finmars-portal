@@ -143,7 +143,7 @@
                     });
 
                 }
-                else if (bookmark.id = delBookmarkId) {
+                else if (bookmark.id === delBookmarkId) {
                     vm.deletedNodes.push(sel);
                     return false;
                 };

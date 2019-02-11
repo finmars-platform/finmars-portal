@@ -615,6 +615,7 @@
                     locals: {
                         validationData: reason.message
                     },
+                    multiple: true,
                     preserveScope: true,
                     autoWrap: true,
                     skipHide: true
@@ -629,6 +630,7 @@
                 templateUrl: 'views/dialogs/entity-type-mapping-dialog-view.html',
                 parent: angular.element(document.body),
                 targetEvent: $event,
+                multiple: true,
                 preserveScope: true,
                 autoWrap: true,
                 skipHide: true,
@@ -648,6 +650,7 @@
                 templateUrl: 'views/dialogs/expression-editor-dialog-view.html',
                 parent: angular.element(document.body),
                 targetEvent: $event,
+                multiple: true,
                 preserveScope: true,
                 autoWrap: true,
                 skipHide: true,
