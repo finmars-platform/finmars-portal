@@ -47,7 +47,7 @@
             var entity = metaContentTypesService.findEntityByContentType(vm.scheme.content_type);
 
             vm.scheme.entity_fields = metaService.getEntityAttrs(entity).filter(function (item) {
-                console.log('import scheme entity attrs are', item);
+
                 return ['tags', 'transaction_types', 'object_permissions_user', 'object_permissions_group'].indexOf(item.key) === -1
 
             }).map(function (item) {
@@ -60,7 +60,6 @@
                 }
 
             });
-            console.log('import scheme scheme is', vm.scheme);
 
             if (vm.scheme.content_type !== 'instruments.pricehistory' && vm.scheme.content_type !== 'currencyhistorys.currencyhistory') {
 
@@ -107,11 +106,31 @@
             vm.scheme.entity_fields.splice($index, 1);
         };
 
+        var allowedEntityAttrsArray = ['accounts',
+                                       'counterparties',
+                                       'currency',
+                                       'daily_pricing_model',
+                                       'payment_size_detail',
+                                       'portfolios', 'pricing_policy',
+                                       'price_download_scheme',
+                                       'responsibles', 'instrument_type',
+                                       'instrument',
+                                       'strategy_1',
+                                       'strategy_2',
+                                       'strategy_3'];
         vm.hasMapping = function (item) {
 
-            if (item.hasOwnProperty('value_type')) {
-                return item.value_type === 'mc_field';
+            if (allowedEntityAttrsArray.indexOf(item.system_property_key) !== -1) {
+                return true;
             }
+
+            // if (item.hasOwnProperty('value_type')) {
+            //     if (item.value_type === 'mc_field') {
+            //         return item.value_type = 'mc_field';
+            //     } else if (item.value_type === 'field') {
+            //         return item.field = 'field';
+            //     }
+            // }
 
         };
 
@@ -155,36 +174,80 @@
         };
 
         vm.openMapping = function ($event, item) {
-            console.log('import scheme entity', item);
+
             var entity = '';
 
-            if (item.system_property_key === 'accounts') {
-                entity = 'account'
+            switch (item.system_property_key) {
+                case 'accounts':
+                    entity = 'account';
+                    break;
+                case 'counterparties':
+                    entity = 'counterparty';
+                    break;
+                case 'currency':
+                    entity = 'currency';
+                    break;
+                case 'daily_pricing_model':
+                    entity = 'daily-pricing-model';
+                    break;
+                case 'payment_size_detail':
+                    entity = 'payment-size-detail';
+                    break;
+                case 'portfolios':
+                    entity = 'portfolio';
+                    break;
+                case 'pricing_policy':
+                    entity = 'pricing-policy';
+                    break;
+                case 'price_download_scheme':
+                    entity = 'price-download-scheme';
+                    break;
+                case 'responsibles':
+                    entity = 'responsible';
+                    break;
+                case 'instrument_type':
+                    entity = 'instrument-type';
+                    break;
+                case 'instrument':
+                    entity = 'instrument';
+                    break;
+                case 'strategy_1':
+                    entity = 'strategy-1';
+                    break;
+                case 'strategy_2':
+                    entity = 'strategy-2';
+                    break;
+                case 'strategy_3':
+                    entity = 'strategy-3';
+                    break;
             }
-
-            if (item.system_property_key === 'responsibles') {
-                entity = 'responsible'
-            }
-
-            if (item.system_property_key === 'counterparties') {
-                entity = 'counterparty'
-            }
-
-            if (item.system_property_key === 'pricing_policy') {
-                entity = 'pricing-policy'
-            }
-
-            if (item.system_property_key === 'instrument_type') {
-                entity = 'instrument-type'
-            }
-
-            if (item.system_property_key === 'instrument') {
-                entity = 'instrument'
-            }
-
-            if (item.system_property_key === 'currency') {
-                entity = 'currency'
-            }
+            // if (item.system_property_key === 'accounts') {
+            //     entity = 'account'
+            // }
+            //
+            // if (item.system_property_key === 'responsibles') {
+            //     entity = 'responsible'
+            // }
+            //
+            // if (item.system_property_key === 'counterparties') {
+            //     entity = 'counterparty'
+            // }
+            //
+            // if (item.system_property_key === 'pricing_policy') {
+            //     entity = 'pricing-policy'
+            // }
+            //
+            // if (item.system_property_key === 'instrument_type') {
+            //     entity = 'instrument-type'
+            // }
+            //
+            // if (item.system_property_key === 'instrument') {
+            //     entity = 'instrument'
+            // }
+            //
+            // if (item.system_property_key === 'currency') {
+            //     entity = 'currency'
+            // }
 
             $mdDialog.show({
                 controller: 'EntityTypeMappingDialogController as vm',
