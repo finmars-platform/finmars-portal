@@ -217,6 +217,7 @@
                     locals: {
                         validationData: "An error occurred. Please try again later"
                     },
+                    multiple: true,
                     preserveScope: true,
                     autoWrap: true,
                     skipHide: true
@@ -237,6 +238,7 @@
                 controller: 'InstrumentMappingEditDialogController as vm',
                 templateUrl: 'views/dialogs/instrument-mapping-dialog-view.html',
                 targetEvent: $event,
+                multiple: true,
                 preserveScope: true,
                 autoWrap: true,
                 skipHide: true,
@@ -271,6 +273,7 @@
                             description: "You have you have successfully add instrument " + vm.config.instrument.user_code + " (user code)."
                         }
                     },
+                    multiple: true,
                     preserveScope: true,
                     autoWrap: true,
                     skipHide: true
