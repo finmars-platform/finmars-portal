@@ -146,7 +146,8 @@
             {
                 key: 'pricing_currency',
                 caption: 'Pricing currency',
-                value_type: "field",
+                // value_type: "field",
+                value_type: 10,
                 required: true,
                 hasBackground: true,
                 expression: '',
@@ -164,6 +165,7 @@
             {
                 key: 'reference_for_pricing',
                 caption: 'Reference for pricing',
+                value_type: 10,
                 required: true,
                 expression: '',
                 complexExpressionEntity: false
