@@ -123,7 +123,9 @@
 
             usersService.updateInviteToMasterUserByKey(item.id, item).then(function () {
 
-                $state.go('app.setup');
+                usersService.setMasterUser(item.to_master_user.id).then(function (value) {
+                    $state.go('app.setup');
+                })
 
             })
 
