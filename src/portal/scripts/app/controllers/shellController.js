@@ -116,8 +116,6 @@
 
         vm.openHelp = function ($event) {
 
-            //console.log('$state', $state);
-
             var urlPieces = $state.current.url.split('/');
             var destinationUrl = urlPieces[urlPieces.length - 1].replace('-', '_');
 
@@ -207,11 +205,7 @@
                 vm.unreadedNotificationsAmount = data.count;
                 $scope.$apply();
             });
-        }
-
-        $rootScope.$on('$stateChangeSuccess', function () {
-            $mdDialog.cancel();
-        });
+        };
 
         $transitions.onSuccess({}, function (transition) {
 
@@ -227,18 +221,21 @@
         vm.logOutMethod = function () {
             usersService.logout().then(function (data) {
                 console.log('Logged out');
+                sessionStorage.removeItem('afterLoginEvents');
                 window.location.pathname = '/';
                 cookiesService.deleteCookie();
             });
         };
 
         vm.init = function () {
+
             vm.getMasterUsersList().then(function () {
 
                 if (vm.masters.length) {
                     vm.getNotifications();
                 }
             })
+
         };
 
         vm.init();

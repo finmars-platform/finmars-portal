@@ -18,9 +18,75 @@
 
         vm.events = [];
 
-        vm.agree = function ($event) {
+        vm.recursiveOpenDialogs = function (resolve, events, index, $event) {
 
-            var promises = [];
+            var doNotReactActionsIds = [6, 9, 14];
+            var withReactActionsIds = [4, 7, 10, 11];
+            var applyDefaultActionsIds = [5, 8, 12, 13];
+
+            var event = events[index];
+
+            if (event.selected && event.status === 1 && event.event_schedule_object) {
+
+                var notification_class = event.event_schedule_object.notification_class;
+
+                if (withReactActionsIds.indexOf(notification_class) !== -1) {
+
+                    vm.openWithReactDialog($event, event).then(function (value) {
+
+                        index = index + 1;
+                        if (events.length < index) {
+                            vm.recursiveOpenDialogs(resolve, events, index, $event);
+                        } else {
+                            resolve();
+                        }
+
+                    })
+
+                }
+
+                if (doNotReactActionsIds.indexOf(notification_class) !== -1) {
+
+                    vm.openDoNotReactDialog($event, event).then(function (value) {
+
+                        index = index + 1;
+                        if (events.length < index) {
+                            vm.recursiveOpenDialogs(resolve, events, index, $event);
+                        } else {
+                            resolve();
+                        }
+
+                    })
+                }
+
+                if (applyDefaultActionsIds.indexOf(notification_class) !== -1) {
+
+                    vm.openApplyDefaultDialog($event, event).then(function (value) {
+
+                        index = index + 1;
+                        if (events.length < index) {
+                            vm.recursiveOpenDialogs(resolve, events, index, $event);
+                        } else {
+                            resolve();
+                        }
+
+                    })
+                }
+
+            } else {
+
+                index = index + 1;
+                if (events.length < index) {
+                    vm.recursiveOpenDialogs(resolve, events, index, $event);
+                } else {
+                    resolve();
+                }
+
+            }
+
+        };
+
+        vm.agree = function ($event) {
 
             // DONT_REACT = 1
             // APPLY_DEF_ON_EDATE = 2
@@ -39,36 +105,11 @@
             // INFORM_ON_NDATE_AND_EDATE_APPLY_DEF_ON_NDATE = 13
             // INFORM_ON_NDATE_AND_EDATE_DONT_REACT = 14
 
-            var doNotReactActionsIds = [6, 9, 14];
-            var withReactActionsIds = [4, 7, 10, 11];
-            var applyDefaultActionsIds = [5, 8, 12, 13];
+            var index = 0;
 
-            vm.events.forEach(function (event) {
-
-                console.log('event', event);
-
-                if (event.selected && event.status === 1 && event.event_schedule_object) {
-
-                    var notification_class = event.event_schedule_object.notification_class;
-
-                    if (withReactActionsIds.indexOf(notification_class) !== -1) {
-                        return promises.push(vm.openWithReactDialog($event, event));
-                    }
-
-                    if (doNotReactActionsIds.indexOf(notification_class) !== -1) {
-                        return promises.push(vm.openDoNotReactDialog($event, event));
-                    }
-
-                    if (applyDefaultActionsIds.indexOf(notification_class) !== -1) {
-                        return promises.push(vm.openApplyDefaultDialog($event, event));
-                    }
-
-                }
-
-            });
-
-
-            Promise.all(promises).then(function () {
+            new Promise(function (resolve, reject) {
+                recursiveOpenDialogs(resolve, vm.events, index, $event);
+            }).then(function () {
                 $mdDialog.hide();
 
                 $mdDialog.show({
