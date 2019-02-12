@@ -22,32 +22,45 @@
 
             var promises = [];
 
-            var dontReactActionsIds = [1, 6, 9, 14];
+            // DONT_REACT = 1
+            // APPLY_DEF_ON_EDATE = 2
+            // APPLY_DEF_ON_NDATE = 3
+            //
+            // INFORM_ON_NDATE_WITH_REACT = 4
+            // INFORM_ON_NDATE_APPLY_DEF = 5
+            // INFORM_ON_NDATE_DONT_REACT = 6
+            // INFORM_ON_EDATE_WITH_REACT = 7
+            // INFORM_ON_EDATE_APPLY_DEF = 8
+            // INFORM_ON_EDATE_DONT_REACT = 9
+            //
+            // INFORM_ON_NDATE_AND_EDATE_WITH_REACT_ON_EDATE = 10
+            // INFORM_ON_NDATE_AND_EDATE_WITH_REACT_ON_NDATE = 11
+            // INFORM_ON_NDATE_AND_EDATE_APPLY_DEF_ON_EDATE = 12
+            // INFORM_ON_NDATE_AND_EDATE_APPLY_DEF_ON_NDATE = 13
+            // INFORM_ON_NDATE_AND_EDATE_DONT_REACT = 14
+
+            var doNotReactActionsIds = [6, 9, 14];
+            var withReactActionsIds = [4, 7, 10, 11];
             var applyDefaultActionsIds = [5, 8, 12, 13];
 
             vm.events.forEach(function (event) {
 
                 console.log('event', event);
 
-                if (event.selected && event.status === 1) {
+                if (event.selected && event.status === 1 && event.event_schedule_object) {
 
-                    if (event.is_need_reaction) {
+                    var notification_class = event.event_schedule_object.notification_class;
+
+                    if (withReactActionsIds.indexOf(notification_class) !== -1) {
                         return promises.push(vm.openWithReactDialog($event, event));
-
                     }
 
-                    if (event.event_schedule_object) {
+                    if (doNotReactActionsIds.indexOf(notification_class) !== -1) {
+                        return promises.push(vm.openDoNotReactDialog($event, event));
+                    }
 
-                        var notification_class = event.event_schedule_object.notification_class;
-
-                        if (dontReactActionsIds.indexOf(notification_class) !== -1) {
-                            return promises.push(vm.openDoNotReactDialog($event, event));
-                        }
-
-                        if (applyDefaultActionsIds.indexOf(notification_class) !== -1) {
-                            return promises.push(vm.openApplyDefaultDialog($event, event));
-                        }
-
+                    if (applyDefaultActionsIds.indexOf(notification_class) !== -1) {
+                        return promises.push(vm.openApplyDefaultDialog($event, event));
                     }
 
                 }
