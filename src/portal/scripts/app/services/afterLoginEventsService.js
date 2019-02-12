@@ -81,7 +81,7 @@
                 openWithReactDialog($mdDialog, $event, event).then(function (value) {
 
                     index = index + 1;
-                    if (events.length < index) {
+                    if (index < events.length) {
                         recursiveOpenDialogs($mdDialog, resolve, events, index, $event);
                     } else {
                         resolve();
@@ -96,7 +96,7 @@
                 openDoNotReactDialog($mdDialog, $event, event).then(function (value) {
 
                     index = index + 1;
-                    if (events.length < index) {
+                    if (index < events.length) {
                         recursiveOpenDialogs($mdDialog, resolve, events, index, $event);
                     } else {
                         resolve();
@@ -110,7 +110,7 @@
                 openApplyDefaultDialog($mdDialog, $event, event).then(function (value) {
 
                     index = index + 1;
-                    if (events.length < index) {
+                    if (index < events.length) {
                         recursiveOpenDialogs($mdDialog, resolve, events, index, $event);
                     } else {
                         resolve();
@@ -122,7 +122,7 @@
         } else {
 
             index = index + 1;
-            if (events.length < index) {
+            if (index < events.length) {
                 recursiveOpenDialogs($mdDialog, resolve, events, index, $event);
             } else {
                 resolve();

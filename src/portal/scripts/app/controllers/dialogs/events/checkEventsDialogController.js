@@ -35,7 +35,7 @@
                     vm.openWithReactDialog($event, event).then(function (value) {
 
                         index = index + 1;
-                        if (events.length < index) {
+                        if (index < events.length) {
                             vm.recursiveOpenDialogs(resolve, events, index, $event);
                         } else {
                             resolve();
@@ -50,7 +50,7 @@
                     vm.openDoNotReactDialog($event, event).then(function (value) {
 
                         index = index + 1;
-                        if (events.length < index) {
+                        if (index < events.length) {
                             vm.recursiveOpenDialogs(resolve, events, index, $event);
                         } else {
                             resolve();
@@ -64,7 +64,7 @@
                     vm.openApplyDefaultDialog($event, event).then(function (value) {
 
                         index = index + 1;
-                        if (events.length < index) {
+                        if (index < events.length) {
                             vm.recursiveOpenDialogs(resolve, events, index, $event);
                         } else {
                             resolve();
@@ -76,7 +76,7 @@
             } else {
 
                 index = index + 1;
-                if (events.length < index) {
+                if (index < events.length) {
                     vm.recursiveOpenDialogs(resolve, events, index, $event);
                 } else {
                     resolve();
