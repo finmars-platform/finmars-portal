@@ -5,7 +5,7 @@
 
     'use strict';
 
-    var eventsService = require('../../services/eventsService');
+    var eventsService = require('../../../services/eventsService');
 
     module.exports = function ($scope, $mdDialog) {
 
@@ -32,7 +32,7 @@
                 if (event.selected && event.status === 1) {
 
                     if (event.is_need_reaction) {
-                        return promises.push(vm.openEventReactWindow($event, event));
+                        return promises.push(vm.openWithReactDialog($event, event));
 
                     }
 
@@ -41,11 +41,11 @@
                         var notification_class = event.event_schedule_object.notification_class;
 
                         if (dontReactActionsIds.indexOf(notification_class) !== -1) {
-                            return promises.push(vm.openEventDismissWindow($event, event));
+                            return promises.push(vm.openDoNotReactDialog($event, event));
                         }
 
                         if (applyDefaultActionsIds.indexOf(notification_class) !== -1) {
-                            return promises.push(vm.openEventApplyDefaultWindow($event, event));
+                            return promises.push(vm.openApplyDefaultDialog($event, event));
                         }
 
                     }
@@ -233,44 +233,25 @@
                 case 1:
                     return 'New';
                 case 2:
-                    return 'Ignored';
+                    return 'Informed';
                 case 3:
-                    return 'Pending (book)';
+                    return 'Booked (system)';
                 case 4:
-                    return 'Booked';
+                    return 'Booked (user)';
                 case 5:
-                    return 'Book (default)';
+                    return 'Booked, pending (system)';
+                case 6:
+                    return 'Booked, pending (user)'
 
             }
 
         };
 
-        vm.openEventDismissWindow = function ($event, item) {
+        vm.openDoNotReactDialog = function ($event, item) {
 
             return $mdDialog.show({
-                controller: 'SuccessDialogController as vm',
-                templateUrl: 'views/dialogs/event-dialog-view.html',
-                parent: angular.element(document.body),
-                targetEvent: $event,
-                locals: {
-                    success: {
-                        title: "Event (Don't react)",
-                        description: 'Nothing will be booked'
-                    }
-                },
-                preserveScope: true,
-                autoWrap: true,
-                skipHide: true,
-                multiple: true
-            })
-
-        };
-
-        vm.openEventApplyDefaultWindow = function ($event, item) {
-
-            return $mdDialog.show({
-                controller: 'EventApplyDefaultDialogController as vm',
-                templateUrl: 'views/dialogs/event-apply-default-dialog-view.html',
+                controller: 'EventDoNotReactDialogController as vm',
+                templateUrl: 'views/dialogs/events/event-do-not-react-dialog-view.html',
                 parent: angular.element(document.body),
                 targetEvent: $event,
                 locals: {
@@ -286,10 +267,30 @@
 
         };
 
-        vm.openEventReactWindow = function ($event, item) {
+        vm.openApplyDefaultDialog = function ($event, item) {
+
             return $mdDialog.show({
-                controller: 'EventDialogController as vm',
-                templateUrl: 'views/dialogs/event-dialog-view.html',
+                controller: 'EventApplyDefaultDialogController as vm',
+                templateUrl: 'views/dialogs/events/event-apply-default-dialog-view.html',
+                parent: angular.element(document.body),
+                targetEvent: $event,
+                locals: {
+                    data: {
+                        event: item
+                    }
+                },
+                preserveScope: true,
+                autoWrap: true,
+                skipHide: true,
+                multiple: true
+            })
+
+        };
+
+        vm.openWithReactDialog = function ($event, item) {
+            return $mdDialog.show({
+                controller: 'EventWithReactDialogController as vm',
+                templateUrl: 'views/dialogs/events/event-with-react-dialog-view.html',
                 parent: angular.element(document.body),
                 targetEvent: $event,
                 locals: {
