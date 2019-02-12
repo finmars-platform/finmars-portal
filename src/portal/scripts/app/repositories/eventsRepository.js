@@ -61,9 +61,9 @@
             })
     };
 
-    var ignoreEventAction = function (id) {
+    var informedEventAction = function (id) {
 
-        return xhrService.fetch(baseUrl + 'instruments/generated-event/' + id + '/ignore/',
+        return xhrService.fetch(baseUrl + 'instruments/generated-event/' + id + '/informed/',
             {
                 method: 'PUT',
                 credentials: 'include',
@@ -110,7 +110,7 @@
         getList: getList,
         getEventAction: getEventAction,
         putEventAction: putEventAction,
-        ignoreEventAction: ignoreEventAction,
+        informedEventAction: informedEventAction,
         generateEvents: generateEvents,
         generateEventsRange: generateEventsRange
     }

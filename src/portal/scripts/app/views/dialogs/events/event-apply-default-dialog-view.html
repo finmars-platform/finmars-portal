@@ -1,0 +1,50 @@
+<md-dialog aria-label="event">
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            <h2>Event <b>{{vm.event.event_schedule_object.name}}</b> (Apply Default)</h2>
+        </div>
+    </md-toolbar>
+    <md-dialog-content data-custom-scroll class="custom-scrollbar md-padding">
+
+        <p>
+            {{vm.event.event_schedule_object.display_description}}
+        </p>
+
+        <div data-ng-if="vm.automatic_actions.length">
+
+            <p>
+                The following transactions will be booked:
+            </p>
+
+            <div layout="row" data-ng-repeat="item in vm.automatic_actions">
+                {{item.display_text}}
+            </div>
+
+        </div>
+
+
+        <div data-ng-if="vm.automaitc_actions_as_pending.length">
+
+            <p>
+                The following transactions will be booked as pending:
+            </p>
+
+            <div layout="row" data-ng-repeat="item in vm.automaitc_actions_as_pending">
+                {{item.display_text}}
+            </div>
+
+        </div>
+
+    </md-dialog-content>
+    <md-dialog-actions layout="row" layout-align="space-between center">
+        <md-button aria-label="cancel" class="md-raised md-warn" data-ng-click="vm.skip()">
+            Skip
+        </md-button>
+        <md-button aria-label="cancel" class="md-raised" data-ng-click="vm.informed()">
+            OK, do nothing
+        </md-button>
+        <md-button aria-label="process" class="md-raised md-primary" data-ng-click="vm.applyDefault()">
+            Apply Default
+        </md-button>
+    </md-dialog-actions>
+</md-dialog>

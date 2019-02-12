@@ -1,0 +1,22 @@
+<md-dialog aria-label="event">
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            <h2>Event <b>{{vm.event.event_schedule_object.name}}</b> (Don't React)</h2>
+        </div>
+    </md-toolbar>
+    <md-dialog-content data-custom-scroll class="custom-scrollbar md-padding">
+
+        <p>
+            {{vm.event.event_schedule_object.display_description}}
+        </p>
+
+    </md-dialog-content>
+    <md-dialog-actions layout="row" layout-align="space-between center">
+        <md-button aria-label="cancel" class="md-raised md-warn" data-ng-click="vm.skip()">
+            Skip
+        </md-button>
+        <md-button aria-label="cancel" class="md-raised" data-ng-click="vm.informed()">
+            Ok
+        </md-button>
+    </md-dialog-actions>
+</md-dialog>
