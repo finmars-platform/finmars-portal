@@ -108,7 +108,7 @@
             var index = 0;
 
             new Promise(function (resolve, reject) {
-                recursiveOpenDialogs(resolve, vm.events, index, $event);
+                vm.recursiveOpenDialogs(resolve, vm.events, index, $event);
             }).then(function () {
                 $mdDialog.hide();
 

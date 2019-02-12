@@ -5,7 +5,7 @@
 
     var eventsService = require('./eventsService');
 
-    var openDoNotReactDialog = function ($event, item) {
+    var openDoNotReactDialog = function ($mdDialog, $event, item) {
 
         return $mdDialog.show({
             controller: 'EventDoNotReactDialogController as vm',
@@ -25,7 +25,7 @@
 
     };
 
-    var openApplyDefaultDialog = function ($event, item) {
+    var openApplyDefaultDialog = function ($mdDialog, $event, item) {
 
         return $mdDialog.show({
             controller: 'EventApplyDefaultDialogController as vm',
@@ -45,7 +45,8 @@
 
     };
 
-    var openWithReactDialog = function ($event, item) {
+    var openWithReactDialog = function ($mdDialog, $event, item) {
+
         return $mdDialog.show({
             controller: 'EventWithReactDialogController as vm',
             templateUrl: 'views/dialogs/events/event-with-react-dialog-view.html',
@@ -63,7 +64,7 @@
         })
     };
 
-    var recursiveOpenDialogs = function (resolve, events, index, $event) {
+    var recursiveOpenDialogs = function ($mdDialog, resolve, events, index, $event) {
 
         var doNotReactActionsIds = [6, 9, 14];
         var withReactActionsIds = [4, 7, 10, 11];
@@ -77,11 +78,11 @@
 
             if (withReactActionsIds.indexOf(notification_class) !== -1) {
 
-                openWithReactDialog($event, event).then(function (value) {
+                openWithReactDialog($mdDialog, $event, event).then(function (value) {
 
                     index = index + 1;
                     if (events.length < index) {
-                        recursiveOpenDialogs(resolve, events, index, $event);
+                        recursiveOpenDialogs($mdDialog, resolve, events, index, $event);
                     } else {
                         resolve();
                     }
@@ -92,11 +93,11 @@
 
             if (doNotReactActionsIds.indexOf(notification_class) !== -1) {
 
-                openDoNotReactDialog($event, event).then(function (value) {
+                openDoNotReactDialog($mdDialog, $event, event).then(function (value) {
 
                     index = index + 1;
                     if (events.length < index) {
-                        recursiveOpenDialogs(resolve, events, index, $event);
+                        recursiveOpenDialogs($mdDialog, resolve, events, index, $event);
                     } else {
                         resolve();
                     }
@@ -106,11 +107,11 @@
 
             if (applyDefaultActionsIds.indexOf(notification_class) !== -1) {
 
-                openApplyDefaultDialog($event, event).then(function (value) {
+                openApplyDefaultDialog($mdDialog, $event, event).then(function (value) {
 
                     index = index + 1;
                     if (events.length < index) {
-                        recursiveOpenDialogs(resolve, events, index, $event);
+                        recursiveOpenDialogs($mdDialog, resolve, events, index, $event);
                     } else {
                         resolve();
                     }
@@ -122,7 +123,7 @@
 
             index = index + 1;
             if (events.length < index) {
-                recursiveOpenDialogs(resolve, events, index, $event);
+                recursiveOpenDialogs($mdDialog, resolve, events, index, $event);
             } else {
                 resolve();
             }
@@ -172,7 +173,7 @@
         new Promise(function (resolve) {
 
             if (notificationDateEvents.length) {
-                recursiveOpenDialogs(resolve, notificationDateEvents, index, $event)
+                recursiveOpenDialogs($mdDialog, resolve, notificationDateEvents, index, $event)
             } else {
                 resolve();
             }
@@ -183,7 +184,7 @@
 
                 if (effectiveDateEvents.length) {
                     index = 0;
-                    recursiveOpenDialogs(resolve, effectiveDateEvents, index, $event)
+                    recursiveOpenDialogs($mdDialog, resolve, effectiveDateEvents, index, $event)
                 } else {
                     resolve();
                 }
