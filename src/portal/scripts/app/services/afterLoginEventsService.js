@@ -77,11 +77,11 @@
 
             if (withReactActionsIds.indexOf(notification_class) !== -1) {
 
-                vm.openWithReactDialog($event, event).then(function (value) {
+                openWithReactDialog($event, event).then(function (value) {
 
                     index = index + 1;
                     if (events.length < index) {
-                        vm.recursiveOpenDialogs(resolve, events, index, $event);
+                        recursiveOpenDialogs(resolve, events, index, $event);
                     } else {
                         resolve();
                     }
@@ -92,11 +92,11 @@
 
             if (doNotReactActionsIds.indexOf(notification_class) !== -1) {
 
-                vm.openDoNotReactDialog($event, event).then(function (value) {
+                openDoNotReactDialog($event, event).then(function (value) {
 
                     index = index + 1;
                     if (events.length < index) {
-                        vm.recursiveOpenDialogs(resolve, events, index, $event);
+                        recursiveOpenDialogs(resolve, events, index, $event);
                     } else {
                         resolve();
                     }
@@ -106,11 +106,11 @@
 
             if (applyDefaultActionsIds.indexOf(notification_class) !== -1) {
 
-                vm.openApplyDefaultDialog($event, event).then(function (value) {
+                openApplyDefaultDialog($event, event).then(function (value) {
 
                     index = index + 1;
                     if (events.length < index) {
-                        vm.recursiveOpenDialogs(resolve, events, index, $event);
+                        recursiveOpenDialogs(resolve, events, index, $event);
                     } else {
                         resolve();
                     }
@@ -122,7 +122,7 @@
 
             index = index + 1;
             if (events.length < index) {
-                vm.recursiveOpenDialogs(resolve, events, index, $event);
+                recursiveOpenDialogs(resolve, events, index, $event);
             } else {
                 resolve();
             }
