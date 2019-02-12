@@ -66,7 +66,7 @@
         };
 
         vm.skip = function () {
-            $mdDialog.cancel();
+            $mdDialog.hide();
         };
 
         vm.informed = function () {
