@@ -81,7 +81,7 @@ app.run(['$rootScope', '$transitions', '$state', function ($rootScope, $transiti
 app.controller('ShellController', ['$scope', '$state', '$rootScope', '$mdDialog', '$transitions', require('./app/controllers/shellController')]);
 app.controller('BookmarksController', ['$scope', '$mdDialog', '$state', require('./app/controllers/bookmarksController')]);
 app.controller('SideNavController', ['$scope', '$mdDialog', require('./app/controllers/sideNavController')]);
-app.controller('HomeController', ['$scope', require('./app/controllers/homeController')]);
+app.controller('HomeController', ['$scope', '$mdDialog', require('./app/controllers/homeController')]);
 app.controller('SetupController', ['$scope', '$state', require('./app/controllers/setupController')]);
 app.controller('NotFoundPageController', ['$scope', require('./app/controllers/notFoundPageController')]);
 
