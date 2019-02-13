@@ -42,7 +42,7 @@
                 uiService.getListLayout(entityType).then(function (data) {
                     var layouts = data.results;
 
-                    layouts.forEach(function (layout) {
+                    layouts.forEach(function (layout) { // TODO refactor active layout update mechanism
                         if (layout.id === layoutId) {
                             layout.is_default = true;
                             layoutExist = true;

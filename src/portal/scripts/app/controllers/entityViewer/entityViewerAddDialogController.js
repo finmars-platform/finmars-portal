@@ -172,12 +172,20 @@
         };
 
         vm.editLayout = function () {
-            $state.go('app.data-constructor', {entityType: vm.entityType});
+            var entityAddress = {entityType: vm.entityType};
+            if (vm.entityType === 'transaction-type' || vm.entityType === 'complex-transaction') {
+                entityAddress = {entityType: 'complex-transaction', from: vm.entityType};
+            }
+            $state.go('app.data-constructor', entityAddress);
             $mdDialog.hide();
         };
 
         vm.manageAttrs = function (ev) {
-            $state.go('app.attributesManager', {entityType: vm.entityType});
+            var entityAddress = {entityType: vm.entityType};
+            if (vm.entityType === 'transaction-type' || vm.entityType === 'complex-transaction') {
+                entityAddress = {entityType: vm.entityType, from: vm.entityType};
+            }
+            $state.go('app.attributesManager', entityAddress);
             $mdDialog.hide();
         };
 
@@ -382,12 +390,26 @@
                     entityResolverService.getByKey(vm.entityType, vm.entityId).then(function (data) {
                         vm.entity = data;
 
-
                         if (vm.entityType === 'transaction-type') {
+                            // vm.editLayout = function () {
+                            //     $state.go('app.data-constructor', {
+                            //         entityType: 'complex-transaction',
+                            //         instanceId: data.id
+                            //     });
+                            //     $mdDialog.hide();
+                            // };
                             vm.editLayout = function () {
                                 $state.go('app.data-constructor', {
                                     entityType: 'complex-transaction',
-                                    instanceId: data.id
+                                    from: vm.entityType
+                                });
+                                $mdDialog.hide();
+                            };
+
+                            vm.manageAttrs = function () {
+                                $state.go('app.attributesManager', {
+                                    entityType: vm.entityType,
+                                    from: vm.entityType
                                 });
                                 $mdDialog.hide();
                             };
@@ -594,7 +616,7 @@
         };
 
         if (vm.entityType === 'transaction-type') {
-            console.log('entity edit transaction type', vm.TTGroupChosen);
+
             $scope.$watch('vm.entity.group', function () {
                 if (vm.entity.group === 14 || !vm.entity.group) {
                     vm.TTGroupChosen = false;
@@ -603,6 +625,7 @@
                     vm.TTGroupChosen = true;
                 }
             });
+
         }
 
         vm.save = function ($event) {
