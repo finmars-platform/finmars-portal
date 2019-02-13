@@ -11,6 +11,7 @@
     var metaNotificationClassService = require('../../../services/metaNotificationClassService');
     var metaEventClassService = require('../../../services/metaEventClassService');
     var instrumentPeriodicityService = require('../../../services/instrumentPeriodicityService');
+    var instrumentEventScheduleService = require('../../../services/instrument/instrumentEventScheduleService');
 
     module.exports = function ($scope, $mdDialog) {
 
@@ -123,7 +124,7 @@
             vm.entity.event_schedules.splice(index, 1);
         };
 
-        vm.createActions = function($event, actions) {
+        vm.createActions = function ($event, actions) {
             $mdDialog.show({
                 controller: 'InstrumentEventActionsDialogController as vm',
                 templateUrl: 'views/dialogs/instrument-event-actions-dialog-view.html',
@@ -139,15 +140,14 @@
         };
 
         vm.generateEventsSchedule = function ($event) {
-            $mdDialog.show({
-               controller: 'GenerateEventScheduleDialogController as vm',
-               templateUrl: 'views/dialogs/generate-event-schedule-dialog-view.html',
-               targetEvent: $event,
-               preserveScope: true,
-               autoWrap: true,
-               multiple: true,
-               clickOutsideToClose: true
+
+            instrumentEventScheduleService.rebuildEvents(vm.entity.id, vm.entity).then(function (data) {
+
+                console.log('events rebuilded data', data);
+                $scope.$parent.vm.getItem();
+
             })
+
         };
 
         vm.addRow = function () {
