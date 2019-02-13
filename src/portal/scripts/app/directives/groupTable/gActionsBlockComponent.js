@@ -423,9 +423,13 @@
 
                     var listLayout = scope.evDataService.getListLayout();
 
+                    console.log('save layout listLayout', listLayout);
+
                     listLayout.data.columns = scope.evDataService.getColumns();
                     listLayout.data.grouping = scope.evDataService.getGroups();
                     listLayout.data.filters = scope.evDataService.getFilters();
+
+                    console.log('save layout modified listLayout', listLayout);
 
                     if (scope.isReport) {
 
@@ -464,24 +468,55 @@
                         if (res.status === 'agree') {
 
                             if (listLayout.id) {
-                                listLayout.is_default = false;
+                                // listLayout.is_default = false;
+                                //
+                                // uiService.updateListLayout(listLayout.id, listLayout).then(function () {
+                                //
+                                //     listLayout.name = res.data.name;
+                                //     listLayout.is_default = true;
+                                //     delete listLayout.id;
+                                //
+                                //     uiService.createListLayout(scope.entityType, listLayout).then(function () {
+                                //
+                                //         scope.evEventService.dispatchEvent(evEvents.LIST_LAYOUT_CHANGE);
+                                //
+                                //     });
+                                //
+                                // })
 
-                                uiService.updateListLayout(listLayout.id, listLayout).then(function () {
+                                uiService.getListLayout(scope.entityType).then(function (data) {
+                                    var layouts = data.results;
+                                    var activeListLayout;
 
-                                    listLayout.name = res.data.name;
-                                    listLayout.is_default = true;
-                                    delete listLayout.id;
+                                    var i;
+                                    for (i = 0; i < layouts.length; i = i + 1) {
+                                        if (layouts[i].id === listLayout.id) {
+                                            layouts[i].is_default = false;
+                                            activeListLayout = layouts[i];
+                                            break;
+                                        }
+                                    }
 
-                                    uiService.createListLayout(scope.entityType, listLayout).then(function () {
+                                    console.log('save layout activeListLayout', activeListLayout);
 
-                                        scope.evEventService.dispatchEvent(evEvents.LIST_LAYOUT_CHANGE);
+                                    uiService.updateListLayout(activeListLayout.id, activeListLayout).then(function () {
+
+                                        listLayout.name = res.data.name;
+                                        listLayout.is_default = true;
+                                        delete listLayout.id;
+
+                                        uiService.createListLayout(scope.entityType, listLayout).then(function () {
+
+                                            scope.evEventService.dispatchEvent(evEvents.LIST_LAYOUT_CHANGE);
+
+                                        });
 
                                     });
 
-                                })
+                                });
 
                             } else {
-
+                                console.log('save layout no id');
                                 listLayout.name = res.data.name;
                                 listLayout.is_default = true;
 
