@@ -93,7 +93,7 @@
             <div>
                 <md-button data-ng-if="vm.attributesAvailable(vm.entityType)"
                            class="md-raised md-primary manage-attrs-btn"
-                           data-ui-sref="app.attributesManager({entityType: vm.entityType})">
+                           data-ng-click="vm.manageAttrs()">
                     Manage attributes
                 </md-button>
             </div>

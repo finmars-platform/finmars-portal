@@ -32,7 +32,9 @@
         vm.items = [];
 
         vm.entityType = $stateParams.entityType;
-        vm.isntanceId = $stateParams.instanceId;
+        vm.isInstanceId = $stateParams.instanceId;
+        vm.fromEntityType = $stateParams.from;
+        console.log('cancel button initEntityType', $stateParams);
 
         var choices = metaService.getTypeCaptions();
 
@@ -45,8 +47,8 @@
 
             return new Promise(function (resolve) {
 
-                if (vm.isntanceId) {
-                    uiService.getEditLayoutByInstanceId(vm.entityType, vm.isntanceId).then(function (data) {
+                if (vm.isInstanceId) {
+                    uiService.getEditLayoutByInstanceId(vm.entityType, vm.isInstanceId).then(function (data) {
 
                         if (data) {
                             vm.ui = data;
@@ -94,7 +96,11 @@
         };
 
         vm.cancel = function () {
-            $state.go('app.data.' + vm.entityType);
+            var entityType = vm.entityType;
+            if (vm.fromEntityType) {
+                entityType = vm.fromEntityType;
+            }
+            $state.go('app.data.' + entityType);
         };
 
         vm.checkColspan = function (tab, row, column) {
@@ -244,8 +250,8 @@
             }
             vm.ui.data = vm.tabs;
             if (vm.uiIsDefault) {
-                if (vm.isntanceId) {
-                    uiService.updateEditLayoutByInstanceId(vm.entityType, vm.isntanceId, vm.ui).then(function (data) {
+                if (vm.isInstanceId) {
+                    uiService.updateEditLayoutByInstanceId(vm.entityType, vm.isInstanceId, vm.ui).then(function (data) {
                         console.log('layout saved');
                         var route;
                         if (vm.entityType === 'complex-transaction') {
@@ -266,8 +272,8 @@
                     });
                 }
             } else {
-                if (vm.isntanceId) {
-                    uiService.updateEditLayoutByInstanceId(vm.entityType, vm.isntanceId, vm.ui).then(function (data) {
+                if (vm.isInstanceId) {
+                    uiService.updateEditLayoutByInstanceId(vm.entityType, vm.isInstanceId, vm.ui).then(function (data) {
                         console.log('layout saved');
 
                         var route;
@@ -370,6 +376,27 @@
             return metaService.checkRestrictedEntityTypesForAM(entityType);
         };
 
+        vm.manageAttrs = function () {
+            var entityAddress = {entityType: vm.entityType};
+            if (vm.fromEntityType) {
+                entityAddress = {entityType: vm.fromEntityType, from: vm.fromEntityType, instanceId: vm.isInstanceId};
+            }
+            $state.go('app.attributesManager', entityAddress);
+        };
+
+        vm.editLayout = function () {
+            var entityAddress = {entityType: vm.entityType};
+            if (vm.fromEntityType) {
+
+                var entityType = vm.entityType;
+                if (vm.fromEntityType === 'transaction-type') {
+                    entityType = 'complex-transaction'
+                }
+                entityAddress = {entityType: entityType, from: vm.fromEntityType, instanceId: vm.instanceId};
+            }
+            $state.go('app.data-constructor', entityAddress);
+        };
+
         vm.getItems = function () {
 
             attributeTypeService.getList(vm.entityType).then(function (data) {
@@ -378,9 +405,9 @@
                 vm.entityAttrs = metaService.getEntityAttrs(vm.entityType);
                 vm.layoutAttrs = layoutService.getLayoutAttrs();
 
-                if (vm.isntanceId && vm.entityType === 'complex-transaction') {
+                if (vm.isInstanceId && vm.entityType === 'complex-transaction') {
 
-                    entityResolverService.getByKey('transaction-type', vm.isntanceId).then(function (data) {
+                    entityResolverService.getByKey('transaction-type', vm.isInstanceId).then(function (data) {
 
                         var inputs = data.inputs;
 
@@ -706,7 +733,6 @@
             vm.getLayout().then(function () {
 
                 vm.getItems();
-                console.log('culling tabs are', vm.tabs);
 
             });
 

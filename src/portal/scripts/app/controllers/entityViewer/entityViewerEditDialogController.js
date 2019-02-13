@@ -164,7 +164,11 @@
         };
 
         vm.manageAttrs = function (ev) {
-            $state.go('app.attributesManager', {entityType: vm.entityType});
+            var entityType = {entityType: vm.entityType};
+            if (vm.fromEntityType) {
+                entityType = {entityType: vm.entityType, from: vm.fromEntityType};
+            }
+            $state.go('app.attributesManager', entityType);
             $mdDialog.hide();
         };
 
@@ -368,6 +372,16 @@
                     vm.editLayout = function () {
                         $state.go('app.data-constructor', {
                             entityType: vm.entityType,
+                            from: vm.entityType,
+                            instanceId: vm.complexTransactionOptions.transactionTypeId
+                        });
+                        $mdDialog.hide();
+                    };
+
+                    vm.manageAttrs = function () {
+                        $state.go('app.attributesManager', {
+                            entityType: vm.entityType,
+                            from: vm.entityType,
                             instanceId: vm.complexTransactionOptions.transactionTypeId
                         });
                         $mdDialog.hide();
@@ -392,6 +406,16 @@
                         vm.editLayout = function () {
                             $state.go('app.data-constructor', {
                                 entityType: 'complex-transaction',
+                                from: vm.entityType,
+                                instanceId: data.id
+                            });
+                            $mdDialog.hide();
+                        };
+
+                        vm.manageAttrs = function () {
+                            $state.go('app.attributesManager', {
+                                entityType: 'transaction-type',
+                                from: vm.entityType,
                                 instanceId: data.id
                             });
                             $mdDialog.hide();
