@@ -114,6 +114,7 @@
         };
         formatEntityForMapping();
         console.log('newMapEntityType is', vm.mapEntityType);
+
         function addChilds(classifier, item) {
 
             // console.log('item', item);
@@ -200,7 +201,7 @@
 
                     if (['periodicity', 'accrual-calculation-model',
                             'daily-pricing-model', 'payment-size-detail'].indexOf(vm.mapEntityType) === -1) {
-                        
+
                         vm.entityItems = vm.entityItems.concat(data.results);
                     } else {
                         vm.entityItems = vm.entityItems.concat(data);
@@ -239,7 +240,7 @@
                     });
                 }, function (error) {
                     vm.lastPageReached = true;
-                    vm.options.page = vm.options.page -1;
+                    vm.options.page = vm.options.page - 1;
                     reject($scope.$apply());
                 });
 
@@ -285,19 +286,29 @@
                                     mapItem.content_object = vm.entityItems[i].id;
                                 }
 
-                                return entityTypeMappingResolveService.create(vm.mapEntityType, mapItem).then(function () {
+                                if (mapItem.value !== '') {
+
+                                    return entityTypeMappingResolveService.create(vm.mapEntityType, mapItem).then(function () {
+                                        i = i + 1;
+                                        updateRow();
+                                        return false;
+                                    })
+
+                                } else {
                                     i = i + 1;
                                     updateRow();
                                     return false;
-                                })
+                                }
                             }
-                            if (mapItem.isDeleted == true) {
+
+                            if (mapItem.isDeleted === true) {
                                 return entityTypeMappingResolveService.deleteByKey(vm.mapEntityType, mapItem.id).then(function () {
                                     i = i + 1;
                                     updateRow();
                                     return false;
                                 })
                             }
+
                             return entityTypeMappingResolveService.update(vm.mapEntityType, mapItem.id, mapItem).then(function () {
                                 i = i + 1;
                                 updateRow();
