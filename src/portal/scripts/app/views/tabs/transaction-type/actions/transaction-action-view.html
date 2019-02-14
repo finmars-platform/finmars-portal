@@ -212,8 +212,8 @@
                                            md-on-open="vm.loadRelation('instrument')">
                                     <md-option
                                             data-ng-if="!vm.relationItems['instrument'].length"
-                                            ng-value="item.transaction.instrument_object.id">
-                                        {{item.transaction.instrument_object.name}}
+                                            ng-value="item.transaction.allocation_pl_object.id">
+                                        {{item.transaction.allocation_pl_object.name}}
                                     </md-option>
                                     <md-option
                                             data-ng-if="vm.relationItems['instrument'].length"
@@ -271,8 +271,8 @@
                                         md-on-open="vm.loadRelation('instrument')">
                                     <md-option
                                             data-ng-if="!vm.relationItems['instrument'].length"
-                                            ng-value="item.transaction.instrument_object.id">
-                                        {{item.transaction.instrument_object.name}}
+                                            ng-value="item.transaction.allocation_balance_object.id">
+                                        {{item.transaction.allocation_balance_object.name}}
                                     </md-option>
                                     <md-option
                                             data-ng-if="vm.relationItems['instrument'].length"

@@ -22,6 +22,9 @@
         vm.attrs = [];
 
         vm.entityType = $stateParams.entityType;
+        vm.fromEntityType = $stateParams.from;
+        vm.isInstanceId = $stateParams.instanceId;
+        console.log('cancel button instanceId', vm.isInstanceId, $stateParams);
 
         var getList = function () {
             attributeTypeService.getList(vm.entityType).then(function (data) {
@@ -129,6 +132,21 @@
                 return false;
             }
             return true;
+        };
+
+        vm.editLayout = function () {
+          var entityAddress = {entityType: vm.entityType};
+          if (vm.fromEntityType) {
+
+              var entityType = vm.entityType;
+
+              if (vm.fromEntityType === 'transaction-type') {
+                  entityType = 'complex-transaction';
+              }
+
+              entityAddress = {entityType: entityType, from: vm.fromEntityType, instanceId: vm.isInstanceId};
+          }
+          $state.go('app.data-constructor', entityAddress);
         };
 
         vm.deleteAttr = function (item, ev) {

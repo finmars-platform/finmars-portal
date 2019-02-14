@@ -43,8 +43,6 @@
         vm.formIsValid = true;
         vm.TTGroupChosen = true;
 
-        console.log('entityViewerEdit entity type is', vm.entityType);
-
         vm.loadPermissions = function () {
 
             var promises = [];
@@ -164,7 +162,11 @@
         };
 
         vm.manageAttrs = function (ev) {
-            $state.go('app.attributesManager', {entityType: vm.entityType});
+            var entityType = {entityType: vm.entityType};
+            if (vm.fromEntityType) {
+                entityType = {entityType: vm.entityType, from: vm.fromEntityType};
+            }
+            $state.go('app.attributesManager', entityType);
             $mdDialog.hide();
         };
 
@@ -368,6 +370,16 @@
                     vm.editLayout = function () {
                         $state.go('app.data-constructor', {
                             entityType: vm.entityType,
+                            from: vm.entityType,
+                            instanceId: vm.complexTransactionOptions.transactionTypeId
+                        });
+                        $mdDialog.hide();
+                    };
+
+                    vm.manageAttrs = function () {
+                        $state.go('app.attributesManager', {
+                            entityType: vm.entityType,
+                            from: vm.entityType,
                             instanceId: vm.complexTransactionOptions.transactionTypeId
                         });
                         $mdDialog.hide();
@@ -392,6 +404,16 @@
                         vm.editLayout = function () {
                             $state.go('app.data-constructor', {
                                 entityType: 'complex-transaction',
+                                from: vm.entityType,
+                                instanceId: data.id
+                            });
+                            $mdDialog.hide();
+                        };
+
+                        vm.manageAttrs = function () {
+                            $state.go('app.attributesManager', {
+                                entityType: 'transaction-type',
+                                from: vm.entityType,
                                 instanceId: data.id
                             });
                             $mdDialog.hide();
@@ -643,7 +665,7 @@
         };
 
         if (vm.entityType === 'transaction-type') {
-            console.log('entity edit transaction type', vm.TTGroupChosen);
+
             $scope.$watch('vm.entity.group', function () {
                 if (vm.entity.group === 14 || !vm.entity.group) {
                     vm.TTGroupChosen = false;
@@ -685,10 +707,6 @@
 
                 }
 
-                if (vm.entityType === 'transaction-type') {
-                    console.log('updating transaction-type');
-
-                }
                 entityResolverService.update(vm.entityType, result.id, result).then(function (data) {
 
                     if (vm.entityType === 'complex-transaction') {
