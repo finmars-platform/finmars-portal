@@ -26,7 +26,7 @@
 
     module.exports = function ($scope, $mdDialog) {
 
-        logService.controller('InstrumentMappingDialogController', 'initialized');
+        logService.controller('ImportInstrumentDialogController', 'initialized');
 
         console.log('mdDialog is ', $mdDialog);
 

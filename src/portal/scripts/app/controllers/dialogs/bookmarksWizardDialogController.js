@@ -130,15 +130,14 @@
 
             var delBookmarkId = parseInt(sel, 10);
 
-            // Check if bookmark to delete saved on server
+            // Check if bookmark to delete recorded on server
             vm.bookmarks.forEach(function (bookmark) {
 
                 if (bookmark.children && bookmark.children.length > 0) {
 
-                    bookmark.children.forEach(function (chBookmark) {
+                    bookmark.children.forEach(function (chBookmark, index) {
                         if (chBookmark.id === delBookmarkId) {
-                            vm.deletedNodes.push(sel);
-                            return false
+                            bookmark.children.splice(index, 1);
                         }
                     });
 

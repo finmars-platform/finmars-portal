@@ -7,12 +7,11 @@
 
     var portfolioService = require('../../services/portfolioService');
 
-    module.exports = function ($scope, $stateParams) {
+    module.exports = function ($scope) {
 
         var vm = this;
 
         vm.entityType = 'portfolio';
-        vm.uiLayoutId = $stateParams.listLayout;
         vm.entityRaw = [];
 
         vm.readyStatus = {content: false};
