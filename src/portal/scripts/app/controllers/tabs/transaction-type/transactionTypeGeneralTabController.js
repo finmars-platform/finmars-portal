@@ -58,6 +58,39 @@
 
         };
 
+        vm.unselectAllEntities = function (entity) {
+
+            if (entity === 'instruments') {
+
+              if (vm.entity.is_valid_for_all_instruments) {
+                  vm.entity.instrument_types = [];;
+              }
+
+            } else if (entity === 'portfolios') {
+
+                if (vm.entity.is_valid_for_all_portfolios) {
+                    vm.entity.portfolios = [];
+                }
+
+            }
+        };
+
+        vm.notValidForAll = function (entity) {
+            if (entity === 'instruments') {
+
+                if (vm.entity.instrument_types && vm.entity.instrument_types.length > 0) {
+                    vm.entity.is_valid_for_all_instruments = false;
+                }
+
+            } else if (entity === 'portfolios') {
+
+                if (vm.entity.portfolios && vm.entity.portfolios.length > 0) {
+                    vm.entity.is_valid_for_all_portfolios = false;
+                }
+
+            }
+        };
+
         vm.bindSelectedText = function (entity, fallback) {
             if (entity) {
                 return '[' + entity.length + ']';

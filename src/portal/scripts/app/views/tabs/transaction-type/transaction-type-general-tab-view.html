@@ -38,26 +38,36 @@
         </div>
         <div layout="row">
             <md-input-container>
-                <md-checkbox data-ng-model="vm.entity.is_valid_for_all_instruments">Valid for all instruments
+                <md-checkbox data-ng-model="vm.entity.is_valid_for_all_instruments"
+                             data-ng-change="vm.unselectAllEntities('instruments')">
+                    Valid for all instruments
                 </md-checkbox>
             </md-input-container>
             <md-input-container>
-                <md-checkbox data-ng-model="vm.entity.is_valid_for_all_portfolios">Valid for all portfolios
+                <md-checkbox data-ng-model="vm.entity.is_valid_for_all_portfolios"
+                             data-ng-change="vm.unselectAllEntities('portfolios')">
+                    Valid for all portfolios
                 </md-checkbox>
             </md-input-container>
         </div>
         <div layout="row" style="margin-bottom: 15px">
             <md-input-container style="min-width: 200px">
-                <label for="">Instrument types</label>
-                <md-select data-ng-model="vm.entity.instrument_types" multiple
-                           md-selected-text="vm.bindSelectedText(vm.entity.instrument_types, 'Instrument Type')">
+                <label for="instrument-types-ms">Instrument types</label>
+                <md-select data-ng-model="vm.entity.instrument_types"
+                           id="instrument-types-ms"
+                           multiple
+                           md-selected-text="vm.bindSelectedText(vm.entity.instrument_types, 'Instrument Type')"
+                           data-ng-change="vm.notValidForAll('instruments')">
                     <md-option ng-value="item.id" ng-repeat="item in vm.instrumentTypes">{{item.name}}</md-option>
                 </md-select>
             </md-input-container>
             <md-input-container style="min-width: 200px">
-                <label for="">Portfolios</label>
-                <md-select data-ng-model="vm.entity.portfolios" multiple
-                           md-selected-text="vm.bindSelectedText(vm.entity.portfolios, 'Portfolio')">
+                <label for="portfolios-ms">Portfolios</label>
+                <md-select data-ng-model="vm.entity.portfolios"
+                           id="portfolios-ms"
+                           multiple
+                           md-selected-text="vm.bindSelectedText(vm.entity.portfolios, 'Portfolio')"
+                           data-ng-change="vm.notValidForAll('portfolios')">
                     <md-option ng-value="item.id" ng-repeat="item in vm.portfolios">{{item.name}}</md-option>
                 </md-select>
             </md-input-container>

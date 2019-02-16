@@ -19,6 +19,31 @@
 
         vm.selectAllState = false;
 
+        // vm.items = [];
+        //
+        // vm.layoutsItems = [];
+        // vm.schemesItems = [];
+        // vm.entitiesItems = [];
+        // vm.attrsItems = [];
+
+        // var sortItems = function () {
+        //     vm.items.forEach(function () {
+        //         if (parent.entity.indexOf(/layout/g) !== -1) {
+        //             vm.layoutsItems.push(parent);
+        //             console.log('export config sorting layout', parent.entity);
+        //         } else if (parent.entity.indexOf(/scheme/g) !== -1) {
+        //             vm.schemesItems.push(parent);
+        //             console.log('export config sorting scheme', parent.entity);
+        //         } else if (parent.entity.indexOf(/obj_attrs/g) !== -1) {
+        //             vm.attrsItems.push(parent);
+        //             console.log('export config sorting attrs', parent.entity);
+        //         } else {
+        //             vm.entitiesItems.push(parent);
+        //             console.log('export config sorting entity', parent.entity);
+        //         };
+        //     })
+        // };
+
         vm.getFile = function () {
 
             return configurationService.getConfigurationData().then(function (data) {
@@ -28,6 +53,11 @@
                 vm.file = data;
 
                 vm.items = data.body;
+
+                var firstLayoutsItem = false;
+                var firstSchemesItem = false;
+                var firstEntitiesItem = false;
+                var firstAttrsItem = false;
 
                 vm.items.forEach(function (parent) {
 
@@ -43,9 +73,44 @@
 
                         return true;
 
-                    })
+                    });
+
+                    if (parent.entity.toLowerCase().indexOf('layout') !== -1) {
+                        parent.order = 1;
+
+                        if (!firstLayoutsItem) {
+                            parent.first = 'Layouts';
+                            firstLayoutsItem = true;
+                        }
+
+                    } else if (parent.entity.toLowerCase().indexOf('scheme') !== -1) {
+                        parent.order = 2;
+
+                        if (!firstSchemesItem) {
+                            parent.first = 'Schemes';
+                            firstSchemesItem = true;
+                        }
+
+                    } else if (parent.entity.toLowerCase().indexOf('obj_attrs') !== -1) {
+                        parent.order = 4;
+
+                        if (!firstAttrsItem) {
+                            parent.first = 'Attributes';
+                            firstAttrsItem = true;
+                        }
+
+                    } else {
+                        parent.order = 3;
+
+                        if (!firstEntitiesItem) {
+                            parent.first = 'Entities';
+                            firstEntitiesItem = true;
+                        }
+
+                    };
 
                 });
+
 
                 vm.readyStatus.content = true;
 
@@ -54,6 +119,7 @@
             });
 
         };
+
         var getECProperties = function (config) {
             var properties = {};
             // var exportSettingsData = {};
@@ -143,17 +209,6 @@
 
                             var exportConfPropertiesList = Object.keys(properties);
 
-                            // if (childItem.hasOwnProperty('name')) {
-                            //     name = childItem.name
-                            // }
-                            //
-                            // if (childItem.hasOwnProperty('user_code')) {
-                            //     name = childItem.user_code
-                            // }
-                            //
-                            // if (childItem.hasOwnProperty('scheme_name')) {
-                            //     name = childItem.scheme_name
-                            // }
                             var itemIsActive = false;
                             vm.activeLayout.data[entityItem.entity].forEach(function (activeItem) {
                                 var propertiesMatch = 0;
@@ -177,13 +232,6 @@
                                 entityItem.active = false;
                                 entityItem.someChildsActive = false;
                             }
-                            // if (vm.activeLayout.data[entityItem.entity].indexOf(name) !== -1) {
-                            //     childItem.active = true
-                            //     entityItem.someChildsActive = true; // TODO refactor here too
-                            // } else {
-                            //     entityItem.active = false;
-                            //     entityItem.someChildsActive = false;
-                            // }
                         })
 
                     }
@@ -206,22 +254,7 @@
 
                     if (child.active) {
 
-                        // var name;
-
-                        // if (child.hasOwnProperty('name')) {
-                        //     name = child.name
-                        // }
-                        //
-                        // if (child.hasOwnProperty('user_code')) {
-                        //     name = child.user_code
-                        // }
-                        //
-                        // if (child.hasOwnProperty('scheme_name')) {
-                        //     name = child.scheme_name
-                        // }
-
                         var name = getECProperties(child);
-                        // var name = child;
 
                         if (name || typeof name === "string") {
                             vm.activeLayout.data[item.entity].push(name)
@@ -269,18 +302,6 @@
                     if (child.active) {
 
                         var name = getECProperties(child);
-
-                        // if (child.hasOwnProperty('name')) {
-                        //     name = child.name
-                        // }
-                        //
-                        // if (child.hasOwnProperty('user_code')) {
-                        //     name = child.user_code
-                        // }
-                        //
-                        // if (child.hasOwnProperty('scheme_name')) {
-                        //     name = child.scheme_name
-                        // }
 
                         configuration[item.entity].push(name)
                     }
@@ -594,7 +615,6 @@
                 a.download = vm.filename ? vm.filename + '.json' : "configuration.json";
 
                 resolve(vm.file);
-
 
             })
 
