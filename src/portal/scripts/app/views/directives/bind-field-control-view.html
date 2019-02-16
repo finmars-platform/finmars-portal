@@ -87,7 +87,7 @@
         <md-input-container class="field-date-pick-holder">
             <!--<label data-ng-if="!entity[getModelKey()]" data-ng-bind="getName()"></label>-->
             <label data-ng-bind="getName()"></label>
-            <zh-date-picker data-ng-change="changeWatcher()" ng-model="entity[getModelKey()]"></zh-date-picker>
+            <zh-date-picker data-ng-change="changeWatcher()" data-date-value="entity[getModelKey()]" data-ng-model="entity[getModelKey()]"></zh-date-picker>
             <div class="date-pick-buttons-block">
                 <md-button data-ng-if="item.options.dateTodayMinus" data-ng-click="setDateMinus()">
                     T - 1

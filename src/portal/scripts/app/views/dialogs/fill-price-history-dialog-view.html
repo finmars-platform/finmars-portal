@@ -19,7 +19,7 @@
                             <div data-ng-if="!vm.priceSettings.isRange">
                                 <md-input-container>
                                     <label for="">Date</label>
-                                    <zh-date-picker data-ng-model="vm.price.date_both"></zh-date-picker>
+                                    <zh-date-picker data-date-value="vm.price.date_both" data-ng-model="vm.price.date_both"></zh-date-picker>
                                 </md-input-container>
                                 <ng-md-icon class="tooltip-inline-block" icon="info" size="20" style="fill: #777777">
                                     <md-tooltip class="tooltip_1" md-direction="top">tooltip text</md-tooltip>
@@ -28,11 +28,11 @@
                             <div data-ng-if="vm.priceSettings.isRange">
                                 <md-input-container>
                                     <label for="">Date from</label>
-                                    <zh-date-picker data-ng-model="vm.price.date_from"></zh-date-picker>
+                                    <zh-date-picker data-date-value="vm.price.date_from" data-ng-model="vm.price.date_from"></zh-date-picker>
                                 </md-input-container>
                                 <md-input-container>
                                     <label for="">Date to</label>
-                                    <zh-date-picker data-ng-model="vm.price.date_to"></zh-date-picker>
+                                    <zh-date-picker data-date-value="vm.price.date_to" data-ng-model="vm.price.date_to"></zh-date-picker>
                                 </md-input-container>
                                 <ng-md-icon class="tooltip-inline-block" icon="info" size="20" style="fill: #777777">
                                     <md-tooltip class="tooltip_1" md-direction="top">tooltip text</md-tooltip>
@@ -41,7 +41,7 @@
                             <div data-ng-if="vm.priceSettings.isRange">
                                 <md-input-container>
                                     <label for="">Portfolio balance date</label>
-                                    <zh-date-picker data-ng-model="vm.price.balance_date"></zh-date-picker>
+                                    <zh-date-picker data-date-value="vm.price.balance_date" data-ng-model="vm.price.balance_date"></zh-date-picker>
                                 </md-input-container>
                                 <ng-md-icon class="tooltip-inline-block" icon="info" size="20" style="fill: #777777">
                                     <md-tooltip class="tooltip_1" md-direction="top">tooltip text</md-tooltip>
@@ -89,11 +89,11 @@
                             <div>
                                 <md-input-container>
                                     <label for="">Date from</label>
-                                    <zh-date-picker data-ng-model="vm.recalculate.date_from"></zh-date-picker>
+                                    <zh-date-picker data-date-value="vm.recalculate.date_from" data-ng-model="vm.recalculate.date_from"></zh-date-picker>
                                 </md-input-container>
                                 <md-input-container>
                                     <label for="">Date to</label>
-                                    <zh-date-picker data-ng-model="vm.recalculate.date_to"></zh-date-picker>
+                                    <zh-date-picker data-date-value="vm.recalculate.date_to" data-ng-model="vm.recalculate.date_to"></zh-date-picker>
                                 </md-input-container>
                             </div>
                             <div layout="row">

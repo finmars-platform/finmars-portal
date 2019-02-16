@@ -42,16 +42,18 @@
                 uiService.getListLayout(entityType).then(function (data) {
                     var layouts = data.results;
 
-                    layouts.forEach(function (layout) { // TODO refactor active layout update mechanism
-                        if (layout.id === layoutId) {
-                            layout.is_default = true;
-                            layoutExist = true;
-                        }
-                        else {
-                            layout.is_default = false;
-                        };
+                    if (layouts && layouts.length) {
+                        layouts.forEach(function (layout) { // TODO refactor active layout update mechanism
+                            if (layout.id === layoutId) {
+                                layout.is_default = true;
+                                layoutExist = true;
+                            } else {
+                                layout.is_default = false;
+                            }
+                            ;
 
-                    });
+                        });
+                    }
 
                     var updateDefaultLayout = function (layoutsToUpdate) {
                         var promises = [];

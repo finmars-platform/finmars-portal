@@ -121,13 +121,13 @@
                 <td data-ng-if="item.editStatus" class="edit-state-td" >
                     <md-input-container>
                         <label for="">Accrual start date</label>
-                        <zh-date-picker data-ng-model="item.accrual_start_date"></zh-date-picker>
+                        <zh-date-picker data-date-value="item.accrual_start_date" data-ng-model="item.accrual_start_date"></zh-date-picker>
                     </md-input-container>
                 </td>
                 <td data-ng-if="item.editStatus" class="edit-state-td">
                     <md-input-container>
                         <label for="">First payment date</label>
-                        <zh-date-picker data-ng-model="item.first_payment_date"></zh-date-picker>
+                        <zh-date-picker data-date-value="item.first_payment_date" data-ng-model="item.first_payment_date"></zh-date-picker>
                     </md-input-container>
                 </td>
                 <td data-ng-if="item.editStatus" class="edit-state-td">
@@ -176,13 +176,13 @@
                 <td>
                     <md-input-container>
                         <!--<label for="">Accrual start date</label>-->
-                        <zh-date-picker data-ng-model="vm.newItem.accrual_start_date"></zh-date-picker>
+                        <zh-date-picker data-date-value="vm.newItem.accrual_start_date" data-ng-model="vm.newItem.accrual_start_date"></zh-date-picker>
                     </md-input-container>
                 </td>
                 <td>
                     <md-input-container>
                         <!--<label for="">First payment date</label>-->
-                        <zh-date-picker data-ng-model="vm.newItem.first_payment_date"></zh-date-picker>
+                        <zh-date-picker data-date-value="vm.newItem.first_payment_date" data-ng-model="vm.newItem.first_payment_date"></zh-date-picker>
                     </md-input-container>
                 </td>
                 <td>

@@ -208,6 +208,7 @@
 
                 vm.complexTransactionOptions.transactionTypeId = data.transaction_type;
                 vm.editLayoutEntityInstanceId = data.transaction_type;
+
                 vm.entity = data.complex_transaction;
 
                 var inputsWithCalculations = data.transaction_type_object.inputs;
@@ -277,7 +278,13 @@
         vm.getEditListByInstanceId = function () {
 
             entityResolverService.getByKey('transaction-type-book', vm.complexTransactionOptions.transactionTypeId).then(function (data) {
-
+                console.log('TType vm.entity', data);
+                if (data.complex_transaction.hasOwnProperty('text') && data.complex_transaction.text === '<InvalidExpression>') {
+                    data.complex_transaction.text = ''
+                }
+                if (data.complex_transaction.hasOwnProperty('code') && data.complex_transaction.code === 0) {
+                    data.complex_transaction.code = null;
+                }
                 vm.entity = data.complex_transaction;
                 vm.entity.transaction_type = data.transaction_type;
 
@@ -358,7 +365,7 @@
         attributeTypeService.getList(vm.entityType).then(function (data) {
             vm.attrs = data.results;
             vm.readyStatus.content = true;
-
+            console.log('ttype attrs', vm.attrs);
             if (vm.entityId) {
 
                 if (vm.entityType === 'complex-transaction') {

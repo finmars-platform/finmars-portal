@@ -21,7 +21,8 @@
                 scope.entityType = scope.$parent.vm.entityType;
                 scope.readyStatus = {classifier: false};
                 scope.entity = scope.$parent.vm.entity;
-
+                var noMu1 = Object.assign({}, scope.entity);
+                console.log('TType scope.entity', noMu1);
                 var attrs = scope.$parent.vm.attrs || [];
                 var userInputs = scope.$parent.vm.userInputs || [];
                 var choices = metaService.getValueTypes() || [];
@@ -199,6 +200,7 @@
                 }
 
                 scope.changeWatcher = function () {
+                    console.log('TType datepicker', this)
                     localStorage.setItem('entityIsChanged', true);
                 };
 
