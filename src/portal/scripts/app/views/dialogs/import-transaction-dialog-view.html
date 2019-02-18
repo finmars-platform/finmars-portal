@@ -76,6 +76,9 @@
                         <div layout="row" data-ng-if="vm.finishedSuccess" layout-align="center center">
                             <h2>The data successfully imported.</h2>
                         </div>
+                        <div layout="row" data-ng-if="vm.config.error_message" layout-align="center center">
+                            Something wrong. Invalid file format.
+                        </div>
                     </md-card-content>
                 </md-card>
             </div>

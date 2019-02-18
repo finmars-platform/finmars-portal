@@ -110,7 +110,7 @@
             new Promise(function (resolve, reject) {
                 vm.recursiveOpenDialogs(resolve, vm.events, index, $event);
             }).then(function () {
-                $mdDialog.hide();
+                // $mdDialog.hide();
 
                 $mdDialog.show({
                     controller: 'SuccessDialogController as vm',

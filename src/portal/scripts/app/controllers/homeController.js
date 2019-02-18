@@ -35,35 +35,46 @@
 
             vm.getMasterUsersList().then(function () {
 
-                var info = JSON.parse(sessionStorage.getItem('afterLoginEvents'));
+                usersService.getOwnMemberSettings().then(function (data) {
 
-                console.log('info', info);
-                console.log('vm.currentMasterUser', vm.currentMasterUser);
+                    var info = JSON.parse(sessionStorage.getItem('afterLoginEvents'));
 
-                var showEventsDialogs = false;
+                    console.log('info', info);
+                    console.log('vm.currentMasterUser', vm.currentMasterUser);
 
-                if (!info) {
-                    showEventsDialogs = true;
-                }
+                    var member = data.results[0];
 
-                if (info && info.indexOf(vm.currentMasterUser.id) === -1) {
-                    showEventsDialogs = true;
-                }
+                    var showEventsDialogs = false;
 
-                if (showEventsDialogs) {
-
-                    afterLoginEventsService.getAndShowEvents($mdDialog);
-
-                    if (info) {
-                        info.push(vm.currentMasterUser.id);
-                    } else {
-                        info = [vm.currentMasterUser.id];
+                    if (!info) {
+                        showEventsDialogs = true;
                     }
 
-                    sessionStorage.setItem('afterLoginEvents', JSON.stringify(info));
+                    if (info && info.indexOf(vm.currentMasterUser.id) === -1) {
+                        showEventsDialogs = true;
+                    }
+
+                    if (member.notification_level === 1) { // 1 = DO NOT NOTIFY
+                        showEventsDialogs = false;
+                    }
+
+                    if (showEventsDialogs) {
+
+                        afterLoginEventsService.getAndShowEvents($mdDialog);
+
+                        if (info) {
+                            info.push(vm.currentMasterUser.id);
+                        } else {
+                            info = [vm.currentMasterUser.id];
+                        }
+
+                        sessionStorage.setItem('afterLoginEvents', JSON.stringify(info));
 
 
-                }
+                    }
+
+                });
+
 
             })
 
