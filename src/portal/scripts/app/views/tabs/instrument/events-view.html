@@ -342,7 +342,8 @@
             </tbody>
         </table>
         <div layout="row" layout-align="end center" data-ng-if="vm.entity.id">
-            <md-button data-ng-click="vm.generateEventsSchedule($event)" class="md-raised">Generate events schedule
+            <md-button data-ng-class="md-raised md-primary" data-ng-click="vm.generateEventsSchedule($event)"
+                       class="md-raised">Generate events schedule
             </md-button>
         </div>
     </div>
