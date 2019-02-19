@@ -105,12 +105,5 @@
 
         };
 
-        // vm.getState = function (item) {
-        //
-        //     var uiState = item.data;
-        //
-        //     return uiState.state + '({listLayout: ' + item.list_layout + '})';
-        // }
-
     }
 }());

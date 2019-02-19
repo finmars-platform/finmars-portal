@@ -165,7 +165,7 @@
             {
                 key: 'reference_for_pricing',
                 caption: 'Reference for pricing',
-                value_type: 10,
+                // value_type: 10,
                 required: true,
                 expression: '',
                 complexExpressionEntity: false

@@ -70,7 +70,7 @@
     <div layout="row" class="min-height">
         <div layout="row" class="sidenav-wrapper" data-ng-controller="SideNavController as vm"
              data-ng-include="'views/side-nav-view.html'"></div>
-        <div layout="column" class="relative" layout-fill role="main">
+        <div layout="column" class="relative main-content-container" layout-fill role="main">
             <md-toolbar ng-show="!showSearch" class="header" layout="columns">
 
                 <div class="md-toolbar-tools" flex="60" layout="start center">
@@ -170,7 +170,7 @@
             <!-- ---------------------- Bookmarks ------------------------- -->
             <div data-ng-controller="BookmarksController as vm" layout="row" data-ng-if="vm.showBookmarks">
                 <div class="bookmarks-list" layout="row" layout-align="space-between center">
-                    <div layout="row">
+                    <div layout="row" class="bookmarks-container">
                         <div data-ng-repeat="item in vm.items track by item.id">
                             <div data-ng-if="item.children.length" layout="row" layout-align="start start">
                                 <md-menu>

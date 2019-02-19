@@ -48,7 +48,7 @@
 
 
                 if (scope.dateValue) {
-                    console.log('TType date has value', new Date(scope.dateValue), typeof new Date(scope.dateValue));
+
                     $(elem).parent().addClass('md-input-has-value');
                     input.pickmeup({
                         date: new Date(scope.dateValue),
@@ -63,7 +63,7 @@
                     });
 
                 } else {
-                    console.log('TType date has no value', scope.dateValue, typeof scope.dateValue);
+
                     input.pickmeup({
                         position: position,
                         default_date: defaultDate,
