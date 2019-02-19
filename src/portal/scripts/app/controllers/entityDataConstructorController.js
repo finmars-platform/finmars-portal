@@ -402,7 +402,13 @@
             attributeTypeService.getList(vm.entityType).then(function (data) {
 
                 vm.attrs = data.results;
-                vm.entityAttrs = metaService.getEntityAttrs(vm.entityType);
+                var doNotShowAttrs = ['code', 'date', 'status', 'text'];
+                var entityAttrs = metaService.getEntityAttrs(vm.entityType);
+                vm.entityAttrs = entityAttrs.filter(function (entity) {
+                    return doNotShowAttrs.indexOf(entity.key) === -1;
+                });
+
+                var doNotShowAttrs = ['code', 'date', 'status', 'text'];
                 vm.layoutAttrs = layoutService.getLayoutAttrs();
 
                 if (vm.isInstanceId && vm.entityType === 'complex-transaction') {
@@ -665,6 +671,18 @@
             vm.items = [];
 
             vm.items = vm.items.concat(vm.attrs);
+            // if (vm.entityType === 'complex-transaction' && !vm.isInstanceId) {
+            //    console.log('remove fields complex-transaction');
+            //    var entityAttrsForCT = doNotShowAttrs.filter(function (entityAttr) {
+            //        return doNotShowAttrs.indexOf(entityAttr) === -1;
+            //    });
+            //
+            //    vm.items.concat(entityAttrsForCT);
+            //
+            // }
+            // else {
+            //     vm.items = vm.items.concat(vm.entityAttrs);
+            // }
             vm.items = vm.items.concat(vm.entityAttrs);
             vm.items = vm.items.concat(vm.userInputs);
             vm.items = vm.items.concat(vm.layoutAttrs);
