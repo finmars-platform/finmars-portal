@@ -50,7 +50,11 @@
 
         }
 
-        elem.innerHTML = rows.join('');
+        if (!rows.length) {
+            elem.innerHTML = "<div class='no-data-block'>No data available.</div>"
+        } else {
+            elem.innerHTML = rows.join('');
+        }
 
         console.timeEnd("Rendering projection");
 
