@@ -291,7 +291,8 @@
                 case 3:
                     return 'Booked (system, default)';
                 case 4:
-                    return 'Booked (user, actions)';
+                    // return 'Booked (user, actions)';
+                    return 'Booked (user)';
                 // case 5:
                 //     return 'Booked, pending (system)';
                 case 6:
