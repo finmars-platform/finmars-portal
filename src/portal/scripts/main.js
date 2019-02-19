@@ -197,6 +197,9 @@ app.controller('ValidationDialogController', ['$scope', '$mdDialog', 'validation
 app.controller('ExpressionEditorDialogController', ['$scope', '$mdDialog', 'item', require('./app/controllers/dialogs/expressionEditorDialogController')]);
 app.controller('InfoDialogController', ['$scope', '$mdDialog', 'info', require('./app/controllers/dialogs/infoDialogController')]);
 app.controller('InstrumentSelectDialogController', ['$scope', '$mdDialog', require('./app/controllers/dialogs/instrumentSelectDialogController')]);
+app.controller('EntitySearchDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/entitySearchDialogController')]);
+
+
 app.controller('ClassifierSelectDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/classifierSelectDialogController')]);
 app.controller('SaveLayoutDialogController', ['$scope', '$mdDialog', require('./app/controllers/dialogs/saveLayoutDialogController')]);
 app.controller('RenameDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/renameDialogController')]);
@@ -300,6 +303,7 @@ app.directive('evFieldResolver', [require('./app/directives/entityViewerFieldRes
 app.directive('ismFieldResolver', ['$mdDialog', require('./app/directives/instrumentSchemeManagerFieldResolverDirective')]);
 app.directive('floatNumbers', [require('./app/directives/floatNumbersDirective')]);
 app.directive('instrumentModalResolver', ['$mdDialog', require('./app/directives/instrumentModalResolverDirective')]);
+app.directive('entitySearchSelect', ['$mdDialog', require('./app/directives/entitySearchSelect')]);
 app.directive('instrumentEventActionResolver', ['$mdDialog', require('./app/directives/instrumentEventActionResolverDirective')]);
 app.directive('classifierModalResolver', ['$mdDialog', require('./app/directives/classifierModalResolverDirective')]);
 app.directive('zhDatePicker', ['$mdDialog', require('./app/directives/zhDatePickerDirective')]);

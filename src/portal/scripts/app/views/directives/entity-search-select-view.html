@@ -1,0 +1,14 @@
+<div>
+
+    <md-input-container class="md-block">
+        <label data-ng-bind="label"></label>
+        <md-select data-ng-model="item"
+                   md-container-class="h-instrument-select"
+                   data-ng-change="changeWatcher()">
+            <md-option data-ng-repeat="option in options track by option.id" ng-value="option.id">
+                {{option.name}}
+            </md-option>
+        </md-select>
+    </md-input-container>
+
+</div>

@@ -289,13 +289,13 @@
                 case 2:
                     return 'Informed';
                 case 3:
-                    return 'Booked (system)';
+                    return 'Booked (system, default)';
                 case 4:
-                    return 'Booked (user)';
-                case 5:
-                    return 'Booked, pending (system)';
+                    return 'Booked (user, actions)';
+                // case 5:
+                //     return 'Booked, pending (system)';
                 case 6:
-                    return 'Booked, pending (user)'
+                    return 'Booked (user, default)'
 
             }
 
