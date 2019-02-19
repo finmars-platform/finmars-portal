@@ -1,0 +1,44 @@
+<md-dialog aria-label="" ng-cloak class="entity-search-dialog">
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            <h2>Search {{vm.entityType}}</h2>
+            <span flex></span>
+        </div>
+    </md-toolbar>
+    <md-dialog-content>
+        <div layout="column">
+            <div>
+                <table class="bordered">
+                    <thead>
+                    <tr>
+                        <th data-ng-repeat="column in vm.columns[vm.entityType]">
+                            <md-input-container class="md-block">
+                                <label>{{column.name}}</label>
+                                <input data-ng-model="vm.search[vm.entityType][column.key]"
+                                       data-ng-model-options="{debounce: 1000}"
+                                       data-ng-change="vm.updateTable()">
+                            </md-input-container>
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr data-ng-click="vm.selectRow(item)" ng-dblclick="vm.selectAndSave(item)"
+                        data-ng-repeat="item in vm.items" class="{{item.active ? 'active' : ''}}"
+                        style="height: 40px">
+                        <td data-ng-repeat="column in vm.columns[vm.entityType]" data-ng-bind="item[column.key]"></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div data-ng-if="!vm.items.length" style="text-align: center; margin-top: 20px">No result found</div>
+        </div>
+    </md-dialog-content>
+    <md-dialog-actions layout="row">
+        <md-button class="md-raised" ng-click="vm.cancel()">
+            Cancel
+        </md-button>
+        <md-button class="md-raised md-primary" ng-click="vm.agree()" style="margin-right:20px;">
+            Save
+        </md-button>
+    </md-dialog-actions>
+</md-dialog>

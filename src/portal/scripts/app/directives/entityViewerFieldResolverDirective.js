@@ -5,7 +5,6 @@
 
     'use strict';
 
-    var logService = require('../../../../core/services/logService');
     var fieldResolverService = require('../services/fieldResolverService');
     var bindFieldsHelper = require('../helpers/bindFieldsHelper');
     var metaService = require('../services/metaService');
@@ -18,15 +17,44 @@
                 item: '=',
                 entity: '=',
                 content_type: '=',
-                options: '='
+                options: '=',
+                entityType: '='
             },
             templateUrl: 'views/entity-viewer/field-resolver-view.html',
             link: function (scope, elem, attrs) {
 
-                logService.component('EntityViewerFieldResolverDirective', 'initialized');
-
                 scope.readyStatus = {content: false, tags: false};
                 scope.type = '';
+
+                scope.isSpecialSearchRelation = function () {
+
+                    return ['instrument', 'portfolio', 'account', 'responsible', 'counterparty'].indexOf(scope.getModelKeyEntity()) !== -1;
+
+                };
+
+                scope.getModelKeyEntity = function () {
+                    var key = scope.getModelKey();
+                    var result = key;
+
+                    if (key === 'linked_instrument') {
+                        result = 'instrument'
+                    }
+
+                    if (key === 'account_interim') {
+                        result = 'account';
+                    }
+
+                    if (key === 'account_cash') {
+                        result = 'account';
+                    }
+
+                    if (key === 'account_position') {
+                        result = 'account';
+                    }
+
+
+                    return result;
+                };
 
                 scope.resolveMultiple = function () {
                     if (scope.$parent.entityType !== 'instrument-type') { // refactor this
@@ -70,7 +98,7 @@
                 scope.searchTerm = '';
 
                 fieldResolverService.getFields(scope.item.key, scope.options).then(function (res) {
-                    logService.collection('DATA', res);
+
                     scope.type = res.type;
                     scope.fields = res.data;
                     scope.readyStatus.content = true;
