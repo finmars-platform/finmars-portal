@@ -10,8 +10,8 @@
         return eventsRepository.getEventAction(eventId, actionId);
     };
 
-    var putEventAction = function (eventId, actionId, data) {
-        return eventsRepository.putEventAction(eventId, actionId, data);
+    var putEventAction = function (eventId, actionId, data, status) {
+        return eventsRepository.putEventAction(eventId, actionId, data, status);
     };
 
     var informedEventAction = function (id) {
