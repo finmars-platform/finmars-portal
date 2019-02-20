@@ -208,16 +208,18 @@
         options.filters.effective_date_0 = effective_date_from;
         options.filters.effective_date_1 = effective_date_to;
 
-        eventsService.getList(options).then(function (data) {
+        return eventsService.getList(options).then(function (data) {
 
-            var events = data.results;
+            return new Promise(function () {
 
-            if (events.length) {
+                var events = data.results;
 
-                showEvents($mdDialog, events);
-
-            }
-
+                if (events.length) {
+                    resolve(showEvents($mdDialog, events));
+                } else {
+                    resolve([])
+                }
+            })
         })
 
     };
