@@ -1,10 +1,9 @@
-
 <div data-ng-if="readyStatus.content">
     <div data-ng-if="type === 'key-value'">
         <md-input-container class="md-block">
             <label data-ng-bind="getName()"></label>
             <md-select data-ng-model="item.expression" md-on-close="searchTerm = ''"
-                       data-ng-change="changeWatcher()">
+            >
                 <md-select-header>
                     <input data-ng-model="searchTerm"
                            type="search"
@@ -23,7 +22,7 @@
             <div flex="50">
                 <md-input-container class="md-block" flex="90">
                     <label data-ng-bind="getName()"></label>
-                    <md-select data-ng-change="changeWatcher()" md-on-close="searchTerm = ''"
+                    <md-select md-on-close="searchTerm = ''"
                                data-ng-model="item.expression"
                                md-selected-text="bindFormFields()">
                         <md-select-header>
@@ -51,7 +50,7 @@
             <div flex="50">
                 <md-input-container class="md-block" flex="90">
                     <label data-ng-bind="getName()"></label>
-                    <md-select data-ng-change="changeWatcher()" md-on-close="searchTerm = ''"
+                    <md-select md-on-close="searchTerm = ''"
                                data-ng-model="item.expression">
                         <md-select-header>
                             <input data-ng-model="searchTerm"

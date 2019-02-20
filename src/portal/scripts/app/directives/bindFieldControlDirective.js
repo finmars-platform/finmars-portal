@@ -25,7 +25,6 @@
                 var attrs = scope.$parent.vm.attrs || [];
                 var userInputs = scope.$parent.vm.userInputs || [];
                 var choices = metaService.getValueTypes() || [];
-                var baseAttrs = metaService.getBaseAttrs() || [];
                 var entityAttrs = metaService.getEntityAttrs(scope.entityType) || [];
 
                 scope.layoutAttrs = layoutService.getLayoutAttrs();
@@ -41,7 +40,7 @@
                         }
                     }
 
-                    if (scope.attribute['value_type'] == 100) {
+                    if (scope.attribute['value_type'] === 100) {
                         scope.fieldType = choices[5]; // relation == field, backend&frontend naming conflict
                     }
 
@@ -80,9 +79,9 @@
 
                 scope.checkValid = function () {
 
-                    if (scope.entity.$_isValid == false) {
+                    if (scope.entity.$_isValid === false) {
                         var item = scope.entity[scope.getModelKey()];
-                        if (item == null || item == '' || item == undefined) {
+                        if (item == null || item === '' || item === undefined) {
                             return true
                         }
                     }
@@ -97,12 +96,8 @@
                         if (scope.item.hasOwnProperty('id') && scope.item.id !== null) {
                             return scope.item.name
                         } else {
-                            var i, l, e, u;
-                            for (i = 0; i < baseAttrs.length; i = i + 1) {
-                                if (scope.item.name === baseAttrs[i].name) {
-                                    return baseAttrs[i].key;
-                                }
-                            }
+                            var  l, e, u;
+
                             for (l = 0; l < scope.layoutAttrs.length; l = l + 1) {
                                 if (scope.item.name === scope.layoutAttrs[l].name) {
 
@@ -127,7 +122,7 @@
 
                 scope.options = {};
 
-                if (fieldKey == 'tags') {
+                if (fieldKey === 'tags') {
                     scope.options = {
                         entityType: scope.entityType
                     }
@@ -155,7 +150,7 @@
                 scope.node = scope.node || null;
 
                 function findNodeInChildren(item) {
-                    if (scope.classifierId == item.id) {
+                    if (scope.classifierId === item.id) {
                         scope.node = item;
                     } else {
                         if (item.children.length) {
@@ -186,7 +181,7 @@
                     })
                 };
 
-                if (scope.fieldType && scope.fieldType.value == 30) {
+                if (scope.fieldType && scope.fieldType.value === 30) {
 
                     if (scope.entity) {
 
@@ -198,13 +193,10 @@
                     }
                 }
 
-                scope.changeWatcher = function () {
-                    localStorage.setItem('entityIsChanged', true);
-                };
 
                 scope.changeClassifier = function () {
                     if (classifierTree) {
-                        //localStorage.setItem('entityIsChanged', true);
+
                         scope.classifierId = scope.entity[scope.getModelKey()];
 
                         scope.findNodeItem().then(function () {

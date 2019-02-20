@@ -24,7 +24,17 @@
             link: function (scope, elem, attrs) {
 
                 scope.readyStatus = {content: false, tags: false};
-                scope.type = '';
+                scope.type = 'id';
+                scope.fields = [];
+
+                console.log('scope.item.name', scope.item);
+                console.log('scope.item.name', scope.item);
+
+                if (['counterparties', 'accounts', 'responsibles', 'transaction_types', 'tags'].indexOf(scope.item.key) !== -1) {
+                    scope.type = 'multiple-ids';
+                }
+
+                console.log('scope.type', scope.type);
 
                 scope.isSpecialSearchRelation = function () {
 
@@ -33,7 +43,7 @@
                 };
 
                 scope.getModelKeyEntity = function () {
-                    var key = scope.getModelKey();
+                    var key = scope.item.name;
                     var result = key;
 
                     if (key === 'linked_instrument') {
@@ -97,25 +107,6 @@
 
                 scope.searchTerm = '';
 
-                fieldResolverService.getFields(scope.item.key, scope.options).then(function (res) {
-
-                    scope.type = res.type;
-                    scope.fields = res.data;
-                    scope.readyStatus.content = true;
-
-                    scope.getFieldsGrouped();
-
-                    scope.$apply(function () {
-
-                        setTimeout(function () {
-                            $(elem).find('.md-select-search-pattern').on('keydown', function (ev) {
-                                ev.stopPropagation();
-                            });
-                        }, 100);
-                    });
-                });
-
-
                 scope.resolveSort = function (field) {
                     if (field) {
                         if (field.hasOwnProperty('name')) {
@@ -149,11 +140,9 @@
                     return scope.item.name
                 };
 
-                scope.changeWatcher = function () {
-                    localStorage.setItem('entityIsChanged', true);
-                };
-
                 scope.bindFormFields = function () {
+
+                    var result = '';
 
                     var id = scope.entity[scope.getModelKey()];
                     if (id) {
@@ -161,9 +150,13 @@
                         var attr;
 
                         for (i = 0; i < scope.fields.length; i = i + 1) {
-                            if (id == scope.fields[i].id) {
+                            if (id === scope.fields[i].id) {
                                 attr = scope.fields[i]
                             }
+                        }
+
+                        if (attr) {
+                            result = attr.name;
                         }
 
                         if (scope.item.options && scope.item.options.fieldsForm) {
@@ -176,13 +169,15 @@
                                 }
                             });
 
-                            return resultCaption
+                            result = resultCaption
                         }
 
-                        return attr.name
+
                     } else {
-                        return scope.getName();
+                        result = scope.getName();
                     }
+
+                    return result
                 };
 
                 scope.bindListFields = function (field) {
@@ -213,6 +208,52 @@
                 };
 
                 scope.getModelKey = scope.$parent.getModelKey;
+
+                scope.getData = function () {
+
+                    fieldResolverService.getFields(scope.item.key, scope.options).then(function (res) {
+
+                        scope.type = res.type;
+                        scope.fields = res.data;
+                        scope.readyStatus.content = true;
+
+                        scope.getFieldsGrouped();
+
+                        scope.$apply(function () {
+
+                            setTimeout(function () {
+                                $(elem).find('.md-select-search-pattern').on('keydown', function (ev) {
+                                    ev.stopPropagation();
+                                });
+                            }, 100);
+                        });
+                    });
+                };
+
+                scope.init = function () {
+
+                    var item_object;
+
+                    if (scope.entityType === 'complex-transaction') {
+                        item_object = scope.entity[scope.item.name + '_object'];
+                    } else {
+                        item_object = scope.entity[scope.item.key + '_object'];
+                    }
+
+                    if (item_object) {
+
+                        if (Array.isArray(item_object)) {
+                            scope.fields = item_object;
+                        } else {
+                            scope.fields.push(item_object);
+                        }
+                    }
+
+                    console.log('scope.fields', scope.fields);
+
+                };
+
+                scope.init()
 
             }
 
