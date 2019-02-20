@@ -210,7 +210,7 @@
 
         return eventsService.getList(options).then(function (data) {
 
-            return new Promise(function () {
+            return new Promise(function (resolve, reject) {
 
                 var events = data.results;
 
