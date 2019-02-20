@@ -102,6 +102,20 @@
                     scope.item.editMode = true;
                 };
 
+                var lastEmptyRowsChecker = function (newFieldRow) {
+                    var rows = scope.tab.layout.rows;
+                    console.log('addRows lastEmptyRowsChecker', newFieldRow, rows);
+
+                    var r;
+                    for (r = rows; rows - r !== 4; r = a - 1) {
+                        if (r === newFieldRow) {
+                            console.log('addRows newField, rows', newFieldRow, r);
+                            addRow();
+                            break;
+                        }
+                    }
+                };
+
                 scope.saveField = function () {
                     var i;
 
