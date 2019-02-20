@@ -134,64 +134,63 @@
 
     var showEvents = function ($mdDialog, events) {
 
-        // DONT_REACT = 1
-        // APPLY_DEF_ON_EDATE = 2
-        // APPLY_DEF_ON_NDATE = 3
-        //
-        // INFORM_ON_NDATE_WITH_REACT = 4
-        // INFORM_ON_NDATE_APPLY_DEF = 5
-        // INFORM_ON_NDATE_DONT_REACT = 6
-        // INFORM_ON_EDATE_WITH_REACT = 7
-        // INFORM_ON_EDATE_APPLY_DEF = 8
-        // INFORM_ON_EDATE_DONT_REACT = 9
-        //
-        // INFORM_ON_NDATE_AND_EDATE_WITH_REACT_ON_EDATE = 10
-        // INFORM_ON_NDATE_AND_EDATE_WITH_REACT_ON_NDATE = 11
-        // INFORM_ON_NDATE_AND_EDATE_APPLY_DEF_ON_EDATE = 12
-        // INFORM_ON_NDATE_AND_EDATE_APPLY_DEF_ON_NDATE = 13
-        // INFORM_ON_NDATE_AND_EDATE_DONT_REACT = 14
+        return new Promise(function (resolveMain) {
 
-        var notificationDateIds = [4, 5, 6, 10, 11, 12, 13, 14];
-        var effectiveDateIds = [7, 8, 9, 10, 11, 12, 13, 14];
+            // DONT_REACT = 1
+            // APPLY_DEF_ON_EDATE = 2
+            // APPLY_DEF_ON_NDATE = 3
+            //
+            // INFORM_ON_NDATE_WITH_REACT = 4
+            // INFORM_ON_NDATE_APPLY_DEF = 5
+            // INFORM_ON_NDATE_DONT_REACT = 6
+            // INFORM_ON_EDATE_WITH_REACT = 7
+            // INFORM_ON_EDATE_APPLY_DEF = 8
+            // INFORM_ON_EDATE_DONT_REACT = 9
+            //
+            // INFORM_ON_NDATE_AND_EDATE_WITH_REACT_ON_EDATE = 10
+            // INFORM_ON_NDATE_AND_EDATE_WITH_REACT_ON_NDATE = 11
+            // INFORM_ON_NDATE_AND_EDATE_APPLY_DEF_ON_EDATE = 12
+            // INFORM_ON_NDATE_AND_EDATE_APPLY_DEF_ON_NDATE = 13
+            // INFORM_ON_NDATE_AND_EDATE_DONT_REACT = 14
 
-        var newEvents = events.filter(function (event) {
-            return event.status === 1
-        });
+            var notificationDateIds = [4, 5, 6, 10, 11, 12, 13, 14];
+            var effectiveDateIds = [7, 8, 9, 10, 11, 12, 13, 14];
 
-        var notificationDateEvents = newEvents.filter(function (event) {
-            return notificationDateIds.indexOf(event.event_schedule_object.notification_class) !== -1;
-        });
+            var newEvents = events.filter(function (event) {
+                return event.status === 1
+            });
 
-        var effectiveDateEvents = newEvents.filter(function (event) {
-            return effectiveDateIds.indexOf(event.event_schedule_object.notification_class) !== -1;
-        });
+            var notificationDateEvents = newEvents.filter(function (event) {
+                return notificationDateIds.indexOf(event.event_schedule_object.notification_class) !== -1;
+            });
 
-        var $event = new Event('click');
+            var effectiveDateEvents = newEvents.filter(function (event) {
+                return effectiveDateIds.indexOf(event.event_schedule_object.notification_class) !== -1;
+            });
 
-        var index = 0;
+            var $event = new Event('click');
 
-        new Promise(function (resolve) {
+            var index = 0;
 
-            if (notificationDateEvents.length) {
-                recursiveOpenDialogs($mdDialog, resolve, notificationDateEvents, index, $event)
-            } else {
-                resolve();
-            }
+            new Promise(function (resolveLocal) {
 
-        }).then(function () {
+                if (notificationDateEvents.length) {
+                    recursiveOpenDialogs($mdDialog, resolveLocal, notificationDateEvents, index, $event)
+                } else {
+                    resolveLocal();
+                }
 
-            new Promise(function (resolve) {
+            }).then(function () {
 
                 if (effectiveDateEvents.length) {
                     index = 0;
-                    recursiveOpenDialogs($mdDialog, resolve, effectiveDateEvents, index, $event)
+                    recursiveOpenDialogs($mdDialog, resolveMain, effectiveDateEvents, index, $event)
                 } else {
-                    resolve();
+                    resolveMain();
                 }
+            });
 
-            })
-
-        });
+        })
 
     };
 
