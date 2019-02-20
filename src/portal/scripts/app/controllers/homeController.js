@@ -14,6 +14,7 @@
 
         vm.masters = [];
         vm.currentMasterUser = null;
+        vm.eventsProcessing = false;
 
         vm.getMasterUsersList = function () {
 
@@ -32,6 +33,8 @@
         };
 
         vm.init = function () {
+
+            vm.eventsProcessing = true;
 
             vm.getMasterUsersList().then(function () {
 
@@ -60,7 +63,12 @@
 
                     if (showEventsDialogs) {
 
-                        afterLoginEventsService.getAndShowEvents($mdDialog);
+                        afterLoginEventsService.getAndShowEvents($mdDialog).then(function (value) {
+
+                            vm.eventsProcessing = false;
+                            $scope.$apply();
+
+                        });
 
                         if (info) {
                             info.push(vm.currentMasterUser.id);
@@ -71,6 +79,9 @@
                         sessionStorage.setItem('afterLoginEvents', JSON.stringify(info));
 
 
+                    } else {
+                        vm.eventsProcessing = false;
+                        $scope.$apply();
                     }
 
                 });

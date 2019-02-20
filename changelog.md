@@ -1,5 +1,9 @@
 # Changelog
 
+## 20.02.2019
+- New Search Window for Porfolio, Account, Instrument, Responsible, Counterparty
+- New dropdown menus with fixed search area
+
 ## 17.01.2019
 - Dynamic attributes in Report Builder
 - Configuration Import Upgrade 
