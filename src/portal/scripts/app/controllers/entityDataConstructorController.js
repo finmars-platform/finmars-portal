@@ -157,7 +157,7 @@
 
         function addRow(tab) {
             var c;
-            tab.layout.rows = tab.layout.rows + 1;
+            tab.layout.rows = tab.layout.rows + 4;
             for (c = 0; c < tab.layout.columns; c = c + 1) {
                 tab.layout.fields.push({
                     row: tab.layout.rows,
