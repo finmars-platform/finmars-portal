@@ -21,9 +21,9 @@
 
                 console.log('event', event);
 
-                event.status = 4; // Booked (user, actions)
+                var status = 4; // Booked (user, actions)
 
-                eventsService.putEventAction(vm.event.id, actionId, event).then(function () {
+                eventsService.putEventAction(vm.event.id, actionId, event, status).then(function () {
 
                     $mdDialog.hide({status: 'agree'});
 
@@ -64,9 +64,9 @@
 
                         console.log('event', event);
 
-                        event.status = 5; // 'Booked (user, default)';
+                        var status = 5; // 'Booked (user, default)';
 
-                        eventsService.putEventAction(vm.event.id, action.id, event).then(function () {
+                        eventsService.putEventAction(vm.event.id, action.id, event, status).then(function () {
 
                             resolve(action);
 

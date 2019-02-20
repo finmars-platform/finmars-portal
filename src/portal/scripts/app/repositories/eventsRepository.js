@@ -47,8 +47,8 @@
             })
     };
 
-    var putEventAction = function (eventId, actionId, data) {
-        return xhrService.fetch(baseUrl + 'instruments/generated-event/' + eventId + '/book/?action=' + actionId,
+    var putEventAction = function (eventId, actionId, data, status) {
+        return xhrService.fetch(baseUrl + 'instruments/generated-event/' + eventId + '/book/?action=' + actionId + '&status=' + status,
             {
                 method: 'PUT',
                 credentials: 'include',

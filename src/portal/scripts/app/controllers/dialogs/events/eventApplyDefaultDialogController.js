@@ -47,9 +47,9 @@
 
                         console.log('event', event);
 
-                        event.status = 5; // 'Booked (user, default)';
+                        var status = 5; // 'Booked (user, default)';
 
-                        eventsService.putEventAction(vm.event.id, action.id, event).then(function () {
+                        eventsService.putEventAction(vm.event.id, action.id, event, status).then(function () {
 
                             resolve(action);
 
