@@ -318,8 +318,8 @@
 
                     var keys = Object.keys(data.values);
 
-                    keys.forEach(function (item) {
-                        vm.entity[item] = data.values[item];
+                    keys.forEach(function (key) {
+                        vm.entity[key] = data.values[key];
                     });
 
                     data.complex_transaction.attributes.forEach(function (item) {
