@@ -193,7 +193,7 @@
 
                 if (vm.config.task_status === 'SUCCESS') {
 
-                    if (vm.config.error_rows.length === 0 && !vm.config.error_message) {
+                    if (vm.config.error_rows.length === 0) {
 
                         vm.finishedSuccess = true;
 
