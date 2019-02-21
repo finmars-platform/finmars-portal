@@ -134,7 +134,7 @@
         vm.selectedItem = {};
 
         vm.agree = function () {
-            $mdDialog.hide({status: 'agree', data: {item: vm.selectedItem}});
+            $mdDialog.hide({status: 'agree', data: {item: vm.selectedItem, items: vm.items}});
         };
 
         vm.cancel = function () {
@@ -150,7 +150,7 @@
         };
 
         vm.selectAndSave = function (item) {
-            $mdDialog.hide({status: 'agree', data: {item: item}});
+            $mdDialog.hide({status: 'agree', data: {item: item, items: vm.items}});
         };
 
         entityResolverService.getList(vm.entityType, {filters: vm.search[vm.entityType]}).then(function (data) {

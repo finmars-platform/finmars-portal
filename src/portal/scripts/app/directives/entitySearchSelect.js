@@ -39,6 +39,13 @@
                     }).then(function (res) {
                         if (res.status === 'agree') {
                             scope.item = res.data.item.id;
+
+                            console.log('res', res);
+
+                            if (!scope.options.length) {
+                                scope.options = res.data.items;
+                            }
+
                         }
                     });
 
