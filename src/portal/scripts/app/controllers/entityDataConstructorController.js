@@ -156,22 +156,37 @@
         }
 
         function addRow(tab) {
-            var c;
-            tab.layout.rows = tab.layout.rows + 4;
-            for (c = 0; c < tab.layout.columns; c = c + 1) {
-                tab.layout.fields.push({
-                    row: tab.layout.rows,
-                    column: c + 1,
-                    colspan: 1,
-                    type: 'empty'
-                })
+
+            var rowsToAdd = 5 - tab.layout.rows;
+            if (rowsToAdd <= 0) {
+               rowsToAdd = 1;
             }
+
+            var r, c;
+            var field = {};
+            for(r = 0; r < rowsToAdd; r = r + 1) {
+
+                tab.layout.rows = tab.layout.rows + 1;
+
+                for (c = 0; c < tab.layout.columns; c = c + 1) {
+                    field = {
+                        row: tab.layout.rows,
+                        column: c + 1,
+                        colspan: 1,
+                        type: 'empty'
+                    };
+                    tab.layout.fields.push(field);
+
+                }
+
+            }
+
         }
 
         function removeLastRow(tab) {
             var f;
             for (f = 0; f < tab.layout.fields.length; f = f + 1) {
-                if (tab.layout.fields[f].row === tab.layout.rows) {
+                if (tab.layout.fields[f].row === tab.layout.rows && tab.layout.fields[f].row > 5) {
                     tab.layout.fields.splice(f, 1);
                     f = f - 1;
                 }
@@ -584,18 +599,20 @@
                             console.log('target.data', elem.dataset);
 
                             var tabIndex = 0;
+                            var tabName = target.dataset.tabName;
                             var column = parseInt(target.dataset.col, 10);
                             var row = parseInt(target.dataset.row, 10);
                             var itemIndex = parseInt(elem.dataset.index, 10);
 
                             vm.tabs.forEach(function (tab) {
 
-                                if (!tab.hasOwnProperty('editState') || (tab.hasOwnProperty('editState') && tab.editState)) {
+                                // if (!tab.hasOwnProperty('editState') || (tab.hasOwnProperty('editState') && tab.editState)) {
+                                if (tab.name === tabName) {
 
                                     tab.layout.fields.forEach(function (field) {
-
+                                        console.log('addRows dnd field', field);
                                         if (field.column === column && field.row === row) {
-
+                                            console.log('addRows dnd field has been found');
                                             field.attribute = vm.items[itemIndex];
                                             field.name = field.attribute.name;
                                             field.attribute_class = 'userInput';

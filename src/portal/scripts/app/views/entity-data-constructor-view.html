@@ -13,7 +13,7 @@
                 <md-tabs md-border-bottom md-dynamic-height>
                     <md-tab data-ng-repeat="tab in vm.tabs">
                         <md-tab-label>
-                            <div data-ng-if="!tab.editState">
+                            <div data-ng-if="!tab.editState" data-ng-click="">
                                 <span class="ec-tab-item-name">{{tab.name}}</span>
                                 <md-button class="ec-tab-btn"
                                            data-ng-click="vm.toggleEditTab(tab)">
