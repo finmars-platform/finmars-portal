@@ -148,6 +148,20 @@
             })
 
         };
+
+        vm.defaultPricingConfig = function ($event) {
+
+            $mdDialog.show({
+                controller: 'DefaultPricingConfigDialogController as vm',
+                templateUrl: 'views/dialogs/default-pricing-config-dialog-view.html',
+                parent: angular.element(document.body),
+                targetEvent: $event,
+                preserveScope: true,
+                autoWrap: true,
+                skipHide: true
+            })
+
+        }
     }
 
 }());

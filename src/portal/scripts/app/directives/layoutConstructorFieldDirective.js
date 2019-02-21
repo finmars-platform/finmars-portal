@@ -103,13 +103,13 @@
                 };
 
                 scope.saveField = function () {
+
                     var i;
-                    console.log('addRows saveField', scope.tab.layout, scope.item);
                     for (i = 0; i < scope.tab.layout.fields.length; i = i + 1) {
 
                         if (scope.tab.layout.fields[i].row === scope.item.row &&
                             scope.tab.layout.fields[i].column === scope.item.column) {
-                            console.log('addRows saveField field found', scope.tab.layout.fields[i], scope.item);
+
                             scope.tab.layout.fields[i].attribute_class = 'userInput';
 
                             if (scope.item.attribute.hasOwnProperty('id')) {
@@ -174,7 +174,7 @@
                     for (i = scope.tab.layout.rows; i > 0; i = i - 1) {
                         for (e = emptyRows.length; e > 0; e = e - 1) {
                             //console.log('e', e);
-                            console.log('emptyRows[e]', emptyRows[e], emptyRows);
+                            //console.log('emptyRows[e]', emptyRows[e]);
                             //console.log('i', i);
                             //console.log('------------------------------------------');
                             if (i === emptyRows[e]) {
