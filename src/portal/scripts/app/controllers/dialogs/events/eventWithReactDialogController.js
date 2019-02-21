@@ -15,15 +15,19 @@
 
         console.log('vm.event', vm.event);
 
-        vm.eventAction = function ($event, actionId) {
+        vm.eventAction = function ($event, action) {
 
-            eventsService.getEventAction(vm.event.id, actionId).then(function (event) {
+            eventsService.getEventAction(vm.event.id, action.id).then(function (event) {
 
                 console.log('event', event);
 
                 var status = 4; // Booked (user, actions)
 
-                eventsService.putEventAction(vm.event.id, actionId, event, status).then(function () {
+                if(action.is_sent_to_pending) {
+                    status = 7; // 'Booked, pending (user, actions)';
+                }
+
+                eventsService.putEventAction(vm.event.id, action.id, event, status).then(function () {
 
                     $mdDialog.hide({status: 'agree'});
 
@@ -65,6 +69,10 @@
                         console.log('event', event);
 
                         var status = 5; // 'Booked (user, default)';
+
+                        if(action.is_sent_to_pending) {
+                            status = 8; // 'Booked, pending (user, default)';
+                        }
 
                         eventsService.putEventAction(vm.event.id, action.id, event, status).then(function () {
 

@@ -288,12 +288,20 @@
                     return 'New';
                 case 2:
                     return 'Informed';
+
                 case 3:
                     return 'Booked (system, default)';
                 case 4:
                     return 'Booked (user, actions)';
                 case 5:
-                    return 'Booked (user, default)'
+                    return 'Booked (user, default)';
+
+                case 6:
+                    return 'Booked, pending (system, default)';
+                case 7:
+                    return 'Booked, pending (user, actions)';
+                case 8:
+                    return 'Booked, pending (user, default)';
 
             }
 
