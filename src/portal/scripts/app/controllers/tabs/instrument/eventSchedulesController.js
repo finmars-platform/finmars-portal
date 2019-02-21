@@ -141,12 +141,39 @@
 
         vm.generateEventsSchedule = function ($event) {
 
-            instrumentEventScheduleService.rebuildEvents(vm.entity.id, vm.entity).then(function (data) {
+            $mdDialog.show({
+                controller: 'WarningDialogController as vm',
+                templateUrl: 'views/warning-dialog-view.html',
+                parent: angular.element(document.body),
+                targetEvent: $event,
+                clickOutsideToClose: true,
+                locals: {
+                    warning: {
+                        title: 'Warning',
+                        description: 'All changes will be saved, OK?'
+                    }
+                },
+                multiple: true,
+                preserveScope: true,
+                autoWrap: true,
+                skipHide: true
+            }).then(function (res) {
 
-                console.log('events rebuilded data', data);
-                $scope.$parent.vm.getItem();
+                if (res.status === 'agree') {
 
-            })
+                    $scope.$parent.vm.updateItem().then(function (value) {
+
+                        instrumentEventScheduleService.rebuildEvents(vm.entity.id, vm.entity).then(function (data) {
+
+                            console.log('events rebuilded data', data);
+                            $scope.$parent.vm.getItem();
+
+                        })
+
+                    })
+                }
+
+            });
 
         };
 
