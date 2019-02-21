@@ -49,6 +49,10 @@
 
                         var status = 5; // 'Booked (user, default)';
 
+                        if(action.is_sent_to_pending) {
+                            status = 8; // 'Booked, pending (user, default)';
+                        }
+
                         eventsService.putEventAction(vm.event.id, action.id, event, status).then(function () {
 
                             resolve(action);
