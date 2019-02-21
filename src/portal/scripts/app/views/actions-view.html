@@ -301,8 +301,25 @@
                     Check for events
                 </md-button>
 
+            </div>
+
+        </fieldset>
+
+    </div>
+
+    <div layout="row" layout-align="space-between">
+
+        <fieldset class="fieldset-event-settings">
+            <legend>Default</legend>
+
+            <div layout="row">
+
                 <md-button class="md-raised md-primary" data-ng-click="vm.eventScheduleConfig()">
                     Configure event schedule
+                </md-button>
+
+                <md-button class="md-raised md-primary" data-ng-click="vm.defaultPricingConfig($event)">
+                    Default pricing config
                 </md-button>
 
             </div>

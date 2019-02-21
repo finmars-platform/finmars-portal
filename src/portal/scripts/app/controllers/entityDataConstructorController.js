@@ -610,9 +610,9 @@
                                 if (tab.name === tabName) {
 
                                     tab.layout.fields.forEach(function (field) {
-                                        console.log('addRows dnd field', field);
+
                                         if (field.column === column && field.row === row) {
-                                            console.log('addRows dnd field has been found');
+
                                             field.attribute = vm.items[itemIndex];
                                             field.name = field.attribute.name;
                                             field.attribute_class = 'userInput';
