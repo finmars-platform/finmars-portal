@@ -140,6 +140,38 @@
 
             item[propertyName][fieldName + '_toggle'] = !item[propertyName][fieldName + '_toggle'];
 
+            if (item[propertyName][fieldName + '_toggle'] && !item[propertyName][fieldName]) {
+
+                var relationType = '';
+                switch (fieldName) {
+                    case 'linked_instrument':
+                    case 'allocation_pl':
+                    case 'allocation_balance':
+                        relationType = 'instrument';
+                        break;
+                    default:
+                        relationType = fieldName;
+                }
+
+                vm.loadRelation(relationType).then(function (data) {
+
+                    var defaultPropertyName = 'name';
+                    if (fieldName === 'price_download_scheme') {
+                        defaultPropertyName = 'scheme_name';
+                    }
+
+                    vm.relationItems[relationType].forEach(function (relation) {
+
+                        if (relation[defaultPropertyName] === "-" || relation[defaultPropertyName] === 'Default') {
+                            item[propertyName][fieldName] = relation.id;
+                            $scope.$apply();
+                        }
+                    });
+
+                });
+
+            }
+
         };
 
         vm.findInputs = function (entity) {

@@ -20,7 +20,8 @@
 
                             <label for="">First Date</label>
 
-                            <zh-date-picker data-ng-model="reportOptions.pl_first_date"
+                            <zh-date-picker data-date-value="reportOptions.pl_first_date"
+                                            data-ng-model="reportOptions.pl_first_date"
                                             ng-change="updateReportOptions()"
                                             position="left"></zh-date-picker>
 
@@ -31,7 +32,9 @@
 
                             <label for="">Date</label>
 
-                            <zh-date-picker data-ng-model="reportOptions.report_date" position="left"
+                            <zh-date-picker data-date-value="reportOptions.report_date"
+                                            data-ng-model="reportOptions.report_date"
+                                            position="left"
                                             ng-change="updateReportOptions()"></zh-date-picker>
 
                         </md-input-container>
@@ -88,7 +91,9 @@
 
                             <label for="">Begin date</label>
 
-                            <zh-date-picker data-ng-model="reportOptions.begin_date" position="left"
+                            <zh-date-picker data-date-value="reportOptions.begin_date"
+                                            data-ng-model="reportOptions.begin_date"
+                                            position="left"
                                             ng-change="updateReportOptions()"></zh-date-picker>
 
                         </md-input-container>
@@ -97,7 +102,9 @@
 
                             <label for="">End date</label>
 
-                            <zh-date-picker data-ng-model="reportOptions.end_date" position="left"
+                            <zh-date-picker data-date-value="reportOptions.end_date"
+                                            data-ng-model="reportOptions.end_date"
+                                            position="left"
                                             ng-change="updateReportOptions()"></zh-date-picker>
 
                         </md-input-container>
@@ -123,7 +130,9 @@
 
                             <label for="">Begin date</label>
 
-                            <zh-date-picker data-ng-model="reportOptions.begin_date" position="left"
+                            <zh-date-picker data-date-value="reportOptions.begin_date"
+                                            data-ng-model="reportOptions.begin_date"
+                                            position="left"
                                             ng-change="updateReportOptions()"></zh-date-picker>
 
                         </md-input-container>
@@ -132,7 +141,9 @@
 
                             <label for="">End date</label>
 
-                            <zh-date-picker data-ng-model="reportOptions.end_date" position="left"
+                            <zh-date-picker data-date-value="reportOptions.end_date"
+                                            data-ng-model="reportOptions.end_date"
+                                            position="left"
                                             ng-change="updateReportOptions()"></zh-date-picker>
 
                         </md-input-container>
@@ -141,7 +152,9 @@
 
                             <label for="">Balance date</label>
 
-                            <zh-date-picker data-ng-model="reportOptions.balance_date" position="left"
+                            <zh-date-picker data-date-value="reportOptions.balance_date"
+                                            data-ng-model="reportOptions.balance_date"
+                                            position="left"
                                             ng-change="updateReportOptions()"></zh-date-picker>
 
                         </md-input-container>
@@ -150,7 +163,9 @@
 
                             <label for="">Report date</label>
 
-                            <zh-date-picker data-ng-model="reportOptions.report_date" position="left"
+                            <zh-date-picker data-date-value="reportOptions.report_date"
+                                            data-ng-model="reportOptions.report_date"
+                                            position="left"
                                             ng-change="updateReportOptions()"></zh-date-picker>
 
                         </md-input-container>
@@ -177,8 +192,10 @@
 
                             <label for="">Begin Date</label>
 
-                            <zh-date-picker data-ng-model="reportOptions.begin_date"
-                                            position="left" ng-change="updateReportOptions()"></zh-date-picker>
+                            <zh-date-picker data-date-value="reportOptions.begin_date"
+                                            data-ng-model="reportOptions.begin_date"
+                                            position="left"
+                                            ng-change="updateReportOptions()"></zh-date-picker>
 
 
                         </md-input-container>
@@ -187,7 +204,9 @@
 
                             <label for="">End Date</label>
 
-                            <zh-date-picker data-ng-model="reportOptions.end_date" position="left"
+                            <zh-date-picker data-date-value="reportOptions.end_date"
+                                            data-ng-model="reportOptions.end_date"
+                                            position="left"
                                             ng-change="updateReportOptions()"></zh-date-picker>
 
                         </md-input-container>
@@ -384,7 +403,9 @@
                 </div>
                 <div data-ng-if="filter['value_type'] === 40">
 
-                    <zh-date-picker data-ng-model="filter.options.query" position="left"
+                    <zh-date-picker data-date-value="filter.options.query"
+                                    data-ng-model="filter.options.query"
+                                    position="left"
                                     ng-change="filterChange(filter)"></zh-date-picker>
                 </div>
             </md-input-container>

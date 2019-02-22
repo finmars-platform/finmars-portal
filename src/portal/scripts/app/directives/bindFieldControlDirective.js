@@ -21,6 +21,7 @@
                 scope.entityType = scope.$parent.vm.entityType;
                 scope.readyStatus = {classifier: false};
                 scope.entity = scope.$parent.vm.entity;
+                var noMu1 = Object.assign({}, scope.entity);
 
                 var attrs = scope.$parent.vm.attrs || [];
                 var userInputs = scope.$parent.vm.userInputs || [];

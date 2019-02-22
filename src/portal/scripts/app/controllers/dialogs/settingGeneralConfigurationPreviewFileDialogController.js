@@ -30,6 +30,54 @@
 
         });
 
+        var sortItems = function () {
+            var firstLayoutsItem = false;
+            var firstSchemesItem = false;
+            var firstEntitiesItem = false;
+            var firstAttrsItem = false;
+
+            vm.items.forEach(function (parent) {
+
+                if (parent.entity.toLowerCase().indexOf('layout') !== -1) {
+                    parent.order = 1;
+
+                    if (!firstLayoutsItem) {
+                        parent.first = 'Layouts';
+                        firstLayoutsItem = true;
+                    }
+
+                } else if (parent.entity.toLowerCase().indexOf('scheme') !== -1) {
+                    parent.order = 2;
+
+                    if (!firstSchemesItem) {
+                        parent.first = 'Schemes';
+                        firstSchemesItem = true;
+                    }
+
+                } else if (parent.entity.toLowerCase().indexOf('obj_attrs') !== -1) {
+                    parent.order = 4;
+
+                    if (!firstAttrsItem) {
+                        parent.first = 'Attributes';
+                        firstAttrsItem = true;
+                    }
+
+                } else {
+                    parent.order = 3;
+
+                    if (!firstEntitiesItem) {
+                        parent.first = 'Entities';
+                        firstEntitiesItem = true;
+                    }
+
+                };
+
+            });
+
+        };
+
+        sortItems();
+
         vm.getEntityName = function (item) {
 
             switch (item.entity) {
@@ -245,6 +293,9 @@
             window.importConfigurationCounter = 0;
 
             vm.items.forEach(function (entity) {
+
+                delete entity.order;
+                delete entity.first;
 
                 entity.content.forEach(function (item) {
 

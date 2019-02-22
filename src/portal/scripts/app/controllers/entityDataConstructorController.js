@@ -156,22 +156,37 @@
         }
 
         function addRow(tab) {
-            var c;
-            tab.layout.rows = tab.layout.rows + 1;
-            for (c = 0; c < tab.layout.columns; c = c + 1) {
-                tab.layout.fields.push({
-                    row: tab.layout.rows,
-                    column: c + 1,
-                    colspan: 1,
-                    type: 'empty'
-                })
+
+            var rowsToAdd = 5 - tab.layout.rows;
+            if (rowsToAdd <= 0) {
+               rowsToAdd = 1;
             }
+
+            var r, c;
+            var field = {};
+            for(r = 0; r < rowsToAdd; r = r + 1) {
+
+                tab.layout.rows = tab.layout.rows + 1;
+
+                for (c = 0; c < tab.layout.columns; c = c + 1) {
+                    field = {
+                        row: tab.layout.rows,
+                        column: c + 1,
+                        colspan: 1,
+                        type: 'empty'
+                    };
+                    tab.layout.fields.push(field);
+
+                }
+
+            }
+
         }
 
         function removeLastRow(tab) {
             var f;
             for (f = 0; f < tab.layout.fields.length; f = f + 1) {
-                if (tab.layout.fields[f].row === tab.layout.rows) {
+                if (tab.layout.fields[f].row === tab.layout.rows && tab.layout.fields[f].row > 5) {
                     tab.layout.fields.splice(f, 1);
                     f = f - 1;
                 }
@@ -366,9 +381,41 @@
 
         vm.saveEditedTab = function (tab) {
             console.log(tab);
-            if (tab.captionName !== '') {
-                tab.name = tab.captionName;
-                tab.editState = !tab.editState;
+            var tabIsReadyToSave = true;
+
+            if (tab.captionName && tab.captionName !== '') {
+
+                vm.tabs.forEach(function (singleTab) {
+                    console.log('addRows tab to save', tab, singleTab);
+                    if (tab.captionName.toLowerCase() === singleTab.name.toLowerCase()) {
+                        console.log('found match', tab.captionName.toLowerCase(), singleTab.name.toLowerCase());
+                        tabIsReadyToSave = false;
+                    }
+                });
+
+                if (tabIsReadyToSave) {
+                    tab.name = tab.captionName;
+                    tab.editState = !tab.editState;
+                }
+            } else {
+                tabIsReadyToSave = false;
+            }
+
+            if (!tabIsReadyToSave) {
+
+                $mdDialog.show({
+                    controller: 'WarningDialogController as vm',
+                    templateUrl: 'views/warning-dialog-view.html',
+                    // targetEvent: $event,
+                    autoWrap: true,
+                    skipHide: true,
+                    locals: {
+                        warning: {
+                            title: 'Warning!',
+                            description: 'Name of the tab must make unique character set.'
+                        }
+                    }
+                });
             }
         };
 
@@ -402,7 +449,13 @@
             attributeTypeService.getList(vm.entityType).then(function (data) {
 
                 vm.attrs = data.results;
-                vm.entityAttrs = metaService.getEntityAttrs(vm.entityType);
+                var doNotShowAttrs = ['code', 'date', 'status', 'text'];
+                var entityAttrs = metaService.getEntityAttrs(vm.entityType);
+                vm.entityAttrs = entityAttrs.filter(function (entity) {
+                    return doNotShowAttrs.indexOf(entity.key) === -1;
+                });
+
+                var doNotShowAttrs = ['code', 'date', 'status', 'text'];
                 vm.layoutAttrs = layoutService.getLayoutAttrs();
 
                 if (vm.isInstanceId && vm.entityType === 'complex-transaction') {
@@ -578,13 +631,15 @@
                             console.log('target.data', elem.dataset);
 
                             var tabIndex = 0;
+                            var tabName = target.dataset.tabName;
                             var column = parseInt(target.dataset.col, 10);
                             var row = parseInt(target.dataset.row, 10);
                             var itemIndex = parseInt(elem.dataset.index, 10);
 
                             vm.tabs.forEach(function (tab) {
 
-                                if (!tab.hasOwnProperty('editState') || (tab.hasOwnProperty('editState') && tab.editState)) {
+                                // if (!tab.hasOwnProperty('editState') || (tab.hasOwnProperty('editState') && tab.editState)) {
+                                if (tab.name === tabName) {
 
                                     tab.layout.fields.forEach(function (field) {
 
@@ -665,6 +720,18 @@
             vm.items = [];
 
             vm.items = vm.items.concat(vm.attrs);
+            // if (vm.entityType === 'complex-transaction' && !vm.isInstanceId) {
+            //    console.log('remove fields complex-transaction');
+            //    var entityAttrsForCT = doNotShowAttrs.filter(function (entityAttr) {
+            //        return doNotShowAttrs.indexOf(entityAttr) === -1;
+            //    });
+            //
+            //    vm.items.concat(entityAttrsForCT);
+            //
+            // }
+            // else {
+            //     vm.items = vm.items.concat(vm.entityAttrs);
+            // }
             vm.items = vm.items.concat(vm.entityAttrs);
             vm.items = vm.items.concat(vm.userInputs);
             vm.items = vm.items.concat(vm.layoutAttrs);

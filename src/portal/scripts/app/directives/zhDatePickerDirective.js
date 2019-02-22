@@ -10,7 +10,9 @@
         return {
             restrict: 'AE',
             scope: {
-                position: '@'
+                position: '@',
+                defaultDate: '@',
+                dateValue: '='
             },
             require: '?ngModel',
             template: '<div class="pick-me-up"><input type="text" value=""></div>',
@@ -27,6 +29,10 @@
                     position = scope.position;
                 }
 
+                var defaultDate = false;
+                if (scope.defaultDate) {
+                    defaultDate = true;
+                }
 
                 scope.$watch(function () {
 
@@ -38,14 +44,18 @@
                     }
                 });
 
-                if (ngModel.$modelValue) {
+                var initModelValueSet = false;
+
+
+                if (scope.dateValue) {
+
                     $(elem).parent().addClass('md-input-has-value');
                     input.pickmeup({
-                        date: new Date(ngModel.$modelValue),
-                        current: new Date(ngModel.$modelValue),
+                        date: new Date(scope.dateValue),
+                        current: new Date(scope.dateValue),
                         position: position,
-                        default_date: false,
-                        'hide_on_select': true,
+                        default_date: defaultDate,
+                        hide_on_select: true,
                         format: 'Y-m-d',
                         change: function () {
                             ngModel.$setViewValue(this.value);
@@ -53,11 +63,11 @@
                     });
 
                 } else {
-                    $(elem).parent().addClass('md-input-has-value');
+
                     input.pickmeup({
                         position: position,
-                        default_date: false,
-                        'hide_on_select': true,
+                        default_date: defaultDate,
+                        hide_on_select: true,
                         format: 'Y-m-d',
                         change: function () {
                             ngModel.$setViewValue(this.value);
@@ -66,14 +76,14 @@
 
                 }
 
-                var unregister = scope.$watch(function () {
-
-                    if (new Date(ngModel.$modelValue) !== 'Invalid Date') {
-                        input.val(moment(new Date(ngModel.$modelValue)).format('YYYY-MM-DD'));
-                        unregister();
-                    }
-
-                });
+                // var unregister = scope.$watch(function () {
+                //
+                //     if (new Date(ngModel.$modelValue) !== 'Invalid Date') {
+                //         input.val(moment(new Date(ngModel.$modelValue)).format('YYYY-MM-DD'));
+                //         unregister();
+                //     }
+                //
+                // });
 
             }
         }

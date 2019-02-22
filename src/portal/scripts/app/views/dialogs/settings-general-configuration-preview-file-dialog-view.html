@@ -20,8 +20,9 @@
 
         </div>
 
-        <div data-ng-repeat="item in vm.items">
+        <div data-ng-repeat="item in vm.items | orderBy: 'order'">
 
+            <h2 data-ng-if="item.first" data-ng-bind="item.first"></h2>
             <div class="cie-entity-holder">
                 <md-checkbox data-ng-checked="item.active"
                              data-ng-click="vm.toggleActiveForChilds(item)"

@@ -147,29 +147,21 @@
                 skipHide: true
             })
 
-
         };
 
-        vm.generateEvents = function ($event) {
-            eventsService.generateEvents();
+        vm.defaultPricingConfig = function ($event) {
+
             $mdDialog.show({
-                controller: 'InfoDialogController as vm',
-                templateUrl: 'views/info-dialog-view.html',
+                controller: 'DefaultPricingConfigDialogController as vm',
+                templateUrl: 'views/dialogs/default-pricing-config-dialog-view.html',
+                parent: angular.element(document.body),
                 targetEvent: $event,
-                locals: {
-                    info: {
-                        title: "Generating events",
-                        description: "Your request is processing"
-                    }
-                },
                 preserveScope: true,
                 autoWrap: true,
-                skipHid: true
+                skipHide: true
             })
-        };
 
-
-
+        }
     }
 
 }());
