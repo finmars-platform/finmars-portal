@@ -6,7 +6,8 @@
         return {
             restriction: 'A',
             scope: {
-                readFile: '='
+                readFile: '=',
+                readFileChange: '&'
             },
             link: function (scope, elem, attr) {
 
@@ -22,6 +23,10 @@
                             $inputPlaceHolder = $(PLInput);
 
                         $inputPlaceHolder.text('Select file');
+                    }
+
+                    if (scope.readFileChange) {
+                        scope.readFileChange();
                     }
 
                 });
@@ -53,6 +58,9 @@
 
                         $inputPlaceHolder.text('Select file');
                     }
+
+
+
                 });
             }
         }

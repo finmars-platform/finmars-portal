@@ -40,8 +40,6 @@ var metaService = require('./app/services/metaService');
 
 app.run(['$rootScope', '$transitions', '$state', function ($rootScope, $transitions, $state) {
 
-    localStorage.setItem('entityIsChanged', false);
-
     document.title = metaService.getCurrentLocation($state);
 
     // window.onerror = function (msg, url, line, col, error) {
@@ -81,7 +79,7 @@ app.run(['$rootScope', '$transitions', '$state', function ($rootScope, $transiti
 app.controller('ShellController', ['$scope', '$state', '$rootScope', '$mdDialog', '$transitions', require('./app/controllers/shellController')]);
 app.controller('BookmarksController', ['$scope', '$mdDialog', '$state', require('./app/controllers/bookmarksController')]);
 app.controller('SideNavController', ['$scope', '$mdDialog', require('./app/controllers/sideNavController')]);
-app.controller('HomeController', ['$scope', require('./app/controllers/homeController')]);
+app.controller('HomeController', ['$scope', '$mdDialog', require('./app/controllers/homeController')]);
 app.controller('SetupController', ['$scope', '$state', require('./app/controllers/setupController')]);
 app.controller('NotFoundPageController', ['$scope', require('./app/controllers/notFoundPageController')]);
 
@@ -97,8 +95,16 @@ app.controller('FillPriceHistoryDialogController', ['$scope', '$mdDialog', requi
 app.controller('EventScheduleConfigDialogController', ['$scope', '$mdDialog', require('./app/controllers/dialogs/eventScheduleConfigDialogController')]);
 app.controller('FillPriceManuallyInstrumentDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/fillPriceManuallyInstrumentDialogController')]);
 app.controller('PriceDownloadSchemeAddDialogController', ['$scope', '$mdDialog', require('./app/controllers/dialogs/priceDownloadSchemeAddDialogController')]);
-app.controller('EventDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/eventDialogController')]);
-app.controller('EventApplyDefaultDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/eventApplyDefaultDialogController')]);
+
+
+// events start
+
+app.controller('CheckEventsDialogController', ['$scope', '$mdDialog', require('./app/controllers/dialogs/events/checkEventsDialogController')]);
+app.controller('EventWithReactDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/events/eventWithReactDialogController')]);
+app.controller('EventDoNotReactDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/events/eventDoNotReactDialogController')]);
+app.controller('EventApplyDefaultDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/events/eventApplyDefaultDialogController')]);
+
+// events end
 
 app.controller('AttributesManagerController', ['$scope', '$state', '$stateParams', '$mdDialog', require('./app/controllers/attributesManagerController')]);
 app.controller('AttributesManagerEditDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/attributesManagerEditDialogController')]);
@@ -189,12 +195,15 @@ app.controller('ValidationDialogController', ['$scope', '$mdDialog', 'validation
 app.controller('ExpressionEditorDialogController', ['$scope', '$mdDialog', 'item', require('./app/controllers/dialogs/expressionEditorDialogController')]);
 app.controller('InfoDialogController', ['$scope', '$mdDialog', 'info', require('./app/controllers/dialogs/infoDialogController')]);
 app.controller('InstrumentSelectDialogController', ['$scope', '$mdDialog', require('./app/controllers/dialogs/instrumentSelectDialogController')]);
+app.controller('EntitySearchDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/entitySearchDialogController')]);
+
+
 app.controller('ClassifierSelectDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/classifierSelectDialogController')]);
 app.controller('SaveLayoutDialogController', ['$scope', '$mdDialog', require('./app/controllers/dialogs/saveLayoutDialogController')]);
 app.controller('RenameDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/renameDialogController')]);
 app.controller('SaveConfigurationExportLayoutDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/saveConfigurationExportLayoutDialogController')]);
-app.controller('CheckEventsDialogController', ['$scope', '$mdDialog', require('./app/controllers/dialogs/checkEventsDialogController')]);
 app.controller('DefaultPricingConfigDialogController', ['$scope', '$mdDialog', require('./app/controllers/dialogs/defaultPricingConfigDialogController')]);
+
 
 app.controller('ExportPdfDialogController', ['$scope', '$mdDialog', 'evDataService', 'evEventService', require('./app/controllers/dialogs/exportPdfDialogController')]);
 
@@ -293,6 +302,7 @@ app.directive('evFieldResolver', [require('./app/directives/entityViewerFieldRes
 app.directive('ismFieldResolver', ['$mdDialog', require('./app/directives/instrumentSchemeManagerFieldResolverDirective')]);
 app.directive('floatNumbers', [require('./app/directives/floatNumbersDirective')]);
 app.directive('instrumentModalResolver', ['$mdDialog', require('./app/directives/instrumentModalResolverDirective')]);
+app.directive('entitySearchSelect', ['$mdDialog', require('./app/directives/entitySearchSelect')]);
 app.directive('instrumentEventActionResolver', ['$mdDialog', require('./app/directives/instrumentEventActionResolverDirective')]);
 app.directive('classifierModalResolver', ['$mdDialog', require('./app/directives/classifierModalResolverDirective')]);
 app.directive('zhDatePicker', ['$mdDialog', require('./app/directives/zhDatePickerDirective')]);

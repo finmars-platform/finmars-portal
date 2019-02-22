@@ -1253,6 +1253,56 @@
                 case 'accounts.accounttype':
                     resolve(entityResolverService.create('account-type', item));
                     break;
+                case 'currencies.currency':
+                    resolve(new Promise(function (resolve, reject) {
+
+                        return new Promise(function (resolveLocal) {
+
+                            var promises = [];
+
+                            var code;
+                            var code_type;
+                            var entity;
+                            var item_key;
+
+                            if (item.hasOwnProperty('___price_download_scheme__scheme_name')) {
+
+                                code = item['___price_download_scheme__scheme_name'];
+                                code_type = 'scheme_name';
+                                entity = 'price-download-scheme';
+                                item_key = 'price_download_scheme';
+
+                                promises.push(mapRelation(item, item_key, entity, code_type, code, cacheContainer))
+
+                            }
+
+                            if (item.hasOwnProperty('___daily_pricing_model__system_code')) {
+
+                                code = item['___daily_pricing_model__system_code'];
+                                code_type = 'system_code';
+                                entity = 'daily-pricing-model';
+                                item_key = 'daily_pricing_model';
+
+                                promises.push(mapRelation(item, item_key, entity, code_type, code, cacheContainer))
+
+                            }
+
+
+                            Promise.all(promises).then(function (data) {
+
+                                resolveLocal(data)
+                            });
+
+
+                        }).then(function (value) {
+
+                            resolve(entityResolverService.create('currency', item))
+
+                        });
+
+
+                    }));
+                    break;
                 case 'instruments.pricingpolicy':
                     resolve(entityResolverService.create('pricing-policy', item));
                     break;
@@ -1399,7 +1449,7 @@
 
                             if (item.hasOwnProperty('___price_download_scheme__scheme_name')) {
 
-                                var code = '___price_download_scheme__scheme_name';
+                                var code = item['___price_download_scheme__scheme_name'];
                                 var code_type = 'scheme_name';
                                 var entity = 'price-download-scheme';
                                 var item_key = 'price_download_scheme';

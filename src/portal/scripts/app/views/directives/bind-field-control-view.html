@@ -2,9 +2,9 @@
     <div data-ng-if="fieldType['display_name'] === 'Number'">
         <md-input-container class="md-block">
             <label data-ng-bind="getName()"></label>
-            <input data-ng-change="changeWatcher()" data-ng-model="entity[getModelKey()]" type="number"
+            <input data-ng-model="entity[getModelKey()]" type="number"
                    data-ng-if="!item.options.onlyPositive" style="width: {{100 - item.buttons.length * 25}}%">
-            <input data-ng-change="changeWatcher()" data-ng-model="entity[getModelKey()]" type="number" min="0"
+            <input data-ng-model="entity[getModelKey()]" type="number" min="0"
                    data-ng-if="item.options.onlyPositive" style="width: {{100 - item.buttons.length * 10}}%">
 
             <div data-ng-if="item.buttons.length">
@@ -24,7 +24,7 @@
         <div data-ng-if="getModelKey() === 'notes' ">
             <md-input-container class="md-block textarea-bind-field">
                 <label data-ng-bind="getName()"></label>
-                <textarea data-ng-change="changeWatcher()" class="{{item.options.frame == 1 ? 'bordered' : '' }}"
+                <textarea class="{{item.options.frame == 1 ? 'bordered' : '' }}"
                           data-ng-model="entity[getModelKey()]"
                           cols="30" rows="{{item.options.rowCount}}"></textarea>
             </md-input-container>
@@ -34,7 +34,7 @@
                     class="md-block bind-field-input {{item.options.copyFrom ? 'with-button' : ''}} {{checkValid() ? 'mdc-error' : ''}}
                     {{entity[getModelKey()] != '' ? 'md-input-has-value' : ''}}">
                 <label data-ng-bind="getName()"></label>
-                <input type="text" data-ng-change="changeWatcher()" data-ng-model="entity[getModelKey()]"
+                <input type="text" data-ng-model="entity[getModelKey()]"
                        style="width: {{100 - item.buttons.length * 10}}%">
                 <md-button data-ng-if="item.options.copyFrom" class="bf-copy-btn"
                            data-ng-click="copyFromField(item.options.copyFrom)">
@@ -57,9 +57,9 @@
     <div data-ng-if="fieldType['display_name'] === 'Float'">
         <md-input-container class="md-block">
             <label data-ng-bind="getName()"></label>
-            <input data-ng-change="changeWatcher()" data-ng-model="entity[getModelKey()]" data-float-numbers
+            <input data-ng-model="entity[getModelKey()]" data-float-numbers
                    data-ng-if="!item.options.onlyPositive">
-            <input data-ng-change="changeWatcher()" data-ng-model="entity[getModelKey()]" data-float-numbers
+            <input data-ng-model="entity[getModelKey()]" data-float-numbers
                    data-only-positive="true"
                    data-ng-if="item.options.onlyPositive">
 
@@ -77,17 +77,17 @@
         </md-input-container>
     </div>
     <div data-ng-if="fieldType['display_name'] === 'Field'">
-        <div data-ev-field-resolver data-item="item" data-entity="entity" data-options="options"></div>
+        <ev-field-resolver data-item="item" data-entity="entity" data-options="options"
+                           data-entity-type="entityType"></ev-field-resolver>
     </div>
     <div data-ng-if="fieldType['display_name'] === 'Multiple choice field'">
-        <div data-ev-field-resolver data-item="item" data-entity="entity" data-options="options"></div>
+        <ev-field-resolver data-item="item" data-entity="entity" data-options="options"></ev-field-resolver>
     </div>
     <div data-ng-if="fieldType['display_name'] === 'Date'" class="field-date-pick">
-        <!-- <label data-ng-bind="getName()"></label> -->
+
         <md-input-container class="field-date-pick-holder">
-            <!--<label data-ng-if="!entity[getModelKey()]" data-ng-bind="getName()"></label>-->
             <label data-ng-bind="getName()"></label>
-            <zh-date-picker data-ng-change="changeWatcher()" data-date-value="entity[getModelKey()]" data-ng-model="entity[getModelKey()]"></zh-date-picker>
+            <zh-date-picker data-ng-change="changeWatcher()" data-date-value="entity[getModelKey()]" ng-model="entity[getModelKey()]"></zh-date-picker>
             <div class="date-pick-buttons-block">
                 <md-button data-ng-if="item.options.dateTodayMinus" data-ng-click="setDateMinus()">
                     T - 1
@@ -114,7 +114,7 @@
         </md-input-container>
     </div>
     <div data-ng-if="fieldType['display_name'] === 'Boolean'">
-        <md-checkbox class="checkbox-bind-field" data-ng-change="changeWatcher()" data-ng-model="entity[getModelKey()]"
+        <md-checkbox class="checkbox-bind-field" data-ng-model="entity[getModelKey()]"
                      aria-label="checkbox">
             <label data-ng-bind="getName()"></label>
         </md-checkbox>
@@ -123,7 +123,7 @@
         <div data-ng-if="readyStatus.classifier">
             <md-input-container class="md-block">
                 <label data-ng-bind="getName()"></label>
-                <!--{{item}}-->
+
                 <md-select data-ng-model="entity[getModelKey()]"
                            data-classifier-modal-resolver
                            data-classifier-attr="item"

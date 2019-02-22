@@ -18,6 +18,15 @@
                     return obj[column.key + '_object'].user_code;
                 }
 
+                if (column.key === 'status') {
+                    if (obj[column.key] === 1) {
+                        return 'Production'
+                    }
+                    if (obj[column.key] === 2) {
+                        return 'Pending'
+                    }
+                }
+
                 return obj[column.key]
             }
 

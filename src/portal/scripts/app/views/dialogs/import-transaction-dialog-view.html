@@ -5,17 +5,31 @@
             <span flex></span>
         </div>
     </md-toolbar>
-    <md-dialog-content   style="background: #E5E5E5;">
+    <md-dialog-content style="background: #E5E5E5;">
         <div data-ng-if="vm.readyStatus.mapping" layout="column">
             <div layout="row">
                 <md-card style="width: 100%">
                     <md-card-content class="p-t-26">
                         <div layout="row" style="margin-bottom: 20px">
                             <div layout="column">
-                                <md-input-container flex="40" style="margin-bottom: 0">
-                                    <label for="">File</label>
-                                    <input type="file" file-read="vm.config.file">
+                                <!--<md-input-container flex="40" style="margin-bottom: 0">-->
+                                <!--<label for="">File</label>-->
+                                <!--<input type="file" data-ng-model="vm.config.file" file-read="vm.config.file"-->
+                                <!--data-ng-change="vm.checkExtension()">-->
+                                <!--</md-input-container>-->
+
+
+                                <md-input-container flex="40" style="margin-bottom: 0" class="ng-hide">
+                                    <!--<input type="file" file-read="vm.config.file" id="importDataUploadInput" input-file-directive>-->
+                                    <input type="file" id="importDataUploadInput" input-file-directive
+                                           read-file="vm.config.file" read-file-change="vm.checkExtension()">
                                 </md-input-container>
+                                <div class="input-upload-file-container">
+                                    <p class="importDataUploadInput">Select file</p>
+                                    <label for="importDataUploadInput" class="md-button md-raised md-primary IFUlabel">
+                                        <ng-md-icon icon="file_upload"></ng-md-icon>
+                                        <span>BROWSE</span></label>
+                                </div>
 
                             </div>
                             <div layout="row">
@@ -30,7 +44,8 @@
                                     </md-select>
                                 </md-input-container>
                                 <md-button
-                                        class="instrument-mapping-btn md-fab {{vm.loadIsAvailable() ? '' : 'disabled-btn' }}"
+                                        class="instrument-mapping-btn md-fab"
+                                        data-ng-class="{'disabled-btn': !vm.loadIsAvailable()}"
                                         data-ng-click="vm.openEditMapping($event)">
                                     <ng-md-icon icon="functions" size="24" style="fill:rgb(63,81,181);"></ng-md-icon>
                                     <md-tooltip class="tooltip_1" md-direction="top">Edit mapping</md-tooltip>
@@ -38,7 +53,8 @@
                             </div>
                             <div layout="row">
                                 <md-button
-                                        class="md-raised colored-btn instrument-load-btn {{vm.loadIsAvailable() ? '' : 'disabled-btn' }}"
+                                        class="md-raised colored-btn instrument-load-btn"
+                                        data-ng-class="{'disabled-btn': !vm.loadIsAvailable()}"
                                         data-ng-click="vm.load($event)">
                                     Load
                                 </md-button>
@@ -60,6 +76,9 @@
                         <div layout="row" data-ng-if="vm.finishedSuccess" layout-align="center center">
                             <h2>The data successfully imported.</h2>
                         </div>
+                        <!--<div layout="row" data-ng-if="vm.config.error_message" layout-align="center center">-->
+                            <!--Something wrong. Invalid file format.-->
+                        <!--</div>-->
                     </md-card-content>
                 </md-card>
             </div>

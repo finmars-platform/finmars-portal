@@ -5,7 +5,7 @@
 
     'use strict';
 
-    var eventsService = require('../../services/eventsService');
+    var eventsService = require('../../../services/eventsService');
 
     module.exports = function ($scope, $mdDialog) {
 
@@ -18,44 +18,98 @@
 
         vm.events = [];
 
-        vm.agree = function ($event) {
+        vm.recursiveOpenDialogs = function (resolve, events, index, $event) {
 
-            var promises = [];
-
-            var dontReactActionsIds = [1, 6, 9, 14];
+            var doNotReactActionsIds = [6, 9, 14];
+            var withReactActionsIds = [4, 7, 10, 11];
             var applyDefaultActionsIds = [5, 8, 12, 13];
 
-            vm.events.forEach(function (event) {
+            var event = events[index];
 
-                console.log('event', event);
+            if (event.selected && event.status === 1 && event.event_schedule_object) {
 
-                if (event.selected && event.status === 1) {
+                var notification_class = event.event_schedule_object.notification_class;
 
-                    if (event.is_need_reaction) {
-                        return promises.push(vm.openEventReactWindow($event, event));
+                if (withReactActionsIds.indexOf(notification_class) !== -1) {
 
-                    }
+                    vm.openWithReactDialog($event, event).then(function (value) {
 
-                    if (event.event_schedule_object) {
-
-                        var notification_class = event.event_schedule_object.notification_class;
-
-                        if (dontReactActionsIds.indexOf(notification_class) !== -1) {
-                            return promises.push(vm.openEventDismissWindow($event, event));
+                        index = index + 1;
+                        if (index < events.length) {
+                            vm.recursiveOpenDialogs(resolve, events, index, $event);
+                        } else {
+                            resolve();
                         }
 
-                        if (applyDefaultActionsIds.indexOf(notification_class) !== -1) {
-                            return promises.push(vm.openEventApplyDefaultWindow($event, event));
-                        }
-
-                    }
+                    })
 
                 }
 
-            });
+                if (doNotReactActionsIds.indexOf(notification_class) !== -1) {
 
+                    vm.openDoNotReactDialog($event, event).then(function (value) {
 
-            Promise.all(promises).then(function () {
+                        index = index + 1;
+                        if (index < events.length) {
+                            vm.recursiveOpenDialogs(resolve, events, index, $event);
+                        } else {
+                            resolve();
+                        }
+
+                    })
+                }
+
+                if (applyDefaultActionsIds.indexOf(notification_class) !== -1) {
+
+                    vm.openApplyDefaultDialog($event, event).then(function (value) {
+
+                        index = index + 1;
+                        if (index < events.length) {
+                            vm.recursiveOpenDialogs(resolve, events, index, $event);
+                        } else {
+                            resolve();
+                        }
+
+                    })
+                }
+
+            } else {
+
+                index = index + 1;
+                if (index < events.length) {
+                    vm.recursiveOpenDialogs(resolve, events, index, $event);
+                } else {
+                    resolve();
+                }
+
+            }
+
+        };
+
+        vm.agree = function ($event) {
+
+            // DONT_REACT = 1
+            // APPLY_DEF_ON_EDATE = 2
+            // APPLY_DEF_ON_NDATE = 3
+            //
+            // INFORM_ON_NDATE_WITH_REACT = 4
+            // INFORM_ON_NDATE_APPLY_DEF = 5
+            // INFORM_ON_NDATE_DONT_REACT = 6
+            // INFORM_ON_EDATE_WITH_REACT = 7
+            // INFORM_ON_EDATE_APPLY_DEF = 8
+            // INFORM_ON_EDATE_DONT_REACT = 9
+            //
+            // INFORM_ON_NDATE_AND_EDATE_WITH_REACT_ON_EDATE = 10
+            // INFORM_ON_NDATE_AND_EDATE_WITH_REACT_ON_NDATE = 11
+            // INFORM_ON_NDATE_AND_EDATE_APPLY_DEF_ON_EDATE = 12
+            // INFORM_ON_NDATE_AND_EDATE_APPLY_DEF_ON_NDATE = 13
+            // INFORM_ON_NDATE_AND_EDATE_DONT_REACT = 14
+
+            var index = 0;
+
+            new Promise(function (resolve, reject) {
+                vm.recursiveOpenDialogs(resolve, vm.events, index, $event);
+            }).then(function () {
                 $mdDialog.hide();
 
                 $mdDialog.show({
@@ -233,44 +287,31 @@
                 case 1:
                     return 'New';
                 case 2:
-                    return 'Ignored';
+                    return 'Informed';
+
                 case 3:
-                    return 'Pending (book)';
+                    return 'Booked (system, default)';
                 case 4:
-                    return 'Booked';
+                    return 'Booked (user, actions)';
                 case 5:
-                    return 'Book (default)';
+                    return 'Booked (user, default)';
+
+                case 6:
+                    return 'Booked, pending (system, default)';
+                case 7:
+                    return 'Booked, pending (user, actions)';
+                case 8:
+                    return 'Booked, pending (user, default)';
 
             }
 
         };
 
-        vm.openEventDismissWindow = function ($event, item) {
+        vm.openDoNotReactDialog = function ($event, item) {
 
             return $mdDialog.show({
-                controller: 'SuccessDialogController as vm',
-                templateUrl: 'views/dialogs/event-dialog-view.html',
-                parent: angular.element(document.body),
-                targetEvent: $event,
-                locals: {
-                    success: {
-                        title: "Event (Don't react)",
-                        description: 'Nothing will be booked'
-                    }
-                },
-                preserveScope: true,
-                autoWrap: true,
-                skipHide: true,
-                multiple: true
-            })
-
-        };
-
-        vm.openEventApplyDefaultWindow = function ($event, item) {
-
-            return $mdDialog.show({
-                controller: 'EventApplyDefaultDialogController as vm',
-                templateUrl: 'views/dialogs/event-apply-default-dialog-view.html',
+                controller: 'EventDoNotReactDialogController as vm',
+                templateUrl: 'views/dialogs/events/event-do-not-react-dialog-view.html',
                 parent: angular.element(document.body),
                 targetEvent: $event,
                 locals: {
@@ -286,10 +327,30 @@
 
         };
 
-        vm.openEventReactWindow = function ($event, item) {
+        vm.openApplyDefaultDialog = function ($event, item) {
+
             return $mdDialog.show({
-                controller: 'EventDialogController as vm',
-                templateUrl: 'views/dialogs/event-dialog-view.html',
+                controller: 'EventApplyDefaultDialogController as vm',
+                templateUrl: 'views/dialogs/events/event-apply-default-dialog-view.html',
+                parent: angular.element(document.body),
+                targetEvent: $event,
+                locals: {
+                    data: {
+                        event: item
+                    }
+                },
+                preserveScope: true,
+                autoWrap: true,
+                skipHide: true,
+                multiple: true
+            })
+
+        };
+
+        vm.openWithReactDialog = function ($event, item) {
+            return $mdDialog.show({
+                controller: 'EventWithReactDialogController as vm',
+                templateUrl: 'views/dialogs/events/event-with-react-dialog-view.html',
                 parent: angular.element(document.body),
                 targetEvent: $event,
                 locals: {

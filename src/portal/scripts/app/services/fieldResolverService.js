@@ -110,7 +110,7 @@
                     break;
                 case 'transaction_class':
                     entityFieldsRepository.getTransactionClassList({pageSize: 1000}).then(function (data) {
-                        resolve({type: 'key-value', key: 'transaction_class', data: data});
+                        resolve({type: 'id', key: 'transaction_class', data: data});
                     });
                     break;
                 case 'periodicity':
