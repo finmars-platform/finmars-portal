@@ -10,12 +10,12 @@
         return eventsRepository.getEventAction(eventId, actionId);
     };
 
-    var putEventAction = function (eventId, actionId, data) {
-        return eventsRepository.putEventAction(eventId, actionId, data);
+    var putEventAction = function (eventId, actionId, data, status) {
+        return eventsRepository.putEventAction(eventId, actionId, data, status);
     };
 
-    var ignoreEventAction = function (id) {
-        return eventsRepository.ignoreEventAction(id);
+    var informedEventAction = function (id) {
+        return eventsRepository.informedEventAction(id);
     };
 
     var generateEvents = function () {
@@ -30,7 +30,7 @@
         getList: getList,
         getEventAction: getEventAction,
         putEventAction: putEventAction,
-        ignoreEventAction: ignoreEventAction,
+        informedEventAction: informedEventAction,
         generateEvents: generateEvents,
         generateEventsRange: generateEventsRange
     }

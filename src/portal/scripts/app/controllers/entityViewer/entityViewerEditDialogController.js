@@ -318,8 +318,8 @@
 
                     var keys = Object.keys(data.values);
 
-                    keys.forEach(function (item) {
-                        vm.entity[item] = data.values[item];
+                    keys.forEach(function (key) {
+                        vm.entity[key] = data.values[key];
                     });
 
                     data.complex_transaction.attributes.forEach(function (item) {
@@ -675,6 +675,32 @@
                 }
             });
         }
+
+        vm.updateItem = function () {
+
+            // TMP save method for instrument
+
+            return new Promise(function (resolve) {
+
+                vm.updateEntityBeforeSave();
+
+                vm.entity.$_isValid = entityEditorHelper.checkForNotNullRestriction(vm.entity, vm.entityAttrs, vm.attrs);
+
+                if (vm.entity.$_isValid) {
+
+                    var result = entityEditorHelper.checkForNulls(vm.entity);
+
+                    entityResolverService.update(vm.entityType, result.id, result).then(function (data) {
+
+                        resolve(data);
+
+                    });
+
+                }
+
+            })
+
+        };
 
         vm.save = function ($event) {
 

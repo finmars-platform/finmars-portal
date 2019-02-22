@@ -47,8 +47,8 @@
             })
     };
 
-    var putEventAction = function (eventId, actionId, data) {
-        return xhrService.fetch(baseUrl + 'instruments/generated-event/' + eventId + '/book/?action=' + actionId,
+    var putEventAction = function (eventId, actionId, data, status) {
+        return xhrService.fetch(baseUrl + 'instruments/generated-event/' + eventId + '/book/?action=' + actionId + '&event_status=' + status,
             {
                 method: 'PUT',
                 credentials: 'include',
@@ -61,9 +61,9 @@
             })
     };
 
-    var ignoreEventAction = function (id) {
+    var informedEventAction = function (id) {
 
-        return xhrService.fetch(baseUrl + 'instruments/generated-event/' + id + '/ignore/',
+        return xhrService.fetch(baseUrl + 'instruments/generated-event/' + id + '/informed/',
             {
                 method: 'PUT',
                 credentials: 'include',
@@ -110,7 +110,7 @@
         getList: getList,
         getEventAction: getEventAction,
         putEventAction: putEventAction,
-        ignoreEventAction: ignoreEventAction,
+        informedEventAction: informedEventAction,
         generateEvents: generateEvents,
         generateEventsRange: generateEventsRange
     }

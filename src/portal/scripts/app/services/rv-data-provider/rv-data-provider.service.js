@@ -129,8 +129,11 @@
                 // console.log('requestReport finished');
 
                 createDataStructure(entityViewerDataService, entityViewerEventService)
+
             } else {
+
                 entityViewerDataService.setStatusData('loaded');
+                entityViewerEventService.dispatchEvent(evEvents.DATA_LOAD_END);
             }
 
         });

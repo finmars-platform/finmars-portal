@@ -42,10 +42,94 @@
         vm.entitySpecialRules = false;
         vm.specialRulesReady = true;
 
+        vm.getEditListByInstanceId = function () {
+
+            return entityResolverService.getByKey('transaction-type-book', vm.complexTransactionOptions.transactionTypeId).then(function (data) {
+
+                vm.entity = data.complex_transaction;
+                vm.entity.transaction_type = data.transaction_type;
+
+                var inputsWithCalculations = data.transaction_type_object.inputs;
+
+                vm.specialRulesReady = true;
+                vm.readyStatus.entity = true;
+                vm.readyStatus.permissions = true;
+
+                var keys = Object.keys(data.values);
+
+                keys.forEach(function (item) {
+                    vm.entity[item] = data.values[item];
+                });
+
+                vm.tabs = data.book_transaction_layout.data;
+                vm.userInputs = [];
+                vm.tabs.forEach(function (tab) {
+                    tab.layout.fields.forEach(function (field) {
+                        if (field.attribute_class === 'userInput') {
+                            vm.userInputs.push(field.attribute);
+                        }
+                    });
+                });
+
+                inputsWithCalculations.forEach(function (inputWithCalc) {
+
+                    vm.userInputs.forEach(function (userInput) {
+                        if (userInput.name === inputWithCalc.name) {
+                            if (inputWithCalc.can_recalculate === true) {
+                                userInput.buttons = [
+                                    {
+                                        icon: 'functions',
+                                        tooltip: 'Recalculate',
+                                        caption: '',
+                                        classes: 'md-raised',
+                                        action: vm.recalculate
+                                    }
+                                ]
+                            }
+                        }
+                    })
+
+                });
+
+                vm.editLayout = function () {
+                    $state.go('app.data-constructor', {
+                        entityType: vm.entityType,
+                        instanceId: vm.editLayoutEntityInstanceId
+                    });
+                    $mdDialog.hide();
+                };
+
+                $scope.$apply();
+            });
+
+        };
+
         if (['complex-transaction'].indexOf(vm.entityType) !== -1) {
             vm.editLayoutByEntityInsance = true;
             vm.entitySpecialRules = true;
             vm.complexTransactionOptions = {};
+
+            if (vm.entity && vm.entity.id) {
+
+                var copy = JSON.parse(JSON.stringify(vm.entity));
+
+                vm.complexTransactionOptions.transactionTypeId = vm.entity.transaction_type;
+
+                vm.getEditListByInstanceId().then(function (value) {
+
+                    console.log('copy', copy);
+
+                    Object.keys(copy).forEach(function (key) {
+                        vm.entity[key] = copy[key];
+                    });
+
+                    delete vm.entity.id;
+
+                    $scope.$apply();
+                });
+
+
+            }
         }
 
         vm.attrs = [];
@@ -275,71 +359,10 @@
             entityResolverService.create('complex-transaction', book).then(handler);
         };
 
-        vm.getEditListByInstanceId = function () {
-
-            entityResolverService.getByKey('transaction-type-book', vm.complexTransactionOptions.transactionTypeId).then(function (data) {
-
-                vm.entity = data.complex_transaction;
-                vm.entity.transaction_type = data.transaction_type;
-
-                var inputsWithCalculations = data.transaction_type_object.inputs;
-
-                vm.specialRulesReady = true;
-                vm.readyStatus.entity = true;
-                vm.readyStatus.permissions = true;
-
-                var keys = Object.keys(data.values);
-
-                keys.forEach(function (item) {
-                    vm.entity[item] = data.values[item];
-                });
-
-                vm.tabs = data.book_transaction_layout.data;
-                vm.userInputs = [];
-                vm.tabs.forEach(function (tab) {
-                    tab.layout.fields.forEach(function (field) {
-                        if (field.attribute_class === 'userInput') {
-                            vm.userInputs.push(field.attribute);
-                        }
-                    });
-                });
-
-                inputsWithCalculations.forEach(function (inputWithCalc) {
-
-                    vm.userInputs.forEach(function (userInput) {
-                        if (userInput.name === inputWithCalc.name) {
-                            if (inputWithCalc.can_recalculate === true) {
-                                userInput.buttons = [
-                                    {
-                                        icon: 'functions',
-                                        tooltip: 'Recalculate',
-                                        caption: '',
-                                        classes: 'md-raised',
-                                        action: vm.recalculate
-                                    }
-                                ]
-                            }
-                        }
-                    })
-
-                });
-
-                vm.editLayout = function () {
-                    $state.go('app.data-constructor', {
-                        entityType: vm.entityType,
-                        instanceId: vm.editLayoutEntityInstanceId
-                    });
-                    $mdDialog.hide();
-                };
-
-                $scope.$apply();
-            });
-
-        };
 
         if (vm.entityType !== 'transaction-type') {
 
-            if (vm.editLayoutByEntityInsance == true) {
+            if (vm.editLayoutByEntityInsance === true) {
                 if (vm.editLayoutEntityInstanceId) {
                     vm.getEditListByInstanceId();
                 }

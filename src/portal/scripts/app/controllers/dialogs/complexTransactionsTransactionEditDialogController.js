@@ -25,7 +25,7 @@
         vm.copyCallback = ''; // copy callback handler in inner controller;
 
         vm.cancel = function () {
-            //localStorage.setItem('entityIsChanged', false);
+
             $mdDialog.cancel();
         };
 

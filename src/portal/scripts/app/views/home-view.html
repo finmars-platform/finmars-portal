@@ -3,3 +3,16 @@
     <h1 class="m-0">Homepage</h1>
 
 </div>
+
+
+<div class="overlay" data-ng-if="vm.eventsProcessing">
+<!--<div class="overlay">-->
+
+    <div class="overlay-loader" layout="row" layout-sm="column" layout-align="space-around">
+        <md-progress-circular class="progress-circular-white" md-diameter="100"
+                              md-mode="indeterminate"></md-progress-circular>
+    </div>
+
+    <p class="overlay-text">Checking for Events</p>
+
+</div>

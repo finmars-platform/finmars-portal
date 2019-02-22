@@ -1,4 +1,4 @@
-        /**
+/**
  * Created by szhitenev on 17.08.2016.
  */
 (function () {
@@ -43,15 +43,11 @@
         vm.dataIsImported = false;
 
         vm.config = {
-            mode: 1,
-
+            mode: 1
         };
 
         vm.loadIsAvailable = function () {
-            if (vm.readyStatus.processing == false && vm.config.scheme != null) {
-                return true;
-            }
-            return false;
+            return !vm.readyStatus.processing && vm.config.scheme && vm.config.error_handling;
         };
 
         vm.dailyModels = [];
@@ -112,6 +108,41 @@
                 }
             });
             return result;
+        };
+
+        vm.checkExtension = function ($event) {
+            console.log('vm.config.file', vm.config.file);
+
+            if (vm.config.file) {
+
+                var ext = vm.config.file.name.split('.')[1]
+
+                if (ext !== 'csv') {
+
+                    $mdDialog.show({
+                        controller: 'SuccessDialogController as vm',
+                        templateUrl: 'views/dialogs/success-dialog-view.html',
+                        targetEvent: $event,
+                        locals: {
+                            success: {
+                                title: "Warning!",
+                                description: 'You are trying to load incorrect file'
+                            }
+                        },
+                        multiple: true,
+                        preserveScope: true,
+                        autoWrap: true,
+                        skipHide: true
+                    }).then(function (res) {
+                        if (res.status === 'agree') {
+                            vm.config.file = null;
+                        }
+                    });
+
+                }
+
+            }
+
         };
 
         vm.findError = function (item, type, state) {

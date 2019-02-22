@@ -89,6 +89,8 @@
                     return "Account Types";
                 case 'instruments.pricingpolicy':
                     return "Pricing Policy";
+                case 'currencies.currency':
+                    return 'Currencies';
                 case 'instruments.instrumenttype':
                     return "Instrument Types";
                 case 'import.pricingautomatedschedule':

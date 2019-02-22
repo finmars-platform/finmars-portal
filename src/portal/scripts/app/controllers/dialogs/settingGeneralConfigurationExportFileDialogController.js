@@ -107,7 +107,8 @@
                             firstEntitiesItem = true;
                         }
 
-                    };
+                    }
+                    ;
 
                 });
 
@@ -386,6 +387,8 @@
                     return "Transaction Type Groups";
                 case 'accounts.accounttype':
                     return "Account Types";
+                case 'currencies.currency':
+                    return 'Currencies';
                 case 'instruments.pricingpolicy':
                     return "Pricing Policy";
                 case 'instruments.instrumenttype':

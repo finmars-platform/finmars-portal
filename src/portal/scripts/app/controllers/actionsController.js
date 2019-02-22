@@ -139,7 +139,7 @@
 
             $mdDialog.show({
                 controller: 'CheckEventsDialogController as vm',
-                templateUrl: 'views/dialogs/check-events-dialog-view.html',
+                templateUrl: 'views/dialogs/events/check-events-dialog-view.html',
                 parent: angular.element(document.body),
                 targetEvent: $event,
                 preserveScope: true,

@@ -114,7 +114,10 @@
                 <td data-ng-if="!item.editStatus" data-ng-bind="item.description"></td>
                 <td data-ng-if="!item.editStatus" data-ng-bind="item.effective_date"></td>
                 <td data-ng-if="!item.editStatus" data-ng-bind="item.final_date"></td>
-                <td data-ng-if="!item.editStatus" class="event-schedule-checkbox-td"><md-checkbox data-ng-model="item.is_auto_generated" class="margin-0" data-ng-disabled="true" aria-label="not-edited-is_auto_generated-checkbox"></md-checkbox></td>
+                <td data-ng-if="!item.editStatus" class="event-schedule-checkbox-td">
+                    <md-checkbox data-ng-model="item.is_auto_generated" class="margin-0" data-ng-disabled="true"
+                                 aria-label="not-edited-is_auto_generated-checkbox"></md-checkbox>
+                </td>
                 <td data-ng-if="!item.editStatus" data-ng-bind="vm.bindNotificationClass(item)"></td>
                 <td data-ng-if="!item.editStatus" data-ng-bind="vm.bindEventClass(item)"></td>
                 <td data-ng-if="!item.editStatus" data-ng-bind="[item.actions.length]"></td>
@@ -173,7 +176,8 @@
                     </md-input-container>
                 </td>
                 <td data-ng-if="item.editStatus" class="edit-state-td event-schedule-checkbox-td">
-                    <md-checkbox data-ng-model="vm.item.is_auto_generated" aria-lable="edited-is_auto_generated-checkbox" data-ng-disabled="true"></md-checkbox>
+                    <md-checkbox data-ng-model="vm.item.is_auto_generated"
+                                 aria-lable="edited-is_auto_generated-checkbox" data-ng-disabled="true"></md-checkbox>
                 </td>
                 <td data-ng-if="item.editStatus" class="edit-state-td" style="padding-top: 12px">
                     <md-input-container>
@@ -196,7 +200,9 @@
                     </md-input-container>
                 </td>
                 <td data-ng-if="item.editStatus" style="padding-top: 12px">
-                    <md-button data-ng-click="vm.createActions($event, item.actions)" class="ES-create-actions-btn">Edit</md-button>
+                    <md-button data-ng-click="vm.createActions($event, item.actions)" class="ES-create-actions-btn">
+                        Edit
+                    </md-button>
                 </td>
                 <!--<td data-ng-if="item.editStatus" style="padding-top: 12px">
                     <md-input-container class="md-block">
@@ -287,7 +293,9 @@
                     </md-input-container>
                 </td>
                 <td style="padding-top: 12px">
-                    <md-button data-ng-click="vm.createActions($event, vm.newItem.actions)" class="ES-create-actions-btn">Create</md-button>
+                    <md-button data-ng-click="vm.createActions($event, vm.newItem.actions)"
+                               class="ES-create-actions-btn">Create
+                    </md-button>
                 </td>
 
                 <!--<td style="padding-top: 12px">
@@ -333,8 +341,10 @@
 
             </tbody>
         </table>
-        <div layout="row" layout-align="end center">
-            <md-button data-ng-click="vm.generateEventsSchedule($event)" class="md-raised">Generate events schedule</md-button>
+        <div layout="row" layout-align="end center" data-ng-if="vm.entity.id">
+            <md-button data-ng-class="md-raised md-primary" data-ng-click="vm.generateEventsSchedule($event)"
+                       class="md-raised">Generate events schedule
+            </md-button>
         </div>
     </div>
     <div data-ng-if="!vm.checkReadyStatus()">
