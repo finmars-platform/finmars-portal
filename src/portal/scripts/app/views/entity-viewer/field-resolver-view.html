@@ -9,7 +9,7 @@
             <div data-ng-if="checkComplexEntityType()">
                 <md-input-container class="md-block">
                     <label data-ng-bind="getName()"></label>
-                    <div data-ng-if="readyStatus.tags">
+                    <div>
                         <md-select md-on-close="searchTerm = ''"
                                    data-ng-model="entity[getModelKey()]" md-on-open="getData()"
                                    md-selected-text="bindFormFields()">
@@ -37,11 +37,6 @@
 
                             </div>
                         </md-select>
-                    </div>
-                    <div data-ng-if="!readyStatus.tags">
-                        <div layout="row" layout-sm="column" layout-align="space-around">
-                            <md-progress-circular md-mode="indeterminate"></md-progress-circular>
-                        </div>
                     </div>
                 </md-input-container>
             </div>
