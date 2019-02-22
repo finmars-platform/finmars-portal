@@ -166,13 +166,13 @@
                 <td data-ng-if="item.editStatus" class="edit-state-td">
                     <md-input-container>
                         <label for="">Effective date</label>
-                        <zh-date-picker data-ng-model="item.effective_date"></zh-date-picker>
+                        <zh-date-picker data-date-value="item.effective_date" data-ng-model="item.effective_date"></zh-date-picker>
                     </md-input-container>
                 </td>
                 <td data-ng-if="item.editStatus" class="edit-state-td">
                     <md-input-container>
                         <label for="">Final date</label>
-                        <zh-date-picker data-ng-model="item.final_date"></zh-date-picker>
+                        <zh-date-picker data-date-value="item.final_date" data-ng-model="item.final_date"></zh-date-picker>
                     </md-input-container>
                 </td>
                 <td data-ng-if="item.editStatus" class="edit-state-td event-schedule-checkbox-td">
@@ -260,13 +260,13 @@
                 <td>
                     <md-input-container>
                         <!--<label for="">Effective date</label>-->
-                        <zh-date-picker data-ng-model="vm.newItem.effective_date"></zh-date-picker>
+                        <zh-date-picker data-date-value="vm.newItem.effective_date" data-ng-model="vm.newItem.effective_date"></zh-date-picker>
                     </md-input-container>
                 </td>
                 <td>
                     <md-input-container>
                         <!--<label for="">Final date</label>-->
-                        <zh-date-picker data-ng-model="vm.newItem.final_date"></zh-date-picker>
+                        <zh-date-picker data-date-value="vm.newItem.final_date" data-ng-model="vm.newItem.final_date"></zh-date-picker>
                     </md-input-container>
                 </td>
                 <td class="add-event-schedule-checkbox-td">

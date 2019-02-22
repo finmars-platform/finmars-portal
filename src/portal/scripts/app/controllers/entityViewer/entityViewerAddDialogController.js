@@ -292,6 +292,7 @@
 
                 vm.complexTransactionOptions.transactionTypeId = data.transaction_type;
                 vm.editLayoutEntityInstanceId = data.transaction_type;
+
                 vm.entity = data.complex_transaction;
 
                 var inputsWithCalculations = data.transaction_type_object.inputs;
