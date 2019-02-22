@@ -7,13 +7,15 @@
 
     var accountTypeModel = require('../models/accountTypePropsModel');
     var instrumentType = require('../models/instrumentTypePropsModel');
+    var currencyModel = require('../models/currencyPropsModel');
     var metaContentTypesService = require('../services/metaContentTypesService');
 
     var entityResolverService = require('../services/entityResolverService');
 
     var modelContainer = {
         'accounts.accounttype': accountTypeModel.getAttributes(),
-        'instruments.instrumenttype': instrumentType.getAttributes()
+        'instruments.instrumenttype': instrumentType.getAttributes(),
+        'currencies.currency': currencyModel.getAttributes()
     };
 
     var setDefaultRelation = function (item, propertyItem, cacheContainer) {
@@ -150,6 +152,9 @@
                 case 'instruments.instrumenttype':
                     resolve(simpleRepair(item, contentType, cacheContainer));
                     break;
+                case 'currencies.currency':
+                    resolve(simpleRepair(item, contentType, cacheContainer));
+                    break;
                 default:
                     resolve(item);
 
@@ -167,8 +172,6 @@
 
             promises.push(setDefaultRelation({}, {entity: 'transaction-type', code: 'user_code', key: 'transaction_type'}, cacheContainer));
             promises.push(setDefaultRelation({}, {entity: 'transaction-class', code: 'system_code', key: 'transaction_class'}, cacheContainer));
-
-            console.log('here?');
 
             Promise.all(promises).then(function (data) {
 

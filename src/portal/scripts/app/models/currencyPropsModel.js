@@ -35,7 +35,10 @@
             {
                 "key": "daily_pricing_model",
                 "name": "Daily pricing model",
-                "value_type": "field"
+                "value_type": "field",
+                "entity": "daily-pricing-model",
+                "code": "system_code",
+                "allow_null": false
             },
             {
                 "key": "price_download_scheme",
