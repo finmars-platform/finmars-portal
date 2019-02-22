@@ -1,6 +1,6 @@
 <div layout="row">
     <md-input-container>
-        <label for="" content-title>Rebook reaction / Create if exists reactions</label>
+        <label for="" class="uncut-text-on-focus-label" content-title>Rebook reaction / Create if exists reactions</label>
         <md-select data-ng-model="item.rebook_reaction">
             <md-option data-ng-repeat="item in vm.rebookOtherReactions"
                        ng-value="item.id">
@@ -26,7 +26,7 @@
                     <div flex="80">
                         <div data-ng-if="item.instrument_event_schedule.instrument_toggle">
                             <md-input-container>
-                                <label for="" content-title>Instrument</label>
+                                <label for="" class="uncut-text-on-focus-label" content-title>Instrument</label>
                                 <md-select
                                         data-ng-model="item.instrument_event_schedule.instrument"
                                         md-on-open="vm.loadRelation('instrument')">
@@ -46,7 +46,7 @@
                         </div>
                         <div data-ng-if="!item.instrument_event_schedule.instrument_toggle">
                             <md-input-container>
-                                <label for="" content-title>Instrument</label>
+                                <label for="" class="uncut-text-on-focus-label" content-title>Instrument</label>
                                 <md-select
                                         data-ng-model="item.instrument_event_schedule[vm.resolveInstrumentProp(item, 'instrument_event_schedule', 'instrument')]">
                                     <md-optgroup label="Inputs">
@@ -75,7 +75,7 @@
         <div layout="row">
             <div flex="33">
                 <md-input-container class="expression-input-container">
-                    <label for="" content-title>Effective date</label>
+                    <label for="" class="uncut-text-on-focus-label" content-title>Effective date: Date</label>
                     <input type="text" value-title data-ng-model="item.instrument_event_schedule.effective_date">
                 </md-input-container>
                 <expression-editor-button
@@ -83,7 +83,7 @@
             </div>
             <div flex="33">
                 <md-input-container class="expression-input-container">
-                    <label for="" content-title>Final date</label>
+                    <label for="" class="uncut-text-on-focus-label" content-title>Final date: Date</label>
                     <input type="text" value-title data-ng-model="item.instrument_event_schedule.final_date">
                 </md-input-container>
                 <expression-editor-button
@@ -93,7 +93,7 @@
         <div layout="row">
             <div flex="33">
                 <md-input-container class="expression-input-container">
-                    <label for="" content-title>Name</label>
+                    <label for="" class="uncut-text-on-focus-label" content-title>Name: Text</label>
                     <input type="text" value-title data-ng-model="item.instrument_event_schedule.name">
                 </md-input-container>
                 <expression-editor-button
@@ -101,7 +101,7 @@
             </div>
             <div flex="33">
                 <md-input-container class="expression-input-container">
-                    <label for="" content-title>Description</label>
+                    <label for="" class="uncut-text-on-focus-label" content-title>Description: Text</label>
                     <input type="text" value-title data-ng-model="item.instrument_event_schedule.description">
                 </md-input-container>
                 <expression-editor-button
@@ -113,7 +113,7 @@
         <div layout="row">
             <div flex="33" layout="row">
                 <md-input-container class="expression-input-container">
-                    <label for="" content-title>Periodicity n</label>
+                    <label for="" class="uncut-text-on-focus-label" content-title>Periodicity n: Number</label>
                     <input type="text" value-title data-ng-model="item.instrument_event_schedule.periodicity_n">
                 </md-input-container>
                 <expression-editor-button
@@ -132,7 +132,7 @@
                 <div flex="80">
                     <div data-ng-if="item.instrument_event_schedule.periodicity_toggle">
                         <md-input-container>
-                            <label for="" content-title>Periodicity</label>
+                            <label for="" class="uncut-text-on-focus-label" content-title>Periodicity</label>
                             <md-select data-ng-model="item.instrument_event_schedule.periodicity"
                                        md-on-open="vm.loadRelation('periodicity')">
                                 <md-option
@@ -151,7 +151,7 @@
                     </div>
                     <div data-ng-if="!item.instrument_event_schedule.periodicity_toggle">
                         <md-input-container>
-                            <label for="" content-title>Periodicity</label>
+                            <label for="" class="uncut-text-on-focus-label" content-title>Periodicity</label>
                             <md-select
                                     data-ng-model="item.instrument_event_schedule.periodicity_input">
                                 <md-option
@@ -177,7 +177,7 @@
                 <div flex="80">
                     <div data-ng-if="item.instrument_event_schedule.notification_class_toggle">
                         <md-input-container>
-                            <label for="" content-title>Notification Class</label>
+                            <label for="" class="uncut-text-on-focus-label" content-title>Notification Class</label>
                             <md-select data-ng-model="item.instrument_event_schedule.notification_class"
                                        md-on-open="vm.loadRelation('notification_class')">
                                 <md-option
@@ -196,7 +196,7 @@
                     </div>
                     <div data-ng-if="!item.instrument_event_schedule.notification_class_toggle">
                         <md-input-container>
-                            <label for="" content-title>Notification Class</label>
+                            <label for="" class="uncut-text-on-focus-label" content-title>Notification Class</label>
                             <md-select
                                     data-ng-model="item.instrument_event_schedule.notification_class_input">
                                 <md-option
@@ -213,7 +213,7 @@
         <div layout="row">
             <div flex="33" layout="row">
                 <md-input-container class="expression-input-container">
-                    <label for="" content-title>Notify in N days</label>
+                    <label for="" class="uncut-text-on-focus-label" content-title>Notify in N days: Number</label>
                     <input type="text" value-title data-ng-model="item.instrument_event_schedule.notify_in_n_days">
                 </md-input-container>
                 <expression-editor-button
@@ -232,7 +232,7 @@
                 <div flex="80">
                     <div data-ng-if="item.instrument_event_schedule.event_class_toggle">
                         <md-input-container>
-                            <label for="" content-title>Event Class</label>
+                            <label for="" class="uncut-text-on-focus-label" content-title>Event Class</label>
                             <md-select data-ng-model="item.instrument_event_schedule.event_class"
                                        md-on-open="vm.loadRelation('event_class')">
                                 <md-option
@@ -251,7 +251,7 @@
                     </div>
                     <div data-ng-if="!item.instrument_event_schedule.event_class_toggle">
                         <md-input-container>
-                            <label for="" content-title>Event Class</label>
+                            <label for="" class="uncut-text-on-focus-label" content-title>Event Class</label>
                             <md-select
                                     data-ng-model="item.instrument_event_schedule.event_class_input">
                                 <md-option
