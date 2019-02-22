@@ -1,6 +1,6 @@
 <div layout="row">
     <md-input-container>
-        <label for="" content-title>Rebook reaction / Create if exists reactions</label>
+        <label for="" class="uncut-text-on-focus-label" content-title>Rebook reaction / Create if exists reactions</label>
         <md-select data-ng-model="item.rebook_reaction">
             <md-option data-ng-repeat="item in vm.rebookOtherReactions"
                        ng-value="item.id">
@@ -26,7 +26,7 @@
                     <div flex="80">
                         <div data-ng-if="item.instrument_accrual_calculation_schedules.instrument_toggle">
                             <md-input-container>
-                                <label for="" content-title>Instrument</label>
+                                <label for="" class="uncut-text-on-focus-label" content-title>Instrument</label>
                                 <md-select
                                         data-ng-model="item.instrument_accrual_calculation_schedules.instrument"
                                         md-on-open="vm.loadRelation('instrument')">
@@ -46,7 +46,7 @@
                         </div>
                         <div data-ng-if="!item.instrument_accrual_calculation_schedules.instrument_toggle">
                             <md-input-container>
-                                <label for="" content-title>Instrument</label>
+                                <label for="" class="uncut-text-on-focus-label" content-title>Instrument</label>
                                 <md-select
                                         data-ng-model="item.instrument_accrual_calculation_schedules[vm.resolveInstrumentProp(item, 'instrument_accrual_calculation_schedules', 'instrument')]">
                                     <md-optgroup label="Inputs">
@@ -75,7 +75,7 @@
         <div layout="row">
             <div flex="33">
                 <md-input-container class="expression-input-container">
-                    <label for="" content-title>Accrual start date</label>
+                    <label for="" class="uncut-text-on-focus-label" content-title>Accrual start date: Date</label>
                     <input type="text" value-title data-ng-model="item.instrument_accrual_calculation_schedules.accrual_start_date">
                 </md-input-container>
                 <expression-editor-button
@@ -83,7 +83,7 @@
             </div>
             <div flex="33">
                 <md-input-container class="expression-input-container">
-                    <label for="" content-title>First payment date</label>
+                    <label for="" class="uncut-text-on-focus-label" content-title>First payment date: Date</label>
                     <input type="text" value-title data-ng-model="item.instrument_accrual_calculation_schedules.first_payment_date">
                 </md-input-container>
                 <expression-editor-button
@@ -91,7 +91,7 @@
             </div>
             <div flex="33">
                 <md-input-container class="expression-input-container">
-                    <label for="" content-title>Accrual size</label>
+                    <label for="" class="uncut-text-on-focus-label" content-title>Accrual size: Number</label>
                     <input type="text" value-title data-ng-model="item.instrument_accrual_calculation_schedules.accrual_size">
                 </md-input-container>
                 <expression-editor-button
@@ -102,7 +102,7 @@
     <div flex="50">
         <div flex="50" layout="row">
             <md-input-container class="expression-input-container">
-                <label for="" content-title>Notes</label>
+                <label for="" class="uncut-text-on-focus-label" content-title>Notes: Text</label>
                 <input type="text" value-title style="color: grey;"
                        data-ng-model="item.instrument_accrual_calculation_schedules.notes">
             </md-input-container>
@@ -112,7 +112,7 @@
         <div layout="row">
             <div flex="33" layout="row">
                 <md-input-container class="expression-input-container">
-                    <label for="" content-title>Periodicity n</label>
+                    <label for="" class="uncut-text-on-focus-label" content-title>Periodicity n: Number</label>
                     <input type="text" value-title data-ng-model="item.instrument_accrual_calculation_schedules.periodicity_n">
                 </md-input-container>
                 <expression-editor-button
@@ -131,7 +131,7 @@
                 <div flex="80">
                     <div data-ng-if="item.instrument_accrual_calculation_schedules.periodicity_toggle">
                         <md-input-container>
-                            <label for="" content-title>Periodicity</label>
+                            <label for="" class="uncut-text-on-focus-label" content-title>Periodicity</label>
                             <md-select data-ng-model="item.instrument_accrual_calculation_schedules.periodicity"
                                        md-on-open="vm.loadRelation('periodicity')">
                                 <md-option
@@ -150,7 +150,7 @@
                     </div>
                     <div data-ng-if="!item.instrument_accrual_calculation_schedules.periodicity_toggle">
                         <md-input-container>
-                            <label for="" content-title>Periodicity</label>
+                            <label for="" class="uncut-text-on-focus-label" content-title>Periodicity</label>
                             <md-select
                                     data-ng-model="item.instrument_accrual_calculation_schedules.periodicity_input">
                                 <md-option
@@ -177,7 +177,7 @@
                 <div flex="80">
                     <div data-ng-if="item.instrument_accrual_calculation_schedules.accrual_calculation_model_toggle">
                         <md-input-container>
-                            <label for="" content-title>Accrual calculation model</label>
+                            <label for="" class="uncut-text-on-focus-label" content-title>Accrual calculation model</label>
                             <md-select data-ng-model="item.instrument_accrual_calculation_schedules.accrual_calculation_model"
                                        md-on-open="vm.loadRelation('accrual_calculation_model')">
                                 <md-option
@@ -196,7 +196,7 @@
                     </div>
                     <div data-ng-if="!item.instrument_accrual_calculation_schedules.accrual_calculation_model_toggle">
                         <md-input-container>
-                            <label for="" content-title>Accrual calculation model</label>
+                            <label for="" class="uncut-text-on-focus-label" content-title>Accrual calculation model</label>
                             <md-select
                                     data-ng-model="item.instrument_accrual_calculation_schedules.accrual_calculation_model_input">
                                 <md-option
