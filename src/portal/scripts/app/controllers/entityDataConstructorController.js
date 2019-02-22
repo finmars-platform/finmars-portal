@@ -381,9 +381,41 @@
 
         vm.saveEditedTab = function (tab) {
             console.log(tab);
-            if (tab.captionName !== '') {
-                tab.name = tab.captionName;
-                tab.editState = !tab.editState;
+            var tabIsReadyToSave = true;
+
+            if (tab.captionName && tab.captionName !== '') {
+
+                vm.tabs.forEach(function (singleTab) {
+                    console.log('addRows tab to save', tab, singleTab);
+                    if (tab.captionName.toLowerCase() === singleTab.name.toLowerCase()) {
+                        console.log('found match', tab.captionName.toLowerCase(), singleTab.name.toLowerCase());
+                        tabIsReadyToSave = false;
+                    }
+                });
+
+                if (tabIsReadyToSave) {
+                    tab.name = tab.captionName;
+                    tab.editState = !tab.editState;
+                }
+            } else {
+                tabIsReadyToSave = false;
+            }
+
+            if (!tabIsReadyToSave) {
+
+                $mdDialog.show({
+                    controller: 'WarningDialogController as vm',
+                    templateUrl: 'views/warning-dialog-view.html',
+                    // targetEvent: $event,
+                    autoWrap: true,
+                    skipHide: true,
+                    locals: {
+                        warning: {
+                            title: 'Warning!',
+                            description: 'Name of the tab must make unique character set.'
+                        }
+                    }
+                });
             }
         };
 
