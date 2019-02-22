@@ -109,7 +109,7 @@
             vm.entitySpecialRules = true;
             vm.complexTransactionOptions = {};
 
-            if (vm.entity) {
+            if (vm.entity && vm.entity.id) {
 
                 var copy = JSON.parse(JSON.stringify(vm.entity));
 
