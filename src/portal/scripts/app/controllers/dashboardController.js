@@ -279,7 +279,7 @@
                     controller: 'SaveLayoutDialogController as vm',
                     templateUrl: 'views/save-layout-dialog-view.html',
                     targetEvent: e,
-                    clickOutsideToClose: true
+                    clickOutsideToClose: false
                 }).then(function () {
                     vm.getView();
                 });
