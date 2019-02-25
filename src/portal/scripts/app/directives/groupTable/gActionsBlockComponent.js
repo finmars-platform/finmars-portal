@@ -401,7 +401,7 @@
                         controller: 'SaveLayoutDialogController as vm',
                         templateUrl: 'views/save-layout-dialog-view.html',
                         targetEvent: $event,
-                        clickOutsideToClose: true
+                        clickOutsideToClose: false
                     }).then(function () {
 
                         scope.evEventService.dispatchEvent(evEvents.LIST_LAYOUT_CHANGE);

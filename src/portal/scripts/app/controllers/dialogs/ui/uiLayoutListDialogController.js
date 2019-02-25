@@ -72,7 +72,7 @@
                 templateUrl: 'views/warning-dialog-view.html',
                 parent: angular.element(document.body),
                 targetEvent: ev,
-                clickOutsideToClose: true,
+                clickOutsideToClose: false,
                 locals: {
                     warning: {
                         title: 'Warning',

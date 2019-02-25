@@ -132,7 +132,7 @@
                 preserveScope: true,
                 autoWrap: true,
                 multiple: true,
-                clickOutsideToClose: true,
+                clickOutsideToClose: false,
                 locals: {
                     eventActions: actions
                 }
@@ -146,7 +146,7 @@
                 templateUrl: 'views/warning-dialog-view.html',
                 parent: angular.element(document.body),
                 targetEvent: $event,
-                clickOutsideToClose: true,
+                clickOutsideToClose: false,
                 locals: {
                     warning: {
                         title: 'Warning',
