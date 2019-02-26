@@ -10,4 +10,3 @@ Keywords
         EntityAttrs - [User code, etc.] - entitiy specific attributes,
         LayoutAttrs - [Line, Labeled line] - attributes for entity-viewer,
         Attributes - [...] - Custom dynamic attributes
-test
