@@ -75,6 +75,10 @@
             $mdDialog.hide();
         };
 
+        vm.skipAll = function(){
+            $mdDialog.hide({status: 'skip_all'});
+        };
+
         vm.informed = function () {
 
             eventsService.informedEventAction(vm.event.id).then(function () {

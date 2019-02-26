@@ -26,7 +26,15 @@
                 "key": "text",
                 "name": "Description",
                 "value_type": 10
-            }
+            },
+            {
+                "key": "transaction_type",
+                "name": "Transaction type",
+                "value_type": "field",
+                "entity": "transaction-type",
+                "code": "user_code",
+                "allow_null": false
+            },
         ]
     };
 
