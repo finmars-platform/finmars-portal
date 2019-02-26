@@ -27,19 +27,23 @@
                         <div data-ng-if="item.instrument_factor_schedule.instrument_toggle">
                             <md-input-container>
                                 <label for="" content-title>Instrument</label>
-                                <md-select
-                                        data-ng-model="item.instrument_factor_schedule.instrument"
-                                        md-on-open="vm.loadRelation('instrument')">
-                                    <md-option
-                                            data-ng-if="!vm.relationItems['instrument'].length"
-                                            ng-value="item.instrument_factor_schedule.instrument_object.id">
-                                        {{item.transaction.instrument_object.name}}
-                                    </md-option>
-                                    <md-option
-                                            data-ng-if="vm.relationItems['instrument'].length"
-                                            data-ng-repeat="relationItem in vm.relationItems['instrument']"
-                                            ng-value="relationItem.id">
+                                <md-select data-ng-model="item.instrument_factor_schedule.instrument"
+                                           md-on-open="vm.loadRelation('instrument')">
+                                    <md-select-header>
+                                        <input data-ng-model="searchTerm"
+                                               type="search"
+                                               placeholder="Search for a ..."
+                                               class="md-text md-select-search-pattern">
+                                    </md-select-header>
+                                    <md-option data-ng-repeat="relationItem in vm.relationItems['instrument'] | filter: {name: searchTerm}"
+                                               data-ng-value="relationItem.id"
+                                               data-ng-if="vm.relationItems['instrument'].length">
                                         {{relationItem.name}}
+                                    </md-option>
+
+                                    <md-option data-ng-if="!vm.relationItems['instrument'].length"
+                                               ng-value="item.instrument_factor_schedule.instrument_object.id">
+                                        {{item.transaction.instrument_object.name}}
                                     </md-option>
                                 </md-select>
                             </md-input-container>

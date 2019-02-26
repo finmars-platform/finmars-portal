@@ -18,28 +18,51 @@
 
         vm.readyStatus = {content: false};
         vm.entityItems = [];
+        vm.entityItemsCount = null;
         vm.mapItem = mapItem;
         vm.mapEntityType = mapItem.complexExpressionEntity;
 
-        vm.options = {
-            page: 1,
-            page_size: 40
+        var entitiesWithoutCount = ['periodicity',
+            'accrual-calculation-model',
+            'daily-pricing-model',
+            'payment-size-detail'];
+
+        var page = 1;
+        vm.pageSize = 40;
+
+        var lastPageReached = false;
+
+        var formatEntityForMapping = function () {
+            vm.mapEntityType = vm.mapEntityType.replace(/_/g, '-')
         };
 
-        vm.lastPageReached = false;
+        formatEntityForMapping();
+
+        if (entitiesWithoutCount.indexOf(vm.mapEntityType) !== -1) {
+            vm.pageSize = 1000
+        }
 
         vm.itemsProvider = {
+            // ui scroll parameters
+            // index - position of first item in list of scrolled items
+            // count - amount of items to scroll before load more
             get: function (index, count, callback) {
 
                 var result = [];
 
-                --index;
+                var startItem = index;
                 var endItem = index + count;
-                var startItem = (index < 0 ? 0 : index);
+                if (startItem < 0 || startItem === 0) {
+                    startItem = 0;
+                }
 
-                if (index > 0 && index + count > vm.entityItems.length - count * 2 && !vm.lastPageReached) {
+                if (vm.entityItemsCount === vm.entityItems.length) {
+                    lastPageReached = true;
+                }
 
-                    vm.options.page = vm.options.page + 1;
+                // if scroll reached last item, load more
+                if (index + count >= vm.entityItems.length && !lastPageReached) {
+                    page = page + 1;
 
                     vm.getDataEntity().then(function (value) {
 
@@ -48,6 +71,7 @@
                         callback(result);
 
                     }).catch(function (reason) {
+
                         result = vm.entityItems.slice(startItem, endItem);
 
                         callback(result);
@@ -59,8 +83,9 @@
                     result = vm.entityItems.slice(startItem, endItem);
 
                     callback(result);
-                }
 
+                    console.log('mapping ui scroll result', result, startItem, endItem);
+                }
 
             }
         };
@@ -108,12 +133,6 @@
         vm.fancyEntity = function () {
             return vm.mapEntityType.replace('-', ' ');
         };
-
-        var formatEntityForMapping = function () {
-            vm.mapEntityType = vm.mapEntityType.replace(/_/g, '-')
-        };
-        formatEntityForMapping();
-        console.log('newMapEntityType is', vm.mapEntityType);
 
         function addChilds(classifier, item) {
 
@@ -163,8 +182,7 @@
                     var i, e;
                     for (e = 0; e < vm.entityItems.length; e = e + 1) {
                         for (i = 0; i < vm.items.length; i = i + 1) {
-                            //if (vm.items[i][vm.mapEntityType] == vm.entityItems[e].id) {
-                            //if (vm.items[i].content_object == vm.entityItems[e].id) {
+
                             if (vm.items[i].classifier == vm.entityItems[e].id) {
 
                                 if (!vm.entityItems[e].hasOwnProperty('mapping')) {
@@ -173,7 +191,6 @@
 
                                 vm.entityItems[e].mapping.push(vm.items[i])
 
-                                //vm.entityItems[e].mapping = vm.items[i]
                             }
                         }
                     }
@@ -195,20 +212,26 @@
 
             return new Promise(function (resolve, reject) {
 
-                entityResolverService.getList(vm.mapEntityType, vm.options).then(function (data) {
+                var options = {
+                    page: page,
+                    pageSize: vm.pageSize
+                };
 
-                    console.log('type mapping entityResolverService', data);
+                entityResolverService.getList(vm.mapEntityType, options).then(function (data, error) {
 
-                    if (['periodicity', 'accrual-calculation-model',
-                            'daily-pricing-model', 'payment-size-detail'].indexOf(vm.mapEntityType) === -1) {
-
+                    if (entitiesWithoutCount.indexOf(vm.mapEntityType) === -1) {
+                        console.log('mapping data to concat', data.results, vm.entityItems);
                         vm.entityItems = vm.entityItems.concat(data.results);
                     } else {
                         vm.entityItems = vm.entityItems.concat(data);
+                        lastPageReached = true;
                     }
 
-                    console.log('vm.entityItems', vm.entityItems);
+                    if (data.count) {
+                        vm.entityItemsCount = data.count;
+                    }
 
+                    // TODO entityTypeMappingResolveService load all mappings in its first use. Prevent repeated invocation of it when using vm.getDataEntity.
                     entityTypeMappingResolveService.getList(vm.mapEntityType).then(function (data) {
 
                         vm.items = data.results;
@@ -221,9 +244,21 @@
 
                                     if (!vm.entityItems[e].hasOwnProperty('mapping')) {
                                         vm.entityItems[e].mapping = [];
+                                        vm.entityItems[e].mapping.push(vm.items[i])
                                     }
+                                    else {
+                                        // check if there is same item in mapping array
+                                        var alreadyMapped = false;
+                                        vm.entityItems[e].mapping.forEach(function (mappingItem) {
+                                            if (mappingItem.id === vm.items[i].id) {
+                                                alreadyMapped = true;
+                                            }
+                                        });
 
-                                    vm.entityItems[e].mapping.push(vm.items[i])
+                                        if (!alreadyMapped) {
+                                            vm.entityItems[e].mapping.push(vm.items[i]);
+                                        }
+                                    }
                                 }
                             }
                         }
@@ -239,8 +274,8 @@
 
                     });
                 }, function (error) {
-                    vm.lastPageReached = true;
-                    vm.options.page = vm.options.page - 1;
+                    lastPageReached = true;
+                    page = page - 1;
                     reject($scope.$apply());
                 });
 

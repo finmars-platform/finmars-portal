@@ -12,6 +12,13 @@
     var baseUrl = baseUrlService.resolve();
 
     var getList = function (options) {
+
+        if (!options) {
+            options = {};
+        }
+
+        options.pageSize = options.pageSize || 1000;
+
         return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl + 'instruments/periodicity/', options),
             {
                 method: 'GET',

@@ -109,7 +109,7 @@
                 <!--<div data-ng-repeat="item in vm.entityItems | filter:vm.query | orderBy:vm.sort:vm.direction">-->
                 <div ui-scroll-viewport style="height: 300px; padding: 24px">
 
-                    <div ui-scroll="item in vm.itemsProvider" buffer-size="20">
+                    <div ui-scroll="item in vm.itemsProvider" buffer-size="20" start-index="0">
                         <div layout="row" data-ng-repeat="mappingItem in item.mapping"
                              data-ng-show="!mappingItem.isDeleted">
                             <div flex="50" layout="row">
