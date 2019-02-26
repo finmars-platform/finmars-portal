@@ -5,7 +5,7 @@
 
     'use strict';
 
-    var eventsService = require('../../../services/eventsService');
+    var eventsService = require('../services/eventsService');
 
     module.exports = function ($scope, $mdDialog) {
 
@@ -104,7 +104,7 @@
 
         };
 
-        vm.agree = function ($event) {
+        vm.process = function ($event) {
 
             // DONT_REACT = 1
             // APPLY_DEF_ON_EDATE = 2
@@ -128,7 +128,6 @@
             new Promise(function (resolve, reject) {
                 vm.recursiveOpenDialogs(resolve, vm.events, index, $event);
             }).then(function () {
-                $mdDialog.hide();
 
                 $mdDialog.show({
                     controller: 'SuccessDialogController as vm',
@@ -149,10 +148,6 @@
 
             })
 
-        };
-
-        vm.cancel = function () {
-            $mdDialog.cancel();
         };
 
         vm.isAllChecked = function () {
@@ -382,6 +377,12 @@
                 multiple: true
             })
         };
+
+        vm.init = function () {
+            vm.requestEvents()
+        };
+
+        vm.init();
 
     };
 

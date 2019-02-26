@@ -1427,12 +1427,9 @@
 
                                 item.list_layout = data.results[0].id;
 
-                                resolve(bookmarkRepository.create(item));
-
-                            } else {
-                                resolve()
                             }
 
+                            resolve(bookmarkRepository.create(item));
                         })
 
                     }));
@@ -1590,7 +1587,7 @@
                         item.entity !== 'ui.editlayout' &&
                         item.entity !== 'ui.listlayout' &&
                         item.entity !== 'ui.reportlayout' &&
-                        item.entity !== 'ui.ui.bookmark'
+                        item.entity !== 'ui.bookmark'
                 });
 
                 var layoutEntities = items.filter(function (item) {

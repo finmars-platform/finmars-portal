@@ -29,7 +29,7 @@
                         autoWrap: true,
                         skipHide: true,
                         multiple: true,
-                        clickOutsideToClose: true,
+                        clickOutsideToClose: false,
                         locals: {
                             ngModelCtrl: ngModelCtrl,
                         }
