@@ -109,7 +109,7 @@
             </tr>
             </thead>
             <tbody>
-            <tr data-ng-repeat="item in vm.entity.event_schedules | filter:vm.query | orderBy:vm.sort:vm.direction">
+            <tr data-ng-repeat="item in vm.entity.event_schedules | filter:vm.query | orderBy:vm.sort:vm.direction as results track by item.id">
                 <td data-ng-if="!item.editStatus" data-ng-bind="item.name"></td>
                 <td data-ng-if="!item.editStatus" data-ng-bind="item.description"></td>
                 <td data-ng-if="!item.editStatus" data-ng-bind="item.effective_date"></td>
@@ -342,8 +342,8 @@
             </tbody>
         </table>
         <div layout="row" layout-align="end center" data-ng-if="vm.entity.id">
-            <md-button data-ng-class="md-raised md-primary" data-ng-click="vm.generateEventsSchedule($event)"
-                       class="md-raised">Generate events schedule
+            <md-button data-ng-click="vm.generateEventsSchedule($event)"
+                       class="md-raised md-primary">Generate events schedule
             </md-button>
         </div>
     </div>

@@ -13,7 +13,14 @@
     var baseUrl = baseUrlService.resolve();
 
     var getList = function (options) {
-        return xhrService.fetch(baseUrl + 'import/account-mapping/?page_size=1000',
+
+        if (!options) {
+            options = {};
+        }
+
+        options.pageSize = options.pageSize || 1000;
+
+        return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl + 'import/account-mapping/', options),
             {
                 method: 'GET',
                 credentials: 'include',

@@ -134,16 +134,22 @@
                             <label for="" class="uncut-text-on-focus-label" content-title>Periodicity</label>
                             <md-select data-ng-model="item.instrument_accrual_calculation_schedules.periodicity"
                                        md-on-open="vm.loadRelation('periodicity')">
+                                <md-select-header>
+                                    <input data-ng-model="searchTerm"
+                                           type="search"
+                                           placeholder="Search for a ..."
+                                           class="md-text md-select-search-pattern">
+                                </md-select-header>
+                                <md-option data-ng-repeat="relationItem in vm.relationItems['periodicity'] | filter: {name: searchTerm}"
+                                           data-ng-value="relationItem.id"
+                                           data-ng-if="vm.relationItems['periodicity'].length">
+                                    {{relationItem.name}}
+                                </md-option>
+
                                 <md-option
                                         data-ng-if="!vm.relationItems['periodicity'].length"
                                         ng-value="item.instrument_accrual_calculation_schedules.periodicity_object.id">
                                     {{item.instrument_accrual_calculation_schedules.periodicity_object.name}}
-                                </md-option>
-                                <md-option
-                                        data-ng-if="vm.relationItems['periodicity'].length"
-                                        data-ng-repeat="relationItem in vm.relationItems['periodicity']"
-                                        ng-value="relationItem.id">
-                                    {{relationItem.name}}
                                 </md-option>
                             </md-select>
                         </md-input-container>
