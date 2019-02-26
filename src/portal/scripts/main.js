@@ -99,7 +99,7 @@ app.controller('PriceDownloadSchemeAddDialogController', ['$scope', '$mdDialog',
 
 // events start
 
-app.controller('CheckEventsController', ['$scope', '$mdDialog', require('./app/controllers/CheckEventsController')]);
+app.controller('CheckEventsController', ['$scope', '$mdDialog', require('./app/controllers/checkEventsController')]);
 app.controller('CheckEventsDialogController', ['$scope', '$mdDialog', require('./app/controllers/dialogs/events/checkEventsDialogController')]);
 app.controller('EventWithReactDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/events/eventWithReactDialogController')]);
 app.controller('EventDoNotReactDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/events/eventDoNotReactDialogController')]);
