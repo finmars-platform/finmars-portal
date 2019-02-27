@@ -20,7 +20,7 @@
 
                 if (column.key === 'status') {
                     if (obj[column.key] === 1) {
-                        return 'Production'
+                        return 'Booked'
                     }
                     if (obj[column.key] === 2) {
                         return 'Pending'

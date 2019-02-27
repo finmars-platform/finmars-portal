@@ -140,7 +140,6 @@
             $mdDialog.show({
                 controller: 'CheckEventsDialogController as vm',
                 templateUrl: 'views/dialogs/events/check-events-dialog-view.html',
-                parent: angular.element(document.body),
                 targetEvent: $event,
                 preserveScope: true,
                 autoWrap: true,
@@ -154,14 +153,54 @@
             $mdDialog.show({
                 controller: 'DefaultPricingConfigDialogController as vm',
                 templateUrl: 'views/dialogs/default-pricing-config-dialog-view.html',
-                parent: angular.element(document.body),
                 targetEvent: $event,
-                preserveScope: true,
-                autoWrap: true,
-                skipHide: true
+                autoWrap: true
             })
 
-        }
+        };
+
+        vm.notificationsSettings = function ($event) {
+          $mdDialog.show({
+              controller: 'ActionsNotificationsSettingsDialogController as vm',
+              templateUrl: 'views/dialogs/actions-notifications-settings-dialog-view.html',
+              targetEvent: $event,
+              autoWrap: true
+          }).then(function (data) {
+              if (data.status === 'success') {
+
+                  $mdDialog.show({
+                      controller: 'SuccessDialogController as vm',
+                      templateUrl: 'views/dialogs/success-dialog-view.html',
+                      targetEvent: $event,
+                      autoWrap: true,
+                      locals: {
+                          success: {
+                              title: "",
+                              description: "Changes saved"
+                          }
+                      }
+
+                  });
+
+              } else {
+
+                  $mdDialog.show({
+                      controller: 'WarningDialogController as vm',
+                      templateUrl: 'views/warning-dialog-view.html',
+                      targetEvent: $event,
+                      clickOutsideToClose: false,
+                      locals: {
+                          warning: {
+                              title: 'Error',
+                              description: 'Failed to save changes'
+                          }
+                      }
+                  });
+
+              }
+          });
+
+        };
     }
 
 }());
