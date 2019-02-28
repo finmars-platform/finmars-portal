@@ -27,19 +27,24 @@
                         <div data-ng-if="item.instrument_manual_pricing_formula.instrument_toggle">
                             <md-input-container>
                                 <label for="" content-title>Instrument</label>
-                                <md-select
-                                        data-ng-model="item.instrument_manual_pricing_formula.instrument"
-                                        md-on-open="vm.loadRelation('instrument')">
+                                <md-select data-ng-model="item.instrument_manual_pricing_formula.instrument"
+                                           md-on-open="vm.loadRelation('instrument')">
+                                    <md-select-header>
+                                        <input data-ng-model="searchTerm"
+                                               type="search"
+                                               placeholder="Search for a ..."
+                                               class="md-text md-select-search-pattern">
+                                    </md-select-header>
+                                    <md-option data-ng-repeat="relationItem in vm.relationItems['instrument'] | filter: {name: searchTerm}"
+                                               data-ng-value="relationItem.id"
+                                               data-ng-if="vm.relationItems['instrument'].length">
+                                        {{relationItem.name}}
+                                    </md-option>
+
                                     <md-option
                                             data-ng-if="!vm.relationItems['instrument'].length"
                                             ng-value="item.instrument_manual_pricing_formula.instrument_object.id">
                                         {{item.transaction.instrument_object.name}}
-                                    </md-option>
-                                    <md-option
-                                            data-ng-if="vm.relationItems['instrument'].length"
-                                            data-ng-repeat="relationItem in vm.relationItems['instrument']"
-                                            ng-value="relationItem.id">
-                                        {{relationItem.name}}
                                     </md-option>
                                 </md-select>
                             </md-input-container>
@@ -77,7 +82,7 @@
                 <div layout="row">
                     <div flex="50">
                         <md-input-container class="expression-input-container">
-                            <label for="" content-title>Expression</label>
+                            <label for="" class="uncut-text-on-focus-label" content-title>Expression: Text</label>
                             <input type="text" value-title
                                    data-ng-model="item.instrument_manual_pricing_formula.expr">
                         </md-input-container>
@@ -91,7 +96,7 @@
     <div flex="50">
         <div flex="50" layout="row">
             <md-input-container class="expression-input-container">
-                <label for="" content-title>Notes</label>
+                <label for="" class="uncut-text-on-focus-label" content-title>Notes: Text</label>
                 <input type="text" value-title style="color: grey;"
                        data-ng-model="item.instrument_manual_pricing_formula.notes">
             </md-input-container>
@@ -112,19 +117,24 @@
                 <div data-ng-if="item.instrument_manual_pricing_formula.pricing_policy_toggle">
                     <md-input-container>
                         <label for="" content-title>Pricing Policy</label>
-                        <md-select
-                                data-ng-model="item.instrument_manual_pricing_formula.pricing_policy"
-                                md-on-open="vm.loadRelation('pricing_policy')">
+                        <md-select data-ng-model="item.instrument_manual_pricing_formula.pricing_policy"
+                                   md-on-open="vm.loadRelation('pricing_policy')">
+                            <md-select-header>
+                                <input data-ng-model="searchTerm"
+                                       type="search"
+                                       placeholder="Search for a ..."
+                                       class="md-text md-select-search-pattern">
+                            </md-select-header>
+                            <md-option data-ng-repeat="relationItem in vm.relationItems['pricing_policy'] | filter: {name: searchTerm}"
+                                       data-ng-value="relationItem.id"
+                                       data-ng-if="vm.relationItems['pricing_policy'].length">
+                                {{relationItem.name}}
+                            </md-option>
+
                             <md-option
                                     data-ng-if="!vm.relationItems['pricing_policy'].length"
                                     ng-value="item.instrument_manual_pricing_formula.pricing_policy_object.id">
                                 {{item.instrument_manual_pricing_formula.pricing_policy_object.name}}
-                            </md-option>
-                            <md-option
-                                    data-ng-if="vm.relationItems['pricing_policy'].length"
-                                    data-ng-repeat="relationItem in vm.relationItems['pricing_policy']"
-                                    ng-value="relationItem.id">
-                                {{relationItem.name}}
                             </md-option>
                         </md-select>
                     </md-input-container>

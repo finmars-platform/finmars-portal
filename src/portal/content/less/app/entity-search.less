@@ -1,5 +1,40 @@
 .entity-search-dialog {
   md-dialog-content {
+    position: relative;
     padding: 20px;
+  }
+}
+
+.entity-search-fixed-thead-wrapper {
+  position: absolute;
+  background-color: #ffffff;
+  top: 64px;
+  left: 0;
+  z-index: 2;
+  padding-top: 20px;
+  margin-left: 20px;
+  margin-right: 37px;
+
+  table {
+    table-layout: fixed;
+  }
+}
+
+.entity-search-filter {
+  margin: 0;
+}
+
+.entity-search-col-b {
+  margin-bottom: 15px;
+  padding-left: 3px;
+}
+
+table.entity-search-table {
+  table-layout: fixed;
+  thead {
+    border-bottom: none;
+    tr {
+      border-bottom: none;
+    }
   }
 }

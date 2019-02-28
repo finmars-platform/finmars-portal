@@ -9,7 +9,7 @@
 
                         <md-input-container flex="40" style="margin-bottom: 0" class="ng-hide">
                             <input type="file" id="configurationFileImport" input-file-directive
-                                   read-file="vm.provider.p12cert">
+                                   data-read-file="vm.provider.p12cert" data-read-file-change="vm.checkExtension($event)">
                         </md-input-container>
                         <div class="input-upload-file-container">
                             <p class="configurationFileImport">Select file</p>

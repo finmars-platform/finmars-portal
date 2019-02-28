@@ -304,144 +304,147 @@
         vm.entityAttrs = [];
         vm.range = gridHelperService.range;
 
-        vm.getItem = function () {
+        vm.getItem = function (fromChild) {
+            return new Promise(function (res, rej) {
+                if (vm.entityType === 'complex-transaction') {
 
-            if (vm.entityType === 'complex-transaction') {
+                    entityResolverService.getByKey(vm.entityType, vm.entityId).then(function (complextTransactionData) {
 
-                entityResolverService.getByKey(vm.entityType, vm.entityId).then(function (data) {
+                        vm.complexTransactionOptions.transactionTypeId = complextTransactionData.transaction_type;
+                        vm.editLayoutEntityInstanceId = complextTransactionData.complex_transaction.id;
+                        vm.entity = complextTransactionData.complex_transaction;
 
-                    vm.complexTransactionOptions.transactionTypeId = data.transaction_type;
-                    vm.editLayoutEntityInstanceId = data.complex_transaction.id;
-                    vm.entity = data.complex_transaction;
+                        var inputsWithCalculations = complextTransactionData.transaction_type_object.inputs;
 
-                    var inputsWithCalculations = data.transaction_type_object.inputs;
+                        var keys = Object.keys(complextTransactionData.values);
 
-                    var keys = Object.keys(data.values);
+                        keys.forEach(function (key) {
+                            vm.entity[key] = complextTransactionData.values[key];
+                        });
 
-                    keys.forEach(function (key) {
-                        vm.entity[key] = data.values[key];
-                    });
-
-                    data.complex_transaction.attributes.forEach(function (item) {
-                        if (item.attribute_type_object.value_type === 10) {
-                            vm.entity[item.attribute_type_object.name] = item.value_string;
-                        }
-                        if (item.attribute_type_object.value_type === 20) {
-                            vm.entity[item.attribute_type_object.name] = item.value_float;
-                        }
-                        if (item.attribute_type_object.value_type === 30) {
-                            vm.entity[item.attribute_type_object.name] = item.classifier;
-                        }
-                        if (item.attribute_type_object.value_type === 40) {
-                            vm.entity[item.attribute_type_object.name] = item.value_date;
-                        }
-                    });
-
-                    vm.tabs = data.book_transaction_layout.data;
-                    vm.userInputs = [];
-                    vm.tabs.forEach(function (tab) {
-                        tab.layout.fields.forEach(function (field) {
-                            if (field.attribute_class === 'userInput') {
-                                vm.userInputs.push(field.attribute);
+                        complextTransactionData.complex_transaction.attributes.forEach(function (item) {
+                            if (item.attribute_type_object.value_type === 10) {
+                                vm.entity[item.attribute_type_object.name] = item.value_string;
+                            }
+                            if (item.attribute_type_object.value_type === 20) {
+                                vm.entity[item.attribute_type_object.name] = item.value_float;
+                            }
+                            if (item.attribute_type_object.value_type === 30) {
+                                vm.entity[item.attribute_type_object.name] = item.classifier;
+                            }
+                            if (item.attribute_type_object.value_type === 40) {
+                                vm.entity[item.attribute_type_object.name] = item.value_date;
                             }
                         });
-                    });
 
-                    inputsWithCalculations.forEach(function (inputWithCalc) {
-
-                        vm.userInputs.forEach(function (userInput) {
-                            if (userInput.name === inputWithCalc.name) {
-                                if (inputWithCalc.can_recalculate === true) {
-                                    userInput.buttons = [
-                                        {
-                                            icon: 'functions',
-                                            tooltip: 'Recalculate',
-                                            caption: '',
-                                            classes: 'md-raised',
-                                            action: vm.recalculate
-                                        }
-                                    ]
+                        vm.tabs = complextTransactionData.book_transaction_layout.data;
+                        vm.userInputs = [];
+                        vm.tabs.forEach(function (tab) {
+                            tab.layout.fields.forEach(function (field) {
+                                if (field.attribute_class === 'userInput') {
+                                    vm.userInputs.push(field.attribute);
                                 }
-                            }
-                        })
-
-                    });
-
-                    vm.editLayout = function () {
-                        $state.go('app.data-constructor', {
-                            entityType: vm.entityType,
-                            from: vm.entityType,
-                            instanceId: vm.complexTransactionOptions.transactionTypeId
+                            });
                         });
-                        $mdDialog.hide();
-                    };
 
-                    vm.manageAttrs = function () {
-                        $state.go('app.attributesManager', {
-                            entityType: vm.entityType,
-                            from: vm.entityType,
-                            instanceId: vm.complexTransactionOptions.transactionTypeId
+                        inputsWithCalculations.forEach(function (inputWithCalc) {
+
+                            vm.userInputs.forEach(function (userInput) {
+                                if (userInput.name === inputWithCalc.name) {
+                                    if (inputWithCalc.can_recalculate === true) {
+                                        userInput.buttons = [
+                                            {
+                                                icon: 'functions',
+                                                tooltip: 'Recalculate',
+                                                caption: '',
+                                                classes: 'md-raised',
+                                                action: vm.recalculate
+                                            }
+                                        ]
+                                    }
+                                }
+                            })
+
                         });
-                        $mdDialog.hide();
-                    };
-
-                    vm.readyStatus.entity = true;
-                    vm.readyStatus.permissions = true;
-                    vm.readyStatus.layout = true;
-
-                    $scope.$apply();
-
-                });
-
-            } else {
-
-                entityResolverService.getByKey(vm.entityType, vm.entityId).then(function (data) {
-
-                    vm.entity = data;
-
-                    if (vm.entityType === 'transaction-type') {
 
                         vm.editLayout = function () {
                             $state.go('app.data-constructor', {
-                                entityType: 'complex-transaction',
+                                entityType: vm.entityType,
                                 from: vm.entityType,
-                                instanceId: data.id
+                                instanceId: vm.complexTransactionOptions.transactionTypeId
                             });
                             $mdDialog.hide();
                         };
 
                         vm.manageAttrs = function () {
                             $state.go('app.attributesManager', {
-                                entityType: 'transaction-type',
+                                entityType: vm.entityType,
                                 from: vm.entityType,
-                                instanceId: data.id
+                                instanceId: vm.complexTransactionOptions.transactionTypeId
                             });
                             $mdDialog.hide();
                         };
-                    }
 
-                    entityViewerHelperService.transformItems([vm.entity], vm.attrs).then(function (data) {
-                        vm.entity = data[0];
-                        vm.entity.$_isValid = true;
                         vm.readyStatus.entity = true;
+                        vm.readyStatus.permissions = true;
+                        vm.readyStatus.layout = true;
 
-                        vm.loadPermissions();
-
-                        if (vm.entityType !== 'transaction-type') {
-
-                            vm.getLayout();
-
-                        } else {
-
-                            vm.readyStatus.layout = true;
-                            $scope.$apply();
-
-                        }
+                        $scope.$apply();
 
                     });
-                });
 
-            }
+                } else {
+
+                    entityResolverService.getByKey(vm.entityType, vm.entityId).then(function (data) {
+
+                        vm.entity = data;
+
+                        if (vm.entityType === 'transaction-type') {
+
+                            vm.editLayout = function () {
+                                $state.go('app.data-constructor', {
+                                    entityType: 'complex-transaction',
+                                    from: vm.entityType,
+                                    instanceId: data.id
+                                });
+                                $mdDialog.hide();
+                            };
+
+                            vm.manageAttrs = function () {
+                                $state.go('app.attributesManager', {
+                                    entityType: 'transaction-type',
+                                    from: vm.entityType,
+                                    instanceId: data.id
+                                });
+                                $mdDialog.hide();
+                            };
+                        }
+
+                        entityViewerHelperService.transformItems([vm.entity], vm.attrs).then(function (transformEntityData) {
+                            vm.entity = transformEntityData[0];
+                            vm.entity.$_isValid = true;
+                            vm.readyStatus.entity = true;
+
+                            vm.loadPermissions();
+
+                            if (vm.entityType !== 'transaction-type') {
+
+                                vm.getLayout();
+
+                                // Resolving promise to inform child about end of editor building
+                                res();
+
+                            } else {
+                                vm.readyStatus.layout = true;
+                                $scope.$apply();
+
+                            }
+
+                        });
+                    });
+
+                }
+            });
 
         };
 

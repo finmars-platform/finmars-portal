@@ -18,8 +18,6 @@
             options = {};
         }
 
-        options.pageSize = options.pageSize || 200;
-
         return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl + 'currencies/currency/', options),
             {
                 method: 'GET',

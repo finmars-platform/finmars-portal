@@ -15,7 +15,7 @@
 
     module.exports = function ($scope, $mdDialog) {
 
-        logService.controller('AccrualCalculationSchedulesController', 'initialized');
+        logService.controller('eventSchedulesTabController', 'initialized');
 
         var vm = this;
 
@@ -23,7 +23,7 @@
 
         var activeItemOriginal = null;
 
-        vm.readyStatus = {notificationClasses: false, eventClasses: false};
+        vm.readyStatus = {notificationClasses: false, eventClasses: false, eventSchedulesReady: false};
 
         metaNotificationClassService.getList().then(function (data) {
             vm.notificationClasses = data;
@@ -43,8 +43,12 @@
             $scope.$apply();
         });
 
+        if (vm.entity.event_schedules) {
+            vm.readyStatus.eventSchedulesReady = true;
+        };
+
         vm.checkReadyStatus = function () {
-            return vm.readyStatus.notificationClasses && vm.readyStatus.eventClasses;
+            return vm.readyStatus.notificationClasses && vm.readyStatus.eventClasses && vm.readyStatus.eventSchedulesReady;
         };
 
         vm.toggleQuery = function () {
@@ -81,12 +85,15 @@
 
         vm.bindPeriodicity = function (row) {
             var name;
-            vm.periodicityItems.forEach(function (item) {
-                if (row.periodicity == item.id) {
-                    row.periodicity_name = item.name;
-                    name = item.name
-                }
-            });
+            if (vm.periodicityItems) {
+                vm.periodicityItems.forEach(function (item) {
+                    if (row.periodicity == item.id) {
+                        row.periodicity_name = item.name;
+                        name = item.name
+                    }
+                });
+            }
+
             return name;
         };
 
@@ -161,12 +168,17 @@
 
                 if (res.status === 'agree') {
 
+                    vm.readyStatus.eventSchedulesReady = false;
                     $scope.$parent.vm.updateItem().then(function (value) {
 
                         instrumentEventScheduleService.rebuildEvents(vm.entity.id, vm.entity).then(function (data) {
 
-                            console.log('events rebuilded data', data);
-                            $scope.$parent.vm.getItem();
+                            console.log('events rebuilt data', data);
+
+                            $scope.$parent.vm.getItem().then(function (getItemData) {
+                                vm.entity = $scope.$parent.vm.entity;
+                                vm.readyStatus.eventSchedulesReady = true;
+                            });
 
                         })
 

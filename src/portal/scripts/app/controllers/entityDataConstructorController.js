@@ -416,7 +416,7 @@
                     locals: {
                         warning: {
                             title: 'Warning!',
-                            description: 'Name of the tab must make unique character set.'
+                            description: 'Name of the tab must make a unique character set.'
                         }
                     },
                     preserveScope: true,

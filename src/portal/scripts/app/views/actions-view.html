@@ -27,7 +27,7 @@
             <div layout="row">
                 <div>
                     <md-button class="md-raised md-primary" data-ng-click="vm.addScheme($event)">
-                        Create download import scheme
+                        Create download instruments scheme
                     </md-button>
                 </div>
 
@@ -310,7 +310,7 @@
     <div layout="row" layout-align="space-between">
 
         <fieldset class="fieldset-event-settings">
-            <legend>Default</legend>
+            <legend>Default settings</legend>
 
             <div layout="row">
 
@@ -320,6 +320,10 @@
 
                 <md-button class="md-raised md-primary" data-ng-click="vm.defaultPricingConfig($event)">
                     Default pricing config
+                </md-button>
+
+                <md-button class="md-raised md-primary" data-ng-click="vm.notificationsSettings($event)">
+                    Notifications settings
                 </md-button>
 
             </div>
