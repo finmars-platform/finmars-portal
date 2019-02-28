@@ -78,11 +78,15 @@
                                    data-ng-model="entity[getModelKey()]" md-on-open="getData()">
 
                             <div class="md-select-holder">
+
                                 <md-select-header>
+
                                     <input data-ng-model="searchTerm"
                                            type="search"
                                            placeholder="Search for a ..."
-                                           class="md-text md-select-search-pattern">
+                                           class="md-text md-select-search-pattern"
+                                           ng-keydown="$event.stopPropagation()">
+
                                 </md-select-header>
 
                                 <div class="md-select-options-holder">

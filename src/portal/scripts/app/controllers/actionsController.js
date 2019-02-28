@@ -148,6 +148,26 @@
 
         };
 
+        vm.eventsAsSystem = function ($event) {
+
+            eventsService.generateAndProcessAsSystem().then(function (value) {
+                $mdDialog.show({
+                    controller: 'SuccessDialogController as vm',
+                    templateUrl: 'views/dialogs/success-dialog-view.html',
+                    targetEvent: $event,
+                    autoWrap: true,
+                    locals: {
+                        success: {
+                            title: "System Event Generation",
+                            description: "Signal to generate and process sent."
+                        }
+                    }
+
+                });
+            })
+
+        };
+
         vm.defaultPricingConfig = function ($event) {
 
             $mdDialog.show({
@@ -160,45 +180,45 @@
         };
 
         vm.notificationsSettings = function ($event) {
-          $mdDialog.show({
-              controller: 'ActionsNotificationsSettingsDialogController as vm',
-              templateUrl: 'views/dialogs/actions-notifications-settings-dialog-view.html',
-              targetEvent: $event,
-              autoWrap: true
-          }).then(function (data) {
-              if (data.status === 'success') {
+            $mdDialog.show({
+                controller: 'ActionsNotificationsSettingsDialogController as vm',
+                templateUrl: 'views/dialogs/actions-notifications-settings-dialog-view.html',
+                targetEvent: $event,
+                autoWrap: true
+            }).then(function (data) {
+                if (data.status === 'success') {
 
-                  $mdDialog.show({
-                      controller: 'SuccessDialogController as vm',
-                      templateUrl: 'views/dialogs/success-dialog-view.html',
-                      targetEvent: $event,
-                      autoWrap: true,
-                      locals: {
-                          success: {
-                              title: "",
-                              description: "Changes saved"
-                          }
-                      }
+                    $mdDialog.show({
+                        controller: 'SuccessDialogController as vm',
+                        templateUrl: 'views/dialogs/success-dialog-view.html',
+                        targetEvent: $event,
+                        autoWrap: true,
+                        locals: {
+                            success: {
+                                title: "",
+                                description: "Changes saved"
+                            }
+                        }
 
-                  });
+                    });
 
-              } else {
+                } else {
 
-                  $mdDialog.show({
-                      controller: 'WarningDialogController as vm',
-                      templateUrl: 'views/warning-dialog-view.html',
-                      targetEvent: $event,
-                      clickOutsideToClose: false,
-                      locals: {
-                          warning: {
-                              title: 'Error',
-                              description: 'Failed to save changes'
-                          }
-                      }
-                  });
+                    $mdDialog.show({
+                        controller: 'WarningDialogController as vm',
+                        templateUrl: 'views/warning-dialog-view.html',
+                        targetEvent: $event,
+                        clickOutsideToClose: false,
+                        locals: {
+                            warning: {
+                                title: 'Error',
+                                description: 'Failed to save changes'
+                            }
+                        }
+                    });
 
-              }
-          });
+                }
+            });
 
         };
     }
