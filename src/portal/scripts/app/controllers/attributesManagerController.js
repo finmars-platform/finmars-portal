@@ -164,7 +164,11 @@
                         title: 'Warning',
                         description: description
                     }
-                }
+                },
+                preserveScope: true,
+                autoWrap: true,
+                skipHide: true,
+                multiple: true
             }).then(function (res) {
                 console.log('res', res);
                 if (res.status === 'agree') {

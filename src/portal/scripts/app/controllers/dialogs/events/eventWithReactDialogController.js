@@ -56,42 +56,64 @@
 
         };
 
-        vm.applyDefault = function () {
+        vm.recursiveHandleEvent = function (index, actions, resolve) {
 
-            var promises = [];
+            var action = actions[index];
+
+            eventsService.getEventAction(vm.event.id, action.id).then(function (event) {
+
+                console.log('event', event);
+
+                var status = 5; // 'Booked (user, default)';
+
+                if (action.is_sent_to_pending) {
+                    status = 8; // 'Booked, pending (user, default)';
+                }
+
+                eventsService.putEventAction(vm.event.id, action.id, event, status).then(function () {
+
+                    index = index + 1;
+
+                    if (index < actions.length) {
+
+                        vm.recursiveHandleEvent(index, actions, resolve);
+
+                    } else {
+
+                        resolve(action);
+                    }
+
+                })
+
+            });
+
+        };
+
+        vm.applyDefault = function () {
 
             var actions = vm.event.event_schedule_object.actions.filter(function (action) {
                 return action.is_book_automatic === true;
             });
 
-            actions.forEach(function (action) {
+            if (actions.length) {
 
-                promises.push(new Promise(function (resolve) {
+                new Promise(function (resolve, reject) {
 
-                    eventsService.getEventAction(vm.event.id, action.id).then(function (event) {
+                    var index = 0;
 
-                        console.log('event', event);
+                    vm.recursiveHandleEvent(index, actions, resolve)
 
-                        var status = 5; // 'Booked (user, default)';
+                }).then(function (value) {
 
-                        if (action.is_sent_to_pending) {
-                            status = 8; // 'Booked, pending (user, default)';
-                        }
+                    $mdDialog.hide({status: 'agree'});
 
-                        eventsService.putEventAction(vm.event.id, action.id, event, status).then(function () {
+                })
 
-                            resolve(action);
+            } else {
 
-                        })
-                    });
+                vm.informed();
 
-                }))
-
-            });
-
-            Promise.all(promises).then(function () {
-                $mdDialog.hide({status: 'agree'});
-            })
+            }
 
         };
 

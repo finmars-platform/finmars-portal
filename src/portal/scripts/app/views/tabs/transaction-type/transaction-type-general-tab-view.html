@@ -17,12 +17,15 @@
             <!--</ui-select-choices>-->
             <!--</ui-select>-->
             <!--</md-input-container>-->
-            <md-input-container>
-                <label for="">Group</label>
-                <md-select data-ng-model="vm.entity.group">
-                    <md-option ng-value="item.id" ng-repeat="item in vm.transactionTypeGroups">{{item.name}}</md-option>
-                </md-select>
-            </md-input-container>
+
+            <crud-select label="'Group'" item="vm.entity.group" entity-type="'transaction-type-group'"
+                         options="vm.transactionTypeGroups"></crud-select>
+            <!--<md-input-container>-->
+                <!--<label for="">Group</label>-->
+                <!--<md-select data-ng-model="vm.entity.group">-->
+                    <!--<md-option ng-value="item.id" ng-repeat="item in vm.transactionTypeGroups">{{item.name}}</md-option>-->
+                <!--</md-select>-->
+            <!--</md-input-container>-->
         </div>
         <div layout="row">
             <md-input-container>

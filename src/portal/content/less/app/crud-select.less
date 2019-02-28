@@ -1,0 +1,86 @@
+
+.crud-select-holder {
+  width: 300px;
+  //padding: 8px 0;
+
+  .crud-select-icon-button {
+    width: 24px;
+    min-width: 24px;
+    margin: 12px 6px;
+    box-sizing: border-box;
+    height: 24px;
+    min-height: 24px;
+    line-height: 1;
+    text-align: center;
+    position: absolute;
+    right: 0;
+    padding: 0;
+
+    &.crud-add-item {
+      right: 14px;
+    }
+
+    &.md-primary {
+      fill: #fff;
+      &:hover {
+        opacity: .8;
+      }
+    }
+    &.md-warn {
+      fill: #fff;
+      right: 32px;
+      &:hover {
+        opacity: .8;
+      }
+    }
+
+    &:hover {
+      //opacity: .5;
+      background-color: rgba(0,0,0,.14);
+    }
+  }
+
+  md-select-header {
+    padding: 0 10px;
+  }
+
+  .crud-input-container {
+    width: 188px;
+    margin-top: 8px;
+  }
+
+  .crud-search {
+    width: 215px;
+    float: left;
+  }
+
+  .crud-edit-option-holder {
+    width: 285px;
+    position: relative;
+    height: 48px;
+  }
+
+  .md-select-options-holder {
+    padding: 8px 0;
+    max-height: 192px;
+    box-sizing: border-box;
+  }
+
+  .crud-edit-option {
+    position: relative;
+    //width: 252px;
+    width: 100%;
+    box-sizing: border-box;
+    display: block;
+    float: left;
+    //max-width: 210px;
+    padding: 16px;
+  }
+
+}
+
+// Really strange thing!
+
+.md-select-menu-container + .md-dialog-container {
+  z-index: 11010;
+}

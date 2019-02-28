@@ -23,7 +23,7 @@
 
     </md-dialog-content>
     <md-dialog-actions layout="column">
-        <div layout="row" layout-align="space-between center">
+        <div layout="row" layout-align="space-between center" class="width-100">
             <md-button aria-label="cancel" class="md-raised md-warn" data-ng-click="vm.skip()">
                 Skip
             </md-button>
@@ -34,8 +34,8 @@
                 Apply Default
             </md-button>
         </div>
-        <div>
-            <md-button aria-label="cancel" style="transform: scale(0.9)" class="md-raised md-warn"
+        <div class="width-100">
+            <md-button aria-label="cancel" class="md-warn"
                        data-ng-click="vm.skipAll()">
                 Skip All
             </md-button>

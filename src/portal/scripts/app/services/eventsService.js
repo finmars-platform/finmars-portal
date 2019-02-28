@@ -26,13 +26,18 @@
         return eventsRepository.generateEventsRange(options);
     };
 
+    var generateAndProcessAsSystem = function () {
+        return eventsRepository.generateAndProcessAsSystem();
+    };
+
     module.exports = {
         getList: getList,
         getEventAction: getEventAction,
         putEventAction: putEventAction,
         informedEventAction: informedEventAction,
         generateEvents: generateEvents,
-        generateEventsRange: generateEventsRange
+        generateEventsRange: generateEventsRange,
+        generateAndProcessAsSystem: generateAndProcessAsSystem
     }
 
 

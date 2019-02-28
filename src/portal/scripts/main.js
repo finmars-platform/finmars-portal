@@ -304,6 +304,7 @@ app.directive('ismFieldResolver', ['$mdDialog', require('./app/directives/instru
 app.directive('floatNumbers', [require('./app/directives/floatNumbersDirective')]);
 app.directive('instrumentModalResolver', ['$mdDialog', require('./app/directives/instrumentModalResolverDirective')]);
 app.directive('entitySearchSelect', ['$mdDialog', require('./app/directives/entitySearchSelect')]);
+app.directive('crudSelect', ['$mdDialog', require('./app/directives/crudSelect')]);
 app.directive('instrumentEventActionResolver', ['$mdDialog', require('./app/directives/instrumentEventActionResolverDirective')]);
 app.directive('classifierModalResolver', ['$mdDialog', require('./app/directives/classifierModalResolverDirective')]);
 app.directive('zhDatePicker', ['$mdDialog', require('./app/directives/zhDatePickerDirective')]);

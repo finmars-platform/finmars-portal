@@ -221,7 +221,11 @@
                             title: 'Warning',
                             description: description
                         }
-                    }
+                    },
+                    preserveScope: true,
+                    autoWrap: true,
+                    skipHide: true,
+                    multiple: true
                 }).then(function (res) {
                     if (res.status === 'agree') {
                         var i, r, c;
@@ -449,7 +453,11 @@
                             title: 'Warning!',
                             description: 'Name of the tab must make a unique character set.'
                         }
-                    }
+                    },
+                    preserveScope: true,
+                    autoWrap: true,
+                    skipHide: true,
+                    multiple: true
                 });
             }
         };
