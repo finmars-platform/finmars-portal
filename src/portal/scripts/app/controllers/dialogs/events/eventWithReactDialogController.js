@@ -23,7 +23,7 @@
 
                 var status = 4; // Booked (user, actions)
 
-                if(action.is_sent_to_pending) {
+                if (action.is_sent_to_pending) {
                     status = 7; // 'Booked, pending (user, actions)';
                 }
 
@@ -40,6 +40,10 @@
 
         vm.skip = function () {
             $mdDialog.hide();
+        };
+
+        vm.skipAll = function () {
+            $mdDialog.hide({status: 'skip_all'});
         };
 
         vm.informed = function () {
@@ -70,7 +74,7 @@
 
                         var status = 5; // 'Booked (user, default)';
 
-                        if(action.is_sent_to_pending) {
+                        if (action.is_sent_to_pending) {
                             status = 8; // 'Booked, pending (user, default)';
                         }
 
