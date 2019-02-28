@@ -72,7 +72,11 @@
                         title: 'Warning!',
                         description: 'Are you sure to delete ' + item['scheme_name']
                     }
-                }
+                },
+                preserveScope: true,
+                autoWrap: true,
+                skipHide: true,
+                multiple: true
             }).then(function (res) {
                 if (res.status === 'agree') {
                     console.log('res', res.data);

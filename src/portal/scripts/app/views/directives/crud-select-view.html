@@ -1,0 +1,71 @@
+<div class="crud-select">
+
+    <md-input-container class="md-block">
+        <label data-ng-bind="label"></label>
+        <md-select data-ng-model="item">
+            <div class="md-select-holder crud-select-holder">
+
+                <md-select-header>
+                    <input data-ng-model="searchTerm"
+                           type="search"
+                           placeholder="Search for a ..."
+                           class="md-text md-select-search-pattern crud-search"
+                           ng-keydown="$event.stopPropagation()">
+
+                    <md-button data-ng-click="addItem()"
+                               class="float-right crud-add-item crud-select-icon-button md-raised md-primary">
+
+                        <ng-md-icon icon="add_circle" size="16"></ng-md-icon>
+
+                    </md-button>
+
+                </md-select-header>
+
+                <div class="md-select-options-holder">
+
+                    <div data-ng-repeat="item in options | filter:{name: searchTerm} track by item.id " class="crud-option">
+
+                        <div data-ng-if="item.___edit" class="crud-edit-option-holder">
+
+                            <md-input-container class="crud-input-container">
+
+                                <input data-ng-model="item.name"
+                                       type="search"
+                                       placeholder="Name"
+                                       class="md-text crud-input"
+                                       ng-keydown="$event.stopPropagation()">
+
+                            </md-input-container>
+
+                            <md-button data-ng-click="saveItem(item, $index, $event)"
+                                       class="crud-save-item crud-select-icon-button md-raised md-primary">
+                                <ng-md-icon icon="save" size="16"></ng-md-icon>
+                            </md-button>
+                            <md-button data-ng-click="deleteItem(item, $index, $event)"
+                                       class="crud-delete-item crud-select-icon-button md-raised md-warn">
+                                <ng-md-icon icon="delete_forever" size="16"></ng-md-icon>
+                            </md-button>
+
+                        </div>
+
+                        <div data-ng-if="!item.___edit" class="crud-edit-option-holder">
+
+                            <md-option ng-value="item.id" class="crud-edit-option">
+                                {{item.name}}
+                            </md-option>
+
+                            <md-button data-ng-click="editItem(item)"
+                                       class="float-right crud-edit-item crud-select-icon-button md-raised">
+                                <ng-md-icon icon="mode_edit" size="16"></ng-md-icon>
+                            </md-button>
+                        </div>
+
+
+                    </div>
+
+                </div>
+            </div>
+        </md-select>
+    </md-input-container>
+
+</div>
