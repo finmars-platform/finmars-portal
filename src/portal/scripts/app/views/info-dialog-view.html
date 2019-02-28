@@ -1,19 +1,16 @@
-<md-dialog aria-label="" ng-cloak class="warning-dialog">
+<md-dialog aria-label="" ng-cloak class="warning-dialog draggable-dialog" drag-dialog>
     <md-toolbar>
         <div class="md-toolbar-tools">
-            <h2>{{vm.info.title}}</h2>
+            <h2 data-ng-bind-html="vm.info.title"></h2>
             <span flex></span>
         </div>
     </md-toolbar>
     <md-dialog-content>
         <div class="warning-text">
-            <p>{{vm.info.description}}</p>
+            <div data-ng-bind-html="vm.info.description"></div>
         </div>
     </md-dialog-content>
     <md-dialog-actions layout="row">
-        <!--<md-button ng-click="vm.cancel()">-->
-            <!--Cancel-->
-        <!--</md-button>-->
         <md-button ng-click="vm.agree()" style="margin-right:20px;">
             OK
         </md-button>

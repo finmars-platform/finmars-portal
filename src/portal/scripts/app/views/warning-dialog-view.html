@@ -1,13 +1,13 @@
-<md-dialog aria-label="" ng-cloak class="warning-dialog">
+<md-dialog aria-label="" ng-cloak class="warning-dialog draggable-dialog" drag-dialog>
     <md-toolbar>
         <div class="md-toolbar-tools">
-            <h2>{{vm.warning.title}}</h2>
+            <h2 data-ng-bind-html="vm.warning.title"></h2>
             <span flex></span>
         </div>
     </md-toolbar>
-    <md-dialog-content  >
+    <md-dialog-content>
         <div class="warning-text">
-            <p>{{vm.warning.description}}</p>
+            <div data-ng-bind-html="vm.warning.description"></div>
         </div>
     </md-dialog-content>
     <md-dialog-actions layout="row">
