@@ -72,11 +72,11 @@
 
                 eventsService.putEventAction(vm.event.id, action.id, event, status).then(function () {
 
+                    index = index + 1;
+
                     if (index < actions.length) {
 
-                        index = index + 1;
-
-                        recursiveHandleEvent(index, actions, resolve);
+                        vm.recursiveHandleEvent(index, actions, resolve);
 
                     } else {
 
