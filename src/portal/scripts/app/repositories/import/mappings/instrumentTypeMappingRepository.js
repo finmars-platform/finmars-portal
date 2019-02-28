@@ -13,7 +13,14 @@
     var baseUrl = baseUrlService.resolve();
 
     var getList = function (options) {
-        return xhrService.fetch(baseUrl + 'import/instrument-type-mapping/?page_size=1000',
+
+        if (!options) {
+            options = {};
+        }
+
+        options.pageSize = options.pageSize || 1000;
+
+        return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl + 'import/instrument-type-mapping/', options),
             {
                 method: 'GET',
                 credentials: 'include',

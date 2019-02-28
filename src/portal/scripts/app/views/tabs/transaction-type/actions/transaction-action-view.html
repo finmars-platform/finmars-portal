@@ -2,19 +2,24 @@
     <div flex="50">
         <div layout="row">
             <md-input-container>
-                <label for="" content-title>Transaction class</label>
+                <label for="" class="uncut-text-on-focus-label" content-title>Transaction class</label>
                 <md-select data-ng-model="item.transaction.transaction_class"
                            md-on-open="vm.loadRelation('transaction_class')">
-                    <md-option
-                            data-ng-if="!vm.relationItems['transaction_class'].length"
-                            ng-value="item.transaction.transaction_class_object.id">
-                        {{item.transaction.transaction_class_object.name}}
-                    </md-option>
-                    <md-option
-                            data-ng-if="vm.relationItems['transaction_class'].length"
-                            data-ng-repeat="relationItem in vm.relationItems['transaction_class']"
-                            ng-value="relationItem.value">
+                    <md-select-header>
+                        <input data-ng-model="searchTerm"
+                               type="search"
+                               placeholder="Search for a ..."
+                               class="md-text md-select-search-pattern">
+                    </md-select-header>
+                    <md-option data-ng-repeat="relationItem in vm.relationItems['transaction_class'] | filter: {name: searchTerm}"
+                               data-ng-value="relationItem.id"
+                               data-ng-if="vm.relationItems['transaction_class'].length">
                         {{relationItem.name}}
+                    </md-option>
+
+                    <md-option data-ng-if="!vm.relationItems['transaction_class'].length"
+                               ng-value="item.transaction.transaction_class_object.id">
+                        {{item.transaction.transaction_class_object.name}}
                     </md-option>
                 </md-select>
             </md-input-container>
@@ -34,26 +39,31 @@
                     <div flex="80">
                         <div data-ng-if="item.transaction.instrument_toggle">
                             <md-input-container>
-                                <label for="" content-title>Instrument</label>
+                                <label for="" class="uncut-text-on-focus-label" content-title>Instrument</label>
                                 <md-select data-ng-model="item.transaction.instrument"
                                            md-on-open="vm.loadRelation('instrument')">
-                                    <md-option
-                                            data-ng-if="!vm.relationItems['instrument'].length"
-                                            ng-value="item.transaction.instrument_object.id">
-                                        {{item.transaction.instrument_object.name}}
-                                    </md-option>
-                                    <md-option
-                                            data-ng-if="vm.relationItems['instrument'].length"
-                                            data-ng-repeat="relationItem in vm.relationItems['instrument']"
-                                            ng-value="relationItem.id">
+                                    <md-select-header>
+                                        <input data-ng-model="searchTerm"
+                                               type="search"
+                                               placeholder="Search for a ..."
+                                               class="md-text md-select-search-pattern">
+                                    </md-select-header>
+                                    <md-option data-ng-repeat="relationItem in vm.relationItems['instrument'] | filter: {name: searchTerm}"
+                                               data-ng-value="relationItem.id"
+                                               data-ng-if="vm.relationItems['instrument'].length">
                                         {{relationItem.name}}
+                                    </md-option>
+
+                                    <md-option data-ng-if="!vm.relationItems['instrument'].length"
+                                               ng-value="item.transaction.instrument_object.id">
+                                        {{item.transaction.instrument_object.name}}
                                     </md-option>
                                 </md-select>
                             </md-input-container>
                         </div>
                         <div data-ng-if="!item.transaction.instrument_toggle">
                             <md-input-container>
-                                <label for="" content-title>Instrument</label>
+                                <label for="" class="uncut-text-on-focus-label" content-title>Instrument</label>
                                 <md-select
                                         data-ng-model="item.transaction[vm.resolveInstrumentProp(item, 'transaction', 'instrument')]">
                                     <md-optgroup label="Inputs">
@@ -80,7 +90,7 @@
             </div>
             <div flex="33">
                 <md-input-container class="expression-input-container">
-                    <label for="" content-title>Position size with sign</label>
+                    <label for="" class="uncut-text-on-focus-label" content-title>Position size with sign: Number</label>
                     <input type="text" value-title data-ng-model="item.transaction.position_size_with_sign">
                 </md-input-container>
 
@@ -101,26 +111,31 @@
                 <div flex="80">
                     <div data-ng-if="item.transaction.transaction_currency_toggle">
                         <md-input-container>
-                            <label for="" content-title>Transaction currency</label>
+                            <label for="" class="uncut-text-on-focus-label" content-title>Transaction currency</label>
                             <md-select data-ng-model="item.transaction.transaction_currency"
                                        md-on-open="vm.loadRelation('transaction_currency')">
-                                <md-option
-                                        data-ng-if="!vm.relationItems['transaction_currency'].length"
-                                        ng-value="item.transaction.transaction_currency_object.id">
-                                    {{item.transaction.transaction_currency_object.name}}
-                                </md-option>
-                                <md-option
-                                        data-ng-if="vm.relationItems['transaction_currency'].length"
-                                        data-ng-repeat="relationItem in vm.relationItems['transaction_currency']"
-                                        ng-value="relationItem.id">
+                                <md-select-header>
+                                    <input data-ng-model="searchTerm"
+                                           type="search"
+                                           placeholder="Search for a ..."
+                                           class="md-text md-select-search-pattern">
+                                </md-select-header>
+                                <md-option data-ng-repeat="relationItem in vm.relationItems['transaction_currency'] | filter: {name: searchTerm}"
+                                           data-ng-value="relationItem.id"
+                                           data-ng-if="vm.relationItems['transaction_currency'].length">
                                     {{relationItem.name}}
+                                </md-option>
+
+                                <md-option data-ng-if="!vm.relationItems['transaction_currency'].length"
+                                           ng-value="item.transaction.transaction_currency_object.id">
+                                    {{item.transaction.transaction_currency_object.name}}
                                 </md-option>
                             </md-select>
                         </md-input-container>
                     </div>
                     <div data-ng-if="!item.transaction.transaction_currency_toggle">
                         <md-input-container>
-                            <label for="" content-title>Transaction currency</label>
+                            <label for="" class="uncut-text-on-focus-label" content-title>Transaction currency</label>
                             <md-select
                                     data-ng-model="item.transaction.transaction_currency_input">
                                 <md-option
@@ -149,26 +164,31 @@
                     <div flex="80">
                         <div data-ng-if="item.transaction.linked_instrument_toggle">
                             <md-input-container>
-                                <label for="" content-title>Linked instrument</label>
+                                <label for="" class="uncut-text-on-focus-label" content-title>Linked instrument</label>
                                 <md-select data-ng-model="item.transaction.linked_instrument"
                                            md-on-open="vm.loadRelation('instrument')">
-                                    <md-option
-                                            data-ng-if="!vm.relationItems['instrument'].length"
-                                            ng-value="item.transaction.linked_instrument_object.id">
-                                        {{item.transaction.instrument_object.name}}
-                                    </md-option>
-                                    <md-option
-                                            data-ng-if="vm.relationItems['instrument'].length"
-                                            data-ng-repeat="relationItem in vm.relationItems['instrument']"
-                                            ng-value="relationItem.id">
+                                    <md-select-header>
+                                        <input data-ng-model="searchTerm"
+                                               type="search"
+                                               placeholder="Search for a ..."
+                                               class="md-text md-select-search-pattern">
+                                    </md-select-header>
+                                    <md-option data-ng-repeat="relationItem in vm.relationItems['instrument'] | filter: {name: searchTerm}"
+                                               data-ng-value="relationItem.id"
+                                               data-ng-if="vm.relationItems['instrument'].length">
                                         {{relationItem.name}}
+                                    </md-option>
+
+                                    <md-option data-ng-if="!vm.relationItems['instrument'].length"
+                                               ng-value="item.transaction.linked_instrument_object.id">
+                                        {{item.transaction.instrument_object.name}}
                                     </md-option>
                                 </md-select>
                             </md-input-container>
                         </div>
                         <div data-ng-if="!item.transaction.linked_instrument_toggle">
                             <md-input-container>
-                                <label for="" content-title>Linked instrument</label>
+                                <label for="" class="uncut-text-on-focus-label" content-title>Linked instrument</label>
                                 <md-select
                                         data-ng-model="item.transaction[vm.resolveInstrumentProp(item, 'transaction', 'linked_instrument')]">
                                     <md-optgroup label="Inputs">
@@ -207,26 +227,31 @@
                     <div flex="80">
                         <div data-ng-if="item.transaction.allocation_pl_toggle">
                             <md-input-container>
-                                <label for="" content-title>Allocation-P&L</label>
+                                <label for="" class="uncut-text-on-focus-label" content-title>Allocation-P&L</label>
                                 <md-select data-ng-model="item.transaction.allocation_pl"
                                            md-on-open="vm.loadRelation('instrument')">
-                                    <md-option
-                                            data-ng-if="!vm.relationItems['instrument'].length"
-                                            ng-value="item.transaction.allocation_pl_object.id">
-                                        {{item.transaction.allocation_pl_object.name}}
-                                    </md-option>
-                                    <md-option
-                                            data-ng-if="vm.relationItems['instrument'].length"
-                                            data-ng-repeat="relationItem in vm.relationItems['instrument']"
-                                            ng-value="relationItem.id">
+                                    <md-select-header>
+                                        <input data-ng-model="searchTerm"
+                                               type="search"
+                                               placeholder="Search for a ..."
+                                               class="md-text md-select-search-pattern">
+                                    </md-select-header>
+                                    <md-option data-ng-repeat="relationItem in vm.relationItems['instrument'] | filter: {name: searchTerm}"
+                                               data-ng-value="relationItem.id"
+                                               data-ng-if="vm.relationItems['instrument'].length">
                                         {{relationItem.name}}
+                                    </md-option>
+
+                                    <md-option data-ng-if="!vm.relationItems['instrument'].length"
+                                               ng-value="item.transaction.allocation_pl_object.id">
+                                        {{item.transaction.allocation_pl_object.name}}
                                     </md-option>
                                 </md-select>
                             </md-input-container>
                         </div>
                         <div data-ng-if="!item.transaction.allocation_pl_toggle">
                             <md-input-container>
-                                <label for="" content-title>Allocation-P&L</label>
+                                <label for="" class="uncut-text-on-focus-label" content-title>Allocation-P&L</label>
                                 <md-select
                                         data-ng-model="item.transaction[vm.resolveInstrumentProp(item, 'transaction', 'allocation_pl')]">
                                     <md-optgroup label="Inputs">
@@ -265,27 +290,31 @@
                     <div flex="80">
                         <div data-ng-if="item.transaction.allocation_balance_toggle">
                             <md-input-container>
-                                <label for="" content-title>Allocation-Balance</label>
-                                <md-select
-                                        data-ng-model="item.transaction.allocation_balance"
-                                        md-on-open="vm.loadRelation('instrument')">
-                                    <md-option
-                                            data-ng-if="!vm.relationItems['instrument'].length"
-                                            ng-value="item.transaction.allocation_balance_object.id">
-                                        {{item.transaction.allocation_balance_object.name}}
-                                    </md-option>
-                                    <md-option
-                                            data-ng-if="vm.relationItems['instrument'].length"
-                                            data-ng-repeat="relationItem in vm.relationItems['instrument']"
-                                            ng-value="relationItem.id">
+                                <label for="" class="uncut-text-on-focus-label" content-title>Allocation-Balance</label>
+                                <md-select data-ng-model="item.transaction.allocation_balance"
+                                           md-on-open="vm.loadRelation('instrument')">
+                                    <md-select-header>
+                                        <input data-ng-model="searchTerm"
+                                               type="search"
+                                               placeholder="Search for a ..."
+                                               class="md-text md-select-search-pattern">
+                                    </md-select-header>
+                                    <md-option data-ng-repeat="relationItem in vm.relationItems['instrument'] | filter: {name: searchTerm}"
+                                               data-ng-value="relationItem.id"
+                                               data-ng-if="vm.relationItems['instrument'].length">
                                         {{relationItem.name}}
+                                    </md-option>
+
+                                    <md-option data-ng-if="!vm.relationItems['instrument'].length"
+                                               ng-value="item.transaction.allocation_balance_object.id">
+                                        {{item.transaction.allocation_balance_object.name}}
                                     </md-option>
                                 </md-select>
                             </md-input-container>
                         </div>
                         <div data-ng-if="!item.transaction.allocation_balance_toggle">
                             <md-input-container>
-                                <label for="" content-title>Allocation-Balance</label>
+                                <label for="" class="uncut-text-on-focus-label" content-title>Allocation-Balance</label>
                                 <md-select
                                         data-ng-model="item.transaction[vm.resolveInstrumentProp(item, 'allocation_balance')]">
                                     <md-optgroup label="Inputs">
@@ -314,7 +343,7 @@
         <div layout="row">
             <div flex="33">
                 <md-input-container class="expression-input-container">
-                    <label for="" content-title>Trade price</label>
+                    <label for="" class="uncut-text-on-focus-label" content-title>Trade price: Number</label>
                     <input type="text" value-title data-ng-model="item.transaction.trade_price">
                 </md-input-container>
                 <expression-editor-button
@@ -322,7 +351,7 @@
             </div>
             <div flex="33">
                 <md-input-container class="expression-input-container">
-                    <label for="" content-title>Factor</label>
+                    <label for="" class="uncut-text-on-focus-label" content-title>Factor: Number</label>
                     <input type="text" value-title data-ng-model="item.transaction.factor">
                 </md-input-container>
                 <expression-editor-button
@@ -330,17 +359,25 @@
             </div>
             <!--<div flex="33">-->
                 <!--<md-input-container class="expression-input-container">-->
-                    <!--<label for="" content-title>Position amount</label>-->
+                    <!--<label for="" class="uncut-text-on-focus-label" content-title>Position amount: Number</label>-->
                     <!--<input type="text" value-title data-ng-model="item.transaction.position_amount">-->
                 <!--</md-input-container>-->
                 <!--<expression-editor-button-->
                         <!--data-item="item.transaction.position_amount"></expression-editor-button>-->
             <!--</div>-->
+            <div flex="33">
+                <md-input-container class="expression-input-container">
+                    <label for="" class="uncut-text-on-focus-label" content-title>Position amount: Number</label>
+                    <input type="text" value-title data-ng-model="item.transaction.position_amount">
+                </md-input-container>
+                <expression-editor-button
+                        data-item="item.transaction.position_amount"></expression-editor-button>
+            </div>
         </div>
         <div layout="row">
             <div flex="33">
                 <md-input-container class="expression-input-container">
-                    <label for="" content-title>Accounting date</label>
+                    <label for="" class="uncut-text-on-focus-label" content-title>Accounting date: Date</label>
                     <input type="text" value-title style="color: grey"
                            data-ng-model="item.transaction.accounting_date">
                 </md-input-container>
@@ -360,26 +397,31 @@
                 <div flex="80">
                     <div data-ng-if="item.transaction.account_position_toggle">
                         <md-input-container>
-                            <label for="" content-title>Account position</label>
+                            <label for="" class="uncut-text-on-focus-label" content-title>Account position</label>
                             <md-select data-ng-model="item.transaction.account_position"
                                        md-on-open="vm.loadRelation('account_position')">
-                                <md-option
-                                        data-ng-if="!vm.relationItems['account_position'].length"
-                                        ng-value="item.transaction.account_position_object.id">
-                                    {{item.transaction.account_position_object.name}}
-                                </md-option>
-                                <md-option
-                                        data-ng-if="vm.relationItems['account_position'].length"
-                                        data-ng-repeat="relationItem in vm.relationItems['account_position']"
-                                        ng-value="relationItem.id">
+                                <md-select-header>
+                                    <input data-ng-model="searchTerm"
+                                           type="search"
+                                           placeholder="Search for a ..."
+                                           class="md-text md-select-search-pattern">
+                                </md-select-header>
+                                <md-option data-ng-repeat="relationItem in vm.relationItems['account_position'] | filter: {name: searchTerm}"
+                                           data-ng-value="relationItem.id"
+                                           data-ng-if="vm.relationItems['account_position'].length">
                                     {{relationItem.name}}
+                                </md-option>
+
+                                <md-option data-ng-if="!vm.relationItems['account_position'].length"
+                                           ng-value="item.transaction.account_position_object.id">
+                                    {{item.transaction.account_position_object.name}}
                                 </md-option>
                             </md-select>
                         </md-input-container>
                     </div>
                     <div data-ng-if="!item.transaction.account_position_toggle">
                         <md-input-container>
-                            <label for="" content-title>Account position</label>
+                            <label for="" class="uncut-text-on-focus-label" content-title>Account position</label>
                             <md-select
                                     data-ng-model="item.transaction.account_position_input">
                                 <md-option
@@ -394,7 +436,7 @@
             </div>
             <div flex="33">
                 <md-input-container>
-                    <label for="" content-title>&nbsp;</label>
+                    <label for="" class="uncut-text-on-focus-label" content-title>&nbsp;</label>
                 </md-input-container>
             </div>
         </div>
@@ -412,26 +454,31 @@
                 <div flex="80">
                     <div data-ng-if="item.transaction.strategy1_position_toggle">
                         <md-input-container>
-                            <label for="" content-title>Strategy1 position</label>
+                            <label for="" class="uncut-text-on-focus-label" content-title>Strategy1 position</label>
                             <md-select data-ng-model="item.transaction.strategy1_position"
                                        md-on-open="vm.loadRelation('strategy1_position')">
-                                <md-option
-                                        data-ng-if="!vm.relationItems['strategy1_position'].length"
-                                        ng-value="item.transaction.strategy1_position_object.id">
-                                    {{item.transaction.strategy1_position_object.name}}
-                                </md-option>
-                                <md-option
-                                        data-ng-if="vm.relationItems['strategy1_position'].length"
-                                        data-ng-repeat="relationItem in vm.relationItems['strategy1_position']"
-                                        ng-value="relationItem.id">
+                                <md-select-header>
+                                    <input data-ng-model="searchTerm"
+                                           type="search"
+                                           placeholder="Search for a ..."
+                                           class="md-text md-select-search-pattern">
+                                </md-select-header>
+                                <md-option data-ng-repeat="relationItem in vm.relationItems['strategy1_position'] | filter: {name: searchTerm}"
+                                           data-ng-value="relationItem.id"
+                                           data-ng-if="vm.relationItems['strategy1_position'].length">
                                     {{relationItem.name}}
+                                </md-option>
+
+                                <md-option data-ng-if="!vm.relationItems['strategy1_position'].length"
+                                           ng-value="item.transaction.strategy1_position_object.id">
+                                    {{item.transaction.strategy1_position_object.name}}
                                 </md-option>
                             </md-select>
                         </md-input-container>
                     </div>
                     <div data-ng-if="!item.transaction.strategy1_position_toggle">
                         <md-input-container>
-                            <label for="" content-title>Strategy1 position</label>
+                            <label for="" class="uncut-text-on-focus-label" content-title>Strategy1 position</label>
                             <md-select
                                     data-ng-model="item.transaction.strategy1_position_input">
                                 <md-option
@@ -457,26 +504,31 @@
                 <div flex="80">
                     <div data-ng-if="item.transaction.strategy2_position_toggle">
                         <md-input-container>
-                            <label for="" content-title>Strategy2 position</label>
+                            <label for="" class="uncut-text-on-focus-label" content-title>Strategy2 position</label>
                             <md-select data-ng-model="item.transaction.strategy2_position"
                                        md-on-open="vm.loadRelation('strategy2_position')">
-                                <md-option
-                                        data-ng-if="!vm.relationItems['strategy2_position'].length"
-                                        ng-value="item.transaction.strategy2_position_object.id">
-                                    {{item.transaction.strategy2_position_object.name}}
-                                </md-option>
-                                <md-option
-                                        data-ng-if="vm.relationItems['strategy2_position'].length"
-                                        data-ng-repeat="relationItem in vm.relationItems['strategy2_position']"
-                                        ng-value="relationItem.id">
+                                <md-select-header>
+                                    <input data-ng-model="searchTerm"
+                                           type="search"
+                                           placeholder="Search for a ..."
+                                           class="md-text md-select-search-pattern">
+                                </md-select-header>
+                                <md-option data-ng-repeat="relationItem in vm.relationItems['strategy2_position'] | filter: {name: searchTerm}"
+                                           data-ng-value="relationItem.id"
+                                           data-ng-if="vm.relationItems['strategy2_position'].length">
                                     {{relationItem.name}}
+                                </md-option>
+
+                                <md-option data-ng-if="!vm.relationItems['strategy2_position'].length"
+                                           ng-value="item.transaction.strategy2_position_object.id">
+                                    {{item.transaction.strategy2_position_object.name}}
                                 </md-option>
                             </md-select>
                         </md-input-container>
                     </div>
                     <div data-ng-if="!item.transaction.strategy2_position_toggle">
                         <md-input-container>
-                            <label for="" content-title>Strategy2 position</label>
+                            <label for="" class="uncut-text-on-focus-label" content-title>Strategy2 position</label>
                             <md-select
                                     data-ng-model="item.transaction.strategy2_position_input">
                                 <md-option
@@ -502,26 +554,31 @@
                 <div flex="80">
                     <div data-ng-if="item.transaction.strategy3_position_toggle">
                         <md-input-container>
-                            <label for="" content-title>Strategy3 position</label>
+                            <label for="" class="uncut-text-on-focus-label" content-title>Strategy3 position</label>
                             <md-select data-ng-model="item.transaction.strategy3_position"
                                        md-on-open="vm.loadRelation('strategy3_position')">
-                                <md-option
-                                        data-ng-if="!vm.relationItems['strategy3_position'].length"
-                                        ng-value="item.transaction.strategy3_position_object.id">
-                                    {{item.transaction.strategy3_position_object.name}}
-                                </md-option>
-                                <md-option
-                                        data-ng-if="vm.relationItems['strategy3_position'].length"
-                                        data-ng-repeat="relationItem in vm.relationItems['strategy3_position']"
-                                        ng-value="relationItem.id">
+                                <md-select-header>
+                                    <input data-ng-model="searchTerm"
+                                           type="search"
+                                           placeholder="Search for a ..."
+                                           class="md-text md-select-search-pattern">
+                                </md-select-header>
+                                <md-option data-ng-repeat="relationItem in vm.relationItems['strategy3_position'] | filter: {name: searchTerm}"
+                                           data-ng-value="relationItem.id"
+                                           data-ng-if="vm.relationItems['strategy3_position'].length">
                                     {{relationItem.name}}
+                                </md-option>
+
+                                <md-option data-ng-if="!vm.relationItems['strategy3_position'].length"
+                                           ng-value="item.transaction.strategy3_position_object.id">
+                                    {{item.transaction.strategy3_position_object.name}}
                                 </md-option>
                             </md-select>
                         </md-input-container>
                     </div>
                     <div data-ng-if="!item.transaction.strategy3_position_toggle">
                         <md-input-container>
-                            <label for="" content-title>Strategy3 position</label>
+                            <label for="" class="uncut-text-on-focus-label" content-title>Strategy3 position</label>
                             <md-select
                                     data-ng-model="item.transaction.strategy3_position_input">
                                 <md-option
@@ -538,7 +595,7 @@
         <div layout="row">
             <div flex="100">
                 <md-input-container class="expression-input-container">
-                    <label for="" content-title>Notes</label>
+                    <label for="" class="uncut-text-on-focus-label" content-title>Notes: Text</label>
                     <input type="text" value-title data-ng-model="item.transaction.notes">
                 </md-input-container>
                 <expression-editor-button
@@ -561,25 +618,32 @@
                 <div flex="80">
                     <div data-ng-if="item.transaction.portfolio_toggle">
                         <md-input-container>
-                            <label for="" content-title>Portfolio</label>
+                            <label for="" class="uncut-text-on-focus-label" content-title>Portfolio</label>
                             <md-select data-ng-model="item.transaction.portfolio"
-                                       md-on-open="vm.loadRelation('portfolio')">
+                                       md-on-open="vm.loadRelation('portfolio')"
+                                       md-on-close="searchTerm = ''">
+                                <md-select-header>
+                                    <input data-ng-model="searchTerm"
+                                           type="search"
+                                           placeholder="Search for a ..."
+                                           class="md-text md-select-search-pattern">
+                                </md-select-header>
+                                <md-option data-ng-repeat="relationItem in vm.relationItems['portfolio'] | filter: {name: searchTerm}"
+                                           data-ng-value="relationItem.id"
+                                           data-ng-if="vm.relationItems['portfolio'].length">
+                                    {{relationItem.name}}
+                                </md-option>
+
                                 <md-option data-ng-if="!vm.relationItems['portfolio'].length"
                                            ng-value="item.transaction.portfolio_object.id">
                                     {{item.transaction.portfolio_object.name}}
-                                </md-option>
-                                <md-option
-                                        data-ng-if="vm.relationItems['portfolio'].length"
-                                        data-ng-repeat="relationItem in vm.relationItems['portfolio']"
-                                        ng-value="relationItem.id">
-                                    {{relationItem.name}}
                                 </md-option>
                             </md-select>
                         </md-input-container>
                     </div>
                     <div data-ng-if="!item.transaction.portfolio_toggle">
                         <md-input-container>
-                            <label for="" content-title>Portfolio</label>
+                            <label for="" class="uncut-text-on-focus-label" content-title>Portfolio</label>
                             <md-select
                                     data-ng-model="item.transaction.portfolio_input">
                                 <md-option
@@ -605,25 +669,31 @@
                 <div flex="80">
                     <div data-ng-if="item.transaction.counterparty_toggle">
                         <md-input-container>
-                            <label for="" content-title>Counterparty</label>
+                            <label for="" class="uncut-text-on-focus-label" content-title>Counterparty</label>
                             <md-select data-ng-model="item.transaction.counterparty"
                                        md-on-open="vm.loadRelation('counterparty')">
+                                <md-select-header>
+                                    <input data-ng-model="searchTerm"
+                                           type="search"
+                                           placeholder="Search for a ..."
+                                           class="md-text md-select-search-pattern">
+                                </md-select-header>
+                                <md-option data-ng-repeat="relationItem in vm.relationItems['counterparty'] | filter: {name: searchTerm}"
+                                           data-ng-value="relationItem.id"
+                                           data-ng-if="vm.relationItems['counterparty'].length">
+                                    {{relationItem.name}}
+                                </md-option>
+
                                 <md-option data-ng-if="!vm.relationItems['counterparty'].length"
                                            ng-value="item.transaction.counterparty_object.id">
                                     {{item.transaction.counterparty_object.name}}
-                                </md-option>
-                                <md-option
-                                        data-ng-if="vm.relationItems['counterparty'].length"
-                                        data-ng-repeat="relationItem in vm.relationItems['counterparty']"
-                                        ng-value="relationItem.id">
-                                    {{relationItem.name}}
                                 </md-option>
                             </md-select>
                         </md-input-container>
                     </div>
                     <div data-ng-if="!item.transaction.counterparty_toggle">
                         <md-input-container>
-                            <label for="" content-title>Counterparty</label>
+                            <label for="" class="uncut-text-on-focus-label" content-title>Counterparty</label>
                             <md-select
                                     data-ng-model="item.transaction.counterparty_input">
                                 <md-option
@@ -649,25 +719,31 @@
                 <div flex="80">
                     <div data-ng-if="item.transaction.responsible_toggle">
                         <md-input-container>
-                            <label for="" content-title>Responsible</label>
+                            <label for="" class="uncut-text-on-focus-label" content-title>Responsible</label>
                             <md-select data-ng-model="item.transaction.responsible"
                                        md-on-open="vm.loadRelation('responsible')">
+                                <md-select-header>
+                                    <input data-ng-model="searchTerm"
+                                           type="search"
+                                           placeholder="Search for a ..."
+                                           class="md-text md-select-search-pattern">
+                                </md-select-header>
+                                <md-option data-ng-repeat="relationItem in vm.relationItems['responsible'] | filter: {name: searchTerm}"
+                                           data-ng-value="relationItem.id"
+                                           data-ng-if="vm.relationItems['responsible'].length">
+                                    {{relationItem.name}}
+                                </md-option>
+
                                 <md-option data-ng-if="!vm.relationItems['responsible'].length"
                                            ng-value="item.transaction.responsible_object.id">
                                     {{item.transaction.responsible_object.name}}
-                                </md-option>
-                                <md-option
-                                        data-ng-if="vm.relationItems['responsible'].length"
-                                        data-ng-repeat="relationItem in vm.relationItems['responsible']"
-                                        ng-value="relationItem.id">
-                                    {{relationItem.name}}
                                 </md-option>
                             </md-select>
                         </md-input-container>
                     </div>
                     <div data-ng-if="!item.transaction.responsible_toggle">
                         <md-input-container>
-                            <label for="" content-title>Responsible</label>
+                            <label for="" class="uncut-text-on-focus-label" content-title>Responsible</label>
                             <md-select
                                     data-ng-model="item.transaction.responsible_input">
                                 <md-option
@@ -695,26 +771,31 @@
                 <div flex="80">
                     <div data-ng-if="item.transaction.settlement_currency_toggle">
                         <md-input-container>
-                            <label for="" content-title>Settlement currency</label>
+                            <label for="" class="uncut-text-on-focus-label" content-title>Settlement currency</label>
                             <md-select data-ng-model="item.transaction.settlement_currency"
                                        md-on-open="vm.loadRelation('settlement_currency')">
-                                <md-option
-                                        data-ng-if="!vm.relationItems['settlement_currency'].length"
-                                        ng-value="item.transaction.settlement_currency_object.id">
-                                    {{item.transaction.settlement_currency_object.name}}
-                                </md-option>
-                                <md-option
-                                        data-ng-if="vm.relationItems['settlement_currency'].length"
-                                        data-ng-repeat="relationItem in vm.relationItems['settlement_currency']"
-                                        ng-value="relationItem.id">
+                                <md-select-header>
+                                    <input data-ng-model="searchTerm"
+                                           type="search"
+                                           placeholder="Search for a ..."
+                                           class="md-text md-select-search-pattern">
+                                </md-select-header>
+                                <md-option data-ng-repeat="relationItem in vm.relationItems['settlement_currency'] | filter: {name: searchTerm}"
+                                           data-ng-value="relationItem.id"
+                                           data-ng-if="vm.relationItems['settlement_currency'].length">
                                     {{relationItem.name}}
+                                </md-option>
+
+                                <md-option data-ng-if="!vm.relationItems['settlement_currency'].length"
+                                           ng-value="item.transaction.settlement_currency_object.id">
+                                    {{item.transaction.settlement_currency_object.name}}
                                 </md-option>
                             </md-select>
                         </md-input-container>
                     </div>
                     <div data-ng-if="!item.transaction.settlement_currency_toggle">
                         <md-input-container>
-                            <label for="" content-title>Settlement currency</label>
+                            <label for="" class="uncut-text-on-focus-label" content-title>Settlement currency</label>
                             <md-select
                                     data-ng-model="item.transaction.settlement_currency_input">
                                 <md-option
@@ -729,7 +810,7 @@
             </div>
             <div flex="33">
                 <md-input-container class="expression-input-container">
-                    <label for="" content-title>Cash consideration</label>
+                    <label for="" class="uncut-text-on-focus-label" content-title>Cash consideration: Number</label>
                     <input type="text" value-title data-ng-model="item.transaction.cash_consideration">
                 </md-input-container>
                 <expression-editor-button
@@ -737,7 +818,7 @@
             </div>
             <div flex="33">
                 <md-input-container class="expression-input-container">
-                    <label for="" content-title>Reference fx-rate</label>
+                    <label for="" class="uncut-text-on-focus-label" content-title>Reference fx-rate: Number</label>
                     <input type="text" value-title data-ng-model="item.transaction.reference_fx_rate">
                 </md-input-container>
                 <expression-editor-button
@@ -747,7 +828,7 @@
         <div layout="row">
             <div flex="33">
                 <md-input-container class="expression-input-container">
-                    <label for="" content-title>Principal with sign</label>
+                    <label for="" class="uncut-text-on-focus-label" content-title>Principal with sign: Number</label>
                     <input type="text" value-title data-ng-model="item.transaction.principal_with_sign">
                 </md-input-container>
                 <expression-editor-button
@@ -755,7 +836,7 @@
             </div>
             <div flex="33">
                 <md-input-container class="expression-input-container">
-                    <label for="" content-title>Carry with sign</label>
+                    <label for="" class="uncut-text-on-focus-label" content-title>Carry with sign: Number</label>
                     <input type="text" value-title data-ng-model="item.transaction.carry_with_sign">
                 </md-input-container>
                 <expression-editor-button
@@ -763,7 +844,7 @@
             </div>
             <div flex="33">
                 <md-input-container class="expression-input-container">
-                    <label for="" content-title>Overheads with sign</label>
+                    <label for="" class="uncut-text-on-focus-label" content-title>Overheads with sign: Number</label>
                     <input type="text" value-title data-ng-model="item.transaction.overheads_with_sign">
                 </md-input-container>
                 <expression-editor-button
@@ -773,7 +854,7 @@
         <!--<div layout="row">-->
             <!--<div flex="33">-->
                 <!--<md-input-container class="expression-input-container">-->
-                    <!--<label for="" content-title>Principal amount</label>-->
+                    <!--<label for="" class="uncut-text-on-focus-label" content-title>Principal amount: Number</label>-->
                     <!--<input type="text" value-title data-ng-model="item.transaction.principal_amount">-->
                 <!--</md-input-container>-->
                 <!--<expression-editor-button-->
@@ -781,7 +862,7 @@
             <!--</div>-->
             <!--<div flex="33">-->
                 <!--<md-input-container class="expression-input-container">-->
-                    <!--<label for="" content-title>Carry amount</label>-->
+                    <!--<label for="" class="uncut-text-on-focus-label" content-title>Carry amount: Number</label>-->
                     <!--<input type="text" value-title data-ng-model="item.transaction.carry_amount">-->
                 <!--</md-input-container>-->
                 <!--<expression-editor-button-->
@@ -789,7 +870,7 @@
             <!--</div>-->
             <!--<div flex="33">-->
                 <!--<md-input-container class="expression-input-container">-->
-                    <!--<label for="" content-title>Overheads</label>-->
+                    <!--<label for="" class="uncut-text-on-focus-label" content-title>Overheads: Number</label>-->
                     <!--<input type="text" value-title data-ng-model="item.transaction.overheads">-->
                 <!--</md-input-container>-->
                 <!--<expression-editor-button-->
@@ -797,9 +878,35 @@
             <!--</div>-->
         <!--</div>-->
         <div layout="row">
+            <div flex="33">
+                <md-input-container class="expression-input-container">
+                    <label for="" class="uncut-text-on-focus-label" content-title>Principal amount: Number</label>
+                    <input type="text" value-title data-ng-model="item.transaction.principal_amount">
+                </md-input-container>
+                <expression-editor-button
+                        data-item="item.transaction.principal_amount"></expression-editor-button>
+            </div>
+            <div flex="33">
+                <md-input-container class="expression-input-container">
+                    <label for="" class="uncut-text-on-focus-label" content-title>Carry amount: Number</label>
+                    <input type="text" value-title data-ng-model="item.transaction.carry_amount">
+                </md-input-container>
+                <expression-editor-button
+                        data-item="item.transaction.carry_amount"></expression-editor-button>
+            </div>
+            <div flex="33">
+                <md-input-container class="expression-input-container">
+                    <label for="" class="uncut-text-on-focus-label" content-title>Overheads: Number</label>
+                    <input type="text" value-title data-ng-model="item.transaction.overheads">
+                </md-input-container>
+                <expression-editor-button
+                        data-item="item.transaction.overheads"></expression-editor-button>
+            </div>
+        </div>
+        <div layout="row">
             <div flex="33" layout="row">
                 <md-input-container class="expression-input-container">
-                    <label for="" content-title>Cash date</label>
+                    <label for="" class="uncut-text-on-focus-label" content-title>Cash date: Date</label>
                     <input type="text" value-title style="color: grey;"
                            data-ng-model="item.transaction.cash_date">
                 </md-input-container>
@@ -819,25 +926,31 @@
                 <div flex="80">
                     <div data-ng-if="item.transaction.account_cash_toggle">
                         <md-input-container>
-                            <label for="" content-title>Account cash</label>
+                            <label for="" class="uncut-text-on-focus-label" content-title>Account cash</label>
                             <md-select data-ng-model="item.transaction.account_cash"
                                        md-on-open="vm.loadRelation('account_cash')">
+                                <md-select-header>
+                                    <input data-ng-model="searchTerm"
+                                           type="search"
+                                           placeholder="Search for a ..."
+                                           class="md-text md-select-search-pattern">
+                                </md-select-header>
+                                <md-option data-ng-repeat="relationItem in vm.relationItems['account_cash'] | filter: {name: searchTerm}"
+                                           data-ng-value="relationItem.id"
+                                           data-ng-if="vm.relationItems['account_cash'].length">
+                                    {{relationItem.name}}
+                                </md-option>
+
                                 <md-option data-ng-if="!vm.relationItems['account_cash'].length"
                                            ng-value="item.transaction.account_cash_object.id">
                                     {{item.transaction.account_cash_object.name}}
-                                </md-option>
-                                <md-option
-                                        data-ng-if="vm.relationItems['account_cash'].length"
-                                        data-ng-repeat="relationItem in vm.relationItems['account_cash']"
-                                        ng-value="relationItem.id">
-                                    {{relationItem.name}}
                                 </md-option>
                             </md-select>
                         </md-input-container>
                     </div>
                     <div data-ng-if="!item.transaction.account_cash_toggle">
                         <md-input-container>
-                            <label for="" content-title>Account cash</label>
+                            <label for="" class="uncut-text-on-focus-label" content-title>Account cash</label>
                             <md-select
                                     data-ng-model="item.transaction.account_cash_input">
                                 <md-option
@@ -863,26 +976,31 @@
                 <div flex="80">
                     <div data-ng-if="item.transaction.account_interim_toggle">
                         <md-input-container>
-                            <label for="" content-title>Account interim</label>
+                            <label for="" class="uncut-text-on-focus-label" content-title>Account interim</label>
                             <md-select data-ng-model="item.transaction.account_interim"
                                        md-on-open="vm.loadRelation('account_interim')">
-                                <md-option
-                                        data-ng-if="!vm.relationItems['account_interim'].length"
-                                        ng-value="item.transaction.account_interim_object.id">
-                                    {{item.transaction.account_interim_object.name}}
-                                </md-option>
-                                <md-option
-                                        data-ng-if="vm.relationItems['account_interim'].length"
-                                        data-ng-repeat="relationItem in vm.relationItems['account_interim']"
-                                        ng-value="relationItem.id">
+                                <md-select-header>
+                                    <input data-ng-model="searchTerm"
+                                           type="search"
+                                           placeholder="Search for a ..."
+                                           class="md-text md-select-search-pattern">
+                                </md-select-header>
+                                <md-option data-ng-repeat="relationItem in vm.relationItems['account_interim'] | filter: {name: searchTerm}"
+                                           data-ng-value="relationItem.id"
+                                           data-ng-if="vm.relationItems['account_interim'].length">
                                     {{relationItem.name}}
+                                </md-option>
+
+                                <md-option data-ng-if="!vm.relationItems['account_interim'].length"
+                                           ng-value="item.transaction.account_interim_object.id">
+                                    {{item.transaction.account_interim_object.name}}
                                 </md-option>
                             </md-select>
                         </md-input-container>
                     </div>
                     <div data-ng-if="!item.transaction.account_interim_toggle">
                         <md-input-container>
-                            <label for="" content-title>Account interim</label>
+                            <label for="" class="uncut-text-on-focus-label" content-title>Account interim</label>
                             <md-select
                                     data-ng-model="item.transaction.account_interim_input">
                                 <md-option
@@ -911,26 +1029,31 @@
                 <div flex="80">
                     <div data-ng-if="item.transaction.strategy1_cash_toggle">
                         <md-input-container>
-                            <label for="" content-title>Strategy1 cash</label>
+                            <label for="" class="uncut-text-on-focus-label" content-title>Strategy1 cash</label>
                             <md-select data-ng-model="item.transaction.strategy1_cash"
                                        md-on-open="vm.loadRelation('strategy1_cash')">
-                                <md-option
-                                        data-ng-if="!vm.relationItems['strategy1_cash'].length"
-                                        ng-value="item.transaction.strategy1_cash_object.id">
-                                    {{item.transaction.strategy1_cash_object.name}}
-                                </md-option>
-                                <md-option
-                                        data-ng-if="vm.relationItems['strategy1_cash'].length"
-                                        data-ng-repeat="relationItem in vm.relationItems['strategy1_cash']"
-                                        ng-value="relationItem.id">
+                                <md-select-header>
+                                    <input data-ng-model="searchTerm"
+                                           type="search"
+                                           placeholder="Search for a ..."
+                                           class="md-text md-select-search-pattern">
+                                </md-select-header>
+                                <md-option data-ng-repeat="relationItem in vm.relationItems['strategy1_cash'] | filter: {name: searchTerm}"
+                                           data-ng-value="relationItem.id"
+                                           data-ng-if="vm.relationItems['strategy1_cash'].length">
                                     {{relationItem.name}}
+                                </md-option>
+
+                                <md-option data-ng-if="!vm.relationItems['strategy1_cash'].length"
+                                           ng-value="item.transaction.strategy1_cash_object.id">
+                                    {{item.transaction.strategy1_cash_object.name}}
                                 </md-option>
                             </md-select>
                         </md-input-container>
                     </div>
                     <div data-ng-if="!item.transaction.strategy1_cash_toggle">
                         <md-input-container>
-                            <label for="" content-title>Strategy1 cash</label>
+                            <label for="" class="uncut-text-on-focus-label" content-title>Strategy1 cash</label>
                             <md-select
                                     data-ng-model="item.transaction.strategy1_cash_input">
                                 <md-option
@@ -956,26 +1079,31 @@
                 <div flex="80">
                     <div data-ng-if="item.transaction.strategy2_cash_toggle">
                         <md-input-container>
-                            <label for="" content-title>Strategy2 cash</label>
+                            <label for="" class="uncut-text-on-focus-label" content-title>Strategy2 cash</label>
                             <md-select data-ng-model="item.transaction.strategy2_cash"
                                        md-on-open="vm.loadRelation('strategy2_cash')">
-                                <md-option
-                                        data-ng-if="!vm.relationItems['strategy2_cash'].length"
-                                        ng-value="item.transaction.strategy2_cash_object.id">
-                                    {{item.transaction.strategy2_cash_object.name}}
-                                </md-option>
-                                <md-option
-                                        data-ng-if="vm.relationItems['strategy2_cash'].length"
-                                        data-ng-repeat="relationItem in vm.relationItems['strategy2_cash']"
-                                        ng-value="relationItem.id">
+                                <md-select-header>
+                                    <input data-ng-model="searchTerm"
+                                           type="search"
+                                           placeholder="Search for a ..."
+                                           class="md-text md-select-search-pattern">
+                                </md-select-header>
+                                <md-option data-ng-repeat="relationItem in vm.relationItems['strategy2_cash'] | filter: {name: searchTerm}"
+                                           data-ng-value="relationItem.id"
+                                           data-ng-if="vm.relationItems['strategy2_cash'].length">
                                     {{relationItem.name}}
+                                </md-option>
+
+                                <md-option data-ng-if="!vm.relationItems['strategy2_cash'].length"
+                                           ng-value="item.transaction.strategy2_cash_object.id">
+                                    {{item.transaction.strategy2_cash_object.name}}
                                 </md-option>
                             </md-select>
                         </md-input-container>
                     </div>
                     <div data-ng-if="!item.transaction.strategy2_cash_toggle">
                         <md-input-container>
-                            <label for="" content-title>Strategy2 cash</label>
+                            <label for="" class="uncut-text-on-focus-label" content-title>Strategy2 cash</label>
                             <md-select
                                     data-ng-model="item.transaction.strategy2_cash_input">
                                 <md-option
@@ -1001,26 +1129,31 @@
                 <div flex="80">
                     <div data-ng-if="item.transaction.strategy3_cash_toggle">
                         <md-input-container>
-                            <label for="" content-title>Strategy3 cash</label>
+                            <label for="" class="uncut-text-on-focus-label" content-title>Strategy3 cash</label>
                             <md-select data-ng-model="item.transaction.strategy3_cash"
                                        md-on-open="vm.loadRelation('strategy3_cash')">
-                                <md-option
-                                        data-ng-if="!vm.relationItems['strategy3_cash'].length"
-                                        ng-value="item.transaction.strategy3_cash_object.id">
-                                    {{item.transaction.strategy3_cash_object.name}}
-                                </md-option>
-                                <md-option
-                                        data-ng-if="vm.relationItems['strategy3_cash'].length"
-                                        data-ng-repeat="relationItem in vm.relationItems['strategy3_cash']"
-                                        ng-value="relationItem.id">
+                                <md-select-header>
+                                    <input data-ng-model="searchTerm"
+                                           type="search"
+                                           placeholder="Search for a ..."
+                                           class="md-text md-select-search-pattern">
+                                </md-select-header>
+                                <md-option data-ng-repeat="relationItem in vm.relationItems['strategy3_cash'] | filter: {name: searchTerm}"
+                                           data-ng-value="relationItem.id"
+                                           data-ng-if="vm.relationItems['strategy3_cash'].length">
                                     {{relationItem.name}}
+                                </md-option>
+
+                                <md-option data-ng-if="!vm.relationItems['strategy3_cash'].length"
+                                           ng-value="item.transaction.strategy3_cash_object.id">
+                                    {{item.transaction.strategy3_cash_object.name}}
                                 </md-option>
                             </md-select>
                         </md-input-container>
                     </div>
                     <div data-ng-if="!item.transaction.strategy3_cash_toggle">
                         <md-input-container>
-                            <label for="" content-title>Strategy3 cash</label>
+                            <label for="" class="uncut-text-on-focus-label" content-title>Strategy3 cash</label>
                             <md-select
                                     data-ng-model="item.transaction.strategy3_cash_input">
                                 <md-option

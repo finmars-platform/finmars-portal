@@ -164,8 +164,16 @@
 
                         if (relation[defaultPropertyName] === "-" || relation[defaultPropertyName] === 'Default') {
                             item[propertyName][fieldName] = relation.id;
-                            $scope.$apply();
                         }
+
+                    });
+
+                    $scope.$apply(function () {
+                        setTimeout(function () {
+                            $('body').find('.md-select-search-pattern').on('keydown', function (ev) {
+                                ev.stopPropagation();
+                            });
+                        }, 100);
                     });
 
                 });
@@ -395,6 +403,7 @@
                 } else {
                     resolve(vm.relationItems[field]);
                 }
+
             })
         };
     }
