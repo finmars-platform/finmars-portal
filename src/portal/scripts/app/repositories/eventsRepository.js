@@ -106,12 +106,26 @@
         return
     };
 
+    var generateAndProcessAsSystem = function () {
+        return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl + 'instruments/instrument/system-generate-and-process/'),
+            {
+                method: 'POST',
+                credentials: 'include',
+                headers: {
+                    'X-CSRFToken': cookieService.getCookie('csrftoken'),
+                    Accept: 'application/json',
+                    'Content-type': 'application/json'
+                }
+            })
+    };
+
     module.exports = {
         getList: getList,
         getEventAction: getEventAction,
         putEventAction: putEventAction,
         informedEventAction: informedEventAction,
         generateEvents: generateEvents,
-        generateEventsRange: generateEventsRange
+        generateEventsRange: generateEventsRange,
+        generateAndProcessAsSystem: generateAndProcessAsSystem
     }
 }());
