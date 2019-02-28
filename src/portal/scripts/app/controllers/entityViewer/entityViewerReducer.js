@@ -49,7 +49,7 @@
                     templateUrl: 'views/entity-viewer/entity-viewer-entity-delete-dialog-view.html',
                     parent: angular.element(document.body),
                     targetEvent: activeObject.event,
-                    //clickOutsideToClose: true,
+                    //clickOutsideToClose: false,
                     locals: {
                         entity: {
                             id: activeObject.id,
@@ -82,7 +82,7 @@
                     templateUrl: 'views/entity-viewer/edit-entity-viewer-dialog-view.html',
                     parent: angular.element(document.body),
                     targetEvent: activeObject.event,
-                    //clickOutsideToClose: true,
+                    //clickOutsideToClose: false,
                     locals: {
                         entityType: entityViewerDataService.getEntityType(),
                         entityId: activeObject.id
