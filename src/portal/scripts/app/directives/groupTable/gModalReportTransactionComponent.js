@@ -201,6 +201,13 @@
                 return item;
             });
 
+            vm.complexTransactionAttrs = metaService.getEntityAttrs('complex-transaction').map(function (item) {
+                item.name = 'Complex Transaction.' + item.name;
+                item.entity = 'complex-transaction';
+                item.key = 'complex_transaction_object_' + item.key;
+                return item;
+            });
+
             vm.portfolioAttrs = metaService.getEntityAttrs('portfolio').map(function (item) {
                 item.name = 'Portfolio.' + item.name;
                 item.entity = 'portfolio';
@@ -378,6 +385,7 @@
         var syncAttrs = function () {
 
             syncTypeAttrs(vm.transactionAttrs);
+            syncTypeAttrs(vm.complexTransactionAttrs);
 
             syncTypeAttrs(vm.portfolioAttrs);
             syncTypeAttrs(vm.instrumentAttrs);
@@ -548,6 +556,7 @@
         vm.updateAttrs = function () {
 
             updateTypeAttrs(vm.transactionAttrs);
+            updateTypeAttrs(vm.complexTransactionAttrs);
 
             updateTypeAttrs(vm.portfolioAttrs);
             updateTypeAttrs(vm.instrumentAttrs);

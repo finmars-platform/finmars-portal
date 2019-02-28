@@ -216,6 +216,16 @@
 
                 }
 
+                if (item.hasOwnProperty('complex_transaction_object') && item.complex_transaction_object) {
+
+                    var complexTransactionObjectKeys = Object.keys(item.complex_transaction_object);
+
+                    complexTransactionObjectKeys.forEach(function (complexTransactionObjectKeyItem) {
+                        item['complex_transaction_object_' + complexTransactionObjectKeyItem] = item.complex_transaction_object[complexTransactionObjectKeyItem];
+                    });
+
+                }
+
                 if (item.hasOwnProperty('transaction_currency_object') && item.transaction_currency_object) {
 
                     var transactionCurrencyObjectKeys = Object.keys(item.transaction_currency_object);
