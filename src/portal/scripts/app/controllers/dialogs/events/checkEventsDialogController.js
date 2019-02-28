@@ -197,6 +197,7 @@
             }
             else {
                 vm.sort = sortParameter;
+                vm.direction = true;
             }
 
             var sortingOptions = {

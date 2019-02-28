@@ -10,15 +10,25 @@
             <thead>
             <tr>
                 <th data-ng-repeat="column in vm.columns[vm.entityType]">
-                    <div layout="column">
-                        <md-input-container class="md-block entity-search-filter">
-                            <label>{{column.name}}</label>
-                            <input data-ng-model="vm.search[vm.entityType][column.key]"
-                                   data-ng-model-options="{debounce: 1000}"
-                                   data-ng-change="vm.updateTable()">
-                        </md-input-container>
-                        <b class="entity-search-col-b">{{column.name}}</b>
-                    </div>
+                    <md-input-container class="md-block entity-search-filter" data-ng-if="column.name !== 'Instrument type'">
+                        <label>{{column.name}}</label>
+                        <input data-ng-model="vm.search[vm.entityType][column.key]"
+                               data-ng-model-options="{debounce: 1000}"
+                               data-ng-change="vm.updateTable()">
+                    </md-input-container>
+                </th>
+            </tr>
+            <tr>
+                <th data-ng-repeat="column in vm.columns[vm.entityType]">
+                    <dvi layout="row" data-ng-click="vm.sortBy(column.key)">
+                        <b class="entity-search-col-b">
+                            {{column.name}}
+                            <span class="sortorder"
+                                  data-ng-show="vm.sort === column.key"
+                                  data-ng-class="{reverse: vm.sortDescending}"
+                            ></span>
+                        </b>
+                    </dvi>
                 </th>
             </tr>
             </thead>
@@ -30,25 +40,29 @@
                 <thead>
                     <tr>
                         <th data-ng-repeat="column in vm.columns[vm.entityType]">
-                            <div layout="column">
-                                <md-input-container class="md-block entity-search-filter">
-                                    <label>{{column.name}}</label>
-                                    <input data-ng-model="vm.search[vm.entityType][column.key]"
-                                           data-ng-model-options="{debounce: 1000}"
-                                           data-ng-change="vm.updateTable()">
-                                </md-input-container>
+                            <md-input-container class="md-block entity-search-filter" data-ng-if="column.name !== 'Instrument type'">
+                                <label>{{column.name}}</label>
+                                <input data-ng-model-options="{debounce: 1000}">
+                            </md-input-container>
+                        </th>
+                    </tr>
+                    <tr>
+                        <th data-ng-repeat="column in vm.columns[vm.entityType]">
+                            <div layout="row">
                                 <b class="entity-search-col-b">{{column.name}}</b>
                             </div>
                         </th>
                     </tr>
-
                 </thead>
 
                 <tbody>
-                    <tr data-ng-click="vm.selectRow(item)" ng-dblclick="vm.selectAndSave(item)"
-                        data-ng-repeat="item in vm.items" class="{{item.active ? 'active' : ''}}"
+                    <tr data-ng-click="vm.selectRow(item)"
+                        ng-dblclick="vm.selectAndSave(item)"
+                        data-ng-repeat="item in vm.items"
+                        class="{{item.active ? 'active' : ''}}"
                         style="height: 40px">
-                        <td data-ng-repeat="column in vm.columns[vm.entityType]" data-ng-bind="item[column.key]"></td>
+                        <td data-ng-repeat="column in vm.columns[vm.entityType]"
+                            data-ng-bind="vm.getTdValue(item, column.key)"></td>
                     </tr>
                 </tbody>
 

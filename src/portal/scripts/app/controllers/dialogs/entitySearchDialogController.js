@@ -14,6 +14,8 @@
 
         vm.entityType = data.entityType;
 
+        vm.readyStatus = false
+
         vm.search = {
             'instrument': {
                 'user_code': '',
@@ -70,6 +72,10 @@
                 {
                     key: 'user_text_3',
                     name: 'User text 3'
+                },
+                {
+                    key: 'instrument_type_object.name',
+                    name: 'Instrument type'
                 }
             ],
             'account': [
@@ -141,6 +147,28 @@
             $mdDialog.cancel();
         };
 
+        vm.getTdValue = function (item, columnKey) {
+            // check if value positioned on a deeper level of an object
+            if (columnKey.indexOf('.') !== -1) {
+
+                var objectPathToValue = columnKey.split('.'); //an array of properties leading to a needed value
+                var currentPath = item; // current nesting level in the object
+
+                var i;
+                for (i = 0; i < objectPathToValue.length; i++) {
+                    if (!currentPath[objectPathToValue[i]]) {
+                        break;
+                    } else {
+                        currentPath = currentPath[objectPathToValue[i]];
+                    }
+                }
+
+                return currentPath;
+            } else {
+                return item[columnKey];
+            }
+        };
+
         vm.selectRow = function (item) {
             vm.items.forEach(function (item) {
                 item.active = false;
@@ -153,17 +181,61 @@
             $mdDialog.hide({status: 'agree', data: {item: item, items: vm.items}});
         };
 
-        entityResolverService.getList(vm.entityType, {filters: vm.search[vm.entityType]}).then(function (data) {
+        vm.sort;
+        vm.sortDescending = true;
+
+        vm.sortBy = function (sortParameter) {
+
+            var sortOrder = 'DSC';
+            if (vm.sort === sortParameter) {
+
+                vm.sortDescending = !vm.sortDescending;
+
+                if (vm.sortDescending) {
+                    sortOrder = 'DSC';
+                }
+                else {
+                    sortOrder = 'ASC';
+                }
+            }
+            else {
+                vm.sort = sortParameter
+                vm.sortDescending = true;
+            }
+
+            var sortingOptions = {
+                key: sortParameter,
+                direction: sortOrder
+            };
+
+            vm.updateTable(sortingOptions);
+
+        };
+
+        /*entityResolverService.getList(vm.entityType, {filters: vm.search[vm.entityType]}).then(function (data) {
             vm.items = data.results;
             $scope.$apply();
-        });
+        });*/
 
-        vm.updateTable = function () {
-            entityResolverService.getList(vm.entityType, {filters: vm.search[vm.entityType]}).then(function (data) {
+        vm.updateTable = function (sortingOptions) {
+            var options = {};
+
+            if (sortingOptions) {
+                options.sort = new Object();
+                options.sort = sortingOptions;
+            }
+
+            options.filters = vm.search[vm.entityType];
+
+            entityResolverService.getList(vm.entityType, options).then(function (data) {
+
                 vm.items = data.results;
+                vm.readyStatus = true;
                 $scope.$apply();
             })
         }
+
+        vm.updateTable();
 
     };
 

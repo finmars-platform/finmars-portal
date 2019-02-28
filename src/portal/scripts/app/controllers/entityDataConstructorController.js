@@ -157,6 +157,7 @@
 
         function addRow(tab) {
 
+            // calculating how much rows needs creating in addition to first five
             var rowsToAdd = 5 - tab.layout.rows;
             if (rowsToAdd <= 0) {
                rowsToAdd = 1;
@@ -343,21 +344,56 @@
         };
 
         vm.addTab = function () {
+
             if (!vm.tabs.length) {
                 vm.tabs = [];
             }
-            vm.tabs.push({
-                name: '',
-                editState: true,
-                layout: {
-                    rows: 0,
-                    columns: 1,
-                    fields: []
-                }
-            });
-            addRow(vm.tabs[vm.tabs.length - 1]);
 
-            vm.updateDrakeContainers();
+            if (vm.tabs.length > 0) {
+                console.log('target vm.tabs', vm.tabs);
+
+                var notSavedTabExist = false;
+
+                var i;
+                for (i = 0; i < vm.tabs.length; i = i + 1) {
+                    if (vm.tabs[i].hasOwnProperty('editState') && vm.tabs[i].editState) {
+                        notSavedTabExist = true;
+                        break;
+                    }
+                }
+
+                if (!notSavedTabExist) {
+
+                    vm.tabs.push({
+                        name: '',
+                        editState: true,
+                        layout: {
+                            rows: 0,
+                            columns: 1,
+                            fields: []
+                        }
+                    });
+
+                    addRow(vm.tabs[vm.tabs.length - 1]);
+
+                    vm.updateDrakeContainers();
+
+                } else {
+
+                    $mdDialog.show({
+                        controller: 'WarningDialogController as vm',
+                        templateUrl: 'views/warning-dialog-view.html',
+                        parent: angular.element(document.body),
+                        clickOutsideToClose: false,
+                        locals: {
+                            warning: {
+                                title: 'Warning',
+                                description: 'There is tab that is not saved. Please, save or delete it before creating new one.'
+                            }
+                        }
+                    });
+                }
+            }
 
         };
 
@@ -386,9 +422,8 @@
             if (tab.captionName && tab.captionName !== '') {
 
                 vm.tabs.forEach(function (singleTab) {
-                    console.log('addRows tab to save', tab, singleTab);
+
                     if (tab.captionName.toLowerCase() === singleTab.name.toLowerCase()) {
-                        console.log('found match', tab.captionName.toLowerCase(), singleTab.name.toLowerCase());
                         tabIsReadyToSave = false;
                     }
                 });
@@ -640,7 +675,7 @@
 
                                 // if (!tab.hasOwnProperty('editState') || (tab.hasOwnProperty('editState') && tab.editState)) {
                                 if (tab.name === tabName) {
-
+                                    console.log('target active tab', tab);
                                     tab.layout.fields.forEach(function (field) {
 
                                         if (field.column === column && field.row === row) {

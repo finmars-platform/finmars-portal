@@ -150,8 +150,10 @@
                 function findEmptyRows() {
                     var i, r, columnsIsEmpty;
                     var emptyRows = [];
-                    for (r = 1; r <= scope.tab.layout.rows; r = r + 1) {
+                    // checking all rows below first 5
+                    for (r = 6; r <= scope.tab.layout.rows; r = r + 1) {
                         columnsIsEmpty = true;
+                        console.log('target r', r);
                         for (i = 0; i < scope.tab.layout.fields.length; i = i + 1) {
                             if (scope.tab.layout.fields[i].row == r) {
                                 if (scope.tab.layout.fields[i].type === 'field') {
@@ -165,10 +167,13 @@
                         }
                     }
 
-                    deleteEmptyRows(emptyRows);
+                    if (emptyRows.length > 0) {
+                        deleteEmptyRows(emptyRows);
+                    }
                 }
 
                 function deleteEmptyRows(emptyRows) {
+
                     var i, e;
                     //console.log('emptyRows', emptyRows);
                     for (i = scope.tab.layout.rows; i > 0; i = i - 1) {
@@ -194,7 +199,6 @@
                         }
                     }
 
-                    addRow();
                 }
 
                 scope.getCols = function () {
