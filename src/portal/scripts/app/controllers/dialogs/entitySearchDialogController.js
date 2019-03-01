@@ -11,10 +11,10 @@
     module.exports = function ($scope, $mdDialog, data) {
 
         var vm = this;
-
+        console.log('smart search dialog data', data);
         vm.entityType = data.entityType;
 
-        vm.readyStatus = false
+        vm.readyStatus = false;
 
         vm.search = {
             'instrument': {
@@ -41,6 +41,21 @@
                 'short_name': ''
             },
             'counterparty': {
+                'user_code': '',
+                'name': '',
+                'short_name': ''
+            },
+            'strategy-1': {
+                'user_code': '',
+                'name': '',
+                'short_name': ''
+            },
+            'strategy-2': {
+                'user_code': '',
+                'name': '',
+                'short_name': ''
+            },
+            'strategy-3': {
                 'user_code': '',
                 'name': '',
                 'short_name': ''
@@ -134,6 +149,48 @@
                     name: 'Short name'
                 }
             ],
+            'strategy-1': [
+                {
+                    key: 'user_code',
+                    name: 'User code'
+                },
+                {
+                    key: 'name',
+                    name: 'Name'
+                },
+                {
+                    key: 'short_name',
+                    name: 'Short name'
+                }
+            ],
+            'strategy-2': [
+                {
+                    key: 'user_code',
+                    name: 'User code'
+                },
+                {
+                    key: 'name',
+                    name: 'Name'
+                },
+                {
+                    key: 'short_name',
+                    name: 'Short name'
+                }
+            ],
+            'strategy-3': [
+                {
+                    key: 'user_code',
+                    name: 'User code'
+                },
+                {
+                    key: 'name',
+                    name: 'Name'
+                },
+                {
+                    key: 'short_name',
+                    name: 'Short name'
+                }
+            ]
         };
 
         vm.items = [];
@@ -212,10 +269,10 @@
 
         };
 
-        /*entityResolverService.getList(vm.entityType, {filters: vm.search[vm.entityType]}).then(function (data) {
+        entityResolverService.getList(vm.entityType, {filters: vm.search[vm.entityType]}).then(function (data) {
             vm.items = data.results;
             $scope.$apply();
-        });*/
+        });
 
         vm.updateTable = function (sortingOptions) {
             var options = {};
@@ -234,8 +291,6 @@
                 $scope.$apply();
             })
         }
-
-        vm.updateTable();
 
     };
 

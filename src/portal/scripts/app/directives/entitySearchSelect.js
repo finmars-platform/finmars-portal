@@ -12,10 +12,16 @@
             scope: {
                 label: '=',
                 item: '=',
+                loadOptionsMethod: '&',
                 options: '=',
                 entityType: '='
             },
             link: function (scope, elem, attrs, ngModelCtrl) {
+
+                console.log('smart search data', scope.item, scope.label, scope.options, scope.entityType);
+                if (scope.loadOptionsMethod()) {
+                    scope.loadOptionsMethod();
+                }
 
                 $(elem).on('click', function (event) {
                     event.preventDefault();
@@ -24,9 +30,9 @@
                     $mdDialog.show({
                         controller: 'EntitySearchDialogController as vm',
                         templateUrl: 'views/dialogs/entity-search-dialog-view.html',
-                        parent: angular.element(document.body),
+                        // parent: angular.element(document.body),
                         targetEvent: event,
-                        preserveScope: true,
+                        preserveScope: false,
                         autoWrap: true,
                         skipHide: true,
                         multiple: true,
@@ -42,7 +48,7 @@
 
                             console.log('res', res);
 
-                            if (!scope.options.length) {
+                            if (!scope.options || !scope.options.length) {
                                 scope.options = res.data.items;
                             }
 
