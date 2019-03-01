@@ -28,7 +28,7 @@
                 scope.fields = [];
 
                 console.log('scope.item.name', scope.item);
-                console.log('scope.item.name', scope.item);
+                // console.log('scope.entity', scope.entity);
 
                 if (['counterparties', 'accounts', 'responsibles', 'transaction_types', 'tags'].indexOf(scope.item.key) !== -1) {
                     scope.type = 'multiple-ids';
@@ -43,27 +43,32 @@
                 };
 
                 scope.getModelKeyEntity = function () {
-                    var key = scope.item.name;
-                    var result = key;
+                    var key;
+                    var modelKeyEntity;
 
-                    if (key === 'linked_instrument') {
-                        result = 'instrument'
+                    if (scope.entityType === 'complex-transaction') {
+                        key = scope.item.content_type;
+
+                        var modelKey = key.split('.');
+                        var entityIndex = modelKey.length - 1;
+                        modelKeyEntity = modelKey[entityIndex];
+
+                    } else {
+                        key = scope.item.name;
+
+                        switch (key) {
+                            case 'linked_instrument':
+                                modelKeyEntity = 'instrument';
+                                break;
+                            case 'account_interim':
+                            case 'account_cash':
+                            case 'account_position':
+                                modelKeyEntity = 'account';
+                                break;
+                        }
                     }
 
-                    if (key === 'account_interim') {
-                        result = 'account';
-                    }
-
-                    if (key === 'account_cash') {
-                        result = 'account';
-                    }
-
-                    if (key === 'account_position') {
-                        result = 'account';
-                    }
-
-
-                    return result;
+                    return modelKeyEntity;
                 };
 
                 scope.resolveMultiple = function () {

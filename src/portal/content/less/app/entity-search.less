@@ -17,6 +17,10 @@
 
   table {
     table-layout: fixed;
+
+    thead {
+      border-bottom: solid 2px #000000;
+    }
   }
 }
 
@@ -37,5 +41,9 @@ table.entity-search-table {
     tr {
       border-bottom: none;
     }
+  }
+  td {
+    text-overflow: ellipsis;
+    overflow: hidden;
   }
 }
