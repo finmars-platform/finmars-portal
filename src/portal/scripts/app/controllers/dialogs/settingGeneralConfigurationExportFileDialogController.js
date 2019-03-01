@@ -211,6 +211,11 @@
                             var exportConfPropertiesList = Object.keys(properties);
 
                             var itemIsActive = false;
+
+                            vm.activeLayout.data[entityItem.entity] = vm.activeLayout.data[entityItem.entity].filter(function (item) {
+                                return !!item;
+                            });
+
                             vm.activeLayout.data[entityItem.entity].forEach(function (activeItem) {
                                 var propertiesMatch = 0;
                                 // Check if all properties of childItem match with ones from layout
