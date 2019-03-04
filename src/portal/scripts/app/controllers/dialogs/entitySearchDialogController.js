@@ -197,6 +197,13 @@
         vm.selectedItem = {};
 
         vm.agree = function () {
+
+            if (itemsToDelete.length > 0) {
+                itemsToDelete.forEach(function (itemId) {
+                    entityResolverService.deleteByKey(vm.entityType, itemId);
+                });
+            }
+
             $mdDialog.hide({status: 'agree', data: {item: vm.selectedItem, items: vm.items}});
         };
 
@@ -267,6 +274,35 @@
 
             vm.updateTable(sortingOptions);
 
+        };
+
+        vm.editItem = function (itemId, $event) {
+
+            $mdDialog.show({
+                controller: 'EntityViewerEditDialogController as vm',
+                templateUrl: 'views/entity-viewer/edit-entity-viewer-dialog-view.html',
+                parent: $(''),
+                targetEvent: $event,
+                multiple: true,
+                autoWrap: true,
+                skipHide: true,
+                locals: {
+                    entityType: vm.entityType,
+                    entityId: itemId
+                }
+            }).then(function (data) {
+
+                if (data.res === 'agree') {
+                    vm.updateTable();
+                }
+
+            })
+        };
+
+        var itemsToDelete = [];
+        vm.deleteItem = function (item, index) {
+            vm.items.splice(index, 1);
+            itemsToDelete.push(item.id);
         };
 
         entityResolverService.getList(vm.entityType, {filters: vm.search[vm.entityType]}).then(function (data) {
