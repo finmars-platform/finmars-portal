@@ -25,6 +25,8 @@
 
     module.exports = function ($scope, $mdDialog, $state, entityType, entity) {
 
+        console.log('EntityViewerAddDialog entityType, entity', entityType, entity);
+
         var vm = this;
         vm.readyStatus = {content: false, entity: true, permissions: true};
         vm.entityType = entityType;
@@ -658,6 +660,8 @@
 
             vm.entity.$_isValid = entityEditorHelper.checkForNotNullRestriction(vm.entity, vm.entityAttrs, vm.attrs);
 
+            console.log('vm.entity before save', vm.entity);
+
             if (vm.entity.$_isValid) {
 
                 var resultEntity = entityEditorHelper.checkForNulls(vm.entity);
@@ -682,6 +686,12 @@
                     resultEntity.calculate = true;
 
                 }
+
+                if (vm.entityType === 'transaction-type') {
+                    resultEntity.book_transaction_layout = vm.entity.book_transaction_layout;
+                }
+
+                console.log('resultEntity', resultEntity);
 
                 entityResolverService.create(vm.entityType, resultEntity).then(function (data) {
 

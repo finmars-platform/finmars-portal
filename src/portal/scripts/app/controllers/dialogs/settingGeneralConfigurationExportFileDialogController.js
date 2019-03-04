@@ -121,30 +121,31 @@
 
         };
 
-        var getECProperties = function (config) {
-            var properties = {};
-            // var exportSettingsData = {};
-            if (config.hasOwnProperty('name')) {
-                properties.name = config.name
+        var getECProperties = function (item) {
+
+            var result = {};
+
+            if (item.hasOwnProperty('name')) {
+                result.name = item.name
             }
 
-            if (config.hasOwnProperty('content_type')) {
-                properties.content_type = config.content_type
+            if (item.hasOwnProperty('content_type')) {
+                result.content_type = item.content_type
             }
 
-            if (config.hasOwnProperty('user_code')) {
-                properties.user_code = config.user_code
+            if (item.hasOwnProperty('user_code')) {
+                result.user_code = item.user_code
             }
 
-            if (config.hasOwnProperty('scheme_name')) {
-                properties.scheme_name = config.scheme_name
+            if (item.hasOwnProperty('scheme_name')) {
+                result.scheme_name = item.scheme_name
             }
 
-            if (config.hasOwnProperty('cron_expr')) {
-                properties.cron_expr = config.cron_expr
+            if (item.hasOwnProperty('cron_expr')) {
+                result.cron_expr = item.cron_expr
             }
 
-            return properties;
+            return result;
         };
 
         vm.getConfigurationExportLayouts = function () {
@@ -166,7 +167,9 @@
                     });
                 }
 
-                vm.syncWithLayout();
+                if (vm.activeLayout) {
+                    vm.syncWithLayout();
+                }
 
                 vm.readyStatus.layouts = true;
 
@@ -176,72 +179,70 @@
 
         };
 
+        vm.deactivateAll = function () {
+
+            vm.items.forEach(function (entityItem) {
+
+                entityItem.active = false;
+                entityItem.someChildsActive = false;
+
+                entityItem.content.forEach(function (childItem) {
+                    childItem.active = false;
+                })
+
+            });
+
+        };
 
         vm.syncWithLayout = function () {
 
-            if (vm.activeLayout) {
+            vm.layouts.forEach(function (item) {
+                item.is_default = false;
+            });
 
-                vm.layouts.forEach(function (item) {
-                    item.is_default = false;
-                });
+            vm.activeLayout.is_default = true;
 
-                vm.activeLayout.is_default = true;
+            vm.deactivateAll();
 
-                vm.items.forEach(function (entityItem) {
-                    entityItem.active = false;
-                    entityItem.someChildsActive = false;
+            vm.items.forEach(function (entityItem) {
 
-                    entityItem.content.forEach(function (childItem) {
-                        childItem.active = false;
-                    })
-                });
+                var layoutData = vm.activeLayout.data[entityItem.entity];
 
-                vm.items.forEach(function (entityItem) {
+                if (layoutData && layoutData.length > 0) {
 
-                    if (vm.activeLayout.data[entityItem.entity] && vm.activeLayout.data[entityItem.entity].length > 0) {
-
-                        if (entityItem.content.length) {
-                            entityItem.active = true;
-                        }
-
-                        entityItem.content.forEach(function (childItem) {
-                            // Get unique set of properties from configuration item
-                            var properties = getECProperties(childItem);
-
-                            var exportConfPropertiesList = Object.keys(properties);
-
-                            var itemIsActive = false;
-                            vm.activeLayout.data[entityItem.entity].forEach(function (activeItem) {
-                                var propertiesMatch = 0;
-                                // Check if all properties of childItem match with ones from layout
-                                exportConfPropertiesList.forEach(function (ECProperty) {
-                                    if (activeItem.hasOwnProperty(ECProperty) && activeItem[ECProperty] === properties[ECProperty]) {
-                                        propertiesMatch = propertiesMatch + 1;
-                                    }
-                                });
-                                // If all childItem properties match make it active
-                                if (exportConfPropertiesList.length === propertiesMatch) {
-                                    itemIsActive = true;
-                                    return false;
-                                }
-
-                            });
-                            if (itemIsActive) {
-                                childItem.active = true;
-                                entityItem.someChildsActive = true;
-                            } else {
-                                entityItem.active = false;
-                                entityItem.someChildsActive = false;
-                            }
-                        })
-
+                    if (entityItem.content.length) {
+                        entityItem.active = true;
                     }
 
-                });
+                    entityItem.content.forEach(function (childItem) {
 
-                vm.checkSelectAll();
+                        var searchItem = getECProperties(childItem);
 
-            }
+                        layoutData.forEach(function (layoutDataItem) {
+
+                            if (layoutDataItem) {
+
+                                Object.keys(searchItem).forEach(function (key) {
+
+                                    if (layoutDataItem[key] === searchItem[key]) {
+                                        childItem.active = true;
+                                        entityItem.someChildsActive = true;
+                                    }
+
+                                });
+
+                            }
+
+                        })
+
+
+                    })
+
+                }
+
+            });
+
+            vm.checkSelectAll();
 
         };
 

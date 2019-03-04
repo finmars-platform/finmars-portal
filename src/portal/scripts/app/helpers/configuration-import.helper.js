@@ -1419,7 +1419,7 @@
                         uiRepository.getListLayoutDefault({
                             filters: {
                                 name: item.___layout_name,
-                                content_tye: item.___content_type
+                                content_type: item.___content_type
                             }
                         }).then(function (data) {
 
@@ -1429,7 +1429,43 @@
 
                             }
 
-                            resolve(bookmarkRepository.create(item));
+                            var promises = [];
+
+                            if (item.children && item.children.length) {
+
+                                item.children.forEach(function (child) {
+
+                                    promises.push(new Promise(function (localResolve) {
+
+                                        uiRepository.getListLayoutDefault({
+                                            filters: {
+                                                name: child.___layout_name,
+                                                content_type: child.___content_type
+                                            }
+                                        }).then(function (data) {
+
+                                            if (data.results.length) {
+
+                                                child.list_layout = data.results[0].id;
+
+                                            }
+
+                                            console.log('bookmark child', child);
+
+                                            localResolve(child)
+
+                                        })
+
+                                    }))
+
+                                })
+
+                            }
+
+                            Promise.all(promises).then(function (value) {
+                                resolve(bookmarkRepository.create(item));
+                            });
+
                         })
 
                     }));

@@ -34,8 +34,6 @@
 
         vm.init = function () {
 
-            vm.eventsProcessing = true;
-
             vm.getMasterUsersList().then(function () {
 
                 usersService.getOwnMemberSettings().then(function (data) {
@@ -62,6 +60,10 @@
                     }
 
                     if (showEventsDialogs) {
+
+                        vm.eventsProcessing = true;
+
+                        $scope.$apply();
 
                         afterLoginEventsService.getAndShowEvents($mdDialog).then(function (value) {
 
