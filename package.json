@@ -50,7 +50,6 @@
     "angular-touch": "^1.5.0",
     "angular-ui-router": "^1.0.20",
     "angular-ui-scroll": "^1.7.1",
-    "bower": "^1.8.2",
     "core-js": "^2.1.4",
     "dragula": "^3.6.8",
     "fancy-logger": "^1.0.0",
