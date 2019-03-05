@@ -1,5 +1,5 @@
 <div data-ng-controller="EventSchedulesTabController as vm">
-    <div class="" data-ng-if="vm.checkReadyStatus()">
+    <div data-ng-if="vm.checkReadyStatus()">
         <table class="bordered margin-bottom-20">
             <thead>
             <tr>
@@ -134,17 +134,13 @@
                         <md-menu-content>
                             <md-menu-item>
                                 <md-button ng-click="vm.editItem(item)">
-                                    <ng-md-icon icon="mode_edit" style="top: 6px;
-    position: relative;
-    margin-right: 10px;"></ng-md-icon>
+                                    <ng-md-icon icon="mode_edit" class="dialog-table-settings-btns-icons"></ng-md-icon>
                                     Edit
                                 </md-button>
                             </md-menu-item>
                             <md-menu-item>
                                 <md-button ng-click="vm.deleteItem(item, $index)">
-                                    <ng-md-icon icon="delete" style="top: 6px;
-    position: relative;
-    margin-right: 10px;"></ng-md-icon>
+                                    <ng-md-icon icon="delete" class="dialog-table-settings-btns-icons"></ng-md-icon>
                                     Delete
                                 </md-button>
                             </md-menu-item>

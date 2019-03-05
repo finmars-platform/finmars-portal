@@ -1,3 +1,7 @@
+div.h-instrument-select {
+  z-index: 0;
+}
+
 .entity-search-dialog {
   md-dialog-content {
     position: relative;
@@ -17,6 +21,10 @@
 
   table {
     table-layout: fixed;
+
+    thead {
+      border-bottom: solid 2px #000000;
+    }
   }
 }
 
@@ -38,4 +46,13 @@ table.entity-search-table {
       border-bottom: none;
     }
   }
+  td {
+    text-overflow: ellipsis;
+    overflow: hidden;
+  }
+
+}
+
+.entity-search-settings-header {
+  width: 50px;
 }

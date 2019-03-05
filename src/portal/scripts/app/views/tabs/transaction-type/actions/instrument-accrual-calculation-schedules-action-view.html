@@ -25,24 +25,11 @@
                     </div>
                     <div flex="80">
                         <div data-ng-if="item.instrument_accrual_calculation_schedules.instrument_toggle">
-                            <md-input-container>
-                                <label for="" class="uncut-text-on-focus-label" content-title>Instrument</label>
-                                <md-select
-                                        data-ng-model="item.instrument_accrual_calculation_schedules.instrument"
-                                        md-on-open="vm.loadRelation('instrument')">
-                                    <md-option
-                                            data-ng-if="!vm.relationItems['instrument'].length"
-                                            ng-value="item.instrument_accrual_calculation_schedules.instrument_object.id">
-                                        {{item.instrument_accrual_calculation_schedules.instrument_object.name}}
-                                    </md-option>
-                                    <md-option
-                                            data-ng-if="vm.relationItems['instrument'].length"
-                                            data-ng-repeat="relationItem in vm.relationItems['instrument']"
-                                            ng-value="relationItem.id">
-                                        {{relationItem.name}}
-                                    </md-option>
-                                </md-select>
-                            </md-input-container>
+                            <entity-search-select data-item="item.instrument_accrual_calculation_schedules.instrument"
+                                                  data-label="'Instrument'"
+                                                  data-load-options-method="vm.loadRelation('instrument')"
+                                                  data-options="vm.relationItems['instrument']"
+                                                  data-entity-type="'instrument'"></entity-search-select>
                         </div>
                         <div data-ng-if="!item.instrument_accrual_calculation_schedules.instrument_toggle">
                             <md-input-container>
