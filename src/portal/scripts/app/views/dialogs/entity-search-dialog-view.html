@@ -17,6 +17,7 @@
                                data-ng-change="vm.updateTable()">
                     </md-input-container>
                 </th>
+                <th class="entity-search-settings-header"></th>
             </tr>
             <tr>
                 <th data-ng-repeat="column in vm.columns[vm.entityType]">
@@ -30,6 +31,7 @@
                         </b>
                     </dvi>
                 </th>
+                <th class="entity-search-settings-header"></th>
             </tr>
             </thead>
         </table>
@@ -45,6 +47,7 @@
                                 <input data-ng-model-options="{debounce: 1000}">
                             </md-input-container>
                         </th>
+                        <th class="entity-search-settings-header"></th>
                     </tr>
                     <tr>
                         <th data-ng-repeat="column in vm.columns[vm.entityType]">
@@ -52,17 +55,42 @@
                                 <b class="entity-search-col-b">{{column.name}}</b>
                             </div>
                         </th>
+                        <th class="entity-search-settings-header"></th>
                     </tr>
                 </thead>
 
                 <tbody>
                     <tr data-ng-click="vm.selectRow(item)"
                         ng-dblclick="vm.selectAndSave(item)"
-                        data-ng-repeat="item in vm.items"
+                        data-ng-repeat="item in vm.items track by item.id"
                         class="{{item.active ? 'active' : ''}}"
                         style="height: 40px">
                         <td data-ng-repeat="column in vm.columns[vm.entityType]"
-                            data-ng-bind="vm.getTdValue(item, column.key)"></td>
+                            data-ng-bind="vm.getTdValue(item, column.key)">
+                        </td>
+                        <td>
+                            <md-menu data-ng-hide="item.user_code === '-'">
+                                <md-button data-ng-click="$mdOpenMenu($event)"
+                                           class="md-icon-button" aria-label="smart search setting menu">
+                                    <ng-md-icon icon="settings"></ng-md-icon>
+                                </md-button>
+
+                                <md-menu-content>
+                                    <md-menu-item>
+                                        <md-button ng-click="vm.editItem(item.id, $event)">
+                                            <ng-md-icon icon="mode_edit" class="dialog-table-settings-btns-icons"></ng-md-icon>
+                                            Edit
+                                        </md-button>
+                                    </md-menu-item>
+                                    <md-menu-item>
+                                        <md-button ng-click="vm.deleteItem(item, $index)">
+                                            <ng-md-icon icon="delete" class="dialog-table-settings-btns-icons"></ng-md-icon>
+                                            Delete
+                                        </md-button>
+                                    </md-menu-item>
+                                </md-menu-content>
+                            </md-menu>
+                        </td>
                     </tr>
                 </tbody>
 

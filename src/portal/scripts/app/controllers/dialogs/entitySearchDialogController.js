@@ -14,7 +14,59 @@
 
         vm.entityType = data.entityType;
 
-        vm.readyStatus = false
+        vm.readyStatus = false;
+
+        /*vm.itemsCount = null;
+        var page = 1;
+        vm.pageSize = 40;
+        var lastPageReached = false;*/
+
+        /*vm.itemsProvider = {
+            // ui scroll parameters
+            // index - position of first item in list of scrolled items
+            // count - amount of items to scroll before load more
+            get: function (index, count, callback) {
+
+                var result = [];
+
+                var startItem = index;
+                var endItem = index + count;
+                if (startItem < 0 || startItem === 0) {
+                    startItem = 0;
+                }
+
+                if (vm.itemsCount === vm.items.length) {
+                    lastPageReached = true;
+                }
+                console.log('smart search loader', vm.items, vm.itemsCount, index, count);
+                // if scroll reached last item, load more
+                if (index + count >= vm.items.length && !lastPageReached) {
+                    page = page + 1;
+
+                    vm.updateTable().then(function (value) {
+
+                        result = vm.items.slice(startItem, endItem);
+                        console.log('smart search downloaded results', result);
+                        callback(result);
+
+                    }).catch(function (reason) {
+
+                        result = vm.items.slice(startItem, endItem);
+                        console.log('smart search downloaded results', result);
+                        callback(result);
+
+                    })
+
+                } else {
+
+                    result = vm.items.slice(startItem, endItem);
+                    console.log('smart search results', result);
+                    callback(result);
+
+                }
+
+            }
+        };*/
 
         vm.search = {
             'instrument': {
@@ -41,6 +93,21 @@
                 'short_name': ''
             },
             'counterparty': {
+                'user_code': '',
+                'name': '',
+                'short_name': ''
+            },
+            'strategy-1': {
+                'user_code': '',
+                'name': '',
+                'short_name': ''
+            },
+            'strategy-2': {
+                'user_code': '',
+                'name': '',
+                'short_name': ''
+            },
+            'strategy-3': {
                 'user_code': '',
                 'name': '',
                 'short_name': ''
@@ -134,12 +201,61 @@
                     name: 'Short name'
                 }
             ],
+            'strategy-1': [
+                {
+                    key: 'user_code',
+                    name: 'User code'
+                },
+                {
+                    key: 'name',
+                    name: 'Name'
+                },
+                {
+                    key: 'short_name',
+                    name: 'Short name'
+                }
+            ],
+            'strategy-2': [
+                {
+                    key: 'user_code',
+                    name: 'User code'
+                },
+                {
+                    key: 'name',
+                    name: 'Name'
+                },
+                {
+                    key: 'short_name',
+                    name: 'Short name'
+                }
+            ],
+            'strategy-3': [
+                {
+                    key: 'user_code',
+                    name: 'User code'
+                },
+                {
+                    key: 'name',
+                    name: 'Name'
+                },
+                {
+                    key: 'short_name',
+                    name: 'Short name'
+                }
+            ]
         };
 
         vm.items = [];
         vm.selectedItem = {};
 
         vm.agree = function () {
+
+            if (itemsToDelete.length > 0) {
+                itemsToDelete.forEach(function (itemId) {
+                    entityResolverService.deleteByKey(vm.entityType, itemId);
+                });
+            }
+
             $mdDialog.hide({status: 'agree', data: {item: vm.selectedItem, items: vm.items}});
         };
 
@@ -212,13 +328,47 @@
 
         };
 
-        /*entityResolverService.getList(vm.entityType, {filters: vm.search[vm.entityType]}).then(function (data) {
+        vm.editItem = function (itemId, $event) {
+
+            $mdDialog.show({
+                controller: 'EntityViewerEditDialogController as vm',
+                templateUrl: 'views/entity-viewer/edit-entity-viewer-dialog-view.html',
+                parent: $(''),
+                targetEvent: $event,
+                multiple: true,
+                autoWrap: true,
+                skipHide: true,
+                locals: {
+                    entityType: vm.entityType,
+                    entityId: itemId
+                }
+            }).then(function (data) {
+
+                if (data.res === 'agree') {
+                    vm.updateTable();
+                }
+
+            })
+        };
+
+        var itemsToDelete = [];
+        vm.deleteItem = function (item, index) {
+            vm.items.splice(index, 1);
+            itemsToDelete.push(item.id);
+        };
+
+        entityResolverService.getList(vm.entityType, {filters: vm.search[vm.entityType]}).then(function (data) {
+
             vm.items = data.results;
             $scope.$apply();
-        });*/
+
+        });
 
         vm.updateTable = function (sortingOptions) {
             var options = {};
+
+            // options.page = page;
+            // options.pageSize = vm.pageSize;
 
             if (sortingOptions) {
                 options.sort = new Object();
@@ -229,13 +379,16 @@
 
             entityResolverService.getList(vm.entityType, options).then(function (data) {
 
-                vm.items = data.results;
+                // if (data.hasOwnProperty('count')) {
+                //     vm.itemsCount = data.count;
+                // }
+
+                vm.items = vm.items.concat(data.results);
                 vm.readyStatus = true;
                 $scope.$apply();
-            })
-        }
 
-        vm.updateTable();
+            })
+        };
 
     };
 

@@ -425,7 +425,6 @@ md-tooltip.tooltip_1 {
   left: 0px;
   bottom: 30px;
   left: -50%;
-  // pointer-events: none;
 }
 
 md-card.small-width {
@@ -444,7 +443,11 @@ md-card.small-width {
 }
 
 md-backdrop.md-select-backdrop {
-  z-index: 11000;
+  z-index: 11009;
+}
+
+md-backdrop.md-menu-backdrop {
+  z-index: 11001;
 }
 
 .audit-cell {
@@ -777,6 +780,12 @@ td, th {
 .checkForEventSortingBtn {
   cursor: pointer;
   min-width: 90px;
+}
+
+.dialog-table-settings-btns-icons {
+  position: relative;
+  top: 6px;
+  margin-right: 10px;
 }
 
 md-input-container {
@@ -1180,8 +1189,8 @@ md-menu-content md-menu.md-menu {
 
 }
 
-.md-input-focused {
-  .uncut-text-on-focus-label {
+md-input-container.md-input-focused {
+  label.uncut-text-on-focus-label {
     overflow: initial;
   }
 }
