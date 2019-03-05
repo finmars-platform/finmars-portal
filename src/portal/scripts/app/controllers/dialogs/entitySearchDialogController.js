@@ -11,10 +11,62 @@
     module.exports = function ($scope, $mdDialog, data) {
 
         var vm = this;
-        console.log('smart search dialog data', data);
+
         vm.entityType = data.entityType;
 
         vm.readyStatus = false;
+
+        /*vm.itemsCount = null;
+        var page = 1;
+        vm.pageSize = 40;
+        var lastPageReached = false;*/
+
+        /*vm.itemsProvider = {
+            // ui scroll parameters
+            // index - position of first item in list of scrolled items
+            // count - amount of items to scroll before load more
+            get: function (index, count, callback) {
+
+                var result = [];
+
+                var startItem = index;
+                var endItem = index + count;
+                if (startItem < 0 || startItem === 0) {
+                    startItem = 0;
+                }
+
+                if (vm.itemsCount === vm.items.length) {
+                    lastPageReached = true;
+                }
+                console.log('smart search loader', vm.items, vm.itemsCount, index, count);
+                // if scroll reached last item, load more
+                if (index + count >= vm.items.length && !lastPageReached) {
+                    page = page + 1;
+
+                    vm.updateTable().then(function (value) {
+
+                        result = vm.items.slice(startItem, endItem);
+                        console.log('smart search downloaded results', result);
+                        callback(result);
+
+                    }).catch(function (reason) {
+
+                        result = vm.items.slice(startItem, endItem);
+                        console.log('smart search downloaded results', result);
+                        callback(result);
+
+                    })
+
+                } else {
+
+                    result = vm.items.slice(startItem, endItem);
+                    console.log('smart search results', result);
+                    callback(result);
+
+                }
+
+            }
+        };*/
 
         vm.search = {
             'instrument': {
@@ -306,12 +358,17 @@
         };
 
         entityResolverService.getList(vm.entityType, {filters: vm.search[vm.entityType]}).then(function (data) {
+
             vm.items = data.results;
             $scope.$apply();
+
         });
 
         vm.updateTable = function (sortingOptions) {
             var options = {};
+
+            // options.page = page;
+            // options.pageSize = vm.pageSize;
 
             if (sortingOptions) {
                 options.sort = new Object();
@@ -322,11 +379,16 @@
 
             entityResolverService.getList(vm.entityType, options).then(function (data) {
 
-                vm.items = data.results;
+                // if (data.hasOwnProperty('count')) {
+                //     vm.itemsCount = data.count;
+                // }
+
+                vm.items = vm.items.concat(data.results);
                 vm.readyStatus = true;
                 $scope.$apply();
+
             })
-        }
+        };
 
     };
 
