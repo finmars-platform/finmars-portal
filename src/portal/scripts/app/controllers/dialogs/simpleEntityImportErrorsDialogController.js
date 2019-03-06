@@ -9,7 +9,7 @@
 
     module.exports = function($scope, $mdDialog, data){
 
-        logService.controller('importEntityErrorsDialogController', 'initialized');
+        logService.controller('SimpleEntityImportErrorsDialogController', 'initialized');
 
         var vm = this;
 

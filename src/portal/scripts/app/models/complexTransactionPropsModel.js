@@ -34,7 +34,7 @@
                 "entity": "transaction-type",
                 "code": "user_code",
                 "allow_null": false
-            },
+            }
         ]
     };
 
