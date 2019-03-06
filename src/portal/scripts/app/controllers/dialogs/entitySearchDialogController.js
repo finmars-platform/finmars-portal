@@ -16,57 +16,10 @@
 
         vm.readyStatus = false;
 
-        /*vm.itemsCount = null;
+        vm.itemsCount = null;
         var page = 1;
-        vm.pageSize = 40;
-        var lastPageReached = false;*/
-
-        /*vm.itemsProvider = {
-            // ui scroll parameters
-            // index - position of first item in list of scrolled items
-            // count - amount of items to scroll before load more
-            get: function (index, count, callback) {
-
-                var result = [];
-
-                var startItem = index;
-                var endItem = index + count;
-                if (startItem < 0 || startItem === 0) {
-                    startItem = 0;
-                }
-
-                if (vm.itemsCount === vm.items.length) {
-                    lastPageReached = true;
-                }
-                console.log('smart search loader', vm.items, vm.itemsCount, index, count);
-                // if scroll reached last item, load more
-                if (index + count >= vm.items.length && !lastPageReached) {
-                    page = page + 1;
-
-                    vm.updateTable().then(function (value) {
-
-                        result = vm.items.slice(startItem, endItem);
-                        console.log('smart search downloaded results', result);
-                        callback(result);
-
-                    }).catch(function (reason) {
-
-                        result = vm.items.slice(startItem, endItem);
-                        console.log('smart search downloaded results', result);
-                        callback(result);
-
-                    })
-
-                } else {
-
-                    result = vm.items.slice(startItem, endItem);
-                    console.log('smart search results', result);
-                    callback(result);
-
-                }
-
-            }
-        };*/
+        var pageSize = 40;
+        // var lastPageReached = false;
 
         vm.search = {
             'instrument': {
@@ -267,7 +220,7 @@
             // check if value positioned on a deeper level of an object
             if (columnKey.indexOf('.') !== -1) {
 
-                var objectPathToValue = columnKey.split('.'); //an array of properties leading to a needed value
+                var objectPathToValue = columnKey.split('.'); // an array of properties leading to a needed value inside of the object
                 var currentPath = item; // current nesting level in the object
 
                 var i;
@@ -299,6 +252,7 @@
 
         vm.sort;
         vm.sortDescending = true;
+        vm.sortingOptions = undefined;
 
         vm.sortBy = function (sortParameter) {
 
@@ -319,12 +273,12 @@
                 vm.sortDescending = true;
             }
 
-            var sortingOptions = {
+            vm.sortingOptions = {
                 key: sortParameter,
                 direction: sortOrder
             };
 
-            vm.updateTable(sortingOptions);
+            vm.getEntityItems('reloadTable');
 
         };
 
@@ -345,50 +299,107 @@
             }).then(function (data) {
 
                 if (data.res === 'agree') {
-                    vm.updateTable();
+                    vm.getEntityItems('reloadTable');
                 }
 
             })
         };
 
         var itemsToDelete = [];
+
         vm.deleteItem = function (item, index) {
             vm.items.splice(index, 1);
             itemsToDelete.push(item.id);
         };
 
-        entityResolverService.getList(vm.entityType, {filters: vm.search[vm.entityType]}).then(function (data) {
+        vm.loadOnScroll = function () {
+            var scrollAtTheEnd = false;
+            var scrollElem = $('.entity-search-scroll-container');
+            var elemScrollHeight = scrollElem[0].scrollHeight;
+            var scrollPositionToLoadItems = elemScrollHeight / 3; // start item loading when scroll passes one third of its length
 
-            vm.items = data.results;
-            $scope.$apply();
+            scrollElem.scroll(function () {
 
-        });
+               // Call function when scroll reaches specified position
+               if (elemScrollHeight - scrollElem.scrollTop() < scrollPositionToLoadItems && !scrollAtTheEnd) {
+                   scrollAtTheEnd = true;
 
-        vm.updateTable = function (sortingOptions) {
+                   if (vm.itemsCount && vm.itemsCount > vm.items.length) {
+                       page = page + 1;
+
+                       vm.getEntityItems().then(function (data) {
+
+                           // refreshing of scroll height after loading new page of items
+                           elemScrollHeight = scrollElem[0].scrollHeight;
+                           scrollPositionToLoadItems = elemScrollHeight / 3;
+                           scrollAtTheEnd = false;
+
+                       });
+
+                   }
+
+               }
+
+            });
+        };
+
+        var getTableOptions = function () {
             var options = {};
 
-            // options.page = page;
-            // options.pageSize = vm.pageSize;
+            options.page = page;
+            options.pageSize = vm.pageSize;
 
-            if (sortingOptions) {
+            if (vm.sortingOptions) {
                 options.sort = new Object();
-                options.sort = sortingOptions;
+                options.sort = vm.sortingOptions;
             }
 
             options.filters = vm.search[vm.entityType];
 
-            entityResolverService.getList(vm.entityType, options).then(function (data) {
-
-                // if (data.hasOwnProperty('count')) {
-                //     vm.itemsCount = data.count;
-                // }
-
-                vm.items = vm.items.concat(data.results);
-                vm.readyStatus = true;
-                $scope.$apply();
-
-            })
+            return options;
         };
+
+        entityResolverService.getList(vm.entityType, getTableOptions()).then(function (data) {
+
+            if (data.hasOwnProperty('count')) {
+                vm.itemsCount = data.count;
+            }
+
+            vm.items = data.results;
+            $scope.$apply();
+            vm.loadOnScroll();
+
+        });
+
+        vm.getEntityItems = function (reloadTable) {
+
+            return new Promise(function (resolve, reject) {
+
+                // if reloadTable parameter exist, reset options and vm.items
+                if (reloadTable) {
+                    page = 1;
+                    vm.itemsCount = null;
+                    $('.entity-search-scroll-container').scrollTop(0);
+                }
+
+                entityResolverService.getList(vm.entityType, getTableOptions()).then(function (data) {
+
+                    if (data.hasOwnProperty('count')) {
+                        vm.itemsCount = data.count;
+                    }
+
+                    if (reloadTable) {
+                        vm.items = data.results;
+                    } else {
+                        vm.items = vm.items.concat(data.results);
+                    }
+
+                    $scope.$apply()
+                    resolve({status: 'loaded'});
+
+                });
+            })
+        }
 
     };
 
