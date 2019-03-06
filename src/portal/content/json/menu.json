@@ -311,7 +311,7 @@
     ]
   },
   {
-    "state": "app.dashboard",
+    "state": "app.home",
     "title": "Dashboard",
     "type": "link",
     "icon": "dashboard"
