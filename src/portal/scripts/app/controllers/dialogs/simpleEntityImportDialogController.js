@@ -126,7 +126,7 @@
                 } else {
 
                     $mdDialog.show({
-                        controller: 'ImportEntityErrorsDialogController as vm',
+                        controller: 'SimpleEntityImportErrorsDialogController as vm',
                         templateUrl: 'views/dialogs/simple-entity-import-errors-dialog-view.html',
                         targetEvent: $event,
                         preserveScope: true,

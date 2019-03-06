@@ -639,23 +639,18 @@
         if (report[propertyName]) {
             report[propertyName].forEach(function (item) {
 
-                if (propertyName == 'transaction_classes') {
-                    if (item.value == id) {
+                if (propertyName === 'transaction_classes') {
+                    if (item.value === id) {
                         result = item;
                     }
                 } else {
 
-                    if (item.id == id) {
+                    if (item.id === id) {
                         result = item;
                     }
                 }
             });
         }
-
-        //console.error(report);
-        //console.error(propertyName);
-        //console.error("id ", id);
-        //console.error(result);
 
         return result
 
