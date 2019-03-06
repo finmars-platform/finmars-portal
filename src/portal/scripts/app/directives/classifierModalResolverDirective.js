@@ -48,9 +48,9 @@
                         }
                     }).then(function (res) {
                         if (res.status === 'agree') {
-                            ngModelCtrl.$setViewValue(res.data.item);
+                            ngModelCtrl.$setViewValue(parseInt(res.data.item));
                             ngModelCtrl.$render();
-                            console.log('ngModelCtrl', ngModelCtrl);
+                            console.log('ngModelCtrl', scope.classifierValue);
                         }
                     });
 

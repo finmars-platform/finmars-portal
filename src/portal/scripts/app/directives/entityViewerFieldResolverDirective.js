@@ -212,6 +212,10 @@
                     }
                 };
 
+                scope.getInputTextForEntitySearch = function () {
+                    return scope.fields[0].name;
+                };
+
                 scope.getModelKey = scope.$parent.getModelKey;
 
                 scope.getData = function () {
