@@ -239,6 +239,8 @@
 
                     var item_object;
 
+                    console.log('scope.entity', JSON.parse(JSON.stringify(scope.entity)));
+
                     if (scope.entityType === 'complex-transaction') {
                         item_object = scope.entity[scope.item.name + '_object'];
                     } else {
