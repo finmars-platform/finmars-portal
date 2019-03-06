@@ -198,6 +198,11 @@
                 }
 
                 if (item.hasOwnProperty('data')) {
+
+                    if (item.hasOwnProperty('___content_type')) {
+                        return item.name + ' (' + metaContentTypesService.getEntityNameByContentType(item.___content_type) + ')'
+                    }
+
                     return item.name + ' (' + metaContentTypesService.getEntityNameByContentType(item.content_type) + ')'
                 }
 

@@ -12,16 +12,14 @@
             scope: {
                 label: '=',
                 item: '=',
-                loadOptionsMethod: '&',
-                options: '=',
+                inputText: '<',
                 entityType: '='
             },
             link: function (scope, elem, attrs, ngModelCtrl) {
 
-                console.log('smart search data', scope.item, scope.label, scope.options, scope.entityType);
-                if (scope.loadOptionsMethod()) {
-                    scope.loadOptionsMethod();
-                }
+                scope.textValue = scope.inputText;
+
+                console.log('smart search data', scope.item, scope.label, scope.inputText, scope.entityType);
 
                 $(elem).on('click', function (event) {
 
@@ -52,12 +50,9 @@
 
                         if (res.status === 'agree') {
                             scope.item = res.data.item.id;
+                            scope.textValue = res.data.item.name;
 
                             console.log('res', res);
-
-                            if (!scope.options || !scope.options.length) {
-                                scope.options = res.data.items;
-                            }
 
                         }
                     });
