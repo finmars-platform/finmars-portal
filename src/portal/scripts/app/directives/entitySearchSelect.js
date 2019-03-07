@@ -26,11 +26,6 @@
                     event.preventDefault();
                     event.stopPropagation();
 
-                    // removing backdrop of select
-                    setTimeout(function () {
-                        $('.md-select-backdrop.md-click-catcher').trigger('click');
-                    }, 1000)
-
                     $mdDialog.show({
                         controller: 'EntitySearchDialogController as vm',
                         templateUrl: 'views/dialogs/entity-search-dialog-view.html',
