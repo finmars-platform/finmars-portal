@@ -6,7 +6,13 @@
 
     function keyIsEntityField(key) {
 
-        return ['type', 'instrument_type', 'currency', 'instrument_object_instrument_type', 'account_object_type', 'group'].indexOf(key) !== -1
+        return ['type',
+            'instrument_type',
+            'currency',
+            'pricing_currency',
+            'instrument_object_instrument_type',
+            'account_object_type',
+            'group'].indexOf(key) !== -1
 
     }
 
