@@ -8,6 +8,7 @@
 
         return ['type',
             'instrument_type',
+            'transaction_type',
             'currency',
             'pricing_currency',
             'instrument_object_instrument_type',
