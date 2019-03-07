@@ -34,7 +34,7 @@
 
                     vm.openWithReactDialog($event, event).then(function (res) {
 
-                        if (res.status === 'skip_all') {
+                        if (res && res.status === 'skip_all') {
                             resolve();
                         } else {
 
@@ -55,7 +55,7 @@
 
                     vm.openDoNotReactDialog($event, event).then(function (res) {
 
-                        if (res.status === 'skip_all') {
+                        if (res &&  res.status === 'skip_all') {
                             resolve();
                         } else {
 
@@ -75,7 +75,7 @@
 
                     vm.openApplyDefaultDialog($event, event).then(function (res) {
 
-                        if (res.status === 'skip_all') {
+                        if (res &&  res.status === 'skip_all') {
                             resolve();
                         } else {
 
