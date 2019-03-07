@@ -68,8 +68,10 @@
 
             if (typeof obj[column.key] === 'number') {
 
-                if (obj[column.key + '_object'] && obj[column.key + '_object'].user_code) {
-                    result.html_result = obj[column.key + '_object'].user_code;
+                if (obj[column.key + '_object'] && obj[column.key + '_object'].name) {
+
+                    result.html_result = obj[column.key + '_object'].name;
+
                 } else {
 
                     result.html_result = renderHelper.formatValue(obj, column);
