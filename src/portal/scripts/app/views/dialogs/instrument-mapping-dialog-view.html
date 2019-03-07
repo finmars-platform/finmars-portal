@@ -174,29 +174,8 @@
                                                 <!--</md-select>-->
                                                 <!--</md-input-container>-->
                                             </div>
-                                            <!--<div flex="50">
-                                                <div>
-                                                    <div data-ng-if="item.value_type == 10" flex="50">
-                                                        <md-input-container>
-                                                            <label for="">Default value</label>
-                                                            <input type="text" data-ng-model="item.expression">
-                                                        </md-input-container>
-                                                    </div>
-                                                    <div flex="50" data-ng-if="item.key === 'reference_for_pricing'">
-                                                        <md-button class="md-raised md-primary expr-btn"
-                                                                   data-ng-click="vm.openExpressionDialog($event, item)">
-                                                            ...
-                                                        </md-button>
-                                                    </div>
 
-                                                    <div data-ng-if="item.value_type == 'field'">
-                                                        <div data-ism-field-resolver data-item="item"
-                                                             data-options="options"></div>
-                                                    </div>
-                                                </div>
-                                            </div>-->
-
-                                            <dvi flex="50" layout="row">
+                                            <!--<div flex="50" layout="row">
                                                 <div data-ng-if="item.value_type != 'field'" flex="50">
                                                     <md-input-container>
                                                         <label for="">Default value</label>
@@ -214,14 +193,34 @@
                                                     <div data-ism-field-resolver data-item="item"
                                                          data-options="options"></div>
                                                 </div>
-                                            </dvi>
-                                        <!-- --------------------------- -->
-                                            <div flex="10">
+                                            </div>-->
 
+                                            <div flex="50" layout="row">
+                                                <div flex="50">
+                                                    <md-input-container>
+                                                        <label for="">Default value</label>
+                                                        <input type="text" data-ng-model="item.expression">
+                                                    </md-input-container>
+                                                </div>
+
+                                                <div flex="50">
+                                                    <md-button class="md-raised md-primary expr-btn"
+                                                               data-ng-click="vm.openExpressionDialog($event, item)">
+                                                        ...
+                                                    </md-button>
+                                                    <md-button class="md-raised md-primary complex-expr-btn"
+                                                               data-ng-click="vm.openMapping($event, item)">
+                                                        Edit mapping
+                                                    </md-button>
+                                                </div>
+                                            </div>
+                                            <!-- --------------------------- -->
+                                            <div flex="10">
                                             </div>
                                         </div>
                                     </div>
                                 </div>
+
                                 <div data-ng-repeat="item in vm.mappedFieldsSecond"
                                      class="{{item.hasBackground ? 'instrument-import-field-bg' : 'instrument-import-field'}}" layout="row"
                                      flex="100">
