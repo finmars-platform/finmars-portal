@@ -130,7 +130,7 @@
                 caption: 'Daily pricing model',
                 required: false,
                 hasBackground: true,
-                value_type: "field",
+                // value_type: "field",
                 expression: '',
                 complexExpressionEntity: 'daily_pricing_model'
             },
@@ -139,7 +139,7 @@
                 caption: 'Price download scheme',
                 required: false,
                 hasBackground: true,
-                value_type: "field",
+                // value_type: "field",
                 expression: '',
                 complexExpressionEntity: 'price_download_scheme'
             },
@@ -160,7 +160,7 @@
                 required: false,
                 hasBackground: true,
                 expression: '',
-                complexExpressionEntity: false
+                complexExpressionEntity: 'currency'
             },
             {
                 key: 'reference_for_pricing',
@@ -168,7 +168,7 @@
                 // value_type: 10,
                 required: true,
                 expression: '',
-                complexExpressionEntity: false
+                complexExpressionEntity: 'currency'
             },
             {
                 key: 'default_price',
@@ -176,7 +176,7 @@
                 value_type: 10,
                 required: false,
                 expression: '',
-                complexExpressionEntity: false
+                complexExpressionEntity: 'currency'
             }
         ];
 
