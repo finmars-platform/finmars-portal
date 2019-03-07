@@ -40,8 +40,7 @@
                         <div data-ng-if="item.transaction.instrument_toggle">
                             <entity-search-select data-item="item.transaction.instrument"
                                                   data-label="'Instrument'"
-                                                  data-load-options-method="vm.loadRelation('instrument')"
-                                                  data-options="vm.relationItems['instrument']"
+                                                  data-input-text="item.transaction.instrument_object.name"
                                                   data-entity-type="'instrument'"></entity-search-select>
                         </div>
                         <div data-ng-if="!item.transaction.instrument_toggle">
@@ -148,8 +147,7 @@
                         <div data-ng-if="item.transaction.linked_instrument_toggle">
                             <entity-search-select data-item="item.transaction.linked_instrument"
                                                   data-label="'Linked instrument'"
-                                                  data-load-options-method="vm.loadRelation('instrument')"
-                                                  data-options="vm.relationItems['instrument']"
+                                                  data-input-text="item.transaction.linked_instrument_object.name"
                                                   data-entity-type="'instrument'"></entity-search-select>
                         </div>
                         <div data-ng-if="!item.transaction.linked_instrument_toggle">
@@ -194,8 +192,7 @@
                         <div data-ng-if="item.transaction.allocation_pl_toggle">
                             <entity-search-select data-item="item.transaction.allocation_pl"
                                                   data-label="'Allocation-P&L'"
-                                                  data-load-options-method="vm.loadRelation('instrument')"
-                                                  data-options="vm.relationItems['instrument']"
+                                                  data-input-text="item.transaction.allocation_pl_object.name"
                                                   data-entity-type="'instrument'"></entity-search-select>
                         </div>
                         <div data-ng-if="!item.transaction.allocation_pl_toggle">
@@ -240,8 +237,7 @@
                         <div data-ng-if="item.transaction.allocation_balance_toggle">
                             <entity-search-select data-item="item.transaction.allocation_balance"
                                                   data-label="'Allocation-Balance'"
-                                                  data-load-options-method="vm.loadRelation('instrument')"
-                                                  data-options="vm.relationItems['instrument']"
+                                                  data-input-text="item.transaction.allocation_balance_object.name"
                                                   data-entity-type="'instrument'"></entity-search-select>
                         </div>
                         <div data-ng-if="!item.transaction.allocation_balance_toggle">
@@ -330,8 +326,7 @@
                     <div data-ng-if="item.transaction.account_position_toggle">
                         <entity-search-select data-item="item.transaction.account_position"
                                               data-label="'Account position'"
-                                              data-load-options-method="vm.loadRelation('account_position')"
-                                              data-options="vm.relationItems['account_position']"
+                                              data-input-text="item.transaction.account_position_object.name"
                                               data-entity-type="'account'"></entity-search-select>
                     </div>
                     <div data-ng-if="!item.transaction.account_position_toggle">
@@ -370,8 +365,7 @@
                     <div data-ng-if="item.transaction.strategy1_position_toggle">
                         <entity-search-select data-item="item.transaction.strategy1_position"
                                               data-label="'Strategy1 position'"
-                                              data-load-options-method="vm.loadRelation('strategy1_position')"
-                                              data-options="vm.relationItems['strategy1_position']"
+                                              data-input-text="item.transaction.strategy1_position_object.name"
                                               data-entity-type="'strategy-1'"></entity-search-select>
                     </div>
                     <div data-ng-if="!item.transaction.strategy1_position_toggle">
@@ -403,8 +397,7 @@
                     <div data-ng-if="item.transaction.strategy2_position_toggle">
                         <entity-search-select data-item="item.transaction.strategy2_position"
                                               data-label="'Strategy2 position'"
-                                              data-load-options-method="vm.loadRelation('strategy2_position')"
-                                              data-options="vm.relationItems['strategy2_position']"
+                                              data-input-text="item.transaction.strategy2_position_object.name"
                                               data-entity-type="'strategy-2'"></entity-search-select>
                     </div>
                     <div data-ng-if="!item.transaction.strategy2_position_toggle">
@@ -436,8 +429,7 @@
                     <div data-ng-if="item.transaction.strategy3_position_toggle">
                         <entity-search-select data-item="item.transaction.strategy3_position"
                                               data-label="'Strategy3 position'"
-                                              data-load-options-method="vm.loadRelation('strategy3_position')"
-                                              data-options="vm.relationItems['strategy3_position']"
+                                              data-input-text="item.transaction.strategy3_position_object.name"
                                               data-entity-type="'strategy-3'"></entity-search-select>
                     </div>
                     <div data-ng-if="!item.transaction.strategy3_position_toggle">
@@ -483,8 +475,7 @@
                     <div data-ng-if="item.transaction.portfolio_toggle">
                         <entity-search-select data-item="item.transaction.portfolio"
                                               data-label="'Portfolio'"
-                                              data-load-options-method="vm.loadRelation('portfolio')"
-                                              data-options="vm.relationItems['portfolio']"
+                                              data-input-text="item.transaction.portfolio_object.name"
                                               data-entity-type="'portfolio'"></entity-search-select>
                     </div>
                     <div data-ng-if="!item.transaction.portfolio_toggle">
@@ -516,8 +507,7 @@
                     <div data-ng-if="item.transaction.counterparty_toggle">
                         <entity-search-select data-item="item.transaction.counterparty"
                                               data-label="'Counterparty'"
-                                              data-load-options-method="vm.loadRelation('counterparty')"
-                                              data-options="vm.relationItems['counterparty']"
+                                              data-input-text="item.transaction.counterparty_object.name"
                                               data-entity-type="'counterparty'"></entity-search-select>
                     </div>
                     <div data-ng-if="!item.transaction.counterparty_toggle">
@@ -549,8 +539,7 @@
                     <div data-ng-if="item.transaction.responsible_toggle">
                         <entity-search-select data-item="item.transaction.responsible"
                                               data-label="'Responsible'"
-                                              data-load-options-method="vm.loadRelation('responsible')"
-                                              data-options="vm.relationItems['responsible']"
+                                              data-input-text="item.transaction.responsible_object.name"
                                               data-entity-type="'responsible'"></entity-search-select>
                     </div>
                     <div data-ng-if="!item.transaction.responsible_toggle">
@@ -739,8 +728,7 @@
                     <div data-ng-if="item.transaction.account_cash_toggle">
                         <entity-search-select data-item="item.transaction.account_cash"
                                               data-label="'Account cash'"
-                                              data-load-options-method="vm.loadRelation('account_cash')"
-                                              data-options="vm.relationItems['account_cash']"
+                                              data-input-text="item.transaction.account_cash_object.name"
                                               data-entity-type="'account'"></entity-search-select>
                     </div>
                     <div data-ng-if="!item.transaction.account_cash_toggle">
@@ -772,8 +760,7 @@
                     <div data-ng-if="item.transaction.account_interim_toggle">
                         <entity-search-select data-item="item.transaction.account_interim"
                                               data-label="'Account interim'"
-                                              data-load-options-method="vm.loadRelation('account_interim')"
-                                              data-options="vm.relationItems['account_interim']"
+                                              data-input-text="item.transaction.account_interim_object.name"
                                               data-entity-type="'account'"></entity-search-select>
                     </div>
                     <div data-ng-if="!item.transaction.account_interim_toggle">
@@ -830,8 +817,7 @@
                         </md-input-container>-->
                         <entity-search-select data-item="item.transaction.strategy1_cash"
                                               data-label="'Strategy1 cash'"
-                                              data-load-options-method="vm.loadRelation('strategy1_cash')"
-                                              data-options="vm.relationItems['strategy1_cash']"
+                                              data-input-text="item.transaction.strategy1_cash_object.name"
                                               data-entity-type="'strategy-1'"></entity-search-select>
                     </div>
                     <div data-ng-if="!item.transaction.strategy1_cash_toggle">
@@ -863,8 +849,7 @@
                     <div data-ng-if="item.transaction.strategy2_cash_toggle">
                         <entity-search-select data-item="item.transaction.strategy2_cash"
                                               data-label="'Strategy2 cash'"
-                                              data-load-options-method="vm.loadRelation('strategy2_cash')"
-                                              data-options="vm.relationItems['strategy2_cash']"
+                                              data-input-text="item.transaction.strategy2_cash_object.name"
                                               data-entity-type="'strategy-2'"></entity-search-select>
                     </div>
                     <div data-ng-if="!item.transaction.strategy2_cash_toggle">
@@ -896,8 +881,7 @@
                     <div data-ng-if="item.transaction.strategy3_cash_toggle">
                         <entity-search-select data-item="item.transaction.strategy3_cash"
                                               data-label="'Strategy3 cash'"
-                                              data-load-options-method="vm.loadRelation('strategy3_cash')"
-                                              data-options="vm.relationItems['strategy3_cash']"
+                                              data-input-text="item.transaction.strategy3_cash_object.name"
                                               data-entity-type="'strategy-3'"></entity-search-select>
                     </div>
                     <div data-ng-if="!item.transaction.strategy3_cash_toggle">

@@ -40,6 +40,10 @@
                 </md-input-container>
             </div>
             <div flex="50" data-ng-if="item.complexExpressionEntity === 'daily_pricing_model'">
+                <md-button class="md-raised md-primary expr-btn"
+                data-ng-click="vm.openExpressionDialog($event, item)">
+                ...
+                </md-button>
                 <md-button class="md-raised md-primary complex-expr-btn"
                            data-ng-click="openMapping($event, item)">
                     Edit mapping
@@ -66,9 +70,14 @@
                     </md-select>
                 </md-input-container>
             </div>
-            <div flex="50" data-ng-if="item.complexExpressionEntity">
+            <div flex="50">
+                <md-button class="md-raised md-primary expr-btn"
+                           data-ng-click="vm.openExpressionDialog($event, item)">
+                    ...
+                </md-button>
                 <md-button class="md-raised md-primary complex-expr-btn"
-                           data-ng-click="openMapping($event, item)">
+                           data-ng-click="openMapping($event, item)"
+                           data-ng-if="item.complexExpressionEntity">
                     Edit mapping
                 </md-button>
             </div>

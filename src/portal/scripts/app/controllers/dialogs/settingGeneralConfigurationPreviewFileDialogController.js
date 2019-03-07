@@ -31,46 +31,90 @@
         });
 
         var sortItems = function () {
-            var firstLayoutsItem = false;
-            var firstSchemesItem = false;
-            var firstEntitiesItem = false;
-            var firstAttrsItem = false;
+
+            var firstWorkingInterfaceItem = false;
+            var firstTransactionTypesItem = false;
+            var firstBaseElementsItem = false;
+            var firstConfigurationsItem = false;
+            var firstUserAttributesItem = false;
+            var firstImportFromFileItem = false;
+            var firstSchemesDownloads = false;
 
             vm.items.forEach(function (parent) {
 
-                if (parent.entity.toLowerCase().indexOf('layout') !== -1) {
-                    parent.order = 1;
+                switch (parent.entity) {
 
-                    if (!firstLayoutsItem) {
-                        parent.first = 'Layouts';
-                        firstLayoutsItem = true;
-                    }
+                    case 'ui.editlayout':
+                    case 'ui.listlayout':
+                    case 'ui.reportlayout':
+                    case 'ui.bookmark':
+                        parent.order = 1;
+                        if (!firstWorkingInterfaceItem) {
+                            firstWorkingInterfaceItem = true;
+                            parent.first = 'Working Interface'
+                        }
+                        break;
 
-                } else if (parent.entity.toLowerCase().indexOf('scheme') !== -1) {
-                    parent.order = 2;
+                    case 'transactions.transactiontype':
+                    case 'transactions.transactiontypegroup':
+                        parent.order = 2;
+                        if (!firstTransactionTypesItem) {
+                            firstTransactionTypesItem = true;
+                            parent.first = 'Transaction Types'
+                        }
+                        break;
 
-                    if (!firstSchemesItem) {
-                        parent.first = 'Schemes';
-                        firstSchemesItem = true;
-                    }
+                    case 'instruments.instrumenttype':
+                    case 'accounts.accounttype':
+                    case 'currencies.currency':
+                    case 'instruments.pricingpolicy':
+                        parent.order = 3;
+                        if (!firstBaseElementsItem) {
+                            firstBaseElementsItem = true;
+                            parent.first = 'Base Elements'
+                        }
+                        break;;
 
-                } else if (parent.entity.toLowerCase().indexOf('obj_attrs') !== -1) {
-                    parent.order = 4;
+                    case 'import.pricingautomatedschedule':
+                        parent.order = 4;
+                        if (!firstConfigurationsItem) {
+                            firstConfigurationsItem = true;
+                            parent.first = 'Configurations'
+                        }
+                        break;
 
-                    if (!firstAttrsItem) {
-                        parent.first = 'Attributes';
-                        firstAttrsItem = true;
-                    }
+                    case 'obj_attrs.portfolioattributetype':
+                    case 'obj_attrs.accountattributetype':
+                    case 'obj_attrs.accounttypeattributetype':
+                    case 'obj_attrs.responsibleattributetype':
+                    case 'obj_attrs.counterpartyattributetype':
+                    case 'obj_attrs.instrumentattributetype':
+                    case 'obj_attrs.instrumenttypeattributetype':
+                        parent.order = 5;
+                        if (!firstUserAttributesItem) {
+                            firstUserAttributesItem = true;
+                            parent.first = 'User Attributes'
+                        }
+                        break;
 
-                } else {
-                    parent.order = 3;
+                    case 'csv_import.scheme':
+                    case 'integrations.complextransactionimportscheme':
+                        parent.order = 6;
+                        if (!firstImportFromFileItem) {
+                            firstImportFromFileItem = true;
+                            parent.first = 'Schemes: Import from File'
+                        }
+                        break;
 
-                    if (!firstEntitiesItem) {
-                        parent.first = 'Entities';
-                        firstEntitiesItem = true;
-                    }
-
-                };
+                    case 'integrations.instrumentdownloadscheme':
+                    case 'integrations.pricedownloadscheme':
+                        parent.order = 7;
+                        if (!firstSchemesDownloads) {
+                            firstSchemesDownloads = true;
+                            parent.first = 'Schemes: Downloads'
+                        }
+                        break;
+                }
 
             });
 
@@ -154,6 +198,11 @@
                 }
 
                 if (item.hasOwnProperty('data')) {
+
+                    if (item.hasOwnProperty('___content_type')) {
+                        return item.name + ' (' + metaContentTypesService.getEntityNameByContentType(item.___content_type) + ')'
+                    }
+
                     return item.name + ' (' + metaContentTypesService.getEntityNameByContentType(item.content_type) + ')'
                 }
 

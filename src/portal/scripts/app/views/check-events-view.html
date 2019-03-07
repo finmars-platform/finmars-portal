@@ -35,138 +35,99 @@
 
         </div>
 
-        <table class="bordered">
+        <table class="bordered homepage-events-table">
             <thead>
-            <tr>
-                <th>
-                    <md-checkbox ng-checked="vm.isAllChecked()" class="md-primary m-0"
-                                 data-ng-click="vm.toggleAll()">
-                    </md-checkbox>
-                </th>
-                <th data-ng-click="vm.sortBy('status')" class="checkForEventSortingBtn">
-                    Status
-                    <span class="sortorder"
-                          data-ng-show="vm.sort === 'status'"
-                          data-ng-class="{reverse: vm.direction}"
-                    ></span>
-                </th>
-                <th>
-                    Description
-                </th>
-                <th data-ng-click="vm.sortBy('instrument')" class="checkForEventSortingBtn">
-                    Instrument
-                    <span class="sortorder"
-                          data-ng-show="vm.sort === 'instrument'"
-                          data-ng-class="{reverse: vm.direction}"
-                    ></span>
-                </th>
-                <th>
-                    Position
-                </th>
-                <th data-ng-click="vm.sortBy('portfolio')" class="checkForEventSortingBtn">
-                    Portfolio
-                    <span flex class="sortorder"
-                          data-ng-show="vm.sort === 'portfolio'"
-                          data-ng-class="{reverse: vm.direction}"
-                    ></span>
-                </th>
-                <th data-ng-click="vm.sortBy('account')" class="checkForEventSortingBtn">
-                    Account
-                    <span flex class="sortorder"
-                          data-ng-show="vm.sort === 'account'"
-                          data-ng-class="{reverse: vm.direction}"
-                    ></span>
-                </th>
-                <th data-ng-click="vm.sortBy('strategy1')" class="checkForEventSortingBtn">
-                    Strategy 1
-                    <span class="sortorder"
-                          data-ng-show="vm.sort === 'strategy1'"
-                          data-ng-class="{reverse: vm.direction}"
-                    ></span>
-                </th>
-                <th data-ng-click="vm.sortBy('strategy2')" class="checkForEventSortingBtn">
-                    Strategy 2
-                    <span class="sortorder"
-                          data-ng-show="vm.sort === 'strategy2'"
-                          data-ng-class="{reverse: vm.direction}"
-                    ></span>
-                </th>
-                <th data-ng-click="vm.sortBy('strategy3')" class="checkForEventSortingBtn">
-                    Strategy 3
-                    <span class="sortorder"
-                          data-ng-show="vm.sort === 'strategy3'"
-                          data-ng-class="{reverse: vm.direction}"
-                    ></span>
-                </th>
-                <th data-ng-click="vm.sortBy('effective_date')" class="checkForEventSortingBtn">
-                    Effective date
-                    <span class="sortorder"
-                          data-ng-show="vm.sort === 'effective_date'"
-                          data-ng-class="{reverse: vm.direction}"
-                    ></span>
-                </th>
-                <th data-ng-click="vm.sortBy('notification_date')" class="checkForEventSortingBtn">
-                    Notification date
-                    <span class="sortorder"
-                          data-ng-show="vm.sort === 'notification_date'"
-                          data-ng-class="{reverse: vm.direction}"
-                    ></span>
-                </th>
-                <th>
-                    Notification class
-                </th>
-                <th>
-                    Event class
-                </th>
-            </tr>
+                <tr>
+
+                    <th>
+                        <md-checkbox ng-checked="vm.isAllChecked()" class="md-primary m-0"
+                                     data-ng-click="vm.toggleAll()">
+                        </md-checkbox>
+                    </th>
+                    <th data-ng-click="vm.sortBy('status')" class="checkForEventSortingBtn">
+                        Status
+                        <span class="sortorder"
+                              data-ng-show="vm.sort === 'status'"
+                              data-ng-class="{reverse: vm.direction}"
+                        ></span>
+                    </th>
+                    <th>
+                        Description
+                    </th>
+                    <th data-ng-click="vm.sortBy('instrument')" class="checkForEventSortingBtn">
+                        Instrument
+                        <span class="sortorder"
+                              data-ng-show="vm.sort === 'instrument'"
+                              data-ng-class="{reverse: vm.direction}"
+                        ></span>
+                    </th>
+                    <th>
+                        Position
+                    </th>
+                    <th data-ng-click="vm.sortBy('portfolio')" class="checkForEventSortingBtn">
+                        Portfolio
+                        <span flex class="sortorder"
+                              data-ng-show="vm.sort === 'portfolio'"
+                              data-ng-class="{reverse: vm.direction}"
+                        ></span>
+                    </th>
+                    <th data-ng-click="vm.sortBy('account')" class="checkForEventSortingBtn">
+                        Account
+                        <span flex class="sortorder"
+                              data-ng-show="vm.sort === 'account'"
+                              data-ng-class="{reverse: vm.direction}"
+                        ></span>
+                    </th>
+
+                </tr>
             </thead>
             <tbody>
-            <tr data-ng-repeat="item in vm.events" class="{{item.active ? 'active' : ''}}" style="height: 40px">
-                <th>
-                    <md-checkbox ng-if="item.status == 1" ng-model="item.selected"
-                                 class="md-primary m-0">
-                    </md-checkbox>
-                    <md-checkbox ng-if="item.status != 1"
-                                 class="md-primary m-0 disabled-btn">
-                    </md-checkbox>
-                </th>
-                <td><span data-ng-bind="vm.getStatus(item.status)"></span>&nbsp;</td>
+                <tr data-ng-repeat="item in vm.events" class="{{item.active ? 'active' : ''}}" style="height: 40px">
+                    <th>
+                        <md-checkbox ng-if="item.status == 1" ng-model="item.selected"
+                                     class="md-primary m-0">
+                        </md-checkbox>
+                        <md-checkbox ng-if="item.status != 1"
+                                     class="md-primary m-0 disabled-btn">
+                        </md-checkbox>
+                    </th>
+                    <td><span data-ng-bind="vm.getStatus(item.status)"></span>&nbsp;</td>
 
-                <td><span data-ng-if="item.event_schedule_object"
-                          data-ng-bind="item.event_schedule_object.display_description"></span>&nbsp;
-                </td>
-                <td>
-                            <span data-ng-if="item.instrument_object"
-                                  data-ng-bind="item.instrument_object.user_code"></span>&nbsp;
-                </td>
-                <td><span data-ng-bind="item.position"></span>&nbsp;</td>
-                <td><span data-ng-if="item.portfolio_object"
-                          data-ng-bind="item.portfolio_object.user_code"></span>&nbsp;
-                </td>
-                <td><span data-ng-if="item.account_object"
-                          data-ng-bind="item.account_object.user_code"></span>&nbsp;
-                </td>
-                <td><span data-ng-if="item.strategy1_object"
-                          data-ng-bind="item.strategy1_object.user_code"></span>&nbsp;
-                </td>
-                <td><span data-ng-if="item.strategy2_object"
-                          data-ng-bind="item.strategy2_object.user_code"></span>&nbsp;
-                </td>
-                <td><span data-ng-if="item.strategy3_object"
-                          data-ng-bind="item.strategy3_object.user_code"></span>&nbsp;
-                </td>
+                    <td><span data-ng-if="item.event_schedule_object"
+                              data-ng-bind="item.event_schedule_object.display_description"></span>&nbsp;
+                    </td>
+                    <td>
+                                <span data-ng-if="item.instrument_object"
+                                      data-ng-bind="item.instrument_object.user_code"></span>&nbsp;
+                    </td>
+                    <td><span data-ng-bind="item.position"></span>&nbsp;</td>
+                    <td><span data-ng-if="item.portfolio_object"
+                              data-ng-bind="item.portfolio_object.user_code"></span>&nbsp;
+                    </td>
+                    <td><span data-ng-if="item.account_object"
+                              data-ng-bind="item.account_object.user_code"></span>&nbsp;
+                    </td>
+                    <td><span data-ng-if="item.strategy1_object"
+                              data-ng-bind="item.strategy1_object.user_code"></span>&nbsp;
+                    </td>
+                    <td><span data-ng-if="item.strategy2_object"
+                              data-ng-bind="item.strategy2_object.user_code"></span>&nbsp;
+                    </td>
+                    <td><span data-ng-if="item.strategy3_object"
+                              data-ng-bind="item.strategy3_object.user_code"></span>&nbsp;
+                    </td>
 
-                <td><span data-ng-bind="item.effective_date"></span>&nbsp;</td>
-                <td><span data-ng-bind="item.notification_date"></span>&nbsp;</td>
-                <td><span
-                        data-ng-if="item.event_schedule_object && item.event_schedule_object.notification_class_object"
-                        data-ng-bind="item.event_schedule_object.notification_class_object.name"></span>&nbsp;
-                </td>
-                <td>
-                            <span data-ng-if="item.event_schedule_object && item.event_schedule_object.event_class_object"
-                                  data-ng-bind="item.event_schedule_object.event_class_object.name"></span>&nbsp;
-                </td>
-            </tr>
+                    <td><span data-ng-bind="item.effective_date"></span>&nbsp;</td>
+                    <td><span data-ng-bind="item.notification_date"></span>&nbsp;</td>
+                    <td><span
+                            data-ng-if="item.event_schedule_object && item.event_schedule_object.notification_class_object"
+                            data-ng-bind="item.event_schedule_object.notification_class_object.name"></span>&nbsp;
+                    </td>
+                    <td>
+                                <span data-ng-if="item.event_schedule_object && item.event_schedule_object.event_class_object"
+                                      data-ng-bind="item.event_schedule_object.event_class_object.name"></span>&nbsp;
+                    </td>
+                </tr>
             </tbody>
         </table>
     </div>
