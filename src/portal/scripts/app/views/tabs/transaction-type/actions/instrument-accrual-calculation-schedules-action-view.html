@@ -27,8 +27,7 @@
                         <div data-ng-if="item.instrument_accrual_calculation_schedules.instrument_toggle">
                             <entity-search-select data-item="item.instrument_accrual_calculation_schedules.instrument"
                                                   data-label="'Instrument'"
-                                                  data-load-options-method="vm.loadRelation('instrument')"
-                                                  data-options="vm.relationItems['instrument']"
+                                                  data-input-text="item.instrument_accrual_calculation_schedules.instrument_object.name"
                                                   data-entity-type="'instrument'"></entity-search-select>
                         </div>
                         <div data-ng-if="!item.instrument_accrual_calculation_schedules.instrument_toggle">

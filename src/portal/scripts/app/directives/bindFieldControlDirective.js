@@ -21,7 +21,6 @@
                 scope.entityType = scope.$parent.vm.entityType;
                 scope.readyStatus = {classifier: false};
                 scope.entity = scope.$parent.vm.entity;
-                var noMu1 = Object.assign({}, scope.entity);
 
                 var attrs = scope.$parent.vm.attrs || [];
                 var userInputs = scope.$parent.vm.userInputs || [];
@@ -197,7 +196,7 @@
 
                 scope.changeClassifier = function () {
                     if (classifierTree) {
-
+                        console.log('classifier id', scope.entity[scope.getModelKey()]);
                         scope.classifierId = scope.entity[scope.getModelKey()];
 
                         scope.findNodeItem().then(function () {
