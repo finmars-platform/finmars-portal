@@ -23,7 +23,7 @@
 
                 <div class="md-select-options-holder">
 
-                    <div data-ng-repeat="item in options | filter:{name: searchTerm} track by item.id " class="crud-option">
+                    <div data-ng-repeat="item in options | filter:{name: searchTerm} as results track by item.id " class="crud-option">
 
                         <div data-ng-if="item.___edit" class="crud-edit-option-holder">
 

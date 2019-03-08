@@ -42,34 +42,43 @@
             </div>
             <div data-ng-if="!checkComplexEntityType()">
                 <div data-ng-if="getModelKey() !== 'price_download_scheme'">
-                    <md-input-container class="md-block">
-                        <label data-ng-bind="getName()"></label>
-                        <md-select md-on-close="searchTerm = ''"
-                                   data-ng-model="entity[getModelKey()]" md-on-open="getData()"
-                                   md-selected-text="bindFormFields()">
+                    <div data-ng-if="!checkForCrudSelects()">
+                        <md-input-container class="md-block">
+                            <label data-ng-bind="getName()"></label>
+                            <md-select md-on-close="searchTerm = ''"
+                                       data-ng-model="entity[getModelKey()]" md-on-open="getData()"
+                                       md-selected-text="bindFormFields()">
 
-                            <div class="md-select-holder">
+                                <div class="md-select-holder">
 
-                                <md-select-header>
-                                    <input data-ng-model="searchTerm"
-                                           type="search"
-                                           placeholder="Search for a ..."
-                                           class="md-text md-select-search-pattern"
-                                           ng-keydown="$event.stopPropagation()">
-                                </md-select-header>
+                                    <md-select-header>
+                                        <input data-ng-model="searchTerm"
+                                               type="search"
+                                               placeholder="Search for a ..."
+                                               class="md-text md-select-search-pattern"
+                                               ng-keydown="$event.stopPropagation()">
+                                    </md-select-header>
 
-                                <div class="md-select-options-holder">
-                                    <md-option
-                                            data-ng-repeat="field in fields | orderBy:'-'+resolveSort(field) | filter:{name: searchTerm} track by field.id "
-                                            ng-value="field.id">
-                                        {{bindListFields(field)}}
-                                    </md-option>
+                                    <div class="md-select-options-holder">
+                                        <md-option
+                                                data-ng-repeat="field in fields | orderBy:'-'+resolveSort(field) | filter:{name: searchTerm} as results track by field.id "
+                                                ng-value="field.id">
+                                            {{bindListFields(field)}}
+                                        </md-option>
+                                    </div>
+
                                 </div>
 
-                            </div>
-
-                        </md-select>
-                    </md-input-container>
+                            </md-select>
+                        </md-input-container>
+                    </div>
+                    <div data-ng-if="checkForCrudSelects()">
+                        <crud-select data-label="getName()"
+                                     data-item="entity[getModelKey()]"
+                                     data-entity-type="crudeEntityType"
+                                     data-options="fields"
+                                     data-ng-click="getData()"></crud-select>
+                    </div>
                 </div>
                 <div data-ng-if="getModelKey() == 'price_download_scheme'">
                     <md-input-container class="md-block">

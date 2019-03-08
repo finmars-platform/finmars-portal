@@ -16,7 +16,6 @@
             },
             require: '?ngModel',
             template: '<div class="pick-me-up"><input type="text" value=""></div>',
-            // template: '<md-input-container class="pick-me-up"><input type="text" value=""></md-input-containe>',
             link: function (scope, elem, attrs, ngModel) {
 
                 console.log('datepicker!');

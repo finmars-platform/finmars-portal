@@ -218,6 +218,16 @@
 
                 scope.getModelKey = scope.$parent.getModelKey;
 
+                scope.crudeEntityType = {entityName: scope.entityType, groupType: scope.getModelKey()};
+                scope.checkForCrudSelects = function () {
+
+                    if (['group', 'subgroup'].indexOf(scope.getModelKey()) !== -1 ) {
+                        return true;
+                    }
+
+                    return false
+                };
+
                 scope.getData = function () {
 
                     fieldResolverService.getFields(scope.item.key, scope.options).then(function (res) {
@@ -242,8 +252,6 @@
                 scope.init = function () {
 
                     var item_object;
-
-                    console.log('scope.entity', JSON.parse(JSON.stringify(scope.entity)));
 
                     if (scope.entityType === 'complex-transaction') {
                         item_object = scope.entity[scope.item.name + '_object'];

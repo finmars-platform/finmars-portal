@@ -151,7 +151,7 @@
 
             uiService.getListLayout(entityType).then(function (data) {
 
-                if (data.results) {
+                if (data.results && data.results.length > 0) {
                     var layouts = data.results;
 
                     if (layouts.length > 1) {
