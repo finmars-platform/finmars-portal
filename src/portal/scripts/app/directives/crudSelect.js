@@ -24,6 +24,22 @@
                 console.log("crudSelect.options", scope.options);
                 console.log("crudSelect.entityType", scope.entityType);
 
+                var entityType = scope.entityType;
+
+                // assembling group entity
+                if (typeof scope.entityType === 'object') {
+                    var entityName = scope.entityType.entityName;
+
+                    // Removing "-group" part of entity
+                    if (entityName.indexOf('group') !== -1) {
+
+                        var lastDash = entityName.lastIndexOf('-');
+                        entityName = entityName.slice(0, lastDash);
+                    }
+
+                    entityType = entityName + '-' + scope.entityType.groupType;
+                }
+
                 scope.searchTerm = '';
 
                 scope.addItem = function ($event) {
@@ -51,7 +67,7 @@
 
                     if (item.id) {
 
-                        entityResolverService.update(scope.entityType, item.id, item).then(function (data) {
+                        entityResolverService.update(entityType, item.id, item).then(function (data) {
                             item.user_code = item.name;
                             scope.options[$index] = data;
                             scope.$apply();
@@ -76,7 +92,7 @@
                         })
                     } else {
 
-                        entityResolverService.create(scope.entityType, item).then(function (data) {
+                        entityResolverService.create(entityType, item).then(function (data) {
                             item.user_code = item.name;
                             scope.options[$index] = data;
                             scope.$apply();
@@ -125,7 +141,7 @@
                     }).then(function (res) {
                         console.log('res', res);
                         if (res.status === 'agree') {
-                            entityResolverService.deleteByKey(scope.entityType, item.id);
+                            entityResolverService.deleteByKey(entityType, item.id);
 
                             scope.options.splice($index, 1);
                         }
