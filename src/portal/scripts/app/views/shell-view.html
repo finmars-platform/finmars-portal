@@ -75,6 +75,7 @@
 
                 <div class="md-toolbar-tools" flex="60" layout="start center">
                     <h2 data-ng-if="vm.currentLocation().length > 0" data-ng-bind="vm.currentLocation()"></h2>
+                    <h3 data-ng-if="vm.isStateOfEntity()" style="margin-left: 15px">Active layout: {{ vm.activeLayoutName }}</h3>
                 </div>
 
                 <div class="md-toolbar-tools" flex="40" layout-align="end center">
