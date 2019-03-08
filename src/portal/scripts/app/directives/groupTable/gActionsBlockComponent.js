@@ -9,6 +9,7 @@
     var evEvents = require('../../services/entityViewerEvents');
 
     var metaContentTypesService = require('../../services/metaContentTypesService');
+    var middlewareService = require('../../services/middlewareService');
 
     var uiService = require('../../services/uiService');
 
@@ -344,6 +345,7 @@
                         }
                     }).then(function (res) {
                         if (res.status == 'agree') {
+                            middlewareService.setData('activeLayoutSwitched', true); // Give signal to update active layout name in the toolbar
                             $state.reload($state.current.name);
                             // $state.reload();
                         }

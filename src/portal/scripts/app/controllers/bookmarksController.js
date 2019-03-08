@@ -8,6 +8,8 @@
     var logService = require('../../../../core/services/logService');
     var uiService = require('../services/uiService');
     var metaContentTypesService = require('../services/metaContentTypesService');
+    var middlewareService = require('../services/middlewareService');
+
     var bookmarkService = require('../services/bookmarkService');
 
     module.exports = function ($scope, $mdDialog, $state) {
@@ -63,8 +65,10 @@
                         });
 
                         Promise.all(promises).then(function () {
-                            if ($state.current.name === stateToGo) {
+
+                            if ($state.current.name === stateToGo) { // If Bookmark change layout for current state, update it
                                 $state.reload(stateToGo);
+                                middlewareService.setData('activeLayoutSwitched', true); // Give signal to update active layout name in the toolbar
                                 $scope.$apply();
                             }
                             else {

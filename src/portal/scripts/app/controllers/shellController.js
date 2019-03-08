@@ -15,6 +15,8 @@
     var reportCopyHelper = require('../helpers/reportCopyHelper');
 
     var metaService = require('../services/metaService');
+    var uiService = require('../services/uiService');
+    var middlewareService = require('../services/middlewareService');
 
     module.exports = function ($scope, $state, $rootScope, $mdDialog, $transitions) {
 
@@ -108,6 +110,71 @@
         vm.currentLocation = function () {
             return metaService.getCurrentLocation($state).toUpperCase();
         };
+
+        // Get name of active layout in the toolbar
+        vm.entityHasLayout = false;
+        var previousState = '';
+        var currentState = '';
+
+        var stateOfEntity = false;
+
+        vm.isStateOfEntity = function () {
+
+            currentState = $state.current.name;
+            var layoutSwitched = middlewareService.getData('activeLayoutSwitched');
+
+            // Change layout information on state change
+            if (currentState !== previousState) {
+                previousState = currentState;
+
+                if (currentState.indexOf('app.data.') !== -1 || vm.isReport()) {
+                    stateOfEntity = true;
+                    vm.getActiveLayoutName();
+                } else {
+                    stateOfEntity = false;
+                }
+            }
+
+            // Check if layout has been switched on the same state
+            if (layoutSwitched) {
+                vm.getActiveLayoutName();
+                middlewareService.deleteData('activeLayoutSwitched');
+            }
+
+            return stateOfEntity;
+        };
+
+        vm.activeLayoutName = '';
+        vm.getActiveLayoutName = function () {
+
+            var entityType = metaContentTypesService.getContentTypeUIByState($state.current.name);
+
+            uiService.getListLayout(entityType).then(function (data) {
+
+                if (data.results) {
+                    var layouts = data.results;
+
+                    if (layouts.length > 1) {
+
+                        var i;
+                        for (i = 0; i < layouts.length; i++) {
+
+                            if (layouts[i].is_default) {
+                                vm.activeLayoutName = layouts[i].name;
+                                $scope.$apply();
+                                break;
+                            }
+                        }
+
+                    } else {
+                        vm.activeLayoutName = layouts[0].name;
+                        $scope.$apply();
+                    }
+                }
+            });
+
+        };
+        // --------------------------------
 
         vm.showBookmarks = false;
         vm.toggleBookmarkPanel = function () {
