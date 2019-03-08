@@ -1,4 +1,5 @@
 <div layout="column" data-ng-controller="CheckEventsController as vm">
+
     <div>
 
         <div layout="row" class="m-b-24">
@@ -131,7 +132,11 @@
         </table>
     </div>
     <div data-ng-if="!vm.events.length" style="text-align: center; margin-top: 20px">No result found</div>
+
+    <div>
+        <md-button class="md-raised md-primary" data-ng-click="vm.process()" style="margin-right:20px;">
+            Process
+        </md-button>
+    </div>
+
 </div>
-<md-button class="md-raised md-primary" ng-click="vm.process()" style="margin-right:20px;">
-    Process
-</md-button>
