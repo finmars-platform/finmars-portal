@@ -78,13 +78,20 @@
 
             if (withReactActionsIds.indexOf(notification_class) !== -1) {
 
-                openWithReactDialog($mdDialog, $event, event).then(function (value) {
+                openWithReactDialog($mdDialog, $event, event).then(function (res) {
 
-                    index = index + 1;
-                    if (index < events.length) {
-                        recursiveOpenDialogs($mdDialog, resolve, events, index, $event);
-                    } else {
+                    if (res && res.status === 'skip_all') {
+
                         resolve();
+
+                    } else {
+
+                        index = index + 1;
+                        if (index < events.length) {
+                            recursiveOpenDialogs($mdDialog, resolve, events, index, $event);
+                        } else {
+                            resolve();
+                        }
                     }
 
                 })
@@ -93,13 +100,19 @@
 
             if (doNotReactActionsIds.indexOf(notification_class) !== -1) {
 
-                openDoNotReactDialog($mdDialog, $event, event).then(function (value) {
+                openDoNotReactDialog($mdDialog, $event, event).then(function (res) {
 
-                    index = index + 1;
-                    if (index < events.length) {
-                        recursiveOpenDialogs($mdDialog, resolve, events, index, $event);
-                    } else {
+                    if (res && res.status === 'skip_all') {
                         resolve();
+                    } else {
+
+                        index = index + 1;
+                        if (index < events.length) {
+                            recursiveOpenDialogs($mdDialog, resolve, events, index, $event);
+                        } else {
+                            resolve();
+                        }
+
                     }
 
                 })
@@ -107,13 +120,19 @@
 
             if (applyDefaultActionsIds.indexOf(notification_class) !== -1) {
 
-                openApplyDefaultDialog($mdDialog, $event, event).then(function (value) {
+                openApplyDefaultDialog($mdDialog, $event, event).then(function (res) {
 
-                    index = index + 1;
-                    if (index < events.length) {
-                        recursiveOpenDialogs($mdDialog, resolve, events, index, $event);
-                    } else {
+                    if (res && res.status === 'skip_all') {
                         resolve();
+                    } else {
+
+                        index = index + 1;
+                        if (index < events.length) {
+                            recursiveOpenDialogs($mdDialog, resolve, events, index, $event);
+                        } else {
+                            resolve();
+                        }
+
                     }
 
                 })
