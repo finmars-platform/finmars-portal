@@ -29,6 +29,11 @@
                 scope.filters = scope.evDataService.getFilters();
                 scope.entityType = scope.evDataService.getEntityType();
                 scope.reportOptions = scope.evDataService.getReportOptions();
+                scope.reportLayoutOptions = scope.evDataService.getReportLayoutOptions();
+                // console.log('complex datepicker layout options', scope.reportLayoutOptions);
+                if (!scope.reportLayoutOptions) {
+                    scope.reportLayoutOptions = {};
+                }
 
                 scope.isReport = metaService.isReport(scope.evDataService.getEntityType());
 
@@ -61,12 +66,14 @@
                 scope.updateReportOptions = function () {
 
                     var reportOptions = scope.evDataService.getReportOptions();
+                    var reportLayoutOptions = scope.evDataService.getReportLayoutOptions();
 
                     var newReportOptions = Object.assign({}, reportOptions, scope.reportOptions);
+                    var newReportLayoutOptions = Object.assign({}, reportLayoutOptions, scope.reportLayoutOptions);
+                    console.log('report options', newReportOptions, newReportLayoutOptions);
 
-                    console.log('report options', newReportOptions);
-
-                    scope.evDataService.setReportOptions(newReportOptions)
+                    scope.evDataService.setReportOptions(newReportOptions);
+                    scope.evDataService.setReportLayoutOptions(newReportLayoutOptions);
 
                 };
 
@@ -370,8 +377,7 @@
                                     });
                                 }, 100);
                             }
-                        )
-                        ;
+                        );
                     });
 
                 };

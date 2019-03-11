@@ -77,9 +77,12 @@
                     entityViewerDataService.setListLayout(listLayout);
 
                     var reportOptions = entityViewerDataService.getReportOptions();
+                    var reportLayoutOptions = entityViewerDataService.getReportLayoutOptions();
                     var newReportOptions = Object.assign({}, reportOptions, listLayout.data.reportOptions);
+                    var newReportLayoutOptions = Object.assign({}, reportLayoutOptions, listLayout.data.reportLayoutOptions);
 
                     entityViewerDataService.setReportOptions(newReportOptions);
+                    entityViewerDataService.setReportLayoutOptions(newReportLayoutOptions);
 
                     entityViewerDataService.setColumns(listLayout.data.columns);
                     entityViewerDataService.setGroups(listLayout.data.grouping);

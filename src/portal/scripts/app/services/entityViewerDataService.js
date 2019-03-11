@@ -230,6 +230,14 @@
             return data.reportOptions
         }
 
+        function setReportLayoutOptions(options) {
+            data.reportLayoutOptions = options;
+        }
+
+        function getReportLayoutOptions() {
+           return data.reportLayoutOptions;
+        }
+
         function setStatusData(status) {
             data.status.data = status
         }
@@ -625,6 +633,8 @@
 
             setReportOptions: setReportOptions,
             getReportOptions: getReportOptions,
+            setReportLayoutOptions: setReportLayoutOptions,
+            getReportLayoutOptions: getReportLayoutOptions,
 
             setStatusData: setStatusData,
             getStatusData: getStatusData,

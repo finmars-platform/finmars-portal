@@ -43,9 +43,6 @@
                     }
                 });
 
-                var initModelValueSet = false;
-
-
                 if (scope.dateValue) {
 
                     $(elem).parent().addClass('md-input-has-value');
@@ -74,15 +71,6 @@
                     });
 
                 }
-
-                // var unregister = scope.$watch(function () {
-                //
-                //     if (new Date(ngModel.$modelValue) !== 'Invalid Date') {
-                //         input.val(moment(new Date(ngModel.$modelValue)).format('YYYY-MM-DD'));
-                //         unregister();
-                //     }
-                //
-                // });
 
             }
         }

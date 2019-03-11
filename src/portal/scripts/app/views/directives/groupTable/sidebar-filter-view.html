@@ -28,7 +28,7 @@
 
                         </md-input-container>
 
-                        <md-input-container>
+                        <!--<md-input-container>
 
                             <label for="">Date</label>
 
@@ -37,7 +37,11 @@
                                             position="left"
                                             ng-change="updateReportOptions()"></zh-date-picker>
 
-                        </md-input-container>
+                        </md-input-container>-->
+                        <complex-zh-date-picker data-date="reportOptions.report_date"
+                                                data-datepicker-options="reportLayoutOptions"
+                                                data-position="left"
+                                                data-callback-method="updateReportOptions()"></complex-zh-date-picker>
 
                         <md-input-container style="margin-bottom: 20px;">
 
