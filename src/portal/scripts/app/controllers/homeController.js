@@ -55,7 +55,10 @@
                         showEventsDialogs = true;
                     }
 
-                    if (member.notification_level === 1) { // 1 = DO NOT NOTIFY
+                    // 1 = Do not notify
+                    // 3 = Email only notifications
+
+                    if (member.notification_level === 1 || member.notification_level === 3) {
                         showEventsDialogs = false;
                     }
 
