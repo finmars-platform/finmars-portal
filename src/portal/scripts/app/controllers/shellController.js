@@ -112,6 +112,7 @@
         };
 
         // Get name of active layout in the toolbar
+
         vm.entityHasLayout = false;
         var previousState = '';
         var currentState = '';
@@ -121,7 +122,7 @@
         vm.isStateOfEntity = function () {
 
             currentState = $state.current.name;
-            var layoutSwitched = middlewareService.getData('activeLayoutSwitched');
+            var layoutSwitched = middlewareService.getData('entityActiveLayoutSwitched');
 
             // Change layout information on state change
             if (currentState !== previousState) {
@@ -138,7 +139,7 @@
             // Check if layout has been switched on the same state
             if (layoutSwitched) {
                 vm.getActiveLayoutName();
-                middlewareService.deleteData('activeLayoutSwitched');
+                middlewareService.deleteData('entityActiveLayoutSwitched');
             }
 
             return stateOfEntity;

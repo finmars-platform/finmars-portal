@@ -30,7 +30,9 @@
             {
                 "key": "subgroup",
                 "name": "Sub Group",
-                "value_type": "field"
+                "value_type": "field",
+                "entity": "strategy-1-subgroup",
+                "code": "user_code"
             },
             {
                 "key": "tags",

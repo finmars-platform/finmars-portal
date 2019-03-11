@@ -345,7 +345,7 @@
                         }
                     }).then(function (res) {
                         if (res.status == 'agree') {
-                            middlewareService.setData('activeLayoutSwitched', true); // Give signal to update active layout name in the toolbar
+                            middlewareService.setData('entityActiveLayoutSwitched', true); // Give signal to update active layout name in the toolbar
                             $state.reload($state.current.name);
                             // $state.reload();
                         }
@@ -373,6 +373,7 @@
                     if (scope.isReport) {
 
                         listLayout.data.reportOptions = JSON.parse(JSON.stringify(scope.evDataService.getReportOptions()));
+                        listLayout.data.reportLayoutOptions = JSON.parse(JSON.stringify(scope.evDataService.getReportLayoutOptions()));
 
                         delete listLayout.data.reportOptions.items;
                         delete listLayout.data.reportOptions.item_complex_transactions;
@@ -436,6 +437,7 @@
                     if (scope.isReport) {
 
                         listLayout.data.reportOptions = JSON.parse(JSON.stringify(scope.evDataService.getReportOptions()));
+                        listLayout.data.reportLayoutOptions = JSON.parse(JSON.stringify(scope.evDataService.getReportLayoutOptions()));
 
                         delete listLayout.data.reportOptions.items;
                         delete listLayout.data.reportOptions.item_complex_transactions;

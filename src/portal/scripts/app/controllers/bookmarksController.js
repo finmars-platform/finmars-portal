@@ -68,7 +68,7 @@
 
                             if ($state.current.name === stateToGo) { // If Bookmark change layout for current state, update it
                                 $state.reload(stateToGo);
-                                middlewareService.setData('activeLayoutSwitched', true); // Give signal to update active layout name in the toolbar
+                                middlewareService.setData('entityActiveLayoutSwitched', true); // Give signal to update active layout name in the toolbar
                                 $scope.$apply();
                             }
                             else {

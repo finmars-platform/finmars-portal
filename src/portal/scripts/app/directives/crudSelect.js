@@ -27,7 +27,7 @@
                 var entityType = scope.entityType;
 
                 // assembling group entity
-                if (typeof scope.entityType === 'object') {
+                /*if (typeof scope.entityType === 'object') {
                     var entityName = scope.entityType.entityName;
 
                     // Removing "-group" part of entity
@@ -38,7 +38,7 @@
                     }
 
                     entityType = entityName + '-' + scope.entityType.groupType;
-                }
+                }*/
 
                 scope.searchTerm = '';
 

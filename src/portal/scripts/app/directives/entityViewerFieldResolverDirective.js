@@ -218,7 +218,7 @@
 
                 scope.getModelKey = scope.$parent.getModelKey;
 
-                scope.crudeEntityType = {entityName: scope.entityType, groupType: scope.getModelKey()};
+                scope.crudeEntityType = scope.item.entity;
                 scope.checkForCrudSelects = function () {
 
                     if (['group', 'subgroup'].indexOf(scope.getModelKey()) !== -1 ) {

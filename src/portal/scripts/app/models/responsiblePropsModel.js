@@ -30,7 +30,9 @@
             {
                 "key": "group",
                 "name": "Group",
-                "value_type": "field"
+                "value_type": "field",
+                "entity": "responsible-group",
+                "code": "user_code"
             },
             {
                 "key": "portfolios",

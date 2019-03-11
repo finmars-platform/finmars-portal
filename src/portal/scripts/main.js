@@ -308,6 +308,7 @@ app.directive('crudSelect', ['$mdDialog', require('./app/directives/crudSelect')
 app.directive('instrumentEventActionResolver', ['$mdDialog', require('./app/directives/instrumentEventActionResolverDirective')]);
 app.directive('classifierModalResolver', ['$mdDialog', require('./app/directives/classifierModalResolverDirective')]);
 app.directive('zhDatePicker', ['$mdDialog', require('./app/directives/zhDatePickerDirective')]);
+app.directive('complexZhDatePicker', ['$mdDialog', require('./app/directives/complexZhDatePickerDirective')]);
 app.directive('customScroll', [require('./app/directives/customScrollDirective')]);
 app.directive('dragDialog', [require('./app/directives/dragDialogDirective')]);
 app.directive('membersGroupsTable', [require('./app/directives/membersGroupsTableDirective')]);
