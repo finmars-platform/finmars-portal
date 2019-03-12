@@ -16,32 +16,19 @@
 
                     <div layout="column" style="padding-top: 16px">
 
-                        <md-input-container data-ng-if="entityType == 'pnl-report'">
+                        <div data-ng-if="entityType == 'pnl-report'">
+                            <complex-zh-date-picker data-date="reportOptions.pl_first_date"
+                                                    data-datepicker-options="reportLayoutOptions.datepickerOptions.reportFirstDatepicker"
+                                                    data-display-options="pnlDatepickerDisplayOptions"
+                                                    data-callback-method="updateReportOptions()">
+                            </complex-zh-date-picker>
+                        </div>
 
-                            <label for="">First Date</label>
-
-                            <zh-date-picker data-date-value="reportOptions.pl_first_date"
-                                            data-ng-model="reportOptions.pl_first_date"
-                                            ng-change="updateReportOptions()"
-                                            position="left"></zh-date-picker>
-
-
-                        </md-input-container>
-
-                        <!--<md-input-container>
-
-                            <label for="">Date</label>
-
-                            <zh-date-picker data-date-value="reportOptions.report_date"
-                                            data-ng-model="reportOptions.report_date"
-                                            position="left"
-                                            ng-change="updateReportOptions()"></zh-date-picker>
-
-                        </md-input-container>-->
                         <complex-zh-date-picker data-date="reportOptions.report_date"
-                                                data-datepicker-options="reportLayoutOptions"
-                                                data-position="left"
-                                                data-callback-method="updateReportOptions()"></complex-zh-date-picker>
+                                                data-datepicker-options="reportLayoutOptions.datepickerOptions.reportLastDatepicker"
+                                                data-display-options="{position: 'left'}"
+                                                data-callback-method="updateReportOptions()">
+                        </complex-zh-date-picker>
 
                         <md-input-container style="margin-bottom: 20px;">
 

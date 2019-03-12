@@ -1,7 +1,7 @@
 <div class="complex-date-picker-wrapper">
-    <div data-ng-class="{'ng-hide' : datepickerActiveMode === 'Expression'}">
+    <div data-ng-class="{'ng-hide' : datepickerOptions.datepickerMode === 'expression'}">
         <md-input-container>
-            <label for="complex-datepicker-input">Date {{ datepickerActiveMode }}</label>
+            <label for="complex-datepicker-input">{{ getDatepickerName() }}</label>
             <div class="pick-me-up">
                 <input data-ng-model="date"
                        id="complex-datepicker-input"
@@ -10,9 +10,9 @@
         </md-input-container>
     </div>
 
-    <div data-ng-if="datepickerActiveMode === 'Expression'">
+    <div data-ng-if="datepickerOptions.datepickerMode === 'expression'">
         <md-input-container>
-            <label for="complex-datepicker-expressions-input">Custom date</label>
+            <label for="complex-datepicker-expressions-input">{{ getDatepickerName() }}</label>
             <input data-ng-model="date"
                    id="complex-datepicker-expressions-input"
                    data-ng-click="openEditExpressionDialog($event)"

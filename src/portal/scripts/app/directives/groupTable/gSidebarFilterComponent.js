@@ -30,7 +30,7 @@
                 scope.entityType = scope.evDataService.getEntityType();
                 scope.reportOptions = scope.evDataService.getReportOptions();
                 scope.reportLayoutOptions = scope.evDataService.getReportLayoutOptions();
-                // console.log('complex datepicker layout options', scope.reportLayoutOptions);
+
                 if (!scope.reportLayoutOptions) {
                     scope.reportLayoutOptions = {};
                 }
@@ -60,6 +60,25 @@
                         scope.$apply();
 
                     });
+
+                    // preparing data for complexZhDatePickerDirective
+                    if (!scope.reportLayoutOptions.hasOwnProperty('datepickerOptions')) {
+                        scope.reportLayoutOptions.datepickerOptions = {};
+                    }
+
+                    if (!scope.reportLayoutOptions.datepickerOptions.hasOwnProperty('reportLastDatepicker')) {
+                        scope.reportLayoutOptions.datepickerOptions.reportLastDatepicker = {};
+                    }
+
+                    if (!scope.reportLayoutOptions.datepickerOptions.hasOwnProperty('reportFirstDatepicker')) {
+                        scope.reportLayoutOptions.datepickerOptions.reportFirstDatepicker = {};
+                    }
+
+                    scope.pnlDatepickerDisplayOptions = {
+                        position: 'left',
+                        labelName: 'First Date'
+                    }
+                    /* -------------------------------------- */
 
                 }
 
