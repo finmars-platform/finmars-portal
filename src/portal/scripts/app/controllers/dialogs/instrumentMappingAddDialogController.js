@@ -159,24 +159,21 @@
                 value_type: 10,
                 required: false,
                 hasBackground: true,
-                expression: '',
-                complexExpressionEntity: 'currency'
+                expression: ''
             },
             {
                 key: 'reference_for_pricing',
                 caption: 'Reference for pricing',
                 // value_type: 10,
                 required: true,
-                expression: '',
-                complexExpressionEntity: 'currency'
+                expression: ''
             },
             {
                 key: 'default_price',
                 caption: 'Default price',
                 value_type: 10,
                 required: false,
-                expression: '',
-                complexExpressionEntity: 'currency'
+                expression: ''
             }
         ];
 
