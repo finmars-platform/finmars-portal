@@ -270,7 +270,7 @@
                         }
                     }
 
-                    console.log('scope.fields', scope.fields);
+                    // console.log('scope.fields', scope.fields);
 
                 };
 

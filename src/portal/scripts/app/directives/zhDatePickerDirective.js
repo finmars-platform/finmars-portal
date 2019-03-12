@@ -18,7 +18,7 @@
             template: '<div class="pick-me-up"><input type="text" value=""></div>',
             link: function (scope, elem, attrs, ngModel) {
 
-                console.log('datepicker!');
+                // console.log('datepicker!');
 
                 var input = $(elem).find('input');
 
