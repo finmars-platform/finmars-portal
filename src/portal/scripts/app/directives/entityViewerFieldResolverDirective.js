@@ -28,14 +28,14 @@
                 scope.type = 'id';
                 scope.fields = [];
 
-                console.log('scope.item.name', scope.item);
+                // console.log('scope.item.name', scope.item);
                 // console.log('scope.entity', scope.entity);
 
                 if (['counterparties', 'accounts', 'responsibles', 'transaction_types', 'tags'].indexOf(scope.item.key) !== -1) {
                     scope.type = 'multiple-ids';
                 }
 
-                console.log('scope.type', scope.type);
+                // console.log('scope.type', scope.type);
 
                 scope.isSpecialSearchRelation = function () {
 
@@ -51,7 +51,7 @@
 
                         modelKeyEntity = metaContentTypesService.findEntityByContentType(scope.item.content_type)
 
-                        console.log('modelKeyEntity', modelKeyEntity);
+                        // console.log('modelKeyEntity', modelKeyEntity);
 
                     } else {
                         key = scope.item.name;
