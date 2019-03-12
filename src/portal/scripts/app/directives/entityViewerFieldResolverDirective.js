@@ -213,7 +213,9 @@
                 };
 
                 scope.getInputTextForEntitySearch = function () {
-                    return scope.fields[0].name;
+                    if (scope.fields[0]) {
+                        return scope.fields[0].name;
+                    }
                 };
 
                 scope.getModelKey = scope.$parent.getModelKey;
@@ -221,7 +223,7 @@
                 scope.crudeEntityType = scope.item.entity;
                 scope.checkForCrudSelects = function () {
 
-                    if (['group', 'subgroup'].indexOf(scope.getModelKey()) !== -1 ) {
+                    if (['group', 'subgroup'].indexOf(scope.getModelKey()) !== -1) {
                         return true;
                     }
 
