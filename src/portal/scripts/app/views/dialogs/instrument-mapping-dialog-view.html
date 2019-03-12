@@ -5,7 +5,7 @@
             <span flex></span>
         </div>
     </md-toolbar>
-    <md-dialog-content   style="background: #E5E5E5;">
+    <md-dialog-content style="background: #E5E5E5;">
         <div data-ng-if="vm.readyStatus.scheme">
             <div layout="row" layout-align="center center">
                 <md-card flex="50" class="inm-card-special">
@@ -148,7 +148,8 @@
                                 </div>
                                 <div>
                                     <div data-ng-repeat="item in vm.mappedFieldsDefaults"
-                                         class="{{item.hasBackground ? 'instrument-import-field-bg' : 'instrument-import-field'}}" layout="row"
+                                         class="{{item.hasBackground ? 'instrument-import-field-bg' : 'instrument-import-field'}}"
+                                         layout="row"
                                          flex="100">
                                         <div layout="row" flex="100">
                                             <div class="field-name" flex="40">
@@ -209,6 +210,7 @@
                                                         ...
                                                     </md-button>
                                                     <md-button class="md-raised md-primary complex-expr-btn"
+                                                               data-ng-if="item.complexExpressionEntity"
                                                                data-ng-click="vm.openMapping($event, item)">
                                                         Edit mapping
                                                     </md-button>
@@ -222,7 +224,8 @@
                                 </div>
 
                                 <div data-ng-repeat="item in vm.mappedFieldsSecond"
-                                     class="{{item.hasBackground ? 'instrument-import-field-bg' : 'instrument-import-field'}}" layout="row"
+                                     class="{{item.hasBackground ? 'instrument-import-field-bg' : 'instrument-import-field'}}"
+                                     layout="row"
                                      flex="100">
                                     <div layout="row" flex="100">
                                         <div class="field-name" flex="40">
@@ -273,7 +276,8 @@
                                     </div>
                                 </div>
                                 <div data-ng-repeat="field in vm.mappedDynamic"
-                                     class="{{item.hasBackground ? 'instrument-import-field-bg' : 'instrument-import-field'}}" layout="row"
+                                     class="{{item.hasBackground ? 'instrument-import-field-bg' : 'instrument-import-field'}}"
+                                     layout="row"
                                      flex="100">
                                     <div layout="row" flex="100">
                                         <div class="field-name" flex="40">
