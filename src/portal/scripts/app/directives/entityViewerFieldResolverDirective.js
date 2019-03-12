@@ -9,6 +9,7 @@
     var bindFieldsHelper = require('../helpers/bindFieldsHelper');
     var metaService = require('../services/metaService');
     var tagService = require('../services/tagService');
+    var metaContentTypesService = require('../services/metaContentTypesService');
 
     module.exports = function ($scope) {
 
@@ -38,7 +39,7 @@
 
                 scope.isSpecialSearchRelation = function () {
 
-                    return ['instrument', 'portfolio', 'account', 'responsible', 'counterparty'].indexOf(scope.getModelKeyEntity()) !== -1;
+                    return ['instrument', 'portfolio', 'account', 'responsible', 'counterparty', 'strategy-1', 'strategy-2', 'strategy-3'].indexOf(scope.getModelKeyEntity()) !== -1;
 
                 };
 
@@ -47,11 +48,10 @@
                     var modelKeyEntity;
 
                     if (scope.entityType === 'complex-transaction') {
-                        key = scope.item.content_type;
 
-                        var modelKey = key.split('.');
-                        var entityIndex = modelKey.length - 1;
-                        modelKeyEntity = modelKey[entityIndex];
+                        modelKeyEntity = metaContentTypesService.findEntityByContentType(scope.item.content_type)
+
+                        console.log('modelKeyEntity', modelKeyEntity);
 
                     } else {
                         key = scope.item.name;
