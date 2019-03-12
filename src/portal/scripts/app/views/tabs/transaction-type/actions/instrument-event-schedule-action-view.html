@@ -265,6 +265,14 @@
                     </div>
                 </div>
             </div>
+            <div flex="33" layout="row">
+                <md-input-container class="expression-input-container">
+                    <label for="" class="uncut-text-on-focus-label" content-title>Is auto generated</label>
+                    <input type="text" value-title data-ng-model="item.instrument_event_schedule.is_auto_generated">
+                </md-input-container>
+                <expression-editor-button
+                        data-item="item.instrument_event_schedule.is_auto_generated"></expression-editor-button>
+            </div>
         </div>
     </div>
 </div>
