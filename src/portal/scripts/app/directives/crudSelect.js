@@ -64,11 +64,12 @@
 
                 scope.saveItem = function (item, $index, $event) {
 
-
                     if (item.id) {
 
+                        item.user_code = item.name;
+                        item.short_name = item.name;
+
                         entityResolverService.update(entityType, item.id, item).then(function (data) {
-                            item.user_code = item.name;
                             scope.options[$index] = data;
                             scope.$apply();
                         }).catch(function (reason) {
@@ -92,8 +93,10 @@
                         })
                     } else {
 
+                        item.user_code = item.name;
+                        item.short_name = item.name;
+
                         entityResolverService.create(entityType, item).then(function (data) {
-                            item.user_code = item.name;
                             scope.options[$index] = data;
                             scope.$apply();
                         }).catch(function (reason) {
