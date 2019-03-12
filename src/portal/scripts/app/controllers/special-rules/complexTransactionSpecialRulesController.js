@@ -74,7 +74,7 @@
             $scope.$apply();
         });
 
-        transactionTypeService.getList().then(function (data) {
+        transactionTypeService.getList({pageSize: 1000}).then(function (data) {
 
             vm.transactionGroups = getGroupsFromItems(data.results);
             $scope.$apply();
@@ -85,7 +85,8 @@
         vm.loadTransactionTypes = function () {
 
             var options = {
-                filters: vm.filters
+                filters: vm.filters,
+                pageSize: 1000
             };
 
             transactionTypeService.getList(options).then(function (data) {
