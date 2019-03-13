@@ -11,6 +11,8 @@
     var metaService = require('../../services/metaService');
     var attributeTypeService = require('../../services/attributeTypeService');
 
+    var modelService = require('../../services/modelService');
+
     module.exports = function ($scope, $mdDialog) {
 
         logService.controller('EntityMappingCreateDialogController', 'initialized');
@@ -61,6 +63,27 @@
 
             });
 
+            var modelAttributes = modelService.getAttributesByContentType(vm.scheme.content_type);
+
+            vm.scheme.entity_fields.forEach(function (entityField) {
+
+                if (entityField.system_property_key) {
+
+                    modelAttributes.forEach(function (attribute) {
+
+                        if (attribute.key === entityField.system_property_key) {
+                            entityField.value_type = attribute.value_type;
+                            entityField.entity = attribute.entity;
+                            entityField.content_type = attribute.content_type;
+                            entityField.code = attribute.code;
+                        }
+
+                    })
+
+                }
+
+            });
+
             if (vm.scheme.content_type !== 'instruments.pricehistory' && vm.scheme.content_type !== 'currencyhistorys.currencyhistory') {
 
                 vm.getAttrs();
@@ -106,20 +129,6 @@
             vm.scheme.entity_fields.splice($index, 1);
         };
 
-        var allowedEntityAttrsArray = ['accounts',
-                                       'counterparties',
-                                       'currency',
-                                       'daily_pricing_model',
-                                       'payment_size_detail',
-                                       'portfolios', 'pricing_policy',
-                                       'price_download_scheme',
-                                       'responsibles', 'instrument_type',
-                                       'instrument',
-                                       'strategy_1',
-                                       'strategy_2',
-                                       'strategy_3'];
-
-
         vm.cancel = function () {
             $mdDialog.cancel();
         };
@@ -161,80 +170,6 @@
 
         vm.openMapping = function ($event, item) {
 
-            var entity = '';
-
-            switch (item.system_property_key) {
-                case 'accounts':
-                    entity = 'account';
-                    break;
-                case 'counterparties':
-                    entity = 'counterparty';
-                    break;
-                case 'currency':
-                    entity = 'currency';
-                    break;
-                case 'daily_pricing_model':
-                    entity = 'daily-pricing-model';
-                    break;
-                case 'payment_size_detail':
-                    entity = 'payment-size-detail';
-                    break;
-                case 'portfolios':
-                    entity = 'portfolio';
-                    break;
-                case 'pricing_policy':
-                    entity = 'pricing-policy';
-                    break;
-                case 'price_download_scheme':
-                    entity = 'price-download-scheme';
-                    break;
-                case 'responsibles':
-                    entity = 'responsible';
-                    break;
-                case 'instrument_type':
-                    entity = 'instrument-type';
-                    break;
-                case 'instrument':
-                    entity = 'instrument';
-                    break;
-                case 'strategy_1':
-                    entity = 'strategy-1';
-                    break;
-                case 'strategy_2':
-                    entity = 'strategy-2';
-                    break;
-                case 'strategy_3':
-                    entity = 'strategy-3';
-                    break;
-            }
-            // if (item.system_property_key === 'accounts') {
-            //     entity = 'account'
-            // }
-            //
-            // if (item.system_property_key === 'responsibles') {
-            //     entity = 'responsible'
-            // }
-            //
-            // if (item.system_property_key === 'counterparties') {
-            //     entity = 'counterparty'
-            // }
-            //
-            // if (item.system_property_key === 'pricing_policy') {
-            //     entity = 'pricing-policy'
-            // }
-            //
-            // if (item.system_property_key === 'instrument_type') {
-            //     entity = 'instrument-type'
-            // }
-            //
-            // if (item.system_property_key === 'instrument') {
-            //     entity = 'instrument'
-            // }
-            //
-            // if (item.system_property_key === 'currency') {
-            //     entity = 'currency'
-            // }
-
             $mdDialog.show({
                 controller: 'EntityTypeMappingDialogController as vm',
                 templateUrl: 'views/dialogs/entity-type-mapping-dialog-view.html',
@@ -245,13 +180,10 @@
                 autoWrap: true,
                 skipHide: true,
                 locals: {
-                    mapItem: {complexExpressionEntity: entity}
+                    mapItem: {complexExpressionEntity: item.entity}
                 }
-            }).then(function (res) {
-                if (res.status === 'agree') {
-                    console.log("res", res.data);
-                }
-            });
+            })
+
         };
 
         vm.openExpressionDialog = function ($event, item) {
