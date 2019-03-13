@@ -32,7 +32,7 @@
                     $mdDialog.hide({status: 'agree'});
 
                 }).catch(function () {
-                    vm.cancel();
+                    // vm.cancel();
                 })
 
             });
