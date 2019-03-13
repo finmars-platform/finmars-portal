@@ -118,21 +118,7 @@
                                        'strategy_1',
                                        'strategy_2',
                                        'strategy_3'];
-        vm.hasMapping = function (item) {
 
-            if (allowedEntityAttrsArray.indexOf(item.system_property_key) !== -1) {
-                return true;
-            }
-
-            // if (item.hasOwnProperty('value_type')) {
-            //     if (item.value_type === 'mc_field') {
-            //         return item.value_type = 'mc_field';
-            //     } else if (item.value_type === 'field') {
-            //         return item.field = 'field';
-            //     }
-            // }
-
-        };
 
         vm.cancel = function () {
             $mdDialog.cancel();
