@@ -321,7 +321,7 @@
 
                         var originValues = JSON.parse(JSON.stringify(entity.values));
 
-                        entity.transactions = data.transactions;
+                        // entity.transactions = data.transactions;
                         entity.values = data.values;
 
                         var originValuesKeys = Object.keys(originValues);
@@ -330,7 +330,7 @@
                         originValuesKeys.forEach(function (originVal) {
                             defaultValuesKeys.forEach(function (defaultVal) {
 
-                                if (originVal === defaultVal) {
+                                if (originVal !== defaultVal) {
                                     entity.values[defaultVal] = originValues[originVal];
                                 }
 
