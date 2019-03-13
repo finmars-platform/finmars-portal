@@ -206,7 +206,7 @@ app.controller('SaveConfigurationExportLayoutDialogController', ['$scope', '$mdD
 app.controller('DefaultPricingConfigDialogController', ['$scope', '$mdDialog', require('./app/controllers/dialogs/defaultPricingConfigDialogController')]);
 app.controller('ActionsNotificationsSettingsDialogController', ['$scope', '$mdDialog', require('./app/controllers/dialogs/actionsNotificationsSettingsDialogController')]);
 
-app.controller('ExportPdfDialogController', ['$scope', '$mdDialog', 'evDataService', 'evEventService', require('./app/controllers/dialogs/exportPdfDialogController')]);
+app.controller('ExportPdfDialogController', ['$scope', '$mdDialog', 'evDataService', 'evEventService', 'data', require('./app/controllers/dialogs/exportPdfDialogController')]);
 
 app.controller('AuditController', ['$scope', require('./app/controllers/system/auditController')]);
 app.controller('NotificationsController', ['$scope', '$state', '$stateParams', require('./app/controllers/system/notificationsController')]);

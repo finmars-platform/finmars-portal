@@ -6,13 +6,15 @@
     var rvRenderer = require('../../services/rv-renderer/rv.renderer');
     var uiService = require('../../services/uiService');
 
-    module.exports = function ($scope, $mdDialog, evDataService, evEventService) {
+    module.exports = function ($scope, $mdDialog, evDataService, evEventService, data) {
 
         var vm = this;
 
         vm.settings = {
             data: {}
         };
+
+        vm.entityType = data.entityType;
 
         vm.zoomPercent = 100;
 
