@@ -13,6 +13,8 @@
             'pricing_currency',
             'instrument_object_instrument_type',
             'account_object_type',
+            'instrument_object_accrued_currency',
+
             'group'].indexOf(key) !== -1
 
     }

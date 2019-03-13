@@ -11,6 +11,8 @@
 
     var metaContentTypesService = require('../../services/metaContentTypesService');
 
+    var modelService = require('../../services/modelService');
+
 
     module.exports = function ($scope, $mdDialog, schemeId) {
 
@@ -32,6 +34,38 @@
 
                 vm.getAttrs();
             }
+
+            vm.scheme.csv_fields = vm.scheme.csv_fields.sort(function (a, b) {
+                if (a.column > b.column) {
+                    return 1;
+                }
+                if (a.column < b.column) {
+                    return -1;
+                }
+
+                return 0;
+            });
+
+            var modelAttributes = modelService.getAttributesByContentType(vm.scheme.content_type);
+
+            vm.scheme.entity_fields.forEach(function (entityField) {
+
+                if (entityField.system_property_key) {
+
+                    modelAttributes.forEach(function (attribute) {
+
+                        if (attribute.key === entityField.system_property_key) {
+                            entityField.value_type = attribute.value_type;
+                            entityField.entity = attribute.entity;
+                            entityField.content_type = attribute.content_type;
+                            entityField.code = attribute.code;
+                        }
+
+                    })
+
+                }
+
+            });
 
             $scope.$apply();
 
@@ -61,6 +95,7 @@
 
                         if (item.dynamic_attribute_id === attribute.id) {
                             item.value_type = attribute.value_type;
+
                         }
 
                     })
@@ -107,13 +142,6 @@
             vm.scheme.entity_fields.splice($index, 1);
         };
 
-        vm.hasMapping = function (item) {
-
-            if (item.hasOwnProperty('value_type')) {
-                return item.value_type === 'field';
-            }
-
-        };
 
         vm.cancel = function () {
             $mdDialog.cancel();
@@ -157,80 +185,20 @@
 
         vm.openMapping = function ($event, item) {
 
-            if (item.hasOwnProperty('value_type')) {
-
-                $mdDialog.show({
-                    controller: 'EntityTypeClassifierMappingDialogController as vm',
-                    templateUrl: 'views/dialogs/entity-type-classifier-mapping-dialog-view.html',
-                    parent: angular.element(document.body),
-                    targetEvent: $event,
-                    preserveScope: true,
-                    multiple: true,
-                    autoWrap: true,
-                    skipHide: true,
-                    locals: {
-                        options: {
-                            entity: vm.scheme.content_type,
-                            attribute_type_id: item.dynamic_attribute_id
-                        }
-                    }
-                })
-
-            } else {
-
-                var entity = '';
-
-                if (item.system_property_key === 'accounts') {
-                    entity = 'account'
+            $mdDialog.show({
+                controller: 'EntityTypeMappingDialogController as vm',
+                templateUrl: 'views/dialogs/entity-type-mapping-dialog-view.html',
+                parent: angular.element(document.body),
+                targetEvent: $event,
+                preserveScope: true,
+                multiple: true,
+                autoWrap: true,
+                skipHide: true,
+                locals: {
+                    mapItem: {complexExpressionEntity: item.entity}
                 }
+            })
 
-                if (item.system_property_key === 'responsibles') {
-                    entity = 'responsible'
-                }
-
-                if (item.system_property_key === 'counterparties') {
-                    entity = 'counterparty'
-                }
-
-                if (item.system_property_key === 'portfolios') {
-                    entity = 'portfolio'
-                }
-
-                if(item.system_property_key === 'pricing_policy') {
-                    entity = 'pricing-policy'
-                }
-
-                if(item.system_property_key === 'instrument_type') {
-                    entity = 'instrument-type'
-                }
-
-                if(item.system_property_key === 'instrument') {
-                    entity = 'instrument'
-                }
-
-                if (item.system_property_key === 'currency') {
-                    entity = 'currency'
-                }
-
-                $mdDialog.show({
-                    controller: 'EntityTypeMappingDialogController as vm',
-                    templateUrl: 'views/dialogs/entity-type-mapping-dialog-view.html',
-                    parent: angular.element(document.body),
-                    targetEvent: $event,
-                    preserveScope: true,
-                    multiple: true,
-                    autoWrap: true,
-                    skipHide: true,
-                    locals: {
-                        mapItem: {complexExpressionEntity: entity}
-                    }
-                }).then(function (res) {
-                    if (res.status === 'agree') {
-                        console.log("res", res.data);
-                    }
-                });
-
-            }
         };
 
         vm.openExpressionDialog = function ($event, item) {

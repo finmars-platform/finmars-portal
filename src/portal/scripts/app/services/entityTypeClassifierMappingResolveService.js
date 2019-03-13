@@ -9,6 +9,7 @@
     var counterpartyClassifierMappingService = require('./import/mappings/classifiers/counterpartyClassifierMappingService');
     var responsibleClassifierMappingService = require('./import/mappings/classifiers/responsibleClassifierMappingService');
     var portfolioClassifierMappingService = require('./import/mappings/classifiers/portfolioClassifierMappingService');
+    var instrumentClassifierMappingService = require('./import/mappings/classifiers/instrumentClassifierMappingService');
 
 
     var getList = function (entityType, attribute_type_id) {
@@ -28,6 +29,9 @@
             case 'portfolio':
                 return portfolioClassifierMappingService.getList(attribute_type_id);
                 break;
+            case 'instrument':
+                return instrumentClassifierMappingService.getList(attribute_type_id);
+                break;
         }
 
     };
@@ -45,6 +49,9 @@
                 break;
             case 'portfolio':
                 return portfolioClassifierMappingService.getByKey(id);
+                break;
+            case 'instrument':
+                return instrumentClassifierMappingService.getByKey(id);
                 break;
         }
 
@@ -64,6 +71,9 @@
             case 'portfolio':
                 return portfolioClassifierMappingService.create(map);
                 break;
+            case 'instrument':
+                return instrumentClassifierMappingService.create(map);
+                break;
         }
 
     };
@@ -82,6 +92,9 @@
             case 'portfolio':
                 return portfolioClassifierMappingService.update(id, map);
                 break;
+            case 'instrument':
+                return instrumentClassifierMappingService.update(id, map);
+                break;
         }
 
     };
@@ -99,6 +112,9 @@
                 break;
             case 'portfolio':
                 return portfolioClassifierMappingService.deleteByKey(id);
+                break;
+            case 'instrument':
+                return instrumentClassifierMappingService.deleteByKey(id);
                 break;
         }
 
