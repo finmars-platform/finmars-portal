@@ -114,7 +114,7 @@
                                                     <md-button style="min-width: 40px;"
                                                                data-ng-click="vm.openMapping($event, item)"
                                                                class="md-raised md-primary"
-                                                               data-ng-if="vm.hasMapping(item)">Edit
+                                                               data-ng-if="item.value_type === 'field'">Edit
                                                         mapping
                                                     </md-button>
 

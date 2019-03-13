@@ -11,6 +11,8 @@
 
     var metaContentTypesService = require('../../services/metaContentTypesService');
 
+    var modelService = require('../../services/modelService');
+
 
     module.exports = function ($scope, $mdDialog, schemeId) {
 
@@ -32,6 +34,35 @@
 
                 vm.getAttrs();
             }
+
+            vm.scheme.csv_fields = vm.scheme.csv_fields.sort(function (a, b) {
+                if (a.column > b.column) {
+                    return 1;
+                }
+                if (a.column < b.column) {
+                    return -1;
+                }
+
+                return 0;
+            });
+
+            var modelAttributes = modelService.getAttributesByContentType(vm.scheme.content_type);
+
+            vm.scheme.entity_fields.forEach(function (entityField) {
+
+                if (entityField.system_property_key) {
+
+                    modelAttributes.forEach(function (attribute) {
+
+                        if (attribute.key === entityField.system_property_key) {
+                            entityField.value_type = attribute.value_type;
+                        }
+
+                    })
+
+                }
+
+            });
 
             $scope.$apply();
 
@@ -107,13 +138,6 @@
             vm.scheme.entity_fields.splice($index, 1);
         };
 
-        vm.hasMapping = function (item) {
-
-            if (item.hasOwnProperty('value_type')) {
-                return item.value_type === 'field';
-            }
-
-        };
 
         vm.cancel = function () {
             $mdDialog.cancel();
@@ -196,15 +220,15 @@
                     entity = 'portfolio'
                 }
 
-                if(item.system_property_key === 'pricing_policy') {
+                if (item.system_property_key === 'pricing_policy') {
                     entity = 'pricing-policy'
                 }
 
-                if(item.system_property_key === 'instrument_type') {
+                if (item.system_property_key === 'instrument_type') {
                     entity = 'instrument-type'
                 }
 
-                if(item.system_property_key === 'instrument') {
+                if (item.system_property_key === 'instrument') {
                     entity = 'instrument'
                 }
 
