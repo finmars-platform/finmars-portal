@@ -9,6 +9,7 @@
     var bindFieldsHelper = require('../helpers/bindFieldsHelper');
     var metaService = require('../services/metaService');
     var tagService = require('../services/tagService');
+    var metaContentTypesService = require('../services/metaContentTypesService');
 
     module.exports = function ($scope) {
 
@@ -27,18 +28,18 @@
                 scope.type = 'id';
                 scope.fields = [];
 
-                console.log('scope.item.name', scope.item);
+                // console.log('scope.item.name', scope.item);
                 // console.log('scope.entity', scope.entity);
 
                 if (['counterparties', 'accounts', 'responsibles', 'transaction_types', 'tags'].indexOf(scope.item.key) !== -1) {
                     scope.type = 'multiple-ids';
                 }
 
-                console.log('scope.type', scope.type);
+                // console.log('scope.type', scope.type);
 
                 scope.isSpecialSearchRelation = function () {
 
-                    return ['instrument', 'portfolio', 'account', 'responsible', 'counterparty'].indexOf(scope.getModelKeyEntity()) !== -1;
+                    return ['instrument', 'portfolio', 'account', 'responsible', 'counterparty', 'strategy-1', 'strategy-2', 'strategy-3'].indexOf(scope.getModelKeyEntity()) !== -1;
 
                 };
 
@@ -47,11 +48,10 @@
                     var modelKeyEntity;
 
                     if (scope.entityType === 'complex-transaction') {
-                        key = scope.item.content_type;
 
-                        var modelKey = key.split('.');
-                        var entityIndex = modelKey.length - 1;
-                        modelKeyEntity = modelKey[entityIndex];
+                        modelKeyEntity = metaContentTypesService.findEntityByContentType(scope.item.content_type)
+
+                        // console.log('modelKeyEntity', modelKeyEntity);
 
                     } else {
                         key = scope.item.name;
@@ -213,7 +213,9 @@
                 };
 
                 scope.getInputTextForEntitySearch = function () {
-                    return scope.fields[0].name;
+                    if (scope.fields[0]) {
+                        return scope.fields[0].name;
+                    }
                 };
 
                 scope.getModelKey = scope.$parent.getModelKey;
@@ -221,7 +223,7 @@
                 scope.crudeEntityType = scope.item.entity;
                 scope.checkForCrudSelects = function () {
 
-                    if (['group', 'subgroup'].indexOf(scope.getModelKey()) !== -1 ) {
+                    if (['group', 'subgroup'].indexOf(scope.getModelKey()) !== -1) {
                         return true;
                     }
 
@@ -268,7 +270,7 @@
                         }
                     }
 
-                    console.log('scope.fields', scope.fields);
+                    // console.log('scope.fields', scope.fields);
 
                 };
 

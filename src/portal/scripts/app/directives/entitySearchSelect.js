@@ -19,7 +19,7 @@
 
                 scope.textValue = scope.inputText;
 
-                console.log('smart search data', scope.item, scope.label, scope.inputText, scope.entityType);
+                // console.log('smart search data', scope.item, scope.label, scope.inputText, scope.entityType);
 
                 $(elem).on('click', function (event) {
 

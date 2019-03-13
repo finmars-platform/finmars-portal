@@ -103,6 +103,26 @@
             });
         };
 
+        vm.openClassifierMapping = function (item, $event) {
+
+            $mdDialog.show({
+                controller: 'EntityTypeClassifierMappingDialogController as vm',
+                templateUrl: 'views/dialogs/entity-type-classifier-mapping-dialog-view.html',
+                parent: angular.element(document.body),
+                targetEvent: $event,
+                preserveScope: true,
+                autoWrap: true,
+                skipHide: true,
+                locals: {
+                    options: {
+                        entityType: vm.entityType,
+                        id: item.id
+                    }
+                }
+            })
+
+        };
+
         vm.editAttr = function (item, ev) {
             $mdDialog.show({
                 controller: 'AttributesManagerEditDialogController as vm',
@@ -127,26 +147,26 @@
             vm.showHidden = !vm.showHidden;
         };
 
-        vm.checkIsHidden = function(attribute){
-            if(vm.showHidden == false && attribute.is_hidden == true) {
+        vm.checkIsHidden = function (attribute) {
+            if (vm.showHidden == false && attribute.is_hidden == true) {
                 return false;
             }
             return true;
         };
 
         vm.editLayout = function () {
-          var entityAddress = {entityType: vm.entityType};
-          if (vm.fromEntityType) {
+            var entityAddress = {entityType: vm.entityType};
+            if (vm.fromEntityType) {
 
-              var entityType = vm.entityType;
+                var entityType = vm.entityType;
 
-              if (vm.fromEntityType === 'transaction-type') {
-                  entityType = 'complex-transaction';
-              }
+                if (vm.fromEntityType === 'transaction-type') {
+                    entityType = 'complex-transaction';
+                }
 
-              entityAddress = {entityType: entityType, from: vm.fromEntityType, instanceId: vm.isInstanceId};
-          }
-          $state.go('app.data-constructor', entityAddress);
+                entityAddress = {entityType: entityType, from: vm.fromEntityType, instanceId: vm.isInstanceId};
+            }
+            $state.go('app.data-constructor', entityAddress);
         };
 
         vm.deleteAttr = function (item, ev) {
