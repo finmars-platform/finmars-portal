@@ -26,31 +26,16 @@
 
         };
 
-        vm.contentTypeToEntity = function (contentType) {
-
-            var entity = '';
-
-            if (contentType.indexOf('.') === -1) {
-                entity = contentType;
-            } else {
-                entity = contentType.split('.')[1];
-            }
-
-            return entity;
-
-        };
 
         vm.getClassifier = function () {
 
-            var entity = vm.contentTypeToEntity(vm.options.entity);
-
-            attributeTypeService.getByKey(entity, vm.options.attribute_type_id).then(function (data) {
+            attributeTypeService.getByKey(vm.options.entityType, vm.options.id).then(function (data) {
 
                 vm.classifier = data;
 
                 vm.items = data.classifiers_flat;
 
-                entityTypeClassifierMappingResolveService.getList(entity, vm.options.attribute_type_id).then(function (data) {
+                entityTypeClassifierMappingResolveService.getList(vm.options.entityType, vm.options.id).then(function (data) {
 
                     var mappingItems = data.results;
 
@@ -117,9 +102,7 @@
 
         vm.fancyEntity = function () {
 
-            var entity = vm.contentTypeToEntity(vm.options.entity);
-
-            return entity.replace('_', ' ');
+            return vm.options.entityType;
         };
 
 
@@ -143,8 +126,6 @@
 
         vm.agree = function () {
 
-            var entity = vm.contentTypeToEntity(vm.options.entity);
-
             vm.items.forEach(function (item) {
 
                 item.mapping.forEach(function (mapItem) {
@@ -155,16 +136,21 @@
                     mapItem.content_object = item.id;
                     mapItem.attribute_type = vm.classifier.id;
 
-                    if (action === 'create') {
-                        entityTypeClassifierMappingResolveService.create(entity, mapItem);
+                    if (action === 'create' && mapItem.value) {
+                        entityTypeClassifierMappingResolveService.create(vm.options.entityType, mapItem);
                     }
 
                     if (action === 'update') {
-                        entityTypeClassifierMappingResolveService.update(entity, mapItem.id, mapItem);
+
+                        if (mapItem.value) {
+                            entityTypeClassifierMappingResolveService.update(vm.options.entityType, mapItem.id, mapItem);
+                        } else {
+                            entityTypeClassifierMappingResolveService.deleteByKey(vm.options.entityType, mapItem.id);
+                        }
                     }
 
                     if (action === 'delete') {
-                        entityTypeClassifierMappingResolveService.deleteByKey(entity, mapItem.id);
+                        entityTypeClassifierMappingResolveService.deleteByKey(vm.options.entityType, mapItem.id);
                     }
 
                 })
