@@ -472,21 +472,6 @@
                         if (res.status === 'agree') {
 
                             if (listLayout.id) {
-                                // listLayout.is_default = false;
-                                //
-                                // uiService.updateListLayout(listLayout.id, listLayout).then(function () {
-                                //
-                                //     listLayout.name = res.data.name;
-                                //     listLayout.is_default = true;
-                                //     delete listLayout.id;
-                                //
-                                //     uiService.createListLayout(scope.entityType, listLayout).then(function () {
-                                //
-                                //         scope.evEventService.dispatchEvent(evEvents.LIST_LAYOUT_CHANGE);
-                                //
-                                //     });
-                                //
-                                // })
 
                                 uiService.getListLayout(scope.entityType).then(function (data) {
                                     var layouts = data.results;
@@ -512,6 +497,7 @@
                                         uiService.createListLayout(scope.entityType, listLayout).then(function () {
 
                                             scope.evEventService.dispatchEvent(evEvents.LIST_LAYOUT_CHANGE);
+                                            middlewareService.setData('entityActiveLayoutSwitched', true); // Give signal to update active layout name in the toolbar
 
                                         });
 
@@ -527,6 +513,7 @@
                                 uiService.createListLayout(scope.entityType, listLayout).then(function () {
 
                                     scope.evEventService.dispatchEvent(evEvents.LIST_LAYOUT_CHANGE);
+                                    middlewareService.setData('entityActiveLayoutSwitched', true); // Give signal to update active layout name in the toolbar
 
                                 });
                             }
@@ -546,7 +533,8 @@
                         targetEvent: $event,
                         locals: {
                             evDataService: scope.evDataService,
-                            evEventService: scope.evEventService
+                            evEventService: scope.evEventService,
+                            data: {entityType: scope.entityType}
                         }
                     })
 
