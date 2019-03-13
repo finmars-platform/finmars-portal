@@ -10,31 +10,43 @@
         return {
             restrict: 'AE',
             scope: {
-                position: '@',
-                defaultDate: '@',
+                displayOptions: '<',
                 callbackMethod: '&',
-                labelName: '<',
                 datepickerOptions: '=',
                 date: '='
             },
             templateUrl: 'views/directives/zh-date-picker-complex-view.html',
             link: function (scope, elem, attrs) {
 
-                console.log('complex datepicker', scope.date, scope.datepickerOptions, scope.callbackMethod);
+                console.log('complex datepicker', scope.displayOptions, scope.date, scope.datepickerOptions, scope.callbackMethod);
 
                 var input = $(elem).find('#complex-datepicker-input');
 
+                // TIPS
+                // scope.displayOptions is an object that may contain next properties:
+                // position: side to show datepicker on
+                // defaultDate: show default date in datepicker empty
+                // labelName: name to show in label of input
+
                 var position = 'right';
-                if (scope.position) {
-                    position = scope.position;
+                if (scope.displayOptions.position) {
+                    position = scope.displayOptions.position;
                 }
 
                 var defaultDate = false;
-                if (scope.defaultDate) {
-                    defaultDate = true;
+                if (scope.displayOptions.defaultDate) {
+                    defaultDate = scope.displayOptions.defaultDate;
                 }
 
                 scope.datepickerActiveMode = '';
+
+                scope.getDatepickerName = function () {
+                    if (scope.displayOptions.labelName) {
+                        return scope.displayOptions.labelName + ": " + scope.datepickerActiveMode + " mode";
+                    } else {
+                        return "Date: " +  scope.datepickerActiveMode + " mode";
+                    }
+                };
 
                 if (scope.date) {
 
@@ -105,7 +117,7 @@
                 };
 
                 scope.expressionMode = function () {
-                    scope.datepickerActiveMode = 'Expression';
+                    scope.datepickerActiveMode = 'Custom';
                     scope.datepickerOptions.datepickerMode = 'expression';
 
                     setTimeout(function () {
@@ -137,22 +149,18 @@
                     });
                 };
 
-                if (scope.datepickerOptions.datepickerMode) {
-                    switch (scope.datepickerOptions.datepickerMode) {
-                        case "today":
-                            scope.todayMode();
-                            break;
-                        case "yesterday":
-                            scope.yesterdayMode();
-                            break;
-                        case "expression":
-                            scope.expressionMode();
-                            break;
-                        default:
-                            scope.datepickerMode();
-                    }
-
-                    console.log('complex datepicker active mode', scope.datepickerOptions.datepickerMode);
+                switch (scope.datepickerOptions.datepickerMode) {
+                    case "today":
+                        scope.todayMode();
+                        break;
+                    case "yesterday":
+                        scope.yesterdayMode();
+                        break;
+                    case "expression":
+                        scope.expressionMode();
+                        break;
+                    default:
+                        scope.datepickerMode();
                 }
 
             }
