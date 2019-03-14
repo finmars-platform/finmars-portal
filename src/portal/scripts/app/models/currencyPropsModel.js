@@ -43,7 +43,10 @@
             {
                 "key": "price_download_scheme",
                 "name": "Price download scheme",
-                "value_type": "field"
+                "value_type": "field",
+                "entity": "price_download_scheme",
+                "content_type": "integrations.pricedownloadscheme",
+                "code": "user_code"
             },
             {
                 "key": "default_fx_rate",

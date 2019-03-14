@@ -25,7 +25,10 @@
             {
                 "key": "currency",
                 "name": "Currency",
-                "value_type": "field"
+                "value_type": "field",
+                "entity": "currency",
+                "content_type": "",
+                "code": "currencies.currency"
             },
             {
                 "key": "date",
@@ -40,7 +43,10 @@
             {
                 "key": "pricing_policy",
                 "name": "Pricing policy",
-                "value_type": "field"
+                "value_type": "field",
+                "entity": "pricing_policy",
+                "content_type": "instruments.pricingpolicy",
+                "code": "user_code"
             }
             //{
             //    "key": "fx_rate_expr",

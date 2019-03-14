@@ -199,7 +199,10 @@
             {
                 "key": "currency",
                 "name": "Currency",
-                "value_type": "field"
+                "value_type": "field",
+                "entity": "currency",
+                "content_type": "currencies.currency",
+                "code": "user_code"
             },
             //{
             //    "key": "report_currency_history",

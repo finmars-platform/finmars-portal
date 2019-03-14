@@ -30,14 +30,17 @@
             {
                 "key": "group",
                 "name": "Group",
-                "value_type": "field",
-                "entity": "responsible-group",
                 "content_type": "counterparties.responsiblegroup",
-                "code": "user_code"
+                "entity": "responsible-group",
+                "code": "user_code",
+                "value_type": "field"
             },
             {
                 "key": "portfolios",
                 "name": "Portfolios",
+                "content_type": "portfolios.portfolio",
+                "entity": "portfolio",
+                "code": "user_code",
                 "value_type": "mc_field"
             },
             {
