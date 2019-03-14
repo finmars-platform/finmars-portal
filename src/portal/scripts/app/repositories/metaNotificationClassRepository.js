@@ -12,8 +12,8 @@
 
     var baseUrl = baseUrlService.resolve();
 
-    var getList = function () {
-        return xhrService.fetch(baseUrl + 'transactions/notification-class/',
+    var getList = function (options) {
+        return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl + 'transactions/notification-class/', options),
             {
                 method: 'GET',
                 credentials: 'include',

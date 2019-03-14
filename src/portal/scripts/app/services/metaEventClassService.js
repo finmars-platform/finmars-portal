@@ -7,8 +7,8 @@
 
     var metaEventClassRepository = require('../repositories/metaEventClassRepository');
 
-    var getList = function(){
-        return metaEventClassRepository.getList();
+    var getList = function(options){
+        return metaEventClassRepository.getList(options);
     };
 
     module.exports = {

@@ -22,6 +22,8 @@
     var transactionTypeGroupService = require('./transaction/transactionTypeGroupService');
     var complexTransactionService = require('./transaction/complexTransactionService');
 
+    var metaEventClassService = require('./metaEventClassService');
+    var metaNotificationClassService = require('./metaNotificationClassService');
     var pricingPolicyService = require('./pricingPolicyService');
     var instrumentTypeService = require('./instrumentTypeService');
     var accrualCalculationModelService = require('./accrualCalculationModelService');
@@ -66,6 +68,10 @@
                 return instrumentDailyPricingModelService.getList(options);
             case 'payment-size-detail':
                 return instrumentPaymentSizeDetailService.getList(options);
+            case 'event-class':
+                return metaEventClassService.getList(options);
+            case 'notification-class':
+                return metaNotificationClassService.getList(options);
             case 'price-download-scheme':
                 return priceDownloadSchemeService.getList(options);
             case 'transaction-type-group':
