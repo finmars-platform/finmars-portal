@@ -47,6 +47,7 @@
                 "key": "instrument_class",
                 "name": "Instrument class",
                 "value_type": "field",
+                "content_type": "instruments.instrumentclass",
                 "entity": "instrument-class",
                 "code": "system_code",
                 "allow_null": false

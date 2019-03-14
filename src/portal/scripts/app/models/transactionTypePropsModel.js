@@ -40,11 +40,17 @@
             {
                 "key": "instrument_types",
                 "name": "Instrument types",
+                "content_type": "instruments.instrumenttype",
+                "entity": "instrument-type",
+                "code": "user_code",
                 "value_type": "mc_field"
             },
             {
                 "key": "portfolios",
                 "name": "Portfolios",
+                "content_type": "portfolios.portfolio",
+                "entity": "portfolio",
+                "code": "user_code",
                 "value_type": "mc_field"
             },
             {

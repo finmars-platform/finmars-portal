@@ -15,6 +15,9 @@
             {
                 "key": "transaction_class",
                 "name": "Transaction class",
+                "content_type": "transactions.transactionclass",
+                "entity": "transaction_class",
+                "code": "system_code",
                 "value_type": "field"
             },
             {
