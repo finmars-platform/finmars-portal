@@ -32,6 +32,7 @@
                 "name": "Group",
                 "value_type": "field",
                 "entity": "counterparty-group",
+                "content_type": "counterparties.counterpartygroup",
                 "code": "user_code"
             },
             {

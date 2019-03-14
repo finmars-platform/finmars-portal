@@ -32,6 +32,7 @@
                 "name": "Group",
                 "value_type": "field",
                 "entity": "strategy-3-group",
+                "content_type": "strategies.strategy3group",
                 "code": "user_code"
             },
             {
