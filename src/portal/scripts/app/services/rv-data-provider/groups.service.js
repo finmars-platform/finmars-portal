@@ -102,7 +102,8 @@
 
                 if (groupType.value_type === 'field') {
                     resultGroup.group_id = item[group];
-                    resultGroup.group_name = item[group + '_object_user_code'];
+                    // resultGroup.group_name = item[group + '_object_user_code'];
+                    resultGroup.group_name = item[group + '_object_name'];
                 } else {
 
                     if (item.hasOwnProperty(group) &&

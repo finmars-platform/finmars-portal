@@ -30,6 +30,15 @@
                         })
                     }
 
+                    if (item.instrument_object.hasOwnProperty('accrued_currency_object')) {
+                        var accruedCurrencyObjectKeys = Object.keys(item.instrument_object.accrued_currency_object);
+
+                        accruedCurrencyObjectKeys.forEach(function (accruedCurrencyObjectKeyItem) {
+                            item['accrued_currency_object_' + accruedCurrencyObjectKeyItem] = item.instrument_object.accrued_currency_object[accruedCurrencyObjectKeyItem];
+                            item['instrument_object_accrued_currency_object_' + accruedCurrencyObjectKeyItem] = item.instrument_object.accrued_currency_object[accruedCurrencyObjectKeyItem];
+                        })
+                    }
+
                 }
 
                 if (item.hasOwnProperty('allocation_object') && item.allocation_object) {
