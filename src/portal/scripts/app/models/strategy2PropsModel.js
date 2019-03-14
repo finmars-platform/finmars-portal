@@ -32,6 +32,7 @@
                 "name": "Sub Group",
                 "value_type": "field",
                 "entity": "strategy-2-subgroup",
+                "content_type": "strategies.strategy2subgroup",
                 "code": "user_code"
             },
             {

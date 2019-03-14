@@ -113,11 +113,10 @@
 
         // Get name of active layout in the toolbar
 
-        vm.entityHasLayout = false;
         var previousState = '';
         var currentState = '';
 
-        var stateOfEntity = false;
+        var showLayoutName = false;
 
         vm.isStateOfEntity = function () {
 
@@ -129,10 +128,10 @@
                 previousState = currentState;
 
                 if (currentState.indexOf('app.data.') !== -1 || vm.isReport()) {
-                    stateOfEntity = true;
+                    showLayoutName = true;
                     vm.getActiveLayoutName();
                 } else {
-                    stateOfEntity = false;
+                    showLayoutName = false;
                 }
             }
 
@@ -142,7 +141,7 @@
                 middlewareService.deleteData('entityActiveLayoutSwitched');
             }
 
-            return stateOfEntity;
+            return showLayoutName;
         };
 
         vm.activeLayoutName = '';
@@ -150,32 +149,19 @@
 
             var entityType = metaContentTypesService.getContentTypeUIByState($state.current.name);
 
-            uiService.getListLayout(entityType).then(function (data) {
+            uiService.getActiveListLayout(entityType).then(function (data) {
+                console.log("active layout data", data);
+                var activeLayoutRes = data.results;
+                if (activeLayoutRes && activeLayoutRes.length) {
+                    var activeLayoutName = activeLayoutRes[0].name;
 
-                if (data.results && data.results.length > 0) {
-                    var layouts = data.results;
-
-                    if (layouts.length > 1) {
-
-                        var i;
-                        for (i = 0; i < layouts.length; i++) {
-
-                            if (layouts[i].is_default) {
-                                vm.activeLayoutName = layouts[i].name;
-                                $scope.$apply();
-                                break;
-                            }
-                        }
-
-                    } else {
-                        vm.activeLayoutName = layouts[0].name;
-                        $scope.$apply();
-                    }
+                    vm.activeLayoutName = activeLayoutName;
+                    $scope.$apply();
                 }
-            });
+            })
 
         };
-        // --------------------------------
+        // < Get name of active layout in the toolbar >
 
         vm.showBookmarks = false;
         vm.toggleBookmarkPanel = function () {

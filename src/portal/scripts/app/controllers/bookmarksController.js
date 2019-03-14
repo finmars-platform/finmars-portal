@@ -45,14 +45,14 @@
                     var layouts = data.results;
 
                     if (layouts && layouts.length) {
-                        layouts.forEach(function (layout) { // TODO refactor active layout update mechanism
+
+                        layouts.forEach(function (layout) {
                             if (layout.id === layoutId) {
                                 layout.is_default = true;
                                 layoutExist = true;
                             } else {
                                 layout.is_default = false;
-                            }
-                            ;
+                            };
 
                         });
                     }
