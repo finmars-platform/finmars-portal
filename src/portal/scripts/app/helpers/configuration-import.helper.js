@@ -157,8 +157,13 @@
 
                         promises.push(new Promise(function (resolveRelation, reject) {
 
+                            console.log('input', input);
+                            console.log('input.content_type', input.content_type);
+
                             var user_code = input[user_code_prop];
                             var entity = metaContentTypesService.findEntityByContentType(input.content_type);
+
+                            console.log('input.entity', entity);
 
                             if (prop_data.code === 'user_code') {
 
@@ -863,23 +868,35 @@
 
             } else {
 
-                entityResolverService.getList(entity, {
-                    filters: {
-                        "system_code": system_code
-                    }
-                }).then(function (data) {
+                console.log('entity', entity);
+                console.log('system_code', system_code);
 
-                    if (data.length) {
-                        cacheContainer[entity][system_code] = data[0];
-                        resolve(data[0])
+                try {
 
-                    } else {
+                    entityResolverService.getList(entity, {
+                        filters: {
+                            "system_code": system_code
+                        }
+                    }).then(function (data) {
 
-                        reject(new Error("Entity does not exist"))
+                        if (data.length) {
+                            cacheContainer[entity][system_code] = data[0];
+                            resolve(data[0])
 
-                    }
+                        } else {
 
-                })
+                            reject(new Error("Entity does not exist"))
+
+                        }
+
+                    })
+
+                } catch (error) {
+
+                    console.error(error);
+
+                    reject(error)
+                }
 
             }
 
@@ -1200,396 +1217,404 @@
 
         return new Promise(function (resolve, reject) {
 
-            switch (entity) {
+            try {
 
-                case 'transactions.transactiontype':
-                    resolve(new Promise(function (resolveLocal, reject) {
+                switch (entity) {
 
-                        new Promise(function (resolveMap, reject) {
+                    case 'transactions.transactiontype':
+                        resolve(new Promise(function (resolveLocal, reject) {
 
-                            var promises = [];
-
-                            if (item.hasOwnProperty('___group__user_code')) {
-
-                                promises.push(new Promise(function (resolveRelation, reject) {
-
-                                    var user_code = item.___group__user_code;
-
-                                    getEntityByUserCode(user_code, 'transaction-type-group', cacheContainer).then(function (data) {
-
-                                        item.group = data.id;
-
-                                        console.log('___group__user_code', user_code);
-
-                                        resolveRelation(item)
-
-                                    });
-
-                                }));
-
-                            }
-
-                            promises.push(mapTransactionTypeInputsRelations(item, cacheContainer));
-
-                            promises.push(mapTransactionTypeActionsRelations(item, cacheContainer));
-
-                            Promise.all(promises).then(function (data) {
-
-                                resolveMap(data);
-
-                            })
-
-                        }).then(function (value) {
-
-                            resolveLocal(entityResolverService.create('transaction-type', item))
-
-                        })
-
-                    }));
-                    break;
-                case 'transactions.transactiontypegroup':
-                    resolve(entityResolverService.create('transaction-type-group', item));
-                    break;
-                case 'accounts.accounttype':
-                    resolve(entityResolverService.create('account-type', item));
-                    break;
-                case 'currencies.currency':
-                    resolve(new Promise(function (resolve, reject) {
-
-                        return new Promise(function (resolveLocal) {
-
-                            var promises = [];
-
-                            var code;
-                            var code_type;
-                            var entity;
-                            var item_key;
-
-                            if (item.hasOwnProperty('___price_download_scheme__scheme_name')) {
-
-                                code = item['___price_download_scheme__scheme_name'];
-                                code_type = 'scheme_name';
-                                entity = 'price-download-scheme';
-                                item_key = 'price_download_scheme';
-
-                                promises.push(mapRelation(item, item_key, entity, code_type, code, cacheContainer))
-
-                            }
-
-                            if (item.hasOwnProperty('___daily_pricing_model__system_code')) {
-
-                                code = item['___daily_pricing_model__system_code'];
-                                code_type = 'system_code';
-                                entity = 'daily-pricing-model';
-                                item_key = 'daily_pricing_model';
-
-                                promises.push(mapRelation(item, item_key, entity, code_type, code, cacheContainer))
-
-                            }
-
-
-                            Promise.all(promises).then(function (data) {
-
-                                resolveLocal(data)
-                            });
-
-
-                        }).then(function (value) {
-
-                            resolve(entityResolverService.create('currency', item))
-
-                        });
-
-
-                    }));
-                    break;
-                case 'instruments.pricingpolicy':
-                    resolve(entityResolverService.create('pricing-policy', item));
-                    break;
-                case 'instruments.instrumenttype':
-                    resolve(entityResolverService.create('instrument-type', item));
-                    break;
-                case 'import.pricingautomatedschedule':
-                    resolve(pricingAutomatedScheduleService.updateSchedule(item));
-                    break;
-                case 'ui.editlayout':
-                    handleEditLayoutMap(item).then(function (value) {
-
-                        var entityType = metaContentTypesService.findEntityByContentType(item.content_type, 'ui');
-
-                        var promise = new Promise(function (resolveLocal, reject) {
-
-                            uiRepository.getEditLayout(entityType).then(function (data) {
-
-                                if (data.results.length) {
-                                    uiRepository.updateEditLayout(data.results[0].id, item).then(function (item) {
-                                        resolveLocal({})
-                                    })
-                                } else {
-                                    uiRepository.createEditLayout(item).then(function (item) {
-                                        resolveLocal({})
-                                    })
-                                }
-
-                            });
-
-                        });
-
-                        resolve(promise);
-
-                    });
-                    break;
-                case 'ui.listlayout':
-                    resolve(new Promise(function (resolve, reject) {
-                        handleListLayoutMap(item, cacheContainer).then(function (value) {
-
-                            console.log('handleListLayoutMap', item);
-
-                            uiRepository.getListLayoutDefault({
-                                filters: {
-                                    name: item.name,
-                                    content_type: item.content_type
-                                }
-                            }).then(function (data) {
-
-                                if (data.results.length) {
-
-                                    var layout = data.results[0];
-                                    var name = layout.name.split(item.name)[1];
-
-                                    if (data.results.length !== 1) {
-
-                                        item.name = item.name + ' (' + data.results.length + ')';
-
-                                    } else {
-
-                                        item.name = item.name + ' (1)'
-                                    }
-
-                                }
-
-                                resolve(uiRepository.createListLayout(item));
-
-                            });
-
-                        })
-                    }));
-                    break;
-                case 'ui.reportlayout':
-                    resolve(new Promise(function (resolve, reject) {
-                        handleListLayoutMap(item, cacheContainer).then(function (value) {
-
-                            console.log('handleListLayoutMap', item);
-
-                            uiRepository.getListLayoutDefault({
-                                filters: {
-                                    name: item.name,
-                                    content_type: item.content_type
-                                }
-                            }).then(function (data) {
-
-                                if (data.results.length) {
-
-                                    var layout = data.results[0];
-                                    var name = layout.name.split(item.name)[1];
-
-                                    console.log('name', name);
-
-                                    if (data.results.length !== 1) {
-
-                                        item.name = item.name + ' (' + data.results.length + ')';
-
-                                    } else {
-
-                                        item.name = item.name + ' (1)'
-                                    }
-
-                                }
-
-                                resolve(uiRepository.createListLayout(item));
-
-                            });
-
-                        })
-                    }));
-                    break;
-                case 'ui.bookmark':
-                    resolve(new Promise(function (resolve, reject) {
-
-                        uiRepository.getListLayoutDefault({
-                            filters: {
-                                name: item.___layout_name,
-                                content_type: item.___content_type
-                            }
-                        }).then(function (data) {
-
-                            if (data.results.length) {
-
-                                item.list_layout = data.results[0].id;
-
-                            }
-
-                            var promises = [];
-
-                            if (item.children && item.children.length) {
-
-                                item.children.forEach(function (child) {
-
-                                    promises.push(new Promise(function (localResolve) {
-
-                                        uiRepository.getListLayoutDefault({
-                                            filters: {
-                                                name: child.___layout_name,
-                                                content_type: child.___content_type
-                                            }
-                                        }).then(function (data) {
-
-                                            if (data.results.length) {
-
-                                                child.list_layout = data.results[0].id;
-
-                                            }
-
-                                            console.log('bookmark child', child);
-
-                                            localResolve(child)
-
-                                        })
-
-                                    }))
-
-                                })
-
-                            }
-
-                            Promise.all(promises).then(function (value) {
-                                resolve(bookmarkRepository.create(item));
-                            });
-
-                        })
-
-                    }));
-                    break;
-                case 'csv_import.scheme':
-                    resolve(entitySchemeService.create(item));
-                    break;
-                case 'integrations.instrumentdownloadscheme':
-                    resolve(new Promise(function (resolveLocal, reject) {
-
-                        return new Promise(function (resolveLocal) {
-
-                            var promises = [];
-
-                            if (item.hasOwnProperty('___price_download_scheme__scheme_name')) {
-
-                                var code = item['___price_download_scheme__scheme_name'];
-                                var code_type = 'scheme_name';
-                                var entity = 'price-download-scheme';
-                                var item_key = 'price_download_scheme';
-
-                                promises.push(mapRelation(item, item_key, entity, code_type, code, cacheContainer))
-
-                            }
-
-                            Promise.all(promises).then(function (data) {
-
-                                resolveLocal(data)
-                            });
-
-
-                        }).then(function (value) {
-
-                            resolveLocal(instrumentSchemeService.create(item))
-
-                        });
-
-                    }));
-                    break;
-                case 'integrations.pricedownloadscheme':
-                    resolve(priceDownloadSchemeService.create(item));
-                    break;
-                case 'integrations.complextransactionimportscheme':
-                    resolve(new Promise(function (resolveLocal, reject) {
-
-                            return new Promise(function (resolveLocalMap) {
+                            new Promise(function (resolveMap, reject) {
 
                                 var promises = [];
 
-                                item.rules.forEach(function (rule) {
+                                if (item.hasOwnProperty('___group__user_code')) {
 
-                                    if (rule.hasOwnProperty('___transaction_type__user_code')) {
+                                    promises.push(new Promise(function (resolveRelation, reject) {
 
-                                        promises.push(new Promise(function (resolveRelation, reject) {
+                                        var user_code = item.___group__user_code;
 
-                                            var user_code = rule.___transaction_type__user_code;
+                                        getEntityByUserCode(user_code, 'transaction-type-group', cacheContainer).then(function (data) {
 
-                                            getEntityByUserCode(user_code, 'transaction-type', cacheContainer).then(function (data) {
+                                            item.group = data.id;
 
-                                                rule.transaction_type = data.id;
+                                            console.log('___group__user_code', user_code);
 
-                                                rule.fields = rule.fields.map(function (field) {
+                                            resolveRelation(item)
 
-                                                    data.inputs.forEach(function (input) {
+                                        });
 
-                                                        if (field.___input__name === input.name) {
-                                                            field.transaction_type_input = input.id;
-                                                        }
+                                    }));
 
-                                                    });
+                                }
 
-                                                    return field;
+                                promises.push(mapTransactionTypeInputsRelations(item, cacheContainer));
 
-                                                });
-
-
-                                                resolveRelation(item)
-
-                                            }).catch(function (reason) {
-                                                reject(reason);
-                                            })
-
-                                        }));
-
-                                    }
-
-                                });
+                                promises.push(mapTransactionTypeActionsRelations(item, cacheContainer));
 
                                 Promise.all(promises).then(function (data) {
 
-                                    resolveLocalMap(data);
+                                    resolveMap(data);
 
                                 })
 
                             }).then(function (value) {
 
-                                resolveLocal(transactionSchemeService.create(item));
+                                resolveLocal(entityResolverService.create('transaction-type', item))
 
                             })
 
-                        })
-                    );
-                    break;
-                case 'obj_attrs.portfolioattributetype':
-                    resolve(attributeTypeService.create('portfolio', item));
-                    break;
-                case 'obj_attrs.accountattributetype':
-                    resolve(attributeTypeService.create('account', item));
-                    break;
-                case 'obj_attrs.accounttypeattributetype':
-                    resolve(attributeTypeService.create('account-type', item));
-                    break;
-                case 'obj_attrs.responsibleattributetype':
-                    resolve(attributeTypeService.create('responsible', item));
-                    break;
-                case 'obj_attrs.counterpartyattributetype':
-                    resolve(attributeTypeService.create('counterparty', item));
-                    break;
-                case 'obj_attrs.instrumentattributetype':
-                    resolve(attributeTypeService.create('instrument', item));
-                    break;
-                case 'obj_attrs.instrumenttypeattributetype':
-                    resolve(attributeTypeService.create('instrument-type', item));
-                    break;
+                        }));
+                        break;
+                    case 'transactions.transactiontypegroup':
+                        resolve(entityResolverService.create('transaction-type-group', item));
+                        break;
+                    case 'accounts.accounttype':
+                        resolve(entityResolverService.create('account-type', item));
+                        break;
+                    case 'currencies.currency':
+                        resolve(new Promise(function (resolve, reject) {
+
+                            return new Promise(function (resolveLocal) {
+
+                                var promises = [];
+
+                                var code;
+                                var code_type;
+                                var entity;
+                                var item_key;
+
+                                if (item.hasOwnProperty('___price_download_scheme__scheme_name')) {
+
+                                    code = item['___price_download_scheme__scheme_name'];
+                                    code_type = 'scheme_name';
+                                    entity = 'price-download-scheme';
+                                    item_key = 'price_download_scheme';
+
+                                    promises.push(mapRelation(item, item_key, entity, code_type, code, cacheContainer))
+
+                                }
+
+                                if (item.hasOwnProperty('___daily_pricing_model__system_code')) {
+
+                                    code = item['___daily_pricing_model__system_code'];
+                                    code_type = 'system_code';
+                                    entity = 'daily-pricing-model';
+                                    item_key = 'daily_pricing_model';
+
+                                    promises.push(mapRelation(item, item_key, entity, code_type, code, cacheContainer))
+
+                                }
+
+
+                                Promise.all(promises).then(function (data) {
+
+                                    resolveLocal(data)
+                                });
+
+
+                            }).then(function (value) {
+
+                                resolve(entityResolverService.create('currency', item))
+
+                            });
+
+
+                        }));
+                        break;
+                    case 'instruments.pricingpolicy':
+                        resolve(entityResolverService.create('pricing-policy', item));
+                        break;
+                    case 'instruments.instrumenttype':
+                        resolve(entityResolverService.create('instrument-type', item));
+                        break;
+                    case 'import.pricingautomatedschedule':
+                        resolve(pricingAutomatedScheduleService.updateSchedule(item));
+                        break;
+                    case 'ui.editlayout':
+                        handleEditLayoutMap(item).then(function (value) {
+
+                            var entityType = metaContentTypesService.findEntityByContentType(item.content_type, 'ui');
+
+                            var promise = new Promise(function (resolveLocal, reject) {
+
+                                uiRepository.getEditLayout(entityType).then(function (data) {
+
+                                    if (data.results.length) {
+                                        uiRepository.updateEditLayout(data.results[0].id, item).then(function (item) {
+                                            resolveLocal({})
+                                        })
+                                    } else {
+                                        uiRepository.createEditLayout(item).then(function (item) {
+                                            resolveLocal({})
+                                        })
+                                    }
+
+                                });
+
+                            });
+
+                            resolve(promise);
+
+                        });
+                        break;
+                    case 'ui.listlayout':
+                        resolve(new Promise(function (resolve, reject) {
+                            handleListLayoutMap(item, cacheContainer).then(function (value) {
+
+                                console.log('handleListLayoutMap', item);
+
+                                uiRepository.getListLayoutDefault({
+                                    filters: {
+                                        name: item.name,
+                                        content_type: item.content_type
+                                    }
+                                }).then(function (data) {
+
+                                    if (data.results.length) {
+
+                                        var layout = data.results[0];
+                                        var name = layout.name.split(item.name)[1];
+
+                                        if (data.results.length !== 1) {
+
+                                            item.name = item.name + ' (' + data.results.length + ')';
+
+                                        } else {
+
+                                            item.name = item.name + ' (1)'
+                                        }
+
+                                    }
+
+                                    resolve(uiRepository.createListLayout(item));
+
+                                });
+
+                            })
+                        }));
+                        break;
+                    case 'ui.reportlayout':
+                        resolve(new Promise(function (resolve, reject) {
+                            handleListLayoutMap(item, cacheContainer).then(function (value) {
+
+                                console.log('handleListLayoutMap', item);
+
+                                uiRepository.getListLayoutDefault({
+                                    filters: {
+                                        name: item.name,
+                                        content_type: item.content_type
+                                    }
+                                }).then(function (data) {
+
+                                    if (data.results.length) {
+
+                                        var layout = data.results[0];
+                                        var name = layout.name.split(item.name)[1];
+
+                                        console.log('name', name);
+
+                                        if (data.results.length !== 1) {
+
+                                            item.name = item.name + ' (' + data.results.length + ')';
+
+                                        } else {
+
+                                            item.name = item.name + ' (1)'
+                                        }
+
+                                    }
+
+                                    resolve(uiRepository.createListLayout(item));
+
+                                });
+
+                            })
+                        }));
+                        break;
+                    case 'ui.bookmark':
+                        resolve(new Promise(function (resolve, reject) {
+
+                            uiRepository.getListLayoutDefault({
+                                filters: {
+                                    name: item.___layout_name,
+                                    content_type: item.___content_type
+                                }
+                            }).then(function (data) {
+
+                                if (data.results.length) {
+
+                                    item.list_layout = data.results[0].id;
+
+                                }
+
+                                var promises = [];
+
+                                if (item.children && item.children.length) {
+
+                                    item.children.forEach(function (child) {
+
+                                        promises.push(new Promise(function (localResolve) {
+
+                                            uiRepository.getListLayoutDefault({
+                                                filters: {
+                                                    name: child.___layout_name,
+                                                    content_type: child.___content_type
+                                                }
+                                            }).then(function (data) {
+
+                                                if (data.results.length) {
+
+                                                    child.list_layout = data.results[0].id;
+
+                                                }
+
+                                                console.log('bookmark child', child);
+
+                                                localResolve(child)
+
+                                            })
+
+                                        }))
+
+                                    })
+
+                                }
+
+                                Promise.all(promises).then(function (value) {
+                                    resolve(bookmarkRepository.create(item));
+                                });
+
+                            })
+
+                        }));
+                        break;
+                    case 'csv_import.scheme':
+                        resolve(entitySchemeService.create(item));
+                        break;
+                    case 'integrations.instrumentdownloadscheme':
+                        resolve(new Promise(function (resolveLocal, reject) {
+
+                            return new Promise(function (resolveLocal) {
+
+                                var promises = [];
+
+                                if (item.hasOwnProperty('___price_download_scheme__scheme_name')) {
+
+                                    var code = item['___price_download_scheme__scheme_name'];
+                                    var code_type = 'scheme_name';
+                                    var entity = 'price-download-scheme';
+                                    var item_key = 'price_download_scheme';
+
+                                    promises.push(mapRelation(item, item_key, entity, code_type, code, cacheContainer))
+
+                                }
+
+                                Promise.all(promises).then(function (data) {
+
+                                    resolveLocal(data)
+                                });
+
+
+                            }).then(function (value) {
+
+                                resolveLocal(instrumentSchemeService.create(item))
+
+                            });
+
+                        }));
+                        break;
+                    case 'integrations.pricedownloadscheme':
+                        resolve(priceDownloadSchemeService.create(item));
+                        break;
+                    case 'integrations.complextransactionimportscheme':
+                        resolve(new Promise(function (resolveLocal, reject) {
+
+                                return new Promise(function (resolveLocalMap) {
+
+                                    var promises = [];
+
+                                    item.rules.forEach(function (rule) {
+
+                                        if (rule.hasOwnProperty('___transaction_type__user_code')) {
+
+                                            promises.push(new Promise(function (resolveRelation, reject) {
+
+                                                var user_code = rule.___transaction_type__user_code;
+
+                                                getEntityByUserCode(user_code, 'transaction-type', cacheContainer).then(function (data) {
+
+                                                    rule.transaction_type = data.id;
+
+                                                    rule.fields = rule.fields.map(function (field) {
+
+                                                        data.inputs.forEach(function (input) {
+
+                                                            if (field.___input__name === input.name) {
+                                                                field.transaction_type_input = input.id;
+                                                            }
+
+                                                        });
+
+                                                        return field;
+
+                                                    });
+
+
+                                                    resolveRelation(item)
+
+                                                }).catch(function (reason) {
+                                                    reject(reason);
+                                                })
+
+                                            }));
+
+                                        }
+
+                                    });
+
+                                    Promise.all(promises).then(function (data) {
+
+                                        resolveLocalMap(data);
+
+                                    })
+
+                                }).then(function (value) {
+
+                                    resolveLocal(transactionSchemeService.create(item));
+
+                                })
+
+                            })
+                        );
+                        break;
+                    case 'obj_attrs.portfolioattributetype':
+                        resolve(attributeTypeService.create('portfolio', item));
+                        break;
+                    case 'obj_attrs.accountattributetype':
+                        resolve(attributeTypeService.create('account', item));
+                        break;
+                    case 'obj_attrs.accounttypeattributetype':
+                        resolve(attributeTypeService.create('account-type', item));
+                        break;
+                    case 'obj_attrs.responsibleattributetype':
+                        resolve(attributeTypeService.create('responsible', item));
+                        break;
+                    case 'obj_attrs.counterpartyattributetype':
+                        resolve(attributeTypeService.create('counterparty', item));
+                        break;
+                    case 'obj_attrs.instrumentattributetype':
+                        resolve(attributeTypeService.create('instrument', item));
+                        break;
+                    case 'obj_attrs.instrumenttypeattributetype':
+                        resolve(attributeTypeService.create('instrument-type', item));
+                        break;
+                }
+
+            } catch (error) {
+
+                console.log('importItem.error', error)
+
             }
 
         })
