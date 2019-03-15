@@ -150,7 +150,7 @@
             var entityType = metaContentTypesService.getContentTypeUIByState($state.current.name);
 
             uiService.getActiveListLayout(entityType).then(function (data) {
-                console.log("active layout data", data);
+
                 var activeLayoutRes = data.results;
                 if (activeLayoutRes && activeLayoutRes.length) {
                     var activeLayoutName = activeLayoutRes[0].name;
