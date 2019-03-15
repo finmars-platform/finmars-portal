@@ -12,8 +12,8 @@
 
     var baseUrl = baseUrlService.resolve();
 
-    var getList = function () {
-        return xhrService.fetch(baseUrl + 'transactions/event-class/',
+    var getList = function (options) {
+        return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl + 'transactions/event-class/', options),
             {
                 method: 'GET',
                 credentials: 'include',

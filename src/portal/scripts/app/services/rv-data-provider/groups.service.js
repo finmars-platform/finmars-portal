@@ -47,9 +47,6 @@
 
     var getUniqueGroups = function (items, group, groupType) {
 
-        // console.log('resultStrings.group', group);
-        // console.log('resultStrings.groupType', groupType);
-
         var result = [];
 
         var resultGroup;
@@ -63,9 +60,6 @@
             if (groupType.hasOwnProperty('id')) {
 
                 if (item.hasOwnProperty(groupType.entity + '_object')) {
-
-                    console.log('item', item);
-                    console.log('item', item.item_type);
 
                     item[groupType.entity + '_object'].attributes.forEach(function (attr) {
 
@@ -102,9 +96,14 @@
 
             } else {
 
-                if (keyIsEntityField(group)) {
+                console.log('group', groupType);
+                console.log('group', group);
+                console.log('item', item);
+
+                if (groupType.value_type === 'field') {
                     resultGroup.group_id = item[group];
-                    resultGroup.group_name = item[group + '_object_user_code'];
+                    // resultGroup.group_name = item[group + '_object_user_code'];
+                    resultGroup.group_name = item[group + '_object_name'];
                 } else {
 
                     if (item.hasOwnProperty(group) &&
@@ -119,16 +118,12 @@
                 }
             }
 
-            // console.log('resultGroup', resultGroup);
-
             if (!groupAlreadyExist(resultGroup, result)) {
 
                 result.push(resultGroup)
             }
 
         });
-
-        // console.log('getUniqueGroups.result', result);
 
         return result;
 
@@ -162,12 +157,7 @@
 
             var group = options.groups_types[options.groups_types.length - 1];
 
-            // console.log('items', items);
-
             var groups = getUniqueGroups(items, group, groupType);
-
-            // console.log('level', options.groups_types.length - 1);
-            // console.log('groups', groups);
 
             if (options.groups_order === 'desc') {
                 groups = sortService.sortItems(groups, '-group_name');

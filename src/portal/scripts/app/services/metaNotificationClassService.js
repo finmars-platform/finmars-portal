@@ -7,8 +7,8 @@
 
     var metaNotificationClassRepository = require('../repositories/metaNotificationClassRepository');
 
-    var getList = function(){
-        return metaNotificationClassRepository.getList();
+    var getList = function(options){
+        return metaNotificationClassRepository.getList(options);
     };
 
     module.exports = {
