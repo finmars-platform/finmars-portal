@@ -148,11 +148,6 @@
                 key: "instruments.instrument"
             },
             {
-                name: 'Pricing Policy',
-                entity: 'pricing-policy',
-                key: 'instruments.pricingpolicy'
-            },
-            {
                 name: 'Price History',
                 entity: 'price-history',
                 key: 'instruments.pricehistory'
@@ -271,6 +266,47 @@
                 name: "Transaction",
                 entity: 'complex-transaction',
                 key: "transactions.complextransaction"
+            },
+
+            {
+                name: 'Daily pricing model',
+                entity: 'daily_pricing_model',
+                key: 'instruments.dailypricingmodel'
+            },
+            {
+                name: 'Payment size detail',
+                entity: 'payment_size_detail',
+                key: 'instruments.paymentsizedetail'
+            },
+            {
+                name: 'Price download scheme',
+                entity: 'price_download_scheme',
+                key: 'integrations.pricedownloadscheme'
+            },
+            {
+                name: 'Pricing policy',
+                entity: 'pricing_policy',
+                key: 'instruments.pricingpolicy'
+            },
+            {
+                name: 'Periodicity',
+                entity: 'periodicity',
+                key: 'instruments.periodicity'
+            },
+            {
+                name: 'Accrual calculation model',
+                entity: 'accrual_calculation_model',
+                key: 'instruments.accrualcalculationmodel'
+            },
+            {
+                name: 'Event Class',
+                entity: 'event_class',
+                key: 'transactions.eventclass'
+            },
+            {
+                name: 'Notification Class',
+                entity: 'notification_class',
+                key: 'transactions.notificationclass'
             }
         ]
     };
