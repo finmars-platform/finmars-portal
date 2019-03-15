@@ -83,8 +83,7 @@
                 preserveScope: true,
                 autoWrap: true,
                 skipHide: true,
-                multiple: true,
-                locals: {}
+                multiple: true
             }).then(function (res) {
                 if (res.status === 'agree') {
                     ref.set_type(sel, 'folder');
@@ -110,8 +109,7 @@
 
         };
 
-
-        vm.renameNode = function () {
+        /*vm.renameNode = function () {
             var ref = $('#jstree_demo').jstree(true),
                 sel = ref.get_selected();
             if (!sel.length) {
@@ -119,6 +117,40 @@
             }
             sel = sel[0];
             ref.edit(sel);
+        };*/
+
+        vm.editNode = function ($event) {
+            var ref = $('#jstree_demo').jstree(true),
+                sel = ref.get_selected(true);
+
+            $mdDialog.show({
+                controller: 'BookmarksEditSelectedDialogController as vm',
+                templateUrl: 'views/dialogs/bookmarks-edit-selected-dialog-view.html',
+                targetEvent: $event,
+                autoWrap: true,
+                multiple: true,
+                locals: {
+                    data: {
+                        a_attr: sel[0].a_attr,
+                        id: sel[0].id,
+                        children: sel[0].children,
+                        original: sel[0].original,
+                        text: sel[0].text
+                    }
+                }
+            }).then(function (res) {
+                if (res.status === "agree") {
+
+                    //check if new layout is not the same
+                    if (res.item.a_attr.list_layout && res.item.a_attr.list_layout !== sel[0].original.list_layout) {
+                        sel[0].a_attr.state = res.item.a_attr.state;
+                        sel[0].a_attr.list_layout = res.item.a_attr.list_layout;
+                    }
+
+                    $('#jstree_demo').jstree(true).rename_node(sel, res.item.text);
+
+                }
+            });
         };
 
         vm.deleteNode = function () {
@@ -202,6 +234,14 @@
 
                     } else {
 
+                        // Check if existed bookmark has been updated
+                        if (!isNaN(item.a_attr.list_layout)) {
+                            item.list_layout = item.a_attr.list_layout;
+                            item.data.state = item.a_attr.state;
+                        }
+                        // < Check if existed bookmark has been updated >
+
+                        // Editing bookmarks inside menu
                         item.children.forEach(function(subItem){
 
                             if (isNaN(parseInt(subItem.id, 10))) {
@@ -212,6 +252,7 @@
                             }
 
                         });
+                        // < Editing bookmark inside menu >
 
                         promises.push(bookmarkService.update(item.id, item));
                     }

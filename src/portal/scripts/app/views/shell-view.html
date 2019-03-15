@@ -81,11 +81,7 @@
                 <div class="md-toolbar-tools" flex="40" layout-align="end center">
 
                     <div class="header-misc" layout="row">
-                        <!--<md-button data-ui-sref="app.system.notifications" aria-label="Notifications">-->
-                        <!--<ng-md-icon icon="mail_outline"></ng-md-icon>-->
-                        <!--</md-button>-->
 
-                        <!--<bookmarks></bookmarks>-->
                         <md-button class="md-button header-cloud-layout-btn" data-ng-click="vm.toggleBookmarkPanel()">
                             <ng-md-icon icon="bookmark" size="24">
                                 <md-tooltip class="tooltip_1" md-direction="bottom">Open bookmark panel</md-tooltip>
@@ -176,9 +172,7 @@
                             <div data-ng-if="item.children.length" layout="row" layout-align="start start">
                                 <md-menu>
                                     <!-- Trigger element is a md-button with an icon -->
-                                    <!--<md-button ng-click="$mdOpenMenu($event)" class="" aria-label="Open sample menu">
-                                        {{item.name}}
-                                    </md-button>-->
+
                                     <md-button ng-click="$mdMenu.open($event)"
                                                aria-label="Open sample menu"
                                                class="bookmark-menu-btn">
@@ -186,14 +180,12 @@
                                     </md-button>
                                     <md-menu-content>
                                         <md-menu-item data-ng-repeat="subItem in item.children">
-                                            <!--<md-button data-ui-sref="{{vm.getState(subItem)}}" data-ng-click="vm.setLayout(subItem)">{{subItem.name}}</md-button>-->
                                             <md-button data-ng-click="vm.setLayout(subItem)">{{subItem.name}}</md-button>
                                         </md-menu-item>
                                     </md-menu-content>
                                 </md-menu>
                             </div>
                             <div data-ng-if="!item.children.length">
-                                <!--<md-button data-ui-sref="{{vm.getState(item)}}" class="bookmark-a-btn" data-ng-click="vm.setLayout(item)">{{item.name}}</md-button>-->
                                 <md-button class="bookmark-a-btn" data-ng-click="vm.setLayout(item)">{{item.name}}</md-button>
                             </div>
                         </div>

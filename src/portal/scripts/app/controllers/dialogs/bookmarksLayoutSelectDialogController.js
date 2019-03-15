@@ -12,6 +12,8 @@
 
     module.exports = function ($scope, $mdDialog) {
 
+        logService.controller('BookmarksLayoutSelectDialogController', 'initialized');
+
         var vm = this;
 
         function contentTypeToState(contentType) {
@@ -34,8 +36,6 @@
             return result;
         }
 
-        logService.controller('BookmarksLayoutSelectDialogController', 'initialized');
-
         vm.readyStatus = {content: false};
 
         var sortLayoutsBy = {
@@ -57,12 +57,16 @@
         vm.selectLayout = function (item) {
             vm.selectedLayoutId = item.id;
             vm.selectedContentType = item.content_type;
+            vm.selectedLayoutName = item.name;
         };
 
         vm.agree = function () {
             $mdDialog.hide({
                 status: 'agree',
-                data: {listLayoutId: vm.selectedLayoutId, state: contentTypeToState(vm.selectedContentType)}
+                data: {listLayoutId: vm.selectedLayoutId,
+                       state: contentTypeToState(vm.selectedContentType),
+                       name: vm.selectedLayoutName,
+                       content_type: vm.selectedContentType}
             });
         };
 
