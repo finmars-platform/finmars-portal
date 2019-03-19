@@ -6,65 +6,70 @@
             <span flex></span>
         </div>
     </md-toolbar>
-    <md-dialog-content   style="background: #E5E5E5;">
+    <md-dialog-content style="background: #E5E5E5;">
         <md-content>
             <md-card>
-                <md-card-content>
+                <md-card-content class="overflow-hidden">
                     <h3>Please see below the list of records we failed to import</h3>
 
-                    <div data-ng-if="vm.data.error_handling == 'break'">
-                        Error occurred on <span data-ng-bind="vm.data.error_row_index"></span> row.
+                    <div class="transaction-import-error-holder">
 
-                        <div data-ng-show="vm.data.error_rows.length" style="margin-top: 24px">
+                        <div data-ng-if="vm.data.error_handling == 'break'">
+                            Error occurred on <span data-ng-bind="vm.data.error_row_index"></span> row.
+
+                            <div data-ng-show="vm.data.error_rows.length" style="margin-top: 24px">
+                                <table>
+                                    <thead>
+                                    <tr>
+                                        <th style="min-width:300px">Message</th>
+                                        <th style="min-width:300px">Inputs</th>
+                                        <th>Row content</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr data-ng-repeat="item in vm.data.error_rows">
+                                        <td data-ng-bind="item.error_message"></td>
+                                        <td>
+                                            <div data-ng-repeat="(key, val) in item.inputs">
+                                                <b data-ng-bind="key"></b>: {{val}}
+                                            </div>
+                                        </td>
+                                        <td data-ng-bind="item.original_row"></td>
+                                    </tr>
+                                    </tbody>
+
+                                </table>
+
+                                <span data-ng-bind="item.error_message"></span>
+
+                            </div>
+
+                        </div>
+                        <div data-ng-if="vm.data.error_handling == 'continue'">
                             <table>
                                 <thead>
                                 <tr>
-                                    <th>Message</th>
-                                    <th>Inputs</th>
-                                    <th>Row content</th>
+                                    <th data-ng-repeat="item in vm.data.scheme_object.inputs">
+                                        <span data-ng-bind="item.name"></span>
+                                    </th>
+                                    <th style="min-width:300px" >Error message</th>
                                 </tr>
                                 </thead>
                                 <tbody>
-                                <tr data-ng-repeat="item in vm.data.error_rows">
-                                    <td data-ng-bind="item.error_message"></td>
-                                    <td>
-                                        <div data-ng-repeat="(key, val) in item.inputs">
-                                            <b data-ng-bind="key"></b>: {{val}}
-                                        </div>
+                                <tr data-ng-repeat="row in vm.data.error_rows">
+                                    <td data-ng-repeat="input in vm.data.scheme_object.inputs">
+                                        <span data-ng-bind="row.inputs[input.name]"></span>
                                     </td>
-                                    <td data-ng-bind="item.original_row"></td>
+                                    <td>
+                                        <span data-ng-bind="row.error_message"></span>
+                                    </td>
                                 </tr>
                                 </tbody>
-
                             </table>
-
-                            <span data-ng-bind="item.error_message"></span>
-
                         </div>
 
                     </div>
-                    <div data-ng-if="vm.data.error_handling == 'continue'">
-                        <table>
-                            <thead>
-                            <tr>
-                                <th data-ng-repeat="item in vm.data.scheme_object.inputs">
-                                    <span data-ng-bind="item.name"></span>
-                                </th>
-                                <th></th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr data-ng-repeat="row in vm.data.error_rows">
-                                <td data-ng-repeat="input in vm.data.scheme_object.inputs">
-                                    <span data-ng-bind="row.inputs[input.name]"></span>
-                                </td>
-                                <td>
-                                    <span data-ng-bind="row.error_message"></span>
-                                </td>
-                            </tr>
-                            </tbody>
-                        </table>
-                    </div>
+
                 </md-card-content>
             </md-card>
 
@@ -73,6 +78,9 @@
     <md-dialog-actions layout="row">
         <md-button class="md-raised" ng-click="vm.cancel()">
             Close
+        </md-button>
+        <md-button class="md-raised md-warn" data-ng-if="vm.data.process_mode == 'validate'" ng-click="vm.agree()">
+            Ok, proceed
         </md-button>
     </md-dialog-actions>
 </md-dialog>

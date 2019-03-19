@@ -36,7 +36,10 @@
             {
                 "key": "type",
                 "name": "Type",
-                "value_type": "field"
+                "value_type": "field",
+                "content_type": "accounts.accounttype",
+                "entity": "account-type",
+                "code": "user_code"
             },
             {
                 "key": "public_name",

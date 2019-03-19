@@ -43,7 +43,7 @@
                 keys.forEach(function (keysItem) {
                     if (options.filters[keysItem]) {
                         var filterItems = options.filters[keysItem];
-                        if (typeof filterItems === 'string') {
+                        if (typeof filterItems === 'string' || typeof filterItems === 'number') {
                             url = url + '&' + entityPluralToSingular(keysItem) + '=' + filterItems;
                         } else {
                             filterItems.map(function (filterItem, index) {
