@@ -11,8 +11,13 @@
         return importTransactionRepository.startImport(config);
     };
 
+    var validateImport = function (config) {
+        return importTransactionRepository.validateImport(config);
+    };
+
     module.exports = {
-        startImport: startImport
+        startImport: startImport,
+        validateImport: validateImport
     }
 
 }());

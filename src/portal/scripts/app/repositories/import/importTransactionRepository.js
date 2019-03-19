@@ -24,8 +24,21 @@
             })
     };
 
+    var validateImport = function (config) {
+        return xhrService.fetch(baseUrl + 'import/complex-transaction-csv-file-import-validate/',
+            {
+                method: 'POST',
+                credentials: 'include',
+                headers: {
+                    'X-CSRFToken': cookieService.getCookie('csrftoken')
+                },
+                body: config
+            })
+    };
+
     module.exports = {
-        startImport: startImport
+        startImport: startImport,
+        validateImport: validateImport
     }
 
 }());

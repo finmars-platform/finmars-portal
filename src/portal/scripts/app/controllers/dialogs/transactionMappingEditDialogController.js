@@ -48,6 +48,17 @@
                     vm.providerFields.push(input);
                 })
 
+                vm.providerFields = vm.providerFields.sort(function (a, b) {
+                    if (a.column > b.column) {
+                        return 1;
+                    }
+                    if (a.column < b.column) {
+                        return -1;
+                    }
+
+                    return 0;
+                });
+
             }
 
             if (vm.scheme.rules.length) {
@@ -56,6 +67,7 @@
                 vm.scheme.rules.forEach(function (rule) {
                     vm.mapFields.push(rule);
                 })
+
             }
 
             vm.readyStatus.scheme = true;

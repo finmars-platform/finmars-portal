@@ -46,6 +46,10 @@
             mode: 1
         };
 
+        vm.validateConfig = {
+            mode: 1
+        };
+
         vm.loadIsAvailable = function () {
             return !vm.readyStatus.processing && vm.config.scheme && vm.config.error_handling;
         };
@@ -170,6 +174,86 @@
             } else {
                 return haveError;
             }
+        };
+
+        vm.startImport = function ($event) {
+
+            new Promise(function (resolve, reject) {
+
+                vm.validateConfig = Object.assign({}, vm.config);
+
+                vm.validate(resolve, $event)
+
+            }).then(function (res) {
+
+                if (vm.validateConfig.error_rows.length) {
+
+                    vm.validateConfig.process_mode = 'validate';
+
+                    $mdDialog.show({
+                        controller: 'ImportTransactionErrorsDialogController as vm',
+                        templateUrl: 'views/dialogs/import-transaction-errors-dialog-view.html',
+                        locals: {
+                            data: vm.validateConfig
+                        },
+                        targetEvent: $event,
+                        preserveScope: true,
+                        multiple: true,
+                        autoWrap: true,
+                        skipHide: true
+                    }).then(function (res) {
+
+                        if (res.status === 'agree') {
+                            vm.load($event);
+                        } else {
+                            vm.validateConfig = {};
+                            vm.readyStatus.processing = false;
+                        }
+
+                    })
+
+                } else {
+                    vm.load($event);
+                }
+
+            })
+
+        };
+
+        vm.validate = function (resolve) {
+            vm.readyStatus.processing = true;
+
+            var formData = new FormData();
+
+            if (vm.validateConfig.task_id) {
+                formData.append('task_id', vm.validateConfig.task_id);
+            } else {
+
+                formData.append('file', vm.config.file);
+                formData.append('scheme', vm.config.scheme);
+                formData.append('error_handling', vm.config.error_handling);
+            }
+
+            importTransactionService.validateImport(formData).then(function (data) {
+
+                vm.validateConfig = data;
+
+                if (vm.validateConfig.task_status === 'SUCCESS') {
+
+                    console.log('VALIDATE IMPORT data', data);
+
+                    resolve(data)
+
+                } else {
+
+                    setTimeout(function () {
+                        vm.validate(resolve);
+                    }, 1000)
+
+                }
+
+            })
+
         };
 
         vm.load = function ($event) {
