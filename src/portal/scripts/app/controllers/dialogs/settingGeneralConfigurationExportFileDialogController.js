@@ -7,6 +7,7 @@
 
     var metaContentTypesService = require('../../services/metaContentTypesService');
     var uiRepository = require('../../repositories/uiRepository');
+    var metaService = require('../../services/metaService');
     var configurationService = require('../../services/configurationService');
 
 
@@ -19,166 +20,92 @@
 
         vm.selectAllState = false;
 
-        var configurationGroups = {
-            0: {
-                name: 'Working Interface',
-                entities: ['ui.editlayout', 'ui.listlayout', 'ui.reportlayout', 'ui.bookmark']
-            },
-
-            1: {
-                name: 'Transaction Types',
-                entities: ['transactions.transactiontype', 'transactions.transactiontypegroup']
-            },
-
-            2: {
-                name: 'Base Elements',
-                entities: ['instruments.instrumenttype', 'accounts.accounttype', 'Currencies', 'Pricing Policy']
-            },
-
-            3: {
-                name: 'Configurations',
-                entities: ['Automated uploads schedule']
-            },
-
-            4: {
-                name: 'User Attributes',
-                entities: ['Portfolio Dynamic Attributes',
-                        'Account Dynamic Attributes',
-                        'Account Type Dynamic Attributes',
-                        'Responsible Dynamic Attributes',
-                        'Counterparty Dynamic Attributes',
-                        'Instrument Dynamic Attributes',
-                        'Instrument Type Dynamic Attributes']
-            },
-
-            5: {
-                name: 'Schemes: Import from File',
-                entities: ['Data import from CSV schemes', 'Complex Transaction Import Scheme']
-            },
-
-            6: {
-                name: 'Schemes: Downloads',
-                entities: ['Instrument Download Schemes', 'Price Download Schemes']
-            }
-        };
-
         vm.getFile = function () {
 
-            return configurationService.getConfigurationData().then(function (data) {
+            return new Promise(function (resolve, reject) {
+                configurationService.getConfigurationData().then(function (data) {
 
-                console.log('configurationService.getConfigurationData', data);
+                    console.log('configurationService.getConfigurationData', data);
 
-                vm.file = data;
+                    vm.file = data;
+                    vm.items = data.body;
 
-                vm.items = data.body;
+                    var groups = []
+                    metaService.getContentGroups("exportImportConfigGroups").then(function (data) {
+                        groups = data;
 
-                var firstWorkingInterfaceItem = false;
-                var firstTransactionTypesItem = false;
-                var firstBaseElementsItem = false;
-                var firstConfigurationsItem = false;
-                var firstUserAttributesItem = false;
-                var firstImportFromFileItem = false;
-                var firstSchemesDownloads = false;
+                        vm.items.forEach(function (parent) {
 
-                vm.items.forEach(function (parent) {
+                            parent.content = parent.content.filter(function (child) {
 
-                    parent.content = parent.content.filter(function (child) {
+                                if (child.hasOwnProperty('user_code') && child.user_code === '-') {
+                                    return false
+                                }
 
-                        if (child.hasOwnProperty('user_code') && child.user_code === '-') {
-                            return false
-                        }
+                                if (child.hasOwnProperty('scheme_name') && child.scheme_name === '-') {
+                                    return false
+                                }
 
-                        if (child.hasOwnProperty('scheme_name') && child.scheme_name === '-') {
-                            return false
-                        }
+                                return true;
 
-                        return true;
+                            });
+
+                            // Assign group to file
+                            var g, e, c;
+                            loop1:
+                                for (g = 0; g < groups.length; g++) {
+
+                                    loop2:
+                                        for (e = 0; e < groups[g].entities.length; e++) {
+
+                                            if (groups[g].entities[e] === parent.entity) {
+
+                                                if (!groups[g].firstElementExist) { // If a file first in the group, attach to it group name to display
+
+                                                    parent.first = groups[g].name;
+                                                    groups[g].firstElementExist = true;
+
+                                                }
+
+                                                parent.order = g; // Set a group order position
+
+                                                // Divide children into subgroups
+                                                if (parent.entity === "ui.listlayout" || parent.entity === "ui.reportlayout") {
+                                                    var subGroupsList = groups[g].subGroups[parent.entity];
+
+                                                    var children = parent.content;
+
+                                                    loop3:
+                                                        for (c = 0; c < children.length; c++) {
+                                                            var subGroup = subGroupsList[children[c].content_type];
+
+                                                            if (!subGroup.firstElementExist) {
+                                                                children[c].first = subGroup.name;
+                                                                subGroup.firstElementExist = true;
+                                                            }
+
+                                                            children[c].order = subGroup.order;
+                                                        }
+                                                }
+                                                // < Divide children into subgroups >
+
+                                                break loop1;
+                                            }
+
+                                        }
+                                }
+                            // < Assign group to file >
+
+                        });
+
+                        vm.readyStatus.content = true;
+
+                        resolve($scope.$apply());
 
                     });
 
-                    switch (parent.entity) {
-
-                        case 'ui.editlayout':
-                        case 'ui.listlayout':
-                        case 'ui.reportlayout':
-                        case 'ui.bookmark':
-                            parent.order = 1;
-                            if (!firstWorkingInterfaceItem) {
-                                firstWorkingInterfaceItem = true;
-                                parent.first = 'Working Interface'
-                            }
-                            break;
-
-                        case 'transactions.transactiontype':
-                        case 'transactions.transactiontypegroup':
-                            parent.order = 2;
-                            if (!firstTransactionTypesItem) {
-                                firstTransactionTypesItem = true;
-                                parent.first = 'Transaction Types'
-                            }
-                            break;
-
-                        case 'instruments.instrumenttype':
-                        case 'accounts.accounttype':
-                        case 'currencies.currency':
-                        case 'instruments.pricingpolicy':
-                            parent.order = 3;
-                            if (!firstBaseElementsItem) {
-                                firstBaseElementsItem = true;
-                                parent.first = 'Base Elements'
-                            }
-                            break;;
-
-                        case 'import.pricingautomatedschedule':
-                            parent.order = 4;
-                            if (!firstConfigurationsItem) {
-                                firstConfigurationsItem = true;
-                                parent.first = 'Configurations'
-                            }
-                            break;
-
-                        case 'obj_attrs.portfolioattributetype':
-                        case 'obj_attrs.accountattributetype':
-                        case 'obj_attrs.accounttypeattributetype':
-                        case 'obj_attrs.responsibleattributetype':
-                        case 'obj_attrs.counterpartyattributetype':
-                        case 'obj_attrs.instrumentattributetype':
-                        case 'obj_attrs.instrumenttypeattributetype':
-                            parent.order = 5;
-                            if (!firstUserAttributesItem) {
-                                firstUserAttributesItem = true;
-                                parent.first = 'User Attributes'
-                            }
-                            break;
-
-                        case 'csv_import.scheme':
-                        case 'integrations.complextransactionimportscheme':
-                            parent.order = 6;
-                            if (!firstImportFromFileItem) {
-                                firstImportFromFileItem = true;
-                                parent.first = 'Schemes: Import from File'
-                            }
-                            break;
-
-                        case 'integrations.instrumentdownloadscheme':
-                        case 'integrations.pricedownloadscheme':
-                            parent.order = 7;
-                            if (!firstSchemesDownloads) {
-                                firstSchemesDownloads = true;
-                                parent.first = 'Schemes: Downloads'
-                            }
-                            break;
-                    }
-
                 });
-
-
-                vm.readyStatus.content = true;
-
-                $scope.$apply();
-
             });
-
         };
 
         var getECProperties = function (item) {
@@ -690,6 +617,19 @@
         }
 
         vm.agree = function ($event) {
+
+            // removing properties created for data rendering
+            vm.items.forEach(function (entity) {
+                delete entity.order;
+                delete entity.first;
+
+                if (entity.entity === "ui.listlayout" || entity.entity === "ui.reportlayout") {
+                    entity.content.forEach(function (item) {
+                        delete item.order;
+                        delete item.first;
+                    });
+                }
+            });
 
             exportConfiguration(vm.items).then(function (data) {
 

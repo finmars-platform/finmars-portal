@@ -6,6 +6,7 @@
     'use strict';
 
     var metaContentTypesService = require('../../services/metaContentTypesService');
+    var metaService = require('../../services/metaService');
     var configurationImportHelper = require('../../helpers/configuration-import.helper');
 
     module.exports = function ($scope, $mdDialog, file) {
@@ -32,89 +33,58 @@
 
         var sortItems = function () {
 
-            var firstWorkingInterfaceItem = false;
-            var firstTransactionTypesItem = false;
-            var firstBaseElementsItem = false;
-            var firstConfigurationsItem = false;
-            var firstUserAttributesItem = false;
-            var firstImportFromFileItem = false;
-            var firstSchemesDownloads = false;
+            var groups = [];
+            metaService.getContentGroups("exportImportConfigGroups").then(function (data) {
+                groups = data;
 
-            vm.items.forEach(function (parent) {
+                vm.items.forEach(function (parent) {
 
-                switch (parent.entity) {
+                    // Assign group to file
+                    var g, e, c;
+                    loop1:
+                        for (g = 0; g < groups.length; g++) {
 
-                    case 'ui.editlayout':
-                    case 'ui.listlayout':
-                    case 'ui.reportlayout':
-                    case 'ui.bookmark':
-                        parent.order = 1;
-                        if (!firstWorkingInterfaceItem) {
-                            firstWorkingInterfaceItem = true;
-                            parent.first = 'Working Interface'
+                            loop2:
+                                for (e = 0; e < groups[g].entities.length; e++) {
+
+                                    if (groups[g].entities[e] === parent.entity) {
+
+                                        if (!groups[g].firstElementExist) { // If a file first in the group, attach to it group name to display
+
+                                            parent.first = groups[g].name;
+                                            groups[g].firstElementExist = true;
+
+                                        }
+
+                                        parent.order = g; // Set a group order position
+
+                                        // Divide children into subgroups
+                                        if (parent.entity === "ui.listlayout" || parent.entity === "ui.reportlayout") {
+                                            var subGroupsList = groups[g].subGroups[parent.entity];
+
+                                            var children = parent.content;
+
+                                            loop3:
+                                                for (c = 0; c < children.length; c++) {
+                                                    var subGroup = subGroupsList[children[c].content_type];
+
+                                                    if (!subGroup.firstElementExist) {
+                                                        children[c].first = subGroup.name;
+                                                        subGroup.firstElementExist = true;
+                                                    }
+
+                                                    children[c].order = subGroup.order;
+                                                }
+                                        }
+                                        // < Divide children into subgroups >
+
+                                        break loop1;
+                                    }
+
+                                }
                         }
-                        break;
 
-                    case 'transactions.transactiontype':
-                    case 'transactions.transactiontypegroup':
-                        parent.order = 2;
-                        if (!firstTransactionTypesItem) {
-                            firstTransactionTypesItem = true;
-                            parent.first = 'Transaction Types'
-                        }
-                        break;
-
-                    case 'instruments.instrumenttype':
-                    case 'accounts.accounttype':
-                    case 'currencies.currency':
-                    case 'instruments.pricingpolicy':
-                        parent.order = 3;
-                        if (!firstBaseElementsItem) {
-                            firstBaseElementsItem = true;
-                            parent.first = 'Base Elements'
-                        }
-                        break;;
-
-                    case 'import.pricingautomatedschedule':
-                        parent.order = 4;
-                        if (!firstConfigurationsItem) {
-                            firstConfigurationsItem = true;
-                            parent.first = 'Configurations'
-                        }
-                        break;
-
-                    case 'obj_attrs.portfolioattributetype':
-                    case 'obj_attrs.accountattributetype':
-                    case 'obj_attrs.accounttypeattributetype':
-                    case 'obj_attrs.responsibleattributetype':
-                    case 'obj_attrs.counterpartyattributetype':
-                    case 'obj_attrs.instrumentattributetype':
-                    case 'obj_attrs.instrumenttypeattributetype':
-                        parent.order = 5;
-                        if (!firstUserAttributesItem) {
-                            firstUserAttributesItem = true;
-                            parent.first = 'User Attributes'
-                        }
-                        break;
-
-                    case 'csv_import.scheme':
-                    case 'integrations.complextransactionimportscheme':
-                        parent.order = 6;
-                        if (!firstImportFromFileItem) {
-                            firstImportFromFileItem = true;
-                            parent.first = 'Schemes: Import from File'
-                        }
-                        break;
-
-                    case 'integrations.instrumentdownloadscheme':
-                    case 'integrations.pricedownloadscheme':
-                        parent.order = 7;
-                        if (!firstSchemesDownloads) {
-                            firstSchemesDownloads = true;
-                            parent.first = 'Schemes: Downloads'
-                        }
-                        break;
-                }
+                });
 
             });
 
@@ -349,6 +319,11 @@
                 delete entity.first;
 
                 entity.content.forEach(function (item) {
+
+                    if (entity.entity === "ui.listlayout" || entity.entity === "ui.reportlayout") {
+                        delete item.order;
+                        delete item.first;
+                    }
 
                     if (item.active) {
                         vm.activeItemTotal = vm.activeItemTotal + 1;
