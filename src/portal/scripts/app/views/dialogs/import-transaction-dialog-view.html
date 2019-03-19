@@ -1,4 +1,4 @@
-<md-dialog aria-label="" ng-cloak class="transaction-import-manager-dialog-view draggable-dialog" drag-dialog>
+<md-dialog aria-label="" ng-cloak class="transaction-import-manager-dialog-view draggable-dialog width-70" drag-dialog>
     <md-toolbar>
         <div class="md-toolbar-tools">
             <h2>Transaction import manager</h2>
@@ -45,7 +45,7 @@
                                 </md-input-container>
                                 <md-button
                                         class="instrument-mapping-btn md-fab"
-                                        data-ng-class="{'disabled-btn': !vm.loadIsAvailable()}"
+                                        data-ng-class="{'disabled-btn': !vm.config.scheme}"
                                         data-ng-click="vm.openEditMapping($event)">
                                     <ng-md-icon icon="functions" size="24" style="fill:rgb(63,81,181);"></ng-md-icon>
                                     <md-tooltip class="tooltip_1" md-direction="top">Edit mapping</md-tooltip>
@@ -55,12 +55,12 @@
                                 <md-button
                                         class="md-raised colored-btn instrument-load-btn"
                                         data-ng-class="{'disabled-btn': !vm.loadIsAvailable()}"
-                                        data-ng-click="vm.load($event)">
+                                        data-ng-click="vm.startImport($event)">
                                     Load
                                 </md-button>
-                                <div data-ng-if="vm.readyStatus.processing">
+                                <div data-ng-if="vm.readyStatus.processing" class="m-l-16">
                                     <md-progress-circular md-mode="indeterminate"
-                                                          md-diameter="48"></md-progress-circular>
+                                                          md-diameter="32"></md-progress-circular>
                                 </div>
                             </div>
                         </div>
@@ -77,7 +77,7 @@
                             <h2>The data successfully imported.</h2>
                         </div>
                         <!--<div layout="row" data-ng-if="vm.config.error_message" layout-align="center center">-->
-                            <!--Something wrong. Invalid file format.-->
+                        <!--Something wrong. Invalid file format.-->
                         <!--</div>-->
                     </md-card-content>
                 </md-card>

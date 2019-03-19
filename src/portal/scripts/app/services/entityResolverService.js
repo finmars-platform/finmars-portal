@@ -336,7 +336,7 @@
                         originValuesKeys.forEach(function (originVal) {
                             defaultValuesKeys.forEach(function (defaultVal) {
 
-                                if (originVal !== defaultVal) {
+                                if (originVal === defaultVal) {
                                     entity.values[defaultVal] = originValues[originVal];
                                 }
 

@@ -33,6 +33,7 @@
             timeout = setTimeout(later, wait);
             if (callNow) func.apply(context, args);
         };
+
     }
 
     function floor10(value, exp) {
