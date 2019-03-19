@@ -91,7 +91,8 @@
 
                 <div data-ng-show="item.displayItems" style="padding-left: 20px">
 
-                    <div data-ng-repeat="child in item.content">
+                    <div data-ng-repeat="child in item.content | orderBy: 'order'">
+                        <h4 data-ng-if="child.first" data-ng-bind="child.first"></h4>
                         <md-checkbox data-ng-checked="child.active"
                                      data-ng-click="vm.updateActiveForParent(child, item)"
                                      aria-label="checkbox">

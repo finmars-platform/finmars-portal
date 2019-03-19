@@ -163,23 +163,27 @@
             var delBookmarkId = parseInt(sel, 10);
 
             // Check if bookmark to delete recorded on server
-            vm.bookmarks.forEach(function (bookmark) {
+            var i;
+            for (i = 0; i < vm.bookmarks.length; i++) {
 
-                if (bookmark.children && bookmark.children.length > 0) {
-
-                    bookmark.children.forEach(function (chBookmark, index) {
-                        if (chBookmark.id === delBookmarkId) {
-                            bookmark.children.splice(index, 1);
-                        }
-                    });
-
-                }
-                else if (bookmark.id === delBookmarkId) {
+                if (vm.bookmarks[i].id === delBookmarkId) {
                     vm.deletedNodes.push(sel);
-                    return false;
-                };
+                    break;
+                } else if (vm.bookmarks[i].children && vm.bookmarks[i].children.length > 0) {
 
-            });
+                    var bookmarkChildren = vm.bookmarks[i].children;
+
+                    var a;
+                    for (a = 0; a < bookmarkChildren.length; a++) {
+
+                        if (bookmarkChildren[a].id === delBookmarkId) {
+                            bookmarkChildren.splice(a, 1);
+                            break;
+                        }
+                    }
+
+                };
+            }
 
             ref.delete_node(sel);
         };
@@ -192,7 +196,7 @@
 
 
             var promisesDel = [];
-
+            console.log("bookmarks delete deleteNodes", vm.deletedNodes);
             vm.deletedNodes.forEach(function (itemId) {
                 promisesDel.push(bookmarkService.deleteByKey(itemId))
 
@@ -234,12 +238,12 @@
 
                     } else {
 
-                        // Check if existed bookmark has been updated
+                        // Check if bookmark has been updated
                         if (!isNaN(item.a_attr.list_layout)) {
                             item.list_layout = item.a_attr.list_layout;
                             item.data.state = item.a_attr.state;
                         }
-                        // < Check if existed bookmark has been updated >
+                        // < Check if bookmark has been updated >
 
                         // Editing bookmarks inside menu
                         item.children.forEach(function(subItem){
@@ -249,6 +253,12 @@
                                 subItem.list_layout = subItem.a_attr.list_layout;
                                 subItem.data.state = subItem.a_attr.state;
                                 delete subItem.id;
+
+                            } else if (!isNaN(subItem.a_attr.list_layout)) {
+
+                                subItem.list_layout = subItem.a_attr.list_layout;
+                                subItem.data.state = subItem.a_attr.state;
+
                             }
 
                         });

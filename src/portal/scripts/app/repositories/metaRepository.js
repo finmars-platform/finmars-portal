@@ -217,6 +217,25 @@
         return ['instrument_type', 'type', 'transaction_type', 'instrument_types', 'transaction_types', 'account_types'];
     };
 
+    var getContentGroups = function (typeOfGrouping) {
+
+        var path = "";
+
+        switch (typeOfGrouping) {
+            case "entityLayoutsGroups":
+                path = "portal/content/json/groups/bookmarks_groups_list.json";
+                break;
+            case "exportImportConfigGroups":
+                path = "portal/content/json/groups/configuration_export_import_files_groups_list.json";
+                break;
+        }
+
+        return window.fetch(path).then(function (data) {
+            return data.json();
+        });
+
+    };
+
     module.exports = {
         getMenu: getMenu,
         getBaseAttrs: getBaseAttrs,
@@ -228,7 +247,8 @@
         getEntitiesWithoutBaseAttrsList: getEntitiesWithoutBaseAttrsList,
         getRestrictedEntitiesWithTypeField: getRestrictedEntitiesWithTypeField,
         getEntitiesWithSimpleFields: getEntitiesWithSimpleFields,
-        getFieldsWithTagGrouping: getFieldsWithTagGrouping
+        getFieldsWithTagGrouping: getFieldsWithTagGrouping,
+        getContentGroups: getContentGroups
     }
 
 

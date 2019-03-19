@@ -8,6 +8,7 @@
     var logService = require('../../../../../core/services/logService');
 
     var uiService = require('../../services/uiService');
+    var metaService = require('../../services/metaService');
     var metaContentTypesService = require('../../services/metaContentTypesService');
 
     module.exports = function ($scope, $mdDialog) {
@@ -36,6 +37,10 @@
             return result;
         }
 
+        metaService.getContentGroups('entityLayoutsGroups').then(function (data) {
+            vm.groups = data;
+        });
+
         vm.readyStatus = {content: false};
 
         var sortLayoutsBy = {
@@ -47,6 +52,18 @@
 
         uiService.getListLayout('all', sortLayoutsBy).then(function (data) {
             vm.items = data.results;
+
+            vm.items.forEach(function (item) {
+
+                var i;
+                for (i = 0; i < vm.groups.length; i++) {
+                    if (item.content_type === vm.groups[i].key) {
+                        vm.groups[i].content.push(item);
+                        break;
+                    }
+                }
+
+            });
 
             vm.readyStatus.content = true;
             $scope.$apply();
