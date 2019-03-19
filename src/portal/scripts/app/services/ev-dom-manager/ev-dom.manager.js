@@ -574,7 +574,7 @@
 
     };
 
-    var addScrollListener = function (elements, evDataService, evEventService) {
+    var addScrollListener = function (elements, evDataService, evEventService)  {
 
         var viewportElem = elements.viewportElem;
 

@@ -1,23 +1,7 @@
 (function () {
 
     var filterService = require('./filter.service');
-
     var sortService = require('./sort.service');
-
-    function keyIsEntityField(key) {
-
-        return ['type',
-            'instrument_type',
-            'transaction_type',
-            'currency',
-            'pricing_currency',
-            'instrument_object_instrument_type',
-            'account_object_type',
-            'instrument_object_accrued_currency',
-
-            'group'].indexOf(key) !== -1
-
-    }
 
     function groupAlreadyExist(resultGroup, result) {
 
@@ -177,6 +161,5 @@
     module.exports = {
         getList: getList
     }
-
 
 }());

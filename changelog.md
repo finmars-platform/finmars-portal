@@ -1,5 +1,8 @@
 # Changelog
 
+## 19.03.2019
+- Import Transaction Validation
+
 ## 28.02.2019
 - CRUD select
 
