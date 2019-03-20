@@ -10,154 +10,153 @@
     "firstElementExist": false,
     "subGroups": {
 
-      "ui.listlayout": {
+      "ui.listlayout":[
 
-        "portfolios.portfolio": {
+        {
+          "content_type": "portfolios.portfolio",
           "name": "Portfolio",
-          "order": 1,
           "firstElementExist": false
         },
-        "accounts.account": {
+        {
+          "content_type": "accounts.account",
           "name": "Account",
-          "order": 2,
           "firstElementExist": false
         },
-        "accounts.accounttype": {
+        {
+          "content_type": "accounts.accounttype",
           "name": "Account Type",
-          "order": 3,
           "firstElementExist": false
         },
-        "counterparties.responsible":  {
+        {
+          "content_type": "counterparties.responsible",
           "name": "Responsible",
-          "order": 4,
           "firstElementExist": false
         },
-        "counterparties.responsiblegroup":  {
+        {
+          "content_type": "counterparties.responsiblegroup",
           "name": "Responsible Group",
-          "order": 5,
           "firstElementExist": false
         },
-        "counterparties.counterparty":  {
+        {
+          "content_type": "counterparties.counterparty",
           "name": "Counterparty",
-          "order": 6,
           "firstElementExist": false
         },
-        "counterparties.counterpartygroup":  {
+        {
+          "content_type": "counterparties.counterpartygroup",
           "name": "Counterparty Group",
-          "order": 7,
           "firstElementExist": false
         },
-        "instruments.instrument":  {
+        {
+          "content_type": "instruments.instrument",
           "name": "Instrument",
-          "order": 8,
           "firstElementExist": false
         },
-        "instruments.instrumenttype":  {
+        {
+          "content_type": "instruments.instrumenttype",
           "name": "Instrument Type",
-          "order": 9,
           "firstElementExist": false
         },
-        "instruments.pricingpolicy":  {
+        {
+          "content_type": "instruments.pricingpolicy",
           "name": "Pricing Policy",
-          "order": 10,
           "firstElementExist": false
         },
-        "currencies.currency":  {
+        {
+          "content_type": "currencies.currency",
           "name": "Currency",
-          "order": 11,
           "firstElementExist": false
         },
-        "currencies.currencyhistory": {
+        {
+          "content_type": "currencies.currencyhistory",
           "name": "Currency History",
-          "order": 12,
           "firstElementExist": false
         },
-        "transactions.transaction":  {
+        {
+          "content_type": "transactions.transaction",
           "name": "Transactions",
-          "order": 13,
           "firstElementExist": false
         },
-        "transactions.complextransaction":  {
+        {
+          "content_type": "transactions.complextransaction",
           "name": "Complex Transactions",
-          "order": 14,
           "firstElementExist": false
         },
-        "transactions.transactiontype":  {
+        {
+          "content_type": "transactions.transactiontype",
           "name": "Transaction Type",
-          "order": 15,
           "firstElementExist": false
         },
-        "transactions.transactiontypegroup":  {
+        {
+          "content_type": "transactions.transactiontypegroup",
           "name": "Transaction Type Group",
-          "order": 16,
           "firstElementExist": false
         },
-        "instruments.pricehistory":  {
+        {
+          "content_type": "instruments.pricehistory",
           "name": "Price History",
-          "order": 17,
           "firstElementExist": false
         },
-        "strategies.strategy1":  {
+        {
+          "content_type": "strategies.strategy1",
           "name": "Strategy 1",
-          "order": 18,
           "firstElementExist": false
         },
-        "strategies.strategy1group":  {
+        {
+          "content_type": "strategies.strategy1group",
           "name": "Strategy 1 Group",
-          "order": 19,
           "firstElementExist": false
         },
-        "strategies.strategy1subgroup":  {
+        {
+          "content_type": "strategies.strategy1subgroup",
           "name": "Strategy 1 Subgroup",
-          "order": 20,
           "firstElementExist": false
         },
-        "strategies.strategy2":  {
+        {
+          "content_type": "strategies.strategy2",
           "name": "Strategy 2",
-          "order": 21,
           "firstElementExist": false
         },
-        "strategies.strategy2group":  {
+        {
+          "content_type": "strategies.strategy2group",
           "name": "Strategy 2 Group",
-          "order": 22,
           "firstElementExist": false
         },
-        "strategies.strategy2subgroup":  {
+        {
+          "content_type": "strategies.strategy2subgroup",
           "name": "Strategy 2 Subgroup",
-          "order": 23,
           "firstElementExist": false
         },
-        "strategies.strategy3":  {
+        {
+          "content_type": "strategies.strategy3",
           "name": "Strategy 3",
-          "order": 24,
           "firstElementExist": false
         },
-        "strategies.strategy3group":  {
+        {
+          "content_type": "strategies.strategy3group",
           "name": "Strategy 3 Group",
-          "order": 25,
           "firstElementExist": false
         },
-        "strategies.strategy3subgroup":  {
+        {
+          "content_type": "strategies.strategy3subgroup",
           "name": "Strategy 3 Subgroup",
-          "order": 26,
           "firstElementExist": false
         }
 
-      },
-      "ui.reportlayout": {
-
-        "reports.balancereport":  {
+      ],
+      "ui.reportlayout": [
+        {
+          "content_type": "reports.balancereport",
           "name": "Balance Reports",
-          "order": 1,
           "firstElementExist": false
         },
-        "reports.plreport":  {
+        {
+          "content_type": "reports.plreport",
           "name": "P&L Reports",
-          "order": 2,
           "firstElementExist": false
         }
 
-      }
+      ]
 
     }
   },

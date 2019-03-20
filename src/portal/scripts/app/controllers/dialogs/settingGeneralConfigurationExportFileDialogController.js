@@ -51,7 +51,7 @@
                             });
 
                             // Assign group to file
-                            var g, e, c;
+                            var g, e, s;
                             loop1:
                                 for (g = 0; g < groups.length; g++) {
 
@@ -75,17 +75,23 @@
 
                                                     var children = parent.content;
 
-                                                    loop3:
-                                                        for (c = 0; c < children.length; c++) {
-                                                            var subGroup = subGroupsList[children[c].content_type];
+                                                    children.forEach(function (child) {
 
-                                                            if (!subGroup.firstElementExist) {
-                                                                children[c].first = subGroup.name;
-                                                                subGroup.firstElementExist = true;
-                                                            }
+                                                       for (s = 0; s < subGroupsList.length; s++) {
 
-                                                            children[c].order = subGroup.order;
-                                                        }
+                                                           if (child.content_type === subGroupsList[s].content_type) {
+
+                                                               if (!subGroupsList[s].firstElementExist) {
+                                                                   child.first = subGroupsList[s].name;
+                                                                   subGroupsList[s].firstElementExist = true;
+                                                               }
+
+                                                               child.order = s;
+                                                           }
+
+                                                       }
+
+                                                    });
                                                 }
                                                 // < Divide children into subgroups >
 
@@ -98,6 +104,8 @@
 
                         });
 
+                        findDynamicAttributesInLayouts();
+
                         vm.readyStatus.content = true;
 
                         resolve($scope.$apply());
@@ -106,6 +114,109 @@
 
                 });
             });
+        };
+
+        var findDynamicAttributesInLayouts = function () {
+
+            var dynamicAttrsGroupIndex = 4;
+
+            var layoutsList = {};
+
+            var i;
+            for (i = 0; i < vm.items.length; i++) {
+
+                if (vm.items[i].entity === "ui.listlayout") {
+                    layoutsList = vm.items[i];
+                    break;
+                }
+
+            }
+
+            vm.items.forEach(function (entityItem) {
+
+                if (entityItem.order === dynamicAttrsGroupIndex) {
+
+                    var matchingLayout = "";
+                    switch (entityItem.entity) {
+                        case "obj_attrs.portfolioattributetype":
+                            matchingLayout = "portfolios.portfolio";
+                            break;
+                        case "obj_attrs.accountattributetype":
+                            matchingLayout = "accounts.account";
+                            break;
+                        case "obj_attrs.accounttypeattributetype":
+                            matchingLayout = "accounts.accounttype";
+                            break;
+                        case "obj_attrs.responsibleattributetype":
+                            matchingLayout = "counterparties.responsible";
+                            break;
+                        case "obj_attrs.counterpartyattributetype":
+                            matchingLayout = "counterparties.counterparty";
+                            break;
+                        case "obj_attrs.instrumentattributetype":
+                            matchingLayout = "instruments.instrument";
+                            break;
+                        case "obj_attrs.instrumenttypeattributetype":
+                            matchingLayout = "instruments.instrumenttype";
+                            break;
+                    }
+
+                    entityItem.content.forEach(function (attr) {
+                        var daName = attr.name;
+                        var daUserCode = attr.user_code;
+                        var usagesCount = 0;
+
+                        layoutsList.content.forEach(function (layout) {
+
+                            if (layout.content_type === matchingLayout) { // to determine whether layout and attribute have same entity
+                                var layoutColumns = layout.data.columns;
+                                var layoutGroups = layout.data.grouping;
+                                var attributeIsUsed = false;
+
+                                var l;
+                                for (l = 0; l < layoutColumns.length; l++) {
+
+                                    if (layoutColumns[l].hasOwnProperty("user_code")) {
+
+                                        if (layoutColumns[l].name === daName && layoutColumns[l].user_code === daUserCode) {
+                                            attributeIsUsed = true;
+                                            break;
+                                        }
+                                    }
+
+                                }
+
+                                if (!attributeIsUsed) {
+
+                                    var g;
+                                    for (g = 0; g < layoutGroups.length; g++) {
+
+                                        if (layoutGroups[g].hasOwnProperty("user_code")) {
+
+                                            if (layoutGroups[g].name === daName && layoutGroups[g].user_code === daUserCode) {
+                                                attributeIsUsed = true;
+                                                break;
+                                            }
+                                        }
+
+                                    }
+
+                                }
+
+                                if (attributeIsUsed) {
+                                    entityItem.attributeIsUsed = true;
+                                    usagesCount = usagesCount + 1;
+                                    attr.countOfUsages = usagesCount;
+                                }
+
+                            }
+
+                        })
+
+                    });
+                }
+            });
+
         };
 
         var getECProperties = function (item) {
@@ -622,13 +733,14 @@
             vm.items.forEach(function (entity) {
                 delete entity.order;
                 delete entity.first;
+                delete entity.attributeIsUsed;
 
-                if (entity.entity === "ui.listlayout" || entity.entity === "ui.reportlayout") {
-                    entity.content.forEach(function (item) {
-                        delete item.order;
-                        delete item.first;
-                    });
-                }
+                entity.content.forEach(function (item) {
+                    delete item.order;
+                    delete item.first;
+                    delete item.countOfUsages;
+                });
+
             });
 
             exportConfiguration(vm.items).then(function (data) {
