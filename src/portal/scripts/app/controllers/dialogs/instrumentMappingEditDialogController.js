@@ -128,7 +128,7 @@
                 hasBackground: true,
                 value_type: "field",
                 expression: '',
-                complexExpressionEntity: false
+                complexExpressionEntity: 'daily_pricing_model'
             },
             {
                 key: 'price_download_scheme',
@@ -137,7 +137,7 @@
                 hasBackground: true,
                 value_type: "field",
                 expression: '',
-                complexExpressionEntity: false
+                complexExpressionEntity: 'price_download_scheme'
             },
             {
                 key: 'pricing_currency',

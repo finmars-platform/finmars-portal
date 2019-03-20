@@ -29,7 +29,8 @@
                              data-ng-class="{'some-checkboxes-ticked': item.someChildsActive}"
                              aria-label="checkbox">
                 </md-checkbox>
-                <span data-ng-bind="vm.getEntityName(item)"></span> <span class="cie-dependency"
+                <span data-ng-bind="vm.getEntityName(item)"
+                      data-ng-class="{'used-dynamic-attrs': item.attributeIsUsed}"></span> <span class="cie-dependency"
                                                                           data-ng-bind="vm.getEntityDependenciesCaptions(item)"></span>
                 ({{item.count}})
                 <md-button class="md-raised" ng-click="item.displayItems = !item.displayItems" aria-label="display items button"><span
@@ -46,7 +47,9 @@
                                  data-ng-click="vm.updateActiveForParent(child, item)"
                                  aria-label="checkbox">
                     </md-checkbox>
-                    {{vm.getItemName(child)}}
+                    <span data-ng-class="{'used-dynamic-attrs': child.countOfUsages}">
+                        {{vm.getItemName(child)}} <span data-ng-if="child.countOfUsages">(<b>{{child.countOfUsages}}</b>)</span>
+                    </span>
                 </div>
 
             </div>
