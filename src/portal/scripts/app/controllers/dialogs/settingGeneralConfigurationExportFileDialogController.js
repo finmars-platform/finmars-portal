@@ -30,7 +30,7 @@
                     vm.file = data;
                     vm.items = data.body;
 
-                    var groups = []
+                    var groups = [];
                     metaService.getContentGroups("exportImportConfigGroups").then(function (data) {
                         groups = data;
 
@@ -62,12 +62,12 @@
 
                                                 if (!groups[g].firstElementExist) { // If a file first in the group, attach to it group name to display
 
-                                                    parent.first = groups[g].name;
+                                                    parent.first__ = groups[g].name;
                                                     groups[g].firstElementExist = true;
 
                                                 }
 
-                                                parent.order = g; // Set a group order position
+                                                parent.order__ = g; // Set a group order position
 
                                                 // Divide children into subgroups
                                                 if (parent.entity === "ui.listlayout" || parent.entity === "ui.reportlayout") {
@@ -82,16 +82,18 @@
                                                            if (child.content_type === subGroupsList[s].content_type) {
 
                                                                if (!subGroupsList[s].firstElementExist) {
-                                                                   child.first = subGroupsList[s].name;
+                                                                   child.first__ = subGroupsList[s].name;
                                                                    subGroupsList[s].firstElementExist = true;
                                                                }
 
-                                                               child.order = s;
+                                                               child.order__ = s;
                                                            }
 
                                                        }
 
                                                     });
+                                                } else if (parent.entity === "transactions.transactiontype") {
+                                                    groupByProperty(parent.content, '___group__user_code');
                                                 }
                                                 // < Divide children into subgroups >
 
@@ -107,13 +109,35 @@
                         findDynamicAttributesInLayouts();
 
                         vm.readyStatus.content = true;
-
                         resolve($scope.$apply());
 
                     });
 
                 });
             });
+        };
+
+        var groupByProperty = function (elements, propertyToGroupBy) {
+
+            var hasFirstElement = [];
+
+            elements.forEach(function (element) {
+                if (element.hasOwnProperty(propertyToGroupBy)) {
+                    var valueToGroupBy = element[propertyToGroupBy];
+
+                    if (valueToGroupBy === "-") {
+                        valueToGroupBy = "Transaction types without group";
+                    }
+
+                    if (hasFirstElement.indexOf(valueToGroupBy) === -1) {
+                        element.first__ = valueToGroupBy;
+                        hasFirstElement.push(valueToGroupBy);
+                    }
+
+                    element.grouping_options__ = valueToGroupBy;
+                }
+            });
+
         };
 
         var findDynamicAttributesInLayouts = function () {
@@ -134,7 +158,7 @@
 
             vm.items.forEach(function (entityItem) {
 
-                if (entityItem.order === dynamicAttrsGroupIndex) {
+                if (entityItem.order__ === dynamicAttrsGroupIndex) {
 
                     var matchingLayout = "";
                     switch (entityItem.entity) {
@@ -204,9 +228,9 @@
                                 }
 
                                 if (attributeIsUsed) {
-                                    entityItem.attributeIsUsed = true;
+                                    entityItem.attributeIsUsed__ = true;
                                     usagesCount = usagesCount + 1;
-                                    attr.countOfUsages = usagesCount;
+                                    attr.countOfUsages__ = usagesCount;
                                 }
 
                             }
@@ -554,8 +578,14 @@
 
                 if (item.hasOwnProperty('data')) {
 
+                    // Case for bookmarks
                     if (item.hasOwnProperty('___content_type')) {
-                        return item.name + ' (' + metaContentTypesService.getEntityNameByContentType(item.___content_type) + ')'
+
+                        if (item.hasOwnProperty('children') && item.children.length > 0) {
+                            return 'Bookmarks - Upper Layer (' + item.name + ')'
+                        } else {
+                            return item.name + ' (' + metaContentTypesService.getEntityNameByContentType(item.___content_type) + ')'
+                        }
                     }
 
                     return item.name + ' (' + metaContentTypesService.getEntityNameByContentType(item.content_type) + ')'
@@ -648,7 +678,7 @@
 
         };
 
-        function isEntitySelected(entity) {
+        /*function isEntitySelected(entity) {
 
             var result = false;
 
@@ -678,7 +708,7 @@
 
             return result;
 
-        }
+        }*/
 
         function exportConfiguration(items) {
 
@@ -731,14 +761,14 @@
 
             // removing properties created for data rendering
             vm.items.forEach(function (entity) {
-                delete entity.order;
-                delete entity.first;
-                delete entity.attributeIsUsed;
+                delete entity.order__;
+                delete entity.first__;
+                delete entity.attributeIsUsed__;
 
                 entity.content.forEach(function (item) {
-                    delete item.order;
-                    delete item.first;
-                    delete item.countOfUsages;
+                    delete item.order__;
+                    delete item.first__;
+                    delete item.countOfUsages__;
                 });
 
             });
