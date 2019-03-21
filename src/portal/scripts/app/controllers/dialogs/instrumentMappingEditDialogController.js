@@ -282,19 +282,19 @@
             };
 
             var findEntityWithComplexExpression = function (key) {
+                var complexExpressionEntity = false;
 
-                if (key == 'accrued_currency') {
-                    return 'currency';
-                }
-                if (key == 'pricing_currency') {
-                    return 'currency';
+                switch (key) {
+                    case 'accrued_currency':
+                    case 'pricing_currency':
+                        complexExpressionEntity = 'currency';
+                        break;
+                    case 'instrument_type':
+                        complexExpressionEntity = 'instrument_type';
+                        break;
                 }
 
-                if (key == 'instrument_type') {
-                    return 'instrument_type';
-                }
-
-                return false;
+                return complexExpressionEntity;
 
             };
 
@@ -302,19 +302,19 @@
                 var keys = Object.keys(vm.scheme);
                 var i;
                 var m;
-                //vm.mapFields = [];
+
                 for (i = 0; i < keys.length; i = i + 1) {
                     if (vm.hidedEntityAttrs.indexOf(keys[i]) === -1) {
 
                         var caption = findKeyCaption(keys[i]);
                         var required = checkRequired(keys[i]);
-                        var complexExpressionEntity = findEntityWithComplexExpression(keys[i]);
+                        // var complexExpressionEntity = findEntityWithComplexExpression(keys[i]);
 
                         for (m = 0; m < vm.mapFields.length; m = m + 1) {
                             if (vm.mapFields[m].key == keys[i]) {
                                 vm.mapFields[m].caption = caption;
                                 vm.mapFields[m].required = required;
-                                vm.mapFields[m].complexExpressionEntity = complexExpressionEntity;
+                                // vm.mapFields[m].complexExpressionEntity = complexExpressionEntity;
                                 vm.mapFields[m].expression = vm.scheme[keys[i]];
                             }
 
@@ -489,8 +489,6 @@
 
         vm.getModelKey = function (item) {
 
-            //console.log('key', item);
-
             if (item.hasOwnProperty('key')) {
                 return 'key'
             }
@@ -506,7 +504,7 @@
         };
 
         vm.beatufier = function (key) {
-            //console.log('KEY', key);
+
             if (key !== undefined) {
                 var str = key.split('_').join(' ');
                 return str;
