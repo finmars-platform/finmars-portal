@@ -48,6 +48,8 @@
                 return portfolioService.getList(options);
             case 'account':
                 return accountService.getList(options);
+            case 'account-type':
+                return accountTypeService.getList(options);
             case 'responsible':
                 return responsibleService.getList(options);
             case 'counterparty':
@@ -329,6 +331,7 @@
 
                         // entity.transactions = data.transactions;
                         entity.values = data.values;
+                        entity.complex_transaction = data.complex_transaction; // ?
 
                         var originValuesKeys = Object.keys(originValues);
                         var defaultValuesKeys = Object.keys(entity.values);
