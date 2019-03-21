@@ -24,7 +24,7 @@
             },
             {
                 "key": "text",
-                // "name": "Description",
+                "name": "Description",
                 "value_type": 10
             },
             {

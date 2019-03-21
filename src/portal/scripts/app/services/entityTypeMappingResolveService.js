@@ -12,6 +12,7 @@
     var instrumentAttributeTypeService = require('./import/mappings/instrumentAttributeTypeMappingService');
 
     var accountMappingService = require('./import/mappings/accountMappingService');
+    var accountTypeMappingService = require('./import/mappings/accountTypeMappingService');
     var instrumentMappingService = require('./import/mappings/instrumentMappingService');
     var counterpartyMappingService = require('./import/mappings/counterpartyMappingService');
     var responsibleMappingService = require('./import/mappings/responsibleMappingService');
@@ -48,6 +49,9 @@
                 break;
             case 'account':
                 return accountMappingService.getList(options);
+                break;
+            case 'account-type':
+                return accountTypeMappingService.getList(options);
                 break;
             case 'instrument':
                 return instrumentMappingService.getList(options);
@@ -106,6 +110,9 @@
             case 'account':
                 return accountMappingService.getByKey(id);
                 break;
+            case 'account-type':
+                return accountTypeMappingService.getByKey(id);
+                break;
             case 'instrument':
                 return instrumentMappingService.getByKey(id);
                 break;
@@ -162,6 +169,9 @@
                 break;
             case 'account':
                 return accountMappingService.create(map);
+                break;
+            case 'account-type':
+                return accountTypeMappingService.create(map);
                 break;
             case 'instrument':
                 return instrumentMappingService.create(map);
@@ -220,6 +230,9 @@
             case 'account':
                 return accountMappingService.update(id, map);
                 break;
+            case 'account-type':
+                return accountTypeMappingService.update(id, map);
+                break;
             case 'instrument':
                 return instrumentMappingService.update(id, map);
                 break;
@@ -276,6 +289,9 @@
                 break;
             case 'account':
                 return accountMappingService.deleteByKey(id);
+                break;
+            case 'account-type':
+                return accountTypeMappingService.deleteByKey(id);
                 break;
             case 'instrument':
                 return instrumentMappingService.deleteByKey(id);
