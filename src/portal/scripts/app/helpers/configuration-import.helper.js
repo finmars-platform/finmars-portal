@@ -1621,7 +1621,7 @@
 
     };
 
-    var importConfiguration = function (items) {
+    var importConfiguration = function (items, settings) {
 
         return new Promise(function (resolve, reject) {
 
