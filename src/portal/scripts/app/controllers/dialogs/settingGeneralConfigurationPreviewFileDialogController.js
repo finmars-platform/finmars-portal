@@ -14,9 +14,21 @@
 
         var vm = this;
 
+        vm.settings = {};
+
         vm.processing = false;
 
         vm.selectAllState = false;
+
+        vm.toggleMode = function (mode) {
+
+            if (vm.settings.mode === mode) {
+                vm.settings.mode = null
+            } else {
+                vm.settings.mode = mode
+            }
+
+        };
 
         vm.items = file.body;
 
@@ -360,7 +372,7 @@
 
             try {
 
-                configurationImportHelper.importConfiguration(vm.items).then(function (data) {
+                configurationImportHelper.importConfiguration(vm.items, vm.settings).then(function (data) {
 
                     $mdDialog.hide({status: 'agree', data: {}});
 

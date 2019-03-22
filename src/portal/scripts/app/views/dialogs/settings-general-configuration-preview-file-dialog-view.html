@@ -32,7 +32,8 @@
                 <span data-ng-bind="vm.getEntityName(item)"></span> <span class="cie-dependency"
                                                                           data-ng-bind="vm.getEntityDependenciesCaptions(item)"></span>
                 ({{item.count}})
-                <md-button class="md-raised" ng-click="item.displayItems = !item.displayItems" aria-label="display items button"><span
+                <md-button class="md-raised" ng-click="item.displayItems = !item.displayItems"
+                           aria-label="display items button"><span
                         data-ng-if="!item.displayItems">Show</span><span data-ng-if="item.displayItems">Hide</span>
                 </md-button>
             </div>
@@ -60,13 +61,26 @@
 
     </md-dialog-content>
     <md-dialog-actions layout="row">
-        <md-button class="md-raised" ng-click="vm.cancel()" aria-label="cancel button">
-            Cancel
-        </md-button>
 
-        <md-button class="md-raised {{vm.processing ? 'disabled-btn': ''}}" ng-click="vm.agree($event)"
-                   style="margin-right:20px;" aria-label="import button">
-            Import
-        </md-button>
+        <div>
+            <md-checkbox ng-checked="vm.mode" data-ng-click="vm.toggleMode('overwrite')"
+                         aria-label="checkbox">
+            </md-checkbox>
+
+            <b>Overwrite existing data</b>
+        </div>
+
+        <div>
+
+            <md-button class="md-raised" ng-click="vm.cancel()" aria-label="cancel button">
+                Cancel
+            </md-button>
+
+            <md-button class="md-raised {{vm.processing ? 'disabled-btn': ''}}" ng-click="vm.agree($event)"
+                       style="margin-right:20px;" aria-label="import button">
+                Import
+            </md-button>
+
+        </div>
     </md-dialog-actions>
 </md-dialog>
