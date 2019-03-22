@@ -278,6 +278,12 @@
 
     };
 
+    var getContentGroups = function (typeOfGroups) {
+
+        return metaRepository.getContentGroups(typeOfGroups);
+
+    };
+
     module.exports = {
         isReport: isReport,
         getMenu: getMenu,
@@ -295,7 +301,8 @@
         getEntitiesWithSimpleFields: getEntitiesWithSimpleFields,
         checkRestrictedEntityTypesForAM: checkRestrictedEntityTypesForAM,
         getFieldsWithTagGrouping: getFieldsWithTagGrouping,
-        getCurrentLocation: getCurrentLocation
+        getCurrentLocation: getCurrentLocation,
+        getContentGroups: getContentGroups
     }
 
 }());

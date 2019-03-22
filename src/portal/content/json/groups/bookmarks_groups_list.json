@@ -1,0 +1,137 @@
+[
+  {
+    "key": "reports.balancereport",
+    "name": "Balance Reports",
+    "content": []
+  },
+  {
+    "key": "reports.plreport",
+    "name": "P&L Reports",
+    "content": []
+  },
+  {
+    "key": "portfolios.portfolio",
+    "name": "Portfolio",
+    "content": []
+  },
+  {
+    "key": "accounts.account",
+    "name": "Account",
+    "content": []
+  },
+  {
+    "key": "accounts.accounttype",
+    "name": "Account Type",
+    "content": []
+  },
+  {
+    "key": "counterparties.responsible",
+    "name": "Responsible",
+    "content": []
+  },
+  {
+    "key": "counterparties.responsiblegroup",
+    "name": "Responsible Group",
+    "content": []
+  },
+  {
+    "key": "counterparties.counterparty",
+    "name": "Counterparty",
+    "content": []
+  },
+  {
+    "key": "counterparties.counterpartygroup",
+    "name": "Counterparty Group",
+    "content": []
+  },
+  {
+    "key": "instruments.instrument",
+    "name": "Instrument",
+    "content": []
+  },
+  {
+    "key": "instruments.instrumenttype",
+    "name": "Instrument Type",
+    "content": []
+  },
+  {
+    "key": "instruments.pricingpolicy",
+    "name": "Pricing Policy",
+    "content": []
+  },
+  {
+    "key": "currencies.currency",
+    "name": "Currency",
+    "content": []
+  },
+  {
+    "key": "transactions.transaction",
+    "name": "Transactions",
+    "content": []
+  },
+  {
+    "key": "transactions.complextransaction",
+    "name": "Complex Transactions",
+    "content": []
+  },
+  {
+    "key": "transactions.transactiontype",
+    "name": "Transaction Type",
+    "content": []
+  },
+  {
+    "key": "transactions.transactiontypegroup",
+    "name": "Transaction Type Group",
+    "content": []
+  },
+  {
+    "key": "instruments.pricehistory",
+    "name": "Price History",
+    "content": []
+  },
+  {
+    "key": "strategies.strategy1",
+    "name": "Strategy 1",
+    "content": []
+  },
+  {
+    "key": "strategies.strategy1group",
+    "name": "Strategy 1 Group",
+    "content": []
+  },
+  {
+    "key": "strategies.strategy1subgroup",
+    "name": "Strategy 1 Subgroup",
+    "content": []
+  },
+  {
+    "key": "strategies.strategy2",
+    "name": "Strategy 2",
+    "content": []
+  },
+  {
+    "key": "strategies.strategy2group",
+    "name": "Strategy 2 Group",
+    "content": []
+  },
+  {
+    "key": "strategies.strategy2subgroup",
+    "name": "Strategy 2 Subgroup",
+    "content": []
+  },
+  {
+    "key": "strategies.strategy3",
+    "name": "Strategy 3",
+    "content": []
+  },
+  {
+    "key": "strategies.strategy3group",
+    "name": "Strategy 3 Group",
+    "content": []
+  },
+  {
+    "key": "strategies.strategy3subgroup",
+    "name": "Strategy 3 Subgroup",
+    "content": []
+  }
+]

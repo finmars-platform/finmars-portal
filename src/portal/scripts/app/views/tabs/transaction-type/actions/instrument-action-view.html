@@ -11,9 +11,11 @@
 </div>
 <div layout="row">
     <div flex="50">
+
         <div layout="row">
-            <div flex="33" layout="row">
-                <div flex="20">
+
+            <div flex="66" layout="row">
+                <div flex>
                     <md-button
                             class="md-icon-button md-raised {{!!item.instrument.instrument_type_toggle ? 'ref' : ''}}"
                             style="transform: scale(0.7,0.7)"
@@ -22,7 +24,7 @@
                         <span data-ng-if="!!!item.instrument.instrument_type_toggle">I</span>
                     </md-button>
                 </div>
-                <div flex="80">
+                <div flex="90">
                     <div>
                         <div data-ng-if="item.instrument.instrument_type_toggle">
                             <md-input-container>
@@ -64,6 +66,7 @@
                     </div>
                 </div>
             </div>
+
             <div flex="33">
                 <md-input-container class="expression-input-container">
                     <label for="" class="uncut-text-on-focus-label" content-title>User code: Text</label>
@@ -72,8 +75,11 @@
                 <expression-editor-button
                         data-item="item.instrument.user_code"></expression-editor-button>
             </div>
+
         </div>
+
         <div layout="row">
+
             <div flex="33">
                 <md-input-container class="expression-input-container">
                     <label for="" class="uncut-text-on-focus-label" content-title>Name: Text</label>
@@ -82,6 +88,7 @@
                 <expression-editor-button
                         data-item="item.instrument.name"></expression-editor-button>
             </div>
+
             <div flex="33">
                 <md-input-container class="expression-input-container">
                     <label for="" class="uncut-text-on-focus-label" content-title>Short name: Text</label>
@@ -90,6 +97,7 @@
                 <expression-editor-button
                         data-item="item.instrument.short_name"></expression-editor-button>
             </div>
+
             <div flex="33">
                 <md-input-container class="expression-input-container">
                     <label for="" class="uncut-text-on-focus-label" content-title>Public name: Text</label>
@@ -98,8 +106,11 @@
                 <expression-editor-button
                         data-item="item.instrument.public_name"></expression-editor-button>
             </div>
+
         </div>
+
         <div layout="row">
+
             <div flex="33">
                 <md-input-container class="expression-input-container">
                     <label for="" class="uncut-text-on-focus-label" content-title>User text1: Text</label>
@@ -108,6 +119,7 @@
                 <expression-editor-button
                         data-item="item.instrument.user_text_1"></expression-editor-button>
             </div>
+
             <div flex="33">
                 <md-input-container class="expression-input-container">
                     <label for="" class="uncut-text-on-focus-label" content-title>User text2: Text</label>
@@ -116,6 +128,7 @@
                 <expression-editor-button
                         data-item="item.instrument.user_text_2"></expression-editor-button>
             </div>
+
             <div flex="33">
                 <md-input-container class="expression-input-container">
                     <label for="" class="uncut-text-on-focus-label" content-title>User text3: Text</label>
@@ -124,10 +137,12 @@
                 <expression-editor-button
                         data-item="item.instrument.user_text_3"></expression-editor-button>
             </div>
+
         </div>
+
         <div layout="row">
             <div flex="100">
-                <md-input-container class="expression-input-container">
+                <md-input-container style="width:87%">
                     <label for="" class="uncut-text-on-focus-label" content-title>Notes</label>
                     <input type="text" value-title data-ng-model="item.instrument.notes">
                 </md-input-container>
@@ -135,120 +150,12 @@
                         data-item="item.instrument.notes"></expression-editor-button>
             </div>
         </div>
+
     </div>
     <div flex="50">
-        <div layout="row">
-            <div flex="33" layout="row">
-                <div flex="20">
-                    <md-button
-                            class="md-icon-button md-raised {{!!item.instrument.daily_pricing_model_toggle ? 'ref' : ''}}"
-                            style="transform: scale(0.7,0.7)"
-                            data-ng-click="vm.resetPropertyBtn(item, 'instrument', 'daily_pricing_model')">
-                        <span data-ng-if="!!item.instrument.daily_pricing_model_toggle">R</span>
-                        <span data-ng-if="!!!item.instrument.daily_pricing_model_toggle">I</span>
-                    </md-button>
-                </div>
-                <div flex="80">
-                    <div data-ng-if="item.instrument.daily_pricing_model_toggle">
-                        <md-input-container>
-                            <label for="" class="uncut-text-on-focus-label" content-title>Daily pricing model</label>
-                            <md-select data-ng-model="item.instrument.daily_pricing_model"
-                                       md-on-open="vm.loadRelation('daily_pricing_model')">
-                                <md-select-header>
-                                    <input data-ng-model="searchTerm"
-                                           type="search"
-                                           placeholder="Search for a ..."
-                                           class="md-text md-select-search-pattern">
-                                </md-select-header>
-                                <md-option data-ng-repeat="relationItem in vm.relationItems['daily_pricing_model'] | filter: {name: searchTerm}"
-                                           data-ng-value="relationItem.id"
-                                           data-ng-if="vm.relationItems['daily_pricing_model'].length">
-                                    {{relationItem.name}}
-                                </md-option>
 
-                                <md-option data-ng-if="!vm.relationItems['daily_pricing_model'].length"
-                                           ng-value="item.instrument.daily_pricing_model_object.id">
-                                    {{item.instrument.daily_pricing_model_object.name}}
-                                </md-option>
-                            </md-select>
-                        </md-input-container>
-                    </div>
-                    <div data-ng-if="!item.instrument.daily_pricing_model_toggle">
-                        <md-input-container>
-                            <label for="" class="uncut-text-on-focus-label" content-title>Daily pricing model</label>
-                            <md-select
-                                    data-ng-model="item.instrument.daily_pricing_model_input">
-                                <md-option
-                                        data-ng-repeat="inputItem in vm.findInputs('daily_pricing_model')"
-                                        ng-value="inputItem.name">
-                                    {{inputItem.name}}
-                                </md-option>
-                            </md-select>
-                        </md-input-container>
-                    </div>
-                </div>
-            </div>
-            <div flex="33" layout="row">
-                <div flex="20">
-                    <md-button
-                            class="md-icon-button md-raised {{!!item.instrument.price_download_scheme_toggle ? 'ref' : ''}}"
-                            style="transform: scale(0.7,0.7)"
-                            data-ng-click="vm.resetPropertyBtn(item, 'instrument', 'price_download_scheme')">
-                        <span data-ng-if="!!item.instrument.price_download_scheme_toggle">R</span>
-                        <span data-ng-if="!!!item.instrument.price_download_scheme_toggle">I</span>
-                    </md-button>
-                </div>
-                <div flex="80">
-                    <div data-ng-if="item.instrument.price_download_scheme_toggle">
-                        <md-input-container>
-                            <label for="" class="uncut-text-on-focus-label" content-title>Price download scheme</label>
-                            <md-select data-ng-model="item.instrument.price_download_scheme"
-                                       md-on-open="vm.loadRelation('price_download_scheme')">
-                                <md-select-header>
-                                    <input data-ng-model="searchTerm"
-                                           type="search"
-                                           placeholder="Search for a ..."
-                                           class="md-text md-select-search-pattern">
-                                </md-select-header>
-                                <md-option data-ng-repeat="relationItem in vm.relationItems['price_download_scheme'] | filter: {name: searchTerm}"
-                                           data-ng-value="relationItem.id"
-                                           data-ng-if="vm.relationItems['price_download_scheme'].length">
-                                    {{relationItem.name}}
-                                </md-option>
-
-                                <md-option data-ng-if="!vm.relationItems['price_download_scheme'].length"
-                                           ng-value="item.instrument.price_download_scheme_object.id">
-                                    {{item.instrument.price_download_scheme_object.scheme_name}}
-                                </md-option>
-                            </md-select>
-                        </md-input-container>
-                    </div>
-                    <div data-ng-if="!item.instrument.price_download_scheme_toggle">
-                        <md-input-container>
-                            <label for="" class="uncut-text-on-focus-label" content-title>Price download scheme</label>
-                            <md-select
-                                    data-ng-model="item.instrument.price_download_scheme_input">
-                                <md-option
-                                        data-ng-repeat="inputItem in vm.findInputs('price_download_scheme')"
-                                        ng-value="inputItem.name">
-                                    {{inputItem.name}}
-                                </md-option>
-                            </md-select>
-                        </md-input-container>
-                    </div>
-                </div>
-            </div>
-            <div flex="33">
-                <md-input-container class="expression-input-container">
-                    <label for="" class="uncut-text-on-focus-label" content-title>Reference for pricing: Text</label>
-                    <input type="text" value-title
-                           data-ng-model="item.instrument.reference_for_pricing">
-                </md-input-container>
-                <expression-editor-button
-                        data-item="item.instrument.reference_for_pricing"></expression-editor-button>
-            </div>
-        </div>
         <div layout="row">
+
             <div flex="33" layout="row">
                 <div flex="20">
                     <md-button
@@ -299,24 +206,7 @@
                     </div>
                 </div>
             </div>
-            <div flex="33">
-                <md-input-container class="expression-input-container">
-                    <label for="" class="uncut-text-on-focus-label" content-title>Price multiplier: Number</label>
-                    <input type="text" value-title data-ng-model="item.instrument.price_multiplier">
-                </md-input-container>
-                <expression-editor-button
-                        data-item="item.instrument.price_multiplier"></expression-editor-button>
-            </div>
-            <div flex="33">
-                <md-input-container class="expression-input-container">
-                    <label for="" class="uncut-text-on-focus-label" content-title>Default price: Number</label>
-                    <input type="text" value-title data-ng-model="item.instrument.default_price">
-                </md-input-container>
-                <expression-editor-button
-                        data-item="item.instrument.default_price"></expression-editor-button>
-            </div>
-        </div>
-        <div layout="row">
+
             <div flex="33" layout="row">
                 <div flex="20">
                     <md-button
@@ -367,6 +257,71 @@
                     </div>
                 </div>
             </div>
+
+            <div flex="33" layout="row">
+                <div flex="20">
+                    <md-button
+                            class="md-icon-button md-raised {{!!item.instrument.daily_pricing_model_toggle ? 'ref' : ''}}"
+                            style="transform: scale(0.7,0.7)"
+                            data-ng-click="vm.resetPropertyBtn(item, 'instrument', 'daily_pricing_model')">
+                        <span data-ng-if="!!item.instrument.daily_pricing_model_toggle">R</span>
+                        <span data-ng-if="!!!item.instrument.daily_pricing_model_toggle">I</span>
+                    </md-button>
+                </div>
+                <div flex="80">
+                    <div data-ng-if="item.instrument.daily_pricing_model_toggle">
+                        <md-input-container>
+                            <label for="" class="uncut-text-on-focus-label" content-title>Daily pricing model</label>
+                            <md-select data-ng-model="item.instrument.daily_pricing_model"
+                                       md-on-open="vm.loadRelation('daily_pricing_model')">
+                                <md-select-header>
+                                    <input data-ng-model="searchTerm"
+                                           type="search"
+                                           placeholder="Search for a ..."
+                                           class="md-text md-select-search-pattern">
+                                </md-select-header>
+                                <md-option data-ng-repeat="relationItem in vm.relationItems['daily_pricing_model'] | filter: {name: searchTerm}"
+                                           data-ng-value="relationItem.id"
+                                           data-ng-if="vm.relationItems['daily_pricing_model'].length">
+                                    {{relationItem.name}}
+                                </md-option>
+
+                                <md-option data-ng-if="!vm.relationItems['daily_pricing_model'].length"
+                                           ng-value="item.instrument.daily_pricing_model_object.id">
+                                    {{item.instrument.daily_pricing_model_object.name}}
+                                </md-option>
+                            </md-select>
+                        </md-input-container>
+                    </div>
+                    <div data-ng-if="!item.instrument.daily_pricing_model_toggle">
+                        <md-input-container>
+                            <label for="" class="uncut-text-on-focus-label" content-title>Daily pricing model</label>
+                            <md-select
+                                    data-ng-model="item.instrument.daily_pricing_model_input">
+                                <md-option
+                                        data-ng-repeat="inputItem in vm.findInputs('daily_pricing_model')"
+                                        ng-value="inputItem.name">
+                                    {{inputItem.name}}
+                                </md-option>
+                            </md-select>
+                        </md-input-container>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div layout="row">
+
+            <div flex="33">
+                <md-input-container class="expression-input-container">
+                    <label for="" class="uncut-text-on-focus-label" content-title>Price multiplier: Number</label>
+                    <input type="text" value-title data-ng-model="item.instrument.price_multiplier">
+                </md-input-container>
+                <expression-editor-button
+                        data-item="item.instrument.price_multiplier"></expression-editor-button>
+            </div>
+
             <div flex="33">
                 <md-input-container class="expression-input-container">
                     <label for="" class="uncut-text-on-focus-label" content-title>Accrued multiplier: Number</label>
@@ -375,6 +330,71 @@
                 <expression-editor-button
                         data-item="item.instrument.accrued_multiplier"></expression-editor-button>
             </div>
+
+            <div flex="33" layout="row">
+                <div flex="20">
+                    <md-button
+                            class="md-icon-button md-raised {{!!item.instrument.price_download_scheme_toggle ? 'ref' : ''}}"
+                            style="transform: scale(0.7,0.7)"
+                            data-ng-click="vm.resetPropertyBtn(item, 'instrument', 'price_download_scheme')">
+                        <span data-ng-if="!!item.instrument.price_download_scheme_toggle">R</span>
+                        <span data-ng-if="!!!item.instrument.price_download_scheme_toggle">I</span>
+                    </md-button>
+                </div>
+                <div flex="80">
+                    <div data-ng-if="item.instrument.price_download_scheme_toggle">
+                        <md-input-container>
+                            <label for="" class="uncut-text-on-focus-label" content-title>Price download scheme</label>
+                            <md-select data-ng-model="item.instrument.price_download_scheme"
+                                       md-on-open="vm.loadRelation('price_download_scheme')">
+                                <md-select-header>
+                                    <input data-ng-model="searchTerm"
+                                           type="search"
+                                           placeholder="Search for a ..."
+                                           class="md-text md-select-search-pattern">
+                                </md-select-header>
+                                <md-option data-ng-repeat="relationItem in vm.relationItems['price_download_scheme'] | filter: {name: searchTerm}"
+                                           data-ng-value="relationItem.id"
+                                           data-ng-if="vm.relationItems['price_download_scheme'].length">
+                                    {{relationItem.name}}
+                                </md-option>
+
+                                <md-option data-ng-if="!vm.relationItems['price_download_scheme'].length"
+                                           ng-value="item.instrument.price_download_scheme_object.id">
+                                    {{item.instrument.price_download_scheme_object.scheme_name}}
+                                </md-option>
+                            </md-select>
+                        </md-input-container>
+                    </div>
+                    <div data-ng-if="!item.instrument.price_download_scheme_toggle">
+                        <md-input-container>
+                            <label for="" class="uncut-text-on-focus-label" content-title>Price download scheme</label>
+                            <md-select
+                                    data-ng-model="item.instrument.price_download_scheme_input">
+                                <md-option
+                                        data-ng-repeat="inputItem in vm.findInputs('price_download_scheme')"
+                                        ng-value="inputItem.name">
+                                    {{inputItem.name}}
+                                </md-option>
+                            </md-select>
+                        </md-input-container>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div layout="row">
+
+            <div flex="33">
+                <md-input-container class="expression-input-container">
+                    <label for="" class="uncut-text-on-focus-label" content-title>Default price: Number</label>
+                    <input type="text" value-title data-ng-model="item.instrument.default_price">
+                </md-input-container>
+                <expression-editor-button
+                        data-item="item.instrument.default_price"></expression-editor-button>
+            </div>
+
             <div flex="33">
                 <md-input-container class="expression-input-container">
                     <label for="" class="uncut-text-on-focus-label" content-title>Default accrued: Number</label>
@@ -383,8 +403,21 @@
                 <expression-editor-button
                         data-item="item.instrument.default_accrued"></expression-editor-button>
             </div>
+
+            <div flex="33">
+                <md-input-container class="expression-input-container">
+                    <label for="" class="uncut-text-on-focus-label" content-title>Reference for pricing: Text</label>
+                    <input type="text" value-title
+                           data-ng-model="item.instrument.reference_for_pricing">
+                </md-input-container>
+                <expression-editor-button
+                        data-item="item.instrument.reference_for_pricing"></expression-editor-button>
+            </div>
+
         </div>
-        <div layout="row">
+
+        <div layout="row" layout-align="center center">
+
             <div flex="33" layout="row">
                 <div flex="20">
                     <md-button
@@ -435,11 +468,17 @@
                     </div>
                 </div>
             </div>
-            <div flex="33">
+
+            <!--<div flex="33">
                 <md-input-container>
                     <label for="" class="uncut-text-on-focus-label" content-title>&nbsp;</label>
                 </md-input-container>
-            </div>
+            </div>-->
+
+        </div>
+
+        <div layout="row">
+
             <div flex="33">
                 <md-input-container class="expression-input-container">
                     <label for="" class="uncut-text-on-focus-label" content-title>Maturity date: Date</label>
@@ -449,6 +488,18 @@
                 <expression-editor-button
                         data-item="item.instrument.maturity_date"></expression-editor-button>
             </div>
+
+            <div flex="33">
+                <md-input-container class="expression-input-container">
+                    <label for="" class="uncut-text-on-focus-label" content-title>Maturity price: Number</label>
+                    <input type="text" value-title style="color: grey"
+                           data-ng-model="item.instrument.maturity_price">
+                </md-input-container>
+                <expression-editor-button
+                        data-item="item.instrument.maturity_price"></expression-editor-button>
+            </div>
+
         </div>
+
     </div>
 </div>

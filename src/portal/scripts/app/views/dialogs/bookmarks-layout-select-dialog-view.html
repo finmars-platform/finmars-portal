@@ -6,11 +6,14 @@
         </div>
     </md-toolbar>
     <md-dialog-content  >
-        <div data-ng-if="vm.readyStatus.content" class="dialog-loader">
-            <div style="padding: 24px">
-                <div data-ng-repeat="item in vm.items" style="margin: 6px">
-                    <div data-ng-click="vm.selectLayout(item)">
-                        <b><span data-ng-bind="item.name"></span></b> (<span data-ng-bind="item.content_type"></span>)
+        <div data-ng-if="vm.readyStatus.content" class="dialog-loader" style="padding: 24px">
+            <div data-ng-repeat="group in vm.groups" style="margin: 6px">
+                <div data-ng-if="group.content.length > 0">
+                    <h3 data-ng-bind="group.name"></h3>
+                    <div data-ng-repeat="item in group.content" style="margin: 6px">
+                        <div data-ng-click="vm.selectLayout(item)">
+                            <b><span data-ng-bind="item.name"></span></b> (<span data-ng-bind="item.content_type"></span>)
+                        </div>
                     </div>
                 </div>
             </div>

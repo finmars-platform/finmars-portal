@@ -17,6 +17,9 @@
 
         var bookmarkData = data;
         var bookmarkCurrentLayoutId = bookmarkData.original.list_layout;
+        if (bookmarkData.a_attr.list_layout && !isNaN(bookmarkData.a_attr.list_layout)) {
+            bookmarkCurrentLayoutId = bookmarkData.a_attr.list_layout;
+        }
 
         vm.readyStatus = false;
         vm.itemIsFolder = true;
@@ -27,7 +30,7 @@
             vm.bookmarkLayoutName = layoutName + " " + "(" + layoutContentType + ")";
         };
 
-        if (bookmarkData.children.length === 0) {
+        // if (bookmarkData.children.length === 0) {
             vm.itemIsFolder = false;
 
             var sortLayoutsBy = {
@@ -56,9 +59,9 @@
 
             });
 
-        } else {
-            vm.readyStatus = true;
-        }
+        // } else {
+        //     vm.readyStatus = true;
+        // }
 
         vm.editBookmarkLayout = function ($event) {
 

@@ -1,0 +1,215 @@
+[
+  {
+    "name": "Working Interface",
+    "entities": [
+      "ui.editlayout",
+      "ui.listlayout",
+      "ui.reportlayout",
+      "ui.bookmark"
+    ],
+    "firstElementExist": false,
+    "subGroups": {
+
+      "ui.listlayout":[
+
+        {
+          "content_type": "portfolios.portfolio",
+          "name": "Portfolio",
+          "firstElementExist": false
+        },
+        {
+          "content_type": "accounts.account",
+          "name": "Account",
+          "firstElementExist": false
+        },
+        {
+          "content_type": "accounts.accounttype",
+          "name": "Account Type",
+          "firstElementExist": false
+        },
+        {
+          "content_type": "counterparties.responsible",
+          "name": "Responsible",
+          "firstElementExist": false
+        },
+        {
+          "content_type": "counterparties.responsiblegroup",
+          "name": "Responsible Group",
+          "firstElementExist": false
+        },
+        {
+          "content_type": "counterparties.counterparty",
+          "name": "Counterparty",
+          "firstElementExist": false
+        },
+        {
+          "content_type": "counterparties.counterpartygroup",
+          "name": "Counterparty Group",
+          "firstElementExist": false
+        },
+        {
+          "content_type": "instruments.instrument",
+          "name": "Instrument",
+          "firstElementExist": false
+        },
+        {
+          "content_type": "instruments.instrumenttype",
+          "name": "Instrument Type",
+          "firstElementExist": false
+        },
+        {
+          "content_type": "instruments.pricingpolicy",
+          "name": "Pricing Policy",
+          "firstElementExist": false
+        },
+        {
+          "content_type": "currencies.currency",
+          "name": "Currency",
+          "firstElementExist": false
+        },
+        {
+          "content_type": "currencies.currencyhistory",
+          "name": "Currency History",
+          "firstElementExist": false
+        },
+        {
+          "content_type": "transactions.transaction",
+          "name": "Transactions",
+          "firstElementExist": false
+        },
+        {
+          "content_type": "transactions.complextransaction",
+          "name": "Complex Transactions",
+          "firstElementExist": false
+        },
+        {
+          "content_type": "transactions.transactiontype",
+          "name": "Transaction Type",
+          "firstElementExist": false
+        },
+        {
+          "content_type": "transactions.transactiontypegroup",
+          "name": "Transaction Type Group",
+          "firstElementExist": false
+        },
+        {
+          "content_type": "instruments.pricehistory",
+          "name": "Price History",
+          "firstElementExist": false
+        },
+        {
+          "content_type": "strategies.strategy1",
+          "name": "Strategy 1",
+          "firstElementExist": false
+        },
+        {
+          "content_type": "strategies.strategy1group",
+          "name": "Strategy 1 Group",
+          "firstElementExist": false
+        },
+        {
+          "content_type": "strategies.strategy1subgroup",
+          "name": "Strategy 1 Subgroup",
+          "firstElementExist": false
+        },
+        {
+          "content_type": "strategies.strategy2",
+          "name": "Strategy 2",
+          "firstElementExist": false
+        },
+        {
+          "content_type": "strategies.strategy2group",
+          "name": "Strategy 2 Group",
+          "firstElementExist": false
+        },
+        {
+          "content_type": "strategies.strategy2subgroup",
+          "name": "Strategy 2 Subgroup",
+          "firstElementExist": false
+        },
+        {
+          "content_type": "strategies.strategy3",
+          "name": "Strategy 3",
+          "firstElementExist": false
+        },
+        {
+          "content_type": "strategies.strategy3group",
+          "name": "Strategy 3 Group",
+          "firstElementExist": false
+        },
+        {
+          "content_type": "strategies.strategy3subgroup",
+          "name": "Strategy 3 Subgroup",
+          "firstElementExist": false
+        }
+
+      ],
+      "ui.reportlayout": [
+        {
+          "content_type": "reports.balancereport",
+          "name": "Balance Reports",
+          "firstElementExist": false
+        },
+        {
+          "content_type": "reports.plreport",
+          "name": "P&L Reports",
+          "firstElementExist": false
+        }
+
+      ]
+
+    }
+  },
+  {
+    "name": "Transaction Types",
+    "entities": [
+      "transactions.transactiontype",
+      "transactions.transactiontypegroup"
+    ],
+    "firstElementExist": false
+  },
+  {
+    "name": "Base Elements",
+    "entities": [
+      "instruments.instrumenttype",
+      "accounts.accounttype",
+      "currencies.currency",
+      "instruments.pricingpolicy"
+    ],
+    "firstElementExist": false
+  },
+  {
+    "name": "Configurations",
+    "entities": ["import.pricingautomatedschedule"],
+    "firstElementExist": false
+  },
+  {
+    "name": "User Attributes",
+    "entities": [
+      "obj_attrs.portfolioattributetype",
+      "obj_attrs.accountattributetype",
+      "obj_attrs.accounttypeattributetype",
+      "obj_attrs.responsibleattributetype",
+      "obj_attrs.counterpartyattributetype",
+      "obj_attrs.instrumentattributetype",
+      "obj_attrs.instrumenttypeattributetype"
+    ],
+    "firstElementExist": false
+  },
+  {
+    "name": "Schemes: Import from File",
+    "entities": [
+      "csv_import.scheme",
+      "integrations.complextransactionimportscheme"
+    ],
+    "firstElementExist": false
+  },
+  {
+    "name": "Schemes: Downloads",
+    "entities": [
+      "integrations.instrumentdownloadscheme",
+      "integrations.pricedownloadscheme"
+    ],
+    "firstElementExist": false
+  }
+]

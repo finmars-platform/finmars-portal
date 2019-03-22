@@ -7,6 +7,7 @@
 
     var metaContentTypesService = require('../../services/metaContentTypesService');
     var uiRepository = require('../../repositories/uiRepository');
+    var metaService = require('../../services/metaService');
     var configurationService = require('../../services/configurationService');
 
 
@@ -19,164 +20,225 @@
 
         vm.selectAllState = false;
 
-        var configurationGroups = {
-            0: {
-                name: 'Working Interface',
-                entities: ['ui.editlayout', 'ui.listlayout', 'ui.reportlayout', 'ui.bookmark']
-            },
-
-            1: {
-                name: 'Transaction Types',
-                entities: ['transactions.transactiontype', 'transactions.transactiontypegroup']
-            },
-
-            2: {
-                name: 'Base Elements',
-                entities: ['instruments.instrumenttype', 'accounts.accounttype', 'Currencies', 'Pricing Policy']
-            },
-
-            3: {
-                name: 'Configurations',
-                entities: ['Automated uploads schedule']
-            },
-
-            4: {
-                name: 'User Attributes',
-                entities: ['Portfolio Dynamic Attributes',
-                        'Account Dynamic Attributes',
-                        'Account Type Dynamic Attributes',
-                        'Responsible Dynamic Attributes',
-                        'Counterparty Dynamic Attributes',
-                        'Instrument Dynamic Attributes',
-                        'Instrument Type Dynamic Attributes']
-            },
-
-            5: {
-                name: 'Schemes: Import from File',
-                entities: ['Data import from CSV schemes', 'Complex Transaction Import Scheme']
-            },
-
-            6: {
-                name: 'Schemes: Downloads',
-                entities: ['Instrument Download Schemes', 'Price Download Schemes']
-            }
-        };
-
         vm.getFile = function () {
 
-            return configurationService.getConfigurationData().then(function (data) {
+            return new Promise(function (resolve, reject) {
+                configurationService.getConfigurationData().then(function (data) {
 
-                console.log('configurationService.getConfigurationData', data);
+                    console.log('configurationService.getConfigurationData', data);
 
-                vm.file = data;
+                    vm.file = data;
+                    vm.items = data.body;
 
-                vm.items = data.body;
+                    var groups = [];
+                    metaService.getContentGroups("exportImportConfigGroups").then(function (data) {
+                        groups = data;
 
-                var firstWorkingInterfaceItem = false;
-                var firstTransactionTypesItem = false;
-                var firstBaseElementsItem = false;
-                var firstConfigurationsItem = false;
-                var firstUserAttributesItem = false;
-                var firstImportFromFileItem = false;
-                var firstSchemesDownloads = false;
+                        vm.items.forEach(function (parent) {
 
-                vm.items.forEach(function (parent) {
+                            parent.content = parent.content.filter(function (child) {
 
-                    parent.content = parent.content.filter(function (child) {
+                                if (child.hasOwnProperty('user_code') && child.user_code === '-') {
+                                    return false
+                                }
 
-                        if (child.hasOwnProperty('user_code') && child.user_code === '-') {
-                            return false
-                        }
+                                if (child.hasOwnProperty('scheme_name') && child.scheme_name === '-') {
+                                    return false
+                                }
 
-                        if (child.hasOwnProperty('scheme_name') && child.scheme_name === '-') {
-                            return false
-                        }
+                                return true;
 
-                        return true;
+                            });
+
+                            // Assign group to file
+                            var g, e, s;
+                            loop1:
+                                for (g = 0; g < groups.length; g++) {
+
+                                    loop2:
+                                        for (e = 0; e < groups[g].entities.length; e++) {
+
+                                            if (groups[g].entities[e] === parent.entity) {
+
+                                                if (!groups[g].firstElementExist) { // If a file first in the group, attach to it group name to display
+
+                                                    parent.first__ = groups[g].name;
+                                                    groups[g].firstElementExist = true;
+
+                                                }
+
+                                                parent.order__ = g; // Set a group order position
+
+                                                // Divide children into subgroups
+                                                if (parent.entity === "ui.listlayout" || parent.entity === "ui.reportlayout") {
+                                                    var subGroupsList = groups[g].subGroups[parent.entity];
+
+                                                    var children = parent.content;
+
+                                                    children.forEach(function (child) {
+
+                                                       for (s = 0; s < subGroupsList.length; s++) {
+
+                                                           if (child.content_type === subGroupsList[s].content_type) {
+
+                                                               if (!subGroupsList[s].firstElementExist) {
+                                                                   child.first__ = subGroupsList[s].name;
+                                                                   subGroupsList[s].firstElementExist = true;
+                                                               }
+
+                                                               child.order__ = s;
+                                                           }
+
+                                                       }
+
+                                                    });
+                                                } else if (parent.entity === "transactions.transactiontype") {
+                                                    groupByProperty(parent.content, '___group__user_code');
+                                                }
+                                                // < Divide children into subgroups >
+
+                                                break loop1;
+                                            }
+
+                                        }
+                                }
+                            // < Assign group to file >
+
+                        });
+
+                        findDynamicAttributesInLayouts();
+
+                        vm.readyStatus.content = true;
+                        resolve($scope.$apply());
 
                     });
 
-                    switch (parent.entity) {
+                });
+            });
+        };
 
-                        case 'ui.editlayout':
-                        case 'ui.listlayout':
-                        case 'ui.reportlayout':
-                        case 'ui.bookmark':
-                            parent.order = 1;
-                            if (!firstWorkingInterfaceItem) {
-                                firstWorkingInterfaceItem = true;
-                                parent.first = 'Working Interface'
-                            }
+        var groupByProperty = function (elements, propertyToGroupBy) {
+
+            var hasFirstElement = [];
+
+            elements.forEach(function (element) {
+                if (element.hasOwnProperty(propertyToGroupBy)) {
+                    var valueToGroupBy = element[propertyToGroupBy];
+
+                    if (valueToGroupBy === "-") {
+                        valueToGroupBy = "Transaction types without group";
+                    }
+
+                    if (hasFirstElement.indexOf(valueToGroupBy) === -1) {
+                        element.first__ = valueToGroupBy;
+                        hasFirstElement.push(valueToGroupBy);
+                    }
+
+                    element.grouping_options__ = valueToGroupBy;
+                }
+            });
+
+        };
+
+        var findDynamicAttributesInLayouts = function () {
+
+            var dynamicAttrsGroupIndex = 4;
+
+            var layoutsList = {};
+
+            var i;
+            for (i = 0; i < vm.items.length; i++) {
+
+                if (vm.items[i].entity === "ui.listlayout") {
+                    layoutsList = vm.items[i];
+                    break;
+                }
+
+            }
+
+            vm.items.forEach(function (entityItem) {
+
+                if (entityItem.order__ === dynamicAttrsGroupIndex) {
+
+                    var matchingLayout = "";
+                    switch (entityItem.entity) {
+                        case "obj_attrs.portfolioattributetype":
+                            matchingLayout = "portfolios.portfolio";
                             break;
-
-                        case 'transactions.transactiontype':
-                        case 'transactions.transactiontypegroup':
-                            parent.order = 2;
-                            if (!firstTransactionTypesItem) {
-                                firstTransactionTypesItem = true;
-                                parent.first = 'Transaction Types'
-                            }
+                        case "obj_attrs.accountattributetype":
+                            matchingLayout = "accounts.account";
                             break;
-
-                        case 'instruments.instrumenttype':
-                        case 'accounts.accounttype':
-                        case 'currencies.currency':
-                        case 'instruments.pricingpolicy':
-                            parent.order = 3;
-                            if (!firstBaseElementsItem) {
-                                firstBaseElementsItem = true;
-                                parent.first = 'Base Elements'
-                            }
-                            break;;
-
-                        case 'import.pricingautomatedschedule':
-                            parent.order = 4;
-                            if (!firstConfigurationsItem) {
-                                firstConfigurationsItem = true;
-                                parent.first = 'Configurations'
-                            }
+                        case "obj_attrs.accounttypeattributetype":
+                            matchingLayout = "accounts.accounttype";
                             break;
-
-                        case 'obj_attrs.portfolioattributetype':
-                        case 'obj_attrs.accountattributetype':
-                        case 'obj_attrs.accounttypeattributetype':
-                        case 'obj_attrs.responsibleattributetype':
-                        case 'obj_attrs.counterpartyattributetype':
-                        case 'obj_attrs.instrumentattributetype':
-                        case 'obj_attrs.instrumenttypeattributetype':
-                            parent.order = 5;
-                            if (!firstUserAttributesItem) {
-                                firstUserAttributesItem = true;
-                                parent.first = 'User Attributes'
-                            }
+                        case "obj_attrs.responsibleattributetype":
+                            matchingLayout = "counterparties.responsible";
                             break;
-
-                        case 'csv_import.scheme':
-                        case 'integrations.complextransactionimportscheme':
-                            parent.order = 6;
-                            if (!firstImportFromFileItem) {
-                                firstImportFromFileItem = true;
-                                parent.first = 'Schemes: Import from File'
-                            }
+                        case "obj_attrs.counterpartyattributetype":
+                            matchingLayout = "counterparties.counterparty";
                             break;
-
-                        case 'integrations.instrumentdownloadscheme':
-                        case 'integrations.pricedownloadscheme':
-                            parent.order = 7;
-                            if (!firstSchemesDownloads) {
-                                firstSchemesDownloads = true;
-                                parent.first = 'Schemes: Downloads'
-                            }
+                        case "obj_attrs.instrumentattributetype":
+                            matchingLayout = "instruments.instrument";
+                            break;
+                        case "obj_attrs.instrumenttypeattributetype":
+                            matchingLayout = "instruments.instrumenttype";
                             break;
                     }
 
-                });
+                    entityItem.content.forEach(function (attr) {
+                        var daName = attr.name;
+                        var daUserCode = attr.user_code;
+                        var usagesCount = 0;
 
+                        layoutsList.content.forEach(function (layout) {
 
-                vm.readyStatus.content = true;
+                            if (layout.content_type === matchingLayout) { // to determine whether layout and attribute have same entity
+                                var layoutColumns = layout.data.columns;
+                                var layoutGroups = layout.data.grouping;
+                                var attributeIsUsed = false;
 
-                $scope.$apply();
+                                var l;
+                                for (l = 0; l < layoutColumns.length; l++) {
 
+                                    if (layoutColumns[l].hasOwnProperty("user_code")) {
+
+                                        if (layoutColumns[l].name === daName && layoutColumns[l].user_code === daUserCode) {
+                                            attributeIsUsed = true;
+                                            break;
+                                        }
+                                    }
+
+                                }
+
+                                if (!attributeIsUsed) {
+
+                                    var g;
+                                    for (g = 0; g < layoutGroups.length; g++) {
+
+                                        if (layoutGroups[g].hasOwnProperty("user_code")) {
+
+                                            if (layoutGroups[g].name === daName && layoutGroups[g].user_code === daUserCode) {
+                                                attributeIsUsed = true;
+                                                break;
+                                            }
+                                        }
+
+                                    }
+
+                                }
+
+                                if (attributeIsUsed) {
+                                    entityItem.attributeIsUsed__ = true;
+                                    usagesCount = usagesCount + 1;
+                                    attr.countOfUsages__ = usagesCount;
+                                }
+
+                            }
+
+                        })
+
+                    });
+                }
             });
 
         };
@@ -516,8 +578,14 @@
 
                 if (item.hasOwnProperty('data')) {
 
+                    // Case for bookmarks
                     if (item.hasOwnProperty('___content_type')) {
-                        return item.name + ' (' + metaContentTypesService.getEntityNameByContentType(item.___content_type) + ')'
+
+                        if (item.hasOwnProperty('children') && item.children.length > 0) {
+                            return 'Bookmarks - Upper Layer (' + item.name + ')'
+                        } else {
+                            return item.name + ' (' + metaContentTypesService.getEntityNameByContentType(item.___content_type) + ')'
+                        }
                     }
 
                     return item.name + ' (' + metaContentTypesService.getEntityNameByContentType(item.content_type) + ')'
@@ -610,7 +678,7 @@
 
         };
 
-        function isEntitySelected(entity) {
+        /*function isEntitySelected(entity) {
 
             var result = false;
 
@@ -640,7 +708,7 @@
 
             return result;
 
-        }
+        }*/
 
         function exportConfiguration(items) {
 
@@ -690,6 +758,20 @@
         }
 
         vm.agree = function ($event) {
+
+            // removing properties created for data rendering
+            vm.items.forEach(function (entity) {
+                delete entity.order__;
+                delete entity.first__;
+                delete entity.attributeIsUsed__;
+
+                entity.content.forEach(function (item) {
+                    delete item.order__;
+                    delete item.first__;
+                    delete item.countOfUsages__;
+                });
+
+            });
 
             exportConfiguration(vm.items).then(function (data) {
 
