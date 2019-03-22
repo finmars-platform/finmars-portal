@@ -20,16 +20,17 @@
 
         </div>
 
-        <div data-ng-repeat="item in vm.items | orderBy: 'order'">
+        <div data-ng-repeat="item in vm.items | orderBy: 'order__'">
 
-            <h2 data-ng-if="item.first" data-ng-bind="item.first"></h2>
+            <h2 data-ng-if="item.first__" data-ng-bind="item.first__"></h2>
             <div class="cie-entity-holder">
                 <md-checkbox data-ng-checked="item.active"
                              data-ng-click="vm.toggleActiveForChilds(item)"
                              data-ng-class="{'some-checkboxes-ticked': item.someChildsActive}"
                              aria-label="checkbox">
                 </md-checkbox>
-                <span data-ng-bind="vm.getEntityName(item)"></span> <span class="cie-dependency"
+                <span data-ng-bind="vm.getEntityName(item)"
+                      data-ng-class="{'used-dynamic-attrs': item.attributeIsUsed__}"></span> <span class="cie-dependency"
                                                                           data-ng-bind="vm.getEntityDependenciesCaptions(item)"></span>
                 ({{item.count}})
                 <md-button class="md-raised" ng-click="item.displayItems = !item.displayItems"
@@ -42,11 +43,14 @@
             <div data-ng-show="item.displayItems" style="padding-left: 20px">
 
                 <div data-ng-repeat="child in item.content">
+                    <h4 data-ng-if="child.first__" data-ng-bind="child.first__"></h4>
                     <md-checkbox data-ng-checked="child.active"
                                  data-ng-click="vm.updateActiveForParent(child, item)"
                                  aria-label="checkbox">
                     </md-checkbox>
-                    {{vm.getItemName(child)}}
+                    <span data-ng-class="{'used-dynamic-attrs': child.countOfUsages__}">
+                        {{vm.getItemName(child)}} <span data-ng-if="child.countOfUsages__">(<b>{{child.countOfUsages__}}</b>)</span>
+                    </span>
                 </div>
 
             </div>

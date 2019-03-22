@@ -73,7 +73,7 @@
 
     gulp.task(appName + '-json-min', function () {
 
-        var pathToJSON = ['src/' + appName + '/content/json/*.json'];
+        var pathToJSON = ['src/' + appName + '/content/json/**/*.json'];
 
         return gulp.src(pathToJSON)
             .pipe(gulp.dest('dist/' + appName + '/content/json/'));

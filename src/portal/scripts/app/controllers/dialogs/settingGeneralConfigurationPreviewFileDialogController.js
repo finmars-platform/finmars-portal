@@ -6,6 +6,7 @@
     'use strict';
 
     var metaContentTypesService = require('../../services/metaContentTypesService');
+    var metaService = require('../../services/metaService');
     var configurationImportHelper = require('../../helpers/configuration-import.helper');
 
     module.exports = function ($scope, $mdDialog, file) {
@@ -44,92 +45,175 @@
 
         var sortItems = function () {
 
-            var firstWorkingInterfaceItem = false;
-            var firstTransactionTypesItem = false;
-            var firstBaseElementsItem = false;
-            var firstConfigurationsItem = false;
-            var firstUserAttributesItem = false;
-            var firstImportFromFileItem = false;
-            var firstSchemesDownloads = false;
+            var groups = [];
+            metaService.getContentGroups("exportImportConfigGroups").then(function (data) {
+                groups = data;
 
-            vm.items.forEach(function (parent) {
+                vm.items.forEach(function (parent) {
 
-                switch (parent.entity) {
+                    // Assign group to file
+                    var g, e, s;
+                    loop1:
+                        for (g = 0; g < groups.length; g++) {
 
-                    case 'ui.editlayout':
-                    case 'ui.listlayout':
-                    case 'ui.reportlayout':
-                    case 'ui.bookmark':
-                        parent.order = 1;
-                        if (!firstWorkingInterfaceItem) {
-                            firstWorkingInterfaceItem = true;
-                            parent.first = 'Working Interface'
+                            loop2:
+                                for (e = 0; e < groups[g].entities.length; e++) {
+
+                                    if (groups[g].entities[e] === parent.entity) {
+
+                                        if (!groups[g].firstElementExist) { // If a file first in the group, attach to it group name to display
+
+                                            parent.first__ = groups[g].name;
+                                            groups[g].firstElementExist = true;
+
+                                        }
+
+                                        parent.order__ = g; // Set a group order position
+
+                                        // Divide children into subgroups
+                                        if (parent.entity === "ui.listlayout" || parent.entity === "ui.reportlayout") {
+                                            var subGroupsList = groups[g].subGroups[parent.entity];
+
+                                            var children = parent.content;
+
+                                            children.forEach(function (child) {
+
+                                                for (s = 0; s < subGroupsList.length; s++) {
+
+                                                    if (child.content_type === subGroupsList[s].content_type) {
+
+                                                        if (!subGroupsList[s].firstElementExist) {
+                                                            child.first__ = subGroupsList[s].name;
+                                                            subGroupsList[s].firstElementExist = true;
+                                                        }
+
+                                                        child.order__ = s;
+                                                    }
+
+                                                }
+
+                                            });
+                                        }
+                                        // < Divide children into subgroups >
+
+                                        break loop1;
+                                    }
+
+                                }
                         }
-                        break;
+                    // < Assign group to file >
+                });
 
-                    case 'transactions.transactiontype':
-                    case 'transactions.transactiontypegroup':
-                        parent.order = 2;
-                        if (!firstTransactionTypesItem) {
-                            firstTransactionTypesItem = true;
-                            parent.first = 'Transaction Types'
-                        }
-                        break;
-
-                    case 'instruments.instrumenttype':
-                    case 'accounts.accounttype':
-                    case 'currencies.currency':
-                    case 'instruments.pricingpolicy':
-                        parent.order = 3;
-                        if (!firstBaseElementsItem) {
-                            firstBaseElementsItem = true;
-                            parent.first = 'Base Elements'
-                        }
-                        break;;
-
-                    case 'import.pricingautomatedschedule':
-                        parent.order = 4;
-                        if (!firstConfigurationsItem) {
-                            firstConfigurationsItem = true;
-                            parent.first = 'Configurations'
-                        }
-                        break;
-
-                    case 'obj_attrs.portfolioattributetype':
-                    case 'obj_attrs.accountattributetype':
-                    case 'obj_attrs.accounttypeattributetype':
-                    case 'obj_attrs.responsibleattributetype':
-                    case 'obj_attrs.counterpartyattributetype':
-                    case 'obj_attrs.instrumentattributetype':
-                    case 'obj_attrs.instrumenttypeattributetype':
-                        parent.order = 5;
-                        if (!firstUserAttributesItem) {
-                            firstUserAttributesItem = true;
-                            parent.first = 'User Attributes'
-                        }
-                        break;
-
-                    case 'csv_import.scheme':
-                    case 'integrations.complextransactionimportscheme':
-                        parent.order = 6;
-                        if (!firstImportFromFileItem) {
-                            firstImportFromFileItem = true;
-                            parent.first = 'Schemes: Import from File'
-                        }
-                        break;
-
-                    case 'integrations.instrumentdownloadscheme':
-                    case 'integrations.pricedownloadscheme':
-                        parent.order = 7;
-                        if (!firstSchemesDownloads) {
-                            firstSchemesDownloads = true;
-                            parent.first = 'Schemes: Downloads'
-                        }
-                        break;
-                }
+                findDynamicAttributesInLayouts();
 
             });
 
+        };
+
+        var findDynamicAttributesInLayouts = function () {
+
+            var dynamicAttrsGroupIndex = 4;
+
+            var layoutsList = {};
+
+            var i;
+            for (i = 0; i < vm.items.length; i++) {
+
+                if (vm.items[i].entity === "ui.listlayout") {
+                    layoutsList = vm.items[i];
+                    break;
+                }
+
+            }
+
+            if (layoutsList && layoutsList !== {}) {
+
+                vm.items.forEach(function (entityItem) {
+
+                    if (entityItem.order__ === dynamicAttrsGroupIndex) {
+
+                        var matchingLayout = "";
+                        switch (entityItem.entity) {
+                            case "obj_attrs.portfolioattributetype":
+                                matchingLayout = "portfolios.portfolio";
+                                break;
+                            case "obj_attrs.accountattributetype":
+                                matchingLayout = "accounts.account";
+                                break;
+                            case "obj_attrs.accounttypeattributetype":
+                                matchingLayout = "accounts.accounttype";
+                                break;
+                            case "obj_attrs.responsibleattributetype":
+                                matchingLayout = "counterparties.responsible";
+                                break;
+                            case "obj_attrs.counterpartyattributetype":
+                                matchingLayout = "counterparties.counterparty";
+                                break;
+                            case "obj_attrs.instrumentattributetype":
+                                matchingLayout = "instruments.instrument";
+                                break;
+                            case "obj_attrs.instrumenttypeattributetype":
+                                matchingLayout = "instruments.instrumenttype";
+                                break;
+                        }
+
+                        entityItem.content.forEach(function (attr) {
+                            var daName = attr.name;
+                            var daUserCode = attr.user_code;
+                            var usagesCount = 0;
+
+                            layoutsList.content.forEach(function (layout) {
+
+                                if (layout.content_type === matchingLayout) { // to determine whether layout and attribute have same entity
+                                    var layoutColumns = layout.data.columns;
+                                    var layoutGroups = layout.data.grouping;
+                                    var attributeIsUsed = false;
+
+                                    var l;
+                                    for (l = 0; l < layoutColumns.length; l++) {
+
+                                        if (layoutColumns[l].hasOwnProperty("user_code")) {
+
+                                            if (layoutColumns[l].name === daName && layoutColumns[l].user_code === daUserCode) {
+                                                attributeIsUsed = true;
+                                                break;
+                                            }
+                                        }
+
+                                    }
+
+                                    if (!attributeIsUsed) {
+
+                                        var g;
+                                        for (g = 0; g < layoutGroups.length; g++) {
+
+                                            if (layoutGroups[g].hasOwnProperty("user_code")) {
+
+                                                if (layoutGroups[g].name === daName && layoutGroups[g].user_code === daUserCode) {
+                                                    attributeIsUsed = true;
+                                                    break;
+                                                }
+                                            }
+
+                                        }
+
+                                    }
+
+                                    if (attributeIsUsed) {
+                                        entityItem.attributeIsUsed__ = true;
+                                        usagesCount = usagesCount + 1;
+                                        attr.countOfUsages__ = usagesCount;
+                                    }
+
+                                }
+
+                            })
+
+                        });
+                    }
+                });
+
+            }
         };
 
         sortItems();
@@ -211,8 +295,14 @@
 
                 if (item.hasOwnProperty('data')) {
 
+                    // Case for bookmarks
                     if (item.hasOwnProperty('___content_type')) {
-                        return item.name + ' (' + metaContentTypesService.getEntityNameByContentType(item.___content_type) + ')'
+
+                        if (item.hasOwnProperty('children') && item.children.length > 0) {
+                            return 'Bookmarks - Upper Layer (' + item.name + ')'
+                        } else {
+                            return item.name + ' (' + metaContentTypesService.getEntityNameByContentType(item.___content_type) + ')'
+                        }
                     }
 
                     return item.name + ' (' + metaContentTypesService.getEntityNameByContentType(item.content_type) + ')'
@@ -357,10 +447,15 @@
 
             vm.items.forEach(function (entity) {
 
-                delete entity.order;
-                delete entity.first;
+                delete entity.order__;
+                delete entity.first__;
+                delete entity.attributeIsUsed__;
 
                 entity.content.forEach(function (item) {
+
+                    delete item.order__;
+                    delete item.first__;
+                    delete item.countOfUsages__;
 
                     if (item.active) {
                         vm.activeItemTotal = vm.activeItemTotal + 1;
