@@ -30,8 +30,9 @@
                              aria-label="checkbox">
                 </md-checkbox>
                 <span data-ng-bind="vm.getEntityName(item)"
-                      data-ng-class="{'used-dynamic-attrs': item.attributeIsUsed__}"></span> <span class="cie-dependency"
-                                                                          data-ng-bind="vm.getEntityDependenciesCaptions(item)"></span>
+                      data-ng-class="{'used-dynamic-attrs': item.attributeIsUsed__}"></span> <span
+                    class="cie-dependency"
+                    data-ng-bind="vm.getEntityDependenciesCaptions(item)"></span>
                 ({{item.count}})
                 <md-button class="md-raised" ng-click="item.displayItems = !item.displayItems"
                            aria-label="display items button"><span
@@ -49,7 +50,8 @@
                                  aria-label="checkbox">
                     </md-checkbox>
                     <span data-ng-class="{'used-dynamic-attrs': child.countOfUsages__}">
-                        {{vm.getItemName(child)}} <span data-ng-if="child.countOfUsages__">(<b>{{child.countOfUsages__}}</b>)</span>
+                        {{vm.getItemName(child)}} <span
+                            data-ng-if="child.countOfUsages__">(<b>{{child.countOfUsages__}}</b>)</span>
                     </span>
                 </div>
 
@@ -64,10 +66,11 @@
         </div>
 
     </md-dialog-content>
-    <md-dialog-actions layout="row">
+    <md-dialog-actions layout="row" layout-align="space-between center"
+                       style="border-top: 1px solid #ddd; min-height: 66px">
 
-        <div>
-            <md-checkbox ng-checked="vm.mode" data-ng-click="vm.toggleMode('overwrite')"
+        <div class="p-t-8">
+            <md-checkbox ng-checked="vm.settings.mode === 'overwrite'" data-ng-click="vm.toggleMode('overwrite')"
                          aria-label="checkbox">
             </md-checkbox>
 

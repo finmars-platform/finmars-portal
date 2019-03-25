@@ -80,9 +80,9 @@
 
             } else {
 
-                console.log('group', groupType);
-                console.log('group', group);
-                console.log('item', item);
+                // console.log('group', groupType);
+                // console.log('group', group);
+                // console.log('item', item);
 
                 if (groupType.value_type === 'field') {
                     resultGroup.group_id = item[group];

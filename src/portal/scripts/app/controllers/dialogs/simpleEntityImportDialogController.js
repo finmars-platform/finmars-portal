@@ -85,6 +85,77 @@
             }
         };
 
+        vm.validate = function ($event) {
+
+            vm.readyStatus.processing = true;
+
+            var formData = new FormData();
+
+            formData.append('file', vm.config.file);
+            formData.append('scheme', vm.config.scheme);
+            formData.append('error_handler', vm.config.error_handler);
+
+            console.log('vm.config', vm.config);
+
+            importEntityService.validateImport(formData).then(function (data) {
+
+                vm.readyStatus.processing = false;
+                vm.dataIsImported = true;
+
+                if (data.errors.length === 0) {
+
+                    vm.load()
+
+                } else {
+
+                    data.process_mode = 'validate';
+
+                    $mdDialog.show({
+                        controller: 'SimpleEntityImportErrorsDialogController as vm',
+                        templateUrl: 'views/dialogs/simple-entity-import-errors-dialog-view.html',
+                        targetEvent: $event,
+                        preserveScope: true,
+                        multiple: true,
+                        autoWrap: true,
+                        skipHide: true,
+                        locals: {
+                            data: data
+                        }
+                    }).then(function (res) {
+
+                        if (res.status === 'agree') {
+                            vm.load();
+                        }
+
+                    })
+
+                }
+
+
+            }).catch(function (reason) {
+
+                vm.readyStatus.processing = false;
+
+                $mdDialog.show({
+                    controller: 'ValidationDialogController as vm',
+                    templateUrl: 'views/dialogs/validation-dialog-view.html',
+                    targetEvent: $event,
+                    preserveScope: true,
+                    multiple: true,
+                    autoWrap: true,
+                    skipHide: true,
+                    locals: {
+                        validationData: {
+                            message: "An error occurred. Please try again later"
+                        }
+                    }
+                });
+
+                $scope.$apply();
+
+            })
+        };
+
         vm.load = function ($event) {
 
             vm.readyStatus.processing = true;
@@ -204,6 +275,12 @@
         vm.cancel = function () {
             $mdDialog.cancel();
         };
+
+        vm.import = function () {
+
+            vm.validate(); //TODO refactor later?
+
+        }
 
     };
 

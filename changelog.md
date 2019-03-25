@@ -1,5 +1,9 @@
 # Changelog
 
+## 25.03.2019
+- Simple Entity Import Validation
+- Overwrite option in Configuration Import
+
 ## 19.03.2019
 - Import Transaction Validation
 
