@@ -461,11 +461,11 @@
 
     var syncLevelFold = function (evDataService) {
 
-        console.time('syncLevelFold');
+        // console.time('syncLevelFold');
 
         var groups = evDataService.getGroups();
 
-        console.log('syncLevelFold.groups', groups);
+        // console.log('syncLevelFold.groups', groups);
 
         if (groups.length) {
 
@@ -477,14 +477,14 @@
 
                         var groupsContent = evDataHelper.getGroupsByLevel(i + 1, evDataService);
 
-                        console.log('syncLevelFold.groupsContent', groupsContent);
+                        // console.log('syncLevelFold.groupsContent', groupsContent);
 
                         groupsContent.forEach(function (groupItem) {
                             groupItem.___is_open = false;
 
                             var childrens = evDataHelper.getAllChildrenGroups(groupItem.___id, evDataService);
 
-                            console.log('childrens', childrens);
+                            // console.log('childrens', childrens);
 
                             childrens.forEach(function (children) {
 

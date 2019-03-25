@@ -7,7 +7,7 @@
 
     var metaContentTypesService = require('../../services/metaContentTypesService');
     var metaService = require('../../services/metaService');
-    var configurationImportHelper = require('../../helpers/configuration-import.helper');
+    var configurationImportService = require('../../services/configuration-import/configurationImportService');
 
     module.exports = function ($scope, $mdDialog, file) {
 
@@ -467,7 +467,7 @@
 
             try {
 
-                configurationImportHelper.importConfiguration(vm.items, vm.settings).then(function (data) {
+                configurationImportService.importConfiguration(vm.items, vm.settings).then(function (data) {
 
                     $mdDialog.hide({status: 'agree', data: {}});
 

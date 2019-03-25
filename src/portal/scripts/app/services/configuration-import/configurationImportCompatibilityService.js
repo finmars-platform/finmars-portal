@@ -5,12 +5,12 @@
 
     'use strict';
 
-    var accountTypeModel = require('../models/accountTypePropsModel');
-    var instrumentType = require('../models/instrumentTypePropsModel');
-    var currencyModel = require('../models/currencyPropsModel');
-    var metaContentTypesService = require('../services/metaContentTypesService');
+    var accountTypeModel = require('../../models/accountTypePropsModel');
+    var instrumentType = require('../../models/instrumentTypePropsModel');
+    var currencyModel = require('../../models/currencyPropsModel');
+    var metaContentTypesService = require('../metaContentTypesService');
 
-    var entityResolverService = require('../services/entityResolverService');
+    var entityResolverService = require('../entityResolverService');
 
     var modelContainer = {
         'accounts.accounttype': accountTypeModel.getAttributes(),

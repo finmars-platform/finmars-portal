@@ -7,7 +7,7 @@
 
     var uiService = require('../services/uiService');
 
-    var configurationImportHelper = require('../helpers/configuration-import.helper');
+    var configurationImportService = require('../services/configuration-import/configurationImportService');
 
     module.exports = function ($scope, $state) {
 
@@ -33,7 +33,7 @@
 
             var items = item.data.body;
 
-            configurationImportHelper.importConfiguration(items).then(function () {
+            configurationImportService.importConfiguration(items).then(function () {
 
                 $state.go('app.home');
             })
