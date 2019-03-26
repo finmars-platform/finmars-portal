@@ -196,7 +196,7 @@
                 };
 
                 // Tentative entity viewer expand / collapse groups buttons fixes
-                scope.evFoldLevel = function (item, $index) {
+                /*scope.evFoldLevel = function (item, $index) {
                     item.ev_group_folded = true;
                     console.log('folding evfoldLevel item is', item);
 
@@ -285,7 +285,7 @@
                     }
 
                     // scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
-                };
+                };*/
                 // ----------------------------------------------------
 
                 scope.foldLevel = function (item, $index) {

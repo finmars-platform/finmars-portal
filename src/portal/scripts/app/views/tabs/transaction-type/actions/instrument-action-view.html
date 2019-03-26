@@ -30,12 +30,13 @@
                             <md-input-container>
                                 <label for="" class="uncut-text-on-focus-label" content-title>Instrument type</label>
                                 <md-select data-ng-model="item.instrument.instrument_type"
-                                           md-on-open="vm.loadRelation('instrument_type')">
+                                           md-on-open="vm.loadRelation('instrument_type')"
+                                           md-container-class="simple-search-select">
                                     <md-select-header>
                                         <input data-ng-model="searchTerm"
                                                type="search"
                                                placeholder="Search for a ..."
-                                               class="md-text md-select-search-pattern">
+                                               class="md-text md-select-search-pattern simple-search-filter-input">
                                     </md-select-header>
                                     <md-option data-ng-repeat="relationItem in vm.relationItems['instrument_type'] | filter: {name: searchTerm}"
                                                data-ng-value="relationItem.id"
@@ -171,12 +172,13 @@
                         <md-input-container>
                             <label for="" class="uncut-text-on-focus-label" content-title>Pricing currency</label>
                             <md-select data-ng-model="item.instrument.pricing_currency"
-                                       md-on-open="vm.loadRelation('pricing_currency')">
+                                       md-on-open="vm.loadRelation('pricing_currency')"
+                                       md-container-class="simple-search-select">
                                 <md-select-header>
                                     <input data-ng-model="searchTerm"
                                            type="search"
                                            placeholder="Search for a ..."
-                                           class="md-text md-select-search-pattern">
+                                           class="md-text md-select-search-pattern simple-search-filter-input">
                                 </md-select-header>
                                 <md-option data-ng-repeat="relationItem in vm.relationItems['pricing_currency'] | filter: {name: searchTerm}"
                                            data-ng-value="relationItem.id"
@@ -222,12 +224,13 @@
                         <md-input-container>
                             <label for="" class="uncut-text-on-focus-label" content-title>Accrued currency</label>
                             <md-select data-ng-model="item.instrument.accrued_currency"
-                                       md-on-open="vm.loadRelation('accrued_currency')">
+                                       md-on-open="vm.loadRelation('accrued_currency')"
+                                       md-container-class="simple-search-select">
                                 <md-select-header>
                                     <input data-ng-model="searchTerm"
                                            type="search"
                                            placeholder="Search for a ..."
-                                           class="md-text md-select-search-pattern">
+                                           class="md-text md-select-search-pattern simple-search-filter-input">
                                 </md-select-header>
                                 <md-option data-ng-repeat="relationItem in vm.relationItems['accrued_currency'] | filter: {name: searchTerm}"
                                            data-ng-value="relationItem.id"
@@ -273,12 +276,13 @@
                         <md-input-container>
                             <label for="" class="uncut-text-on-focus-label" content-title>Daily pricing model</label>
                             <md-select data-ng-model="item.instrument.daily_pricing_model"
-                                       md-on-open="vm.loadRelation('daily_pricing_model')">
+                                       md-on-open="vm.loadRelation('daily_pricing_model')"
+                                       md-container-class="simple-search-select">
                                 <md-select-header>
                                     <input data-ng-model="searchTerm"
                                            type="search"
                                            placeholder="Search for a ..."
-                                           class="md-text md-select-search-pattern">
+                                           class="md-text md-select-search-pattern simple-search-filter-input">
                                 </md-select-header>
                                 <md-option data-ng-repeat="relationItem in vm.relationItems['daily_pricing_model'] | filter: {name: searchTerm}"
                                            data-ng-value="relationItem.id"
@@ -346,12 +350,13 @@
                         <md-input-container>
                             <label for="" class="uncut-text-on-focus-label" content-title>Price download scheme</label>
                             <md-select data-ng-model="item.instrument.price_download_scheme"
-                                       md-on-open="vm.loadRelation('price_download_scheme')">
+                                       md-on-open="vm.loadRelation('price_download_scheme')"
+                                       md-container-class="simple-search-select">
                                 <md-select-header>
                                     <input data-ng-model="searchTerm"
                                            type="search"
                                            placeholder="Search for a ..."
-                                           class="md-text md-select-search-pattern">
+                                           class="md-text md-select-search-pattern simple-search-filter-input">
                                 </md-select-header>
                                 <md-option data-ng-repeat="relationItem in vm.relationItems['price_download_scheme'] | filter: {name: searchTerm}"
                                            data-ng-value="relationItem.id"
@@ -433,12 +438,13 @@
                         <md-input-container>
                             <label for="" class="uncut-text-on-focus-label" content-title>Payment size details</label>
                             <md-select data-ng-model="item.instrument.payment_size_detail"
-                                       md-on-open="vm.loadRelation('payment_size_detail')">
+                                       md-on-open="vm.loadRelation('payment_size_detail')"
+                                       md-container-class="simple-search-select">
                                 <md-select-header>
                                     <input data-ng-model="searchTerm"
                                            type="search"
                                            placeholder="Search for a ..."
-                                           class="md-text md-select-search-pattern">
+                                           class="md-text md-select-search-pattern simple-search-filter-input">
                                 </md-select-header>
                                 <md-option data-ng-repeat="relationItem in vm.relationItems['payment_size_detail'] | filter: {name: searchTerm}"
                                            data-ng-value="relationItem.id"
