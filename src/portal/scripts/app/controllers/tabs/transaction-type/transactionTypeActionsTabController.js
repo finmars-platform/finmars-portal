@@ -398,9 +398,21 @@
                 if (!vm.relationItems[field]) {
                     fieldResolverService.getFields(field).then(function (data) {
                         vm.relationItems[field] = data.data;
+
+                        console.log("vm.relationItems21", vm.relationItems);
+                        $scope.$apply(function () {
+                            setTimeout(function () {
+                                $('body').find('.md-select-search-pattern').on('keydown', function (ev) {
+                                    ev.stopPropagation();
+                                });
+                            }, 100);
+                        });
+
                         resolve(vm.relationItems[field]);
                     })
                 } else {
+
+                    console.log("vm.relationItems22", vm.relationItems);
                     resolve(vm.relationItems[field]);
                 }
 

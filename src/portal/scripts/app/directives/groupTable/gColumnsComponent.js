@@ -331,6 +331,7 @@
                     eventListeners: function () {
 
                         this.dragula.on('over', function (elem, container, source) {
+
                             $(container).addClass('active');
                             $(container).on('mouseleave', function () {
                                 $(this).removeClass('active');
@@ -464,6 +465,7 @@
                         evDataHelper.setColumnsDefaultWidth(scope.evDataService);
 
                         scope.columns = scope.evDataService.getColumns();
+                        scope.$apply();
 
                     });
 

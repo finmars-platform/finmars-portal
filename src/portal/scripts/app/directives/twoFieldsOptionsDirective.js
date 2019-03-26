@@ -7,11 +7,12 @@
 			restrict: 'E',
 			scope: {
 				allOptions: "=",
-				selectedOptions: "="
+				selectedOptions: "=",
+				nameProperty: "@"
 			},
 			templateUrl: 'views/directives/two-fields-options-view.html',
 			link: function (scope, elem, attr) {
-				
+
 				scope.highlightOption = function (ev) {
 					var clickedOption = ev.currentTarget;
 					if ($(clickedOption).hasClass('active-option')) {
@@ -20,35 +21,71 @@
 					else {
 						$(clickedOption).addClass('active-option');	
 					}
-				}
+				};
+
 				// switch options to selected
-				scope.switchOptions = function (optionsSelector, spliceScope, pushScope) {
-					// var hOptions = $('p.two-fields-available-option.active-option');
-					var hOptions = $(optionsSelector);
-					if (hOptions && hOptions.length > 0) {
-						hOptions.each(function() {
+				scope.switchOptions = function (mode) {
+
+					var optionsType = "";
+					var removeFrom = [];
+					var addTo = [];
+
+					switch (mode) {
+						case "select":
+							optionsType = ".two-fields-available-option";
+							removeFrom = scope.allOptions;
+							addTo = scope.selectedOptions;
+							break;
+						case "deselect":
+							optionsType = ".two-fields-selected-option";
+							removeFrom = scope.selectedOptions;
+							addTo = scope.allOptions;
+							break;
+						default:
+							return false;
+					}
+
+					// var hOptions = elem.find(optionsSelector);
+					var fieldOptions = elem.find('.active-option' + optionsType);
+					if (fieldOptions && fieldOptions.length > 0) {
+
+						fieldOptions.each(function() {
+
 							var hOption = $(this);
 							var hOptionId = parseInt(hOption.data('member-group-id'));
-							// scope.allOptions.map(function(option, optionIndex) {
-							// 	if (option['id'] === hOptionId) {
-							// 		console.log('before select', scope.allOptions, scope.selectedOptions);
-							// 		scope.allOptions.splice(optionIndex, 1); //remove options from available
-							// 		scope.selectedOptions.push(option); // add options to selected
-							// 		console.log('after select', scope.allOptions, scope.selectedOptions);
-							// 	}
-							// });
-							spliceScope.map(function(option, optionIndex) {
-								if (option['id'] === hOptionId) {
-									spliceScope.splice(optionIndex, 1); //remove options from available
-									pushScope.push(option); // add options to selected
-									console.log('after select', scope.allOptions, scope.selectedOptions);
+
+							removeFrom.map(function(option, optionIndex) {
+
+								if (option.id === hOptionId) {
+									removeFrom.splice(optionIndex, 1); //remove options from available
+									addTo.push(option); // add options to selected
 								}
+
 							});
 						});
 					}
+				};
+
+
+				scope.selectAll = function () {
+					var mergedArray = [];
+
+					mergedArray = scope.selectedOptions.concat(scope.allOptions);
+					scope.selectedOptions = mergedArray;
+					scope.allOptions = [];
+
+				};
+
+				scope.deselectAll = function () {
+					var mergedArray = [];
+
+					mergedArray = scope.allOptions.concat(scope.selectedOptions);
+					scope.allOptions = mergedArray;
+					scope.selectedOptions = [];
+
 				}
 
-				// getAvailableOptions();
+
 			}
 		}
 	}

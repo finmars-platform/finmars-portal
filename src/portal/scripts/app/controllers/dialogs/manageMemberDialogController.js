@@ -21,6 +21,7 @@
 				var assignedGroupsIds = vm.members.groups;
 				// separate assigned groups from available
 				if (assignedGroupsIds && assignedGroupsIds.length > 0) {
+
 					assignedGroupsIds.map(function(assignedId) {
 						vm.groupsList.map(function(group, groupIndex) {
 							var groupId = group['id'];
@@ -30,6 +31,7 @@
 							}
 						});
 					});
+
 				}
 				$scope.$apply();
 			});

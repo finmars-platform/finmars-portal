@@ -5,8 +5,6 @@
 
     'use strict';
 
-    var logService = require('../../../../../core/services/logService');
-
     var pricingPolicyService = require('../../services/pricingPolicyService');
     var currencyService = require('../../services/currencyService');
 
@@ -71,11 +69,11 @@
         vm.readyStatus = {
             pricingPolicy: false,
             currency: false,
-            portfolio: false,
-            account: false,
-            strategy1: false,
-            strategy2: false,
-            strategy3: false,
+            // portfolio: false,
+            // account: false,
+            // strategy1: false,
+            // strategy2: false,
+            // strategy3: false,
             transactionClass: false
         };
 
@@ -115,7 +113,7 @@
             });
         };
 
-        vm.getPortfolios = function () {
+        /*vm.getPortfolios = function () {
 
             vm.readyStatus.portfolio = false;
 
@@ -127,9 +125,17 @@
                 $scope.$apply();
 
             });
+        };*/
+        vm.optionsForMultiselect = {
+            page: 1,
+            pageSize: 1000
         };
 
-        vm.getAccounts = function () {
+        vm.getPortfolios = function (options) {
+            return portfolioService.getList(options);
+        };
+
+        /*vm.getAccounts = function () {
 
             vm.readyStatus.account = false;
 
@@ -141,9 +147,12 @@
                 $scope.$apply();
 
             });
+        };*/
+        vm.getAccounts = function (options) {
+            return accountService.getList(options);
         };
 
-        vm.getStrategies1 = function () {
+        /*vm.getStrategies1 = function () {
 
             vm.readyStatus.strategy1 = false;
 
@@ -155,9 +164,13 @@
                 $scope.$apply();
 
             });
+        };*/
+
+        vm.getStrategies1 = function (options) {
+            return strategyService.getList(1, options);
         };
 
-        vm.getStrategies2 = function () {
+        /*vm.getStrategies2 = function () {
 
             vm.readyStatus.strategy2 = false;
 
@@ -169,9 +182,13 @@
                 $scope.$apply();
 
             });
+        };*/
+
+        vm.getStrategies2 = function (options) {
+            return strategyService.getList(2, options);
         };
 
-        vm.getStrategies3 = function () {
+        /*vm.getStrategies3 = function () {
 
             vm.readyStatus.strategy3 = false;
 
@@ -183,6 +200,10 @@
                 $scope.$apply();
 
             });
+        };*/
+
+        vm.getStrategies3 = function (options) {
+            return strategyService.getList(3, options);
         };
 
         vm.getTransactionClasses = function () {
@@ -220,13 +241,12 @@
 
         vm.getPricingPolicies();
         vm.getCurrencies();
-        vm.getPortfolios();
-        vm.getAccounts();
+        // vm.getPortfolios();
+        // vm.getAccounts();
         vm.getTransactionClasses();
-        vm.getStrategies1();
-        vm.getStrategies2();
-        vm.getStrategies3();
-
+        // vm.getStrategies1();
+        // vm.getStrategies2();
+        // vm.getStrategies3();
 
         vm.saveSettings = function () {
 
