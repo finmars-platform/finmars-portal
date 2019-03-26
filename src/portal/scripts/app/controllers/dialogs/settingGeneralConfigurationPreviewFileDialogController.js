@@ -7,7 +7,7 @@
 
     var metaContentTypesService = require('../../services/metaContentTypesService');
     var metaService = require('../../services/metaService');
-    var configurationImportHelper = require('../../helpers/configuration-import.helper');
+    var configurationImportService = require('../../services/configuration-import/configurationImportService');
 
     module.exports = function ($scope, $mdDialog, file) {
 
@@ -15,9 +15,21 @@
 
         var vm = this;
 
+        vm.settings = {};
+
         vm.processing = false;
 
         vm.selectAllState = false;
+
+        vm.toggleMode = function (mode) {
+
+            if (vm.settings.mode === mode) {
+                vm.settings.mode = null
+            } else {
+                vm.settings.mode = mode
+            }
+
+        };
 
         vm.items = file.body;
 
@@ -455,7 +467,7 @@
 
             try {
 
-                configurationImportHelper.importConfiguration(vm.items).then(function (data) {
+                configurationImportService.importConfiguration(vm.items, vm.settings).then(function (data) {
 
                     $mdDialog.hide({status: 'agree', data: {}});
 
