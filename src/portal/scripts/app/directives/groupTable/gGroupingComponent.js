@@ -198,20 +198,20 @@
                 // Tentative entity viewer expand / collapse groups buttons fixes
                 /*scope.evFoldLevel = function (item, $index) {
                     item.ev_group_folded = true;
-                    console.log('folding evfoldLevel item is', item);
+                    // console.log('folding evfoldLevel item is', item);
 
                     var groups = scope.evDataService.getGroups();
                     for(; $index < groups.length - 1; $index = $index + 1) {
                         groups[$index].ev_group_folded = true;
                         var groupsContent = evDataHelper.getGroupsByLevel($index + 1, scope.evDataService);
 
-                        console.log('folding groupsContent', groupsContent);
+                        // console.log('folding groupsContent', groupsContent);
 
                         groupsContent.forEach(function (groupItem) {
                             groupItem.___is_open = false;
 
                             var childrens = evDataHelper.getAllChildrenGroups(groupItem.___id, scope.evDataService);
-                            console.log('folding childrens', childrens);
+                            // console.log('folding childrens', childrens);
                             childrens.forEach(function (children) {
 
                                 if (children.___type === 'group') {

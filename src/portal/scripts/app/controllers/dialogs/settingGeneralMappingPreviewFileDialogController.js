@@ -184,13 +184,13 @@
                     }
                 }
 
-                if(item.___system_code) {
+                if (item.___system_code) {
                     options.filters = {
                         'system_code': item.___system_code
                     }
                 }
 
-                if(item.___scheme_name) {
+                if (item.___scheme_name) {
                     options.filters = {
                         'scheme_name': item.___scheme_name
                     }
@@ -230,7 +230,7 @@
                     }
 
 
-                    if(item.___system_code) {
+                    if (item.___system_code) {
 
                         data.forEach(function (dataItem) {
 

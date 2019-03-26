@@ -14,8 +14,6 @@
 
     var startImport = function (config) {
 
-        var status = null;
-
         return xhrService.fetch(baseUrl + 'import/csv/',
             {
                 method: 'POST',
@@ -27,8 +25,22 @@
             })
     };
 
+    var validateImport = function (config) {
+
+        return xhrService.fetch(baseUrl + 'import/csv-validate/',
+            {
+                method: 'POST',
+                credentials: 'include',
+                headers: {
+                    'X-CSRFToken': cookieService.getCookie('csrftoken')
+                },
+                body: config
+            })
+    };
+
     module.exports = {
-        startImport: startImport
+        startImport: startImport,
+        validateImport: validateImport
     }
 
 }());

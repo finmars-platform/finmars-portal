@@ -111,7 +111,7 @@
             var key;
             var value;
 
-            console.log('filterByGroupsFilters.options', JSON.parse(JSON.stringify(options)));
+            // console.log('filterByGroupsFilters.options', JSON.parse(JSON.stringify(options)));
 
             items = items.filter(function (item) {
 
@@ -172,7 +172,7 @@
 
         }
 
-        console.log('filterByGroupsFilters.items', JSON.parse(JSON.stringify(items)));
+        // console.log('filterByGroupsFilters.items', JSON.parse(JSON.stringify(items)));
 
         return items;
 
