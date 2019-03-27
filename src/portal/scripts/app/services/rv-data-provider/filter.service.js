@@ -120,7 +120,8 @@
             var key;
             var value;
             var groupType;
-            var field_key;
+
+            var item_value = null;
 
             console.log('filterByGroupsFilters.options', JSON.parse(JSON.stringify(options)));
 
@@ -148,31 +149,28 @@
 
                         if (groupType.value_type === 'field') {
 
-                            field_key = key + '_object_user_code';
+                            if (item[key + '_object']) {
+                                item_value = item[key + '_object'].user_code;
+                            }
+
+                            console.log('value', value);
+                            console.log('item_value', item_value);
 
                             if (value === '-') {
 
-                                if (item[field_key] !== null && item[field_key] !== undefined && item[field_key] !== '-') {
+                                if (item_value !== null && item_value !== undefined && item_value !== '-') {
                                     match = false;
                                 }
 
                             } else {
 
-                                if (!item.hasOwnProperty(field_key)) {
-                                    match = false;
-                                } else {
+                                if (item_value === null || item_value === undefined) {
+                                    match = false
 
-                                    if (item[field_key] === null || item[field_key] === undefined) {
-                                        match = false
+                                }
 
-                                    } else {
-
-                                        if (item[field_key].toString().indexOf(value) === -1) {
-                                            match = false
-                                        }
-
-                                    }
-
+                                if (item_value && item_value.toString().indexOf(value) === -1) {
+                                    match = false
                                 }
 
                             }
