@@ -235,7 +235,7 @@
         }
 
         function getReportLayoutOptions() {
-           return data.reportLayoutOptions;
+            return data.reportLayoutOptions;
         }
 
         function setStatusData(status) {
@@ -438,14 +438,7 @@
                             parentGroupId: null
                         },
                         body: {
-                            groups_types: [groups[0]].map(function (item) {
-                                    if (item.id) {
-                                        return item.id
-                                    } else {
-                                        return item.key
-                                    }
-                                }
-                            ),
+                            groups_types: [groups[0]],
                             page: 1,
                             groups_values: [],
                             groups_order: 'asc'

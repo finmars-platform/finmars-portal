@@ -131,13 +131,19 @@
 
                 for (i = 0; i < options.groups_values.length; i = i + 1) {
 
-                    key = options.groups_types[i];
+
+                    if (options.groups_types[i].id) {
+                        key = options.groups_types[i].id
+                    } else {
+                        key = options.groups_types[i].key;
+                    }
+
                     value = options.groups_values[i];
 
                     groupType = groupTypes[i];
 
-                    // TODO Integer Group Types are for Attribute Types
-                    if (typeof key === 'number') {
+
+                    if (groupType.hasOwnProperty('id')) {
 
                         match = getFilterMatchInAttributes(item, groupType, key, value);
 
@@ -153,8 +159,8 @@
                                 item_value = item[key + '_object'].user_code;
                             }
 
-                            console.log('value', value);
-                            console.log('item_value', item_value);
+                            // console.log('value', value);
+                            // console.log('item_value', item_value);
 
                             if (value === '-') {
 
@@ -221,7 +227,7 @@
 
         }
 
-        console.log('filterByGroupsFilters.items', JSON.parse(JSON.stringify(items)));
+        // console.log('filterByGroupsFilters.items', JSON.parse(JSON.stringify(items)));
 
         return items;
 

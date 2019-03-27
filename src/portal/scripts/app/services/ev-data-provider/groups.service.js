@@ -32,7 +32,7 @@
 
             data.results = data.results.map(function (item) {
                 item.___group_name = item.group_name;
-                item.___group_id = item.group_id;
+                item.___group_identifier = item.group_id;
                 return item
             });
 
