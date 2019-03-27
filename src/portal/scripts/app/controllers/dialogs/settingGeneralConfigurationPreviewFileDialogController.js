@@ -383,18 +383,15 @@
             parent.content.forEach(function (item) {
                 if (item.active) {
                     ChildIsActive = true;
-                }
-                else {
+                } else {
                     ChildIsNotActive = true;
                 }
 
                 if (ChildIsActive && !ChildIsNotActive) {
                     parentIsActive = true;
-                }
-                else if (!ChildIsActive && ChildIsNotActive) {
+                } else if (!ChildIsActive && ChildIsNotActive) {
                     parent.someChildsActive = false;
-                }
-                else {
+                } else {
                     parentIsActive = false;
                     parent.someChildsActive = true;
                 }
@@ -469,24 +466,58 @@
 
                 configurationImportService.importConfiguration(vm.items, vm.settings).then(function (data) {
 
+
                     $mdDialog.hide({status: 'agree', data: {}});
 
-                    $mdDialog.show({
-                        controller: 'SuccessDialogController as vm',
-                        templateUrl: 'views/dialogs/success-dialog-view.html',
-                        targetEvent: $event,
-                        preserveScope: true,
-                        multiple: true,
-                        autoWrap: true,
-                        skipHide: true,
-                        locals: {
-                            success: {
-                                title: "",
-                                description: "You have successfully imported configuration file"
-                            }
-                        }
+                    console.log('data', data);
 
-                    });
+                    if (data.errors.length) {
+
+                        $mdDialog.show({
+                            controller: 'SettingGeneralConfigurationPreviewFileErrorsDialogController as vm',
+                            templateUrl: 'views/dialogs/settings-general-configuration-preview-file-errors-dialog-view.html',
+                            targetEvent: $event,
+                            preserveScope: true,
+                            multiple: true,
+                            autoWrap: true,
+                            skipHide: true,
+                            locals: {
+                                data: {
+                                    errors: data.errors.map(function (errorItem) {
+                                        return {
+
+                                            item: errorItem.item,
+                                            error: errorItem.error.message
+
+                                        }
+                                    })
+                                }
+                            }
+
+                        });
+
+
+                    } else {
+
+                        $mdDialog.show({
+                            controller: 'SuccessDialogController as vm',
+                            templateUrl: 'views/dialogs/success-dialog-view.html',
+                            targetEvent: $event,
+                            preserveScope: true,
+                            multiple: true,
+                            autoWrap: true,
+                            skipHide: true,
+                            locals: {
+                                success: {
+                                    title: "",
+                                    description: "You have successfully imported configuration file"
+                                }
+                            }
+
+                        });
+
+
+                    }
 
 
                 }).catch(function (reason) {

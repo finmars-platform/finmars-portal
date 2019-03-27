@@ -83,7 +83,7 @@
 
                     if (item[group.key + '_object']) {
                         resultGroup.___group_identifier = item[group.key + '_object'].user_code;
-                        resultGroup.___group_name = item[group.key + '_object'].name;
+                        resultGroup.___group_name = item[group.key + '_object'].short_name;
                     }
 
                 } else {
