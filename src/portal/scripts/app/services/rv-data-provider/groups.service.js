@@ -90,10 +90,12 @@
 
                     var item_value = null;
 
-                    if (group.entity === 'balance-report') {
+                    if (['balance-report', 'pnl-report', 'report-mismatch', 'report-addon-performance-pnl', 'transaction-report'].indexOf(group.entity) !== -1) {
                         item_value = item[group.key];
                     } else {
-                        item_value = item[group.entity + '_object'][group.key];
+                        if (item[group.entity + '_object']) {
+                            item_value = item[group.entity + '_object'][group.key];
+                        }
                     }
 
                     if (
