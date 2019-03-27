@@ -109,6 +109,78 @@
 
     };
 
+    var getFilterMatch = function (item, groupType, key, value) {
+
+        var item_value = null;
+        var match = true;
+
+        if (groupType.entity === 'balance-report') {
+            item_value = item[key];
+        } else {
+            item_value = item[groupType.entity + '_object'][key];
+        }
+
+        console.log("groupType.entity", groupType.entity);
+        console.log("getFilterMatch.item_value", item_value);
+
+        if (value === '-') {
+
+            if (item_value && item_value !== '-') {
+                match = false;
+            }
+
+        } else {
+
+            if (!item_value) {
+
+                match = false;
+
+            } else {
+
+                if (item_value.toString().indexOf(value) === -1) {
+                    match = false
+                }
+
+            }
+
+        }
+
+        return match
+
+    };
+
+    var getFilterMatchInField = function (item, groupType, key, value) {
+
+        var item_value = null;
+        var match = true;
+
+        if (item[key + '_object']) {
+            item_value = item[key + '_object'].user_code;
+        }
+
+        if (value === '-') {
+
+            if (item_value !== null && item_value !== undefined && item_value !== '-') {
+                match = false;
+            }
+
+        } else {
+
+            if (item_value === null || item_value === undefined) {
+                match = false
+
+            }
+
+            if (item_value && item_value.toString().indexOf(value) === -1) {
+                match = false
+            }
+
+        }
+
+        return match;
+
+    };
+
     var filterByGroupsFilters = function (items, options, groupTypes) {
 
         var i;
@@ -121,7 +193,6 @@
             var value;
             var groupType;
 
-            var item_value = null;
 
             // console.log('filterByGroupsFilters.options', JSON.parse(JSON.stringify(options)));
 
@@ -142,78 +213,26 @@
 
                     groupType = groupTypes[i];
 
-
                     if (groupType.hasOwnProperty('id')) {
 
                         match = getFilterMatchInAttributes(item, groupType, key, value);
-
-                        if (match === false) {
-                            break;
-                        }
 
                     } else {
 
                         if (groupType.value_type === 'field') {
 
-                            if (item[key + '_object']) {
-                                item_value = item[key + '_object'].user_code;
-                            }
-
-                            if (value === '-') {
-
-                                if (item_value !== null && item_value !== undefined && item_value !== '-') {
-                                    match = false;
-                                }
-
-                            } else {
-
-                                if (item_value === null || item_value === undefined) {
-                                    match = false
-
-                                }
-
-                                if (item_value && item_value.toString().indexOf(value) === -1) {
-                                    match = false
-                                }
-
-                            }
-
+                            match = getFilterMatchInField(item, groupType, key, value)
 
                         } else {
 
-                            if (value === '-') {
-
-                                if (item[key] !== null && item[key] !== undefined && item[key] !== '-') {
-                                    match = false;
-                                }
-
-                            } else {
-
-                                if (!item.hasOwnProperty(key)) {
-                                    match = false;
-                                } else {
-
-                                    if (item[key] === null || item[key] === undefined) {
-                                        match = false
-
-                                    } else {
-
-                                        if (item[key].toString().indexOf(value) === -1) {
-                                            match = false
-                                        }
-
-                                    }
-
-                                }
-
-                            }
+                            match = getFilterMatch(item, groupType, key, value);
 
                         }
 
-                        if (match === false) {
-                            break;
-                        }
+                    }
 
+                    if (match === false) {
+                        break;
                     }
 
                 }
@@ -224,7 +243,7 @@
 
         }
 
-        // console.log('filterByGroupsFilters.items', JSON.parse(JSON.stringify(items)));
+        console.log('filterByGroupsFilters.items', JSON.parse(JSON.stringify(items)));
 
         return items;
 

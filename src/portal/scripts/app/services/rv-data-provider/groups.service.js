@@ -25,8 +25,8 @@
 
         var resultGroup;
 
-        console.log('items', items);
-        console.log('group', group);
+        // console.log('items', items);
+        // console.log('group', group);
 
         items.forEach(function (item) {
 
@@ -88,13 +88,21 @@
 
                 } else {
 
-                    if (item.hasOwnProperty(group.key) &&
-                        item[group.key] !== null &&
-                        item[group.key] !== undefined &&
-                        item[group.key] !== '-') {
+                    var item_value = null;
 
-                        resultGroup.___group_identifier = item[group.key].toString();
-                        resultGroup.___group_name = item[group.key].toString();
+                    if (group.entity === 'balance-report') {
+                        item_value = item[group.key];
+                    } else {
+                        item_value = item[group.entity + '_object'][group.key];
+                    }
+
+                    if (
+                        item_value !== null &&
+                        item_value !== undefined &&
+                        item_value !== '-') {
+
+                        resultGroup.___group_identifier = item_value.toString();
+                        resultGroup.___group_name = item_value.toString();
 
                     }
 
