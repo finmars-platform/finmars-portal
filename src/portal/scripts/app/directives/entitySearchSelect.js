@@ -19,8 +19,6 @@
 
                 scope.textValue = scope.inputText;
 
-                // console.log('smart search data', scope.item, scope.label, scope.inputText, scope.entityType);
-
                 $(elem).on('click', function (event) {
 
                     event.preventDefault();
@@ -29,7 +27,7 @@
                     $mdDialog.show({
                         controller: 'EntitySearchDialogController as vm',
                         templateUrl: 'views/dialogs/entity-search-dialog-view.html',
-                        // parent: angular.element(document.body),
+                        parent: angular.element(document.body),
                         targetEvent: event,
                         preserveScope: false,
                         autoWrap: true,
