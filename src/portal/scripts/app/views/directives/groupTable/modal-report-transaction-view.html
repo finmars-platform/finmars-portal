@@ -26,14 +26,14 @@
                         <div class="g-checkbox-row" data-ng-repeat="item in vm.transactionAttrs" layout="row">
                             <div>
                                 <md-checkbox ng-model="item.columns" aria-label="Columns" aria="columns"
-                                             data-ng-change="vm.updateAttrs()">
+                                             data-ng-change="vm.updateAttrs(vm.transactionAttrs)">
                                 </md-checkbox>
                                 <md-checkbox ng-model="item.groups" aria-label="Groups" aria="groups"
                                              class="md-g-green"
-                                             data-ng-change="vm.updateAttrs()">
+                                             data-ng-change="vm.updateAttrs(vm.transactionAttrs)">
                                 </md-checkbox>
                                 <md-checkbox ng-model="item.filters" aria-label="Filters" aria="filters"
-                                             class="md-primary" data-ng-change="vm.updateAttrs()">
+                                             class="md-primary" data-ng-change="vm.updateAttrs(vm.transactionAttrs)">
                                 </md-checkbox>
                             </div>
                             <div class="g-modal-draggable-card">
@@ -44,14 +44,14 @@
                         <div class="g-checkbox-row" data-ng-repeat="item in vm.complexTransactionAttrs" layout="row">
                             <div>
                                 <md-checkbox ng-model="item.columns" aria-label="Columns" aria="columns"
-                                             data-ng-change="vm.updateAttrs()">
+                                             data-ng-change="vm.updateAttrs(vm.complexTransactionAttrs)">
                                 </md-checkbox>
                                 <md-checkbox ng-model="item.groups" aria-label="Groups" aria="groups"
                                              class="md-g-green"
-                                             data-ng-change="vm.updateAttrs()">
+                                             data-ng-change="vm.updateAttrs(vm.complexTransactionAttrs)">
                                 </md-checkbox>
                                 <md-checkbox ng-model="item.filters" aria-label="Filters" aria="filters"
-                                             class="md-primary" data-ng-change="vm.updateAttrs()">
+                                             class="md-primary" data-ng-change="vm.updateAttrs(vm.complexTransactionAttrs)">
                                 </md-checkbox>
                             </div>
                             <div class="g-modal-draggable-card">
@@ -62,14 +62,14 @@
                         <div class="g-checkbox-row" data-ng-repeat="item in vm.linkedInstrumentAttrs" layout="row">
                             <div>
                                 <md-checkbox ng-model="item.columns" aria-label="Columns" aria="columns"
-                                             data-ng-change="vm.updateAttrs()">
+                                             data-ng-change="vm.updateAttrs(vm.linkedInstrumentAttrs)">
                                 </md-checkbox>
                                 <md-checkbox ng-model="item.groups" aria-label="Groups" aria="groups"
                                              class="md-g-green"
-                                             data-ng-change="vm.updateAttrs()">
+                                             data-ng-change="vm.updateAttrs(vm.linkedInstrumentAttrs)">
                                 </md-checkbox>
                                 <md-checkbox ng-model="item.filters" aria-label="Filters" aria="filters"
-                                             class="md-primary" data-ng-change="vm.updateAttrs()">
+                                             class="md-primary" data-ng-change="vm.updateAttrs(vm.linkedInstrumentAttrs)">
                                 </md-checkbox>
                             </div>
                             <div class="g-modal-draggable-card">
@@ -91,14 +91,14 @@
                         <div class="g-checkbox-row" data-ng-repeat="item in vm.portfolioAttrs" layout="row">
                             <div>
                                 <md-checkbox ng-model="item.columns" aria-label="Columns" aria="columns"
-                                             data-ng-change="vm.updateAttrs()">
+                                             data-ng-change="vm.updateAttrs(vm.portfolioAttrs)">
                                 </md-checkbox>
                                 <md-checkbox ng-model="item.groups" aria-label="Groups" aria="groups"
                                              class="md-g-green"
-                                             data-ng-change="vm.updateAttrs()">
+                                             data-ng-change="vm.updateAttrs(vm.portfolioAttrs)">
                                 </md-checkbox>
                                 <md-checkbox ng-model="item.filters" aria-label="Filters" aria="filters"
-                                             class="md-primary" data-ng-change="vm.updateAttrs()">
+                                             class="md-primary" data-ng-change="vm.updateAttrs(vm.portfolioAttrs)">
                                 </md-checkbox>
                             </div>
                             <div class="g-modal-draggable-card">
@@ -118,14 +118,14 @@
                         <div class="g-checkbox-row" data-ng-repeat="item in vm.instrumentAttrs" layout="row">
                             <div>
                                 <md-checkbox ng-model="item.columns" aria-label="Columns" aria="columns"
-                                             data-ng-change="vm.updateAttrs()">
+                                             data-ng-change="vm.updateAttrs(vm.instrumentAttrs)">
                                 </md-checkbox>
                                 <md-checkbox ng-model="item.groups" aria-label="Groups" aria="groups"
                                              class="md-g-green"
-                                             data-ng-change="vm.updateAttrs()">
+                                             data-ng-change="vm.updateAttrs(vm.instrumentAttrs)">
                                 </md-checkbox>
                                 <md-checkbox ng-model="item.filters" aria-label="Filters" aria="filters"
-                                             class="md-primary" data-ng-change="vm.updateAttrs()">
+                                             class="md-primary" data-ng-change="vm.updateAttrs(vm.instrumentAttrs)">
                                 </md-checkbox>
                             </div>
                             <div class="g-modal-draggable-card">
@@ -145,14 +145,14 @@
                         <div class="g-checkbox-row" data-ng-repeat="item in vm.responsibleAttrs" layout="row">
                             <div>
                                 <md-checkbox ng-model="item.columns" aria-label="Columns" aria="columns"
-                                             data-ng-change="vm.updateAttrs()">
+                                             data-ng-change="vm.updateAttrs(vm.responsibleAttrs)">
                                 </md-checkbox>
                                 <md-checkbox ng-model="item.groups" aria-label="Groups" aria="groups"
                                              class="md-g-green"
-                                             data-ng-change="vm.updateAttrs()">
+                                             data-ng-change="vm.updateAttrs(vm.responsibleAttrs)">
                                 </md-checkbox>
                                 <md-checkbox ng-model="item.filters" aria-label="Filters" aria="filters"
-                                             class="md-primary" data-ng-change="vm.updateAttrs()">
+                                             class="md-primary" data-ng-change="vm.updateAttrs(vm.responsibleAttrs)">
                                 </md-checkbox>
                             </div>
                             <div class="g-modal-draggable-card">
@@ -172,14 +172,14 @@
                         <div class="g-checkbox-row" data-ng-repeat="item in vm.counterpartyAttrs" layout="row">
                             <div>
                                 <md-checkbox ng-model="item.columns" aria-label="Columns" aria="columns"
-                                             data-ng-change="vm.updateAttrs()">
+                                             data-ng-change="vm.updateAttrs(vm.counterpartyAttrs)">
                                 </md-checkbox>
                                 <md-checkbox ng-model="item.groups" aria-label="Groups" aria="groups"
                                              class="md-g-green"
-                                             data-ng-change="vm.updateAttrs()">
+                                             data-ng-change="vm.updateAttrs(vm.counterpartyAttrs)">
                                 </md-checkbox>
                                 <md-checkbox ng-model="item.filters" aria-label="Filters" aria="filters"
-                                             class="md-primary" data-ng-change="vm.updateAttrs()">
+                                             class="md-primary" data-ng-change="vm.updateAttrs(vm.counterpartyAttrs)">
                                 </md-checkbox>
                             </div>
                             <div class="g-modal-draggable-card">
@@ -245,14 +245,14 @@
                         <div class="g-checkbox-row" data-ng-repeat="item in vm.accountPositionAttrs" layout="row">
                             <div>
                                 <md-checkbox ng-model="item.columns" aria-label="Columns" aria="columns"
-                                             data-ng-change="vm.updateAttrs()">
+                                             data-ng-change="vm.updateAttrs(vm.accountPositionAttrs)">
                                 </md-checkbox>
                                 <md-checkbox ng-model="item.groups" aria-label="Groups" aria="groups"
                                              class="md-g-green"
-                                             data-ng-change="vm.updateAttrs()">
+                                             data-ng-change="vm.updateAttrs(vm.accountPositionAttrs)">
                                 </md-checkbox>
                                 <md-checkbox ng-model="item.filters" aria-label="Filters" aria="filters"
-                                             class="md-primary" data-ng-change="vm.updateAttrs()">
+                                             class="md-primary" data-ng-change="vm.updateAttrs(vm.accountPositionAttrs)">
                                 </md-checkbox>
                             </div>
                             <div class="g-modal-draggable-card">
@@ -263,14 +263,14 @@
                         <div class="g-checkbox-row" data-ng-repeat="item in vm.accountCashAttrs" layout="row">
                             <div>
                                 <md-checkbox ng-model="item.columns" aria-label="Columns" aria="columns"
-                                             data-ng-change="vm.updateAttrs()">
+                                             data-ng-change="vm.updateAttrs(vm.accountCashAttrs)">
                                 </md-checkbox>
                                 <md-checkbox ng-model="item.groups" aria-label="Groups" aria="groups"
                                              class="md-g-green"
-                                             data-ng-change="vm.updateAttrs()">
+                                             data-ng-change="vm.updateAttrs(vm.accountCashAttrs)">
                                 </md-checkbox>
                                 <md-checkbox ng-model="item.filters" aria-label="Filters" aria="filters"
-                                             class="md-primary" data-ng-change="vm.updateAttrs()">
+                                             class="md-primary" data-ng-change="vm.updateAttrs(vm.accountCashAttrs)">
                                 </md-checkbox>
                             </div>
                             <div class="g-modal-draggable-card">
@@ -281,14 +281,14 @@
                         <div class="g-checkbox-row" data-ng-repeat="item in vm.accountInterimAttrs" layout="row">
                             <div>
                                 <md-checkbox ng-model="item.columns" aria-label="Columns" aria="columns"
-                                             data-ng-change="vm.updateAttrs()">
+                                             data-ng-change="vm.updateAttrs(vm.accountInterimAttrs)">
                                 </md-checkbox>
                                 <md-checkbox ng-model="item.groups" aria-label="Groups" aria="groups"
                                              class="md-g-green"
-                                             data-ng-change="vm.updateAttrs()">
+                                             data-ng-change="vm.updateAttrs(vm.accountInterimAttrs)">
                                 </md-checkbox>
                                 <md-checkbox ng-model="item.filters" aria-label="Filters" aria="filters"
-                                             class="md-primary" data-ng-change="vm.updateAttrs()">
+                                             class="md-primary" data-ng-change="vm.updateAttrs(vm.accountInterimAttrs)">
                                 </md-checkbox>
                             </div>
                             <div class="g-modal-draggable-card">
@@ -310,14 +310,14 @@
                         <div class="g-checkbox-row" data-ng-repeat="item in vm.transactionCurrencyAttrs" layout="row">
                             <div>
                                 <md-checkbox ng-model="item.columns" aria-label="Columns" aria="columns"
-                                             data-ng-change="vm.updateAttrs()">
+                                             data-ng-change="vm.updateAttrs(vm.transactionCurrencyAttrs)">
                                 </md-checkbox>
                                 <md-checkbox ng-model="item.groups" aria-label="Groups" aria="groups"
                                              class="md-g-green"
-                                             data-ng-change="vm.updateAttrs()">
+                                             data-ng-change="vm.updateAttrs(vm.transactionCurrencyAttrs)">
                                 </md-checkbox>
                                 <md-checkbox ng-model="item.filters" aria-label="Filters" aria="filters"
-                                             class="md-primary" data-ng-change="vm.updateAttrs()">
+                                             class="md-primary" data-ng-change="vm.updateAttrs(vm.transactionCurrencyAttrs)">
                                 </md-checkbox>
                             </div>
                             <div class="g-modal-draggable-card">
@@ -328,14 +328,14 @@
                         <div class="g-checkbox-row" data-ng-repeat="item in vm.settlementCurrencyAttrs" layout="row">
                             <div>
                                 <md-checkbox ng-model="item.columns" aria-label="Columns" aria="columns"
-                                             data-ng-change="vm.updateAttrs()">
+                                             data-ng-change="vm.updateAttrs(vm.settlementCurrencyAttrs)">
                                 </md-checkbox>
                                 <md-checkbox ng-model="item.groups" aria-label="Groups" aria="groups"
                                              class="md-g-green"
-                                             data-ng-change="vm.updateAttrs()">
+                                             data-ng-change="vm.updateAttrs(vm.settlementCurrencyAttrs)">
                                 </md-checkbox>
                                 <md-checkbox ng-model="item.filters" aria-label="Filters" aria="filters"
-                                             class="md-primary" data-ng-change="vm.updateAttrs()">
+                                             class="md-primary" data-ng-change="vm.updateAttrs(vm.settlementCurrencyAttrs)">
                                 </md-checkbox>
                             </div>
                             <div class="g-modal-draggable-card">
@@ -356,14 +356,14 @@
                         <div class="g-checkbox-row" data-ng-repeat="item in vm.strategy1cashAttrs" layout="row">
                             <div>
                                 <md-checkbox ng-model="item.columns" aria-label="Columns" aria="columns"
-                                             data-ng-change="vm.updateAttrs()">
+                                             data-ng-change="vm.updateAttrs(vm.strategy1cashAttrs)">
                                 </md-checkbox>
                                 <md-checkbox ng-model="item.groups" aria-label="Groups" aria="groups"
                                              class="md-g-green"
-                                             data-ng-change="vm.updateAttrs()">
+                                             data-ng-change="vm.updateAttrs(vm.strategy1cashAttrs)">
                                 </md-checkbox>
                                 <md-checkbox ng-model="item.filters" aria-label="Filters" aria="filters"
-                                             class="md-primary" data-ng-change="vm.updateAttrs()">
+                                             class="md-primary" data-ng-change="vm.updateAttrs(vm.strategy1cashAttrs)">
                                 </md-checkbox>
                             </div>
                             <div class="g-modal-draggable-card">
@@ -374,14 +374,14 @@
                         <div class="g-checkbox-row" data-ng-repeat="item in vm.strategy1positionAttrs" layout="row">
                             <div>
                                 <md-checkbox ng-model="item.columns" aria-label="Columns" aria="columns"
-                                             data-ng-change="vm.updateAttrs()">
+                                             data-ng-change="vm.updateAttrs(vm.strategy1positionAttrs)">
                                 </md-checkbox>
                                 <md-checkbox ng-model="item.groups" aria-label="Groups" aria="groups"
                                              class="md-g-green"
-                                             data-ng-change="vm.updateAttrs()">
+                                             data-ng-change="vm.updateAttrs(vm.strategy1positionAttrs)">
                                 </md-checkbox>
                                 <md-checkbox ng-model="item.filters" aria-label="Filters" aria="filters"
-                                             class="md-primary" data-ng-change="vm.updateAttrs()">
+                                             class="md-primary" data-ng-change="vm.updateAttrs(vm.strategy1positionAttrs)">
                                 </md-checkbox>
                             </div>
                             <div class="g-modal-draggable-card">
@@ -392,14 +392,14 @@
                         <div class="g-checkbox-row" data-ng-repeat="item in vm.strategy2cashAttrs" layout="row">
                             <div>
                                 <md-checkbox ng-model="item.columns" aria-label="Columns" aria="columns"
-                                             data-ng-change="vm.updateAttrs()">
+                                             data-ng-change="vm.updateAttrs(vm.strategy2cashAttrs)">
                                 </md-checkbox>
                                 <md-checkbox ng-model="item.groups" aria-label="Groups" aria="groups"
                                              class="md-g-green"
-                                             data-ng-change="vm.updateAttrs()">
+                                             data-ng-change="vm.updateAttrs(vm.strategy2cashAttrs)">
                                 </md-checkbox>
                                 <md-checkbox ng-model="item.filters" aria-label="Filters" aria="filters"
-                                             class="md-primary" data-ng-change="vm.updateAttrs()">
+                                             class="md-primary" data-ng-change="vm.updateAttrs(vm.strategy2cashAttrs)">
                                 </md-checkbox>
                             </div>
                             <div class="g-modal-draggable-card">
@@ -410,14 +410,14 @@
                         <div class="g-checkbox-row" data-ng-repeat="item in vm.strategy2positionAttrs" layout="row">
                             <div>
                                 <md-checkbox ng-model="item.columns" aria-label="Columns" aria="columns"
-                                             data-ng-change="vm.updateAttrs()">
+                                             data-ng-change="vm.updateAttrs(vm.strategy2positionAttrs)">
                                 </md-checkbox>
                                 <md-checkbox ng-model="item.groups" aria-label="Groups" aria="groups"
                                              class="md-g-green"
-                                             data-ng-change="vm.updateAttrs()">
+                                             data-ng-change="vm.updateAttrs(vm.strategy2positionAttrs)">
                                 </md-checkbox>
                                 <md-checkbox ng-model="item.filters" aria-label="Filters" aria="filters"
-                                             class="md-primary" data-ng-change="vm.updateAttrs()">
+                                             class="md-primary" data-ng-change="vm.updateAttrs(vm.strategy2positionAttrs)">
                                 </md-checkbox>
                             </div>
                             <div class="g-modal-draggable-card">
@@ -428,14 +428,14 @@
                         <div class="g-checkbox-row" data-ng-repeat="item in vm.strategy3cashAttrs" layout="row">
                             <div>
                                 <md-checkbox ng-model="item.columns" aria-label="Columns" aria="columns"
-                                             data-ng-change="vm.updateAttrs()">
+                                             data-ng-change="vm.updateAttrs(vm.strategy3cashAttrs)">
                                 </md-checkbox>
                                 <md-checkbox ng-model="item.groups" aria-label="Groups" aria="groups"
                                              class="md-g-green"
-                                             data-ng-change="vm.updateAttrs()">
+                                             data-ng-change="vm.updateAttrs(vm.strategy3cashAttrs)">
                                 </md-checkbox>
                                 <md-checkbox ng-model="item.filters" aria-label="Filters" aria="filters"
-                                             class="md-primary" data-ng-change="vm.updateAttrs()">
+                                             class="md-primary" data-ng-change="vm.updateAttrs(vm.strategy3cashAttrs)">
                                 </md-checkbox>
                             </div>
                             <div class="g-modal-draggable-card">
@@ -446,14 +446,14 @@
                         <div class="g-checkbox-row" data-ng-repeat="item in vm.strategy3positionAttrs" layout="row">
                             <div>
                                 <md-checkbox ng-model="item.columns" aria-label="Columns" aria="columns"
-                                             data-ng-change="vm.updateAttrs()">
+                                             data-ng-change="vm.updateAttrs(vm.strategy3positionAttrs)">
                                 </md-checkbox>
                                 <md-checkbox ng-model="item.groups" aria-label="Groups" aria="groups"
                                              class="md-g-green"
-                                             data-ng-change="vm.updateAttrs()">
+                                             data-ng-change="vm.updateAttrs(vm.strategy3positionAttrs)">
                                 </md-checkbox>
                                 <md-checkbox ng-model="item.filters" aria-label="Filters" aria="filters"
-                                             class="md-primary" data-ng-change="vm.updateAttrs()">
+                                             class="md-primary" data-ng-change="vm.updateAttrs(vm.strategy3positionAttrs)">
                                 </md-checkbox>
                             </div>
                             <div class="g-modal-draggable-card">
@@ -474,14 +474,14 @@
                         <div class="g-checkbox-row" data-ng-repeat="item in vm.custom" layout="row">
                             <div>
                                 <md-checkbox ng-model="item.columns" aria-label="Columns" aria="columns"
-                                             data-ng-change="vm.updateAttrs()">
+                                             data-ng-change="vm.updateAttrs(vm.custom)">
                                 </md-checkbox>
                                 <md-checkbox ng-model="item.groups" aria-label="Groups" aria="groups"
                                              class="md-g-green"
-                                             data-ng-change="vm.updateAttrs()">
+                                             data-ng-change="vm.updateAttrs(vm.custom)">
                                 </md-checkbox>
                                 <md-checkbox ng-model="item.filters" aria-label="Filters" aria="filters"
-                                             class="md-primary" data-ng-change="vm.updateAttrs()">
+                                             class="md-primary" data-ng-change="vm.updateAttrs(vm.custom)">
                                 </md-checkbox>
                             </div>
                             <div class="g-modal-draggable-card">

@@ -114,10 +114,12 @@
         var item_value = null;
         var match = true;
 
-        if (groupType.entity === 'balance-report') {
+        if (['balance-report', 'pnl-report', 'report-mismatch', 'report-addon-performance-pnl', 'transaction-report'].indexOf(groupType.entity) !== -1) {
             item_value = item[key];
         } else {
-            item_value = item[groupType.entity + '_object'][key];
+            if (item[groupType.entity + '_object']) {
+                item_value = item[groupType.entity + '_object'][key];
+            }
         }
 
         console.log("groupType.entity", groupType.entity);
