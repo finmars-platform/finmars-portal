@@ -123,7 +123,7 @@
 
             var item_value = null;
 
-            console.log('filterByGroupsFilters.options', JSON.parse(JSON.stringify(options)));
+            // console.log('filterByGroupsFilters.options', JSON.parse(JSON.stringify(options)));
 
             items = items.filter(function (item) {
 
@@ -158,9 +158,6 @@
                             if (item[key + '_object']) {
                                 item_value = item[key + '_object'].user_code;
                             }
-
-                            // console.log('value', value);
-                            // console.log('item_value', item_value);
 
                             if (value === '-') {
 
