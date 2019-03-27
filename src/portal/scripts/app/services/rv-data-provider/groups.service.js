@@ -9,18 +9,8 @@
 
         result.forEach(function (item) {
 
-            if (item.hasOwnProperty('group_id') && resultGroup.hasOwnProperty('group_id')) {
-
-                if (item.group_id === resultGroup.group_id) {
-                    exist = true;
-                }
-
-            } else {
-
-                if (item.group_name === resultGroup.group_name) {
-                    exist = true;
-                }
-
+            if (item.___group_id === resultGroup.___group_id) {
+                exist = true;
             }
 
         });
@@ -35,10 +25,14 @@
 
         var resultGroup;
 
+        console.log('groupType', groupType);
+        console.log('items', items);
+
         items.forEach(function (item) {
 
             resultGroup = {
-                group_name: null
+                ___group_name: null,
+                ___group_id: null
             };
 
             if (groupType.hasOwnProperty('id')) {
@@ -51,24 +45,28 @@
 
                             if (groupType.value_type === 20 && attr.value_float) {
 
-                                resultGroup.group_name = attr.value_float.toString();
+                                resultGroup.___group_id = attr.value_float.toString();
+                                resultGroup.___group_name = attr.value_float.toString();
 
                             }
 
                             if (groupType.value_type === 10 && attr.value_string) {
 
-                                resultGroup.group_name = attr.value_string;
+                                resultGroup.___group_id = attr.value_string;
+                                resultGroup.___group_name = attr.value_string;
 
                             }
 
                             if (groupType.value_type === 30 && attr.classifier_object) {
 
-                                resultGroup.group_name = attr.classifier_object.name;
+                                resultGroup.___group_id = attr.classifier_object.name;
+                                resultGroup.___group_name = attr.classifier_object.name;
                             }
 
                             if (groupType.value_type === 40 && attr.value_date) {
 
-                                resultGroup.group_name = attr.value_date;
+                                resultGroup.___group_id = attr.value_date;
+                                resultGroup.___group_name = attr.value_date;
 
                             }
 
@@ -80,14 +78,10 @@
 
             } else {
 
-                // console.log('group', groupType);
-                // console.log('group', group);
-                // console.log('item', item);
-
                 if (groupType.value_type === 'field') {
-                    resultGroup.group_id = item[group];
-                    // resultGroup.group_name = item[group + '_object_user_code'];
-                    resultGroup.group_name = item[group + '_object_name'];
+                    // resultGroup.___group_id = item[group] ;
+                    resultGroup.___group_id = item[group + '_object_user_code'];
+                    resultGroup.___group_name = item[group + '_object_name'];
                 } else {
 
                     if (item.hasOwnProperty(group) &&
@@ -95,7 +89,8 @@
                         item[group] !== undefined &&
                         item[group] !== '-') {
 
-                        resultGroup.group_name = item[group].toString();
+                        resultGroup.___group_id = item[group].toString();
+                        resultGroup.___group_name = item[group].toString();
 
                     }
 
@@ -143,10 +138,12 @@
 
             var groups = getUniqueGroups(items, group, groupType);
 
+            console.log('getUniqueGroups groups', groups);
+
             if (options.groups_order === 'desc') {
-                groups = sortService.sortItems(groups, '-group_name');
+                groups = sortService.sortItems(groups, '-___group_name');
             } else {
-                groups = sortService.sortItems(groups, 'group_name');
+                groups = sortService.sortItems(groups, '___group_name');
             }
 
             result.count = groups.length;

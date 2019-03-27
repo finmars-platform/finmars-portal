@@ -89,7 +89,7 @@
 
         });
 
-        return result.group_name
+        return result.___group_name
 
     };
 
@@ -103,7 +103,7 @@
 
         });
 
-        if (result.group_id) return result.group_id;
+        if (result.___group_id) return result.___group_id;
 
         return null;
 
@@ -240,11 +240,9 @@
 
             if (parents[i].___parentId !== null) {
 
-                if (parents[i].group_id) {
-                    result.push(parents[i].group_id)
-                } else {
-                    result.push(parents[i].group_name)
-                }
+
+                    result.push(parents[i].___group_id)
+
 
             }
 
@@ -496,7 +494,7 @@
 
             if (!obj.results[i]) {
                 obj.results[i] = {
-                    group_name: '___placeholder_group_' + i,
+                    ___group_name: '___placeholder_group_' + i,
                     ___type: 'placeholder_group',
                     ___parentId: obj.___id,
                     results: []
@@ -591,11 +589,9 @@
 
             if (parentItem.___parentId) {
 
-                if (parentItem.group_id) {
-                    group_values.push(parentItem.group_id);
-                } else {
-                    group_values.push(parentItem.group_name);
-                }
+
+                    group_values.push(parentItem.___group_id);
+
 
             }
 

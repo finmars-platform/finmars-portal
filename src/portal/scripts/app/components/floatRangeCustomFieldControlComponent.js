@@ -43,7 +43,7 @@
                 newRange = {
                     value_left: '',
                     value_right: vm.items[$index].value_right,
-                    group_name: 'Group ' + (vm.items.length + 1),
+                    ___group_name: 'Group ' + (vm.items.length + 1),
                     is_active: false
                 };
 
@@ -59,7 +59,7 @@
                     newRange = {
                         value_left: '',
                         value_right: 'inf',
-                        group_name: 'Group ' + (vm.items.length + 1),
+                        ___group_name: 'Group ' + (vm.items.length + 1),
                         is_active: false
                     };
 
@@ -73,7 +73,7 @@
                     newRange = {
                         value_left: vm.items[$index].value_right,
                         value_right: parseFloat(vm.items[$index + 1].value_left) + 1,
-                        group_name: 'Group ' + (vm.items.length + 1),
+                        ___group_name: 'Group ' + (vm.items.length + 1),
                         is_active: true
                     };
 
