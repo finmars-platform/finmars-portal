@@ -58,7 +58,7 @@
         obj.next = null;
         obj.previous = null;
         obj.results = [];
-        obj.group_name = 'root';
+        obj.___group_name = 'root';
         obj.___is_open = true;
         obj.___id = rootHash;
         obj.___parentId = null;

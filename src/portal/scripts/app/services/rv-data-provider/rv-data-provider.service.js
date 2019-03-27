@@ -162,6 +162,8 @@
 
                 var groupData = entityViewerDataService.getData(event.___id);
 
+                // console.log('groupData', groupData);
+
                 var obj;
 
                 if (!event.___id) {
@@ -186,8 +188,8 @@
 
                         obj = Object.assign({}, groupData);
 
-                        obj.group_name = groupData.group_name ? groupData.group_name : '-';
-                        obj.group_id = groupData.id ? groupData.id : null;
+                        obj.___group_name = groupData.___group_name ? groupData.___group_name : '-';
+                        obj.___group_id = groupData.___group_id ? groupData.___group_id : '-';
 
                         obj.count = data.count;
                         obj.next = data.next;
@@ -212,8 +214,8 @@
                         });
 
                         obj = Object.assign({}, data);
-                        obj.group_name = event.groupName ? event.groupName : '-';
-                        obj.group_id = event.groupId;
+                        obj.___group_name = event.groupName ? event.groupName : '-';
+                        obj.___group_id = event.groupId ? event.groupId : '-';
                         obj.___is_open = true;
                         obj.___is_selected = evDataHelper.isGroupSelected(event.___id, event.parentGroupId, entityViewerDataService);
 
@@ -229,8 +231,8 @@
 
                 obj.results = obj.results.map(function (item) {
 
-
-                    item.group_name = item.group_name ? item.group_name : '-';
+                    item.___group_name = item.___group_name ? item.___group_name : '-';
+                    item.___group_id = item.___group_id ? item.___group_id : '-';
                     item.___is_selected = evDataHelper.isSelected(entityViewerDataService);
 
                     item.___parentId = obj.___id;
@@ -310,7 +312,8 @@
 
                             obj = Object.assign({}, groupData);
 
-                            obj.group_name = groupData.group_name ? groupData.group_name : '-';
+                            obj.___group_name = groupData.___group_name ? groupData.___group_name : '-';
+                            obj.___group_id = groupData.___group_id ? groupData.___group_id : '-';
 
                             obj.count = data.count;
                             obj.next = data.next;
@@ -337,8 +340,8 @@
                             });
 
                             obj = Object.assign({}, data);
-                            obj.group_name = event.groupName ? event.groupName : '-';
-                            obj.group_id = event.groupId;
+                            obj.___group_name = event.groupName ? event.groupName : '-';
+                            obj.___group_id = event.groupId ? event.groupId : '-';
                             obj.___is_open = true;
                             obj.___is_selected = evDataHelper.isGroupSelected(event.___id, event.parentGroupId, entityViewerDataService);
 
@@ -363,7 +366,8 @@
                     obj.results = obj.results.map(function (item) {
 
                         item.___parentId = obj.___id;
-                        item.group_name = item.group_name ? item.group_name : '-';
+                        item.___group_name = item.___group_name ? item.___group_name : '-';
+                        item.___group_id = item.___group_id ? item.___group_id : '-';
 
                         item.___is_selected = evDataHelper.isSelected(entityViewerDataService);
 
@@ -430,11 +434,7 @@
         var group_types = evDataHelper.getGroupTypesToLevel(level + 1, evDataService);
         var group_values = evDataHelper.getGroupValuesByItem(item, evDataService);
 
-        if (item.group_id) {
-            group_values.push(item.group_id);
-        } else {
-            group_values.push(item.group_name);
-        }
+        group_values.push(item.___group_id);
 
 
         if (groups.length && level + 1 < groups.length) {
@@ -445,8 +445,8 @@
                 groups_level: level + 1, // 0 is for root
                 event: {
                     ___id: id,
-                    groupName: item.group_name,
-                    groupId: item.group_id ? item.group_id : null,
+                    groupName: item.___group_name,
+                    groupId: item.___group_id ? item.___group_id : '-',
                     parentGroupId: item.___parentId
                 },
                 body: {
@@ -465,8 +465,8 @@
                 groups_level: level + 1, // 0 is for root
                 event: {
                     ___id: id,
-                    groupName: item.group_name,
-                    groupId: item.group_id ? item.group_id : null,
+                    groupName: item.___group_name,
+                    groupId: item.___group_id ? item.___group_id : '-',
                     parentGroupId: item.___parentId
                 },
                 body: {
@@ -518,7 +518,7 @@
 
                     items.forEach(function (item) {
 
-                        // console.log('item!', item.group_name);
+                        // console.log('item!', item.___group_name);
 
                         recursiveRequestPromises.push(recursiveRequest(item.results, level, evDataService, evEventService));
 
@@ -665,7 +665,8 @@
                 if (group.___id === requestsParameters[key].id) {
 
                     requestsParameters[key].event.___id = group.___id;
-                    requestsParameters[key].event.groupName = group.group_name;
+                    requestsParameters[key].event.groupName = group.___group_name;
+                    requestsParameters[key].event.groupId = group.___group_id;
                     requestsParameters[key].event.parentGroupId = group.___parentId;
 
                     requestParametersForUnfoldedGroups.push(requestsParameters[key]);
@@ -768,7 +769,8 @@
                 if (group.___id === requestsParameters[key].id) {
 
                     requestsParameters[key].event.___id = group.___id;
-                    requestsParameters[key].event.groupName = group.group_name;
+                    requestsParameters[key].event.groupName = group.___group_name;
+                    requestsParameters[key].event.groupId = group.___group_id;
                     requestsParameters[key].event.parentGroupId = group.___parentId;
 
                     requestParametersForUnfoldedGroups.push(requestsParameters[key]);

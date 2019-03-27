@@ -29,7 +29,7 @@
 
 
         return '<div class="' + classes + '" data-type="group" data-group-hash-id="' + group.___id + '" data-parent-group-hash-id="' + group.___parentId + '">' +
-            rowSelection + foldButton + group.group_name + '</div>'
+            rowSelection + foldButton + group.___group_name + '</div>'
 
     };
 

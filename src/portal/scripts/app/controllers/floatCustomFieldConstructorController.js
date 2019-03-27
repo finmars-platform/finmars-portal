@@ -19,7 +19,7 @@
             vm.rangeItems.push({
                 value_left: '-inf',
                 value_right: 'inf',
-                group_name: 'Group 1'
+                ___group_name: 'Group 1'
             });
         }
 

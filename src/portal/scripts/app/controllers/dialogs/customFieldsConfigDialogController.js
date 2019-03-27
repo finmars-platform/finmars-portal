@@ -76,7 +76,7 @@
                         value_right = '"-inf"';
                     }
 
-                    expression = expression + '[' + value_left + ', ' + value_right + ', "' + item.group_name + '"]' + colon;
+                    expression = expression + '[' + value_left + ', ' + value_right + ', "' + item.___group_name + '"]' + colon;
                 });
 
                 expression = expression + '], default="lorem")';

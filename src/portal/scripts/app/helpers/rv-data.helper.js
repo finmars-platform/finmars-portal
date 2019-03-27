@@ -96,7 +96,7 @@
                     if (item.___level === index + 1 && item.___level <= groups.length) {
 
                         subtotalObj = Object.assign({}, item.subtotal, {
-                            group_name: item.group_name,
+                            ___group_name: item.___group_name,
                             ___type: 'subtotal',
                             ___parentId: item.___id,
                             ___level: item.___level + 1
@@ -181,7 +181,7 @@
                     if (item.___level === index + 1 && item.___level <= groups.length) {
 
                         subtotalObj = Object.assign({}, {
-                            group_name: item.group_name,
+                            ___group_name: item.___group_name,
                             ___type: 'blankline',
                             ___parentId: item.___id,
                             ___level: item.___level + 1
