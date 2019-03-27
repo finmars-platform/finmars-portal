@@ -392,6 +392,8 @@
 
                                 scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
 
+                                scope.$apply();
+
                             }
 
                         })
@@ -465,7 +467,6 @@
                         evDataHelper.setColumnsDefaultWidth(scope.evDataService);
 
                         scope.columns = scope.evDataService.getColumns();
-                        scope.$apply();
 
                     });
 
