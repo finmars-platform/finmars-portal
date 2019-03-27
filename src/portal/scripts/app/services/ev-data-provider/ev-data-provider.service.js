@@ -39,6 +39,7 @@
             requestParameters.body.page = Math.ceil(parent.results / 40); // TODO 40 - items per page, make configurable
             requestParameters.event.___id = parent.___id;
             requestParameters.event.groupName = parent.___group_name;
+            requestParameters.event.groupId = parent.___group_id;
             requestParameters.event.parentGroupId = parent.___parentId;
             requestParameters.requestType = 'groups';
 
@@ -85,22 +86,35 @@
 
     var fromMemoryDecorator = function (callback, entityViewerDataService, entityViewerEventService) {
 
-            var requestParameters = JSON.parse(JSON.stringify(entityViewerDataService.getActiveRequestParameters()));
+        var requestParameters = JSON.parse(JSON.stringify(entityViewerDataService.getActiveRequestParameters()));
 
-            var options = requestParameters.body;
-            var event = requestParameters.event;
+        var options = requestParameters.body;
+        var event = requestParameters.event;
 
-            if (!requestParameters.requestedPages) {
-                requestParameters.requestedPages = [];
-            }
+        if (!requestParameters.requestedPages) {
+            requestParameters.requestedPages = [];
+        }
 
-            var currentPage = evDataHelper.calculatePageFromOffset(requestParameters, entityViewerDataService);
+        var currentPage = evDataHelper.calculatePageFromOffset(requestParameters, entityViewerDataService);
 
-            if (evDataHelper.ifFirstRequestForRootGroup(event, entityViewerDataService) || evDataHelper.isFirstRequestForObjects(event, entityViewerDataService)) {
+        if (evDataHelper.ifFirstRequestForRootGroup(event, entityViewerDataService) || evDataHelper.isFirstRequestForObjects(event, entityViewerDataService)) {
+
+            requestParameters.body = options;
+
+            requestParameters.requestedPages = [1];
+
+            entityViewerDataService.setRequestParameters(requestParameters);
+
+            callback(entityViewerDataService, entityViewerEventService);
+
+        } else {
+
+            if (requestParameters.requestedPages.indexOf(currentPage) === -1) {
+
+                options.page = currentPage;
+                requestParameters.requestedPages.push(currentPage);
 
                 requestParameters.body = options;
-
-                requestParameters.requestedPages = [1];
 
                 entityViewerDataService.setRequestParameters(requestParameters);
 
@@ -108,26 +122,13 @@
 
             } else {
 
-                if (requestParameters.requestedPages.indexOf(currentPage) === -1) {
+                console.log('fromMemoryDecorator: From memory');
 
-                    options.page = currentPage;
-                    requestParameters.requestedPages.push(currentPage);
-
-                    requestParameters.body = options;
-
-                    entityViewerDataService.setRequestParameters(requestParameters);
-
-                    callback(entityViewerDataService, entityViewerEventService);
-
-                } else {
-
-                    console.log('fromMemoryDecorator: From memory');
-
-                    entityViewerEventService.dispatchEvent(evEvents.DATA_LOAD_END);
-
-                }
+                entityViewerEventService.dispatchEvent(evEvents.DATA_LOAD_END);
 
             }
+
+        }
 
 
     };
@@ -177,6 +178,7 @@
                         obj = Object.assign({}, groupData);
 
                         obj.___group_name = groupData.___group_name ? groupData.___group_name : '-';
+                        obj.___group_id = groupData.___group_id ? groupData.___group_id : '-';
 
                         obj.count = data.count;
                         obj.next = data.next;
@@ -192,7 +194,8 @@
 
                         obj = Object.assign({}, data);
                         obj.___group_name = event.groupName ? event.groupName : '-';
-                        obj.___group_id = event.groupId;
+                        obj.___group_id = event.___group_id ? event.___group_id : '-';
+                        // obj.___group_id = event.groupId;
                         obj.___is_open = true;
                         obj.___is_selected = evDataHelper.isGroupSelected(event.___id, event.parentGroupId, entityViewerDataService);
 
@@ -212,6 +215,7 @@
                     if (item.___type !== 'placeholder_object') {
 
                         item.___group_name = item.___group_name ? item.___group_name : '-';
+                        item.___group_id = item.___group_id ? item.___group_id : '-';
                         item.___is_selected = evDataHelper.isSelected(entityViewerDataService);
 
                         item.___parentId = obj.___id;
@@ -285,6 +289,7 @@
                             obj = Object.assign({}, groupData);
 
                             obj.___group_name = groupData.___group_name ? groupData.___group_name : '-';
+                            obj.___group_id = groupData.___group_id ? groupData.___group_id : '-';
 
                             obj.count = data.count;
                             obj.next = data.next;
@@ -301,7 +306,8 @@
 
                             obj = Object.assign({}, data);
                             obj.___group_name = event.groupName ? event.groupName : '-';
-                            obj.___group_id = event.groupId;
+                            obj.___group_id = event.groupId ? event.groupId: '-';
+                            // obj.___group_id = event.groupId;
                             obj.___is_open = true;
                             obj.___is_selected = evDataHelper.isGroupSelected(event.___id, event.parentGroupId, entityViewerDataService);
 
@@ -330,6 +336,7 @@
 
                             item.___parentId = obj.___id;
                             item.___group_name = item.___group_name ? item.___group_name : '-';
+                            item.___group_id = item.___group_id ? item.___group_id : '-';
 
                             item.___is_selected = evDataHelper.isSelected(entityViewerDataService);
 
@@ -434,6 +441,7 @@
 
                     requestsParameters[key].event.___id = group.___id;
                     requestsParameters[key].event.groupName = group.___group_name;
+                    requestsParameters[key].event.groupId = group.___group_id;
                     requestsParameters[key].event.parentGroupId = group.___parentId;
 
                     requestParametersForUnfoldedGroups.push(requestsParameters[key]);
@@ -537,6 +545,7 @@
 
                     requestsParameters[key].event.___id = group.___id;
                     requestsParameters[key].event.groupName = group.___group_name;
+                    requestsParameters[key].event.groupId = group.___group_id;
                     requestsParameters[key].event.parentGroupId = group.___parentId;
 
                     requestParametersForUnfoldedGroups.push(requestsParameters[key]);
