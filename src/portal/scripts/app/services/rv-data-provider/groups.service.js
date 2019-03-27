@@ -81,8 +81,14 @@
                 if (groupType.value_type === 'field') {
                     // resultGroup.___group_id = item[group] ;
 
-                    resultGroup.___group_id = item[group + '_object'].user_code;
-                    resultGroup.___group_name = item[group + '_object'].name;
+                    if (item[group + '_object']) {
+                        resultGroup.___group_id = item[group + '_object'].user_code;
+                        resultGroup.___group_name = item[group + '_object'].name;
+                    } else {
+                        // TODO Remove later
+                        resultGroup.___group_id = item[group];
+                        resultGroup.___name = item[group];
+                    }
 
                 } else {
 
