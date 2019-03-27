@@ -284,8 +284,6 @@
 
         function setData(obj) {
 
-            // console.log('setData.obj', obj);
-
             data.data[obj.___id] = obj
         }
 

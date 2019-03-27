@@ -138,8 +138,6 @@
                 var currentGroup = evDataService.getData(proxyLineSubtotal.___parentId);
                 var parentGroup = evDataService.getData(currentGroup.___parentId);
 
-                console.log('currentGroup', currentGroup);
-
                 if (parentGroup.___is_open) {
 
                     var foldButton = '';
