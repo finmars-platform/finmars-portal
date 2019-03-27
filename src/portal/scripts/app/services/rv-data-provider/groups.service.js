@@ -9,7 +9,7 @@
 
         result.forEach(function (item) {
 
-            if (item.___group_id === resultGroup.___group_id) {
+            if (item.___group_identifier === resultGroup.___group_identifier) {
                 exist = true;
             }
 
@@ -19,53 +19,53 @@
         return exist;
     }
 
-    var getUniqueGroups = function (items, group, groupType) {
+    var getUniqueGroups = function (items, group) {
 
         var result = [];
 
         var resultGroup;
 
-        console.log('groupType', groupType);
         console.log('items', items);
+        console.log('group', group);
 
         items.forEach(function (item) {
 
             resultGroup = {
                 ___group_name: null,
-                ___group_id: null
+                ___group_identifier: null
             };
 
-            if (groupType.hasOwnProperty('id')) {
+            if (group.hasOwnProperty('id')) {
 
-                if (item.hasOwnProperty(groupType.entity + '_object')) {
+                if (item.hasOwnProperty(group.entity + '_object')) {
 
-                    item[groupType.entity + '_object'].attributes.forEach(function (attr) {
+                    item[group.entity + '_object'].attributes.forEach(function (attr) {
 
-                        if (attr.attribute_type === group) {
+                        if (attr.attribute_type === group.id) {
 
-                            if (groupType.value_type === 20 && attr.value_float) {
+                            if (group.value_type === 20 && attr.value_float) {
 
-                                resultGroup.___group_id = attr.value_float.toString();
+                                resultGroup.___group_identifier = attr.value_float.toString();
                                 resultGroup.___group_name = attr.value_float.toString();
 
                             }
 
-                            if (groupType.value_type === 10 && attr.value_string) {
+                            if (group.value_type === 10 && attr.value_string) {
 
-                                resultGroup.___group_id = attr.value_string;
+                                resultGroup.___group_identifier = attr.value_string;
                                 resultGroup.___group_name = attr.value_string;
 
                             }
 
-                            if (groupType.value_type === 30 && attr.classifier_object) {
+                            if (group.value_type === 30 && attr.classifier_object) {
 
-                                resultGroup.___group_id = attr.classifier_object.name;
+                                resultGroup.___group_identifier = attr.classifier_object.name;
                                 resultGroup.___group_name = attr.classifier_object.name;
                             }
 
-                            if (groupType.value_type === 40 && attr.value_date) {
+                            if (group.value_type === 40 && attr.value_date) {
 
-                                resultGroup.___group_id = attr.value_date;
+                                resultGroup.___group_identifier = attr.value_date;
                                 resultGroup.___group_name = attr.value_date;
 
                             }
@@ -78,27 +78,23 @@
 
             } else {
 
-                if (groupType.value_type === 'field') {
-                    // resultGroup.___group_id = item[group] ;
+                if (group.value_type === 'field') {
+                    // resultGroup.___group_identifier = item[group] ;
 
-                    if (item[group + '_object']) {
-                        resultGroup.___group_id = item[group + '_object'].user_code;
-                        resultGroup.___group_name = item[group + '_object'].name;
-                    } else {
-                        // TODO Remove later
-                        resultGroup.___group_id = item[group];
-                        resultGroup.___name = item[group];
+                    if (item[group.key + '_object']) {
+                        resultGroup.___group_identifier = item[group.key + '_object'].user_code;
+                        resultGroup.___group_name = item[group.key + '_object'].name;
                     }
 
                 } else {
 
-                    if (item.hasOwnProperty(group) &&
-                        item[group] !== null &&
-                        item[group] !== undefined &&
-                        item[group] !== '-') {
+                    if (item.hasOwnProperty(group.key) &&
+                        item[group.key] !== null &&
+                        item[group.key] !== undefined &&
+                        item[group.key] !== '-') {
 
-                        resultGroup.___group_id = item[group].toString();
-                        resultGroup.___group_name = item[group].toString();
+                        resultGroup.___group_identifier = item[group.key].toString();
+                        resultGroup.___group_name = item[group.key].toString();
 
                     }
 
@@ -138,13 +134,9 @@
             items = filterService.filterByRegularFilters(items, regularFilters);
             items = filterService.filterByGroupsFilters(items, options, groupTypes);
 
-            var groupingAreaGroups = entityViewerDataService.getGroups();
-
-            var groupType = groupingAreaGroups[options.groups_types.length - 1];
-
             var group = options.groups_types[options.groups_types.length - 1];
 
-            var groups = getUniqueGroups(items, group, groupType);
+            var groups = getUniqueGroups(items, group);
 
             console.log('getUniqueGroups groups', groups);
 
@@ -156,6 +148,8 @@
 
             result.count = groups.length;
             result.results = groups;
+
+            console.log('get groups', JSON.parse(JSON.stringify(result)));
 
             resolve(result)
 
