@@ -24,6 +24,8 @@
                     if (item.instrument_object.hasOwnProperty('instrument_type_object')) {
                         var instrumentTypeObjectKeys = Object.keys(item.instrument_object.instrument_type_object);
 
+                        item['instrument_type_object'] = item.instrument_object.instrument_type_object;
+
                         instrumentTypeObjectKeys.forEach(function (instrumentObjectKeyItem) {
                             item['instrument_type_object_' + instrumentObjectKeyItem] = item.instrument_object.instrument_type_object[instrumentObjectKeyItem];
                             item['instrument_object_instrument_type_object_' + instrumentObjectKeyItem] = item.instrument_object.instrument_type_object[instrumentObjectKeyItem];
@@ -32,6 +34,8 @@
 
                     if (item.instrument_object.hasOwnProperty('accrued_currency_object')) {
                         var accruedCurrencyObjectKeys = Object.keys(item.instrument_object.accrued_currency_object);
+
+                        item['accrued_currency_object'] = item.instrument_object.accrued_currency_object;
 
                         accruedCurrencyObjectKeys.forEach(function (accruedCurrencyObjectKeyItem) {
                             item['accrued_currency_object_' + accruedCurrencyObjectKeyItem] = item.instrument_object.accrued_currency_object[accruedCurrencyObjectKeyItem];
@@ -143,6 +147,8 @@
 
                     if (item.account_object.hasOwnProperty('type_object') && item.account_object.type_object) {
                         var accountTypeObjectKeys = Object.keys(item.account_object.type_object);
+
+                        item['account_type_object'] = item.account_object.type_object;
 
                         accountTypeObjectKeys.forEach(function (accountTypeObjectKeyItem) {
                             item['account_type_object_' + accountTypeObjectKeyItem] = item.account_object.type_object[accountTypeObjectKeyItem];

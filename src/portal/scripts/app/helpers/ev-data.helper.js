@@ -89,7 +89,7 @@
 
         });
 
-        return result.group_name
+        return result.___group_name
 
     };
 
@@ -103,7 +103,7 @@
 
         });
 
-        if (result.group_id) return result.group_id;
+        if (result.___group_identifier) return result.___group_identifier;
 
         return null;
 
@@ -230,7 +230,7 @@
 
     };
 
-    var getGroupValues = function (id, parentId, evDataService) {
+    var getGroupsValues = function (id, parentId, evDataService) {
 
         var parents = evRvCommonHelper.getParents(parentId, evDataService).reverse();
 
@@ -240,11 +240,7 @@
 
             if (parents[i].___parentId !== null) {
 
-                if (parents[i].group_id) {
-                    result.push(parents[i].group_id)
-                } else {
-                    result.push(parents[i].group_name)
-                }
+                result.push(parents[i].___group_identifier)
 
             }
 
@@ -496,7 +492,7 @@
 
             if (!obj.results[i]) {
                 obj.results[i] = {
-                    group_name: '___placeholder_group_' + i,
+                    ___group_name: '___placeholder_group_' + i,
                     ___type: 'placeholder_group',
                     ___parentId: obj.___id,
                     results: []
@@ -553,13 +549,10 @@
 
     };
 
-    var getGroupTypesToLevel = function (level, evDataService) {
+    var getGroupsTypesToLevel = function (level, evDataService) {
 
         var groups = evDataService.getGroups();
         var group_types = [];
-
-        // console.log('getGroupTypesToLevel.level', level);
-        // console.log('getGroupTypesToLevel.groups', groups);
 
         var to = level;
 
@@ -569,41 +562,35 @@
 
         for (var i = 0; i <= to; i = i + 1) {
 
-            if (groups[i].hasOwnProperty('id')) {
-                group_types.push(groups[i].id)
-            } else {
-                group_types.push(groups[i].key)
-            }
+            group_types.push(groups[i])
+
+            // if (groups[i].hasOwnProperty('id')) {
+            //     group_types.push(groups[i].id)
+            // } else {
+            //     group_types.push(groups[i].key)
+            // }
         }
 
         return group_types;
 
     };
 
-    var getGroupValuesByItem = function (item, evDataService) {
+    var getGroupsValuesByItem = function (item, evDataService) {
 
         var parents = evRvCommonHelper.getParents(item.___parentId, evDataService);
-        var group_values = [];
-
-        // console.log('getGroupValuesByItem.parents', parents);
+        var groups_values = [];
 
         parents.forEach(function (parentItem) {
 
             if (parentItem.___parentId) {
 
-                if (parentItem.group_id) {
-                    group_values.push(parentItem.group_id);
-                } else {
-                    group_values.push(parentItem.group_name);
-                }
+                groups_values.push(parentItem.___group_identifier);
 
             }
 
         });
 
-        // console.log('getGroupValuesByItem.group_values', group_values);
-
-        return group_values.reverse();
+        return groups_values.reverse();
 
     };
 
@@ -630,7 +617,7 @@
         getColumnId: getColumnId,
 
         getGroupTypes: getGroupTypes,
-        getGroupValues: getGroupValues,
+        getGroupsValues: getGroupsValues,
         calculateProjection: calculateProjection,
 
         setColumnsDefaultWidth: setColumnsDefaultWidth,
@@ -644,8 +631,8 @@
         isGroupSelected: isGroupSelected,
         isSelected: isSelected,
 
-        getGroupTypesToLevel: getGroupTypesToLevel,
-        getGroupValuesByItem: getGroupValuesByItem
+        getGroupsTypesToLevel: getGroupsTypesToLevel,
+        getGroupsValuesByItem: getGroupsValuesByItem
     }
 
 

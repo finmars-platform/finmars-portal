@@ -28,6 +28,16 @@
                 }
             }).then(function (data) {
             return data.json();
+        }).then(function (data) {
+
+            data.results = data.results.map(function (item) {
+                item.___group_name = item.group_name;
+                item.___group_identifier = item.group_id;
+                return item
+            });
+
+            return data;
+
         })
 
 

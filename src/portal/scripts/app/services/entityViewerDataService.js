@@ -58,7 +58,7 @@
         obj.next = null;
         obj.previous = null;
         obj.results = [];
-        obj.group_name = 'root';
+        obj.___group_name = 'root';
         obj.___is_open = true;
         obj.___id = rootHash;
         obj.___parentId = null;
@@ -235,7 +235,7 @@
         }
 
         function getReportLayoutOptions() {
-           return data.reportLayoutOptions;
+            return data.reportLayoutOptions;
         }
 
         function setStatusData(status) {
@@ -283,8 +283,6 @@
         }
 
         function setData(obj) {
-
-            // console.log('setData.obj', obj);
 
             data.data[obj.___id] = obj
         }
@@ -438,14 +436,7 @@
                             parentGroupId: null
                         },
                         body: {
-                            groups_types: [groups[0]].map(function (item) {
-                                    if (item.id) {
-                                        return item.id
-                                    } else {
-                                        return item.key
-                                    }
-                                }
-                            ),
+                            groups_types: [groups[0]],
                             page: 1,
                             groups_values: [],
                             groups_order: 'asc'

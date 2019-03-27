@@ -148,7 +148,7 @@
                         foldButton = '<div class="ev-fold-button" data-type="foldbutton" data-object-id="' + currentGroup.___id + '" data-parent-group-hash-id="' + currentGroup.___parentId + '">+</div>';
                     }
 
-                    result.html_result = foldButton + '<b>' + currentGroup.group_name + '</b>';
+                    result.html_result = foldButton + '<b>' + currentGroup.___group_name + '</b>';
 
                 }
             }

@@ -206,13 +206,13 @@
 
         toNextLevel(tree, resultAsObj);
 
-        console.log('convertTreeToTreeList.resultAsObj', resultAsObj);
+        // console.log('convertTreeToTreeList.resultAsObj', resultAsObj);
 
         Object.keys(resultAsObj).forEach(function (key) {
             result.push(resultAsObj[key]);
         });
 
-        console.log('convertTreeToTreeList.result', resultAsObj);
+        // console.log('convertTreeToTreeList.result', resultAsObj);
 
         return result;
 
