@@ -47,7 +47,7 @@
             },
             body: {
                 groups_types: evDataHelper.getGroupTypes(groupHashId, parentGroupHashId, evDataService),
-                groups_values: evDataHelper.getGroupValues(groupHashId, parentGroupHashId, evDataService)
+                groups_values: evDataHelper.getGroupsValues(groupHashId, parentGroupHashId, evDataService)
             }
         };
 
@@ -74,7 +74,7 @@
         var currentGroupIdentifier = currentGroup.hasOwnProperty('key') ? currentGroup.key : currentGroup.id;
 
         var groupTypes = evDataHelper.getGroupTypes(groupHashId, parentGroupHashId, evDataService);
-        var groupValues = evDataHelper.getGroupValues(groupHashId, parentGroupHashId, evDataService);
+        var groupValues = evDataHelper.getGroupsValues(groupHashId, parentGroupHashId, evDataService);
 
         var currentGroupName = evDataHelper.getGroupNameFromParent(groupHashId, parentGroupHashId, evDataService);
 

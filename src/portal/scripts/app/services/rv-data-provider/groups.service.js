@@ -9,18 +9,8 @@
 
         result.forEach(function (item) {
 
-            if (item.hasOwnProperty('group_id') && resultGroup.hasOwnProperty('group_id')) {
-
-                if (item.group_id === resultGroup.group_id) {
-                    exist = true;
-                }
-
-            } else {
-
-                if (item.group_name === resultGroup.group_name) {
-                    exist = true;
-                }
-
+            if (item.___group_identifier === resultGroup.___group_identifier) {
+                exist = true;
             }
 
         });
@@ -29,46 +19,54 @@
         return exist;
     }
 
-    var getUniqueGroups = function (items, group, groupType) {
+    var getUniqueGroups = function (items, group) {
 
         var result = [];
 
         var resultGroup;
 
+        console.log('items', items);
+        console.log('group', group);
+
         items.forEach(function (item) {
 
             resultGroup = {
-                group_name: null
+                ___group_name: null,
+                ___group_identifier: null
             };
 
-            if (groupType.hasOwnProperty('id')) {
+            if (group.hasOwnProperty('id')) {
 
-                if (item.hasOwnProperty(groupType.entity + '_object')) {
+                if (item.hasOwnProperty(group.entity + '_object')) {
 
-                    item[groupType.entity + '_object'].attributes.forEach(function (attr) {
+                    item[group.entity + '_object'].attributes.forEach(function (attr) {
 
-                        if (attr.attribute_type === group) {
+                        if (attr.attribute_type === group.id) {
 
-                            if (groupType.value_type === 20 && attr.value_float) {
+                            if (group.value_type === 20 && attr.value_float) {
 
-                                resultGroup.group_name = attr.value_float.toString();
-
-                            }
-
-                            if (groupType.value_type === 10 && attr.value_string) {
-
-                                resultGroup.group_name = attr.value_string;
+                                resultGroup.___group_identifier = attr.value_float.toString();
+                                resultGroup.___group_name = attr.value_float.toString();
 
                             }
 
-                            if (groupType.value_type === 30 && attr.classifier_object) {
+                            if (group.value_type === 10 && attr.value_string) {
 
-                                resultGroup.group_name = attr.classifier_object.name;
+                                resultGroup.___group_identifier = attr.value_string;
+                                resultGroup.___group_name = attr.value_string;
+
                             }
 
-                            if (groupType.value_type === 40 && attr.value_date) {
+                            if (group.value_type === 30 && attr.classifier_object) {
 
-                                resultGroup.group_name = attr.value_date;
+                                resultGroup.___group_identifier = attr.classifier_object.name;
+                                resultGroup.___group_name = attr.classifier_object.name;
+                            }
+
+                            if (group.value_type === 40 && attr.value_date) {
+
+                                resultGroup.___group_identifier = attr.value_date;
+                                resultGroup.___group_name = attr.value_date;
 
                             }
 
@@ -80,22 +78,23 @@
 
             } else {
 
-                // console.log('group', groupType);
-                // console.log('group', group);
-                // console.log('item', item);
+                if (group.value_type === 'field') {
+                    // resultGroup.___group_identifier = item[group] ;
 
-                if (groupType.value_type === 'field') {
-                    resultGroup.group_id = item[group];
-                    // resultGroup.group_name = item[group + '_object_user_code'];
-                    resultGroup.group_name = item[group + '_object_name'];
+                    if (item[group.key + '_object']) {
+                        resultGroup.___group_identifier = item[group.key + '_object'].user_code;
+                        resultGroup.___group_name = item[group.key + '_object'].name;
+                    }
+
                 } else {
 
-                    if (item.hasOwnProperty(group) &&
-                        item[group] !== null &&
-                        item[group] !== undefined &&
-                        item[group] !== '-') {
+                    if (item.hasOwnProperty(group.key) &&
+                        item[group.key] !== null &&
+                        item[group.key] !== undefined &&
+                        item[group.key] !== '-') {
 
-                        resultGroup.group_name = item[group].toString();
+                        resultGroup.___group_identifier = item[group.key].toString();
+                        resultGroup.___group_name = item[group.key].toString();
 
                     }
 
@@ -135,22 +134,22 @@
             items = filterService.filterByRegularFilters(items, regularFilters);
             items = filterService.filterByGroupsFilters(items, options, groupTypes);
 
-            var groupingAreaGroups = entityViewerDataService.getGroups();
-
-            var groupType = groupingAreaGroups[options.groups_types.length - 1];
-
             var group = options.groups_types[options.groups_types.length - 1];
 
-            var groups = getUniqueGroups(items, group, groupType);
+            var groups = getUniqueGroups(items, group);
+
+            console.log('getUniqueGroups groups', groups);
 
             if (options.groups_order === 'desc') {
-                groups = sortService.sortItems(groups, '-group_name');
+                groups = sortService.sortItems(groups, '-___group_name');
             } else {
-                groups = sortService.sortItems(groups, 'group_name');
+                groups = sortService.sortItems(groups, '___group_name');
             }
 
             result.count = groups.length;
             result.results = groups;
+
+            console.log('get groups', JSON.parse(JSON.stringify(result)));
 
             resolve(result)
 

@@ -80,9 +80,6 @@
 
         entityViewerDataService.setRequestParameters(requestParameters);
 
-        // console.log('injectRegularFilters.filters', filters);
-        // console.log('injectRegularFilters.newRequestParameters', requestParameters);
-
     };
 
     var requestReport = function (entityViewerDataService, entityViewerEventService) {
@@ -162,6 +159,8 @@
 
                 var groupData = entityViewerDataService.getData(event.___id);
 
+                // console.log('groupData', groupData);
+
                 var obj;
 
                 if (!event.___id) {
@@ -186,8 +185,8 @@
 
                         obj = Object.assign({}, groupData);
 
-                        obj.group_name = groupData.group_name ? groupData.group_name : '-';
-                        obj.group_id = groupData.id ? groupData.id : null;
+                        obj.___group_name = groupData.___group_name ? groupData.___group_name : '-';
+                        obj.___group_identifier = groupData.___group_identifier ? groupData.___group_identifier : '-';
 
                         obj.count = data.count;
                         obj.next = data.next;
@@ -212,8 +211,10 @@
                         });
 
                         obj = Object.assign({}, data);
-                        obj.group_name = event.groupName ? event.groupName : '-';
-                        obj.group_id = event.groupId;
+
+                        obj.___group_name = event.groupName ? event.groupName : '-';
+                        obj.___group_identifier = event.groupId ? event.groupId : '-';
+
                         obj.___is_open = true;
                         obj.___is_selected = evDataHelper.isGroupSelected(event.___id, event.parentGroupId, entityViewerDataService);
 
@@ -229,8 +230,9 @@
 
                 obj.results = obj.results.map(function (item) {
 
+                    item.___group_name = item.___group_name ? item.___group_name : '-';
+                    item.___group_identifier = item.___group_identifier ? item.___group_identifier : '-';
 
-                    item.group_name = item.group_name ? item.group_name : '-';
                     item.___is_selected = evDataHelper.isSelected(entityViewerDataService);
 
                     item.___parentId = obj.___id;
@@ -310,7 +312,8 @@
 
                             obj = Object.assign({}, groupData);
 
-                            obj.group_name = groupData.group_name ? groupData.group_name : '-';
+                            obj.___group_name = groupData.___group_name ? groupData.___group_name : '-';
+                            obj.___group_identifier = groupData.___group_identifier ? groupData.___group_identifier : '-';
 
                             obj.count = data.count;
                             obj.next = data.next;
@@ -337,8 +340,8 @@
                             });
 
                             obj = Object.assign({}, data);
-                            obj.group_name = event.groupName ? event.groupName : '-';
-                            obj.group_id = event.groupId;
+                            obj.___group_name = event.groupName ? event.groupName : '-';
+                            obj.___group_identifier = event.groupId ? event.groupId : '-';
                             obj.___is_open = true;
                             obj.___is_selected = evDataHelper.isGroupSelected(event.___id, event.parentGroupId, entityViewerDataService);
 
@@ -363,7 +366,8 @@
                     obj.results = obj.results.map(function (item) {
 
                         item.___parentId = obj.___id;
-                        item.group_name = item.group_name ? item.group_name : '-';
+                        item.___group_name = item.___group_name ? item.___group_name : '-';
+                        item.___group_identifier = item.___group_identifier ? item.___group_identifier : '-';
 
                         item.___is_selected = evDataHelper.isSelected(entityViewerDataService);
 
@@ -427,15 +431,11 @@
 
         var id = evRvCommonHelper.getId(item);
 
-        var group_types = evDataHelper.getGroupTypesToLevel(level + 1, evDataService);
-        var group_values = evDataHelper.getGroupValuesByItem(item, evDataService);
+        var groups_types = evDataHelper.getGroupsTypesToLevel(level + 1, evDataService);
+        var groups_values = evDataHelper.getGroupsValuesByItem(item, evDataService);
 
-        if (item.group_id) {
-            group_values.push(item.group_id);
-        } else {
-            group_values.push(item.group_name);
-        }
 
+        groups_values.push(item.___group_identifier);
 
         if (groups.length && level + 1 < groups.length) {
 
@@ -445,14 +445,14 @@
                 groups_level: level + 1, // 0 is for root
                 event: {
                     ___id: id,
-                    groupName: item.group_name,
-                    groupId: item.group_id ? item.group_id : null,
+                    groupName: item.___group_name,
+                    groupId: item.___group_identifier ? item.___group_identifier : '-',
                     parentGroupId: item.___parentId
                 },
                 body: {
-                    groups_types: group_types,
+                    groups_types: groups_types,
                     page: 1,
-                    groups_values: group_values,
+                    groups_values: groups_values,
                     groups_order: 'asc'
                 }
             };
@@ -465,14 +465,14 @@
                 groups_level: level + 1, // 0 is for root
                 event: {
                     ___id: id,
-                    groupName: item.group_name,
-                    groupId: item.group_id ? item.group_id : null,
+                    groupName: item.___group_name,
+                    groupId: item.___group_identifier ? item.___group_identifier : '-',
                     parentGroupId: item.___parentId
                 },
                 body: {
-                    groups_types: group_types,
+                    groups_types: groups_types,
                     page: 1,
-                    groups_values: group_values,
+                    groups_values: groups_values,
                     groups_order: 'asc'
                 }
             };
@@ -518,7 +518,7 @@
 
                     items.forEach(function (item) {
 
-                        // console.log('item!', item.group_name);
+                        // console.log('item!', item.___group_name);
 
                         recursiveRequestPromises.push(recursiveRequest(item.results, level, evDataService, evEventService));
 
@@ -665,7 +665,8 @@
                 if (group.___id === requestsParameters[key].id) {
 
                     requestsParameters[key].event.___id = group.___id;
-                    requestsParameters[key].event.groupName = group.group_name;
+                    requestsParameters[key].event.groupName = group.___group_name;
+                    requestsParameters[key].event.groupId = group.___group_identifier;
                     requestsParameters[key].event.parentGroupId = group.___parentId;
 
                     requestParametersForUnfoldedGroups.push(requestsParameters[key]);
@@ -768,7 +769,8 @@
                 if (group.___id === requestsParameters[key].id) {
 
                     requestsParameters[key].event.___id = group.___id;
-                    requestsParameters[key].event.groupName = group.group_name;
+                    requestsParameters[key].event.groupName = group.___group_name;
+                    requestsParameters[key].event.groupId = group.___group_identifier;
                     requestsParameters[key].event.parentGroupId = group.___parentId;
 
                     requestParametersForUnfoldedGroups.push(requestsParameters[key]);

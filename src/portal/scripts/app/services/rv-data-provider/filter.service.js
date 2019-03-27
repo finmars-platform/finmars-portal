@@ -68,25 +68,34 @@
 
         if (item.hasOwnProperty(groupType.entity + '_object')) {
 
-            item[groupType.entity + '_object'].attributes.forEach(function (attr) {
+            var i;
+            var attr;
+            var value_exists = false;
+
+            for (i = 0; i < item[groupType.entity + '_object'].attributes.length; i = i + 1) {
+
+                attr = item[groupType.entity + '_object'].attributes[i];
 
                 if (attr.attribute_type === key) {
 
                     var attrValue = getAttributeValue(attr, groupType);
 
-                    if (attrValue === value) {
-                        match = true;
+                    if (attrValue) {
+                        value_exists = true;
                     }
 
-                    if (value === '-') {
-                        if (attrValue === null || attrValue === undefined || attrValue === '-') {
-                            match = true;
-                        }
+                    if (attrValue === value) {
+                        match = true;
+                        break;
                     }
 
                 }
 
-            })
+            }
+
+            if (value === '-' && !value_exists) {
+                match = true;
+            }
 
 
         } else {
@@ -110,6 +119,9 @@
 
             var key;
             var value;
+            var groupType;
+
+            var item_value = null;
 
             // console.log('filterByGroupsFilters.options', JSON.parse(JSON.stringify(options)));
 
@@ -119,37 +131,77 @@
 
                 for (i = 0; i < options.groups_values.length; i = i + 1) {
 
-                    key = options.groups_types[i];
+
+                    if (options.groups_types[i].id) {
+                        key = options.groups_types[i].id
+                    } else {
+                        key = options.groups_types[i].key;
+                    }
+
                     value = options.groups_values[i];
 
-                    // TODO Integer Group Types are for Attribute Types
-                    if (typeof key === 'number') {
+                    groupType = groupTypes[i];
 
-                        var groupType = groupTypes[i];
+
+                    if (groupType.hasOwnProperty('id')) {
 
                         match = getFilterMatchInAttributes(item, groupType, key, value);
 
+                        if (match === false) {
+                            break;
+                        }
+
                     } else {
 
-                        if (value === '-') {
+                        if (groupType.value_type === 'field') {
 
-                            if (item[key] !== null && item[key] !== undefined && item[key] !== '-') {
-                                match = false;
+                            if (item[key + '_object']) {
+                                item_value = item[key + '_object'].user_code;
                             }
+
+                            if (value === '-') {
+
+                                if (item_value !== null && item_value !== undefined && item_value !== '-') {
+                                    match = false;
+                                }
+
+                            } else {
+
+                                if (item_value === null || item_value === undefined) {
+                                    match = false
+
+                                }
+
+                                if (item_value && item_value.toString().indexOf(value) === -1) {
+                                    match = false
+                                }
+
+                            }
+
 
                         } else {
 
-                            if (!item.hasOwnProperty(key)) {
-                                match = false;
+                            if (value === '-') {
+
+                                if (item[key] !== null && item[key] !== undefined && item[key] !== '-') {
+                                    match = false;
+                                }
+
                             } else {
 
-                                if (item[key] === null || item[key] === undefined) {
-                                    match = false
-
+                                if (!item.hasOwnProperty(key)) {
+                                    match = false;
                                 } else {
 
-                                    if (item[key].toString().indexOf(value) === -1) {
+                                    if (item[key] === null || item[key] === undefined) {
                                         match = false
+
+                                    } else {
+
+                                        if (item[key].toString().indexOf(value) === -1) {
+                                            match = false
+                                        }
+
                                     }
 
                                 }
