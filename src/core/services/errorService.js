@@ -129,9 +129,11 @@
 
         toastNotificationService.error(message);
 
-        return reason
+        // return reason
 
         // throw new Error("Error processing request", reason);
+
+        return Promise.reject(reason)
 
     };
 
