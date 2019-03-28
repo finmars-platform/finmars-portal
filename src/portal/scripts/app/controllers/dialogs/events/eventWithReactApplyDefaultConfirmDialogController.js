@@ -48,6 +48,20 @@
 
         };
 
+        vm.cancel = function () {
+            mdDialog.hide();
+        };
+
+        vm.informed = function () {
+
+            eventsService.informedEventAction(vm.event.id).then(function () {
+
+                $mdDialog.hide({status: 'agree'});
+
+            });
+
+        };
+
         vm.applyDefault = function () {
 
             var actions = vm.event.event_schedule_object.actions.filter(function (action) {
