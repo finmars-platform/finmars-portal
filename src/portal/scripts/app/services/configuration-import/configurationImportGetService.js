@@ -20,11 +20,11 @@
                 cacheContainer[entity] = {};
             }
 
-            console.log(JSON.parse(JSON.stringify(cacheContainer[entity])));
+            // console.log(JSON.parse(JSON.stringify(cacheContainer[entity])));
 
             if (cacheContainer[entity][user_code]) {
 
-                console.log('From cache: ', cacheContainer[entity][user_code]);
+                // console.log('From cache: ', cacheContainer[entity][user_code]);
 
                 resolve(cacheContainer[entity][user_code]);
 
@@ -84,8 +84,8 @@
 
             } else {
 
-                console.log('entity', entity);
-                console.log('system_code', system_code);
+                // console.log('entity', entity);
+                // console.log('system_code', system_code);
 
                 try {
 

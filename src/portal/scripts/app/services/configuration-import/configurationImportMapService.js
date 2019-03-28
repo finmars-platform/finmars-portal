@@ -145,13 +145,13 @@
 
                         promises.push(new Promise(function (resolveRelation, reject) {
 
-                            console.log('input', input);
-                            console.log('input.content_type', input.content_type);
+                            // console.log('input', input);
+                            // console.log('input.content_type', input.content_type);
 
                             var user_code = input[user_code_prop];
                             var entity = metaContentTypesService.findEntityByContentType(input.content_type);
 
-                            console.log('input.entity', entity);
+                            // console.log('input.entity', entity);
 
                             if (prop_data.code === 'user_code') {
 

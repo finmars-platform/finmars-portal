@@ -64,22 +64,22 @@
             },
             {
                 name: 'Daily pricing model',
-                entity: 'daily_pricing_model',
+                entity: 'daily-pricing-model',
                 key: 'instruments.dailypricingmodel'
             },
             {
                 name: 'Payment size detail',
-                entity: 'payment_size_detail',
+                entity: 'payment-size-detail',
                 key: 'instruments.paymentsizedetail'
             },
             {
                 name: 'Price download scheme',
-                entity: 'price_download_scheme',
+                entity: 'price-download-scheme',
                 key: 'integrations.pricedownloadscheme'
             },
             {
                 name: 'Pricing policy',
-                entity: 'pricing_policy',
+                entity: 'pricing-policy',
                 key: 'instruments.pricingpolicy'
             },
             {
@@ -89,17 +89,17 @@
             },
             {
                 name: 'Accrual calculation model',
-                entity: 'accrual_calculation_model',
+                entity: 'accrual-calculation-model',
                 key: 'instruments.accrualcalculationmodel'
             },
             {
                 name: 'Event Class',
-                entity: 'event_class',
+                entity: 'event-class',
                 key: 'transactions.eventclass'
             },
             {
                 name: 'Notification Class',
-                entity: 'notification_class',
+                entity: 'notification-class',
                 key: 'transactions.notificationclass'
             }
         ]
@@ -270,22 +270,22 @@
 
             {
                 name: 'Daily pricing model',
-                entity: 'daily_pricing_model',
+                entity: 'daily-pricing-model',
                 key: 'instruments.dailypricingmodel'
             },
             {
                 name: 'Payment size detail',
-                entity: 'payment_size_detail',
+                entity: 'payment-size-detail',
                 key: 'instruments.paymentsizedetail'
             },
             {
                 name: 'Price download scheme',
-                entity: 'price_download_scheme',
+                entity: 'price-download-scheme',
                 key: 'integrations.pricedownloadscheme'
             },
             {
                 name: 'Pricing policy',
-                entity: 'pricing_policy',
+                entity: 'pricing-policy',
                 key: 'instruments.pricingpolicy'
             },
             {
@@ -295,17 +295,17 @@
             },
             {
                 name: 'Accrual calculation model',
-                entity: 'accrual_calculation_model',
+                entity: 'accrual-calculation-model',
                 key: 'instruments.accrualcalculationmodel'
             },
             {
                 name: 'Event Class',
-                entity: 'event_class',
+                entity: 'event-class',
                 key: 'transactions.eventclass'
             },
             {
                 name: 'Notification Class',
-                entity: 'notification_class',
+                entity: 'notification-class',
                 key: 'transactions.notificationclass'
             }
         ]

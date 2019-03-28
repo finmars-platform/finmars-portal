@@ -250,7 +250,7 @@
 
             var entityType = entityViewerDataService.getEntityType();
 
-            var options = requestParameters.body;
+            var options = JSON.parse(JSON.stringify(requestParameters.body));
             var event = requestParameters.event;
 
             var page = new Number(options.page) - 1;
@@ -258,9 +258,30 @@
             var step = 40;
             var i;
 
+
+            if (options.groups_types) {
+
+                options.groups_types = options.groups_types.map(function (groupType) {
+
+                    if (groupType.hasOwnProperty('id')) {
+                        return groupType.id
+                    } else {
+                        return groupType.key;
+                    }
+
+                })
+
+            }
+
             groupsService.getList(entityType, options).then(function (data) {
 
                 if (data.status !== 404) {
+
+                    data.results = data.results.map(function (item) {
+                        item.___group_name = item.group_name;
+                        item.___group_identifier = item.group_id;
+                        return item
+                    });
 
                     var obj = {};
 
@@ -306,7 +327,7 @@
 
                             obj = Object.assign({}, data);
                             obj.___group_name = event.groupName ? event.groupName : '-';
-                            obj.___group_identifier = event.groupId ? event.groupId: '-';
+                            obj.___group_identifier = event.groupId ? event.groupId : '-';
                             // obj.___group_identifier = event.groupId;
                             obj.___is_open = true;
                             obj.___is_selected = evDataHelper.isGroupSelected(event.___id, event.parentGroupId, entityViewerDataService);
