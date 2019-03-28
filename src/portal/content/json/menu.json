@@ -62,42 +62,16 @@
         "icon": ""
       },
       {
-        "state": "",
+        "state": "app.data.responsible",
         "title": "Responsible",
-        "type": "toggle",
-        "pages": [
-          {
-            "state": "app.data.responsible-group",
-            "title": "Group",
-            "type": "link",
-            "icon": ""
-          },
-          {
-            "state": "app.data.responsible",
-            "title": "Responsible",
-            "type": "link",
-            "icon": ""
-          }
-        ]
+        "type": "link",
+        "icon": ""
       },
       {
-        "state": "",
+        "state": "app.data.counterparty",
         "title": "Counterparty",
-        "type": "toggle",
-        "pages": [
-          {
-            "state": "app.data.counterparty-group",
-            "title": "Group",
-            "type": "link",
-            "icon": ""
-          },
-          {
-            "state": "app.data.counterparty",
-            "title": "Counterparty",
-            "type": "link",
-            "icon": ""
-          }
-        ]
+        "type": "link",
+        "icon": ""
       },
       {
         "state": "app.data.instrument",
@@ -130,23 +104,10 @@
         "icon": ""
       },
       {
-        "state": "",
+        "state": "app.data.transaction-type",
         "title": "Transaction Type",
-        "type": "toggle",
-        "pages": [
-          {
-            "state": "app.data.transaction-type-group",
-            "title": "Group",
-            "type": "link",
-            "icon": ""
-          },
-          {
-            "state": "app.data.transaction-type",
-            "title": "Type",
-            "type": "link",
-            "icon": ""
-          }
-        ]
+        "type": "link",
+        "icon": ""
       },
       {
         "state": "app.data.price-history",

@@ -331,6 +331,7 @@
                     eventListeners: function () {
 
                         this.dragula.on('over', function (elem, container, source) {
+
                             $(container).addClass('active');
                             $(container).on('mouseleave', function () {
                                 $(this).removeClass('active');
@@ -390,6 +391,8 @@
                                 scope.evEventService.dispatchEvent(evEvents.COLUMNS_CHANGE);
 
                                 scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+
+                                scope.$apply();
 
                             }
 
