@@ -120,12 +120,13 @@
                         <md-input-container>
                             <label for="" class="uncut-text-on-focus-label" content-title>Periodicity</label>
                             <md-select data-ng-model="item.instrument_event_schedule.periodicity"
-                                       md-on-open="vm.loadRelation('periodicity')">
+                                       md-on-open="vm.loadRelation('periodicity')"
+                                       md-container-class="simple-search-select">
                                 <md-select-header>
                                     <input data-ng-model="searchTerm"
                                            type="search"
                                            placeholder="Search for a ..."
-                                           class="md-text md-select-search-pattern">
+                                           class="md-text md-select-search-pattern simple-search-filter-input">
                                 </md-select-header>
                                 <md-option data-ng-repeat="relationItem in vm.relationItems['periodicity'] | filter: {name: searchTerm}"
                                            data-ng-value="relationItem.id"
@@ -170,12 +171,13 @@
                         <md-input-container>
                             <label for="" class="uncut-text-on-focus-label" content-title>Notification Class</label>
                             <md-select data-ng-model="item.instrument_event_schedule.notification_class"
-                                       md-on-open="vm.loadRelation('notification_class')">
+                                       md-on-open="vm.loadRelation('notification_class')"
+                                       md-container-class="simple-search-select">
                                 <md-select-header>
                                     <input data-ng-model="searchTerm"
                                            type="search"
                                            placeholder="Search for a ..."
-                                           class="md-text md-select-search-pattern">
+                                           class="md-text md-select-search-pattern simple-search-filter-input">
                                 </md-select-header>
                                 <md-option data-ng-repeat="relationItem in vm.relationItems['notification_class'] | filter: {name: searchTerm}"
                                            data-ng-value="relationItem.id"
@@ -230,12 +232,13 @@
                         <md-input-container>
                             <label for="" class="uncut-text-on-focus-label" content-title>Event Class</label>
                             <md-select data-ng-model="item.instrument_event_schedule.event_class"
-                                       md-on-open="vm.loadRelation('event_class')">
+                                       md-on-open="vm.loadRelation('event_class')"
+                                       md-container-class="simple-search-select">
                                 <md-select-header>
                                     <input data-ng-model="searchTerm"
                                            type="search"
                                            placeholder="Search for a ..."
-                                           class="md-text md-select-search-pattern">
+                                           class="md-text md-select-search-pattern simple-search-filter-input">
                                 </md-select-header>
                                 <md-option data-ng-repeat="relationItem in vm.relationItems['event_class'] | filter: {name: searchTerm}"
                                            data-ng-value="relationItem.id"

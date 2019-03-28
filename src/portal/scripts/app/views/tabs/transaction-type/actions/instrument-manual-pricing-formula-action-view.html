@@ -99,12 +99,13 @@
                     <md-input-container>
                         <label for="" content-title>Pricing Policy</label>
                         <md-select data-ng-model="item.instrument_manual_pricing_formula.pricing_policy"
-                                   md-on-open="vm.loadRelation('pricing_policy')">
+                                   md-on-open="vm.loadRelation('pricing_policy')"
+                                   md-container-class="simple-search-select">
                             <md-select-header>
                                 <input data-ng-model="searchTerm"
                                        type="search"
                                        placeholder="Search for a ..."
-                                       class="md-text md-select-search-pattern">
+                                       class="md-text md-select-search-pattern simple-search-filter-input">
                             </md-select-header>
                             <md-option data-ng-repeat="relationItem in vm.relationItems['pricing_policy'] | filter: {name: searchTerm}"
                                        data-ng-value="relationItem.id"

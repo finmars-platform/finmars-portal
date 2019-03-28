@@ -1,26 +1,48 @@
 <div layout="row" class="two-fields-options-content" layout-align="center center">
-	<div>
-		<p data-ng-if="allOptions[0].name">Available groups</p>
-		<p data-ng-if="allOptions[0].display_name">Available members</p>
+	<div layout="column">
+		<p>Available</p>
+		<input type="search"
+			   placeholder="Search for a ..."
+			   data-ng-model="availableSearchTerm"
+			   class="two-fields-filter-input">
 		<div class="all-options-field two-fields-options">
-			<p data-ng-repeat="option in allOptions" data-ng-if="option.name" data-ng-bind="option.name" class="two-fields-available-option" data-member-group-id="{{option.id}}" data-ng-click="highlightOption($event)"></p>
-			<p data-ng-repeat="option in allOptions" data-ng-if="option.display_name" data-ng-bind="option.display_name" class="two-fields-available-option" data-member-group-id="{{option.id}}" data-ng-click="highlightOption($event)"></p>
+			<p data-ng-repeat="option in allOptions | filter: {name: availableSearchTerm}"
+			   data-ng-bind="option['{{nameProperty}}']"
+			   class="two-fields-available-option"
+			   data-member-group-id="{{option.id}}"
+			   data-ng-click="highlightOption($event)"></p>
 		</div>
 	</div>
 	<div class="two-fields-buttons" layout="column" layout-align="center center">
-		<md-button class="two-fields-select-btn two-fields-btn md-raised" data-ng-disable="" data-ng-click="switchOptions('p.two-fields-available-option.active-option', allOptions, selectedOptions)">
-			<ng-md-icon icon="chevron_right" size="25"></ng-icon>
+		<md-button class="two-fields-select-btn two-fields-btn md-raised"
+				   data-ng-click="switchOptions('select')">
+			<ng-md-icon icon="chevron_right" size="25"></ng-md-icon>
 		</md-button>
-		<md-button class="two-fields-select-btn two-fields-btn md-raised" data-ng-disable="" data-ng-click="switchOptions('p.two-fields-selected-option.active-option', selectedOptions, allOptions)">
-			<ng-md-icon icon="chevron_left" size="25"></ng-icon>
+		<md-button class="two-fields-select-all-btn two-fields-btn md-raised"
+				   data-ng-click="selectAll()">
+			<ng-md-icon icon="chevron_right" size="35"></ng-md-icon>
 		</md-button>
+
+		<md-button class="two-fields-select-btn two-fields-btn md-raised"
+				   data-ng-click="switchOptions('deselect')">
+			<ng-md-icon icon="chevron_left" size="25"></ng-md-icon>
+		</md-button>
+		<md-button class="two-fields-select-all-btn two-fields-btn md-raised"
+				   data-ng-click="deselectAll()">
+			<ng-md-icon icon="chevron_left" size="35"></ng-md-icon>
 	</div>
-	<div>
-		<p data-ng-if="allOptions[0].name">Assigned groups</p>
-		<p data-ng-if="allOptions[0].display_name">Assigned members</p>
-		<div class="selected-options-field two-fields-options">
-			<p data-ng-repeat="sOption in selectedOptions" data-ng-if="sOption.name" data-ng-bind="sOption.name" class="two-fields-selected-option" data-member-group-id="{{sOption.id}}" data-ng-click="highlightOption($event)"></p>
-			<p data-ng-repeat="sOption in selectedOptions" data-ng-if="sOption.display_name" data-ng-bind="sOption.display_name" class="two-fields-selected-option" data-member-group-id="{{sOption.id}}" data-ng-click="highlightOption($event)"></p>
-		</div>
+	<div layout="column">
+			<p>Selected</p>
+			<input type="search"
+				   placeholder="Search for a ..."
+				   data-ng-model="selectedSearchTerm"
+				   class="two-fields-filter-input">
+			<div class="selected-options-field two-fields-options">
+				<p data-ng-repeat="sOption in selectedOptions | filter: {name: selectedSearchTerm}"
+				   data-ng-bind="sOption['{{nameProperty}}']"
+				   class="two-fields-selected-option"
+				   data-member-group-id="{{sOption.id}}"
+				   data-ng-click="highlightOption($event)"></p>
+			</div>
 	</div>
 </div>

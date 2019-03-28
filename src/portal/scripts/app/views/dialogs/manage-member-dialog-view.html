@@ -6,7 +6,7 @@
 	</md-toolbar>
 	<md-dialog-content data-custom-scroll class="manage-member-dialog-content custom-scrollbar">
 		<div layout="column">
-			<two-fields-options all-options="vm.groupsList" selected-options="vm.assignedGroupsList"></two-fields-options>
+			<two-fields-options all-options="vm.groupsList" selected-options="vm.assignedGroupsList" name-property="name"></two-fields-options>
 			<md-checkbox data-ng-model="vm.memberIsAdmin" aria-label="member permission">This member is Admin</md-checkbox>
 		</div>
 	</md-dialog-content>

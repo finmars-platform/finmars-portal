@@ -53,7 +53,7 @@
                         </md-button>
                     </div>
 
-                    <div class="sort" data-ng-if="!isReport">
+                    <!--<div class="sort" data-ng-if="!isReport">
                         <md-button class="group-sort" data-ng-show="item.options.fold"
                                    aria-label="open settings" data-ng-click="toggleFold(item)">
                             -
@@ -62,13 +62,15 @@
                                    aria-label="open settings" data-ng-click="toggleFold(item)">
                             +
                         </md-button>
-                    </div>
+                    </div>-->
 
-                    <div class="ev-fold-button m-t-8" data-ng-if="item.report_settings.is_level_folded"
-                         data-ng-click="unfoldLevel(item, $index)">+
-                    </div>
-                    <div class="ev-fold-button m-t-8" data-ng-if="!item.report_settings.is_level_folded"
-                         data-ng-click="foldLevel(item, $index)">-
+                    <div data-ng-if="isReport">
+                        <div class="ev-fold-button m-t-8" data-ng-if="item.report_settings.is_level_folded"
+                             data-ng-click="unfoldLevel(item, $index)">+
+                        </div>
+                        <div class="ev-fold-button m-t-8" data-ng-if="!item.report_settings.is_level_folded"
+                             data-ng-click="foldLevel(item, $index)">-
+                        </div>
                     </div>
 
                     <div class="caption">

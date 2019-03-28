@@ -253,30 +253,14 @@
 
                     <h2>Filters</h2>
 
-                    <div layout="row">
+                    <div layout="row" style="margin-bottom:20px">
 
-                        <md-input-container>
+                        <two-fields-multiselect data-get-data-method="vm.getPortfolios(vm.optionsForMultiselect)"
+                                                data-title="Portfolios"
+                                                data-selected-items="vm.reportOptions.portfolios"
+                                                data-name-property="name"></two-fields-multiselect>
 
-                            <label for="">Portfolios</label>
-
-                            <md-select multiple data-ng-model="vm.reportOptions.portfolios"
-                                       md-on-close="searchTerm = ''">
-                                <md-select-header>
-                                    <input data-ng-model="searchTerm"
-                                           type="search"
-                                           placeholder="Search for a ..."
-                                           ng-keydown="vm.onSearchChange($event)"
-                                           class="md-text md-select-search-pattern">
-                                </md-select-header>
-                                <md-option
-                                        data-ng-repeat="item in vm.portfolios | orderBy:'-'+item.name | filter:{name: searchTerm}"
-                                        ng-value="item.id">{{item.name}}
-                                </md-option>
-                            </md-select>
-
-                        </md-input-container>
-
-                        <md-input-container>
+                        <!--<md-input-container>
 
                             <label for="">Accounts</label>
 
@@ -295,13 +279,18 @@
                                 </md-option>
                             </md-select>
 
-                        </md-input-container>
+                        </md-input-container>-->
+
+                        <two-fields-multiselect get-data-method="vm.getAccounts(vm.optionsForMultiselect)"
+                                                data-title="Accounts"
+                                                data-selected-items="vm.reportOptions.account"
+                                                data-name-property="name"></two-fields-multiselect>
 
                     </div>
 
-                    <div layout="row">
+                    <div layout="row" style="margin-bottom:20px">
 
-                        <md-input-container>
+                        <!--<md-input-container>
 
                             <label for="">Strategies 1</label>
 
@@ -320,9 +309,14 @@
                                 </md-option>
                             </md-select>
 
-                        </md-input-container>
+                        </md-input-container>-->
 
-                        <md-input-container>
+                        <two-fields-multiselect get-data-method="vm.getStrategies1(vm.optionsForMultiselect)"
+                                                data-title="Strategies 1"
+                                                data-selected-items="vm.reportOptions.strategies1"
+                                                data-name-property="name"></two-fields-multiselect>
+
+                        <!--<md-input-container>
 
                             <label for="">Strategies 2</label>
 
@@ -341,9 +335,14 @@
                                 </md-option>
                             </md-select>
 
-                        </md-input-container>
+                        </md-input-container>-->
 
-                        <md-input-container>
+                        <two-fields-multiselect get-data-method="vm.getStrategies2(vm.optionsForMultiselect)"
+                                                data-title="Strategies 2"
+                                                data-selected-items="vm.reportOptions.strategies2"
+                                                data-name-property="name"></two-fields-multiselect>
+
+                        <!--<md-input-container>
 
                             <label for="">Strategies 3</label>
 
@@ -362,8 +361,12 @@
                                 </md-option>
                             </md-select>
 
-                        </md-input-container>
+                        </md-input-container>-->
 
+                        <two-fields-multiselect get-data-method="vm.getStrategies3(vm.optionsForMultiselect)"
+                                                data-title="Strategies 3"
+                                                data-selected-items="vm.reportOptions.strategies3"
+                                                data-name-property="name"></two-fields-multiselect>
 
                     </div>
 
