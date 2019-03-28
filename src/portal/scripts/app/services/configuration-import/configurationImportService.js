@@ -99,7 +99,7 @@
 
     };
 
-    var createIfNotExists = function (contentType, item, cacheContainer) {
+    var createIfNotExists = function (contentType, item, cacheContainer, errors) {
 
         return new Promise(function (resolve, reject) {
 
@@ -109,6 +109,7 @@
 
             } else {
 
+                // console.log('contentType', contentType);
 
                 var entityType = metaContentTypesService.findEntityByContentType(contentType);
 
@@ -137,11 +138,21 @@
 
                             entityResolverService.create(entityType, item).then(function (data) {
 
+                                if (!cacheContainer[contentType]) {
+                                    cacheContainer[contentType] = {};
+                                }
+
                                 cacheContainer[contentType][item.user_code] = data;
 
                                 resolve(data)
 
-                            });
+                            }).catch(function (reason) {
+
+                                errors.push(reason);
+
+                                resolve()
+
+                            })
 
                         }
 
@@ -154,11 +165,21 @@
 
                         entityResolverService.create(entityType, item).then(function (data) {
 
+                            if (!cacheContainer[contentType]) {
+                                cacheContainer[contentType] = {};
+                            }
+
                             cacheContainer[contentType][item.user_code] = data;
 
                             resolve(data)
 
-                        });
+                        }).catch(function (reason) {
+
+                            errors.push(reason);
+
+                            resolve()
+
+                        })
                     }
 
                 })
@@ -440,7 +461,7 @@
 
     // Create handler start
 
-    var recursiveCreateItem = function (resolve, index, entityItem, cacheContainer) {
+    var recursiveCreateItem = function (resolve, index, entityItem, cacheContainer, errors) {
 
         var item = entityItem.content[index];
 
@@ -448,14 +469,14 @@
 
         if (item.active) {
 
-            createItem(item, entityItem.entity, cacheContainer).then(function () {
+            createItem(item, entityItem.entity, cacheContainer, errors).then(function () {
 
                 window.importConfigurationCounter = window.importConfigurationCounter + 1;
 
                 if (index === entityItem.content.length) {
                     resolve(item);
                 } else {
-                    recursiveCreateItem(resolve, index, entityItem, cacheContainer)
+                    recursiveCreateItem(resolve, index, entityItem, cacheContainer, errors)
                 }
 
             })
@@ -464,13 +485,36 @@
             if (index === entityItem.content.length) {
                 resolve(item);
             } else {
-                recursiveCreateItem(resolve, index, entityItem, cacheContainer)
+                recursiveCreateItem(resolve, index, entityItem, cacheContainer, errors)
             }
 
         }
 
     };
-    var createItem = function (item, entity, cacheContainer) {
+
+    var catchError = function (promise, item, errors) {
+
+        return new Promise(function (resolve, reject) {
+
+            promise.then(function (data) {
+                resolve(data)
+            }).catch(function (reason) {
+
+                console.log('catch?');
+
+                errors.push({
+                    item: item,
+                    error: reason
+                });
+                resolve();
+
+            })
+
+        })
+
+    };
+
+    var createItem = function (item, entity, cacheContainer, errors) {
 
         return new Promise(function (resolve, reject) {
 
@@ -481,25 +525,25 @@
                     switch (entity) {
 
                         case 'transactions.transactiontype':
-                            resolve(createIfNotExists(entity, item, cacheContainer));
+                            resolve(createIfNotExists(entity, item, cacheContainer, errors));
                             break;
                         case 'transactions.transactiontypegroup':
-                            resolve(createIfNotExists(entity, item, cacheContainer));
+                            resolve(createIfNotExists(entity, item, cacheContainer, errors));
                             break;
                         case 'accounts.accounttype':
-                            resolve(createIfNotExists(entity, item, cacheContainer));
+                            resolve(createIfNotExists(entity, item, cacheContainer, errors));
                             break;
                         case 'currencies.currency':
-                            resolve(createIfNotExists(entity, item, cacheContainer));
+                            resolve(createIfNotExists(entity, item, cacheContainer, errors));
                             break;
                         case 'instruments.pricingpolicy':
-                            resolve(createIfNotExists(entity, item, cacheContainer));
+                            resolve(createIfNotExists(entity, item, cacheContainer, errors));
                             break;
                         case 'instruments.instrumenttype':
-                            resolve(createIfNotExists(entity, item, cacheContainer));
+                            resolve(createIfNotExists(entity, item, cacheContainer, errors));
                             break;
                         case 'import.pricingautomatedschedule':
-                            resolve(pricingAutomatedScheduleService.updateSchedule(item));
+                            resolve(catchError(pricingAutomatedScheduleService.updateSchedule(item), item, errors));
                             break;
                         case 'ui.editlayout':
                             resolve(new Promise(function (resolve, reject) {
@@ -652,43 +696,45 @@
                             }));
                             break;
                         case 'csv_import.scheme':
-                            resolve(entitySchemeService.create(item));
+                            resolve(catchError(entitySchemeService.create(item), item, errors));
                             break;
                         case 'integrations.instrumentdownloadscheme':
-                            resolve(instrumentSchemeService.create(item));
+                            resolve(catchError(instrumentSchemeService.create(item), item, errors));
                             break;
                         case 'integrations.pricedownloadscheme':
-                            resolve(priceDownloadSchemeService.create(item));
+                            resolve(catchError(priceDownloadSchemeService.create(item), item, errors));
                             break;
                         case 'integrations.complextransactionimportscheme':
-                            resolve(transactionSchemeService.create(item));
+                            resolve(catchError(transactionSchemeService.create(item)), item, errors);
                             break;
                         case 'obj_attrs.portfolioattributetype':
-                            resolve(attributeTypeService.create('portfolio', item));
+                            resolve(catchError(attributeTypeService.create('portfolio', item), item, errors));
                             break;
                         case 'obj_attrs.accountattributetype':
-                            resolve(attributeTypeService.create('account', item));
+                            resolve(catchError(attributeTypeService.create('account', item), item, errors));
                             break;
                         case 'obj_attrs.accounttypeattributetype':
-                            resolve(attributeTypeService.create('account-type', item));
+                            resolve(catchError(attributeTypeService.create('account-type', item), item, errors));
                             break;
                         case 'obj_attrs.responsibleattributetype':
-                            resolve(attributeTypeService.create('responsible', item));
+                            resolve(catchError(attributeTypeService.create('responsible', item), item, errors));
                             break;
                         case 'obj_attrs.counterpartyattributetype':
-                            resolve(attributeTypeService.create('counterparty', item));
+                            resolve(catchError(attributeTypeService.create('counterparty', item), item, errors));
                             break;
                         case 'obj_attrs.instrumentattributetype':
-                            resolve(attributeTypeService.create('instrument', item));
+                            resolve(catchError(attributeTypeService.create('instrument', item), item, errors));
                             break;
                         case 'obj_attrs.instrumenttypeattributetype':
-                            resolve(attributeTypeService.create('instrument-type', item));
+                            resolve(catchError(attributeTypeService.create('instrument-type', item), item, errors));
                             break;
                     }
 
                 } catch (error) {
 
-                    console.log('createItem.error', error)
+                    console.log('createItem.error', error);
+
+                    errors.push(error);
 
                 }
 
@@ -708,11 +754,7 @@
                     return item.active;
                 });
 
-                console.log('instrumentTypes', instrumentTypes);
-
                 configurationImportGetService.getInstrumentsTypesWithIds(instrumentTypes).then(function (items) {
-
-                    console.log('instrumentTypes with ids', items);
 
                     var promises = [];
 
@@ -742,7 +784,8 @@
         })
 
     };
-    var createEntityItems = function (entities, cacheContainer) {
+
+    var createEntityItems = function (entities, cacheContainer, errors) {
 
         return new Promise(function (resolve, reject) {
 
@@ -754,19 +797,14 @@
 
                     var startIndex = 0;
 
-                    recursiveCreateItem(resolveItem, startIndex, entityItem, cacheContainer)
+                    recursiveCreateItem(resolveItem, startIndex, entityItem, cacheContainer, errors)
                 }))
 
             });
 
-            console.log('promises', promises);
-
             Promise.all(promises).then(function (data) {
 
-                console.log("createEntityItems?", data);
-
                 resolve(data)
-
 
             })
 
@@ -774,7 +812,7 @@
 
     };
 
-    var createEntities = function (items, cacheContainer) {
+    var createEntities = function (items, cacheContainer, errors) {
 
         return new Promise(function (resolve, reject) {
 
@@ -811,15 +849,15 @@
             });
 
 
-            createEntityItems(instrumentTypes, cacheContainer).then(function () {
+            createEntityItems(instrumentTypes, cacheContainer, errors).then(function () {
 
                 console.log("Instrument type import success");
 
-                createEntityItems(transactionTypeGroups, cacheContainer).then(function (value) {
+                createEntityItems(transactionTypeGroups, cacheContainer, errors).then(function (value) {
 
                     console.log("Transaction type groups import success");
 
-                    createEntityItems(transactionTypes, cacheContainer).then(function () {
+                    createEntityItems(transactionTypes, cacheContainer, errors).then(function () {
 
                         console.log("Transaction type import success");
 
@@ -827,15 +865,15 @@
 
                             console.log("Instrument type overwrite success");
 
-                            createEntityItems(otherEntities, cacheContainer).then(function (data) {
+                            createEntityItems(otherEntities, cacheContainer, errors).then(function (data) {
 
                                 console.log("Entities import success", data);
 
-                                createEntityItems(layoutEntities, cacheContainer).then(function (data) {
+                                createEntityItems(layoutEntities, cacheContainer, errors).then(function (data) {
 
                                     console.log("Layout import success", data);
 
-                                    createEntityItems(bookmarks, cacheContainer).then(function (data) {
+                                    createEntityItems(bookmarks, cacheContainer, errors).then(function (data) {
 
                                         console.log("Bookmark import success", data);
 
@@ -881,28 +919,33 @@
 
                 console.log('Repair items success');
 
+                var errors = [];
                 var cacheContainer = {};
 
-                createEntities(items, cacheContainer).then(function () {
+                createEntities(items, cacheContainer, errors).then(function () {
 
                     console.log('Create items success');
 
                     if (settings && settings.mode === 'overwrite') {
 
-                        overwriteEntities(items, cacheContainer).then(function () {
+                        overwriteEntities(items, cacheContainer, errors).then(function () {
 
                             console.log('Overwrite items success');
 
                             console.log('Finish import success');
 
-                            resolve()
+                            resolve({
+                                errors: errors
+                            })
                         })
 
                     } else {
 
                         console.log('Finish import success');
 
-                        resolve()
+                        resolve({
+                            errors: errors
+                        })
                     }
 
 

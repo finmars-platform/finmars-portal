@@ -24,7 +24,7 @@
 
                         item.group = data.id;
 
-                        console.log('___group__user_code', user_code);
+                        // console.log('___group__user_code', user_code);
 
                         resolveRelation(item)
 
@@ -205,7 +205,7 @@
 
         return new Promise(function (resolve, reject) {
 
-            console.log('syncItem', entity);
+            // console.log('syncItem', entity);
 
             try {
 

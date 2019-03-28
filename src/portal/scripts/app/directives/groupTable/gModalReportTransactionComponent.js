@@ -204,35 +204,35 @@
             vm.complexTransactionAttrs = metaService.getEntityAttrs('complex-transaction').map(function (item) {
                 item.name = 'Complex Transaction.' + item.name;
                 item.entity = 'complex-transaction';
-                item.key = 'complex_transaction_object_' + item.key;
+                // item.key = 'complex_transaction_object_' + item.key;
                 return item;
             });
 
             vm.portfolioAttrs = metaService.getEntityAttrs('portfolio').map(function (item) {
                 item.name = 'Portfolio.' + item.name;
                 item.entity = 'portfolio';
-                item.key = 'portfolio_object_' + item.key;
+                // item.key = 'portfolio_object_' + item.key;
                 return item;
             });
 
             vm.instrumentAttrs = metaService.getEntityAttrs('instrument').map(function (item) {
                 item.name = 'Instrument.' + item.name;
                 item.entity = 'instrument';
-                item.key = 'instrument_object_' + item.key;
+                // item.key = 'instrument_object_' + item.key;
                 return item;
             });
 
             vm.responsibleAttrs = metaService.getEntityAttrs('responsible').map(function (item) {
                 item.name = 'Responsible.' + item.name;
                 item.entity = 'responsible';
-                item.key = 'responsible_object_' + item.key;
+                // item.key = 'responsible_object_' + item.key;
                 return item;
             });
 
             vm.counterpartyAttrs = metaService.getEntityAttrs('counterparty').map(function (item) {
                 item.name = 'Counterparty.' + item.name;
                 item.entity = 'counterparty';
-                item.key = 'counterparty_object_' + item.key;
+                // item.key = 'counterparty_object_' + item.key;
                 return item;
             });
 
@@ -242,21 +242,21 @@
             vm.linkedInstrumentAttrs = metaService.getEntityAttrs('instrument').map(function (item) {
                 item.name = 'Linked instrument.' + item.name;
                 item.entity = 'instrument';
-                item.key = 'linked_instrument_object_' + item.key;
+                // item.key = 'linked_instrument_object_' + item.key;
                 return item;
             });
 
             vm.allocationBalanceAttrs = metaService.getEntityAttrs('instrument').map(function (item) {
                 item.name = 'Allocation balance.' + item.name;
                 item.entity = 'instrument';
-                item.key = 'allocation_balance_object_' + item.key;
+                // item.key = 'allocation_balance_object_' + item.key;
                 return item;
             });
 
             vm.allocationPlAttrs = metaService.getEntityAttrs('instrument').map(function (item) {
                 item.name = 'Allocation P&L.' + item.name;
                 item.entity = 'instrument';
-                item.key = 'allocation_pl_object_' + item.key;
+                // item.key = 'allocation_pl_object_' + item.key;
                 return item;
             });
 
@@ -265,14 +265,14 @@
             vm.transactionCurrencyAttrs = metaService.getEntityAttrs('currency').map(function (item) {
                 item.name = 'Transaction currency.' + item.name;
                 item.entity = 'currency';
-                item.key = 'transaction_currency_object_' + item.key;
+                // item.key = 'transaction_currency_object_' + item.key;
                 return item;
             });
 
             vm.settlementCurrencyAttrs = metaService.getEntityAttrs('currency').map(function (item) {
                 item.name = 'Settlement currency.' + item.name;
                 item.entity = 'currency';
-                item.key = 'settlement_currency_object_' + item.key;
+                // item.key = 'settlement_currency_object_' + item.key;
                 return item;
             });
 
@@ -282,21 +282,21 @@
             vm.accountPositionAttrs = metaService.getEntityAttrs('account').map(function (item) {
                 item.name = 'Account Position.' + item.name;
                 item.entity = 'account';
-                item.key = 'account_position_object_' + item.key;
+                // item.key = 'account_position_object_' + item.key;
                 return item;
             });
 
             vm.accountCashAttrs = metaService.getEntityAttrs('account').map(function (item) {
                 item.name = 'Account Cash.' + item.name;
                 item.entity = 'account';
-                item.key = 'account_cash_object_' + item.key;
+                // item.key = 'account_cash_object_' + item.key;
                 return item;
             });
 
             vm.accountInterimAttrs = metaService.getEntityAttrs('account').map(function (item) {
                 item.name = 'Account interim.' + item.name;
                 item.entity = 'account';
-                item.key = 'account_interim_object_' + item.key;
+                // item.key = 'account_interim_object_' + item.key;
                 return item;
             });
 
@@ -305,35 +305,35 @@
 
             vm.strategy1cashAttrs = metaService.getEntityAttrs('strategy-1').map(function (item) {
                 item.name = 'Strategy1 Cash.' + item.name;
-                item.key = 'strategy1_cash_object_' + item.key;
+                // item.key = 'strategy1_cash_object_' + item.key;
                 return item;
             });
             vm.strategy1positionAttrs = metaService.getEntityAttrs('strategy-1').map(function (item) {
                 item.name = 'Strategy1 Position.' + item.name;
-                item.key = 'strategy1_position_object_' + item.key;
+                // item.key = 'strategy1_position_object_' + item.key;
                 return item;
             });
 
             vm.strategy2cashAttrs = metaService.getEntityAttrs('strategy-2').map(function (item) {
                 item.name = 'Strategy2 Cash.' + item.name;
-                item.key = 'strategy2_cash_object_' + item.key;
+                // item.key = 'strategy2_cash_object_' + item.key;
                 return item;
             });
             vm.strategy2positionAttrs = metaService.getEntityAttrs('strategy-2').map(function (item) {
                 item.name = 'Strategy2 Position.' + item.name;
-                item.key = 'strategy2_position_object_' + item.key;
+                // item.key = 'strategy2_position_object_' + item.key;
                 return item;
             });
 
 
             vm.strategy3cashAttrs = metaService.getEntityAttrs('strategy-3').map(function (item) {
                 item.name = 'Strategy3 Cash.' + item.name;
-                item.key = 'strategy3_cash_object_' + item.key;
+                // item.key = 'strategy3_cash_object_' + item.key;
                 return item;
             });
             vm.strategy3positionAttrs = metaService.getEntityAttrs('strategy-3').map(function (item) {
                 item.name = 'Strategy3 Position.' + item.name;
-                item.key = 'strategy3_position_object_' + item.key;
+                // item.key = 'strategy3_position_object_' + item.key;
                 return item;
             });
 
@@ -420,173 +420,182 @@
 
             var i;
             for (i = 0; i < attrs.length; i = i + 1) {
+
                 attrs[i].columns = false;
                 attrs[i].filters = false;
                 attrs[i].groups = false;
-                columns.map(function (item) {
-                    //console.log('item', item);
-                    //console.log('attrs[i]', attrs[i]);
-                    if (attrs[i].name === item.name) {
-                        attrs[i].columns = true;
+
+                columns.forEach(function (item) {
+
+                    if (item.hasOwnProperty('key')) {
+
+                        if (attrs[i].key === item.key) {
+                            attrs[i].columns = true;
+                        }
                     }
-                    return item;
-                });
-                filters.map(function (item) {
-                    if (attrs[i].name === item.name) {
-                        attrs[i].filters = true;
+
+                    if (item.hasOwnProperty('id')) {
+
+                        if (attrs[i].id === item.id) {
+                            attrs[i].columns = true;
+                        }
                     }
-                    return item;
+
                 });
-                grouping.map(function (item) {
+
+                filters.forEach(function (item) {
+
+                    if (item.hasOwnProperty('key')) {
+
+                        if (attrs[i].key === item.key) {
+                            attrs[i].filters = true;
+                        }
+                    }
+
+                    if (item.hasOwnProperty('id')) {
+
+                        if (attrs[i].id === item.id) {
+                            attrs[i].filters = true;
+                        }
+                    }
+
+                });
+
+                grouping.forEach(function (item) {
+
                     if (item.hasOwnProperty('key')) {
                         if (attrs[i].key === item.key) {
                             attrs[i].groups = true;
                         }
-                    } else {
-                        if (attrs[i].name === item.name) {
+                    }
+
+                    if (item.hasOwnProperty('id')) {
+
+                        if (attrs[i].id === item.id) {
                             attrs[i].groups = true;
                         }
                     }
-                    return item;
+
                 });
             }
         }
 
-        function updateTypeAttrs(typeAttrs) {
-            var i, c, g, f;
+        function updateTypeAttrs(attrs) {
+            var c, g, f;
             var columnExist, groupExist, filterExist;
 
-            for (i = 0; i < typeAttrs.length; i = i + 1) {
+            attrs.forEach(function (attr) {
+
                 columnExist = false;
                 groupExist = false;
                 filterExist = false;
+
                 for (c = 0; c < columns.length; c = c + 1) {
-                    if (typeAttrs[i].hasOwnProperty('key')) {
-                        if (typeAttrs[i].key === columns[c].key) {
+
+                    if (attr.hasOwnProperty('key')) {
+                        if (attr.key === columns[c].key) {
                             columnExist = true;
-                            if (typeAttrs[i].columns === false) {
-                                columns.splice(c, 1);
-                                c = c - 1;
-                            }
-                        }
-                    } else {
-                        if (typeAttrs[i].name === columns[c].name) {
-                            columnExist = true;
-                            if (typeAttrs[i].columns === false) {
+                            if (attr.columns === false) {
                                 columns.splice(c, 1);
                                 c = c - 1;
                             }
                         }
                     }
-                }
-                if (!columnExist) {
-                    if (typeAttrs[i].columns === true) {
-                        columns.push(typeAttrs[i]);
+
+                    if (attr.hasOwnProperty('id')) {
+
+                        if (attr.id === columns[c].id) {
+                            columnExist = true;
+                            if (attr.columns === false) {
+                                columns.splice(c, 1);
+                                c = c - 1;
+                            }
+                        }
+
                     }
+
                 }
+
 
                 /////// GROUPING
 
                 for (g = 0; g < grouping.length; g = g + 1) {
-                    if (typeAttrs[i].hasOwnProperty('key')) {
-                        if (typeAttrs[i].key === grouping[g].key) {
+
+
+                    if (attr.hasOwnProperty('key')) {
+                        if (attr.key === grouping[g].key) {
                             groupExist = true;
-                            if (typeAttrs[i].groups === false) {
+                            if (attr.groups === false) {
                                 grouping.splice(g, 1);
                                 g = g - 1;
                             }
                         }
                     }
 
-                    else if (typeAttrs[i].name === grouping[g].name) {
+                    if (attr.hasOwnProperty('id')) {
 
-                        groupExist = true;
-                        if (typeAttrs[i].groups === false) {
-                            grouping.splice(c, 1);
-                            g = g - 1;
-                        }
-                    }
-                    else {
-                        if (typeAttrs[i].id === grouping[g].id) {
+                        if (attr.id === grouping[g].id) {
                             groupExist = true;
-                            if (typeAttrs[i].groups === false) {
+                            if (attr.groups === false) {
                                 grouping.splice(g, 1);
                                 g = g - 1;
                             }
                         }
+
                     }
+
                 }
-                if (!groupExist) {
-                    if (typeAttrs[i].groups === true) {
-                        grouping.push(typeAttrs[i]);
-                    }
-                }
+
 
                 /////// FILTERING
 
                 for (f = 0; f < filters.length; f = f + 1) {
-                    if (typeAttrs[i].hasOwnProperty('key')) {
-                        if (typeAttrs[i].key === filters[f].key) {
+                    if (attr.hasOwnProperty('key')) {
+                        if (attr.key === filters[f].key) {
                             filterExist = true;
-                            if (typeAttrs[i].filters === false) {
-                                filters.splice(f, 1);
-                                f = f - 1;
-                            }
-                        }
-                    } else {
-                        if (typeAttrs[i].name === filters[f].name) {
-                            filterExist = true;
-                            if (typeAttrs[i].filters === false) {
+                            if (attr.filters === false) {
                                 filters.splice(f, 1);
                                 f = f - 1;
                             }
                         }
                     }
-                }
-                if (!filterExist) {
-                    if (typeAttrs[i].filters === true) {
-                        filters.push(typeAttrs[i]);
-                    }
-                }
-            }
 
-            // console.log('attributes in modal ', vm.attrs, vm.baseAttrs, vm.entityAttrs, parentScope);
+                    if (attr.hasOwnProperty('id')) {
+
+                        if (attr.id === filters[f].id) {
+                            filterExist = true;
+                            if (attr.filters === false) {
+                                filters.splice(f, 1);
+                                f = f - 1;
+                            }
+                        }
+                    }
+
+                }
+
+                if (!columnExist && attr.columns === true) {
+                    columns.push(attr);
+                }
+
+                if (!groupExist && attr.groups === true) {
+                    grouping.push(attr);
+                }
+
+                if (!filterExist && attr.filters === true) {
+                    filters.push(attr);
+                }
+
+            });
+
+            entityViewerDataService.setColumns(columns);
+            entityViewerDataService.setGroups(grouping);
+            entityViewerDataService.setFilters(filters);
+
         }
 
-        vm.updateAttrs = function () {
+        vm.updateAttrs = function (attrs) {
 
-            updateTypeAttrs(vm.transactionAttrs);
-            updateTypeAttrs(vm.complexTransactionAttrs);
-
-            updateTypeAttrs(vm.portfolioAttrs);
-            updateTypeAttrs(vm.instrumentAttrs);
-            updateTypeAttrs(vm.responsibleAttrs);
-            updateTypeAttrs(vm.counterpartyAttrs);
-
-            updateTypeAttrs(vm.linkedInstrumentAttrs);
-            updateTypeAttrs(vm.allocationBalanceAttrs);
-            updateTypeAttrs(vm.allocationPlAttrs);
-
-            updateTypeAttrs(vm.accountPositionAttrs);
-            updateTypeAttrs(vm.accountCashAttrs);
-            updateTypeAttrs(vm.accountInterimAttrs);
-
-            updateTypeAttrs(vm.transactionCurrencyAttrs);
-            updateTypeAttrs(vm.settlementCurrencyAttrs);
-
-            updateTypeAttrs(vm.strategy1cashAttrs);
-            updateTypeAttrs(vm.strategy1positionAttrs);
-
-            updateTypeAttrs(vm.strategy2cashAttrs);
-            updateTypeAttrs(vm.strategy2positionAttrs);
-
-            updateTypeAttrs(vm.strategy3cashAttrs);
-            updateTypeAttrs(vm.strategy3positionAttrs);
-
-            updateTypeAttrs(vm.custom);
-
-
-            addColumn();
+            updateTypeAttrs(attrs);
 
             evDataHelper.updateColumnsIds(entityViewerDataService);
             evDataHelper.setColumnsDefaultWidth(entityViewerDataService);
@@ -596,6 +605,7 @@
             entityViewerEventService.dispatchEvent(evEvents.GROUPS_CHANGE);
 
             entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+
         };
 
         vm.cancel = function () {
