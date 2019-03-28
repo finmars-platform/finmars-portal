@@ -59,6 +59,22 @@
                     return scope.item.name
                 };
 
+                scope.hideIscanceledCheckbox = function (checkboxName) {
+
+                    if (scope.entityType === 'transaction') {
+
+                        if (checkboxName === 'Is canceled') {
+                            return false;
+                        }
+
+                        return true;
+
+                    }
+
+                    return true;
+
+                };
+
                 scope.copyFromField = function (attr) {
                     var attrObj = JSON.parse(attr);
 

@@ -113,7 +113,7 @@
 
         </md-input-container>
     </div>
-    <div data-ng-if="fieldType['display_name'] === 'Boolean'">
+    <div data-ng-if="fieldType['display_name'] === 'Boolean' && hideIscanceledCheckbox(getName())">
         <md-checkbox class="checkbox-bind-field" data-ng-model="entity[getModelKey()]"
                      aria-label="checkbox">
             <label data-ng-bind="getName()"></label>
