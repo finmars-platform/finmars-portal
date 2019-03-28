@@ -56,64 +56,31 @@
 
         };
 
-        vm.recursiveHandleEvent = function (index, actions, resolve) {
 
-            var action = actions[index];
+        vm.applyDefault = function ($event) {
 
-            eventsService.getEventAction(vm.event.id, action.id).then(function (event) {
-
-                console.log('event', event);
-
-                var status = 5; // 'Booked (user, default)';
-
-                if (action.is_sent_to_pending) {
-                    status = 8; // 'Booked, pending (user, default)';
-                }
-
-                eventsService.putEventAction(vm.event.id, action.id, event, status).then(function () {
-
-                    index = index + 1;
-
-                    if (index < actions.length) {
-
-                        vm.recursiveHandleEvent(index, actions, resolve);
-
-                    } else {
-
-                        resolve(action);
+            return $mdDialog.show({
+                controller: 'EventWithReactApplyDefaultConfirmDialogController as vm',
+                templateUrl: 'views/dialogs/events/event-with-react-apply-default-confirm-dialog-view.html',
+                parent: angular.element(document.body),
+                targetEvent: $event,
+                locals: {
+                    data: {
+                        event: vm.event
                     }
+                },
+                preserveScope: true,
+                autoWrap: true,
+                skipHide: true,
+                multiple: true
+            }).then(function (res) {
 
-                })
-
-            });
-
-        };
-
-        vm.applyDefault = function () {
-
-            var actions = vm.event.event_schedule_object.actions.filter(function (action) {
-                return action.is_book_automatic === true;
-            });
-
-            if (actions.length) {
-
-                new Promise(function (resolve, reject) {
-
-                    var index = 0;
-
-                    vm.recursiveHandleEvent(index, actions, resolve)
-
-                }).then(function (value) {
+                if (res.status === 'agree') {
 
                     $mdDialog.hide({status: 'agree'});
+                }
 
-                })
-
-            } else {
-
-                vm.informed();
-
-            }
+            });
 
         };
 
