@@ -9,29 +9,7 @@
     <div class="g-second-line">
 
         <div class="groups-holder">
-            <!--<div class="group-folding-holder" data-ng-if="!options.isReport">-->
-            <!--<md-card>-->
-            <!--<div>-->
-            <!--&lt;!&ndash;<div class="fold-btn-wrap {{folding ? '' : 'disabled'}}">&ndash;&gt;-->
-            <!--<div class="fold-btn-wrap">-->
-            <!--<md-button class="grouping-fold-btn" aria-label="hide/show grouping"-->
-            <!--data-ng-click="toggleGroupFold()">-->
-            <!--<ng-md-icon icon="add"></ng-md-icon>-->
-            <!--</md-button>-->
-            <!--<md-tooltip class="tooltip_1" md-direction="top">Expand</md-tooltip>-->
-            <!--</div>-->
-            <!--&lt;!&ndash;<div class="fold-btn-wrap {{folding ? 'disabled' : ''}}">&ndash;&gt;-->
-            <!--<div class="fold-btn-wrap">-->
-            <!--<md-button class="grouping-fold-btn" aria-label="hide/show grouping"-->
-            <!--data-ng-click="toggleGroupFold()">-->
-            <!--<ng-md-icon icon="remove"></ng-md-icon>-->
-            <!--</md-button>-->
-            <!--<md-tooltip class="tooltip_1" md-direction="top">Collapse</md-tooltip>-->
-            <!--</div>-->
-            <!--</div>-->
-            <!--</md-card>-->
-            <!--</div>-->
-            <!--<div dragula="'group-bag'" dragula-model="grouping">-->
+
             <div class="g-groups-holder">
 
                 <md-card data-ng-repeat="item in grouping track by $index" class="group-item card"
@@ -98,7 +76,8 @@
                                         <span>Subtotal on Top</span>
                                     </md-button>
                                 </md-menu-item>
-                                <md-menu-item>
+
+                                <!--<md-menu-item>
                                     <md-button md-prevent-menu-close="md-prevent-menu-close"
                                                ng-click="reportSetSubtotalType(item, 'area', $index)"
                                                class="g-settings-option-btn">
@@ -108,8 +87,9 @@
                                                     data-ng-show="item.report_settings.subtotal_type != 'area'"></ng-md-icon>
                                         <span>Subtotal on Bottom</span>
                                     </md-button>
-                                </md-menu-item>
-                                <md-menu-item>
+                                </md-menu-item>-->
+
+                                <!--<md-menu-item>
                                     <md-button md-prevent-menu-close="md-prevent-menu-close"
                                                ng-click="reportSetSubtotalType(item, 'arealine', $index)"
                                                class="g-settings-option-btn">
@@ -119,7 +99,8 @@
                                                     data-ng-show="item.report_settings.subtotal_type != 'arealine'"></ng-md-icon>
                                         <span>Subtotal on Top and Bottom</span>
                                     </md-button>
-                                </md-menu-item>
+                                </md-menu-item>-->
+
                                 <md-menu-item>
                                     <md-button md-prevent-menu-close="md-prevent-menu-close"
                                                ng-click="reportSetBlankLineType(item, 'area', $index)"

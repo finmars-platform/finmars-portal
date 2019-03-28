@@ -93,7 +93,9 @@
 
                                                     });
                                                 } else if (parent.entity === "transactions.transactiontype") {
+
                                                     groupByProperty(parent.content, '___group__user_code');
+
                                                 }
                                                 // < Divide children into subgroups >
 
@@ -122,6 +124,7 @@
             var hasFirstElement = [];
 
             elements.forEach(function (element) {
+
                 if (element.hasOwnProperty(propertyToGroupBy)) {
                     var valueToGroupBy = element[propertyToGroupBy];
 
@@ -134,8 +137,9 @@
                         hasFirstElement.push(valueToGroupBy);
                     }
 
-                    element.grouping_options__ = valueToGroupBy;
+                    element.order__ = valueToGroupBy;
                 }
+
             });
 
         };
