@@ -446,8 +446,6 @@
                     controller: 'WarningDialogController as vm',
                     templateUrl: 'views/warning-dialog-view.html',
                     // targetEvent: $event,
-                    autoWrap: true,
-                    skipHide: true,
                     locals: {
                         warning: {
                             title: 'Warning!',
