@@ -256,7 +256,7 @@
                     } else {
                         column.report_settings.negative_color_format_id = type;
                     }
-                    console.log("negative color columns after turning on", scope.columns);
+
                     scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
                 };
 
@@ -440,13 +440,15 @@
                     var groupToAdd = {};
 
                     if (column.hasOwnProperty('key')) {
-
                         groupToAdd.key = column.key;
+                    }
 
-                    } else if (column.hasOwnProperty('entity')) {
+                    if (column.hasOwnProperty('entity')) {
                         groupToAdd.entity = column.entity;
-                        groupToAdd.id = column.id;
+                    }
 
+                    if (column.hasOwnProperty('id')) {
+                        groupToAdd.id = column.id;
                     }
 
                     groupToAdd.name = column.name;
