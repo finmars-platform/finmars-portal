@@ -425,6 +425,43 @@
 
                 };
 
+                scope.checkForExistingGroupingColumn = function (index) {
+                    var groups = scope.evDataService.getGroups();
+                    if (groups.length > 0 && index <= groups.length - 1) {
+                        return false;
+                    } else {
+                        return true;
+                    }
+                };
+
+                scope.addColumnEntityToGrouping = function (column) {
+
+                    var groups = scope.evDataService.getGroups();
+                    var groupToAdd = {};
+
+                    if (column.hasOwnProperty('key')) {
+                        groupToAdd.key = column.key;
+                    }
+
+                    if (column.hasOwnProperty('entity')) {
+                        groupToAdd.entity = column.entity;
+                    }
+
+                    if (column.hasOwnProperty('id')) {
+                        groupToAdd.id = column.id;
+                    }
+
+                    groupToAdd.name = column.name;
+                    groupToAdd.value_type = column.value_type;
+
+                    groups.push(groupToAdd);
+                    scope.evDataService.setGroups(groups);
+
+                    scope.evEventService.dispatchEvent(evEvents.GROUPS_CHANGE);
+                    scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+
+                };
+
                 scope.removeColumn = function (column) {
 
                     scope.columns = scope.columns.filter(function (item) {
