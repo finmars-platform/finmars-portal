@@ -256,7 +256,7 @@
                     } else {
                         column.report_settings.negative_color_format_id = type;
                     }
-
+                    console.log("negative color columns after turning on", scope.columns);
                     scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
                 };
 
@@ -426,15 +426,17 @@
                 };
 
                 scope.checkForExistingGroupingColumn = function (index) {
-                   if (scope.groups.length > 0 && index <= scope.groups.length - 1) {
-                       return false;
-                   } else {
-                       return true;
-                   }
+                    var groups = scope.evDataService.getGroups();
+                    if (groups.length > 0 && index <= groups.length - 1) {
+                        return false;
+                    } else {
+                        return true;
+                    }
                 };
 
                 scope.addColumnEntityToGrouping = function (column) {
 
+                    var groups = scope.evDataService.getGroups();
                     var groupToAdd = {};
 
                     if (column.hasOwnProperty('key')) {
@@ -450,8 +452,8 @@
                     groupToAdd.name = column.name;
                     groupToAdd.value_type = column.value_type;
 
-                    scope.groups.push(groupToAdd);
-                    scope.evDataService.setGroups(scope.groups);
+                    groups.push(groupToAdd);
+                    scope.evDataService.setGroups(groups);
 
                     scope.evEventService.dispatchEvent(evEvents.GROUPS_CHANGE);
                     scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);

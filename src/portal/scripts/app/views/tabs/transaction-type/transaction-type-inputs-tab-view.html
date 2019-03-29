@@ -184,7 +184,8 @@
                 </td>
                 <td style="padding-top: 12px">
                     <md-input-container>
-                        <md-select data-ng-model="vm.newItem.content_type">
+                        <md-select data-ng-model="vm.newItem.content_type"
+                                   md-container-class="simple-search-select">
                             <md-option data-ng-repeat="item in vm.contentTypes" ng-value="item.key">
                                 {{item.name}}
                             </md-option>
