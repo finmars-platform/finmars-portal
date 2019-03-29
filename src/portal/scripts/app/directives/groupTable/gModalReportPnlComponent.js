@@ -398,14 +398,14 @@
 
                     if (item.hasOwnProperty('key')) {
 
-                        if (attrs[i].key === item.key) {
+                        if (attrs[i].key === item.key && attrs[i].entity === item.entity) {
                             attrs[i].columns = true;
                         }
                     }
 
                     if (item.hasOwnProperty('id')) {
 
-                        if (attrs[i].id === item.id) {
+                        if (attrs[i].id === item.id && attrs[i].entity === item.entity) {
                             attrs[i].columns = true;
                         }
                     }
@@ -416,14 +416,14 @@
 
                     if (item.hasOwnProperty('key')) {
 
-                        if (attrs[i].key === item.key) {
+                        if (attrs[i].key === item.key && attrs[i].entity === item.entity) {
                             attrs[i].filters = true;
                         }
                     }
 
                     if (item.hasOwnProperty('id')) {
 
-                        if (attrs[i].id === item.id) {
+                        if (attrs[i].id === item.id && attrs[i].entity === item.entity) {
                             attrs[i].filters = true;
                         }
                     }
@@ -433,14 +433,14 @@
                 grouping.forEach(function (item) {
 
                     if (item.hasOwnProperty('key')) {
-                        if (attrs[i].key === item.key) {
+                        if (attrs[i].key === item.key && attrs[i].entity === item.entity) {
                             attrs[i].groups = true;
                         }
                     }
 
                     if (item.hasOwnProperty('id')) {
 
-                        if (attrs[i].id === item.id) {
+                        if (attrs[i].id === item.id && attrs[i].entity === item.entity) {
                             attrs[i].groups = true;
                         }
                     }
@@ -462,7 +462,7 @@
                 for (c = 0; c < columns.length; c = c + 1) {
 
                     if (attr.hasOwnProperty('key')) {
-                        if (attr.key === columns[c].key) {
+                        if (attr.key === columns[c].key && attr.entity === columns[c].entity) {
                             columnExist = true;
                             if (attr.columns === false) {
                                 columns.splice(c, 1);
@@ -473,7 +473,7 @@
 
                     if (attr.hasOwnProperty('id')) {
 
-                        if (attr.id === columns[c].id) {
+                        if (attr.id === columns[c].id && attr.entity === columns[c].entity) {
                             columnExist = true;
                             if (attr.columns === false) {
                                 columns.splice(c, 1);
@@ -492,7 +492,7 @@
 
 
                     if (attr.hasOwnProperty('key')) {
-                        if (attr.key === grouping[g].key) {
+                        if (attr.key === grouping[g].key && attr.entity === grouping[g].entity) {
                             groupExist = true;
                             if (attr.groups === false) {
                                 grouping.splice(g, 1);
@@ -503,7 +503,7 @@
 
                     if (attr.hasOwnProperty('id')) {
 
-                        if (attr.id === grouping[g].id) {
+                        if (attr.id === grouping[g].id && attr.entity === grouping[g].entity) {
                             groupExist = true;
                             if (attr.groups === false) {
                                 grouping.splice(g, 1);
@@ -520,7 +520,7 @@
 
                 for (f = 0; f < filters.length; f = f + 1) {
                     if (attr.hasOwnProperty('key')) {
-                        if (attr.key === filters[f].key) {
+                        if (attr.key === filters[f].key && attr.entity === filters[f].entity) {
                             filterExist = true;
                             if (attr.filters === false) {
                                 filters.splice(f, 1);
@@ -531,7 +531,7 @@
 
                     if (attr.hasOwnProperty('id')) {
 
-                        if (attr.id === filters[f].id) {
+                        if (attr.id === filters[f].id && attr.entity === filters[f].entity) {
                             filterExist = true;
                             if (attr.filters === false) {
                                 filters.splice(f, 1);
