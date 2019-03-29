@@ -159,7 +159,7 @@
             result.count = groups.length;
             result.results = groups;
 
-            console.log('get groups', JSON.parse(JSON.stringify(result)));
+            // console.log('get groups', JSON.parse(JSON.stringify(result)));
 
             resolve(result)
 
