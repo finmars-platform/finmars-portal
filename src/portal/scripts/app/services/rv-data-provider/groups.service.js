@@ -148,7 +148,7 @@
 
             var groups = getUniqueGroups(items, group);
 
-            console.log('getUniqueGroups groups', groups);
+            // console.log('getUniqueGroups groups', groups);
 
             if (options.groups_order === 'desc') {
                 groups = sortService.sortItems(groups, '-___group_name');
