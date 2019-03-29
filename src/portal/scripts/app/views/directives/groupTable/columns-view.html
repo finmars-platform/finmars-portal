@@ -475,6 +475,19 @@
                                                 <md-menu-content style="display: none"></md-menu-content>
                                             </md-menu>
                                         </md-menu-item>
+
+                                        <md-menu-item data-ng-if="checkForExistingGroupingColumn($index)">
+                                            <md-menu>
+                                                <md-button data-ng-click="addColumnEntityToGrouping(column)"
+                                                           class="g-settings-option-btn">
+                                                    <ng-md-icon icon="visibility_off"
+                                                                style="visibility: hidden;"></ng-md-icon>
+                                                    <span>Add to grouping</span>
+                                                </md-button>
+                                                <md-menu-content style="display: none"></md-menu-content>
+                                            </md-menu>
+                                        </md-menu-item>
+
                                         <md-menu-item data-ng-if="checkReportRemoveButton(column, $index)">
                                             <md-menu>
                                                 <md-button ng-click="removeColumn(column)"
@@ -496,6 +509,7 @@
                                         {{column.value_type}}
                                     </md-button>
                                     <md-menu-content>
+
                                         <md-menu-item>
                                             <md-menu>
                                                 <md-button ng-click="renameColumn(column, $mdMenu, $event)"
@@ -507,6 +521,19 @@
                                                 <md-menu-content style="display: none"></md-menu-content>
                                             </md-menu>
                                         </md-menu-item>
+
+                                        <md-menu-item data-ng-if="checkForExistingGroupingColumn($index)">
+                                            <md-menu>
+                                                <md-button data-ng-click="addColumnEntityToGrouping(column)"
+                                                           class="g-settings-option-btn">
+                                                    <ng-md-icon icon="visibility_off"
+                                                                style="visibility: hidden;"></ng-md-icon>
+                                                    <span>Add to grouping</span>
+                                                </md-button>
+                                                <md-menu-content style="display: none"></md-menu-content>
+                                            </md-menu>
+                                        </md-menu-item>
+
                                         <md-menu-item data-ng-if="checkReportRemoveButton(column, $index)">
                                             <md-menu>
                                                 <md-button ng-click="removeColumn(column)"
@@ -521,11 +548,13 @@
                                     </md-menu-content>
                                 </md-menu>
                                 <md-menu data-ng-if="!isReport">
+
                                     <md-button aria-label="Open phone interactions menu"
                                                class="md-icon-button column-btns"
                                                ng-click="$mdOpenMenu($event)">
                                         <ng-md-icon icon="settings"></ng-md-icon>
                                     </md-button>
+
                                     <md-menu-content width="4">
                                         <md-menu-item>
                                             <md-menu>
