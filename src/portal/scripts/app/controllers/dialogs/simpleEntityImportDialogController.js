@@ -32,7 +32,7 @@
         vm.activeContentType = null;
 
         vm.config = {
-            error_handler: 'break'
+            delimiter: ','
         };
 
         vm.loadIsAvailable = function () {
