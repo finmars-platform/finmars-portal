@@ -43,7 +43,8 @@
         vm.dataIsImported = false;
 
         vm.config = {
-            mode: 1
+            mode: 1,
+            delimiter: ','
         };
 
         vm.validateConfig = {
