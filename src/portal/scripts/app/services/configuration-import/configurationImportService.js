@@ -403,7 +403,7 @@
                                     }
                                 };
 
-                                instrumentSchemeService.getList(options).then(function (data) {
+                                    instrumentSchemeService.getList(options).then(function (data) {
 
                                     var result;
 
