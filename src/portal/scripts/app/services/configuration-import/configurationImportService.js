@@ -81,55 +81,16 @@
 
                     });
 
-                    if (result) {
+                    item.id = result.id;
 
-                        item.id = result.id;
+                    resolve(entityResolverService.update(entityType, item.id, item))
 
-                        if (entityType === 'transaction-type') {
-
-                            result.actions.forEach(function (resultAction) {
-
-                                item.actions.forEach(function (itemAction) {
-
-                                    if (resultAction.action_notes === itemAction.action_notes) {
-                                        itemAction.id = resultAction.id
-                                    }
-
-
-                                })
-
-
-                            })
-
-                            result.inputs.forEach(function (resultInput) {
-
-                                item.inputs.forEach(function (itemInput) {
-
-                                    if (resultInput.name === itemInput.name) {
-                                        itemInput.id = resultInput.id
-                                    }
-
-
-                                })
-
-
-                            })
-
-                        }
-
-
-                        resolve(entityResolverService.update(entityType, item.id, item))
-
-                    } else {
-
-                        resolve(entityResolverService.create(entityType, item))
-
-                    }
 
                 } else {
 
-                    resolve(entityResolverService.create(entityType, item))
+                    console.warn('Cant overwrite item ' + item.user_code + ' contentType: ' + contentType);
 
+                    resolve(item);
                 }
 
             })
@@ -138,7 +99,7 @@
 
     };
 
-    var createIfNotExists = function (contentType, item, settings, cacheContainer, errors) {
+    var createIfNotExists = function (contentType, item, cacheContainer, errors) {
 
         return new Promise(function (resolve, reject) {
 
@@ -157,6 +118,7 @@
                         user_code: item.user_code
                     }
                 };
+
 
                 entityResolverService.getList(entityType, options).then(function (data) {
 
@@ -194,18 +156,10 @@
 
                         }
 
-                        if (settings.mode === 'overwrite') {
-                            console.warn('Item already exists: user_code ' + item.user_code + ' contentType ' + contentType);
-                        } else {
-                            errors.push({
-                                item: item,
-                                error: {
-                                    message: 'Item already exists: user_code ' + item.user_code
-                                }
-                            });
-                        }
+                        console.warn('Item already exists: user_code ' + item.user_code + ' contentType ' + contentType);
 
                         resolve()
+
 
                     } else {
 
@@ -231,80 +185,6 @@
                 })
 
             }
-
-        })
-
-    };
-
-    var createAttributeTypeIfNotExists = function (contentType, item, errors) {
-
-        return new Promise(function (resolve, reject) {
-
-
-            console.log('contentType', contentType);
-
-            var entityType = metaContentTypesService.findEntityByContentType(contentType);
-
-            console.log('entityType', entityType);
-
-            var options = {
-                filters: {
-                    user_code: item.user_code
-                }
-            };
-
-            attributeTypeService.getList(entityType, options).then(function (data) {
-
-                var result;
-
-                if (data.results.length) {
-
-                    data.results.forEach(function (resultItem) {
-
-                        if (resultItem.user_code === item.user_code) {
-                            result = resultItem;
-                        }
-
-                    });
-
-                    if (!result) {
-
-                        attributeTypeService.create(entityType, item).catch(function (reason) {
-
-                            errors.push(reason);
-
-                            resolve()
-
-                        })
-
-                    }
-
-                    // console.warn('Attribute Type already exists: user_code ' + item.user_code + ' contentType ' + contentType);
-
-                    // resolve()
-
-                    errors.push({
-                        item: item,
-                        error: {
-                            message: 'Attribute Type already exists: user_code ' + item.user_code
-                        }
-                    });
-
-                    resolve()
-
-                } else {
-
-                    attributeTypeService.create(entityType, item).catch(function (reason) {
-
-                        errors.push(reason);
-
-                        resolve()
-
-                    })
-                }
-
-            })
-
 
         })
 
@@ -344,11 +224,11 @@
 
                                 var options = {
                                     filters: {
-                                        name: item.name
+                                        scheme_name: item.scheme_name
                                     }
                                 };
 
-                                entitySchemeService.getList(options).then(function (data) {
+                                entitySchemeService.getList(entityType, options).then(function (data) {
 
                                     var result;
 
@@ -356,26 +236,22 @@
 
                                         data.results.forEach(function (resultItem) {
 
-                                            if (resultItem.name === item.name) {
+                                            if (resultItem.user_code === item.user_code) {
                                                 result = resultItem;
                                             }
 
                                         });
 
-                                        if (result) {
+                                        item.id = result.id;
 
-                                            item.id = result.id;
+                                        resolveLocal(entitySchemeService.update(entityType, item.id, item))
 
-                                            resolveLocal(entitySchemeService.update(item.id, item))
-
-                                        } else {
-
-                                            resolveLocal(entitySchemeService.create(item));
-                                        }
 
                                     } else {
 
-                                        resolveLocal(entitySchemeService.create(item));
+                                        console.warn("Cant overwrite item " + item.scheme_name + ' entityType: ' + entityType);
+
+                                        resolveLocal(item);
                                     }
 
                                 })
@@ -393,7 +269,7 @@
                                     }
                                 };
 
-                                instrumentSchemeService.getList(options).then(function (data) {
+                                instrumentSchemeService.getList(entityType, options).then(function (data) {
 
                                     var result;
 
@@ -401,40 +277,22 @@
 
                                         data.results.forEach(function (resultItem) {
 
-                                            if (resultItem.scheme_name === item.scheme_name) {
+                                            if (resultItem.user_code === item.user_code) {
                                                 result = resultItem;
                                             }
 
                                         });
 
-                                        if (result) {
+                                        item.id = result.id;
 
-                                            item.id = result.id;
+                                        resolveLocal(instrumentSchemeService.update(entityType, item.id, item))
 
-                                            result.inputs.forEach(function (resultInput) {
-
-                                                item.inputs.forEach(function (itemInput) {
-
-                                                    if (resultInput.name === itemInput.name) {
-                                                        itemInput.id = resultInput.id
-                                                    }
-
-
-                                                })
-
-                                            });
-
-
-                                            resolveLocal(instrumentSchemeService.update(item.id, item))
-
-                                        } else {
-
-                                            resolveLocal(instrumentSchemeService.create(item));
-                                        }
 
                                     } else {
 
-                                        resolveLocal(instrumentSchemeService.create(item));
+                                        console.warn("Cant overwrite item " + item.scheme_name + ' entityType: ' + entityType);
+
+                                        resolveLocal(item);
                                     }
 
                                 })
@@ -452,7 +310,7 @@
                                     }
                                 };
 
-                                priceDownloadSchemeService.getList(options).then(function (data) {
+                                priceDownloadSchemeService.getList(entityType, options).then(function (data) {
 
                                     var result;
 
@@ -460,28 +318,22 @@
 
                                         data.results.forEach(function (resultItem) {
 
-                                            if (resultItem.scheme_name === item.scheme_name) {
+                                            if (resultItem.user_code === item.user_code) {
                                                 result = resultItem;
                                             }
 
                                         });
 
-                                        if (result) {
+                                        item.id = result.id;
 
-                                            item.id = result.id;
+                                        resolveLocal(priceDownloadSchemeService.update(entityType, item.id, item))
 
-                                            resolveLocal(priceDownloadSchemeService.update(item.id, item))
-
-                                        } else {
-
-                                            resolveLocal(priceDownloadSchemeService.create(item))
-
-                                        }
 
                                     } else {
 
-                                        resolveLocal(priceDownloadSchemeService.create(item))
+                                        console.warn("Cant overwrite item " + item.scheme_name + ' entityType: ' + entityType);
 
+                                        resolveLocal(item);
                                     }
 
                                 })
@@ -499,7 +351,7 @@
                                     }
                                 };
 
-                                transactionSchemeService.getList(options).then(function (data) {
+                                transactionSchemeService.getList(entityType, options).then(function (data) {
 
                                     var result;
 
@@ -507,115 +359,26 @@
 
                                         data.results.forEach(function (resultItem) {
 
-                                            if (resultItem.scheme_name === item.scheme_name) {
+                                            if (resultItem.user_code === item.user_code) {
                                                 result = resultItem;
                                             }
 
                                         });
 
-                                        if (result) {
+                                        item.id = result.id;
 
-                                            item.id = result.id;
+                                        resolveLocal(transactionSchemeService.update(entityType, item.id, item))
 
-                                            resolveLocal(transactionSchemeService.update(item.id, item))
-
-                                        } else {
-
-                                            resolveLocal(transactionSchemeService.create(item))
-
-                                        }
 
                                     } else {
 
-                                        resolveLocal(transactionSchemeService.create(item))
+                                        console.warn("Cant overwrite item " + item.scheme_name + ' entityType: ' + entityType);
 
+                                        resolveLocal(item);
                                     }
 
                                 })
 
-
-                            }));
-                            break;
-                        case 'ui.listlayout':
-                            resolve(new Promise(function (resolve, reject) {
-
-                                uiRepository.getListLayoutDefault({
-                                    filters: {
-                                        name: item.name,
-                                        content_type: item.content_type
-                                    }
-                                }).then(function (data) {
-
-                                    if (data.results.length) {
-
-                                        var result;
-
-                                        data.results.forEach(function (resultItem) {
-
-                                            if (resultItem.name === item.name) {
-                                                result = resultItem
-                                            }
-
-                                        });
-
-                                        if (result) {
-
-                                            item.id = result.id;
-
-                                            resolve(uiRepository.updateListLayout(item.id, item));
-
-                                        } else {
-                                            resolve(uiRepository.createListLayout(item));
-                                        }
-                                    } else {
-
-                                        resolve(uiRepository.createListLayout(item));
-
-                                    }
-
-                                });
-
-                            }));
-                            break;
-                        case 'ui.reportlayout':
-                            resolve(new Promise(function (resolve, reject) {
-
-                                uiRepository.getListLayoutDefault({
-                                    filters: {
-                                        name: item.name,
-                                        content_type: item.content_type
-                                    }
-                                }).then(function (data) {
-
-                                    if (data.results.length) {
-
-                                        var result;
-
-                                        data.results.forEach(function (resultItem) {
-
-                                            if (resultItem.name === item.name) {
-                                                result = resultItem
-                                            }
-
-                                        });
-
-                                        if (result) {
-
-                                            item.id = result.id;
-
-                                            resolve(uiRepository.updateListLayout(item.id, item));
-
-                                        } else {
-
-                                            resolve(uiRepository.createListLayout(item));
-                                        }
-                                    } else {
-
-                                        resolve(uiRepository.createListLayout(item));
-
-                                    }
-
-                                });
 
                             }));
                             break;
@@ -665,7 +428,7 @@
 
     };
 
-    var overwriteEntities = function (items, settings, cacheContainer) {
+    var overwriteEntities = function (items, cacheContainer) {
 
         return new Promise(function (resolve, reject) {
 
@@ -698,7 +461,7 @@
 
     // Create handler start
 
-    var recursiveCreateItem = function (resolve, index, entityItem, settings, cacheContainer, errors) {
+    var recursiveCreateItem = function (resolve, index, entityItem, cacheContainer, errors) {
 
         var item = entityItem.content[index];
 
@@ -706,14 +469,14 @@
 
         if (item.active) {
 
-            createItem(item, entityItem.entity, settings, cacheContainer, errors).then(function () {
+            createItem(item, entityItem.entity, cacheContainer, errors).then(function () {
 
                 window.importConfigurationCounter = window.importConfigurationCounter + 1;
 
                 if (index === entityItem.content.length) {
                     resolve(item);
                 } else {
-                    recursiveCreateItem(resolve, index, entityItem, settings, cacheContainer, errors)
+                    recursiveCreateItem(resolve, index, entityItem, cacheContainer, errors)
                 }
 
             })
@@ -751,7 +514,7 @@
 
     };
 
-    var createItem = function (item, entity, settings, cacheContainer, errors) {
+    var createItem = function (item, entity, cacheContainer, errors) {
 
         return new Promise(function (resolve, reject) {
 
@@ -762,22 +525,22 @@
                     switch (entity) {
 
                         case 'transactions.transactiontype':
-                            resolve(createIfNotExists(entity, item, settings, cacheContainer, errors));
+                            resolve(createIfNotExists(entity, item, cacheContainer, errors));
                             break;
                         case 'transactions.transactiontypegroup':
-                            resolve(createIfNotExists(entity, item, settings, cacheContainer, errors));
+                            resolve(createIfNotExists(entity, item, cacheContainer, errors));
                             break;
                         case 'accounts.accounttype':
-                            resolve(createIfNotExists(entity, item, settings, cacheContainer, errors));
+                            resolve(createIfNotExists(entity, item, cacheContainer, errors));
                             break;
                         case 'currencies.currency':
-                            resolve(createIfNotExists(entity, item, settings, cacheContainer, errors));
+                            resolve(createIfNotExists(entity, item, cacheContainer, errors));
                             break;
                         case 'instruments.pricingpolicy':
-                            resolve(createIfNotExists(entity, item, settings, cacheContainer, errors));
+                            resolve(createIfNotExists(entity, item, cacheContainer, errors));
                             break;
                         case 'instruments.instrumenttype':
-                            resolve(createIfNotExists(entity, item, settings, cacheContainer, errors));
+                            resolve(createIfNotExists(entity, item, cacheContainer, errors));
                             break;
                         case 'import.pricingautomatedschedule':
                             resolve(catchError(pricingAutomatedScheduleService.updateSchedule(item), item, errors));
@@ -804,7 +567,7 @@
                             }));
                             break;
                         case 'ui.listlayout':
-                            resolve(new Promise(function (resolveLocal, reject) {
+                            resolve(new Promise(function (resolve, reject) {
 
                                 uiRepository.getListLayoutDefault({
                                     filters: {
@@ -825,26 +588,13 @@
 
                                         });
 
-                                        if (result) {
+                                        item.id = result.id;
 
-                                            errors.push({
-                                                item: item,
-                                                error: {
-                                                    message: 'Layout already exists: name ' + item.name
-                                                }
-                                            });
-
-                                            resolveLocal()
-
-                                        } else {
-
-                                            resolveLocal(uiRepository.createListLayout(item));
-
-                                        }
+                                        resolve(uiRepository.updateListLayout(item.id, item));
 
                                     } else {
 
-                                        resolveLocal(uiRepository.createListLayout(item));
+                                        resolve(uiRepository.createListLayout(item));
 
                                     }
 
@@ -853,7 +603,7 @@
                             }));
                             break;
                         case 'ui.reportlayout':
-                            resolve(new Promise(function (resolveLocal, reject) {
+                            resolve(new Promise(function (resolve, reject) {
 
                                 uiRepository.getListLayoutDefault({
                                     filters: {
@@ -874,26 +624,13 @@
 
                                         });
 
-                                        if (result) {
+                                        item.id = result.id;
 
-                                            errors.push({
-                                                item: item,
-                                                error: {
-                                                    message: 'Report Layout already exists: name ' + item.name
-                                                }
-                                            });
-
-                                            resolveLocal()
-
-                                        } else {
-
-                                            resolveLocal(uiRepository.updateListLayout(item.id, item));
-
-                                        }
+                                        resolve(uiRepository.updateListLayout(item.id, item));
 
                                     } else {
 
-                                        resolveLocal(uiRepository.createListLayout(item));
+                                        resolve(uiRepository.createListLayout(item));
 
                                     }
 
@@ -959,243 +696,37 @@
                             }));
                             break;
                         case 'csv_import.scheme':
-                            resolve(new Promise(function (resolveLocal, reject) {
-
-                                entitySchemeService.getList({
-                                    filters: {
-                                        name: item.name,
-                                        content_type: item.content_type
-                                    }
-                                }).then(function (data) {
-
-                                    if (data.results.length) {
-
-                                        var result;
-
-                                        data.results.forEach(function (resultItem) {
-
-                                            if (resultItem.name === item.name) {
-                                                result = resultItem
-                                            }
-
-                                        });
-
-                                        if (result) {
-
-                                            if (settings.mode === 'overwrite') {
-                                                console.warn('Simple Entity Import scheme already exists: name ' + item.name);
-                                            } else {
-
-                                                errors.push({
-                                                    item: item,
-                                                    error: {
-                                                        message: 'Simple Entity Import scheme already exists: name ' + item.name
-                                                    }
-                                                });
-                                            }
-
-                                            resolveLocal()
-
-                                        } else {
-
-                                            resolveLocal(entitySchemeService.create(item));
-
-                                        }
-
-                                    } else {
-
-                                        resolveLocal(entitySchemeService.create(item));
-
-                                    }
-
-                                });
-
-
-                            }));
+                            resolve(catchError(entitySchemeService.create(item), item, errors));
                             break;
                         case 'integrations.instrumentdownloadscheme':
-                            resolve(new Promise(function (resolveLocal, reject) {
-
-                                instrumentSchemeService.getList({
-                                    filters: {
-                                        scheme_name: item.scheme_name
-                                    }
-                                }).then(function (data) {
-
-                                    if (data.results.length) {
-
-                                        var result;
-
-                                        data.results.forEach(function (resultItem) {
-
-                                            if (resultItem.scheme_name === item.scheme_name) {
-                                                result = resultItem
-                                            }
-
-                                        });
-
-                                        if (result) {
-
-                                            if (settings.mode === 'overwrite') {
-                                                console.warn('Instrument download scheme already exists: scheme name ' + item.scheme_name);
-                                            } else {
-
-                                                errors.push({
-                                                    item: item,
-                                                    error: {
-                                                        message: 'Instrument download scheme already exists: scheme name ' + item.scheme_name
-                                                    }
-                                                });
-                                            }
-
-                                            resolveLocal()
-
-                                        } else {
-
-                                            resolveLocal(instrumentSchemeService.create(item));
-
-                                        }
-
-                                    } else {
-
-                                        resolveLocal(instrumentSchemeService.create(item));
-
-                                    }
-
-                                });
-
-
-                            }));
+                            resolve(catchError(instrumentSchemeService.create(item), item, errors));
                             break;
                         case 'integrations.pricedownloadscheme':
-                            resolve(new Promise(function (resolveLocal, reject) {
-
-                                priceDownloadSchemeService.getList({
-                                    filters: {
-                                        scheme_name: item.scheme_name
-                                    }
-                                }).then(function (data) {
-
-                                    if (data.results.length) {
-
-                                        var result;
-
-                                        data.results.forEach(function (resultItem) {
-
-                                            if (resultItem.scheme_name === item.scheme_name) {
-                                                result = resultItem
-                                            }
-
-                                        });
-
-                                        if (result) {
-
-                                            if (settings.mode === 'overwrite') {
-                                                console.warn('Price download scheme already exists: scheme name ' + item.scheme_name);
-                                            } else {
-
-                                                errors.push({
-                                                    item: item,
-                                                    error: {
-                                                        message: 'Price download scheme already exists: scheme name ' + item.scheme_name
-                                                    }
-                                                });
-
-                                            }
-
-                                            resolveLocal()
-
-                                        } else {
-
-                                            resolveLocal(priceDownloadSchemeService.create(item));
-
-                                        }
-
-                                    } else {
-
-                                        resolveLocal(priceDownloadSchemeService.create(item));
-
-                                    }
-
-                                });
-
-
-                            }));
+                            resolve(catchError(priceDownloadSchemeService.create(item), item, errors));
                             break;
                         case 'integrations.complextransactionimportscheme':
-                            resolve(new Promise(function (resolveLocal, reject) {
-
-                                transactionSchemeService.getList({
-                                    filters: {
-                                        scheme_name: item.scheme_name
-                                    }
-                                }).then(function (data) {
-
-                                    if (data.results.length) {
-
-                                        var result;
-
-                                        data.results.forEach(function (resultItem) {
-
-                                            if (resultItem.scheme_name === item.scheme_name) {
-                                                result = resultItem
-                                            }
-
-                                        });
-
-                                        if (result) {
-
-                                            if (settings.mode === 'overwrite') {
-                                                console.warn('Transaction import scheme already exists: scheme name ' + item.scheme_name);
-                                            } else {
-
-                                                errors.push({
-                                                    item: item,
-                                                    error: {
-                                                        message: 'Transaction import scheme already exists: scheme name ' + item.scheme_name
-                                                    }
-                                                });
-                                            }
-
-                                            resolveLocal()
-
-                                        } else {
-
-                                            resolveLocal(transactionSchemeService.create(item));
-
-                                        }
-
-                                    } else {
-
-                                        resolveLocal(transactionSchemeService.create(item));
-
-                                    }
-
-                                });
-
-
-                            }));
+                            resolve(catchError(transactionSchemeService.create(item)), item, errors);
                             break;
                         case 'obj_attrs.portfolioattributetype':
-                            resolve(createAttributeTypeIfNotExists('portfolios.portfolio', item, errors));
+                            resolve(catchError(attributeTypeService.create('portfolio', item), item, errors));
                             break;
                         case 'obj_attrs.accountattributetype':
-                            resolve(createAttributeTypeIfNotExists('accounts.account', item, errors));
+                            resolve(catchError(attributeTypeService.create('account', item), item, errors));
                             break;
                         case 'obj_attrs.accounttypeattributetype':
-                            resolve(createAttributeTypeIfNotExists('accounts.accounttype', item, errors));
+                            resolve(catchError(attributeTypeService.create('account-type', item), item, errors));
                             break;
                         case 'obj_attrs.responsibleattributetype':
-                            resolve(createAttributeTypeIfNotExists('counterparties.responsible', item, errors));
+                            resolve(catchError(attributeTypeService.create('responsible', item), item, errors));
                             break;
                         case 'obj_attrs.counterpartyattributetype':
-                            resolve(createAttributeTypeIfNotExists('counterparties.counterparty', item, errors));
+                            resolve(catchError(attributeTypeService.create('counterparty', item), item, errors));
                             break;
                         case 'obj_attrs.instrumentattributetype':
-                            resolve(createAttributeTypeIfNotExists('instruments.instrument', item, errors));
+                            resolve(catchError(attributeTypeService.create('instrument', item), item, errors));
                             break;
                         case 'obj_attrs.instrumenttypeattributetype':
-                            resolve(createAttributeTypeIfNotExists('instruments.instrumenttype', item, errors));
+                            resolve(catchError(attributeTypeService.create('instrument-type', item), item, errors));
                             break;
                     }
 
@@ -1254,7 +785,7 @@
 
     };
 
-    var createEntityItems = function (entities, settings, cacheContainer, errors) {
+    var createEntityItems = function (entities, cacheContainer, errors) {
 
         return new Promise(function (resolve, reject) {
 
@@ -1266,7 +797,7 @@
 
                     var startIndex = 0;
 
-                    recursiveCreateItem(resolveItem, startIndex, entityItem, settings, cacheContainer, errors)
+                    recursiveCreateItem(resolveItem, startIndex, entityItem, cacheContainer, errors)
                 }))
 
             });
@@ -1281,7 +812,7 @@
 
     };
 
-    var createEntities = function (items, settings, cacheContainer, errors) {
+    var createEntities = function (items, cacheContainer, errors) {
 
         return new Promise(function (resolve, reject) {
 
@@ -1318,15 +849,15 @@
             });
 
 
-            createEntityItems(instrumentTypes, settings, cacheContainer, errors).then(function () {
+            createEntityItems(instrumentTypes, cacheContainer, errors).then(function () {
 
                 console.log("Instrument type import success");
 
-                createEntityItems(transactionTypeGroups, settings, cacheContainer, errors).then(function (value) {
+                createEntityItems(transactionTypeGroups, cacheContainer, errors).then(function (value) {
 
                     console.log("Transaction type groups import success");
 
-                    createEntityItems(transactionTypes, settings, cacheContainer, errors).then(function () {
+                    createEntityItems(transactionTypes, cacheContainer, errors).then(function () {
 
                         console.log("Transaction type import success");
 
@@ -1334,15 +865,15 @@
 
                             console.log("Instrument type overwrite success");
 
-                            createEntityItems(otherEntities, settings, cacheContainer, errors).then(function (data) {
+                            createEntityItems(otherEntities, cacheContainer, errors).then(function (data) {
 
                                 console.log("Entities import success", data);
 
-                                createEntityItems(layoutEntities, settings, cacheContainer, errors).then(function (data) {
+                                createEntityItems(layoutEntities, cacheContainer, errors).then(function (data) {
 
                                     console.log("Layout import success", data);
 
-                                    createEntityItems(bookmarks, settings, cacheContainer, errors).then(function (data) {
+                                    createEntityItems(bookmarks, cacheContainer, errors).then(function (data) {
 
                                         console.log("Bookmark import success", data);
 
@@ -1391,13 +922,13 @@
                 var errors = [];
                 var cacheContainer = {};
 
-                createEntities(items, settings, cacheContainer, errors).then(function () {
+                createEntities(items, cacheContainer, errors).then(function () {
 
                     console.log('Create items success');
 
                     if (settings && settings.mode === 'overwrite') {
 
-                        overwriteEntities(items, settings, cacheContainer, errors).then(function () {
+                        overwriteEntities(items, cacheContainer, errors).then(function () {
 
                             console.log('Overwrite items success');
 

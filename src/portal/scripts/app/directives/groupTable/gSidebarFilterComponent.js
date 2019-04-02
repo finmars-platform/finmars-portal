@@ -43,6 +43,17 @@
                     return field.id ? field.id : field.key;
                 };
 
+                scope.datepickerReadySignal = function (status) {
+
+                    return new Promise(function(res, rej) {
+
+                        scope.updateReportOptions();
+
+                        res(status);
+                    })
+
+                };
+
                 if (scope.isReport === true) {
 
                     pricingPolicyService.getList().then(function (data) {
@@ -78,7 +89,7 @@
                         position: 'left',
                         labelName: 'First Date'
                     }
-                    /* -------------------------------------- */
+                    /* < preparing data for complexZhDatePickerDirective > */
 
                 }
 
@@ -89,6 +100,8 @@
 
                     var newReportOptions = Object.assign({}, reportOptions, scope.reportOptions);
                     var newReportLayoutOptions = Object.assign({}, reportLayoutOptions, scope.reportLayoutOptions);
+                    delete newReportLayoutOptions.reportFirstDatepicker;
+                    delete newReportLayoutOptions.reportLastDatepicker;
                     console.log('report options', newReportOptions, newReportLayoutOptions);
 
                     scope.evDataService.setReportOptions(newReportOptions);
@@ -421,7 +434,9 @@
 
                 };
 
-                init();
+                scope.onDatepickerReady = function () {
+                    init();
+                };
 
             }
         }

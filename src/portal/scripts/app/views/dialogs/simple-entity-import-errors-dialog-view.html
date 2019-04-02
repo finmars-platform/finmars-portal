@@ -6,19 +6,10 @@
             <span flex></span>
         </div>
     </md-toolbar>
-    <md-dialog-content style="background: #E5E5E5;">
+    <md-dialog-content   style="background: #E5E5E5;">
         <md-content>
             <md-card>
                 <md-card-content>
-
-                    <div data-ng-if="vm.data.process_mode != 'validate'">
-
-                        <div>Rows total: {{vm.data.total - 1 }}</div>
-                        <div>Rows success import: {{vm.data.total - 1 - vm.data.errors.length}}</div>
-                        <div>Rows fail import: {{vm.data.errors.length}}</div>
-
-                    </div>
-
                     <h3>Please see below the list of records we failed to import</h3>
                     <div>
                         <table>

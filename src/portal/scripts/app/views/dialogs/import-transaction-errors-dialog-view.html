@@ -12,14 +12,6 @@
                 <md-card-content class="overflow-hidden">
                     <h3>Please see below the list of records we failed to import</h3>
 
-                    <div data-ng-if="vm.data.process_mode != 'validate'">
-
-                        <div>Rows total: {{vm.data.total - 1}}</div>
-                        <div>Rows success import: {{vm.data.total - 1 - vm.data.errors.length}}</div>
-                        <div>Rows fail import: {{vm.data.errors.length}}</div>
-
-                    </div>
-
                     <div class="transaction-import-error-holder">
 
                         <div data-ng-if="vm.data.error_handling == 'break'">
@@ -60,7 +52,7 @@
                                     <th data-ng-repeat="item in vm.data.scheme_object.inputs">
                                         <span data-ng-bind="item.name"></span>
                                     </th>
-                                    <th style="min-width:300px">Error message</th>
+                                    <th style="min-width:300px" >Error message</th>
                                 </tr>
                                 </thead>
                                 <tbody>

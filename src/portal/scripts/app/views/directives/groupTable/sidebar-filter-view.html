@@ -27,7 +27,8 @@
                         <complex-zh-date-picker data-date="reportOptions.report_date"
                                                 data-datepicker-options="reportLayoutOptions.datepickerOptions.reportLastDatepicker"
                                                 data-display-options="{position: 'left'}"
-                                                data-callback-method="updateReportOptions()">
+                                                data-callback-method="updateReportOptions()"
+                                                data-on-ready-callback="onDatepickerReady()">
                         </complex-zh-date-picker>
 
                         <md-input-container style="margin-bottom: 20px;">
@@ -54,7 +55,16 @@
 
                             <label for="">Pricing Policy</label>
 
-                            <md-select data-ng-model="reportOptions.pricing_policy" ng-change="updateReportOptions()">
+                            <md-select data-ng-model="reportOptions.pricing_policy"
+                                       ng-change="updateReportOptions()"
+                                       md-container-class="common-select-container"
+                                       md-on-close="searchTerm = ''">
+                                <md-select-header>
+                                    <input data-ng-model="searchTerm"
+                                           type="search"
+                                           placeholder="Search for a ..."
+                                           class="md-text md-select-search-pattern select-input-filter" ng-keydown="$event.stopPropagation()">
+                                </md-select-header>
                                 <md-option data-ng-repeat="item in pricingPolicies" ng-value="item.id">{{item.name}}
                                 </md-option>
                             </md-select>
