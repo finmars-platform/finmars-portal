@@ -1,5 +1,47 @@
 [
   {
+    "name": "Add price to Database",
+    "description": "",
+    "groups": "all",
+    "func": "add_price_history()"
+  },
+  {
+    "name": "Add fx rate to Database",
+    "description": "",
+    "groups": "all",
+    "func": "add_fx_history()"
+  },
+  {
+    "name": "Get FX rate as of <date>",
+    "description": "",
+    "groups": "all",
+    "func": "get_fx_rate()"
+  },
+  {
+    "name": "Get instrument accrued price as of <date>",
+    "description": "",
+    "groups": "all",
+    "func": "get_accrued_price()"
+  },
+  {
+    "name": "Get instrument principal price as of <date>",
+    "description": "",
+    "groups": "all",
+    "func": "get_principal_price()"
+  },
+  {
+    "name": "Get Instr factor as of <date>",
+    "description": "",
+    "groups": "all",
+    "func": "get_factor()"
+  },
+  {
+    "name": "Generate user code",
+    "description": "",
+    "groups": "all",
+    "func": "generate_user_code()"
+  },
+  {
     "name": "Get today's Date",
     "description": "now() :: [Result: current date]<br/><br/>[Result: current date]: Date - date when the function was triggered. This function can be used as an attribute of transaction (for example as a default transaction date) or as a parameter of other function - for example for converting current date to string to write it to any string variable).<br/><br/>Examples:<br/>now() - to get a current date as a date object<br/>str(now()) - to get a current date as a string, in system format it returns string '2018-01-01' for current date 2018-01-01",
     "groups": "date",
