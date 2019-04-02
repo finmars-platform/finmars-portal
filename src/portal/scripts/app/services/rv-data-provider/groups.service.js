@@ -148,7 +148,7 @@
 
             var groups = getUniqueGroups(items, group);
 
-            // console.log('getUniqueGroups groups', groups);
+            console.log('getUniqueGroups groups', groups);
 
             if (options.groups_order === 'desc') {
                 groups = sortService.sortItems(groups, '-___group_name');
@@ -159,7 +159,7 @@
             result.count = groups.length;
             result.results = groups;
 
-            // console.log('get groups', JSON.parse(JSON.stringify(result)));
+            console.log('get groups', JSON.parse(JSON.stringify(result)));
 
             resolve(result)
 

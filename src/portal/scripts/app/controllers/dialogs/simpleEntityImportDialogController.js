@@ -32,7 +32,7 @@
         vm.activeContentType = null;
 
         vm.config = {
-            delimiter: ','
+            error_handler: 'break'
         };
 
         vm.loadIsAvailable = function () {
@@ -94,7 +94,6 @@
             formData.append('file', vm.config.file);
             formData.append('scheme', vm.config.scheme);
             formData.append('error_handler', vm.config.error_handler);
-            formData.append('delimiter', vm.config.delimiter);
 
             console.log('vm.config', vm.config);
 
@@ -166,7 +165,6 @@
             formData.append('file', vm.config.file);
             formData.append('scheme', vm.config.scheme);
             formData.append('error_handler', vm.config.error_handler);
-            formData.append('delimiter', vm.config.delimiter);
 
             console.log('vm.config', vm.config);
 

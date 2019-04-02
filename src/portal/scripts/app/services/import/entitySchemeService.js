@@ -11,6 +11,10 @@
         return entitySchemesRepository.getEntitiesSchemesList(contentType);
     };
 
+    var getEntitySchemesByModel = function (entityModel) {
+        return entitySchemesRepository.getEntitySchemesByModel(entityModel);
+    };
+
     var getSchemeFields = function (schemeId) {
         return entitySchemesRepository.getSchemeFields(schemeId);
     };
@@ -19,8 +23,8 @@
         return entitySchemesRepository.getSchemeAttributes(schemeId);
     };
 
-    var getList = function (options) {
-        return entitySchemesRepository.getList(options);
+    var updateEntitySchemeMapping = function (schemeMapping) {
+        return entitySchemesRepository.updateEntitySchemeMapping(schemeMapping);
     };
 
     var create = function (scheme) {
@@ -41,9 +45,10 @@
 
     module.exports = {
         getEntitiesSchemesList: getEntitiesSchemesList,
+        getEntitySchemesByModel: getEntitySchemesByModel,
         getSchemeFields: getSchemeFields,
         getSchemeAttributes: getSchemeAttributes,
-        getList: getList,
+        updateEntitySchemeMapping: updateEntitySchemeMapping,
         create: create,
         getByKey: getByKey,
         update: update,

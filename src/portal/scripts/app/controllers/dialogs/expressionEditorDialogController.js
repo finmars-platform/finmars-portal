@@ -8,7 +8,7 @@
     var helpService = require('../../services/helpService');
     var expressionService = require('../../services/expression.service');
 
-    module.exports = function ($scope, $mdDialog, item) {
+    module.exports = function ($scope, $mdDialog, item, options) {
 
         var vm = this;
 
@@ -21,6 +21,10 @@
         vm.searchExpr = '';
 
         vm.item = item;
+
+        if (options.returnExpressionResult) {
+            vm.item.is_eval = true;
+        }
 
         vm.getFilters = function () {
 
@@ -126,7 +130,7 @@
 
         vm.validate = function () {
 
-            expressionService.validate(vm.item).then(function (data) {
+            return expressionService.validate(vm.item).then(function (data) {
 
                 // console.log('data', data);
 
@@ -149,6 +153,22 @@
         };
 
         vm.agree = function () {
+
+            /*if (options.returnExpressionResult) {
+
+                vm.validate().then(function (resolve) {
+
+                    if (vm.success) {
+                        $mdDialog.hide({status: 'agree', data: {item: vm.item}});
+                    } else {
+                        $mdDialog.hide({status: 'invalid'});
+                    }
+
+                });
+
+            } else {
+                $mdDialog.hide({status: 'agree', data: {item: vm.item}});
+            }*/
 
             $mdDialog.hide({status: 'agree', data: {item: vm.item}});
 
