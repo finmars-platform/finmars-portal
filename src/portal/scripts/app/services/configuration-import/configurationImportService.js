@@ -99,7 +99,7 @@
                                 })
 
 
-                            })
+                            });
 
                             result.inputs.forEach(function (resultInput) {
 
@@ -241,11 +241,11 @@
         return new Promise(function (resolve, reject) {
 
 
-            console.log('contentType', contentType);
+            // console.log('contentType', contentType);
 
             var entityType = metaContentTypesService.findEntityByContentType(contentType);
 
-            console.log('entityType', entityType);
+            // console.log('entityType', entityType);
 
             var options = {
                 filters: {
@@ -269,7 +269,11 @@
 
                     if (!result) {
 
-                        attributeTypeService.create(entityType, item).catch(function (reason) {
+                        attributeTypeService.create(entityType, item).then(function (data) {
+
+                            resolve(data)
+
+                        }).catch(function (reason) {
 
                             errors.push(reason);
 
@@ -277,24 +281,30 @@
 
                         })
 
+                    } else {
+
+                        // console.warn('Attribute Type already exists: user_code ' + item.user_code + ' contentType ' + contentType);
+
+                        // resolve()
+
+                        errors.push({
+                            item: item,
+                            error: {
+                                message: 'Attribute Type already exists: user_code ' + item.user_code
+                            }
+                        });
+
+                        resolve()
+
                     }
-
-                    // console.warn('Attribute Type already exists: user_code ' + item.user_code + ' contentType ' + contentType);
-
-                    // resolve()
-
-                    errors.push({
-                        item: item,
-                        error: {
-                            message: 'Attribute Type already exists: user_code ' + item.user_code
-                        }
-                    });
-
-                    resolve()
 
                 } else {
 
-                    attributeTypeService.create(entityType, item).catch(function (reason) {
+                    attributeTypeService.create(entityType, item).then(function (data) {
+
+                        resolve(data)
+
+                    }).catch(function (reason) {
 
                         errors.push(reason);
 
@@ -704,6 +714,9 @@
 
         index = index + 1;
 
+        console.log('recursiveCreateItem', entityItem.content.length);
+        console.log('recursiveCreateItem', index);
+
         if (item.active) {
 
             createItem(item, entityItem.entity, settings, cacheContainer, errors).then(function () {
@@ -758,6 +771,8 @@
             configurationImportSyncService.syncItem(item, entity, cacheContainer).then(function (value) {
 
                 try {
+
+                    console.log('Create item', item);
 
                     switch (entity) {
 
