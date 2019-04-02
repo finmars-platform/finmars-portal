@@ -7,8 +7,8 @@
 
     var instrumentSchemeRepository = require('../../repositories/import/instrumentSchemeRepository');
 
-    var getList = function (providerId) {
-        return instrumentSchemeRepository.getList(providerId);
+    var getList = function (options) {
+        return instrumentSchemeRepository.getList(options);
     };
 
     var create = function (scheme) {
