@@ -31,18 +31,6 @@
             })
     };
 
-    var getEntitySchemesByModel = function (entityModel) {
-        return xhrService.fetch(baseUrl + 'import/data_schema/?model=' + entityModel,
-            {
-                method: 'GET',
-                credentials: 'include',
-                headers: {
-                    Accept: 'application/json',
-                    'Content-type': 'application/json'
-                }
-            })
-    };
-
     var getSchemeFields = function (schemeId) {
         return xhrService.fetch(baseUrl + 'import/schema_fields/?schema_id=' + schemeId,
             {
@@ -57,6 +45,18 @@
 
     var getSchemeAttributes = function (schemeId) {
         return xhrService.fetch(baseUrl + 'import/schema_matching/?schema_id=' + schemeId,
+            {
+                method: 'GET',
+                credentials: 'include',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-type': 'application/json'
+                }
+            })
+    };
+
+    var getList = function (options) {
+        return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl + 'import/csv/scheme/', options),
             {
                 method: 'GET',
                 credentials: 'include',
@@ -123,9 +123,9 @@
 
     module.exports = {
         getEntitiesSchemesList: getEntitiesSchemesList,
-        getEntitySchemesByModel: getEntitySchemesByModel,
         getSchemeFields: getSchemeFields,
         getSchemeAttributes: getSchemeAttributes,
+        getList: getList,
         create: create,
         getByKey: getByKey,
         update: update,

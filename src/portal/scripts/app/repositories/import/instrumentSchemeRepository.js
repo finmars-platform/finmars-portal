@@ -12,8 +12,8 @@
 
     var baseUrl = baseUrlService.resolve();
 
-    var getList = function (providerId) {
-        return xhrService.fetch(baseUrl + 'import/instrument-scheme/?provider' + providerId,
+    var getList = function (options) {
+        return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl + 'import/instrument-scheme/', options),
             {
                 method: 'GET',
                 credentials: 'include',
@@ -54,7 +54,7 @@
     var update = function (id, scheme) {
         return xhrService.fetch(baseUrl + 'import/instrument-scheme/' + id + '/',
             {
-                method: 'PATCH',
+                method: 'PUT',
                 credentials: 'include',
                 headers: {
                     'X-CSRFToken': cookieService.getCookie('csrftoken'),
