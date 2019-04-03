@@ -25,8 +25,7 @@
 
                 <div class="{{item.isSelected ? 'selected' : ''}} help-item-menu-item"
                      data-ng-repeat="item in vm.groups"
-                     data-ng-click="vm.selectHelpGroup(item)">
-                    {{item.name}}
+                     data-ng-click="vm.selectHelpGroup(item)" data-ng-bind-html="item.name">
                 </div>
             </div>
 

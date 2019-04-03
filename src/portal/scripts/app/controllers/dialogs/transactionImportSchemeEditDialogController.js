@@ -8,86 +8,18 @@
     var logService = require('../../../../../core/services/logService');
 
     var metaService = require('../../services/metaService');
-    var scheduleService = require('../../services/import/scheduleService');
     var transactionSchemeService = require('../../services/import/transactionSchemeService');
+    var scheduleService = require('../../services/import/scheduleService');
+    var attributeTypeService = require('../../services/attributeTypeService');
     var transactionTypeService = require('../../services/transactionTypeService');
 
-    module.exports = function ($scope, $mdDialog) {
+    module.exports = function ($scope, $mdDialog, schemeId) {
 
-        logService.controller('InstrumentMappingDialogController', 'initialized');
+        logService.controller('InstrumentDownloadSchemeEditDialogController', 'initialized');
 
         var vm = this;
-
-        vm.dataProviders = [];
-
-        vm.readyStatus = {dataProviders: false, scheme: true, transactionTypes: false};
-
-        transactionTypeService.getList().then(function (data) {
-            vm.transactionTypes = data.results;
-            vm.readyStatus.transactionTypes = true;
-            $scope.$apply();
-        });
-
-        vm.openInputs = function (item, $event) {
-            $mdDialog.show({
-                controller: 'TransactionMappingInputMappingDialogController as vm',
-                templateUrl: 'views/dialogs/transaction-mapping-input-mapping-dialog-view.html',
-                parent: angular.element(document.body),
-                targetEvent: $event,
-                preserveScope: true,
-                autoWrap: true,
-                multiple: true,
-                skipHide: true,
-                locals: {
-                    data: {
-                        item: item
-                    }
-                }
-            }).then(function (res) {
-                if (res.status === 'agree') {
-                    console.log("res", res.data);
-
-                    item = res.data.item;
-                }
-            });
-        };
-
-        vm.checkReadyStatus = function () {
-            return vm.readyStatus.scheme && vm.readyStatus.transactionTypes;
-        };
-
         vm.scheme = {};
-
-        var createEmptyScheme = function () {
-            vm.scheme.inputs = [];
-            vm.scheme.rules = [];
-            vm.scheme.rule_expr = 'a + b';
-            vm.scheme.scheme_name = '';
-        };
-
-        createEmptyScheme();
-
-        vm.openInputs = function (item, $event) {
-            $mdDialog.show({
-                controller: 'TransactionMappingInputMappingDialogController as vm',
-                templateUrl: 'views/dialogs/transaction-mapping-input-mapping-dialog-view.html',
-                parent: angular.element(document.body),
-                targetEvent: $event,
-                preserveScope: true,
-                multiple: true,
-                autoWrap: true,
-                skipHide: true,
-                locals: {
-                    data: {
-                        item: item
-                    }
-                }
-            }).then(function (res) {
-                if (res.status === 'agree') {
-                    item.fields = res.data.item.fields;
-                }
-            });
-        };
+        vm.readyStatus = {scheme: false, transactionTypes: false};
 
         vm.mapFields = [
             {
@@ -103,6 +35,78 @@
                 column: ''
             }
         ];
+
+
+        transactionSchemeService.getByKey(schemeId).then(function (data) {
+            vm.scheme = data;
+
+            if (vm.scheme.inputs.length) {
+
+                vm.providerFields = [];
+
+                vm.scheme.inputs.forEach(function (input) {
+                    vm.providerFields.push(input);
+                })
+
+                vm.providerFields = vm.providerFields.sort(function (a, b) {
+                    if (a.column > b.column) {
+                        return 1;
+                    }
+                    if (a.column < b.column) {
+                        return -1;
+                    }
+
+                    return 0;
+                });
+
+            }
+
+            if (vm.scheme.rules.length) {
+                vm.mapFields = [];
+
+                vm.scheme.rules.forEach(function (rule) {
+                    vm.mapFields.push(rule);
+                })
+
+            }
+
+            vm.readyStatus.scheme = true;
+            $scope.$apply();
+        });
+
+        transactionTypeService.getList().then(function (data) {
+            vm.transactionTypes = data.results;
+            vm.readyStatus.transactionTypes = true;
+            $scope.$apply();
+        });
+
+        vm.openInputs = function (item, $event) {
+            $mdDialog.show({
+                controller: 'TransactionImportSchemeInputsDialogController as vm',
+                templateUrl: 'views/dialogs/transaction-import-scheme-inputs-dialog-view.html',
+                parent: angular.element(document.body),
+                targetEvent: $event,
+                preserveScope: true,
+                autoWrap: true,
+                skipHide: true,
+                multiple: true,
+                locals: {
+                    data: {
+                        fields: vm.providerFields,
+                        item: item
+                    }
+                }
+            }).then(function (res) {
+                if (res.status === 'agree') {
+                    item.fields = res.data.item.fields;
+                }
+            });
+        };
+
+        vm.checkReadyStatus = function () {
+            return vm.readyStatus.scheme && vm.readyStatus.transactionTypes;
+        };
+
 
         vm.addProviderField = function () {
             vm.providerFields.push({
@@ -120,12 +124,7 @@
         };
 
         vm.removeProviderField = function (item, $index) {
-            console.log('$index', $index);
-
             vm.providerFields.splice($index, 1);
-
-            //$scope.$apply();
-            console.log('vm.providerFields', vm.providerFields);
         };
 
         vm.removeMappingField = function (item, $index) {
@@ -141,9 +140,9 @@
             vm.scheme.inputs = vm.providerFields;
             vm.scheme.rules = vm.mapFields;
 
-            transactionSchemeService.create(vm.scheme).then(function (data) {
+            transactionSchemeService.update(vm.scheme.id, vm.scheme).then(function (data) {
 
-                $mdDialog.hide({status: 'agree'});
+                $mdDialog.hide({res: 'agree'});
 
             }).catch(function (reason) {
 
@@ -159,15 +158,10 @@
                     multiple: true,
                     skipHide: true
                 })
-
             })
-
         };
 
         vm.openMapping = function ($event, item) {
-
-            console.log('ITEEM', item);
-
             $mdDialog.show({
                 controller: 'EntityTypeMappingDialogController as vm',
                 templateUrl: 'views/dialogs/entity-type-mapping-dialog-view.html',
@@ -175,8 +169,8 @@
                 targetEvent: $event,
                 preserveScope: true,
                 autoWrap: true,
-                skipHide: true,
                 multiple: true,
+                skipHide: true,
                 locals: {
                     mapItem: item
                 }
@@ -195,8 +189,8 @@
                 targetEvent: $event,
                 preserveScope: true,
                 autoWrap: true,
-                skipHide: true,
                 multiple: true,
+                skipHide: true,
                 locals: {
                     item: {
                         expression: item.value
@@ -212,6 +206,7 @@
                 }
             });
         };
+
     };
 
 }());

@@ -7,7 +7,8 @@
             restriction: 'AE',
             templateUrl: 'controls/expression-editor-button/expression-editor-button.html',
             scope: {
-                item: '='
+                item: '=',
+                data: '='
             },
             link: function (scope, elem, attr) {
 
@@ -23,7 +24,8 @@
                         autoWrap: true,
                         skipHide: true,
                         locals: {
-                            item: {expression: scope.item}
+                            item: {expression: scope.item},
+                            data: scope.data
                         }
                     }).then(function (res) {
 
