@@ -91,10 +91,9 @@
                                                     </md-input-container>
                                                 </div>
                                                 <div flex="50">
-                                                    <md-button class="md-raised md-primary expr-btn"
-                                                               data-ng-click="vm.openExpressionDialog($event, item)">
-                                                        ...
-                                                    </md-button>
+                                                    <expression-editor-button data-item="item.expression"
+                                                                              data-data="{groups: [vm.inputsGroup], functions: [vm.inputsFunctions]}"></expression-editor-button>
+
                                                 </div>
                                             </div>
                                             <div data-ng-if="item.complexExpressionEntity != false" layout="row">
@@ -105,10 +104,8 @@
                                                     </md-input-container>
                                                 </div>
                                                 <div flex="50" layout="row">
-                                                    <md-button class="md-raised md-primary expr-btn"
-                                                               data-ng-click="vm.openExpressionDialog($event, item)">
-                                                        ...
-                                                    </md-button>
+                                                    <expression-editor-button data-item="item.expression"
+                                                                              data-data="{groups: [vm.inputsGroup], functions: [vm.inputsFunctions]}"></expression-editor-button>
                                                     <md-button class="md-raised md-primary complex-expr-btn"
                                                                data-ng-click="vm.openMapping($event, item)">
                                                         Edit mapping
@@ -145,10 +142,8 @@
                                                 </div>
 
                                                 <div flex="50">
-                                                    <md-button class="md-raised md-primary expr-btn"
-                                                               data-ng-click="vm.openExpressionDialog($event, item)">
-                                                        ...
-                                                    </md-button>
+                                                    <expression-editor-button data-item="item.expression"
+                                                                              data-data="{groups: [vm.inputsGroup], functions: [vm.inputsFunctions]}"></expression-editor-button>
                                                     <md-button class="md-raised md-primary complex-expr-btn"
                                                                data-ng-if="item.complexExpressionEntity"
                                                                data-ng-click="vm.openMapping($event, item)">
@@ -180,10 +175,8 @@
                                                     </md-input-container>
                                                 </div>
                                                 <div flex="50">
-                                                    <md-button class="md-raised md-primary expr-btn"
-                                                               data-ng-click="vm.openExpressionDialog($event, item)">
-                                                        ...
-                                                    </md-button>
+                                                    <expression-editor-button data-item="item.expression"
+                                                                              data-data="{groups: [vm.inputsGroup], functions: [vm.inputsFunctions]}"></expression-editor-button>
                                                 </div>
                                             </div>
                                             <div data-ng-if="item.complexExpressionEntity != false" layout="row">
@@ -194,10 +187,8 @@
                                                     </md-input-container>
                                                 </div>
                                                 <div flex="50" layout="row">
-                                                    <md-button class="md-raised md-primary expr-btn"
-                                                               data-ng-click="vm.openExpressionDialog($event, item)">
-                                                        ...
-                                                    </md-button>
+                                                    <expression-editor-button data-item="item.expression"
+                                                                              data-data="{groups: [vm.inputsGroup], functions: [vm.inputsFunctions]}"></expression-editor-button>
                                                     <md-button class="md-raised md-primary complex-expr-btn"
                                                                data-ng-click="vm.openMapping($event, item)">
                                                         Edit mapping
@@ -251,10 +242,10 @@
                                                     </md-input-container>
                                                 </div>
                                                 <div flex="50">
-                                                    <md-button class="md-raised md-primary expr-btn"
-                                                               data-ng-click="vm.openExpressionDialog($event, field)">
-                                                        ...
-                                                    </md-button>
+
+                                                    <expression-editor-button data-item="field.expression"
+                                                                              data-data="{groups: [vm.inputsGroup], functions: [vm.inputsFunctions]}"></expression-editor-button>
+
                                                 </div>
                                             </div>
                                             <div data-ng-if="field.complexExpressionEntity != false" layout="row">
@@ -265,10 +256,10 @@
                                                     </md-input-container>
                                                 </div>
                                                 <div flex="50" layout="row">
-                                                    <md-button class="md-raised md-primary expr-btn"
-                                                               data-ng-click="vm.openExpressionDialog($event, field)">
-                                                        ...
-                                                    </md-button>
+
+                                                    <expression-editor-button data-item="field.expression"
+                                                                              data-data="{groups: [vm.inputsGroup], functions: [vm.inputsFunctions]}"></expression-editor-button>
+
                                                     <md-button class="md-raised md-primary complex-expr-btn"
                                                                data-ng-click="vm.openMapping($event, field)">
                                                         Edit mapping

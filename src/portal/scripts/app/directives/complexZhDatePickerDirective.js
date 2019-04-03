@@ -159,10 +159,10 @@
                         targetEvent: $event,
                         autoWrap: true,
                         locals: {
-                            item: datepickerOptionsCopy,
-                            options: {
-                                returnExpressionResult: true
-                            }
+                            item: datepickerOptionsCopy
+                            // options: {
+                            //     returnExpressionResult: true
+                            // }
                         }
                     }).then(function (res) {
                         if (res.status === 'agree') {

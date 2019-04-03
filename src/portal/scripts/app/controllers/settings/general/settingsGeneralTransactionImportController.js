@@ -29,8 +29,8 @@
 
         vm.addScheme = function ($event) {
             $mdDialog.show({
-                controller: 'TransactionMappingAddDialogController as vm',
-                templateUrl: 'views/dialogs/transaction-mapping-dialog-view.html',
+                controller: 'TransactionImportSchemeAddDialogController as vm',
+                templateUrl: 'views/dialogs/transaction-import-scheme-dialog-view.html',
                 targetEvent: $event
             }).then(function (res) {
                 if (res.status === 'agree') {
@@ -44,8 +44,8 @@
             console.log('what?');
 
             $mdDialog.show({
-                controller: 'TransactionMappingEditDialogController as vm',
-                templateUrl: 'views/dialogs/transaction-mapping-dialog-view.html',
+                controller: 'TransactionImportSchemeEditDialogController as vm',
+                templateUrl: 'views/dialogs/transaction-import-scheme-dialog-view.html',
                 targetEvent: $event,
                 locals: {
                     schemeId: item.id

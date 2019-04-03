@@ -67,7 +67,7 @@
                             <input type="text" value-title
                                    data-ng-model="item.instrument_factor_schedule.factor_value">
                         </md-input-container>
-                        <expression-editor-button
+                        <expression-editor-button data-data="{groups: [vm.inputsGroup], functions: [vm.inputsFunctions]}"
                                 data-item="item.instrument_factor_schedule.factor_value"></expression-editor-button>
                     </div>
                 </div>
@@ -81,7 +81,7 @@
                 <input type="text" value-title style="color: grey;"
                        data-ng-model="item.instrument_factor_schedule.effective_date">
             </md-input-container>
-            <expression-editor-button
+            <expression-editor-button data-data="{groups: [vm.inputsGroup], functions: [vm.inputsFunctions]}"
                     data-item="item.instrument_factor_schedule.effective_date"></expression-editor-button>
         </div>
     </div>
