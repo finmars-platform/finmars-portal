@@ -434,9 +434,7 @@
 
                 };
 
-                scope.onDatepickerReady = function () {
-                    init();
-                };
+                init();
 
             }
         }

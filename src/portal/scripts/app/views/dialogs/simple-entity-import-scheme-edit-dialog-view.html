@@ -57,7 +57,7 @@
                                     <div data-ng-repeat="item in vm.scheme.entity_fields track by $index" flex="100">
                                         <div class="fields-holder" layout="row">
                                             <div class="iscm-item width-100" layout="row" layout-align="center center">
-                                                <md-input-container flex="10">
+                                                <md-input-container flex="20">
 
                                                     <div data-ng-if="item.system_property_key">
                                                         <input aria-label="attribute name" type="text"
@@ -66,19 +66,49 @@
 
                                                     <div data-ng-if="!item.system_property_key">
 
-                                                        <md-select data-ng-change="vm.extendEntityFields()" data-ng-model="item.dynamic_attribute_id" style="margin-top: 0">
+                                                        <!--<md-select data-ng-change="vm.extendEntityFields()"
+                                                                   data-ng-model="item.dynamic_attribute_id"
+                                                                   style="margin-top: 0">
                                                             <md-option
                                                                     data-ng-repeat="item in vm.dynamicAttributes"
                                                                     data-ng-value="item.id">
                                                                 {{item.name}}
                                                             </md-option>
-                                                        </md-select>
+                                                        </md-select>-->
+
+                                                        <md-input-container class="md-block" style="margin:0">
+
+                                                                <md-select ng-model="item.dynamic_attribute_id"
+                                                                           md-container-class="common-select-container"
+                                                                           md-on-close="searchTerm = ''"
+                                                                           data-ng-change="vm.extendEntityFields()"
+                                                                           style="margin-bottom: 24px">
+                                                                    <md-select-header>
+                                                                        <input data-ng-model="searchTerm"
+                                                                               type="search"
+                                                                               placeholder="Search for a ..."
+                                                                               class="md-text md-select-search-pattern select-input-filter"
+                                                                               ng-keydown="$event.stopPropagation()">
+                                                                    </md-select-header>
+
+                                                                    <div class="select-options-holder">
+
+                                                                        <md-option data-ng-repeat="item in vm.dynamicAttributes | filter:{name: searchTerm}"
+                                                                                ng-value="item.id">
+                                                                           {{item.name}}
+                                                                        </md-option>
+
+                                                                    </div>
+
+                                                                </md-select>
+
+                                                        </md-input-container>
 
                                                     </div>
 
                                                 </md-input-container>
-                                                <md-input-container flex="60">
-
+                                                <md-input-container flex="50">
+                                                    <label data-ng-bind="vm.getContentTypeName(item.value_type)"></label>
                                                     <input data-ng-model="item.expression" aria-label="attribute value"
                                                            type="text">
                                                 </md-input-container>
