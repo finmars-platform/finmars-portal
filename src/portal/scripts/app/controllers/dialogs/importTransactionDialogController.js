@@ -338,8 +338,8 @@
 
         vm.openEditMapping = function ($event) {
             $mdDialog.show({
-                controller: 'TransactionMappingEditDialogController as vm',
-                templateUrl: 'views/dialogs/transaction-mapping-dialog-view.html',
+                controller: 'TransactionImportSchemeEditDialogController as vm',
+                templateUrl: 'views/dialogs/transaction-import-scheme-dialog-view.html',
                 locals: {
                     schemeId: vm.config.scheme
                 },

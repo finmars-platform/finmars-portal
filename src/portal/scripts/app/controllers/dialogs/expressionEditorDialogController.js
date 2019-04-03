@@ -8,9 +8,13 @@
     var helpService = require('../../services/helpService');
     var expressionService = require('../../services/expression.service');
 
-    module.exports = function ($scope, $mdDialog, item) {
+    module.exports = function ($scope, $mdDialog, item, data) {
+
+        console.log('data', data);
 
         var vm = this;
+
+        vm.data = data;
 
         vm.readyStatus = {expressions: false, groups: false};
 
@@ -43,6 +47,16 @@
 
             vm.readyStatus.expressions = true;
 
+            if (vm.data && vm.data.functions) {
+
+                console.log('data.functions', vm.data.functions);
+
+                vm.data.functions.forEach(function (items) {
+                    vm.expressions = vm.expressions.concat(items)
+                })
+
+            }
+
             vm.expressions = vm.expressions.map(function (item) {
 
                 item.search_index = item.name + ' ' + item.func;
@@ -64,6 +78,30 @@
             vm.readyStatus.groups = true;
 
             vm.selectedHelpGroup = vm.groups[0];
+
+            if (vm.data && vm.data.groups) {
+
+                vm.groups.shift();
+
+                var result = [];
+
+                vm.data.groups.forEach(function (group) {
+
+                    result = result.concat(group)
+
+                });
+
+                result = result.concat(vm.groups);
+
+                result.unshift({
+                    "name": "All",
+                    "key": "all"
+                });
+
+                vm.groups = result;
+
+            }
+
             $scope.$apply();
         });
 
@@ -102,7 +140,6 @@
         };
 
         vm.appendFunction = function (item) {
-
 
             vm.expressionsHistory.push(vm.item.expression);
 

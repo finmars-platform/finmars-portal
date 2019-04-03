@@ -15,11 +15,33 @@
 
     module.exports = function ($scope, $mdDialog, schemeId) {
 
-        logService.controller('InstrumentMappingEditDialogController', 'initialized');
+        logService.controller('InstrumentDownloadSchemeEditDialogController', 'initialized');
 
         var vm = this;
         vm.scheme = {};
         vm.readyStatus = {dataProviders: false, scheme: false};
+
+        vm.inputsGroup = {
+            "name": "<b>Inputs</b>",
+            "key": 'input'
+        };
+
+        vm.inputsFunctions = [];
+
+        vm.getFunctions = function () {
+
+            return vm.providerFields.map(function(input){
+
+                return {
+                    "name": "Add input " + input.name,
+                    "description": "Downloaded Parameter: " + input.name,
+                    "groups": "input",
+                    "func": input.name
+                }
+
+            })
+
+        };
 
         instrumentSchemeService.getByKey(schemeId).then(function (data) {
             vm.scheme = data;
@@ -463,6 +485,8 @@
             syncMappedDynamic();
 
             vm.providerFields = vm.scheme.inputs;
+
+            vm.inputsFunctions = vm.getFunctions();
             vm.readyStatus.scheme = true;
         };
 
@@ -501,6 +525,8 @@
                 name: '',
                 field: ''
             })
+
+            vm.inputsFunctions = vm.getFunctions();
         };
 
         vm.beatufier = function (key) {
@@ -522,6 +548,8 @@
 
         vm.removeProviderField = function (item, $index) {
             vm.providerFields.splice($index, 1);
+
+            vm.inputsFunctions = vm.getFunctions();
         };
 
         vm.removeMappingField = function (item, $index) {
@@ -638,30 +666,6 @@
             }).then(function (res) {
                 if (res.status === 'agree') {
                     console.log("res", res.data);
-                }
-            });
-        };
-
-        vm.openExpressionDialog = function ($event, item) {
-            $mdDialog.show({
-                controller: 'ExpressionEditorDialogController as vm',
-                templateUrl: 'views/dialogs/expression-editor-dialog-view.html',
-                parent: angular.element(document.body),
-                targetEvent: $event,
-                multiple: true,
-                preserveScope: true,
-                autoWrap: true,
-                skipHide: true,
-                locals: {
-                    item: item
-                }
-            }).then(function (res) {
-                if (res.status === 'agree') {
-                    console.log("res", res.data);
-                    if (res.data) {
-                        item.expression = res.data.item.expression;
-                    }
-                    $scope.$apply();
                 }
             });
         };

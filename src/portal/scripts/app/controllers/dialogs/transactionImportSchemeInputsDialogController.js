@@ -12,7 +12,7 @@
 
     module.exports = function ($scope, $mdDialog, data) {
 
-        logService.controller('TransactionMappingInputMappingDialogController', 'initialized');
+        logService.controller('TransactionImportSchemeInputsDialogController', 'initialized');
 
         var vm = this;
 
@@ -22,6 +22,22 @@
         vm.item = JSON.parse(JSON.stringify(vm.data.item));
 
         vm.inputs = [];
+
+        vm.inputsGroup = {
+            "name": "<b>Inputs</b>",
+            "key": 'input'
+        };
+
+        vm.inputsFunctions = vm.data.fields.map(function (input) {
+
+            return {
+                "name": "Add input " + input.name,
+                "description": "Imported Parameter: " + input.name + " (column #" + input.column + ") ",
+                "groups": "input",
+                "func": input.name
+            }
+
+        });
 
         transactionTypeService.getByKey(vm.item.transaction_type).then(function (data) {
             vm.transactionType = data;
@@ -78,46 +94,24 @@
 
         vm.openMapping = function (item, $event) {
 
-            if (item.value_type === 100) {
+            $mdDialog.show({
+                controller: 'EntityTypeMappingDialogController as vm',
+                templateUrl: 'views/dialogs/entity-type-mapping-dialog-view.html',
+                parent: angular.element(document.body),
+                targetEvent: $event,
+                preserveScope: true,
+                autoWrap: true,
+                skipHide: true,
+                multiple: true,
+                locals: {
+                    mapItem: {complexExpressionEntity: metaContentTypesService.findEntityByContentType(item.content_type, 'ui')}
+                }
+            }).then(function (res) {
+                if (res.status === 'agree') {
+                    console.log("res", res.data);
+                }
+            });
 
-                $mdDialog.show({
-                    controller: 'EntityTypeMappingDialogController as vm',
-                    templateUrl: 'views/dialogs/entity-type-mapping-dialog-view.html',
-                    parent: angular.element(document.body),
-                    targetEvent: $event,
-                    preserveScope: true,
-                    autoWrap: true,
-                    skipHide: true,
-                    multiple: true,
-                    locals: {
-                        mapItem: {complexExpressionEntity: metaContentTypesService.findEntityByContentType(item.content_type, 'ui')}
-                    }
-                }).then(function (res) {
-                    if (res.status === 'agree') {
-                        console.log("res", res.data);
-                    }
-                });
-            } else {
-
-                $mdDialog.show({
-                    controller: 'ExpressionEditorDialogController as vm',
-                    templateUrl: 'views/dialogs/expression-editor-dialog-view.html',
-                    parent: angular.element(document.body),
-                    targetEvent: $event,
-                    preserveScope: true,
-                    autoWrap: true,
-                    skipHide: true,
-                    locals: {
-                        item: {expression: item.mapping.expression}
-                    }
-                }).then(function (res) {
-                    if (res.status === 'agree') {
-                        console.log("res", res.data);
-                        item.mapping.expression = res.data.item.expression;
-                    }
-                    // console.log('item', item);
-                });
-            }
         };
 
         vm.checkReadyStatus = function () {
