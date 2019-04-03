@@ -16,6 +16,22 @@
         var vm = this;
         vm.entity = $scope.$parent.vm.entity;
 
+        vm.inputsGroup = {
+            "name": "<b>Inputs</b>",
+            "key": 'input'
+        };
+
+        vm.inputsFunctions = vm.entity.inputs.map(function (input) {
+
+            return {
+                "name": "Add input " + input.name,
+                "description": "Transaction Type Input: " + input.name + " (" + input.verbose_name + ") ",
+                "groups": "input",
+                "func": input.name
+            }
+
+        });
+
         vm.relationItems = {};
 
         vm.contentTypes = metaContentTypesService.getListForTransactionTypeInputs();

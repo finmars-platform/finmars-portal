@@ -109,7 +109,7 @@
 
                     // Check if there is need to solve report datepicker expression
                     if (newReportLayoutOptions && newReportLayoutOptions.datepickerOptions) {
-                        // console.log("complex datepicker rv", newReportLayoutOptions);
+                        console.log("complex datepicker rv", newReportLayoutOptions);
                         var reportFirstDatepickerExpression = newReportLayoutOptions.datepickerOptions.reportFirstDatepicker.expression;
                         var reportLastDatepickerExpression = newReportLayoutOptions.datepickerOptions.reportLastDatepicker.expression;
 
@@ -121,7 +121,7 @@
 
                                 var solveFirstExpression = function () {
                                     return expressionService.getResultOfExpression({"expression": reportFirstDatepickerExpression}).then(function (data) {
-                                        // console.log("complex datepicker rv first expression result", data);
+                                        console.log("complex datepicker rv first expression result", data);
                                         newReportOptions.pl_first_date = data.result;
                                     });
                                 };
@@ -133,7 +133,7 @@
 
                                 var solveLastExpression = function () {
                                     return expressionService.getResultOfExpression({"expression": reportLastDatepickerExpression}).then(function (data) {
-                                        // console.log("complex datepicker rv last expression result", data);
+                                        console.log("complex datepicker rv last expression result", data);
                                         newReportOptions.report_date = data.result;
 
                                     });

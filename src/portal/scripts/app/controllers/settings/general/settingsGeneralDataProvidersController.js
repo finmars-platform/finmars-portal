@@ -21,7 +21,34 @@
             vm.dataProviders = data;
             vm.readyStatus.dataProviders = true;
             $scope.$apply();
-        })
+        });
+
+        $mdDialog.show({
+            controller: 'WarningDialogController as vm',
+            templateUrl: 'views/warning-dialog-view.html',
+            targetEvent: $event,
+            clickOutsideToClose: false,
+            locals: {
+                warning: {
+                    title: 'Bloomberg certificate import',
+                    description: 'Error'
+                }
+            }
+        });
+
+        $mdDialog.show({
+            controller: 'SuccessDialogController as vm',
+            templateUrl: 'views/dialogs/success-dialog-view.html',
+            targetEvent: $event,
+            autoWrap: true,
+            locals: {
+                success: {
+                    title: "Bloomberg certificate import",
+                    description: "Success"
+                }
+            }
+
+        });
 
     }
 

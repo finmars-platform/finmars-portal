@@ -235,8 +235,8 @@
 
         vm.openEditMapping = function ($event) {
             $mdDialog.show({
-                controller: 'InstrumentMappingEditDialogController as vm',
-                templateUrl: 'views/dialogs/instrument-mapping-dialog-view.html',
+                controller: 'InstrumentDownloadSchemeEditDialogController as vm',
+                templateUrl: 'views/dialogs/instrument-download-scheme-dialog-view.html',
                 targetEvent: $event,
                 multiple: true,
                 preserveScope: true,

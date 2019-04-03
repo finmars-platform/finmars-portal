@@ -15,16 +15,39 @@
 
     module.exports = function ($scope, $mdDialog) {
 
-        logService.controller('InstrumentMappingDialogController', 'initialized');
+        logService.controller('InstrumentDownloadSchemeAddDialogController', 'initialized');
 
         var vm = this;
 
         vm.dataProviders = [];
 
+        vm.inputsGroup = {
+            "name": "<b>Inputs</b>",
+            "key": 'input'
+        };
+
+        vm.inputsFunctions = [];
+
+        vm.getFunctions = function () {
+
+            return vm.providerFields.map(function(input){
+
+                return {
+                    "name": "Add input " + input.name,
+                    "description": "Downloaded Parameter: " + input.name,
+                    "groups": "input",
+                    "func": input.name
+                }
+
+            })
+
+        };
+
         vm.readyStatus = {dataProviders: false, scheme: true};
 
         dataProvidersService.getList().then(function (data) {
             vm.dataProviders = data;
+
             vm.readyStatus.dataProviders = true;
             $scope.$apply();
         });
@@ -253,10 +276,13 @@
         ];
 
         vm.addProviderField = function () {
+
             vm.providerFields.push({
                 name: '',
                 field: ''
-            })
+            });
+
+            vm.inputsFunctions = vm.getFunctions();
         };
 
         vm.addMapField = function () {
@@ -271,6 +297,8 @@
             console.log('$index', $index);
 
             vm.providerFields.splice($index, 1);
+
+            vm.inputsFunctions = vm.getFunctions();
 
             //$scope.$apply();
             console.log('vm.providerFields', vm.providerFields);

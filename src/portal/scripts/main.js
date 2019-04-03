@@ -114,14 +114,14 @@ app.controller('AttributesManagerAddDialogController', ['$scope', '$mdDialog', '
 app.controller('ClassificationEditorDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/classificationEditorDialogController')]);
 app.controller('CustomFieldsConfigDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/customFieldsConfigDialogController')]);
 
-app.controller('InstrumentMappingAddDialogController', ['$scope', '$mdDialog', require('./app/controllers/dialogs/instrumentMappingAddDialogController')]);
-app.controller('InstrumentMappingEditDialogController', ['$scope', '$mdDialog', 'schemeId', require('./app/controllers/dialogs/instrumentMappingEditDialogController')]);
+app.controller('InstrumentDownloadSchemeAddDialogController', ['$scope', '$mdDialog', require('./app/controllers/dialogs/instrumentDownloadSchemeAddDialogController')]);
+app.controller('InstrumentDownloadSchemeEditDialogController', ['$scope', '$mdDialog', 'schemeId', require('./app/controllers/dialogs/instrumentDownloadSchemeEditDialogController')]);
 app.controller('EntityTypeMappingDialogController', ['$scope', '$mdDialog', 'mapItem', require('./app/controllers/dialogs/entityTypeMappingDialogController')]);
 app.controller('EntityTypeClassifierMappingDialogController', ['$scope', '$mdDialog', 'options', require('./app/controllers/dialogs/entityTypeClassifierMappingDialogController')]);
 
-app.controller('TransactionMappingAddDialogController', ['$scope', '$mdDialog', require('./app/controllers/dialogs/transactionMappingAddDialogController')]);
-app.controller('TransactionMappingEditDialogController', ['$scope', '$mdDialog', 'schemeId', require('./app/controllers/dialogs/transactionMappingEditDialogController')]);
-app.controller('TransactionMappingInputMappingDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/transactionMappingInputMappingDialogController')]);
+app.controller('TransactionImportSchemeAddDialogController', ['$scope', '$mdDialog', require('./app/controllers/dialogs/transactionImportSchemeAddDialogController')]);
+app.controller('TransactionImportSchemeEditDialogController', ['$scope', '$mdDialog', 'schemeId', require('./app/controllers/dialogs/transactionImportSchemeEditDialogController')]);
+app.controller('TransactionImportSchemeInputsDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/transactionImportSchemeInputsDialogController')]);
 
 app.controller('SimpleEntityImportSchemeEditDialogController', ['$scope', '$mdDialog', 'schemeId', require('./app/controllers/dialogs/simpleEntityImportSchemeEditDialogController')]);
 app.controller('SimpleEntityImportSchemeCreateDialogController', ['$scope', '$mdDialog', require('./app/controllers/dialogs/simpleEntityImportSchemeCreateDialogController')]);
@@ -194,7 +194,7 @@ app.controller('WarningDialogController', ['$scope', '$mdDialog', 'warning', req
 app.controller('HelpDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/helpDialogController')]);
 app.controller('SuccessDialogController', ['$scope', '$mdDialog', 'success', require('./app/controllers/dialogs/successDialogController')]);
 app.controller('ValidationDialogController', ['$scope', '$mdDialog', 'validationData', require('./app/controllers/dialogs/validationDialogController')]);
-app.controller('ExpressionEditorDialogController', ['$scope', '$mdDialog', 'item', 'options', require('./app/controllers/dialogs/expressionEditorDialogController')]);
+app.controller('ExpressionEditorDialogController', ['$scope', '$mdDialog', 'item', 'data', require('./app/controllers/dialogs/expressionEditorDialogController')]);
 app.controller('InfoDialogController', ['$scope', '$mdDialog', 'info', require('./app/controllers/dialogs/infoDialogController')]);
 app.controller('InstrumentSelectDialogController', ['$scope', '$mdDialog', require('./app/controllers/dialogs/instrumentSelectDialogController')]);
 app.controller('EntitySearchDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/entitySearchDialogController')]);
