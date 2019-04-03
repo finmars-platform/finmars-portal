@@ -30,7 +30,7 @@
             <md-button aria-label="cancel" class="md-raised" data-ng-click="vm.informed()">
                 OK, do nothing
             </md-button>
-            <md-button aria-label="cancel" class="md-raised" data-ng-click="vm.applyDefault()">
+            <md-button aria-label="cancel" class="md-raised {{vm.availableForApplyDefault ? '': 'disabled-btn'}}"" data-ng-click="vm.applyDefault()">
                 Apply Default
             </md-button>
         </div>

@@ -13,6 +13,17 @@
 
         vm.actionButtons = vm.event.event_schedule_object.actions;
 
+        vm.availableForApplyDefault = false;
+
+        vm.event.event_schedule_object.actions.forEach(function (item) {
+
+            if (item.is_book_automatic) {
+                vm.availableForApplyDefault = true;
+            }
+
+        });
+
+
         console.log('vm.event', vm.event);
 
         vm.eventAction = function ($event, action) {
