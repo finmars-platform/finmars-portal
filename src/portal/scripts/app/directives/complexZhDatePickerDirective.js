@@ -14,7 +14,6 @@
             scope: {
                 displayOptions: '<',
                 callbackMethod: '&',
-                onReadyCallback: '&',
                 datepickerOptions: '=',
                 date: '='
             },
@@ -83,9 +82,17 @@
 
                 }
 
-                scope.todayMode = function () {
+                var toggleTodayMode = function () {
                     scope.datepickerActiveModeTitle = 'Today';
                     scope.datepickerOptions.datepickerMode = 'today';
+                    scope.datepickerOptions.expression = "now()";
+
+                    input.attr('disabled', '');
+                };
+
+                scope.todayMode = function () {
+
+                    toggleTodayMode();
 
                     var today = moment(new Date()).format('YYYY-MM-DD');
                     scope.date = today;
@@ -93,12 +100,22 @@
                     setTimeout(function () {
                         scope.callbackMethod()
                     }, 500);
+
+                };
+
+                var toggleYesterdayMode = function () {
+
+                    scope.datepickerActiveModeTitle = 'Yesterday';
+                    scope.datepickerOptions.datepickerMode = 'yesterday';
+                    scope.datepickerOptions.expression = "now()-days(1)";
+
                     input.attr('disabled', '');
                 };
 
                 scope.yesterdayMode = function () {
-                    scope.datepickerActiveModeTitle = 'Yesterday';
-                    scope.datepickerOptions.datepickerMode = 'yesterday';
+
+                    toggleYesterdayMode();
+
                     var yesterday = moment(new Date()).subtract(1, 'day').format('YYYY-MM-DD');
 
                     scope.date = yesterday;
@@ -106,12 +123,13 @@
                     setTimeout(function () {
                         scope.callbackMethod()
                     }, 500);
-                    input.attr('disabled', '');
+
                 };
 
                 scope.datepickerMode = function () {
                     scope.datepickerActiveModeTitle = 'Datepicker';
                     scope.datepickerOptions.datepickerMode = 'datepicker';
+                    delete scope.datepickerOptions.expression;
 
                     setTimeout(function () {
                         scope.callbackMethod()
@@ -123,9 +141,6 @@
                     scope.datepickerActiveModeTitle = 'Custom';
                     scope.datepickerOptions.datepickerMode = 'expression';
 
-                    /*setTimeout(function () {
-                        scope.callbackMethod()
-                    }, 500);*/
                     input.attr('disabled', '');
                 };
 
@@ -133,7 +148,10 @@
 
                     if (scope.datepickerOptions.datepickerMode !== 'expression') {
                         scope.expressionMode();
+                        scope.datepickerOptions.expression = undefined;
                     }
+
+                    var datepickerOptionsCopy = JSON.parse(JSON.stringify(scope.datepickerOptions));
 
                     $mdDialog.show({
                         controller: 'ExpressionEditorDialogController as vm',
@@ -141,7 +159,7 @@
                         targetEvent: $event,
                         autoWrap: true,
                         locals: {
-                            item: scope.datepickerOptions,
+                            item: datepickerOptionsCopy,
                             options: {
                                 returnExpressionResult: true
                             }
@@ -199,7 +217,7 @@
                         scope.datepickerMode();
                 }
 
-                if (scope.onReadyCallback) {
+                /*if (scope.onReadyCallback) {
 
                     if (scope.datepickerOptions.datepickerMode === 'expression') {
 
@@ -225,7 +243,7 @@
                         scope.onReadyCallback();
                     }
 
-                }
+                }*/
 
             }
         }
