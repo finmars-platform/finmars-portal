@@ -2,8 +2,6 @@
 
     var filterByRegularFilters = function (items, regularFilters) {
 
-        // console.log('filterItems.regularFilters', regularFilters);
-
         var match;
 
         return items.filter(function (item) {
@@ -257,7 +255,7 @@
 
         Object.keys(options).filter(function (key) {
 
-            if (['groups_order', 'groups_types', 'groups_values', 'page'].indexOf(key) === -1) {
+            if (['groups_order', 'groups_types', 'groups_values', 'page', 'page_size'].indexOf(key) === -1) {
 
                 result[key] = options[key];
 

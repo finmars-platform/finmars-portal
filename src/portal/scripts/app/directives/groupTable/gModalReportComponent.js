@@ -26,7 +26,6 @@
 
         vm.general = [];
         vm.attrs = [];
-        vm.baseAttrs = [];
         vm.entityAttrs = [];
         vm.custom = [];
 
@@ -76,8 +75,8 @@
 
                 var a, t, c, b, e;
                 var tab, tabAttr, attr, baseAttr, attributeIsExist, entityAttr;
-                //console.log('METHOD: restoreAttrs, data: vm.tabs, value: ', vm.tabs);
-                //console.log('METHOD: restoreAttrs, data: vm.attrs, value: ', vm.attrs);
+
+
                 for (t = 0; t < vm.tabs.length; t = t + 1) {
                     tab = vm.tabs[t];
                     for (c = 0; c < tab.attrs.length; c = c + 1) {
@@ -96,13 +95,7 @@
                                 c = c - 1;
                             }
                         } else {
-                            for (b = 0; b < vm.baseAttrs.length; b = b + 1) {
-                                baseAttr = vm.baseAttrs[b];
-                                if (tabAttr.name === baseAttr.name) {
-                                    vm.tabs[t].attrs[c] = baseAttr;
-                                    attributeIsExist = true;
-                                }
-                            }
+
                             for (e = 0; e < vm.entityAttrs.length; e = e + 1) {
                                 entityAttr = vm.entityAttrs[e];
                                 if (tabAttr.name === entityAttr.name) {
@@ -137,10 +130,6 @@
         $('body').addClass('drag-dialog'); // hide backdrop
 
         vm.getAttributes = function () {
-
-            if (metaService.getEntitiesWithoutBaseAttrsList().indexOf(vm.entityType) === -1) {
-                vm.baseAttrs = metaService.getBaseAttrs();
-            }
 
             //vm.entityAttrs = metaService.getEntityAttrs(vm.entityType);
 
@@ -273,7 +262,6 @@
                     vm.accountDynamicAttrs = data['account'];
                     vm.instrumentDynamicAttrs = data['instrument'];
 
-                    attrsList = vm.attrs.concat(vm.baseAttrs);
                     attrsList = attrsList.concat(vm.entityAttrs);
                     attrsList = attrsList.concat(vm.balanceAttrs);
                     attrsList = attrsList.concat(vm.allocationAttrs);

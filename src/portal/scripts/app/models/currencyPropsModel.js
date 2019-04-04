@@ -36,7 +36,7 @@
                 "key": "daily_pricing_model",
                 "name": "Daily pricing model",
                 "value_type": "field",
-                "entity": "daily-pricing-model",
+                "value_entity": "daily-pricing-model",
                 "code": "system_code",
                 "allow_null": false
             },
@@ -44,8 +44,8 @@
                 "key": "price_download_scheme",
                 "name": "Price download scheme",
                 "value_type": "field",
-                "entity": "price_download_scheme",
-                "content_type": "integrations.pricedownloadscheme",
+                "value_entity": "price_download_scheme",
+                "value_content_type": "integrations.pricedownloadscheme",
                 "code": "user_code"
             },
             {

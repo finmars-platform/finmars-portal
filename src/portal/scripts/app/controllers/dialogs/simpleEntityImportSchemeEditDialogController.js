@@ -1,6 +1,13 @@
 /**
  * Created by szhitenev on 19.03.2018.
  */
+
+/**
+ * Simple Entity Import Edit Dialog Controller.
+ * @module SimpleEntityImportEitDialogController
+ *
+ */
+
 (function () {
 
     'use strict';
@@ -12,7 +19,6 @@
     var metaContentTypesService = require('../../services/metaContentTypesService');
 
     var modelService = require('../../services/modelService');
-
 
     module.exports = function ($scope, $mdDialog, schemeId) {
 
@@ -31,6 +37,12 @@
 
         vm.inputsFunctions = [];
 
+        /**
+         * Blend two colors together.
+         * @param {string} color1 - The first color, in hexadecimal format.
+         * @param {string} color2 - The second color, in hexadecimal format.
+         * @return {string} The blended color.
+         */
         vm.getFunctions = function () {
 
             return vm.scheme.csv_fields.map(function (input) {
@@ -46,7 +58,10 @@
 
         };
 
-
+        /**
+         * Get a Simple Entity Import scheme .
+         * @constructor
+         */
         entitySchemeService.getByKey(schemeId).then(function (data) {
 
             vm.scheme = data;

@@ -33,7 +33,7 @@
                 "value_type": 10
             },
             {
-                "key": "content_types",
+                "key": "value_content_types",
                 "name": "Content Types",
                 "value_type": 'mc_field'
             }
