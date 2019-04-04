@@ -200,8 +200,8 @@
                 "key": "currency",
                 "name": "Currency",
                 "value_type": "field",
-                "entity": "currency",
-                "content_type": "currencies.currency",
+                "value_entity": "currency",
+                "value_content_type": "currencies.currency",
                 "code": "user_code"
             },
             //{

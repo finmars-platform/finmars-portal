@@ -47,8 +47,8 @@
                 "key": "instrument_class",
                 "name": "Instrument class",
                 "value_type": "field",
-                "content_type": "instruments.instrumentclass",
-                "entity": "instrument-class",
+                "value_content_type": "instruments.instrumentclass",
+                "value_entity": "instrument-class",
                 "code": "system_code",
                 "allow_null": false
             },
@@ -56,7 +56,7 @@
                 "key": "one_off_event",
                 "name": "One off event",
                 "value_type": "field",
-                "entity": "transaction-type",
+                "value_entity": "transaction-type",
                 "code": "user_code",
                 "allow_null": false
             },
@@ -64,7 +64,7 @@
                 "key": "regular_event",
                 "name": "Regular event",
                 "value_type": "field",
-                "entity": "transaction-type",
+                "value_entity": "transaction-type",
                 "code": "user_code",
                 "allow_null": false
             },
@@ -72,7 +72,7 @@
                 "key": "factor_same",
                 "name": "Factor same",
                 "value_type": "field",
-                "entity": "transaction-type",
+                "value_entity": "transaction-type",
                 "code": "user_code",
                 "allow_null": false
             },
@@ -80,7 +80,7 @@
                 "key": "factor_up",
                 "name": "Factor up",
                 "value_type": "field",
-                "entity": "transaction-type",
+                "value_entity": "transaction-type",
                 "code": "user_code",
                 "allow_null": false
             },
@@ -88,7 +88,7 @@
                 "key": "factor_down",
                 "name": "Factor down",
                 "value_type": "field",
-                "entity": "transaction-type",
+                "value_entity": "transaction-type",
                 "code": "user_code",
                 "allow_null": false
             },
@@ -96,7 +96,7 @@
                 "key": "tags",
                 "name": "Tags",
                 "value_type": "mc_field",
-                "entity": "tag",
+                "value_entity": "tag",
                 "code": "user_code",
                 "allow_null": true
             }

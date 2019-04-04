@@ -31,9 +31,9 @@
                 "key": "transaction_type",
                 "name": "Transaction type",
                 "value_type": "field",
-                "entity": "transaction-type",
+                "value_entity": "transaction-type",
                 "code": "user_code",
-                "content_type": "transactions.transactiontype",
+                "value_content_type": "transactions.transactiontype",
                 "allow_null": false
             }
         ]

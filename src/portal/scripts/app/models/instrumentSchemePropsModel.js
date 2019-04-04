@@ -15,16 +15,16 @@
             {
                 key: 'factor_schedule_method',
                 name: 'Factor schedule method',
-                "content_type": "instruments.instrumentfactorschedule",
-                "entity": "factor_schedule_method",
+                "value_content_type": "instruments.instrumentfactorschedule",
+                "value_entity": "factor_schedule_method",
                 "code": "system_code",
                 type: 'field'
             },
             {
                 key: 'accrual_calculation_schedule_method',
                 name: 'Accrual calculation schedule method',
-                "content_type": "instruments.accrualcalculationschedule",
-                "entity": "accrual_calculation_schedule_method",
+                "value_content_type": "instruments.accrualcalculationschedule",
+                "value_entity": "accrual_calculation_schedule_method",
                 "code": "system_code",
                 type: 'field'
             },
@@ -86,24 +86,24 @@
             {
                 "key": "payment_size_detail",
                 "name": "Payment size detail",
-                "content_type": "instruments.paymentsizedetail",
-                "entity": "payment_size_detail",
+                "value_content_type": "instruments.paymentsizedetail",
+                "value_entity": "payment_size_detail",
                 "code": "system_code",
                 "value_type": 'field'
             },
             {
                 "key": "daily_pricing_model",
                 "name": "Daily pricing model",
-                "content_type": "instruments.dailypricingmodel",
-                "entity": "daily_pricing_model",
+                "value_content_type": "instruments.dailypricingmodel",
+                "value_entity": "daily_pricing_model",
                 "code": "system_code",
                 "value_type": 'field'
             },
             {
                 "key": "price_download_scheme",
                 "name": "Price download scheme",
-                "content_type": "integrations.pricedownloadscheme",
-                "entity": "price_download_scheme",
+                "value_content_type": "integrations.pricedownloadscheme",
+                "value_entity": "price_download_scheme",
                 "code": "user_code",
                 "value_type": 'field'
             },

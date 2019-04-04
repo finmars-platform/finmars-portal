@@ -22,8 +22,6 @@
 
     var fetch = function (url, params) {
 
-        console.log('requestsCount', requestsCount);
-
         return new Promise(function (resolve, reject) {
 
             if (requestsCount > requestsPerMinuteLimit) {

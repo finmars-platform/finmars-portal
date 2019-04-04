@@ -38,7 +38,7 @@
                 "value_type": 10
             },
             {
-                "key": "actor_content_type",
+                "key": "actor_value_content_type",
                 "name": "Change source type",
                 "value_type": 'field'
             },
@@ -48,7 +48,7 @@
                 "value_type": 10
             },
             {
-                "key": "content_type",
+                "key": "value_content_type",
                 "name": "Change target type",
                 "value_type": 'field'
             },

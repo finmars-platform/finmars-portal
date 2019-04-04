@@ -30,8 +30,8 @@
             {
                 "key": "accounts",
                 "name": "Accounts",
-                "content_type": "accounts.account",
-                "entity": "account",
+                "value_content_type": "accounts.account",
+                "value_entity": "account",
                 "code": "user_code",
                 "value_type": "mc_field"
 
@@ -39,24 +39,24 @@
             {
                 "key": "responsibles",
                 "name": "Responsibles",
-                "content_type": "counterparties.responsible",
-                "entity": "responsible",
+                "value_content_type": "counterparties.responsible",
+                "value_entity": "responsible",
                 "code": "user_code",
                 "value_type": "mc_field"
             },
             {
                 "key": "counterparties",
                 "name": "Counterparties",
-                "content_type": "counterparties.counterparty",
-                "entity": "counterparty",
+                "value_content_type": "counterparties.counterparty",
+                "value_entity": "counterparty",
                 "code": "user_code",
                 "value_type": "mc_field"
             },
             {
                 "key": "transaction_types",
                 "name": "Transaction types",
-                "content_type": "transactions.transactiontype",
-                "entity": "transaction-type",
+                "value_content_type": "transactions.transactiontype",
+                "value_entity": "transaction-type",
                 "code": "user_code",
                 "value_type": "mc_field"
             },
