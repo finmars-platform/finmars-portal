@@ -5,7 +5,6 @@
 /**
  * Simple Entity Import Edit Dialog Controller.
  * @module SimpleEntityImportEitDialogController
- *
  */
 
 (function () {
@@ -20,10 +19,12 @@
 
     var modelService = require('../../services/modelService');
 
+
     module.exports = function ($scope, $mdDialog, schemeId) {
 
         logService.controller('EntityMappingEditDialogController', 'initialized');
 
+        /** JSDOC ignores vm methods, only works for var variable. */
         var vm = this;
         vm.scheme = {};
         vm.readyStatus = {scheme: false, entitySchemeAttributes: false};
@@ -35,13 +36,13 @@
             "key": 'input'
         };
 
+
         vm.inputsFunctions = [];
 
         /**
-         * Blend two colors together.
-         * @param {string} color1 - The first color, in hexadecimal format.
-         * @param {string} color2 - The second color, in hexadecimal format.
-         * @return {string} The blended color.
+         * Get list of expressions for Expression Builder.
+         * @return {Object[]} Array of Expressions.
+         * @memberof module:SimpleEntityImportEitDialogController
          */
         vm.getFunctions = function () {
 
@@ -58,10 +59,7 @@
 
         };
 
-        /**
-         * Get a Simple Entity Import scheme .
-         * @constructor
-         */
+
         entitySchemeService.getByKey(schemeId).then(function (data) {
 
             vm.scheme = data;
@@ -112,6 +110,12 @@
 
         });
 
+
+        /**
+         * Get list of dynamic attributes .
+         *
+         * @memberof module:SimpleEntityImportEitDialogController
+         */
         vm.getAttrs = function () {
 
             var entity = metaContentTypesService.findEntityByContentType(vm.scheme.content_type);
