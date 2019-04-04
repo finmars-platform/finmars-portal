@@ -49,7 +49,7 @@
         };
 
         vm.cancel = function () {
-            $mdDialog.hide();
+            $mdDialog.hide({});
         };
 
         vm.informed = function () {
