@@ -15,6 +15,8 @@
 
         var rvDataProviderService = require('../../services/rv-data-provider/rv-data-provider.service');
 
+        var expressionService = require('../../services/expression.service');
+
         module.exports = function ($scope, $mdDialog) {
 
             var vm = this;
@@ -105,11 +107,77 @@
                     entityViewerDataService.setEditorTemplateUrl('views/additions-editor-view.html');
                     entityViewerDataService.setRootEntityViewer(true);
 
-                    vm.listViewIsReady = true;
+                    // Check if there is need to solve report datepicker expression
+                    if (newReportLayoutOptions && newReportLayoutOptions.datepickerOptions) {
+                        console.log("complex datepicker rv", newReportLayoutOptions);
+                        var reportFirstDatepickerExpression = newReportLayoutOptions.datepickerOptions.reportFirstDatepicker.expression;
+                        var reportLastDatepickerExpression = newReportLayoutOptions.datepickerOptions.reportLastDatepicker.expression;
+
+                        if (reportFirstDatepickerExpression || reportLastDatepickerExpression) {
+
+                            var datepickerExpressionsToSolve = [];
+
+                            if (reportFirstDatepickerExpression) {
+
+                                var solveFirstExpression = function () {
+                                    return expressionService.getResultOfExpression({"expression": reportFirstDatepickerExpression}).then(function (data) {
+                                        console.log("complex datepicker rv first expression result", data);
+                                        newReportOptions.pl_first_date = data.result;
+                                    });
+                                };
+
+                                datepickerExpressionsToSolve.push(solveFirstExpression());
+                            }
+
+                            if (reportLastDatepickerExpression) {
+
+                                var solveLastExpression = function () {
+                                    return expressionService.getResultOfExpression({"expression": reportLastDatepickerExpression}).then(function (data) {
+                                        console.log("complex datepicker rv last expression result", data);
+                                        newReportOptions.report_date = data.result;
+
+                                    });
+                                };
+
+                                datepickerExpressionsToSolve.push(solveLastExpression());
+                            }
+
+                            Promise.all(datepickerExpressionsToSolve).then(function () {
+
+                                vm.listViewIsReady = true;
+
+                                rvDataProviderService.requestReport(entityViewerDataService, entityViewerEventService);
+
+                                $scope.$apply()
+
+                            });
+
+
+                        } else {
+
+                            vm.listViewIsReady = true;
+
+                            rvDataProviderService.requestReport(entityViewerDataService, entityViewerEventService);
+
+                            $scope.$apply()
+
+                        }
+                        // < Check if there is need to solve report datepicker expression >
+                    } else {
+
+                        vm.listViewIsReady = true;
+
+                        rvDataProviderService.requestReport(entityViewerDataService, entityViewerEventService);
+
+                        $scope.$apply()
+
+                    }
+
+                    /*vm.listViewIsReady = true;
 
                     rvDataProviderService.requestReport(entityViewerDataService, entityViewerEventService);
 
-                    $scope.$apply()
+                    $scope.$apply()*/
 
                 });
 

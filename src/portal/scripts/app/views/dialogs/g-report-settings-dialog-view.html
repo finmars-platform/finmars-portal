@@ -39,7 +39,7 @@
 
                             </md-input-container>
 
-                            <md-input-container>
+                            <!--<md-input-container>
 
                                 <label for="">Pricing Policy</label>
 
@@ -49,13 +49,40 @@
                                     </md-option>
                                 </md-select>
 
+                            </md-input-container>-->
+
+                            <md-input-container>
+                                <label>Pricing Policy</label>
+                                <div>
+                                    <md-select ng-model="vm.reportOptions.pricing_policy"
+                                               md-container-class="common-select-container"
+                                               md-on-close="searchTerm = ''">
+                                        <md-select-header>
+                                            <input data-ng-model="searchTerm"
+                                                   type="search"
+                                                   placeholder="Search for a ..."
+                                                   class="md-text md-select-search-pattern select-input-filter"
+                                                   ng-keydown="$event.stopPropagation()">
+                                        </md-select-header>
+
+                                        <div class="select-options-holder">
+
+                                            <md-option data-ng-repeat="item in vm.pricingPolicies | filter:{name: searchTerm}"
+                                                    ng-value="item.id">
+                                                {{item.name}}
+                                            </md-option>
+
+                                        </div>
+
+                                    </md-select>
+                                </div>
                             </md-input-container>
 
                         </div>
 
                         <div layout="row">
 
-                            <md-input-container>
+                            <!--<md-input-container>
 
                                 <label for="">Currency</label>
 
@@ -64,9 +91,35 @@
                                     </md-option>
                                 </md-select>
 
+                            </md-input-container>-->
+
+                            <md-input-container>
+                                <label>Currency</label>
+                                <div>
+                                    <md-select ng-model="vm.reportOptions.report_currency"
+                                               md-container-class="common-select-container"
+                                               md-on-close="searchTerm = ''">
+                                        <md-select-header>
+                                            <input data-ng-model="searchTerm"
+                                                   type="search"
+                                                   placeholder="Search for a ..."
+                                                   class="md-text md-select-search-pattern select-input-filter"
+                                                   ng-keydown="$event.stopPropagation()">
+                                        </md-select-header>
+
+                                        <div class="select-options-holder">
+
+                                            <md-option data-ng-repeat="item in vm.currencies | filter:{name: searchTerm}"
+                                                       ng-value="item.id">
+                                                {{item.name}}
+                                            </md-option>
+
+                                        </div>
+
+                                    </md-select>
+                                </div>
                             </md-input-container>
 
-                            <!--<md-input-container data-ng-if="vm.entityType != 'performance-report'">-->
                             <md-input-container>
 
                                 <label for="">Cost method</label>

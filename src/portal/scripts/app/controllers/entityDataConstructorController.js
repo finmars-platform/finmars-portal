@@ -446,6 +446,8 @@
                     controller: 'WarningDialogController as vm',
                     templateUrl: 'views/warning-dialog-view.html',
                     // targetEvent: $event,
+                    autoWrap: true,
+                    skipHide: true,
                     locals: {
                         warning: {
                             title: 'Warning!',
@@ -777,7 +779,7 @@
             vm.items = vm.items.concat(vm.userInputs);
             vm.items = vm.items.concat(vm.layoutAttrs);
 
-            // console.log('syncItems.items before', JSON.parse(JSON.stringify(vm.items)));
+            console.log('syncItems.items before', JSON.parse(JSON.stringify(vm.items)));
 
             vm.items = vm.items.filter(function (item) {
 
