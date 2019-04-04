@@ -10,7 +10,7 @@
 
     module.exports = function ($scope, $mdDialog, item, data) {
 
-        console.log('data', data);
+        // console.log('data', data) ;
 
         var vm = this;
 
@@ -26,9 +26,9 @@
 
         vm.item = item;
 
-        /*if (data.returnExpressionResult) {
+        if (vm.data.returnExpressionResult) {
             vm.item.is_eval = true;
-        }*/
+        }
 
         vm.getFilters = function () {
 
