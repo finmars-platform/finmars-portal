@@ -152,6 +152,7 @@
                     }
 
                     var datepickerOptionsCopy = JSON.parse(JSON.stringify(scope.datepickerOptions));
+                    console.log("!!!!!!!!!!!!!!!", datepickerOptionsCopy);
 
                     $mdDialog.show({
                         controller: 'ExpressionEditorDialogController as vm',
@@ -159,10 +160,9 @@
                         targetEvent: $event,
                         autoWrap: true,
                         locals: {
-                            item: datepickerOptionsCopy
-                            // options: {
-                            //     returnExpressionResult: true
-                            // }
+                            item: {expression: datepickerOptionsCopy.expression},
+                            data: {returnExpressionResult: true}
+
                         }
                     }).then(function (res) {
                         if (res.status === 'agree') {
