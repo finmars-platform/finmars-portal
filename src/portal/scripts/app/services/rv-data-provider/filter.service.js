@@ -120,8 +120,8 @@
             }
         }
 
-        // console.log("groupType.entity", groupType.entity);
-        // console.log("getFilterMatch.item_value", item_value);
+        console.log("groupType.entity", groupType.entity);
+        console.log("getFilterMatch.item_value", item_value);
 
         if (value === '-') {
 
@@ -243,7 +243,7 @@
 
         }
 
-        // console.log('filterByGroupsFilters.items', JSON.parse(JSON.stringify(items)));
+        console.log('filterByGroupsFilters.items', JSON.parse(JSON.stringify(items)));
 
         return items;
 

@@ -226,7 +226,13 @@
                     subtotal = rvHelper.lookUpForSubtotal(evDataService, obj, column, columnNumber);
 
                     if (obj.hasOwnProperty(column.key)) {
-                        result.html_result = '<b>' + renderHelper.formatValue(subtotal, column) + '</b>';
+
+                        var subtotalValue = renderHelper.formatValue(subtotal, column);
+
+                        if (!isNaN(subtotalValue)) {
+                            result.html_result = '<b>' + subtotalValue + '</b>';
+                        }
+
                         result.numeric_result = subtotal[column.key];
                     }
 

@@ -16,6 +16,35 @@
         <div data-ng-if="vm.readyStatus.content">
             <md-tabs md-dynamic-height md-border-bottom id="dialogbag">
 
+                <md-tab label="Complex Transaction">
+                    <md-content class="md-padding">
+
+                        <div class="g-th-checkbox-row">
+                            <span data-ng-click="vm.toggleAll($event, 'columns')" class="g-meta-circle red">C</span>
+                            <span data-ng-click="vm.toggleAll($event, 'groups')" class="g-meta-circle green">G</span>
+                            <span data-ng-click="vm.toggleAll($event, 'filters')" class="g-meta-circle blue">F</span>
+                        </div>
+                        <div class="g-checkbox-row" data-ng-repeat="item in vm.complexTransactionAttrs" layout="row">
+                            <div>
+                                <md-checkbox ng-model="item.columns" aria-label="Columns" aria="columns"
+                                             data-ng-change="vm.updateAttrs(vm.complexTransactionAttrs)">
+                                </md-checkbox>
+                                <md-checkbox ng-model="item.groups" aria-label="Groups" aria="groups"
+                                             class="md-g-green"
+                                             data-ng-change="vm.updateAttrs(vm.complexTransactionAttrs)">
+                                </md-checkbox>
+                                <md-checkbox ng-model="item.filters" aria-label="Filters" aria="filters"
+                                             class="md-primary" data-ng-change="vm.updateAttrs(vm.complexTransactionAttrs)">
+                                </md-checkbox>
+                            </div>
+                            <div class="g-modal-draggable-card">
+                                <md-card class="modal-dialog-card">{{::vm.bindReportItemName(item)}}</md-card>
+                            </div>
+                        </div>
+
+                    </md-content>
+                </md-tab>
+
                 <md-tab label="Transaction">
                     <md-content class="md-padding">
                         <div class="g-th-checkbox-row">
@@ -34,24 +63,6 @@
                                 </md-checkbox>
                                 <md-checkbox ng-model="item.filters" aria-label="Filters" aria="filters"
                                              class="md-primary" data-ng-change="vm.updateAttrs(vm.transactionAttrs)">
-                                </md-checkbox>
-                            </div>
-                            <div class="g-modal-draggable-card">
-                                <md-card class="modal-dialog-card">{{::vm.bindReportItemName(item)}}</md-card>
-                            </div>
-                        </div>
-
-                        <div class="g-checkbox-row" data-ng-repeat="item in vm.complexTransactionAttrs" layout="row">
-                            <div>
-                                <md-checkbox ng-model="item.columns" aria-label="Columns" aria="columns"
-                                             data-ng-change="vm.updateAttrs(vm.complexTransactionAttrs)">
-                                </md-checkbox>
-                                <md-checkbox ng-model="item.groups" aria-label="Groups" aria="groups"
-                                             class="md-g-green"
-                                             data-ng-change="vm.updateAttrs(vm.complexTransactionAttrs)">
-                                </md-checkbox>
-                                <md-checkbox ng-model="item.filters" aria-label="Filters" aria="filters"
-                                             class="md-primary" data-ng-change="vm.updateAttrs(vm.complexTransactionAttrs)">
                                 </md-checkbox>
                             </div>
                             <div class="g-modal-draggable-card">

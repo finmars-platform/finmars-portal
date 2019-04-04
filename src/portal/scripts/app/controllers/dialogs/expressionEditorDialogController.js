@@ -10,7 +10,7 @@
 
     module.exports = function ($scope, $mdDialog, item, data) {
 
-        console.log('data', data);
+        // console.log('data', data) ;
 
         var vm = this;
 
@@ -25,6 +25,10 @@
         vm.searchExpr = '';
 
         vm.item = item;
+
+        if (vm.data.returnExpressionResult) {
+            vm.item.is_eval = true;
+        }
 
         vm.getFilters = function () {
 
@@ -163,7 +167,7 @@
 
         vm.validate = function () {
 
-            expressionService.validate(vm.item).then(function (data) {
+            return expressionService.validate(vm.item).then(function (data) {
 
                 // console.log('data', data);
 

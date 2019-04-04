@@ -30,7 +30,7 @@
                                                 data-callback-method="updateReportOptions()">
                         </complex-zh-date-picker>
 
-                        <md-input-container style="margin-bottom: 20px;">
+                        <!--<md-input-container style="margin-bottom: 20px;">
 
                             <label for="">Currency</label>
 
@@ -48,17 +48,55 @@
                                 </md-option>
                             </md-select>
 
+                        </md-input-container>-->
+
+                        <md-input-container style="margin-bottom: 20px;">
+                            <label>Currency</label>
+                            <md-select ng-model="reportOptions.report_currency"
+                                       md-container-class="common-select-container"
+                                       md-on-close="searchTerm = ''"
+                                       ng-change="updateReportOptions()">
+                                <md-select-header>
+                                    <input data-ng-model="searchTerm"
+                                           type="search"
+                                           placeholder="Search for a ..."
+                                           class="md-text md-select-search-pattern select-input-filter"
+                                           ng-keydown="$event.stopPropagation()">
+                                </md-select-header>
+
+                                <div class="select-options-holder">
+
+                                    <md-option ng-repeat="item in currencies | orderBy:'-'+field.name | filter:{name: searchTerm}" ng-value="item.id">
+                                        {{item.name}}
+                                    </md-option>
+
+                                </div>
+
+                            </md-select>
                         </md-input-container>
 
                         <md-input-container>
+                            <label>Pricing Policy</label>
+                            <md-select ng-model="reportOptions.pricing_policy"
+                                       md-container-class="common-select-container"
+                                       md-on-close="searchTerm = ''"
+                                       ng-change="updateReportOptions()">
+                                <md-select-header>
+                                    <input data-ng-model="searchTerm"
+                                           type="search"
+                                           placeholder="Search for a ..."
+                                           class="md-text md-select-search-pattern select-input-filter" ng-keydown="$event.stopPropagation()">
+                                </md-select-header>
 
-                            <label for="">Pricing Policy</label>
+                                <div class="select-options-holder">
 
-                            <md-select data-ng-model="reportOptions.pricing_policy" ng-change="updateReportOptions()">
-                                <md-option data-ng-repeat="item in pricingPolicies" ng-value="item.id">{{item.name}}
-                                </md-option>
+                                    <md-option ng-repeat="item in pricingPolicies | filter:{name: searchTerm}" ng-value="item.id">
+                                        {{item.name}}
+                                    </md-option>
+
+                                </div>
+
                             </md-select>
-
                         </md-input-container>
 
                     </div>
@@ -203,7 +241,7 @@
                         </md-input-container>
 
 
-                        <md-input-container style="margin-bottom: 20px;">
+                        <!--<md-input-container style="margin-bottom: 20px;">
 
                             <label for="">Currency</label>
 
@@ -221,9 +259,33 @@
                                 </md-option>
                             </md-select>
 
+                        </md-input-container>-->
+
+                        <md-input-container style="margin-bottom: 20px;">
+                            <label>Currency</label>
+                            <md-select ng-model="reportOptions.report_currency"
+                                       md-container-class="common-select-container"
+                                       md-on-close="searchTerm = ''"
+                                       ng-change="updateReportOptions()">
+                                <md-select-header>
+                                    <input data-ng-model="searchTerm"
+                                           type="search"
+                                           placeholder="Search for a ..."
+                                           class="md-text md-select-search-pattern select-input-filter" ng-keydown="$event.stopPropagation()">
+                                </md-select-header>
+
+                                <div class="select-options-holder">
+
+                                    <md-option ng-repeat="item in currencies | orderBy:'-'+field.name | filter:{name: searchTerm}" ng-value="item.id">
+                                        {{item.name}}
+                                    </md-option>
+
+                                </div>
+
+                            </md-select>
                         </md-input-container>
 
-                        <md-input-container>
+                        <!--<md-input-container>
 
                             <label for="">Pricing Policy</label>
 
@@ -232,6 +294,30 @@
                                 </md-option>
                             </md-select>
 
+                        </md-input-container>-->
+
+                        <md-input-container>
+                            <label>Pricing Policy</label>
+                            <md-select ng-model="reportOptions.pricing_policy"
+                                       ng-change="updateReportOptions()"
+                                       md-container-class="common-select-container"
+                                       md-on-close="searchTerm = ''">
+                                <md-select-header>
+                                    <input data-ng-model="searchTerm"
+                                           type="search"
+                                           placeholder="Search for a ..."
+                                           class="md-text md-select-search-pattern select-input-filter" ng-keydown="$event.stopPropagation()">
+                                </md-select-header>
+
+                                <div class="select-options-holder">
+
+                                    <md-option ng-repeat="item in pricingPolicies | filter:{name: searchTerm}" ng-value="item.id">
+                                        {{item.name}}
+                                    </md-option>
+
+                                </div>
+
+                            </md-select>
                         </md-input-container>
 
                     </div>
@@ -343,8 +429,7 @@
                     <div data-ng-if="fields[filter.key]">
                         <md-select data-ng-model="filter.options.query"
                                    md-on-close="searchTerm = ''"
-                                   data-ng-change="filterChange(filter)"
-                        >
+                                   data-ng-change="filterChange(filter)">
                             <md-select-header>
                                 <input data-ng-model="searchTerm"
                                        type="search"

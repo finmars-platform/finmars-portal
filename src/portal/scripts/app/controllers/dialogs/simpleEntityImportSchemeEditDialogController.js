@@ -151,6 +151,29 @@
 
         };
 
+        vm.getContentTypeName = function (valueType) {
+
+            var valueTypeName = "";
+            switch (valueType) {
+                case 10:
+                    valueTypeName = "Text";
+                    break;
+                case 20:
+                    valueTypeName = "Number";
+                    break;
+                case 30:
+                case "field":
+                case "mc_field":
+                    valueTypeName = "Classificator";
+                    break;
+                case 40:
+                    valueTypeName = "Date";
+                    break;
+            }
+
+            return valueTypeName;
+        };
+
         vm.checkReadyStatus = function () {
             return vm.readyStatus.scheme;
         };
@@ -191,7 +214,6 @@
         vm.removeDynamicAttribute = function (item, $index) {
             vm.scheme.entity_fields.splice($index, 1);
         };
-
 
         vm.cancel = function () {
             $mdDialog.cancel();
