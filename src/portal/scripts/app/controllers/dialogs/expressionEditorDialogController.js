@@ -10,11 +10,17 @@
 
     module.exports = function ($scope, $mdDialog, item, data) {
 
-        // console.log('data', data) ;
-
         var vm = this;
 
-        vm.data = data;
+        vm.item = item;
+
+        if (data) {
+            vm.data = data;
+
+            if (vm.data.returnExpressionResult) { // check if expression editor should return expression result
+                vm.item.is_eval = true;
+            }
+        }
 
         vm.readyStatus = {expressions: false, groups: false};
 
@@ -23,12 +29,6 @@
         vm.error = false;
 
         vm.searchExpr = '';
-
-        vm.item = item;
-
-        if (vm.data.returnExpressionResult) {
-            vm.item.is_eval = true;
-        }
 
         vm.getFilters = function () {
 

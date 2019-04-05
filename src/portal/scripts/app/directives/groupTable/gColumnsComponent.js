@@ -46,17 +46,17 @@
                 scope.isAllSelected = scope.evDataService.getSelectAllRowsState();
 
                 scope.checkReportRemoveButton = function (column, index) {
+                    var groups = scope.evDataService.getGroups();
 
-                    if (scope.isReport && index < scope.groups.length) {
+                    if (scope.isReport && index < groups.length) {
 
-                        if (column.key === scope.groups[index].key) {
+                        if (column.key === groups[index].key) {
                             return false;
                         }
 
                         return true;
 
                     }
-
 
                     return true;
 
@@ -464,7 +464,6 @@
 
                 scope.removeGroup = function (columnTableId) {
                     var groups = scope.evDataService.getGroups();
-                    console.log("remove group column_id", columnTableId);
 
                     /** remove group */
                     var i;

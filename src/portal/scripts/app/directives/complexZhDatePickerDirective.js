@@ -178,6 +178,7 @@
                             expressionService.getResultOfExpression(expressionData).then(function (resData) {
 
                                 scope.date = resData.result;
+                                scope.datepickerOptions.date = resData.result;
                                 scope.$apply();
 
                                 if (scope.callbackMethod) {
