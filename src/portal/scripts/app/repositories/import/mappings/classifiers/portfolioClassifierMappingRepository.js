@@ -13,7 +13,7 @@
     var baseUrl = baseUrlService.resolve();
 
     var getList = function (attribute_type_id) {
-        return xhrService.fetch(baseUrl + 'import/portfolio-classifier-mapping/?page_size=1000?attribute_type=' + attribute_type_id,
+        return xhrService.fetch(baseUrl + 'import/portfolio-classifier-mapping/?page_size=1000&attribute_type=' + attribute_type_id,
             {
                 method: 'GET',
                 credentials: 'include',
