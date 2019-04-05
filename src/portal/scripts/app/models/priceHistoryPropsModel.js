@@ -10,8 +10,8 @@
             {
                 "key": "instrument",
                 "name": "Instrument",
-                "content_type": "instruments.instrument",
-                "entity": "instrument",
+                "value_content_type": "instruments.instrument",
+                "value_entity": "instrument",
                 "code": "user_code",
                 "value_type": "field"
             },
@@ -23,8 +23,8 @@
             {
                 "key": "pricing_policy",
                 "name": "Pricing policy",
-                "content_type": "instruments.pricingpolicy",
-                "entity": "pricing_policy",
+                "value_content_type": "instruments.pricingpolicy",
+                "value_entity": "pricing_policy",
                 "code": "user_code",
                 "value_type": "field"
             },

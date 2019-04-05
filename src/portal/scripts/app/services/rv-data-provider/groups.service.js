@@ -1,8 +1,20 @@
+/**
+ * Report Viewer Data Provider Groups Service.
+ * @module ReportViewerDataProviderGroupsService
+ */
+
 (function () {
 
     var filterService = require('./filter.service');
     var sortService = require('./sort.service');
 
+    /**
+     * Check if group already exists
+     * @param {object} resultGroup - group for a check.
+     * @param {object[]} result - groups that already exists
+     * @return {boolean} return true if group exists
+     * @memberof module:ReportViewerDataProviderGroupsService
+     */
     function groupAlreadyExist(resultGroup, result) {
 
         var exist = false;
@@ -19,6 +31,13 @@
         return exist;
     }
 
+    /**
+     * Get list of unique groups
+     * @param {object[]} items - collection of items
+     * @param {object} group - group type on which grouping is based
+     * @return {boolean} return list of unique groups
+     * @memberof module:ReportViewerDataProviderGroupsService
+     */
     var getUniqueGroups = function (items, group) {
 
         var result = [];
@@ -122,6 +141,15 @@
 
     };
 
+
+    /**
+     * Get list of groups
+     * @param {string} entityType - string value of entity name (e.g. instrument-type)
+     * @param {object} options - set of specific options
+     * @param {object} entityViewerDataService - global data service
+     * @return {boolean} return list of groups
+     * @memberof module:ReportViewerDataProviderGroupsService
+     */
     var getList = function (entityType, options, entityViewerDataService) {
 
         return new Promise(function (resolve, reject) {

@@ -37,8 +37,8 @@
                 "key": "type",
                 "name": "Type",
                 "value_type": "field",
-                "content_type": "accounts.accounttype",
-                "entity": "account-type",
+                "value_content_type": "accounts.accounttype",
+                "value_entity": "account-type",
                 "code": "user_code"
             },
             {

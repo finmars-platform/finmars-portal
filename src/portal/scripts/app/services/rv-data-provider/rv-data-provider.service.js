@@ -115,15 +115,13 @@
             if (reportOptions.items && reportOptions.items.length) {
 
                 reportOptions.items = reportHelper.injectIntoItems(reportOptions.items, reportOptions);
-                reportOptions.items = reportHelper.releaseEntityObjects(reportOptions.items);
+                // reportOptions.items = reportHelper.releaseEntityObjects(reportOptions.items);
 
                 reportOptions.items = reportHelper.calculateMarketValueAndExposurePercents(reportOptions.items, reportOptions);
 
                 entityViewerDataService.setReportOptions(reportOptions);
 
                 entityViewerDataService.setStatusData('loaded');
-
-                // console.log('requestReport finished');
 
                 createDataStructure(entityViewerDataService, entityViewerEventService)
 

@@ -49,7 +49,7 @@
         };
 
         vm.cancel = function () {
-            mdDialog.hide();
+            $mdDialog.hide({});
         };
 
         vm.informed = function () {
@@ -77,6 +77,8 @@
                     vm.recursiveHandleEvent(index, actions, resolve)
 
                 }).then(function (value) {
+
+                    console.log('resolve here?');
 
                     $mdDialog.hide({status: 'agree'});
 
