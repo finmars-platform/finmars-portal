@@ -1,6 +1,12 @@
 /**
  * Created by szhitenev on 19.03.2018.
  */
+
+/**
+ * Simple Entity Import Edit Dialog Controller.
+ * @module SimpleEntityImportEitDialogController
+ */
+
 (function () {
 
     'use strict';
@@ -18,6 +24,7 @@
 
         logService.controller('EntityMappingEditDialogController', 'initialized');
 
+        /** JSDOC ignores vm methods, only works for var variable. */
         var vm = this;
         vm.scheme = {};
         vm.readyStatus = {scheme: false, entitySchemeAttributes: false};
@@ -29,8 +36,14 @@
             "key": 'input'
         };
 
+
         vm.inputsFunctions = [];
 
+        /**
+         * Get list of expressions for Expression Builder.
+         * @return {Object[]} Array of Expressions.
+         * @memberof module:SimpleEntityImportEitDialogController
+         */
         vm.getFunctions = function () {
 
             return vm.scheme.csv_fields.map(function (input) {
@@ -97,6 +110,12 @@
 
         });
 
+
+        /**
+         * Get list of dynamic attributes .
+         *
+         * @memberof module:SimpleEntityImportEitDialogController
+         */
         vm.getAttrs = function () {
 
             var entity = metaContentTypesService.findEntityByContentType(vm.scheme.content_type);

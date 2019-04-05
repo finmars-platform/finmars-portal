@@ -26,8 +26,8 @@
                 "key": "currency",
                 "name": "Currency",
                 "value_type": "field",
-                "entity": "currency",
-                "content_type": "",
+                "value_entity": "currency",
+                "value_content_type": "",
                 "code": "currencies.currency"
             },
             {
@@ -44,8 +44,8 @@
                 "key": "pricing_policy",
                 "name": "Pricing policy",
                 "value_type": "field",
-                "entity": "pricing_policy",
-                "content_type": "instruments.pricingpolicy",
+                "value_entity": "pricing_policy",
+                "value_content_type": "instruments.pricingpolicy",
                 "code": "user_code"
             }
             //{

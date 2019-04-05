@@ -22,19 +22,19 @@
 
         return new Promise(function (resolve, reject) {
 
-            if (cacheContainer[propertyItem.entity] && cacheContainer[propertyItem.entity]['-']) {
+            if (cacheContainer[propertyItem.value_entity] && cacheContainer[propertyItem.value_entity]['-']) {
 
-                item[propertyItem.key] = cacheContainer[propertyItem.entity]['-'];
+                item[propertyItem.key] = cacheContainer[propertyItem.value_entity]['-'];
 
                 resolve(item)
 
             } else {
 
-                cacheContainer[propertyItem.entity] = {};
+                cacheContainer[propertyItem.value_entity] = {};
 
                 if (propertyItem.code === 'user_code') {
 
-                    entityResolverService.getList(propertyItem.entity, {
+                    entityResolverService.getList(propertyItem.value_entity, {
                         filters: {
                             "user_code": '-'
                         }
@@ -48,7 +48,7 @@
 
                                     item[propertyItem.key] = resultItem.id;
 
-                                    cacheContainer[propertyItem.entity]['-'] = resultItem.id;
+                                    cacheContainer[propertyItem.value_entity]['-'] = resultItem.id;
 
                                     resolve(item)
 
@@ -63,7 +63,7 @@
 
                 } else {
 
-                    entityResolverService.getList(propertyItem.entity, {
+                    entityResolverService.getList(propertyItem.value_entity, {
                         filters: {
                             "system_code": '-'
                         }
@@ -77,7 +77,7 @@
 
                                     item[propertyItem.key] = resultItem.id;
 
-                                    cacheContainer[propertyItem.entity]['-'] = resultItem.id;
+                                    cacheContainer[propertyItem.value_entity]['-'] = resultItem.id;
 
                                     resolve(item)
 
@@ -170,8 +170,8 @@
 
             var promises = [];
 
-            promises.push(setDefaultRelation({}, {entity: 'transaction-type', code: 'user_code', key: 'transaction_type'}, cacheContainer));
-            promises.push(setDefaultRelation({}, {entity: 'transaction-class', code: 'system_code', key: 'transaction_class'}, cacheContainer));
+            promises.push(setDefaultRelation({}, {value_entity: 'transaction-type', code: 'user_code', key: 'transaction_type'}, cacheContainer));
+            promises.push(setDefaultRelation({}, {value_entity: 'transaction-class', code: 'system_code', key: 'transaction_class'}, cacheContainer));
 
             Promise.all(promises).then(function (data) {
 

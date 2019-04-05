@@ -20,16 +20,16 @@
             {
                 "key": "transaction_class",
                 "name": "Transaction class",
-                "content_type": "transactions.transactionclass",
-                "entity": "transaction_class",
+                "value_content_type": "transactions.transactionclass",
+                "value_entity": "transaction_class",
                 "code": "system_code",
                 "value_type": "field"
             },
             {
                 "key": "portfolio",
                 "name": "Portfolio",
-                "content_type": "portfolios.portfolio",
-                "entity": "portfolio",
+                "value_content_type": "portfolios.portfolio",
+                "value_entity": "portfolio",
                 "code": "user_code",
                 "value_type": "field"
             },
@@ -41,8 +41,8 @@
             {
                 "key": "instrument",
                 "name": "Instrument",
-                "content_type": "instruments.instrument",
-                "entity": "instrument",
+                "value_content_type": "instruments.instrument",
+                "value_entity": "instrument",
                 "code": "user_code",
                 "value_type": "field"
             },
@@ -174,16 +174,16 @@
             {
                 "key": "responsible",
                 "name": "Responsible",
-                "content_type": "counterparties.responsible",
-                "entity": "responsible",
+                "value_content_type": "counterparties.responsible",
+                "value_entity": "responsible",
                 "code": "user_code",
                 "value_type": 'field'
             },
             {
                 "key": "counterparty",
                 "name": "Counterparty",
-                "content_type": "counterparties.counterparty",
-                "entity": "counterparty",
+                "value_content_type": "counterparties.counterparty",
+                "value_entity": "counterparty",
                 "code": "user_code",
                 "value_type": 'field'
             },

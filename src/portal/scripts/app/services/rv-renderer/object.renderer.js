@@ -1,3 +1,8 @@
+/**
+ * Report Viewer Object Renderer.
+ * @module ReportViewerRendererObjectRenderer
+ */
+
 (function () {
 
     var renderHelper = require('../../helpers/render.helper');
@@ -8,6 +13,12 @@
     var checkIcon = renderHelper.getCheckIcon();
     var REPORT_BG_CSS_SELECTOR = 'report-bg-level';
 
+
+    /**
+     * Get Dynamic attribute value
+     * @return {Object} Return html_result and number result (optional)
+     * @memberof module:ReportViewerRendererObjectRenderer
+     */
     var getDynamicAttributeValue = function (obj, column) {
 
         var result = {
@@ -55,6 +66,11 @@
 
     };
 
+    /**
+     * Get Entity attribute value
+     * @return {Object} Return html_result and number result (optional)
+     * @memberof module:ReportViewerRendererObjectRenderer
+     */
     var getEntityAttributeValue = function (obj, column) {
 
         var result = {
@@ -62,11 +78,22 @@
             'numeric_result': null
         };
 
-        if (typeof obj[column.key] === 'string') {
-            result.html_result = obj[column.key]
+        var source = obj;
+        var entityAsProperty = column.entity.split('-').join('_');
+
+        if (obj[entityAsProperty + '_object']) {
+            source = obj[entityAsProperty + '_object'];
+        }
+
+        if (typeof source[column.key] === 'string') {
+            result.html_result = source[column.key]
         } else {
 
-            if (typeof obj[column.key] === 'number') {
+            // Works only for 1 level entities
+            // Example:
+            // For instrument_object.instrument_type_object.name it won't work
+
+            if (typeof source[column.key] === 'number') {
 
                 if (obj[column.key + '_object'] && obj[column.key + '_object'].name) {
 
@@ -74,16 +101,16 @@
 
                 } else {
 
-                    result.html_result = renderHelper.formatValue(obj, column);
-                    result.numeric_result = obj[column.key];
+                    result.html_result = renderHelper.formatValue(source, column);
+                    result.numeric_result = source[column.key];
 
                 }
 
             } else {
 
-                if (Array.isArray(obj[column.key])) {
+                if (Array.isArray(source[column.key])) {
 
-                    result.html_result = '[' + obj[column.key].length + ']';
+                    result.html_result = '[' + source[column.key].length + ']';
 
                 }
 

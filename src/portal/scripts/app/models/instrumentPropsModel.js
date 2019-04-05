@@ -31,8 +31,8 @@
                 "key": "instrument_type",
                 "name": "Instrument type",
                 "value_type": "field",
-                "content_type": "instruments.instrumenttype",
-                "entity": "instrument-type",
+                "value_content_type": "instruments.instrumenttype",
+                "value_entity": "instrument-type",
                 "code": "user_code"
             },
             {
@@ -48,16 +48,16 @@
             {
                 "key": "price_download_scheme",
                 "name": "Price download scheme",
-                "content_type": "integrations.pricedownloadscheme",
-                "entity": "price-download-scheme",
+                "value_content_type": "integrations.pricedownloadscheme",
+                "value_entity": "price-download-scheme",
                 "code": "user_code",
                 "value_type": "field"
             },
             {
                 "key": "pricing_currency",
                 "name": "Pricing currency",
-                "content_type": "currencies.currency",
-                "entity": "currency",
+                "value_content_type": "currencies.currency",
+                "value_entity": "currency",
                 "code": "user_code",
                 "value_type": "field"
             },
@@ -69,8 +69,8 @@
             {
                 "key": "accrued_currency",
                 "name": "Accrued currency",
-                "content_type": "currencies.currency",
-                "entity": "currency",
+                "value_content_type": "currencies.currency",
+                "value_entity": "currency",
                 "code": "user_code",
                 "value_type": "field"
             },
@@ -92,16 +92,16 @@
             {
                 "key": "daily_pricing_model",
                 "name": "Daily pricing model",
-                "content_type": "instruments.dailypricingmodel",
-                "entity": "daily-pricing-model",
+                "value_content_type": "instruments.dailypricingmodel",
+                "value_entity": "daily-pricing-model",
                 "code": "system_code",
                 "value_type": "field"
             },
             {
                 "key": "payment_size_detail",
                 "name": "Payment size detail",
-                "content_type": "instruments.paymentsizedetail",
-                "entity": "payment-size-detail",
+                "value_content_type": "instruments.paymentsizedetail",
+                "value_entity": "payment-size-detail",
                 "code": "system_code",
                 "value_type": "field"
             },

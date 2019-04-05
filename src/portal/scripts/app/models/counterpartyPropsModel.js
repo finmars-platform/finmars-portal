@@ -31,8 +31,8 @@
                 "key": "group",
                 "name": "Group",
                 "value_type": "field",
-                "entity": "counterparty-group",
-                "content_type": "counterparties.counterpartygroup",
+                "value_entity": "counterparty-group",
+                "value_content_type": "counterparties.counterpartygroup",
                 "code": "user_code"
             },
             {

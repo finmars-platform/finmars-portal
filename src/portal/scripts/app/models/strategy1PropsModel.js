@@ -31,8 +31,8 @@
                 "key": "subgroup",
                 "name": "Sub Group",
                 "value_type": "field",
-                "entity": "strategy-1-subgroup",
-                "content_type": "strategies.strategy1subgroup",
+                "value_entity": "strategy-1-subgroup",
+                "value_content_type": "strategies.strategy1subgroup",
                 "code": "user_code"
             },
             {
