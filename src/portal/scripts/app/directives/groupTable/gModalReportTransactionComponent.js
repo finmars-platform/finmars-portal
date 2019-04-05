@@ -34,7 +34,6 @@
 
         vm.general = [];
         vm.attrs = [];
-        vm.baseAttrs = [];
         vm.entityAttrs = [];
         vm.custom = [];
 
@@ -127,7 +126,7 @@
             function fillTabAttrs() {
 
                 var a, t, c, b, e;
-                var tab, tabAttr, attr, baseAttr, attributeIsExist, entityAttr;
+                var tab, tabAttr, attr, attributeIsExist, entityAttr;
                 //console.log('METHOD: restoreAttrs, data: vm.tabs, value: ', vm.tabs);
                 //console.log('METHOD: restoreAttrs, data: vm.attrs, value: ', vm.attrs);
                 for (t = 0; t < vm.tabs.length; t = t + 1) {
@@ -148,13 +147,7 @@
                                 c = c - 1;
                             }
                         } else {
-                            for (b = 0; b < vm.baseAttrs.length; b = b + 1) {
-                                baseAttr = vm.baseAttrs[b];
-                                if (tabAttr.name === baseAttr.name) {
-                                    vm.tabs[t].attrs[c] = baseAttr;
-                                    attributeIsExist = true;
-                                }
-                            }
+
                             for (e = 0; e < vm.entityAttrs.length; e = e + 1) {
                                 entityAttr = vm.entityAttrs[e];
                                 if (tabAttr.name === entityAttr.name) {
@@ -189,10 +182,6 @@
         $('body').addClass('drag-dialog'); // hide backdrop
 
         vm.getAttributes = function () {
-
-            if (metaService.getEntitiesWithoutBaseAttrsList().indexOf(vm.entityType) === -1) {
-                vm.baseAttrs = metaService.getBaseAttrs();
-            }
 
             //vm.entityAttrs = metaService.getEntityAttrs(vm.entityType);
 
@@ -305,22 +294,26 @@
 
             vm.strategy1cashAttrs = metaService.getEntityAttrs('strategy-1').map(function (item) {
                 item.name = 'Strategy1 Cash.' + item.name;
+                item.entity = 'strategy-1';
                 // item.key = 'strategy1_cash_object_' + item.key;
                 return item;
             });
             vm.strategy1positionAttrs = metaService.getEntityAttrs('strategy-1').map(function (item) {
                 item.name = 'Strategy1 Position.' + item.name;
+                item.entity = 'strategy-1';
                 // item.key = 'strategy1_position_object_' + item.key;
                 return item;
             });
 
             vm.strategy2cashAttrs = metaService.getEntityAttrs('strategy-2').map(function (item) {
                 item.name = 'Strategy2 Cash.' + item.name;
+                item.entity = 'strategy-2';
                 // item.key = 'strategy2_cash_object_' + item.key;
                 return item;
             });
             vm.strategy2positionAttrs = metaService.getEntityAttrs('strategy-2').map(function (item) {
                 item.name = 'Strategy2 Position.' + item.name;
+                item.entity = 'strategy-2';
                 // item.key = 'strategy2_position_object_' + item.key;
                 return item;
             });
@@ -328,11 +321,13 @@
 
             vm.strategy3cashAttrs = metaService.getEntityAttrs('strategy-3').map(function (item) {
                 item.name = 'Strategy3 Cash.' + item.name;
+                item.entity = 'strategy-3';
                 // item.key = 'strategy3_cash_object_' + item.key;
                 return item;
             });
             vm.strategy3positionAttrs = metaService.getEntityAttrs('strategy-3').map(function (item) {
                 item.name = 'Strategy3 Position.' + item.name;
+                item.entity = 'strategy-3';
                 // item.key = 'strategy3_position_object_' + item.key;
                 return item;
             });
@@ -371,13 +366,6 @@
         };
 
         vm.bindReportItemName = function (item) {
-
-            //if (item.name.toLocaleLowerCase().indexOf('strategy') == -1) {
-            //
-            //    var pieces = item.name.split('.');
-            //
-            //    return pieces[pieces.length - 1];
-            //}
 
             return item.name;
         };
@@ -636,10 +624,6 @@
                     var name = $(elem).html();
                     var i;
 
-                    //console.log('elem111111111111111111111111111111', elem);
-                    //console.log('columns111111111111111111111111111111', columns);
-                    //console.log('grouping111111111111111111111111111111', grouping);
-                    //console.log('filters111111111111111111111111111111', filters);
 
                     var identifier;
                     if ($(elem).attr('data-key-identifier')) {
