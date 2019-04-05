@@ -114,21 +114,20 @@
 
             var dynamicAttrsGroupIndex = 4;
 
-            var layoutsList = {};
+            var layoutsList = [];
 
             var i;
             for (i = 0; i < vm.items.length; i++) {
 
-                if (vm.items[i].entity === "ui.listlayout") {
-                    layoutsList = vm.items[i];
-                    break;
+                if (vm.items[i].entity === "ui.listlayout" || vm.items[i].entity === "ui.reportlayout") { // create one array of all layouts
+                    layoutsList = layoutsList.concat(vm.items[i].content);
                 }
 
             }
 
             if (layoutsList && layoutsList !== {}) {
 
-                vm.items.forEach(function (entityItem) {
+                vm.items.map(function (entityItem) {
 
                     if (entityItem.order__ === dynamicAttrsGroupIndex) {
 
@@ -157,24 +156,29 @@
                                 break;
                         }
 
-                        entityItem.content.forEach(function (attr) {
+                        entityItem.content.map(function (attr) {
                             var daName = attr.name;
                             var daUserCode = attr.user_code;
                             var usagesCount = 0;
 
-                            layoutsList.content.forEach(function (layout) {
+                            layoutsList.map(function (layout) {
 
-                                if (layout.content_type === matchingLayout) { // to determine whether layout and attribute have same entity
+                                if (matchingLayout.indexOf(layout.content_type) !== -1) { // to determine if it is possible for this layout can contain such an attribute
                                     var layoutColumns = layout.data.columns;
                                     var layoutGroups = layout.data.grouping;
                                     var attributeIsUsed = false;
+                                    var attributeNameProperty = "name";
+
+                                    if (layout.content_type.indexOf("report") !== -1) { // use source_name when map layout of report
+                                        attributeNameProperty = "source_name";
+                                    }
 
                                     var l;
                                     for (l = 0; l < layoutColumns.length; l++) {
 
                                         if (layoutColumns[l].hasOwnProperty("user_code")) {
 
-                                            if (layoutColumns[l].name === daName && layoutColumns[l].user_code === daUserCode) {
+                                            if (layoutColumns[l][attributeNameProperty] === daName && layoutColumns[l].user_code === daUserCode) {
                                                 attributeIsUsed = true;
                                                 break;
                                             }
@@ -189,7 +193,7 @@
 
                                             if (layoutGroups[g].hasOwnProperty("user_code")) {
 
-                                                if (layoutGroups[g].name === daName && layoutGroups[g].user_code === daUserCode) {
+                                                if (layoutGroups[g][attributeNameProperty] === daName && layoutGroups[g].user_code === daUserCode) {
                                                     attributeIsUsed = true;
                                                     break;
                                                 }
@@ -273,52 +277,69 @@
 
         vm.getItemName = function (item) {
 
+            // transactions.transactiontype, transactions.transactiontypegroup, currencies.currency, instruments.pricingpolicy, instruments.instrumenttype, all dynamic attrs (obj_attrs)
             if (item.hasOwnProperty('user_code')) {
                 var result = item.user_code;
 
-                if (item.hasOwnProperty('scheme_name')) {
+                if (item.hasOwnProperty('scheme_name')) { // integrations.instrumentdownloadscheme
                     result = item.scheme_name;
                 }
 
                 return result;
             }
 
+            // integrations.pricedownloadscheme, integrations.complextransactionimportscheme,
             if (item.hasOwnProperty('scheme_name')) {
                 return item.scheme_name;
             }
 
             if (item.hasOwnProperty('name')) {
 
+                // csv_import.scheme
                 if (item.hasOwnProperty('csv_fields')) {
                     return item.name + ' (' + metaContentTypesService.getEntityNameByContentType(item.content_type) + ')'
                 }
 
+                // ui.listlayout, ui.reportlayout
                 if (item.hasOwnProperty('data')) {
 
-                    // Case for bookmarks
+                    // ui.bookmark
                     if (item.hasOwnProperty('___content_type')) {
 
-                        if (item.hasOwnProperty('children') && item.children.length > 0) {
-                            return 'Bookmarks - Upper Layer (' + item.name + ')'
+                        /*if (item.hasOwnProperty('children') && item.children.length > 0) {
+                            // return 'Bookmarks - Upper Layer (' + item.name + ')'
+                            return "&folder;" + ' ' + item.name
                         } else {
-                            return item.name + ' (' + metaContentTypesService.getEntityNameByContentType(item.___content_type) + ')'
-                        }
+                            return item.name
+                        }*/
+                        return item.name
                     }
 
-                    return item.name + ' (' + metaContentTypesService.getEntityNameByContentType(item.content_type) + ')'
+                    // return item.name + ' (' + metaContentTypesService.getEntityNameByContentType(item.content_type) + ')'
+                    return item.name
                 }
 
                 return item.name
             }
 
+            // ui.editlayout
             if (item.hasOwnProperty('content_type')) {
                 return metaContentTypesService.getEntityNameByContentType(item.content_type)
             }
 
-            if (item.hasOwnProperty('last_run_at')) { // import.pricingautomatedschedule
+            // import.pricingautomatedschedule
+            if (item.hasOwnProperty('last_run_at')) {
                 return "Schedule"
             }
 
+        };
+
+        vm.checkForTextIcon = function (parentEntity, child) {
+            if (parentEntity === "ui.bookmark") {
+                if (child.children.length > 0) {
+                    return true;
+                }
+            }
         };
 
         vm.toggleSelectAll = function () {
