@@ -78,24 +78,15 @@
             'numeric_result': null
         };
 
-        var source = obj;
-        var entityAsProperty = column.entity.split('-').join('_');
-
-        if (obj[entityAsProperty + '_object']) {
-            source = obj[entityAsProperty + '_object'];
-        }
-
-        console.log('source', source);
-
-        if (typeof source[column.key] === 'string') {
-            result.html_result = source[column.key]
+        if (typeof obj[column.key] === 'string') {
+            result.html_result = obj[column.key]
         } else {
 
             // Works only for 1 level entities
             // Example:
             // For instrument_object.instrument_type_object.name it won't work
 
-            if (typeof source[column.key] === 'number') {
+            if (typeof obj[column.key] === 'number') {
 
                 if (obj[column.key + '_object'] && obj[column.key + '_object'].name) {
 
@@ -103,16 +94,16 @@
 
                 } else {
 
-                    result.html_result = renderHelper.formatValue(source, column);
-                    result.numeric_result = source[column.key];
+                    result.html_result = renderHelper.formatValue(obj, column);
+                    result.numeric_result = obj[column.key];
 
                 }
 
             } else {
 
-                if (Array.isArray(source[column.key])) {
+                if (Array.isArray(obj[column.key])) {
 
-                    result.html_result = '[' + source[column.key].length + ']';
+                    result.html_result = '[' + obj[column.key].length + ']';
 
                 }
 
