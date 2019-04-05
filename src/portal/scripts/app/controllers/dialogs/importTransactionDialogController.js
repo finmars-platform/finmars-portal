@@ -43,6 +43,7 @@
         vm.dataIsImported = false;
 
         vm.config = {
+            delimiter: ',',
             mode: 1
         };
 
@@ -232,6 +233,7 @@
                 formData.append('file', vm.config.file);
                 formData.append('scheme', vm.config.scheme);
                 formData.append('error_handling', vm.config.error_handling);
+                formData.append('delimiter', vm.config.delimiter);
             }
 
             importTransactionService.validateImport(formData).then(function (data) {
@@ -269,6 +271,7 @@
                 formData.append('file', vm.config.file);
                 formData.append('scheme', vm.config.scheme);
                 formData.append('error_handling', vm.config.error_handling);
+                formData.append('delimiter', vm.config.delimiter);
             }
 
             importTransactionService.startImport(formData).then(function (data) {

@@ -32,6 +32,7 @@
         vm.activeContentType = null;
 
         vm.config = {
+            delimiter: ',',
             error_handler: 'break'
         };
 
