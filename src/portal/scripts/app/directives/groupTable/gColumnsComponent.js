@@ -462,6 +462,41 @@
 
                 };
 
+                scope.removeGroup = function (columnTableId) {
+                    var groups = scope.evDataService.getGroups();
+                    console.log("remove group column_id", columnTableId);
+
+                    /** remove group */
+                    var i;
+                    for (i = 0; i < groups.length; i++) {
+                       if (groups[i].___group_type_id === columnTableId) {
+                           groups.splice(i, 1);
+                           break;
+                       }
+                    }
+
+                    scope.evDataService.setGroups(groups);
+                    scope.evEventService.dispatchEvent(evEvents.GROUPS_CHANGE);
+
+                    /** remove column */
+                    var c;
+                    for (c = 0; c < scope.columns.length; c++) {
+
+                        if (scope.columns[c].___column_id === columnTableId) {
+                            scope.columns.splice(c, 1);
+                            break;
+                        }
+
+                    }
+
+                    scope.evDataService.setColumns(scope.columns);
+                    scope.evEventService.dispatchEvent(evEvents.COLUMNS_CHANGE);
+                    scope.evEventService.dispatchEvent(evEvents.UPDATE_COLUMNS_SIZE)
+
+                    scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+
+                };
+
                 scope.removeColumn = function (column) {
 
                     scope.columns = scope.columns.filter(function (item) {

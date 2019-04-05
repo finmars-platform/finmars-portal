@@ -98,8 +98,10 @@
                                      data-ng-click="vm.updateActiveForParent(child, item)"
                                      aria-label="checkbox">
                         </md-checkbox>
-                        <span data-ng-class="{'used-dynamic-attrs': child.countOfUsages__}">
-                            {{vm.getItemName(child)}} <span data-ng-if="child.countOfUsages__">(<b>{{child.countOfUsages__}}</b>)</span>
+                        <span data-ng-class="{'used-dynamic-attrs': child.countOfUsages__, 'child-with-icon': vm.checkForTextIcon(item.entity, child)}">
+                            <ng-md-icon data-ng-if="vm.checkForTextIcon(item.entity, child)" icon="folder" fill="#000" size="20"></ng-md-icon>
+                            {{vm.getItemName(child)}}
+                            <span data-ng-if="child.countOfUsages__">(<b>{{child.countOfUsages__}}</b>)</span>
                         </span>
                     </div>
 

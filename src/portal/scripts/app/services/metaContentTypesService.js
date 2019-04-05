@@ -145,11 +145,20 @@
             case 'counterparties.responsible':
                 result = 'Responsible';
                 break;
+            case 'counterparties.responsiblegroup':
+                result = 'Responsible Group';
+                break;
             case 'counterparties.counterparty':
                 result = 'Counterparty';
                 break;
+            case 'counterparties.counterpartygroup':
+                result = 'Counterparty Group'
+                break;
             case 'currencies.currencyhistory':
                 result = 'Currency History';
+                break;
+            case 'currencies.currency':
+                result = 'Currencies';
                 break;
             case 'instruments.pricingpolicy':
                 result = 'Pricing Policy';
@@ -169,20 +178,44 @@
             case 'strategies.strategy1':
                 result = 'Strategy 1';
                 break;
+            case 'strategies.strategy1group':
+                result = 'Strategy 1 Group';
+                break;
+            case 'strategies.strategy1subgroup':
+                result = 'Strategy 1 Subgroup';
+                break;
             case 'strategies.strategy2':
                 result = 'Strategy 2';
+                break;
+            case 'strategies.strategy2group':
+                result = 'Strategy 2 Group';
+                break;
+            case 'strategies.strategy2subgroup':
+                result = 'Strategy 2 Subgroup';
                 break;
             case 'strategies.strategy3':
                 result = 'Strategy 3';
                 break;
+            case 'strategies.strategy3group':
+                result = 'Strategy 3 Group';
+                break;
+            case 'strategies.strategy3subgroup':
+                result = 'Strategy 3 Subgroup';
+                break;
             case 'transactions.transactiontype':
                 result = 'Transaction Type';
                 break;
-            case 'integrations.pricedownloadscheme':
-                result = 'Price Download Sceme';
-                break;
             case 'transactions.transactiontypegroup':
                 result = 'Transaction Type Group';
+                break;
+            case 'transactions.complextransaction':
+                result = 'Complex Transaction';
+                break;
+            case 'transactions.transaction':
+                result = 'Transaction';
+                break;
+            case 'integrations.pricedownloadscheme':
+                result = 'Price Download Sceme';
                 break;
 
             case 'integrations.portfoliomapping':
