@@ -85,6 +85,8 @@
             source = obj[entityAsProperty + '_object'];
         }
 
+        console.log('source', source);
+
         if (typeof source[column.key] === 'string') {
             result.html_result = source[column.key]
         } else {
