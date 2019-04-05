@@ -7,7 +7,7 @@
 
     var dataProvidersService = require('../../../services/import/dataProvidersService');
 
-    module.exports = function ($scope) {
+    module.exports = function ($scope, $mdDialog) {
 
         logService.controller('SettingsGeneralDataProvidersController', 'initialized');
 
@@ -23,10 +23,9 @@
             $scope.$apply();
         });
 
-        $mdDialog.show({
+        /*$mdDialog.show({
             controller: 'WarningDialogController as vm',
             templateUrl: 'views/warning-dialog-view.html',
-            targetEvent: $event,
             clickOutsideToClose: false,
             locals: {
                 warning: {
@@ -39,7 +38,6 @@
         $mdDialog.show({
             controller: 'SuccessDialogController as vm',
             templateUrl: 'views/dialogs/success-dialog-view.html',
-            targetEvent: $event,
             autoWrap: true,
             locals: {
                 success: {
@@ -48,7 +46,7 @@
                 }
             }
 
-        });
+        });*/
 
     }
 
