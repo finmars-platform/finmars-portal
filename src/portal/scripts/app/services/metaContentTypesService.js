@@ -202,6 +202,9 @@
             case 'strategies.strategy3subgroup':
                 result = 'Strategy 3 Subgroup';
                 break;
+            case 'tags.tag':
+                result = 'Tags';
+                break;
             case 'transactions.transactiontype':
                 result = 'Transaction Type';
                 break;
