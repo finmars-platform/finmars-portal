@@ -120,8 +120,8 @@
             }
         }
 
-        console.log("groupType.entity", groupType.entity);
-        console.log("getFilterMatch.item_value", item_value);
+        // console.log("groupType.entity", groupType.entity);
+        // console.log("getFilterMatch.item_value", item_value);
 
         if (value === '-') {
 

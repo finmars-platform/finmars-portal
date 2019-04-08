@@ -34,7 +34,6 @@
 
         vm.general = [];
         vm.attrs = [];
-        vm.baseAttrs = [];
         vm.entityAttrs = [];
         vm.custom = [];
 
@@ -127,7 +126,7 @@
             function fillTabAttrs() {
 
                 var a, t, c, b, e;
-                var tab, tabAttr, attr, baseAttr, attributeIsExist, entityAttr;
+                var tab, tabAttr, attr, attributeIsExist, entityAttr;
                 //console.log('METHOD: restoreAttrs, data: vm.tabs, value: ', vm.tabs);
                 //console.log('METHOD: restoreAttrs, data: vm.attrs, value: ', vm.attrs);
                 for (t = 0; t < vm.tabs.length; t = t + 1) {
@@ -148,13 +147,7 @@
                                 c = c - 1;
                             }
                         } else {
-                            for (b = 0; b < vm.baseAttrs.length; b = b + 1) {
-                                baseAttr = vm.baseAttrs[b];
-                                if (tabAttr.name === baseAttr.name) {
-                                    vm.tabs[t].attrs[c] = baseAttr;
-                                    attributeIsExist = true;
-                                }
-                            }
+
                             for (e = 0; e < vm.entityAttrs.length; e = e + 1) {
                                 entityAttr = vm.entityAttrs[e];
                                 if (tabAttr.name === entityAttr.name) {
@@ -189,10 +182,6 @@
         $('body').addClass('drag-dialog'); // hide backdrop
 
         vm.getAttributes = function () {
-
-            if (metaService.getEntitiesWithoutBaseAttrsList().indexOf(vm.entityType) === -1) {
-                vm.baseAttrs = metaService.getBaseAttrs();
-            }
 
             //vm.entityAttrs = metaService.getEntityAttrs(vm.entityType);
 
@@ -305,22 +294,26 @@
 
             vm.strategy1cashAttrs = metaService.getEntityAttrs('strategy-1').map(function (item) {
                 item.name = 'Strategy1 Cash.' + item.name;
+                item.entity = 'strategy-1';
                 // item.key = 'strategy1_cash_object_' + item.key;
                 return item;
             });
             vm.strategy1positionAttrs = metaService.getEntityAttrs('strategy-1').map(function (item) {
                 item.name = 'Strategy1 Position.' + item.name;
+                item.entity = 'strategy-1';
                 // item.key = 'strategy1_position_object_' + item.key;
                 return item;
             });
 
             vm.strategy2cashAttrs = metaService.getEntityAttrs('strategy-2').map(function (item) {
                 item.name = 'Strategy2 Cash.' + item.name;
+                item.entity = 'strategy-2';
                 // item.key = 'strategy2_cash_object_' + item.key;
                 return item;
             });
             vm.strategy2positionAttrs = metaService.getEntityAttrs('strategy-2').map(function (item) {
                 item.name = 'Strategy2 Position.' + item.name;
+                item.entity = 'strategy-2';
                 // item.key = 'strategy2_position_object_' + item.key;
                 return item;
             });
@@ -328,11 +321,13 @@
 
             vm.strategy3cashAttrs = metaService.getEntityAttrs('strategy-3').map(function (item) {
                 item.name = 'Strategy3 Cash.' + item.name;
+                item.entity = 'strategy-3';
                 // item.key = 'strategy3_cash_object_' + item.key;
                 return item;
             });
             vm.strategy3positionAttrs = metaService.getEntityAttrs('strategy-3').map(function (item) {
                 item.name = 'Strategy3 Position.' + item.name;
+                item.entity = 'strategy-3';
                 // item.key = 'strategy3_position_object_' + item.key;
                 return item;
             });
@@ -371,13 +366,6 @@
         };
 
         vm.bindReportItemName = function (item) {
-
-            //if (item.name.toLocaleLowerCase().indexOf('strategy') == -1) {
-            //
-            //    var pieces = item.name.split('.');
-            //
-            //    return pieces[pieces.length - 1];
-            //}
 
             return item.name;
         };
@@ -427,53 +415,65 @@
 
                 columns.forEach(function (item) {
 
-                    if (item.hasOwnProperty('key')) {
+                    if (attrs[i].entity === item.entity) {
 
-                        if (attrs[i].key === item.key) {
-                            attrs[i].columns = true;
+                        if (item.hasOwnProperty('key')) {
+
+                            if (attrs[i].key === item.key) {
+                                attrs[i].columns = true;
+                            }
                         }
-                    }
 
-                    if (item.hasOwnProperty('id')) {
+                        if (item.hasOwnProperty('id')) {
 
-                        if (attrs[i].id === item.id) {
-                            attrs[i].columns = true;
+                            if (attrs[i].id === item.id) {
+                                attrs[i].columns = true;
+                            }
                         }
+
                     }
 
                 });
 
                 filters.forEach(function (item) {
 
-                    if (item.hasOwnProperty('key')) {
+                    if (attrs[i].entity === item.entity) {
 
-                        if (attrs[i].key === item.key) {
-                            attrs[i].filters = true;
+                        if (item.hasOwnProperty('key')) {
+
+                            if (attrs[i].key === item.key) {
+                                attrs[i].filters = true;
+                            }
                         }
-                    }
 
-                    if (item.hasOwnProperty('id')) {
+                        if (item.hasOwnProperty('id')) {
 
-                        if (attrs[i].id === item.id) {
-                            attrs[i].filters = true;
+                            if (attrs[i].id === item.id) {
+                                attrs[i].filters = true;
+                            }
                         }
+
                     }
 
                 });
 
                 grouping.forEach(function (item) {
 
-                    if (item.hasOwnProperty('key')) {
-                        if (attrs[i].key === item.key) {
-                            attrs[i].groups = true;
-                        }
-                    }
+                    if (attrs[i].entity === item.entity) {
 
-                    if (item.hasOwnProperty('id')) {
-
-                        if (attrs[i].id === item.id) {
-                            attrs[i].groups = true;
+                        if (item.hasOwnProperty('key')) {
+                            if (attrs[i].key === item.key) {
+                                attrs[i].groups = true;
+                            }
                         }
+
+                        if (item.hasOwnProperty('id')) {
+
+                            if (attrs[i].id === item.id) {
+                                attrs[i].groups = true;
+                            }
+                        }
+
                     }
 
                 });
@@ -492,24 +492,28 @@
 
                 for (c = 0; c < columns.length; c = c + 1) {
 
-                    if (attr.hasOwnProperty('key')) {
-                        if (attr.key === columns[c].key) {
-                            columnExist = true;
-                            if (attr.columns === false) {
-                                columns.splice(c, 1);
-                                c = c - 1;
+                    if (attr.entity === columns[c].entity) {
+
+                        if (attr.hasOwnProperty('key')) {
+                            if (attr.key === columns[c].key) {
+                                columnExist = true;
+                                if (attr.columns === false) {
+                                    columns.splice(c, 1);
+                                    c = c - 1;
+                                }
                             }
                         }
-                    }
 
-                    if (attr.hasOwnProperty('id')) {
+                        if (attr.hasOwnProperty('id')) {
 
-                        if (attr.id === columns[c].id) {
-                            columnExist = true;
-                            if (attr.columns === false) {
-                                columns.splice(c, 1);
-                                c = c - 1;
+                            if (attr.id === columns[c].id) {
+                                columnExist = true;
+                                if (attr.columns === false) {
+                                    columns.splice(c, 1);
+                                    c = c - 1;
+                                }
                             }
+
                         }
 
                     }
@@ -521,25 +525,28 @@
 
                 for (g = 0; g < grouping.length; g = g + 1) {
 
+                    if (attr.entity === grouping[g].entity) {
 
-                    if (attr.hasOwnProperty('key')) {
-                        if (attr.key === grouping[g].key) {
-                            groupExist = true;
-                            if (attr.groups === false) {
-                                grouping.splice(g, 1);
-                                g = g - 1;
+                        if (attr.hasOwnProperty('key')) {
+                            if (attr.key === grouping[g].key) {
+                                groupExist = true;
+                                if (attr.groups === false) {
+                                    grouping.splice(g, 1);
+                                    g = g - 1;
+                                }
                             }
                         }
-                    }
 
-                    if (attr.hasOwnProperty('id')) {
+                        if (attr.hasOwnProperty('id')) {
 
-                        if (attr.id === grouping[g].id) {
-                            groupExist = true;
-                            if (attr.groups === false) {
-                                grouping.splice(g, 1);
-                                g = g - 1;
+                            if (attr.id === grouping[g].id) {
+                                groupExist = true;
+                                if (attr.groups === false) {
+                                    grouping.splice(g, 1);
+                                    g = g - 1;
+                                }
                             }
+
                         }
 
                     }
@@ -550,25 +557,30 @@
                 /////// FILTERING
 
                 for (f = 0; f < filters.length; f = f + 1) {
-                    if (attr.hasOwnProperty('key')) {
-                        if (attr.key === filters[f].key) {
-                            filterExist = true;
-                            if (attr.filters === false) {
-                                filters.splice(f, 1);
-                                f = f - 1;
+
+                    if (attr.entity === filters[f].entity) {
+
+                        if (attr.hasOwnProperty('key')) {
+                            if (attr.key === filters[f].key) {
+                                filterExist = true;
+                                if (attr.filters === false) {
+                                    filters.splice(f, 1);
+                                    f = f - 1;
+                                }
                             }
                         }
-                    }
 
-                    if (attr.hasOwnProperty('id')) {
+                        if (attr.hasOwnProperty('id')) {
 
-                        if (attr.id === filters[f].id) {
-                            filterExist = true;
-                            if (attr.filters === false) {
-                                filters.splice(f, 1);
-                                f = f - 1;
+                            if (attr.id === filters[f].id) {
+                                filterExist = true;
+                                if (attr.filters === false) {
+                                    filters.splice(f, 1);
+                                    f = f - 1;
+                                }
                             }
                         }
+
                     }
 
                 }
@@ -636,10 +648,6 @@
                     var name = $(elem).html();
                     var i;
 
-                    //console.log('elem111111111111111111111111111111', elem);
-                    //console.log('columns111111111111111111111111111111', columns);
-                    //console.log('grouping111111111111111111111111111111', grouping);
-                    //console.log('filters111111111111111111111111111111', filters);
 
                     var identifier;
                     if ($(elem).attr('data-key-identifier')) {
