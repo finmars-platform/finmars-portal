@@ -5,7 +5,7 @@
             <span flex></span>
         </div>
     </md-toolbar>
-    <md-dialog-content   style="background: #E5E5E5; width: 910px">
+    <md-dialog-content style="background: #E5E5E5; width: 910px">
         <div data-ng-if="vm.readyStatus.mapping" layout="column">
             <div layout="row">
                 <md-card style="width: 100%">
@@ -14,16 +14,20 @@
 
                             <md-input-container flex="40" style="margin-bottom: 0" class="ng-hide">
                                 <!--<input type="file" file-read="vm.config.file" id="importDataUploadInput" input-file-directive>-->
-                                <input type="file" id="importDataUploadInput" input-file-directive read-file="vm.config.file">
+                                <input type="file" id="importDataUploadInput" input-file-directive
+                                       read-file="vm.config.file">
                             </md-input-container>
                             <div class="input-upload-file-container">
                                 <p class="importDataUploadInput">Select file</p>
-                                <label for="importDataUploadInput" class="md-button md-raised md-primary IFUlabel"><ng-md-icon icon="file_upload"></ng-md-icon><span>BROWSE</span></label>
+                                <label for="importDataUploadInput" class="md-button md-raised md-primary IFUlabel">
+                                    <ng-md-icon icon="file_upload"></ng-md-icon>
+                                    <span>BROWSE</span></label>
                             </div>
 
                             <md-input-container>
                                 <label>Choose entity</label>
-                                <md-select data-ng-model="vm.activeContentType" data-ng-change="vm.updateEntitySchemes()">
+                                <md-select data-ng-model="vm.activeContentType"
+                                           data-ng-change="vm.updateEntitySchemes()">
                                     <md-option data-ng-repeat="entity in vm.contentTypes" ng-value="entity.key">
                                         {{ entity.name }}
                                     </md-option>
@@ -68,6 +72,15 @@
                                 <md-select data-ng-model="vm.config.error_handler">
                                     <md-option value="continue">Continue</md-option>
                                     <md-option value="break">Break on first error</md-option>
+                                </md-select>
+                            </md-input-container>
+
+                            <md-input-container>
+                                <label>Separator</label>
+                                <md-select data-ng-model="vm.config.delimiter">
+                                    <md-option value=",">Comma (,)</md-option>
+                                    <md-option value=";">Semicolon (;)</md-option>
+                                    <md-option value="\t">Tab</md-option>
                                 </md-select>
                             </md-input-container>
 
