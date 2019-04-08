@@ -138,6 +138,7 @@
         getEntitySchemesByModel: getEntitySchemesByModel,
         getSchemeFields: getSchemeFields,
         getSchemeAttributes: getSchemeAttributes,
+        getList: getList,
         create: create,
         getByKey: getByKey,
         update: update,
