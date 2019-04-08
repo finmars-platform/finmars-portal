@@ -6,7 +6,7 @@
             <span flex></span>
         </div>
     </md-toolbar>
-    <md-dialog-content   style="background: #E5E5E5;">
+    <md-dialog-content style="background: #E5E5E5;">
         <md-content>
             <div data-ng-if="vm.checkReadyStatus()">
 
@@ -18,7 +18,7 @@
                                 <input aria-label="scheme name" type="text" data-ng-model="vm.scheme.name">
                             </md-input-container>
                             <md-input-container class="SC-entity-select-container">
-                                <label>Data type</label>
+                                <!--<label>Data type</label>
                                 <md-select data-ng-model="vm.scheme.content_type"
                                            data-ng-change="vm.updateEntityFields()">
                                     <md-option
@@ -26,6 +26,32 @@
                                             data-ng-value="item.key">
                                         {{item.name}}
                                     </md-option>
+                                </md-select>-->
+
+                                <label>Data type</label>
+                                <md-select ng-model="vm.scheme.content_type"
+                                           md-container-class="common-select-container"
+                                           md-on-close="searchTerm = ''"
+                                           data-ng-change="vm.updateEntityFields()">
+                                    <div nf-if="vm.contentTypes && vm.contentTypes.length > 0">
+                                        <md-select-header>
+                                            <input data-ng-model="searchTerm"
+                                                   type="search"
+                                                   placeholder="Search for a ..."
+                                                   class="md-text md-select-search-pattern select-input-filter"
+                                                   ng-keydown="$event.stopPropagation()">
+                                        </md-select-header>
+
+                                        <div class="select-options-holder">
+
+                                            <md-option
+                                                    data-ng-repeat="item in vm.contentTypes | filter: {name: searchTerm}"
+                                                    ng-value="item.key"
+                                                    ng-bind="item.name">
+                                            </md-option>
+
+                                        </div>
+                                    </div>
                                 </md-select>
                             </md-input-container>
                         </md-card-content>
@@ -90,12 +116,38 @@
 
                                                     <div data-ng-if="!item.system_property_key">
 
-                                                        <md-select data-ng-model="item.dynamic_attribute_id" style="margin-top: 0">
+                                                        <!--<md-select data-ng-model="item.dynamic_attribute_id" style="margin-top: 0">
                                                             <md-option
                                                                     data-ng-repeat="item in vm.dynamicAttributes"
                                                                     data-ng-value="item.id">
                                                                 {{item.name}}
                                                             </md-option>
+                                                        </md-select>-->
+
+                                                        <label></label>
+                                                        <md-select ng-model="item.dynamic_attribute_id"
+                                                                   md-container-class="common-select-container"
+                                                                   md-on-close="searchTerm = ''"
+                                                                   style="margin-top: 0">
+                                                            <div nf-if="vm.dynamicAttributes && vm.dynamicAttributes.length > 0">
+                                                                <md-select-header>
+                                                                    <input data-ng-model="searchTerm"
+                                                                           type="search"
+                                                                           placeholder="Search for a ..."
+                                                                           class="md-text md-select-search-pattern select-input-filter"
+                                                                           ng-keydown="$event.stopPropagation()">
+                                                                </md-select-header>
+
+                                                                <div class="select-options-holder">
+
+                                                                    <md-option
+                                                                            data-ng-repeat="item in vm.dynamicAttributes | filter: {name: searchTerm}"
+                                                                            ng-value="item.id"
+                                                                            ng-bind="item.name">
+                                                                    </md-option>
+
+                                                                </div>
+                                                            </div>
                                                         </md-select>
 
                                                     </div>
