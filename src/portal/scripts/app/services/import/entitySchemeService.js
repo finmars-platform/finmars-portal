@@ -23,8 +23,8 @@
         return entitySchemesRepository.getSchemeAttributes(schemeId);
     };
 
-    var updateEntitySchemeMapping = function (schemeMapping) {
-        return entitySchemesRepository.updateEntitySchemeMapping(schemeMapping);
+    var getList = function (options) {
+        return entitySchemesRepository.getList(options);
     };
 
     var create = function (scheme) {
@@ -48,7 +48,7 @@
         getEntitySchemesByModel: getEntitySchemesByModel,
         getSchemeFields: getSchemeFields,
         getSchemeAttributes: getSchemeAttributes,
-        updateEntitySchemeMapping: updateEntitySchemeMapping,
+        getList: getList,
         create: create,
         getByKey: getByKey,
         update: update,
