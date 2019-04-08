@@ -67,6 +67,18 @@
             })
     };
 
+    var getList = function (options) {
+        return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl + 'import/csv/scheme/', options),
+            {
+                method: 'GET',
+                credentials: 'include',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-type': 'application/json'
+                }
+            })
+    };
+
     var create = function (scheme) {
         return xhrService.fetch(baseUrl + 'import/csv/scheme/',
             {
