@@ -214,7 +214,7 @@
                     result.push(input);
                 }
             });
-
+            // console.log("ttype input find input function", entity, vm.contentTypes, vm.entity.inputs);
             return result;
 
         };
@@ -415,13 +415,14 @@
                     fieldResolverService.getFields(field).then(function (data) {
                         vm.relationItems[field] = data.data;
 
-                        $scope.$apply(function () {
+                        /*$scope.$apply(function () {
                             setTimeout(function () {
                                 $('body').find('.md-select-search-pattern').on('keydown', function (ev) {
                                     ev.stopPropagation();
                                 });
                             }, 100);
-                        });
+                        });*/
+                        $scope.$apply();
 
                         resolve(vm.relationItems[field]);
                     })

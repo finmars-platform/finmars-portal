@@ -120,11 +120,36 @@
                         </td>
                         <td data-ng-if="item.editStatus" class="edit-state-td" style="padding-top: 12px">
                             <md-input-container>
-                                <label for="">Transaction Type</label>
+                                <!--<label for="">Transaction Type</label>
                                 <md-select data-ng-model="item.transaction_type">
                                     <md-option data-ng-repeat="model in vm.transactionTypes" ng-value="model.id">
                                         {{model.name}}
                                     </md-option>
+                                </md-select>-->
+
+                                <label>Transaction Type</label>
+                                <md-select ng-model="item.transaction_type"
+                                           md-container-class="common-select-container"
+                                           md-on-close="searchTerm = ''">
+                                    <div nf-if="vm.transactionTypes && vm.transactionTypes.length > 0">
+                                        <md-select-header>
+                                            <input data-ng-model="searchTerm"
+                                                   type="search"
+                                                   placeholder="Search for a ..."
+                                                   class="md-text md-select-search-pattern select-input-filter"
+                                                   ng-keydown="$event.stopPropagation()">
+                                        </md-select-header>
+
+                                        <div class="select-options-holder">
+
+                                            <md-option
+                                                    data-ng-repeat="model in vm.transactionTypes | filter: {name: searchTerm}"
+                                                    ng-value="model.id"
+                                                    ng-bind="model.name">
+                                            </md-option>
+
+                                        </div>
+                                    </div>
                                 </md-select>
                             </md-input-container>
                         </td>
@@ -165,12 +190,36 @@
                     </tr>
                     <tr class="tab-input-row">
                         <td style="padding-top: 12px">
-                            <md-input-container>
-                                <!--<label for="">Accrual calculation model</label>-->
-                                <md-select data-ng-model="vm.newItem.transaction_type">
+                            <md-input-container style="margin-bottom: 14px">
+                                <!--<md-select data-ng-model="vm.newItem.transaction_type">
                                     <md-option data-ng-repeat="model in vm.transactionTypes" ng-value="model.id">
                                         {{model.name}}
                                     </md-option>
+                                </md-select>-->
+
+                                <label></label>
+                                <md-select ng-model="vm.newItem.transaction_type"
+                                           md-container-class="common-select-container"
+                                           md-on-close="searchTerm = ''">
+                                    <div nf-if="vm.transactionTypes && vm.transactionTypes.length > 0">
+                                        <md-select-header>
+                                            <input data-ng-model="searchTerm"
+                                                   type="search"
+                                                   placeholder="Search for a ..."
+                                                   class="md-text md-select-search-pattern select-input-filter"
+                                                   ng-keydown="$event.stopPropagation()">
+                                        </md-select-header>
+
+                                        <div class="select-options-holder">
+
+                                            <md-option
+                                                    data-ng-repeat="model in vm.transactionTypes | filter: {name: searchTerm}"
+                                                    ng-value="model.id"
+                                                    ng-bind="model.name">
+                                            </md-option>
+
+                                        </div>
+                                    </div>
                                 </md-select>
                             </md-input-container>
                         </td>

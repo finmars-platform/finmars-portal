@@ -1,0 +1,30 @@
+<md-input-container class="md-block">
+    <label>{{labelTitle}}</label>
+    <md-select ng-model="model"
+               md-container-class="common-select-container"
+               md-on-close="searchTerm = ''"
+               md-on-open="loadRelationsOnOpen()">
+        <div nf-if="relations && relations.length > 0">
+            <md-select-header>
+                <input data-ng-model="searchTerm"
+                       type="search"
+                       placeholder="Search for a ..."
+                       class="md-text md-select-search-pattern select-input-filter"
+                       ng-keydown="$event.stopPropagation()">
+            </md-select-header>
+
+            <div class="select-options-holder">
+
+                <md-option data-ng-repeat="relationItem in relationItems | filter: filterPredicateFunction(propertyName, searchTerm)"
+                           ng-value="relationItem['{{propertyValue}}']"
+                           ng-bind="relationItem['{{propertyName}}']"
+                           nf-if="relationItems.length">
+                </md-option>
+
+                <md-option ng-if="!relationItems.length"
+                           ng-value="selectedValue">{{selectedName}}</md-option>
+
+            </div>
+        </div>
+    </md-select>
+</md-input-container>

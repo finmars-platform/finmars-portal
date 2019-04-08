@@ -1,6 +1,6 @@
 <div layout="row">
     <md-input-container>
-        <label for="" class="uncut-text-on-focus-label" content-title>Rebook reaction / Create if exists reactions</label>
+        <label for="" content-title>Rebook reaction / Create if exists reactions</label>
         <md-select data-ng-model="item.rebook_reaction">
             <md-option data-ng-repeat="item in vm.rebookInstrumentReactions"
                        ng-value="item.id">
@@ -27,7 +27,7 @@
                 <div flex="90">
                     <div>
                         <div data-ng-if="item.instrument.instrument_type_toggle">
-                            <md-input-container>
+                            <!--<md-input-container>
                                 <label for="" class="uncut-text-on-focus-label" content-title>Instrument type</label>
                                 <md-select data-ng-model="item.instrument.instrument_type"
                                            md-on-open="vm.loadRelation('instrument_type')"
@@ -49,11 +49,18 @@
                                         {{item.instrument.instrument_type_object.name}}
                                     </md-option>
                                 </md-select>
-                            </md-input-container>
+                            </md-input-container>-->
+
+                            <ttype-actions-relations-select label-title="Instrument type"
+                                                            model="item.instrument.instrument_type"
+                                                            load-relation="vm.loadRelation('instrument_type')"
+                                                            relation-items="vm.relationItems['instrument_type']"
+                                                            selected-value="item.instrument.instrument_type_object.id"
+                                                            selected-name="item.instrument.instrument_type_object.name"></ttype-actions-relations-select>
                         </div>
 
                         <div data-ng-if="!item.instrument.instrument_type_toggle">
-                            <md-input-container>
+                            <!--<md-input-container>
                                 <label for="" class="uncut-text-on-focus-label" content-title>Instrument type</label>
                                 <md-select
                                         data-ng-model="item.instrument.instrument_type_input">
@@ -63,7 +70,11 @@
                                         {{inputItem.name}}
                                     </md-option>
                                 </md-select>
-                            </md-input-container>
+                            </md-input-container>-->
+
+                            <ttype-actions-input-select label-title="Instrument type"
+                                                        model="item.instrument.instrument_type_input"
+                                                        find-inputs="vm.findInputs('instrument-type')"></ttype-actions-input-select>
                         </div>
                     </div>
                 </div>
@@ -170,7 +181,7 @@
                 </div>
                 <div flex="80">
                     <div data-ng-if="item.instrument.pricing_currency_toggle">
-                        <md-input-container>
+                        <!--<md-input-container>
                             <label for="" class="uncut-text-on-focus-label" content-title>Pricing currency</label>
                             <md-select data-ng-model="item.instrument.pricing_currency"
                                        md-on-open="vm.loadRelation('pricing_currency')"
@@ -192,11 +203,18 @@
                                     {{item.instrument.pricing_currency_object.name}}
                                 </md-option>
                             </md-select>
-                        </md-input-container>
+                        </md-input-container>-->
+
+                        <ttype-actions-relations-select label-title="Pricing currency"
+                                                        model="item.instrument.pricing_currency"
+                                                        load-relation="vm.loadRelation('pricing_currency')"
+                                                        relation-items="vm.relationItems['pricing_currency']"
+                                                        selected-value="item.instrument.pricing_currency_object.id"
+                                                        selected-name="item.instrument.pricing_currency_object.name"></ttype-actions-relations-select>
                     </div>
 
                     <div data-ng-if="!item.instrument.pricing_currency_toggle">
-                        <md-input-container>
+                        <!--<md-input-container>
                             <label for="" class="uncut-text-on-focus-label" content-title>Pricing currency</label>
                             <md-select
                                     data-ng-model="item.instrument.pricing_currency_input">
@@ -206,7 +224,11 @@
                                     {{inputItem.name}}
                                 </md-option>
                             </md-select>
-                        </md-input-container>
+                        </md-input-container>-->
+
+                        <ttype-actions-input-select label-title="Pricing currency"
+                                                    model="item.instrument.pricing_currency_input"
+                                                    find-inputs="vm.findInputs('currency')"></ttype-actions-input-select>
                     </div>
                 </div>
             </div>
@@ -223,7 +245,7 @@
                 </div>
                 <div flex="80">
                     <div data-ng-if="item.instrument.accrued_currency_toggle">
-                        <md-input-container>
+                        <!--<md-input-container>
                             <label for="" class="uncut-text-on-focus-label" content-title>Accrued currency</label>
                             <md-select data-ng-model="item.instrument.accrued_currency"
                                        md-on-open="vm.loadRelation('accrued_currency')"
@@ -245,10 +267,17 @@
                                     {{item.instrument.accrued_currency_object.name}}
                                 </md-option>
                             </md-select>
-                        </md-input-container>
+                        </md-input-container>-->
+
+                        <ttype-actions-relations-select label-title="Accrued currency"
+                                                        model="item.instrument.accrued_currency"
+                                                        load-relation="vm.loadRelation('accrued_currency')"
+                                                        relation-items="vm.relationItems['accrued_currency']"
+                                                        selected-value="item.instrument.accrued_currency_object.id"
+                                                        selected-name="item.instrument.accrued_currency_object.name"></ttype-actions-relations-select>
                     </div>
                     <div data-ng-if="!item.instrument.accrued_currency_toggle">
-                        <md-input-container>
+                        <!--<md-input-container>
                             <label for="" class="uncut-text-on-focus-label" content-title>Accrued currency</label>
                             <md-select
                                     data-ng-model="item.instrument.accrued_currency_input">
@@ -258,7 +287,11 @@
                                     {{inputItem.name}}
                                 </md-option>
                             </md-select>
-                        </md-input-container>
+                        </md-input-container>-->
+
+                        <ttype-actions-input-select label-title="Accrued currency"
+                                                    model="item.instrument.accrued_currency_input"
+                                                    find-inputs="vm.findInputs('currency')"></ttype-actions-input-select>
                     </div>
                 </div>
             </div>
@@ -275,7 +308,7 @@
                 </div>
                 <div flex="80">
                     <div data-ng-if="item.instrument.daily_pricing_model_toggle">
-                        <md-input-container>
+                        <!--<md-input-container>
                             <label for="" class="uncut-text-on-focus-label" content-title>Daily pricing model</label>
                             <md-select data-ng-model="item.instrument.daily_pricing_model"
                                        md-on-open="vm.loadRelation('daily_pricing_model')"
@@ -297,10 +330,17 @@
                                     {{item.instrument.daily_pricing_model_object.name}}
                                 </md-option>
                             </md-select>
-                        </md-input-container>
+                        </md-input-container>-->
+
+                        <ttype-actions-relations-select label-title="Daily pricing model"
+                                                        model="item.instrument.daily_pricing_model"
+                                                        load-relation="vm.loadRelation('daily_pricing_model')"
+                                                        relation-items="vm.relationItems['daily_pricing_model']"
+                                                        selected-value="item.instrument.daily_pricing_model_object.id"
+                                                        selected-name="item.instrument.daily_pricing_model_object.name"></ttype-actions-relations-select>
                     </div>
                     <div data-ng-if="!item.instrument.daily_pricing_model_toggle">
-                        <md-input-container>
+                        <!--<md-input-container>
                             <label for="" class="uncut-text-on-focus-label" content-title>Daily pricing model</label>
                             <md-select
                                     data-ng-model="item.instrument.daily_pricing_model_input">
@@ -310,7 +350,11 @@
                                     {{inputItem.name}}
                                 </md-option>
                             </md-select>
-                        </md-input-container>
+                        </md-input-container>-->
+
+                        <ttype-actions-input-select label-title="Daily pricing model"
+                                                    model="item.instrument.daily_pricing_model_input"
+                                                    find-inputs="vm.findInputs('daily_pricing_model')"></ttype-actions-input-select>
                     </div>
                 </div>
             </div>
@@ -349,7 +393,7 @@
                 </div>
                 <div flex="80">
                     <div data-ng-if="item.instrument.price_download_scheme_toggle">
-                        <md-input-container>
+                        <!--<md-input-container>
                             <label for="" class="uncut-text-on-focus-label" content-title>Price download scheme</label>
                             <md-select data-ng-model="item.instrument.price_download_scheme"
                                        md-on-open="vm.loadRelation('price_download_scheme')"
@@ -371,10 +415,18 @@
                                     {{item.instrument.price_download_scheme_object.scheme_name}}
                                 </md-option>
                             </md-select>
-                        </md-input-container>
+                        </md-input-container>-->
+
+                        <ttype-actions-relations-select label-title="Price download scheme"
+                                                        model="item.instrument.price_download_scheme"
+                                                        relation-items="vm.relationItems['price_download_scheme']"
+                                                        load-relation="vm.loadRelation('price_download_scheme')"
+                                                        property-name="scheme_name"
+                                                        selected-value="item.instrument.price_download_scheme_object.id"
+                                                        selected-name="item.instrument.price_download_scheme_object.scheme_name"></ttype-actions-relations-select>
                     </div>
                     <div data-ng-if="!item.instrument.price_download_scheme_toggle">
-                        <md-input-container>
+                        <!--<md-input-container>
                             <label for="" class="uncut-text-on-focus-label" content-title>Price download scheme</label>
                             <md-select
                                     data-ng-model="item.instrument.price_download_scheme_input">
@@ -384,7 +436,11 @@
                                     {{inputItem.name}}
                                 </md-option>
                             </md-select>
-                        </md-input-container>
+                        </md-input-container>-->
+
+                        <ttype-actions-input-select label-title="Price download scheme"
+                                                    model="item.instrument.price_download_scheme_input"
+                                                    find-inputs="vm.findInputs('price_download_scheme')"></ttype-actions-input-select>
                     </div>
                 </div>
             </div>
@@ -437,7 +493,7 @@
                 </div>
                 <div flex="80">
                     <div data-ng-if="item.instrument.payment_size_detail_toggle">
-                        <md-input-container>
+                        <!--<md-input-container>
                             <label for="" class="uncut-text-on-focus-label" content-title>Payment size details</label>
                             <md-select data-ng-model="item.instrument.payment_size_detail"
                                        md-on-open="vm.loadRelation('payment_size_detail')"
@@ -459,10 +515,16 @@
                                     {{item.instrument.payment_size_detail_object.name}}
                                 </md-option>
                             </md-select>
-                        </md-input-container>
+                        </md-input-container>-->
+                        <ttype-actions-relations-select label-title="Payment size details"
+                                                        model="item.instrument.payment_size_detail"
+                                                        load-relation="vm.loadRelation('payment_size_detail')"
+                                                        relation-items="vm.relationItems['payment_size_detail']"
+                                                        selected-value="item.instrument.payment_size_detail_object.id"
+                                                        selected-name="item.instrument.payment_size_detail_object.name"></ttype-actions-relations-select>
                     </div>
                     <div data-ng-if="!item.instrument.payment_size_detail_toggle">
-                        <md-input-container>
+                        <!--<md-input-container>
                             <label for="" class="uncut-text-on-focus-label" content-title>Payment size details</label>
                             <md-select
                                     data-ng-model="item.instrument.payment_size_detail_input">
@@ -472,7 +534,11 @@
                                     {{inputItem.name}}
                                 </md-option>
                             </md-select>
-                        </md-input-container>
+                        </md-input-container>-->
+
+                        <ttype-actions-input-select label-title="Payment size details"
+                                                    model="item.instrument.payment_size_detail_input"
+                                                    find-inputs="vm.findInputs('payment_size_detail')"></ttype-actions-input-select>
                     </div>
                 </div>
             </div>
