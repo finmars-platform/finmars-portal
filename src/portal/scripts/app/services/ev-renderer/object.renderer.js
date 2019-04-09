@@ -18,8 +18,18 @@
                 //     return obj[column.key + '_object'].user_code;
                 // }
 
-                if (obj[column.key + '_object'] && obj[column.key + '_object'].name) {
-                    return obj[column.key + '_object'].name;
+                if (obj[column.key + '_object']) {
+
+                    if (obj[column.key + '_object'].name) {
+
+                        return obj[column.key + '_object'].name;
+
+                    } else if (column.key === 'price_download_scheme') {
+
+                        return obj[column.key + '_object'].scheme_name;
+
+                    }
+
                 }
 
                 if (column.key === 'status') {
