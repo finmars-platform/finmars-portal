@@ -75,7 +75,10 @@
             {
                 "key": "pricing_currency",
                 "name": "Pricing Currency",
-                "value_type": "field"
+                "value_type": "field",
+                "value_entity": "currency",
+                "value_content_type": "currencies.currency",
+                "code": "user_code"
             },
             //{
             //    "key": "instrument_principal",

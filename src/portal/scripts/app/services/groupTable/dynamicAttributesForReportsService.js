@@ -10,7 +10,6 @@
     var getDynamicAttributes = function (items, filters) {
         console.log();
         var promises = [];
-        var attr = [];
         var reportAttrs = {};
 
         promises.push(attributeTypeService.getList('portfolio'));
