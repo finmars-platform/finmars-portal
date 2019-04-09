@@ -33,13 +33,13 @@
                 itemsCache = metaHelper.recursiveDeepCopy(reportOptions.items);
             }
 
-            console.log('itemsCache', itemsCache);
-
             items = itemsCache.map(function (item) {
                 return item
             });
 
             // items = metaHelper.recursiveDeepCopy(reportOptions.items);
+
+            console.log('options', options);
 
 
             var groupTypes = entityViewerDataService.getGroups();
@@ -47,10 +47,6 @@
             items = filterService.filterByRegularFilters(items, regularFilters);
 
             items = filterService.filterByGroupsFilters(items, options, groupTypes);
-
-            console.log('options', options);
-            console.log('groupTypes', groupTypes);
-            console.log('objectService.items', JSON.parse(JSON.stringify(items)));
 
             if (options.ordering) {
                 items = sortService.sortItems(items, options.ordering);

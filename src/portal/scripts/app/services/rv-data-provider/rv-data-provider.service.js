@@ -115,7 +115,7 @@
             if (reportOptions.items && reportOptions.items.length) {
 
                 reportOptions.items = reportHelper.injectIntoItems(reportOptions.items, reportOptions);
-                // reportOptions.items = reportHelper.releaseEntityObjects(reportOptions.items);
+                reportOptions.items = reportHelper.convertItemsToFlat(reportOptions.items);
 
                 reportOptions.items = reportHelper.calculateMarketValueAndExposurePercents(reportOptions.items, reportOptions);
 
@@ -134,6 +134,7 @@
         });
 
     };
+
 
     var getObjects = function (requestParameters, entityViewerDataService, entityViewerEventService) {
 

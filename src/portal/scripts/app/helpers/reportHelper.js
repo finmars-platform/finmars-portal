@@ -1,11 +1,18 @@
 /**
  * Created by szhitenev on 13.02.2017.
  */
+
+/**
+ * Report Viewer Helper.
+ * @module reportHelper
+ */
+
 (function () {
 
     'use strict';
 
     var transactionClassService = require('../services/transaction/transactionClassService');
+    var modelService = require('../services/modelService');
 
     function findEntityObject(report, propertyName, id) {
 
@@ -237,7 +244,104 @@
 
     }
 
+    var recursiveUnwrapRelation = function (result, parentKey, contentType, source) {
+
+        var attributes = modelService.getAttributesByContentType(contentType);
+        var resultKey;
+
+        attributes.forEach(function (attribute) {
+
+            resultKey = parentKey + '.' + attribute.key;
+
+            if (attribute.value_type === 'field' && attribute.code === 'user_code' && source[attribute.key]) {
+
+                recursiveUnwrapRelation(result, resultKey, attribute.value_content_type, source[attribute.key + '_object'])
+
+            } else {
+
+                if (attribute.value_type !== 'mc_field') {
+
+                    result[resultKey] = source[attribute.key]
+
+                }
+            }
+
+        })
+
+
+    };
+
+    var unwrapItem = function (item) {
+
+        var result = {};
+        var keys = Object.keys(item);
+
+        var keysToUnwrap = {
+            'instrument': 'instruments.instrument',
+            'allocation': 'instruments.instrument',
+            'allocation_balance': 'instruments.instrument',
+            'allocation_pl': 'instruments.instrument',
+            'linked_instrument': 'instruments.instrument',
+            'account': 'accounts.account',
+            'account_cash': 'accounts.account',
+            'account_interim': 'accounts.account',
+            'account_position': 'accounts.account',
+            'currency': 'currencies.currency',
+            'pricing_currency': 'currencies.currency',
+            'settlement_currency': 'currencies.currency',
+            'transaction_currency': 'currencies.currency',
+            'portfolio': 'portfolios.portfolio',
+            'complex_transaction': 'transactions.complextransaction',
+            'responsible': 'counterparties.responsible',
+            'counterparty': 'counterparties.counterparty',
+            'strategy1_cash': 'strategies.strategy1',
+            'strategy1_position': 'strategies.strategy1',
+            'strategy2_cash': 'strategies.strategy2',
+            'strategy2_position': 'strategies.strategy2',
+            'strategy3_cash': 'strategies.strategy3',
+            'strategy3_position': 'strategies.strategy3',
+            //TODO add more keys to map
+        };
+
+
+        keys.forEach(function (key) {
+
+            if (keysToUnwrap.hasOwnProperty(key) && item[key]) {
+
+                recursiveUnwrapRelation(result, key, keysToUnwrap[key], item[key + '_object']);
+
+            } else {
+                result[key] = item[key];
+            }
+
+
+        });
+
+        return result;
+
+    };
+
+    /**
+     * Get list of entity attributes and all children attributes.
+     * @param {Object[]} items - that were received from REST API.
+     * @param {object} reportOptions - report options.
+     * @return {Object[]} Array of flat objects.
+     * @memberof module:reportHelper
+     */
+    var convertItemsToFlat = function (items) {
+
+        items = items.map(function (item) {
+
+            return unwrapItem(item);
+
+        });
+
+        return items
+
+    };
+
     module.exports = {
+        convertItemsToFlat: convertItemsToFlat,
         injectIntoItems: injectIntoItems,
         calculateMarketValueAndExposurePercents: calculateMarketValueAndExposurePercents
     }

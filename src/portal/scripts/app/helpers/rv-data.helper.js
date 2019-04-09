@@ -8,6 +8,10 @@
     var rvHelper = require('./rv.helper');
     var evDataHelper = require('./ev-data.helper');
 
+    var getDataAsFlatObjects = function(evDataService){
+
+    };
+
     var getGroupsByParent = function (parentId, evDataService) {
 
         var items = evDataService.getDataAsList();

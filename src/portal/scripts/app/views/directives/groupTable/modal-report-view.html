@@ -1,4 +1,4 @@
-<md-dialog aria-label="Report fields modal" ng-cloak class="g-modal-dialog drag" g-dialog-draggable>
+<md-dialog aria-label="Report fields modal" ng-cloak class="g-modal-dialog drag view-constructor" g-dialog-draggable>
     <md-toolbar>
         <div class="md-toolbar-tools" layout="row" layout-align="start center">
             <h2 style="user-select: none; position: relative;">View Constructor
@@ -96,23 +96,7 @@
                                 <md-card class="modal-dialog-card">{{::vm.bindReportItemName(item)}}</md-card>
                             </div>
                         </div>
-                        <div class="g-checkbox-row" data-ng-repeat="item in vm.instrumentTypeAttrs" layout="row">
-                            <div>
-                                <md-checkbox ng-model="item.columns" aria-label="Columns" aria="columns"
-                                             data-ng-change="vm.updateAttrs(vm.instrumentTypeAttrs)">
-                                </md-checkbox>
-                                <md-checkbox ng-model="item.groups" aria-label="Groups" aria="groups"
-                                             class="md-g-green"
-                                             data-ng-change="vm.updateAttrs(vm.instrumentTypeAttrs)">
-                                </md-checkbox>
-                                <md-checkbox ng-model="item.filters" aria-label="Filters" aria="filters"
-                                             class="md-primary" data-ng-change="vm.updateAttrs(vm.instrumentTypeAttrs)">
-                                </md-checkbox>
-                            </div>
-                            <div class="g-modal-draggable-card">
-                                <md-card class="modal-dialog-card">{{::vm.bindReportItemName(item)}}</md-card>
-                            </div>
-                        </div>
+
                         <div layout="row" class="view-constructor-attributes-separator" data-ng-show="vm.instrumentDynamicAttrs.length > 0">
                             <p>User Attributes</p>
                         </div>
@@ -160,23 +144,7 @@
                                 <md-card class="modal-dialog-card">{{::vm.bindReportItemName(item)}}</md-card>
                             </div>
                         </div>
-                        <div class="g-checkbox-row" data-ng-repeat="item in vm.accountTypeAttrs" layout="row">
-                            <div>
-                                <md-checkbox ng-model="item.columns" aria-label="Columns" aria="columns"
-                                             data-ng-change="vm.updateAttrs(vm.accountTypeAttrs)">
-                                </md-checkbox>
-                                <md-checkbox ng-model="item.groups" aria-label="Groups" aria="groups"
-                                             class="md-g-green"
-                                             data-ng-change="vm.updateAttrs(vm.accountTypeAttrs)">
-                                </md-checkbox>
-                                <md-checkbox ng-model="item.filters" aria-label="Filters" aria="filters"
-                                             class="md-primary" data-ng-change="vm.updateAttrs(vm.accountTypeAttrs)">
-                                </md-checkbox>
-                            </div>
-                            <div class="g-modal-draggable-card">
-                                <md-card class="modal-dialog-card">{{::vm.bindReportItemName(item)}}</md-card>
-                            </div>
-                        </div>
+
                         <div layout="row" class="view-constructor-attributes-separator" data-ng-show="vm.accountDynamicAttrs.length > 0">
                             <p>User Attributes</p>
                         </div>
