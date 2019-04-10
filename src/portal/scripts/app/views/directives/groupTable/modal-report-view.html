@@ -456,6 +456,29 @@
                                 <md-card class="modal-dialog-card">{{::vm.bindReportItemName(item)}}</md-card>
                             </div>
                         </div>
+
+
+                        <div layout="row" class="view-constructor-attributes-separator" data-ng-show="vm.allocationDynamicAttrs.length > 0">
+                            <p>User Attributes</p>
+                        </div>
+                        <div class="g-checkbox-row" data-ng-repeat="item in vm.allocationDynamicAttrs" layout="row">
+                            <div>
+                                <md-checkbox ng-model="item.columns" aria-label="Columns" aria="columns"
+                                             data-ng-change="vm.updateAttrs(vm.allocationDynamicAttrs)">
+                                </md-checkbox>
+                                <md-checkbox ng-model="item.groups" aria-label="Groups" aria="groups"
+                                             class="md-g-green"
+                                             data-ng-change="vm.updateAttrs(vm.allocationDynamicAttrs)">
+                                </md-checkbox>
+                                <md-checkbox ng-model="item.filters" aria-label="Filters" aria="filters"
+                                             class="md-primary" data-ng-change="vm.updateAttrs(vm.allocationDynamicAttrs)">
+                                </md-checkbox>
+                            </div>
+                            <div class="g-modal-draggable-card">
+                                <md-card class="modal-dialog-card">{{::vm.bindReportItemName(item)}}</md-card>
+                            </div>
+                        </div>
+
                     </md-content>
                 </md-tab>
             </md-tabs>

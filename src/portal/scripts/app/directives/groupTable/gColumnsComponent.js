@@ -36,13 +36,6 @@
                     'performance-report', 'pnl-report',
                     'transaction-report'].indexOf(scope.entityType) !== -1;
 
-                var baseAttrs = [];
-                var entityAttrs = [];
-                if (metaService.getEntitiesWithoutBaseAttrsList().indexOf(scope.entityType) === -1) {
-                    baseAttrs = metaService.getBaseAttrs();
-                }
-                entityAttrs = metaService.getEntityAttrs(scope.entityType);
-
                 scope.isAllSelected = scope.evDataService.getSelectAllRowsState();
 
                 scope.checkReportRemoveButton = function (column, index) {

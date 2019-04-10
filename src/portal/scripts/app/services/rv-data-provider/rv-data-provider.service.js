@@ -680,24 +680,10 @@
 
             item.body.page = 1;
 
-            if (activeColumnSort.key) {
-
-                if (activeColumnSort.options.sort === 'ASC') {
-                    item.body.ordering = activeColumnSort.key
-                } else {
-                    item.body.ordering = '-' + activeColumnSort.key
-                }
-
+            if (activeColumnSort.options.sort === 'ASC') {
+                item.body.ordering = activeColumnSort.key
             } else {
-
-                if (activeColumnSort.id) {
-                    if (activeColumnSort.options.sort === 'ASC') {
-                        item.body.ordering = '___da_' + activeColumnSort.id
-                    } else {
-                        item.body.ordering = '-' + '___da_' + activeColumnSort.id
-                    }
-                }
-
+                item.body.ordering = '-' + activeColumnSort.key
             }
 
             entityViewerDataService.setRequestParameters(item);
