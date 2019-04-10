@@ -13,6 +13,7 @@
 
     var transactionClassService = require('../services/transaction/transactionClassService');
     var modelService = require('../services/modelService');
+    var metaService = require('../services/metaService')
 
     function findEntityObject(report, propertyName, id) {
 
@@ -244,6 +245,28 @@
 
     }
 
+    function getContentTypesWithDynamicAttributes() {
+
+        return [
+            'accounts.account',
+            'counterparties.counterparty',
+            'counterparties.responsible',
+            'currencies.currency',
+            'instruments.instrument',
+            'portfolios.portfolio',
+            'transactions.complextransaction']
+
+    }
+
+    /**
+     * Save to result object all props from relation key in source object
+     * @param {object} result - result flat object.
+     * @param {string} parentKey - parent key (e.g. instrument.instrument_type).
+     * @param {string} contentType - content type.
+     * @param {object} source - original item instance.
+     * @return {Object[]} Flat object.
+     * @memberof module:reportHelper
+     */
     var recursiveUnwrapRelation = function (result, parentKey, contentType, source) {
 
         var attributes = modelService.getAttributesByContentType(contentType);
@@ -266,11 +289,68 @@
                 }
             }
 
-        })
+        });
+
+        var contentTypesWithDynamicAttributes = getContentTypesWithDynamicAttributes();
+
+        if (contentTypesWithDynamicAttributes.indexOf(contentType) !== -1) {
+
+            unwrapDynamicAttributes(result, parentKey, contentType, source);
+
+        }
 
 
     };
 
+    var unwrapDynamicAttributes = function (result, parentKey, contentType, source) {
+
+        if (source.hasOwnProperty('attributes')) {
+
+            var resultKey = parentKey + '.attributes';
+            var localResultKey;
+
+            source.attributes.forEach(function (attribute) {
+
+                localResultKey = resultKey + '.' + attribute.attribute_type;
+
+                result[localResultKey] = null;
+
+                if (attribute.attribute_type_object.value_type === 10) {
+                    result[localResultKey] = attribute.value_string
+                }
+
+                if (attribute.attribute_type_object.value_type === 20) {
+                    result[localResultKey] = attribute.value_float
+                }
+
+                if (attribute.attribute_type_object.value_type === 30) {
+
+                    if (attribute.classifier_object) {
+
+                        result[localResultKey] = attribute.classifier_object.name
+
+                    }
+
+                }
+
+                if (attribute.attribute_type_object.value_type === 40) {
+                    result[localResultKey] = attribute.value_date
+                }
+
+
+            })
+
+
+        }
+
+    };
+
+    /**
+     * Convert single object to a flat object.
+     * @param {object} item.
+     * @return {Object[]} Flat object.
+     * @memberof module:reportHelper
+     */
     var unwrapItem = function (item) {
 
         var result = {};

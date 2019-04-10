@@ -52,6 +52,8 @@
                 items = sortService.sortItems(items, options.ordering);
             }
 
+            console.log('sorted items, ', items);
+
             result.count = items.length;
             result.results = items;
 
