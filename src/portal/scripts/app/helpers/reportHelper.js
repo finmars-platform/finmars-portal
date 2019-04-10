@@ -382,6 +382,7 @@
             'strategy2_position': 'strategies.strategy2',
             'strategy3_cash': 'strategies.strategy3',
             'strategy3_position': 'strategies.strategy3',
+            'transaction_type': 'transactions.transactiontype'
             //TODO add more keys to map
         };
 
