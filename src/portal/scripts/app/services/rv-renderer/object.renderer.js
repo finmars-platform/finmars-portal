@@ -318,12 +318,15 @@
 
             if (column.value_type === 20) {
 
-                if (parseInt(val) < 0) {
-
-                    result = 'negative-red'
-
+                if (val % 1 === 0) { // check whether number is float or integer
+                    if (parseInt(val) < 0) {
+                        result = 'negative-red'
+                    }
+                } else {
+                    if (parseFloat(val) < 0) {
+                        result = 'negative-red'
+                    }
                 }
-
             }
         }
 

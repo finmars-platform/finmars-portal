@@ -32,49 +32,80 @@
                 <label>Please select Element</label>
                 <!--{{item.attribute}}-->
                 <md-select ng-model="item.attribute"
+                           md-container-class="common-select-container"
+                           md-on-close="searchTerm = ''"
                            ng-change="changeModel(item.attribute)"
                            ng-focus="findAttrsLeft()">
-                    <md-optgroup label="System" class="bold-field-select">
-                        <md-option ng-repeat="entityAttr in entityAttrs"
-                                   ng-value="entityAttr"
-                                   class="{{entityAttr.disabled ? 'disabled' : ''}}">
-                            <!--{{attr}}-->
-                            {{entityAttr.name}} ({{bindTypeByValueType(entityAttr['value_type'])}})
-                        </md-option>
-                    </md-optgroup>
-                    <md-optgroup label="User attributes" class="bold-field-select" data-ng-if="attrs.length">
-                        <md-option ng-repeat="attr in attrs"
-                                   ng-value="attr"
-                                   class="{{attr.disabled ? 'disabled' : ''}}">
-                            <!--{{attr}}-->
-                            {{attr.name}} ({{bindTypeByValueType(attr['value_type'])}})
-                        </md-option>
-                    </md-optgroup>
-                    <md-optgroup label="Inputs" class="bold-field-select" data-ng-if="userInputs.length">
-                        <md-option ng-repeat="userInput in userInputs"
-                                   ng-value="userInput"
-                                   class="{{userInput.disabled ? 'disabled' : ''}}">
-                            <!--{{attr}}-->
-                            {{userInput.name}} ({{bindTypeByValueType(userInput['value_type'])}})
-                        </md-option>
-                    </md-optgroup>
-                    <md-optgroup label="Layout" class="bold-field-select">
-                        <md-option ng-repeat="layoutAttr in layoutAttrs"
-                                   ng-value="layoutAttr"
-                                   class="{{layoutAttr.disabled ? 'disabled' : ''}}">
-                            {{layoutAttr.name}} ({{bindTypeByValueType(layoutAttr['value_type'])}})
-                        </md-option>
-                    </md-optgroup>
+                    <md-select-header>
+                        <input data-ng-model="searchTerm"
+                               type="search"
+                               placeholder="Search for a ..."
+                               class="md-text md-select-search-pattern select-input-filter"
+                               ng-keydown="$event.stopPropagation()">
+                    </md-select-header>
+
+                    <div class="select-options-holder">
+                        <md-optgroup label="System" class="bold-field-select">
+                            <md-option ng-repeat="entityAttr in entityAttrs | filter: {name: searchTerm}"
+                                       ng-value="entityAttr"
+                                       class="{{entityAttr.disabled ? 'disabled' : ''}}">
+                                <!--{{attr}}-->
+                                {{entityAttr.name}} ({{bindTypeByValueType(entityAttr['value_type'])}})
+                            </md-option>
+                        </md-optgroup>
+                        <md-optgroup label="User attributes" class="bold-field-select" data-ng-if="attrs.length">
+                            <md-option ng-repeat="attr in attrs | filter: {name: searchTerm}"
+                                       ng-value="attr"
+                                       class="{{attr.disabled ? 'disabled' : ''}}">
+                                <!--{{attr}}-->
+                                {{attr.name}} ({{bindTypeByValueType(attr['value_type'])}})
+                            </md-option>
+                        </md-optgroup>
+                        <md-optgroup label="Inputs" class="bold-field-select" data-ng-if="userInputs.length">
+                            <md-option ng-repeat="userInput in userInputs | filter: {name: searchTerm}"
+                                       ng-value="userInput"
+                                       class="{{userInput.disabled ? 'disabled' : ''}}">
+                                <!--{{attr}}-->
+                                {{userInput.name}} ({{bindTypeByValueType(userInput['value_type'])}})
+                            </md-option>
+                        </md-optgroup>
+                        <md-optgroup label="Layout" class="bold-field-select">
+                            <md-option ng-repeat="layoutAttr in layoutAttrs | filter: {name: searchTerm}"
+                                       ng-value="layoutAttr"
+                                       class="{{layoutAttr.disabled ? 'disabled' : ''}}">
+                                {{layoutAttr.name}} ({{bindTypeByValueType(layoutAttr['value_type'])}})
+                            </md-option>
+                        </md-optgroup>
+                    </div>
                 </md-select>
             </md-input-container>
+
             <md-input-container class="md-block" flex-gt-sm>
-                <label>Element width</label>
+                <!--<label>Element width</label>
                 <md-select ng-model="item.colspan">
                     <md-option ng-repeat="colspan in getCols()" value="{{colspan}}">
                         {{colspan}} column(s)
                     </md-option>
+                </md-select>-->
+                <label>Element width</label>
+                <md-select ng-model="item.colspan"
+                           md-container-class="common-select-container"
+                           md-on-close="searchTerm = ''">
+                    <div nf-if="options && options.length > 0">
+
+                        <div class="select-options-holder">
+
+                            <md-option
+                                    data-ng-repeat="colspan in getCols()"
+                                    value="{{colspan}}">
+                                {{colspan}} column(s)
+                            </md-option>
+
+                        </div>
+                    </div>
                 </md-select>
             </md-input-container>
+
             <md-input-container class="md-block" data-ng-if="item.attribute.value_type != 'decoration'">
                 <label>Custom label</label>
                 <input data-ng-model="item.options.fieldName">

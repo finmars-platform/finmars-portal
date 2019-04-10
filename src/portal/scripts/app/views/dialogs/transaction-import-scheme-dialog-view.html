@@ -83,13 +83,38 @@
                                             </div>
                                             <div flex="40">
                                                 <md-input-container style="width: 80%">
-                                                    <label for="">Transaction type</label>
+                                                    <!--<label for="">Transaction type</label>
                                                     <md-select data-ng-model="item.transaction_type">
                                                         <md-option
                                                                 data-ng-repeat="transactionType in vm.transactionTypes"
                                                                 data-ng-value="transactionType.id">
                                                             {{transactionType.name}}
                                                         </md-option>
+                                                    </md-select>-->
+
+                                                    <label for="">Transaction type</label>
+                                                    <md-select ng-model="vm.config.instrument_download_scheme"
+                                                               md-container-class="common-select-container"
+                                                               md-on-close="searchTerm = ''">
+                                                        <div nf-if="vm.transactionTypes && vm.transactionTypes.length > 0">
+                                                            <md-select-header>
+                                                                <input data-ng-model="searchTerm"
+                                                                       type="search"
+                                                                       placeholder="Search for a ..."
+                                                                       class="md-text md-select-search-pattern select-input-filter"
+                                                                       ng-keydown="$event.stopPropagation()">
+                                                            </md-select-header>
+
+                                                            <div class="select-options-holder">
+
+                                                                <md-option
+                                                                        data-ng-repeat="transactionType in vm.transactionTypes | filter: {name: searchTerm}"
+                                                                        ng-value="transactionType.id"
+                                                                        ng-bind="transactionType.name">
+                                                                </md-option>
+
+                                                            </div>
+                                                        </div>
                                                     </md-select>
                                                 </md-input-container>
                                             </div>

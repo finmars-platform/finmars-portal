@@ -1,6 +1,6 @@
 <div layout="row">
     <md-input-container>
-        <label for="" class="uncut-text-on-focus-label" content-title>Rebook reaction / Create if exists reactions</label>
+        <label for="" content-title>Rebook reaction / Create if exists reactions</label>
         <md-select data-ng-model="item.rebook_reaction">
             <md-option data-ng-repeat="item in vm.rebookOtherReactions"
                        ng-value="item.id">
@@ -17,7 +17,7 @@
             <div flex="50">
 
                 <md-input-container>
-                    <label for="" class="uncut-text-on-focus-label" content-title>Event (Phantom)</label>
+                    <label for="" content-title>Event (Phantom)</label>
                     <md-select data-ng-model="item.instrument_event_schedule_action.event_schedule_phantom">
                         <md-option
                                 data-ng-repeat="phantomItem in vm.findEventSchedulePhantoms()"
@@ -30,10 +30,9 @@
             </div>
 
             <div flex="50">
-                <div layout="row">
 
                     <md-input-container>
-                        <label for="" class="uncut-text-on-focus-label" content-title>Transaction Type</label>
+                        <label for="" content-title>Transaction Type</label>
                         <md-select
                                 data-ng-model="item.instrument_event_schedule_action.transaction_type_from_instrument_type">
                             <md-option data-ng-repeat="item in vm.instrumentTypeTransactionTypes"
@@ -43,7 +42,6 @@
                         </md-select>
                     </md-input-container>
 
-                </div>
             </div>
         </div>
         <div layout="row">

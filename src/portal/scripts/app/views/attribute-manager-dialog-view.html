@@ -36,12 +36,37 @@
                                 </div>
                                 <div data-ng-if="!vm.editRestriction" flex-gt-sm>
                                     <md-input-container class="md-block">
-                                        <label>Attribute type</label>
+                                        <!--<label>Attribute type</label>
                                         <md-select ng-model="vm.attribute['value_type']">
                                             <md-option ng-repeat="valueType in vm.valueTypes"
                                                        value="{{valueType.value}}">
                                                 {{valueType['caption_name']}}
                                             </md-option>
+                                        </md-select>-->
+
+                                        <label>Attribute typ</label>
+                                        <md-select ng-model="vm.attribute['value_type']"
+                                                   md-container-class="common-select-container"
+                                                   md-on-close="searchTerm = ''">
+                                            <div nf-if="vm.valueTypes && vm.valueTypes.length > 0">
+                                                <md-select-header>
+                                                    <input data-ng-model="searchTerm"
+                                                           type="search"
+                                                           placeholder="Search for a ..."
+                                                           class="md-text md-select-search-pattern select-input-filter"
+                                                           ng-keydown="$event.stopPropagation()">
+                                                </md-select-header>
+
+                                                <div class="select-options-holder">
+
+                                                    <md-option
+                                                            data-ng-repeat="valueType in vm.valueTypes | filter: {name: searchTerm}"
+                                                            value="valueType.value">
+                                                        {{valueType['caption_name']}}
+                                                    </md-option>
+
+                                                </div>
+                                            </div>
                                         </md-select>
                                     </md-input-container>
                                 </div>

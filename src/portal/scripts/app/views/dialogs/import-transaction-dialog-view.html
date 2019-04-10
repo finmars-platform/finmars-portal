@@ -35,12 +35,38 @@
                             <div layout="row">
 
                                 <md-input-container>
-                                    <label for="">Import scheme</label>
+                                    <!--<label for="">Import scheme</label>
                                     <md-select style="width: 200px"
                                                data-ng-model="vm.config.scheme">
                                         <md-option data-ng-repeat="item in vm.transactionSchemes" ng-value="item.id">
                                             {{item.scheme_name}}
                                         </md-option>
+                                    </md-select>-->
+
+                                    <label for="">Import scheme</label>
+                                    <md-select ng-model="vm.config.scheme"
+                                               md-container-class="common-select-container"
+                                               md-on-close="searchTerm = ''"
+                                               style="width: 200px">
+                                        <div nf-if="vm.transactionSchemes && vm.transactionSchemes.length > 0">
+                                            <md-select-header>
+                                                <input data-ng-model="searchTerm"
+                                                       type="search"
+                                                       placeholder="Search for a ..."
+                                                       class="md-text md-select-search-pattern select-input-filter"
+                                                       ng-keydown="$event.stopPropagation()">
+                                            </md-select-header>
+
+                                            <div class="select-options-holder">
+
+                                                <md-option
+                                                        data-ng-repeat="item in vm.transactionSchemes | filter: {scheme_name: searchTerm}"
+                                                        ng-value="item.id"
+                                                        ng-bind="item.scheme_name">
+                                                </md-option>
+
+                                            </div>
+                                        </div>
                                     </md-select>
                                 </md-input-container>
                                 <md-button

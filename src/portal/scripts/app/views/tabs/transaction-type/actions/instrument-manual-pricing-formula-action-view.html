@@ -96,7 +96,7 @@
             </div>
             <div flex="80">
                 <div data-ng-if="item.instrument_manual_pricing_formula.pricing_policy_toggle">
-                    <md-input-container>
+                    <!--<md-input-container>
                         <label for="" content-title>Pricing Policy</label>
                         <md-select data-ng-model="item.instrument_manual_pricing_formula.pricing_policy"
                                    md-on-open="vm.loadRelation('pricing_policy')"
@@ -119,10 +119,17 @@
                                 {{item.instrument_manual_pricing_formula.pricing_policy_object.name}}
                             </md-option>
                         </md-select>
-                    </md-input-container>
+                    </md-input-container>-->
+
+                    <ttype-actions-relations-select label-title="Pricing Policy"
+                                                    model="item.instrument_manual_pricing_formula.pricing_policy"
+                                                    load-relation="vm.loadRelation('pricing_policy')"
+                                                    relation-items="vm.relationItems['pricing_policy']"
+                                                    selected-value="item.instrument_manual_pricing_formula.pricing_policy_object.id"
+                                                    selected-name="item.instrument_manual_pricing_formula.pricing_policy_object.name"></ttype-actions-relations-select>
                 </div>
                 <div data-ng-if="!item.instrument_manual_pricing_formula.pricing_policy_toggle">
-                    <md-input-container>
+                    <!--<md-input-container>
                         <label for="" content-title>Pricing Policy</label>
                         <md-select
                                 data-ng-model="item.instrument_manual_pricing_formula.pricing_policy_input">
@@ -132,7 +139,11 @@
                                 {{inputItem.name}}
                             </md-option>
                         </md-select>
-                    </md-input-container>
+                    </md-input-container>-->
+
+                    <ttype-actions-input-select label-title="Pricing Policy"
+                                                model="item.instrument_manual_pricing_formula.pricing_policy_input"
+                                                find-inputs="vm.findInputs('pricing_policy')"></ttype-actions-input-select>
                 </div>
             </div>
         </div>

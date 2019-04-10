@@ -25,25 +25,77 @@
                             </div>
 
                             <md-input-container>
-                                <label>Choose entity</label>
+                                <!--<label>Choose entity</label>
                                 <md-select data-ng-model="vm.activeContentType"
                                            data-ng-change="vm.updateEntitySchemes()">
                                     <md-option data-ng-repeat="entity in vm.contentTypes" ng-value="entity.key">
                                         {{ entity.name }}
                                     </md-option>
+                                </md-select>-->
+
+                                <label for="">Choose entity</label>
+                                <md-select ng-model="vm.activeContentType"
+                                           md-container-class="common-select-container"
+                                           md-on-close="searchTerm = ''"
+                                           data-ng-change="vm.updateEntitySchemes()">
+                                    <div nf-if="vm.contentTypes && vm.contentTypes.length > 0">
+                                        <md-select-header>
+                                            <input data-ng-model="searchTerm"
+                                                   type="search"
+                                                   placeholder="Search for a ..."
+                                                   class="md-text md-select-search-pattern select-input-filter"
+                                                   ng-keydown="$event.stopPropagation()">
+                                        </md-select-header>
+
+                                        <div class="select-options-holder">
+
+                                            <md-option
+                                                    data-ng-repeat="entity in vm.contentTypes | filter: {name: searchTerm}"
+                                                    ng-value="entity.key"
+                                                    ng-bind="entity.name">
+                                            </md-option>
+
+                                        </div>
+                                    </div>
                                 </md-select>
                             </md-input-container>
 
                             <div layout="row">
 
                                 <md-input-container>
-                                    <label>Import scheme</label>
+                                    <!--<label>Import scheme</label>
                                     <md-select style="width: 200px"
                                                data-ng-model="vm.config.scheme">
                                         <md-option data-ng-repeat="item in vm.entitySchemes" ng-value="item.id">
                                             {{item.name}}
                                         </md-option>
                                         <md-option data-ng-click="vm.createScheme($event)">Add scheme</md-option>
+                                    </md-select>-->
+
+                                    <label for="">Import scheme</label>
+                                    <md-select ng-model="vm.config.scheme"
+                                               md-container-class="common-select-container"
+                                               md-on-close="searchTerm = ''"
+                                               style="width: 200px">
+                                        <div nf-if="vm.entitySchemes && vm.entitySchemes.length > 0">
+                                            <md-select-header>
+                                                <input data-ng-model="searchTerm"
+                                                       type="search"
+                                                       placeholder="Search for a ..."
+                                                       class="md-text md-select-search-pattern select-input-filter"
+                                                       ng-keydown="$event.stopPropagation()">
+                                            </md-select-header>
+
+                                            <div class="select-options-holder">
+
+                                                <md-option
+                                                        data-ng-repeat="item in vm.entitySchemes | filter: {name: searchTerm}"
+                                                        ng-value="item.id"
+                                                        ng-bind="item.name">
+                                                </md-option>
+                                                <md-option data-ng-click="vm.createScheme($event)">Add scheme</md-option>
+                                            </div>
+                                        </div>
                                     </md-select>
                                 </md-input-container>
                                 <md-button

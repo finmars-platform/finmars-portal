@@ -32,7 +32,7 @@
                         </div>
                         <div data-ng-if="!item.instrument_accrual_calculation_schedules.instrument_toggle">
                             <md-input-container>
-                                <label for="" class="uncut-text-on-focus-label" content-title>Instrument</label>
+                                <label for="" content-title>Instrument</label>
                                 <md-select
                                         data-ng-model="item.instrument_accrual_calculation_schedules[vm.resolveInstrumentProp(item, 'instrument_accrual_calculation_schedules', 'instrument')]">
                                     <md-optgroup label="Inputs">
@@ -116,7 +116,7 @@
                 </div>
                 <div flex="80">
                     <div data-ng-if="item.instrument_accrual_calculation_schedules.periodicity_toggle">
-                        <md-input-container>
+                        <!--<md-input-container>
                             <label for="" class="uncut-text-on-focus-label" content-title>Periodicity</label>
                             <md-select data-ng-model="item.instrument_accrual_calculation_schedules.periodicity"
                                        md-on-open="vm.loadRelation('periodicity')"
@@ -139,10 +139,18 @@
                                     {{item.instrument_accrual_calculation_schedules.periodicity_object.name}}
                                 </md-option>
                             </md-select>
-                        </md-input-container>
+                        </md-input-container>-->
+
+                        <ttype-actions-relations-select
+                                label-title="Periodicity"
+                                model="item.instrument_accrual_calculation_schedules.periodicity"
+                                load-relation="vm.loadRelation('periodicity')"
+                                relation-items="vm.relationItems['periodicity']"
+                                selected-value="item.instrument_accrual_calculation_schedules.periodicity_object.id"
+                                selected-name="item.instrument_accrual_calculation_schedules.periodicity_object.name"></ttype-actions-relations-select>
                     </div>
                     <div data-ng-if="!item.instrument_accrual_calculation_schedules.periodicity_toggle">
-                        <md-input-container>
+                        <!--<md-input-container>
                             <label for="" class="uncut-text-on-focus-label" content-title>Periodicity</label>
                             <md-select
                                     data-ng-model="item.instrument_accrual_calculation_schedules.periodicity_input">
@@ -152,7 +160,11 @@
                                     {{inputItem.name}}
                                 </md-option>
                             </md-select>
-                        </md-input-container>
+                        </md-input-container>-->
+
+                        <ttype-actions-input-select label-title="Periodicity"
+                                                    model="item.instrument_accrual_calculation_schedules.periodicity_input"
+                                                    find-inputs="vm.findInputs('periodicity')"></ttype-actions-input-select>
                     </div>
                 </div>
             </div>
@@ -169,7 +181,7 @@
                 </div>
                 <div flex="80">
                     <div data-ng-if="item.instrument_accrual_calculation_schedules.accrual_calculation_model_toggle">
-                        <md-input-container>
+                        <!--<md-input-container>
                             <label for="" class="uncut-text-on-focus-label" content-title>Accrual calculation model</label>
                             <md-select data-ng-model="item.instrument_accrual_calculation_schedules.accrual_calculation_model"
                                        md-on-open="vm.loadRelation('accrual_calculation_model')"
@@ -186,10 +198,18 @@
                                     {{relationItem.name}}
                                 </md-option>
                             </md-select>
-                        </md-input-container>
+                        </md-input-container>-->
+
+                        <ttype-actions-relations-select
+                                label-title="Accrual calculation model"
+                                model="item.instrument_accrual_calculation_schedules.accrual_calculation_model"
+                                load-relation="vm.loadRelation('accrual_calculation_model')"
+                                relation-items="vm.relationItems['accrual_calculation_model']"
+                                selected-value="item.instrument_accrual_calculation_schedules.accrual_calculation_model_object.id"
+                                selected-name="item.instrument_accrual_calculation_schedules.accrual_calculation_model_object.name"></ttype-actions-relations-select>
                     </div>
                     <div data-ng-if="!item.instrument_accrual_calculation_schedules.accrual_calculation_model_toggle">
-                        <md-input-container>
+                        <!--<md-input-container>
                             <label for="" class="uncut-text-on-focus-label" content-title>Accrual calculation model</label>
                             <md-select
                                     data-ng-model="item.instrument_accrual_calculation_schedules.accrual_calculation_model_input">
@@ -199,7 +219,11 @@
                                     {{inputItem.name}}
                                 </md-option>
                             </md-select>
-                        </md-input-container>
+                        </md-input-container>-->
+
+                        <ttype-actions-input-select label-title="Accrual calculation model"
+                                                    model="item.instrument_accrual_calculation_schedules.accrual_calculation_model_input"
+                                                    find-inputs="vm.findInputs('accrual_calculation_model')"></ttype-actions-input-select>
                     </div>
                 </div>
 
