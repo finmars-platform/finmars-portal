@@ -129,16 +129,16 @@
                 item.strategy1_position_object = findEntityObject(report, 'item_strategies1', item.strategy1_position);
             }
             if (item.strategy2_cash) {
-                item.strategy2_cash_object = findEntityObject(report, 'item_strategies1', item.strategy2_cash);
+                item.strategy2_cash_object = findEntityObject(report, 'item_strategies2', item.strategy2_cash);
             }
             if (item.strategy2_position) {
-                item.strategy2_position_object = findEntityObject(report, 'item_strategies1', item.strategy2_position);
+                item.strategy2_position_object = findEntityObject(report, 'item_strategies2', item.strategy2_position);
             }
             if (item.strategy3_cash) {
-                item.strategy3_cash_object = findEntityObject(report, 'item_strategies1', item.strategy3_cash);
+                item.strategy3_cash_object = findEntityObject(report, 'item_strategies3', item.strategy3_cash);
             }
             if (item.strategy3_position) {
-                item.strategy3_position_object = findEntityObject(report, 'item_strategies1', item.strategy3_position);
+                item.strategy3_position_object = findEntityObject(report, 'item_strategies3', item.strategy3_position);
             }
 
             if (item.custom_fields) {
@@ -304,7 +304,7 @@
 
     var unwrapDynamicAttributes = function (result, parentKey, contentType, source) {
 
-        console.log('unwrapDynamicAttributes.source', source);
+        // console.log('unwrapDynamicAttributes.source', source);
 
         if (source.hasOwnProperty('attributes')) {
 
@@ -382,7 +382,6 @@
             'strategy2_position': 'strategies.strategy2',
             'strategy3_cash': 'strategies.strategy3',
             'strategy3_position': 'strategies.strategy3',
-            'transaction_type': 'transactions.transactiontype'
             //TODO add more keys to map
         };
 
