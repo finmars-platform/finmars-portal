@@ -10,14 +10,18 @@
 
             Object.keys(regularFilters).forEach(function (key) {
 
-                if (item.hasOwnProperty(key)) {
+                if (key !== 'ordering') {
 
-                    if (key !== 'ordering' && item[key].toString().indexOf(regularFilters[key]) === -1) {
+                    if (item.hasOwnProperty(key) && item[key]) {
+
+                        if (item[key].toString().indexOf(regularFilters[key]) === -1) {
+                            match = false;
+                        }
+
+                    } else {
                         match = false;
                     }
 
-                } else {
-                    match = false;
                 }
 
             });

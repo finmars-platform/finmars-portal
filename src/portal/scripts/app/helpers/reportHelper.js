@@ -161,7 +161,7 @@
 
         });
 
-        console.log('INJECTED', items);
+        // console.log('INJECTED', items);
 
         return items;
     };
@@ -303,6 +303,8 @@
     };
 
     var unwrapDynamicAttributes = function (result, parentKey, contentType, source) {
+
+        console.log('unwrapDynamicAttributes.source', source);
 
         if (source.hasOwnProperty('attributes')) {
 

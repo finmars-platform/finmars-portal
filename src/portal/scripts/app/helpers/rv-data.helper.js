@@ -451,7 +451,7 @@
 
         var tree = utilsHelper.convertToTree(data, rootGroup);
 
-        console.log('getFlatStructure.tree', tree);
+        // console.log('getFlatStructure.tree', tree);
 
         var list = utilsHelper.convertTreeToList(tree);
 

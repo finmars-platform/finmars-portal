@@ -14,6 +14,7 @@
     var metaService = require('../../services/metaService');
     var attributeTypeService = require('../../services/attributeTypeService');
     var balanceReportCustomAttrService = require('../../services/reports/balanceReportCustomAttrService');
+    var dynamicAttributesForReportsService = require('../../services/groupTable/dynamicAttributesForReportsService');
 
     var evDataHelper = require('../../helpers/ev-data.helper');
 
@@ -105,10 +106,28 @@
                     customItem.columnType = 'custom-field';
                 });
 
-                syncAttrs();
+                dynamicAttributesForReportsService.getDynamicAttributes().then(function (data) {
 
-                vm.readyStatus.content = true;
-                $scope.$apply();
+                    vm.portfolioDynamicAttrs = rvAttributesHelper.formatAttributeTypes(data['portfolios.portfolio'], 'portfolios.portfolio', 'portfolio', 'Portfolio');
+                    vm.complexTransactionDynamicAttrs = rvAttributesHelper.formatAttributeTypes(data['transactions.complextransaction'], 'transactions.complextransaction', 'complex_transaction', 'Complex Transaction');
+                    vm.responsibleDynamicAttrs = rvAttributesHelper.formatAttributeTypes(data['counterparties.responsible'], 'counterparties.responsible', 'responsible', 'Responsible');
+                    vm.counterpartyDynmicAttrs = rvAttributesHelper.formatAttributeTypes(data['counterparties.counterparty'], 'counterparties.counterparty', 'counterparty', 'Counterparty');
+
+                    vm.instrumentDynamicAttrs = rvAttributesHelper.formatAttributeTypes(data['instruments.instrument'], 'instruments.instrument', 'instrument', 'Instrument');
+                    vm.linkedInstrumentDynamicAttrs = rvAttributesHelper.formatAttributeTypes(data['instruments.instrument'], 'instruments.instrument', 'linked_instrument', 'Linked Instrument');
+                    vm.allocationBalanceDynamicAttrs = rvAttributesHelper.formatAttributeTypes(data['instruments.instrument'], 'instruments.instrument', 'allocation_balance', 'Allocation Balance');
+                    vm.allocationPlDnymaicAttrs = rvAttributesHelper.formatAttributeTypes(data['instruments.instrument'], 'instruments.instrument', 'allocation_pl', 'Allocation PL');
+
+                    vm.accountPositionDynamicAttrs = rvAttributesHelper.formatAttributeTypes(data['accounts.account'], 'accounts.account', 'account_position', 'Account Position');
+                    vm.accountCashDynamicAttrs = rvAttributesHelper.formatAttributeTypes(data['accounts.account'], 'accounts.account', 'account_cash', 'Account Cash');
+                    vm.accountInterimDynamicAttrs = rvAttributesHelper.formatAttributeTypes(data['accounts.account'], 'accounts.account', 'account_interim', 'Account Interim');
+
+                    syncAttrs();
+
+                    vm.readyStatus.content = true;
+                    $scope.$apply();
+
+                });
 
             });
 
@@ -122,8 +141,7 @@
                     return true;
                 }
                 return false;
-            }
-            else {
+            } else {
                 if (['notes'].indexOf(item.key) !== -1) {
                     return true;
                 }
@@ -140,22 +158,40 @@
 
             syncTypeAttrs(vm.transactionAttrs);
             syncTypeAttrs(vm.complexTransactionAttrs);
+            syncTypeAttrs(vm.complexTransactionDynamicAttrs);
 
             syncTypeAttrs(vm.portfolioAttrs);
+            syncTypeAttrs(vm.portfolioDynamicAttrs);
+
             syncTypeAttrs(vm.instrumentAttrs);
+            syncTypeAttrs(vm.instrumentDynamicAttrs);
+
             syncTypeAttrs(vm.responsibleAttrs);
+            syncTypeAttrs(vm.responsibleDynamicAttrs);
+
             syncTypeAttrs(vm.counterpartyAttrs);
+            syncTypeAttrs(vm.counterpartyDynmicAttrs);
 
             syncTypeAttrs(vm.linkedInstrumentAttrs);
+            syncTypeAttrs(vm.linkedInstrumentDynamicAttrs);
+
             syncTypeAttrs(vm.allocationBalanceAttrs);
+            syncTypeAttrs(vm.allocationBalanceDynamicAttrs);
+
             syncTypeAttrs(vm.allocationPlAttrs);
+            syncTypeAttrs(vm.allocationPlDnymaicAttrs);
 
             syncTypeAttrs(vm.transactionCurrencyAttrs);
             syncTypeAttrs(vm.settlementCurrencyAttrs);
 
             syncTypeAttrs(vm.accountPositionAttrs);
+            syncTypeAttrs(vm.accountPositionDynamicAttrs);
+
             syncTypeAttrs(vm.accountCashAttrs);
+            syncTypeAttrs(vm.accountCashDynamicAttrs);
+
             syncTypeAttrs(vm.accountInterimAttrs);
+            syncTypeAttrs(vm.accountInterimDynamicAttrs);
 
             syncTypeAttrs(vm.strategy1cashAttrs);
             syncTypeAttrs(vm.strategy1positionAttrs);

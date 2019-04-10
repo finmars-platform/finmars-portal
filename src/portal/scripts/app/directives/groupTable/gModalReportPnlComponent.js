@@ -77,12 +77,14 @@
 
                 dynamicAttributesForReportsService.getDynamicAttributes().then(function (data) {
 
-                    vm.portfolioDynamicAttrs = data['portfolio'];
-                    vm.accountDynamicAttrs = data['account'];
-                    vm.instrumentDynamicAttrs = data['instrument'];
+                    vm.portfolioDynamicAttrs = rvAttributesHelper.formatAttributeTypes(data['portfolios.portfolio'], 'portfolios.portfolio', 'portfolio', 'Portfolio');
+                    vm.accountDynamicAttrs = rvAttributesHelper.formatAttributeTypes(data['accounts.account'], 'accounts.account', 'account', 'Account');
+                    vm.instrumentDynamicAttrs = rvAttributesHelper.formatAttributeTypes(data['instruments.instrument'], 'instruments.instrument', 'instrument', 'Instrument');
+                    vm.allocationDynamicAttrs = rvAttributesHelper.formatAttributeTypes(data['instruments.instrument'], 'instruments.instrument', 'allocation', 'Allocation');
 
                     attrsList = attrsList.concat(vm.balanceAttrs);
                     attrsList = attrsList.concat(vm.allocationAttrs);
+                    attrsList = attrsList.concat(vm.allocationDynamicAttrs);
 
                     attrsList = attrsList.concat(vm.balancePerformanceAttrs);
                     attrsList = attrsList.concat(vm.balanceMismatchAttrs);
@@ -149,6 +151,7 @@
             syncTypeAttrs(vm.balanceMismatchAttrs);
             syncTypeAttrs(vm.custom);
             syncTypeAttrs(vm.allocationAttrs);
+            syncTypeAttrs(vm.allocationDynamicAttrs);
 
             syncTypeAttrs(vm.instrumentAttrs);
             syncTypeAttrs(vm.instrumentDynamicAttrs);

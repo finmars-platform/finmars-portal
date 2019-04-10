@@ -54,7 +54,7 @@
 
                 name = parentName + '. ' + attribute.name;
 
-                if(parentKey) {
+                if (parentKey) {
                     key = parentKey + '.' + attribute.key;
                 } else {
                     key = attribute.key;
@@ -94,8 +94,37 @@
 
     };
 
+    /**
+     * Get list of entity attribute types.
+     * @param {object[]} attributes - source list of attribute types.
+     * @param {string} contentType - content type
+     * @param {string} rootKey - key prefix for root level attributes.
+     * @param {string} rootName - name prefix for root level attributes.
+     * @return {Object[]} Array of Attributes.
+     * @memberof module:rvAttributesHelper
+     */
+
+    var formatAttributeTypes = function (attributes, contentType, rootKey, rootName) {
+
+        return attributes.map(function (attribute) {
+
+            var result = {};
+
+            result.attribute_type = Object.assign({}, attribute);
+            result.value_type = attribute.value_type;
+            result.content_type = contentType;
+            result.key = rootKey + '.attributes.' + attribute.id;
+            result.name = rootName + '. ' + attribute.name;
+
+            return result
+
+        })
+
+    };
+
     module.exports = {
-        getAllAttributesAsFlatList: getAllAttributesAsFlatList
+        getAllAttributesAsFlatList: getAllAttributesAsFlatList,
+        formatAttributeTypes: formatAttributeTypes
     }
 
 
