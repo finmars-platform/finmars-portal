@@ -56,12 +56,15 @@
                                 <div layout="column">
                                     <div data-ng-repeat="item in vm.scheme.entity_fields track by $index" flex="100">
                                         <div class="fields-holder" layout="row">
-                                            <div class="iscm-item width-100" layout="row" layout-align="center center">
+                                            <div class="iscm-item width-100" layout="row">
                                                 <md-input-container flex="20">
 
-                                                    <div data-ng-if="item.system_property_key">
-                                                        <input aria-label="attribute name" type="text"
-                                                               data-ng-model="item.name" readonly>
+                                                    <div data-ng-if="item.system_property_key"
+                                                         data-ng-bind="item.name"
+                                                         style="padding-top: 10px">
+                                                        <!--<input aria-label="attribute name" type="text"
+                                                               data-ng-model="item.name" readonly>-->
+
                                                     </div>
 
                                                     <div data-ng-if="!item.system_property_key">
@@ -78,6 +81,7 @@
 
                                                         <md-input-container class="md-block" style="margin:0">
 
+                                                                <label></label>
                                                                 <md-select ng-model="item.dynamic_attribute_id"
                                                                            md-container-class="common-select-container"
                                                                            md-on-close="searchTerm = ''"

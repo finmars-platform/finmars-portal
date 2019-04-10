@@ -19,13 +19,40 @@
                 <md-card flex="50" class="inm-card-special">
                     <md-card-content>
                         <md-input-container class="md-block" flex-gt-sm>
-                            <label>Provider</label>
+                            <!--<label>Provider</label>
                             <md-select data-ng-model="vm.schemeProvider" data-ng-if="vm.readyStatus.dataProviders">
                                 <md-option data-ng-repeat="item in vm.dataProviders" data-ng-value="item.id">
                                     {{item.name}}
                                 </md-option>
+                            </md-select>-->
+
+                            <label>Provider</label>
+                            <md-select ng-model="vm.schemeProvider"
+                                       md-container-class="common-select-container"
+                                       md-on-close="searchTerm = ''"
+                                       ng-if="vm.readyStatus.dataProviders">
+                                <div nf-if="vm.dataProviders && vm.dataProviders.length > 0">
+                                    <!--<md-select-header>
+                                        <input data-ng-model="searchTerm"
+                                               type="search"
+                                               placeholder="Search for a ..."
+                                               class="md-text md-select-search-pattern select-input-filter"
+                                               ng-keydown="$event.stopPropagation()">
+                                    </md-select-header>-->
+
+                                    <div class="select-options-holder">
+
+                                        <md-option
+                                                data-ng-repeat="item in vm.dataProviders"
+                                                ng-value="item.id"
+                                                ng-bind="item.name">
+                                        </md-option>
+
+                                    </div>
+                                </div>
                             </md-select>
                         </md-input-container>
+
                         <div data-ng-if="!vm.readyStatus.dataProviders">
                             <div layout="row" layout-sm="column" layout-align="space-around" class="m-large">
                                 <md-progress-circular md-mode="indeterminate" md-diameter="96"></md-progress-circular>
@@ -213,7 +240,7 @@
                                     <div layout="row" flex="100">
                                         <div class="field-name" flex="40">
                                             <md-input-container>
-                                                <md-select data-ng-model="field.value"
+                                                <!--<md-select data-ng-model="field.value"
                                                            data-ng-change="vm.resolveFieldType(field)"
                                                            data-ng-focus="vm.checkAttrs()">
                                                     <md-option data-ng-repeat="item in vm.baseAttrs"
@@ -230,6 +257,45 @@
                                                                class="{{item.disabled ? 'disabled' : ''}}">
                                                         {{item.name}}
                                                     </md-option>
+                                                </md-select>-->
+
+                                                <label></label>
+                                                <md-select ng-model="field.value"
+                                                           ng-change="vm.resolveFieldType(field)"
+                                                           ng-focus="vm.checkAttrs()"
+                                                           md-container-class="common-select-container"
+                                                           md-on-close="searchTerm = ''"
+                                                           ng-if="vm.readyStatus.dataProviders">
+                                                    <div nf-if="vm.dataProviders && vm.dataProviders.length > 0">
+                                                        <md-select-header>
+                                                            <input data-ng-model="searchTerm"
+                                                                   type="search"
+                                                                   placeholder="Search for a ..."
+                                                                   class="md-text md-select-search-pattern select-input-filter"
+                                                                   ng-keydown="$event.stopPropagation()">
+                                                        </md-select-header>
+
+                                                        <div class="select-options-holder">
+
+                                                            <md-option
+                                                                    data-ng-repeat="item in vm.baseAttrs | filter: {name: searchTerm}"
+                                                                    ng-value="item"
+                                                                    ng-bind="item.name"
+                                                                    class="{{item.disabled ? 'disabled' : ''}}">
+                                                            </md-option>
+                                                            <md-option data-ng-repeat="item in vm.entityAttrs | filter: {name: searchTerm}"
+                                                                       ng-value="item"
+                                                                       ng-bind="item.name"
+                                                                       class="{{item.disabled ? 'disabled' : ''}}">
+                                                            </md-option>
+                                                            <md-option data-ng-repeat="item in vm.attrs | filter: {name: searchTerm}"
+                                                                       ng-value="item"
+                                                                       ng-bind="item.name"
+                                                                       class="{{item.disabled ? 'disabled' : ''}}">
+                                                            </md-option>
+
+                                                        </div>
+                                                    </div>
                                                 </md-select>
                                             </md-input-container>
                                         </div>
@@ -293,11 +359,36 @@
                             <md-card flex="100">
                                 <md-card-content>
                                     <md-input-container style="width: 100%">
-                                        <label for="">Factor upload method</label>
+                                        <!--<label for="">Factor upload method</label>
                                         <md-select data-ng-model="vm.factorScheduleMethod">
                                             <md-option data-ng-repeat="item in vm.factorSchedule"
                                                        data-ng-value="item.id">{{item.name}}
                                             </md-option>
+                                        </md-select>-->
+
+                                        <label>Factor upload method</label>
+                                        <md-select ng-model="vm.factorScheduleMethod"
+                                                   md-container-class="common-select-container"
+                                                   md-on-close="searchTerm = ''">
+                                            <div nf-if="vm.factorSchedule && vm.factorSchedule.length > 0">
+                                                <!--<md-select-header>
+                                                    <input data-ng-model="searchTerm"
+                                                           type="search"
+                                                           placeholder="Search for a ..."
+                                                           class="md-text md-select-search-pattern select-input-filter"
+                                                           ng-keydown="$event.stopPropagation()">
+                                                </md-select-header>-->
+
+                                                <div class="select-options-holder">
+
+                                                    <md-option
+                                                            data-ng-repeat="item in vm.factorSchedule"
+                                                            ng-value="item.id"
+                                                            ng-bind="item.name">
+                                                    </md-option>
+
+                                                </div>
+                                            </div>
                                         </md-select>
                                     </md-input-container>
                                 </md-card-content>
@@ -307,11 +398,36 @@
                             <md-card flex="100">
                                 <md-card-content>
                                     <md-input-container style="width: 100%">
-                                        <label for="">Accrual schedule upload</label>
+                                        <!--<label for="">Accrual schedule upload</label>
                                         <md-select data-ng-model="vm.accrualCalculation">
                                             <md-option data-ng-repeat="item in vm.accrualSchedule"
                                                        data-ng-value="item.id">{{item.name}}
                                             </md-option>
+                                        </md-select>-->
+
+                                        <label>Accrual schedule upload</label>
+                                        <md-select ng-model="vm.accrualCalculation"
+                                                   md-container-class="common-select-container"
+                                                   md-on-close="searchTerm = ''">
+                                            <div nf-if="vm.accrualSchedule && vm.accrualSchedule.length > 0">
+                                                <!--<md-select-header>
+                                                    <input data-ng-model="searchTerm"
+                                                           type="search"
+                                                           placeholder="Search for a ..."
+                                                           class="md-text md-select-search-pattern select-input-filter"
+                                                           ng-keydown="$event.stopPropagation()">
+                                                </md-select-header>-->
+
+                                                <div class="select-options-holder">
+
+                                                    <md-option
+                                                            data-ng-repeat="item in vm.accrualSchedule"
+                                                            ng-value="item.id"
+                                                            ng-bind="item.name">
+                                                    </md-option>
+
+                                                </div>
+                                            </div>
                                         </md-select>
                                     </md-input-container>
                                 </md-card-content>

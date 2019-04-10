@@ -40,12 +40,38 @@
                             <div layout="row">
 
                                 <md-input-container>
-                                    <label for="">Import scheme</label>
+                                    <!--<label for="">Import scheme</label>
                                     <md-select style="width: 200px"
                                                data-ng-model="vm.config.instrument_download_scheme">
                                         <md-option data-ng-repeat="item in vm.instrumentSchemes" ng-value="item.id">
                                             {{item.scheme_name}}
                                         </md-option>
+                                    </md-select>-->
+
+                                    <label for="">Import scheme</label>
+                                    <md-select ng-model="vm.config.instrument_download_scheme"
+                                               md-container-class="common-select-container"
+                                               md-on-close="searchTerm = ''"
+                                               style="width: 200px">
+                                        <div nf-if="vm.instrumentSchemes && vm.instrumentSchemes.length > 0">
+                                            <md-select-header>
+                                                <input data-ng-model="searchTerm"
+                                                       type="search"
+                                                       placeholder="Search for a ..."
+                                                       class="md-text md-select-search-pattern select-input-filter"
+                                                       ng-keydown="$event.stopPropagation()">
+                                            </md-select-header>
+
+                                            <div class="select-options-holder">
+
+                                                <md-option
+                                                        data-ng-repeat="item in vm.instrumentSchemes | filter: {scheme_name: searchTerm}"
+                                                        ng-value="item.id"
+                                                        ng-bind="item.scheme_name">
+                                                </md-option>
+
+                                            </div>
+                                        </div>
                                     </md-select>
                                 </md-input-container>
                                 <md-button
@@ -140,12 +166,39 @@
                                 <md-input-container
                                         class="md-block {{vm.findError('instrument_type', 'entityAttr', 'class') ? 'error' : ''}}"
                                         style="min-height: 64px">
-                                    <label for="">Instrument type</label>
+                                    <!--<label for="">Instrument type</label>
                                     <md-select data-ng-model="vm.config.instrument.instrument_type">
                                         <md-option data-ng-repeat="item in vm.instrumentTypes" ng-value="item.id">
                                             {{item.name}}
                                         </md-option>
+                                    </md-select>-->
+
+                                    <label for="">Instrument type</label>
+                                    <md-select ng-model="vm.config.instrument.instrument_type"
+                                               md-container-class="common-select-container"
+                                               md-on-close="searchTerm = ''"
+                                               style="width: 200px">
+                                        <div nf-if="vm.instrumentTypes && vm.instrumentTypes.length > 0">
+                                            <md-select-header>
+                                                <input data-ng-model="searchTerm"
+                                                       type="search"
+                                                       placeholder="Search for a ..."
+                                                       class="md-text md-select-search-pattern select-input-filter"
+                                                       ng-keydown="$event.stopPropagation()">
+                                            </md-select-header>
+
+                                            <div class="select-options-holder">
+
+                                                <md-option
+                                                        data-ng-repeat="item in vm.instrumentTypes | filter: {name: searchTerm}"
+                                                        ng-value="item.id"
+                                                        ng-bind="item.name">
+                                                </md-option>
+
+                                            </div>
+                                        </div>
                                     </md-select>
+
                                     <div class="md-input-error"
                                          data-ng-show="vm.findError('instrument_type', 'entityAttr', 'class')">
                                         {{vm.findError('instrument_type',
@@ -195,12 +248,39 @@
                                 <md-input-container
                                         class="md-block  {{vm.findError('daily_pricing_model', 'entityAttr', 'class') ? 'error' : ''}}"
                                         style="min-height: 64px">
-                                    <label for="">Pricing model</label>
+                                    <!--<label for="">Pricing model</label>
                                     <md-select data-ng-model="vm.config.instrument.daily_pricing_model">
                                         <md-option data-ng-repeat="item in vm.dailyModels" ng-value="item.id">
                                             {{item.name}}
                                         </md-option>
+                                    </md-select>-->
+
+                                    <label for="">Pricing model</label>
+                                    <md-select ng-model="vm.config.instrument.daily_pricing_model"
+                                               md-container-class="common-select-container"
+                                               md-on-close="searchTerm = ''"
+                                               style="width: 200px">
+                                        <div nf-if="vm.dailyModels && vm.dailyModels.length > 0">
+                                            <md-select-header>
+                                                <input data-ng-model="searchTerm"
+                                                       type="search"
+                                                       placeholder="Search for a ..."
+                                                       class="md-text md-select-search-pattern select-input-filter"
+                                                       ng-keydown="$event.stopPropagation()">
+                                            </md-select-header>
+
+                                            <div class="select-options-holder">
+
+                                                <md-option
+                                                        data-ng-repeat="item in vm.dailyModels | filter: {name: searchTerm}"
+                                                        ng-value="item.id"
+                                                        ng-bind="item.name">
+                                                </md-option>
+
+                                            </div>
+                                        </div>
                                     </md-select>
+
                                     <div class="md-input-error"
                                          data-ng-show="vm.findError('daily_pricing_model', 'entityAttr', 'class')">
                                         {{vm.findError('daily_pricing_model',
@@ -212,12 +292,39 @@
                                 <md-input-container
                                         class="md-block {{vm.findError('price_download_scheme', 'entityAttr', 'class') ? 'error' : ''}}"
                                         style="min-height: 64px">
-                                    <label for="">Price download scheme</label>
+                                    <!--<label for="">Price download scheme</label>
                                     <md-select data-ng-model="vm.config.instrument.price_download_scheme">
                                         <md-option data-ng-repeat="item in vm.priceDownloadSchemes" ng-value="item.id">
                                             {{item.scheme_name}}
                                         </md-option>
+                                    </md-select>-->
+
+                                    <label for="">Price download scheme</label>
+                                    <md-select ng-model="vm.config.instrument.price_download_scheme"
+                                               md-container-class="common-select-container"
+                                               md-on-close="searchTerm = ''"
+                                               style="width: 200px">
+                                        <div nf-if="vm.priceDownloadSchemes && vm.priceDownloadSchemes.length > 0">
+                                            <md-select-header>
+                                                <input data-ng-model="searchTerm"
+                                                       type="search"
+                                                       placeholder="Search for a ..."
+                                                       class="md-text md-select-search-pattern select-input-filter"
+                                                       ng-keydown="$event.stopPropagation()">
+                                            </md-select-header>
+
+                                            <div class="select-options-holder">
+
+                                                <md-option
+                                                        data-ng-repeat="item in vm.priceDownloadSchemes | filter: {scheme_name: searchTerm}"
+                                                        ng-value="item.id"
+                                                        ng-bind="item.scheme_name">
+                                                </md-option>
+
+                                            </div>
+                                        </div>
                                     </md-select>
+
                                     <div class="md-input-error"
                                          data-ng-show="vm.findError('price_download_scheme', 'entityAttr', 'class')">
                                         {{vm.findError('price_download_scheme',
@@ -230,12 +337,39 @@
                                 <md-input-container
                                         class="md-block {{vm.findError('pricing_currency', 'entityAttr', 'class') ? 'error' : ''}}"
                                         style="min-height: 64px">
-                                    <label for="">Pricing currency</label>
+                                    <!--<label for="">Pricing currency</label>
                                     <md-select data-ng-model="vm.config.instrument.pricing_currency">
                                         <md-option data-ng-repeat="item in vm.currencies" ng-value="item.id">
                                             {{item.name}}
                                         </md-option>
+                                    </md-select>-->
+
+                                    <label for="">Pricing currency</label>
+                                    <md-select ng-model="vm.config.instrument.pricing_currency"
+                                               md-container-class="common-select-container"
+                                               md-on-close="searchTerm = ''"
+                                               style="width: 200px">
+                                        <div nf-if="vm.currencies && vm.currencies.length > 0">
+                                            <md-select-header>
+                                                <input data-ng-model="searchTerm"
+                                                       type="search"
+                                                       placeholder="Search for a ..."
+                                                       class="md-text md-select-search-pattern select-input-filter"
+                                                       ng-keydown="$event.stopPropagation()">
+                                            </md-select-header>
+
+                                            <div class="select-options-holder">
+
+                                                <md-option
+                                                        data-ng-repeat="item in vm.currencies | filter: {name: searchTerm}"
+                                                        ng-value="item.id"
+                                                        ng-bind="item.name">
+                                                </md-option>
+
+                                            </div>
+                                        </div>
                                     </md-select>
+
                                     <div class="md-input-error"
                                          data-ng-show="vm.findError('pricing_currency', 'entityAttr', 'class')">
                                         {{vm.findError('pricing_currency',
@@ -288,12 +422,39 @@
                                 <md-input-container
                                         class="md-block {{vm.findError('accrued_currency', 'entityAttr', 'class') ? 'error' : ''}}"
                                         style="min-height: 64px">
-                                    <label for="">Accrued currency</label>
+                                    <!--<label for="">Accrued currency</label>
                                     <md-select data-ng-model="vm.config.instrument.accrued_currency">
                                         <md-option data-ng-repeat="item in vm.currencies" ng-value="item.id">
                                             {{item.name}}
                                         </md-option>
+                                    </md-select>-->
+
+                                    <label for="">Accrued currency</label>
+                                    <md-select ng-model="vm.config.instrument.accrued_currency"
+                                               md-container-class="common-select-container"
+                                               md-on-close="searchTerm = ''"
+                                               style="width: 200px">
+                                        <div nf-if="vm.currencies && vm.currencies.length > 0">
+                                            <md-select-header>
+                                                <input data-ng-model="searchTerm"
+                                                       type="search"
+                                                       placeholder="Search for a ..."
+                                                       class="md-text md-select-search-pattern select-input-filter"
+                                                       ng-keydown="$event.stopPropagation()">
+                                            </md-select-header>
+
+                                            <div class="select-options-holder">
+
+                                                <md-option
+                                                        data-ng-repeat="item in vm.currencies | filter: {name: searchTerm}"
+                                                        ng-value="item.id"
+                                                        ng-bind="item.name">
+                                                </md-option>
+
+                                            </div>
+                                        </div>
                                     </md-select>
+
                                     <div class="md-input-error"
                                          data-ng-show="vm.findError('accrued_currency', 'entityAttr', 'class')">
                                         {{vm.findError('accrued_currency',
@@ -332,12 +493,39 @@
                             <div class="instrument-import-field-bg">
                                 <md-input-container
                                         class="md-block {{vm.findError('payment_size_detail', 'entityAttr', 'class') ? 'error' : ''}}">
-                                    <label for="">Payment size default</label>
+                                    <!--<label for="">Payment size default</label>
                                     <md-select data-ng-model="vm.config.instrument.payment_size_detail">
                                         <md-option data-ng-repeat="item in vm.paymentSizeDefaults" ng-value="item.id">
                                             {{item.name}}
                                         </md-option>
+                                    </md-select>-->
+
+                                    <label for="">Payment size default</label>
+                                    <md-select ng-model="vm.config.instrument.payment_size_detail"
+                                               md-container-class="common-select-container"
+                                               md-on-close="searchTerm = ''"
+                                               style="width: 200px">
+                                        <div nf-if="vm.paymentSizeDefaults && vm.paymentSizeDefaults.length > 0">
+                                            <md-select-header>
+                                                <input data-ng-model="searchTerm"
+                                                       type="search"
+                                                       placeholder="Search for a ..."
+                                                       class="md-text md-select-search-pattern select-input-filter"
+                                                       ng-keydown="$event.stopPropagation()">
+                                            </md-select-header>
+
+                                            <div class="select-options-holder">
+
+                                                <md-option
+                                                        data-ng-repeat="item in vm.paymentSizeDefaults | filter: {name: searchTerm}"
+                                                        ng-value="item.id"
+                                                        ng-bind="item.name">
+                                                </md-option>
+
+                                            </div>
+                                        </div>
                                     </md-select>
+
                                     <div class="md-input-error"
                                          data-ng-show="vm.findError('payment_size_detail', 'entityAttr', 'class')">
                                         {{vm.findError('payment_size_detail',

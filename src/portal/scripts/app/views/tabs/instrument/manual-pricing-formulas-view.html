@@ -105,11 +105,35 @@
                 </tr>
                 <tr class="tab-input-row">
                     <td>
-                        <md-input-container>
-                            <!--<label for="">Pricing policy</label>-->
-                            <md-select data-ng-model="vm.newItem.pricing_policy">
+                        <md-input-container style="margin-bottom: 21px;">
+                            <!--<md-select data-ng-model="vm.newItem.pricing_policy">
                                 <md-option data-ng-repeat="policy in vm.policies" ng-value="policy.id">{{policy.name}}
                                 </md-option>
+                            </md-select>-->
+
+                            <label></label>
+                            <md-select ng-model="vm.newItem.pricing_policy"
+                                       md-container-class="common-select-container"
+                                       md-on-close="searchTerm = ''">
+                                <div nf-if="vm.policies && vm.policies.length > 0">
+                                    <md-select-header>
+                                        <input data-ng-model="searchTerm"
+                                               type="search"
+                                               placeholder="Search for a ..."
+                                               class="md-text md-select-search-pattern select-input-filter"
+                                               ng-keydown="$event.stopPropagation()">
+                                    </md-select-header>
+
+                                    <div class="select-options-holder">
+
+                                        <md-option
+                                                data-ng-repeat="policy in vm.policies | filter: {name: searchTerm}"
+                                                ng-value="policy.id"
+                                                ng-bind="policy.name">
+                                        </md-option>
+
+                                    </div>
+                                </div>
                             </md-select>
                         </md-input-container>
                     </td>

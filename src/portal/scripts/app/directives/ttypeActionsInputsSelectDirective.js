@@ -1,0 +1,32 @@
+/**
+ * Created by mevstratov on 5.04.2019.
+ */
+(function () {
+
+    'use strict';
+
+    module.exports = function () {
+
+        return {
+            restrict: 'E',
+            scope: {
+                labelTitle: '@',
+                model: '=',
+                findInputs: '&'
+            },
+            templateUrl: 'views/directives/ttype-actions-inputs-select-view.html',
+            link: function (scope, elem, attrs) {
+                console.log("ttype input directive data", scope.labelTitle, scope.model, scope.findInputs);
+
+                if (!scope.labelTitle) {
+                    scope.labelTitle = "";
+                }
+
+                elem[0].title = scope.labelTitle;
+                scope.inputs = scope.findInputs();
+
+            }
+        }
+    };
+
+}());

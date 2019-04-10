@@ -307,6 +307,8 @@ app.directive('ismFieldResolver', ['$mdDialog', require('./app/directives/instru
 app.directive('floatNumbers', [require('./app/directives/floatNumbersDirective')]);
 app.directive('instrumentModalResolver', ['$mdDialog', require('./app/directives/instrumentModalResolverDirective')]);
 app.directive('commonSelect', [require('./app/directives/commonSelectDirective')]);
+app.directive('ttypeActionsInputSelect', [require('./app/directives/ttypeActionsInputsSelectDirective')]);
+app.directive('ttypeActionsRelationsSelect', [require('./app/directives/ttypeActionsRelationsSelectDirective')]);
 app.directive('entitySearchSelect', ['$mdDialog', require('./app/directives/entitySearchSelect')]);
 app.directive('crudSelect', ['$mdDialog', require('./app/directives/crudSelect')]);
 app.directive('twoFieldsMultiselect', ['$mdDialog', require('./app/directives/twoFieldsMultiselectDirective')]);

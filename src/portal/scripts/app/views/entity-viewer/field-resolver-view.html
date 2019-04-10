@@ -19,7 +19,8 @@
                                 <input data-ng-model="searchTerm"
                                        type="search"
                                        placeholder="Search for a ..."
-                                       class="md-text md-select-search-pattern select-input-filter">
+                                       class="md-text md-select-search-pattern select-input-filter"
+                                       ng-keydown="$event.stopPropagation()">
                             </md-select-header>
 
                             <div class="select-options-holder">
@@ -116,7 +117,8 @@
                         <input data-ng-model="searchTerm"
                                type="search"
                                placeholder="Search for a ..."
-                               class="md-text md-select-search-pattern">
+                               class="md-text md-select-search-pattern"
+                               ng-keydown="$event.stopPropagation()">
                     </md-select-header>
                     <md-optgroup label="{{group.name}}"
                                  data-ng-repeat="group in groups | orderBy:'-'+group.name track by group.id">
