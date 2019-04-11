@@ -288,7 +288,7 @@
 
                         description = '<div>' +
                             '<div>Rows total: ' + data.total_rows + '</div>' +
-                            '<div>Rows success import: ' + data.total_rows - data.error_rows.length + '</div>' +
+                            '<div>Rows success import: ' + (data.total_rows - data.error_rows.length) + '</div>' +
                             '<div>Rows fail import: ' + data.error_rows.length + '</div>' +
                             '</div><br/>';
 
