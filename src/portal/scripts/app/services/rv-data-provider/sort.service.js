@@ -1,20 +1,37 @@
 (function () {
 
-    function dynamicSort(property) {
+    function orderSort(property, sortOrder) {
+
+        return function (a, b) {
+
+            if (a[property] === null) {
+                return 1 * sortOrder;
+            }
+            if (b[property] === null) {
+                return -1 * sortOrder;
+            }
+
+            if (a[property] < b[property]) {
+                return -1 * sortOrder
+            }
+
+            if (a[property] > b[property]) {
+                return 1 * sortOrder
+            }
+
+        }
+
+    }
+
+    var sortItems = function (items, property) {
+
         var sortOrder = 1;
         if (property[0] === "-") {
             sortOrder = -1;
             property = property.substr(1);
         }
-        return function (a, b) {
-            var result = (a[property] < b[property]) ? -1 : (a[property] > b[property]) ? 1 : 0;
-            return result * sortOrder;
-        }
-    }
 
-    var sortItems = function (items, property) {
-
-        return items.sort(dynamicSort(property))
+        return items.sort(orderSort(property, sortOrder))
 
     };
 

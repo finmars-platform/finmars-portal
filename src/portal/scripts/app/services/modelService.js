@@ -71,6 +71,7 @@
             "transactions.transaction": require('../models/transactionPropsModel').getAttributes(),
             "transactions.transactiontypegroup": require('../models/transactionTypeGroupPropsModel').getAttributes(),
             "transactions.transactiontype": require('../models/transactionTypePropsModel').getAttributes(),
+            "transactions.complextransaction": require('../models/complexTransactionPropsModel').getAttributes(),
             "currencies.currency": require('../models/currencyPropsModel').getAttributes(),
             "currencies.currencyhistory": require('../models/currencyHistoryPropsModel').getAttributes(),
             "instruments.pricehistory": require('../models/priceHistoryPropsModel').getAttributes(),
@@ -84,11 +85,15 @@
             "strategies.strategy2group": require('../models/strategy2groupPropsModel').getAttributes(),
             "strategies.strategy3group": require('../models/strategy3groupPropsModel').getAttributes(),
             "reports.balancereport": require('../models/balanceReportPropsModel').getAttributes(),
+            "reports.balancereportperfomance": require('../models/reportAddonPerformancePropsModel').getAttributes(),
+            "reports.balancereportmismatch":  require('../models/reportMismatchPropsModel').getAttributes(),
             "reports.plreport": require('../models/pnlReportPropsModel').getAttributes(),
+            'reports.plreportperfomance': require('../models/reportAddonPerformancePnlPropsModel').getAttributes(),
+            'reports.plreportmismatch': require('../models/reportMismatchPnlPropsModel').getAttributes(),
             "reports.transactionreport": require('../models/transactionReportPropsModel').getAttributes(),
             "reports.cashflowreport": require('../models/cashFlowProjectionReportPropsModel').getAttributes(),
-            "reports.performancereport": require('../models/performanceReportPropsModel').getAttributes(),
-            "transactions.complextransaction": require('../models/complexTransactionPropsModel').getAttributes()
+            "reports.performancereport": require('../models/performanceReportPropsModel').getAttributes()
+
         };
 
         return models[contentType];

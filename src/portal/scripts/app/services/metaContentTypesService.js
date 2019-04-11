@@ -86,9 +86,6 @@
             result = state.split('.')[1];
         }
 
-
-        console.log('result 3232', result);
-
         return result;
 
     };

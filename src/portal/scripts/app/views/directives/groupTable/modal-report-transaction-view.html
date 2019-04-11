@@ -1,4 +1,4 @@
-<md-dialog aria-label="Report fields modal" ng-cloak class="g-modal-dialog drag" g-dialog-draggable>
+<md-dialog aria-label="Report fields modal" ng-cloak class="g-modal-dialog drag view-constructor" g-dialog-draggable>
     <md-toolbar>
         <div class="md-toolbar-tools" layout="row" layout-align="start center">
             <h2 style="user-select: none; position: relative;">View Constructor
@@ -20,9 +20,9 @@
                     <md-content class="md-padding">
 
                         <div class="g-th-checkbox-row">
-                            <span data-ng-click="vm.toggleAll($event, 'columns')" class="g-meta-circle red">C</span>
-                            <span data-ng-click="vm.toggleAll($event, 'groups')" class="g-meta-circle green">G</span>
-                            <span data-ng-click="vm.toggleAll($event, 'filters')" class="g-meta-circle blue">F</span>
+                            <span class="g-meta-circle red">C</span>
+                            <span class="g-meta-circle green">G</span>
+                            <span class="g-meta-circle blue">F</span>
                         </div>
                         <div class="g-checkbox-row" data-ng-repeat="item in vm.complexTransactionAttrs" layout="row">
                             <div>
@@ -34,7 +34,31 @@
                                              data-ng-change="vm.updateAttrs(vm.complexTransactionAttrs)">
                                 </md-checkbox>
                                 <md-checkbox ng-model="item.filters" aria-label="Filters" aria="filters"
-                                             class="md-primary" data-ng-change="vm.updateAttrs(vm.complexTransactionAttrs)">
+                                             class="md-primary"
+                                             data-ng-change="vm.updateAttrs(vm.complexTransactionAttrs)">
+                                </md-checkbox>
+                            </div>
+                            <div class="g-modal-draggable-card">
+                                <md-card class="modal-dialog-card">{{::vm.bindReportItemName(item)}}</md-card>
+                            </div>
+                        </div>
+
+                        <div layout="row" class="view-constructor-attributes-separator"
+                             data-ng-show="vm.complexTransactionDynamicAttrs.length > 0">
+                            <p>User Attributes</p>
+                        </div>
+                        <div class="g-checkbox-row" data-ng-repeat="item in vm.complexTransactionDynamicAttrs" layout="row">
+                            <div>
+                                <md-checkbox ng-model="item.columns" aria-label="Columns" aria="columns"
+                                             data-ng-change="vm.updateAttrs(vm.complexTransactionDynamicAttrs)">
+                                </md-checkbox>
+                                <md-checkbox ng-model="item.groups" aria-label="Groups" aria="groups"
+                                             class="md-g-green"
+                                             data-ng-change="vm.updateAttrs(vm.complexTransactionDynamicAttrs)">
+                                </md-checkbox>
+                                <md-checkbox ng-model="item.filters" aria-label="Filters" aria="filters"
+                                             class="md-primary"
+                                             data-ng-change="vm.updateAttrs(vm.complexTransactionDynamicAttrs)">
                                 </md-checkbox>
                             </div>
                             <div class="g-modal-draggable-card">
@@ -48,9 +72,9 @@
                 <md-tab label="Transaction">
                     <md-content class="md-padding">
                         <div class="g-th-checkbox-row">
-                            <span data-ng-click="vm.toggleAll($event, 'columns')" class="g-meta-circle red">C</span>
-                            <span data-ng-click="vm.toggleAll($event, 'groups')" class="g-meta-circle green">G</span>
-                            <span data-ng-click="vm.toggleAll($event, 'filters')" class="g-meta-circle blue">F</span>
+                            <span class="g-meta-circle red">C</span>
+                            <span class="g-meta-circle green">G</span>
+                            <span class="g-meta-circle blue">F</span>
                         </div>
                         <div class="g-checkbox-row" data-ng-repeat="item in vm.transactionAttrs" layout="row">
                             <div>
@@ -80,7 +104,31 @@
                                              data-ng-change="vm.updateAttrs(vm.linkedInstrumentAttrs)">
                                 </md-checkbox>
                                 <md-checkbox ng-model="item.filters" aria-label="Filters" aria="filters"
-                                             class="md-primary" data-ng-change="vm.updateAttrs(vm.linkedInstrumentAttrs)">
+                                             class="md-primary"
+                                             data-ng-change="vm.updateAttrs(vm.linkedInstrumentAttrs)">
+                                </md-checkbox>
+                            </div>
+                            <div class="g-modal-draggable-card">
+                                <md-card class="modal-dialog-card">{{::vm.bindReportItemName(item)}}</md-card>
+                            </div>
+                        </div>
+
+                        <div layout="row" class="view-constructor-attributes-separator"
+                             data-ng-show="vm.linkedInstrumentDynamicAttrs.length > 0">
+                            <p>User Attributes</p>
+                        </div>
+                        <div class="g-checkbox-row" data-ng-repeat="item in vm.linkedInstrumentDynamicAttrs" layout="row">
+                            <div>
+                                <md-checkbox ng-model="item.columns" aria-label="Columns" aria="columns"
+                                             data-ng-change="vm.updateAttrs(vm.linkedInstrumentDynamicAttrs)">
+                                </md-checkbox>
+                                <md-checkbox ng-model="item.groups" aria-label="Groups" aria="groups"
+                                             class="md-g-green"
+                                             data-ng-change="vm.updateAttrs(vm.linkedInstrumentDynamicAttrs)">
+                                </md-checkbox>
+                                <md-checkbox ng-model="item.filters" aria-label="Filters" aria="filters"
+                                             class="md-primary"
+                                             data-ng-change="vm.updateAttrs(vm.linkedInstrumentDynamicAttrs)">
                                 </md-checkbox>
                             </div>
                             <div class="g-modal-draggable-card">
@@ -95,9 +143,9 @@
                 <md-tab label="Portfolio">
                     <md-content class="md-padding">
                         <div class="g-th-checkbox-row">
-                            <span data-ng-click="vm.toggleAll($event, 'columns')" class="g-meta-circle red">C</span>
-                            <span data-ng-click="vm.toggleAll($event, 'groups')" class="g-meta-circle green">G</span>
-                            <span data-ng-click="vm.toggleAll($event, 'filters')" class="g-meta-circle blue">F</span>
+                            <span class="g-meta-circle red">C</span>
+                            <span class="g-meta-circle green">G</span>
+                            <span class="g-meta-circle blue">F</span>
                         </div>
                         <div class="g-checkbox-row" data-ng-repeat="item in vm.portfolioAttrs" layout="row">
                             <div>
@@ -116,15 +164,39 @@
                                 <md-card class="modal-dialog-card">{{::vm.bindReportItemName(item)}}</md-card>
                             </div>
                         </div>
+
+                        <div layout="row" class="view-constructor-attributes-separator"
+                             data-ng-show="vm.portfolioDynamicAttrs.length > 0">
+                            <p>User Attributes</p>
+                        </div>
+                        <div class="g-checkbox-row" data-ng-repeat="item in vm.portfolioDynamicAttrs" layout="row">
+                            <div>
+                                <md-checkbox ng-model="item.columns" aria-label="Columns" aria="columns"
+                                             data-ng-change="vm.updateAttrs(vm.portfolioDynamicAttrs)">
+                                </md-checkbox>
+                                <md-checkbox ng-model="item.groups" aria-label="Groups" aria="groups"
+                                             class="md-g-green"
+                                             data-ng-change="vm.updateAttrs(vm.portfolioDynamicAttrs)">
+                                </md-checkbox>
+                                <md-checkbox ng-model="item.filters" aria-label="Filters" aria="filters"
+                                             class="md-primary"
+                                             data-ng-change="vm.updateAttrs(vm.portfolioDynamicAttrs)">
+                                </md-checkbox>
+                            </div>
+                            <div class="g-modal-draggable-card">
+                                <md-card class="modal-dialog-card">{{::vm.bindReportItemName(item)}}</md-card>
+                            </div>
+                        </div>
+
                     </md-content>
                 </md-tab>
 
                 <md-tab label="Instrument">
                     <md-content class="md-padding">
                         <div class="g-th-checkbox-row">
-                            <span data-ng-click="vm.toggleAll($event, 'columns')" class="g-meta-circle red">C</span>
-                            <span data-ng-click="vm.toggleAll($event, 'groups')" class="g-meta-circle green">G</span>
-                            <span data-ng-click="vm.toggleAll($event, 'filters')" class="g-meta-circle blue">F</span>
+                            <span class="g-meta-circle red">C</span>
+                            <span class="g-meta-circle green">G</span>
+                            <span class="g-meta-circle blue">F</span>
                         </div>
                         <div class="g-checkbox-row" data-ng-repeat="item in vm.instrumentAttrs" layout="row">
                             <div>
@@ -143,15 +215,39 @@
                                 <md-card class="modal-dialog-card">{{::vm.bindReportItemName(item)}}</md-card>
                             </div>
                         </div>
+
+                        <div layout="row" class="view-constructor-attributes-separator"
+                             data-ng-show="vm.instrumentDynamicAttrs.length > 0">
+                            <p>User Attributes</p>
+                        </div>
+                        <div class="g-checkbox-row" data-ng-repeat="item in vm.instrumentDynamicAttrs" layout="row">
+                            <div>
+                                <md-checkbox ng-model="item.columns" aria-label="Columns" aria="columns"
+                                             data-ng-change="vm.updateAttrs(vm.instrumentDynamicAttrs)">
+                                </md-checkbox>
+                                <md-checkbox ng-model="item.groups" aria-label="Groups" aria="groups"
+                                             class="md-g-green"
+                                             data-ng-change="vm.updateAttrs(vm.instrumentDynamicAttrs)">
+                                </md-checkbox>
+                                <md-checkbox ng-model="item.filters" aria-label="Filters" aria="filters"
+                                             class="md-primary"
+                                             data-ng-change="vm.updateAttrs(vm.instrumentDynamicAttrs)">
+                                </md-checkbox>
+                            </div>
+                            <div class="g-modal-draggable-card">
+                                <md-card class="modal-dialog-card">{{::vm.bindReportItemName(item)}}</md-card>
+                            </div>
+                        </div>
+
                     </md-content>
                 </md-tab>
 
                 <md-tab label="Responsible">
                     <md-content class="md-padding">
                         <div class="g-th-checkbox-row">
-                            <span data-ng-click="vm.toggleAll($event, 'columns')" class="g-meta-circle red">C</span>
-                            <span data-ng-click="vm.toggleAll($event, 'groups')" class="g-meta-circle green">G</span>
-                            <span data-ng-click="vm.toggleAll($event, 'filters')" class="g-meta-circle blue">F</span>
+                            <span class="g-meta-circle red">C</span>
+                            <span class="g-meta-circle green">G</span>
+                            <span class="g-meta-circle blue">F</span>
                         </div>
                         <div class="g-checkbox-row" data-ng-repeat="item in vm.responsibleAttrs" layout="row">
                             <div>
@@ -170,15 +266,39 @@
                                 <md-card class="modal-dialog-card">{{::vm.bindReportItemName(item)}}</md-card>
                             </div>
                         </div>
+
+                        <div layout="row" class="view-constructor-attributes-separator"
+                             data-ng-show="vm.responsibleDynamicAttrs.length > 0">
+                            <p>User Attributes</p>
+                        </div>
+                        <div class="g-checkbox-row" data-ng-repeat="item in vm.responsibleDynamicAttrs" layout="row">
+                            <div>
+                                <md-checkbox ng-model="item.columns" aria-label="Columns" aria="columns"
+                                             data-ng-change="vm.updateAttrs(vm.responsibleDynamicAttrs)">
+                                </md-checkbox>
+                                <md-checkbox ng-model="item.groups" aria-label="Groups" aria="groups"
+                                             class="md-g-green"
+                                             data-ng-change="vm.updateAttrs(vm.responsibleDynamicAttrs)">
+                                </md-checkbox>
+                                <md-checkbox ng-model="item.filters" aria-label="Filters" aria="filters"
+                                             class="md-primary"
+                                             data-ng-change="vm.updateAttrs(vm.responsibleDynamicAttrs)">
+                                </md-checkbox>
+                            </div>
+                            <div class="g-modal-draggable-card">
+                                <md-card class="modal-dialog-card">{{::vm.bindReportItemName(item)}}</md-card>
+                            </div>
+                        </div>
+
                     </md-content>
                 </md-tab>
 
                 <md-tab label="Counterparty">
                     <md-content class="md-padding">
                         <div class="g-th-checkbox-row">
-                            <span data-ng-click="vm.toggleAll($event, 'columns')" class="g-meta-circle red">C</span>
-                            <span data-ng-click="vm.toggleAll($event, 'groups')" class="g-meta-circle green">G</span>
-                            <span data-ng-click="vm.toggleAll($event, 'filters')" class="g-meta-circle blue">F</span>
+                            <span class="g-meta-circle red">C</span>
+                            <span class="g-meta-circle green">G</span>
+                            <span class="g-meta-circle blue">F</span>
                         </div>
                         <div class="g-checkbox-row" data-ng-repeat="item in vm.counterpartyAttrs" layout="row">
                             <div>
@@ -197,61 +317,85 @@
                                 <md-card class="modal-dialog-card">{{::vm.bindReportItemName(item)}}</md-card>
                             </div>
                         </div>
+
+                        <div layout="row" class="view-constructor-attributes-separator"
+                             data-ng-show="vm.counterpartyDynmicAttrs.length > 0">
+                            <p>User Attributes</p>
+                        </div>
+                        <div class="g-checkbox-row" data-ng-repeat="item in vm.counterpartyDynmicAttrs" layout="row">
+                            <div>
+                                <md-checkbox ng-model="item.columns" aria-label="Columns" aria="columns"
+                                             data-ng-change="vm.updateAttrs(vm.counterpartyDynmicAttrs)">
+                                </md-checkbox>
+                                <md-checkbox ng-model="item.groups" aria-label="Groups" aria="groups"
+                                             class="md-g-green"
+                                             data-ng-change="vm.updateAttrs(vm.counterpartyDynmicAttrs)">
+                                </md-checkbox>
+                                <md-checkbox ng-model="item.filters" aria-label="Filters" aria="filters"
+                                             class="md-primary"
+                                             data-ng-change="vm.updateAttrs(vm.counterpartyDynmicAttrs)">
+                                </md-checkbox>
+                            </div>
+                            <div class="g-modal-draggable-card">
+                                <md-card class="modal-dialog-card">{{::vm.bindReportItemName(item)}}</md-card>
+                            </div>
+                        </div>
+
                     </md-content>
                 </md-tab>
 
                 <!--<md-tab label="Allocations">-->
-                    <!--<md-content class="md-padding">-->
-                        <!--<div class="g-th-checkbox-row">-->
-                            <!--<span data-ng-click="vm.toggleAll($event, 'columns')" class="g-meta-circle red">C</span>-->
-                            <!--<span data-ng-click="vm.toggleAll($event, 'groups')" class="g-meta-circle green">G</span>-->
-                            <!--<span data-ng-click="vm.toggleAll($event, 'filters')" class="g-meta-circle blue">F</span>-->
-                        <!--</div>-->
-                        <!--<div class="g-checkbox-row" data-ng-repeat="item in vm.allocationBalanceAttrs" layout="row">-->
-                            <!--<div>-->
-                                <!--<md-checkbox ng-model="item.columns" aria-label="Columns" aria="columns"-->
-                                             <!--data-ng-change="vm.updateAttrs()">-->
-                                <!--</md-checkbox>-->
-                                <!--<md-checkbox ng-model="item.groups" aria-label="Groups" aria="groups"-->
-                                             <!--class="md-g-green"-->
-                                             <!--data-ng-change="vm.updateAttrs()">-->
-                                <!--</md-checkbox>-->
-                                <!--<md-checkbox ng-model="item.filters" aria-label="Filters" aria="filters"-->
-                                             <!--class="md-primary" data-ng-change="vm.updateAttrs()">-->
-                                <!--</md-checkbox>-->
-                            <!--</div>-->
-                            <!--<div class="g-modal-draggable-card">-->
-                                <!--<md-card class="modal-dialog-card">{{::vm.bindReportItemName(item)}}</md-card>-->
-                            <!--</div>-->
-                        <!--</div>-->
+                <!--<md-content class="md-padding">-->
+                <!--<div class="g-th-checkbox-row">-->
+                <!--<span class="g-meta-circle red">C</span>-->
+                <!--<span g-meta-circle green">G</span>-->
+                <!--<span g-meta-circle blue">F</span>-->
+                <!--</div>-->
+                <!--<div class="g-checkbox-row" data-ng-repeat="item in vm.allocationBalanceAttrs" layout="row">-->
+                <!--<div>-->
+                <!--<md-checkbox ng-model="item.columns" aria-label="Columns" aria="columns"-->
+                <!--data-ng-change="vm.updateAttrs()">-->
+                <!--</md-checkbox>-->
+                <!--<md-checkbox ng-model="item.groups" aria-label="Groups" aria="groups"-->
+                <!--class="md-g-green"-->
+                <!--data-ng-change="vm.updateAttrs()">-->
+                <!--</md-checkbox>-->
+                <!--<md-checkbox ng-model="item.filters" aria-label="Filters" aria="filters"-->
+                <!--class="md-primary" data-ng-change="vm.updateAttrs()">-->
+                <!--</md-checkbox>-->
+                <!--</div>-->
+                <!--<div class="g-modal-draggable-card">-->
+                <!--<md-card class="modal-dialog-card">{{::vm.bindReportItemName(item)}}</md-card>-->
+                <!--</div>-->
+                <!--</div>-->
 
-                        <!--<div class="g-checkbox-row" data-ng-repeat="item in vm.allocationPlAttrs" layout="row">-->
-                            <!--<div>-->
-                                <!--<md-checkbox ng-model="item.columns" aria-label="Columns" aria="columns"-->
-                                             <!--data-ng-change="vm.updateAttrs()">-->
-                                <!--</md-checkbox>-->
-                                <!--<md-checkbox ng-model="item.groups" aria-label="Groups" aria="groups"-->
-                                             <!--class="md-g-green"-->
-                                             <!--data-ng-change="vm.updateAttrs()">-->
-                                <!--</md-checkbox>-->
-                                <!--<md-checkbox ng-model="item.filters" aria-label="Filters" aria="filters"-->
-                                             <!--class="md-primary" data-ng-change="vm.updateAttrs()">-->
-                                <!--</md-checkbox>-->
-                            <!--</div>-->
-                            <!--<div class="g-modal-draggable-card">-->
-                                <!--<md-card class="modal-dialog-card">{{::vm.bindReportItemName(item)}}</md-card>-->
-                            <!--</div>-->
-                        <!--</div>-->
+                <!--<div class="g-checkbox-row" data-ng-repeat="item in vm.allocationPlAttrs" layout="row">-->
+                <!--<div>-->
+                <!--<md-checkbox ng-model="item.columns" aria-label="Columns" aria="columns"-->
+                <!--data-ng-change="vm.updateAttrs()">-->
+                <!--</md-checkbox>-->
+                <!--<md-checkbox ng-model="item.groups" aria-label="Groups" aria="groups"-->
+                <!--class="md-g-green"-->
+                <!--data-ng-change="vm.updateAttrs()">-->
+                <!--</md-checkbox>-->
+                <!--<md-checkbox ng-model="item.filters" aria-label="Filters" aria="filters"-->
+                <!--class="md-primary" data-ng-change="vm.updateAttrs()">-->
+                <!--</md-checkbox>-->
+                <!--</div>-->
+                <!--<div class="g-modal-draggable-card">-->
+                <!--<md-card class="modal-dialog-card">{{::vm.bindReportItemName(item)}}</md-card>-->
+                <!--</div>-->
+                <!--</div>-->
 
-                    <!--</md-content>-->
+                <!--</md-content>-->
                 <!--</md-tab>-->
 
                 <md-tab label="Accounts">
                     <md-content class="md-padding">
                         <div class="g-th-checkbox-row">
-                            <span data-ng-click="vm.toggleAll($event, 'columns')" class="g-meta-circle red">C</span>
-                            <span data-ng-click="vm.toggleAll($event, 'groups')" class="g-meta-circle green">G</span>
-                            <span data-ng-click="vm.toggleAll($event, 'filters')" class="g-meta-circle blue">F</span>
+                            <span class="g-meta-circle red">C</span>
+                            <span class="g-meta-circle green">G</span>
+                            <span class="g-meta-circle blue">F</span>
                         </div>
                         <div class="g-checkbox-row" data-ng-repeat="item in vm.accountPositionAttrs" layout="row">
                             <div>
@@ -263,7 +407,8 @@
                                              data-ng-change="vm.updateAttrs(vm.accountPositionAttrs)">
                                 </md-checkbox>
                                 <md-checkbox ng-model="item.filters" aria-label="Filters" aria="filters"
-                                             class="md-primary" data-ng-change="vm.updateAttrs(vm.accountPositionAttrs)">
+                                             class="md-primary"
+                                             data-ng-change="vm.updateAttrs(vm.accountPositionAttrs)">
                                 </md-checkbox>
                             </div>
                             <div class="g-modal-draggable-card">
@@ -307,6 +452,68 @@
                             </div>
                         </div>
 
+                        <div layout="row" class="view-constructor-attributes-separator"
+                             data-ng-show="vm.accountPositionDynamicAttrs.length > 0 || vm.accountCashDynamicAttrs.length > 0 || vm.accountInterimDynamicAttrs.length > 0 ">
+                            <p>User Attributes</p>
+                        </div>
+
+                        <div class="g-checkbox-row" data-ng-repeat="item in vm.accountPositionDynamicAttrs"
+                             layout="row">
+                            <div>
+                                <md-checkbox ng-model="item.columns" aria-label="Columns" aria="columns"
+                                             data-ng-change="vm.updateAttrs(vm.accountPositionDynamicAttrs)">
+                                </md-checkbox>
+                                <md-checkbox ng-model="item.groups" aria-label="Groups" aria="groups"
+                                             class="md-g-green"
+                                             data-ng-change="vm.updateAttrs(vm.accountPositionDynamicAttrs)">
+                                </md-checkbox>
+                                <md-checkbox ng-model="item.filters" aria-label="Filters" aria="filters"
+                                             class="md-primary"
+                                             data-ng-change="vm.updateAttrs(vm.accountPositionDynamicAttrs)">
+                                </md-checkbox>
+                            </div>
+                            <div class="g-modal-draggable-card">
+                                <md-card class="modal-dialog-card">{{::vm.bindReportItemName(item)}}</md-card>
+                            </div>
+                        </div>
+
+                        <div class="g-checkbox-row" data-ng-repeat="item in vm.accountCashDynamicAttrs" layout="row">
+                            <div>
+                                <md-checkbox ng-model="item.columns" aria-label="Columns" aria="columns"
+                                             data-ng-change="vm.updateAttrs(vm.accountCashDynamicAttrs)">
+                                </md-checkbox>
+                                <md-checkbox ng-model="item.groups" aria-label="Groups" aria="groups"
+                                             class="md-g-green"
+                                             data-ng-change="vm.updateAttrs(vm.accountCashDynamicAttrs)">
+                                </md-checkbox>
+                                <md-checkbox ng-model="item.filters" aria-label="Filters" aria="filters"
+                                             class="md-primary"
+                                             data-ng-change="vm.updateAttrs(vm.accountCashDynamicAttrs)">
+                                </md-checkbox>
+                            </div>
+                            <div class="g-modal-draggable-card">
+                                <md-card class="modal-dialog-card">{{::vm.bindReportItemName(item)}}</md-card>
+                            </div>
+                        </div>
+
+                        <div class="g-checkbox-row" data-ng-repeat="item in vm.accountInterimDynamicAttrs" layout="row">
+                            <div>
+                                <md-checkbox ng-model="item.columns" aria-label="Columns" aria="columns"
+                                             data-ng-change="vm.updateAttrs(vm.accountInterimDynamicAttrs)">
+                                </md-checkbox>
+                                <md-checkbox ng-model="item.groups" aria-label="Groups" aria="groups"
+                                             class="md-g-green"
+                                             data-ng-change="vm.updateAttrs(vm.accountInterimDynamicAttrs)">
+                                </md-checkbox>
+                                <md-checkbox ng-model="item.filters" aria-label="Filters" aria="filters"
+                                             class="md-primary"
+                                             data-ng-change="vm.updateAttrs(vm.accountInterimDynamicAttrs)">
+                                </md-checkbox>
+                            </div>
+                            <div class="g-modal-draggable-card">
+                                <md-card class="modal-dialog-card">{{::vm.bindReportItemName(item)}}</md-card>
+                            </div>
+                        </div>
 
                     </md-content>
                 </md-tab>
@@ -314,9 +521,9 @@
                 <md-tab label="Currencies">
                     <md-content class="md-padding">
                         <div class="g-th-checkbox-row">
-                            <span data-ng-click="vm.toggleAll($event, 'columns')" class="g-meta-circle red">C</span>
-                            <span data-ng-click="vm.toggleAll($event, 'groups')" class="g-meta-circle green">G</span>
-                            <span data-ng-click="vm.toggleAll($event, 'filters')" class="g-meta-circle blue">F</span>
+                            <span class="g-meta-circle red">C</span>
+                            <span class="g-meta-circle green">G</span>
+                            <span class="g-meta-circle blue">F</span>
                         </div>
                         <div class="g-checkbox-row" data-ng-repeat="item in vm.transactionCurrencyAttrs" layout="row">
                             <div>
@@ -328,7 +535,8 @@
                                              data-ng-change="vm.updateAttrs(vm.transactionCurrencyAttrs)">
                                 </md-checkbox>
                                 <md-checkbox ng-model="item.filters" aria-label="Filters" aria="filters"
-                                             class="md-primary" data-ng-change="vm.updateAttrs(vm.transactionCurrencyAttrs)">
+                                             class="md-primary"
+                                             data-ng-change="vm.updateAttrs(vm.transactionCurrencyAttrs)">
                                 </md-checkbox>
                             </div>
                             <div class="g-modal-draggable-card">
@@ -346,7 +554,8 @@
                                              data-ng-change="vm.updateAttrs(vm.settlementCurrencyAttrs)">
                                 </md-checkbox>
                                 <md-checkbox ng-model="item.filters" aria-label="Filters" aria="filters"
-                                             class="md-primary" data-ng-change="vm.updateAttrs(vm.settlementCurrencyAttrs)">
+                                             class="md-primary"
+                                             data-ng-change="vm.updateAttrs(vm.settlementCurrencyAttrs)">
                                 </md-checkbox>
                             </div>
                             <div class="g-modal-draggable-card">
@@ -360,9 +569,9 @@
                 <md-tab label="Strategies">
                     <md-content class="md-padding">
                         <div class="g-th-checkbox-row">
-                            <span data-ng-click="vm.toggleAll($event, 'columns')" class="g-meta-circle red">C</span>
-                            <span data-ng-click="vm.toggleAll($event, 'groups')" class="g-meta-circle green">G</span>
-                            <span data-ng-click="vm.toggleAll($event, 'filters')" class="g-meta-circle blue">F</span>
+                            <span class="g-meta-circle red">C</span>
+                            <span class="g-meta-circle green">G</span>
+                            <span class="g-meta-circle blue">F</span>
                         </div>
                         <div class="g-checkbox-row" data-ng-repeat="item in vm.strategy1cashAttrs" layout="row">
                             <div>
@@ -392,7 +601,8 @@
                                              data-ng-change="vm.updateAttrs(vm.strategy1positionAttrs)">
                                 </md-checkbox>
                                 <md-checkbox ng-model="item.filters" aria-label="Filters" aria="filters"
-                                             class="md-primary" data-ng-change="vm.updateAttrs(vm.strategy1positionAttrs)">
+                                             class="md-primary"
+                                             data-ng-change="vm.updateAttrs(vm.strategy1positionAttrs)">
                                 </md-checkbox>
                             </div>
                             <div class="g-modal-draggable-card">
@@ -428,7 +638,8 @@
                                              data-ng-change="vm.updateAttrs(vm.strategy2positionAttrs)">
                                 </md-checkbox>
                                 <md-checkbox ng-model="item.filters" aria-label="Filters" aria="filters"
-                                             class="md-primary" data-ng-change="vm.updateAttrs(vm.strategy2positionAttrs)">
+                                             class="md-primary"
+                                             data-ng-change="vm.updateAttrs(vm.strategy2positionAttrs)">
                                 </md-checkbox>
                             </div>
                             <div class="g-modal-draggable-card">
@@ -464,7 +675,8 @@
                                              data-ng-change="vm.updateAttrs(vm.strategy3positionAttrs)">
                                 </md-checkbox>
                                 <md-checkbox ng-model="item.filters" aria-label="Filters" aria="filters"
-                                             class="md-primary" data-ng-change="vm.updateAttrs(vm.strategy3positionAttrs)">
+                                             class="md-primary"
+                                             data-ng-change="vm.updateAttrs(vm.strategy3positionAttrs)">
                                 </md-checkbox>
                             </div>
                             <div class="g-modal-draggable-card">
@@ -478,9 +690,9 @@
                 <md-tab label="Custom Attributes">
                     <md-content class="md-padding">
                         <div class="g-th-checkbox-row">
-                            <span data-ng-click="vm.toggleAll($event, 'columns')" class="g-meta-circle red">C</span>
-                            <span data-ng-click="vm.toggleAll($event, 'groups')" class="g-meta-circle green">G</span>
-                            <span data-ng-click="vm.toggleAll($event, 'filters')" class="g-meta-circle blue">F</span>
+                            <span class="g-meta-circle red">C</span>
+                            <span class="g-meta-circle green">G</span>
+                            <span class="g-meta-circle blue">F</span>
                         </div>
                         <div class="g-checkbox-row" data-ng-repeat="item in vm.custom" layout="row">
                             <div>

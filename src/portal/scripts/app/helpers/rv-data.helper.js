@@ -8,6 +8,10 @@
     var rvHelper = require('./rv.helper');
     var evDataHelper = require('./ev-data.helper');
 
+    var getDataAsFlatObjects = function(evDataService){
+
+    };
+
     var getGroupsByParent = function (parentId, evDataService) {
 
         var items = evDataService.getDataAsList();
@@ -447,7 +451,7 @@
 
         var tree = utilsHelper.convertToTree(data, rootGroup);
 
-        console.log('getFlatStructure.tree', tree);
+        // console.log('getFlatStructure.tree', tree);
 
         var list = utilsHelper.convertTreeToList(tree);
 

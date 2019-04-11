@@ -10,14 +10,18 @@
 
             Object.keys(regularFilters).forEach(function (key) {
 
-                if (item.hasOwnProperty(key)) {
+                if (key !== 'ordering') {
 
-                    if (key !== 'ordering' && item[key].toString().indexOf(regularFilters[key]) === -1) {
+                    if (item.hasOwnProperty(key) && item[key]) {
+
+                        if (item[key].toString().indexOf(regularFilters[key]) === -1) {
+                            match = false;
+                        }
+
+                    } else {
                         match = false;
                     }
 
-                } else {
-                    match = false;
                 }
 
             });
@@ -109,16 +113,8 @@
 
     var getFilterMatch = function (item, groupType, key, value) {
 
-        var item_value = null;
+        var item_value = item[key];
         var match = true;
-
-        if (['balance-report', 'pnl-report', 'report-mismatch', 'report-addon-performance-pnl', 'transaction-report'].indexOf(groupType.entity) !== -1) {
-            item_value = item[key];
-        } else {
-            if (item[groupType.entity + '_object']) {
-                item_value = item[groupType.entity + '_object'][key];
-            }
-        }
 
         // console.log("groupType.entity", groupType.entity);
         // console.log("getFilterMatch.item_value", item_value);
@@ -149,6 +145,8 @@
 
     };
 
+
+    // DEPRECATED
     var getFilterMatchInField = function (item, groupType, key, value) {
 
         var item_value = null;
@@ -219,15 +217,7 @@
 
                     } else {
 
-                        if (groupType.value_type === 'field') {
-
-                            match = getFilterMatchInField(item, groupType, key, value)
-
-                        } else {
-
-                            match = getFilterMatch(item, groupType, key, value);
-
-                        }
+                        match = getFilterMatch(item, groupType, key, value);
 
                     }
 
@@ -243,7 +233,7 @@
 
         }
 
-        console.log('filterByGroupsFilters.items', JSON.parse(JSON.stringify(items)));
+        // console.log('filterByGroupsFilters.items', JSON.parse(JSON.stringify(items)));
 
         return items;
 

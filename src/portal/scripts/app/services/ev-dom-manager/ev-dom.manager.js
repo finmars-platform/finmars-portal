@@ -289,8 +289,6 @@
 
     var getClickTarget = function (event) {
 
-        console.log('getClickTarget.event', event);
-
         var result = '';
 
         if (event.target.classList.contains('g-group-holder')) {

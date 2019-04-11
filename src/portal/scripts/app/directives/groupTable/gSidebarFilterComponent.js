@@ -347,13 +347,6 @@
                 var syncFilters = function () {
 
                     scope.filters = scope.evDataService.getFilters();
-                    scope.filters.forEach(function (item) {
-
-                        if (item.hasOwnProperty('id')) {
-                            item.key = '___da_' + item.id;
-                        }
-
-                    });
 
                     scope.evDataService.setFilters(scope.filters);
 

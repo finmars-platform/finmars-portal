@@ -1,11 +1,19 @@
 /**
  * Created by szhitenev on 13.02.2017.
  */
+
+/**
+ * Report Viewer Helper.
+ * @module reportHelper
+ */
+
 (function () {
 
     'use strict';
 
     var transactionClassService = require('../services/transaction/transactionClassService');
+    var modelService = require('../services/modelService');
+    var metaService = require('../services/metaService')
 
     function findEntityObject(report, propertyName, id) {
 
@@ -121,16 +129,16 @@
                 item.strategy1_position_object = findEntityObject(report, 'item_strategies1', item.strategy1_position);
             }
             if (item.strategy2_cash) {
-                item.strategy2_cash_object = findEntityObject(report, 'item_strategies1', item.strategy2_cash);
+                item.strategy2_cash_object = findEntityObject(report, 'item_strategies2', item.strategy2_cash);
             }
             if (item.strategy2_position) {
-                item.strategy2_position_object = findEntityObject(report, 'item_strategies1', item.strategy2_position);
+                item.strategy2_position_object = findEntityObject(report, 'item_strategies2', item.strategy2_position);
             }
             if (item.strategy3_cash) {
-                item.strategy3_cash_object = findEntityObject(report, 'item_strategies1', item.strategy3_cash);
+                item.strategy3_cash_object = findEntityObject(report, 'item_strategies3', item.strategy3_cash);
             }
             if (item.strategy3_position) {
-                item.strategy3_position_object = findEntityObject(report, 'item_strategies1', item.strategy3_position);
+                item.strategy3_position_object = findEntityObject(report, 'item_strategies3', item.strategy3_position);
             }
 
             if (item.custom_fields) {
@@ -153,7 +161,7 @@
 
         });
 
-        console.log('INJECTED', items);
+        // console.log('INJECTED', items);
 
         return items;
     };
@@ -237,7 +245,185 @@
 
     }
 
+    function getContentTypesWithDynamicAttributes() {
+
+        return [
+            'accounts.account',
+            'counterparties.counterparty',
+            'counterparties.responsible',
+            'currencies.currency',
+            'instruments.instrument',
+            'portfolios.portfolio',
+            'transactions.complextransaction']
+
+    }
+
+    /**
+     * Save to result object all props from relation key in source object
+     * @param {object} result - result flat object.
+     * @param {string} parentKey - parent key (e.g. instrument.instrument_type).
+     * @param {string} contentType - content type.
+     * @param {object} source - original item instance.
+     * @return {Object[]} Flat object.
+     * @memberof module:reportHelper
+     */
+    var recursiveUnwrapRelation = function (result, parentKey, contentType, source) {
+
+        var attributes = modelService.getAttributesByContentType(contentType);
+        var resultKey;
+
+        attributes.forEach(function (attribute) {
+
+            resultKey = parentKey + '.' + attribute.key;
+
+            if (attribute.value_type === 'field' && attribute.code === 'user_code' && source[attribute.key]) {
+
+                recursiveUnwrapRelation(result, resultKey, attribute.value_content_type, source[attribute.key + '_object'])
+
+            } else {
+
+                if (attribute.value_type !== 'mc_field') {
+
+                    result[resultKey] = source[attribute.key]
+
+                }
+            }
+
+        });
+
+        var contentTypesWithDynamicAttributes = getContentTypesWithDynamicAttributes();
+
+        if (contentTypesWithDynamicAttributes.indexOf(contentType) !== -1) {
+
+            unwrapDynamicAttributes(result, parentKey, contentType, source);
+
+        }
+
+
+    };
+
+    var unwrapDynamicAttributes = function (result, parentKey, contentType, source) {
+
+        // console.log('unwrapDynamicAttributes.source', source);
+
+        if (source.hasOwnProperty('attributes')) {
+
+            var resultKey = parentKey + '.attributes';
+            var localResultKey;
+
+            source.attributes.forEach(function (attribute) {
+
+                localResultKey = resultKey + '.' + attribute.attribute_type;
+
+                result[localResultKey] = null;
+
+                if (attribute.attribute_type_object.value_type === 10) {
+                    result[localResultKey] = attribute.value_string
+                }
+
+                if (attribute.attribute_type_object.value_type === 20) {
+                    result[localResultKey] = attribute.value_float
+                }
+
+                if (attribute.attribute_type_object.value_type === 30) {
+
+                    if (attribute.classifier_object) {
+
+                        result[localResultKey] = attribute.classifier_object.name
+
+                    }
+
+                }
+
+                if (attribute.attribute_type_object.value_type === 40) {
+                    result[localResultKey] = attribute.value_date
+                }
+
+
+            })
+
+
+        }
+
+    };
+
+    /**
+     * Convert single object to a flat object.
+     * @param {object} item.
+     * @return {Object[]} Flat object.
+     * @memberof module:reportHelper
+     */
+    var unwrapItem = function (item) {
+
+        var result = {};
+        var keys = Object.keys(item);
+
+        var keysToUnwrap = {
+            'instrument': 'instruments.instrument',
+            'allocation': 'instruments.instrument',
+            'allocation_balance': 'instruments.instrument',
+            'allocation_pl': 'instruments.instrument',
+            'linked_instrument': 'instruments.instrument',
+            'account': 'accounts.account',
+            'account_cash': 'accounts.account',
+            'account_interim': 'accounts.account',
+            'account_position': 'accounts.account',
+            'currency': 'currencies.currency',
+            'pricing_currency': 'currencies.currency',
+            'settlement_currency': 'currencies.currency',
+            'transaction_currency': 'currencies.currency',
+            'portfolio': 'portfolios.portfolio',
+            'complex_transaction': 'transactions.complextransaction',
+            'responsible': 'counterparties.responsible',
+            'counterparty': 'counterparties.counterparty',
+            'strategy1_cash': 'strategies.strategy1',
+            'strategy1_position': 'strategies.strategy1',
+            'strategy2_cash': 'strategies.strategy2',
+            'strategy2_position': 'strategies.strategy2',
+            'strategy3_cash': 'strategies.strategy3',
+            'strategy3_position': 'strategies.strategy3',
+            //TODO add more keys to map
+        };
+
+
+        keys.forEach(function (key) {
+
+            if (keysToUnwrap.hasOwnProperty(key) && item[key]) {
+
+                recursiveUnwrapRelation(result, key, keysToUnwrap[key], item[key + '_object']);
+
+            } else {
+                result[key] = item[key];
+            }
+
+
+        });
+
+        return result;
+
+    };
+
+    /**
+     * Get list of entity attributes and all children attributes.
+     * @param {Object[]} items - that were received from REST API.
+     * @param {object} reportOptions - report options.
+     * @return {Object[]} Array of flat objects.
+     * @memberof module:reportHelper
+     */
+    var convertItemsToFlat = function (items) {
+
+        items = items.map(function (item) {
+
+            return unwrapItem(item);
+
+        });
+
+        return items
+
+    };
+
     module.exports = {
+        convertItemsToFlat: convertItemsToFlat,
         injectIntoItems: injectIntoItems,
         calculateMarketValueAndExposurePercents: calculateMarketValueAndExposurePercents
     }
