@@ -11,7 +11,20 @@
 
         vm.event = data.event;
 
-        vm.actionButtons = vm.event.event_schedule_object.actions;
+        vm.automatic_actions = [];
+        vm.automaitc_actions_as_pending = [];
+
+        vm.automatic_actions = vm.event.event_schedule_object.actions.filter(function (action) {
+
+            return action.is_book_automatic === true && action.is_sent_to_pending === false;
+
+        });
+
+        vm.automaitc_actions_as_pending = vm.event.event_schedule_object.actions.filter(function (action) {
+
+            return action.is_book_automatic === true && action.is_sent_to_pending === true;
+
+        });
 
         console.log('vm.event', vm.event);
 
