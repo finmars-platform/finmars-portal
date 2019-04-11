@@ -260,6 +260,7 @@ app.component('dashboardEntityViewer', require('./app/components/dashboardEntity
 
 app.directive('menuToggle', [require('./app/directives/menuToggleDirective')]);
 app.directive('menuLink', [require('./app/directives/menuLinkDirective')]);
+app.directive('sidenavDropdownMenu', [require('./app/directives/sidenavDropdownMenuDirective')]);
 
 app.directive('bindFieldControl', [require('./app/directives/bindFieldControlDirective')]);
 app.directive('layoutConstructorField', [require('./app/directives/layoutConstructorFieldDirective')]);

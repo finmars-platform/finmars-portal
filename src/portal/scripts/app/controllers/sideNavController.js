@@ -56,6 +56,23 @@
 
         };
 
+        var sideMenuSettingsMenuOpened = false;
+        vm.showSettingsSideMenu = function () {
+
+            if (!sideMenuSettingsMenuOpened) {
+                // $('.side-menu-settings-menu').removeClass('ng-hide');
+                $('.side-menu-settings-menu').addClass('settings-menu-opened');
+            } else {
+                $('.side-menu-settings-menu').removeClass('settings-menu-opened');
+                // setTimeout(function () {
+                //     $('.side-menu-settings-menu').addClass('ng-hide');
+                // }, 400);
+            }
+
+            sideMenuSettingsMenuOpened = !sideMenuSettingsMenuOpened;
+            console.log("settings sidemenu opened", sideMenuSettingsMenuOpened);
+        };
+
         metaService.getMenu().then(function (data) {
             vm.sections = data;
             $scope.$apply();
