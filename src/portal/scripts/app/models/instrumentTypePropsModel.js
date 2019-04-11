@@ -57,6 +57,7 @@
                 "name": "One off event",
                 "value_type": "field",
                 "value_entity": "transaction-type",
+                "value_content_type": "transactions.transactiontype",
                 "code": "user_code",
                 "allow_null": false
             },
@@ -65,6 +66,7 @@
                 "name": "Regular event",
                 "value_type": "field",
                 "value_entity": "transaction-type",
+                "value_content_type": "transactions.transactiontype",
                 "code": "user_code",
                 "allow_null": false
             },
@@ -73,6 +75,7 @@
                 "name": "Factor same",
                 "value_type": "field",
                 "value_entity": "transaction-type",
+                "value_content_type": "transactions.transactiontype",
                 "code": "user_code",
                 "allow_null": false
             },
@@ -81,6 +84,7 @@
                 "name": "Factor up",
                 "value_type": "field",
                 "value_entity": "transaction-type",
+                "value_content_type": "transactions.transactiontype",
                 "code": "user_code",
                 "allow_null": false
             },
@@ -89,6 +93,7 @@
                 "name": "Factor down",
                 "value_type": "field",
                 "value_entity": "transaction-type",
+                "value_content_type": "transactions.transactiontype",
                 "code": "user_code",
                 "allow_null": false
             },

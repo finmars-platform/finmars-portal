@@ -117,8 +117,7 @@
 
         if (typeof newColumn === "boolean") {
             groups["newColumnAdded"] = newColumn;
-        }
-        else {
+        } else {
             return groups;
         }
     };

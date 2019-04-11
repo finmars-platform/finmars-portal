@@ -97,35 +97,15 @@
 
             } else {
 
-                if (group.value_type === 'field') {
-                    // resultGroup.___group_identifier = item[group] ;
+                var item_value = item[group.key];
 
-                    if (item[group.key + '_object']) {
-                        resultGroup.___group_identifier = item[group.key + '_object'].user_code;
-                        resultGroup.___group_name = item[group.key + '_object'].short_name;
-                    }
+                if (
+                    item_value !== null &&
+                    item_value !== undefined &&
+                    item_value !== '-') {
 
-                } else {
-
-                    var item_value = null;
-
-                    if (['balance-report', 'pnl-report', 'report-mismatch', 'report-addon-performance-pnl', 'transaction-report'].indexOf(group.entity) !== -1) {
-                        item_value = item[group.key];
-                    } else {
-                        if (item[group.entity + '_object']) {
-                            item_value = item[group.entity + '_object'][group.key];
-                        }
-                    }
-
-                    if (
-                        item_value !== null &&
-                        item_value !== undefined &&
-                        item_value !== '-') {
-
-                        resultGroup.___group_identifier = item_value.toString();
-                        resultGroup.___group_name = item_value.toString();
-
-                    }
+                    resultGroup.___group_identifier = item_value.toString();
+                    resultGroup.___group_name = item_value.toString();
 
                 }
             }
@@ -176,7 +156,7 @@
 
             var groups = getUniqueGroups(items, group);
 
-            console.log('getUniqueGroups groups', groups);
+            // console.log('getUniqueGroups groups', groups);
 
             if (options.groups_order === 'desc') {
                 groups = sortService.sortItems(groups, '-___group_name');
@@ -187,7 +167,7 @@
             result.count = groups.length;
             result.results = groups;
 
-            console.log('get groups', JSON.parse(JSON.stringify(result)));
+            // console.log('get groups', JSON.parse(JSON.stringify(result)));
 
             resolve(result)
 
