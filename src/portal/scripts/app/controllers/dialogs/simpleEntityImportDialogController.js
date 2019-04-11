@@ -180,6 +180,18 @@
 
                     $mdDialog.hide();
 
+                    var description = '';
+
+                    description = '<div>' +
+                        '<div>Rows total: ' + data.total + '</div>' +
+                        '<div>Rows success import: ' + (data.total - data.errors.length) + '</div>' +
+                        '<div>Rows fail import: ' + data.errors.length + '</div>' +
+                        '</div><br/>';
+
+                    console.log('description', description);
+
+                    description = description + '<div> You have successfully imported csv file </div>';
+
                     $mdDialog.show({
                         controller: 'SuccessDialogController as vm',
                         templateUrl: 'views/dialogs/success-dialog-view.html',
@@ -191,7 +203,7 @@
                         locals: {
                             success: {
                                 title: "",
-                                description: "You have successfully imported csv file"
+                                description: description
                             }
                         }
 
@@ -216,6 +228,8 @@
 
 
             }).catch(function (reason) {
+
+                console.log('here? ', reason);
 
                 vm.readyStatus.processing = false;
 

@@ -282,7 +282,35 @@
 
                     if (vm.config.error_rows.length === 0) {
 
-                        vm.finishedSuccess = true;
+                        // vm.finishedSuccess = true;
+
+                        var description = '';
+
+                        description = '<div>' +
+                            '<div>Rows total: ' + data.total_rows + '</div>' +
+                            '<div>Rows success import: ' + data.total_rows - data.error_rows.length + '</div>' +
+                            '<div>Rows fail import: ' + data.error_rows.length + '</div>' +
+                            '</div><br/>';
+
+                        description = description + '<div> You have successfully imported transactions file </div>';
+
+                        $mdDialog.show({
+                            controller: 'SuccessDialogController as vm',
+                            templateUrl: 'views/dialogs/success-dialog-view.html',
+                            targetEvent: $event,
+                            preserveScope: true,
+                            multiple: true,
+                            autoWrap: true,
+                            skipHide: true,
+                            locals: {
+                                success: {
+                                    title: "",
+                                    description: description
+                                }
+                            }
+
+                        });
+
 
                     } else {
 
