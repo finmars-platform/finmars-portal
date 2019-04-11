@@ -304,7 +304,7 @@
                             skipHide: true,
                             locals: {
                                 success: {
-                                    title: "",
+                                    title: "Success",
                                     description: description
                                 }
                             }

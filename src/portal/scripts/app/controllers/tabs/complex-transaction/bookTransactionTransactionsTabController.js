@@ -14,7 +14,7 @@
         vm.editBaseTransaction = function (ev, entityId) {
             $mdDialog.show({
                 controller: 'EntityViewerEditDialogController as vm',
-                templateUrl: 'views/entity-viewer/edit-entity-viewer-dialog-view.html',
+                templateUrl: 'views/entity-viewer/entity-viewer-edit-dialog-view.html',
                 parent: angular.element(document.body),
                 targetEvent: ev,
                 locals: {
