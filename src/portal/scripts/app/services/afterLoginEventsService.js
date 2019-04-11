@@ -191,23 +191,34 @@
 
             var index = 0;
 
-            new Promise(function (resolveLocal) {
+            var resultEvents = effectiveDateEvents.slice();
 
-                if (notificationDateEvents.length) {
-                    recursiveOpenDialogs($mdDialog, resolveLocal, notificationDateEvents, index, $event)
-                } else {
-                    resolveLocal();
+            notificationDateEvents.forEach(function (notificationEvent) {
+
+                var exists = false;
+
+                effectiveDateEvents.forEach(function (effectiveDateEvent) {
+
+                    if (notificationEvent.id === effectiveDateEvent.id) {
+                        exists = true;
+                    }
+
+                });
+
+                if (exists === false) {
+                    resultEvents.push(notificationEvent)
                 }
 
-            }).then(function () {
-
-                if (effectiveDateEvents.length) {
-                    index = 0;
-                    recursiveOpenDialogs($mdDialog, resolveMain, effectiveDateEvents, index, $event)
-                } else {
-                    resolveMain();
-                }
             });
+
+            console.log('resultEvents', resultEvents);
+
+            if (resultEvents.length) {
+                index = 0;
+                recursiveOpenDialogs($mdDialog, resolveMain, resultEvents, index, $event)
+            } else {
+                resolveMain();
+            }
 
         })
 
@@ -215,28 +226,44 @@
 
     var getAndShowEvents = function ($mdDialog) {
 
-        var effective_date_from = moment(new Date()).format('YYYY-MM-DD');
-        var effective_date_to = moment(new Date()).format('YYYY-MM-DD');
+        return new Promise(function (resolve, reject) {
 
-        console.log('showing events here');
+            var effective_date_from = moment(new Date()).format('YYYY-MM-DD');
+            var effective_date_to = moment(new Date()).format('YYYY-MM-DD');
 
-        var options = {};
+            var options = {};
 
-        options.filters = {};
-        options.filters.effective_date_0 = effective_date_from;
-        options.filters.effective_date_1 = effective_date_to;
+            options.filters = {};
+            options.filters.effective_date_0 = effective_date_from;
+            options.filters.effective_date_1 = effective_date_to;
 
-        return eventsService.getList(options).then(function (data) {
+            eventsService.getList(options).then(function (effectiveData) {
 
-            return new Promise(function (resolve, reject) {
+                var effective_date_events = effectiveData.results;
 
-                var events = data.results;
+                var notification_date_from = moment(new Date()).format('YYYY-MM-DD');
+                var notification_date_to = moment(new Date()).format('YYYY-MM-DD');
 
-                if (events.length) {
-                    resolve(showEvents($mdDialog, events));
-                } else {
-                    resolve([])
-                }
+                console.log('showing events here');
+
+                var options = {};
+
+                options.filters = {};
+                options.filters.notification_date_0 = notification_date_from;
+                options.filters.notification_date_1 = notification_date_to;
+
+                eventsService.getList(options).then(function (notificationData) {
+
+                    var notification_date_events = notificationData.results;
+
+                    var result_events = effective_date_events.concat(notification_date_events);
+
+                    if (result_events.length) {
+                        resolve(showEvents($mdDialog, result_events));
+                    } else {
+                        resolve([])
+                    }
+                })
             })
         })
 
