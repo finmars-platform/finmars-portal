@@ -323,14 +323,7 @@
 
                 scope.calculateReport = function () {
 
-                    var reportOptions = scope.evDataService.getReportOptions();
-
-                    reportOptions = Object.assign({}, reportOptions, {task_id: null});
-
-                    scope.evDataService.setReportOptions(reportOptions);
-
                     scope.evEventService.dispatchEvent(evEvents.REQUEST_REPORT);
-                    // scope.evEventService.dispatchEvent(evEvents.CALCULATE_REPORT);
 
                 };
 
