@@ -81,30 +81,32 @@
 
                                                         <md-input-container class="md-block" style="margin:0">
 
-                                                                <label></label>
-                                                                <md-select ng-model="item.dynamic_attribute_id"
-                                                                           md-container-class="common-select-container"
-                                                                           md-on-close="searchTerm = ''"
-                                                                           data-ng-change="vm.extendEntityFields()"
-                                                                           style="margin-bottom: 24px">
-                                                                    <md-select-header>
-                                                                        <input data-ng-model="searchTerm"
-                                                                               type="search"
-                                                                               placeholder="Search for a ..."
-                                                                               class="md-text md-select-search-pattern select-input-filter"
-                                                                               ng-keydown="$event.stopPropagation()">
-                                                                    </md-select-header>
+                                                            <label></label>
+                                                            <md-select ng-model="item.dynamic_attribute_id"
+                                                                       md-container-class="common-select-container"
+                                                                       md-on-open="searchTerm = ''"
+                                                                       ng-change="vm.dynamicAttrPicked = true"
+                                                                       md-on-close="vm.onDynamicAttributePick()"
+                                                                       style="margin-bottom: 24px">
+                                                                <md-select-header>
+                                                                    <input data-ng-model="searchTerm"
+                                                                           type="search"
+                                                                           placeholder="Search for a ..."
+                                                                           class="md-text md-select-search-pattern select-input-filter"
+                                                                           ng-keydown="$event.stopPropagation()">
+                                                                </md-select-header>
 
-                                                                    <div class="select-options-holder">
+                                                                <div class="select-options-holder">
 
-                                                                        <md-option data-ng-repeat="item in vm.dynamicAttributes | filter:{name: searchTerm}"
-                                                                                ng-value="item.id">
-                                                                           {{item.name}}
-                                                                        </md-option>
+                                                                    <md-option data-ng-repeat="item in vm.dynamicAttributes | filter:{name: searchTerm}"
+                                                                               ng-value="item.id"
+                                                                               ng-disabled="vm.checkForUsedDynamicAttr(item.id)">
+                                                                       {{item.name}}
+                                                                    </md-option>
 
-                                                                    </div>
+                                                                </div>
 
-                                                                </md-select>
+                                                            </md-select>
 
                                                         </md-input-container>
 

@@ -36,6 +36,9 @@
             "key": 'input'
         };
 
+        vm.dynamicAttrPicked = true;
+
+        var pickedDynamicAttrs = [];
 
         vm.inputsFunctions = [];
 
@@ -59,6 +62,35 @@
 
         };
 
+        var findPickedDynamicAttrs = function () {
+            if (vm.dynamicAttrPicked) {
+                vm.scheme.entity_fields.map(function (field) {
+                    if (field.hasOwnProperty('dynamic_attribute_id') && field.dynamic_attribute_id) {
+
+                        if (pickedDynamicAttrs.length > 0) {
+                            var dynamicAttrMarked = false;
+                            pickedDynamicAttrs.map(function (dynamicAttr) {
+
+                                if (dynamicAttr === field.dynamic_attribute_id) {
+                                    dynamicAttrMarked = true;
+                                }
+
+                            });
+
+                            if (!dynamicAttrMarked) {
+                                pickedDynamicAttrs.push(field.dynamic_attribute_id);
+                            }
+
+                        } else {
+                            pickedDynamicAttrs.push(field.dynamic_attribute_id);
+                        }
+
+                    }
+                });
+            }
+
+            vm.dynamicAttrPicked = false;
+        };
 
         entitySchemeService.getByKey(schemeId).then(function (data) {
 
@@ -84,17 +116,25 @@
 
             var modelAttributes = modelService.getAttributesByContentType(vm.scheme.content_type);
 
-            vm.scheme.entity_fields.forEach(function (entityField) {
+            vm.scheme.entity_fields.map(function (entityField, entityFieldIndex) {
 
                 if (entityField.system_property_key) {
 
                     modelAttributes.forEach(function (attribute) {
 
                         if (attribute.key === entityField.system_property_key) {
-                            entityField.value_type = attribute.value_type;
-                            entityField.entity = attribute.entity;
-                            entityField.content_type = attribute.content_type;
-                            entityField.code = attribute.code;
+
+                            if (attribute.value_type === 'mc_field') { // remove multiple relation attributes
+
+                                vm.scheme.entity_fields.splice(entityFieldIndex, 1)
+
+                            } else {
+                                entityField.value_type = attribute.value_type;
+                                entityField.entity = attribute.entity;
+                                entityField.content_type = attribute.content_type;
+                                entityField.code = attribute.code;
+                            }
+
                         }
 
                     })
@@ -103,8 +143,9 @@
 
             });
 
-
             vm.inputsFunctions = vm.getFunctions();
+
+            findPickedDynamicAttrs();
 
             $scope.$apply();
 
@@ -178,6 +219,19 @@
             return vm.readyStatus.scheme;
         };
 
+        vm.onDynamicAttributePick = function () {
+            findPickedDynamicAttrs();
+            vm.extendEntityFields();
+        };
+
+        vm.checkForUsedDynamicAttr = function (attrId) {
+            if (pickedDynamicAttrs.indexOf(attrId) !== -1) {
+                return true;
+            }
+
+            return false;
+        };
+
         vm.addCsvField = function () {
             var csvFieldsLength = vm.scheme.csv_fields.length;
             var lastFieldNumber;
@@ -212,6 +266,15 @@
         };
 
         vm.removeDynamicAttribute = function (item, $index) {
+
+            var i;
+            for (i = 0; i < pickedDynamicAttrs.length; i++) {
+                if (vm.scheme.entity_fields[$index].dynamic_attribute_id === pickedDynamicAttrs[i]) {
+                    pickedDynamicAttrs.splice(i, 1);
+                    break;
+                }
+            }
+
             vm.scheme.entity_fields.splice($index, 1);
         };
 

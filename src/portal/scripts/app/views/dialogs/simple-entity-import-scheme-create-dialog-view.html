@@ -129,7 +129,9 @@
                                                         <label></label>
                                                         <md-select ng-model="item.dynamic_attribute_id"
                                                                    md-container-class="common-select-container"
-                                                                   md-on-close="searchTerm = ''"
+                                                                   md-on-open="searchTerm = ''"
+                                                                   ng-change="vm.dynamicAttrPicked = true"
+                                                                   md-on-close="vm.findPickedDynamicAttrs()"
                                                                    style="margin-top: 0">
                                                             <div nf-if="vm.dynamicAttributes && vm.dynamicAttributes.length > 0">
                                                                 <md-select-header>
@@ -145,7 +147,8 @@
                                                                     <md-option
                                                                             data-ng-repeat="item in vm.dynamicAttributes | filter: {name: searchTerm}"
                                                                             ng-value="item.id"
-                                                                            ng-bind="item.name">
+                                                                            ng-disabled="vm.checkForUsedDynamicAttr(item.id)">
+                                                                        {{item.name}}
                                                                     </md-option>
 
                                                                 </div>
