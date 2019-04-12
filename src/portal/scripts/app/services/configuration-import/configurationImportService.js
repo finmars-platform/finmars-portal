@@ -195,7 +195,9 @@
                         }
 
                         if (settings.mode === 'overwrite') {
+
                             console.warn('Item already exists: user_code ' + item.user_code + ' contentType ' + contentType);
+
                         } else {
                             errors.push({
                                 item: item,
@@ -842,12 +844,16 @@
 
                                         if (result) {
 
-                                            errors.push({
-                                                item: item,
-                                                error: {
-                                                    message: 'Layout already exists: name ' + item.name
-                                                }
-                                            });
+                                            if (settings.mode !== 'overwrite') {
+
+                                                errors.push({
+                                                    item: item,
+                                                    error: {
+                                                        message: 'Layout already exists: name ' + item.name
+                                                    }
+                                                });
+
+                                            }
 
                                             resolveLocal()
 
@@ -891,12 +897,16 @@
 
                                         if (result) {
 
-                                            errors.push({
-                                                item: item,
-                                                error: {
-                                                    message: 'Report Layout already exists: name ' + item.name
-                                                }
-                                            });
+                                            if (settings.mode !== 'overwrite') {
+
+                                                errors.push({
+                                                    item: item,
+                                                    error: {
+                                                        message: 'Report Layout already exists: name ' + item.name
+                                                    }
+                                                });
+
+                                            }
 
                                             resolveLocal()
 
