@@ -15,7 +15,7 @@
 
     module.exports = function ($scope, $mdDialog) {
 
-        logService.controller('EntityMappingCreateDialogController', 'initialized');
+        logService.controller('SimpleEntityImportCreateDialogController', 'initialized');
 
         var vm = this;
         vm.scheme = {
@@ -30,8 +30,16 @@
             "key": 'input'
         };
 
+        vm.dynamicAttrPicked = false;
+        var pickedDynamicAttrs = [];
+
         vm.inputsFunctions = [];
 
+        /**
+         * Get list of expressions for Expression Builder.
+         * @return {Object[]} Array of Expressions.
+         * @memberof module:SimpleEntityImportCreateDialogController
+         */
         vm.getFunctions = function () {
 
             return vm.scheme.csv_fields.map(function(input){
@@ -45,6 +53,37 @@
 
             })
 
+        };
+
+        vm.findPickedDynamicAttrs = function () {
+            if (vm.dynamicAttrPicked) {
+                vm.scheme.entity_fields.map(function (field) {
+                    if (field.hasOwnProperty('dynamic_attribute_id') && field.dynamic_attribute_id) {
+
+                        if (pickedDynamicAttrs.length > 0) {
+                            var dynamicAttrMarked = false;
+                            pickedDynamicAttrs.map(function (dynamicAttr) {
+
+                                if (dynamicAttr === field.dynamic_attribute_id) {
+                                    dynamicAttrMarked = true;
+                                }
+
+                            });
+
+                            if (!dynamicAttrMarked) {
+                                pickedDynamicAttrs.push(field.dynamic_attribute_id);
+                            }
+
+                        } else {
+                            pickedDynamicAttrs.push(field.dynamic_attribute_id);
+                        }
+
+                    }
+
+                });
+
+                vm.dynamicAttrPicked = false;
+            };
         };
 
         vm.getAttrs = function () {
@@ -72,7 +111,7 @@
 
             vm.scheme.entity_fields = metaService.getEntityAttrs(entity).filter(function (item) {
 
-                return ['tags', 'transaction_types', 'object_permissions_user', 'object_permissions_group'].indexOf(item.key) === -1
+                return ['tags', 'transaction_types', 'object_permissions_user', 'object_permissions_group'].indexOf(item.key) === -1 && item.value_type !== 'mc_field'
 
             }).map(function (item) {
 
@@ -119,6 +158,14 @@
             return vm.readyStatus.scheme;
         };
 
+        vm.checkForUsedDynamicAttr = function (attrId) {
+            if (pickedDynamicAttrs.indexOf(attrId) !== -1) {
+                return true;
+            }
+
+            return false;
+        };
+
         vm.addCsvField = function () {
             var csvFieldsLength = vm.scheme.csv_fields.length;
             var lastFieldNumber;
@@ -152,6 +199,15 @@
         };
 
         vm.removeDynamicAttribute = function (item, $index) {
+
+            var i;
+            for (i = 0; i < pickedDynamicAttrs.length; i++) {
+                if (vm.scheme.entity_fields[$index].dynamic_attribute_id === pickedDynamicAttrs[i]) {
+                    pickedDynamicAttrs.splice(i, 1);
+                    break;
+                }
+            }
+
             vm.scheme.entity_fields.splice($index, 1);
         };
 
