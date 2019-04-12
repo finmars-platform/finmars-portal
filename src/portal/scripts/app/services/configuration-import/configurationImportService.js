@@ -328,6 +328,8 @@
 
             configurationImportSyncService.syncItem(item, contentType, cacheContainer).then(function (value) {
 
+                console.log('Overwrite item', item);
+
                 try {
 
                     switch (contentType) {
@@ -405,7 +407,7 @@
                                     }
                                 };
 
-                                    instrumentSchemeService.getList(options).then(function (data) {
+                                instrumentSchemeService.getList(options).then(function (data) {
 
                                     var result;
 
@@ -651,6 +653,8 @@
 
             var promises = [];
 
+            console.log('overwriteEntityItems.entities', entities);
+
             entities.forEach(function (entityItem) {
 
                 promises.push(new Promise(function (resolveItem, reject) {
@@ -682,7 +686,7 @@
         return new Promise(function (resolve, reject) {
 
             var overwriteEntities = items.filter(function (item) {
-                return ['instruments.instrumenttype', 'transactions.transactiontype',
+                return ['instruments.instrumenttype', 'transactions.transactiontype', 'ui.listlayout', 'ui.reportlayout',
                     'accounts.accounttype', 'currencies.currency', 'instruments.pricingpolicy',
                     'csv_import.scheme', 'integrations.instrumentdownloadscheme', 'integrations.pricedownloadscheme',
                     'integrations.complextransactionimportscheme'].indexOf(item.entity) !== -1;
