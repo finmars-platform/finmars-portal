@@ -1,6 +1,6 @@
-<div data-ng-controller="TransactionTypeActionsTabController as vm">
+<div >
     <div class="transaction-type-actions-tab-view">
-        <v-accordion class="vAccordion--default" multiple control="accordion">
+        <v-accordion class="vAccordion--default" multiple control="vm.accordion">
 
             <v-pane data-ng-repeat="item in vm.entity.actions" expanded="item.isPaneExpanded">
                 <v-pane-header inactive class="transaction-type-action-pane">

@@ -133,6 +133,10 @@ app.controller('EntityViewerEditDialogController', ['$scope', '$mdDialog', '$sta
 app.controller('EntityViewerDeleteDialogController', ['$scope', '$mdDialog', 'entity', 'entityType', require('./app/controllers/entityViewer/entityViewerDeleteDialogController')]);
 app.controller('ReportWizardController', ['$scope', require('./app/controllers/entityViewer/onBeforeLoadActions/reportWizardController')]);
 
+app.controller('TransactionTypeAddDialogController', ['$scope', '$mdDialog', '$state', 'entityType', 'entity', require('./app/controllers/entityViewer/transactionTypeAddDialogController')]);
+app.controller('TransactionTypeEditDialogController', ['$scope', '$mdDialog', '$state', 'entityType', 'entityId', require('./app/controllers/entityViewer/transactionTypeEditDialogController')]);
+
+
 app.controller('EntityViewerPermissionEditorController', ['$scope', require('./app/controllers/entityViewer/entityViewerPermissionEditorController')]);
 
 app.controller('ComplexTransactionSpecialRulesController', ['$scope', require('./app/controllers/special-rules/complexTransactionSpecialRulesController')]);

@@ -1,18 +1,18 @@
 <md-dialog aria-label="" ng-cloak class="success-dialog">
     <md-toolbar>
         <div class="md-toolbar-tools">
-            <h2>{{vm.success.title}}</h2>
+            <h2 data-ng-bind-html="vm.success.title"></h2>
             <span flex></span>
         </div>
     </md-toolbar>
-    <md-dialog-content  >
+    <md-dialog-content>
         <div class="success-text">
-            <p>{{vm.success.description}}</p>
+            <p data-ng-bind-html="vm.success.description"></p>
         </div>
     </md-dialog-content>
     <md-dialog-actions layout="row">
         <!--<md-button ng-click="vm.cancel()">-->
-            <!--Cancel-->
+        <!--Cancel-->
         <!--</md-button>-->
         <md-button ng-click="vm.agree()" style="margin-right:20px;">
             OK
