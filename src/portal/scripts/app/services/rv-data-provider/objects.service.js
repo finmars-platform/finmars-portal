@@ -4,7 +4,7 @@
     var sortService = require('./sort.service');
     var metaHelper = require('../../helpers/meta.helper')
 
-    var taskId = null;
+    var reportRecievedAt = null;
     var items = [];
     var itemsCache = [];
 
@@ -23,13 +23,16 @@
 
             var reportOptions = entityViewerDataService.getReportOptions();
 
-            if (taskId == null) {
-                taskId = reportOptions.task_id;
+            console.log('getList.reportRecievedAt', reportRecievedAt);
+            console.log('getList.itemsCache', itemsCache);
+
+            if (reportRecievedAt == null) {
+                reportRecievedAt = reportOptions.recieved_at;
                 itemsCache = metaHelper.recursiveDeepCopy(reportOptions.items);
             }
 
-            if (taskId !== reportOptions.task_id) {
-                taskId = reportOptions.task_id;
+            if (reportRecievedAt !== reportOptions.recieved_at) {
+                reportRecievedAt = reportOptions.recieved_at;
                 itemsCache = metaHelper.recursiveDeepCopy(reportOptions.items);
             }
 

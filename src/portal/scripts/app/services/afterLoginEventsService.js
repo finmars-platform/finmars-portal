@@ -180,11 +180,17 @@
             });
 
             var notificationDateEvents = newEvents.filter(function (event) {
-                return notificationDateIds.indexOf(event.event_schedule_object.notification_class) !== -1;
+                if (event.event_schedule_object) {
+                    return notificationDateIds.indexOf(event.event_schedule_object.notification_class) !== -1;
+                }
+                return false
             });
 
             var effectiveDateEvents = newEvents.filter(function (event) {
-                return effectiveDateIds.indexOf(event.event_schedule_object.notification_class) !== -1;
+                if (event.event_schedule_object) {
+                    return effectiveDateIds.indexOf(event.event_schedule_object.notification_class) !== -1;
+                }
+                return false;
             });
 
             var $event = new Event('click');

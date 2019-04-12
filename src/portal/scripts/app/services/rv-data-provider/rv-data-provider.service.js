@@ -101,7 +101,9 @@
         delete reportOptions.item_currency_fx_rates;
         delete reportOptions.item_currencies;
         delete reportOptions.item_accounts;
+
         reportOptions.task_id = null;
+
         entityViewerDataService.setReportOptions(reportOptions);
 
         // console.log('requestReport started');
@@ -112,6 +114,10 @@
 
             reportOptions = Object.assign({}, reportOptions);
 
+            reportOptions.recieved_at = new Date().getTime();
+
+            console.log('reportOptions', reportOptions);
+
             if (reportOptions.items && reportOptions.items.length) {
 
                 reportOptions.items = reportHelper.injectIntoItems(reportOptions.items, reportOptions);
@@ -119,17 +125,13 @@
 
                 reportOptions.items = reportHelper.calculateMarketValueAndExposurePercents(reportOptions.items, reportOptions);
 
-                entityViewerDataService.setReportOptions(reportOptions);
-
-                entityViewerDataService.setStatusData('loaded');
-
-                createDataStructure(entityViewerDataService, entityViewerEventService)
-
-            } else {
-
-                entityViewerDataService.setStatusData('loaded');
-                entityViewerEventService.dispatchEvent(evEvents.DATA_LOAD_END);
             }
+
+            entityViewerDataService.setReportOptions(reportOptions);
+
+            entityViewerDataService.setStatusData('loaded');
+
+            createDataStructure(entityViewerDataService, entityViewerEventService)
 
         });
 
