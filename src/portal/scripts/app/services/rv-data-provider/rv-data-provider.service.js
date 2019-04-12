@@ -45,7 +45,7 @@
 
             }).catch(function (reason) {
 
-                console.log('here?');
+                // console.log('here?');
 
             })
         });
@@ -116,7 +116,7 @@
 
             reportOptions.recieved_at = new Date().getTime();
 
-            console.log('reportOptions', reportOptions);
+            // console.log('reportOptions', reportOptions);
 
             if (reportOptions.items && reportOptions.items.length) {
 
