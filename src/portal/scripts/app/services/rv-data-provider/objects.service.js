@@ -23,8 +23,8 @@
 
             var reportOptions = entityViewerDataService.getReportOptions();
 
-            console.log('getList.reportRecievedAt', reportRecievedAt);
-            console.log('getList.itemsCache', itemsCache);
+            // console.log('getList.reportRecievedAt', reportRecievedAt);
+            // console.log('getList.itemsCache', itemsCache);
 
             if (reportRecievedAt == null) {
                 reportRecievedAt = reportOptions.recieved_at;
