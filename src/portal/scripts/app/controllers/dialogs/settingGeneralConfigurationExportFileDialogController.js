@@ -533,7 +533,7 @@
                     return "Report builder layouts";
                 case 'ui.bookmark':
                     return "Bookmarks";
-                case 'csv_import.scheme':
+                case 'csv_import.csvimportscheme':
                     return "Data import from CSV schemes";
                 case 'integrations.instrumentdownloadscheme':
                     return "Instrument Download Schemes";
@@ -581,7 +581,7 @@
 
             if (item.hasOwnProperty('name')) {
 
-                // csv_import.scheme
+                // csv_import.csvimportscheme
                 if (item.hasOwnProperty('csv_fields')) {
                     return item.name + ' (' + metaContentTypesService.getEntityNameByContentType(item.content_type) + ')'
                 }

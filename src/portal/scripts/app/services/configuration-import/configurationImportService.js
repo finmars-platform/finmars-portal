@@ -8,7 +8,7 @@
     var entityResolverService = require('../../services/entityResolverService');
     var attributeTypeService = require('../../services/attributeTypeService');
 
-    var entitySchemeService = require('../../services/import/entitySchemeService');
+    var csvImportSchemeService = require('../../services/import/csvImportSchemeService');
     var priceDownloadSchemeService = require('../../services/import/priceDownloadSchemeService');
     var instrumentSchemeService = require('../../services/import/instrumentSchemeService');
     var transactionSchemeService = require('../../services/import/transactionSchemeService');
@@ -352,7 +352,7 @@
                         case 'import.pricingautomatedschedule':
                             resolve(pricingAutomatedScheduleService.updateSchedule(item));
                             break;
-                        case 'csv_import.scheme':
+                        case 'csv_import.csvimportscheme':
                             resolve(new Promise(function (resolveLocal, reject) {
 
 
@@ -362,7 +362,7 @@
                                     }
                                 };
 
-                                entitySchemeService.getList(options).then(function (data) {
+                                csvImportSchemeService.getList(options).then(function (data) {
 
                                     var result;
 
@@ -380,16 +380,16 @@
 
                                             item.id = result.id;
 
-                                            resolveLocal(entitySchemeService.update(item.id, item))
+                                            resolveLocal(csvImportSchemeService.update(item.id, item))
 
                                         } else {
 
-                                            resolveLocal(entitySchemeService.create(item));
+                                            resolveLocal(csvImportSchemeService.create(item));
                                         }
 
                                     } else {
 
-                                        resolveLocal(entitySchemeService.create(item));
+                                        resolveLocal(csvImportSchemeService.create(item));
                                     }
 
                                 })
@@ -688,7 +688,7 @@
             var overwriteEntities = items.filter(function (item) {
                 return ['instruments.instrumenttype', 'transactions.transactiontype', 'ui.listlayout', 'ui.reportlayout',
                     'accounts.accounttype', 'currencies.currency', 'instruments.pricingpolicy',
-                    'csv_import.scheme', 'integrations.instrumentdownloadscheme', 'integrations.pricedownloadscheme',
+                    'csv_import.csvimportscheme', 'integrations.instrumentdownloadscheme', 'integrations.pricedownloadscheme',
                     'integrations.complextransactionimportscheme'].indexOf(item.entity) !== -1;
             });
 
@@ -987,10 +987,10 @@
 
                             }));
                             break;
-                        case 'csv_import.scheme':
+                        case 'csv_import.csvimportscheme':
                             resolve(new Promise(function (resolveLocal, reject) {
 
-                                entitySchemeService.getList({
+                                csvImportSchemeService.getList({
                                     filters: {
                                         name: item.name,
                                         content_type: item.content_type
@@ -1027,13 +1027,13 @@
 
                                         } else {
 
-                                            resolveLocal(entitySchemeService.create(item));
+                                            resolveLocal(csvImportSchemeService.create(item));
 
                                         }
 
                                     } else {
 
-                                        resolveLocal(entitySchemeService.create(item));
+                                        resolveLocal(csvImportSchemeService.create(item));
 
                                     }
 
