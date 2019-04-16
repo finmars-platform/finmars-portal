@@ -8,10 +8,6 @@
     var rvHelper = require('./rv.helper');
     var evDataHelper = require('./ev-data.helper');
 
-    var getDataAsFlatObjects = function(evDataService){
-
-    };
-
     var getGroupsByParent = function (parentId, evDataService) {
 
         var items = evDataService.getDataAsList();
@@ -83,11 +79,11 @@
 
         var dataList = [];
         var groups = evDataService.getGroups();
+        var rootGroupOptions = evDataService.getRootGroupOptions();
 
         Object.keys(data).forEach(function (key) {
             dataList.push(data[key])
         });
-
 
         var subtotalObj;
 
@@ -95,65 +91,102 @@
 
             if (item.results.length) {
 
-                groups.forEach(function (group, index) {
+                if (item.___level === 0 && rootGroupOptions.subtotal_type) {
 
-                    if (item.___level === index + 1 && item.___level <= groups.length) {
+                    subtotalObj = Object.assign({}, item.subtotal, {
+                        ___group_name: item.___group_name,
+                        ___type: 'subtotal',
+                        ___parentId: item.___id,
+                        ___level: 0
+                    });
 
-                        subtotalObj = Object.assign({}, item.subtotal, {
-                            ___group_name: item.___group_name,
-                            ___type: 'subtotal',
-                            ___parentId: item.___id,
-                            ___level: item.___level + 1
-                        });
-
-                        if (group.report_settings.subtotal_type === 'line') {
-
+                    switch (rootGroupOptions.subtotal_type) {
+                        case "line":
                             subtotalObj.___id = evRvCommonHelper.getId(subtotalObj);
                             subtotalObj.___subtotal_type = 'line';
-
                             item.results.unshift(subtotalObj);
-
-                        }
-
-                        if (group.report_settings.subtotal_type === 'area') {
-
-                            subtotalObj.___subtotal_type = 'proxyline';
-                            subtotalObj.___id = evRvCommonHelper.getId(subtotalObj);
-
-                            item.results.unshift(JSON.parse(JSON.stringify(subtotalObj)));
-
-
+                            break;
+                        case "area":
                             subtotalObj.___subtotal_type = 'area';
                             subtotalObj.___id = evRvCommonHelper.getId(subtotalObj);
-
-
                             item.results.push(subtotalObj);
-
-                        }
-
-                        if (group.report_settings.subtotal_type === 'arealine') {
-
+                            break;
+                        case "arealine":
                             subtotalObj.___subtotal_type = 'arealine';
-
 
                             subtotalObj.___subtotal_subtype = 'line';
                             subtotalObj.___id = evRvCommonHelper.getId(subtotalObj);
-
                             item.results.unshift(JSON.parse(JSON.stringify(subtotalObj)));
-
 
                             subtotalObj.___subtotal_subtype = 'area';
                             subtotalObj.___id = evRvCommonHelper.getId(subtotalObj);
-
                             item.results.push(subtotalObj);
+                            break;
+                    }
+
+                } else {
+
+                    groups.forEach(function (group, index) {
+
+                        if (item.___level === index + 1 && item.___level <= groups.length) {
+
+                            subtotalObj = Object.assign({}, item.subtotal, {
+                                ___group_name: item.___group_name,
+                                ___type: 'subtotal',
+                                ___parentId: item.___id,
+                                ___level: item.___level + 1
+                            });
+
+                            if (group.report_settings.subtotal_type === 'line') {
+
+                                subtotalObj.___id = evRvCommonHelper.getId(subtotalObj);
+                                subtotalObj.___subtotal_type = 'line';
+
+                                item.results.unshift(subtotalObj);
+
+                            }
+
+                            if (group.report_settings.subtotal_type === 'area') {
+
+                                subtotalObj.___subtotal_type = 'proxyline';
+                                subtotalObj.___id = evRvCommonHelper.getId(subtotalObj);
+
+                                item.results.unshift(JSON.parse(JSON.stringify(subtotalObj)));
+
+
+                                subtotalObj.___subtotal_type = 'area';
+                                subtotalObj.___id = evRvCommonHelper.getId(subtotalObj);
+
+
+                                item.results.push(subtotalObj);
+
+                            }
+
+                            if (group.report_settings.subtotal_type === 'arealine') {
+
+                                subtotalObj.___subtotal_type = 'arealine';
+
+
+                                subtotalObj.___subtotal_subtype = 'line';
+                                subtotalObj.___id = evRvCommonHelper.getId(subtotalObj);
+
+                                item.results.unshift(JSON.parse(JSON.stringify(subtotalObj)));
+
+
+                                subtotalObj.___subtotal_subtype = 'area';
+                                subtotalObj.___id = evRvCommonHelper.getId(subtotalObj);
+
+                                item.results.push(subtotalObj);
+
+
+                            }
 
 
                         }
 
+                    })
 
-                    }
-
-                })
+                }
 
             }
 
@@ -419,11 +452,13 @@
 
     var getFlatStructure = function (evDataService) {
 
+        var rootGroupOptions = evDataService.getRootGroupOptions();
+
         var groups = evDataService.getGroups();
 
         var data;
 
-        if (groups.length) {
+        if (groups.length || rootGroupOptions.subtotal_type) {
 
             console.time("Calculating subtotals");
 
@@ -451,7 +486,7 @@
 
         var tree = utilsHelper.convertToTree(data, rootGroup);
 
-        // console.log('getFlatStructure.tree', tree);
+        console.log('getFlatStructure.tree', tree);
 
         var list = utilsHelper.convertTreeToList(tree);
 
