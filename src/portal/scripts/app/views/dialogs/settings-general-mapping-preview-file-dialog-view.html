@@ -53,14 +53,17 @@
     </md-dialog-content>
     <md-dialog-actions layout="row" layout-align="space-between">
 
-        <!--<div>-->
+        <div>
 
-            <!--<md-button class="md-raised {{vm.overwriteOption ? 'active-button' : ''}}"-->
-                       <!--ng-click="vm.overwriteOption = !vm.overwriteOption" style="margin-right:20px;" aria-label="overwrite button">-->
-                <!--Overwrite-->
-            <!--</md-button>-->
+            <div class="p-t-8">
+                <md-checkbox ng-checked="vm.settings.mode === 'overwrite'" data-ng-click="vm.toggleMode('overwrite')"
+                             aria-label="checkbox">
+                </md-checkbox>
 
-        <!--</div>-->
+                <b>Overwrite existing data</b>
+            </div>
+
+        </div>
 
         <div layout="row">
 

@@ -21,8 +21,27 @@
 
         vm.readyStatus = {attribute: false, permissions: false};
 
-         vm.entityType = data.entityType;
+        vm.entityType = data.entityType;
         vm.attributeId = data.attributeId;
+
+        vm.valueTypes = [
+            {
+                name: 'Number',
+                value: 20
+            },
+            {
+                name: 'Text',
+                value: 10
+            },
+            {
+                name: 'Date',
+                value: 40
+            },
+            {
+                name: 'Classification',
+                value: 30
+            }
+        ];
 
         //attributeTypeService.getByKey("generic", vm.attributeId).then(function (data) {
         attributeTypeService.getByKey(vm.entityType, vm.attributeId).then(function (data) {
@@ -128,7 +147,7 @@
 
         console.log('vm.attribute', vm.attribute);
 
-        vm.valueTypes = metaService.getDynamicAttrsValueTypesCaptions();
+        // vm.valueTypes = metaService.getDynamicAttrsValueTypesCaptions();
 
         vm.agree = function () {
             console.log('vm.attr', vm.attribute);

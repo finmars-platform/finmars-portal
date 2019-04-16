@@ -5,7 +5,7 @@
             <span flex></span>
         </div>
     </md-toolbar>
-    <md-dialog-content  >
+    <md-dialog-content>
         <div layout="row">
             <div data-ng-if="vm.readyStatus.attribute" style="width: 100%">
                 <md-tabs md-dynamic-height md-border-bottom class="tabs-colored">
@@ -27,28 +27,21 @@
                                     <md-input-container class="md-block">
                                         <label>Attribute type</label>
                                         <md-select ng-model="vm.attribute['value_type']" disabled>
-                                            <md-option ng-repeat="valueType in vm.valueTypes"
-                                                       value="{{valueType.value}}">
-                                                {{valueType['caption_name']}}
+                                            <md-option ng-repeat="item in vm.valueTypes"
+                                                       value="{{item.value}}">
+                                                {{item['name']}}
                                             </md-option>
                                         </md-select>
                                     </md-input-container>
                                 </div>
                                 <div data-ng-if="!vm.editRestriction" flex-gt-sm>
                                     <md-input-container class="md-block">
-                                        <!--<label>Attribute type</label>
-                                        <md-select ng-model="vm.attribute['value_type']">
-                                            <md-option ng-repeat="valueType in vm.valueTypes"
-                                                       value="{{valueType.value}}">
-                                                {{valueType['caption_name']}}
-                                            </md-option>
-                                        </md-select>-->
 
-                                        <label>Attribute typ</label>
+                                        <label>Attribute type</label>
                                         <md-select ng-model="vm.attribute['value_type']"
                                                    md-container-class="common-select-container"
                                                    md-on-close="searchTerm = ''">
-                                            <div nf-if="vm.valueTypes && vm.valueTypes.length > 0">
+                                            <div>
                                                 <md-select-header>
                                                     <input data-ng-model="searchTerm"
                                                            type="search"
@@ -60,9 +53,9 @@
                                                 <div class="select-options-holder">
 
                                                     <md-option
-                                                            data-ng-repeat="valueType in vm.valueTypes | filter: {name: searchTerm}"
-                                                            value="valueType.value">
-                                                        {{valueType['caption_name']}}
+                                                            data-ng-repeat="item in vm.valueTypes | filter: {name: searchTerm}"
+                                                            ng-value="item.value">
+                                                        {{item.name}}
                                                     </md-option>
 
                                                 </div>
