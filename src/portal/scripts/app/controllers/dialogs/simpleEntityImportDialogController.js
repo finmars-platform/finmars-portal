@@ -33,7 +33,8 @@
 
         vm.config = {
             delimiter: ',',
-            error_handler: 'break'
+            error_handler: 'break',
+            mode: 'skip'
         };
 
         vm.loadIsAvailable = function () {
@@ -96,6 +97,7 @@
             formData.append('scheme', vm.config.scheme);
             formData.append('error_handler', vm.config.error_handler);
             formData.append('delimiter', vm.config.delimiter);
+            formData.append('mode', vm.config.mode);
 
             console.log('vm.config', vm.config);
 
@@ -168,6 +170,7 @@
             formData.append('scheme', vm.config.scheme);
             formData.append('error_handler', vm.config.error_handler);
             formData.append('delimiter', vm.config.delimiter);
+            formData.append('mode', vm.config.mode);
 
             console.log('vm.config', vm.config);
 

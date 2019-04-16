@@ -22,39 +22,31 @@
         vm.readyStatus = {attribute: true, permissions: false};
 
         // vm.entityType = data.entityType;
-        
+
         vm.editRestriction = false;
         vm.setUserCode = true;
         console.log('vm.attribute', vm.attribute);
 
 
+            vm.valueTypes = [
+            {
+                name: 'Number',
+                value: 20
+            },
+            {
+                name: 'Text',
+                value: 10
+            },
+            {
+                name: 'Date',
+                value: 40
+            },
+            {
+                name: 'Classification',
+                value: 30
+            }
+        ];
 
-
-
-        vm.valueTypes = [];
-        // vm.valueTypes = metaService.getValueTypes().filter(function (item) {
-        //     return item.value !== 30 && item.value !== 'decoration';
-        // });
-
-        // vm.valueTypes = vm.valueTypes.map(function (item) {
-
-        //     switch (item['display_name']){
-        //         case 'Number':
-        //             item['caption_name'] = 'Integer';
-        //             break;
-        //         case 'Float':
-        //             item['caption_name'] = 'Number with decimals';
-        //             break;
-        //         case 'Field':
-        //             item['caption_name'] = 'Classification';
-        //             break;
-        //         default:
-        //             item['caption_name'] = item['display_name'];
-        //             break;
-        //     }
-
-        //     return item;
-        // });
         vm.loadPermissions = function () {
 
             var promises = [];
@@ -149,7 +141,7 @@
 
         vm.loadPermissions();
 
-        vm.valueTypes = metaService.getDynamicAttrsValueTypesCaptions();
+        // vm.valueTypes = metaService.getDynamicAttrsValueTypesCaptions();
         console.log("Value type is ", vm.valueTypes);
 
         vm.agree = function () {

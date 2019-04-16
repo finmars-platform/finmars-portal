@@ -25,13 +25,6 @@
                             </div>
 
                             <md-input-container>
-                                <!--<label>Choose entity</label>
-                                <md-select data-ng-model="vm.activeContentType"
-                                           data-ng-change="vm.updateEntitySchemes()">
-                                    <md-option data-ng-repeat="entity in vm.contentTypes" ng-value="entity.key">
-                                        {{ entity.name }}
-                                    </md-option>
-                                </md-select>-->
 
                                 <label for="">Choose entity</label>
                                 <md-select ng-model="vm.activeContentType"
@@ -63,14 +56,6 @@
                             <div layout="row">
 
                                 <md-input-container>
-                                    <!--<label>Import scheme</label>
-                                    <md-select style="width: 200px"
-                                               data-ng-model="vm.config.scheme">
-                                        <md-option data-ng-repeat="item in vm.entitySchemes" ng-value="item.id">
-                                            {{item.name}}
-                                        </md-option>
-                                        <md-option data-ng-click="vm.createScheme($event)">Add scheme</md-option>
-                                    </md-select>-->
 
                                     <label for="">Import scheme</label>
                                     <md-select ng-model="vm.config.scheme"
@@ -93,7 +78,8 @@
                                                         ng-value="item.id"
                                                         ng-bind="item.name">
                                                 </md-option>
-                                                <md-option data-ng-click="vm.createScheme($event)">Add scheme</md-option>
+                                                <md-option data-ng-click="vm.createScheme($event)">Add scheme
+                                                </md-option>
                                             </div>
                                         </div>
                                     </md-select>
@@ -133,6 +119,14 @@
                                     <md-option value=",">Comma (,)</md-option>
                                     <md-option value=";">Semicolon (;)</md-option>
                                     <md-option value="\t">Tab</md-option>
+                                </md-select>
+                            </md-input-container>
+
+                            <md-input-container>
+                                <label>Mode</label>
+                                <md-select data-ng-model="vm.config.mode">
+                                    <md-option value="skip">Skip if exists</md-option>
+                                    <md-option value="overwrite">Overwrite</md-option>
                                 </md-select>
                             </md-input-container>
 

@@ -18,7 +18,17 @@
 
         vm.items = file.body;
 
-        vm.overwriteOption = false;
+        vm.settings = {};
+
+        vm.toggleMode = function (mode) {
+
+            if (vm.settings.mode === mode) {
+                vm.settings.mode = null
+            } else {
+                vm.settings.mode = mode
+            }
+
+        };
 
         vm.items.forEach(function (item) {
 
@@ -128,18 +138,15 @@
             parent.content.forEach(function (item) {
                 if (item.active) {
                     ChildIsActive = true;
-                }
-                else {
+                } else {
                     ChildIsNotActive = true;
                 }
 
                 if (ChildIsActive && !ChildIsNotActive) {
                     parentIsActive = true;
-                }
-                else if (!ChildIsActive && ChildIsNotActive) {
+                } else if (!ChildIsActive && ChildIsNotActive) {
                     parent.someChildsActive = false;
-                }
-                else {
+                } else {
                     parentIsActive = false;
                     parent.someChildsActive = true;
                 }
@@ -151,24 +158,68 @@
 
         };
 
-        function handleItem(entity, item) {
+        function getEntityTypeByMappingContentType(contentType) {
 
-            return new Promise(function (resolve, reject) {
+            if (contentType === 'integrations.portfoliomapping') {
+                return 'portfolio'
+            }
 
-                mapContentObj(entity, item).then(function (item) {
+            if (contentType === 'integrations.currencymapping') {
+                return 'currency'
+            }
 
-                    createIfNotExists(entity, item).then(function () {
+            if (contentType === 'integrations.instrumenttypemapping') {
+                return 'instrument-type'
+            }
 
-                        console.log('entity', entity);
-                        console.log('item', item);
+            if (contentType === 'integrations.accountmapping') {
+                return 'account'
+            }
 
-                        resolve();
+            if (contentType === 'integrations.instrumentmapping') {
+                return 'instrument'
+            }
 
-                    })
-                })
+            if (contentType === 'integrations.counterpartymapping') {
+                return 'counterparty'
+            }
 
+            if (contentType === 'integrations.responsiblemapping') {
+                return 'responsible'
+            }
 
-            })
+            if (contentType === 'integrations.strategy1mapping') {
+                return 'strategy-1'
+            }
+
+            if (contentType === 'integrations.strategy2mapping') {
+                return 'strategy-2'
+            }
+
+            if (contentType === 'integrations.strategy3mapping') {
+                return 'strategy-3'
+            }
+
+            if (contentType === 'integrations.periodicitymapping') {
+                return 'periodicity'
+            }
+
+            if (contentType === 'integrations.dailypricingmodelmapping') {
+                return 'daily-pricing-model'
+            }
+
+            if (contentType === 'integrations.paymentsizedetailmapping') {
+                return 'payment-size-detail'
+            }
+
+            if (contentType === 'integrations.accrualcalculationmodelmapping') {
+                return 'accrual-calculation-model'
+            }
+
+            if (contentType === 'integrations.pricedownloadschememapping') {
+                return 'price-download-scheme'
+            }
+
 
         }
 
@@ -242,6 +293,8 @@
 
                     }
 
+                    console.log("MAP OBJECT ", item);
+
                     resolve(item);
 
                 });
@@ -249,119 +302,186 @@
             })
         }
 
-        function createIfNotExists(entity, item) {
+        function deleteIfOverwrite(entityType, mode, mappings) {
+            return new Promise(function (resolve, reject) {
+
+                if (mode === 'overwrite') {
+
+                    var promises = [];
+
+                    mappings.forEach(function (item) {
+
+                        promises.push(entityTypeMappingResolveService.deleteByKey(entityType, item.id))
+
+                    });
+
+                    Promise.all(promises).then(function (value) {
+                        resolve([]);
+                    })
+
+
+                } else {
+                    resolve(mappings)
+                }
+
+            })
+        }
+
+        function mapItem(item, existingMappings, entityType, errors) {
 
             return new Promise(function (resolve, reject) {
 
-                var mappingOptions = {
-                    filters: {
-                        'content_object': item.content_object,
-                        'value': item.value
-                    }
-                };
+                var exists = false;
+                var existingItem;
 
-                entityTypeMappingResolveService.getList(entity, mappingOptions).then(function (data) {
+                existingMappings.forEach(function (existingMappingItem) {
 
-                    var exist = false;
-
-                    if (data.results.length) {
-
-                        data.results.forEach(function (serverItem) {
-
-                            if (serverItem.value === item.value) {
-                                exist = true;
-                            }
-
-                        })
-
-                    }
-
-                    if (!exist) {
-
-                        entityTypeMappingResolveService.create(entity, item).then(function (data) {
-
-                            resolve(data);
-
-                        })
-
-                    } else {
-
-                        resolve();
-
+                    if (existingMappingItem.value === item.value) {
+                        exists = true;
+                        existingItem = existingMappingItem;
                     }
 
 
                 });
 
-            })
+                if (exists === false) {
 
-        }
+                    mapContentObj(entityType, item).then(function (resultItem) {
 
-        function importConfiguration(items) {
+                        // console.log('resultItem', resultItem);
 
-            return new Promise(function (resolve, reject) {
+                        if (resultItem.content_object) {
 
-                var promises = [];
+                            entityTypeMappingResolveService.create(entityType, resultItem).then(function (data) {
 
-                items.forEach(function (entityItem) {
+                                resolve(data);
 
-                    entityItem.content.forEach(function (item) {
+                            })
 
-                        if (item.active) {
+                        } else {
 
-                            switch (entityItem.entity) {
+                            var code = '';
 
-                                case 'integrations.portfoliomapping':
-                                    promises.push(handleItem('portfolio', item));
-                                    break;
-                                case 'integrations.currencymapping':
-                                    promises.push(handleItem('currency', item));
-                                    break;
-                                case 'integrations.instrumenttypemapping':
-                                    promises.push(handleItem('instrument-type', item));
-                                    break;
-                                case 'integrations.accountmapping':
-                                    promises.push(handleItem('account', item));
-                                    break;
-                                case 'integrations.instrumentmapping':
-                                    promises.push(handleItem('instrument', item));
-                                    break;
-                                case 'integrations.counterpartymapping':
-                                    promises.push(handleItem('counterparty', item));
-                                    break;
-                                case 'integrations.responsiblemapping':
-                                    promises.push(handleItem('responsible', item));
-                                    break;
-                                case 'integrations.strategy1mapping':
-                                    promises.push(handleItem('strategy-1', item));
-                                    break;
-                                case 'integrations.strategy2mapping':
-                                    promises.push(handleItem('strategy-2', item));
-                                    break;
-                                case 'integrations.strategy3mapping':
-                                    promises.push(handleItem('strategy-3', item));
-                                    break;
-                                case 'integrations.periodicitymapping':
-                                    promises.push(handleItem('periodicity', item));
-                                    break;
-                                case 'integrations.dailypricingmodelmapping':
-                                    promises.push(handleItem('daily-pricing-model', item));
-                                    break;
-                                case 'integrations.paymentsizedetailmapping':
-                                    promises.push(handleItem('payment-size-detail', item));
-                                    break;
-                                case 'integrations.accrualcalculationmodelmapping':
-                                    promises.push(handleItem('accrual-calculation-model', item));
-                                    break;
-                                case 'integrations.pricedownloadschememapping':
-                                    promises.push(handleItem('price-download-scheme', item));
-                                    break;
-
+                            if (resultItem.___user_code) {
+                                code = resultItem.___user_code;
                             }
+
+                            if (resultItem.___system_code) {
+                                code = resultItem.___system_code;
+                            }
+
+                            errors.push({
+                                item: {
+                                    name: code
+                                },
+                                error: {
+                                    message: 'Content object for code ' + code + 'does not exist (Mapping: ' + item.value + ')'
+                                }
+                            });
+
+                            resolve(resultItem);
 
                         }
 
                     })
+
+                } else {
+
+                    var code = '';
+
+                    if (item.___user_code) {
+                        code = item.___user_code;
+                    }
+
+                    if (item.___system_code) {
+                        code = item.___system_code;
+                    }
+
+                    errors.push({
+                        item: {
+                            name: code
+                        },
+                        error: {
+                            message: 'Mapping: ' + item.value + ' for Content Object with user_code ' + code + ' already exists'
+                        }
+                    });
+
+                    resolve(item);
+                }
+
+
+            })
+
+        }
+
+        function mapEntityItems(entityItem, errors) {
+
+            return new Promise(function (resolve, reject) {
+
+                var mappingOptions = {
+                    pageSize: 1000
+                };
+
+                var entityType = getEntityTypeByMappingContentType(entityItem.entity);
+
+                // console.log('entityItem.entity', entityItem.entity);
+                // console.log('entityType', entityType);
+
+                entityTypeMappingResolveService.getList(entityType, mappingOptions).then(function (data) {
+
+                    var existingMappings = data.results;
+
+                    deleteIfOverwrite(entityType, vm.settings.mode, existingMappings).then(function (resultMappings) {
+
+                        existingMappings = resultMappings;
+
+                        // console.log('existingMappings', existingMappings);
+
+                        var promises = [];
+
+                        entityItem.content.forEach(function (item) {
+
+                            if (item.active) {
+
+                                promises.push(mapItem(item, existingMappings, entityType, errors))
+
+                            }
+
+
+                        });
+
+                        Promise.all(promises).then(function (data) {
+
+                            // console.log('Entities imported');
+
+                            resolve(data)
+
+                        })
+
+                    })
+
+                })
+
+
+            })
+
+
+        }
+
+        function importConfiguration(entities, errors) {
+
+            return new Promise(function (resolve, reject) {
+
+                var promises = [];
+                var errors = [];
+
+                entities.forEach(function (entityItem) {
+
+                    if (entityItem.active) {
+
+                        promises.push(mapEntityItems(entityItem, errors))
+
+                    }
 
                 });
 
@@ -369,7 +489,10 @@
 
                     console.log("import success", data);
 
-                    resolve(data);
+                    resolve({
+                        data: data,
+                        errors: errors
+                    });
 
 
                 })
@@ -380,26 +503,56 @@
 
         vm.agree = function ($event) {
 
-            importConfiguration(vm.items).then(function (value) {
+            importConfiguration(vm.items).then(function (data) {
 
                 $mdDialog.hide({status: 'agree', data: {}});
 
-                $mdDialog.show({
-                    controller: 'SuccessDialogController as vm',
-                    templateUrl: 'views/dialogs/success-dialog-view.html',
-                    targetEvent: $event,
-                    preserveScope: true,
-                    multiple: true,
-                    autoWrap: true,
-                    skipHide: true,
-                    locals: {
-                        success: {
-                            title: "",
-                            description: "You have successfully imported mapping file"
-                        }
-                    }
+                if (data.errors.length) {
 
-                });
+                    $mdDialog.show({
+                        controller: 'SettingGeneralMappingPreviewFileErrorsDialogController as vm',
+                        templateUrl: 'views/dialogs/settings-general-mapping-preview-file-errors-dialog-view.html',
+                        targetEvent: $event,
+                        preserveScope: true,
+                        multiple: true,
+                        autoWrap: true,
+                        skipHide: true,
+                        locals: {
+                            data: {
+                                errors: data.errors.map(function (errorItem) {
+                                    return {
+
+                                        item: errorItem.item,
+                                        error: errorItem.error.message
+
+                                    }
+                                })
+                            }
+                        }
+
+                    });
+
+
+                } else {
+
+                    $mdDialog.show({
+                        controller: 'SuccessDialogController as vm',
+                        templateUrl: 'views/dialogs/success-dialog-view.html',
+                        targetEvent: $event,
+                        preserveScope: true,
+                        multiple: true,
+                        autoWrap: true,
+                        skipHide: true,
+                        locals: {
+                            success: {
+                                title: "Success",
+                                description: "You have successfully imported mapping file"
+                            }
+                        }
+
+                    });
+
+                }
 
 
             })

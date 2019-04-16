@@ -231,6 +231,10 @@ app.controller('SettingGeneralConfigurationPreviewFileErrorsDialogController', [
 app.controller('SettingGeneralConfigurationExportFileDialogController', ['$scope', '$mdDialog', require('./app/controllers/dialogs/settingGeneralConfigurationExportFileDialogController')]);
 app.controller('SettingGeneralMappingPreviewFileDialogController', ['$scope', '$mdDialog', 'file', require('./app/controllers/dialogs/settingGeneralMappingPreviewFileDialogController')]);
 app.controller('SettingGeneralMappingExportFileDialogController', ['$scope', '$mdDialog', require('./app/controllers/dialogs/settingGeneralMappingExportFileDialogController')]);
+app.controller('SettingGeneralMappingPreviewFileErrorsDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/settingGeneralMappingPreviewFileErrorsDialogController')]);
+
+
+
 app.controller('CreateConfigurationDialogController', ['$scope', '$mdDialog', require('./app/controllers/dialogs/createConfigurationDialogController')]);
 app.controller('EditConfigurationDialogController', ['$scope', '$mdDialog', 'item', require('./app/controllers/dialogs/editConfigurationDialogController')]);
 
