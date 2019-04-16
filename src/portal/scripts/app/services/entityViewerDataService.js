@@ -74,6 +74,7 @@
         var data = {
             columns: [],
             groups: [],
+            rootGroupOptions: {},
             filters: [],
             pagination: {
                 page: 1,
@@ -164,6 +165,14 @@
 
         function getGroups() {
             return data.groups;
+        }
+
+        function setRootGroupOptions(options) {
+            data.rootGroupOptions = options;
+        }
+
+        function getRootGroupOptions() {
+            return data.rootGroupOptions;
         }
 
         function setFilters(filters) {
@@ -603,6 +612,9 @@
 
             setGroups: setGroups,
             getGroups: getGroups,
+
+            setRootGroupOptions: setRootGroupOptions,
+            getRootGroupOptions: getRootGroupOptions,
 
             setFilters: setFilters,
             getFilters: getFilters,

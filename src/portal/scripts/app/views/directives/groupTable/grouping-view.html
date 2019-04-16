@@ -1,10 +1,50 @@
 <div class="g-grouping-component">
-    <div>
+    <div style="position: relative">
         <p class="g-drag-section-title"><span class="g-meta-circle green">G</span>ROUPING AREA
             <ng-md-icon class="tooltips-sign" icon="info" size="20" style="fill: #777777">
                 <md-tooltip class="tooltip_1" md-direction="top">tooltip text</md-tooltip>
             </ng-md-icon>
         </p>
+
+        <div class="grouping-area-settings-container">
+            <md-menu>
+                <md-button class="md-icon-button grouping-area-settings-btn"
+                           aria-label="grand total settings"
+                           ng-click="openGroupSettings($mdOpenMenu, $event)">
+                    <ng-md-icon icon="settings" size="21"></ng-md-icon>
+                </md-button>
+
+                <md-menu-content width="4">
+                    <md-menu-item>
+                        <md-button md-prevent-menu-close="md-prevent-menu-close"
+                                   ng-click="reportSetGrandtotalType('line')"
+                                   class="g-settings-option-btn">
+                            <ng-md-icon icon="done"
+                                        data-ng-hide="item.report_settings.subtotal_type != 'line'"></ng-md-icon>
+                            <span>Subtotal on Top</span>
+                        </md-button>
+                    </md-menu-item>
+                    <md-menu-item>
+                        <md-button md-prevent-menu-close="md-prevent-menu-close"
+                                   ng-click="reportSetGrandtotalType('area')"
+                                   class="g-settings-option-btn">
+                            <ng-md-icon icon="done"
+                                        data-ng-hide="item.report_settings.subtotal_type != 'line'"></ng-md-icon>
+                            <span>Subtotal on Bottom</span>
+                        </md-button>
+                    </md-menu-item>
+                    <md-menu-item>
+                        <md-button md-prevent-menu-close="md-prevent-menu-close"
+                                   ng-click="reportSetGrandtotalType('arealine')"
+                                   class="g-settings-option-btn">
+                            <ng-md-icon icon="done"
+                                        data-ng-hide="item.report_settings.subtotal_type != 'line'"></ng-md-icon>
+                            <span>Subtotal on Top and Bottom</span>
+                        </md-button>
+                    </md-menu-item>
+                </md-menu-content>
+            </md-menu>
+        </div>
     </div>
     <div class="g-second-line">
 
@@ -67,7 +107,7 @@
 
                                 <md-menu-item>
                                     <md-button md-prevent-menu-close="md-prevent-menu-close"
-                                               ng-click="reportSetSubtotalType(item, 'line', $index)"
+                                               ng-click="reportSetSubtotalType(item, 'line')"
                                                class="g-settings-option-btn">
                                         <ng-md-icon icon="done"
                                                     data-ng-show="item.report_settings.subtotal_type == 'line'"></ng-md-icon>
@@ -79,7 +119,7 @@
 
                                 <md-menu-item>
                                     <md-button md-prevent-menu-close="md-prevent-menu-close"
-                                               ng-click="reportSetSubtotalType(item, 'area', $index)"
+                                               ng-click="reportSetSubtotalType(item, 'area')"
                                                class="g-settings-option-btn">
                                         <ng-md-icon icon="done"
                                                     data-ng-show="item.report_settings.subtotal_type == 'area'"></ng-md-icon>
@@ -91,7 +131,7 @@
 
                                 <md-menu-item>
                                     <md-button md-prevent-menu-close="md-prevent-menu-close"
-                                               ng-click="reportSetSubtotalType(item, 'arealine', $index)"
+                                               ng-click="reportSetSubtotalType(item, 'arealine')"
                                                class="g-settings-option-btn">
                                         <ng-md-icon icon="done"
                                                     data-ng-show="item.report_settings.subtotal_type == 'arealine'"></ng-md-icon>

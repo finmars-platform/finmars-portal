@@ -14,7 +14,7 @@
 
         vm.sideNavStatus = 'expand';
 
-        vm.resizeSideNav = function (status) {
+        /*vm.resizeSideNav = function (status) {
             vm.sideNavStatus = status;
             if (status == 'expand') {
                 $('body').removeClass('sidenav-collapsed');
@@ -53,6 +53,33 @@
 
             }
 
+
+        };*/
+
+        vm.resizeSideNav = function (status) {
+            vm.sideNavStatus = status;
+            if (status == 'expand') {
+                $('body').removeClass('sidenav-collapsed');
+                $('body').addClass('sidenav-expanded');
+
+                $(window).trigger('resize');
+            } else {
+
+                $('body').removeClass('sidenav-expanded');
+                $('body').addClass('sidenav-collapsed');
+
+                setTimeout(function () {
+                    $('.sidenav-wrapper').width(55);
+                }, 0);
+                var interval = setInterval(function () {
+                    $(window).trigger('resize');
+                }, 50);
+
+                setTimeout(function () {
+                    clearInterval(interval)
+                }, 300);
+
+            }
 
         };
 

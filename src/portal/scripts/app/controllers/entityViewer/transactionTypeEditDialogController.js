@@ -6,6 +6,7 @@
     'use strict';
 
     var entityResolverService = require('../../services/entityResolverService');
+    var fieldResolverService = require('../../services/fieldResolverService');
 
     var usersGroupService = require('../../services/usersGroupService');
     var usersService = require('../../services/usersService');
@@ -505,6 +506,39 @@
 
         };
 
+        var checkActionsForEmptyFields = function (actions) {
+            console.log("empty fields actions", actions);
+            var emptyFields = false;
+
+            var a,f;
+            for (a = 0; a < actions.length; a++) {
+                var action = actions[a];
+                var actionFields = Object.keys(action);
+
+                for (f = 0; f < actionFields.length; f++) {
+                    var field = actionFields[f];
+
+                    if (action[field] === null) {
+
+                        emptyFields = true;
+
+                    }
+                }
+            }
+            /*actions.map(function (action) {
+                var actionFields = Object.keys(action);
+
+                var i;
+                for (i = 0; i < actionFields.length; i++) {
+                    if (action[actionFields[i]] === null) {
+                        emptyField = true;
+                    }
+                }
+            });*/
+
+            return emptyFields;
+        };
+
         vm.save = function ($event) {
 
             vm.updateEntityBeforeSave();
@@ -515,16 +549,36 @@
 
                 var result = entityEditorHelper.checkForNulls(vm.entity);
 
-                entityResolverService.update(vm.entityType, result.id, result).then(function (data) {
+                if (result.actions.length > 0 && checkActionsForEmptyFields(result.actions)) {
 
-                    if (data.status === 400) {
-                        vm.handleErrors($event, data);
-                    } else {
-                        $mdDialog.hide({res: 'agree'});
-                    }
+                    $mdDialog.show({
+                        controller: 'WarningDialogController as vm',
+                        templateUrl: 'views/warning-dialog-view.html',
+                        parent: angular.element(document.body),
+                        targetEvent: $event,
+                        clickOutsideToClose: false,
+                        multiple: true,
+                        locals: {
+                            warning: {
+                                title: 'Warning',
+                                description: "Not all fields in Actions are filled"
+                            }
+                        }
+                    })
 
+                } else {
 
-                });
+                    entityResolverService.update(vm.entityType, result.id, result).then(function (data) {
+
+                        if (data.status === 400) {
+                            vm.handleErrors($event, data);
+                        } else {
+                            $mdDialog.hide({res: 'agree'});
+                        }
+
+                    });
+
+                }
 
             }
 

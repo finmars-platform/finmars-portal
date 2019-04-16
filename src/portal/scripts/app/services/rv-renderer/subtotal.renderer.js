@@ -2,12 +2,14 @@
 
     var renderHelper = require('../../helpers/render.helper');
     var rvHelper = require('../../helpers/rv.helper');
+    var evDataHelper = require('../../helpers/ev-data.helper');
 
     var evRvCommonHelper = require('../../helpers/ev-rv-common.helper');
 
     var checkIcon = renderHelper.getCheckIcon();
 
     var REPORT_BG_CSS_SELECTOR = 'report-bg-level';
+    var REPORT_GRAND_TOTAL_CSS_SELECTOR = 'report-grand-total-bg';
 
     var getBorderBottomTransparent = function (evDataService, obj, columnNumber, groups) {
 
@@ -199,6 +201,14 @@
 
         }
 
+        /* Insert 'Grand Total' text inside first cell of the row */
+        var rootGroupOptions = evDataService.getRootGroupOptions();
+        var grandTotalIsActive = rootGroupOptions.subtotal_type;
+
+        if (obj.___level === 0 && grandTotalIsActive && columnNumber === 1) {
+            result.html_result ='<b>Grand Total</b>'
+        }
+
         return result;
 
     };
@@ -219,6 +229,7 @@
         var result = '';
 
         var parents = evRvCommonHelper.getParents(obj.___parentId, evDataService);
+
 
         var foldedParents = [];
         var i;
@@ -246,6 +257,14 @@
             }
 
         }
+
+        /* For Grand Total background */
+        var rootGroupOptions = evDataService.getRootGroupOptions();
+
+        if (obj.___level === 0 && rootGroupOptions.subtotal_type) {
+            result = REPORT_GRAND_TOTAL_CSS_SELECTOR;
+        }
+        /* < For Grand Total background > */
 
         return result;
 

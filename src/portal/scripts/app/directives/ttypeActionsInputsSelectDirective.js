@@ -16,7 +16,6 @@
             },
             templateUrl: 'views/directives/ttype-actions-inputs-select-view.html',
             link: function (scope, elem, attrs) {
-                console.log("ttype input directive data", scope.labelTitle, scope.model, scope.findInputs);
 
                 if (!scope.labelTitle) {
                     scope.labelTitle = "";
