@@ -199,7 +199,7 @@
   {
     "name": "Schemes: Import from File",
     "entities": [
-      "csv_import.scheme",
+      "csv_import.csvimportscheme",
       "integrations.complextransactionimportscheme"
     ],
     "firstElementExist": false
