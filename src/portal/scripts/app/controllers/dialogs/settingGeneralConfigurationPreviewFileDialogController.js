@@ -504,14 +504,7 @@
                             skipHide: true,
                             locals: {
                                 data: {
-                                    errors: data.errors.map(function (errorItem) {
-                                        return {
-
-                                            item: errorItem.item,
-                                            error: errorItem.error.message
-
-                                        }
-                                    })
+                                    errors: data.errors
                                 }
                             }
 

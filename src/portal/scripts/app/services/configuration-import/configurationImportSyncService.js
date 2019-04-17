@@ -49,6 +49,22 @@
 
     };
 
+    var syncInstrumentType = function (item, cacheContainer) {
+
+        return new Promise(function (resolve, reject) {
+
+            configurationImportMapService.mapFieldsInInstrumentType(item).then(function (updatedItem) {
+
+                console.log('syncInstrumentType.updatedItem', updatedItem);
+
+                resolve(updatedItem)
+
+            });
+
+        })
+
+    };
+
     var syncCurrency = function (item, cacheContainer) {
 
         return new Promise(function (resolve, reject) {
@@ -216,6 +232,9 @@
                         break;
                     case 'currencies.currency':
                         resolve(syncCurrency(item, cacheContainer));
+                        break;
+                    case 'instruments.instrumenttype':
+                        resolve(syncInstrumentType(item, cacheContainer));
                         break;
                     case 'ui.editlayout':
                         resolve(syncEditLayout(item, cacheContainer));

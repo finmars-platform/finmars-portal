@@ -287,7 +287,11 @@
 
             configurationImportGetService.getAttributeTypeByUserCode(code, entity).then(function (data) {
 
-                item[key] = data.id;
+                var pieces = item[key].split('.');
+                pieces.splice(-1, 1);
+                pieces.push(data.id);
+                var result = pieces.join('.');
+                item[key] = result;
 
                 resolve(item)
 
@@ -777,7 +781,7 @@
                 var code = items[index].user_code;
                 var entity = items[index].entity;
                 var item = items[index];
-                var item_key = 'id';
+                var item_key = 'key';
 
                 if (entity) {
 

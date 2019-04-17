@@ -6,6 +6,7 @@
     'use strict';
 
     var logService = require('../../../../../core/services/logService');
+    var metaContentTypesService = require('../../services/metaContentTypesService');
 
     module.exports = function ($scope, $mdDialog, data) {
 
@@ -15,13 +16,36 @@
 
         vm.data = data;
 
-        vm.getName = function (item) {
+        vm.getName = function (errorItem) {
 
-            if (item.scheme_name) {
-                return item.scheme_name
+            var result = '';
+
+            if (errorItem.content_type) {
+                result = result + metaContentTypesService.getEntityNameByContentType(errorItem.content_type)
             }
 
-            return item.name;
+            if (errorItem.item) {
+
+                result = result + ': ';
+
+                if (errorItem.item.scheme_name) {
+                    result = result + errorItem.item.scheme_name
+                } else {
+
+                    if (errorItem.item.short_name) {
+
+                        result = result + errorItem.item.short_name + ' (' + errorItem.item.user_code + ')';
+
+                    } else {
+
+                        result = result + errorItem.item.user_code;
+                    }
+
+                }
+
+            }
+
+            return result
 
         };
 

@@ -200,10 +200,12 @@
 
                         } else {
                             errors.push({
+                                content_type: contentType,
                                 item: item,
                                 error: {
                                     message: 'Item already exists: user_code ' + item.user_code
-                                }
+                                },
+                                mode: 'skip'
                             });
                         }
 
@@ -293,7 +295,8 @@
                             item: item,
                             error: {
                                 message: 'Attribute Type already exists: user_code ' + item.user_code
-                            }
+                            },
+                            mode: 'skip'
                         });
 
                         resolve()
@@ -851,10 +854,12 @@
                                             if (settings.mode !== 'overwrite') {
 
                                                 errors.push({
+                                                    content_type: 'ui.listlayout',
                                                     item: item,
                                                     error: {
                                                         message: 'Layout already exists: name ' + item.name
-                                                    }
+                                                    },
+                                                    mode: 'skip'
                                                 });
 
                                             }
@@ -904,10 +909,12 @@
                                             if (settings.mode !== 'overwrite') {
 
                                                 errors.push({
+                                                    content_type: 'ui.reportlayout',
                                                     item: item,
                                                     error: {
                                                         message: 'Report Layout already exists: name ' + item.name
-                                                    }
+                                                    },
+                                                    mode: 'skip'
                                                 });
 
                                             }
@@ -1016,10 +1023,12 @@
                                             } else {
 
                                                 errors.push({
+                                                    content_type: 'csv_import.csvimportscheme',
                                                     item: item,
                                                     error: {
                                                         message: 'Simple Entity Import scheme already exists: name ' + item.name
-                                                    }
+                                                    },
+                                                    mode: 'skip'
                                                 });
                                             }
 
@@ -1070,10 +1079,12 @@
                                             } else {
 
                                                 errors.push({
+                                                    content_type: 'integrations.instrumentdownloadscheme',
                                                     item: item,
                                                     error: {
                                                         message: 'Instrument download scheme already exists: scheme name ' + item.scheme_name
-                                                    }
+                                                    },
+                                                    mode: 'skip'
                                                 });
                                             }
 
@@ -1124,10 +1135,12 @@
                                             } else {
 
                                                 errors.push({
+                                                    content_type: 'integrations.pricedownloadscheme',
                                                     item: item,
                                                     error: {
                                                         message: 'Price download scheme already exists: scheme name ' + item.scheme_name
-                                                    }
+                                                    },
+                                                    mode: 'skip'
                                                 });
 
                                             }
@@ -1179,10 +1192,12 @@
                                             } else {
 
                                                 errors.push({
+                                                    content_type: 'integrations.complextransactionimportscheme',
                                                     item: item,
                                                     error: {
                                                         message: 'Transaction import scheme already exists: scheme name ' + item.scheme_name
-                                                    }
+                                                    },
+                                                    mode: 'skip'
                                                 });
                                             }
 
