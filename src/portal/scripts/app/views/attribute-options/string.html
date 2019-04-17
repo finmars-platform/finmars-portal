@@ -1,5 +1,6 @@
 <div>
-    <md-input-container class="md-block">
+    <md-input-container class="md-block"
+                        aria-label="select with filter">
         <!--<label>Copy text from</label>
         <md-select ng-model="item.options.copyFrom">
             <md-option data-ng-repeat="attr in findStringAttributes()" ng-value="copyFromValue(attr)">
@@ -10,7 +11,7 @@
         <md-select ng-model="item.options.copyFrom"
                    md-container-class="common-select-container"
                    md-on-close="searchTerm = ''">
-            <div nf-if="findStringAttributes() && findStringAttributes().length > 0">
+
                 <md-select-header>
                     <input data-ng-model="searchTerm"
                            type="search"
@@ -28,7 +29,7 @@
                     </md-option>
 
                 </div>
-            </div>
+
         </md-select>
     </md-input-container>
     <md-checkbox data-ng-model="item.options.notNull" aria-label="checkbox">

@@ -48,6 +48,10 @@
 
         }
 
+        $transitions.onStart({}, function (transition) {
+            $mdDialog.cancel();
+        });
+
         vm.getMasterUsersList = function () {
 
             vm.readyStatus.masters = false;
@@ -110,6 +114,10 @@
         vm.currentLocation = function () {
             return metaService.getCurrentLocation($state).toUpperCase();
         };
+
+        $rootScope.$on('$stateChangeStart', function (event) {
+           console.log("state change started");
+        });
 
         // Get name of active layout in the toolbar
 
@@ -213,11 +221,6 @@
                     return false
             }
 
-        };
-
-        vm.copyReport = function ($event) {
-            console.log('copy report');
-            reportCopyHelper.copy($event);
         };
 
         vm.openLayoutList = function ($event) {

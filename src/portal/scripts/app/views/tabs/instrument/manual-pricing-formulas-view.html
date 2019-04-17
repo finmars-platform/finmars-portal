@@ -105,7 +105,7 @@
                 </tr>
                 <tr class="tab-input-row">
                     <td>
-                        <md-input-container style="margin-bottom: 21px;">
+                        <md-input-container style="margin-bottom: 21px;" aria-label="select with filter">
                             <!--<md-select data-ng-model="vm.newItem.pricing_policy">
                                 <md-option data-ng-repeat="policy in vm.policies" ng-value="policy.id">{{policy.name}}
                                 </md-option>
@@ -115,7 +115,7 @@
                             <md-select ng-model="vm.newItem.pricing_policy"
                                        md-container-class="common-select-container"
                                        md-on-close="searchTerm = ''">
-                                <div nf-if="vm.policies && vm.policies.length > 0">
+
                                     <md-select-header>
                                         <input data-ng-model="searchTerm"
                                                type="search"
@@ -133,7 +133,7 @@
                                         </md-option>
 
                                     </div>
-                                </div>
+
                             </md-select>
                         </md-input-container>
                     </td>

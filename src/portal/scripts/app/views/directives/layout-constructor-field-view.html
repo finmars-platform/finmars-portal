@@ -80,7 +80,9 @@
                 </md-select>
             </md-input-container>
 
-            <md-input-container class="md-block" flex-gt-sm>
+            <md-input-container class="md-block"
+                                flex-gt-sm
+                                aria-label="select with filter">
                 <!--<label>Element width</label>
                 <md-select ng-model="item.colspan">
                     <md-option ng-repeat="colspan in getCols()" value="{{colspan}}">
@@ -91,7 +93,6 @@
                 <md-select ng-model="item.colspan"
                            md-container-class="common-select-container"
                            md-on-close="searchTerm = ''">
-                    <div nf-if="options && options.length > 0">
 
                         <div class="select-options-holder">
 
@@ -102,7 +103,7 @@
                             </md-option>
 
                         </div>
-                    </div>
+
                 </md-select>
             </md-input-container>
 

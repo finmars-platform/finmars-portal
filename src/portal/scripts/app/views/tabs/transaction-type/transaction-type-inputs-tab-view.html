@@ -186,26 +186,23 @@
                         <md-select ng-model="vm.newItem.value_type"
                                    md-container-class="common-select-container"
                                    md-on-close="searchTerm = ''" id="ttype-inputs-value-type">
-                            <div ng-if="vm.valueTypes && vm.valueTypes.length > 0">
-                                <md-select-header>
-                                    <input data-ng-model="searchTerm"
-                                           type="search"
-                                           placeholder="Search for a ..."
-                                           class="md-text md-select-search-pattern select-input-filter"
-                                           ng-keydown="$event.stopPropagation()">
-                                </md-select-header>
+                            <md-select-header>
+                                <input data-ng-model="searchTerm"
+                                       type="search"
+                                       placeholder="Search for a ..."
+                                       class="md-text md-select-search-pattern select-input-filter"
+                                       ng-keydown="$event.stopPropagation()">
+                            </md-select-header>
 
-                                <div class="select-options-holder">
+                            <div class="select-options-holder">
 
-                                    <md-option
-                                            data-ng-repeat="item in vm.valueTypes | filter:{display_name: searchTerm}"
-                                            ng-value="item.value">
-                                        {{item.display_name}}
-                                    </md-option>
+                                <md-option
+                                        data-ng-repeat="item in vm.valueTypes | filter:{display_name: searchTerm}"
+                                        ng-value="item.value">
+                                    {{item.display_name}}
+                                </md-option>
 
-                                </div>
                             </div>
-
                         </md-select>
                     </md-input-container>
                 </td>
@@ -224,24 +221,23 @@
                                    md-container-class="common-select-container"
                                    md-on-close="searchTerm = ''"
                                    id="ttype-inputs-default-value">
-                            <div nf-if="vm.contentTypes && vm.contentTypes.length > 0">
-                                <md-select-header>
-                                    <input data-ng-model="searchTerm"
-                                           type="search"
-                                           placeholder="Search for a ..."
-                                           class="md-text md-select-search-pattern select-input-filter"
-                                           ng-keydown="$event.stopPropagation()">
-                                </md-select-header>
 
-                                <div class="select-options-holder">
+                            <md-select-header>
+                                <input data-ng-model="searchTerm"
+                                       type="search"
+                                       placeholder="Search for a ..."
+                                       class="md-text md-select-search-pattern select-input-filter"
+                                       ng-keydown="$event.stopPropagation()">
+                            </md-select-header>
 
-                                    <md-option
-                                            data-ng-repeat="item in vm.contentTypes | filter:{name: searchTerm}"
-                                            ng-value="item.key">
-                                        {{item.name}}
-                                    </md-option>
+                            <div class="select-options-holder">
 
-                                </div>
+                                <md-option
+                                        data-ng-repeat="item in vm.contentTypes | filter:{name: searchTerm}"
+                                        ng-value="item.key">
+                                    {{item.name}}
+                                </md-option>
+
                             </div>
 
                         </md-select>

@@ -18,7 +18,9 @@
                 </md-card>
                 <md-card flex="50" class="inm-card-special">
                     <md-card-content>
-                        <md-input-container class="md-block" flex-gt-sm>
+                        <md-input-container class="md-block"
+                                            flex-gt-sm
+                                            aria-label="select with filter">
                             <!--<label>Provider</label>
                             <md-select data-ng-model="vm.schemeProvider" data-ng-if="vm.readyStatus.dataProviders">
                                 <md-option data-ng-repeat="item in vm.dataProviders" data-ng-value="item.id">
@@ -31,7 +33,7 @@
                                        md-container-class="common-select-container"
                                        md-on-close="searchTerm = ''"
                                        ng-if="vm.readyStatus.dataProviders">
-                                <div nf-if="vm.dataProviders && vm.dataProviders.length > 0">
+
                                     <!--<md-select-header>
                                         <input data-ng-model="searchTerm"
                                                type="search"
@@ -49,7 +51,7 @@
                                         </md-option>
 
                                     </div>
-                                </div>
+
                             </md-select>
                         </md-input-container>
 
@@ -239,7 +241,7 @@
                                      flex="100">
                                     <div layout="row" flex="100">
                                         <div class="field-name" flex="40">
-                                            <md-input-container>
+                                            <md-input-container aria-label="select with filter">
                                                 <!--<md-select data-ng-model="field.value"
                                                            data-ng-change="vm.resolveFieldType(field)"
                                                            data-ng-focus="vm.checkAttrs()">
@@ -266,7 +268,7 @@
                                                            md-container-class="common-select-container"
                                                            md-on-close="searchTerm = ''"
                                                            ng-if="vm.readyStatus.dataProviders">
-                                                    <div nf-if="vm.dataProviders && vm.dataProviders.length > 0">
+
                                                         <md-select-header>
                                                             <input data-ng-model="searchTerm"
                                                                    type="search"
@@ -295,7 +297,7 @@
                                                             </md-option>
 
                                                         </div>
-                                                    </div>
+
                                                 </md-select>
                                             </md-input-container>
                                         </div>
@@ -358,7 +360,7 @@
                         <div layout="row" flex="50">
                             <md-card flex="100">
                                 <md-card-content>
-                                    <md-input-container style="width: 100%">
+                                    <md-input-container style="width: 100%" aria-label="select with filter">
                                         <!--<label for="">Factor upload method</label>
                                         <md-select data-ng-model="vm.factorScheduleMethod">
                                             <md-option data-ng-repeat="item in vm.factorSchedule"
@@ -370,7 +372,7 @@
                                         <md-select ng-model="vm.factorScheduleMethod"
                                                    md-container-class="common-select-container"
                                                    md-on-close="searchTerm = ''">
-                                            <div nf-if="vm.factorSchedule && vm.factorSchedule.length > 0">
+
                                                 <!--<md-select-header>
                                                     <input data-ng-model="searchTerm"
                                                            type="search"
@@ -388,7 +390,7 @@
                                                     </md-option>
 
                                                 </div>
-                                            </div>
+
                                         </md-select>
                                     </md-input-container>
                                 </md-card-content>
@@ -397,7 +399,7 @@
                         <div layout="row" flex="50">
                             <md-card flex="100">
                                 <md-card-content>
-                                    <md-input-container style="width: 100%">
+                                    <md-input-container style="width: 100%" aria-label="select with filter">
                                         <!--<label for="">Accrual schedule upload</label>
                                         <md-select data-ng-model="vm.accrualCalculation">
                                             <md-option data-ng-repeat="item in vm.accrualSchedule"
@@ -409,7 +411,7 @@
                                         <md-select ng-model="vm.accrualCalculation"
                                                    md-container-class="common-select-container"
                                                    md-on-close="searchTerm = ''">
-                                            <div nf-if="vm.accrualSchedule && vm.accrualSchedule.length > 0">
+
                                                 <!--<md-select-header>
                                                     <input data-ng-model="searchTerm"
                                                            type="search"
@@ -427,7 +429,7 @@
                                                     </md-option>
 
                                                 </div>
-                                            </div>
+
                                         </md-select>
                                     </md-input-container>
                                 </md-card-content>
