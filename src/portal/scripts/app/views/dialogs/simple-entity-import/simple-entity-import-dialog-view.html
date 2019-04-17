@@ -24,14 +24,14 @@
                                     <span>BROWSE</span></label>
                             </div>
 
-                            <md-input-container>
+                            <md-input-container aria-label="select with filter">
 
                                 <label for="">Choose entity</label>
                                 <md-select ng-model="vm.activeContentType"
                                            md-container-class="common-select-container"
                                            md-on-close="searchTerm = ''"
                                            data-ng-change="vm.updateEntitySchemes()">
-                                    <div nf-if="vm.contentTypes && vm.contentTypes.length > 0">
+
                                         <md-select-header>
                                             <input data-ng-model="searchTerm"
                                                    type="search"
@@ -49,20 +49,20 @@
                                             </md-option>
 
                                         </div>
-                                    </div>
+
                                 </md-select>
                             </md-input-container>
 
                             <div layout="row">
 
-                                <md-input-container>
+                                <md-input-container aria-label="select with filter">
 
                                     <label for="">Import scheme</label>
                                     <md-select ng-model="vm.config.scheme"
                                                md-container-class="common-select-container"
                                                md-on-close="searchTerm = ''"
                                                style="width: 200px">
-                                        <div nf-if="vm.entitySchemes && vm.entitySchemes.length > 0">
+
                                             <md-select-header>
                                                 <input data-ng-model="searchTerm"
                                                        type="search"
@@ -74,14 +74,14 @@
                                             <div class="select-options-holder">
 
                                                 <md-option
-                                                        data-ng-repeat="item in vm.entitySchemes | filter: {scheme_name: searchTerm}"
+                                                        data-ng-repeat="item in vm.entitySchemes | filter: {name: searchTerm}"
                                                         ng-value="item.id"
-                                                        ng-bind="item.scheme_name">
+                                                        ng-bind="item.name">
                                                 </md-option>
                                                 <md-option data-ng-click="vm.createScheme($event)">Add scheme
                                                 </md-option>
                                             </div>
-                                        </div>
+
                                     </md-select>
                                 </md-input-container>
                                 <md-button

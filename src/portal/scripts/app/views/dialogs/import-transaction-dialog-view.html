@@ -34,7 +34,7 @@
                             </div>
                             <div layout="row">
 
-                                <md-input-container>
+                                <md-input-container aria-label="select with filter">
                                     <!--<label for="">Import scheme</label>
                                     <md-select style="width: 200px"
                                                data-ng-model="vm.config.scheme">
@@ -48,7 +48,7 @@
                                                md-container-class="common-select-container"
                                                md-on-close="searchTerm = ''"
                                                style="width: 200px">
-                                        <div nf-if="vm.transactionSchemes && vm.transactionSchemes.length > 0">
+
                                             <md-select-header>
                                                 <input data-ng-model="searchTerm"
                                                        type="search"
@@ -66,7 +66,7 @@
                                                 </md-option>
 
                                             </div>
-                                        </div>
+
                                     </md-select>
                                 </md-input-container>
                                 <md-button

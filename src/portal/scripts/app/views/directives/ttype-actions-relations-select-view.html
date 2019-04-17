@@ -1,10 +1,10 @@
-<md-input-container class="md-block">
+<md-input-container class="md-block" aria-label="select with filter">
     <label>{{labelTitle}}</label>
     <md-select ng-model="model"
                md-container-class="common-select-container"
                md-on-close="searchTerm = ''"
                md-on-open="loadRelationsOnOpen()">
-        <div nf-if="relations && relations.length > 0">
+
             <md-select-header>
                 <input data-ng-model="searchTerm"
                        type="search"
@@ -18,13 +18,13 @@
                 <md-option data-ng-repeat="relationItem in relationItems | filter: filterPredicateFunction(propertyName, searchTerm)"
                            ng-value="relationItem['{{propertyValue}}']"
                            ng-bind="relationItem['{{propertyName}}']"
-                           nf-if="relationItems.length">
+                           ng-if="relationItems.length">
                 </md-option>
 
                 <md-option ng-if="!relationItems.length"
                            ng-value="selectedValue">{{selectedName}}</md-option>
 
             </div>
-        </div>
+
     </md-select>
 </md-input-container>

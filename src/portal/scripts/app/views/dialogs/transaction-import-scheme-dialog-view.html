@@ -82,7 +82,7 @@
                                                 </div>
                                             </div>
                                             <div flex="40">
-                                                <md-input-container style="width: 80%">
+                                                <md-input-container style="width: 80%" aria-label="select with filter">
                                                     <!--<label for="">Transaction type</label>
                                                     <md-select data-ng-model="item.transaction_type">
                                                         <md-option
@@ -96,7 +96,7 @@
                                                     <md-select ng-model="vm.config.instrument_download_scheme"
                                                                md-container-class="common-select-container"
                                                                md-on-close="searchTerm = ''">
-                                                        <div nf-if="vm.transactionTypes && vm.transactionTypes.length > 0">
+
                                                             <md-select-header>
                                                                 <input data-ng-model="searchTerm"
                                                                        type="search"
@@ -114,7 +114,7 @@
                                                                 </md-option>
 
                                                             </div>
-                                                        </div>
+
                                                     </md-select>
                                                 </md-input-container>
                                             </div>

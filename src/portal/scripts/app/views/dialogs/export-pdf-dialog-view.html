@@ -5,9 +5,9 @@
             <span flex></span>
         </div>
     </md-toolbar>
-    <md-dialog-content   style="padding: 8px">
+    <md-dialog-content style="padding: 8px">
 
-        <h2 style="    margin: 10px 12px 28px;">Settings</h2>
+        <h2 style="margin: 10px 12px 28px;">Settings</h2>
 
         <div>
 
@@ -39,6 +39,18 @@
 
             </md-input-container>
 
+        </div>
+
+        <div class="copy-report-to-buffer">
+            <md-button class="md-button md-raised"
+                       data-ng-click="vm.copyReport($event)"
+                       aria-label="Copy report">
+                <!--<ng-md-icon icon="content_copy" size="24">
+                    <md-tooltip class="tooltip_1" md-direction="bottom">Copy report in buffer</md-tooltip>
+                </ng-md-icon>-->
+                <ng-md-icon icon="content_copy" size="24"></ng-md-icon>
+                Copy report in buffer
+            </md-button>
         </div>
 
     </md-dialog-content>

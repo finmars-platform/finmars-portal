@@ -6,6 +6,8 @@
     var rvRenderer = require('../../services/rv-renderer/rv.renderer');
     var uiService = require('../../services/uiService');
 
+    var reportCopyHelper = require('../../helpers/reportCopyHelper');
+
     module.exports = function ($scope, $mdDialog, evDataService, evEventService, data) {
 
         var vm = this;
@@ -85,6 +87,11 @@
             link.click();
 
         }
+
+        vm.copyReport = function ($event) {
+            console.log('copy report');
+            reportCopyHelper.copy($event);
+        };
 
         vm.agree = function () {
 

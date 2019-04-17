@@ -17,7 +17,7 @@
                                 <label>Scheme name</label>
                                 <input aria-label="scheme name" type="text" data-ng-model="vm.scheme.cs">
                             </md-input-container>
-                            <md-input-container class="SC-entity-select-container">
+                            <md-input-container class="SC-entity-select-container" aria-label="select with filter">
                                 <!--<label>Data type</label>
                                 <md-select data-ng-model="vm.scheme.content_type"
                                            data-ng-change="vm.updateEntityFields()">
@@ -33,7 +33,7 @@
                                            md-container-class="common-select-container"
                                            md-on-close="searchTerm = ''"
                                            data-ng-change="vm.updateEntityFields()">
-                                    <div nf-if="vm.contentTypes && vm.contentTypes.length > 0">
+
                                         <md-select-header>
                                             <input data-ng-model="searchTerm"
                                                    type="search"
@@ -51,7 +51,7 @@
                                             </md-option>
 
                                         </div>
-                                    </div>
+
                                 </md-select>
                             </md-input-container>
                         </md-card-content>
@@ -107,7 +107,7 @@
                                     <div data-ng-repeat="item in vm.scheme.entity_fields track by $index" flex="100">
                                         <div class="fields-holder" layout="row">
                                             <div class="iscm-item width-100" layout="row">
-                                                <md-input-container flex="10">
+                                                <md-input-container flex="10" aria-label="select with filter">
 
                                                     <div data-ng-if="item.system_property_key"
                                                          data-ng-bind="item.name"
@@ -133,7 +133,7 @@
                                                                    ng-change="vm.dynamicAttrPicked = true"
                                                                    md-on-close="vm.findPickedDynamicAttrs()"
                                                                    style="margin-top: 0">
-                                                            <div nf-if="vm.dynamicAttributes && vm.dynamicAttributes.length > 0">
+
                                                                 <md-select-header>
                                                                     <input data-ng-model="searchTerm"
                                                                            type="search"
@@ -152,7 +152,7 @@
                                                                     </md-option>
 
                                                                 </div>
-                                                            </div>
+
                                                         </md-select>
 
                                                     </div>

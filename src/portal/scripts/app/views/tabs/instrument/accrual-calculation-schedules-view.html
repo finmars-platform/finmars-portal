@@ -137,7 +137,7 @@
                     </md-input-container>
                 </td>
                 <td data-ng-if="item.editStatus" class="edit-state-td">
-                    <md-input-container style="margin-bottom: 23px">
+                    <md-input-container style="margin-bottom: 23px" aria-label="select with filter">
                         <!--<label for="">Accrual calculation model</label>-->
                         <!--<md-select data-ng-model="item.accrual_calculation_model">
                             <md-option data-ng-repeat="model in vm.accrualModels" ng-value="model.id">{{model.name}}
@@ -147,30 +147,30 @@
                         <md-select ng-model="item.accrual_calculation_model"
                                    md-container-class="common-select-container"
                                    md-on-close="searchTerm = ''">
-                            <div nf-if="vm.accrualModels && vm.accrualModels.length > 0">
-                                <md-select-header>
-                                    <input data-ng-model="searchTerm"
-                                           type="search"
-                                           placeholder="Search for a ..."
-                                           class="md-text md-select-search-pattern select-input-filter"
-                                           ng-keydown="$event.stopPropagation()">
-                                </md-select-header>
 
-                                <div class="select-options-holder">
+                            <md-select-header>
+                                <input data-ng-model="searchTerm"
+                                       type="search"
+                                       placeholder="Search for a ..."
+                                       class="md-text md-select-search-pattern select-input-filter"
+                                       ng-keydown="$event.stopPropagation()">
+                            </md-select-header>
 
-                                    <md-option
-                                            data-ng-repeat="model in vm.accrualModels | filter: {name: searchTerm}"
-                                            ng-value="model.id"
-                                            ng-bind="model.name">
-                                    </md-option>
+                            <div class="select-options-holder">
 
-                                </div>
+                                <md-option
+                                        data-ng-repeat="model in vm.accrualModels | filter: {name: searchTerm}"
+                                        ng-value="model.id"
+                                        ng-bind="model.name">
+                                </md-option>
+
                             </div>
+
                         </md-select>
                     </md-input-container>
                 </td>
                 <td data-ng-if="item.editStatus" class="edit-state-td">
-                    <md-input-container>
+                    <md-input-container aria-label="select with filter">
                         <!--<label for="">Periodicity</label>
                         <md-select data-ng-model="item.periodicity">
                             <md-option data-ng-repeat="model in vm.periodicityItems" ng-value="model.id">{{model.name}}
@@ -181,7 +181,7 @@
                         <md-select ng-model="item.periodicity"
                                    md-container-class="common-select-container"
                                    md-on-close="searchTerm = ''">
-                            <div nf-if="vm.periodicityItems && vm.periodicityItems.length > 0">
+
                                 <md-select-header>
                                     <input data-ng-model="searchTerm"
                                            type="search"
@@ -199,7 +199,7 @@
                                     </md-option>
 
                                 </div>
-                            </div>
+
                         </md-select>
                     </md-input-container>
                 </td>
@@ -241,7 +241,7 @@
                     </md-input-container>
                 </td>
                 <td>
-                    <md-input-container stiyle="margin-bottom: 24px;">
+                    <md-input-container stiyle="margin-bottom: 24px;" aria-label="select with filter">
                         <!--<md-select data-ng-model="vm.newItem.accrual_calculation_model">
                             <md-option data-ng-repeat="model in vm.accrualModels" ng-value="model.id">{{model.name}}
                             </md-option>
@@ -251,7 +251,7 @@
                         <md-select ng-model="vm.newItem.accrual_calculation_model"
                                    md-container-class="common-select-container"
                                    md-on-close="searchTerm = ''">
-                            <div nf-if="vm.accrualModels && vm.accrualModels.length > 0">
+
                                 <md-select-header>
                                     <input data-ng-model="searchTerm"
                                            type="search"
@@ -269,12 +269,12 @@
                                     </md-option>
 
                                 </div>
-                            </div>
+
                         </md-select>
                     </md-input-container>
                 </td>
                 <td>
-                    <md-input-container style="margin-bottom: 21px;">
+                    <md-input-container style="margin-bottom: 21px;" aria-label="select with filter">
                         <!--<label for="">Periodicity</label>-->
                         <!--<md-select data-ng-model="vm.newItem.periodicity">
                             <md-option data-ng-repeat="model in vm.periodicityItems" ng-value="model.id">{{model.name}}
@@ -285,7 +285,7 @@
                         <md-select ng-model="vm.newItem.periodicity"
                                    md-container-class="common-select-container"
                                    md-on-close="searchTerm = ''">
-                            <div nf-if="vm.periodicityItems && vm.periodicityItems.length > 0">
+
                                 <md-select-header>
                                     <input data-ng-model="searchTerm"
                                            type="search"
@@ -303,7 +303,7 @@
                                     </md-option>
 
                                 </div>
-                            </div>
+
                         </md-select>
                     </md-input-container>
                 </td>

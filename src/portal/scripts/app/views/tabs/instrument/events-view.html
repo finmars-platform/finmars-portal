@@ -176,7 +176,7 @@
                                  aria-lable="edited-is_auto_generated-checkbox" data-ng-disabled="true"></md-checkbox>
                 </td>
                 <td data-ng-if="item.editStatus" class="edit-state-td">
-                    <md-input-container style="margin-bottom: 21px;">
+                    <md-input-container style="margin-bottom: 21px;" aria-label="select with filter">
                         <!--<label for="">Notification class</label>
                         <md-select data-ng-model="item.notification_class" style="max-width: 195px">
                             <md-option data-ng-repeat="model in vm.notificationClasses" ng-value="model.id">
@@ -188,7 +188,7 @@
                         <md-select ng-model="item.notification_class"
                                    md-container-class="common-select-container"
                                    md-on-close="searchTerm = ''">
-                            <div nf-if="vm.notificationClasses && vm.notificationClasses.length > 0">
+
                                 <md-select-header>
                                     <input data-ng-model="searchTerm"
                                            type="search"
@@ -206,12 +206,12 @@
                                     </md-option>
 
                                 </div>
-                            </div>
+
                         </md-select>
                     </md-input-container>
                 </td>
                 <td data-ng-if="item.editStatus" class="edit-state-td">
-                    <md-input-container style="margin-bottom: 21px;">
+                    <md-input-container style="margin-bottom: 21px;" aria-label="select with filter">
                         <!--<label for="">Event class</label>
                         <md-select data-ng-model="item.event_class">
                             <md-option data-ng-repeat="model in vm.eventClasses" ng-value="model.id">
@@ -223,7 +223,7 @@
                         <md-select ng-model="item.event_class"
                                    md-container-class="common-select-container"
                                    md-on-close="searchTerm = ''">
-                            <div nf-if="vm.eventClasses && vm.eventClasses.length > 0">
+
                                 <md-select-header>
                                     <input data-ng-model="searchTerm"
                                            type="search"
@@ -241,7 +241,7 @@
                                     </md-option>
 
                                 </div>
-                            </div>
+
                         </md-select>
                     </md-input-container>
                 </td>
@@ -270,7 +270,7 @@
                     </md-input-container>
                 </td>
                 <td data-ng-if="item.editStatus" class="edit-state-td" style="padding-top: 12px">
-                    <md-input-container>
+                    <md-input-container aria-label="select with filter">
                         <!--<label for="">Periodicity</label>
                         <md-select data-ng-model="item.periodicity">
                             <md-option data-ng-repeat="model in vm.periodicityItems" ng-value="model.id">{{model.name}}
@@ -281,7 +281,7 @@
                         <md-select ng-model="item.periodicity"
                                    md-container-class="common-select-container"
                                    md-on-close="searchTerm = ''">
-                            <div nf-if="vm.periodicityItems && vm.periodicityItems.length > 0">
+
                                 <md-select-header>
                                     <input data-ng-model="searchTerm"
                                            type="search"
@@ -299,7 +299,7 @@
                                     </md-option>
 
                                 </div>
-                            </div>
+
                         </md-select>
                     </md-input-container>
                 </td>
@@ -344,7 +344,7 @@
                     <md-checkbox data-ng-model="vm.newItem.is_auto_generated" class="ES-add-new-checkbox" data-ng-disabled="true" aria-lable="is_auto_generated-checkbox"></md-checkbox>
                 </td>
                 <td style="padding-top: 12px">
-                    <md-input-container style="margin-bottom: 18px">
+                    <md-input-container style="margin-bottom: 18px" aria-label="select with filter">
                         <!--<md-select data-ng-model="vm.newItem.notification_class" style="max-width: 195px">
                             <md-option data-ng-repeat="model in vm.notificationClasses" ng-value="model.id">
                                 {{model.name}}
@@ -355,7 +355,7 @@
                         <md-select ng-model="vm.newItem.notification_class"
                                    md-container-class="common-select-container"
                                    md-on-close="searchTerm = ''">
-                            <div nf-if="vm.notificationClassesl && vm.notificationClasses.length > 0">
+
                                 <md-select-header>
                                     <input data-ng-model="searchTerm"
                                            type="search"
@@ -373,7 +373,7 @@
                                     </md-option>
 
                                 </div>
-                            </div>
+
                         </md-select>
                     </md-input-container>
                 </td>
@@ -389,7 +389,7 @@
                         <md-select ng-model="vm.newItem.event_class"
                                    md-container-class="common-select-container"
                                    md-on-close="searchTerm = ''">
-                            <div nf-if="vm.eventClasses && vm.eventClasses.length > 0">
+
                                 <md-select-header>
                                     <input data-ng-model="searchTerm"
                                            type="search"
@@ -407,7 +407,7 @@
                                     </md-option>
 
                                 </div>
-                            </div>
+
                         </md-select>
                     </md-input-container>
                 </td>
@@ -437,7 +437,7 @@
                     </md-input-container>
                 </td>
                 <td>
-                    <md-input-container style="margin-bottom: 24px;">
+                    <md-input-container style="margin-bottom: 24px;" aria-label="select with filter">
                         <!--<md-select data-ng-model="vm.newItem.periodicity">
                             <md-option data-ng-repeat="model in vm.periodicityItems" ng-value="model.id">{{model.name}}
                             </md-option>
@@ -447,7 +447,7 @@
                         <md-select ng-model="vm.newItem.periodicity"
                                    md-container-class="common-select-container"
                                    md-on-close="searchTerm = ''">
-                            <div nf-if="vm.periodicityItems && vm.periodicityItems.length > 0">
+
                                 <md-select-header>
                                     <input data-ng-model="searchTerm"
                                            type="search"
@@ -465,7 +465,7 @@
                                     </md-option>
 
                                 </div>
-                            </div>
+
                         </md-select>
                     </md-input-container>
                 </td>

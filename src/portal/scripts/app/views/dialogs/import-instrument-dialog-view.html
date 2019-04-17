@@ -39,7 +39,7 @@
                             </div>
                             <div layout="row">
 
-                                <md-input-container>
+                                <md-input-container aria-label="select with filter">
                                     <!--<label for="">Import scheme</label>
                                     <md-select style="width: 200px"
                                                data-ng-model="vm.config.instrument_download_scheme">
@@ -53,7 +53,7 @@
                                                md-container-class="common-select-container"
                                                md-on-close="searchTerm = ''"
                                                style="width: 200px">
-                                        <div nf-if="vm.instrumentSchemes && vm.instrumentSchemes.length > 0">
+
                                             <md-select-header>
                                                 <input data-ng-model="searchTerm"
                                                        type="search"
@@ -71,7 +71,7 @@
                                                 </md-option>
 
                                             </div>
-                                        </div>
+
                                     </md-select>
                                 </md-input-container>
                                 <md-button
@@ -165,7 +165,8 @@
                             <div class="instrument-import-field-bg">
                                 <md-input-container
                                         class="md-block {{vm.findError('instrument_type', 'entityAttr', 'class') ? 'error' : ''}}"
-                                        style="min-height: 64px">
+                                        style="min-height: 64px"
+                                        aria-label="select with filter">
                                     <!--<label for="">Instrument type</label>
                                     <md-select data-ng-model="vm.config.instrument.instrument_type">
                                         <md-option data-ng-repeat="item in vm.instrumentTypes" ng-value="item.id">
@@ -178,7 +179,7 @@
                                                md-container-class="common-select-container"
                                                md-on-close="searchTerm = ''"
                                                style="width: 200px">
-                                        <div nf-if="vm.instrumentTypes && vm.instrumentTypes.length > 0">
+
                                             <md-select-header>
                                                 <input data-ng-model="searchTerm"
                                                        type="search"
@@ -196,7 +197,7 @@
                                                 </md-option>
 
                                             </div>
-                                        </div>
+
                                     </md-select>
 
                                     <div class="md-input-error"
@@ -247,7 +248,8 @@
                             <div class="instrument-import-field-bg">
                                 <md-input-container
                                         class="md-block  {{vm.findError('daily_pricing_model', 'entityAttr', 'class') ? 'error' : ''}}"
-                                        style="min-height: 64px">
+                                        style="min-height: 64px"
+                                        aria-label="select with filter">
                                     <!--<label for="">Pricing model</label>
                                     <md-select data-ng-model="vm.config.instrument.daily_pricing_model">
                                         <md-option data-ng-repeat="item in vm.dailyModels" ng-value="item.id">
@@ -260,7 +262,7 @@
                                                md-container-class="common-select-container"
                                                md-on-close="searchTerm = ''"
                                                style="width: 200px">
-                                        <div nf-if="vm.dailyModels && vm.dailyModels.length > 0">
+
                                             <md-select-header>
                                                 <input data-ng-model="searchTerm"
                                                        type="search"
@@ -278,7 +280,7 @@
                                                 </md-option>
 
                                             </div>
-                                        </div>
+
                                     </md-select>
 
                                     <div class="md-input-error"
@@ -291,7 +293,8 @@
                             <div class="instrument-import-field-bg">
                                 <md-input-container
                                         class="md-block {{vm.findError('price_download_scheme', 'entityAttr', 'class') ? 'error' : ''}}"
-                                        style="min-height: 64px">
+                                        style="min-height: 64px"
+                                        aria-label="select with filter">
                                     <!--<label for="">Price download scheme</label>
                                     <md-select data-ng-model="vm.config.instrument.price_download_scheme">
                                         <md-option data-ng-repeat="item in vm.priceDownloadSchemes" ng-value="item.id">
@@ -304,7 +307,7 @@
                                                md-container-class="common-select-container"
                                                md-on-close="searchTerm = ''"
                                                style="width: 200px">
-                                        <div nf-if="vm.priceDownloadSchemes && vm.priceDownloadSchemes.length > 0">
+
                                             <md-select-header>
                                                 <input data-ng-model="searchTerm"
                                                        type="search"
@@ -322,7 +325,7 @@
                                                 </md-option>
 
                                             </div>
-                                        </div>
+
                                     </md-select>
 
                                     <div class="md-input-error"
@@ -336,7 +339,8 @@
                             <div class="instrument-import-field-bg">
                                 <md-input-container
                                         class="md-block {{vm.findError('pricing_currency', 'entityAttr', 'class') ? 'error' : ''}}"
-                                        style="min-height: 64px">
+                                        style="min-height: 64px"
+                                        aria-label="select with filter">
                                     <!--<label for="">Pricing currency</label>
                                     <md-select data-ng-model="vm.config.instrument.pricing_currency">
                                         <md-option data-ng-repeat="item in vm.currencies" ng-value="item.id">
@@ -349,7 +353,7 @@
                                                md-container-class="common-select-container"
                                                md-on-close="searchTerm = ''"
                                                style="width: 200px">
-                                        <div nf-if="vm.currencies && vm.currencies.length > 0">
+
                                             <md-select-header>
                                                 <input data-ng-model="searchTerm"
                                                        type="search"
@@ -367,7 +371,7 @@
                                                 </md-option>
 
                                             </div>
-                                        </div>
+
                                     </md-select>
 
                                     <div class="md-input-error"
@@ -421,7 +425,8 @@
                             <div class="instrument-import-field-bg">
                                 <md-input-container
                                         class="md-block {{vm.findError('accrued_currency', 'entityAttr', 'class') ? 'error' : ''}}"
-                                        style="min-height: 64px">
+                                        style="min-height: 64px"
+                                        aria-label="select with filter">
                                     <!--<label for="">Accrued currency</label>
                                     <md-select data-ng-model="vm.config.instrument.accrued_currency">
                                         <md-option data-ng-repeat="item in vm.currencies" ng-value="item.id">
@@ -434,7 +439,7 @@
                                                md-container-class="common-select-container"
                                                md-on-close="searchTerm = ''"
                                                style="width: 200px">
-                                        <div nf-if="vm.currencies && vm.currencies.length > 0">
+
                                             <md-select-header>
                                                 <input data-ng-model="searchTerm"
                                                        type="search"
@@ -452,7 +457,7 @@
                                                 </md-option>
 
                                             </div>
-                                        </div>
+
                                     </md-select>
 
                                     <div class="md-input-error"
@@ -492,7 +497,8 @@
 
                             <div class="instrument-import-field-bg">
                                 <md-input-container
-                                        class="md-block {{vm.findError('payment_size_detail', 'entityAttr', 'class') ? 'error' : ''}}">
+                                        class="md-block {{vm.findError('payment_size_detail', 'entityAttr', 'class') ? 'error' : ''}}"
+                                        aria-label="select with filter">
                                     <!--<label for="">Payment size default</label>
                                     <md-select data-ng-model="vm.config.instrument.payment_size_detail">
                                         <md-option data-ng-repeat="item in vm.paymentSizeDefaults" ng-value="item.id">
@@ -505,7 +511,7 @@
                                                md-container-class="common-select-container"
                                                md-on-close="searchTerm = ''"
                                                style="width: 200px">
-                                        <div nf-if="vm.paymentSizeDefaults && vm.paymentSizeDefaults.length > 0">
+
                                             <md-select-header>
                                                 <input data-ng-model="searchTerm"
                                                        type="search"
@@ -523,7 +529,7 @@
                                                 </md-option>
 
                                             </div>
-                                        </div>
+
                                     </md-select>
 
                                     <div class="md-input-error"

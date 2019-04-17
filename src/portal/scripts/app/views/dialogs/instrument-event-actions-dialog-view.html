@@ -119,7 +119,7 @@
                             </md-menu>
                         </td>
                         <td data-ng-if="item.editStatus" class="edit-state-td" style="padding-top: 12px">
-                            <md-input-container>
+                            <md-input-container aria-label="select with filter">
                                 <!--<label for="">Transaction Type</label>
                                 <md-select data-ng-model="item.transaction_type">
                                     <md-option data-ng-repeat="model in vm.transactionTypes" ng-value="model.id">
@@ -131,7 +131,7 @@
                                 <md-select ng-model="item.transaction_type"
                                            md-container-class="common-select-container"
                                            md-on-close="searchTerm = ''">
-                                    <div nf-if="vm.transactionTypes && vm.transactionTypes.length > 0">
+
                                         <md-select-header>
                                             <input data-ng-model="searchTerm"
                                                    type="search"
@@ -149,7 +149,7 @@
                                             </md-option>
 
                                         </div>
-                                    </div>
+
                                 </md-select>
                             </md-input-container>
                         </td>
@@ -190,7 +190,7 @@
                     </tr>
                     <tr class="tab-input-row">
                         <td style="padding-top: 12px">
-                            <md-input-container style="margin-bottom: 14px">
+                            <md-input-container style="margin-bottom: 14px" aria-label="select with filter">
                                 <!--<md-select data-ng-model="vm.newItem.transaction_type">
                                     <md-option data-ng-repeat="model in vm.transactionTypes" ng-value="model.id">
                                         {{model.name}}
@@ -201,7 +201,7 @@
                                 <md-select ng-model="vm.newItem.transaction_type"
                                            md-container-class="common-select-container"
                                            md-on-close="searchTerm = ''">
-                                    <div nf-if="vm.transactionTypes && vm.transactionTypes.length > 0">
+
                                         <md-select-header>
                                             <input data-ng-model="searchTerm"
                                                    type="search"
@@ -219,7 +219,7 @@
                                             </md-option>
 
                                         </div>
-                                    </div>
+
                                 </md-select>
                             </md-input-container>
                         </td>
