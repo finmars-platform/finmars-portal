@@ -85,8 +85,7 @@ app.controller('NotFoundPageController', ['$scope', require('./app/controllers/n
 
 app.controller('DashboardController', ['$scope', '$mdDialog', require('./app/controllers/dashboardController')]);
 app.controller('ActionsController', ['$scope', '$mdDialog', require('./app/controllers/actionsController')]);
-app.controller('SimpleEntityImportDialogController', ['$scope', '$mdDialog', require('./app/controllers/dialogs/simpleEntityImportDialogController')]);
-app.controller('SimpleEntityImportErrorsDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/simpleEntityImportErrorsDialogController')]);
+
 app.controller('ImportInstrumentDialogController', ['$scope', '$mdDialog', require('./app/controllers/dialogs/importInstrumentDialogController')]);
 app.controller('ImportTransactionDialogController', ['$scope', '$mdDialog', require('./app/controllers/dialogs/importTransactionDialogController')]);
 app.controller('ImportTransactionErrorsDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/importTransactionErrorsDialogController')]);
@@ -95,6 +94,17 @@ app.controller('FillPriceHistoryDialogController', ['$scope', '$mdDialog', requi
 app.controller('EventScheduleConfigDialogController', ['$scope', '$mdDialog', require('./app/controllers/dialogs/eventScheduleConfigDialogController')]);
 app.controller('FillPriceManuallyInstrumentDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/fillPriceManuallyInstrumentDialogController')]);
 app.controller('PriceDownloadSchemeAddDialogController', ['$scope', '$mdDialog', require('./app/controllers/dialogs/priceDownloadSchemeAddDialogController')]);
+
+
+app.controller('SimpleEntityImportDialogController', ['$scope', '$mdDialog', require('./app/controllers/dialogs/simple-entity-import/simpleEntityImportDialogController')]);
+app.controller('SimpleEntityImportErrorsDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/simple-entity-import/simpleEntityImportErrorsDialogController')]);
+app.controller('SimpleEntityImportSchemeEditDialogController', ['$scope', '$mdDialog', 'schemeId', require('./app/controllers/dialogs/simple-entity-import/simpleEntityImportSchemeEditDialogController')]);
+app.controller('SimpleEntityImportSchemeCreateDialogController', ['$scope', '$mdDialog', require('./app/controllers/dialogs/simple-entity-import/simpleEntityImportSchemeCreateDialogController')]);
+
+
+app.controller('ComplexImportDialogController', ['$scope', '$mdDialog', require('./app/controllers/dialogs/complex-import/complexImportDialogController')]);
+app.controller('ComplexImportSchemeEditDialogController', ['$scope', '$mdDialog', 'schemeId', require('./app/controllers/dialogs/complex-import/complexImportSchemeEditDialogController')]);
+app.controller('ComplexImportSchemeCreateDialogController', ['$scope', '$mdDialog', require('./app/controllers/dialogs/complex-import/complexImportSchemeCreateDialogController')]);
 
 
 // events start
@@ -123,8 +133,6 @@ app.controller('TransactionImportSchemeAddDialogController', ['$scope', '$mdDial
 app.controller('TransactionImportSchemeEditDialogController', ['$scope', '$mdDialog', 'schemeId', require('./app/controllers/dialogs/transactionImportSchemeEditDialogController')]);
 app.controller('TransactionImportSchemeInputsDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/transactionImportSchemeInputsDialogController')]);
 
-app.controller('SimpleEntityImportSchemeEditDialogController', ['$scope', '$mdDialog', 'schemeId', require('./app/controllers/dialogs/simpleEntityImportSchemeEditDialogController')]);
-app.controller('SimpleEntityImportSchemeCreateDialogController', ['$scope', '$mdDialog', require('./app/controllers/dialogs/simpleEntityImportSchemeCreateDialogController')]);
 
 app.controller('EntityViewer2Controller', ['$scope', '$mdDialog', require('./app/controllers/entityViewer/entityViewer2Controller')]);
 app.controller('ReportViewerController', ['$scope', '$mdDialog', require('./app/controllers/entityViewer/reportViewerController')]);
@@ -232,7 +240,6 @@ app.controller('SettingGeneralConfigurationExportFileDialogController', ['$scope
 app.controller('SettingGeneralMappingPreviewFileDialogController', ['$scope', '$mdDialog', 'file', require('./app/controllers/dialogs/settingGeneralMappingPreviewFileDialogController')]);
 app.controller('SettingGeneralMappingExportFileDialogController', ['$scope', '$mdDialog', require('./app/controllers/dialogs/settingGeneralMappingExportFileDialogController')]);
 app.controller('SettingGeneralMappingPreviewFileErrorsDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/settingGeneralMappingPreviewFileErrorsDialogController')]);
-
 
 
 app.controller('CreateConfigurationDialogController', ['$scope', '$mdDialog', require('./app/controllers/dialogs/createConfigurationDialogController')]);
