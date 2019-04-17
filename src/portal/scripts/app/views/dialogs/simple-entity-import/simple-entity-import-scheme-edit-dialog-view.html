@@ -25,7 +25,7 @@
                                                 <input aria-label="index" type="text" data-ng-model="item.column">
                                             </md-input-container>
                                             <md-input-container flex="70">
-                                                <input aria-label="key" type="text" data-ng-model="item.name">
+                                                <input aria-label="key" type="text" data-ng-model="item.scheme_name">
                                             </md-input-container>
                                         </div>
                                         <div>
@@ -98,10 +98,11 @@
 
                                                                 <div class="select-options-holder">
 
-                                                                    <md-option data-ng-repeat="item in vm.dynamicAttributes | filter:{name: searchTerm}"
-                                                                               ng-value="item.id"
-                                                                               ng-disabled="vm.checkForUsedDynamicAttr(item.id)">
-                                                                       {{item.name}}
+                                                                    <md-option
+                                                                            data-ng-repeat="item in vm.dynamicAttributes | filter:{name: searchTerm}"
+                                                                            ng-value="item.id"
+                                                                            ng-disabled="vm.checkForUsedDynamicAttr(item.id)">
+                                                                        {{item.name}}
                                                                     </md-option>
 
                                                                 </div>

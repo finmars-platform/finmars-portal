@@ -38,6 +38,9 @@
     var instrumentPaymentSizeDetailService = require('./instrument/instrumentPaymentSizeDetailService');
     var instrumentClassService = require('./instrument/instrumentClassService');
     var priceDownloadSchemeService = require('./import/priceDownloadSchemeService');
+    var csvImportSchemeService = require('./import/csvImportSchemeService');
+    var complexImportSchemeService = require('./import/complexImportSchemeService');
+    var complexTransactionImportSchemeService = require('./import/transactionSchemeService');
 
     var costMethodService = require('./instrument/instrumentCostMethodService');
 
@@ -76,6 +79,12 @@
                 return metaNotificationClassService.getList(options);
             case 'price-download-scheme':
                 return priceDownloadSchemeService.getList(options);
+            case 'csv-import-scheme':
+                return csvImportSchemeService.getList(options);
+            case 'complex-import-scheme':
+                return complexImportSchemeService.getList(options);
+            case 'complex-transaction-import-scheme':
+                return complexTransactionImportSchemeService.getList(options);
             case 'transaction-type-group':
                 return transactionTypeGroupService.getList(options);
             case 'strategy-1':

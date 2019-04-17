@@ -235,7 +235,7 @@
 
         return new Promise(function (resolveRelation, reject) {
 
-            if (key === 'price_download_scheme') {
+            if (key === 'price_download_scheme' || key === 'complex_transaction_import_scheme' || key === 'csv_import_scheme') {
 
                 configurationImportGetService.getSchemeBySchemeName(code, entity).then(function (data) {
 

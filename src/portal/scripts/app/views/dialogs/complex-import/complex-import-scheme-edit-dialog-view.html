@@ -15,7 +15,7 @@
                         <md-card-content layout="column">
                             <md-input-container class="md-block">
                                 <label>Scheme name</label>
-                                <input aria-label="scheme name" type="text" data-ng-model="vm.scheme.name">
+                                <input aria-label="scheme name" type="text" data-ng-model="vm.scheme.scheme_name">
                             </md-input-container>
                         </md-card-content>
                     </md-card>
@@ -88,9 +88,9 @@
                                                     <div class="select-options-holder">
 
                                                         <md-option
-                                                                data-ng-repeat="item in vm.csvImportSchemes | filter: {name: searchTerm}"
+                                                                data-ng-repeat="item in vm.csvImportSchemes | filter: {scheme_name: searchTerm}"
                                                                 ng-value="item.id"
-                                                                ng-bind="item.name">
+                                                                ng-bind="item.scheme_name">
                                                         </md-option>
 
                                                     </div>

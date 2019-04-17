@@ -162,6 +162,56 @@
 
     };
 
+    var syncComplexImportScheme = function (item, cacheContainer) {
+
+        return new Promise(function (resolve) {
+
+            var promises = [];
+
+            item.actions.forEach(function (actionItem) {
+
+                if (actionItem.csv_import_scheme) {
+
+                    if (actionItem.csv_import_scheme.hasOwnProperty('___csv_import_scheme__scheme_name')) {
+
+                        var code = actionItem.csv_import_scheme['___csv_import_scheme__scheme_name'];
+                        var code_type = 'scheme_name';
+                        var entity = 'csv-import-scheme';
+                        var item_key = 'csv_import_scheme';
+
+                        promises.push(configurationImportMapService.mapRelation(actionItem.csv_import_scheme, item_key, entity, code_type, code, cacheContainer))
+
+                    }
+
+                }
+
+                if (actionItem.complex_transaction_import_scheme) {
+
+                    if (actionItem.complex_transaction_import_scheme.hasOwnProperty('___complex_transaction_import_scheme__scheme_name')) {
+
+                        var code = actionItem.complex_transaction_import_scheme['___complex_transaction_import_scheme__scheme_name'];
+                        var code_type = 'scheme_name';
+                        var entity = 'complex-transaction-import-scheme';
+                        var item_key = 'complex_transaction_import_scheme';
+
+                        promises.push(configurationImportMapService.mapRelation(actionItem.complex_transaction_import_scheme, item_key, entity, code_type, code, cacheContainer))
+
+                    }
+
+                }
+
+            });
+
+            Promise.all(promises).then(function (data) {
+
+                resolve(data)
+            });
+
+
+        })
+
+    };
+
     var syncComplexTransactionImportScheme = function (item, cacheContainer) {
 
         return new Promise(function (resolve, reject) {
@@ -247,6 +297,9 @@
                         break;
                     case 'integrations.instrumentdownloadscheme':
                         resolve(syncInstrumentDownloadScheme(item, cacheContainer));
+                        break;
+                    case 'complex_import.compleximportscheme':
+                        resolve(syncComplexImportScheme(item, cacheContainer));
                         break;
                     case 'integrations.complextransactionimportscheme':
                         resolve(syncComplexTransactionImportScheme(item, cacheContainer));

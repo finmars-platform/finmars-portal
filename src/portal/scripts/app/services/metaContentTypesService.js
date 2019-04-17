@@ -217,7 +217,9 @@
             case 'integrations.pricedownloadscheme':
                 result = 'Price Download Sceme';
                 break;
-
+            case 'csv_import.csvimportscheme':
+                result = 'CSV Import Scheme';
+                break;
             case 'integrations.portfoliomapping':
                 result = 'Portfolio Mapping';
                 break;

@@ -45,9 +45,9 @@
                                             <div class="select-options-holder">
 
                                                 <md-option
-                                                        data-ng-repeat="item in vm.schemes | filter: {name: searchTerm}"
+                                                        data-ng-repeat="item in vm.schemes | filter: {scheme_name: searchTerm}"
                                                         ng-value="item.id"
-                                                        ng-bind="item.name">
+                                                        ng-bind="item.scheme_name">
                                                 </md-option>
                                                 <md-option data-ng-click="vm.createScheme($event)">Add scheme
                                                 </md-option>

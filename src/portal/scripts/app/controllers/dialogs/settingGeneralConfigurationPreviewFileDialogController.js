@@ -249,6 +249,8 @@
                     return "Bookmarks";
                 case 'csv_import.csvimportscheme':
                     return "Simple Entity Import Schemes";
+                case 'complex_import.compleximportscheme':
+                    return 'Complex Import Schemes';
                 case 'integrations.instrumentdownloadscheme':
                     return "Instrument Download Schemes";
                 case 'integrations.pricedownloadscheme':
