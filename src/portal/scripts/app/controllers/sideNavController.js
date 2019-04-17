@@ -14,7 +14,7 @@
 
         vm.sideNavStatus = 'expand';
 
-        /*vm.resizeSideNav = function (status) {
+        vm.resizeSideNav = function (status) {
             vm.sideNavStatus = status;
             if (status == 'expand') {
                 $('body').removeClass('sidenav-collapsed');
@@ -54,30 +54,24 @@
             }
 
 
-        };*/
+        };
 
-        vm.resizeSideNav = function (status) {
+
+        // !!!!!!!!!!!
+        // $(window).trigger('resize'); may needed for content adaptation to menu collapse
+        // !!!!!!!!!!!
+
+
+        /*vm.resizeSideNav = function (status) {
             vm.sideNavStatus = status;
             if (status == 'expand') {
                 $('body').removeClass('sidenav-collapsed');
                 $('body').addClass('sidenav-expanded');
 
-                $(window).trigger('resize');
             } else {
 
                 $('body').removeClass('sidenav-expanded');
                 $('body').addClass('sidenav-collapsed');
-
-                setTimeout(function () {
-                    $('.sidenav-wrapper').width(55);
-                }, 0);
-                var interval = setInterval(function () {
-                    $(window).trigger('resize');
-                }, 50);
-
-                setTimeout(function () {
-                    clearInterval(interval)
-                }, 300);
 
             }
 
@@ -87,18 +81,22 @@
         vm.showSettingsSideMenu = function () {
 
             if (!sideMenuSettingsMenuOpened) {
-                // $('.side-menu-settings-menu').removeClass('ng-hide');
+
+
                 $('.side-menu-settings-menu').addClass('settings-menu-opened');
+                setTimeout(function () {
+                    $('.side-menu-settings-menu').addClass('overflow-visible');
+                }, 250);
+
             } else {
+                $('.side-menu-settings-menu').removeClass('overflow-visible');
                 $('.side-menu-settings-menu').removeClass('settings-menu-opened');
-                // setTimeout(function () {
-                //     $('.side-menu-settings-menu').addClass('ng-hide');
-                // }, 400);
+
             }
 
             sideMenuSettingsMenuOpened = !sideMenuSettingsMenuOpened;
             console.log("settings sidemenu opened", sideMenuSettingsMenuOpened);
-        };
+        };*/
 
         metaService.getMenu().then(function (data) {
             vm.sections = data;
