@@ -535,6 +535,8 @@
                     return "Bookmarks";
                 case 'csv_import.csvimportscheme':
                     return "Data import from CSV schemes";
+                case 'complex_import.compleximportscheme':
+                    return 'Complex Import Schemes';
                 case 'integrations.instrumentdownloadscheme':
                     return "Instrument Download Schemes";
                 case 'integrations.pricedownloadscheme':
