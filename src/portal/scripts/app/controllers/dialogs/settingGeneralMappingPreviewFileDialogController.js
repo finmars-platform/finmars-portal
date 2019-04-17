@@ -176,6 +176,10 @@
                 return 'account'
             }
 
+            if (contentType === 'integrations.accountypemapping') {
+                return 'account-type'
+            }
+
             if (contentType === 'integrations.instrumentmapping') {
                 return 'instrument'
             }
@@ -198,6 +202,10 @@
 
             if (contentType === 'integrations.strategy3mapping') {
                 return 'strategy-3'
+            }
+
+            if (contentType === 'integrations.pricingpolicymapping') {
+                return 'pricing-policy'
             }
 
             if (contentType === 'integrations.periodicitymapping') {

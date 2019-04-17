@@ -5,13 +5,13 @@
 
     'use strict';
 
-    var logService = require('../../../../../core/services/logService');
+    var logService = require('../../../../../../core/services/logService');
 
-    var metaService = require('../../services/metaService');
-    var metaContentTypesService = require('../../services/metaContentTypesService');
-    var entitySchemeService = require('../../services/import/entitySchemeService');
+    var metaService = require('../../../services/metaService');
+    var metaContentTypesService = require('../../../services/metaContentTypesService');
+    var csvImportSchemeService = require('../../../services/import/csvImportSchemeService');
 
-    var importEntityService = require('../../services/import/importEntityService');
+    var importEntityService = require('../../../services/import/importEntityService');
 
 
     module.exports = function ($scope, $mdDialog) {
@@ -47,44 +47,21 @@
         vm.contentTypes = metaContentTypesService.getListForSimleEntityImport();
 
         vm.getSchemeList = function () {
-            entitySchemeService.getEntitiesSchemesList(vm.activeContentType).then(function (data) {
+
+            var options = {filters: {'content_type': vm.activeContentType}};
+
+            csvImportSchemeService.getList(options).then(function (data) {
                 vm.entitySchemes = data.results;
                 vm.readyStatus.mapping = true;
                 $scope.$apply();
             });
+
         };
 
         vm.getSchemeList();
 
         vm.updateEntitySchemes = function () {
             vm.getSchemeList();
-        };
-
-        vm.findError = function (item, type, state) {
-
-            var message = '';
-            var haveError = false;
-
-            if (type == 'entityAttr') {
-                if (vm.config.errors.hasOwnProperty(item)) {
-                    message = vm.config.errors[item].join(' ');
-                    haveError = true;
-                }
-            }
-
-            if (type == 'dynAttr') {
-                //console.log('item', item);
-                if (vm.config.errors.hasOwnProperty('attribute_type_' + item.attribute_type)) {
-                    message = vm.config.errors['attribute_type_' + item.attribute_type].join(' ');
-                    haveError = true;
-                }
-            }
-
-            if (state == 'message') {
-                return message
-            } else {
-                return haveError;
-            }
         };
 
         vm.validate = function ($event) {
@@ -116,7 +93,7 @@
 
                     $mdDialog.show({
                         controller: 'SimpleEntityImportErrorsDialogController as vm',
-                        templateUrl: 'views/dialogs/simple-entity-import-errors-dialog-view.html',
+                        templateUrl: 'views/dialogs/simple-entity-import/simple-entity-import-errors-dialog-view.html',
                         targetEvent: $event,
                         preserveScope: true,
                         multiple: true,
@@ -216,7 +193,7 @@
 
                     $mdDialog.show({
                         controller: 'SimpleEntityImportErrorsDialogController as vm',
-                        templateUrl: 'views/dialogs/simple-entity-import-errors-dialog-view.html',
+                        templateUrl: 'views/dialogs/simple-entity-import/simple-entity-import-errors-dialog-view.html',
                         targetEvent: $event,
                         preserveScope: true,
                         multiple: true,
@@ -260,7 +237,7 @@
 
             $mdDialog.show({
                 controller: 'SimpleEntityImportSchemeCreateDialogController as vm',
-                templateUrl: 'views/dialogs/simple-entity-import-scheme-create-dialog-view.html',
+                templateUrl: 'views/dialogs/simple-entity-import/simple-entity-import-scheme-create-dialog-view.html',
                 targetEvent: $event,
                 preserveScope: true,
                 multiple: true,
@@ -277,10 +254,10 @@
 
         };
 
-        vm.openEditMapping = function ($event) {
+        vm.editScheme = function ($event) {
             $mdDialog.show({
                 controller: 'SimpleEntityImportSchemeEditDialogController as vm',
-                templateUrl: 'views/dialogs/simple-entity-import-scheme-edit-dialog-view.html',
+                templateUrl: 'views/dialogs/simple-entity-import/simple-entity-import-scheme-edit-dialog-view.html',
                 targetEvent: $event,
                 preserveScope: true,
                 multiple: true,

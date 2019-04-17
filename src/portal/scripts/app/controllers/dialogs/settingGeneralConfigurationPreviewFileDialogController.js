@@ -247,8 +247,10 @@
                     return "Report builder layouts";
                 case 'ui.bookmark':
                     return "Bookmarks";
-                case 'csv_import.scheme':
+                case 'csv_import.csvimportscheme':
                     return "Simple Entity Import Schemes";
+                case 'complex_import.compleximportscheme':
+                    return 'Complex Import Schemes';
                 case 'integrations.instrumentdownloadscheme':
                     return "Instrument Download Schemes";
                 case 'integrations.pricedownloadscheme':
@@ -295,7 +297,7 @@
 
             if (item.hasOwnProperty('name')) {
 
-                // csv_import.scheme
+                // csv_import.csvimportscheme
                 if (item.hasOwnProperty('csv_fields')) {
                     return item.name + ' (' + metaContentTypesService.getEntityNameByContentType(item.content_type) + ')'
                 }
@@ -504,14 +506,7 @@
                             skipHide: true,
                             locals: {
                                 data: {
-                                    errors: data.errors.map(function (errorItem) {
-                                        return {
-
-                                            item: errorItem.item,
-                                            error: errorItem.error.message
-
-                                        }
-                                    })
+                                    errors: data.errors
                                 }
                             }
 

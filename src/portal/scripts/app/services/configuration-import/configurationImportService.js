@@ -8,7 +8,8 @@
     var entityResolverService = require('../../services/entityResolverService');
     var attributeTypeService = require('../../services/attributeTypeService');
 
-    var entitySchemeService = require('../../services/import/entitySchemeService');
+    var csvImportSchemeService = require('../../services/import/csvImportSchemeService');
+    var complexImportSchemeService = require('../../services/import/complexImportSchemeService');
     var priceDownloadSchemeService = require('../../services/import/priceDownloadSchemeService');
     var instrumentSchemeService = require('../../services/import/instrumentSchemeService');
     var transactionSchemeService = require('../../services/import/transactionSchemeService');
@@ -200,10 +201,12 @@
 
                         } else {
                             errors.push({
+                                content_type: contentType,
                                 item: item,
                                 error: {
                                     message: 'Item already exists: user_code ' + item.user_code
-                                }
+                                },
+                                mode: 'skip'
                             });
                         }
 
@@ -293,7 +296,8 @@
                             item: item,
                             error: {
                                 message: 'Attribute Type already exists: user_code ' + item.user_code
-                            }
+                            },
+                            mode: 'skip'
                         });
 
                         resolve()
@@ -352,17 +356,17 @@
                         case 'import.pricingautomatedschedule':
                             resolve(pricingAutomatedScheduleService.updateSchedule(item));
                             break;
-                        case 'csv_import.scheme':
+                        case 'complex_import.compleximportscheme':
                             resolve(new Promise(function (resolveLocal, reject) {
 
 
                                 var options = {
                                     filters: {
-                                        name: item.name
+                                        scheme_name: item.scheme_name
                                     }
                                 };
 
-                                entitySchemeService.getList(options).then(function (data) {
+                                complexImportSchemeService.getList(options).then(function (data) {
 
                                     var result;
 
@@ -370,7 +374,7 @@
 
                                         data.results.forEach(function (resultItem) {
 
-                                            if (resultItem.name === item.name) {
+                                            if (resultItem.scheme_name === item.scheme_name) {
                                                 result = resultItem;
                                             }
 
@@ -380,16 +384,61 @@
 
                                             item.id = result.id;
 
-                                            resolveLocal(entitySchemeService.update(item.id, item))
+                                            resolveLocal(complexImportSchemeService.update(item.id, item))
 
                                         } else {
 
-                                            resolveLocal(entitySchemeService.create(item));
+                                            resolveLocal(complexImportSchemeService.create(item));
                                         }
 
                                     } else {
 
-                                        resolveLocal(entitySchemeService.create(item));
+                                        resolveLocal(complexImportSchemeService.create(item));
+                                    }
+
+                                })
+
+
+                            }));
+                            break;
+                        case 'csv_import.csvimportscheme':
+                            resolve(new Promise(function (resolveLocal, reject) {
+
+
+                                var options = {
+                                    filters: {
+                                        scheme_name: item.scheme_name
+                                    }
+                                };
+
+                                csvImportSchemeService.getList(options).then(function (data) {
+
+                                    var result;
+
+                                    if (data.results.length) {
+
+                                        data.results.forEach(function (resultItem) {
+
+                                            if (resultItem.scheme_name === item.scheme_name) {
+                                                result = resultItem;
+                                            }
+
+                                        });
+
+                                        if (result) {
+
+                                            item.id = result.id;
+
+                                            resolveLocal(csvImportSchemeService.update(item.id, item))
+
+                                        } else {
+
+                                            resolveLocal(csvImportSchemeService.create(item));
+                                        }
+
+                                    } else {
+
+                                        resolveLocal(csvImportSchemeService.create(item));
                                     }
 
                                 })
@@ -688,8 +737,8 @@
             var overwriteEntities = items.filter(function (item) {
                 return ['instruments.instrumenttype', 'transactions.transactiontype', 'ui.listlayout', 'ui.reportlayout',
                     'accounts.accounttype', 'currencies.currency', 'instruments.pricingpolicy',
-                    'csv_import.scheme', 'integrations.instrumentdownloadscheme', 'integrations.pricedownloadscheme',
-                    'integrations.complextransactionimportscheme'].indexOf(item.entity) !== -1;
+                    'csv_import.csvimportscheme', 'integrations.instrumentdownloadscheme', 'integrations.pricedownloadscheme',
+                    'integrations.complextransactionimportscheme', 'complex_import.compleximportscheme'].indexOf(item.entity) !== -1;
             });
 
             overwriteEntityItems(overwriteEntities, cacheContainer).then(function (data) {
@@ -851,10 +900,12 @@
                                             if (settings.mode !== 'overwrite') {
 
                                                 errors.push({
+                                                    content_type: 'ui.listlayout',
                                                     item: item,
                                                     error: {
                                                         message: 'Layout already exists: name ' + item.name
-                                                    }
+                                                    },
+                                                    mode: 'skip'
                                                 });
 
                                             }
@@ -904,10 +955,12 @@
                                             if (settings.mode !== 'overwrite') {
 
                                                 errors.push({
+                                                    content_type: 'ui.reportlayout',
                                                     item: item,
                                                     error: {
                                                         message: 'Report Layout already exists: name ' + item.name
-                                                    }
+                                                    },
+                                                    mode: 'skip'
                                                 });
 
                                             }
@@ -987,12 +1040,12 @@
 
                             }));
                             break;
-                        case 'csv_import.scheme':
+                        case 'complex_import.compleximportscheme':
                             resolve(new Promise(function (resolveLocal, reject) {
 
-                                entitySchemeService.getList({
+                                complexImportSchemeService.getList({
                                     filters: {
-                                        name: item.name,
+                                        scheme_name: item.scheme_name,
                                         content_type: item.content_type
                                     }
                                 }).then(function (data) {
@@ -1003,7 +1056,7 @@
 
                                         data.results.forEach(function (resultItem) {
 
-                                            if (resultItem.name === item.name) {
+                                            if (resultItem.scheme_name === item.scheme_name) {
                                                 result = resultItem
                                             }
 
@@ -1012,14 +1065,16 @@
                                         if (result) {
 
                                             if (settings.mode === 'overwrite') {
-                                                console.warn('Simple Entity Import scheme already exists: name ' + item.name);
+                                                console.warn('Complex Import scheme already exists: scheme_name ' + item.scheme_name);
                                             } else {
 
                                                 errors.push({
+                                                    content_type: 'complex_import.compleximportscheme',
                                                     item: item,
                                                     error: {
-                                                        message: 'Simple Entity Import scheme already exists: name ' + item.name
-                                                    }
+                                                        message: 'Complex Import scheme already exists: scheme_name ' + item.scheme_name
+                                                    },
+                                                    mode: 'skip'
                                                 });
                                             }
 
@@ -1027,13 +1082,70 @@
 
                                         } else {
 
-                                            resolveLocal(entitySchemeService.create(item));
+                                            resolveLocal(complexImportSchemeService.create(item));
 
                                         }
 
                                     } else {
 
-                                        resolveLocal(entitySchemeService.create(item));
+                                        resolveLocal(complexImportSchemeService.create(item));
+
+                                    }
+
+                                });
+
+
+                            }));
+                            break;
+                        case 'csv_import.csvimportscheme':
+                            resolve(new Promise(function (resolveLocal, reject) {
+
+                                csvImportSchemeService.getList({
+                                    filters: {
+                                        scheme_name: item.scheme_name,
+                                        content_type: item.content_type
+                                    }
+                                }).then(function (data) {
+
+                                    if (data.results.length) {
+
+                                        var result;
+
+                                        data.results.forEach(function (resultItem) {
+
+                                            if (resultItem.scheme_name === item.scheme_name) {
+                                                result = resultItem
+                                            }
+
+                                        });
+
+                                        if (result) {
+
+                                            if (settings.mode === 'overwrite') {
+                                                console.warn('Simple Entity Import scheme already exists: name ' + item.scheme_name);
+                                            } else {
+
+                                                errors.push({
+                                                    content_type: 'csv_import.csvimportscheme',
+                                                    item: item,
+                                                    error: {
+                                                        message: 'Simple Entity Import scheme already exists: name ' + item.scheme_name
+                                                    },
+                                                    mode: 'skip'
+                                                });
+                                            }
+
+                                            resolveLocal()
+
+                                        } else {
+
+                                            resolveLocal(csvImportSchemeService.create(item));
+
+                                        }
+
+                                    } else {
+
+                                        resolveLocal(csvImportSchemeService.create(item));
 
                                     }
 
@@ -1070,10 +1182,12 @@
                                             } else {
 
                                                 errors.push({
+                                                    content_type: 'integrations.instrumentdownloadscheme',
                                                     item: item,
                                                     error: {
                                                         message: 'Instrument download scheme already exists: scheme name ' + item.scheme_name
-                                                    }
+                                                    },
+                                                    mode: 'skip'
                                                 });
                                             }
 
@@ -1124,10 +1238,12 @@
                                             } else {
 
                                                 errors.push({
+                                                    content_type: 'integrations.pricedownloadscheme',
                                                     item: item,
                                                     error: {
                                                         message: 'Price download scheme already exists: scheme name ' + item.scheme_name
-                                                    }
+                                                    },
+                                                    mode: 'skip'
                                                 });
 
                                             }
@@ -1179,10 +1295,12 @@
                                             } else {
 
                                                 errors.push({
+                                                    content_type: 'integrations.complextransactionimportscheme',
                                                     item: item,
                                                     error: {
                                                         message: 'Transaction import scheme already exists: scheme name ' + item.scheme_name
-                                                    }
+                                                    },
+                                                    mode: 'skip'
                                                 });
                                             }
 
@@ -1333,7 +1451,8 @@
                     item.entity !== 'ui.editlayout' &&
                     item.entity !== 'ui.listlayout' &&
                     item.entity !== 'ui.reportlayout' &&
-                    item.entity !== 'ui.bookmark'
+                    item.entity !== 'ui.bookmark' &&
+                    item.entity !== 'complex_import.compleximportscheme'
             });
 
             var layoutEntities = items.filter(function (item) {
@@ -1344,6 +1463,10 @@
 
             var bookmarks = items.filter(function (item) {
                 return item.entity === 'ui.bookmark'
+            });
+
+            var complexImportSchemes = items.filter(function (item) {
+                return item.entity === 'complex_import.compleximportscheme';
             });
 
 
@@ -1367,31 +1490,31 @@
 
                                 console.log("Entities import success", data);
 
-                                createEntityItems(layoutEntities, settings, cacheContainer, errors).then(function (data) {
+                                createEntityItems(complexImportSchemes, settings, cacheContainer, errors).then(function (data) {
 
-                                    console.log("Layout import success", data);
+                                    console.log("Complex import Schemes import success", data);
 
-                                    createEntityItems(bookmarks, settings, cacheContainer, errors).then(function (data) {
+                                    createEntityItems(layoutEntities, settings, cacheContainer, errors).then(function (data) {
 
-                                        console.log("Bookmark import success", data);
+                                        console.log("Layout import success", data);
 
-                                        resolve(data);
+                                        createEntityItems(bookmarks, settings, cacheContainer, errors).then(function (data) {
 
-                                    }).catch(function (reason) {
+                                            console.log("Bookmark import success", data);
 
-                                        console.log('importConfiguration.reason', reason);
+                                            resolve(data);
 
-                                        reject(reason);
+                                        }).catch(function (reason) {
+
+                                            console.log('importConfiguration.reason', reason);
+
+                                            reject(reason);
+                                        })
+
                                     })
 
-                                })
+                                });
 
-
-                            }).catch(function (reason) {
-
-                                console.log('importConfiguration.reason', reason);
-
-                                reject(reason);
                             })
 
 

@@ -1,43 +1,36 @@
 /**
  * Created by szhitenev on 19.03.2018.
  */
-
-/**
- * Simple Entity Import Edit Dialog Controller.
- * @module SimpleEntityImportEitDialogController
- */
-
 (function () {
 
     'use strict';
 
-    var logService = require('../../../../../core/services/logService');
-    var entitySchemeService = require('../../services/import/entitySchemeService');
-    var attributeTypeService = require('../../services/attributeTypeService');
+    var logService = require('../../../../../../core/services/logService');
+    var csvImportSchemeService = require('../../../services/import/csvImportSchemeService');
+    var metaContentTypesService = require('../../../services/metaContentTypesService');
+    var metaService = require('../../../services/metaService');
+    var attributeTypeService = require('../../../services/attributeTypeService');
 
-    var metaContentTypesService = require('../../services/metaContentTypesService');
+    var modelService = require('../../../services/modelService');
 
-    var modelService = require('../../services/modelService');
+    module.exports = function ($scope, $mdDialog) {
 
+        logService.controller('SimpleEntityImportCreateDialogController', 'initialized');
 
-    module.exports = function ($scope, $mdDialog, schemeId) {
-
-        logService.controller('EntityMappingEditDialogController', 'initialized');
-
-        /** JSDOC ignores vm methods, only works for var variable. */
         var vm = this;
-        vm.scheme = {};
-        vm.readyStatus = {scheme: false, entitySchemeAttributes: false};
+        vm.scheme = {
 
-        vm.dynamicAttributes = [];
+            csv_fields: [],
+            entity_fields: []
+
+        };
 
         vm.inputsGroup = {
             "name": "<b>Inputs</b>",
             "key": 'input'
         };
 
-        vm.dynamicAttrPicked = true;
-
+        vm.dynamicAttrPicked = false;
         var pickedDynamicAttrs = [];
 
         vm.inputsFunctions = [];
@@ -45,24 +38,24 @@
         /**
          * Get list of expressions for Expression Builder.
          * @return {Object[]} Array of Expressions.
-         * @memberof module:SimpleEntityImportEitDialogController
+         * @memberof module:SimpleEntityImportCreateDialogController
          */
         vm.getFunctions = function () {
 
-            return vm.scheme.csv_fields.map(function (input) {
+            return vm.scheme.csv_fields.map(function(input){
 
                 return {
-                    "name": "Add input " + input.value,
-                    "description": "Imported Parameter: " + input.value + " (column #" + input.column + ") ",
+                    "name": "Add input " + input.name,
+                    "description": "Imported Parameter: " + input.name + " (column #" + input.column + ") ",
                     "groups": "input",
-                    "func": input.value
+                    "func": input.name
                 }
 
             })
 
         };
 
-        var findPickedDynamicAttrs = function () {
+        vm.findPickedDynamicAttrs = function () {
             if (vm.dynamicAttrPicked) {
                 vm.scheme.entity_fields.map(function (field) {
                     if (field.hasOwnProperty('dynamic_attribute_id') && field.dynamic_attribute_id) {
@@ -86,55 +79,64 @@
                         }
 
                     }
-                });
-            }
 
-            vm.dynamicAttrPicked = false;
+                });
+
+                vm.dynamicAttrPicked = false;
+            };
         };
 
-        entitySchemeService.getByKey(schemeId).then(function (data) {
+        vm.getAttrs = function () {
 
-            vm.scheme = data;
+            var entity = vm.scheme.content_type.split('.')[1];
 
-            vm.readyStatus.scheme = true;
+            attributeTypeService.getList(entity).then(function (data) {
 
-            if (vm.scheme.content_type !== 'instruments.pricehistory' && vm.scheme.content_type !== 'currencyhistorys.currencyhistory') {
+                vm.dynamicAttributes = data.results;
 
-                vm.getAttrs();
-            }
+                $scope.$apply();
+            });
+        };
 
-            vm.scheme.csv_fields = vm.scheme.csv_fields.sort(function (a, b) {
-                if (a.column > b.column) {
-                    return 1;
+        vm.readyStatus = {scheme: true, entitySchemeAttributes: false};
+
+        vm.contentTypes = metaContentTypesService.getListForSimleEntityImport();
+
+        vm.scheme.content_type = vm.contentTypes[0].key;
+        vm.getAttrs();
+
+        vm.updateEntityFields = function () {
+
+            var entity = metaContentTypesService.findEntityByContentType(vm.scheme.content_type);
+
+            vm.scheme.entity_fields = metaService.getEntityAttrs(entity).filter(function (item) {
+
+                return ['tags', 'transaction_types', 'object_permissions_user', 'object_permissions_group'].indexOf(item.key) === -1 && item.value_type !== 'mc_field'
+
+            }).map(function (item) {
+
+                return {
+                    expression: '',
+                    system_property_key: item.key,
+                    name: item.name,
+                    value_type: item.value_type
                 }
-                if (a.column < b.column) {
-                    return -1;
-                }
 
-                return 0;
             });
 
             var modelAttributes = modelService.getAttributesByContentType(vm.scheme.content_type);
 
-            vm.scheme.entity_fields.map(function (entityField, entityFieldIndex) {
+            vm.scheme.entity_fields.forEach(function (entityField) {
 
                 if (entityField.system_property_key) {
 
                     modelAttributes.forEach(function (attribute) {
 
                         if (attribute.key === entityField.system_property_key) {
-
-                            if (attribute.value_type === 'mc_field') { // remove multiple relation attributes
-
-                                vm.scheme.entity_fields.splice(entityFieldIndex, 1)
-
-                            } else {
-                                entityField.value_type = attribute.value_type;
-                                entityField.entity = attribute.entity;
-                                entityField.content_type = attribute.content_type;
-                                entityField.code = attribute.code;
-                            }
-
+                            entityField.value_type = attribute.value_type;
+                            entityField.entity = attribute.entity;
+                            entityField.content_type = attribute.content_type;
+                            entityField.code = attribute.code;
                         }
 
                     })
@@ -143,85 +145,17 @@
 
             });
 
-            vm.inputsFunctions = vm.getFunctions();
+            if (vm.scheme.content_type !== 'instruments.pricehistory' && vm.scheme.content_type !== 'currencyhistorys.currencyhistory') {
 
-            findPickedDynamicAttrs();
+                vm.getAttrs();
 
-            $scope.$apply();
-
-        });
-
-
-        /**
-         * Get list of dynamic attributes .
-         *
-         * @memberof module:SimpleEntityImportEitDialogController
-         */
-        vm.getAttrs = function () {
-
-            var entity = metaContentTypesService.findEntityByContentType(vm.scheme.content_type);
-
-            attributeTypeService.getList(entity).then(function (data) {
-
-                vm.dynamicAttributes = data.results;
-
-                vm.extendEntityFields();
-
-                $scope.$apply();
-            });
-        };
-
-        vm.extendEntityFields = function () {
-
-            vm.scheme.entity_fields.forEach(function (item) {
-
-                if (item.dynamic_attribute_id !== null) {
-
-                    vm.dynamicAttributes.forEach(function (attribute) {
-
-                        if (item.dynamic_attribute_id === attribute.id) {
-                            item.value_type = attribute.value_type;
-
-                        }
-
-                    })
-
-                }
-
-            })
-
-        };
-
-        vm.getContentTypeName = function (valueType) {
-
-            var valueTypeName = "";
-            switch (valueType) {
-                case 10:
-                    valueTypeName = "Text";
-                    break;
-                case 20:
-                    valueTypeName = "Number";
-                    break;
-                case 30:
-                case "field":
-                case "mc_field":
-                    valueTypeName = "Classificator";
-                    break;
-                case 40:
-                    valueTypeName = "Date";
-                    break;
             }
-
-            return valueTypeName;
         };
+
+        vm.updateEntityFields();
 
         vm.checkReadyStatus = function () {
             return vm.readyStatus.scheme;
-        };
-
-        vm.onDynamicAttributePick = function () {
-            findPickedDynamicAttrs();
-            vm.extendEntityFields();
         };
 
         vm.checkForUsedDynamicAttr = function (attrId) {
@@ -246,10 +180,9 @@
             vm.scheme.csv_fields.push({
                 name: '',
                 column: nextFieldNumber
-            });
+            })
 
             vm.inputsFunctions = vm.getFunctions();
-
         };
 
         vm.addDynamicAttribute = function () {
@@ -296,7 +229,7 @@
 
             });
 
-            entitySchemeService.update(vm.scheme.id, vm.scheme).then(function (data) {
+            csvImportSchemeService.create(vm.scheme).then(function (data) {
 
                 $mdDialog.hide({res: 'agree'});
 
@@ -309,7 +242,6 @@
                     locals: {
                         validationData: reason.message
                     },
-                    multiple: true,
                     preserveScope: true,
                     autoWrap: true,
                     skipHide: true

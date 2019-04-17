@@ -12,63 +12,8 @@
 
     var baseUrl = baseUrlService.resolve();
 
-    var getEntitiesSchemesList = function (contentType) {
-
-        var queryFilter = '';
-
-        if (contentType) {
-            queryFilter = '?content_type=' + contentType
-        }
-
-        return xhrService.fetch(baseUrl + 'import/csv/scheme/' + queryFilter,
-            {
-                method: 'GET',
-                credentials: 'include',
-                headers: {
-                    Accept: 'application/json',
-                    'Content-type': 'application/json'
-                }
-            })
-    };
-
-    var getEntitySchemesByModel = function (entityModel) {
-        return xhrService.fetch(baseUrl + 'import/data_schema/?model=' + entityModel,
-            {
-                method: 'GET',
-                credentials: 'include',
-                headers: {
-                    Accept: 'application/json',
-                    'Content-type': 'application/json'
-                }
-            })
-    };
-
-    var getSchemeFields = function (schemeId) {
-        return xhrService.fetch(baseUrl + 'import/schema_fields/?schema_id=' + schemeId,
-            {
-                method: 'GET',
-                credentials: 'include',
-                headers: {
-                    Accept: 'application/json',
-                    'Content-type': 'application/json'
-                }
-            })
-    };
-
-    var getSchemeAttributes = function (schemeId) {
-        return xhrService.fetch(baseUrl + 'import/schema_matching/?schema_id=' + schemeId,
-            {
-                method: 'GET',
-                credentials: 'include',
-                headers: {
-                    Accept: 'application/json',
-                    'Content-type': 'application/json'
-                }
-            })
-    };
-
     var getList = function (options) {
-        return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl + 'import/csv/scheme/', options),
+        return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl + 'import/complex/scheme/', options),
             {
                 method: 'GET',
                 credentials: 'include',
@@ -80,7 +25,7 @@
     };
 
     var create = function (scheme) {
-        return xhrService.fetch(baseUrl + 'import/csv/scheme/',
+        return xhrService.fetch(baseUrl + 'import/complex/scheme/',
             {
                 method: 'POST',
                 credentials: 'include',
@@ -94,7 +39,7 @@
     };
 
     var getByKey = function (id) {
-        return xhrService.fetch(baseUrl + 'import/csv/scheme/' + id + '/',
+        return xhrService.fetch(baseUrl + 'import/complex/scheme/' + id + '/',
             {
                 method: 'GET',
                 credentials: 'include',
@@ -107,9 +52,9 @@
     };
 
     var update = function (id, scheme) {
-        return xhrService.fetch(baseUrl + 'import/csv/scheme/' + id + '/',
+        return xhrService.fetch(baseUrl + 'import/complex/scheme/' + id + '/',
             {
-                method: 'PATCH',
+                method: 'PUT',
                 credentials: 'include',
                 headers: {
                     'X-CSRFToken': cookieService.getCookie('csrftoken'),
@@ -121,7 +66,7 @@
     };
 
     var deleteByKey = function (id) {
-        return xhrService.fetch(baseUrl + 'import/csv/scheme/' + id + '/',
+        return xhrService.fetch(baseUrl + 'import/complex/scheme/' + id + '/',
             {
                 method: 'DELETE',
                 credentials: 'include',
@@ -134,10 +79,6 @@
     };
 
     module.exports = {
-        getEntitiesSchemesList: getEntitiesSchemesList,
-        getEntitySchemesByModel: getEntitySchemesByModel,
-        getSchemeFields: getSchemeFields,
-        getSchemeAttributes: getSchemeAttributes,
         getList: getList,
         create: create,
         getByKey: getByKey,

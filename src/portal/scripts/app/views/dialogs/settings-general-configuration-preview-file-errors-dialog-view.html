@@ -12,12 +12,25 @@
                 <md-card-content>
                     <h3>Please see below the list of records we failed to import</h3>
 
-                    <div data-ng-repeat="errorItem in vm.data.errors">
+                    <table>
+                        <thead>
+                        <tr>
+                            <th>Object</th>
+                            <th>Issue</th>
+                            <th>Reaction</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr data-ng-repeat="errorItem in vm.data.errors">
+                            <td>{{ vm.getName(errorItem) }}</td>
+                            <td>
+                                <div data-ng-if="errorItem.error">{{errorItem.error.message}}</div>
+                            </td>
+                            <td>{{errorItem.mode}}</td>
+                        </tr>
+                        </tbody>
 
-                        {{vm.getName(errorItem.item)}} : {{errorItem.error}}
-
-                    </div>
-
+                    </table>
 
                 </md-card-content>
             </md-card>

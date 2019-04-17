@@ -5,6 +5,8 @@
 
     'use strict';
 
+
+
     module.exports = function ($scope, $mdDialog, data) {
 
         var vm = this;
