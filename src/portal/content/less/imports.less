@@ -15,7 +15,6 @@
 @import "app/report-viewer.less";
 @import "app/actions-block.less";
 @import "app/configuration-import-export";
-@import "app/common";
 @import "app/expression-editor";
 @import "app/transaction-type";
 @import "app/entity-editor-dialog";
@@ -30,3 +29,5 @@
 @import "app/warning-dialog";
 @import "app/transaction-import";
 @import "app/view-constructor";
+// сommon styles should always be at the end to overwrite other styles
+@import "app/common";

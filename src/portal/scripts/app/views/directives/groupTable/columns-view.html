@@ -52,7 +52,7 @@
                                         <ng-md-icon icon="settings"></ng-md-icon>
                                     </md-button>
                                     <md-menu-content width="4">
-                                        <md-menu-item>
+                                        <md-menu-item data-ng-if="$index !== 0">
                                             <md-menu>
                                                 <md-button ng-click="selectSubtotalType(column, 1)"
                                                            class="g-settings-option-btn">
@@ -68,7 +68,7 @@
                                                 <md-menu-content style="display: none"></md-menu-content>
                                             </md-menu>
                                         </md-menu-item>
-                                        <md-menu-item>
+                                        <md-menu-item data-ng-if="$index !== 0">
                                             <md-menu>
                                                 <md-button aria-label="Open phone interactions menu"
                                                            class=""
@@ -136,7 +136,7 @@
                                                 </md-menu-content>
                                             </md-menu>
                                         </md-menu-item>
-                                        <md-menu-item>
+                                        <md-menu-item data-ng-if="$index !== 0">
                                             <md-menu>
                                                 <md-button aria-label="Open phone interactions menu"
                                                            class=""
