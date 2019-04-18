@@ -600,7 +600,7 @@
 
         function getLayoutCurrentConfiguration(columnsWidths, isReport) {
 
-            var listLayout = getListLayout();
+            var listLayout = JSON.parse(JSON.stringify(getListLayout()));
 
             listLayout.data.columns = getColumns();
             listLayout.data.grouping = getGroups();
