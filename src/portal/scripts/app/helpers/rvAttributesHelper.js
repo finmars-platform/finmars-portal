@@ -72,15 +72,29 @@
 
                 } else {
 
-                    if (attribute.value_type !== 'mc_field') {
+                    if (attribute.value_type === 'field' && attribute.code === 'system_code') {
 
                         resultAttr = Object.assign({}, attribute);
 
                         resultAttr.content_type = contentType;
-                        resultAttr.name = name;
-                        resultAttr.key = key;
+                        resultAttr.name = name + '. Name';
+                        resultAttr.key = key + '.name';
 
                         result.push(resultAttr);
+
+                    } else {
+
+                        if (attribute.value_type !== 'mc_field') {
+
+                            resultAttr = Object.assign({}, attribute);
+
+                            resultAttr.content_type = contentType;
+                            resultAttr.name = name;
+                            resultAttr.key = key;
+
+                            result.push(resultAttr);
+
+                        }
 
                     }
 
