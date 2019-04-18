@@ -282,10 +282,17 @@
 
             } else {
 
-                if (attribute.value_type !== 'mc_field') {
+                if (attribute.value_type === 'field' && attribute.code === 'system_code' && source[attribute.key]) {
 
-                    result[resultKey] = source[attribute.key]
+                    result[resultKey + '.name'] = source[attribute.key + '_object'].name
 
+                } else {
+
+                    if (attribute.value_type !== 'mc_field') {
+
+                        result[resultKey] = source[attribute.key]
+
+                    }
                 }
             }
 
