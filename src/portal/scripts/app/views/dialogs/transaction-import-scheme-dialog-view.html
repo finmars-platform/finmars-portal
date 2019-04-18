@@ -83,17 +83,9 @@
                                             </div>
                                             <div flex="40">
                                                 <md-input-container style="width: 80%" aria-label="select with filter">
-                                                    <!--<label for="">Transaction type</label>
-                                                    <md-select data-ng-model="item.transaction_type">
-                                                        <md-option
-                                                                data-ng-repeat="transactionType in vm.transactionTypes"
-                                                                data-ng-value="transactionType.id">
-                                                            {{transactionType.name}}
-                                                        </md-option>
-                                                    </md-select>-->
 
                                                     <label for="">Transaction type</label>
-                                                    <md-select ng-model="vm.config.instrument_download_scheme"
+                                                    <md-select ng-model="item.transaction_type"
                                                                md-container-class="common-select-container"
                                                                md-on-close="searchTerm = ''">
 
