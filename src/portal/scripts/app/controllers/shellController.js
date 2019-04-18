@@ -13,7 +13,9 @@
     var notificationsService = require('../services/notificationsService');
 
     var reportCopyHelper = require('../helpers/reportCopyHelper');
+    var stringHelper = require('../helpers/stringHelper');
 
+    var evDataService = require('../services/entityViewerDataService');
     var metaService = require('../services/metaService');
     var uiService = require('../services/uiService');
     var middlewareService = require('../services/middlewareService');
@@ -48,9 +50,36 @@
 
         }
 
-        $transitions.onStart({}, function (transition) {
+        $transitions.onStart({}, function () {
             $mdDialog.cancel();
         });
+
+        /* $transitions.onStart({}, function (transition) {
+            var state = $state.current.name;
+
+            if (state.indexOf('app.data.') !== -1 || vm.isReport()) {
+
+                var th = $('.g-columns-component.g-thead').find('.g-cell');
+                var thWidths = [];
+                for (var i = 0; i < th.length; i++) {
+                    var thWidth = $(th[i]).width();
+                    thWidths.push(thWidth);
+                }
+
+                var activeLayout = evDataService.getListLayout();
+                var layoutCurrentConfiguration = evDataService().getLayoutCurrentConfiguration(thWidths, vm.isReport());
+                console.log("layout warning layouts", activeLayout + '\n' + layoutCurrentConfiguration);
+                var activeLayoutHash = stringHelper.toHash(JSON.stringify(activeLayout));
+                var layoutCurrentConfigurationHash = stringHelper.toHash(JSON.stringify(layoutCurrentConfiguration));
+
+                console.log("layout warning hashes", activeLayoutHash + '\n' + layoutCurrentConfigurationHash);
+
+                if () {
+
+                }
+            }
+
+        }); */
 
         vm.getMasterUsersList = function () {
 
@@ -114,10 +143,6 @@
         vm.currentLocation = function () {
             return metaService.getCurrentLocation($state).toUpperCase();
         };
-
-        $rootScope.$on('$stateChangeStart', function (event) {
-           console.log("state change started");
-        });
 
         // Get name of active layout in the toolbar
 

@@ -598,6 +598,41 @@
             return data.listLayout;
         }
 
+        function getLayoutCurrentConfiguration(columnsWidths, isReport) {
+
+            var listLayout = getListLayout();
+
+            listLayout.data.columns = getColumns();
+            listLayout.data.grouping = getGroups();
+            listLayout.data.filters = getFilters();
+
+            if (isReport) {
+
+                listLayout.data.reportOptions = JSON.parse(JSON.stringify(getReportOptions()));
+                listLayout.data.reportLayoutOptions = JSON.parse(JSON.stringify(getReportLayoutOptions()));
+
+                delete listLayout.data.reportOptions.items;
+                delete listLayout.data.reportOptions.item_complex_transactions;
+                delete listLayout.data.reportOptions.item_counterparties;
+                delete listLayout.data.reportOptions.item_responsibles;
+                delete listLayout.data.reportOptions.item_strategies3;
+                delete listLayout.data.reportOptions.item_strategies2;
+                delete listLayout.data.reportOptions.item_strategies1;
+                delete listLayout.data.reportOptions.item_portfolios;
+                delete listLayout.data.reportOptions.item_instruments;
+                delete listLayout.data.reportOptions.item_instrument_pricings;
+                delete listLayout.data.reportOptions.item_instrument_accruals;
+                delete listLayout.data.reportOptions.item_currency_fx_rates;
+                delete listLayout.data.reportOptions.item_currencies;
+                delete listLayout.data.reportOptions.item_accounts;
+
+            }
+
+            listLayout.data.columnsWidth = columnsWidths;
+
+            return listLayout;
+        }
+
 
         return {
 
@@ -711,9 +746,10 @@
 
             getInterfaceLayout: getInterfaceLayout,
 
-
             setListLayout: setListLayout,
-            getListLayout: getListLayout
+            getListLayout: getListLayout,
+
+            getLayoutCurrentConfiguration: getLayoutCurrentConfiguration
 
         }
     }
