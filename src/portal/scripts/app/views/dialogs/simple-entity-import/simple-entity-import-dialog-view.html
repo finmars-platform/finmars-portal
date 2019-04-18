@@ -76,7 +76,7 @@
                                                 <md-option
                                                         data-ng-repeat="item in vm.entitySchemes | filter: {name: searchTerm}"
                                                         ng-value="item.id"
-                                                        ng-bind="item.name">
+                                                        ng-bind="item.scheme_name">
                                                 </md-option>
                                                 <md-option data-ng-click="vm.createScheme($event)">Add scheme
                                                 </md-option>
