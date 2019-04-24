@@ -63,6 +63,14 @@
                                 </md-button>
                             </div>
                             <div layout="row">
+
+                                <md-button
+                                        class="md-raised m-r-16 instrument-load-btn {{vm.loadIsAvailable() ? '' : 'disabled-btn' }}"
+                                        data-ng-click="vm.validate($event)">
+                                    Validate
+                                </md-button>
+
+
                                 <md-button
                                         class="md-raised colored-btn instrument-load-btn {{vm.loadIsAvailable() ? '' : 'disabled-btn' }}"
                                         data-ng-click="vm.import($event)">
