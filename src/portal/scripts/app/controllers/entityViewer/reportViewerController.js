@@ -13,15 +13,20 @@
         var EntityViewerDataService = require('../../services/entityViewerDataService');
         var EntityViewerEventService = require('../../services/entityViewerEventService');
 
+        var stringHelper = require('../../helpers/stringHelper');
+
         var rvDataProviderService = require('../../services/rv-data-provider/rv-data-provider.service');
 
         var expressionService = require('../../services/expression.service');
 
-        module.exports = function ($scope, $mdDialog) {
+        module.exports = function ($scope, $mdDialog, $transitions) {
 
             var vm = this;
 
             vm.listViewIsReady = false;
+
+            var activeLayoutConfigString = {};
+            var activeLayoutHash = '';
 
             var entityViewerDataService = new EntityViewerDataService();
             var entityViewerEventService = new EntityViewerEventService();
@@ -59,7 +64,7 @@
 
                 uiService.getActiveListLayout(vm.entityType).then(function (res) {
 
-                    var listLayout = {};
+                    /*var listLayout = {};
 
                     if (res.results.length) {
 
@@ -78,13 +83,13 @@
 
                     entityViewerDataService.setListLayout(listLayout);
 
-                    var reportOptions = entityViewerDataService.getReportOptions();
-                    var reportLayoutOptions = entityViewerDataService.getReportLayoutOptions();
+                    var reportOptions = getReportOptions();
+                    var reportLayoutOptions = getReportLayoutOptions();
                     var newReportOptions = Object.assign({}, reportOptions, listLayout.data.reportOptions);
                     var newReportLayoutOptions = Object.assign({}, reportLayoutOptions, listLayout.data.reportLayoutOptions);
 
-                    entityViewerDataService.setReportOptions(newReportOptions);
-                    entityViewerDataService.setReportLayoutOptions(newReportLayoutOptions);
+                    setReportOptions(newReportOptions);
+                    setReportLayoutOptions(newReportLayoutOptions);
 
                     entityViewerDataService.setColumns(listLayout.data.columns);
                     entityViewerDataService.setGroups(listLayout.data.grouping);
@@ -105,13 +110,17 @@
 
                     entityViewerDataService.setComponents(listLayout.data.components);
                     entityViewerDataService.setEditorTemplateUrl('views/additions-editor-view.html');
-                    entityViewerDataService.setRootEntityViewer(true);
+                    entityViewerDataService.setRootEntityViewer(true);*/
 
+                    entityViewerDataService.setLayoutCurrentConfiguration(res, uiService, true);
+
+                    var reportOptions = entityViewerDataService.getReportOptions();
+                    var reportLayoutOptions = entityViewerDataService.getReportLayoutOptions()
                     // Check if there is need to solve report datepicker expression
-                    if (newReportLayoutOptions && newReportLayoutOptions.datepickerOptions) {
+                    if (reportLayoutOptions && reportLayoutOptions.datepickerOptions) {
 
-                        var reportFirstDatepickerExpression = newReportLayoutOptions.datepickerOptions.reportFirstDatepicker.expression;
-                        var reportLastDatepickerExpression = newReportLayoutOptions.datepickerOptions.reportLastDatepicker.expression;
+                        var reportFirstDatepickerExpression = reportLayoutOptions.datepickerOptions.reportFirstDatepicker.expression; // field for the first datepicker in reports with two datepickers, e.g. p&l report
+                        var reportLastDatepickerExpression = reportLayoutOptions.datepickerOptions.reportLastDatepicker.expression;
 
                         if (reportFirstDatepickerExpression || reportLastDatepickerExpression) {
 
@@ -121,7 +130,7 @@
 
                                 var solveFirstExpression = function () {
                                     return expressionService.getResultOfExpression({"expression": reportFirstDatepickerExpression}).then(function (data) {
-                                        newReportOptions.pl_first_date = data.result;
+                                        reportOptions.pl_first_date = data.result;
                                     });
                                 };
 
@@ -132,7 +141,7 @@
 
                                 var solveLastExpression = function () {
                                     return expressionService.getResultOfExpression({"expression": reportLastDatepickerExpression}).then(function (data) {
-                                        newReportOptions.report_date = data.result;
+                                        reportOptions.report_date = data.result;
                                     });
                                 };
 
@@ -145,7 +154,10 @@
 
                                 rvDataProviderService.requestReport(entityViewerDataService, entityViewerEventService);
 
-                                $scope.$apply()
+                                $scope.$apply();
+
+                                activeLayoutConfigString = JSON.stringify(entityViewerDataService.getListLayout());
+                                activeLayoutHash = stringHelper.toHash(activeLayoutConfigString);
 
                             });
 
@@ -156,25 +168,25 @@
 
                             rvDataProviderService.requestReport(entityViewerDataService, entityViewerEventService);
 
-                            $scope.$apply()
+                            $scope.$apply();
+
+                            activeLayoutConfigString = JSON.stringify(entityViewerDataService.getListLayout());
+                            activeLayoutHash = stringHelper.toHash(activeLayoutConfigString);
 
                         }
-                        // < Check if there is need to solve report datepicker expression >
+                    // < Check if there is need to solve report datepicker expression >
                     } else {
 
                         vm.listViewIsReady = true;
 
                         rvDataProviderService.requestReport(entityViewerDataService, entityViewerEventService);
 
-                        $scope.$apply()
+                        $scope.$apply();
+
+                        activeLayoutConfigString = JSON.stringify(entityViewerDataService.getListLayout());
+                        activeLayoutHash = stringHelper.toHash(activeLayoutConfigString);
 
                     }
-
-                    /*vm.listViewIsReady = true;
-
-                    rvDataProviderService.requestReport(entityViewerDataService, entityViewerEventService);
-
-                    $scope.$apply()*/
 
                 });
 
@@ -190,6 +202,67 @@
             };
 
             vm.init();
+
+            var checkLayoutForChanges = function (transition) {
+                var stateName = transition.to().name;
+
+                if (stateName !== transition.from().name) {
+
+                    var layoutCurrentConfigString = JSON.stringify(entityViewerDataService.getLayoutCurrentConfiguration(true));
+                    var layoutCurrentConfigHash = stringHelper.toHash(layoutCurrentConfigString);
+
+                    if (activeLayoutHash !== layoutCurrentConfigHash) {
+
+                        return new Promise (function (resolve, reject) {
+
+                            $mdDialog.show({
+                                controller: 'LayoutChangesLossWarningDialogController as vm',
+                                templateUrl: 'views/dialogs/layout-changes-loss-warning-dialog.html',
+                                parent: angular.element(document.body),
+                                preserveScope: true,
+                                autoWrap: true,
+                                multiple: true
+                            }).then(function (res, rej) {
+
+                                if (res.status === 'save_layout') {
+
+                                    var layoutCurrentConfig = JSON.parse(layoutCurrentConfigString);
+
+                                    if (layoutCurrentConfig.hasOwnProperty('id')) {
+
+                                        uiService.updateListLayout(layoutCurrentConfig.id, layoutCurrentConfig).then(function () {
+                                            resolve(true);
+                                        });
+
+                                    } else {
+
+                                        uiService.createListLayout(vm.entityType, layoutCurrentConfig).then(function () {
+                                            resolve(true);
+                                        });
+
+                                    }
+
+                                } else if ('do_not_save_layout') {
+
+                                    resolve(true);
+
+                                }
+
+                            }).catch(function () {
+                                reject();
+                            });
+                        });
+
+                    }
+                }
+
+            };
+
+            var doBeforeStateChange = $transitions.onBefore({}, checkLayoutForChanges);
+
+            this.$onDestroy = function () {
+                doBeforeStateChange();
+            }
         }
 
     }()

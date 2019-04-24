@@ -272,9 +272,6 @@
                     }
                 ],
                 "filters": [],
-                "columnsWidth": [
-                    238
-                ],
                 "additionsType": ""
             }
         }]
