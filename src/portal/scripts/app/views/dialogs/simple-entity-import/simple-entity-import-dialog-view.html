@@ -74,7 +74,7 @@
                                             <div class="select-options-holder">
 
                                                 <md-option
-                                                        data-ng-repeat="item in vm.entitySchemes | filter: {name: searchTerm}"
+                                                        data-ng-repeat="item in vm.entitySchemes | filter: {scheme_name: searchTerm}"
                                                         ng-value="item.id"
                                                         ng-bind="item.scheme_name">
                                                 </md-option>
