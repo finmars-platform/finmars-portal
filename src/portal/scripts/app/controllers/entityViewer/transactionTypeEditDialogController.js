@@ -218,145 +218,60 @@
         vm.range = gridHelperService.range;
 
         vm.getItem = function (fromChild) {
+
             return new Promise(function (res, rej) {
-                if (vm.entityType === 'complex-transaction') {
 
-                    entityResolverService.getByKey(vm.entityType, vm.entityId).then(function (complextTransactionData) {
+                entityResolverService.getByKey(vm.entityType, vm.entityId).then(function (data) {
 
-                        vm.complexTransactionOptions.transactionTypeId = complextTransactionData.transaction_type;
-                        vm.editLayoutEntityInstanceId = complextTransactionData.complex_transaction.id;
-                        vm.entity = complextTransactionData.complex_transaction;
+                    vm.entity = data;
 
-                        var inputsWithCalculations = complextTransactionData.transaction_type_object.inputs;
-
-                        var keys = Object.keys(complextTransactionData.values);
-
-                        keys.forEach(function (key) {
-                            vm.entity[key] = complextTransactionData.values[key];
-                        });
-
-                        complextTransactionData.complex_transaction.attributes.forEach(function (item) {
-                            if (item.attribute_type_object.value_type === 10) {
-                                vm.entity[item.attribute_type_object.name] = item.value_string;
-                            }
-                            if (item.attribute_type_object.value_type === 20) {
-                                vm.entity[item.attribute_type_object.name] = item.value_float;
-                            }
-                            if (item.attribute_type_object.value_type === 30) {
-                                vm.entity[item.attribute_type_object.name] = item.classifier;
-                            }
-                            if (item.attribute_type_object.value_type === 40) {
-                                vm.entity[item.attribute_type_object.name] = item.value_date;
-                            }
-                        });
-
-                        vm.tabs = complextTransactionData.book_transaction_layout.data;
-                        vm.userInputs = [];
-                        vm.tabs.forEach(function (tab) {
-                            tab.layout.fields.forEach(function (field) {
-                                if (field.attribute_class === 'userInput') {
-                                    vm.userInputs.push(field.attribute);
-                                }
-                            });
-                        });
-
-                        inputsWithCalculations.forEach(function (inputWithCalc) {
-
-                            vm.userInputs.forEach(function (userInput) {
-                                if (userInput.name === inputWithCalc.name) {
-                                    if (inputWithCalc.can_recalculate === true) {
-                                        userInput.buttons = [
-                                            {
-                                                icon: 'functions',
-                                                tooltip: 'Recalculate',
-                                                caption: '',
-                                                classes: 'md-raised',
-                                                action: vm.recalculate
-                                            }
-                                        ]
-                                    }
-                                }
-                            })
-
-                        });
+                    if (vm.entityType === 'transaction-type') {
 
                         vm.editLayout = function () {
                             $state.go('app.data-constructor', {
-                                entityType: vm.entityType,
+                                entityType: 'complex-transaction',
                                 from: vm.entityType,
-                                instanceId: vm.complexTransactionOptions.transactionTypeId
+                                instanceId: data.id
                             });
                             $mdDialog.hide();
                         };
 
                         vm.manageAttrs = function () {
                             $state.go('app.attributesManager', {
-                                entityType: vm.entityType,
+                                entityType: 'transaction-type',
                                 from: vm.entityType,
-                                instanceId: vm.complexTransactionOptions.transactionTypeId
+                                instanceId: data.id
                             });
                             $mdDialog.hide();
                         };
+                    }
 
+                    entityViewerHelperService.transformItems([vm.entity], vm.attrs).then(function (transformEntityData) {
+                        vm.entity = transformEntityData[0];
+                        vm.entity.$_isValid = true;
                         vm.readyStatus.entity = true;
-                        vm.readyStatus.permissions = true;
-                        vm.readyStatus.layout = true;
 
-                        $scope.$apply();
+                        vm.loadPermissions();
 
-                    });
+                        if (vm.entityType !== 'transaction-type') {
 
-                } else {
+                            vm.getLayout();
 
-                    entityResolverService.getByKey(vm.entityType, vm.entityId).then(function (data) {
+                            // Resolving promise to inform child about end of editor building
+                            res();
 
-                        vm.entity = data;
+                        } else {
+                            vm.readyStatus.layout = true;
+                            $scope.$apply();
 
-                        if (vm.entityType === 'transaction-type') {
-
-                            vm.editLayout = function () {
-                                $state.go('app.data-constructor', {
-                                    entityType: 'complex-transaction',
-                                    from: vm.entityType,
-                                    instanceId: data.id
-                                });
-                                $mdDialog.hide();
-                            };
-
-                            vm.manageAttrs = function () {
-                                $state.go('app.attributesManager', {
-                                    entityType: 'transaction-type',
-                                    from: vm.entityType,
-                                    instanceId: data.id
-                                });
-                                $mdDialog.hide();
-                            };
                         }
 
-                        entityViewerHelperService.transformItems([vm.entity], vm.attrs).then(function (transformEntityData) {
-                            vm.entity = transformEntityData[0];
-                            vm.entity.$_isValid = true;
-                            vm.readyStatus.entity = true;
-
-                            vm.loadPermissions();
-
-                            if (vm.entityType !== 'transaction-type') {
-
-                                vm.getLayout();
-
-                                // Resolving promise to inform child about end of editor building
-                                res();
-
-                            } else {
-                                vm.readyStatus.layout = true;
-                                $scope.$apply();
-
-                            }
-
-                        });
                     });
 
-                }
+                    vm.setStateInActionsControls();
+
+                });
+
             });
 
         };
@@ -510,7 +425,7 @@
             console.log("empty fields actions", actions);
             var emptyFields = false;
 
-            var a,f;
+            var a, f;
             for (a = 0; a < actions.length; a++) {
                 var action = actions[a];
                 var actionFields = Object.keys(action);
@@ -642,7 +557,8 @@
             if (entity === 'instruments') {
 
                 if (vm.entity.is_valid_for_all_instruments) {
-                    vm.entity.instrument_types = [];;
+                    vm.entity.instrument_types = [];
+                    ;
                 }
 
             } else if (entity === 'portfolios') {
@@ -1072,41 +988,47 @@
             }
         ];
 
-        vm.actionsKeysList = [
-            'instrument',
-            'transaction',
-            'instrument_factor_schedule',
-            'instrument_manual_pricing_formula',
-            'instrument_accrual_calculation_schedules',
-            'instrument_event_schedule',
-            'instrument_event_schedule_action'
-        ];
 
         vm.checkActionsIsNotNull = function () {
             return false;
         };
 
-        vm.entity.actions.forEach(function (action) {
+        vm.setStateInActionsControls = function () {
 
-            var keys;
+            vm.actionsKeysList = [
+                'instrument',
+                'transaction',
+                'instrument_factor_schedule',
+                'instrument_manual_pricing_formula',
+                'instrument_accrual_calculation_schedules',
+                'instrument_event_schedule',
+                'instrument_event_schedule_action'
+            ];
 
-            vm.actionsKeysList.forEach(function (actionKey) {
+            vm.entity.actions.forEach(function (action) {
 
-                if (action[actionKey] !== null) {
-                    keys = Object.keys(action[actionKey]);
+                var keys;
 
-                    keys.forEach(function (key) {
-                        if (action[actionKey].hasOwnProperty(key + '_input')) {
-                            if (action[actionKey][key] !== null) {
-                                action[actionKey][key + '_toggle'] = true;
+                vm.actionsKeysList.forEach(function (actionKey) {
+
+                    if (action[actionKey] !== null) {
+                        keys = Object.keys(action[actionKey]);
+
+                        keys.forEach(function (key) {
+                            if (action[actionKey].hasOwnProperty(key + '_input')) {
+                                if (action[actionKey][key] !== null) {
+                                    action[actionKey][key + '_toggle'] = true;
+                                }
                             }
-                        }
-                    })
-                }
+                        })
+                    }
 
-            })
+                })
 
-        });
+            });
+
+        }
+
 
         vm.resetProperty = function (item, propertyName, fieldName) {
 

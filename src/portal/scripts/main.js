@@ -278,7 +278,6 @@ app.directive('bindFieldControl', [require('./app/directives/bindFieldControlDir
 app.directive('layoutConstructorField', [require('./app/directives/layoutConstructorFieldDirective')]);
 app.directive('addTabEc', ['$compile', require('./app/directives/addTabEcDirective')]);
 
-app.directive('fileRead', [require('./app/directives/fileReadDirective')]);
 app.directive('onFinishRender', [require('./app/directives/onFinishRenderDirective')]);
 
 // Controls

@@ -46,19 +46,21 @@
                         var $fileName;
                         if ($inputValue.indexOf('\\') >= 0) {
                             $lastDivider = $inputValue.lastIndexOf('\\');
-                        }
-                        else if ($inputValue.indexOf('/') >= 0) {
+                        } else if ($inputValue.indexOf('/') >= 0) {
                             $lastDivider = $inputValue.lastIndexOf('/');
                         }
                         $fileName = $inputValue.substring($lastDivider + 1);
                         $inputPlaceHolder.text($fileName);
-                    }
-                    else if ($inputPlaceHolder.text != 'Select file') {
+                    } else if ($inputPlaceHolder.text !== 'Select file') {
                         scope.readFile = elem[0].files[0];
 
                         $inputPlaceHolder.text('Select file');
+
+
                     }
 
+                    scope.readFileChange();
+                    scope.$apply();
 
 
                 });
