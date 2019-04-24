@@ -598,7 +598,7 @@
             return data.listLayout;
         }
 
-        function getLayoutCurrentConfiguration(columnsWidths, isReport) {
+        function getLayoutCurrentConfiguration(isReport) {
 
             var listLayout = JSON.parse(JSON.stringify(getListLayout()));
 
@@ -628,11 +628,62 @@
 
             }
 
-            listLayout.data.columnsWidth = columnsWidths;
-
             return listLayout;
         }
 
+        function setLayoutCurrentConfiguration(activeListLayout, uiService, isReport) {
+
+            var listLayout = {};
+
+            if (activeListLayout.results.length) {
+
+                listLayout = Object.assign({}, activeListLayout.results[0]);
+
+            } else {
+
+                console.log('default triggered');
+
+                var defaultList = uiService.getDefaultListLayout();
+
+                listLayout = {};
+                listLayout.data = Object.assign({}, defaultList[0].data);
+
+            }
+
+            setListLayout(listLayout);
+
+            if (isReport) {
+
+                var reportOptions = getReportOptions();
+                var reportLayoutOptions = getReportLayoutOptions();
+                var newReportOptions = Object.assign({}, reportOptions, listLayout.data.reportOptions);
+                var newReportLayoutOptions = Object.assign({}, reportLayoutOptions, listLayout.data.reportLayoutOptions);
+
+                setReportOptions(newReportOptions);
+                setReportLayoutOptions(newReportLayoutOptions);
+
+            }
+
+            setColumns(listLayout.data.columns);
+            setGroups(listLayout.data.grouping);
+            setFilters(listLayout.data.filters);
+
+            listLayout.data.components = {
+                sidebar: true,
+                groupingArea: true,
+                columnAreaHeader: true,
+                splitPanel: true,
+                addEntityBtn: true,
+                fieldManagerBtn: true,
+                layoutManager: true,
+                autoReportRequest: false
+            };
+
+            setComponents(listLayout.data.components);
+            setEditorTemplateUrl('views/additions-editor-view.html');
+            setRootEntityViewer(true);
+
+        }
 
         return {
 
@@ -749,7 +800,8 @@
             setListLayout: setListLayout,
             getListLayout: getListLayout,
 
-            getLayoutCurrentConfiguration: getLayoutCurrentConfiguration
+            getLayoutCurrentConfiguration: getLayoutCurrentConfiguration,
+            setLayoutCurrentConfiguration: setLayoutCurrentConfiguration
 
         }
     }

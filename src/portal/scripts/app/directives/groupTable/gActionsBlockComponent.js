@@ -382,14 +382,14 @@
 
                 scope.saveLayoutList = function ($event) {
 
-                    // saving columns widths
-                    var tHead = $('.g-columns-component');
+                    // saving columns widths - OUTDATED CODE
+                    /*var tHead = $('.g-columns-component');
                     var th = $('.g-columns-component.g-thead').find('.g-cell');
                     var thWidths = [];
                     for (var i = 0; i < th.length; i = i + 1) {
                         var thWidth = $(th[i]).width();
                         thWidths.push(thWidth);
-                    }
+                    }*/
 
                     var listLayout = scope.evDataService.getListLayout();
 
@@ -419,7 +419,7 @@
 
                     }
 
-                    listLayout.data.columnsWidth = thWidths;
+                    // listLayout.data.columnsWidth = thWidths;
 
                     if (listLayout.hasOwnProperty('id')) {
                         uiService.updateListLayout(listLayout.id, listLayout)
@@ -436,6 +436,8 @@
 
                         scope.evEventService.dispatchEvent(evEvents.LIST_LAYOUT_CHANGE);
 
+                        middlewareService.setData('entityActiveLayoutSwitched', true); // Give signal to update active layout name in the toolbar
+
                     });
 
 
@@ -443,13 +445,13 @@
 
                 scope.saveAsLayoutList = function ($event) {
 
-                    var tHead = $('.g-columns-component');
+                    /*var tHead = $('.g-columns-component');
                     var th = $('.g-columns-component.g-thead').find('.g-cell');
                     var thWidths = [];
                     for (var i = 0; i < th.length; i = i + 1) {
                         var thWidth = $(th[i]).width();
                         thWidths.push(thWidth);
-                    }
+                    }*/
 
                     var listLayout = scope.evDataService.getListLayout();
 
@@ -483,7 +485,7 @@
 
                     }
 
-                    listLayout.data.columnsWidth = thWidths;
+                    // listLayout.data.columnsWidth = thWidths;
 
                     $mdDialog.show({
                         controller: 'UiLayoutSaveAsDialogController as vm',

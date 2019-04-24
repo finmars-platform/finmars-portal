@@ -25,6 +25,9 @@
 
             vm.listViewIsReady = false;
 
+            var activeLayoutConfigString = {};
+            var activeLayoutHash = '';
+
             var entityViewerDataService = new EntityViewerDataService();
             var entityViewerEventService = new EntityViewerEventService();
 
@@ -35,7 +38,7 @@
 
                 uiService.getActiveListLayout(vm.entityType).then(function (res) {
 
-                    var listLayout = {};
+                    /*var listLayout = {};
 
                     if (res.results.length) {
 
@@ -54,15 +57,6 @@
 
                     entityViewerDataService.setListLayout(listLayout);
 
-
-                    var reportOptions = entityViewerDataService.getReportOptions();
-                    var reportLayoutOptions = entityViewerDataService.getReportLayoutOptions();
-                    var newReportOptions = Object.assign({}, reportOptions, listLayout.data.reportOptions);
-                    var newReportLayoutOptions = Object.assign({}, reportLayoutOptions, listLayout.data.reportLayoutOptions);
-
-                    entityViewerDataService.setReportOptions(newReportOptions);
-                    entityViewerDataService.setReportLayoutOptions(newReportLayoutOptions);
-
                     entityViewerDataService.setColumns(listLayout.data.columns);
                     entityViewerDataService.setGroups(listLayout.data.grouping);
                     entityViewerDataService.setFilters(listLayout.data.filters);
@@ -80,7 +74,9 @@
 
                     entityViewerDataService.setComponents(listLayout.data.components);
                     entityViewerDataService.setEditorTemplateUrl('views/additions-editor-view.html');
-                    entityViewerDataService.setRootEntityViewer(true);
+                    entityViewerDataService.setRootEntityViewer(true);*/
+
+                    entityViewerDataService.setLayoutCurrentConfiguration(res, uiService, false);
 
                     vm.listViewIsReady = true;
 
@@ -88,8 +84,10 @@
 
                     evDataProviderService.updateDataStructure(entityViewerDataService, entityViewerEventService);
 
-                    $scope.$apply()
+                    $scope.$apply();
 
+                    activeLayoutConfigString = JSON.stringify(entityViewerDataService.getListLayout());
+                    activeLayoutHash = stringHelper.toHash(activeLayoutConfigString);
                 });
 
             };
@@ -128,68 +126,63 @@
                     'app.data.strategy'
                 ];
 
-                console.log("layout warning transition data", transition, stateName);
-                if (listOfStatesWithLayout.indexOf(stateName) !== -1) {
+                if (stateName !== transition.from().name && listOfStatesWithLayout.indexOf(stateName) !== -1) {
 
-                    var th = $('.g-columns-component.g-thead').find('.g-cell');
-                    var thWidths = [];
-                    for (var i = 0; i < th.length; i++) {
-                        var thWidth = $(th[i]).width();
-                        thWidths.push(thWidth);
-                    }
+                    var layoutCurrentConfigString = JSON.stringify(entityViewerDataService.getLayoutCurrentConfiguration(false));
+                    var layoutCurrentConfigHash = stringHelper.toHash(layoutCurrentConfigString);
 
-                    var activeLayout = JSON.stringify(entityViewerDataService.getListLayout());
-                    var layoutCurrentConfiguration = JSON.stringify(entityViewerDataService.getLayoutCurrentConfiguration(thWidths, false));
-                    console.log("layout warning layouts", JSON.stringify(activeLayout) + '\n' + JSON.stringify(layoutCurrentConfiguration));
-
-                    var activeLayoutHash = stringHelper.toHash(activeLayout);
-                    var layoutCurrentConfigurationHash = stringHelper.toHash(layoutCurrentConfiguration);
-
-                    console.log("layout warning hashes", activeLayoutHash + '\n' + layoutCurrentConfigurationHash);
-
-                    if (activeLayoutHash !== layoutCurrentConfigurationHash) {
+                    if (activeLayoutHash !== layoutCurrentConfigHash) {
 
                         return new Promise (function (resolve, reject) {
 
                             $mdDialog.show({
-                                controller: 'WarningDialogController as vm',
-                                templateUrl: 'views/warning-dialog-view.html',
+                                controller: 'LayoutChangesLossWarningDialogController as vm',
+                                templateUrl: 'views/dialogs/layout-changes-loss-warning-dialog.html',
                                 parent: angular.element(document.body),
                                 preserveScope: true,
                                 autoWrap: true,
-                                multiple: true,
-                                skipHide: true,
-                                locals: {
-                                    warning: {
-                                        title: 'Warning',
-                                        description: 'If you leave this page all unsaved layout changes will be lost. Do you want to proceed.'
-                                    }
-                                }
+                                multiple: true
                             }).then(function (res, rej) {
 
-                                if (res.status === 'agree') {
+                                if (res.status === 'save_layout') {
+
+                                    var layoutCurrentConfig = JSON.parse(layoutCurrentConfigString);
+
+                                    if (layoutCurrentConfig.hasOwnProperty('id')) {
+
+                                        uiService.updateListLayout(layoutCurrentConfig.id, layoutCurrentConfig).then(function () {
+                                            resolve(true);
+                                        });
+
+                                    } else {
+
+                                        uiService.createListLayout(vm.entityType, layoutCurrentConfig).then(function () {
+                                            resolve(true);
+                                        });
+
+                                    }
+
+                                } else if ('do_not_save_layout') {
+
                                     resolve(true);
+
                                 }
+
                             }).catch(function () {
-                                reject();
+                                reject(false);
                             });
                         });
 
-                    } else {
-                        console.log('layout warning layout is not modified');
                     }
-                } else {
-                    console.log('layout warning without layout');
                 }
 
             };
 
-            // var doBeforeStateChange = $transitions.onBefore({}, checkLayoutForChanges);
+            var doBeforeStateChange = $transitions.onBefore({}, checkLayoutForChanges);
 
 
             this.$onDestroy = function () {
-                // doBeforeStateChange();
-                console.log("layout warning destroyed");
+                doBeforeStateChange();
             }
         }
 
