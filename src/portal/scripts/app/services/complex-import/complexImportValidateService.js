@@ -20,7 +20,7 @@
 
         console.log('action', action);
 
-        return importEntityService.startImport(formData)
+        return importEntityService.validateImport(formData)
 
     };
 
@@ -38,7 +38,7 @@
             formData.append('delimiter', config.delimiter);
         }
 
-        importTransactionService.startImport(formData).then(function (data) {
+        importTransactionService.validateImport(formData).then(function (data) {
 
             config = data;
 
@@ -124,7 +124,7 @@
 
     };
 
-    var startImport = function (file, scheme) {
+    var validateImport = function (file, scheme) {
 
         return new Promise(function (resolve, reject) {
 
@@ -153,7 +153,7 @@
     };
 
     module.exports = {
-        startImport: startImport
+        validateImport: validateImport
     }
 
 }());
