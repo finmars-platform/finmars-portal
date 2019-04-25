@@ -86,37 +86,37 @@
 
                         item.id = result.id;
 
-                        if (entityType === 'transaction-type') {
-
-                            result.actions.forEach(function (resultAction) {
-
-                                item.actions.forEach(function (itemAction) {
-
-                                    if (resultAction.action_notes === itemAction.action_notes) {
-                                        itemAction.id = resultAction.id
-                                    }
-
-
-                                })
-
-
-                            });
-
-                            result.inputs.forEach(function (resultInput) {
-
-                                item.inputs.forEach(function (itemInput) {
-
-                                    if (resultInput.name === itemInput.name) {
-                                        itemInput.id = resultInput.id
-                                    }
-
-
-                                })
-
-
-                            })
-
-                        }
+                        // if (entityType === 'transaction-type') {
+                        //
+                        //     result.actions.forEach(function (resultAction) {
+                        //
+                        //         item.actions.forEach(function (itemAction) {
+                        //
+                        //             if (resultAction.action_notes === itemAction.action_notes) {
+                        //                 itemAction.id = resultAction.id
+                        //             }
+                        //
+                        //
+                        //         })
+                        //
+                        //
+                        //     });
+                        //
+                        //     result.inputs.forEach(function (resultInput) {
+                        //
+                        //         item.inputs.forEach(function (itemInput) {
+                        //
+                        //             if (resultInput.name === itemInput.name) {
+                        //                 itemInput.id = resultInput.id
+                        //             }
+                        //
+                        //
+                        //         })
+                        //
+                        //
+                        //     })
+                        //
+                        // }
 
 
                         resolve(entityResolverService.update(entityType, item.id, item))
@@ -790,7 +790,7 @@
             if (index === entityItem.content.length) {
                 resolve(item);
             } else {
-                recursiveCreateItem(resolve, index, entityItem, cacheContainer, errors)
+                recursiveCreateItem(resolve, index, entityItem, settings, cacheContainer, errors)
             }
 
         }
