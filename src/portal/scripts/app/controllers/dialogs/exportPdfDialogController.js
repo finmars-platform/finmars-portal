@@ -41,25 +41,6 @@
             }
         ];
 
-        vm.zoomOptions = [
-            {
-                value: 1,
-                name: '100%'
-            },
-            {
-                value: 0.75,
-                name: '75%'
-            },
-            {
-                value: 0.5,
-                name: '50%'
-            },
-            {
-                value: 0.25,
-                name: '25%'
-            }
-        ];
-
         vm.cancel = function () {
             $mdDialog.cancel();
         };
@@ -93,9 +74,42 @@
             reportCopyHelper.copy($event);
         };
 
+        vm.fitLayoutOnAPage = function () {
+            var pageType = vm.settings.layout;
+            var pageMargin = vm.settings.margin;
+            var scale = 1;
+
+            var pageSize = null;
+            if (pageType === 'portrait') {
+                pageSize = 560;
+            }
+            else {
+                pageSize = 810;
+            }
+
+            var columns = evDataService.getColumns();
+            var layoutWidth = 0;
+            columns.map(function (column) {
+                layoutWidth = layoutWidth + parseInt(column.style.width);
+            });
+            console.log('fit layout columns', columns);
+
+            var widthLimit = pageSize - pageMargin;
+            console.log('fit layout layoutWidth, limitWidth', layoutWidth, widthLimit);
+            while (layoutWidth * scale > widthLimit) {
+                scale = (scale - 0.05).toFixed(2);
+                console.log('fit layout scale step', scale);
+            }
+
+            vm.zoomPercent = parseInt(scale * 100);
+            console.log('fit layout final zoom', vm.zoomPercent);
+        };
+
         vm.agree = function () {
 
             console.log('vm.settings', vm.settings);
+
+            vm.settings.data.columns = evDataService.getColumns();
 
             vm.settings.data.reportOptions = JSON.parse(JSON.stringify(evDataService.getReportOptions()));
 

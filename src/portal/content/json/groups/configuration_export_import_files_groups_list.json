@@ -154,6 +154,11 @@
           "content_type": "reports.plreport",
           "name": "P&L Reports",
           "firstElementExist": false
+        },
+        {
+          "content_type": "reports.transactionreport",
+          "name": "Transaction Reports",
+          "firstElementExist": false
         }
 
       ]
