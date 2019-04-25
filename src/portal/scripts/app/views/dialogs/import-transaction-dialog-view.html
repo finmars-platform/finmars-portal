@@ -12,15 +12,8 @@
                     <md-card-content class="p-t-26">
                         <div layout="row" style="margin-bottom: 20px">
                             <div layout="column">
-                                <!--<md-input-container flex="40" style="margin-bottom: 0">-->
-                                <!--<label for="">File</label>-->
-                                <!--<input type="file" data-ng-model="vm.config.file" file-read="vm.config.file"-->
-                                <!--data-ng-change="vm.checkExtension()">-->
-                                <!--</md-input-container>-->
-
 
                                 <md-input-container flex="40" style="margin-bottom: 0" class="ng-hide">
-                                    <!--<input type="file" file-read="vm.config.file" id="importDataUploadInput" input-file-directive>-->
                                     <input type="file" id="importDataUploadInput" input-file-directive
                                            read-file="vm.config.file" read-file-change="vm.checkExtension($event)">
                                 </md-input-container>
