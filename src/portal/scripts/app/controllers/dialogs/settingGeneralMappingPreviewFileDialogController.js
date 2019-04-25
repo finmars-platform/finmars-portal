@@ -176,7 +176,7 @@
                 return 'account'
             }
 
-            if (contentType === 'integrations.accountypemapping') {
+            if (contentType === 'integrations.accounttypemapping') {
                 return 'account-type'
             }
 
