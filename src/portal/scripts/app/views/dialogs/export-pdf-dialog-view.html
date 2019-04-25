@@ -41,16 +41,21 @@
 
         </div>
 
-        <div class="copy-report-to-buffer">
-            <md-button class="md-button md-raised"
-                       data-ng-click="vm.copyReport($event)"
-                       aria-label="Copy report">
-                <!--<ng-md-icon icon="content_copy" size="24">
-                    <md-tooltip class="tooltip_1" md-direction="bottom">Copy report in buffer</md-tooltip>
-                </ng-md-icon>-->
-                <ng-md-icon icon="content_copy" size="24"></ng-md-icon>
-                Copy report in buffer
-            </md-button>
+        <div layout="row" class="m-t-16">
+            <div class="copy-report-to-buffer">
+                <md-button class="md-button md-raised"
+                           data-ng-click="vm.copyReport($event)"
+                           aria-label="Copy report">
+                    <!--<ng-md-icon icon="content_copy" size="24">
+                        <md-tooltip class="tooltip_1" md-direction="bottom">Copy report in buffer</md-tooltip>
+                    </ng-md-icon>-->
+                    <ng-md-icon icon="content_copy" size="24"></ng-md-icon>
+                    Copy report in buffer
+                </md-button>
+            </div>
+            <div>
+                <md-button class="md-raised" ng-click="vm.fitLayoutOnAPage()">Autocalculate zoom for layout</md-button>
+            </div>
         </div>
 
     </md-dialog-content>

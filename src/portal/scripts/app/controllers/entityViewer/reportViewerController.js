@@ -115,7 +115,8 @@
                     entityViewerDataService.setLayoutCurrentConfiguration(res, uiService, true);
 
                     var reportOptions = entityViewerDataService.getReportOptions();
-                    var reportLayoutOptions = entityViewerDataService.getReportLayoutOptions()
+                    var reportLayoutOptions = entityViewerDataService.getReportLayoutOptions();
+
                     // Check if there is need to solve report datepicker expression
                     if (reportLayoutOptions && reportLayoutOptions.datepickerOptions) {
 
@@ -157,7 +158,6 @@
                                 $scope.$apply();
 
                                 activeLayoutConfigString = JSON.stringify(entityViewerDataService.getListLayout());
-                                activeLayoutHash = stringHelper.toHash(activeLayoutConfigString);
 
                             });
 
@@ -208,7 +208,15 @@
 
                 if (stateName !== transition.from().name) {
 
-                    var layoutCurrentConfigString = JSON.stringify(entityViewerDataService.getLayoutCurrentConfiguration(true));
+                    var layoutCurrentConfigString = JSON.parse(JSON.stringify(entityViewerDataService.getLayoutCurrentConfiguration(true)));
+                    delete layoutCurrentConfigString.data.reportOptions.task_id;
+                    layoutCurrentConfigString = JSON.stringify(layoutCurrentConfigString);
+
+                    activeLayoutConfigString = JSON.parse(activeLayoutConfigString);
+                    delete activeLayoutConfigString.data.reportOptions.task_id;
+                    activeLayoutConfigString = JSON.stringify(activeLayoutConfigString);
+
+                    activeLayoutHash = stringHelper.toHash(activeLayoutConfigString);
                     var layoutCurrentConfigHash = stringHelper.toHash(layoutCurrentConfigString);
 
                     if (activeLayoutHash !== layoutCurrentConfigHash) {
