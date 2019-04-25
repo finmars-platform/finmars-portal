@@ -218,145 +218,60 @@
         vm.range = gridHelperService.range;
 
         vm.getItem = function (fromChild) {
+
             return new Promise(function (res, rej) {
-                if (vm.entityType === 'complex-transaction') {
 
-                    entityResolverService.getByKey(vm.entityType, vm.entityId).then(function (complextTransactionData) {
+                entityResolverService.getByKey(vm.entityType, vm.entityId).then(function (data) {
 
-                        vm.complexTransactionOptions.transactionTypeId = complextTransactionData.transaction_type;
-                        vm.editLayoutEntityInstanceId = complextTransactionData.complex_transaction.id;
-                        vm.entity = complextTransactionData.complex_transaction;
+                    vm.entity = data;
 
-                        var inputsWithCalculations = complextTransactionData.transaction_type_object.inputs;
-
-                        var keys = Object.keys(complextTransactionData.values);
-
-                        keys.forEach(function (key) {
-                            vm.entity[key] = complextTransactionData.values[key];
-                        });
-
-                        complextTransactionData.complex_transaction.attributes.forEach(function (item) {
-                            if (item.attribute_type_object.value_type === 10) {
-                                vm.entity[item.attribute_type_object.name] = item.value_string;
-                            }
-                            if (item.attribute_type_object.value_type === 20) {
-                                vm.entity[item.attribute_type_object.name] = item.value_float;
-                            }
-                            if (item.attribute_type_object.value_type === 30) {
-                                vm.entity[item.attribute_type_object.name] = item.classifier;
-                            }
-                            if (item.attribute_type_object.value_type === 40) {
-                                vm.entity[item.attribute_type_object.name] = item.value_date;
-                            }
-                        });
-
-                        vm.tabs = complextTransactionData.book_transaction_layout.data;
-                        vm.userInputs = [];
-                        vm.tabs.forEach(function (tab) {
-                            tab.layout.fields.forEach(function (field) {
-                                if (field.attribute_class === 'userInput') {
-                                    vm.userInputs.push(field.attribute);
-                                }
-                            });
-                        });
-
-                        inputsWithCalculations.forEach(function (inputWithCalc) {
-
-                            vm.userInputs.forEach(function (userInput) {
-                                if (userInput.name === inputWithCalc.name) {
-                                    if (inputWithCalc.can_recalculate === true) {
-                                        userInput.buttons = [
-                                            {
-                                                icon: 'functions',
-                                                tooltip: 'Recalculate',
-                                                caption: '',
-                                                classes: 'md-raised',
-                                                action: vm.recalculate
-                                            }
-                                        ]
-                                    }
-                                }
-                            })
-
-                        });
+                    if (vm.entityType === 'transaction-type') {
 
                         vm.editLayout = function () {
                             $state.go('app.data-constructor', {
-                                entityType: vm.entityType,
+                                entityType: 'complex-transaction',
                                 from: vm.entityType,
-                                instanceId: vm.complexTransactionOptions.transactionTypeId
+                                instanceId: data.id
                             });
                             $mdDialog.hide();
                         };
 
                         vm.manageAttrs = function () {
                             $state.go('app.attributesManager', {
-                                entityType: vm.entityType,
+                                entityType: 'transaction-type',
                                 from: vm.entityType,
-                                instanceId: vm.complexTransactionOptions.transactionTypeId
+                                instanceId: data.id
                             });
                             $mdDialog.hide();
                         };
+                    }
 
+                    entityViewerHelperService.transformItems([vm.entity], vm.attrs).then(function (transformEntityData) {
+                        vm.entity = transformEntityData[0];
+                        vm.entity.$_isValid = true;
                         vm.readyStatus.entity = true;
-                        vm.readyStatus.permissions = true;
-                        vm.readyStatus.layout = true;
 
-                        $scope.$apply();
+                        vm.loadPermissions();
 
-                    });
+                        if (vm.entityType !== 'transaction-type') {
 
-                } else {
+                            vm.getLayout();
 
-                    entityResolverService.getByKey(vm.entityType, vm.entityId).then(function (data) {
+                            // Resolving promise to inform child about end of editor building
+                            res();
 
-                        vm.entity = data;
+                        } else {
+                            vm.readyStatus.layout = true;
+                            $scope.$apply();
 
-                        if (vm.entityType === 'transaction-type') {
-
-                            vm.editLayout = function () {
-                                $state.go('app.data-constructor', {
-                                    entityType: 'complex-transaction',
-                                    from: vm.entityType,
-                                    instanceId: data.id
-                                });
-                                $mdDialog.hide();
-                            };
-
-                            vm.manageAttrs = function () {
-                                $state.go('app.attributesManager', {
-                                    entityType: 'transaction-type',
-                                    from: vm.entityType,
-                                    instanceId: data.id
-                                });
-                                $mdDialog.hide();
-                            };
                         }
 
-                        entityViewerHelperService.transformItems([vm.entity], vm.attrs).then(function (transformEntityData) {
-                            vm.entity = transformEntityData[0];
-                            vm.entity.$_isValid = true;
-                            vm.readyStatus.entity = true;
-
-                            vm.loadPermissions();
-
-                            if (vm.entityType !== 'transaction-type') {
-
-                                vm.getLayout();
-
-                                // Resolving promise to inform child about end of editor building
-                                res();
-
-                            } else {
-                                vm.readyStatus.layout = true;
-                                $scope.$apply();
-
-                            }
-
-                        });
                     });
 
-                }
+                    vm.setStateInActionsControls();
+
+                });
+
             });
 
         };
@@ -507,36 +422,97 @@
         };
 
         var checkActionsForEmptyFields = function (actions) {
-            console.log("empty fields actions", actions);
-            var emptyFields = false;
 
-            var a,f;
-            for (a = 0; a < actions.length; a++) {
-                var action = actions[a];
-                var actionFields = Object.keys(action);
+            var result = [];
 
-                for (f = 0; f < actionFields.length; f++) {
-                    var field = actionFields[f];
+            actions.forEach(function (action) {
 
-                    if (action[field] === null) {
+                var actionKeys = Object.keys(action);
 
-                        emptyFields = true;
+                actionKeys.forEach(function (actionKey) {
+
+                    if (typeof action[actionKey] === 'object' && action[actionKey]) {
+
+                        var actionItem = action[actionKey];
+                        var actionItemKeys = Object.keys(actionItem);
+
+                        actionItemKeys = actionItemKeys.filter(function (key) {
+
+                            return key.indexOf('_object') === -1 && key.indexOf('_input') === -1 && key.indexOf('_phantom') === -1
+
+                        });
+
+                        console.log('actionItemKeys', actionItemKeys);
+
+                        actionItemKeys.forEach(function (actionItemKey) {
+
+                            if (actionItem.hasOwnProperty(actionItemKey + '_input')) {
+
+                                var inputValue = actionItem[actionItemKey + '_input'];
+                                var relationValue = actionItem[actionItemKey];
+
+                                var valueIsEmpty = false;
+
+                                console.log('actionItemKey', actionItemKey);
+                                console.log('inputValue', inputValue);
+                                console.log('relationValue', relationValue);
+
+                                if (actionItem.hasOwnProperty(actionItemKey + '_phantom')) {
+
+                                    var phantomValue = actionItem[actionItemKey + '_phantom'];
+
+                                    console.log('phantomValue', phantomValue);
+
+                                    if (!inputValue && !relationValue && (phantomValue === null || phantomValue === undefined)) {
+                                        valueIsEmpty = true;
+                                    }
+
+                                } else {
+
+                                    if (!inputValue && !relationValue) {
+                                        valueIsEmpty = true;
+                                    }
+
+                                }
+
+                                if (valueIsEmpty) {
+
+                                    result.push({
+                                        action_notes: action.action_notes,
+                                        key: actionItemKey,
+                                        value: actionItem[actionItemKey]
+                                    })
+
+                                }
+
+
+                            } else {
+
+                                if (actionItem[actionItemKey] === null || actionItem[actionItemKey] === undefined) {
+
+                                    result.push({
+                                        action_notes: action.action_notes,
+                                        key: actionItemKey,
+                                        value: actionItem[actionItemKey]
+                                    })
+
+                                }
+
+                            }
+
+
+                        })
 
                     }
-                }
-            }
-            /*actions.map(function (action) {
-                var actionFields = Object.keys(action);
 
-                var i;
-                for (i = 0; i < actionFields.length; i++) {
-                    if (action[actionFields[i]] === null) {
-                        emptyField = true;
-                    }
-                }
-            });*/
 
-            return emptyFields;
+                })
+
+
+            });
+
+
+            return result;
         };
 
         vm.save = function ($event) {
@@ -549,19 +525,22 @@
 
                 var result = entityEditorHelper.checkForNulls(vm.entity);
 
-                if (result.actions.length > 0 && checkActionsForEmptyFields(result.actions)) {
+                var actionsErrors = checkActionsForEmptyFields(result.actions);
+
+                console.log('actionsErrors', actionsErrors);
+
+                if (result.actions.length > 0 && actionsErrors.length) {
 
                     $mdDialog.show({
-                        controller: 'WarningDialogController as vm',
-                        templateUrl: 'views/warning-dialog-view.html',
+                        controller: 'TransactionTypeValidationErrorsDialogController as vm',
+                        templateUrl: 'views/entity-viewer/transaction-type-validation-errors-dialog-view.html',
                         parent: angular.element(document.body),
                         targetEvent: $event,
                         clickOutsideToClose: false,
                         multiple: true,
                         locals: {
-                            warning: {
-                                title: 'Warning',
-                                description: "Not all fields in Actions are filled"
+                            data: {
+                                actionErrors: actionsErrors
                             }
                         }
                     })
@@ -642,7 +621,8 @@
             if (entity === 'instruments') {
 
                 if (vm.entity.is_valid_for_all_instruments) {
-                    vm.entity.instrument_types = [];;
+                    vm.entity.instrument_types = [];
+                    ;
                 }
 
             } else if (entity === 'portfolios') {
@@ -1072,41 +1052,47 @@
             }
         ];
 
-        vm.actionsKeysList = [
-            'instrument',
-            'transaction',
-            'instrument_factor_schedule',
-            'instrument_manual_pricing_formula',
-            'instrument_accrual_calculation_schedules',
-            'instrument_event_schedule',
-            'instrument_event_schedule_action'
-        ];
 
         vm.checkActionsIsNotNull = function () {
             return false;
         };
 
-        vm.entity.actions.forEach(function (action) {
+        vm.setStateInActionsControls = function () {
 
-            var keys;
+            vm.actionsKeysList = [
+                'instrument',
+                'transaction',
+                'instrument_factor_schedule',
+                'instrument_manual_pricing_formula',
+                'instrument_accrual_calculation_schedules',
+                'instrument_event_schedule',
+                'instrument_event_schedule_action'
+            ];
 
-            vm.actionsKeysList.forEach(function (actionKey) {
+            vm.entity.actions.forEach(function (action) {
 
-                if (action[actionKey] !== null) {
-                    keys = Object.keys(action[actionKey]);
+                var keys;
 
-                    keys.forEach(function (key) {
-                        if (action[actionKey].hasOwnProperty(key + '_input')) {
-                            if (action[actionKey][key] !== null) {
-                                action[actionKey][key + '_toggle'] = true;
+                vm.actionsKeysList.forEach(function (actionKey) {
+
+                    if (action[actionKey] !== null) {
+                        keys = Object.keys(action[actionKey]);
+
+                        keys.forEach(function (key) {
+                            if (action[actionKey].hasOwnProperty(key + '_input')) {
+                                if (action[actionKey][key] !== null) {
+                                    action[actionKey][key + '_toggle'] = true;
+                                }
                             }
-                        }
-                    })
-                }
+                        })
+                    }
 
-            })
+                })
 
-        });
+            });
+
+        }
+
 
         vm.resetProperty = function (item, propertyName, fieldName) {
 
@@ -1212,7 +1198,6 @@
                 if (res.status === 'agree') {
                     vm.entity.actions.splice($index, 1);
                 }
-                $scope.$apply();
             });
         };
 
@@ -1225,6 +1210,58 @@
             };
 
             result[actionType] = {};
+
+            var fields = {
+                'transaction': [
+                    'account_cash', 'account_cash_input', 'account_interim',
+                    'account_interim_input', 'account_position', 'account_position_input',
+                    'accounting_date', 'allocation_balance', 'allocation_balance_input',
+                    'allocation_balance_phantom', 'allocation_pl', 'allocation_pl_input',
+                    'allocation_pl_phantom', 'carry_amount', 'carry_with_sign', 'cash_consideration', 'cash_date',
+                    'counterparty', 'counterparty_input', 'factor', 'instrument', 'instrument_input', 'instrument_phantom',
+                    'linked_instrument', 'linked_instrument_input', 'linked_instrument_phantom', 'notes', 'overheads',
+                    'overheads_with_sign', 'portfolio', 'portfolio_input', 'position_amount', 'position_size_with_sign',
+                    'principal_amount', 'principal_with_sign', 'reference_fx_rate', 'responsible', 'responsible_input',
+                    'settlement_currency', 'settlement_currency_input', 'strategy1_cash', 'strategy1_cash_input',
+                    'strategy1_position', 'strategy1_position_input', 'strategy2_cash', 'strategy2_cash_input',
+                    'strategy2_position', 'strategy2_position_input', 'strategy3_cash', 'strategy3_cash_input',
+                    'strategy3_position', 'strategy3_position_input', 'trade_price', 'transaction_class', 'transaction_currency',
+                    'transaction_currency_input'
+                ],
+                'instrument': [
+                    'accrued_currency', 'accrued_currency_input', 'accrued_multiplier',
+                    'daily_pricing_model', 'daily_pricing_model_input', 'default_accrued',
+                    'default_price', 'instrument_type', 'instrument_type_input', 'maturity_date',
+                    'maturity_price', 'name', 'notes', 'payment_size_detail', 'payment_size_detail_input',
+                    'price_download_scheme', 'price_download_scheme_input', 'price_multiplier',
+                    'pricing_currency', 'pricing_currency_input', 'public_name', 'reference_for_pricing',
+                    'short_name', 'user_code', 'user_text_1', 'user_text_2', 'user_text_3'],
+                'instrument_accrual_calculation_schedules': [
+                    'accrual_calculation_model', 'accrual_calculation_model_input', 'accrual_size', 'accrual_start_date',
+                    'first_payment_date', 'instrument', 'instrument_input', 'instrument_phantom', 'notes', 'periodicity',
+                    'periodicity_input', 'periodicity_n'
+                ],
+                'instrument_event_schedule': [
+                    'description', 'effective_date', 'event_class', 'event_class_input', 'final_date', 'instrument',
+                    'instrument_input', 'instrument_phantom', 'is_auto_generated', 'name', 'notification_class',
+                    'notification_class_input', 'notify_in_n_days', 'periodicity', 'periodicity_input', 'periodicity_input'
+                ],
+                'instrument_event_schedule_action': [
+                    'button_position', 'event_schedule', 'event_schedule_input', 'event_schedule_phantom', 'is_book_automatic',
+                    'is_sent_to_pending', 'text', 'transaction_type_from_instrument_type'
+                ],
+                'instrument_manual_pricing_formula': [
+                    'expr', 'instrument', 'instrument_input', 'instrument_phantom', 'notes', 'pricing_policy', 'pricing_policy_input'
+                ],
+                'instrument_factor_schedule': [
+                    'instrument', 'instrument_input', 'instrument_phantom', 'effective_date', 'factor_value'
+                ]
+            };
+
+
+            fields[actionType].forEach(function (key) {
+                result[actionType][key] = null;
+            });
 
             vm.entity.actions.push(result);
 

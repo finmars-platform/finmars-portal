@@ -144,6 +144,7 @@ app.controller('ReportWizardController', ['$scope', require('./app/controllers/e
 
 app.controller('TransactionTypeAddDialogController', ['$scope', '$mdDialog', '$state', 'entityType', 'entity', require('./app/controllers/entityViewer/transactionTypeAddDialogController')]);
 app.controller('TransactionTypeEditDialogController', ['$scope', '$mdDialog', '$state', 'entityType', 'entityId', require('./app/controllers/entityViewer/transactionTypeEditDialogController')]);
+app.controller('TransactionTypeValidationErrorsDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/entityViewer/transactionTypeValidationErrorsDialogController')]);
 
 
 app.controller('EntityViewerPermissionEditorController', ['$scope', require('./app/controllers/entityViewer/entityViewerPermissionEditorController')]);
@@ -279,7 +280,6 @@ app.directive('bindFieldControl', [require('./app/directives/bindFieldControlDir
 app.directive('layoutConstructorField', [require('./app/directives/layoutConstructorFieldDirective')]);
 app.directive('addTabEc', ['$compile', require('./app/directives/addTabEcDirective')]);
 
-app.directive('fileRead', [require('./app/directives/fileReadDirective')]);
 app.directive('onFinishRender', [require('./app/directives/onFinishRenderDirective')]);
 
 // Controls

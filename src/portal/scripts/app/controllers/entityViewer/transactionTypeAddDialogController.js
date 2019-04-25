@@ -285,6 +285,100 @@
             }
         });
 
+        var checkActionsForEmptyFields = function (actions) {
+
+            var result = [];
+
+            actions.forEach(function (action) {
+
+                var actionKeys = Object.keys(action);
+
+                actionKeys.forEach(function (actionKey) {
+
+                    if (typeof action[actionKey] === 'object' && action[actionKey]) {
+
+                        var actionItem = action[actionKey];
+                        var actionItemKeys = Object.keys(actionItem);
+
+                        actionItemKeys = actionItemKeys.filter(function (key) {
+
+                            return key.indexOf('_object') === -1 && key.indexOf('_input') === -1 && key.indexOf('_phantom') === -1
+
+                        });
+
+                        console.log('actionItemKeys', actionItemKeys);
+
+                        actionItemKeys.forEach(function (actionItemKey) {
+
+                            if (actionItem.hasOwnProperty(actionItemKey + '_input')) {
+
+                                var inputValue = actionItem[actionItemKey + '_input'];
+                                var relationValue = actionItem[actionItemKey];
+
+                                var valueIsEmpty = false;
+
+                                console.log('actionItemKey', actionItemKey);
+                                console.log('inputValue', inputValue);
+                                console.log('relationValue', relationValue);
+
+                                if (actionItem.hasOwnProperty(actionItemKey + '_phantom')) {
+
+                                    var phantomValue = actionItem[actionItemKey + '_phantom'];
+
+                                    console.log('phantomValue', phantomValue);
+
+                                    if (!inputValue && !relationValue && (phantomValue === null || phantomValue === undefined)) {
+                                        valueIsEmpty = true;
+                                    }
+
+                                } else {
+
+                                    if (!inputValue && !relationValue) {
+                                        valueIsEmpty = true;
+                                    }
+
+                                }
+
+                                if (valueIsEmpty) {
+
+                                    result.push({
+                                        action_notes: action.action_notes,
+                                        key: actionItemKey,
+                                        value: actionItem[actionItemKey]
+                                    })
+
+                                }
+
+
+                            } else {
+
+                                if (actionItem[actionItemKey] === null || actionItem[actionItemKey] === undefined) {
+
+                                    result.push({
+                                        action_notes: action.action_notes,
+                                        key: actionItemKey,
+                                        value: actionItem[actionItemKey]
+                                    })
+
+                                }
+
+                            }
+
+
+                        })
+
+                    }
+
+
+                })
+
+
+            });
+
+
+            return result;
+        };
+
         vm.save = function ($event) {
 
             vm.updateEntityBeforeSave();
@@ -299,28 +393,53 @@
 
                 resultEntity.book_transaction_layout = vm.entity.book_transaction_layout;
 
+                var actionsErrors = checkActionsForEmptyFields(resultEntity.actions);
+
                 console.log('resultEntity', resultEntity);
 
-                entityResolverService.create(vm.entityType, resultEntity).then(function (data) {
+                console.log('actionsErrors', actionsErrors);
 
-                    $mdDialog.hide({res: 'agree'});
-
-                }).catch(function (data) {
+                if (resultEntity.actions.length > 0 && actionsErrors.length) {
 
                     $mdDialog.show({
-                        controller: 'ValidationDialogController as vm',
-                        templateUrl: 'views/dialogs/validation-dialog-view.html',
+                        controller: 'TransactionTypeValidationErrorsDialogController as vm',
+                        templateUrl: 'views/entity-viewer/transaction-type-validation-errors-dialog-view.html',
+                        parent: angular.element(document.body),
                         targetEvent: $event,
-                        locals: {
-                            validationData: data
-                        },
-                        preserveScope: true,
+                        clickOutsideToClose: false,
                         multiple: true,
-                        autoWrap: true,
-                        skipHide: true
+                        locals: {
+                            data: {
+                                actionErrors: actionsErrors
+                            }
+                        }
                     })
 
-                })
+
+                } else {
+
+                    entityResolverService.create(vm.entityType, resultEntity).then(function (data) {
+
+                        $mdDialog.hide({res: 'agree'});
+
+                    }).catch(function (data) {
+
+                        $mdDialog.show({
+                            controller: 'ValidationDialogController as vm',
+                            templateUrl: 'views/dialogs/validation-dialog-view.html',
+                            targetEvent: $event,
+                            locals: {
+                                validationData: data
+                            },
+                            preserveScope: true,
+                            multiple: true,
+                            autoWrap: true,
+                            skipHide: true
+                        })
+
+                    })
+
+                }
 
             }
 
@@ -944,13 +1063,10 @@
                 if (res.status === 'agree') {
                     vm.entity.actions.splice($index, 1);
                 }
-                $scope.$apply();
             });
         };
 
         vm.addAction = function (actionType) {
-
-            console.log('$scope', $scope);
 
             vm.accordion.collapseAll();
 
@@ -959,6 +1075,58 @@
             };
 
             result[actionType] = {};
+
+            var fields = {
+                'transaction': [
+                    'account_cash', 'account_cash_input', 'account_interim',
+                    'account_interim_input', 'account_position', 'account_position_input',
+                    'accounting_date', 'allocation_balance', 'allocation_balance_input',
+                    'allocation_balance_phantom', 'allocation_pl', 'allocation_pl_input',
+                    'allocation_pl_phantom', 'carry_amount', 'carry_with_sign', 'cash_consideration', 'cash_date',
+                    'counterparty', 'counterparty_input', 'factor', 'instrument', 'instrument_input', 'instrument_phantom',
+                    'linked_instrument', 'linked_instrument_input', 'linked_instrument_phantom', 'notes', 'overheads',
+                    'overheads_with_sign', 'portfolio', 'portfolio_input', 'position_amount', 'position_size_with_sign',
+                    'principal_amount', 'principal_with_sign', 'reference_fx_rate', 'responsible', 'responsible_input',
+                    'settlement_currency', 'settlement_currency_input', 'strategy1_cash', 'strategy1_cash_input',
+                    'strategy1_position', 'strategy1_position_input', 'strategy2_cash', 'strategy2_cash_input',
+                    'strategy2_position', 'strategy2_position_input', 'strategy3_cash', 'strategy3_cash_input',
+                    'strategy3_position', 'strategy3_position_input', 'trade_price', 'transaction_class', 'transaction_currency',
+                    'transaction_currency_input'
+                ],
+                'instrument': [
+                    'accrued_currency', 'accrued_currency_input', 'accrued_multiplier',
+                    'daily_pricing_model', 'daily_pricing_model_input', 'default_accrued',
+                    'default_price', 'instrument_type', 'instrument_type_input', 'maturity_date',
+                    'maturity_price', 'name', 'notes', 'payment_size_detail', 'payment_size_detail_input',
+                    'price_download_scheme', 'price_download_scheme_input', 'price_multiplier',
+                    'pricing_currency', 'pricing_currency_input', 'public_name', 'reference_for_pricing',
+                    'short_name', 'user_code', 'user_text_1', 'user_text_2', 'user_text_3'],
+                'instrument_accrual_calculation_schedules': [
+                    'accrual_calculation_model', 'accrual_calculation_model_input', 'accrual_size', 'accrual_start_date',
+                    'first_payment_date', 'instrument', 'instrument_input', 'instrument_phantom', 'notes', 'periodicity',
+                    'periodicity_input', 'periodicity_n'
+                ],
+                'instrument_event_schedule': [
+                    'description', 'effective_date', 'event_class', 'event_class_input', 'final_date', 'instrument',
+                    'instrument_input', 'instrument_phantom', 'is_auto_generated', 'name', 'notification_class',
+                    'notification_class_input', 'notify_in_n_days', 'periodicity', 'periodicity_input', 'periodicity_input'
+                ],
+                'instrument_event_schedule_action': [
+                    'button_position', 'event_schedule', 'event_schedule_input', 'event_schedule_phantom', 'is_book_automatic',
+                    'is_sent_to_pending', 'text', 'transaction_type_from_instrument_type'
+                ],
+                'instrument_manual_pricing_formula': [
+                    'expr', 'instrument', 'instrument_input', 'instrument_phantom', 'notes', 'pricing_policy', 'pricing_policy_input'
+                ],
+                'instrument_factor_schedule': [
+                    'instrument', 'instrument_input', 'instrument_phantom', 'effective_date', 'factor_value'
+                ]
+            };
+
+
+            fields[actionType].forEach(function (key) {
+                result[actionType][key] = null;
+            });
 
             vm.entity.actions.push(result);
 
