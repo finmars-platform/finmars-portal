@@ -208,7 +208,7 @@
 
                 if (stateName !== transition.from().name) {
 
-                    var layoutCurrentConfigString = JSON.parse(JSON.stringify(entityViewerDataService.getLayoutCurrentConfiguration(true)));
+                    var layoutCurrentConfigString = entityViewerDataService.getLayoutCurrentConfiguration(true);
                     delete layoutCurrentConfigString.data.reportOptions.task_id;
                     layoutCurrentConfigString = JSON.stringify(layoutCurrentConfigString);
 

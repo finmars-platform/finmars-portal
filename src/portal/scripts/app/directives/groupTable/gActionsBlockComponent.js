@@ -402,6 +402,10 @@
                         listLayout.data.reportOptions = JSON.parse(JSON.stringify(scope.evDataService.getReportOptions()));
                         listLayout.data.reportLayoutOptions = JSON.parse(JSON.stringify(scope.evDataService.getReportLayoutOptions()));
 
+                        if (scope.evDataService.getExportOptions()) {
+                            listLayout.data.export = JSON.parse(JSON.stringify(scope.evDataService.getExportOptions()));
+                        }
+
                         delete listLayout.data.reportOptions.items;
                         delete listLayout.data.reportOptions.item_complex_transactions;
                         delete listLayout.data.reportOptions.item_counterparties;
@@ -467,6 +471,10 @@
 
                         listLayout.data.reportOptions = JSON.parse(JSON.stringify(scope.evDataService.getReportOptions()));
                         listLayout.data.reportLayoutOptions = JSON.parse(JSON.stringify(scope.evDataService.getReportLayoutOptions()));
+
+                        if (scope.evDataService.getExportOptions()) {
+                            listLayout.data.export = JSON.parse(JSON.stringify(scope.evDataService.getExportOptions()));
+                        }
 
                         delete listLayout.data.reportOptions.items;
                         delete listLayout.data.reportOptions.item_complex_transactions;

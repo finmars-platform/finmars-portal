@@ -590,6 +590,14 @@
             return data.virtualScroll.limit;
         }
 
+        function setExportOptions(exportOptions) {
+            data.export = exportOptions;
+        }
+
+        function getExportOptions() {
+            return data.export;
+        }
+
         function setListLayout(listLayout) {
             data.listLayout = listLayout;
         }
@@ -610,6 +618,10 @@
 
                 listLayout.data.reportOptions = JSON.parse(JSON.stringify(getReportOptions()));
                 listLayout.data.reportLayoutOptions = JSON.parse(JSON.stringify(getReportLayoutOptions()));
+
+                if (getExportOptions()) {
+                    listLayout.data.export = JSON.parse(JSON.stringify(getExportOptions()));
+                }
 
                 delete listLayout.data.reportOptions.items;
                 delete listLayout.data.reportOptions.item_complex_transactions;
@@ -661,6 +673,8 @@
 
                 setReportOptions(newReportOptions);
                 setReportLayoutOptions(newReportLayoutOptions);
+
+                setExportOptions(listLayout.data.export);
 
             }
 
@@ -796,6 +810,9 @@
             getVirtualScrollLimit: getVirtualScrollLimit,
 
             getInterfaceLayout: getInterfaceLayout,
+
+            setExportOptions: setExportOptions,
+            getExportOptions: getExportOptions,
 
             setListLayout: setListLayout,
             getListLayout: getListLayout,
