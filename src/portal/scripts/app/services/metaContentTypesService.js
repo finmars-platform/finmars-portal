@@ -112,8 +112,7 @@
                             APIEntity = {};
                         if (entityFound == true) {
                             break;
-                        }
-                        else if (typeKey == UiType.key) {
+                        } else if (typeKey == UiType.key) {
                             APIEntity.id = type.id;
                             APIEntity.name = UiType.name;
                             entities.push(APIEntity);
@@ -231,6 +230,12 @@
                 break;
             case 'integrations.instrumenttypemapping':
                 result = 'Instrument Type Mapping';
+                break;
+            case 'integrations.accounttypemapping':
+                result = 'Account Type Mapping';
+                break;
+            case 'integrations.pricingpolicymapping':
+                result = 'Pricing Policy Mapping';
                 break;
             case 'integrations.accountmapping':
                 result = 'Account Mapping';
