@@ -8,14 +8,14 @@
     var importEntityService = require('../import/importEntityService');
     var importTransactionService = require('../../services/import/importTransactionService');
 
-    var handleCsvImportAction = function (action, file) {
+    var handleCsvImportAction = function (action, file, delimiter) {
 
         var formData = new FormData();
 
         formData.append('file', file);
         formData.append('scheme', action.csv_import_scheme);
         formData.append('error_handler', action.error_handler);
-        formData.append('delimiter', action.delimiter);
+        formData.append('delimiter', delimiter);
         formData.append('mode', action.mode);
 
         console.log('action', action);
@@ -56,7 +56,7 @@
 
     };
 
-    var handleComplexTransactionImportAction = function (action, file) {
+    var handleComplexTransactionImportAction = function (action, file, delimiter) {
 
         return new Promise(function (resolve, reject) {
 
@@ -64,7 +64,7 @@
                 file: file,
                 scheme: action.complex_transaction_import_scheme,
                 error_handling: action.error_handler,
-                delimiter: action.delimiter
+                delimiter: delimiter
             };
 
             console.log('handleComplexTransactionImportAction.config', config)
@@ -75,24 +75,24 @@
 
     };
 
-    var processAction = function (action, file) {
+    var processAction = function (action, file, delimiter) {
 
         return new Promise(function (resolve, reject) {
 
             if (action.csv_import_scheme) {
-                resolve(handleCsvImportAction(action.csv_import_scheme, file))
+                resolve(handleCsvImportAction(action.csv_import_scheme, file, delimiter))
             }
 
             if (action.complex_transaction_import_scheme) {
-                resolve(handleComplexTransactionImportAction(action.complex_transaction_import_scheme, file))
+                resolve(handleComplexTransactionImportAction(action.complex_transaction_import_scheme, file, delimiter))
             }
 
         })
     };
 
-    var processActionOneByOne = function (resolve, result, actions, file, index) {
+    var processActionOneByOne = function (resolve, result, actions, file, delimiter, index) {
 
-        processAction(actions[index], file).then(function (data) {
+        processAction(actions[index], file, delimiter).then(function (data) {
 
             console.log('processAction.data', data);
 
@@ -112,7 +112,7 @@
 
             if (index < actions.length) {
 
-                processActionOneByOne(resolve, result, actions, file, index)
+                processActionOneByOne(resolve, result, actions, file, delimiter, index)
 
             } else {
 
@@ -124,7 +124,7 @@
 
     };
 
-    var startImport = function (file, scheme) {
+    var startImport = function (file, delimiter, scheme) {
 
         return new Promise(function (resolve, reject) {
 
@@ -140,7 +140,7 @@
 
                 var index = 0;
 
-                processActionOneByOne(resolve, result, scheme.actions, file, index)
+                processActionOneByOne(resolve, result, scheme.actions, file, delimiter, index)
 
             } else {
 

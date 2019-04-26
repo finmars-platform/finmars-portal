@@ -44,7 +44,8 @@
 
         vm.config = {
             delimiter: ',',
-            mode: 1
+            mode: 1,
+            missing_data_handler: 'throw_error'
         };
 
         vm.validateConfig = {
@@ -234,6 +235,7 @@
                 formData.append('scheme', vm.config.scheme);
                 formData.append('error_handling', vm.config.error_handling);
                 formData.append('delimiter', vm.config.delimiter);
+                formData.append('missing_data_handler', vm.config.missing_data_handler);
             }
 
             importTransactionService.validateImport(formData).then(function (data) {
@@ -272,6 +274,7 @@
                 formData.append('scheme', vm.config.scheme);
                 formData.append('error_handling', vm.config.error_handling);
                 formData.append('delimiter', vm.config.delimiter);
+                formData.append('missing_data_handler', vm.config.missing_data_handler);
             }
 
             importTransactionService.startImport(formData).then(function (data) {
