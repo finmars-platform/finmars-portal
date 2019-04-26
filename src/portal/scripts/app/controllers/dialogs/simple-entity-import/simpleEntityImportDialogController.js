@@ -106,7 +106,7 @@
                         }
                     }).then(function (res) {
 
-                        if (res.status === 'agree') {
+                        if (res && res.status === 'agree') {
                             vm.load();
                         }
 
