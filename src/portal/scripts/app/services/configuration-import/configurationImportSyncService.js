@@ -5,8 +5,12 @@
 
     'use strict';
 
+    var metaContentTypesService = require('../../services/metaContentTypesService');
+
+
     var configurationImportGetService = require('./configurationImportGetService');
     var configurationImportMapService = require('./configurationImportMapService');
+
 
     var syncTransactionType = function (item, cacheContainer) {
 
@@ -212,6 +216,36 @@
 
     };
 
+    var syncCsvImportScheme = function (item, cacheContainer) {
+
+        return new Promise(function (resolve) {
+
+            var promises = [];
+
+            item.entity_fields.forEach(function (entityField) {
+
+                if (entityField.___dynamic_attribute_id__user_code) {
+
+                    var code = entityField.___dynamic_attribute_id__user_code;
+                    var entityType = metaContentTypesService.findEntityByContentType(item.content_type);
+                    var item_key = 'dynamic_attribute_id';
+
+                    promises.push(configurationImportMapService.mapAttributeType(entityField, item_key, entityType, code))
+
+                }
+
+            });
+
+            Promise.all(promises).then(function (data) {
+
+                resolve(data)
+            });
+
+
+        })
+
+    };
+
     var syncComplexTransactionImportScheme = function (item, cacheContainer) {
 
         return new Promise(function (resolve, reject) {
@@ -300,6 +334,9 @@
                         break;
                     case 'complex_import.compleximportscheme':
                         resolve(syncComplexImportScheme(item, cacheContainer));
+                        break;
+                    case 'csv_import.csvimportscheme':
+                        resolve(syncCsvImportScheme(item, cacheContainer));
                         break;
                     case 'integrations.complextransactionimportscheme':
                         resolve(syncComplexTransactionImportScheme(item, cacheContainer));
