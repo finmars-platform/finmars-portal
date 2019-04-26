@@ -15,6 +15,7 @@
         formData.append('file', file);
         formData.append('scheme', action.csv_import_scheme);
         formData.append('error_handler', action.error_handler);
+        formData.append('missing_data_handler', action.missing_data_handler);
         formData.append('delimiter', delimiter);
         formData.append('mode', action.mode);
 
@@ -35,6 +36,7 @@
             formData.append('file', config.file);
             formData.append('scheme', config.scheme);
             formData.append('error_handling', config.error_handling);
+            formData.append('missing_data_handler', config.missing_data_handler);
             formData.append('delimiter', config.delimiter);
         }
 
@@ -64,6 +66,7 @@
                 file: file,
                 scheme: action.complex_transaction_import_scheme,
                 error_handling: action.error_handler,
+                missing_data_handler: action.missing_data_handler,
                 delimiter: delimiter
             };
 
