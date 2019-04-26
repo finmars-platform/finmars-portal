@@ -129,8 +129,12 @@
                                 vm.scheme.entity_fields.splice(entityFieldIndex, 1)
 
                             } else {
+
+                                console.log('entityField', entityField);
+                                console.log('attribute', attribute);
+
                                 entityField.value_type = attribute.value_type;
-                                entityField.entity = attribute.entity;
+                                entityField.entity = attribute.value_entity;
                                 entityField.content_type = attribute.content_type;
                                 entityField.code = attribute.code;
                             }
@@ -319,6 +323,8 @@
         };
 
         vm.openMapping = function ($event, item) {
+
+            console.log('item', item);
 
             $mdDialog.show({
                 controller: 'EntityTypeMappingDialogController as vm',
