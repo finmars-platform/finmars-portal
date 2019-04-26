@@ -19,7 +19,9 @@
 
         var vm = this;
 
-        vm.config = {};
+        vm.config = {
+            delimiter: ','
+        };
 
         vm.readyStatus = {
             scheme: false,
@@ -108,7 +110,7 @@
 
             });
 
-            complexImportValidateService.validateImport(vm.config.file, schemeObject).then(function (data) {
+            complexImportValidateService.validateImport(vm.config.file, vm.config.delimiter, schemeObject).then(function (data) {
 
                 console.log('data', data);
 
@@ -179,13 +181,13 @@
 
             });
 
-            complexImportValidateService.validateImport(vm.config.file, schemeObject).then(function (data) {
+            complexImportValidateService.validateImport(vm.config.file, vm.config.delimiter, schemeObject).then(function (data) {
 
                 console.log('validation data', data);
 
                 if (data.errors.length === 0) {
 
-                    complexImportService.startImport(vm.config.file, schemeObject).then(function (data) {
+                    complexImportService.startImport(vm.config.file, vm.config.delimiter, schemeObject).then(function (data) {
 
                         console.log('data', data);
 

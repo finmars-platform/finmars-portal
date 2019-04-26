@@ -82,6 +82,20 @@
                             </div>
                         </div>
 
+                        <div layout="row">
+
+                            <md-input-container>
+                                <label>Separator</label>
+                                <md-select data-ng-model="vm.config.delimiter">
+                                    <md-option value=",">Comma (,)</md-option>
+                                    <md-option value=";">Semicolon (;)</md-option>
+                                    <md-option value="\t">Tab</md-option>
+                                </md-select>
+                            </md-input-container>
+
+
+                        </div>
+
                         <div layout="row" data-ng-if="vm.finishedSuccess" layout-align="center center">
                             <h2>The data successfully imported.</h2>
                         </div>
