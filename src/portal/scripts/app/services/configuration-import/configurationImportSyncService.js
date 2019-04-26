@@ -230,7 +230,18 @@
                     var entityType = metaContentTypesService.findEntityByContentType(item.content_type);
                     var item_key = 'dynamic_attribute_id';
 
-                    promises.push(configurationImportMapService.mapAttributeType(entityField, item_key, entityType, code))
+
+                    promises.push(new Promise(function (resolveLocal) {
+
+                        configurationImportGetService.getAttributeTypeByUserCode(code, entityType).then(function (data) {
+
+                            entityField[item_key] = data.id;
+
+                            resolveLocal(entityField)
+
+                        })
+
+                    }))
 
                 }
 
