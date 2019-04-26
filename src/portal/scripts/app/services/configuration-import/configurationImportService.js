@@ -37,6 +37,8 @@
 
             overwriteItem(item, entityItem.entity, cacheContainer).then(function () {
 
+                window.importConfigurationCounter = window.importConfigurationCounter + 1;
+
                 if (index === entityItem.content.length) {
                     resolve(item);
                 } else {
