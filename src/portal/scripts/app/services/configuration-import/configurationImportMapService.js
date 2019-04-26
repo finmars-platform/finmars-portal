@@ -282,6 +282,8 @@
 
         console.log('code', code);
         console.log('entity', entity);
+        console.log('item', item);
+        console.log('key', key);
 
         return new Promise(function (resolve, reject) {
 
@@ -296,6 +298,8 @@
                 resolve(item)
 
             }).catch(function (reason) {
+
+                console.error(reason);
 
                 toastNotificationService.error(reason);
 

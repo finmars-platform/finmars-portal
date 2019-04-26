@@ -769,9 +769,6 @@
 
         index = index + 1;
 
-        console.log('recursiveCreateItem', entityItem.content.length);
-        console.log('recursiveCreateItem', index);
-
         if (item.active) {
 
             createItem(item, entityItem.entity, settings, cacheContainer, errors).then(function () {
@@ -1444,6 +1441,16 @@
                 return item.entity === 'transactions.transactiontype';
             });
 
+            var attributeTypes = items.filter(function (item) {
+                return item.entity === 'obj_attrs.portfolioattributetype' ||
+                    item.entity === 'obj_attrs.accountattributetype' ||
+                    item.entity === 'obj_attrs.instrumentattributetype' ||
+                    item.entity === 'obj_attrs.accounttypeattributetype' ||
+                    item.entity === 'obj_attrs.instrumenttypeattributetype' ||
+                    item.entity === 'obj_attrs.responsibleattributetype' ||
+                    item.entity === 'obj_attrs.counterpartyattributetype'
+            });
+
             var otherEntities = items.filter(function (item) {
                 return item.entity !== 'transactions.transactiontype' &&
                     item.entity !== 'instruments.instrumenttype' &&
@@ -1452,7 +1459,14 @@
                     item.entity !== 'ui.listlayout' &&
                     item.entity !== 'ui.reportlayout' &&
                     item.entity !== 'ui.bookmark' &&
-                    item.entity !== 'complex_import.compleximportscheme'
+                    item.entity !== 'complex_import.compleximportscheme' &&
+                    item.entity !== 'obj_attrs.portfolioattributetype' &&
+                    item.entity !== 'obj_attrs.accountattributetype' &&
+                    item.entity !== 'obj_attrs.instrumentattributetype' &&
+                    item.entity !== 'obj_attrs.accounttypeattributetype' &&
+                    item.entity !== 'obj_attrs.instrumenttypeattributetype' &&
+                    item.entity !== 'obj_attrs.responsibleattributetype' &&
+                    item.entity !== 'obj_attrs.counterpartyattributetype'
             });
 
             var layoutEntities = items.filter(function (item) {
@@ -1486,36 +1500,42 @@
 
                             console.log("Instrument type overwrite success");
 
-                            createEntityItems(otherEntities, settings, cacheContainer, errors).then(function (data) {
+                            createEntityItems(attributeTypes, settings, cacheContainer, errors).then(function (data) {
 
-                                console.log("Entities import success", data);
+                                console.log("Attribute types import success");
 
-                                createEntityItems(complexImportSchemes, settings, cacheContainer, errors).then(function (data) {
+                                createEntityItems(otherEntities, settings, cacheContainer, errors).then(function (data) {
 
-                                    console.log("Complex import Schemes import success", data);
+                                    console.log("Entities import success", data);
 
-                                    createEntityItems(layoutEntities, settings, cacheContainer, errors).then(function (data) {
+                                    createEntityItems(complexImportSchemes, settings, cacheContainer, errors).then(function (data) {
 
-                                        console.log("Layout import success", data);
+                                        console.log("Complex import Schemes import success", data);
 
-                                        createEntityItems(bookmarks, settings, cacheContainer, errors).then(function (data) {
+                                        createEntityItems(layoutEntities, settings, cacheContainer, errors).then(function (data) {
 
-                                            console.log("Bookmark import success", data);
+                                            console.log("Layout import success", data);
 
-                                            resolve(data);
+                                            createEntityItems(bookmarks, settings, cacheContainer, errors).then(function (data) {
 
-                                        }).catch(function (reason) {
+                                                console.log("Bookmark import success", data);
 
-                                            console.log('importConfiguration.reason', reason);
+                                                resolve(data);
 
-                                            reject(reason);
+                                            }).catch(function (reason) {
+
+                                                console.log('importConfiguration.reason', reason);
+
+                                                reject(reason);
+                                            })
+
                                         })
 
-                                    })
+                                    });
 
-                                });
+                                })
 
-                            })
+                            });
 
 
                         })
