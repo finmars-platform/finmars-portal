@@ -364,52 +364,6 @@
                         data-item="item.transaction.cash_consideration"></expression-editor-button>
             </div>
 
-            <div flex="33">
-                <div layout="row">
-                    <div flex="20">
-                        <md-button
-                                class="md-icon-button md-raised {{!!item.transaction.linked_instrument_toggle ? 'ref' : ''}}"
-                                style="transform: scale(0.7,0.7)"
-                                data-ng-click="vm.resetPropertyBtn(item, 'transaction', 'linked_instrument')">
-                            <span data-ng-if="!!item.transaction.linked_instrument_toggle">R</span>
-                            <span data-ng-if="!!!item.transaction.linked_instrument_toggle">I</span>
-                        </md-button>
-                    </div>
-                    <div flex="80">
-                        <div data-ng-if="item.transaction.linked_instrument_toggle">
-                            <entity-search-select data-item="item.transaction.linked_instrument"
-                                                  data-label="'Linked instrument'"
-                                                  data-input-text="item.transaction.linked_instrument_object.name"
-                                                  data-entity-type="'instrument'"></entity-search-select>
-                        </div>
-                        <div data-ng-if="!item.transaction.linked_instrument_toggle">
-                            <md-input-container>
-                                <label for="" content-title>Linked instrument</label>
-                                <md-select
-                                        data-ng-model="item.transaction[vm.resolveInstrumentProp(item, 'transaction', 'linked_instrument')]">
-                                    <md-optgroup label="Inputs">
-                                        <md-option
-                                                data-ng-click="vm.setTransactionInstrumentInput(item, inputItem.name, 'linked_instrument')"
-                                                data-ng-repeat="inputItem in vm.findInputs('instrument')"
-                                                ng-value="inputItem.name">
-                                            {{inputItem.name}}
-                                        </md-option>
-                                    </md-optgroup>
-                                    <md-optgroup label="Phantoms">
-                                        <md-option
-                                                data-ng-click="vm.setTransactionInstrumentPhantom(item, phantomItem.positionOrder, 'linked_instrument')"
-                                                data-ng-repeat="phantomItem in vm.findPhantoms()"
-                                                ng-value="phantomItem.positionOrder">
-                                            {{phantomItem.action_notes}}
-                                        </md-option>
-                                    </md-optgroup>
-                                </md-select>
-                            </md-input-container>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
         </div>
 
         <div layout="row">
@@ -559,6 +513,148 @@
                         <ttype-actions-input-select label-title="Account interim"
                                                     model="item.transaction.account_interim_input"
                                                     find-inputs="vm.findInputs('account')"></ttype-actions-input-select>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div layout="row">
+
+            <div flex="33">
+                <div layout="row">
+                    <div flex="20">
+                        <md-button
+                                class="md-icon-button md-raised {{!!item.transaction.linked_instrument_toggle ? 'ref' : ''}}"
+                                style="transform: scale(0.7,0.7)"
+                                data-ng-click="vm.resetPropertyBtn(item, 'transaction', 'linked_instrument')">
+                            <span data-ng-if="!!item.transaction.linked_instrument_toggle">R</span>
+                            <span data-ng-if="!!!item.transaction.linked_instrument_toggle">I</span>
+                        </md-button>
+                    </div>
+                    <div flex="80">
+                        <div data-ng-if="item.transaction.linked_instrument_toggle">
+                            <entity-search-select data-item="item.transaction.linked_instrument"
+                                                  data-label="'Linked instrument'"
+                                                  data-input-text="item.transaction.linked_instrument_object.name"
+                                                  data-entity-type="'instrument'"></entity-search-select>
+                        </div>
+                        <div data-ng-if="!item.transaction.linked_instrument_toggle">
+                            <md-input-container>
+                                <label for="" content-title>Linked instrument</label>
+                                <md-select
+                                        data-ng-model="item.transaction[vm.resolveInstrumentProp(item, 'transaction', 'linked_instrument')]">
+                                    <md-optgroup label="Inputs">
+                                        <md-option
+                                                data-ng-click="vm.setTransactionInstrumentInput(item, inputItem.name, 'linked_instrument')"
+                                                data-ng-repeat="inputItem in vm.findInputs('instrument')"
+                                                ng-value="inputItem.name">
+                                            {{inputItem.name}}
+                                        </md-option>
+                                    </md-optgroup>
+                                    <md-optgroup label="Phantoms">
+                                        <md-option
+                                                data-ng-click="vm.setTransactionInstrumentPhantom(item, phantomItem.positionOrder, 'linked_instrument')"
+                                                data-ng-repeat="phantomItem in vm.findPhantoms()"
+                                                ng-value="phantomItem.positionOrder">
+                                            {{phantomItem.action_notes}}
+                                        </md-option>
+                                    </md-optgroup>
+                                </md-select>
+                            </md-input-container>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div flex="33">
+                <div layout="row">
+                    <div flex="20">
+                        <md-button
+                                class="md-icon-button md-raised {{!!item.transaction.allocation_pl_toggle ? 'ref' : ''}}"
+                                style="transform: scale(0.7,0.7)"
+                                data-ng-click="vm.resetPropertyBtn(item, 'transaction', 'allocation_pl')">
+                            <span data-ng-if="!!item.transaction.allocation_pl_toggle">R</span>
+                            <span data-ng-if="!!!item.transaction.allocation_pl_toggle">I</span>
+                        </md-button>
+                    </div>
+                    <div flex="80">
+                        <div data-ng-if="item.transaction.allocation_pl_toggle">
+                            <entity-search-select data-item="item.transaction.allocation_pl"
+                                                  data-label="'Allocation-P&L'"
+                                                  data-input-text="item.transaction.allocation_pl_object.name"
+                                                  data-entity-type="'instrument'"></entity-search-select>
+                        </div>
+                        <div data-ng-if="!item.transaction.allocation_pl_toggle">
+                            <md-input-container>
+                                <label for="" content-title>Allocation-P&L</label>
+                                <md-select
+                                        data-ng-model="item.transaction[vm.resolveInstrumentProp(item, 'transaction', 'allocation_pl')]">
+                                    <md-optgroup label="Inputs">
+                                        <md-option
+                                                data-ng-click="vm.setTransactionInstrumentInput(item, inputItem.name, 'allocation_pl')"
+                                                data-ng-repeat="inputItem in vm.findInputs('instrument')"
+                                                ng-value="inputItem.name">
+                                            {{inputItem.name}}
+                                        </md-option>
+                                    </md-optgroup>
+                                    <md-optgroup label="Phantoms">
+                                        <md-option
+                                                data-ng-click="vm.setTransactionInstrumentPhantom(item, phantomItem.positionOrder, 'allocation_pl')"
+                                                data-ng-repeat="phantomItem in vm.findPhantoms()"
+                                                ng-value="phantomItem.positionOrder">
+                                            {{phantomItem.action_notes}}
+                                        </md-option>
+                                    </md-optgroup>
+                                </md-select>
+                            </md-input-container>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div flex="33">
+                <div layout="row">
+                    <div flex="20">
+                        <md-button
+                                class="md-icon-button md-raised {{!!item.transaction.allocation_balance_toggle ? 'ref' : ''}}"
+                                style="transform: scale(0.7,0.7)"
+                                data-ng-click="vm.resetPropertyBtn(item, 'transaction', 'allocation_balance')">
+                            <span data-ng-if="!!item.transaction.allocation_balance_toggle">R</span>
+                            <span data-ng-if="!!!item.transaction.allocation_balance_toggle">I</span>
+                        </md-button>
+                    </div>
+                    <div flex="80">
+                        <div data-ng-if="item.transaction.allocation_balance_toggle">
+                            <entity-search-select data-item="item.transaction.allocation_balance"
+                                                  data-label="'Allocation-Balance'"
+                                                  data-input-text="item.transaction.allocation_balance_object.name"
+                                                  data-entity-type="'instrument'"></entity-search-select>
+                        </div>
+                        <div data-ng-if="!item.transaction.allocation_balance_toggle">
+                            <md-input-container>
+                                <label for="" content-title>Allocation-Balance</label>
+                                <md-select
+                                        data-ng-model="item.transaction[vm.resolveInstrumentProp(item, 'allocation_balance')]">
+                                    <md-optgroup label="Inputs">
+                                        <md-option
+                                                data-ng-click="vm.setTransactionInstrumentInput(item, inputItem.name, 'allocation_balance')"
+                                                data-ng-repeat="inputItem in vm.findInputs('instrument')"
+                                                ng-value="inputItem.name">
+                                            {{inputItem.name}}
+                                        </md-option>
+                                    </md-optgroup>
+                                    <md-optgroup label="Phantoms">
+                                        <md-option
+                                                data-ng-click="vm.setTransactionInstrumentPhantom(item, phantomItem.positionOrder, 'allocation_balance')"
+                                                data-ng-repeat="phantomItem in vm.findPhantoms()"
+                                                ng-value="phantomItem.positionOrder">
+                                            {{phantomItem.action_notes}}
+                                        </md-option>
+                                    </md-optgroup>
+                                </md-select>
+                            </md-input-container>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -818,129 +914,6 @@
                     </div>
                 </div>
             </div>
-
-        </div>
-
-        <div layout="row">
-
-            <div flex="33">
-                <div layout="row">
-                    <div flex="20">
-                        <md-button
-                                class="md-icon-button md-raised {{!!item.transaction.allocation_pl_toggle ? 'ref' : ''}}"
-                                style="transform: scale(0.7,0.7)"
-                                data-ng-click="vm.resetPropertyBtn(item, 'transaction', 'allocation_pl')">
-                            <span data-ng-if="!!item.transaction.allocation_pl_toggle">R</span>
-                            <span data-ng-if="!!!item.transaction.allocation_pl_toggle">I</span>
-                        </md-button>
-                    </div>
-                    <div flex="80">
-                        <div data-ng-if="item.transaction.allocation_pl_toggle">
-                            <entity-search-select data-item="item.transaction.allocation_pl"
-                                                  data-label="'Allocation-P&L'"
-                                                  data-input-text="item.transaction.allocation_pl_object.name"
-                                                  data-entity-type="'instrument'"></entity-search-select>
-                        </div>
-                        <div data-ng-if="!item.transaction.allocation_pl_toggle">
-                            <md-input-container>
-                                <label for="" content-title>Allocation-P&L</label>
-                                <md-select
-                                        data-ng-model="item.transaction[vm.resolveInstrumentProp(item, 'transaction', 'allocation_pl')]">
-                                    <md-optgroup label="Inputs">
-                                        <md-option
-                                                data-ng-click="vm.setTransactionInstrumentInput(item, inputItem.name, 'allocation_pl')"
-                                                data-ng-repeat="inputItem in vm.findInputs('instrument')"
-                                                ng-value="inputItem.name">
-                                            {{inputItem.name}}
-                                        </md-option>
-                                    </md-optgroup>
-                                    <md-optgroup label="Phantoms">
-                                        <md-option
-                                                data-ng-click="vm.setTransactionInstrumentPhantom(item, phantomItem.positionOrder, 'allocation_pl')"
-                                                data-ng-repeat="phantomItem in vm.findPhantoms()"
-                                                ng-value="phantomItem.positionOrder">
-                                            {{phantomItem.action_notes}}
-                                        </md-option>
-                                    </md-optgroup>
-                                </md-select>
-                            </md-input-container>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div flex="33">
-                <div layout="row">
-                    <div flex="20">
-                        <md-button
-                                class="md-icon-button md-raised {{!!item.transaction.allocation_balance_toggle ? 'ref' : ''}}"
-                                style="transform: scale(0.7,0.7)"
-                                data-ng-click="vm.resetPropertyBtn(item, 'transaction', 'allocation_balance')">
-                            <span data-ng-if="!!item.transaction.allocation_balance_toggle">R</span>
-                            <span data-ng-if="!!!item.transaction.allocation_balance_toggle">I</span>
-                        </md-button>
-                    </div>
-                    <div flex="80">
-                        <div data-ng-if="item.transaction.allocation_balance_toggle">
-                            <entity-search-select data-item="item.transaction.allocation_balance"
-                                                  data-label="'Allocation-Balance'"
-                                                  data-input-text="item.transaction.allocation_balance_object.name"
-                                                  data-entity-type="'instrument'"></entity-search-select>
-                        </div>
-                        <div data-ng-if="!item.transaction.allocation_balance_toggle">
-                            <md-input-container>
-                                <label for="" content-title>Allocation-Balance</label>
-                                <md-select
-                                        data-ng-model="item.transaction[vm.resolveInstrumentProp(item, 'allocation_balance')]">
-                                    <md-optgroup label="Inputs">
-                                        <md-option
-                                                data-ng-click="vm.setTransactionInstrumentInput(item, inputItem.name, 'allocation_balance')"
-                                                data-ng-repeat="inputItem in vm.findInputs('instrument')"
-                                                ng-value="inputItem.name">
-                                            {{inputItem.name}}
-                                        </md-option>
-                                    </md-optgroup>
-                                    <md-optgroup label="Phantoms">
-                                        <md-option
-                                                data-ng-click="vm.setTransactionInstrumentPhantom(item, phantomItem.positionOrder, 'allocation_balance')"
-                                                data-ng-repeat="phantomItem in vm.findPhantoms()"
-                                                ng-value="phantomItem.positionOrder">
-                                            {{phantomItem.action_notes}}
-                                        </md-option>
-                                    </md-optgroup>
-                                </md-select>
-                            </md-input-container>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!--<div flex="33">
-                <md-input-container class="expression-input-container">
-                    <label for="" class="uncut-text-on-focus-label" content-title>Principal amount: Number</label>
-                    <input type="text" value-title data-ng-model="item.transaction.principal_amount">
-                </md-input-container>
-                <expression-editor-button data-data="{groups: [vm.inputsGroup], functions: [vm.inputsFunctions]}"
-                        data-item="item.transaction.principal_amount"></expression-editor-button>
-            </div>-->
-
-            <!--<div flex="33">
-                <md-input-container class="expression-input-container">
-                    <label for="" class="uncut-text-on-focus-label" content-title>Carry amount: Number</label>
-                    <input type="text" value-title data-ng-model="item.transaction.carry_amount">
-                </md-input-container>
-                <expression-editor-button data-data="{groups: [vm.inputsGroup], functions: [vm.inputsFunctions]}"
-                        data-item="item.transaction.carry_amount"></expression-editor-button>
-            </div>-->
-
-            <!--<div flex="33">
-                <md-input-container class="expression-input-container">
-                    <label for="" class="uncut-text-on-focus-label" content-title>Overheads: Number</label>
-                    <input type="text" value-title data-ng-model="item.transaction.overheads">
-                </md-input-container>
-                <expression-editor-button data-data="{groups: [vm.inputsGroup], functions: [vm.inputsFunctions]}"
-                        data-item="item.transaction.overheads"></expression-editor-button>
-            </div>-->
 
         </div>
 
