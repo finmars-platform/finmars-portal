@@ -80,6 +80,16 @@
 
             console.log('vm.config', vm.config);
 
+            var schemeObject;
+
+            vm.entitySchemes.forEach(function (scheme) {
+
+                if (scheme.id == vm.config.scheme) {
+                    schemeObject = scheme;
+                }
+
+            })
+
             importEntityService.validateImport(formData).then(function (data) {
 
                 vm.readyStatus.processing = false;
@@ -102,7 +112,11 @@
                         autoWrap: true,
                         skipHide: true,
                         locals: {
-                            data: data
+                            data: {
+                                validationResult: data,
+                                scheme: schemeObject,
+                                config: vm.config
+                            }
                         }
                     }).then(function (res) {
 

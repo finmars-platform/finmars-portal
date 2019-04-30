@@ -225,26 +225,41 @@
 
                     vm.entity = data;
 
-                    if (vm.entityType === 'transaction-type') {
+                    vm.inputsGroup = {
+                        "name": "<b>Inputs</b>",
+                        "key": 'input'
+                    };
 
-                        vm.editLayout = function () {
-                            $state.go('app.data-constructor', {
-                                entityType: 'complex-transaction',
-                                from: vm.entityType,
-                                instanceId: data.id
-                            });
-                            $mdDialog.hide();
-                        };
+                    vm.inputsFunctions = vm.entity.inputs.map(function (input) {
 
-                        vm.manageAttrs = function () {
-                            $state.go('app.attributesManager', {
-                                entityType: 'transaction-type',
-                                from: vm.entityType,
-                                instanceId: data.id
-                            });
-                            $mdDialog.hide();
-                        };
-                    }
+                        return {
+                            "name": "Input: " + input.verbose_name + " (" + input.name + ")",
+                            "description": "Transaction Type Input: " + input.name + " (" + input.verbose_name + ") ",
+                            "groups": "input",
+                            "func": input.name
+                        }
+
+                    });
+
+
+                    vm.editLayout = function () {
+                        $state.go('app.data-constructor', {
+                            entityType: 'complex-transaction',
+                            from: vm.entityType,
+                            instanceId: data.id
+                        });
+                        $mdDialog.hide();
+                    };
+
+                    vm.manageAttrs = function () {
+                        $state.go('app.attributesManager', {
+                            entityType: 'transaction-type',
+                            from: vm.entityType,
+                            instanceId: data.id
+                        });
+                        $mdDialog.hide();
+                    };
+
 
                     entityViewerHelperService.transformItems([vm.entity], vm.attrs).then(function (transformEntityData) {
                         vm.entity = transformEntityData[0];
@@ -880,16 +895,43 @@
             vm.sort = propertyName;
         };
 
+        vm.updateInputFunctions = function () {
+
+            vm.inputsGroup = {
+                "name": "<b>Inputs</b>",
+                "key": 'input'
+            };
+
+            vm.inputsFunctions = vm.entity.inputs.map(function (input) {
+
+                return {
+                    "name": "Input: " + input.verbose_name + " (" + input.name + ")",
+                    "description": "Transaction Type Input: " + input.name + " (" + input.verbose_name + ") ",
+                    "groups": "input",
+                    "func": input.name
+                }
+
+            });
+
+        };
+
         vm.editItem = function (item) {
             item.editStatus = true;
         };
 
         vm.saveItem = function (item) {
+
+            vm.updateInputFunctions();
+
             item.editStatus = false;
         };
 
         vm.deleteItem = function (item, index) {
+
             vm.entity.inputs.splice(index, 1);
+
+            vm.updateInputFunctions();
+
         };
 
         vm.openExpressionDialog = function ($event, item, options) {
@@ -966,21 +1008,6 @@
 
         // Transaction type Actions controller start
 
-        vm.inputsGroup = {
-            "name": "<b>Inputs</b>",
-            "key": 'input'
-        };
-
-        vm.inputsFunctions = vm.entity.inputs.map(function (input) {
-
-            return {
-                "name": "Input: " + input.verbose_name + " (" + input.name + ")",
-                "description": "Transaction Type Input: " + input.name + " (" + input.verbose_name + ") ",
-                "groups": "input",
-                "func": input.name
-            }
-
-        });
 
         vm.relationItems = {};
 

@@ -755,12 +755,40 @@
             item.editStatus = true;
         };
 
+        vm.updateInputFunctions = function(){
+
+            vm.inputsGroup = {
+                "name": "<b>Inputs</b>",
+                "key": 'input'
+            };
+
+            vm.inputsFunctions = vm.entity.inputs.map(function (input) {
+
+                return {
+                    "name": "Input: " + input.verbose_name + " (" + input.name + ")",
+                    "description": "Transaction Type Input: " + input.name + " (" + input.verbose_name + ") ",
+                    "groups": "input",
+                    "func": input.name
+                }
+
+            });
+
+        };
+
+
         vm.saveItem = function (item) {
+
+            vm.updateInputFunctions();
+
             item.editStatus = false;
         };
 
         vm.deleteItem = function (item, index) {
+
             vm.entity.inputs.splice(index, 1);
+
+            vm.updateInputFunctions();
+
         };
 
         vm.openExpressionDialog = function ($event, item, options) {
@@ -836,22 +864,6 @@
         // Transaction Type Input Controller end
 
         // Transaction type Actions controller start
-
-        vm.inputsGroup = {
-            "name": "<b>Inputs</b>",
-            "key": 'input'
-        };
-
-        vm.inputsFunctions = vm.entity.inputs.map(function (input) {
-
-            return {
-                "name": "Input: " + input.verbose_name + " (" + input.name + ")",
-                "description": "Transaction Type Input: " + input.name + " (" + input.verbose_name + ") ",
-                "groups": "input",
-                "func": input.name
-            }
-
-        });
 
         vm.relationItems = {};
 
