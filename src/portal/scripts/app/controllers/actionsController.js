@@ -51,7 +51,7 @@
 
             $mdDialog.show({
                 controller: 'ImportTransactionDialogController as vm',
-                templateUrl: 'views/dialogs/import-transaction-dialog-view.html',
+                templateUrl: 'views/dialogs/transaction-import/transaction-import-dialog-view.html',
                 targetEvent: $event
             })
 

@@ -33,7 +33,9 @@
                             <div data-ng-if="vm.data.process_mode != 'validate'">
 
                                 <div><b>Rows total</b>: {{vm.validationResult.total}}</div>
-                                <div><b>Rows success import</b>: {{vm.validationResult.total - vm.validationResult.errors.length}}</div>
+                                <div><b>Rows success import</b>: {{vm.validationResult.total -
+                                    vm.validationResult.errors.length}}
+                                </div>
                                 <div><b>Rows fail import</b>: {{vm.validationResult.errors.length}}</div>
 
                             </div>
@@ -49,7 +51,10 @@
                                 <th>
                                     Row number
                                 </th>
-                                <th data-ng-repeat="column in vm.errorDataColumns">
+                                <th data-ng-repeat="column in vm.csvFieldsColumns">
+                                    {{column.name}}
+                                </th>
+                                <th data-ng-repeat="column in vm.entityFieldsColumns">
                                     {{column.name}}
                                 </th>
                                 <th>
@@ -65,8 +70,11 @@
                                 <td>
                                     <span data-ng-bind="row.original_row_index"></span>
                                 </td>
-                                <td data-ng-repeat="column in vm.errorDataColumns track by $index">
-                                    <span data-ng-bind="row.error_data[$index]"> </span>
+                                <td data-ng-repeat="column in vm.csvFieldsColumns track by $index">
+                                    <span data-ng-bind="row.error_data.imported_columns[$index]"> </span>
+                                </td>
+                                <td data-ng-repeat="column in vm.entityFieldsColumns track by $index">
+                                    <span data-ng-bind="row.error_data.data_matching[$index]"> </span>
                                 </td>
                                 <td>
                                     <span data-ng-bind="row.error_message"></span>
