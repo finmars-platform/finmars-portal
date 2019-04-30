@@ -32,6 +32,8 @@
 
         var vm = this;
 
+        vm.closeButtonText = "Cancel";
+
         vm.readyStatus = {
             mapping: false,
             processing: false,
@@ -210,6 +212,7 @@
                         } else {
                             vm.validateConfig = {};
                             vm.readyStatus.processing = false;
+                            vm.closeButtonText = "Cancel";
                         }
 
                     })
@@ -314,6 +317,8 @@
 
                         });
 
+                        vm.closeButtonText = "OK"
+
 
                     } else {
 
@@ -328,7 +333,9 @@
                             multiple: true,
                             autoWrap: true,
                             skipHide: true,
-                        })
+                        });
+
+                        vm.closeButtonText = "Cancel";
                     }
 
                     vm.readyStatus.processing = false;
@@ -355,7 +362,9 @@
                     multiple: true,
                     autoWrap: true,
                     skipHide: true,
-                })
+                });
+
+                vm.closeButtonText = "Cancel";
 
             })
         };
@@ -403,7 +412,7 @@
                     locals: {
                         success: {
                             title: "",
-                            description: "You have you have successfully add instrument " + vm.config.instrument.user_code + " (user code)."
+                            description: "You have successfully add instrument " + vm.config.instrument.user_code + " (user code)."
                         }
                     },
                     targetEvent: $event,

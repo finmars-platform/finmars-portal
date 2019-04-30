@@ -20,6 +20,8 @@
 
         var vm = this;
 
+        vm.closeButtonText = "Cancel";
+
         vm.readyStatus = {
             mapping: false,
             processing: false,
@@ -88,7 +90,7 @@
                     schemeObject = scheme;
                 }
 
-            })
+            });
 
             importEntityService.validateImport(formData).then(function (data) {
 
@@ -97,7 +99,7 @@
 
                 if (data.errors.length === 0) {
 
-                    vm.load()
+                    vm.load();
 
                 } else {
 
@@ -122,6 +124,8 @@
 
                         if (res && res.status === 'agree') {
                             vm.load();
+                        } else {
+                            vm.closeButtonText = "Cancel";
                         }
 
                     })
@@ -206,6 +210,8 @@
 
                     });
 
+                    vm.closeButtonText = "OK";
+
                 } else {
 
                     $mdDialog.show({
@@ -219,7 +225,9 @@
                         locals: {
                             data: data
                         }
-                    })
+                    });
+
+                    vm.closeButtonText = "Cancel";
 
                 }
 

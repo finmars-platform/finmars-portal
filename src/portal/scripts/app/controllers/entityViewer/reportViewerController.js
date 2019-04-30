@@ -204,69 +204,85 @@
             vm.init();
 
             var checkLayoutForChanges = function (transition) {
-                var stateName = transition.to().name;
 
-                if (stateName !== transition.from().name) {
+                var layoutCurrentConfigString = entityViewerDataService.getLayoutCurrentConfiguration(true);
+                delete layoutCurrentConfigString.data.reportOptions.task_id;
+                layoutCurrentConfigString = JSON.stringify(layoutCurrentConfigString);
 
-                    var layoutCurrentConfigString = entityViewerDataService.getLayoutCurrentConfiguration(true);
-                    delete layoutCurrentConfigString.data.reportOptions.task_id;
-                    layoutCurrentConfigString = JSON.stringify(layoutCurrentConfigString);
+                activeLayoutConfigString = JSON.parse(activeLayoutConfigString);
+                delete activeLayoutConfigString.data.reportOptions.task_id;
+                activeLayoutConfigString = JSON.stringify(activeLayoutConfigString);
 
-                    activeLayoutConfigString = JSON.parse(activeLayoutConfigString);
-                    delete activeLayoutConfigString.data.reportOptions.task_id;
-                    activeLayoutConfigString = JSON.stringify(activeLayoutConfigString);
+                activeLayoutHash = stringHelper.toHash(activeLayoutConfigString);
+                var layoutCurrentConfigHash = stringHelper.toHash(layoutCurrentConfigString);
 
-                    activeLayoutHash = stringHelper.toHash(activeLayoutConfigString);
-                    var layoutCurrentConfigHash = stringHelper.toHash(layoutCurrentConfigString);
+                if (activeLayoutHash !== layoutCurrentConfigHash) {
 
-                    if (activeLayoutHash !== layoutCurrentConfigHash) {
+                    return new Promise (function (resolve, reject) {
 
-                        return new Promise (function (resolve, reject) {
+                        $mdDialog.show({
+                            controller: 'LayoutChangesLossWarningDialogController as vm',
+                            templateUrl: 'views/dialogs/layout-changes-loss-warning-dialog.html',
+                            parent: angular.element(document.body),
+                            preserveScope: true,
+                            autoWrap: true,
+                            multiple: true
+                        }).then(function (res, rej) {
 
-                            $mdDialog.show({
-                                controller: 'LayoutChangesLossWarningDialogController as vm',
-                                templateUrl: 'views/dialogs/layout-changes-loss-warning-dialog.html',
-                                parent: angular.element(document.body),
-                                preserveScope: true,
-                                autoWrap: true,
-                                multiple: true
-                            }).then(function (res, rej) {
+                            if (res.status === 'save_layout') {
 
-                                if (res.status === 'save_layout') {
+                                var layoutCurrentConfig = JSON.parse(layoutCurrentConfigString);
 
-                                    var layoutCurrentConfig = JSON.parse(layoutCurrentConfigString);
+                                if (layoutCurrentConfig.hasOwnProperty('id')) {
 
-                                    if (layoutCurrentConfig.hasOwnProperty('id')) {
+                                    uiService.updateListLayout(layoutCurrentConfig.id, layoutCurrentConfig).then(function () {
+                                        resolve(true);
+                                    });
 
-                                        uiService.updateListLayout(layoutCurrentConfig.id, layoutCurrentConfig).then(function () {
-                                            resolve(true);
-                                        });
+                                } else {
 
-                                    } else {
-
-                                        uiService.createListLayout(vm.entityType, layoutCurrentConfig).then(function () {
-                                            resolve(true);
-                                        });
-
-                                    }
-
-                                } else if ('do_not_save_layout') {
-
-                                    resolve(true);
+                                    uiService.createListLayout(vm.entityType, layoutCurrentConfig).then(function () {
+                                        resolve(true);
+                                    });
 
                                 }
 
-                            }).catch(function () {
-                                reject();
-                            });
-                        });
+                            } else if ('do_not_save_layout') {
 
-                    }
+                                resolve(true);
+
+                            }
+
+                        }).catch(function () {
+                            reject();
+                        });
+                    });
+
                 }
 
             };
 
             var doBeforeStateChange = $transitions.onBefore({}, checkLayoutForChanges);
+
+            window.addEventListener('beforeunload', function (event) {
+
+                var layoutCurrentConfigString = entityViewerDataService.getLayoutCurrentConfiguration(true);
+                delete layoutCurrentConfigString.data.reportOptions.task_id;
+                layoutCurrentConfigString = JSON.stringify(layoutCurrentConfigString);
+
+                activeLayoutConfigString = JSON.parse(activeLayoutConfigString);
+                delete activeLayoutConfigString.data.reportOptions.task_id;
+                activeLayoutConfigString = JSON.stringify(activeLayoutConfigString);
+
+                activeLayoutHash = stringHelper.toHash(activeLayoutConfigString);
+                var layoutCurrentConfigHash = stringHelper.toHash(layoutCurrentConfigString);
+
+                if (activeLayoutHash !== layoutCurrentConfigHash) {
+                    event.preventDefault();
+                    (event || window.event).returnValue = 'All unsaved changes will be lost.';
+                }
+
+            });
 
             this.$onDestroy = function () {
                 doBeforeStateChange();

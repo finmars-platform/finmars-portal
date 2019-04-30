@@ -87,7 +87,7 @@
                                 <md-button
                                         class="instrument-mapping-btn md-fab {{vm.config.scheme ? '' : 'disabled-btn' }}"
                                         data-ng-click="vm.editScheme($event)">
-                                    <ng-md-icon icon="functions" size="24" style="fill:rgb(63,81,181);"></ng-md-icon>
+                                    <ng-md-icon icon="edit" size="24" style="fill:rgb(63,81,181);"></ng-md-icon>
                                     <md-tooltip class="tooltip_1" md-direction="top">Edit mapping</md-tooltip>
                                 </md-button>
                             </div>
@@ -95,7 +95,7 @@
                                 <md-button
                                         class="md-raised colored-btn instrument-load-btn {{vm.loadIsAvailable() ? '' : 'disabled-btn' }}"
                                         data-ng-click="vm.import($event)">
-                                    Load
+                                    IMPORT
                                 </md-button>
                                 <div data-ng-if="vm.readyStatus.processing" class="m-l-16 m-t-8">
                                     <md-progress-circular md-mode="indeterminate"
@@ -154,7 +154,7 @@
         </div>
     </md-dialog-content>
     <md-dialog-actions layout="row">
-        <md-button class="md-raised" ng-click="vm.cancel()">
+        <md-button class="md-raised" ng-click="vm.cancel()" ng-bind="vm.closeButtonText">
             Cancel
         </md-button>
     </md-dialog-actions>
