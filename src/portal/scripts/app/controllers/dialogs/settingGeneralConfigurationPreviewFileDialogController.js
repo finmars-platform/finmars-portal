@@ -21,6 +21,8 @@
 
         vm.selectAllState = false;
 
+        vm.counter = 0;
+
         vm.toggleMode = function (mode) {
 
             if (vm.settings.mode === mode) {
@@ -485,10 +487,22 @@
 
             });
 
+            if (vm.settings.mode === 'overwrite') {
+                vm.activeItemTotal = vm.activeItemTotal * 2;
+            }
+
             try {
+
+                var timeout = setInterval(function () {
+
+                    vm.counter = window.importConfigurationCounter;
+                    $scope.$apply();
+
+                }, 1000);
 
                 configurationImportService.importConfiguration(vm.items, vm.settings).then(function (data) {
 
+                    clearInterval(timeout);
 
                     $mdDialog.hide({status: 'agree', data: {}});
 
@@ -537,6 +551,8 @@
 
 
                 }).catch(function (reason) {
+
+                    clearInterval(timeout);
 
                     vm.processing = false;
 

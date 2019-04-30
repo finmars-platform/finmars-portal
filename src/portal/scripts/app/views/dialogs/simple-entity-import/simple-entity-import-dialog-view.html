@@ -130,6 +130,15 @@
                                 </md-select>
                             </md-input-container>
 
+                            <md-input-container>
+                                <label>Import Rules - if object is not found</label>
+                                <md-select
+                                        data-ng-model="vm.config.missing_data_handler">
+                                    <md-option value="throw_error">Treat as Error</md-option>
+                                    <md-option value="set_defaults">Replace with Default Value</md-option>
+                                </md-select>
+                            </md-input-container>
+
                         </div>
                         <div layout="row" data-ng-if="vm.finishedSuccess" layout-align="center center">
                             <h2>The data successfully imported.</h2>

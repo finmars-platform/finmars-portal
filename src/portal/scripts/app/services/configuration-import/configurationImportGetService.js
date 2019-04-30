@@ -158,7 +158,18 @@
 
                 if (data.results.length) {
 
-                    resolve(data.results[0])
+                    var result;
+
+                    data.results.forEach(function (item) {
+
+                        if (item.scheme_name === scheme_name) {
+
+                            result = item
+                        }
+
+                    });
+
+                    resolve(result)
 
                 } else {
 
