@@ -19,7 +19,7 @@
 
         var entityViewerReducer = require('./entityViewerReducer');
 
-        module.exports = function ($scope, $mdDialog, $transitions) {
+        module.exports = function ($scope, $mdDialog, $state, $transitions) {
 
             var vm = this;
 
@@ -105,28 +105,36 @@
 
             vm.init();
 
-            var checkLayoutForChanges = function (transition) {
-                var stateName = transition.to().name;
-                var listOfStatesWithLayout = [
-                    'app.data.portfolio',
-                    'app.data.account',
-                    'app.data.account-type',
-                    'app.data.counterparty',
-                    'app.data.responsible',
-                    'app.data.instrument',
-                    'app.data.instrument-type',
-                    'app.data.pricing-policy',
-                    'app.data.complex-transaction',
-                    'app.data.transaction',
-                    'app.data.transaction-type',
-                    'app.data.currency-history',
-                    'app.data.price-history',
-                    'app.data.currency',
-                    'app.data.strategy-group',
-                    'app.data.strategy'
-                ];
+            var listOfStatesWithLayout = [
+                'app.data.portfolio',
+                'app.data.account',
+                'app.data.account-type',
+                'app.data.counterparty',
+                'app.data.responsible',
+                'app.data.instrument',
+                'app.data.instrument-type',
+                'app.data.pricing-policy',
+                'app.data.complex-transaction',
+                'app.data.transaction',
+                'app.data.transaction-type',
+                'app.data.currency-history',
+                'app.data.price-history',
+                'app.data.currency',
+                'app.data.strategy-group',
+                'app.data.strategy'
+            ];
 
-                if (stateName !== transition.from().name && listOfStatesWithLayout.indexOf(stateName) !== -1) {
+            vm.stateWithLayout = false;
+
+            if (listOfStatesWithLayout.indexOf($state.current.name) !== -1) {
+                vm.stateWithLayout = true;
+            }
+
+            var checkLayoutForChanges = function (transition) {
+
+                var stateName = transition.from().name;
+
+                if (vm.stateWithLayout) {
 
                     var layoutCurrentConfigString = JSON.stringify(entityViewerDataService.getLayoutCurrentConfiguration(false));
                     var layoutCurrentConfigHash = stringHelper.toHash(layoutCurrentConfigString);
@@ -180,6 +188,19 @@
 
             var doBeforeStateChange = $transitions.onBefore({}, checkLayoutForChanges);
 
+            if (vm.stateWithLayout) {
+                window.addEventListener('beforeunload', function (event) {
+
+                    var layoutCurrentConfigString = JSON.stringify(entityViewerDataService.getLayoutCurrentConfiguration(false));
+                    var layoutCurrentConfigHash = stringHelper.toHash(layoutCurrentConfigString);
+
+                    if (activeLayoutHash !== layoutCurrentConfigHash) {
+                        event.preventDefault();
+                        (event || window.event).returnValue = 'All unsaved changes will be lost.';
+                    }
+
+                });
+            }
 
             this.$onDestroy = function () {
                 doBeforeStateChange();
