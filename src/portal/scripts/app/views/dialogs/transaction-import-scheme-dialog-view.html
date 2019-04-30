@@ -1,11 +1,12 @@
-<md-dialog aria-label="" ng-cloak class="transaction-scheme-manager-dialog-view draggable-dialog" drag-dialog>
+<md-dialog aria-label="import transaction scheme manager dialog" ng-cloak class="transaction-scheme-manager-dialog-view draggable-dialog" drag-dialog>
     <md-toolbar>
         <div class="md-toolbar-tools">
+            <ng-md-icon icon="dialpad" size="20" class="draggable-dialog-sign"></ng-md-icon>
             <h2>Transaction scheme manager</h2>
             <span flex></span>
         </div>
     </md-toolbar>
-    <md-dialog-content   style="background: #E5E5E5;">
+    <md-dialog-content style="background: #E5E5E5;">
         <md-content>
             <div data-ng-if="vm.checkReadyStatus()">
                 <div layout="row" layout-align="center center">
@@ -15,17 +16,26 @@
                                 <label for="">Scheme name</label>
                                 <input type="text" data-ng-model="vm.scheme.scheme_name">
                             </md-input-container>
-                            <md-input-container flex="40" style="margin-bottom: 0">
-                                <label for="">Expression</label>
-                                <input type="text" data-ng-model="vm.scheme.rule_expr">
-                            </md-input-container>
+                            <div layout="row">
+                                <md-input-container flex style="margin-bottom: 0">
+                                    <label for="">Expression for Transaction Type Selector</label>
+                                    <input type="text" data-ng-model="vm.scheme.rule_expr">
+                                </md-input-container>
+                                <expression-editor-button data-item="vm.scheme.rule_expr"
+                                                          data-data="{groups: [vm.inputsGroup], functions: [vm.inputsFunctions]}"></expression-editor-button>
+                            </div>
                         </md-card-content>
                     </md-card>
                 </div>
                 <div layout="row">
-                    <div layout="column" flex="25">
+                    <div layout="column" flex="33">
                         <div layout="row">
-                            <h4 style="padding-left: 10px">Imported Columns</h4>
+                            <h4 style="padding-left: 10px" class="scheme-manager-import-columns-header">
+                                Imported Columns
+                                <ng-md-icon icon="help" size="24">
+                                    <md-tooltip md-z-index="12000" md-direction="top">To Be Done</md-tooltip>
+                                </ng-md-icon>
+                            </h4>
                         </div>
                         <div layout="column">
 
@@ -35,20 +45,29 @@
                                         <div class="fields-holder" layout="row">
                                             <div class="iscm-item" layout="row">
                                                 <span style="position: relative; top: 8px">#</span>
-                                                <md-input-container flex="20">
+                                                <md-input-container flex="20" style="position: relative">
                                                     <!--<label for="">Number</label>-->
-                                                    <input type="text" data-ng-model="item.column">
+                                                    <input type="number"
+                                                           data-ng-model="item.column"
+                                                           aria-label="provider field column number">
                                                 </md-input-container>
                                                 <md-input-container flex="70">
                                                     <!--<label for="">Name</label>-->
-                                                    <input type="text" data-ng-model="item.name">
+                                                    <input type="text"
+                                                           data-ng-model="item.name"
+                                                           ng-blur="vm.setProviderFieldExpression(item)"
+                                                           aria-label="provider field name">
                                                 </md-input-container>
                                             </div>
                                             <div>
                                                 <md-button style="min-width: 40px;"
                                                            data-ng-click="vm.removeProviderField(item, $index)"
-                                                           class="md-raised">x
-                                                </md-button>
+                                                           class="md-raised">x</md-button>
+                                            </div>
+                                            <div>
+                                                <md-button class="md-raised"
+                                                           ng-click="vm.openProviderFieldExpressionBuilder(item, $event)"
+                                                           style="min-width: 40px;">f(x)</md-button>
                                             </div>
                                         </div>
                                     </div>
@@ -62,7 +81,7 @@
                         </div>
 
                     </div>
-                    <div layout="column" flex="75">
+                    <div layout="column" flex="66">
                         <div layout="row">
                             <h4 style="padding-left: 10px">Transaction type matching</h4>
                         </div>
@@ -73,9 +92,9 @@
                                         <div layout="row" flex="100">
                                             <div flex="30">
                                                 <div layout="row">
-                                                    <div flex="50">
+                                                    <div>
                                                         <md-input-container>
-                                                            <label for="">Value</label>
+                                                            <label for="">Selector Value</label>
                                                             <input type="text" data-ng-model="item.value">
                                                         </md-input-container>
                                                     </div>

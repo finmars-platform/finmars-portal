@@ -21,6 +21,13 @@
         vm.scheme = {};
         vm.readyStatus = {scheme: false, transactionTypes: false};
 
+        vm.inputsGroup = {
+            "name": "<b>Inputs</b>",
+            "key": 'input'
+        };
+
+        vm.inputsFunctions = [];
+
         vm.mapFields = [
             {
                 value: '',
@@ -32,7 +39,8 @@
         vm.providerFields = [
             {
                 name: '',
-                column: ''
+                column: '',
+                expression: ''
             }
         ];
 
@@ -109,9 +117,22 @@
 
 
         vm.addProviderField = function () {
+            var fieldsLength = vm.providerFields.length;
+            var lastFieldNumber;
+            var nextFieldNumber;
+            if (fieldsLength === 0) {
+                nextFieldNumber = 1;
+            } else {
+                lastFieldNumber = parseInt(vm.providerFields[fieldsLength - 1].column);
+                if (isNaN(lastFieldNumber) || lastFieldNumber === null) {
+                    lastFieldNumber = 0
+                }
+                nextFieldNumber = lastFieldNumber + 1;
+            }
+
             vm.providerFields.push({
                 name: '',
-                column: vm.providerFields.length
+                column: nextFieldNumber
             })
         };
 
@@ -121,6 +142,64 @@
                 transaction_type: null,
                 fields: []
             })
+        };
+
+        vm.setProviderFieldExpression = function (field) {
+            console.log("transaction import on blur", field);
+            if (!field.expression || field.expression === '') {
+                field.expression = field.name;
+                console.log("transaction import", field);
+            }
+        };
+
+        /*vm.openTTypeSelectorExpressionBuilder = function($event) {
+
+            $mdDialog.show({
+                controller: 'ExpressionEditorDialogController as vm',
+                templateUrl: 'views/dialogs/expression-editor-dialog-view.html',
+                targetEvent: $event,
+                multiple: true,
+                autoWrap: true,
+                skipHide: true,
+                locals: {
+                    item: {expression: field.expression},
+                    data: {}
+                }
+            }).then(function (res) {
+
+                if (res.status === 'agree') {
+
+                    field.expression = res.data.item.expression;
+
+                }
+
+            });
+
+        };*/
+
+        vm.openProviderFieldExpressionBuilder = function (field, $event) {
+
+            $mdDialog.show({
+                controller: 'ExpressionEditorDialogController as vm',
+                templateUrl: 'views/dialogs/expression-editor-dialog-view.html',
+                targetEvent: $event,
+                multiple: true,
+                autoWrap: true,
+                skipHide: true,
+                locals: {
+                    item: {expression: field.expression},
+                    data: {}
+                }
+            }).then(function (res) {
+
+                if (res.status === 'agree') {
+
+                    field.expression = res.data.item.expression;
+
+                }
+
+            });
+
         };
 
         vm.removeProviderField = function (item, $index) {
@@ -139,26 +218,70 @@
 
             vm.scheme.inputs = vm.providerFields;
             vm.scheme.rules = vm.mapFields;
+            console.log("import transaction scheme", vm.scheme);
+            var warningMessage = '';
 
-            transactionSchemeService.update(vm.scheme.id, vm.scheme).then(function (data) {
+            var importedColumnsNumberZero = false;
+            var importedColumnsNumberEmpty = false;
 
-                $mdDialog.hide({res: 'agree'});
+            vm.providerFields.map(function (field) {
 
-            }).catch(function (reason) {
+                if (field.column === 0 && !importedColumnsNumberZero) {
+                    warningMessage = "should not have value 0 (column's count starts from 1)";
+                    importedColumnsNumberZero = true;
+                }
+
+                if (field.column === null && !importedColumnsNumberEmpty) {
+
+                    if (importedColumnsNumberZero) {
+                        warningMessage = warningMessage + ', should not be empty'
+                    } else {
+                        warningMessage = 'should not be empty'
+                    }
+
+                    importedColumnsNumberEmpty = true;
+                }
+
+            });
+
+            if (importedColumnsNumberZero || importedColumnsNumberEmpty) {
+                warningMessage = 'Imported Columns Field #: ' + warningMessage + '.';
 
                 $mdDialog.show({
-                    controller: 'ValidationDialogController as vm',
-                    templateUrl: 'views/dialogs/validation-dialog-view.html',
+                    controller: 'WarningDialogController as vm',
+                    templateUrl: 'views/warning-dialog-view.html',
                     targetEvent: $event,
+                    clickOutsideToClose: false,
                     locals: {
-                        validationData: reason.message
+                        warning: {
+                            title: 'Incorrect Imported Columns field #',
+                            description: warningMessage
+                        }
                     },
-                    preserveScope: true,
-                    autoWrap: true,
-                    multiple: true,
-                    skipHide: true
+                    multiple: true
                 })
-            })
+            } else {
+
+                transactionSchemeService.update(vm.scheme.id, vm.scheme).then(function (data) {
+
+                    $mdDialog.hide({res: 'agree'});
+
+                }).catch(function (reason) {
+
+                    $mdDialog.show({
+                        controller: 'ValidationDialogController as vm',
+                        templateUrl: 'views/dialogs/validation-dialog-view.html',
+                        targetEvent: $event,
+                        locals: {
+                            validationData: reason.message
+                        },
+                        preserveScope: true,
+                        autoWrap: true,
+                        multiple: true,
+                        skipHide: true
+                    })
+                })
+            }
         };
 
         vm.openMapping = function ($event, item) {
@@ -177,32 +300,6 @@
             }).then(function (res) {
                 if (res.status === 'agree') {
                     console.log("res", res.data);
-                }
-            });
-        };
-
-        vm.openExpressionDialog = function ($event, item) {
-            $mdDialog.show({
-                controller: 'ExpressionEditorDialogController as vm',
-                templateUrl: 'views/dialogs/expression-editor-dialog-view.html',
-                parent: angular.element(document.body),
-                targetEvent: $event,
-                preserveScope: true,
-                autoWrap: true,
-                multiple: true,
-                skipHide: true,
-                locals: {
-                    item: {
-                        expression: item.value
-                    }
-                }
-            }).then(function (res) {
-                if (res.status === 'agree') {
-                    console.log("res", res.data);
-                    if (res.data) {
-                        item.value = res.data.item.expression;
-                    }
-                    $scope.$apply();
                 }
             });
         };
