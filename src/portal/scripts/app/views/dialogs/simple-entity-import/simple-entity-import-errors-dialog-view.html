@@ -2,21 +2,43 @@
            style="width: 75%;" drag-dialog>
     <md-toolbar>
         <div class="md-toolbar-tools">
-            <h2>Data import errors</h2>
+            <h2>Validation Error</h2>
             <span flex></span>
         </div>
     </md-toolbar>
-    <md-dialog-content   style="background: #E5E5E5;">
+    <md-dialog-content style="background: #E5E5E5;">
         <md-content>
             <md-card>
                 <md-card-content>
-                    <h3>Please see below the list of records we failed to import</h3>
 
-                    <div data-ng-if="vm.data.process_mode != 'validate'">
+                    <div class="overflow-hidden m-b-24">
 
-                        <div>Rows total: {{vm.data.total}}</div>
-                        <div>Rows success import: {{vm.data.total - vm.data.errors.length}}</div>
-                        <div>Rows fail import: {{vm.data.errors.length}}</div>
+                        <div class="float-left width-40">
+
+                            <h3 class="margin-0 m-b-8">Info</h3>
+
+                            <div><b>Type</b>: Simple Entity Import</div>
+                            <div><b>Error handler</b>: {{vm.config.error_handler}}</div>
+                            <div><b>Filename</b>: {{vm.config.file.name}}</div>
+                            <div><b>Mode</b>: {{vm.config.mode}}</div>
+                            <div><b>Import Rules - if object is not found</b>: {{vm.config.missing_data_handler}}</div>
+                            <div><b>Entity</b>: {{vm.scheme.content_type}}</div>
+
+                        </div>
+
+                        <div class="float-left width-40">
+
+                            <h3 class="margin-0 m-b-8">Stats</h3>
+
+                            <div data-ng-if="vm.data.process_mode != 'validate'">
+
+                                <div><b>Rows total</b>: {{vm.validationResult.total}}</div>
+                                <div><b>Rows success import</b>: {{vm.validationResult.total - vm.validationResult.errors.length}}</div>
+                                <div><b>Rows fail import</b>: {{vm.validationResult.errors.length}}</div>
+
+                            </div>
+
+                        </div>
 
                     </div>
 
@@ -24,21 +46,33 @@
                         <table>
                             <thead>
                             <tr>
-                                <th style="width: 100px">
+                                <th>
                                     Row number
                                 </th>
+                                <th data-ng-repeat="column in vm.errorDataColumns">
+                                    {{column.name}}
+                                </th>
                                 <th>
-                                    Message
+                                    Error message
+                                </th>
+                                <th>
+                                    Reaction
                                 </th>
                             </tr>
                             </thead>
                             <tbody>
-                            <tr data-ng-repeat="row in vm.data.errors">
+                            <tr data-ng-repeat="row in vm.validationResult.errors">
                                 <td>
                                     <span data-ng-bind="row.original_row_index"></span>
                                 </td>
+                                <td data-ng-repeat="column in vm.errorDataColumns track by $index">
+                                    <span data-ng-bind="row.error_data[$index]"> </span>
+                                </td>
                                 <td>
                                     <span data-ng-bind="row.error_message"></span>
+                                </td>
+                                <td>
+                                    <span data-ng-bind="row.error_reaction"></span>
                                 </td>
                             </tr>
                             </tbody>
