@@ -185,7 +185,13 @@
 
                 console.log('validation data', data);
 
-                if (data.errors.length === 0) {
+                var errorsCount = 0;
+
+                data.errors.forEach(function (error) {
+                    errorsCount = errorsCount + error.length;
+                });
+
+                if (errorsCount === 0) {
 
                     complexImportService.startImport(vm.config.file, vm.config.delimiter, schemeObject).then(function (data) {
 

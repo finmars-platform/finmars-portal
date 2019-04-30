@@ -97,6 +97,7 @@
 
         processAction(actions[index], file, delimiter).then(function (data) {
 
+            console.log('processAction.index', index);
             console.log('processAction.data', data);
 
             result.errors[index] = [];
