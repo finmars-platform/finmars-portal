@@ -91,7 +91,7 @@
         vm.openInputs = function (item, $event) {
             $mdDialog.show({
                 controller: 'TransactionImportSchemeInputsDialogController as vm',
-                templateUrl: 'views/dialogs/transaction-import-scheme-inputs-dialog-view.html',
+                templateUrl: 'views/dialogs/transaction-import/transaction-import-scheme-inputs-dialog-view.html',
                 parent: angular.element(document.body),
                 targetEvent: $event,
                 preserveScope: true,

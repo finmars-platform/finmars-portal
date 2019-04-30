@@ -17,14 +17,15 @@
         vm.scheme = data.scheme;
         vm.config = data.config;
 
-        vm.errorDataColumns = [];
+        vm.csvFieldsColumns = [];
+        vm.entityFieldsColumns = [];
 
 
         vm.createErrorDataColumns = function () {
 
             vm.scheme.csv_fields.forEach(function (item) {
 
-                vm.errorDataColumns.push({
+                vm.csvFieldsColumns.push({
                     name: item.name
                 })
 
@@ -34,7 +35,7 @@
 
                 if (item.expression && item.expression !== '') {
 
-                    vm.errorDataColumns.push({
+                    vm.entityFieldsColumns.push({
                         name: item.name + ':' + item.expression
                     })
 

@@ -188,17 +188,31 @@
 
                 vm.validate(resolve, $event)
 
-            }).then(function (res) {
+            }).then(function (data) {
 
                 if (vm.validateConfig.error_rows.length) {
 
                     vm.validateConfig.process_mode = 'validate';
 
+                    var transactionScheme;
+
+                    vm.transactionSchemes.forEach(function (scheme) {
+
+                        if (scheme.id === vm.config.scheme) {
+                            transactionScheme = scheme;
+                        }
+
+                    });
+
                     $mdDialog.show({
                         controller: 'ImportTransactionErrorsDialogController as vm',
-                        templateUrl: 'views/dialogs/import-transaction-errors-dialog-view.html',
+                        templateUrl: 'views/dialogs/transaction-import/transaction-import-errors-dialog-view.html',
                         locals: {
-                            data: vm.validateConfig
+                            data: {
+                                validationResult: data,
+                                scheme: transactionScheme,
+                                config: vm.config
+                            }
                         },
                         targetEvent: $event,
                         preserveScope: true,
@@ -280,6 +294,17 @@
                 formData.append('missing_data_handler', vm.config.missing_data_handler);
             }
 
+            var transactionScheme;
+
+            vm.transactionSchemes.forEach(function (scheme) {
+
+                if (scheme.id === vm.config.scheme) {
+                    transactionScheme = scheme;
+                }
+
+            });
+
+
             importTransactionService.startImport(formData).then(function (data) {
 
                 vm.config = data;
@@ -324,9 +349,13 @@
 
                         $mdDialog.show({
                             controller: 'ImportTransactionErrorsDialogController as vm',
-                            templateUrl: 'views/dialogs/import-transaction-errors-dialog-view.html',
+                            templateUrl: 'views/dialogs/transaction-import/transaction-import-errors-dialog-view.html',
                             locals: {
-                                data: vm.config
+                                data: {
+                                    validationResult: data,
+                                    scheme: transactionScheme,
+                                    config: vm.config
+                                }
                             },
                             targetEvent: $event,
                             preserveScope: true,
@@ -379,7 +408,7 @@
         vm.openEditMapping = function ($event) {
             $mdDialog.show({
                 controller: 'TransactionImportSchemeEditDialogController as vm',
-                templateUrl: 'views/dialogs/transaction-import-scheme-dialog-view.html',
+                templateUrl: 'views/dialogs/transaction-import/transaction-import-scheme-dialog-view.html',
                 locals: {
                     schemeId: vm.config.scheme
                 },

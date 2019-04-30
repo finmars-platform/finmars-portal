@@ -15,6 +15,10 @@
 
         vm.data = data;
 
+        vm.validationResult = data.validationResult;
+        vm.scheme = data.scheme;
+        vm.config = data.config;
+
         vm.cancel = function () {
             $mdDialog.hide({});
         };
