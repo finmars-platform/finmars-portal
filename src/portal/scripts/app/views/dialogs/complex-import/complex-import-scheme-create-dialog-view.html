@@ -108,20 +108,29 @@
                                             </md-select>
                                         </md-input-container>
 
-                                        <md-input-container>
-                                            <label>Separator</label>
-                                            <md-select data-ng-model="item.csv_import_scheme.delimiter">
-                                                <md-option value=",">Comma (,)</md-option>
-                                                <md-option value=";">Semicolon (;)</md-option>
-                                                <md-option value="\t">Tab</md-option>
-                                            </md-select>
-                                        </md-input-container>
+                                        <!--<md-input-container>-->
+                                            <!--<label>Separator</label>-->
+                                            <!--<md-select data-ng-model="item.csv_import_scheme.delimiter">-->
+                                                <!--<md-option value=",">Comma (,)</md-option>-->
+                                                <!--<md-option value=";">Semicolon (;)</md-option>-->
+                                                <!--<md-option value="\t">Tab</md-option>-->
+                                            <!--</md-select>-->
+                                        <!--</md-input-container>-->
 
                                         <md-input-container>
                                             <label>Mode</label>
                                             <md-select data-ng-model="item.csv_import_scheme.mode">
                                                 <md-option value="skip">Skip if exists</md-option>
                                                 <md-option value="overwrite">Overwrite</md-option>
+                                            </md-select>
+                                        </md-input-container>
+
+                                        <md-input-container>
+                                            <label>Import Rules - if object is not found</label>
+                                            <md-select
+                                                    data-ng-model="item.csv_import_scheme.missing_data_handler">
+                                                <md-option value="throw_error">Treat as Error</md-option>
+                                                <md-option value="set_defaults">Replace with Default Value</md-option>
                                             </md-select>
                                         </md-input-container>
 
@@ -169,13 +178,22 @@
                                         </md-input-container>
 
                                         <md-input-container>
-                                            <label>Separator</label>
-                                            <md-select data-ng-model="item.complex_transaction_import_scheme.delimiter">
-                                                <md-option value=",">Comma (,)</md-option>
-                                                <md-option value=";">Semicolon (;)</md-option>
-                                                <md-option value="\t">Tab</md-option>
+                                            <label>Import Rules - if object is not found</label>
+                                            <md-select
+                                                    data-ng-model="item.complex_transaction_import_scheme.missing_data_handler">
+                                                <md-option value="throw_error">Treat as Error</md-option>
+                                                <md-option value="set_defaults">Replace with Default Value</md-option>
                                             </md-select>
                                         </md-input-container>
+
+                                        <!--<md-input-container>-->
+                                            <!--<label>Separator</label>-->
+                                            <!--<md-select data-ng-model="item.complex_transaction_import_scheme.delimiter">-->
+                                                <!--<md-option value=",">Comma (,)</md-option>-->
+                                                <!--<md-option value=";">Semicolon (;)</md-option>-->
+                                                <!--<md-option value="\t">Tab</md-option>-->
+                                            <!--</md-select>-->
+                                        <!--</md-input-container>-->
 
                                     </div>
 

@@ -134,7 +134,7 @@
 
                         if (attribute.key === entityField.system_property_key) {
                             entityField.value_type = attribute.value_type;
-                            entityField.entity = attribute.entity;
+                            entityField.entity = attribute.value_entity;
                             entityField.content_type = attribute.content_type;
                             entityField.code = attribute.code;
                         }
