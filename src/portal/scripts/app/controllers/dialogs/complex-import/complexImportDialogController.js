@@ -199,7 +199,13 @@
 
                         vm.readyStatus.processing = false;
 
-                        if (data.errors.length === 0) {
+                        errorsCount = 0;
+
+                        data.errors.forEach(function (error) {
+                            errorsCount = errorsCount + error.length;
+                        });
+
+                        if (errorsCount === 0) {
 
                             $mdDialog.hide();
 
@@ -232,18 +238,21 @@
 
                         } else {
 
-                            // $mdDialog.show({
-                            //     controller: 'SimpleEntityImportErrorsDialogController as vm',
-                            //     templateUrl: 'views/dialogs/simple-entity-import/simple-entity-import-errors-dialog-view.html',
-                            //     targetEvent: $event,
-                            //     preserveScope: true,
-                            //     multiple: true,
-                            //     autoWrap: true,
-                            //     skipHide: true,
-                            //     locals: {
-                            //         data: data
-                            //     }
-                            // })
+                            $mdDialog.show({
+                                controller: 'ComplexImportValidationErrorsDialogController as vm',
+                                templateUrl: 'views/dialogs/complex-import/complex-import-validation-errors-dialog-view.html',
+                                targetEvent: $event,
+                                preserveScope: true,
+                                multiple: true,
+                                autoWrap: true,
+                                skipHide: true,
+                                locals: {
+                                    data: {
+                                        complexImportScheme: schemeObject,
+                                        validationResults: data
+                                    }
+                                }
+                            })
 
                         }
 
