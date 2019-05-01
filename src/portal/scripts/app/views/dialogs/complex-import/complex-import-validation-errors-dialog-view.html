@@ -18,6 +18,7 @@
                             <th>Step</th>
                             <th>Action Name</th>
                             <th>Status</th>
+                            <th>Output</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -31,6 +32,16 @@
                                 <div data-ng-if="vm.validationResults.errors[$index].length">Error</div>
                                 <div data-ng-if="!vm.validationResults.errors[$index].length">Ok</div>
 
+                            </td>
+
+                            <td>
+                                <div data-ng-if="vm.validationResults.errors[$index].length">
+
+
+                                    <a href="javascript:void(0)" class="download-error-link link-{{$index}}">Download
+                                        error
+                                        file</a>
+                                </div>
                             </td>
                         </tr>
                         </tbody>
