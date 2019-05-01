@@ -450,6 +450,26 @@
   }
 }
 
+.draggable-dialog {
+  position: absolute;
+  box-shadow: 5px 12px 25px rgba(0,0,0,.5);
+
+  md-toolbar {
+    cursor: grab;
+
+    .md-toolbar-tools {
+      padding-left: 35px;
+    }
+
+    .draggable-dialog-sign {
+      position: absolute;
+      left: 5px;
+      top: 7px;
+      fill: #929292;
+    }
+  }
+}
+
 .drag-dialog {
   .g-modal-dialog {
     left: 0;
@@ -462,24 +482,22 @@
       transform: none;
       overflow: hidden;
     }
-    .draggable-dialog {
-      -webkit-user-select: none;
-      user-select: none;
-      cursor: move;
-      transform: rotate(-140deg);
-      right: -5px;
-      position: absolute;
-      top: -7px;
-    }
     md-toolbar {
       height: 32px;
       min-height: 32px;
     }
+
+  }
+  .draggable-dialog {
+    -webkit-user-select: none;
+    user-select: none;
+    transform: rotate(-140deg);
+    right: -5px;
+    top: -7px;
+
     .md-toolbar-tools {
-      cursor: move;
       height: 100%;
     }
-
   }
 }
 

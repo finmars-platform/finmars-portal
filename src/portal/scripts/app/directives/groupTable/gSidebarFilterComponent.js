@@ -85,9 +85,18 @@
                         scope.reportLayoutOptions.datepickerOptions.reportFirstDatepicker = {};
                     }
 
-                    scope.pnlDatepickerDisplayOptions = {
+                    scope.datepickerFromDisplayOptions = {
                         position: 'left',
-                        labelName: 'First Date'
+                        labelName: 'Date from (excl)'
+                    }
+
+                    scope.datepickerToDisplayOptions = {position: 'left'};
+
+                    if (scope.entityType === 'pnl-report' || scope.entityType === 'transaction-report') {
+                        scope.datepickerToDisplayOptions = {
+                            position: 'left',
+                            labelName: 'Date to (incl)'
+                        }
                     }
                     /* < preparing data for complexZhDatePickerDirective > */
 

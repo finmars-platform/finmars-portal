@@ -8,6 +8,7 @@
 
         var uiService = require('../../services/uiService');
         var evEvents = require('../../services/entityViewerEvents');
+        var objectComparison = require('../../services/objectsComparisonService');
 
 
         var EntityViewerDataService = require('../../services/entityViewerDataService');
@@ -19,14 +20,13 @@
 
         var entityViewerReducer = require('./entityViewerReducer');
 
-        module.exports = function ($scope, $mdDialog, $transitions) {
+        module.exports = function ($scope, $mdDialog, $state, $transitions) {
 
             var vm = this;
 
             vm.listViewIsReady = false;
 
             var activeLayoutConfigString = {};
-            var activeLayoutHash = '';
 
             var entityViewerDataService = new EntityViewerDataService();
             var entityViewerEventService = new EntityViewerEventService();
@@ -87,7 +87,7 @@
                     $scope.$apply();
 
                     activeLayoutConfigString = JSON.stringify(entityViewerDataService.getListLayout());
-                    activeLayoutHash = stringHelper.toHash(activeLayoutConfigString);
+
                 });
 
             };
@@ -105,33 +105,40 @@
 
             vm.init();
 
-            var checkLayoutForChanges = function (transition) {
-                var stateName = transition.to().name;
-                var listOfStatesWithLayout = [
-                    'app.data.portfolio',
-                    'app.data.account',
-                    'app.data.account-type',
-                    'app.data.counterparty',
-                    'app.data.responsible',
-                    'app.data.instrument',
-                    'app.data.instrument-type',
-                    'app.data.pricing-policy',
-                    'app.data.complex-transaction',
-                    'app.data.transaction',
-                    'app.data.transaction-type',
-                    'app.data.currency-history',
-                    'app.data.price-history',
-                    'app.data.currency',
-                    'app.data.strategy-group',
-                    'app.data.strategy'
-                ];
+            var listOfStatesWithLayout = [
+                'app.data.portfolio',
+                'app.data.account',
+                'app.data.account-type',
+                'app.data.counterparty',
+                'app.data.responsible',
+                'app.data.instrument',
+                'app.data.instrument-type',
+                'app.data.pricing-policy',
+                'app.data.complex-transaction',
+                'app.data.transaction',
+                'app.data.transaction-type',
+                'app.data.currency-history',
+                'app.data.price-history',
+                'app.data.currency',
+                'app.data.strategy-group',
+                'app.data.strategy'
+            ];
 
-                if (stateName !== transition.from().name && listOfStatesWithLayout.indexOf(stateName) !== -1) {
+            vm.stateWithLayout = false;
 
-                    var layoutCurrentConfigString = JSON.stringify(entityViewerDataService.getLayoutCurrentConfiguration(false));
-                    var layoutCurrentConfigHash = stringHelper.toHash(layoutCurrentConfigString);
+            if (listOfStatesWithLayout.indexOf($state.current.name) !== -1) {
+                vm.stateWithLayout = true;
+            }
 
-                    if (activeLayoutHash !== layoutCurrentConfigHash) {
+            var checkLayoutForChanges = function () {
+
+                if (vm.stateWithLayout) {
+
+                    var activeLayoutConfig = JSON.parse(activeLayoutConfigString);
+
+                    var layoutCurrentConfig = entityViewerDataService.getLayoutCurrentConfiguration(false);
+
+                    if (!objectComparison.compareObjects(activeLayoutConfig, layoutCurrentConfig)) {
 
                         return new Promise (function (resolve, reject) {
 
@@ -145,8 +152,6 @@
                             }).then(function (res, rej) {
 
                                 if (res.status === 'save_layout') {
-
-                                    var layoutCurrentConfig = JSON.parse(layoutCurrentConfigString);
 
                                     if (layoutCurrentConfig.hasOwnProperty('id')) {
 
@@ -180,6 +185,20 @@
 
             var doBeforeStateChange = $transitions.onBefore({}, checkLayoutForChanges);
 
+            if (vm.stateWithLayout) {
+                window.addEventListener('beforeunload', function (event) {
+
+                    var activeLayoutConfig = JSON.parse(activeLayoutConfigString);
+
+                    var layoutCurrentConfig = entityViewerDataService.getLayoutCurrentConfiguration(false);
+
+                    if (!objectComparison.compareObjects(activeLayoutConfig, layoutCurrentConfig)) {
+                        event.preventDefault();
+                        (event || window.event).returnValue = 'All unsaved changes will be lost.';
+                    }
+
+                });
+            }
 
             this.$onDestroy = function () {
                 doBeforeStateChange();

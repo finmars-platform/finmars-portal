@@ -1,6 +1,7 @@
 <md-dialog aria-label="" ng-cloak class="g-report-settings-dialog-view draggable-dialog" drag-dialog style="width: 50%">
     <md-toolbar>
         <div class="md-toolbar-tools">
+            <ng-md-icon icon="dialpad" size="20" class="draggable-dialog-sign"></ng-md-icon>
             <h2>Export to PDF</h2>
             <span flex></span>
         </div>
@@ -62,6 +63,9 @@
     <md-dialog-actions layout="row">
         <md-button ng-click="vm.cancel()">
             Cancel
+        </md-button>
+        <md-button class="md-primary md-raised" ng-click="vm.saveExportOptions()">
+            Apply
         </md-button>
         <md-button ng-click="vm.agree()" class="md-primary md-raised" style="margin-right:20px;">
             Download

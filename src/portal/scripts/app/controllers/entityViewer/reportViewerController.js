@@ -8,6 +8,7 @@
 
         var uiService = require('../../services/uiService');
         var evEvents = require('../../services/entityViewerEvents');
+        var objectComparison = require('../../services/objectsComparisonService');
 
 
         var EntityViewerDataService = require('../../services/entityViewerDataService');
@@ -26,7 +27,6 @@
             vm.listViewIsReady = false;
 
             var activeLayoutConfigString = {};
-            var activeLayoutHash = '';
 
             var entityViewerDataService = new EntityViewerDataService();
             var entityViewerEventService = new EntityViewerEventService();
@@ -171,7 +171,6 @@
                             $scope.$apply();
 
                             activeLayoutConfigString = JSON.stringify(entityViewerDataService.getListLayout());
-                            activeLayoutHash = stringHelper.toHash(activeLayoutConfigString);
 
                         }
                     // < Check if there is need to solve report datepicker expression >
@@ -184,7 +183,7 @@
                         $scope.$apply();
 
                         activeLayoutConfigString = JSON.stringify(entityViewerDataService.getListLayout());
-                        activeLayoutHash = stringHelper.toHash(activeLayoutConfigString);
+
 
                     }
 
@@ -203,70 +202,78 @@
 
             vm.init();
 
-            var checkLayoutForChanges = function (transition) {
-                var stateName = transition.to().name;
+            var checkLayoutForChanges = function () {
 
-                if (stateName !== transition.from().name) {
+                var layoutCurrentConfig = entityViewerDataService.getLayoutCurrentConfiguration(true);
+                delete layoutCurrentConfig.data.reportOptions.task_id;
+                delete layoutCurrentConfig.data.reportOptions.recieved_at;
 
-                    var layoutCurrentConfigString = JSON.parse(JSON.stringify(entityViewerDataService.getLayoutCurrentConfiguration(true)));
-                    delete layoutCurrentConfigString.data.reportOptions.task_id;
-                    layoutCurrentConfigString = JSON.stringify(layoutCurrentConfigString);
+                var activeLayoutConfig = JSON.parse(activeLayoutConfigString);
+                delete activeLayoutConfig.data.reportOptions.task_id;
+                delete activeLayoutConfig.data.reportOptions.recieved_at;
 
-                    activeLayoutConfigString = JSON.parse(activeLayoutConfigString);
-                    delete activeLayoutConfigString.data.reportOptions.task_id;
-                    activeLayoutConfigString = JSON.stringify(activeLayoutConfigString);
+                if (!objectComparison.compareObjects(activeLayoutConfig, layoutCurrentConfig)) {
 
-                    activeLayoutHash = stringHelper.toHash(activeLayoutConfigString);
-                    var layoutCurrentConfigHash = stringHelper.toHash(layoutCurrentConfigString);
+                    return new Promise (function (resolve, reject) {
 
-                    if (activeLayoutHash !== layoutCurrentConfigHash) {
+                        $mdDialog.show({
+                            controller: 'LayoutChangesLossWarningDialogController as vm',
+                            templateUrl: 'views/dialogs/layout-changes-loss-warning-dialog.html',
+                            parent: angular.element(document.body),
+                            preserveScope: true,
+                            autoWrap: true,
+                            multiple: true
+                        }).then(function (res, rej) {
 
-                        return new Promise (function (resolve, reject) {
+                            if (res.status === 'save_layout') {
 
-                            $mdDialog.show({
-                                controller: 'LayoutChangesLossWarningDialogController as vm',
-                                templateUrl: 'views/dialogs/layout-changes-loss-warning-dialog.html',
-                                parent: angular.element(document.body),
-                                preserveScope: true,
-                                autoWrap: true,
-                                multiple: true
-                            }).then(function (res, rej) {
+                                if (layoutCurrentConfig.hasOwnProperty('id')) {
 
-                                if (res.status === 'save_layout') {
+                                    uiService.updateListLayout(layoutCurrentConfig.id, layoutCurrentConfig).then(function () {
+                                        resolve(true);
+                                    });
 
-                                    var layoutCurrentConfig = JSON.parse(layoutCurrentConfigString);
+                                } else {
 
-                                    if (layoutCurrentConfig.hasOwnProperty('id')) {
-
-                                        uiService.updateListLayout(layoutCurrentConfig.id, layoutCurrentConfig).then(function () {
-                                            resolve(true);
-                                        });
-
-                                    } else {
-
-                                        uiService.createListLayout(vm.entityType, layoutCurrentConfig).then(function () {
-                                            resolve(true);
-                                        });
-
-                                    }
-
-                                } else if ('do_not_save_layout') {
-
-                                    resolve(true);
+                                    uiService.createListLayout(vm.entityType, layoutCurrentConfig).then(function () {
+                                        resolve(true);
+                                    });
 
                                 }
 
-                            }).catch(function () {
-                                reject();
-                            });
-                        });
+                            } else if ('do_not_save_layout') {
 
-                    }
+                                resolve(true);
+
+                            }
+
+                        }).catch(function () {
+                            reject();
+                        });
+                    });
+
                 }
 
             };
 
             var doBeforeStateChange = $transitions.onBefore({}, checkLayoutForChanges);
+
+            window.addEventListener('beforeunload', function (event) {
+
+                var activeLayoutConfig = JSON.parse(activeLayoutConfigString);
+                delete activeLayoutConfig.data.reportOptions.task_id;
+                delete activeLayoutConfig.data.reportOptions.recieved_at;
+
+                var layoutCurrentConfigString = entityViewerDataService.getLayoutCurrentConfiguration(true);
+                delete layoutCurrentConfigString.data.reportOptions.task_id;
+                delete layoutCurrentConfigString.data.reportOptions.recieved_at;
+
+                if (!objectComparison.compareObjects(activeLayoutConfig, layoutCurrentConfigString)) {
+                    event.preventDefault();
+                    (event || window.event).returnValue = 'All unsaved changes will be lost.';
+                }
+
+            });
 
             this.$onDestroy = function () {
                 doBeforeStateChange();

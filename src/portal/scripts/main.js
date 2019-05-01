@@ -135,7 +135,7 @@ app.controller('TransactionImportSchemeEditDialogController', ['$scope', '$mdDia
 app.controller('TransactionImportSchemeInputsDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/transactionImportSchemeInputsDialogController')]);
 
 
-app.controller('EntityViewer2Controller', ['$scope', '$mdDialog', '$transitions', require('./app/controllers/entityViewer/entityViewer2Controller')]);
+app.controller('EntityViewer2Controller', ['$scope', '$mdDialog', '$state', '$transitions', require('./app/controllers/entityViewer/entityViewer2Controller')]);
 app.controller('ReportViewerController', ['$scope', '$mdDialog', '$transitions', require('./app/controllers/entityViewer/reportViewerController')]);
 app.controller('EntityViewerAddDialogController', ['$scope', '$mdDialog', '$state', 'entityType', 'entity', require('./app/controllers/entityViewer/entityViewerAddDialogController')]);
 app.controller('EntityViewerEditDialogController', ['$scope', '$mdDialog', '$state', 'entityType', 'entityId', require('./app/controllers/entityViewer/entityViewerEditDialogController')]);
