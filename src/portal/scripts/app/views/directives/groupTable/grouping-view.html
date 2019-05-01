@@ -21,8 +21,10 @@
                                    ng-click="reportSetGrandtotalType('line')"
                                    class="g-settings-option-btn">
                             <ng-md-icon icon="done"
-                                        data-ng-show="rootGroupOptions.subtotal_type == 'line'"></ng-md-icon>
-                            <ng-md-icon icon="done" style="visibility:hidden;"></ng-md-icon>
+                                        data-ng-show="rootGroupOptions.subtotal_type === 'line'"></ng-md-icon>
+                            <ng-md-icon icon="done"
+                                        style="visibility:hidden;"
+                                        data-ng-show="rootGroupOptions.subtotal_type !== 'line'"></ng-md-icon>
                             <span>Grandtotal on Top</span>
                         </md-button>
                     </md-menu-item>
@@ -31,8 +33,10 @@
                                    ng-click="reportSetGrandtotalType('area')"
                                    class="g-settings-option-btn">
                             <ng-md-icon icon="done"
-                                        data-ng-show="rootGroupOptions.subtotal_type == 'area'"></ng-md-icon>
-                            <ng-md-icon icon="done" style="visibility:hidden;"></ng-md-icon>
+                                        data-ng-show="rootGroupOptions.subtotal_type === 'area'"></ng-md-icon>
+                            <ng-md-icon icon="done"
+                                        style="visibility:hidden;"
+                                        data-ng-show="rootGroupOptions.subtotal_type !== 'area'"></ng-md-icon>
                             <span>Grandtotal on Bottom</span>
                         </md-button>
                     </md-menu-item>
@@ -41,8 +45,10 @@
                                    ng-click="reportSetGrandtotalType('arealine')"
                                    class="g-settings-option-btn">
                             <ng-md-icon icon="done"
-                                        data-ng-show="rootGroupOptions.subtotal_type == 'arealine'"></ng-md-icon>
-                            <ng-md-icon icon="done" style="visibility:hidden;"></ng-md-icon>
+                                        data-ng-show="rootGroupOptions.subtotal_type === 'arealine'"></ng-md-icon>
+                            <ng-md-icon icon="done"
+                                        style="visibility:hidden;"
+                                        data-ng-show="rootGroupOptions.subtotal_type !== 'arealine'"></ng-md-icon>
                             <span>Grandtotal on Top and Bottom</span>
                         </md-button>
                     </md-menu-item>

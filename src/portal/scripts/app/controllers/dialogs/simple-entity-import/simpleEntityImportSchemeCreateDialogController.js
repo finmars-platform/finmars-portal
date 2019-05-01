@@ -167,13 +167,13 @@
         };
 
         vm.addCsvField = function () {
-            var csvFieldsLength = vm.scheme.csv_fields.length;
+            var fieldsLength = vm.scheme.csv_fields.length;
             var lastFieldNumber;
             var nextFieldNumber;
-            if (csvFieldsLength === 0) {
+            if (fieldsLength === 0) {
                 nextFieldNumber = 0;
             } else {
-                lastFieldNumber = parseInt(vm.scheme.csv_fields[csvFieldsLength - 1].column);
+                lastFieldNumber = parseInt(vm.scheme.csv_fields[fieldsLength - 1].column);
                 nextFieldNumber = lastFieldNumber + 1;
             }
 
@@ -229,25 +229,71 @@
 
             });
 
-            csvImportSchemeService.create(vm.scheme).then(function (data) {
+            var warningMessage = '';
 
-                $mdDialog.hide({res: 'agree'});
+            var importedColumnsNumberZero = false;
+            var importedColumnsNumberEmpty = false;
 
-            }).catch(function (reason) {
+            vm.providerFields.map(function (field) {
+
+                if (field.column === 0 && !importedColumnsNumberZero) {
+                    warningMessage = "should not have value 0 (column's count starts from 1)";
+                    importedColumnsNumberZero = true;
+                }
+
+                if (field.column === null && !importedColumnsNumberEmpty) {
+
+                    if (importedColumnsNumberZero) {
+                        warningMessage = warningMessage + ', should not be empty'
+                    } else {
+                        warningMessage = 'should not be empty'
+                    }
+
+                    importedColumnsNumberEmpty = true;
+                }
+
+            });
+
+            if (importedColumnsNumberZero || importedColumnsNumberEmpty) {
+                warningMessage = 'Imported Columns Field #: ' + warningMessage + '.';
 
                 $mdDialog.show({
-                    controller: 'ValidationDialogController as vm',
-                    templateUrl: 'views/dialogs/validation-dialog-view.html',
+                    controller: 'WarningDialogController as vm',
+                    templateUrl: 'views/warning-dialog-view.html',
                     targetEvent: $event,
+                    clickOutsideToClose: false,
                     locals: {
-                        validationData: reason.message
+                        warning: {
+                            title: 'Incorrect Imported Columns field #',
+                            description: warningMessage
+                        }
                     },
-                    preserveScope: true,
-                    autoWrap: true,
-                    skipHide: true
+                    multiple: true
                 })
 
-            })
+            } else {
+
+                csvImportSchemeService.create(vm.scheme).then(function (data) {
+
+                    $mdDialog.hide({res: 'agree'});
+
+                }).catch(function (reason) {
+
+                    $mdDialog.show({
+                        controller: 'ValidationDialogController as vm',
+                        templateUrl: 'views/dialogs/validation-dialog-view.html',
+                        targetEvent: $event,
+                        locals: {
+                            validationData: reason.message
+                        },
+                        preserveScope: true,
+                        autoWrap: true,
+                        skipHide: true
+                    })
+
+                })
+            }
+
         };
 
         vm.openMapping = function ($event, item) {

@@ -22,7 +22,7 @@
 
                 // console.log('complex datepicker', scope.displayOptions, scope.date, scope.datepickerOptions, scope.callbackMethod);
 
-                var input = $(elem).find('#complex-datepicker-input');
+                var input = $(elem).find('.complex-datepicker-input');
 
                 // TIPS
                 // scope.displayOptions is an object that may contain next properties:
@@ -44,7 +44,7 @@
 
                 scope.getDatepickerName = function () {
                     if (scope.displayOptions.labelName) {
-                        return scope.displayOptions.labelName + ": " + scope.datepickerActiveModeTitle + " mode";
+                        return scope.displayOptions.labelName + ": " + scope.datepickerActiveModeTitle;
                     } else {
                         return "Date: " +  scope.datepickerActiveModeTitle + " mode";
                     }

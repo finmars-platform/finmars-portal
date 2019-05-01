@@ -610,6 +610,19 @@ md-tooltip.tooltip_1 {
   z-index: 12000;
 }
 
+.error_box {
+  position: absolute;
+  color: #ffffff;
+  font-size: 13px;
+  background-color: rgba(255, 0, 0, 0.8);
+  white-space: nowrap;
+  border-radius: 5px;
+  padding: 5px;
+  bottom: 65px;
+  left: -30px;
+  z-index: 1;
+}
+
 .column-name-tooltip-wrap {
   position: absolute;
   left: 50%;
@@ -1324,6 +1337,10 @@ md-toolbar.header {
 md-dialog.draggable-dialog {
   position: absolute;
   transition: initial;
+
+  /*md-toolbar {
+    cursor: grab;
+  }*/
 }
 
 md-select-header input {
@@ -1638,6 +1655,17 @@ md-input-container:not(.md-input-focused):not(.md-input-has-value) {
 
 .transaction-scheme-manager-dialog-view {
   width: 75%;
+}
+
+.scheme-manager-import-columns-header {
+  position: relative;
+  padding-left: 10px;
+
+  ng-md-icon {
+    position: absolute;
+    right: -30px;
+    bottom: -2px;
+  }
 }
 
 .TSM-small-input {

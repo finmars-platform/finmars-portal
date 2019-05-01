@@ -590,6 +590,14 @@
             return data.virtualScroll.limit;
         }
 
+        function setExportOptions(exportOptions) {
+            data.export = exportOptions;
+        }
+
+        function getExportOptions() {
+            return data.export;
+        }
+
         function setListLayout(listLayout) {
             data.listLayout = listLayout;
         }
@@ -608,8 +616,14 @@
 
             if (isReport) {
 
+                console.log("transition prevention get reportOptions4", JSON.stringify(getReportOptions()), JSON.parse(JSON.stringify(getReportOptions())));
                 listLayout.data.reportOptions = JSON.parse(JSON.stringify(getReportOptions()));
                 listLayout.data.reportLayoutOptions = JSON.parse(JSON.stringify(getReportLayoutOptions()));
+                // console.log("transition prevention reportOptions", listLayout.data.reportOptions);
+
+                if (getExportOptions()) {
+                    listLayout.data.export = JSON.parse(JSON.stringify(getExportOptions()));
+                }
 
                 delete listLayout.data.reportOptions.items;
                 delete listLayout.data.reportOptions.item_complex_transactions;
@@ -658,9 +672,11 @@
                 var reportLayoutOptions = getReportLayoutOptions();
                 var newReportOptions = Object.assign({}, reportOptions, listLayout.data.reportOptions);
                 var newReportLayoutOptions = Object.assign({}, reportLayoutOptions, listLayout.data.reportLayoutOptions);
-
+                console.log("transition prevention set reportOptions1", reportOptions, JSON.stringify(newReportOptions));
                 setReportOptions(newReportOptions);
                 setReportLayoutOptions(newReportLayoutOptions);
+
+                setExportOptions(listLayout.data.export);
 
             }
 
@@ -796,6 +812,9 @@
             getVirtualScrollLimit: getVirtualScrollLimit,
 
             getInterfaceLayout: getInterfaceLayout,
+
+            setExportOptions: setExportOptions,
+            getExportOptions: getExportOptions,
 
             setListLayout: setListLayout,
             getListLayout: getListLayout,

@@ -600,7 +600,8 @@
                             </div>
                             <div class="column-name-tooltip-wrap">
                                 <div class="column-name-tooltip-content">
-                                    <span data-ng-bind="column.name"></span>
+                                    <span ng-if="!column.layout_name" data-ng-bind="column.name"></span>
+                                    <span ng-if="column.layout_name" data-ng-bind="column.layout_name"></span>
                                 </div>
                             </div>
                         </div>

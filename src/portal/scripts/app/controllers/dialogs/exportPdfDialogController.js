@@ -21,8 +21,27 @@
         vm.zoomPercent = 100;
 
         vm.settings.layout = 'landscape';
-        vm.settings.zoom = 1;
         vm.settings.margin = 4;
+
+        var exportOptions = evDataService.getExportOptions();
+
+        console.log("export options", exportOptions);
+
+        if (exportOptions && exportOptions.hasOwnProperty('pdf')) {
+
+            if (exportOptions.pdf.zoom) {
+                vm.zoomPercent = exportOptions.pdf.zoom;
+            }
+
+            if (exportOptions.pdf.layout) {
+                vm.settings.layout = exportOptions.pdf.layout;
+            }
+
+            if (exportOptions.pdf.margin) {
+                vm.settings.margin = exportOptions.pdf.margin;
+            }
+
+        }
 
         vm.settings.data.groups = evDataService.getGroups();
         vm.settings.data.columns = evDataService.getColumns();
@@ -84,7 +103,7 @@
                 pageSize = 560;
             }
             else {
-                pageSize = 810;
+                pageSize = 864;
             }
 
             var columns = evDataService.getColumns();
@@ -92,24 +111,47 @@
             columns.map(function (column) {
                 layoutWidth = layoutWidth + parseInt(column.style.width);
             });
-            console.log('fit layout columns', columns);
+            // console.log('fit layout columns', columns);
 
             var widthLimit = pageSize - pageMargin;
-            console.log('fit layout layoutWidth, limitWidth', layoutWidth, widthLimit);
+            // console.log('fit layout layoutWidth, limitWidth', layoutWidth, widthLimit);
             while (layoutWidth * scale > widthLimit) {
                 scale = (scale - 0.05).toFixed(2);
-                console.log('fit layout scale step', scale);
             }
 
             vm.zoomPercent = parseInt(scale * 100);
-            console.log('fit layout final zoom', vm.zoomPercent);
+            // console.log('fit layout final zoom', vm.zoomPercent);
+        };
+
+        vm.saveExportOptions = function () {
+
+            var exportOptions = {};
+
+            exportOptions.pdf = {};
+            exportOptions.pdf.zoom = vm.zoomPercent;
+            exportOptions.pdf.layout = vm.settings.layout;
+            exportOptions.pdf.margin = vm.settings.margin;
+
+            evDataService.setExportOptions(exportOptions);
+
+            $mdDialog.show({
+                controller: 'SuccessDialogController as vm',
+                templateUrl: 'views/dialogs/success-dialog-view.html',
+                multiple: true,
+                locals: {
+                    success: {
+                        title: 'Success',
+                        description: 'Export settings have been saved'
+                    }
+                },
+                autoWrap: true,
+                skipHide: true
+            });
         };
 
         vm.agree = function () {
 
             console.log('vm.settings', vm.settings);
-
-            vm.settings.data.columns = evDataService.getColumns();
 
             vm.settings.data.reportOptions = JSON.parse(JSON.stringify(evDataService.getReportOptions()));
 
