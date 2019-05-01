@@ -19,14 +19,14 @@
                         <div data-ng-if="entityType == 'pnl-report'">
                             <complex-zh-date-picker data-date="reportOptions.pl_first_date"
                                                     data-datepicker-options="reportLayoutOptions.datepickerOptions.reportFirstDatepicker"
-                                                    data-display-options="pnlDatepickerDisplayOptions"
+                                                    data-display-options="datepickerFromDisplayOptions"
                                                     data-callback-method="updateReportOptions()">
                             </complex-zh-date-picker>
                         </div>
 
                         <complex-zh-date-picker data-date="reportOptions.report_date"
                                                 data-datepicker-options="reportLayoutOptions.datepickerOptions.reportLastDatepicker"
-                                                data-display-options="{position: 'left'}"
+                                                data-display-options="datepickerToDisplayOptions"
                                                 data-callback-method="updateReportOptions()">
                         </complex-zh-date-picker>
 
@@ -116,7 +116,7 @@
 
                     <div layout="column" style="padding-top: 16px">
 
-                        <md-input-container>
+                        <!--<md-input-container>
 
                             <label for="">Begin date</label>
 
@@ -125,9 +125,17 @@
                                             position="left"
                                             ng-change="updateReportOptions()"></zh-date-picker>
 
-                        </md-input-container>
+                        </md-input-container>-->
 
-                        <md-input-container>
+                        <div>
+                            <complex-zh-date-picker data-date="reportOptions.pl_first_date"
+                                                    data-datepicker-options="reportLayoutOptions.datepickerOptions.reportFirstDatepicker"
+                                                    data-display-options="datepickerFromDisplayOptions"
+                                                    data-callback-method="updateReportOptions()">
+                            </complex-zh-date-picker>
+                        </div>
+
+                        <!--<md-input-container>
 
                             <label for="">End date</label>
 
@@ -136,7 +144,15 @@
                                             position="left"
                                             ng-change="updateReportOptions()"></zh-date-picker>
 
-                        </md-input-container>
+                        </md-input-container>-->
+
+                        <div>
+                            <complex-zh-date-picker data-date="reportOptions.end_date"
+                                                    data-datepicker-options="reportLayoutOptions.datepickerOptions.reportLastDatepicker"
+                                                    data-display-options="datepickerToDisplayOptions"
+                                                    data-callback-method="updateReportOptions()">
+                            </complex-zh-date-picker>
+                        </div>
 
                     </div>
 

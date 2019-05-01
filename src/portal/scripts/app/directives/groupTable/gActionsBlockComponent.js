@@ -401,7 +401,7 @@
 
                         listLayout.data.reportOptions = JSON.parse(JSON.stringify(scope.evDataService.getReportOptions()));
                         listLayout.data.reportLayoutOptions = JSON.parse(JSON.stringify(scope.evDataService.getReportLayoutOptions()));
-
+                        console.log("transition prevention reportOptions save", listLayout.data.reportOptions);
                         if (scope.evDataService.getExportOptions()) {
                             listLayout.data.export = JSON.parse(JSON.stringify(scope.evDataService.getExportOptions()));
                         }

@@ -8,6 +8,7 @@
 
         var uiService = require('../../services/uiService');
         var evEvents = require('../../services/entityViewerEvents');
+        var objectComparison = require('../../services/objectsComparisonService');
 
 
         var EntityViewerDataService = require('../../services/entityViewerDataService');
@@ -26,7 +27,6 @@
             vm.listViewIsReady = false;
 
             var activeLayoutConfigString = {};
-            var activeLayoutHash = '';
 
             var entityViewerDataService = new EntityViewerDataService();
             var entityViewerEventService = new EntityViewerEventService();
@@ -87,7 +87,7 @@
                     $scope.$apply();
 
                     activeLayoutConfigString = JSON.stringify(entityViewerDataService.getListLayout());
-                    activeLayoutHash = stringHelper.toHash(activeLayoutConfigString);
+
                 });
 
             };
@@ -130,16 +130,15 @@
                 vm.stateWithLayout = true;
             }
 
-            var checkLayoutForChanges = function (transition) {
-
-                var stateName = transition.from().name;
+            var checkLayoutForChanges = function () {
 
                 if (vm.stateWithLayout) {
 
-                    var layoutCurrentConfigString = JSON.stringify(entityViewerDataService.getLayoutCurrentConfiguration(false));
-                    var layoutCurrentConfigHash = stringHelper.toHash(layoutCurrentConfigString);
+                    var activeLayoutConfig = JSON.parse(activeLayoutConfigString);
 
-                    if (activeLayoutHash !== layoutCurrentConfigHash) {
+                    var layoutCurrentConfig = entityViewerDataService.getLayoutCurrentConfiguration(false);
+
+                    if (!objectComparison.compareObjects(activeLayoutConfig, layoutCurrentConfig)) {
 
                         return new Promise (function (resolve, reject) {
 
@@ -153,8 +152,6 @@
                             }).then(function (res, rej) {
 
                                 if (res.status === 'save_layout') {
-
-                                    var layoutCurrentConfig = JSON.parse(layoutCurrentConfigString);
 
                                     if (layoutCurrentConfig.hasOwnProperty('id')) {
 
@@ -191,10 +188,11 @@
             if (vm.stateWithLayout) {
                 window.addEventListener('beforeunload', function (event) {
 
-                    var layoutCurrentConfigString = JSON.stringify(entityViewerDataService.getLayoutCurrentConfiguration(false));
-                    var layoutCurrentConfigHash = stringHelper.toHash(layoutCurrentConfigString);
+                    var activeLayoutConfig = JSON.parse(activeLayoutConfigString);
 
-                    if (activeLayoutHash !== layoutCurrentConfigHash) {
+                    var layoutCurrentConfig = entityViewerDataService.getLayoutCurrentConfiguration(false);
+
+                    if (!objectComparison.compareObjects(activeLayoutConfig, layoutCurrentConfig)) {
                         event.preventDefault();
                         (event || window.event).returnValue = 'All unsaved changes will be lost.';
                     }
