@@ -8,6 +8,7 @@
 
         var uiService = require('../../services/uiService');
         var evEvents = require('../../services/entityViewerEvents');
+        var objectComparison = require('../../services/objectsComparisonService');
 
 
         var EntityViewerDataService = require('../../services/entityViewerDataService');
@@ -26,7 +27,6 @@
             vm.listViewIsReady = false;
 
             var activeLayoutConfigString = {};
-            var activeLayoutHash = '';
 
             var entityViewerDataService = new EntityViewerDataService();
             var entityViewerEventService = new EntityViewerEventService();
@@ -171,7 +171,6 @@
                             $scope.$apply();
 
                             activeLayoutConfigString = JSON.stringify(entityViewerDataService.getListLayout());
-                            activeLayoutHash = stringHelper.toHash(activeLayoutConfigString);
 
                         }
                     // < Check if there is need to solve report datepicker expression >
@@ -184,7 +183,7 @@
                         $scope.$apply();
 
                         activeLayoutConfigString = JSON.stringify(entityViewerDataService.getListLayout());
-                        activeLayoutHash = stringHelper.toHash(activeLayoutConfigString);
+
 
                     }
 
@@ -203,20 +202,17 @@
 
             vm.init();
 
-            var checkLayoutForChanges = function (transition) {
+            var checkLayoutForChanges = function () {
 
-                var layoutCurrentConfigString = entityViewerDataService.getLayoutCurrentConfiguration(true);
-                delete layoutCurrentConfigString.data.reportOptions.task_id;
-                layoutCurrentConfigString = JSON.stringify(layoutCurrentConfigString);
+                var layoutCurrentConfig = entityViewerDataService.getLayoutCurrentConfiguration(true);
+                delete layoutCurrentConfig.data.reportOptions.task_id;
+                delete layoutCurrentConfig.data.reportOptions.recieved_at;
 
-                activeLayoutConfigString = JSON.parse(activeLayoutConfigString);
-                delete activeLayoutConfigString.data.reportOptions.task_id;
-                activeLayoutConfigString = JSON.stringify(activeLayoutConfigString);
+                var activeLayoutConfig = JSON.parse(activeLayoutConfigString);
+                delete activeLayoutConfig.data.reportOptions.task_id;
+                delete activeLayoutConfig.data.reportOptions.recieved_at;
 
-                activeLayoutHash = stringHelper.toHash(activeLayoutConfigString);
-                var layoutCurrentConfigHash = stringHelper.toHash(layoutCurrentConfigString);
-
-                if (activeLayoutHash !== layoutCurrentConfigHash) {
+                if (!objectComparison.compareObjects(activeLayoutConfig, layoutCurrentConfig)) {
 
                     return new Promise (function (resolve, reject) {
 
@@ -230,8 +226,6 @@
                         }).then(function (res, rej) {
 
                             if (res.status === 'save_layout') {
-
-                                var layoutCurrentConfig = JSON.parse(layoutCurrentConfigString);
 
                                 if (layoutCurrentConfig.hasOwnProperty('id')) {
 
@@ -266,18 +260,15 @@
 
             window.addEventListener('beforeunload', function (event) {
 
+                var activeLayoutConfig = JSON.parse(activeLayoutConfigString);
+                delete activeLayoutConfig.data.reportOptions.task_id;
+                delete activeLayoutConfig.data.reportOptions.recieved_at;
+
                 var layoutCurrentConfigString = entityViewerDataService.getLayoutCurrentConfiguration(true);
                 delete layoutCurrentConfigString.data.reportOptions.task_id;
-                layoutCurrentConfigString = JSON.stringify(layoutCurrentConfigString);
+                delete layoutCurrentConfigString.data.reportOptions.recieved_at;
 
-                activeLayoutConfigString = JSON.parse(activeLayoutConfigString);
-                delete activeLayoutConfigString.data.reportOptions.task_id;
-                activeLayoutConfigString = JSON.stringify(activeLayoutConfigString);
-
-                activeLayoutHash = stringHelper.toHash(activeLayoutConfigString);
-                var layoutCurrentConfigHash = stringHelper.toHash(layoutCurrentConfigString);
-
-                if (activeLayoutHash !== layoutCurrentConfigHash) {
+                if (!objectComparison.compareObjects(activeLayoutConfig, layoutCurrentConfigString)) {
                     event.preventDefault();
                     (event || window.event).returnValue = 'All unsaved changes will be lost.';
                 }
