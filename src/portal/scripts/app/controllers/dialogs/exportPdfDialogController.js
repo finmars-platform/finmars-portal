@@ -100,10 +100,10 @@
 
             var pageSize = null;
             if (pageType === 'portrait') {
-                pageSize = 791;
+                pageSize = 839;
             }
             else {
-                pageSize = 1120;
+                pageSize = 1197;
             }
 
             var columns = evDataService.getColumns();
@@ -113,10 +113,10 @@
             });
             // console.log('fit layout columns', columns);
 
-            var widthLimit = pageSize - pageMargin;
+            var widthLimit = pageSize - pageMargin * 2;
             // console.log('fit layout layoutWidth, limitWidth', layoutWidth, widthLimit);
             while (layoutWidth * scale > widthLimit) {
-                scale = (scale - 0.05).toFixed(2);
+                scale = (scale - 0.01).toFixed(2);
             }
 
             vm.zoomPercent = parseInt(scale * 100);

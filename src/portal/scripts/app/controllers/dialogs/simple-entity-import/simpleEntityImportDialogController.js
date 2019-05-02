@@ -125,7 +125,7 @@
                         if (res && res.status === 'agree') {
                             vm.load();
                         } else {
-                            vm.closeButtonText = "Cancel";
+                            vm.closeButtonText = "OK";
                         }
 
                     })
@@ -227,7 +227,7 @@
                         }
                     });
 
-                    vm.closeButtonText = "Cancel";
+                    vm.closeButtonText = "OK";
 
                 }
 

@@ -104,22 +104,77 @@
                     </md-input-container>
                 </td>
                 <td data-ng-if="item.editStatus" class="edit-state-td" style="padding-top: 12px">
-                    <md-input-container>
+                    <!--<md-input-container>
                         <label for="">Value type</label>
                         <md-select data-ng-model="item.value_type">
                             <md-option data-ng-repeat="item in vm.valueTypes" ng-value="item.value">
                                 {{item.display_name}}
                             </md-option>
                         </md-select>
+                    </md-input-container>-->
+
+                    <md-input-container class="md-block" aria-label="select with filter">
+                        <label>Value type</label>
+                        <md-select ng-model="item.value_type"
+                                   md-container-class="common-select-container"
+                                   md-on-close="searchTerm = ''">
+
+                            <md-select-header>
+                                <input data-ng-model="searchTerm"
+                                       type="search"
+                                       placeholder="Search for a ..."
+                                       class="md-text md-select-search-pattern select-input-filter"
+                                       ng-keydown="$event.stopPropagation()">
+                            </md-select-header>
+
+                            <div class="select-options-holder">
+
+                                <md-option
+                                        data-ng-repeat="item in vm.valueTypes | filter:{name: searchTerm}"
+                                        ng-value="item.value">
+                                    {{item.display_name}}
+                                </md-option>
+
+                            </div>
+
+                        </md-select>
                     </md-input-container>
                 </td>
                 <td data-ng-if="item.editStatus" class="edit-state-td" style="padding-top: 12px">
-                    <md-input-container>
+                    <!--<md-input-container>
                         <label for="">Content type</label>
                         <md-select data-ng-model="item.content_type">
                             <md-option data-ng-repeat="item in vm.contentTypes" ng-value="item.key">
                                 {{item.name}}
                             </md-option>
+                        </md-select>
+                    </md-input-container>-->
+
+                    <md-input-container class="md-block" aria-label="select with filter">
+                        <label for="ttype-inputs-content-type">Content type</label>
+                        <md-select ng-model="item.content_type"
+                                   md-container-class="common-select-container"
+                                   md-on-close="searchTerm = ''"
+                                   id="ttype-inputs-content-type">
+
+                            <md-select-header>
+                                <input data-ng-model="searchTerm"
+                                       type="search"
+                                       placeholder="Search for a ..."
+                                       class="md-text md-select-search-pattern select-input-filter"
+                                       ng-keydown="$event.stopPropagation()">
+                            </md-select-header>
+
+                            <div class="select-options-holder">
+
+                                <md-option
+                                        data-ng-repeat="item in vm.contentTypes | filter:{name: searchTerm}"
+                                        ng-value="item.key">
+                                    {{item.name}}
+                                </md-option>
+
+                            </div>
+
                         </md-select>
                     </md-input-container>
                 </td>
@@ -131,14 +186,32 @@
 
                     <expression-editor-button data-ng-if="item.value_type != 100" data-item="item.value"></expression-editor-button>
 
-                    <md-input-container data-ng-if="item.value_type == 100" style="margin-top: -25px">
-                        <label for="">Default value</label>
-                        <md-select data-ng-model="item[vm.resolveRelation(item)]"
-                                   md-on-open="vm.loadRelation(vm.resolveRelation(item))">
-                            <md-option data-ng-repeat="relationItem in vm.relationItems[vm.resolveRelation(item)]"
-                                       ng-value="relationItem.id">
-                                {{relationItem.name}}
-                            </md-option>
+                    <md-input-container data-ng-if="item.value_type == 100"
+                                        style="margin-top: -25px"
+                                        aria-label="select with filter">
+                        <label for="ttype-relation-item-input">Default value</label>
+                        <md-select ng-model="item[vm.resolveRelation(item)]"
+                                   md-container-class="common-select-container"
+                                   md-on-open="vm.loadRelation(vm.resolveRelation(item))"
+                                   md-on-close="searchTerm = ''"
+                                   id="ttype-relation-item-input">
+                            <md-select-header>
+                                <input data-ng-model="searchTerm"
+                                       type="search"
+                                       placeholder="Search for a ..."
+                                       class="md-text md-select-search-pattern select-input-filter"
+                                       ng-keydown="$event.stopPropagation()">
+                            </md-select-header>
+
+                            <div class="select-options-holder">
+
+                                <md-option
+                                        data-ng-repeat="relationItem in vm.relationItems[vm.resolveRelation(item)] | filter:{name: searchTerm}"
+                                        ng-value="relationItem.id">
+                                    {{relationItem.name}}
+                                </md-option>
+
+                            </div>
                         </md-select>
                     </md-input-container>
                 </td>
@@ -181,7 +254,7 @@
                             </md-option>
                         </md-select>
                     </md-input-container>-->
-                    <md-input-container class="md-block">
+                    <md-input-container class="md-block" aria-label="select with filter">
                         <label for="ttype-inputs-value-type"></label>
                         <md-select ng-model="vm.newItem.value_type"
                                    md-container-class="common-select-container"
@@ -215,7 +288,7 @@
                             </md-option>
                         </md-select>
                     </md-input-container>-->
-                    <md-input-container class="md-block">
+                    <md-input-container class="md-block" aria-label="select with filter">
                         <label for="ttype-inputs-default-value"></label>
                         <md-select ng-model="vm.newItem.content_type"
                                    md-container-class="common-select-container"
@@ -250,13 +323,41 @@
 
                     <expression-editor-button data-ng-if="vm.newItem.value_type != 100" data-item="vm.newItem.value"></expression-editor-button>
 
-                    <md-input-container data-ng-if="vm.newItem.value_type == 100" style="margin-top: -25px">
+                    <!--<md-input-container data-ng-if="vm.newItem.value_type == 100" style="margin-top: -25px">
                         <md-select data-ng-model="vm.newItem[vm.resolveRelation(vm.newItem)]"
                                    md-on-open="vm.loadRelation(vm.resolveRelation(vm.newItem))">
                             <md-option data-ng-repeat="item in vm.relationItems[vm.resolveRelation(vm.newItem)]"
                                        ng-value="item.id">
                                 {{item.name}}
                             </md-option>
+                        </md-select>
+                    </md-input-container>-->
+
+                    <md-input-container data-ng-if="vm.newItem.value_type == 100" style="margin-top: -25px">
+                        <label></label>
+                        <md-select ng-model="vm.newItem[vm.resolveRelation(vm.newItem)]"
+                                   md-container-class="common-select-container"
+                                   md-on-open="vm.loadRelation(vm.resolveRelation(vm.newItem))"
+                                   md-on-close="searchTerm = ''">
+
+                            <md-select-header>
+                                <input data-ng-model="searchTerm"
+                                       type="search"
+                                       placeholder="Search for a ..."
+                                       class="md-text md-select-search-pattern select-input-filter"
+                                       ng-keydown="$event.stopPropagation()">
+                            </md-select-header>
+
+                            <div class="select-options-holder">
+
+                                <md-option
+                                        data-ng-repeat="item in vm.relationItems[vm.resolveRelation(vm.newItem)] | filter:{name: searchTerm}"
+                                        ng-value="item.id">
+                                    {{item.name}}
+                                </md-option>
+
+                            </div>
+
                         </md-select>
                     </md-input-container>
                 </td>

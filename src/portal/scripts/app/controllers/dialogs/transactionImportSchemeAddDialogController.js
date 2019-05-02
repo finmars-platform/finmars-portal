@@ -104,9 +104,22 @@
         ];
 
         vm.addProviderField = function () {
+            var fieldsLength = vm.providerFields.length;
+            var lastFieldNumber;
+            var nextFieldNumber;
+            if (fieldsLength === 0) {
+                nextFieldNumber = 1;
+            } else {
+                lastFieldNumber = parseInt(vm.providerFields[fieldsLength - 1].column);
+                if (isNaN(lastFieldNumber) || lastFieldNumber === null) {
+                    lastFieldNumber = 0
+                }
+                nextFieldNumber = lastFieldNumber + 1;
+            }
+
             vm.providerFields.push({
                 name: '',
-                column: vm.providerFields.length
+                column: nextFieldNumber
             })
         };
 

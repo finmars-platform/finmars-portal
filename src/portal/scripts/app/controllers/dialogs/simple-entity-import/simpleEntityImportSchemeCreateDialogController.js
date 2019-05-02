@@ -171,7 +171,7 @@
             var lastFieldNumber;
             var nextFieldNumber;
             if (fieldsLength === 0) {
-                nextFieldNumber = 0;
+                nextFieldNumber = 1;
             } else {
                 lastFieldNumber = parseInt(vm.scheme.csv_fields[fieldsLength - 1].column);
                 nextFieldNumber = lastFieldNumber + 1;
