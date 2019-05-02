@@ -285,6 +285,40 @@
             vm.scheme.entity_fields.splice($index, 1);
         };
 
+        vm.setProviderFieldExpression = function (item) {
+
+            if (!item.name_expr || item.name_expr === '') {
+                item.name_expr = item.name;
+                console.log("transaction import", item);
+            }
+
+        };
+
+        vm.openProviderFieldExpressionBuilder = function (item, $event) {
+
+            $mdDialog.show({
+                controller: 'ExpressionEditorDialogController as vm',
+                templateUrl: 'views/dialogs/expression-editor-dialog-view.html',
+                targetEvent: $event,
+                multiple: true,
+                autoWrap: true,
+                skipHide: true,
+                locals: {
+                    item: {expression: item.name_expr},
+                    data: {}
+                }
+            }).then(function (res) {
+
+                if (res.status === 'agree') {
+
+                    item.name_expr = res.data.item.expression;
+
+                }
+
+            });
+
+        };
+
         vm.cancel = function () {
             $mdDialog.cancel();
         };
@@ -308,7 +342,7 @@
             var importedColumnsNumberZero = false;
             var importedColumnsNumberEmpty = false;
 
-            vm.providerFields.map(function (field) {
+            vm.scheme.csv_fields.map(function (field) {
 
                 if (field.column === 0 && !importedColumnsNumberZero) {
                     warningMessage = "should not have value 0 (column's count starts from 1)";

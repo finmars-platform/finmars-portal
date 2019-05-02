@@ -171,6 +171,15 @@
             case 'portfolios.portfolio':
                 result = 'Portfolio';
                 break;
+            case 'ui.listlayout':
+                result = 'Layout';
+                break;
+            case 'ui.reportlayout':
+                result = 'Report Layout';
+                break;
+            case 'ui.editlayout':
+                result = 'Form';
+                break;
             case 'strategies.strategy1':
                 result = 'Strategy 1';
                 break;
@@ -215,6 +224,9 @@
                 break;
             case 'integrations.pricedownloadscheme':
                 result = 'Price Download Sceme';
+                break;
+            case 'integrations.complextransactionimportscheme':
+                result = 'Complex Transaction Import Scheme';
                 break;
             case 'csv_import.csvimportscheme':
                 result = 'CSV Import Scheme';

@@ -26,6 +26,10 @@
                                 <div><b>Import Rules - if object is not found</b>: {{vm.config.missing_data_handler}}
                                 </div>
 
+                                <div class="m-t-8">
+                                    <a href="javascript:void(0)" class="download-error-link">Download error file</a>
+                                </div>
+
                             </div>
 
                         </div>
@@ -61,6 +65,11 @@
                                     {{column}}
                                 </th>
 
+                                <th data-ng-repeat="column in row.error_data.columns.converted_imported_columns track by $index">
+                                    {{column}}
+                                </th>
+
+
                                 <th data-ng-repeat="column in row.error_data.columns.transaction_type_selector track by $index">
                                     {{column}}
                                 </th>
@@ -80,10 +89,14 @@
                             <tbody>
                             <tr>
                                 <td>
-                                    <span data-ng-bind="row.original_row_index track by $index"></span>
+                                    <span data-ng-bind="row.original_row_index"></span>
                                 </td>
 
-                                <td data-ng-repeat="column in row.error_data.data.imported_columnstrack by $index">
+                                <td data-ng-repeat="column in row.error_data.data.imported_columns track by $index">
+                                    {{column}}
+                                </td>
+
+                                <td data-ng-repeat="column in row.error_data.data.converted_imported_columns track by $index">
                                     {{column}}
                                 </td>
 
