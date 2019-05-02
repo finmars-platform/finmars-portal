@@ -118,6 +118,41 @@
             })
         };
 
+        vm.setProviderFieldExpression = function (item) {
+
+            if (!item.name_expr || item.name_expr === '') {
+                item.name_expr = item.name;
+                console.log("transaction import", item);
+            }
+
+        };
+
+
+        vm.openProviderFieldExpressionBuilder = function (item, $event) {
+
+            $mdDialog.show({
+                controller: 'ExpressionEditorDialogController as vm',
+                templateUrl: 'views/dialogs/expression-editor-dialog-view.html',
+                targetEvent: $event,
+                multiple: true,
+                autoWrap: true,
+                skipHide: true,
+                locals: {
+                    item: {expression: item.name_expr},
+                    data: {}
+                }
+            }).then(function (res) {
+
+                if (res.status === 'agree') {
+
+                    item.name_expr = res.data.item.expression;
+
+                }
+
+            });
+
+        };
+
         vm.removeProviderField = function (item, $index) {
 
             vm.providerFields.splice($index, 1);

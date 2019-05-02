@@ -144,15 +144,16 @@
             })
         };
 
-        vm.setProviderFieldExpression = function (field) {
-            console.log("transaction import on blur", field);
-            if (!field.expression || field.expression === '') {
-                field.expression = field.name;
-                console.log("transaction import", field);
+        vm.setProviderFieldExpression = function (item) {
+
+            if (!item.name_expr || item.name_expr === '') {
+                item.name_expr = item.name;
+                console.log("transaction import", item);
             }
+
         };
 
-        /*vm.openTTypeSelectorExpressionBuilder = function($event) {
+        vm.openProviderFieldExpressionBuilder = function (item, $event) {
 
             $mdDialog.show({
                 controller: 'ExpressionEditorDialogController as vm',
@@ -162,39 +163,14 @@
                 autoWrap: true,
                 skipHide: true,
                 locals: {
-                    item: {expression: field.expression},
+                    item: {expression: item.name_expr},
                     data: {}
                 }
             }).then(function (res) {
 
                 if (res.status === 'agree') {
 
-                    field.expression = res.data.item.expression;
-
-                }
-
-            });
-
-        };*/
-
-        vm.openProviderFieldExpressionBuilder = function (field, $event) {
-
-            $mdDialog.show({
-                controller: 'ExpressionEditorDialogController as vm',
-                templateUrl: 'views/dialogs/expression-editor-dialog-view.html',
-                targetEvent: $event,
-                multiple: true,
-                autoWrap: true,
-                skipHide: true,
-                locals: {
-                    item: {expression: field.expression},
-                    data: {}
-                }
-            }).then(function (res) {
-
-                if (res.status === 'agree') {
-
-                    field.expression = res.data.item.expression;
+                    item.name_expr = res.data.item.expression;
 
                 }
 
