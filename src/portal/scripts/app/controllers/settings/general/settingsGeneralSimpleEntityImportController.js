@@ -19,6 +19,7 @@
         vm.getList = function () {
             vm.readyStatus.entitySchemes = false;
             csvImportSchemeService.getList().then(function (data) {
+                console.log("simple entity data", data);
                 vm.entitySchemes = data.results;
                 vm.readyStatus.entitySchemes = true;
                 $scope.$apply();
@@ -33,8 +34,7 @@
                 templateUrl: 'views/dialogs/simple-entity-import/simple-entity-import-scheme-create-dialog-view.html',
                 targetEvent: $event
             }).then(function (res) {
-                if (res.status === 'agree') {
-                    console.log('res', res.data);
+                if (res.res === 'agree') {
                     vm.getList();
                 }
             });

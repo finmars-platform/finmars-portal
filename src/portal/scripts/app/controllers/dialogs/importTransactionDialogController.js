@@ -226,7 +226,7 @@
                         } else {
                             vm.validateConfig = {};
                             vm.readyStatus.processing = false;
-                            vm.closeButtonText = "Cancel";
+                            vm.closeButtonText = "OK";
                         }
 
                     })
@@ -364,7 +364,7 @@
                             skipHide: true,
                         });
 
-                        vm.closeButtonText = "Cancel";
+                        vm.closeButtonText = "OK";
                     }
 
                     vm.readyStatus.processing = false;
@@ -393,7 +393,7 @@
                     skipHide: true,
                 });
 
-                vm.closeButtonText = "Cancel";
+                vm.closeButtonText = "OK";
 
             })
         };

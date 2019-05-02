@@ -112,7 +112,6 @@
             return vm.readyStatus.scheme && vm.readyStatus.transactionTypes;
         };
 
-
         vm.addProviderField = function () {
             var fieldsLength = vm.providerFields.length;
             var lastFieldNumber;
