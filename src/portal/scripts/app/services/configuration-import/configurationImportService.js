@@ -968,7 +968,7 @@
 
                                         } else {
 
-                                            resolveLocal(uiRepository.updateListLayout(item.id, item));
+                                            resolveLocal(uiRepository.createListLayout(item));
 
                                         }
 

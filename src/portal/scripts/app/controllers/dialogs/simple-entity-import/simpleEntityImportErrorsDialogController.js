@@ -17,31 +17,82 @@
         vm.scheme = data.scheme;
         vm.config = data.config;
 
-        vm.csvFieldsColumns = [];
-        vm.entityFieldsColumns = [];
+        vm.imported_columns = [];
+        vm.converted_imported_columns = [];
+        vm.data_matching = [];
 
 
         vm.createErrorDataColumns = function () {
 
-            vm.scheme.csv_fields.forEach(function (item) {
+            if (vm.validationResult.errors.length) {
 
-                vm.csvFieldsColumns.push({
-                    name: item.name
-                })
+                if (vm.validationResult.errors[0].error_data) {
 
-            });
-
-            vm.scheme.entity_fields.forEach(function (item) {
-
-                if (item.expression && item.expression !== '') {
-
-                    vm.entityFieldsColumns.push({
-                        name: item.name + ':' + item.expression
-                    })
-
+                    vm.imported_columns = vm.validationResult.errors[0].error_data.columns.imported_columns;
+                    vm.converted_imported_columns = vm.validationResult.errors[0].error_data.columns.converted_imported_columns;
+                    vm.data_matching = vm.validationResult.errors[0].error_data.columns.data_matching;
                 }
 
+            }
+        };
+
+        vm.createCsvContentSimpleEntityImport = function (validationResults) {
+
+            var columns = ['Row number'];
+
+            columns = columns.concat(validationResults[0].error_data.columns.imported_columns);
+            columns = columns.concat(validationResults[0].error_data.columns.data_matching);
+
+            columns.push('Error Message');
+            columns.push('Reaction');
+
+            var content = [];
+
+            validationResults.forEach(function (errorRow) {
+
+                var result = [];
+
+                result.push(errorRow.original_row_index);
+
+                result = result.concat(errorRow.error_data.data.imported_columns)
+                result = result.concat(errorRow.error_data.data.data_matching)
+
+                result.push(errorRow.error_message);
+                result.push(errorRow.error_reaction);
+
+                content.push(result)
+
             });
+
+            var columnRow = columns.join(',');
+
+            var result = [
+                columnRow
+            ];
+
+            content.forEach(function (contentRow) {
+
+                result.push(contentRow.join(','))
+
+            });
+
+            result = result.join('\n');
+
+            return result;
+
+        };
+
+        vm.setDownloadLink = function () {
+
+            var link = document.querySelector('.download-error-link');
+
+            var text = vm.createCsvContentSimpleEntityImport(vm.validationResult.errors);
+
+            var file = new Blob([text], {type: 'text/plain'});
+
+            link.href = URL.createObjectURL(file);
+            link.download = vm.scheme.scheme_name + ' error file.csv';
+
 
         };
 
@@ -56,6 +107,10 @@
         vm.init = function () {
 
             vm.createErrorDataColumns();
+
+            setTimeout(function () {
+                vm.setDownloadLink();
+            }, 100)
 
         };
 

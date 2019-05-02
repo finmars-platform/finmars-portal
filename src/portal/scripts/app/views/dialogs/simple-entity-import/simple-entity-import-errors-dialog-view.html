@@ -28,6 +28,10 @@
                             <div><b>Import Rules - if object is not found</b>: {{vm.config.missing_data_handler}}</div>
                             <div><b>Entity</b>: {{vm.scheme.content_type}}</div>
 
+                            <div class="m-t-8">
+                                <a href="javascript:void(0)" class="download-error-link">Download error file</a>
+                            </div>
+
                         </div>
 
                         <div class="float-left width-40">
@@ -55,11 +59,14 @@
                                 <th>
                                     Row number
                                 </th>
-                                <th data-ng-repeat="column in vm.csvFieldsColumns">
-                                    {{column.name}}
+                                <th data-ng-repeat="column in vm.imported_columns">
+                                    {{column}}
                                 </th>
-                                <th data-ng-repeat="column in vm.entityFieldsColumns">
-                                    {{column.name}}
+                                <th data-ng-repeat="column in vm.converted_imported_columns">
+                                    {{column}}
+                                </th>
+                                <th data-ng-repeat="column in vm.data_matching">
+                                    {{column}}
                                 </th>
                                 <th>
                                     Error message
@@ -74,11 +81,14 @@
                                 <td>
                                     <span data-ng-bind="row.original_row_index"></span>
                                 </td>
-                                <td data-ng-repeat="column in vm.csvFieldsColumns track by $index">
-                                    <span data-ng-bind="row.error_data.imported_columns[$index]"> </span>
+                                <td data-ng-repeat="item in row.error_data.data.imported_columns track by $index">
+                                    <span data-ng-bind="item"> </span>
                                 </td>
-                                <td data-ng-repeat="column in vm.entityFieldsColumns track by $index">
-                                    <span data-ng-bind="row.error_data.data_matching[$index]"> </span>
+                                <td data-ng-repeat="item in row.error_data.data.converted_imported_columns track by $index">
+                                    <span data-ng-bind="item"> </span>
+                                </td>
+                                <td data-ng-repeat="item in row.error_data.data.data_matching track by $index">
+                                    <span data-ng-bind="item"> </span>
                                 </td>
                                 <td>
                                     <span data-ng-bind="row.error_message"></span>
