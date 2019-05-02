@@ -275,6 +275,15 @@
                     }
                 }
             })
+            .state('app.settings.general.simple-entity-import', {
+                url: '/simple-entity-import',
+                views: {
+                    'simple-entity-import': {
+                        templateUrl: 'views/settings/simple-entity-import-settings-view.html',
+                        controller: 'SettingsGeneralSimpleEntityImportController as vm'
+                    }
+                }
+            })
             .state('app.settings.general.transaction-import', {
                 url: '/transaction-import',
                 views: {

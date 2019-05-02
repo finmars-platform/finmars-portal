@@ -100,10 +100,10 @@
 
             var pageSize = null;
             if (pageType === 'portrait') {
-                pageSize = 560;
+                pageSize = 791;
             }
             else {
-                pageSize = 864;
+                pageSize = 1120;
             }
 
             var columns = evDataService.getColumns();

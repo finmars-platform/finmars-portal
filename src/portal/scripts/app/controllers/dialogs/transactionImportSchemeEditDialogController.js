@@ -7,10 +7,7 @@
 
     var logService = require('../../../../../core/services/logService');
 
-    var metaService = require('../../services/metaService');
     var transactionSchemeService = require('../../services/import/transactionSchemeService');
-    var scheduleService = require('../../services/import/scheduleService');
-    var attributeTypeService = require('../../services/attributeTypeService');
     var transactionTypeService = require('../../services/transactionTypeService');
 
     module.exports = function ($scope, $mdDialog, schemeId) {

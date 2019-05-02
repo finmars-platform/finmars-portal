@@ -7,14 +7,11 @@
         'use strict';
 
         var uiService = require('../../services/uiService');
-        var evEvents = require('../../services/entityViewerEvents');
         var objectComparison = require('../../services/objectsComparisonService');
 
 
         var EntityViewerDataService = require('../../services/entityViewerDataService');
         var EntityViewerEventService = require('../../services/entityViewerEventService');
-
-        var stringHelper = require('../../helpers/stringHelper');
 
         var evDataProviderService = require('../../services/ev-data-provider/ev-data-provider.service');
 
@@ -185,23 +182,24 @@
 
             var doBeforeStateChange = $transitions.onBefore({}, checkLayoutForChanges);
 
+            var warnAboutLayoutChangesLoss = function (event) {
+                var activeLayoutConfig = JSON.parse(activeLayoutConfigString);
+
+                var layoutCurrentConfig = entityViewerDataService.getLayoutCurrentConfiguration(false);
+
+                if (!objectComparison.compareObjects(activeLayoutConfig, layoutCurrentConfig)) {
+                    event.preventDefault();
+                    (event || window.event).returnValue = 'All unsaved changes will be lost.';
+                }
+            };
+
             if (vm.stateWithLayout) {
-                window.addEventListener('beforeunload', function (event) {
-
-                    var activeLayoutConfig = JSON.parse(activeLayoutConfigString);
-
-                    var layoutCurrentConfig = entityViewerDataService.getLayoutCurrentConfiguration(false);
-
-                    if (!objectComparison.compareObjects(activeLayoutConfig, layoutCurrentConfig)) {
-                        event.preventDefault();
-                        (event || window.event).returnValue = 'All unsaved changes will be lost.';
-                    }
-
-                });
+                window.addEventListener('beforeunload', warnAboutLayoutChangesLoss);
             }
 
             this.$onDestroy = function () {
                 doBeforeStateChange();
+                window.removeEventListener('beforeunload', warnAboutLayoutChangesLoss);
             }
         }
 

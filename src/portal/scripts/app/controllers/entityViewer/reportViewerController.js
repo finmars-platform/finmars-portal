@@ -258,7 +258,7 @@
 
             var doBeforeStateChange = $transitions.onBefore({}, checkLayoutForChanges);
 
-            window.addEventListener('beforeunload', function (event) {
+            var warnAboutLayoutChangesLoss = function (event) {
 
                 var activeLayoutConfig = JSON.parse(activeLayoutConfigString);
                 delete activeLayoutConfig.data.reportOptions.task_id;
@@ -273,10 +273,14 @@
                     (event || window.event).returnValue = 'All unsaved changes will be lost.';
                 }
 
-            });
+            };
+
+            window.addEventListener('beforeunload', warnAboutLayoutChangesLoss);
 
             this.$onDestroy = function () {
                 doBeforeStateChange();
+
+                window.removeEventListener('beforeunload', warnAboutLayoutChangesLoss)
             }
         }
 
