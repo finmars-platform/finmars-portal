@@ -16,6 +16,7 @@
         formData.append('scheme', action.csv_import_scheme);
         formData.append('error_handler', action.error_handler);
         formData.append('missing_data_handler', action.missing_data_handler);
+        formData.append('classifier_handler', action.classifier_handler);
         formData.append('delimiter', delimiter);
         formData.append('mode', action.mode);
 
