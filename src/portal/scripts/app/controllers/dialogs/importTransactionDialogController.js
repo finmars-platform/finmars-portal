@@ -180,6 +180,83 @@
             }
         };
 
+
+        vm.validateImport = function ($event) {
+
+            new Promise(function (resolve, reject) {
+
+                vm.validateConfig = Object.assign({}, vm.config);
+
+                vm.validate(resolve, $event)
+
+            }).then(function (data) {
+
+                if (vm.validateConfig.error_rows.length) {
+
+                    vm.validateConfig.process_mode = 'validate';
+
+                    var transactionScheme;
+
+                    vm.transactionSchemes.forEach(function (scheme) {
+
+                        if (scheme.id === vm.config.scheme) {
+                            transactionScheme = scheme;
+                        }
+
+                    });
+
+                    $mdDialog.show({
+                        controller: 'ImportTransactionErrorsDialogController as vm',
+                        templateUrl: 'views/dialogs/transaction-import/transaction-import-errors-dialog-view.html',
+                        locals: {
+                            data: {
+                                validationResult: data,
+                                scheme: transactionScheme,
+                                config: vm.config
+                            }
+                        },
+                        targetEvent: $event,
+                        preserveScope: true,
+                        multiple: true,
+                        autoWrap: true,
+                        skipHide: true
+                    }).then(function (res) {
+
+                        vm.validateConfig = {};
+                        vm.readyStatus.processing = false;
+                        vm.closeButtonText = "OK";
+
+                    })
+
+                } else {
+
+                    vm.validateConfig = {};
+                    vm.readyStatus.processing = false;
+                    vm.closeButtonText = "OK";
+
+                    $mdDialog.show({
+                        controller: 'SuccessDialogController as vm',
+                        templateUrl: 'views/dialogs/success-dialog-view.html',
+                        targetEvent: $event,
+                        preserveScope: true,
+                        multiple: true,
+                        autoWrap: true,
+                        skipHide: true,
+                        locals: {
+                            success: {
+                                title: "Success",
+                                description: 'Validation successful'
+                            }
+                        }
+
+                    });
+
+                }
+
+            })
+
+        };
+
         vm.startImport = function ($event) {
 
             new Promise(function (resolve, reject) {
