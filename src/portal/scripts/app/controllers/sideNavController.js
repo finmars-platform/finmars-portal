@@ -14,7 +14,7 @@
 
         vm.sideNavStatus = 'expand';
 
-        vm.resizeSideNav = function (status) {
+        /*vm.resizeSideNav = function (status) {
             vm.sideNavStatus = status;
             if (status == 'expand') {
                 $('body').removeClass('sidenav-collapsed');
@@ -54,7 +54,7 @@
             }
 
 
-        };
+        };*/
 
 
         // !!!!!!!!!!!
@@ -62,16 +62,21 @@
         // !!!!!!!!!!!
 
 
-        /*vm.resizeSideNav = function (status) {
+        vm.resizeSideNav = function (status) {
             vm.sideNavStatus = status;
             if (status == 'expand') {
+
                 $('body').removeClass('sidenav-collapsed');
                 $('body').addClass('sidenav-expanded');
+
+                $(window).trigger('resize');
 
             } else {
 
                 $('body').removeClass('sidenav-expanded');
                 $('body').addClass('sidenav-collapsed');
+
+                $(window).trigger('resize');
 
             }
 
@@ -96,7 +101,7 @@
 
             sideMenuSettingsMenuOpened = !sideMenuSettingsMenuOpened;
             console.log("settings sidemenu opened", sideMenuSettingsMenuOpened);
-        };*/
+        };
 
         metaService.getMenu().then(function (data) {
             vm.sections = data;

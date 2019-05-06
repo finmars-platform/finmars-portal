@@ -542,19 +542,20 @@
 .g-cell-wrap {
   float: left;
   overflow: hidden;
-  background: #fff;
+  background-color: #fff;
   .g-cell {
     float: none;
   }
 }
 
 .g-cell {
-  padding: 4px 15px 8px;
-  height: 12px;
+  /*padding: 4px 15px 8px;
+  height: 12px;*/
+  padding: 3px 15px;
+  height: 24px;
   font-size: 14px;
-  text-overflow: ellipsis;
   white-space: nowrap;
-  overflow: hidden;
+  box-sizing: border-box;
   &:last-child {
     border-right: 1px solid #363636;
     margin-right: 2px;

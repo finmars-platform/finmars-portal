@@ -226,16 +226,21 @@
                         } else {
                             vm.validateConfig = {};
                             vm.readyStatus.processing = false;
-                            vm.closeButtonText = "OK";
                         }
+
+                        vm.closeButtonText = "OK";
 
                     })
 
                 } else {
+                    console.log("load triggered");
                     vm.load($event);
                 }
 
-            })
+            }).catch(function () {
+                console.log("error occured");
+                vm.closeButtonText = "OK";
+            });
 
         };
 
@@ -342,9 +347,6 @@
 
                         });
 
-                        vm.closeButtonText = "OK"
-
-
                     } else {
 
                         $mdDialog.show({
@@ -364,18 +366,20 @@
                             skipHide: true,
                         });
 
-                        vm.closeButtonText = "OK";
                     }
 
                     vm.readyStatus.processing = false;
                     vm.dataIsImported = true;
 
                 } else {
+
                     setTimeout(function () {
                         vm.load();
                     }, 1000)
 
                 }
+
+                vm.closeButtonText = "OK";
 
 
             }).catch(function (reason) {
@@ -432,7 +436,7 @@
             $mdDialog.cancel();
         };
 
-        vm.agree = function ($event) {
+        /*vm.agree = function ($event) {
             instrumentService.create(vm.config.instrument).then(function (data) {
 
                 $mdDialog.show({
@@ -471,7 +475,7 @@
 
             })
 
-        };
+        };*/
 
     };
 

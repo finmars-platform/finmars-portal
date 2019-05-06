@@ -13,14 +13,10 @@
                            data-ng-click="vm.resizeSideNav('collapse')">
                     <ng-md-icon icon="chevron_left"></ng-md-icon>
                 </md-button>
-                <!-- <md-button data-ng-show="vm.sideNavStatus == 'collapse'" aria-label="resize"
-                           class="to-small-btn side-nav-btn fab md-raised" data-ng-click="vm.resizeSideNav('expand')">
-                    <ng-md-icon icon="chevron_right"></ng-md-icon>
-                </md-button> -->
-                <md-button data-ng-show="vm.sideNavStatus == 'collapse'"
-                           aria-label="resize"
-                           class="to-small-btn side-nav-btn fab md-raised"
-                           data-ng-click="vm.resizeSideNav('expand')">
+                 <md-button data-ng-show="vm.sideNavStatus == 'collapse'"
+                            aria-label="resize"
+                            class="to-small-btn side-nav-btn fab md-raised"
+                            data-ng-click="vm.resizeSideNav('expand')">
                     <ng-md-icon icon="chevron_right"></ng-md-icon>
                 </md-button>
             </div>
@@ -29,7 +25,7 @@
     <div class="sidenav-content">
         <div class="side-menu-container" layout="column">
 
-            <ul class="side-menu">
+            <!--<ul class="side-menu">
                 <li data-ng-repeat="section in vm.sections" class="parent-list-item"
                     data-ng-class="{'parentActive' : vm.isSectionSelected(section)}">
                     <menu-link section="section" ng-if="section.type === 'link'"></menu-link>
@@ -44,9 +40,9 @@
                         <span class="side-nav-title">Help</span>
                     </md-button>
                 </li>
-            </ul>
+            </ul>-->
 
-            <!--<div class="side-menu-main-buttons">
+            <div class="side-menu-main-buttons">
                 <ul class="side-menu">
                     <li>
                         <md-button ui-sref-active="active" class="sidemenu-btn" ui-sref="app.home">
@@ -432,7 +428,7 @@
                         </md-button>
                     </li>
                 </ul>
-            </div>-->
+            </div>
 
             <div class="side-menu-settings-container side-menu-settings-menu">
                 <div class="side-menu-settings-wrapper">

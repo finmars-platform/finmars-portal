@@ -24,14 +24,14 @@
             },
             template: '<div>' +
             '<div class="ev-progressbar-holder" layout="row" layout-sm="column">\n' +
-            '            <md-progress-linear class="ev-progressbar"  md-mode="indeterminate"></md-progress-linear>\n' +
+            '            <md-progress-linear class="ev-progressbar" md-mode="indeterminate"></md-progress-linear>\n' +
             '        </div>' +
             '<div class="ev-viewport">' +
             '<div class="ev-content"></div>' +
             '</div>' +
             '</div>',
             link: function (scope, elem) {
-
+                console.log("overflow elem", elem);
                 var viewportElem = elem[0].querySelector('.ev-viewport');
                 var contentElem = elem[0].querySelector('.ev-content');
                 var progressBar = elem[0].querySelector('.ev-progressbar');
@@ -78,7 +78,6 @@
 
                     rvRenderer.render(contentElem, projection, scope.evDataService, scope.evEventService);
 
-
                 }
 
                 function renderEntityViewer() {
@@ -108,9 +107,93 @@
                 function updateTableContent() {
                     if (isReport) {
                         renderReportViewer();
+                        cellContentOverflow();
                     } else {
                         renderEntityViewer();
                     }
+                }
+
+                function cellContentOverflow() {
+                    console.log("cellContentOverflow started");
+                    var rows = contentElem.querySelectorAll('.g-row');
+
+                    var r;
+                    for (r = 0; r < rows.length; r++) {
+
+                        var cellWraps = rows[r].querySelectorAll('.g-cell-wrap');
+                        var cells = rows[r].querySelectorAll('.g-cell');
+
+                        var w;
+                        for (w = 0; w < cellWraps.length; w++) {
+                            var cellWrap = cellWraps[w];
+                            var cell = cells[w];
+                            var cellContentWrap = cell.querySelector('.g-cell-content-wrap');
+
+                            if (cellContentWrap === undefined || cellContentWrap.textContent !== '') {
+                                console.log("overflow cellContentWrap", cellContentWrap, cellContentWrap.textContent);
+                                var cellContentHolder = cellContentWrap.querySelector('.g-cell-content');
+                                var cellSpaceForText = cellContentWrap.clientWidth;
+
+                                console.log("overflow cell data", cell, cellContentHolder, cellContentHolder.offsetWidth, cellSpaceForText);
+
+                                if (cellContentHolder.offsetWidth > cellSpaceForText) {
+                                    var cellStretchWidth = cellWrap.clientWidth;
+                                    var nextCellIndex = w;
+                                    var overflowedCells = [];
+
+                                    while (cellContentHolder.offsetWidth > cellSpaceForText && nextCellIndex + 1 < cellWraps.length) {
+                                        var nextCellIndex = nextCellIndex + 1;
+                                        console.log("overflow widths", cellContentHolder.offsetWidth, cellStretchWidth, nextCellIndex);
+                                        var nextCellWrap = cellWraps[nextCellIndex];
+                                        var nextCellContentWrap = nextCellWrap.querySelector('.g-cell-content-wrap');
+                                        var nexCellContentHolder = nextCellContentWrap.querySelector('.g-cell-content');
+                                        console.log("overflow nextCellContentWrap.contentText", nextCellWrap, nextCellContentWrap.contentText);
+                                        if (nexCellContentHolder || nextCellContentWrap.contentText) {
+                                            break;
+                                        }
+
+                                        overflowedCells.push(nextCellWrap);
+                                        cellSpaceForText = cellSpaceForText + nextCellWrap.clientWidth;
+                                        cellStretchWidth = cellStretchWidth + nextCellWrap.clientWidth;
+                                    }
+                                    console.log("overflow cellStretchWidth", cellStretchWidth, cellSpaceForText);
+                                    if (cellStretchWidth !== cellWrap.clientWidth) { // check are there any empty cells next to overflowing cell
+                                        console.log("overflow cell overflowing", cell, overflowedCells);
+                                        overflowedCells.pop();
+                                        overflowedCells.map(function (overflowedCell) {
+                                            overflowedCell.classList.add('g-overflowed-cell');
+                                        });
+
+                                        cellWrap.classList.add('g-overflowing-cell');
+                                        cell.style.width = cellStretchWidth + 'px';
+
+                                    }
+                                }
+
+                            }
+
+                        }
+                    }
+
+                    console.log("overflow rows", rows, cellWraps);
+
+                };
+
+                function clearOverflowingCells() {
+                    var overflowingCells = contentElem.querySelectorAll('.g-overflowing-cell');
+                    var overflowedCells = contentElem.querySelectorAll('.g-overflowed-cell');
+                    console.log("overflow cells to clear", overflowingCells, overflowedCells);
+                    overflowingCells.forEach(function (overflowingCell) {
+                        overflowingCell.classList.remove('g-overflowing-cell');
+                        var cell = overflowingCell.querySelector('.g-cell');
+                        cell.style.width = "";
+                    });
+
+                    overflowedCells.forEach(function (overflowedCell) {
+                        overflowedCell.classList.remove('g-overflowed-cell');
+                        var cell = overflowedCell.querySelector('.g-cell');
+                        cell.style.width = "";
+                    });
                 }
 
                 scope.evEventService.addEventListener(evEvents.UPDATE_PROJECTION, function () {
@@ -157,6 +240,11 @@
                     rvDomManager.initEventDelegation(contentElem, scope.evDataService, scope.evEventService);
 
                     rvDomManager.addScrollListener(elements, scope.evDataService, scope.evEventService);
+
+                    scope.evEventService.addEventListener(evEvents.START_CELLS_OVERFLOW, function () {
+                        clearOverflowingCells();
+                        cellContentOverflow();
+                    });
 
                 } else {
 

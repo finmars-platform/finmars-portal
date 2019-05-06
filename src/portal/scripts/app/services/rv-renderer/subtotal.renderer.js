@@ -145,7 +145,7 @@
                             foldButton = '<div class="ev-fold-button" data-type="foldbutton" data-object-id="' + currentGroup.___id + '" data-parent-group-hash-id="' + currentGroup.___parentId + '">+</div>';
                         }
 
-                        result.html_result = foldButton + '<b>' + currentGroup.___group_name + '</b>';
+                        result.html_result = '<span class="g-cell-content">' + foldButton + '<span class="text-bold">' + currentGroup.___group_name + '</span></span>';
 
                     }
 
@@ -179,7 +179,7 @@
                     foldButtonStr = ''
                 }
 
-                result.html_result = foldButtonStr + '<b>' + obj.___group_name + '</b>';
+                result.html_result = '<span class="g-cell-content">' + foldButtonStr + '<span class="text-bold">' + obj.___group_name + '</span></span>';
 
             }
 
@@ -190,7 +190,7 @@
             if (column.report_settings && !column.report_settings.hide_subtotal) {
 
                 if (obj.hasOwnProperty(column.key)) {
-                    result.html_result = '<b>' + renderHelper.formatValue(obj, column) + '</b>';
+                    result.html_result = '<span class="g-cell-content"><span class="text-bold">' + renderHelper.formatValue(obj, column) + '</span></span>';
                     result.numeric_result = obj[column.key];
                 } else {
 
@@ -206,7 +206,7 @@
         var grandTotalIsActive = rootGroupOptions.subtotal_type;
 
         if (obj.___level === 0 && grandTotalIsActive && columnNumber === 1) {
-            result.html_result ='<b>Grand Total</b>'
+            result.html_result ='<span class="text-bold">Grand Total</span>'
         }
 
         return result;
@@ -350,8 +350,11 @@
                 resultValue = value_obj.html_result;
             }
 
-            cell = '<div class="g-cell-wrap ' + getBgColor(evDataService, obj, columnNumber) + '" style="width: ' + column.style.width + '"><div class="g-cell ' + textAlign + ' ' + colorNegative + ' ' + borderBottomTransparent + ' ">' +
+            cell = '<div class="g-cell-wrap ' + getBgColor(evDataService, obj, columnNumber) + '" style="width: ' + column.style.width + '">' +
+                '<div class="g-cell ' + textAlign + ' ' + colorNegative + ' ' + borderBottomTransparent + ' ">' +
+                '<div class="g-cell-content-wrap">' +
                 resultValue +
+                '</div>' +
                 '</div>' +
                 '</div>';
 

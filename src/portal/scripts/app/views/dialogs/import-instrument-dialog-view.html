@@ -86,7 +86,7 @@
                                 <md-button
                                         class="md-raised colored-btn instrument-load-btn {{vm.loadIsAvailable() ? '' : 'disabled-btn' }}"
                                         data-ng-click="vm.load($event)">
-                                    Load
+                                    Download
                                 </md-button>
                                 <div data-ng-if="vm.readyStatus.processing">
                                     <md-progress-circular md-mode="indeterminate"
@@ -122,7 +122,7 @@
                         <h2 class="title-padding">Instrument data</h2>
                         <div layout="row">
                             <md-button class="md-raised" data-ng-click="vm.recalculate()">Recalculate</md-button>
-                            <md-button class="md-raised" ng-click="vm.agree()" style="margin-right:20px;">
+                            <md-button class="md-raised md-primary" ng-click="vm.agree()" style="margin-right:20px;">
                                 Add to database
                             </md-button>
                         </div>

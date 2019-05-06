@@ -75,10 +75,13 @@
 
 .g-cell {
   border-bottom: 1px solid #363636;
-  height: 11px;
-  padding: 4px 15px 8px;
+  /*height: 11px;
+  padding: 4px 15px 8px;*/
+  padding: 3px 15px;
+  height: 24px;
   font-size: 14px;
   overflow: hidden;
+  box-sizing: border-box;
 }
 
 .g-cell:last-child {
@@ -91,4 +94,24 @@
 
 .g-cell.border-right-transparent {
   border-right: 1px solid transparent;
+}
+
+.g-cell-content-wrap {
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+.g-cell-wrap.g-overflowing-cell {
+  position: relative;
+  overflow: visible;
+  //z-index: 2;
+  .g-cell {
+    border-right: none;
+  }
+}
+
+.g-cell-wrap.g-overflowed-cell {
+  .g-cell {
+    border-right: 1px solid transparent;
+  }
 }

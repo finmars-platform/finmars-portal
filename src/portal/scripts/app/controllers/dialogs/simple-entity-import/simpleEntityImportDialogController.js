@@ -124,9 +124,9 @@
 
                         if (res && res.status === 'agree') {
                             vm.load();
-                        } else {
-                            vm.closeButtonText = "OK";
                         }
+
+                        vm.closeButtonText = "OK";
 
                     })
 
@@ -151,6 +151,8 @@
                         }
                     }
                 });
+
+                vm.closeButtonText = "OK";
 
                 $scope.$apply();
 

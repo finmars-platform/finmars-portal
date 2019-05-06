@@ -202,17 +202,52 @@
 
             vm.init();
 
+            var checkForLayoutChanges = function (savedLayoutConfiguration, currentLayoutConfiguration) {
+
+                var savedConfig = JSON.parse(JSON.stringify(savedLayoutConfiguration));
+                delete savedConfig.data.reportOptions.task_id;
+                delete savedConfig.data.reportOptions.recieved_at;
+
+                if (savedConfig.data.hasOwnProperty('reportLayoutOptions')) {
+
+                    if (savedConfig.data.reportLayoutOptions.datepickerOptions.reportFirstDatepicker.datepickerMode !== 'datepicker') {
+                        delete savedConfig.data.reportOptions.pl_first_date;
+                    }
+
+                    if (savedConfig.data.reportLayoutOptions.datepickerOptions.reportLastDatepicker.datepickerMode !== 'datepicker') {
+                        delete savedConfig.data.reportOptions.report_date;
+                    }
+
+                }
+
+                var currentConfig = JSON.parse(JSON.stringify(currentLayoutConfiguration));
+                delete currentConfig.data.reportOptions.task_id;
+                delete currentConfig.data.reportOptions.recieved_at;
+
+                if (currentConfig.data.hasOwnProperty('reportLayoutOptions')) {
+
+                    if (currentConfig.data.reportLayoutOptions.datepickerOptions.reportFirstDatepicker.datepickerMode !== 'datepicker') {
+                        delete currentConfig.data.reportOptions.pl_first_date;
+                    }
+
+                    if (currentConfig.data.reportLayoutOptions.datepickerOptions.reportLastDatepicker.datepickerMode !== 'datepicker') {
+                        delete currentConfig.data.reportOptions.report_date;
+                    }
+
+                }
+
+                var layoutChanged = objectComparison.compareObjects(savedConfig, currentConfig);
+
+                return layoutChanged;
+
+            };
+
             var checkLayoutForChanges = function () {
 
-                var layoutCurrentConfig = entityViewerDataService.getLayoutCurrentConfiguration(true);
-                delete layoutCurrentConfig.data.reportOptions.task_id;
-                delete layoutCurrentConfig.data.reportOptions.recieved_at;
-
                 var activeLayoutConfig = JSON.parse(activeLayoutConfigString);
-                delete activeLayoutConfig.data.reportOptions.task_id;
-                delete activeLayoutConfig.data.reportOptions.recieved_at;
+                var currentLayoutConfig = entityViewerDataService.getLayoutCurrentConfiguration(true);
 
-                if (!objectComparison.compareObjects(activeLayoutConfig, layoutCurrentConfig)) {
+                if (!checkForLayoutChanges(activeLayoutConfig, currentLayoutConfig)) {
 
                     return new Promise (function (resolve, reject) {
 
@@ -227,15 +262,17 @@
 
                             if (res.status === 'save_layout') {
 
-                                if (layoutCurrentConfig.hasOwnProperty('id')) {
+                                delete currentLayoutConfig.data.reportOptions.task_id;
 
-                                    uiService.updateListLayout(layoutCurrentConfig.id, layoutCurrentConfig).then(function () {
+                                if (currentLayoutConfig.hasOwnProperty('id')) {
+
+                                    uiService.updateListLayout(currentLayoutConfig.id, currentLayoutConfig).then(function () {
                                         resolve(true);
                                     });
 
                                 } else {
 
-                                    uiService.createListLayout(vm.entityType, layoutCurrentConfig).then(function () {
+                                    uiService.createListLayout(vm.entityType, currentLayoutConfig).then(function () {
                                         resolve(true);
                                     });
 
@@ -261,14 +298,9 @@
             var warnAboutLayoutChangesLoss = function (event) {
 
                 var activeLayoutConfig = JSON.parse(activeLayoutConfigString);
-                delete activeLayoutConfig.data.reportOptions.task_id;
-                delete activeLayoutConfig.data.reportOptions.recieved_at;
+                var currentLayoutConfig = entityViewerDataService.getLayoutCurrentConfiguration(true);
 
-                var layoutCurrentConfigString = entityViewerDataService.getLayoutCurrentConfiguration(true);
-                delete layoutCurrentConfigString.data.reportOptions.task_id;
-                delete layoutCurrentConfigString.data.reportOptions.recieved_at;
-
-                if (!objectComparison.compareObjects(activeLayoutConfig, layoutCurrentConfigString)) {
+                if (!checkForLayoutChanges(activeLayoutConfig, currentLayoutConfig)) {
                     event.preventDefault();
                     (event || window.event).returnValue = 'All unsaved changes will be lost.';
                 }
