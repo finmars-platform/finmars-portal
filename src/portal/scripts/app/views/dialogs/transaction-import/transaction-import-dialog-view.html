@@ -43,23 +43,23 @@
                                                md-on-close="searchTerm = ''"
                                                style="width: 200px">
 
-                                            <md-select-header>
-                                                <input data-ng-model="searchTerm"
-                                                       type="search"
-                                                       placeholder="Search for a ..."
-                                                       class="md-text md-select-search-pattern select-input-filter"
-                                                       ng-keydown="$event.stopPropagation()">
-                                            </md-select-header>
+                                        <md-select-header>
+                                            <input data-ng-model="searchTerm"
+                                                   type="search"
+                                                   placeholder="Search for a ..."
+                                                   class="md-text md-select-search-pattern select-input-filter"
+                                                   ng-keydown="$event.stopPropagation()">
+                                        </md-select-header>
 
-                                            <div class="select-options-holder">
+                                        <div class="select-options-holder">
 
-                                                <md-option
-                                                        data-ng-repeat="item in vm.transactionSchemes | filter: {scheme_name: searchTerm}"
-                                                        ng-value="item.id"
-                                                        ng-bind="item.scheme_name">
-                                                </md-option>
+                                            <md-option
+                                                    data-ng-repeat="item in vm.transactionSchemes | filter: {scheme_name: searchTerm}"
+                                                    ng-value="item.id"
+                                                    ng-bind="item.scheme_name">
+                                            </md-option>
 
-                                            </div>
+                                        </div>
 
                                     </md-select>
                                 </md-input-container>
@@ -72,8 +72,15 @@
                                 </md-button>
                             </div>
                             <div layout="row">
+
                                 <md-button
-                                        class="md-raised colored-btn instrument-load-btn"
+                                        class="md-raised"
+                                        data-ng-class="{'disabled-btn': !vm.loadIsAvailable()}"
+                                        data-ng-click="vm.validateImport($event)">
+                                    VALIDATE
+                                </md-button>
+                                <md-button
+                                        class="md-raised colored-btn"
                                         data-ng-class="{'disabled-btn': !vm.loadIsAvailable()}"
                                         data-ng-click="vm.startImport($event)">
                                     IMPORT
