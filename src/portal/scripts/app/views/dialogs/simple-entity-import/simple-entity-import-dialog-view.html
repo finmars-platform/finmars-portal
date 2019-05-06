@@ -1,4 +1,4 @@
-<md-dialog aria-label="" ng-cloak class="transaction-import-manager-dialog-view draggable-dialog" drag-dialog>
+<md-dialog aria-label="" ng-cloak class="transaction-import-manager-dialog-view draggable-dialog width-70" drag-dialog>
     <md-toolbar>
         <div class="md-toolbar-tools">
             <ng-md-icon icon="dialpad" size="20" class="draggable-dialog-sign"></ng-md-icon>
@@ -6,7 +6,7 @@
             <span flex></span>
         </div>
     </md-toolbar>
-    <md-dialog-content style="background: #E5E5E5; width: 910px">
+    <md-dialog-content style="background: #E5E5E5;">
         <div data-ng-if="vm.readyStatus.mapping" layout="column">
             <div layout="row">
                 <md-card style="width: 100%">
@@ -32,23 +32,23 @@
                                            md-on-close="searchTerm = ''"
                                            data-ng-change="vm.updateEntitySchemes()">
 
-                                        <md-select-header>
-                                            <input data-ng-model="searchTerm"
-                                                   type="search"
-                                                   placeholder="Search for a ..."
-                                                   class="md-text md-select-search-pattern select-input-filter"
-                                                   ng-keydown="$event.stopPropagation()">
-                                        </md-select-header>
+                                    <md-select-header>
+                                        <input data-ng-model="searchTerm"
+                                               type="search"
+                                               placeholder="Search for a ..."
+                                               class="md-text md-select-search-pattern select-input-filter"
+                                               ng-keydown="$event.stopPropagation()">
+                                    </md-select-header>
 
-                                        <div class="select-options-holder">
+                                    <div class="select-options-holder">
 
-                                            <md-option
-                                                    data-ng-repeat="entity in vm.contentTypes | filter: {name: searchTerm}"
-                                                    ng-value="entity.key"
-                                                    ng-bind="entity.name">
-                                            </md-option>
+                                        <md-option
+                                                data-ng-repeat="entity in vm.contentTypes | filter: {name: searchTerm}"
+                                                ng-value="entity.key"
+                                                ng-bind="entity.name">
+                                        </md-option>
 
-                                        </div>
+                                    </div>
 
                                 </md-select>
                             </md-input-container>
@@ -63,24 +63,24 @@
                                                md-on-close="searchTerm = ''"
                                                style="width: 200px">
 
-                                            <md-select-header>
-                                                <input data-ng-model="searchTerm"
-                                                       type="search"
-                                                       placeholder="Search for a ..."
-                                                       class="md-text md-select-search-pattern select-input-filter"
-                                                       ng-keydown="$event.stopPropagation()">
-                                            </md-select-header>
+                                        <md-select-header>
+                                            <input data-ng-model="searchTerm"
+                                                   type="search"
+                                                   placeholder="Search for a ..."
+                                                   class="md-text md-select-search-pattern select-input-filter"
+                                                   ng-keydown="$event.stopPropagation()">
+                                        </md-select-header>
 
-                                            <div class="select-options-holder">
+                                        <div class="select-options-holder">
 
-                                                <md-option
-                                                        data-ng-repeat="item in vm.entitySchemes | filter: {scheme_name: searchTerm}"
-                                                        ng-value="item.id"
-                                                        ng-bind="item.scheme_name">
-                                                </md-option>
-                                                <md-option data-ng-click="vm.createScheme($event)">Add scheme
-                                                </md-option>
-                                            </div>
+                                            <md-option
+                                                    data-ng-repeat="item in vm.entitySchemes | filter: {scheme_name: searchTerm}"
+                                                    ng-value="item.id"
+                                                    ng-bind="item.scheme_name">
+                                            </md-option>
+                                            <md-option data-ng-click="vm.createScheme($event)">Add scheme
+                                            </md-option>
+                                        </div>
 
                                     </md-select>
                                 </md-input-container>
@@ -93,7 +93,12 @@
                             </div>
                             <div layout="row">
                                 <md-button
-                                        class="md-raised colored-btn instrument-load-btn {{vm.loadIsAvailable() ? '' : 'disabled-btn' }}"
+                                        class="md-raised {{vm.loadIsAvailable() ? '' : 'disabled-btn' }}"
+                                        data-ng-click="vm.validateImport($event)">
+                                    VALIDATE
+                                </md-button>
+                                <md-button
+                                        class="md-raised colored-btn {{vm.loadIsAvailable() ? '' : 'disabled-btn' }}"
                                         data-ng-click="vm.import($event)">
                                     IMPORT
                                 </md-button>
@@ -136,6 +141,15 @@
                                         data-ng-model="vm.config.missing_data_handler">
                                     <md-option value="throw_error">Treat as Error</md-option>
                                     <md-option value="set_defaults">Replace with Default Value</md-option>
+                                </md-select>
+                            </md-input-container>
+
+                            <md-input-container style="width: 232px;">
+                                <label>Import Rules - Classifier handling</label>
+                                <md-select
+                                        data-ng-model="vm.config.classifier_handler">
+                                    <md-option value="skip">Skip</md-option>
+                                    <md-option value="append">Append</md-option>
                                 </md-select>
                             </md-input-container>
 

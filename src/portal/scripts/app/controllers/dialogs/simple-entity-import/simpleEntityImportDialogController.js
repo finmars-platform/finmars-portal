@@ -37,7 +37,8 @@
             delimiter: ',',
             error_handler: 'break',
             mode: 'skip',
-            missing_data_handler: 'throw_error'
+            missing_data_handler: 'throw_error',
+            classifier_handler: 'skip'
         };
 
         vm.loadIsAvailable = function () {
@@ -69,94 +70,126 @@
 
         vm.validate = function ($event) {
 
-            vm.readyStatus.processing = true;
+            return new Promise(function (resolve, reject) {
 
-            var formData = new FormData();
+                vm.readyStatus.processing = true;
 
-            formData.append('file', vm.config.file);
-            formData.append('scheme', vm.config.scheme);
-            formData.append('error_handler', vm.config.error_handler);
-            formData.append('delimiter', vm.config.delimiter);
-            formData.append('mode', vm.config.mode);
-            formData.append('missing_data_handler', vm.config.missing_data_handler);
+                var formData = new FormData();
 
-            console.log('vm.config', vm.config);
+                formData.append('file', vm.config.file);
+                formData.append('scheme', vm.config.scheme);
+                formData.append('error_handler', vm.config.error_handler);
+                formData.append('delimiter', vm.config.delimiter);
+                formData.append('mode', vm.config.mode);
+                formData.append('missing_data_handler', vm.config.missing_data_handler);
+                formData.append('classifier_handler', vm.config.classifier_handler);
 
-            var schemeObject;
+                console.log('vm.config', vm.config);
 
-            vm.entitySchemes.forEach(function (scheme) {
+                var schemeObject;
 
-                if (scheme.id == vm.config.scheme) {
-                    schemeObject = scheme;
-                }
+                vm.entitySchemes.forEach(function (scheme) {
 
-            });
+                    if (scheme.id == vm.config.scheme) {
+                        schemeObject = scheme;
+                    }
 
-            importEntityService.validateImport(formData).then(function (data) {
+                });
 
-                vm.readyStatus.processing = false;
-                vm.dataIsImported = true;
+                importEntityService.validateImport(formData).then(function (data) {
 
-                if (data.errors.length === 0) {
+                    vm.readyStatus.processing = false;
+                    vm.dataIsImported = true;
 
-                    vm.load();
+                    if (data.errors.length === 0) {
 
-                } else {
+                        resolve({status: 'agree'})
 
-                    data.process_mode = 'validate';
+                    } else {
+
+                        data.process_mode = 'validate';
+
+                        $mdDialog.show({
+                            controller: 'SimpleEntityImportErrorsDialogController as vm',
+                            templateUrl: 'views/dialogs/simple-entity-import/simple-entity-import-errors-dialog-view.html',
+                            targetEvent: $event,
+                            preserveScope: true,
+                            multiple: true,
+                            autoWrap: true,
+                            skipHide: true,
+                            locals: {
+                                data: {
+                                    validationResult: data,
+                                    scheme: schemeObject,
+                                    config: vm.config
+                                }
+                            }
+                        }).then(function (res) {
+
+                            if (res && res.status === 'agree') {
+                                resolve({status: 'agree'})
+                            } else {
+                                resolve({status: 'disagree'});
+                                vm.closeButtonText = "OK";
+                            }
+
+                        })
+
+                    }
+
+
+                }).catch(function (reason) {
+
+                    vm.readyStatus.processing = false;
 
                     $mdDialog.show({
-                        controller: 'SimpleEntityImportErrorsDialogController as vm',
-                        templateUrl: 'views/dialogs/simple-entity-import/simple-entity-import-errors-dialog-view.html',
+                        controller: 'ValidationDialogController as vm',
+                        templateUrl: 'views/dialogs/validation-dialog-view.html',
                         targetEvent: $event,
                         preserveScope: true,
                         multiple: true,
                         autoWrap: true,
                         skipHide: true,
                         locals: {
-                            data: {
-                                validationResult: data,
-                                scheme: schemeObject,
-                                config: vm.config
+                            validationData: {
+                                message: "An error occurred. Please try again later"
                             }
                         }
-                    }).then(function (res) {
+                    });
 
-                        if (res && res.status === 'agree') {
-                            vm.load();
-                        }
+                    resolve({status: 'disagree'});
 
-                        vm.closeButtonText = "OK";
+                    $scope.$apply();
 
-                    })
-
-                }
-
-
-            }).catch(function (reason) {
-
-                vm.readyStatus.processing = false;
-
-                $mdDialog.show({
-                    controller: 'ValidationDialogController as vm',
-                    templateUrl: 'views/dialogs/validation-dialog-view.html',
-                    targetEvent: $event,
-                    preserveScope: true,
-                    multiple: true,
-                    autoWrap: true,
-                    skipHide: true,
-                    locals: {
-                        validationData: {
-                            message: "An error occurred. Please try again later"
-                        }
-                    }
-                });
-
-                vm.closeButtonText = "OK";
-
-                $scope.$apply();
+                })
 
             })
+        };
+
+        vm.validateImport = function ($event) {
+
+            vm.validate($event).then(function (res) {
+                if (res.status === 'agree') {
+                    $mdDialog.show({
+                        controller: 'SuccessDialogController as vm',
+                        templateUrl: 'views/dialogs/success-dialog-view.html',
+                        targetEvent: $event,
+                        preserveScope: true,
+                        multiple: true,
+                        autoWrap: true,
+                        skipHide: true,
+                        locals: {
+                            success: {
+                                title: "Success",
+                                description: "Validation successful"
+                            }
+                        }
+
+                    });
+
+                }
+            })
+
         };
 
         vm.load = function ($event) {
@@ -171,6 +204,7 @@
             formData.append('delimiter', vm.config.delimiter);
             formData.append('mode', vm.config.mode);
             formData.append('missing_data_handler', vm.config.missing_data_handler);
+            formData.append('classifier_handler', vm.config.classifier_handler);
 
             console.log('vm.config', vm.config);
 
@@ -302,7 +336,14 @@
 
         vm.import = function () {
 
-            vm.validate(); //TODO refactor later?
+            vm.validate().then(function (res) {
+
+                if (res.status === 'agree') {
+                    vm.load();
+                }
+
+
+            })
 
         }
 
