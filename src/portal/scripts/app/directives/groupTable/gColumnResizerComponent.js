@@ -189,6 +189,7 @@
 
                         $(window).bind('mouseup', function () {
                             $(window).unbind('mousemove');
+                            scope.evEventService.dispatchEvent(evEvents.START_CELLS_OVERFLOW);
                         });
 
                     });

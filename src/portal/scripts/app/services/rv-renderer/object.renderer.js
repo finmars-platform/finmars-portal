@@ -168,7 +168,7 @@
                         foldButton = '<div class="ev-fold-button" data-type="foldbutton" data-object-id="' + currentGroup.___id + '" data-parent-group-hash-id="' + currentGroup.___parentId + '">+</div>';
                     }
 
-                    result.html_result = foldButton + '<b>' + currentGroup.___group_name + '</b>';
+                    result.html_result = foldButton + '<span class="text-bold">' + currentGroup.___group_name + '</span>';
 
                 }
             }
@@ -223,7 +223,7 @@
                         var subtotalValue = renderHelper.formatValue(subtotal, column);
 
                         if (!isNaN(subtotalValue)) {
-                            result.html_result = '<b>' + subtotalValue + '</b>';
+                            result.html_result = '<span class="text-bold">' + subtotalValue + '</span>';
                         }
 
                         result.numeric_result = subtotal[column.key];
@@ -392,10 +392,16 @@
             resultValue = '';
 
             if (value_obj.html_result) {
-                resultValue = value_obj.html_result;
+                resultValue = '<span class="g-cell-content">' + value_obj.html_result + '</span>';
             }
 
-            cell = '<div class="g-cell-wrap ' + getBgColor(evDataService, obj, columnNumber) + '" style="width: ' + column.style.width + '"><div class="g-cell ' + textAlign + ' ' + colorNegative + ' ' + borderBottomTransparent + '">' + resultValue + '</div></div>';
+            cell = '<div class="g-cell-wrap ' + getBgColor(evDataService, obj, columnNumber) + '" style="width: ' + column.style.width + '">' +
+                '<div class="g-cell ' + textAlign + ' ' + colorNegative + ' ' + borderBottomTransparent + '">' +
+                '<div class="g-cell-content-wrap">' +
+                resultValue +
+                '</div>' +
+                '</div>' +
+                '</div>';
 
             result = result + cell
 
