@@ -67,12 +67,6 @@
 
         var requestParameters = evDataService.getRequestParameters(groupHashId);
 
-        var groups = evDataService.getGroups();
-        var parents = evRvCommonHelper.getParents(parentGroupHashId, evDataService);
-        // var currentGroup = groups[parents.length + 1];
-        var currentGroup = groups[parents.length - 1]; // +1 from root group
-        var currentGroupIdentifier = currentGroup.hasOwnProperty('key') ? currentGroup.key : currentGroup.id;
-
         var groupTypes = evDataHelper.getGroupTypes(groupHashId, parentGroupHashId, evDataService);
         var groupValues = evDataHelper.getGroupsValues(groupHashId, parentGroupHashId, evDataService);
 

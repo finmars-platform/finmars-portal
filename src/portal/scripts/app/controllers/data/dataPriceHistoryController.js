@@ -13,7 +13,9 @@
 
         var vm = this;
 
-        vm.entityType = 'price-history';
+        vm.entityType = 'price-history'; // deprecated
+        vm.contentType = 'instruments.pricehistory';
+
         vm.entityRaw = [];
 
         vm.readyStatus = {content: false};

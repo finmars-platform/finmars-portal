@@ -52,15 +52,19 @@
 
         }
 
-        if (column.id) {
+        if (column.attribute_type) {
 
             var result = '';
 
             if (obj.attributes) {
 
+                var pieces = column.key.split('.');
+
+                var id = parseInt(pieces[pieces.length - 1], 10);
+
                 obj.attributes.forEach(function (item) {
 
-                    if (item.attribute_type === column.id) {
+                    if (item.attribute_type === id) {
 
                         if (column.value_type === 20 && item.value_float) {
 

@@ -11,7 +11,8 @@
 
         var vm = this;
 
-        vm.entityType = 'portfolio';
+        vm.entityType = 'portfolio'; // deprecated
+        vm.contentType = 'portfolios.portfolio';
         vm.entityRaw = [];
 
         vm.readyStatus = {content: false};
