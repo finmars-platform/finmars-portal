@@ -92,7 +92,9 @@
             vm.init = function () {
 
                 vm.entityType = $scope.$parent.vm.entityType;
+                vm.contentType = $scope.$parent.vm.contentType;
                 entityViewerDataService.setEntityType($scope.$parent.vm.entityType);
+                entityViewerDataService.setContentType($scope.$parent.vm.contentType);
 
                 vm.getView();
 
@@ -137,7 +139,7 @@
 
                     if (!objectComparison.compareObjects(activeLayoutConfig, layoutCurrentConfig)) {
 
-                        return new Promise (function (resolve, reject) {
+                        return new Promise(function (resolve, reject) {
 
                             $mdDialog.show({
                                 controller: 'LayoutChangesLossWarningDialogController as vm',

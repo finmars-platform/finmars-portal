@@ -14,6 +14,7 @@
         var vm = this;
 
         vm.entityType = 'counterparty';
+        vm.contentType = 'counterparties.counterparty';
         vm.entityRaw = [];
 
         vm.readyStatus = {content: false};

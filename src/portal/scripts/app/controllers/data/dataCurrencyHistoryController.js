@@ -13,7 +13,8 @@
 
         var vm = this;
 
-        vm.entityType = 'currency-history';
+        vm.entityType = 'currency-history'; // deprecated
+        vm.contentType = 'currencies.currencyhistory';
         vm.entityRaw = [];
 
         vm.readyStatus = {content: false};

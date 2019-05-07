@@ -13,7 +13,9 @@
 
         var vm = this;
 
-        vm.entityType = 'pricing-policy';
+        vm.entityType = 'pricing-policy'; // deprecated
+        vm.contentType = 'instruments.pricingpolicy';
+
         vm.entityRaw = [];
 
         vm.readyStatus = {content: false};
