@@ -149,18 +149,15 @@
             parent.content.forEach(function (item, itemIndex) {
                 if (item.active === true) {
                     ChildIsActive = true;
-                }
-                else {
+                } else {
                     ChildIsNotActive = true;
                 }
                 if (itemIndex == parent.content.length - 1) {
                     if (ChildIsActive && !ChildIsNotActive) {
                         parentIsActive = true;
-                    }
-                    else if (!ChildIsActive && ChildIsNotActive) {
+                    } else if (!ChildIsActive && ChildIsNotActive) {
                         parent.someChildsActive = undefined;
-                    }
-                    else {
+                    } else {
                         parentIsActive = false;
                         parent.someChildsActive = 'some-checkboxes-ticked';
                     }
@@ -271,7 +268,7 @@
                 var result = new File([resultFile], {type: 'text/json;charset=utf-8'});
 
                 a.href = URL.createObjectURL(result);
-                a.download = vm.filename ? vm.filename + '.json' : "mapping.json";
+                a.download = vm.filename ? vm.filename + '.fmcfg' : "mapping.fmcfg";
 
                 resolve(vm.file);
 

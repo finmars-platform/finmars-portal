@@ -128,6 +128,7 @@
             case "account":
             case "counterparty":
             case "responsible":
+            case "currency":
             case "instrument":
             case "transaction":
             case "complex-transaction":

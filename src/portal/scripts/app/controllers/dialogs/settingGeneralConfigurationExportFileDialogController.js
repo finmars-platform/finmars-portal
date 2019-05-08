@@ -77,19 +77,19 @@
 
                                                     children.forEach(function (child) {
 
-                                                       for (s = 0; s < subGroupsList.length; s++) {
+                                                        for (s = 0; s < subGroupsList.length; s++) {
 
-                                                           if (child.content_type === subGroupsList[s].content_type) {
+                                                            if (child.content_type === subGroupsList[s].content_type) {
 
-                                                               if (!subGroupsList[s].firstElementExist) {
-                                                                   child.first__ = subGroupsList[s].name;
-                                                                   subGroupsList[s].firstElementExist = true;
-                                                               }
+                                                                if (!subGroupsList[s].firstElementExist) {
+                                                                    child.first__ = subGroupsList[s].name;
+                                                                    subGroupsList[s].firstElementExist = true;
+                                                                }
 
-                                                               child.order__ = s;
-                                                           }
+                                                                child.order__ = s;
+                                                            }
 
-                                                       }
+                                                        }
 
                                                     });
                                                 } else if (parent.entity === "transactions.transactiontype") {
@@ -653,19 +653,16 @@
             parent.content.forEach(function (item) {
                 if (item.active) {
                     ChildIsActive = true;
-                }
-                else {
+                } else {
                     ChildIsNotActive = true;
                 }
             });
 
             if (ChildIsActive && !ChildIsNotActive) {
                 parentIsActive = true;
-            }
-            else if (!ChildIsActive && ChildIsNotActive) {
+            } else if (!ChildIsActive && ChildIsNotActive) {
                 parent.someChildsActive = false;
-            }
-            else {
+            } else {
                 parentIsActive = false;
                 parent.someChildsActive = true;
             }
@@ -775,7 +772,7 @@
                 var result = new File([resultFile], {type: 'text/json;charset=utf-8'});
 
                 a.href = URL.createObjectURL(result);
-                a.download = vm.filename ? vm.filename + '.json' : "configuration.json";
+                a.download = vm.filename ? vm.filename + '.fcfg' : "configuration.fcfg";
 
                 resolve(vm.file);
 
