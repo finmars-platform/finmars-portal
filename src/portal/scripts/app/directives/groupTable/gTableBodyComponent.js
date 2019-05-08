@@ -114,40 +114,47 @@
                 }
 
                 function cellContentOverflow() {
-                    console.log("cellContentOverflow started");
+
                     var rows = contentElem.querySelectorAll('.g-row');
+                    rows = Array.from(rows);
+
+                    var subtotalRows = rows.filter(function(row) {
+                        return row.dataset.type === 'subtotal';
+                    });
 
                     var r;
-                    for (r = 0; r < rows.length; r++) {
+                    for (r = 0; r < subtotalRows.length; r++) {
 
-                        var cellWraps = rows[r].querySelectorAll('.g-cell-wrap');
-                        var cells = rows[r].querySelectorAll('.g-cell');
+                        var cellWraps = subtotalRows[r].querySelectorAll('.g-cell-wrap');
+                        var cells = subtotalRows[r].querySelectorAll('.g-cell');
 
                         var w;
                         for (w = 0; w < cellWraps.length; w++) {
+
                             var cellWrap = cellWraps[w];
                             var cell = cells[w];
                             var cellContentWrap = cell.querySelector('.g-cell-content-wrap');
+                            var groupFoldingBtn = cellContentWrap.querySelector('.g-group-fold-button');
 
-                            if (cellContentWrap === undefined || cellContentWrap.textContent !== '') {
-                                console.log("overflow cellContentWrap", cellContentWrap, cellContentWrap.textContent);
+                            if (cellContentWrap.textContent !== undefined && cellContentWrap.textContent !== '') {
+
                                 var cellContentHolder = cellContentWrap.querySelector('.g-cell-content');
-                                var cellSpaceForText = cellContentWrap.clientWidth;
-
-                                console.log("overflow cell data", cell, cellContentHolder, cellContentHolder.offsetWidth, cellSpaceForText);
+                                var cellSpaceForText = cellContentWrap.clientWidth - groupFoldingBtn.clientWidth;
 
                                 if (cellContentHolder.offsetWidth > cellSpaceForText) {
                                     var cellStretchWidth = cellWrap.clientWidth;
                                     var nextCellIndex = w;
                                     var overflowedCells = [];
 
+                                    // Looping through next cell in the row, until encounter not empty cell or overflowing cell have enough width
                                     while (cellContentHolder.offsetWidth > cellSpaceForText && nextCellIndex + 1 < cellWraps.length) {
+
                                         var nextCellIndex = nextCellIndex + 1;
-                                        console.log("overflow widths", cellContentHolder.offsetWidth, cellStretchWidth, nextCellIndex);
+
                                         var nextCellWrap = cellWraps[nextCellIndex];
                                         var nextCellContentWrap = nextCellWrap.querySelector('.g-cell-content-wrap');
                                         var nexCellContentHolder = nextCellContentWrap.querySelector('.g-cell-content');
-                                        console.log("overflow nextCellContentWrap.contentText", nextCellWrap, nextCellContentWrap.contentText);
+
                                         if (nexCellContentHolder || nextCellContentWrap.contentText) {
                                             break;
                                         }
@@ -155,11 +162,12 @@
                                         overflowedCells.push(nextCellWrap);
                                         cellSpaceForText = cellSpaceForText + nextCellWrap.clientWidth;
                                         cellStretchWidth = cellStretchWidth + nextCellWrap.clientWidth;
+
                                     }
-                                    console.log("overflow cellStretchWidth", cellStretchWidth, cellSpaceForText);
-                                    if (cellStretchWidth !== cellWrap.clientWidth) { // check are there any empty cells next to overflowing cell
-                                        console.log("overflow cell overflowing", cell, overflowedCells);
-                                        overflowedCells.pop();
+
+                                    if (cellStretchWidth !== cellWrap.clientWidth) { // check if there is available cells to be overflowed
+
+                                        overflowedCells.pop(); // leaving right border of last overflowed cell
                                         overflowedCells.map(function (overflowedCell) {
                                             overflowedCell.classList.add('g-overflowed-cell');
                                         });
@@ -175,14 +183,12 @@
                         }
                     }
 
-                    console.log("overflow rows", rows, cellWraps);
-
                 };
 
                 function clearOverflowingCells() {
                     var overflowingCells = contentElem.querySelectorAll('.g-overflowing-cell');
                     var overflowedCells = contentElem.querySelectorAll('.g-overflowed-cell');
-                    console.log("overflow cells to clear", overflowingCells, overflowedCells);
+
                     overflowingCells.forEach(function (overflowingCell) {
                         overflowingCell.classList.remove('g-overflowing-cell');
                         var cell = overflowingCell.querySelector('.g-cell');
@@ -203,8 +209,13 @@
                     projection = evDataHelper.calculateProjection(flatList, scope.evDataService);
 
                     if (isReport) {
+
                         rvDomManager.calculateScroll(elements, scope.evDataService);
                         rvRenderer.render(contentElem, projection, scope.evDataService, scope.evEventService);
+
+                        clearOverflowingCells();
+                        cellContentOverflow();
+
                     } else {
                         evDomManager.calculateScroll(elements, scope.evDataService);
                         evRenderer.render(contentElem, projection, scope.evDataService, scope.evEventService);
@@ -241,8 +252,11 @@
 
                     rvDomManager.addScrollListener(elements, scope.evDataService, scope.evEventService);
 
-                    scope.evEventService.addEventListener(evEvents.START_CELLS_OVERFLOW, function () {
+                    scope.evEventService.addEventListener(evEvents.RESIZE_COLUMNS, function () {
                         clearOverflowingCells();
+                    });
+
+                    scope.evEventService.addEventListener(evEvents.START_CELLS_OVERFLOW, function () {
                         cellContentOverflow();
                     });
 

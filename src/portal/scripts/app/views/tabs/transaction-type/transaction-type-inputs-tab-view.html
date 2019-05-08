@@ -20,10 +20,10 @@
                                                                                       data-ng-class="{reverse: vm.direction}"></span>
                 </th>
                 <th>Default value
-                </th>
-                <th>Input expr</th>
                 <th>Fill from context
                 </th>
+                </th>
+                <th>Input expr</th>
                 <th>
                     <md-button class="md-icon-button">
                         <ng-md-icon data-ng-click="vm.toggleQuery()" icon="search"></ng-md-icon>
@@ -215,6 +215,11 @@
                         </md-select>
                     </md-input-container>
                 </td>
+                <td data-ng-if="item.editStatus" class="edit-state-td" style="text-align: center">
+                    <md-input-container>
+                        <md-checkbox data-ng-model="item.is_fill_from_context">Fill from context</md-checkbox>
+                    </md-input-container>
+                </td>
                 <td data-ng-if="item.editStatus" class="edit-state-td">
                     <md-input-container>
                         <label for="">Input expr</label>
@@ -223,11 +228,6 @@
 
                     <expression-editor-button data-item="item.value_expr"></expression-editor-button>
 
-                </td>
-                <td data-ng-if="item.editStatus" class="edit-state-td">
-                    <md-input-container>
-                        <md-checkbox data-ng-model="item.is_fill_from_context">Fill from context</md-checkbox>
-                    </md-input-container>
                 </td>
                 <td data-ng-if="item.editStatus" class="edit-state-td">
                     <md-button data-ng-click="vm.saveItem(item)">
@@ -258,7 +258,9 @@
                         <label for="ttype-inputs-value-type"></label>
                         <md-select ng-model="vm.newItem.value_type"
                                    md-container-class="common-select-container"
-                                   md-on-close="searchTerm = ''" id="ttype-inputs-value-type">
+                                   ng-change="vm.valueTypeChanged()"
+                                   md-on-close="searchTerm = ''"
+                                   id="ttype-inputs-value-type">
                             <md-select-header>
                                 <input data-ng-model="searchTerm"
                                        type="search"
@@ -288,12 +290,14 @@
                             </md-option>
                         </md-select>
                     </md-input-container>-->
-                    <md-input-container class="md-block" aria-label="select with filter">
+                    <md-input-container class="md-block" aria-label="content type input">
                         <label for="ttype-inputs-default-value"></label>
                         <md-select ng-model="vm.newItem.content_type"
                                    md-container-class="common-select-container"
                                    md-on-close="searchTerm = ''"
-                                   id="ttype-inputs-default-value">
+                                   id="ttype-inputs-default-value"
+                                   aria-label="select with filter"
+                                   ng-disabled="vm.newItem.value_type !== 100">
 
                             <md-select-header>
                                 <input data-ng-model="searchTerm"
@@ -361,6 +365,11 @@
                         </md-select>
                     </md-input-container>
                 </td>
+                <td style="text-align: center">
+                    <md-input-container>
+                        <md-checkbox data-ng-model="vm.newItem.is_fill_from_context" ng-disabled="vm.newItem.value_type !== 100"></md-checkbox>
+                    </md-input-container>
+                </td>
                 <td>
 
                     <md-input-container>
@@ -370,11 +379,6 @@
 
                     <expression-editor-button data-item="vm.newItem.value_expr"></expression-editor-button>
 
-                </td>
-                <td>
-                    <md-input-container>
-                        <md-checkbox data-ng-model="vm.newItem.is_fill_from_context"></md-checkbox>
-                    </md-input-container>
                 </td>
                 <td>
                     <md-button data-ng-click="vm.addRow()">

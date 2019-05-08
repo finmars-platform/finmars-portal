@@ -124,7 +124,13 @@
 
         columns.forEach(function (column) {
 
-            cell = '<div class="g-cell-wrap" style="width: ' + column.style.width + '"><div class="g-cell">' + getValue(obj, column) + '</div></div>';
+            var cellValue = getValue(obj, column);
+
+            if (cellValue !== '') {
+                cellValue = '<span class="g-cell-content">' + cellValue + '</span>'
+            }
+
+            cell = '<div class="g-cell-wrap" style="width: ' + column.style.width + '"><div class="g-cell"><div class="g-cell-content-wrap">' + cellValue + '</div></div></div>';
 
             result = result + cell
 

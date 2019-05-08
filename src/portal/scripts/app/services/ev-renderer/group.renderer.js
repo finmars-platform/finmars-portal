@@ -6,11 +6,11 @@
 
     var render = function (group) {
 
-        var foldButton = '<div class="ev-fold-button">+</div>';
+        var foldButton = '<div class="g-group-fold-button"><div class="ev-fold-button">+</div></div>';
 
 
         if (group.___is_open) {
-            foldButton = '<div class="ev-fold-button">-</div>';
+            foldButton = '<div class="g-group-fold-button"><div class="ev-fold-button">-</div></div>';
         }
 
         var classList = ['g-group-holder'];

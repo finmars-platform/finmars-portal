@@ -956,6 +956,15 @@
             });
         };
 
+        vm.valueTypeChanged = function () {
+            vm.newItem.content_type = null;
+            vm.newItem.is_fill_from_context = false;
+
+            if (vm.newItem.value_type === 100) {
+                vm.newItem.content_type = "accounts.account";
+            }
+        };
+
         vm.addRow = function () {
             vm.entity.inputs.push({
                 name: vm.newItem.name,
@@ -1027,7 +1036,7 @@
         };
 
         vm.rebookInstrumentReactions = [
-            {
+            /*{
                 name: "Proceed (Overwrite if exists)",
                 id: 2
             },
@@ -1038,11 +1047,23 @@
             {
                 name: "Proceed (Skip if exists)",
                 id: 4
+            }*/
+            {
+                name: "Create Instrument. If exists: Overwrite",
+                id: 2
+            },
+            {
+                name: "If exists: Phantom = existing Instrument. If not exists: create Instrument",
+                id: 1
+            },
+            {
+                name: "Find the Instrument. If not found: create on the first booking. On rebook: nothing is created",
+                id: 4
             }
         ];
 
         vm.rebookOtherReactions = [
-            {
+            /*{
                 name: "Append",
                 id: 0
             },
@@ -1053,6 +1074,27 @@
             {
                 name: "Clear & Append",
                 id: 3
+            }*/
+
+            {
+                name: "Append",
+                id: 0
+            },
+            {
+                name: "If book: Append. If rebook: Skip",
+                id: 1
+            },
+            {
+                name: "Clear & Append",
+                id: 3
+            },
+            {
+                name: "If book: Clear & Append. If rebook: Clear & Append",
+                id: null
+            },
+            {
+                name: "Clear",
+                id: null
             }
         ];
 

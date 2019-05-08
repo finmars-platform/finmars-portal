@@ -1,60 +1,65 @@
 <div class="g-grouping-component">
-    <div style="position: relative">
-        <p class="g-drag-section-title">
-            <span class="g-meta-circle green">G</span>ROUPING AREA
-            <ng-md-icon class="tooltips-sign" icon="info" size="20" style="fill: #777777">
-                <md-tooltip class="tooltip_1" md-direction="top">tooltip text</md-tooltip>
-            </ng-md-icon>
-        </p>
-
-        <div class="grouping-area-settings-container">
-            <md-menu>
-                <md-button class="md-icon-button grouping-area-settings-btn"
-                           aria-label="grand total settings"
-                           ng-click="openGroupSettings($mdOpenMenu, $event)">
-                    <ng-md-icon icon="settings" size="21"></ng-md-icon>
-                </md-button>
-
-                <md-menu-content width="4">
-                    <md-menu-item>
-                        <md-button md-prevent-menu-close="md-prevent-menu-close"
-                                   ng-click="reportSetGrandtotalType('line')"
-                                   class="g-settings-option-btn">
-                            <ng-md-icon icon="done"
-                                        data-ng-show="rootGroupOptions.subtotal_type === 'line'"></ng-md-icon>
-                            <ng-md-icon icon="done"
-                                        style="visibility:hidden;"
-                                        data-ng-show="rootGroupOptions.subtotal_type !== 'line'"></ng-md-icon>
-                            <span>Grand Total on Top</span>
-                        </md-button>
-                    </md-menu-item>
-                    <md-menu-item>
-                        <md-button md-prevent-menu-close="md-prevent-menu-close"
-                                   ng-click="reportSetGrandtotalType('area')"
-                                   class="g-settings-option-btn">
-                            <ng-md-icon icon="done"
-                                        data-ng-show="rootGroupOptions.subtotal_type === 'area'"></ng-md-icon>
-                            <ng-md-icon icon="done"
-                                        style="visibility:hidden;"
-                                        data-ng-show="rootGroupOptions.subtotal_type !== 'area'"></ng-md-icon>
-                            <span>Grand Total on Bottom</span>
-                        </md-button>
-                    </md-menu-item>
-                    <md-menu-item>
-                        <md-button md-prevent-menu-close="md-prevent-menu-close"
-                                   ng-click="reportSetGrandtotalType('arealine')"
-                                   class="g-settings-option-btn">
-                            <ng-md-icon icon="done"
-                                        data-ng-show="rootGroupOptions.subtotal_type === 'arealine'"></ng-md-icon>
-                            <ng-md-icon icon="done"
-                                        style="visibility:hidden;"
-                                        data-ng-show="rootGroupOptions.subtotal_type !== 'arealine'"></ng-md-icon>
-                            <span>Grand Total on Top and Bottom</span>
-                        </md-button>
-                    </md-menu-item>
-                </md-menu-content>
-            </md-menu>
+    <div layout="row">
+        <div>
+            <p class="g-drag-section-title">
+                <span class="g-meta-circle green">G</span>ROUPING AREA
+                <ng-md-icon class="tooltips-sign" icon="info" size="20" style="fill: #777777">
+                    <md-tooltip class="tooltip_1" md-direction="top">tooltip text</md-tooltip>
+                </ng-md-icon>
+            </p>
         </div>
+
+        <md-card data-ng-if="isReport" class="card grouping-area-settings-card" layout="row">
+            <p>Grand Total</p>
+            <div class="grouping-area-settings-container">
+                <md-menu>
+                    <md-button class="md-icon-button grouping-area-settings-btn"
+                               aria-label="grand total settings"
+                               ng-click="openGroupSettings($mdOpenMenu, $event)">
+                        <ng-md-icon icon="settings" size="21"></ng-md-icon>
+                    </md-button>
+
+                    <md-menu-content width="4">
+                        <md-menu-item>
+                            <md-button md-prevent-menu-close="md-prevent-menu-close"
+                                       ng-click="reportSetGrandtotalType('line')"
+                                       class="g-settings-option-btn">
+                                <ng-md-icon icon="done"
+                                            data-ng-show="rootGroupOptions.subtotal_type === 'line'"></ng-md-icon>
+                                <ng-md-icon icon="done"
+                                            style="visibility:hidden;"
+                                            data-ng-show="rootGroupOptions.subtotal_type !== 'line'"></ng-md-icon>
+                                <span>Grand Total on Top</span>
+                            </md-button>
+                        </md-menu-item>
+                        <md-menu-item>
+                            <md-button md-prevent-menu-close="md-prevent-menu-close"
+                                       ng-click="reportSetGrandtotalType('area')"
+                                       class="g-settings-option-btn">
+                                <ng-md-icon icon="done"
+                                            data-ng-show="rootGroupOptions.subtotal_type === 'area'"></ng-md-icon>
+                                <ng-md-icon icon="done"
+                                            style="visibility:hidden;"
+                                            data-ng-show="rootGroupOptions.subtotal_type !== 'area'"></ng-md-icon>
+                                <span>Grand Total on Bottom</span>
+                            </md-button>
+                        </md-menu-item>
+                        <md-menu-item>
+                            <md-button md-prevent-menu-close="md-prevent-menu-close"
+                                       ng-click="reportSetGrandtotalType('arealine')"
+                                       class="g-settings-option-btn">
+                                <ng-md-icon icon="done"
+                                            data-ng-show="rootGroupOptions.subtotal_type === 'arealine'"></ng-md-icon>
+                                <ng-md-icon icon="done"
+                                            style="visibility:hidden;"
+                                            data-ng-show="rootGroupOptions.subtotal_type !== 'arealine'"></ng-md-icon>
+                                <span>Grand Total on Top and Bottom</span>
+                            </md-button>
+                        </md-menu-item>
+                    </md-menu-content>
+                </md-menu>
+            </div>
+        </md-card>
     </div>
     <div class="g-second-line">
 
@@ -176,7 +181,7 @@
                                 <md-menu-item>
                                     <md-button ng-click="removeGroup(item)" class="g-settings-option-btn">
                                         <ng-md-icon icon="visibility_off"></ng-md-icon>
-                                        <span>Remove</span>
+                                        <span>Remove from group</span>
                                     </md-button>
                                 </md-menu-item>
                             </md-menu-content>
@@ -201,7 +206,7 @@
                                 <md-menu-item>
                                     <md-button ng-click="removeGroup(item)" class="g-settings-option-btn">
                                         <ng-md-icon icon="visibility_off"></ng-md-icon>
-                                        <span>Remove</span>
+                                        <span>Remove from group</span>
                                     </md-button>
                                 </md-menu-item>
                             </md-menu-content>
