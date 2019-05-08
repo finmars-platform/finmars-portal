@@ -51,7 +51,8 @@
                                  aria-label="checkbox">
                     </md-checkbox>
                     <span data-ng-class="{'used-dynamic-attrs': child.countOfUsages__, 'child-with-icon': vm.checkForTextIcon(item.entity, child)}">
-                        <ng-md-icon data-ng-if="vm.checkForTextIcon(item.entity, child)" icon="folder" fill="#000" size="20"></ng-md-icon>
+                        <ng-md-icon data-ng-if="vm.checkForTextIcon(item.entity, child)" icon="folder" fill="#000"
+                                    size="20"></ng-md-icon>
                         {{vm.getItemName(child)}}
                         <span data-ng-if="child.countOfUsages__">(<b>{{child.countOfUsages__}}</b>)</span>
                     </span>
@@ -72,11 +73,22 @@
                        style="border-top: 1px solid #ddd; min-height: 66px">
 
         <div class="p-t-8">
-            <md-checkbox ng-checked="vm.settings.mode === 'overwrite'" data-ng-click="vm.toggleMode('overwrite')"
-                         aria-label="checkbox">
-            </md-checkbox>
+            <!--<md-checkbox ng-checked="vm.settings.mode === 'overwrite'" data-ng-click="vm.toggleMode('overwrite')"-->
+            <!--aria-label="checkbox">-->
+            <!--</md-checkbox>-->
 
-            <b>Overwrite existing data</b>
+            <!--<b>Overwrite existing data</b>-->
+
+            <md-input-container style="width: 232px;">
+                <label>Actions to do with the configurable entities in case if entity User Code exists</label>
+                <md-select
+                        data-ng-model="vm.settings.mode">
+                    <md-option value="skip">Skip</md-option>
+                    <md-option value="overwrite">Overwrite</md-option>
+                </md-select>
+            </md-input-container>
+
+
         </div>
 
         <div>
