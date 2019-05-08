@@ -10,6 +10,18 @@
     <md-dialog-content style="background: #E5E5E5;">
         <md-content>
             <div data-ng-if="vm.checkReadyStatus()">
+
+                <div layout="row" layout-align="center center">
+                    <md-card flex="100" class="inm-card-special">
+                        <md-card-content layout="column">
+                            <md-input-container class="md-block">
+                                <label>Scheme name</label>
+                                <input aria-label="scheme name" type="text" data-ng-model="vm.scheme.scheme_name">
+                            </md-input-container>
+                        </md-card-content>
+                    </md-card>
+                </div>
+
                 <div layout="row">
                     <div layout="column" flex="25">
                         <div layout="row">

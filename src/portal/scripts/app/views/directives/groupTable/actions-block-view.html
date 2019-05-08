@@ -105,8 +105,44 @@
 
             <div layout="column">
 
-                <md-button data-ng-click="exportAsPdf($event)" class=" md-raised">Export
-                </md-button>
+                <div layout="row" class="filters-control-btn s-f-expanded-btns layout-row">
+                    <md-menu class="full-width" layout="row">
+                        <md-button class="md-raised clear-all full-width md-button md-ink-ripple" type="button"
+                                   ng-click="openExportActions($mdOpenMenu, $event)">
+                            Export
+                        </md-button>
+                        <md-menu-content width="4">
+                            <md-menu-item>
+                                <md-button ng-click="exportAsPdf($event)" class="g-settings-option-btn">
+                                    <span>Export to PDF</span>
+                                </md-button>
+                            </md-menu-item>
+                            <!--<md-button class="md-button md-raised"
+                                       data-ng-click="vm.copyReport($event)"
+                                       aria-label="Copy report">
+                                <ng-md-icon icon="content_copy" size="24">
+                                <md-tooltip class="tooltip_1" md-direction="bottom">Copy report in buffer</md-tooltip>
+                            </ng-md-icon>
+                                <ng-md-icon icon="content_copy" size="24"></ng-md-icon>
+                                Copy to buffer
+                            </md-button>-->
+                            <md-menu-item>
+                                <md-button ng-click="exportAsXls()" class="g-settings-option-btn">
+                                    <span>Export to XLS</span>
+                                </md-button>
+                            </md-menu-item>
+                            <md-menu-item>
+                                <md-button ng-click="copyReport($event)" class="g-settings-option-btn">
+                                <!--<ng-md-icon icon="content_copy" size="24"></ng-md-icon>-->
+                                    <span>Copy to buffer</span>
+                                </md-button>
+                            </md-menu-item>
+                        </md-menu-content>
+                    </md-menu>
+                </div>
+
+                <!--<md-button data-ng-click="exportAsPdf($event)" class=" md-raised">Export
+                </md-button>-->
 
                 <md-button data-ng-click="openReportSettings($event)" class=" md-raised">Settings
                 </md-button>

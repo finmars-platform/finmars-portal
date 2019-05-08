@@ -2,56 +2,11 @@
 
     'use strict';
 
-    var copy = function (event) {
+    var convertReportHelper = require('./converters/convertReportHelper');
 
-        var rows = document.querySelectorAll('.ev-content .g-row');
+    var copy = function () {
 
-        var table = '<table>';
-
-        var columns = document.querySelectorAll('.g-columns-holder .g-cell');
-
-        table = table + '<thead>';
-        table = table + '<tr>';
-
-        for (var hc = 0; hc < columns.length; hc = hc + 1) {
-
-            table = table + '<th><b>' + columns[hc].querySelector('.caption').textContent + '</b></th>';
-        }
-
-        table = table + '</tr>';
-        table = table + '</thead>';
-
-        table = table + '<tbody>';
-
-        var tr;
-        var cells;
-        var bg;
-        for (var i = 0; i < rows.length; i = i + 1) {
-
-            cells = rows[i].querySelectorAll('.g-cell');
-
-            //console.log('cells', cells);
-
-            tr = '<tr>';
-
-            for (var c = 0; c < cells.length; c = c + 1) {
-
-                bg = getComputedStyle(cells[c].parentElement).backgroundColor;
-
-                if (cells[c].querySelector('b')) {
-                    tr = tr + '<td bgcolor="' + bg + '"><b>' + cells[c].innerText + '</b></td>'
-                } else {
-                    tr = tr + '<td bgcolor="' + bg + '">' + cells[c].innerText + '</td>'
-                }
-            }
-
-            tr = tr + '</tr>';
-
-            table = table + tr;
-        }
-
-        table = table + "</tbody>";
-        table = table + "</table>";
+        var table = convertReportHelper.convertToExcel();
 
         var listener = function (e) {
 

@@ -13,6 +13,10 @@
 
     var uiService = require('../../services/uiService');
 
+    var convertReportHelper = require('../../helpers/converters/convertReportHelper')
+    var reportCopyHelper = require('../../helpers/reportCopyHelper');
+    var downloadFileHelper = require('../../helpers/downloadFileHelper');
+
     module.exports = function ($mdDialog, $state) {
         return {
             restrict: 'AE',
@@ -236,6 +240,12 @@
 
                     $mdOpenMenu($event);
 
+                };
+
+                scope.openExportActions = function ($mdOpenMenu, $event) {
+
+
+                    $mdOpenMenu($event);
                 };
 
                 function clearAdditions() {
@@ -575,7 +585,17 @@
                         }
                     })
 
-                }
+                };
+
+                scope.exportAsXls = function () {
+                    var blobPart = convertReportHelper.convertToExcel();
+                    downloadFileHelper.downloadFile(blobPart, "text/plain", "report.xls");
+                };
+
+                scope.copyReport = function ($event) {
+                    console.log('copy report');
+                    reportCopyHelper.copy();
+                };
 
             }
         }

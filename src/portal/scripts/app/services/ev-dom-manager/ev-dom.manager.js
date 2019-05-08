@@ -353,9 +353,24 @@
                 clickData.___parentId = event.target.dataset.parentGroupHashId;
                 break;
             case clickTargets.FOLD_BUTTON:
-                clickData.___type = event.target.parentElement.dataset.type;
-                clickData.___id = event.target.parentElement.dataset.groupHashId;
-                clickData.___parentId = event.target.parentElement.dataset.parentGroupHashId;
+
+                var parentWithData = event.target.parentElement;
+                var parent = event.target.parentElement;
+
+                for (var i = 0; i < 15; i++) { // safeguard in case of endless loop
+                    if (parent.classList.contains('g-group-holder')) {
+                        parentWithData = parent;
+                        break;
+                    } else if (parent === null) {
+                        break;
+                    } else {
+                        parent = parent.parentElement;
+                    }
+                }
+
+                clickData.___type = parentWithData.dataset.type;
+                clickData.___id = parentWithData.dataset.groupHashId;
+                clickData.___parentId = parentWithData.dataset.parentGroupHashId;
                 break;
             case clickTargets.ROW_SELECTION_OBJECT_BUTTON:
                 clickData.___type = event.target.offsetParent.dataset.type;

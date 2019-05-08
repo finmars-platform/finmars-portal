@@ -1,8 +1,35 @@
 .g-wrapper {
+  .grouping-area-settings-card {
+    position: relative;
+    padding: 5px 35px 5px 10px;
+    display: block;
+    height: 30px;
+    top: 2px;
+    p {
+      margin: 1px 0;
+    }
+  }
+  .grouping-area-settings-container {
+    position: absolute;
+    right: 0;
+    top: 0;
+  }
+
+  .g-grouping-component {
+    .ev-loader {
+      float: right;
+      margin-right: 10px;
+      margin-top: -12px;
+    }
+  }
   .g-drag-section-title {
     position: relative;
-    padding-left: .5em;
-    padding-top: 1em;
+    padding: 1em 30px 0 .5em;
+    margin: 0;
+    .toolbar-sign {
+      margin-left: 0;
+      right: 0;
+    }
   }
   overflow: hidden;
   .g-workarea-wrap {
@@ -10,8 +37,8 @@
     overflow: hidden;
   }
   .g-workarea {
-    width: calc(100% - border-right);
-    //width: calc(~"100% - 246px");
+    width: 100%;
+    //width: calc(100% - border-right);
     //border-right: 6px solid #4C334D;
     background: #4C334D;
     overflow: auto;
@@ -221,9 +248,6 @@
   }
   .g-grouping-section {
     background: #DCDCDC;
-  }
-  .g-drag-section-title {
-    margin: 0;
   }
   .g-settings-btn {
     float: right;

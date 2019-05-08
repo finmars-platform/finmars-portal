@@ -2,11 +2,11 @@
 
     'use strict';
 
-    var exportPdfService = require('../../services/exportPdfService')
+    var exportPdfService = require('../../services/exportPdfService');
     var rvRenderer = require('../../services/rv-renderer/rv.renderer');
     var uiService = require('../../services/uiService');
 
-    var reportCopyHelper = require('../../helpers/reportCopyHelper');
+    var downloadFileHelper = require('../../helpers/downloadFileHelper');
 
     module.exports = function ($scope, $mdDialog, evDataService, evEventService, data) {
 
@@ -62,35 +62,6 @@
 
         vm.cancel = function () {
             $mdDialog.cancel();
-        };
-
-        function showFile(blob) {
-            // It is necessary to create a new blob object with mime-type explicitly set
-            // otherwise only Chrome works like it should
-            var newBlob = new Blob([blob], {type: "application/pdf"})
-
-            console.log(newBlob)
-
-            // IE doesn't allow using a blob object directly as link href
-            // instead it is necessary to use msSaveOrOpenBlob
-            if (window.navigator && window.navigator.msSaveOrOpenBlob) {
-                window.navigator.msSaveOrOpenBlob(newBlob);
-                return;
-            }
-
-            // For other browsers:
-            // Create a link pointing to the ObjectURL containing the blob.
-            const data = window.URL.createObjectURL(newBlob);
-            var link = document.createElement('a');
-            link.href = data;
-            link.download = "report.pdf";
-            link.click();
-
-        }
-
-        vm.copyReport = function ($event) {
-            console.log('copy report');
-            reportCopyHelper.copy($event);
         };
 
         vm.fitLayoutOnAPage = function () {
@@ -195,7 +166,7 @@
 
                 exportPdfService.generatePdf(vm.settings).then(function (blob) {
 
-                    showFile(blob);
+                    downloadFileHelper.downloadFile(blob, "application/pdf", "report.pdf");
 
                     $mdDialog.cancel();
 

@@ -153,6 +153,8 @@
                         e.preventDefault();
                         e.stopPropagation();
 
+                        scope.evEventService.dispatchEvent(evEvents.RESIZE_COLUMNS);
+
                         var gColumnElem = $(this).parents('md-card.g-cell.g-column');
                         var column = findColumnById(gColumnElem[0].dataset.columnId);
                         var columnIndex = findColumnIndexById(gColumnElem[0].dataset.columnId);

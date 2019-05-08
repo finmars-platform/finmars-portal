@@ -796,11 +796,18 @@ md-menu-bar.header-logout-menu {
   transition: width ease .25s, left ease .25s;
 
   .side-menu-settings-wrapper {
+    position: relative;
     width: 200px;
     height: 100%;
     border-top: 2px solid #69476a;
     border-left: 2px solid #69476a;
     box-sizing: border-box;
+  }
+
+  .settings-menu-collapse-button-holder {
+    position: absolute;
+    right: 3px;
+    top: 3px;
   }
 
   .side-menu-group-btn-container {
@@ -852,7 +859,7 @@ md-menu-bar.header-logout-menu {
     left: 65px;
   }
 
-  .md-button.md-raised.to-small-btn {
+  .md-button.md-raised.expand-sidenav-btn {
     width: 25px;
     min-height: 20px;
     height: 25px;
@@ -1014,7 +1021,7 @@ md-menu-bar.header-logout-menu {
 }
 /* < New sidemenu styles > */
 
-.md-button.md-raised.to-small-btn {
+.md-button.md-raised.to-small-btn, .md-button.md-raised.expand-sidenav-btn {
   fill: #fff;
   position: relative;
   min-width: 20px;
