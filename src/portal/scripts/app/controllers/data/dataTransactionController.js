@@ -13,7 +13,8 @@
 
         var vm = this;
 
-        vm.entityType = 'transaction';
+        vm.entityType = 'transaction'; // deprecated
+        vm.contentType = 'transactions.transaction';
         vm.entityRaw = [];
 
         vm.readyStatus = {content: false};

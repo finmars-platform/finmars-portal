@@ -13,7 +13,8 @@
 
         var vm = this;
 
-        vm.entityType = 'counterparty-group';
+        vm.entityType = 'counterparty-group'; // deprecated
+        vm.contentType = 'counterparties.counterpartygroup';
         vm.entityRaw = [];
 
         vm.readyStatus = {content: false};

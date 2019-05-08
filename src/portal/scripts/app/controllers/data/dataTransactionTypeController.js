@@ -15,7 +15,8 @@
 
         vm.readyStatus = {content: false};
 
-        vm.entityType = 'transaction-type';
+        vm.entityType = 'transaction-type'; // deprecated
+        vm.contentType = 'transactions.transactiontype';
         vm.entityRaw = [];
 
         vm.entityViewer = {extraFeatures: []};

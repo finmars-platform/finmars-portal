@@ -15,7 +15,7 @@
 
         var vm = this;
 
-        vm.settings = {};
+        vm.settings = {mode: 'skip'};
 
         vm.processing = false;
 

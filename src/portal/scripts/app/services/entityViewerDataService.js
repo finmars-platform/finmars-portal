@@ -138,6 +138,15 @@
             return data.entityType;
         }
 
+        function setContentType(entityType) {
+            data.contentType = entityType;
+        }
+
+        function getContentType() {
+            return data.contentType;
+        }
+
+
 
         function setColumns(columns) {
 
@@ -706,6 +715,9 @@
 
             setEntityType: setEntityType,
             getEntityType: getEntityType,
+
+            setContentType: setContentType,
+            getContentType: getContentType,
 
             setColumns: setColumns,
             getColumns: getColumns,

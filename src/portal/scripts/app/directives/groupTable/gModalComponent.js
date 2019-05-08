@@ -21,98 +21,15 @@
         var vm = this;
         vm.readyStatus = {content: false};
 
-        vm.tabs = [];
         vm.entityType = entityViewerDataService.getEntityType();
+        vm.contentType = entityViewerDataService.getContentType();
 
         console.log('vm', vm);
 
         logService.property('vm.entityType', vm.entityType);
 
-        vm.general = [];
         vm.attrs = [];
         vm.entityAttrs = [];
-
-        vm.tabAttrsReady = false;
-
-        // refactore this block
-        function restoreAttrs() {
-            function fillTabWithAttrs() {
-                var i, x;
-                for (i = 0; i < vm.tabs.length; i = i + 1) {
-                    if (!vm.tabs[i].attrs) {
-                        vm.tabs[i].attrs = [];
-
-                        for (x = 0; x < vm.tabs[i].layout.fields.length; x = x + 1) {
-                            ;
-                            if (vm.tabs[i].layout.fields[x].type === 'field') {
-                                if (vm.tabs[i].layout.fields[x].hasOwnProperty('id')) {
-                                    vm.tabs[i].attrs.push({
-                                        id: vm.tabs[i].layout.fields[x].id
-                                    })
-                                } else {
-                                    if (vm.tabs[i].layout.fields[x].type === 'field') {
-                                        if (vm.tabs[i].layout.fields[x].name != 'Labeled Line' && vm.tabs[i].layout.fields[x].name != 'Line') {
-                                            vm.tabs[i].attrs.push({
-                                                name: vm.tabs[i].layout.fields[x].name
-                                            })
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-                //console.log('vm.tabs[i].attrs', vm.tabs[0].attrs)
-            }
-
-            function fillTabAttrs() {
-
-                var a, t, c, b, e;
-                var tab, tabAttr, attr, baseAttr, attributeIsExist, entityAttr;
-                //console.log('METHOD: restoreAttrs, data: vm.tabs, value: ', vm.tabs);
-                //console.log('METHOD: restoreAttrs, data: vm.attrs, value: ', vm.attrs);
-                for (t = 0; t < vm.tabs.length; t = t + 1) {
-                    tab = vm.tabs[t];
-                    for (c = 0; c < tab.attrs.length; c = c + 1) {
-                        tabAttr = tab.attrs[c];
-                        attributeIsExist = false;
-                        if (tabAttr.hasOwnProperty('id')) {
-                            for (a = 0; a < vm.attrs.length; a = a + 1) {
-                                attr = vm.attrs[a];
-                                if (tabAttr.id === attr.id) {
-                                    vm.tabs[t].attrs[c] = attr;
-                                    attributeIsExist = true;
-                                }
-                            }
-                            if (!attributeIsExist) {
-                                vm.tabs[t].attrs.splice(c, 1);
-                                c = c - 1;
-                            }
-                        } else {
-
-                            for (e = 0; e < vm.entityAttrs.length; e = e + 1) {
-                                entityAttr = vm.entityAttrs[e];
-                                if (tabAttr.name === entityAttr.name) {
-                                    vm.tabs[t].attrs[c] = entityAttr;
-                                    attributeIsExist = true;
-                                }
-                            }
-
-                            if (!attributeIsExist) {
-                                vm.tabs[t].attrs.splice(c, 1);
-                                c = c - 1;
-                            }
-                        }
-                    }
-                }
-            }
-
-            fillTabWithAttrs();
-            fillTabAttrs();
-            vm.tabAttrsReady = true;
-        }
-
-        // end refactore
 
         var columns = entityViewerDataService.getColumns();
         var currentColumnsWidth = columns.length;
@@ -132,15 +49,23 @@
 
             attributeTypeService.getList(vm.entityType).then(function (data) {
 
-                vm.attrs = data.results;
+                vm.attrs = data.results.map(function (attribute) {
 
-                vm.attrs.forEach(function (item) {
-                    item.entity = vm.entityType;
+                    var result = {};
+
+                    result.attribute_type = Object.assign({}, attribute);
+                    result.value_type = attribute.value_type;
+                    result.content_type = vm.contentType;
+                    result.key = 'attributes.' + attribute.id;
+                    result.name = attribute.name;
+
+                    return result
+
                 });
 
                 attrsList = attrsList.concat(vm.entityAttrs);
                 attrsList = attrsList.concat(vm.attrs);
-                restoreAttrs();
+
                 syncAttrs();
 
                 vm.readyStatus.content = true;
@@ -157,8 +82,7 @@
                     return true;
                 }
                 return false;
-            }
-            else {
+            } else {
                 if (['notes'].indexOf(item.key) !== -1) {
                     return true;
                 }
@@ -487,8 +411,7 @@
         var addColumn = function () {
             if (currentColumnsWidth < columns.length) {
                 metaService.columnsWidthGroups(true);
-            }
-            else {
+            } else {
                 metaService.columnsWidthGroups(false);
             }
         };

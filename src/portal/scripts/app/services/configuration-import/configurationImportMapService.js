@@ -780,10 +780,12 @@
 
         if (items.length) {
 
-            if (items[index].hasOwnProperty('id')) {
+            if (items[index].hasOwnProperty('attribute_type')) {
 
-                var code = items[index].user_code;
-                var entity = items[index].entity;
+
+
+                var code = items[index].attribute_type.user_code;
+                var entity = metaContentTypesService.findEntityByContentType(items[index].content_type, 'ui');
                 var item = items[index];
                 var item_key = 'key';
 

@@ -13,7 +13,8 @@
 
         var vm = this;
 
-        vm.entityType = 'instrument-type';
+        vm.entityType = 'instrument-type'; // deprecated
+        vm.contentType = 'instruments.instrumenttype';
         vm.entityRaw = [];
 
         vm.readyStatus = {content: false};
