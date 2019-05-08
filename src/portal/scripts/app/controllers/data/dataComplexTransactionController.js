@@ -14,6 +14,7 @@
         var vm = this;
 
         vm.entityType = 'complex-transaction';
+        vm.contentType = 'transactions.complextransaction';
         vm.entityRaw = [];
 
         vm.readyStatus = {content: false};

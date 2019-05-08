@@ -13,7 +13,9 @@
 
         var vm = this;
 
-        vm.entityType = 'responsible-group';
+        vm.entityType = 'responsible-group'; // deprecated
+        vm.contentType = 'counterparties.responsiblegroup';
+
         vm.entityRaw = [];
 
         vm.readyStatus = {content: false};

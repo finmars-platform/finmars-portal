@@ -21,7 +21,8 @@
 
         vm.strategyNumber = $stateParams.strategyNumber;
 
-        vm.entityType = 'strategy-' + vm.strategyNumber + '-subgroup';
+        vm.entityType = 'strategy-' + vm.strategyNumber + '-subgroup'; // deprecated
+        vm.contentType = 'strategies.strategy' + vm.strategyNumber + 'subgroup';
         vm.entityRaw = [];
 
         vm.entityViewer = {extraFeatures: []};

@@ -14,6 +14,7 @@
         var vm = this;
 
         vm.entityType = 'account-type';
+        vm.contentType = 'accounts.accounttype';
         vm.entityRaw = [];
 
         vm.readyStatus = {content: false};

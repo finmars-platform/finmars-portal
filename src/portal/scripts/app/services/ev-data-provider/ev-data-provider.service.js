@@ -263,11 +263,7 @@
 
                 options.groups_types = options.groups_types.map(function (groupType) {
 
-                    if (groupType.hasOwnProperty('id')) {
-                        return groupType.id
-                    } else {
-                        return groupType.key;
-                    }
+                    return groupType.key;
 
                 })
 
@@ -278,12 +274,18 @@
                 if (data.status !== 404) {
 
                     data.results = data.results.map(function (item) {
-                        item.___group_name = item.group_name;
-                        item.___group_identifier = item.group_id;
-                        return item
+
+                        var result = {}
+
+                        result.___group_name = item.group_name;
+                        result.___group_identifier = item.group_id;
+
+                        return result
                     });
 
                     var obj = {};
+
+                    console.log('event', event);
 
                     if (!event.___id) {
 
@@ -299,6 +301,8 @@
                                 obj.results[page * step + i] = data.results[i];
                             }
                         }
+
+                        console.log('obj', obj);
 
 
                     } else {
@@ -477,24 +481,10 @@
 
             item.body.page = 1;
 
-            if (activeColumnSort.key) {
-
-                if (activeColumnSort.options.sort === 'ASC') {
-                    item.body.ordering = activeColumnSort.key
-                } else {
-                    item.body.ordering = '-' + activeColumnSort.key
-                }
-
+            if (activeColumnSort.options.sort === 'ASC') {
+                item.body.ordering = activeColumnSort.key
             } else {
-
-                if (activeColumnSort.id) {
-                    if (activeColumnSort.options.sort === 'ASC') {
-                        item.body.ordering = '___da_' + activeColumnSort.id
-                    } else {
-                        item.body.ordering = '-' + '___da_' + activeColumnSort.id
-                    }
-                }
-
+                item.body.ordering = '-' + activeColumnSort.key
             }
 
             entityViewerDataService.setRequestParameters(item);

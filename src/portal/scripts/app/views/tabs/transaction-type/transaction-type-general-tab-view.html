@@ -81,7 +81,7 @@
                 <input type="text" data-ng-model="vm.entity.date_expr" value-title>
             </md-input-container>
 
-            <expression-editor-button data-item="vm.entity.date_expr"></expression-editor-button>
+            <expression-editor-button data-data="{groups: [vm.inputsGroup], functions: [vm.inputsFunctions]}" data-item="vm.entity.date_expr"></expression-editor-button>
 
         </div>
         <div layout="row">
@@ -90,7 +90,7 @@
                 <input type="text" data-ng-model="vm.entity.display_expr" value-title>
             </md-input-container>
 
-            <expression-editor-button data-item="vm.entity.display_expr"></expression-editor-button>
+            <expression-editor-button data-data="{groups: [vm.inputsGroup], functions: [vm.inputsFunctions]}" data-item="vm.entity.display_expr"></expression-editor-button>
 
         </div>
 

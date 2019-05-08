@@ -14,7 +14,8 @@
 
         var vm = this;
 
-        vm.entityType = 'audit-transaction';
+        vm.entityType = 'audit-transaction'; // deprecated
+        vm.contentType = 'audit.transactionaudit';
         vm.entityRaw = [];
 
         vm.readyStatus = {content: false};

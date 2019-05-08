@@ -293,6 +293,15 @@
                     }
                 }
             })
+            .state('app.settings.general.complex-import', {
+                url: '/complex-import',
+                views: {
+                    'complex-import': {
+                        templateUrl: 'views/settings/complex-import-settings-view.html',
+                        controller: 'SettingsGeneralComplexImportController as vm'
+                    }
+                }
+            })
             .state('app.settings.general.configuration', {
                 url: '/configuration',
                 views: {

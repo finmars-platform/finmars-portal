@@ -106,7 +106,7 @@
 
             complexImportSchemeService.create(vm.scheme).then(function (data) {
 
-                $mdDialog.hide({res: 'agree'});
+                $mdDialog.hide({status: 'agree'});
 
             }).catch(function (reason) {
 

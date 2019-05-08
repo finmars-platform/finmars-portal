@@ -19,7 +19,8 @@
 
         vm.readyStatus = {content: false};
 
-        vm.strategyNumber = $stateParams.strategyNumber;
+        vm.strategyNumber = $stateParams.strategyNumber; // deprecated
+        vm.contentType = 'strategies.strategy' + vm.strategyNumber;
 
         vm.entityType = 'strategy-' + vm.strategyNumber + '-group';
         vm.entityRaw = [];
