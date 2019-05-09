@@ -5,6 +5,8 @@
 
     'use strict';
 
+    var configurationImportRepository = require('../../repositories/import/configurationImportRepository');
+
     var entityResolverService = require('../../services/entityResolverService');
     var attributeTypeService = require('../../services/attributeTypeService');
 
@@ -1601,8 +1603,20 @@
     };
 
 
+    var checkForDuplicates = function (file) {
+
+        var formData = new FormData();
+
+        formData.append('file', file);
+
+        return configurationImportRepository.checkForDuplicates(formData);
+
+
+    };
+
     module.exports = {
-        importConfiguration: importConfiguration
+        importConfiguration: importConfiguration,
+        checkForDuplicates: checkForDuplicates
     }
 
 }());

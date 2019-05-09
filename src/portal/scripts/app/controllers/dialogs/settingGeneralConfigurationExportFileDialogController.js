@@ -523,7 +523,7 @@
                     return "Pricing Policy";
                 case 'instruments.instrumenttype':
                     return "Instrument Types";
-                case 'import.pricingautomatedschedule':
+                case 'integrations.pricingautomatedschedule':
                     return 'Automated uploads schedule ';
                 case 'ui.editlayout':
                     return "Input Form";
