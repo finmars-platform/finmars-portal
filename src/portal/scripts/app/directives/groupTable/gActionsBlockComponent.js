@@ -390,18 +390,55 @@
                     })
                 };
 
+                scope.createNewLayout = function () {
+
+                    var listLayout = {};
+
+                    var defaultList = uiService.getDefaultListLayout();
+
+                    listLayout = {};
+                    listLayout.data = Object.assign({}, defaultList[0].data);
+
+                    scope.evDataService.setListLayout(listLayout);
+
+                    if (isReport) {
+
+                        var reportOptions = scope.evDataService.getReportOptions();
+                        var reportLayoutOptions = scope.evDataService.getReportLayoutOptions();
+                        var newReportOptions = Object.assign({}, reportOptions, listLayout.data.reportOptions);
+                        var newReportLayoutOptions = Object.assign({}, reportLayoutOptions, listLayout.data.reportLayoutOptions);
+
+                        scope.evDataService.setReportOptions(newReportOptions);
+                        scope.evDataService.setReportLayoutOptions(newReportLayoutOptions);
+
+                        scope.evDataService.setExportOptions(listLayout.data.export);
+
+                    }
+
+                    scope.evDataService.setColumns(listLayout.data.columns);
+                    scope.evDataService.setGroups(listLayout.data.grouping);
+                    scope.evDataService.setFilters(listLayout.data.filters);
+
+                    listLayout.data.components = {
+                        sidebar: true,
+                        groupingArea: true,
+                        columnAreaHeader: true,
+                        splitPanel: true,
+                        addEntityBtn: true,
+                        fieldManagerBtn: true,
+                        layoutManager: true,
+                        autoReportRequest: false
+                    };
+
+                    scope.evDataService.setComponents(listLayout.data.components);
+                    scope.evDataService.setEditorTemplateUrl('views/additions-editor-view.html');
+                    scope.evDataService.setRootEntityViewer(true);
+
+                };
+
                 scope.saveLayoutList = function ($event) {
 
-                    // saving columns widths - OUTDATED CODE
-                    /*var tHead = $('.g-columns-component');
-                    var th = $('.g-columns-component.g-thead').find('.g-cell');
-                    var thWidths = [];
-                    for (var i = 0; i < th.length; i = i + 1) {
-                        var thWidth = $(th[i]).width();
-                        thWidths.push(thWidth);
-                    }*/
-
-                    var listLayout = scope.evDataService.getListLayout();
+                    /*var listLayout = scope.evDataService.getListLayout();
 
                     listLayout.data.columns = scope.evDataService.getColumns();
                     listLayout.data.grouping = scope.evDataService.getGroups();
@@ -431,9 +468,9 @@
                         delete listLayout.data.reportOptions.item_currencies;
                         delete listLayout.data.reportOptions.item_accounts;
 
-                    }
+                    }*/
 
-                    // listLayout.data.columnsWidth = thWidths;
+                    var listLayout = scope.evDataService.getLayoutCurrentConfiguration(scope.isReport);
 
                     if (listLayout.hasOwnProperty('id')) {
                         uiService.updateListLayout(listLayout.id, listLayout)
@@ -459,15 +496,7 @@
 
                 scope.saveAsLayoutList = function ($event) {
 
-                    /*var tHead = $('.g-columns-component');
-                    var th = $('.g-columns-component.g-thead').find('.g-cell');
-                    var thWidths = [];
-                    for (var i = 0; i < th.length; i = i + 1) {
-                        var thWidth = $(th[i]).width();
-                        thWidths.push(thWidth);
-                    }*/
-
-                    var listLayout = scope.evDataService.getListLayout();
+                    /*var listLayout = scope.evDataService.getListLayout();
 
                     console.log('save layout listLayout', listLayout);
 
@@ -501,9 +530,9 @@
                         delete listLayout.data.reportOptions.item_currencies;
                         delete listLayout.data.reportOptions.item_accounts;
 
-                    }
+                    }*/
 
-                    // listLayout.data.columnsWidth = thWidths;
+                    var listLayout = scope.evDataService.getLayoutCurrentConfiguration(scope.isReport);
 
                     $mdDialog.show({
                         controller: 'UiLayoutSaveAsDialogController as vm',

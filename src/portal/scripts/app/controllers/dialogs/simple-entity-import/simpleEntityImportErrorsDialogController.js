@@ -21,6 +21,7 @@
         vm.converted_imported_columns = [];
         vm.data_matching = [];
 
+        vm.cancelButtonText = "Ok";
 
         vm.createErrorDataColumns = function () {
 

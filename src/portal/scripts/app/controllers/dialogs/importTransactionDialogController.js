@@ -224,9 +224,10 @@
 
                         vm.validateConfig = {};
                         vm.readyStatus.processing = false;
-                        vm.closeButtonText = "OK";
 
-                    })
+                    });
+
+                    vm.closeButtonText = "OK";
 
                 } else {
 
@@ -305,9 +306,9 @@
                             vm.readyStatus.processing = false;
                         }
 
-                        vm.closeButtonText = "OK";
+                    });
 
-                    })
+                    vm.closeButtonText = "OK";
 
                 } else {
                     console.log("load triggered");
@@ -316,8 +317,9 @@
 
             }).catch(function () {
                 console.log("error occured");
-                vm.closeButtonText = "OK";
             });
+
+            vm.closeButtonText = "OK";
 
         };
 
@@ -474,9 +476,9 @@
                     skipHide: true,
                 });
 
-                vm.closeButtonText = "OK";
-
             })
+
+            vm.closeButtonText = "OK";
         };
 
         vm.recalculate = function () {

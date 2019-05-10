@@ -130,10 +130,11 @@
                                 resolve({status: 'agree'})
                             } else {
                                 resolve({status: 'disagree'});
-                                vm.closeButtonText = "OK";
                             }
 
                         })
+
+                        vm.closeButtonText = "OK";
 
                     }
 

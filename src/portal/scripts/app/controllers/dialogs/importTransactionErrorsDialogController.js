@@ -15,6 +15,12 @@
 
         vm.data = data;
 
+        vm.cancelButtonText = "Ok";
+
+        if (vm.data.hasOwnProperty("process_mode") && vm.data.process_mode == 'validate') {
+            vm.cancelButtonText = "Cancel";
+        }
+
         vm.validationResult = data.validationResult;
         vm.scheme = data.scheme;
         vm.config = data.config;
