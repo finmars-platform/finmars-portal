@@ -15,11 +15,13 @@
         vm.item = item;
 
         if (data) {
+
             vm.data = data;
 
             if (vm.data.returnExpressionResult) { // check if expression editor should return expression result
                 vm.item.is_eval = true;
             }
+
         }
 
         vm.readyStatus = {expressions: false, groups: false};

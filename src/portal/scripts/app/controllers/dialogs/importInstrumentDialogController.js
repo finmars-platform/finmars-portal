@@ -128,7 +128,7 @@
             var haveError = false;
 
             if (type == 'entityAttr') {
-                if (vm.config.errors.hasOwnProperty(item)) {
+                if (vm.config.errors && vm.config.errors.hasOwnProperty(item)) {
                     message = vm.config.errors[item].join(' ');
                     haveError = true;
                 }
@@ -136,7 +136,7 @@
 
             if (type == 'dynAttr') {
                 //console.log('item', item);
-                if (vm.config.errors.hasOwnProperty('attribute_type_' + item.attribute_type)) {
+                if (vm.config.errors && vm.config.errors.hasOwnProperty('attribute_type_' + item.attribute_type)) {
                     message = vm.config.errors['attribute_type_' + item.attribute_type].join(' ');
                     haveError = true;
                 }
@@ -147,6 +147,25 @@
             } else {
                 return haveError;
             }
+        };
+
+        vm.openMapping = function ($event, item) {
+
+            console.log('ITEEM', item);
+
+            $mdDialog.show({
+                controller: 'EntityTypeMappingDialogController as vm',
+                templateUrl: 'views/dialogs/entity-type-mapping-dialog-view.html',
+                parent: angular.element(document.body),
+                targetEvent: $event,
+                preserveScope: true,
+                multiple: true,
+                autoWrap: true,
+                skipHide: true,
+                locals: {
+                    mapItem: item
+                }
+            })
         };
 
         vm.load = function ($event) {
@@ -233,7 +252,7 @@
             vm.load();
         };
 
-        vm.openEditMapping = function ($event) {
+        vm.openSchemeManager = function ($event) {
             $mdDialog.show({
                 controller: 'InstrumentDownloadSchemeEditDialogController as vm',
                 templateUrl: 'views/dialogs/instrument-download-scheme-dialog-view.html',

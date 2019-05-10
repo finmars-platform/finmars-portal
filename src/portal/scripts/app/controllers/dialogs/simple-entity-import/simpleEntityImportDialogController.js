@@ -278,6 +278,8 @@
 
                 vm.readyStatus.processing = false;
 
+                vm.closeButtonText = "OK";
+
                 $mdDialog.show({
                     controller: 'ValidationDialogController as vm',
                     templateUrl: 'views/dialogs/validation-dialog-view.html',
