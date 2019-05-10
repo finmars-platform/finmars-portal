@@ -14,7 +14,7 @@
 
         vm.sideNavStatus = 'expand';
 
-        /*vm.resizeSideNav = function (status) {
+        vm.resizeSideNav = function (status) {
             vm.sideNavStatus = status;
             if (status == 'expand') {
                 $('body').removeClass('sidenav-collapsed');
@@ -54,15 +54,9 @@
             }
 
 
-        };*/
+        };
 
-
-        // !!!!!!!!!!!
-        // $(window).trigger('resize'); may needed for content adaptation to menu collapse
-        // !!!!!!!!!!!
-
-
-        vm.resizeSideNav = function (status) {
+        /*vm.resizeSideNav = function (status) {
             vm.sideNavStatus = status;
             if (status == 'expand') {
 
@@ -89,19 +83,22 @@
 
 
                 $('.side-menu-settings-menu').addClass('settings-menu-opened');
+                $('.sidenav-settings-toggle-btn').addClass('settings-menu-opened');
+
                 setTimeout(function () {
                     $('.side-menu-settings-menu').addClass('overflow-visible');
                 }, 250);
 
             } else {
+
+                $('.sidenav-settings-toggle-btn').removeClass('settings-menu-opened');
                 $('.side-menu-settings-menu').removeClass('overflow-visible');
                 $('.side-menu-settings-menu').removeClass('settings-menu-opened');
 
             }
 
             sideMenuSettingsMenuOpened = !sideMenuSettingsMenuOpened;
-            console.log("settings sidemenu opened", sideMenuSettingsMenuOpened);
-        };
+        };*/
 
         metaService.getMenu().then(function (data) {
             vm.sections = data;

@@ -163,7 +163,7 @@
 
                 if (entityItem.order__ === dynamicAttrsGroupIndex) {
 
-                    var matchingLayout = ["reports.balancereport", "reports.plreport"];
+                    var matchingLayout = ["reports.balancereport", "reports.plreport", "reports.transactionreport"];
                     switch (entityItem.entity) {
                         case "obj_attrs.portfolioattributetype":
                             matchingLayout.push("portfolios.portfolio");
@@ -189,45 +189,91 @@
                     }
 
                     entityItem.content.map(function (attr) {
+
+                        // For report layout check
+                        var daContentType = "";
+                        switch (attr.content_type) {
+                            case "portfolios.portfolio":
+                                daContentType = "Portfolio";
+                                break;
+                            case "instruments.instrument":
+                                daContentType = "Instrument";
+                                break;
+                            case "counterparties.responsible":
+                                daContentType = "Responsible";
+                                break;
+                            case "counterparties.counterparty":
+                                daContentType = "Counterparty";
+                                break;
+                            case "accounts.account":
+                                daContentType = "Account";
+                                break;
+                        };
+
                         var daName = attr.name;
-                        var daUserCode = attr.user_code;
                         var usagesCount = 0;
 
+                        // Searching attribute usage in layout
                         layoutsList.map(function (layout) {
 
-                            if (matchingLayout.indexOf(layout.content_type) !== -1) { // to determine if it is possible for this layout can contain such an attribute
-                                var layoutColumns = layout.data.columns;
-                                var layoutGroups = layout.data.grouping;
+                            if (matchingLayout.indexOf(layout.content_type) !== -1) { // determine if it is possible for this layout can contain such an attribute
+
+                                var columnsInLayout = layout.data.columns;
+                                var groupsInLayout = layout.data.grouping;
                                 var attributeIsUsed = false;
-                                var attributeNameProperty = "name";
 
-                                if (layout.content_type.indexOf("report") !== -1) { // use source_name when map layout of report
-                                    attributeNameProperty = "source_name";
-                                }
+                                if (layout.content_type.indexOf("report") !== -1) {
 
-                                var l;
-                                for (l = 0; l < layoutColumns.length; l++) {
+                                    var rg;
+                                    for (rg = 0; rg < groupsInLayout.length; rg++) {
 
-                                    if (layoutColumns[l].hasOwnProperty("user_code")) {
-                                        if (layoutColumns[l][attributeNameProperty] === daName && layoutColumns[l].user_code === daUserCode) {
+                                        var columnName = groupsInLayout[rg].name.split(". ");
+
+                                        if (columnName[0].indexOf(daContentType) !== -1 && columnName[1] === daName) {
                                             attributeIsUsed = true;
                                             break;
                                         }
+
                                     }
 
-                                }
+                                    if (!attributeIsUsed) {
 
-                                if (!attributeIsUsed) {
+                                        var rс;
+                                        for (rс = 0; rс < columnsInLayout.length; rс++) {
 
-                                    var g;
-                                    for (g = 0; g < layoutGroups.length; g++) {
+                                            var columnName = columnsInLayout[rс].name.split(". ");
 
-                                        if (layoutGroups[g].hasOwnProperty("user_code")) {
-
-                                            if (layoutGroups[g][attributeNameProperty] === daName && layoutGroups[g].user_code === daUserCode) {
+                                            if (columnName[0].indexOf(daContentType) !== -1 && columnName[1] === daName) {
                                                 attributeIsUsed = true;
                                                 break;
                                             }
+
+                                        }
+
+                                    }
+
+                                } else {
+
+                                    var g;
+                                    for (g = 0; g < groupsInLayout.length; g++) {
+
+                                        if (groupsInLayout[g].name === daName) {
+                                            attributeIsUsed = true;
+                                            break;
+                                        }
+
+                                    }
+
+                                    if (!attributeIsUsed) {
+
+                                        var с;
+                                        for (с = 0; с < columnsInLayout.length; с++) {
+
+                                            if (columnsInLayout[с].name === daName) {
+                                                attributeIsUsed = true;
+                                                break;
+                                            }
+
                                         }
 
                                     }
@@ -240,10 +286,11 @@
                                     attr.countOfUsages__ = usagesCount;
                                 }
 
+
                             }
 
                         })
-
+                        // < Searching attribute usage in layout  >
                     });
                 }
             });
