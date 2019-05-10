@@ -28,12 +28,13 @@
         var oldRequestParameters = evDataService.getActiveRequestParameters();
 
         var currentGroupName = evDataHelper.getGroupNameFromParent(groupHashId, parentGroupHashId, evDataService);
-        var currentGroupId = evDataHelper.getGroupIdFromParent(groupHashId, parentGroupHashId, evDataService); // for classifiers
+        var currentGroupIdentifier = evDataHelper.getGroupIdentifierFromParent(groupHashId, parentGroupHashId, evDataService);
 
         var event = {
             parentGroupId: parentGroupHashId,
+            groupId: groupHashId,
             groupName: currentGroupName,
-            groupId: groupHashId
+            groupIdentifier: currentGroupIdentifier
         };
 
         var newRequestParameters = {
@@ -42,8 +43,11 @@
             event: {
                 ___id: groupHashId,
                 parentGroupId: parentGroupHashId,
+                groupId: groupHashId,
+
                 groupName: currentGroupName,
-                groupId: currentGroupId // for classifiers, nullable
+                groupIdentifier: currentGroupIdentifier
+
             },
             body: {
                 groups_types: evDataHelper.getGroupTypes(groupHashId, parentGroupHashId, evDataService),
@@ -71,8 +75,7 @@
         var groupValues = evDataHelper.getGroupsValues(groupHashId, parentGroupHashId, evDataService);
 
         var currentGroupName = evDataHelper.getGroupNameFromParent(groupHashId, parentGroupHashId, evDataService);
-
-        var currentGroupId = evDataHelper.getGroupIdFromParent(groupHashId, parentGroupHashId, evDataService);
+        var currentGroupIdentifier = evDataHelper.getGroupIdentifierFromParent(groupHashId, parentGroupHashId, evDataService);
 
         if (!requestParameters) {
             requestParameters = {};
@@ -84,9 +87,12 @@
         requestParameters.event = {
             ___id: groupHashId,
             parentGroupId: parentGroupHashId,
+            groupId: groupHashId,
+
             groupName: currentGroupName,
-            groupId: currentGroupId
+            groupIdentifier: currentGroupIdentifier
         };
+
         requestParameters.body = {
             groups_types: groupTypes,
             groups_values: groupValues
