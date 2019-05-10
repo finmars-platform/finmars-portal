@@ -77,7 +77,7 @@
                                 </md-input-container>
                                 <md-button
                                         class="instrument-mapping-btn md-fab {{vm.loadIsAvailable() ? '' : 'disabled-btn' }}"
-                                        data-ng-click="vm.openEditMapping($event)">
+                                        data-ng-click="vm.openSchemeManager($event)">
                                     <ng-md-icon icon="functions" size="24" style="fill:rgb(63,81,181);"></ng-md-icon>
                                     <md-tooltip class="tooltip_1" md-direction="top">Edit mapping</md-tooltip>
                                 </md-button>
@@ -129,57 +129,75 @@
                     </div>
                     <md-card>
                         <md-card-content class="p-t-26">
-                            <div class="instrument-import-field-bg">
-                                <md-input-container
-                                        class="md-block {{vm.findError('name', 'entityAttr', 'class') ? 'error' : ''}}">
-                                    <label for="">Name</label>
-                                    <input type="text" data-ng-model="vm.config.instrument.name">
-                                    <div data-ng-show="vm.findError('name', 'entityAttr', 'class')">
-                                        {{vm.findError('name',
-                                        'entityAttr', 'message')}}
-                                    </div>
-                                </md-input-container>
+                            <div class="instrument-import-field-bg" layout="row">
+                                <div flex="66">
+                                    <md-input-container
+                                            class="md-block {{vm.findError('name', 'entityAttr', 'class') ? 'error' : ''}}">
+                                        <label for="">Name</label>
+                                        <input type="text" data-ng-model="vm.config.instrument.name">
+                                        <div data-ng-show="vm.findError('name', 'entityAttr', 'class')">
+                                            {{vm.findError('name',
+                                            'entityAttr', 'message')}}
+                                        </div>
+                                    </md-input-container>
+                                </div>
+                                <div flex="33">
+                                    <expression-editor-button
+                                            data-item="vm.config.instrument.name"></expression-editor-button>
+                                </div>
                             </div>
-                            <div class="instrument-import-field-bg">
-                                <md-input-container
-                                        class="md-block {{vm.findError('public_name', 'entityAttr', 'class') ? 'error' : ''}}">
-                                    <label for="">Public Name</label>
-                                    <input type="text" data-ng-model="vm.config.instrument.public_name">
-                                    <div data-ng-show="vm.findError('name', 'entityAttr', 'class')">
-                                        {{vm.findError('public_name',
-                                        'entityAttr', 'message')}}
-                                    </div>
-                                </md-input-container>
+                            <div class="instrument-import-field-bg" layout="row">
+                                <div flex="66">
+                                    <md-input-container
+                                            class="md-block {{vm.findError('public_name', 'entityAttr', 'class') ? 'error' : ''}}">
+                                        <label for="">Public Name</label>
+                                        <input type="text" data-ng-model="vm.config.instrument.public_name">
+                                        <div data-ng-show="vm.findError('name', 'entityAttr', 'class')">
+                                            {{vm.findError('public_name',
+                                            'entityAttr', 'message')}}
+                                        </div>
+                                    </md-input-container>
+                                </div>
+                                <div flex="33">
+                                    <expression-editor-button
+                                            data-item="vm.config.instrument.public_name"></expression-editor-button>
+                                </div>
                             </div>
-                            <div class="instrument-import-field-bg">
-                                <md-input-container
-                                        class="md-block {{vm.findError('user_code', 'entityAttr', 'class') ? 'error' : ''}}">
-                                    <label for="">User code</label>
-                                    <input type="text" data-ng-model="vm.config.instrument.user_code">
-                                    <div class="md-input-error"
-                                         data-ng-show="vm.findError('user_code', 'entityAttr', 'class')">
-                                        {{vm.findError('user_code',
-                                        'entityAttr', 'message')}}
-                                    </div>
-                                </md-input-container>
+                            <div class="instrument-import-field-bg" layout="row">
+                                <div flex="66">
+                                    <md-input-container
+                                            class="md-block {{vm.findError('user_code', 'entityAttr', 'class') ? 'error' : ''}}">
+                                        <label for="">User code</label>
+                                        <input type="text" data-ng-model="vm.config.instrument.user_code">
+                                        <div class="md-input-error"
+                                             data-ng-show="vm.findError('user_code', 'entityAttr', 'class')">
+                                            {{vm.findError('user_code',
+                                            'entityAttr', 'message')}}
+                                        </div>
+                                    </md-input-container>
+                                </div>
+                                <div flex="33">
+                                    <expression-editor-button
+                                            data-item="vm.config.instrument.user_code"></expression-editor-button>
+                                </div>
                             </div>
-                            <div class="instrument-import-field-bg">
-                                <md-input-container
-                                        class="md-block {{vm.findError('instrument_type', 'entityAttr', 'class') ? 'error' : ''}}"
-                                        style="min-height: 64px"
-                                        aria-label="select with filter">
-                                    <!--<label for="">Instrument type</label>
-                                    <md-select data-ng-model="vm.config.instrument.instrument_type">
-                                        <md-option data-ng-repeat="item in vm.instrumentTypes" ng-value="item.id">
-                                            {{item.name}}
-                                        </md-option>
-                                    </md-select>-->
+                            <div class="instrument-import-field-bg" layout="row">
+                                <div flex="66">
+                                    <md-input-container
+                                            class="md-block {{vm.findError('instrument_type', 'entityAttr', 'class') ? 'error' : ''}}"
+                                            style="min-height: 64px"
+                                            aria-label="select with filter">
+                                        <!--<label for="">Instrument type</label>
+                                        <md-select data-ng-model="vm.config.instrument.instrument_type">
+                                            <md-option data-ng-repeat="item in vm.instrumentTypes" ng-value="item.id">
+                                                {{item.name}}
+                                            </md-option>
+                                        </md-select>-->
 
-                                    <label for="">Instrument type</label>
-                                    <md-select ng-model="vm.config.instrument.instrument_type"
-                                               md-container-class="common-select-container"
-                                               md-on-close="searchTerm = ''"
-                                               style="width: 200px">
+                                        <label for="">Instrument type</label>
+                                        <md-select ng-model="vm.config.instrument.instrument_type"
+                                                   md-container-class="common-select-container"
+                                                   md-on-close="searchTerm = ''">
 
                                             <md-select-header>
                                                 <input data-ng-model="searchTerm"
@@ -199,70 +217,102 @@
 
                                             </div>
 
-                                    </md-select>
+                                        </md-select>
 
-                                    <div class="md-input-error"
-                                         data-ng-show="vm.findError('instrument_type', 'entityAttr', 'class')">
-                                        {{vm.findError('instrument_type',
-                                        'entityAttr', 'message')}}
-                                    </div>
-                                </md-input-container>
+                                        <div class="md-input-error"
+                                             data-ng-show="vm.findError('instrument_type', 'entityAttr', 'class')">
+                                            {{vm.findError('instrument_type',
+                                            'entityAttr', 'message')}}
+                                        </div>
+                                    </md-input-container>
+                                </div>
+                                <div flex="33">
+                                    <md-button class="md-raised md-primary complex-expr-btn"
+                                               data-ng-click="vm.openMapping($event, {complexExpressionEntity: 'instrument_type'})">
+                                        Edit mapping
+                                    </md-button>
+                                </div>
                             </div>
 
-                            <div class="instrument-import-field">
-                                <md-input-container
-                                        class="md-block {{vm.findError('short_name', 'entityAttr', 'class') ? 'error' : ''}}">
-                                    <label for="">Short name</label>
-                                    <input type="text" data-ng-model="vm.config.instrument.short_name">
-                                    <div class="md-input-error"
-                                         data-ng-show="vm.findError('short_name', 'entityAttr', 'class')">
-                                        {{vm.findError('short_name',
-                                        'entityAttr', 'message')}}
-                                    </div>
-                                </md-input-container>
+                            <div class="instrument-import-field" layout="row">
+                                <div flex="66">
+                                    <md-input-container
+                                            class="md-block {{vm.findError('short_name', 'entityAttr', 'class') ? 'error' : ''}}">
+                                        <label for="">Short name</label>
+                                        <input type="text" data-ng-model="vm.config.instrument.short_name">
+                                        <div class="md-input-error"
+                                             data-ng-show="vm.findError('short_name', 'entityAttr', 'class')">
+                                            {{vm.findError('short_name',
+                                            'entityAttr', 'message')}}
+                                        </div>
+                                    </md-input-container>
+                                </div>
+                                <div flex="33">
+                                    <expression-editor-button
+                                            data-item="vm.config.instrument.short_name"></expression-editor-button>
+                                </div>
                             </div>
-                            <div class="instrument-import-field">
-                                <md-input-container class="md-block">
-                                    <label for="">Public name</label>
-                                    <input type="text" data-ng-model="vm.config.instrument.public_name">
-                                    <div class="md-input-error"
-                                         data-ng-show="vm.findError('public_name', 'entityAttr', 'class')">
-                                        {{vm.findError('public_name',
-                                        'entityAttr', 'message')}}
-                                    </div>
-                                </md-input-container>
+                            <div class="instrument-import-field" layout="row">
+                                <div flex="66">
+                                    <md-input-container class="md-block">
+                                        <label for="">Public name</label>
+                                        <input type="text" data-ng-model="vm.config.instrument.public_name">
+                                        <div class="md-input-error"
+                                             data-ng-show="vm.findError('public_name', 'entityAttr', 'class')">
+                                            {{vm.findError('public_name',
+                                            'entityAttr', 'message')}}
+                                        </div>
+                                    </md-input-container>
+                                </div>
+                                <div flex="33">
+                                    <expression-editor-button
+                                            data-item="vm.config.instrument.public_name"></expression-editor-button>
+                                </div>
                             </div>
-                            <div class="instrument-import-field">
-                                <md-input-container
-                                        class="md-block {{vm.findError('maturity_date', 'entityAttr', 'class') ? 'error' : ''}}"
-                                        data-ng-if="vm.config.instrument.maturity_date != ''">
-                                    <label for="">Maturity date</label>
-                                    <zh-date-picker data-date-value="vm.config.instrument.maturity_date" data-ng-model="vm.config.instrument.maturity_date"></zh-date-picker>
-                                    <div class="md-input-error"
-                                         data-ng-show="vm.findError('maturity_date', 'entityAttr', 'class')">
-                                        {{vm.findError('maturity_date',
-                                        'entityAttr', 'message')}}
-                                    </div>
-                                </md-input-container>
+                            <div class="instrument-import-field" layout="row">
+                                <div flex="66">
+                                    <md-input-container
+                                            class="md-block {{vm.findError('maturity_date', 'entityAttr', 'class') ? 'error' : ''}}"
+                                            data-ng-if="vm.config.instrument.maturity_date != ''">
+                                        <label for="">Maturity date</label>
+                                        <input type="text" data-ng-model="vm.config.instrument.maturity_date">
+                                        <div class="md-input-error"
+                                             data-ng-show="vm.findError('maturity_date', 'entityAttr', 'class')">
+                                            {{vm.findError('public_name',
+                                            'entityAttr', 'message')}}
+                                        </div>
+                                        <!--<zh-date-picker data-date-value="vm.config.instrument.maturity_date"
+                                                        data-ng-model="vm.config.instrument.maturity_date"></zh-date-picker>
+                                        <div class="md-input-error"
+                                             data-ng-show="vm.findError('maturity_date', 'entityAttr', 'class')">
+                                            {{vm.findError('maturity_date',
+                                            'entityAttr', 'message')}}
+                                        </div>-->
+                                    </md-input-container>
+                                </div>
+                                <div flex="33">
+                                    <expression-editor-button
+                                            data-item="vm.config.instrument.maturity_date"></expression-editor-button>
+                                </div>
                             </div>
 
-                            <div class="instrument-import-field-bg">
-                                <md-input-container
-                                        class="md-block  {{vm.findError('daily_pricing_model', 'entityAttr', 'class') ? 'error' : ''}}"
-                                        style="min-height: 64px"
-                                        aria-label="select with filter">
-                                    <!--<label for="">Pricing model</label>
-                                    <md-select data-ng-model="vm.config.instrument.daily_pricing_model">
-                                        <md-option data-ng-repeat="item in vm.dailyModels" ng-value="item.id">
-                                            {{item.name}}
-                                        </md-option>
-                                    </md-select>-->
+                            <div class="instrument-import-field-bg" layout="row">
+                                <div flex="66">
+                                    <md-input-container
+                                            class="md-block  {{vm.findError('daily_pricing_model', 'entityAttr', 'class') ? 'error' : ''}}"
+                                            style="min-height: 64px"
+                                            aria-label="select with filter">
+                                        <!--<label for="">Pricing model</label>
+                                        <md-select data-ng-model="vm.config.instrument.daily_pricing_model">
+                                            <md-option data-ng-repeat="item in vm.dailyModels" ng-value="item.id">
+                                                {{item.name}}
+                                            </md-option>
+                                        </md-select>-->
 
-                                    <label for="">Pricing model</label>
-                                    <md-select ng-model="vm.config.instrument.daily_pricing_model"
-                                               md-container-class="common-select-container"
-                                               md-on-close="searchTerm = ''"
-                                               style="width: 200px">
+                                        <label>Daily Pricing Model</label>
+                                        <md-select ng-model="vm.config.instrument.daily_pricing_model"
+                                                   md-container-class="common-select-container"
+                                                   md-on-close="searchTerm = ''">
 
                                             <md-select-header>
                                                 <input data-ng-model="searchTerm"
@@ -282,164 +332,93 @@
 
                                             </div>
 
-                                    </md-select>
+                                        </md-select>
 
-                                    <div class="md-input-error"
-                                         data-ng-show="vm.findError('daily_pricing_model', 'entityAttr', 'class')">
-                                        {{vm.findError('daily_pricing_model',
-                                        'entityAttr', 'message')}}
-                                    </div>
-                                </md-input-container>
-                            </div>
-                            <div class="instrument-import-field-bg">
-                                <md-input-container
-                                        class="md-block {{vm.findError('price_download_scheme', 'entityAttr', 'class') ? 'error' : ''}}"
-                                        style="min-height: 64px"
-                                        aria-label="select with filter">
-                                    <!--<label for="">Price download scheme</label>
-                                    <md-select data-ng-model="vm.config.instrument.price_download_scheme">
-                                        <md-option data-ng-repeat="item in vm.priceDownloadSchemes" ng-value="item.id">
-                                            {{item.scheme_name}}
-                                        </md-option>
-                                    </md-select>-->
-
-                                    <label for="">Price download scheme</label>
-                                    <md-select ng-model="vm.config.instrument.price_download_scheme"
-                                               md-container-class="common-select-container"
-                                               md-on-close="searchTerm = ''"
-                                               style="width: 200px">
-
-                                            <md-select-header>
-                                                <input data-ng-model="searchTerm"
-                                                       type="search"
-                                                       placeholder="Search for a ..."
-                                                       class="md-text md-select-search-pattern select-input-filter"
-                                                       ng-keydown="$event.stopPropagation()">
-                                            </md-select-header>
-
-                                            <div class="select-options-holder">
-
-                                                <md-option
-                                                        data-ng-repeat="item in vm.priceDownloadSchemes | filter: {scheme_name: searchTerm}"
-                                                        ng-value="item.id"
-                                                        ng-bind="item.scheme_name">
-                                                </md-option>
-
-                                            </div>
-
-                                    </md-select>
-
-                                    <div class="md-input-error"
-                                         data-ng-show="vm.findError('price_download_scheme', 'entityAttr', 'class')">
-                                        {{vm.findError('price_download_scheme',
-                                        'entityAttr', 'message')}}
-                                    </div>
-                                </md-input-container>
+                                        <div class="md-input-error"
+                                             data-ng-show="vm.findError('daily_pricing_model', 'entityAttr', 'class')">
+                                            {{vm.findError('daily_pricing_model',
+                                            'entityAttr', 'message')}}
+                                        </div>
+                                    </md-input-container>
+                                </div>
+                                <div flex="33">
+                                    <md-button class="md-raised md-primary complex-expr-btn"
+                                               data-ng-click="vm.openMapping($event, {complexExpressionEntity: 'daily_pricing_model'})">
+                                        Edit mapping
+                                    </md-button>
+                                </div>
                             </div>
 
-                            <div class="instrument-import-field-bg">
-                                <md-input-container
-                                        class="md-block {{vm.findError('pricing_currency', 'entityAttr', 'class') ? 'error' : ''}}"
-                                        style="min-height: 64px"
-                                        aria-label="select with filter">
-                                    <!--<label for="">Pricing currency</label>
-                                    <md-select data-ng-model="vm.config.instrument.pricing_currency">
-                                        <md-option data-ng-repeat="item in vm.currencies" ng-value="item.id">
-                                            {{item.name}}
-                                        </md-option>
-                                    </md-select>-->
+                            <div class="instrument-import-field-bg" layout="row">
+                                <div flex="66">
+                                    <md-input-container
+                                            class="md-block {{vm.findError('price_download_scheme', 'entityAttr', 'class') ? 'error' : ''}}"
+                                            style="min-height: 64px"
+                                            aria-label="select with filter">
+                                        <!--<label for="">Price download scheme</label>
+                                        <md-select data-ng-model="vm.config.instrument.price_download_scheme">
+                                            <md-option data-ng-repeat="item in vm.priceDownloadSchemes" ng-value="item.id">
+                                                {{item.scheme_name}}
+                                            </md-option>
+                                        </md-select>-->
 
-                                    <label for="">Pricing currency</label>
-                                    <md-select ng-model="vm.config.instrument.pricing_currency"
-                                               md-container-class="common-select-container"
-                                               md-on-close="searchTerm = ''"
-                                               style="width: 200px">
+                                        <label>Price download scheme</label>
+                                        <md-select ng-model="vm.config.instrument.price_download_scheme"
+                                                   md-container-class="common-select-container"
+                                                   md-on-close="searchTerm = ''">
 
-                                            <md-select-header>
-                                                <input data-ng-model="searchTerm"
-                                                       type="search"
-                                                       placeholder="Search for a ..."
-                                                       class="md-text md-select-search-pattern select-input-filter"
-                                                       ng-keydown="$event.stopPropagation()">
-                                            </md-select-header>
+                                                <md-select-header>
+                                                    <input data-ng-model="searchTerm"
+                                                           type="search"
+                                                           placeholder="Search for a ..."
+                                                           class="md-text md-select-search-pattern select-input-filter"
+                                                           ng-keydown="$event.stopPropagation()">
+                                                </md-select-header>
 
-                                            <div class="select-options-holder">
+                                                <div class="select-options-holder">
 
-                                                <md-option
-                                                        data-ng-repeat="item in vm.currencies | filter: {name: searchTerm}"
-                                                        ng-value="item.id"
-                                                        ng-bind="item.name">
-                                                </md-option>
+                                                    <md-option
+                                                            data-ng-repeat="item in vm.priceDownloadSchemes | filter: {scheme_name: searchTerm}"
+                                                            ng-value="item.id"
+                                                            ng-bind="item.scheme_name">
+                                                    </md-option>
 
-                                            </div>
+                                                </div>
 
-                                    </md-select>
+                                        </md-select>
 
-                                    <div class="md-input-error"
-                                         data-ng-show="vm.findError('pricing_currency', 'entityAttr', 'class')">
-                                        {{vm.findError('pricing_currency',
-                                        'entityAttr', 'message')}}
-                                    </div>
-                                </md-input-container>
+                                        <div class="md-input-error"
+                                             data-ng-show="vm.findError('price_download_scheme', 'entityAttr', 'class')">
+                                            {{vm.findError('price_download_scheme',
+                                            'entityAttr', 'message')}}
+                                        </div>
+                                    </md-input-container>
+                                </div>
+                                <div flex="33">
+                                    <md-button class="md-raised md-primary complex-expr-btn"
+                                               data-ng-click="vm.openMapping($event, {complexExpressionEntity: 'price_download_scheme'})">
+                                        Edit mapping
+                                    </md-button>
+                                </div>
                             </div>
 
-                            <div class="instrument-import-field-bg">
-                                <md-input-container
-                                        class="md-block {{vm.findError('price_multiplier', 'entityAttr', 'class') ? 'error' : ''}}"
-                                        data-ng-if="vm.config.instrument.price_multiplier != ''">
-                                    <label for="">Price multiplier</label>
-                                    <input type="text" data-ng-model="vm.config.instrument.price_multiplier">
-                                    <div class="md-input-error"
-                                         data-ng-show="vm.findError('price_multiplier', 'entityAttr', 'class')">
-                                        {{vm.findError('price_multiplier',
-                                        'entityAttr', 'message')}}
-                                    </div>
-                                </md-input-container>
-                            </div>
+                            <div class="instrument-import-field-bg" layout="row">
+                                <div flex="66">
+                                    <md-input-container
+                                            class="md-block {{vm.findError('pricing_currency', 'entityAttr', 'class') ? 'error' : ''}}"
+                                            style="min-height: 64px"
+                                            aria-label="select with filter">
+                                        <!--<label for="">Pricing currency</label>
+                                        <md-select data-ng-model="vm.config.instrument.pricing_currency">
+                                            <md-option data-ng-repeat="item in vm.currencies" ng-value="item.id">
+                                                {{item.name}}
+                                            </md-option>
+                                        </md-select>-->
 
-                            <div class="instrument-import-field">
-                                <md-input-container
-                                        class="md-block {{vm.findError('reference_for_pricing', 'entityAttr', 'class') ? 'error' : ''}}">
-                                    <label for="">Reference for pricing</label>
-                                    <input type="text" data-ng-model="vm.config.instrument.reference_for_pricing">
-                                    <div class="md-input-error"
-                                         data-ng-show="vm.findError('reference_for_pricing', 'entityAttr', 'class')">
-                                        {{vm.findError('reference_for_pricing',
-                                        'entityAttr', 'message')}}
-                                    </div>
-                                </md-input-container>
-                            </div>
-
-                            <div class="instrument-import-field">
-                                <md-input-container
-                                        class="md-block {{vm.findError('default_price', 'entityAttr', 'class') ? 'error' : ''}}">
-                                    <label for="">Default price</label>
-                                    <input type="text" data-ng-model="vm.config.instrument.default_price">
-                                    <div class="md-input-error"
-                                         data-ng-show="vm.findError('default_price', 'entityAttr', 'class')">
-                                        {{vm.findError('default_price',
-                                        'entityAttr', 'message')}}
-                                    </div>
-                                </md-input-container>
-                            </div>
-
-                            <div class="instrument-import-field-bg">
-                                <md-input-container
-                                        class="md-block {{vm.findError('accrued_currency', 'entityAttr', 'class') ? 'error' : ''}}"
-                                        style="min-height: 64px"
-                                        aria-label="select with filter">
-                                    <!--<label for="">Accrued currency</label>
-                                    <md-select data-ng-model="vm.config.instrument.accrued_currency">
-                                        <md-option data-ng-repeat="item in vm.currencies" ng-value="item.id">
-                                            {{item.name}}
-                                        </md-option>
-                                    </md-select>-->
-
-                                    <label for="">Accrued currency</label>
-                                    <md-select ng-model="vm.config.instrument.accrued_currency"
-                                               md-container-class="common-select-container"
-                                               md-on-close="searchTerm = ''"
-                                               style="width: 200px">
+                                        <label>Pricing currency</label>
+                                        <md-select ng-model="vm.config.instrument.pricing_currency"
+                                                   md-container-class="common-select-container"
+                                                   md-on-close="searchTerm = ''">
 
                                             <md-select-header>
                                                 <input data-ng-model="searchTerm"
@@ -459,59 +438,189 @@
 
                                             </div>
 
-                                    </md-select>
+                                        </md-select>
 
-                                    <div class="md-input-error"
-                                         data-ng-show="vm.findError('accrued_currency', 'entityAttr', 'class')">
-                                        {{vm.findError('accrued_currency',
-                                        'entityAttr', 'message')}}
-                                    </div>
-                                </md-input-container>
+                                        <div class="md-input-error"
+                                             data-ng-show="vm.findError('pricing_currency', 'entityAttr', 'class')">
+                                            {{vm.findError('pricing_currency',
+                                            'entityAttr', 'message')}}
+                                        </div>
+                                    </md-input-container>
+                                </div>
+                                <div flex="33">
+                                    <md-button class="md-raised md-primary complex-expr-btn"
+                                               data-ng-click="vm.openMapping($event, {complexExpressionEntity: 'currency'})">
+                                        Edit mapping
+                                    </md-button>
+                                </div>
                             </div>
 
-                            <div class="instrument-import-field-bg">
-                                <md-input-container
-                                        class="md-block {{vm.findError('accrued_multiplier', 'entityAttr', 'class') ? 'error' : ''}}"
-                                        data-ng-if="vm.config.instrument.accrued_multiplier != ''">
-                                    <label for="">Accrued multiplier</label>
-                                    <input type="text" data-ng-model="vm.config.instrument.accrued_multiplier">
-                                    <div class="md-input-error"
-                                         data-ng-show="vm.findError('accrued_multiplier', 'entityAttr', 'class')">
-                                        {{vm.findError('accrued_multiplier',
-                                        'entityAttr', 'message')}}
-                                    </div>
-                                </md-input-container>
+                            <div class="instrument-import-field-bg" layout="row">
+                                <div flex="66">
+                                    <md-input-container
+                                            class="md-block {{vm.findError('price_multiplier', 'entityAttr', 'class') ? 'error' : ''}}"
+                                            data-ng-if="vm.config.instrument.price_multiplier != ''">
+                                        <label for="">Price multiplier</label>
+                                        <input type="text" data-ng-model="vm.config.instrument.price_multiplier">
+                                        <div class="md-input-error"
+                                             data-ng-show="vm.findError('price_multiplier', 'entityAttr', 'class')">
+                                            {{vm.findError('price_multiplier',
+                                            'entityAttr', 'message')}}
+                                        </div>
+                                    </md-input-container>
+                                </div>
+                                <div flex="33">
+                                    <expression-editor-button
+                                            data-item="vm.config.instrument.price_multiplier"></expression-editor-button>
+                                </div>
                             </div>
 
-                            <div class="instrument-import-field">
-                                <md-input-container
-                                        class="md-block {{vm.findError('default_accrued', 'entityAttr', 'class') ? 'error' : ''}}">
-                                    <label for="">Default accrued</label>
-                                    <input type="text" data-ng-model="vm.config.instrument.default_accrued">
-                                    <div class="md-input-error"
-                                         data-ng-show="vm.findError('default_accrued', 'entityAttr', 'class')">
-                                        {{vm.findError('default_accrued',
-                                        'entityAttr', 'message')}}
-                                    </div>
-                                </md-input-container>
+                            <div class="instrument-import-field" layout="row">
+                                <div flex="66">
+                                    <md-input-container
+                                            class="md-block {{vm.findError('reference_for_pricing', 'entityAttr', 'class') ? 'error' : ''}}">
+                                        <label for="">Reference for pricing</label>
+                                        <input type="text" data-ng-model="vm.config.instrument.reference_for_pricing">
+                                        <div class="md-input-error"
+                                             data-ng-show="vm.findError('reference_for_pricing', 'entityAttr', 'class')">
+                                            {{vm.findError('reference_for_pricing',
+                                            'entityAttr', 'message')}}
+                                        </div>
+                                    </md-input-container>
+                                </div>
+                                <div flex="33">
+                                    <expression-editor-button
+                                            data-item="vm.config.instrument.reference_for_pricing"></expression-editor-button>
+                                </div>
                             </div>
 
-                            <div class="instrument-import-field-bg">
-                                <md-input-container
-                                        class="md-block {{vm.findError('payment_size_detail', 'entityAttr', 'class') ? 'error' : ''}}"
-                                        aria-label="select with filter">
-                                    <!--<label for="">Payment size default</label>
-                                    <md-select data-ng-model="vm.config.instrument.payment_size_detail">
-                                        <md-option data-ng-repeat="item in vm.paymentSizeDefaults" ng-value="item.id">
-                                            {{item.name}}
-                                        </md-option>
-                                    </md-select>-->
+                            <div class="instrument-import-field" layout="row">
+                                <div flex="66">
+                                    <md-input-container
+                                            class="md-block {{vm.findError('default_price', 'entityAttr', 'class') ? 'error' : ''}}">
+                                        <label for="">Default price</label>
+                                        <input type="text" data-ng-model="vm.config.instrument.default_price">
+                                        <div class="md-input-error"
+                                             data-ng-show="vm.findError('default_price', 'entityAttr', 'class')">
+                                            {{vm.findError('default_price',
+                                            'entityAttr', 'message')}}
+                                        </div>
+                                    </md-input-container>
+                                </div>
+                                <div flex="33">
+                                    <expression-editor-button
+                                            data-item="vm.config.instrument.default_price"></expression-editor-button>
+                                </div>
+                            </div>
 
-                                    <label for="">Payment size default</label>
-                                    <md-select ng-model="vm.config.instrument.payment_size_detail"
-                                               md-container-class="common-select-container"
-                                               md-on-close="searchTerm = ''"
-                                               style="width: 200px">
+                            <div class="instrument-import-field-bg" layout="row">
+                                <div flex="66">
+                                    <md-input-container
+                                            class="md-block {{vm.findError('accrued_currency', 'entityAttr', 'class') ? 'error' : ''}}"
+                                            style="min-height: 64px"
+                                            aria-label="select with filter">
+                                        <!--<label for="">Accrued currency</label>
+                                        <md-select data-ng-model="vm.config.instrument.accrued_currency">
+                                            <md-option data-ng-repeat="item in vm.currencies" ng-value="item.id">
+                                                {{item.name}}
+                                            </md-option>
+                                        </md-select>-->
+
+                                        <label>Accrued currency</label>
+                                        <md-select ng-model="vm.config.instrument.accrued_currency"
+                                                   md-container-class="common-select-container"
+                                                   md-on-close="searchTerm = ''">
+
+                                            <md-select-header>
+                                                <input data-ng-model="searchTerm"
+                                                       type="search"
+                                                       placeholder="Search for a ..."
+                                                       class="md-text md-select-search-pattern select-input-filter"
+                                                       ng-keydown="$event.stopPropagation()">
+                                            </md-select-header>
+
+                                            <div class="select-options-holder">
+
+                                                <md-option
+                                                        data-ng-repeat="item in vm.currencies | filter: {name: searchTerm}"
+                                                        ng-value="item.id"
+                                                        ng-bind="item.name">
+                                                </md-option>
+
+                                            </div>
+
+                                        </md-select>
+
+                                        <div class="md-input-error"
+                                             data-ng-show="vm.findError('accrued_currency', 'entityAttr', 'class')">
+                                            {{vm.findError('accrued_currency',
+                                            'entityAttr', 'message')}}
+                                        </div>
+                                    </md-input-container>
+                                </div>
+                                <div flex="33">
+                                    <md-button class="md-raised md-primary complex-expr-btn"
+                                               data-ng-click="vm.openMapping($event, {complexExpressionEntity: 'currency'})">
+                                        Edit mapping
+                                    </md-button>
+                                </div>
+                            </div>
+
+                            <div class="instrument-import-field-bg" layout="row">
+                                <div flex="66">
+                                    <md-input-container
+                                            class="md-block {{vm.findError('accrued_multiplier', 'entityAttr', 'class') ? 'error' : ''}}"
+                                            data-ng-if="vm.config.instrument.accrued_multiplier != ''">
+                                        <label for="">Accrued multiplier</label>
+                                        <input type="text" data-ng-model="vm.config.instrument.accrued_multiplier">
+                                        <div class="md-input-error"
+                                             data-ng-show="vm.findError('accrued_multiplier', 'entityAttr', 'class')">
+                                            {{vm.findError('accrued_multiplier',
+                                            'entityAttr', 'message')}}
+                                        </div>
+                                    </md-input-container>
+                                </div>
+                                <div flex="33">
+                                    <expression-editor-button
+                                            data-item="vm.config.instrument.accrued_multiplier"></expression-editor-button>
+                                </div>
+                            </div>
+
+                            <div class="instrument-import-field" layout="row">
+                                <div flex="66">
+                                    <md-input-container
+                                            class="md-block {{vm.findError('default_accrued', 'entityAttr', 'class') ? 'error' : ''}}">
+                                        <label for="">Default accrued</label>
+                                        <input type="text" data-ng-model="vm.config.instrument.default_accrued">
+                                        <div class="md-input-error"
+                                             data-ng-show="vm.findError('default_accrued', 'entityAttr', 'class')">
+                                            {{vm.findError('default_accrued',
+                                            'entityAttr', 'message')}}
+                                        </div>
+                                    </md-input-container>
+                                </div>
+                                <div flex="33">
+                                    <expression-editor-button
+                                            data-item="vm.config.instrument.default_accrued"></expression-editor-button>
+                                </div>
+                            </div>
+
+                            <div class="instrument-import-field-bg" layout="row">
+                                <div flex="66">
+                                    <md-input-container
+                                            class="md-block {{vm.findError('payment_size_detail', 'entityAttr', 'class') ? 'error' : ''}}"
+                                            aria-label="select with filter">
+                                        <!--<label for="">Payment size default</label>
+                                        <md-select data-ng-model="vm.config.instrument.payment_size_detail">
+                                            <md-option data-ng-repeat="item in vm.paymentSizeDefaults" ng-value="item.id">
+                                                {{item.name}}
+                                            </md-option>
+                                        </md-select>-->
+
+                                        <label>Payment size default</label>
+                                        <md-select ng-model="vm.config.instrument.payment_size_detail"
+                                                   md-container-class="common-select-container"
+                                                   md-on-close="searchTerm = ''">
 
                                             <md-select-header>
                                                 <input data-ng-model="searchTerm"
@@ -531,67 +640,98 @@
 
                                             </div>
 
-                                    </md-select>
+                                        </md-select>
 
-                                    <div class="md-input-error"
-                                         data-ng-show="vm.findError('payment_size_detail', 'entityAttr', 'class')">
-                                        {{vm.findError('payment_size_detail',
-                                        'entityAttr', 'message')}}
-                                    </div>
-                                </md-input-container>
+                                        <div class="md-input-error"
+                                             data-ng-show="vm.findError('payment_size_detail', 'entityAttr', 'class')">
+                                            {{vm.findError('payment_size_detail',
+                                            'entityAttr', 'message')}}
+                                        </div>
+                                    </md-input-container>
+                                </div>
+                                <div flex="33">
+                                    <md-button class="md-raised md-primary complex-expr-btn"
+                                               data-ng-click="vm.openMapping($event, {complexExpressionEntity: 'payment_size_detail'})">
+                                        Edit mapping
+                                    </md-button>
+                                </div>
                             </div>
 
-                            <div class="instrument-import-field">
-                                <md-input-container
-                                        class="md-block {{vm.findError('user_text_1', 'entityAttr', 'class') ? 'error' : ''}}"
-                                        data-ng-if="vm.config.instrument.user_text_1 != ''">
-                                    <label for="">User text 1</label>
-                                    <input type="text" data-ng-model="vm.config.instrument.user_text_1">
-                                    <div class="md-input-error"
-                                         data-ng-show="vm.findError('user_text_1', 'entityAttr', 'class')">
-                                        {{vm.findError('user_text_1',
-                                        'entityAttr', 'message')}}
-                                    </div>
-                                </md-input-container>
+                            <div class="instrument-import-field" layout="row">
+                                <div flex="66">
+                                    <md-input-container
+                                            class="md-block {{vm.findError('user_text_1', 'entityAttr', 'class') ? 'error' : ''}}"
+                                            data-ng-if="vm.config.instrument.user_text_1 != ''">
+                                        <label for="">User text 1</label>
+                                        <input type="text" data-ng-model="vm.config.instrument.user_text_1">
+                                        <div class="md-input-error"
+                                             data-ng-show="vm.findError('user_text_1', 'entityAttr', 'class')">
+                                            {{vm.findError('user_text_1',
+                                            'entityAttr', 'message')}}
+                                        </div>
+                                    </md-input-container>
+                                </div>
+                                <div flex="33">
+                                    <expression-editor-button
+                                            data-item="vm.config.instrument.user_text_1"></expression-editor-button>
+                                </div>
                             </div>
-                            <div class="instrument-import-field">
-                                <md-input-container
-                                        class="md-block {{vm.findError('user_text_2', 'entityAttr', 'class') ? 'error' : ''}}"
-                                        data-ng-if="vm.config.instrument.user_text_2 != ''">
-                                    <label for="">User text 2</label>
-                                    <input type="text" data-ng-model="vm.config.instrument.user_text_2">
-                                    <div class="md-input-error"
-                                         data-ng-show="vm.findError('user_text_2', 'entityAttr', 'class')">
-                                        {{vm.findError('user_text_2',
-                                        'entityAttr', 'message')}}
-                                    </div>
-                                </md-input-container>
+                            <div class="instrument-import-field" layout="row">
+                                <div flex="66">
+                                    <md-input-container
+                                            class="md-block {{vm.findError('user_text_2', 'entityAttr', 'class') ? 'error' : ''}}"
+                                            data-ng-if="vm.config.instrument.user_text_2 != ''">
+                                        <label for="">User text 2</label>
+                                        <input type="text" data-ng-model="vm.config.instrument.user_text_2">
+                                        <div class="md-input-error"
+                                             data-ng-show="vm.findError('user_text_2', 'entityAttr', 'class')">
+                                            {{vm.findError('user_text_2',
+                                            'entityAttr', 'message')}}
+                                        </div>
+                                    </md-input-container>
+                                </div>
+                                <div flex="33">
+                                    <expression-editor-button
+                                            data-item="vm.config.instrument.user_text_2"></expression-editor-button>
+                                </div>
                             </div>
-                            <div class="instrument-import-field">
-                                <md-input-container
-                                        class="md-block {{vm.findError('user_text_3', 'entityAttr', 'class') ? 'error' : ''}}"
-                                        data-ng-if="vm.config.instrument.user_text_3 != ''">
-                                    <label for="">User text 3</label>
-                                    <input type="text" data-ng-model="vm.config.instrument.user_text_3">
-                                    <div class="md-input-error"
-                                         data-ng-show="vm.findError('user_text_3', 'entityAttr', 'class')">
-                                        {{vm.findError('user_text_3',
-                                        'entityAttr', 'message')}}
-                                    </div>
-                                </md-input-container>
+                            <div class="instrument-import-field" layout="row">
+                                <div flex="66">
+                                    <md-input-container
+                                            class="md-block {{vm.findError('user_text_3', 'entityAttr', 'class') ? 'error' : ''}}"
+                                            data-ng-if="vm.config.instrument.user_text_3 != ''">
+                                        <label for="">User text 3</label>
+                                        <input type="text" data-ng-model="vm.config.instrument.user_text_3">
+                                        <div class="md-input-error"
+                                             data-ng-show="vm.findError('user_text_3', 'entityAttr', 'class')">
+                                            {{vm.findError('user_text_3',
+                                            'entityAttr', 'message')}}
+                                        </div>
+                                    </md-input-container>
+                                </div>
+                                <div flex="33">
+                                    <expression-editor-button
+                                            data-item="vm.config.instrument.user_text_3"></expression-editor-button>
+                                </div>
                             </div>
-                            <div class="instrument-import-field">
-                                <md-input-container
-                                        class="md-block {{vm.findError('notes', 'entityAttr', 'class') ? 'error' : ''}}"
-                                        data-ng-if="vm.config.instrument.notes != ''">
-                                    <label for="">Notes</label>
-                                    <input type="text" data-ng-model="vm.config.instrument.notes">
-                                    <div class="md-input-error"
-                                         data-ng-show="vm.findError('notes', 'entityAttr', 'class')">
-                                        {{vm.findError('notes',
-                                        'entityAttr', 'message')}}
-                                    </div>
-                                </md-input-container>
+                            <div class="instrument-import-field" layout="row">
+                                <div flex="66">
+                                    <md-input-container
+                                            class="md-block {{vm.findError('notes', 'entityAttr', 'class') ? 'error' : ''}}"
+                                            data-ng-if="vm.config.instrument.notes != ''">
+                                        <label for="">Notes</label>
+                                        <input type="text" data-ng-model="vm.config.instrument.notes">
+                                        <div class="md-input-error"
+                                             data-ng-show="vm.findError('notes', 'entityAttr', 'class')">
+                                            {{vm.findError('notes',
+                                            'entityAttr', 'message')}}
+                                        </div>
+                                    </md-input-container>
+                                </div>
+                                <div flex="33">
+                                    <expression-editor-button
+                                            data-item="vm.config.instrument.notes"></expression-editor-button>
+                                </div>
                             </div>
 
                             <div data-ng-repeat="item in vm.config.instrument.attributes" style="padding: 10px">

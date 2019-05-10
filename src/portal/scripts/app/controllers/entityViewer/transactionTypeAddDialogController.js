@@ -352,7 +352,7 @@
 
                             } else {
 
-                                if (actionItem[actionItemKey] === null || actionItem[actionItemKey] === undefined) {
+                                if (actionItem[actionItemKey] === null || actionItem[actionItemKey] === undefined || actionItem[actionItemKey] === "") {
 
                                     result.push({
                                         action_notes: action.action_notes,

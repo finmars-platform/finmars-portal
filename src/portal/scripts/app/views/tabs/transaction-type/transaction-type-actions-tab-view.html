@@ -20,6 +20,9 @@
                                        style="background: #ffeee8;"
                                        data-ng-click="vm.deletePane(item, $index, $event)">Delete
                             </md-button>
+                            <md-button class="md-raised"
+                                       data-ng-click="vm.makeCopyOfAction(item, $index)">Make copy
+                            </md-button>
                             <md-button class="md-raised" ng-disabled="$index == 0"
                                        data-ng-click="vm.moveUp(item, $index)">Move up
                             </md-button>

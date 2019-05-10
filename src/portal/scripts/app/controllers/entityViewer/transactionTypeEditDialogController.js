@@ -446,7 +446,7 @@
 
                 actionKeys.forEach(function (actionKey) {
 
-                    if (typeof action[actionKey] === 'object' && action[actionKey]) {
+                    if (typeof action[actionKey] === 'object' && action[actionKey]) { // check if it is property that contains actions field data
 
                         var actionItem = action[actionKey];
                         var actionItemKeys = Object.keys(actionItem);
@@ -456,8 +456,6 @@
                             return key.indexOf('_object') === -1 && key.indexOf('_input') === -1 && key.indexOf('_phantom') === -1
 
                         });
-
-                        console.log('actionItemKeys', actionItemKeys);
 
                         actionItemKeys.forEach(function (actionItemKey) {
 
@@ -503,7 +501,7 @@
 
                             } else {
 
-                                if (actionItem[actionItemKey] === null || actionItem[actionItemKey] === undefined) {
+                                if (actionItem[actionItemKey] === null || actionItem[actionItemKey] === undefined || actionItem[actionItemKey] === "") {
 
                                     result.push({
                                         action_notes: action.action_notes,
@@ -1121,11 +1119,6 @@
             }
         ];
 
-
-        vm.checkActionsIsNotNull = function () {
-            return false;
-        };
-
         vm.setStateInActionsControls = function () {
 
             vm.actionsKeysList = [
@@ -1333,6 +1326,49 @@
             });
 
             vm.entity.actions.push(result);
+
+            vm.findPhantoms();
+        };
+
+        vm.makeCopyOfAction = function (actionToCopy, index) {
+
+            var actionCopy = JSON.parse(JSON.stringify(actionToCopy));
+
+            delete actionCopy.$$hashKey;
+
+            var actionName = actionCopy.action_notes + ' (Copy)';
+            var actionNameOccupied = true;
+
+            var c = 1;
+            while(actionNameOccupied) { // check that copy name is unique
+
+                actionNameOccupied = false;
+
+                for (var a = 0; a < vm.entity.actions.length; a++) {
+
+                    if (vm.entity.actions[a].action_notes === actionName) {
+
+                        c = c + 1;
+                        actionName = actionCopy.action_notes + ' (Copy ' + c + ')';
+                        actionNameOccupied = true;
+
+                        break;
+                        console.log("action copy c2", c);
+                    }
+
+                }
+
+                if (!actionNameOccupied) {
+                    actionCopy.action_notes = actionName;
+                }
+
+            }
+
+            vm.accordion.collapseAll();
+
+            actionCopy.isPaneExpanded = true;
+
+            vm.entity.actions.splice(index + 1, 0, actionCopy);
 
             vm.findPhantoms();
         };

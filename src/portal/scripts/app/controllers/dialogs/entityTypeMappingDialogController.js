@@ -130,10 +130,6 @@
 
         };
 
-        vm.fancyEntity = function () {
-            return vm.mapEntityType.replace('-', ' ');
-        };
-
         function addChilds(classifier, item) {
 
             // console.log('item', item);
