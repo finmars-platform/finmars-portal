@@ -50,11 +50,21 @@
                                  data-ng-click="vm.updateActiveForParent(child, item)"
                                  aria-label="checkbox">
                     </md-checkbox>
-                    <span data-ng-class="{'used-dynamic-attrs': child.countOfUsages__, 'child-with-icon': vm.checkForTextIcon(item.entity, child)}">
+                    <span data-ng-class="{
+                    'used-dynamic-attrs': child.countOfUsages__,
+                    'child-with-icon': vm.checkForTextIcon(item.entity, child),
+                    'text-warning-red': child.is_duplicate && vm.settings.mode == 'overwrite'}">
                         <ng-md-icon data-ng-if="vm.checkForTextIcon(item.entity, child)" icon="folder" fill="#000"
                                     size="20"></ng-md-icon>
                         {{vm.getItemName(child)}}
                         <span data-ng-if="child.countOfUsages__">(<b>{{child.countOfUsages__}}</b>)</span>
+
+                        <span data-ng-if="child.is_duplicate && vm.settings.mode == 'overwrite'" class="cursor-pointer"><ng-md-icon
+                                icon="warning"
+                                size="18">
+                            <md-tooltip class="tooltip_2"
+                                        md-direction="top">Warning. You already have that entity, it will be overwritten.</md-tooltip>
+                        </ng-md-icon></span>
                     </span>
                 </div>
 
@@ -63,7 +73,7 @@
 
         </div>
 
-        <div class="configuration-import-loader" data-ng-if="vm.processing">
+        <div class="configuration-import-loader" data-ng-if="vm.processing || !vm.readyStatus.duplicates">
             <md-progress-circular md-mode="indeterminate"
                                   md-diameter="48"></md-progress-circular>
         </div>
@@ -73,13 +83,8 @@
                        style="border-top: 1px solid #ddd; min-height: 66px">
 
         <div class="p-t-8">
-            <!--<md-checkbox ng-checked="vm.settings.mode === 'overwrite'" data-ng-click="vm.toggleMode('overwrite')"-->
-            <!--aria-label="checkbox">-->
-            <!--</md-checkbox>-->
 
-            <!--<b>Overwrite existing data</b>-->
-
-            <md-input-container style="width: 232px;">
+            <md-input-container style="width: 540px;">
                 <label>Actions to do with the configurable entities in case if entity User Code exists</label>
                 <md-select
                         data-ng-model="vm.settings.mode">
@@ -87,7 +92,6 @@
                     <md-option value="overwrite">Overwrite</md-option>
                 </md-select>
             </md-input-container>
-
 
         </div>
 

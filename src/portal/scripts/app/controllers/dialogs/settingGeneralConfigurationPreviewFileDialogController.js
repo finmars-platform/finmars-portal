@@ -9,19 +9,21 @@
     var metaService = require('../../services/metaService');
     var configurationImportService = require('../../services/configuration-import/configurationImportService');
 
-    module.exports = function ($scope, $mdDialog, file) {
+    module.exports = function ($scope, $mdDialog, data) {
 
-        console.log("file", file);
+        console.log("file", data.file);
 
         var vm = this;
 
+        vm.file = data.file;
+        vm.rawFile = data.rawFile;
+
         vm.settings = {mode: 'skip'};
-
         vm.processing = false;
-
         vm.selectAllState = false;
-
         vm.counter = 0;
+
+        vm.readyStatus = {duplicates: false};
 
         vm.toggleMode = function (mode) {
 
@@ -32,18 +34,6 @@
             }
 
         };
-
-        vm.items = file.body;
-
-        vm.items.forEach(function (item) {
-
-            item.active = false;
-
-            item.content.forEach(function (child) {
-                child.active = false;
-            });
-
-        });
 
         var sortItems = function () {
 
@@ -222,8 +212,6 @@
             }
         };
 
-        sortItems();
-
         vm.getEntityName = function (item) {
 
             switch (item.entity) {
@@ -239,7 +227,7 @@
                     return 'Currencies';
                 case 'instruments.instrumenttype':
                     return "Instrument Types";
-                case 'import.pricingautomatedschedule':
+                case 'integrations.pricingautomatedschedule':
                     return 'Automated uploads schedule ';
                 case 'ui.editlayout':
                     return "Input Form";
@@ -572,6 +560,87 @@
         vm.cancel = function () {
             $mdDialog.cancel();
         };
+
+        vm.checkForDuplicates = function () {
+
+            vm.readyStatus.duplicates = false;
+
+            configurationImportService.checkForDuplicates(vm.rawFile).then(function (data) {
+
+                vm.items.forEach(function (itemEntity) {
+
+                    data.results.forEach(function (duplicateDataEntity) {
+
+                        itemEntity.content.forEach(function (item) {
+
+                            duplicateDataEntity.content.forEach(function (duplicateDataItem) {
+
+                                if (item.hasOwnProperty('scheme_name') && duplicateDataItem.hasOwnProperty('scheme_name')) {
+
+                                    if (item.scheme_name === duplicateDataItem.scheme_name) {
+                                        item.is_duplicate = duplicateDataItem.is_duplicate;
+                                    }
+
+                                } else {
+
+                                    if (item.hasOwnProperty('user_code') && duplicateDataItem.hasOwnProperty('user_code')) {
+
+                                        if (item.user_code === duplicateDataItem.user_code) {
+                                            item.is_duplicate = duplicateDataItem.is_duplicate;
+                                        }
+
+                                    } else {
+
+                                        if (item.hasOwnProperty('name') && duplicateDataItem.hasOwnProperty('name')) {
+
+                                            if (item.name === duplicateDataItem.name) {
+                                                item.is_duplicate = duplicateDataItem.is_duplicate;
+                                            }
+
+                                        }
+
+                                    }
+
+                                }
+
+                            })
+
+                        })
+
+                    })
+
+                });
+
+                console.log('vm.items with duplicates indicator', vm.items);
+
+                vm.readyStatus.duplicates = true;
+                $scope.$apply();
+
+            })
+
+        };
+
+        vm.init = function () {
+
+            vm.items = vm.file.body;
+
+            vm.items.forEach(function (item) {
+
+                item.active = false;
+
+                item.content.forEach(function (child) {
+                    child.active = false;
+                });
+
+            });
+
+            vm.checkForDuplicates();
+
+            sortItems();
+
+        };
+
+        vm.init();
 
     }
 

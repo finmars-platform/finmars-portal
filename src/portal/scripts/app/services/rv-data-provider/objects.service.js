@@ -23,9 +23,6 @@
 
             var reportOptions = entityViewerDataService.getReportOptions();
 
-            // console.log('getList.reportRecievedAt', reportRecievedAt);
-            // console.log('getList.itemsCache', itemsCache);
-
             if (reportRecievedAt == null) {
                 reportRecievedAt = reportOptions.recieved_at;
                 itemsCache = metaHelper.recursiveDeepCopy(reportOptions.items);
@@ -36,25 +33,20 @@
                 itemsCache = metaHelper.recursiveDeepCopy(reportOptions.items);
             }
 
-            // console.log("JSON itemsCache", JSON.parse(JSON.stringify(itemsCache)));
 
             items = itemsCache.map(function (item) {
                 return item
             });
 
-            // items = metaHelper.recursiveDeepCopy(reportOptions.items);
-
             var groupTypes = entityViewerDataService.getGroups();
 
             items = filterService.filterByRegularFilters(items, regularFilters);
 
-            // console.log("JSON filterByRegularFilters", JSON.parse(JSON.stringify(items)));
+            console.log('regular filters length', items.length);
 
             items = filterService.filterByGroupsFilters(items, options, groupTypes);
 
-            // console.log("JSON filterByGroupsFilters", JSON.parse(JSON.stringify(items)));
-
-            console.log('options.ordering', options.ordering);
+            console.log('groups filters length', items.length);
 
             if (options.ordering) {
                 items = sortService.sortItems(items, options.ordering);
