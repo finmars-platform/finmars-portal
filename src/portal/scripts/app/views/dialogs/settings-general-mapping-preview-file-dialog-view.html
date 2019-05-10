@@ -57,11 +57,16 @@
         <div>
 
             <div class="p-t-8">
-                <md-checkbox ng-checked="vm.settings.mode === 'overwrite'" data-ng-click="vm.toggleMode('overwrite')"
-                             aria-label="checkbox">
-                </md-checkbox>
 
-                <b>Overwrite existing data</b>
+                <md-input-container style="width: 540px;">
+                    <label>Actions to do with the configurable entities in case if entity User Code exists</label>
+                    <md-select
+                            data-ng-model="vm.settings.mode">
+                        <md-option value="skip">Skip</md-option>
+                        <md-option value="overwrite">Overwrite</md-option>
+                    </md-select>
+                </md-input-container>
+
             </div>
 
         </div>

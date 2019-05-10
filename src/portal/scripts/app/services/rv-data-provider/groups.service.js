@@ -35,7 +35,7 @@
      * Get list of unique groups
      * @param {object[]} items - collection of items
      * @param {object} group - group type on which grouping is based
-     * @return {boolean} return list of unique groups
+     * @return {object[]} return list of unique groups
      * @memberof module:ReportViewerDataProviderGroupsService
      */
     var getUniqueGroups = function (items, group) {
@@ -44,9 +44,6 @@
 
         var resultGroup;
 
-        // console.log('items', items);
-        // console.log('group', group);
-
         items.forEach(function (item) {
 
             resultGroup = {
@@ -54,61 +51,16 @@
                 ___group_identifier: null
             };
 
-            if (group.hasOwnProperty('id')) {
+            var item_value = item[group.key];
 
-                if (item.hasOwnProperty(group.entity + '_object')) {
+            if (item_value !== null && item_value !== undefined && item_value !== '-') {
 
-                    item[group.entity + '_object'].attributes.forEach(function (attr) {
+                resultGroup.___group_identifier = item_value.toString();
+                resultGroup.___group_name = item_value.toString();
 
-                        if (attr.attribute_type === group.id) {
-
-                            if (group.value_type === 20 && attr.value_float) {
-
-                                resultGroup.___group_identifier = attr.value_float.toString();
-                                resultGroup.___group_name = attr.value_float.toString();
-
-                            }
-
-                            if (group.value_type === 10 && attr.value_string) {
-
-                                resultGroup.___group_identifier = attr.value_string;
-                                resultGroup.___group_name = attr.value_string;
-
-                            }
-
-                            if (group.value_type === 30 && attr.classifier_object) {
-
-                                resultGroup.___group_identifier = attr.classifier_object.name;
-                                resultGroup.___group_name = attr.classifier_object.name;
-                            }
-
-                            if (group.value_type === 40 && attr.value_date) {
-
-                                resultGroup.___group_identifier = attr.value_date;
-                                resultGroup.___group_name = attr.value_date;
-
-                            }
-
-                        }
-
-                    })
-
-                }
-
-            } else {
-
-                var item_value = item[group.key];
-
-                if (
-                    item_value !== null &&
-                    item_value !== undefined &&
-                    item_value !== '-') {
-
-                    resultGroup.___group_identifier = item_value.toString();
-                    resultGroup.___group_name = item_value.toString();
-
-                }
             }
+
+            console.log('resultGroup', resultGroup);
 
             if (!groupAlreadyExist(resultGroup, result)) {
 

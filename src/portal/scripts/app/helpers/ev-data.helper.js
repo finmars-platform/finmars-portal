@@ -93,7 +93,7 @@
 
     };
 
-    var getGroupIdFromParent = function (id, parentId, evDataService) {
+    var getGroupIdentifierFromParent = function (id, parentId, evDataService) {
 
         var parent = evDataService.getData(parentId);
 
@@ -103,12 +103,9 @@
 
         });
 
-        if (result.___group_identifier) return result.___group_identifier;
-
-        return null;
+        return result.___group_identifier
 
     };
-
 
     var _getChildrenGroups = function (parentGroupId, evDataService, results) {
 
@@ -246,19 +243,9 @@
 
         }
 
-        var activatedGroupId = getGroupIdFromParent(id, parentId, evDataService);
+        var currentValue = getGroupIdentifierFromParent(id, parentId, evDataService);
 
-        if (activatedGroupId) {
-
-            result.push(activatedGroupId);
-
-        } else {
-
-            var activatedGroupName = getGroupNameFromParent(id, parentId, evDataService);
-
-            result.push(activatedGroupName);
-
-        }
+        result.push(currentValue);
 
         return result;
 
@@ -597,7 +584,7 @@
     module.exports = {
 
         getGroupNameFromParent: getGroupNameFromParent,
-        getGroupIdFromParent: getGroupIdFromParent,
+        getGroupIdentifierFromParent: getGroupIdentifierFromParent,
 
         getAllChildrenGroups: getAllChildrenGroups,
 

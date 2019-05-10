@@ -40,7 +40,10 @@
                         autoWrap: true,
                         skipHide: true,
                         locals: {
-                            file: file
+                            data: {
+                                file: file,
+                                rawFile: vm.configurationFile
+                            }
                         }
                     }).then(function (res) {
 
