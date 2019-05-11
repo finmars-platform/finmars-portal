@@ -181,7 +181,7 @@
 
             $mdDialog.show({
                 controller: 'EntityViewerAddDialogController as vm',
-                templateUrl: 'views/entity-viewer/add-entity-viewer-dialog-view.html',
+                templateUrl: 'views/entity-viewer/entity-viewer-add-dialog-view.html',
                 parent: angular.element(document.body),
                 targetEvent: $event,
                 locals: {
@@ -675,8 +675,7 @@
             $scope.$watch('vm.entity.group', function () {
                 if (vm.entity.group === 14 || !vm.entity.group) {
                     vm.TTGroupChosen = false;
-                }
-                else {
+                } else {
                     vm.TTGroupChosen = true;
                 }
             });
