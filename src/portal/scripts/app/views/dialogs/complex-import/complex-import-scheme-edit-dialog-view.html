@@ -69,142 +69,175 @@
 
                                     <div data-ng-if="item.csv_import_scheme">
 
+                                        <div>
 
-                                        <md-input-container>
+                                            <md-input-container>
 
-                                            <label for="">Simple Entity Import scheme</label>
-                                            <md-select ng-model="item.csv_import_scheme.csv_import_scheme"
-                                                       md-container-class="common-select-container"
-                                                       md-on-close="searchTerm = ''"
-                                                       style="width: 200px">
-                                                <div>
-                                                    <md-select-header>
-                                                        <input data-ng-model="searchTerm"
-                                                               type="search"
-                                                               placeholder="Search for a ..."
-                                                               class="md-text md-select-search-pattern select-input-filter"
-                                                               ng-keydown="$event.stopPropagation()">
-                                                    </md-select-header>
+                                                <label for="">Simple Entity Import scheme</label>
+                                                <md-select ng-model="item.csv_import_scheme.csv_import_scheme"
+                                                           md-container-class="common-select-container"
+                                                           md-on-close="searchTerm = ''"
+                                                           style="width: 200px">
+                                                    <div>
+                                                        <md-select-header>
+                                                            <input data-ng-model="searchTerm"
+                                                                   type="search"
+                                                                   placeholder="Search for a ..."
+                                                                   class="md-text md-select-search-pattern select-input-filter"
+                                                                   ng-keydown="$event.stopPropagation()">
+                                                        </md-select-header>
 
-                                                    <div class="select-options-holder">
+                                                        <div class="select-options-holder">
 
-                                                        <md-option
-                                                                data-ng-repeat="item in vm.csvImportSchemes | filter: {scheme_name: searchTerm}"
-                                                                ng-value="item.id"
-                                                                ng-bind="item.scheme_name">
-                                                        </md-option>
+                                                            <md-option
+                                                                    data-ng-repeat="item in vm.csvImportSchemes | filter: {scheme_name: searchTerm}"
+                                                                    ng-value="item.id"
+                                                                    ng-bind="item.scheme_name">
+                                                            </md-option>
 
+                                                        </div>
                                                     </div>
-                                                </div>
-                                            </md-select>
-                                        </md-input-container>
+                                                </md-select>
+                                            </md-input-container>
 
-                                        <md-input-container>
-                                            <label>Error handling</label>
-                                            <md-select data-ng-model="item.csv_import_scheme.error_handler">
-                                                <md-option value="continue">Continue</md-option>
-                                                <md-option value="break">Break on first error</md-option>
-                                            </md-select>
-                                        </md-input-container>
+                                            <md-input-container>
+                                                <label>Error handling</label>
+                                                <md-select data-ng-model="item.csv_import_scheme.error_handler">
+                                                    <md-option value="continue">Continue</md-option>
+                                                    <md-option value="break">Break on first error</md-option>
+                                                </md-select>
+                                            </md-input-container>
 
-                                        <!--<md-input-container>-->
-                                        <!--<label>Separator</label>-->
-                                        <!--<md-select data-ng-model="item.csv_import_scheme.delimiter">-->
-                                        <!--<md-option value=",">Comma (,)</md-option>-->
-                                        <!--<md-option value=";">Semicolon (;)</md-option>-->
-                                        <!--<md-option value="\t">Tab</md-option>-->
-                                        <!--</md-select>-->
-                                        <!--</md-input-container>-->
+                                            <!--<md-input-container>-->
+                                            <!--<label>Separator</label>-->
+                                            <!--<md-select data-ng-model="item.csv_import_scheme.delimiter">-->
+                                            <!--<md-option value=",">Comma (,)</md-option>-->
+                                            <!--<md-option value=";">Semicolon (;)</md-option>-->
+                                            <!--<md-option value="\t">Tab</md-option>-->
+                                            <!--</md-select>-->
+                                            <!--</md-input-container>-->
 
-                                        <md-input-container>
-                                            <label>Mode</label>
-                                            <md-select data-ng-model="item.csv_import_scheme.mode">
-                                                <md-option value="skip">Skip if exists</md-option>
-                                                <md-option value="overwrite">Overwrite</md-option>
-                                            </md-select>
-                                        </md-input-container>
+                                            <md-input-container>
+                                                <label>Mode</label>
+                                                <md-select data-ng-model="item.csv_import_scheme.mode">
+                                                    <md-option value="skip">Skip if exists</md-option>
+                                                    <md-option value="overwrite">Overwrite</md-option>
+                                                </md-select>
+                                            </md-input-container>
 
-                                        <md-input-container>
-                                            <label>Import Rules - if object is not found</label>
-                                            <md-select
-                                                    data-ng-model="item.csv_import_scheme.missing_data_handler">
-                                                <md-option value="throw_error">Treat as Error</md-option>
-                                                <md-option value="set_defaults">Replace with Default Value</md-option>
-                                            </md-select>
-                                        </md-input-container>
+                                            <md-input-container>
+                                                <label>Import Rules - if object is not found</label>
+                                                <md-select
+                                                        data-ng-model="item.csv_import_scheme.missing_data_handler">
+                                                    <md-option value="throw_error">Treat as Error</md-option>
+                                                    <md-option value="set_defaults">Replace with Default Value
+                                                    </md-option>
+                                                </md-select>
+                                            </md-input-container>
 
-                                        <md-input-container style="width: 232px;">
-                                            <label>Import Rules - Classifier handling</label>
-                                            <md-select
-                                                    data-ng-model="item.csv_import_scheme.classifier_handler">
-                                                <md-option value="skip">Skip</md-option>
-                                                <md-option value="append">Append</md-option>
-                                            </md-select>
-                                        </md-input-container>
+                                            <md-input-container style="width: 232px;">
+                                                <label>Import Rules - Classifier handling</label>
+                                                <md-select
+                                                        data-ng-model="item.csv_import_scheme.classifier_handler">
+                                                    <md-option value="skip">Skip</md-option>
+                                                    <md-option value="append">Append</md-option>
+                                                </md-select>
+                                            </md-input-container>
 
+                                        </div>
 
+                                        <div class="p-8">
+
+                                            <md-input-container class="width-70 border-bottom-black border-bottom-width-1 border-bottom-solid">
+
+                                                <label for="">Notes</label>
+
+                                                <textarea name="" id="" cols="30" rows="10"
+                                                          data-ng-model="item.csv_import_scheme.notes"></textarea>
+
+                                            </md-input-container>
+
+                                        </div>
 
                                     </div>
 
                                     <div data-ng-if="item.complex_transaction_import_scheme">
 
+                                        <div>
 
-                                        <md-input-container>
+                                            <md-input-container>
 
-                                            <label for="">Complex Transaction Import scheme</label>
-                                            <md-select
-                                                    ng-model="item.complex_transaction_import_scheme.complex_transaction_import_scheme"
-                                                    md-container-class="common-select-container"
-                                                    md-on-close="searchTerm = ''"
-                                                    style="width: 200px">
-                                                <div>
-                                                    <md-select-header>
-                                                        <input data-ng-model="searchTerm"
-                                                               type="search"
-                                                               placeholder="Search for a ..."
-                                                               class="md-text md-select-search-pattern select-input-filter"
-                                                               ng-keydown="$event.stopPropagation()">
-                                                    </md-select-header>
+                                                <label for="">Complex Transaction Import scheme</label>
+                                                <md-select
+                                                        ng-model="item.complex_transaction_import_scheme.complex_transaction_import_scheme"
+                                                        md-container-class="common-select-container"
+                                                        md-on-close="searchTerm = ''"
+                                                        style="width: 200px">
+                                                    <div>
+                                                        <md-select-header>
+                                                            <input data-ng-model="searchTerm"
+                                                                   type="search"
+                                                                   placeholder="Search for a ..."
+                                                                   class="md-text md-select-search-pattern select-input-filter"
+                                                                   ng-keydown="$event.stopPropagation()">
+                                                        </md-select-header>
 
-                                                    <div class="select-options-holder">
+                                                        <div class="select-options-holder">
 
-                                                        <md-option
-                                                                data-ng-repeat="item in vm.transactionImportSchemes | filter: {scheme_name: searchTerm}"
-                                                                ng-value="item.id"
-                                                                ng-bind="item.scheme_name">
-                                                        </md-option>
+                                                            <md-option
+                                                                    data-ng-repeat="item in vm.transactionImportSchemes | filter: {scheme_name: searchTerm}"
+                                                                    ng-value="item.id"
+                                                                    ng-bind="item.scheme_name">
+                                                            </md-option>
 
+                                                        </div>
                                                     </div>
-                                                </div>
-                                            </md-select>
-                                        </md-input-container>
+                                                </md-select>
+                                            </md-input-container>
 
-                                        <md-input-container>
-                                            <label>Error handling</label>
-                                            <md-select
-                                                    data-ng-model="item.complex_transaction_import_scheme.error_handler">
-                                                <md-option value="continue">Continue</md-option>
-                                                <md-option value="break">Break on first error</md-option>
-                                            </md-select>
-                                        </md-input-container>
+                                            <md-input-container>
+                                                <label>Error handling</label>
+                                                <md-select
+                                                        data-ng-model="item.complex_transaction_import_scheme.error_handler">
+                                                    <md-option value="continue">Continue</md-option>
+                                                    <md-option value="break">Break on first error</md-option>
+                                                </md-select>
+                                            </md-input-container>
 
-                                        <md-input-container>
-                                            <label>Import Rules - if object is not found</label>
-                                            <md-select
-                                                    data-ng-model="item.complex_transaction_import_scheme.missing_data_handler">
-                                                <md-option value="throw_error">Treat as Error</md-option>
-                                                <md-option value="set_defaults">Replace with Default Value</md-option>
-                                            </md-select>
-                                        </md-input-container>
+                                            <md-input-container>
+                                                <label>Import Rules - if object is not found</label>
+                                                <md-select
+                                                        data-ng-model="item.complex_transaction_import_scheme.missing_data_handler">
+                                                    <md-option value="throw_error">Treat as Error</md-option>
+                                                    <md-option value="set_defaults">Replace with Default Value
+                                                    </md-option>
+                                                </md-select>
+                                            </md-input-container>
 
-                                        <!--<md-input-container>-->
-                                        <!--<label>Separator</label>-->
-                                        <!--<md-select data-ng-model="item.complex_transaction_import_scheme.delimiter">-->
-                                        <!--<md-option value=",">Comma (,)</md-option>-->
-                                        <!--<md-option value=";">Semicolon (;)</md-option>-->
-                                        <!--<md-option value="\t">Tab</md-option>-->
-                                        <!--</md-select>-->
-                                        <!--</md-input-container>-->
+                                            <!--<md-input-container>-->
+                                            <!--<label>Separator</label>-->
+                                            <!--<md-select data-ng-model="item.complex_transaction_import_scheme.delimiter">-->
+                                            <!--<md-option value=",">Comma (,)</md-option>-->
+                                            <!--<md-option value=";">Semicolon (;)</md-option>-->
+                                            <!--<md-option value="\t">Tab</md-option>-->
+                                            <!--</md-select>-->
+                                            <!--</md-input-container>-->
+
+                                        </div>
+
+                                        <div class="p-8">
+
+                                            <md-input-container
+                                                    class="width-70 border-bottom-black border-bottom-width-1 border-bottom-solid">
+
+                                                <label for="">Notes</label>
+
+                                                <textarea name="" id="" cols="30" rows="10"
+                                                          data-ng-model="item.complex_transaction_import_scheme.notes"></textarea>
+
+                                            </md-input-container>
+
+                                        </div>
 
                                     </div>
 
