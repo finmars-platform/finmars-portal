@@ -5,13 +5,13 @@
 
     'use strict';
 
-    var logService = require('../../../../../core/services/logService');
+    var logService = require('../../../../../../core/services/logService');
 
-    var metaService = require('../../services/metaService');
-    var dataProvidersService = require('../../services/import/dataProvidersService');
-    var scheduleService = require('../../services/import/scheduleService');
-    var attributeTypeService = require('../../services/attributeTypeService');
-    var instrumentSchemeService = require('../../services/import/instrumentSchemeService');
+    var metaService = require('../../../services/metaService');
+    var dataProvidersService = require('../../../services/import/dataProvidersService');
+    var scheduleService = require('../../../services/import/scheduleService');
+    var attributeTypeService = require('../../../services/attributeTypeService');
+    var instrumentSchemeService = require('../../../services/import/instrumentSchemeService');
 
     module.exports = function ($scope, $mdDialog) {
 
@@ -30,7 +30,7 @@
 
         vm.getFunctions = function () {
 
-            return vm.providerFields.map(function(input){
+            return vm.providerFields.map(function (input) {
 
                 return {
                     "name": "Add input " + input.name,
@@ -293,6 +293,40 @@
             })
         };
 
+        vm.setProviderFieldExpression = function (item) {
+
+            if (!item.name_expr || item.name_expr === '') {
+                item.name_expr = item.name;
+                console.log("instrument download", item);
+            }
+
+        };
+
+        vm.openProviderFieldExpressionBuilder = function (item, $event) {
+
+            $mdDialog.show({
+                controller: 'ExpressionEditorDialogController as vm',
+                templateUrl: 'views/dialogs/expression-editor-dialog-view.html',
+                targetEvent: $event,
+                multiple: true,
+                autoWrap: true,
+                skipHide: true,
+                locals: {
+                    item: {expression: item.name_expr},
+                    data: {}
+                }
+            }).then(function (res) {
+
+                if (res.status === 'agree') {
+
+                    item.name_expr = res.data.item.expression;
+
+                }
+
+            });
+
+        };
+
         vm.removeProviderField = function (item, $index) {
             console.log('$index', $index);
 
@@ -454,7 +488,6 @@
             syncMappedFieldsDefaults();
             syncMappedFieldsSecond();
             syncMappedDynamic();
-
 
             vm.scheme.inputs = vm.providerFields;
             vm.scheme.inputs.forEach(function (item) {

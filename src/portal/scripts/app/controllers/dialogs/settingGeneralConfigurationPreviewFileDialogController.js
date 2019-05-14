@@ -603,6 +603,10 @@
 
                                 }
 
+                                if (item.is_duplicate) {
+                                    itemEntity.is_duplicate = true
+                                }
+
                             })
 
                         })

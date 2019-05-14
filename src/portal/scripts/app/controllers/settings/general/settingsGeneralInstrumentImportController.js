@@ -30,7 +30,7 @@
         vm.addScheme = function ($event) {
             $mdDialog.show({
                 controller: 'InstrumentDownloadSchemeAddDialogController as vm',
-                templateUrl: 'views/dialogs/instrument-download-scheme-dialog-view.html',
+                templateUrl: 'views/dialogs/instrument-download/instrument-download-scheme-dialog-view.html',
                 targetEvent: $event
             }).then(function (res) {
                 if (res.status === 'agree') {
@@ -45,7 +45,7 @@
 
             $mdDialog.show({
                 controller: 'InstrumentDownloadSchemeEditDialogController as vm',
-                templateUrl: 'views/dialogs/instrument-download-scheme-dialog-view.html',
+                templateUrl: 'views/dialogs/instrument-download/instrument-download-scheme-dialog-view.html',
                 targetEvent: $event,
                 locals: {
                     schemeId: item.id

@@ -14,6 +14,8 @@
 
         vm.item = item;
 
+        vm.showValidation = false;
+
         if (data) {
 
             vm.data = data;
@@ -167,7 +169,161 @@
             $mdDialog.cancel();
         };
 
+        var isBracketsValid = function (expression, leftBracket, rightBracket) {
+
+            var result = true;
+            var container = [];
+
+            for (var i = 0; i < expression.length; i = i + 1) {
+
+                if (expression[i] === leftBracket) {
+                    container.push(leftBracket)
+                } else {
+
+                    if (expression[i] === rightBracket) {
+
+                        if (container.length && container[container.length - 1] === leftBracket) {
+
+                            container.pop()
+
+                        } else {
+
+                            result = false;
+                            break;
+
+                        }
+
+                    }
+                }
+
+            }
+
+            if (container.length > 0) {
+                result = false;
+            }
+
+            return result
+
+        };
+
+        var wrapWords = function (expression, words, tag, className) {
+
+            var index;
+
+            words.forEach(function (word) {
+
+                index = expression.indexOf(word);
+
+                if (index !== -1) {
+
+                    var openTag = '<' + tag + ' class="' + className + '">';
+                    var closeTag = '</' + tag + '>';
+
+                    var resultWord = word;
+                    var trailingParenthesis = false;
+
+                    // special exception for case when func keyword inside some word
+                    // example:
+                    // function - str()
+                    // it appears to be inside word inSTRument,
+                    // so if we looking for str( in Regexp it will be OK.
+                    // but, we need to highlight only str, so, when we generating resultTag
+                    // we remove parenthesis, wrap it up, and then add ) at the end.
+
+                    if (word[word.length - 1] === '(') {
+                        resultWord = resultWord.slice(0, -1);  // trick to find only func keywords, but not to color a parenthesis
+                        trailingParenthesis = true;
+                    }
+
+                    var result = openTag + resultWord + closeTag;
+
+                    if (trailingParenthesis) { // for func keywords
+                        result = result + '(';
+                    }
+
+                    expression = expression.split(word).join(result);
+
+                }
+
+
+            });
+
+            return expression;
+
+        };
+
+        vm.getHtmlExpression = function (expression) {
+
+            var result = expression.slice();
+
+            var i = 0;
+
+            // transactions[0].portfolio.user_code+', Book real estate balances'+', Cost size: '+format_number(transactions[0].cash_consideration,
+            // decimal_pos=2, thousand_sep=' ', use_grouping=True)+transactions[0].transaction_currency.user_code+',
+            // Object: '+transactions[0].instrument.name
+
+            if (vm.data.functions) {
+
+
+                var words = vm.data.functions[0].map(function (item) {
+                    return item.func
+                });
+
+                console.log('words inputs', words);
+
+                result = wrapWords(result, words, 'span', 'eb-highlight-input')
+
+
+            }
+
+            if (isBracketsValid(expression, '(', ')')) {
+
+                console.log('vm.data.functions', vm.expressions);
+
+                var words = vm.expressions.filter(function (item) {
+                    return item.func.indexOf('(') !== -1;
+                });
+
+                words = words.map(function (item) {
+                    return item.func
+                });
+
+                words = words.map(function (item) {
+                    return item.split('(')[0] + '('; // trick to change only function keywords
+                });
+
+                console.log('words functions', words);
+
+                result = wrapWords(result, words, 'span', 'eb-highlight-func');
+            }
+
+            if (isBracketsValid(expression, '[', ']')) {
+
+                var words = vm.expressions.filter(function (item) {
+                    return item.func.indexOf(']') !== -1;
+                });
+
+                words = words.map(function (item) {
+                    return item.func
+                });
+
+                words = words.map(function (item) {
+                    return item.split('].')[1];
+                });
+
+                console.log('words properties', words);
+
+                result = wrapWords(result, words, 'span', 'eb-highlight-property')
+
+            }
+
+            return result
+
+        };
+
         vm.validate = function () {
+
+            vm.htmlExpression = vm.getHtmlExpression(vm.item.expression);
 
             return expressionService.validate(vm.item).then(function (data) {
 
@@ -175,6 +331,8 @@
 
                 vm.error = false;
                 vm.success = true;
+
+                vm.showValidation = true;
 
                 $scope.$apply();
 
@@ -184,6 +342,8 @@
 
                 vm.error = true;
                 vm.success = false;
+
+                vm.showValidation = true;
 
                 $scope.$apply();
 
