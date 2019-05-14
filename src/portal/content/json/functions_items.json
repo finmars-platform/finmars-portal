@@ -1,5 +1,23 @@
 [
   {
+    "name": "Get Transaction Type Input Default",
+    "description": "",
+    "groups": "all",
+    "func": "get_ttype_default_input()"
+  },
+  {
+    "name": "Convert to Number",
+    "description": "",
+    "groups": "all",
+    "func": "convert_to_number()"
+  },
+  {
+    "name": "Check if Null",
+    "description": "",
+    "groups": "all",
+    "func": "if_null()"
+  },
+  {
     "name": "Add price to Database",
     "description": "",
     "groups": "all",
