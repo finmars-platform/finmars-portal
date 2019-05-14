@@ -35,23 +35,23 @@
                                        md-on-close="searchTerm = ''"
                                        ng-if="vm.readyStatus.dataProviders">
 
-                                    <!--<md-select-header>
-                                        <input data-ng-model="searchTerm"
-                                               type="search"
-                                               placeholder="Search for a ..."
-                                               class="md-text md-select-search-pattern select-input-filter"
-                                               ng-keydown="$event.stopPropagation()">
-                                    </md-select-header>-->
+                                <!--<md-select-header>
+                                    <input data-ng-model="searchTerm"
+                                           type="search"
+                                           placeholder="Search for a ..."
+                                           class="md-text md-select-search-pattern select-input-filter"
+                                           ng-keydown="$event.stopPropagation()">
+                                </md-select-header>-->
 
-                                    <div class="select-options-holder">
+                                <div class="select-options-holder">
 
-                                        <md-option
-                                                data-ng-repeat="item in vm.dataProviders"
-                                                ng-value="item.id"
-                                                ng-bind="item.name">
-                                        </md-option>
+                                    <md-option
+                                            data-ng-repeat="item in vm.dataProviders"
+                                            ng-value="item.id"
+                                            ng-bind="item.name">
+                                    </md-option>
 
-                                    </div>
+                                </div>
 
                             </md-select>
                         </md-input-container>
@@ -78,13 +78,21 @@
                                         <div class="iscm-item">
                                             <md-input-container>
                                                 <label for="">Field</label>
-                                                <input type="text" data-ng-model="item.name">
+                                                <input type="text" data-ng-model="item.name"
+                                                       ng-blur="vm.setProviderFieldExpression(item)"
+                                                >
                                             </md-input-container>
                                         </div>
                                         <div>
                                             <md-button style="min-width: 40px;"
                                                        data-ng-click="vm.removeProviderField(item, $index)"
                                                        class="md-raised">x
+                                            </md-button>
+                                        </div>
+                                        <div>
+                                            <md-button class="md-raised"
+                                                       ng-click="vm.openProviderFieldExpressionBuilder(item, $event)"
+                                                       style="min-width: 40px;">f(x)
                                             </md-button>
                                         </div>
                                     </div>
@@ -270,34 +278,36 @@
                                                            md-on-close="searchTerm = ''"
                                                            ng-if="vm.readyStatus.dataProviders">
 
-                                                        <md-select-header>
-                                                            <input data-ng-model="searchTerm"
-                                                                   type="search"
-                                                                   placeholder="Search for a ..."
-                                                                   class="md-text md-select-search-pattern select-input-filter"
-                                                                   ng-keydown="$event.stopPropagation()">
-                                                        </md-select-header>
+                                                    <md-select-header>
+                                                        <input data-ng-model="searchTerm"
+                                                               type="search"
+                                                               placeholder="Search for a ..."
+                                                               class="md-text md-select-search-pattern select-input-filter"
+                                                               ng-keydown="$event.stopPropagation()">
+                                                    </md-select-header>
 
-                                                        <div class="select-options-holder">
+                                                    <div class="select-options-holder">
 
-                                                            <md-option
-                                                                    data-ng-repeat="item in vm.baseAttrs | filter: {name: searchTerm}"
-                                                                    ng-value="item"
-                                                                    ng-bind="item.name"
-                                                                    class="{{item.disabled ? 'disabled' : ''}}">
-                                                            </md-option>
-                                                            <md-option data-ng-repeat="item in vm.entityAttrs | filter: {name: searchTerm}"
-                                                                       ng-value="item"
-                                                                       ng-bind="item.name"
-                                                                       class="{{item.disabled ? 'disabled' : ''}}">
-                                                            </md-option>
-                                                            <md-option data-ng-repeat="item in vm.attrs | filter: {name: searchTerm}"
-                                                                       ng-value="item"
-                                                                       ng-bind="item.name"
-                                                                       class="{{item.disabled ? 'disabled' : ''}}">
-                                                            </md-option>
+                                                        <md-option
+                                                                data-ng-repeat="item in vm.baseAttrs | filter: {name: searchTerm}"
+                                                                ng-value="item"
+                                                                ng-bind="item.name"
+                                                                class="{{item.disabled ? 'disabled' : ''}}">
+                                                        </md-option>
+                                                        <md-option
+                                                                data-ng-repeat="item in vm.entityAttrs | filter: {name: searchTerm}"
+                                                                ng-value="item"
+                                                                ng-bind="item.name"
+                                                                class="{{item.disabled ? 'disabled' : ''}}">
+                                                        </md-option>
+                                                        <md-option
+                                                                data-ng-repeat="item in vm.attrs | filter: {name: searchTerm}"
+                                                                ng-value="item"
+                                                                ng-bind="item.name"
+                                                                class="{{item.disabled ? 'disabled' : ''}}">
+                                                        </md-option>
 
-                                                        </div>
+                                                    </div>
 
                                                 </md-select>
                                             </md-input-container>
@@ -374,23 +384,23 @@
                                                    md-container-class="common-select-container"
                                                    md-on-close="searchTerm = ''">
 
-                                                <!--<md-select-header>
-                                                    <input data-ng-model="searchTerm"
-                                                           type="search"
-                                                           placeholder="Search for a ..."
-                                                           class="md-text md-select-search-pattern select-input-filter"
-                                                           ng-keydown="$event.stopPropagation()">
-                                                </md-select-header>-->
+                                            <!--<md-select-header>
+                                                <input data-ng-model="searchTerm"
+                                                       type="search"
+                                                       placeholder="Search for a ..."
+                                                       class="md-text md-select-search-pattern select-input-filter"
+                                                       ng-keydown="$event.stopPropagation()">
+                                            </md-select-header>-->
 
-                                                <div class="select-options-holder">
+                                            <div class="select-options-holder">
 
-                                                    <md-option
-                                                            data-ng-repeat="item in vm.factorSchedule"
-                                                            ng-value="item.id"
-                                                            ng-bind="item.name">
-                                                    </md-option>
+                                                <md-option
+                                                        data-ng-repeat="item in vm.factorSchedule"
+                                                        ng-value="item.id"
+                                                        ng-bind="item.name">
+                                                </md-option>
 
-                                                </div>
+                                            </div>
 
                                         </md-select>
                                     </md-input-container>
@@ -413,23 +423,23 @@
                                                    md-container-class="common-select-container"
                                                    md-on-close="searchTerm = ''">
 
-                                                <!--<md-select-header>
-                                                    <input data-ng-model="searchTerm"
-                                                           type="search"
-                                                           placeholder="Search for a ..."
-                                                           class="md-text md-select-search-pattern select-input-filter"
-                                                           ng-keydown="$event.stopPropagation()">
-                                                </md-select-header>-->
+                                            <!--<md-select-header>
+                                                <input data-ng-model="searchTerm"
+                                                       type="search"
+                                                       placeholder="Search for a ..."
+                                                       class="md-text md-select-search-pattern select-input-filter"
+                                                       ng-keydown="$event.stopPropagation()">
+                                            </md-select-header>-->
 
-                                                <div class="select-options-holder">
+                                            <div class="select-options-holder">
 
-                                                    <md-option
-                                                            data-ng-repeat="item in vm.accrualSchedule"
-                                                            ng-value="item.id"
-                                                            ng-bind="item.name">
-                                                    </md-option>
+                                                <md-option
+                                                        data-ng-repeat="item in vm.accrualSchedule"
+                                                        ng-value="item.id"
+                                                        ng-bind="item.name">
+                                                </md-option>
 
-                                                </div>
+                                            </div>
 
                                         </md-select>
                                     </md-input-container>

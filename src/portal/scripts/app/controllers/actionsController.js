@@ -37,11 +37,11 @@
 
         };
 
-        vm.importInstrument = function ($event) {
+        vm.instrumentDownload = function ($event) {
 
             $mdDialog.show({
-                controller: 'ImportInstrumentDialogController as vm',
-                templateUrl: 'views/dialogs/import-instrument-dialog-view.html',
+                controller: 'InstrumentDownloadDialogController as vm',
+                templateUrl: 'views/dialogs/instrument-download/instrument-download-dialog-view.html',
                 targetEvent: $event
             })
 
@@ -50,7 +50,7 @@
         vm.importTransaction = function ($event) {
 
             $mdDialog.show({
-                controller: 'ImportTransactionDialogController as vm',
+                controller: 'TransactionImportDialogController as vm',
                 templateUrl: 'views/dialogs/transaction-import/transaction-import-dialog-view.html',
                 targetEvent: $event
             })
@@ -105,7 +105,7 @@
         vm.addScheme = function ($event) {
             $mdDialog.show({
                 controller: 'InstrumentDownloadSchemeAddDialogController as vm',
-                templateUrl: 'views/dialogs/instrument-download-scheme-dialog-view.html',
+                templateUrl: 'views/dialogs/instrument-download/instrument-download-scheme-dialog-view.html',
                 targetEvent: $event
             }).then(function (res) {
                 if (res.status === 'agree') {

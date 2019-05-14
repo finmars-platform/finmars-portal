@@ -5,23 +5,23 @@
 
     'use strict';
 
-    var logService = require('../../../../../core/services/logService');
+    var logService = require('../../../../../../core/services/logService');
 
-    var metaService = require('../../services/metaService');
-    var dataProvidersService = require('../../services/import/dataProvidersService');
-    var scheduleService = require('../../services/import/scheduleService');
-    var attributeTypeService = require('../../services/attributeTypeService');
-    var transactionSchemeService = require('../../services/import/transactionSchemeService');
-    var instrumentService = require('../../services/instrumentService');
-    var currencyService = require('../../services/currencyService');
+    var metaService = require('../../../services/metaService');
+    var dataProvidersService = require('../../../services/import/dataProvidersService');
+    var scheduleService = require('../../../services/import/scheduleService');
+    var attributeTypeService = require('../../../services/attributeTypeService');
+    var transactionSchemeService = require('../../../services/import/transactionSchemeService');
+    var instrumentService = require('../../../services/instrumentService');
+    var currencyService = require('../../../services/currencyService');
 
-    var instrumentTypeService = require('../../services/instrumentTypeService');
-    var instrumentDailyPricingModelService = require('../../services/instrument/instrumentDailyPricingModelService');
-    var importPriceDownloadSchemeService = require('../../services/import/importPriceDownloadSchemeService');
+    var instrumentTypeService = require('../../../services/instrumentTypeService');
+    var instrumentDailyPricingModelService = require('../../../services/instrument/instrumentDailyPricingModelService');
+    var importPriceDownloadSchemeService = require('../../../services/import/importPriceDownloadSchemeService');
 
-    var importTransactionService = require('../../services/import/importTransactionService');
-    var instrumentPaymentSizeDetailService = require('../../services/instrument/instrumentPaymentSizeDetailService');
-    var instrumentAttributeTypeService = require('../../services/instrument/instrumentAttributeTypeService');
+    var importTransactionService = require('../../../services/import/importTransactionService');
+    var instrumentPaymentSizeDetailService = require('../../../services/instrument/instrumentPaymentSizeDetailService');
+    var instrumentAttributeTypeService = require('../../../services/instrument/instrumentAttributeTypeService');
 
 
     module.exports = function ($scope, $mdDialog) {
@@ -206,7 +206,7 @@
                     });
 
                     $mdDialog.show({
-                        controller: 'ImportTransactionErrorsDialogController as vm',
+                        controller: 'TransactionImportErrorsDialogController as vm',
                         templateUrl: 'views/dialogs/transaction-import/transaction-import-errors-dialog-view.html',
                         locals: {
                             data: {
@@ -283,7 +283,7 @@
                     });
 
                     $mdDialog.show({
-                        controller: 'ImportTransactionErrorsDialogController as vm',
+                        controller: 'TransactionImportErrorsDialogController as vm',
                         templateUrl: 'views/dialogs/transaction-import/transaction-import-errors-dialog-view.html',
                         locals: {
                             data: {
@@ -429,7 +429,7 @@
                     } else {
 
                         $mdDialog.show({
-                            controller: 'ImportTransactionErrorsDialogController as vm',
+                            controller: 'TransactionImportErrorsDialogController as vm',
                             templateUrl: 'views/dialogs/transaction-import/transaction-import-errors-dialog-view.html',
                             locals: {
                                 data: {
