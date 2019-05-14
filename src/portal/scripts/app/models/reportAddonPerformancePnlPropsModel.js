@@ -8,7 +8,7 @@
     var getAttributes = function () {
         return [
             {
-                "key": "item____group_name",
+                "key": "item_group_name",
                 "name": "Group Name",
                 "value_type": 10
             },
