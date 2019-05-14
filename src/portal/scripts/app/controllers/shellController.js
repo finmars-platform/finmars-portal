@@ -141,7 +141,7 @@
 
             // Check if layout has been switched on the same state
             if (layoutSwitched) {
-                vm.getActiveLayoutName();
+                vm.getActiveLayoutName(layoutSwitched);
                 middlewareService.deleteData('entityActiveLayoutSwitched');
             }
 
@@ -149,20 +149,27 @@
         };
 
         vm.activeLayoutName = '';
-        vm.getActiveLayoutName = function () {
+        vm.getActiveLayoutName = function (newLayoutName) {
 
-            var entityType = metaContentTypesService.getContentTypeUIByState($state.current.name);
+            if (typeof newLayoutName === "string") {
 
-            uiService.getActiveListLayout(entityType).then(function (data) {
+                vm.activeLayoutName = newLayoutName;
 
-                var activeLayoutRes = data.results;
-                if (activeLayoutRes && activeLayoutRes.length) {
-                    var activeLayoutName = activeLayoutRes[0].name;
+            } else {
 
-                    vm.activeLayoutName = activeLayoutName;
+                var entityType = metaContentTypesService.getContentTypeUIByState($state.current.name);
+
+                uiService.getActiveListLayout(entityType).then(function (data) {
+
+                    var activeLayoutRes = data.results;
+                    if (activeLayoutRes && activeLayoutRes.length) {
+                        vm.activeLayoutName = activeLayoutRes[0].name;
+                    }
+
                     $scope.$apply();
-                }
-            })
+                });
+
+            }
 
         };
         // < Get name of active layout in the toolbar >

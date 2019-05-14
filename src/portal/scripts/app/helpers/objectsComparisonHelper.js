@@ -5,7 +5,7 @@
 
     'use strict';
 
-    function compareObjects (obj1, obj2) {
+    function comparePropertiesOfObjects (obj1, obj2) {
 
             var firstObject, secondObject;
 
@@ -90,7 +90,7 @@
     }
 
     module.exports = {
-        compareObjects: compareObjects
+        comparePropertiesOfObjects: comparePropertiesOfObjects
     }
 
 }());

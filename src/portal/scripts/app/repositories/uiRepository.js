@@ -60,7 +60,7 @@
     };
 
     var getListLayout = function (entity, options) {
-        console.log('uiRepository options is', options);
+
         if (entity == 'all') {
             // return xhrService.fetch(baseUrl + 'ui/list-layout/',
             //     {

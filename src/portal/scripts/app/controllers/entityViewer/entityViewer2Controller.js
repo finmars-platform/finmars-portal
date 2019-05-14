@@ -7,7 +7,8 @@
         'use strict';
 
         var uiService = require('../../services/uiService');
-        var objectComparison = require('../../services/objectsComparisonService');
+
+        var evHelperService = require('../../services/entityViewerHelperService');
 
 
         var EntityViewerDataService = require('../../services/entityViewerDataService');
@@ -22,8 +23,6 @@
             var vm = this;
 
             vm.listViewIsReady = false;
-
-            var activeLayoutConfigString = {};
 
             var entityViewerDataService = new EntityViewerDataService();
             var entityViewerEventService = new EntityViewerEventService();
@@ -83,7 +82,7 @@
 
                     $scope.$apply();
 
-                    activeLayoutConfigString = JSON.stringify(entityViewerDataService.getListLayout());
+                    entityViewerDataService.setActiveLayoutConfiguration();
 
                 });
 
@@ -133,11 +132,10 @@
 
                 if (vm.stateWithLayout) {
 
-                    var activeLayoutConfig = JSON.parse(activeLayoutConfigString);
-
+                    var activeLayoutConfig = entityViewerDataService.getActiveLayoutConfiguration();
                     var layoutCurrentConfig = entityViewerDataService.getLayoutCurrentConfiguration(false);
 
-                    if (!objectComparison.compareObjects(activeLayoutConfig, layoutCurrentConfig)) {
+                    if (!evHelperService.checkForLayoutConfigurationChanges(activeLayoutConfig, layoutCurrentConfig, false)) {
 
                         return new Promise(function (resolve, reject) {
 
@@ -147,7 +145,13 @@
                                 parent: angular.element(document.body),
                                 preserveScope: true,
                                 autoWrap: true,
-                                multiple: true
+                                multiple: true,
+                                locals: {
+                                    data: {
+                                        evDataService: entityViewerDataService,
+                                        entityType: vm.entityType
+                                    }
+                                }
                             }).then(function (res, rej) {
 
                                 if (res.status === 'save_layout') {
@@ -160,13 +164,29 @@
 
                                     } else {
 
-                                        uiService.createListLayout(vm.entityType, layoutCurrentConfig).then(function () {
-                                            resolve(true);
+                                        if (res.data && res.data.layoutName) {
+                                            layoutCurrentConfig.name = res.data.layoutName;
+                                        }
+
+                                        uiService.getActiveListLayout(vm.entityType).then(function (data) {
+
+                                            var activeLayout = data.results[0];
+                                            activeLayout.is_default = false;
+                                            layoutCurrentConfig.is_default = true;
+
+                                            uiService.updateListLayout(activeLayout.id, activeLayout).then(function () {
+
+                                                uiService.createListLayout(vm.entityType, layoutCurrentConfig).then(function () {
+                                                    resolve(true);
+                                                });
+
+                                            });
+
                                         });
 
                                     }
 
-                                } else if ('do_not_save_layout') {
+                                } else if (res.status === 'do_not_save_layout') {
 
                                     resolve(true);
 
@@ -185,14 +205,15 @@
             var doBeforeStateChange = $transitions.onBefore({}, checkLayoutForChanges);
 
             var warnAboutLayoutChangesLoss = function (event) {
-                var activeLayoutConfig = JSON.parse(activeLayoutConfigString);
 
+                var activeLayoutConfig = entityViewerDataService.getActiveLayoutConfiguration();
                 var layoutCurrentConfig = entityViewerDataService.getLayoutCurrentConfiguration(false);
 
-                if (!objectComparison.compareObjects(activeLayoutConfig, layoutCurrentConfig)) {
+                if (!evHelperService.checkForLayoutConfigurationChanges(activeLayoutConfig, layoutCurrentConfig, true)) {
                     event.preventDefault();
-                    (event || window.event).returnValue = 'All unsaved changes will be lost.';
+                    (event || window.event).returnValue = 'All unsaved changes of layout will be lost.';
                 }
+
             };
 
             if (vm.stateWithLayout) {

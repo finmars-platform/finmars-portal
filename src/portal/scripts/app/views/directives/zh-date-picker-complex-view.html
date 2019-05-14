@@ -32,16 +32,16 @@
 
         <md-menu-content>
             <md-menu-item>
-                <md-button data-ng-click="yesterdayMode()">Yesterday</md-button>
+                <md-button data-ng-click="toggleMode('yesterday')">Yesterday</md-button>
             </md-menu-item>
             <md-menu-item>
-                <md-button data-ng-click="todayMode()">Today</md-button>
+                <md-button data-ng-click="toggleMode('today')">Today</md-button>
             </md-menu-item>
             <md-menu-item>
                 <md-button data-ng-click="openEditExpressionDialog($event)">Custom</md-button>
             </md-menu-item>
             <md-menu-item>
-                <md-button data-ng-click="datepickerMode()">Datepicker</md-button>
+                <md-button data-ng-click="toggleMode('datepicker')">Datepicker</md-button>
             </md-menu-item>
         </md-menu-content>
     </md-menu>

@@ -105,6 +105,7 @@
             requestParameters: {},
             activeRequestParametersId: null,
             lastClickInfo: {},
+            activeLayoutConfiguration: {},
             flatList: [],
             projection: []
         };
@@ -615,6 +616,20 @@
             return data.listLayout;
         }
 
+        function setActiveLayoutConfiguration(activeLayoutConfig) {
+
+            if (activeLayoutConfig) {
+                data.activeLayoutConfiguration = activeLayoutConfig;
+            } else {
+                data.activeLayoutConfiguration = JSON.parse(JSON.stringify(getListLayout()));
+            }
+
+        }
+
+        function getActiveLayoutConfiguration() {
+            return data.activeLayoutConfiguration;
+        }
+
         function getLayoutCurrentConfiguration(isReport) {
 
             var listLayout = JSON.parse(JSON.stringify(getListLayout()));
@@ -828,6 +843,9 @@
 
             setListLayout: setListLayout,
             getListLayout: getListLayout,
+
+            getActiveLayoutConfiguration: getActiveLayoutConfiguration,
+            setActiveLayoutConfiguration: setActiveLayoutConfiguration,
 
             getLayoutCurrentConfiguration: getLayoutCurrentConfiguration,
             setLayoutCurrentConfiguration: setLayoutCurrentConfiguration

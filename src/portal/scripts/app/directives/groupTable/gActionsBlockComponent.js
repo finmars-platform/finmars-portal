@@ -7,6 +7,7 @@
 
     var metaService = require('../../services/metaService');
     var evEvents = require('../../services/entityViewerEvents');
+    var evHelperService = require('../../services/entityViewerHelperService');
 
     var metaContentTypesService = require('../../services/metaContentTypesService');
     var middlewareService = require('../../services/middlewareService');
@@ -27,10 +28,10 @@
             templateUrl: 'views/directives/groupTable/actions-block-view.html',
             link: function (scope, elem, attrs) {
 
-
                 scope.entityType = scope.evDataService.getEntityType();
                 scope.isReport = metaService.isReport(scope.entityType);
                 scope.currentAdditions = scope.evDataService.getAdditions();
+                scope.isNewLayout = false;
 
                 scope.openViewConstructor = function (ev) {
 
@@ -38,8 +39,6 @@
 
                         var controllerName = '';
                         var templateUrl = '';
-
-                        console.log('scope.openModalSettings.entityType', scope.entityType);
 
                         switch (scope.entityType) {
                             case 'balance-report':
@@ -243,8 +242,6 @@
                 };
 
                 scope.openExportActions = function ($mdOpenMenu, $event) {
-
-
                     $mdOpenMenu($event);
                 };
 
@@ -390,28 +387,33 @@
                     })
                 };
 
-                scope.createNewLayout = function () {
-
-                    var listLayout = {};
+                var createNewLayout = function () {
 
                     var defaultList = uiService.getDefaultListLayout();
 
-                    listLayout = {};
+                    var listLayout = {};
                     listLayout.data = Object.assign({}, defaultList[0].data);
+                    delete listLayout.id;
+                    listLayout.name = "New Layout";
+                    listLayout.data.columns = [];
 
                     scope.evDataService.setListLayout(listLayout);
 
-                    if (isReport) {
+                    if (scope.isReport) {
 
-                        var reportOptions = scope.evDataService.getReportOptions();
+                        /*var reportOptions = scope.evDataService.getReportOptions();
                         var reportLayoutOptions = scope.evDataService.getReportLayoutOptions();
                         var newReportOptions = Object.assign({}, reportOptions, listLayout.data.reportOptions);
-                        var newReportLayoutOptions = Object.assign({}, reportLayoutOptions, listLayout.data.reportLayoutOptions);
+                        var newReportLayoutOptions = Object.assign({}, reportLayoutOptions, listLayout.data.reportLayoutOptions);*/
 
-                        scope.evDataService.setReportOptions(newReportOptions);
-                        scope.evDataService.setReportLayoutOptions(newReportLayoutOptions);
+                        scope.evDataService.setReportOptions({});
+                        scope.evDataService.setReportLayoutOptions({});
 
-                        scope.evDataService.setExportOptions(listLayout.data.export);
+                        scope.evDataService.setExportOptions({});
+
+                        listLayout.data.reportOptions = {};
+                        listLayout.data.reportLayoutOptions = {};
+                        listLayout.data.export = {};
 
                     }
 
@@ -434,41 +436,77 @@
                     scope.evDataService.setEditorTemplateUrl('views/additions-editor-view.html');
                     scope.evDataService.setRootEntityViewer(true);
 
+                    scope.evDataService.resetData();
+                    scope.evDataService.resetRequestParameters();
+
+                    var rootGroup = scope.evDataService.getRootGroupData();
+
+                    scope.evDataService.setActiveRequestParametersId(rootGroup.___id);
+
+                    scope.evEventService.dispatchEvent(evEvents.GROUPS_CHANGE);
+                    scope.evEventService.dispatchEvent(evEvents.COLUMNS_CHANGE);
+                    scope.evEventService.dispatchEvent(evEvents.UPDATE_COLUMNS_SIZE);
+
+                    if (scope.isReport) {
+                        scope.evEventService.dispatchEvent(evEvents.REPORT_OPTIONS_CHANGE);
+
+                        scope.evEventService.dispatchEvent(evEvents.REQUEST_REPORT);
+                    }
+
+                    scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+
+                    middlewareService.setData('entityActiveLayoutSwitched', listLayout.name); // Give signal to update active layout name in the toolbar
+
+                    scope.isNewLayout = true;
+
+                    scope.evDataService.setActiveLayoutConfiguration();
+
+                };
+
+                scope.createNewLayout = function () {
+
+                    var activeLayoutConfig = scope.evDataService.getActiveLayoutConfiguration();
+                    var layoutCurrentConfig = scope.evDataService.getLayoutCurrentConfiguration(scope.isReport);
+
+                    if (!evHelperService.checkForLayoutConfigurationChanges(activeLayoutConfig, layoutCurrentConfig, scope.isReport)) {
+
+                        $mdDialog.show({
+                            controller: 'LayoutChangesLossWarningDialogController as vm',
+                            templateUrl: 'views/dialogs/layout-changes-loss-warning-dialog.html',
+                            parent: angular.element(document.body),
+                            preserveScope: true,
+                            autoWrap: true,
+                            multiple: true
+                        }).then(function (res, rej) {
+
+                            if (res.status === 'save_layout') {
+
+                                if (layoutCurrentConfig.hasOwnProperty('id')) {
+
+                                    uiService.updateListLayout(layoutCurrentConfig.id, layoutCurrentConfig).then(function () {
+                                        createNewLayout();
+                                    });
+
+                                } else {
+
+                                    uiService.createListLayout(scope.entityType, layoutCurrentConfig).then(function () {
+                                        createNewLayout();
+                                    });
+
+                                }
+
+                            } else if ('do_not_save_layout') {
+                                createNewLayout();
+                            }
+
+                        });
+
+                    } else {
+                        createNewLayout();
+                    }
                 };
 
                 scope.saveLayoutList = function ($event) {
-
-                    /*var listLayout = scope.evDataService.getListLayout();
-
-                    listLayout.data.columns = scope.evDataService.getColumns();
-                    listLayout.data.grouping = scope.evDataService.getGroups();
-                    listLayout.data.filters = scope.evDataService.getFilters();
-
-                    if (scope.isReport) {
-
-                        listLayout.data.reportOptions = JSON.parse(JSON.stringify(scope.evDataService.getReportOptions()));
-                        listLayout.data.reportLayoutOptions = JSON.parse(JSON.stringify(scope.evDataService.getReportLayoutOptions()));
-                        console.log("transition prevention reportOptions save", listLayout.data.reportOptions);
-                        if (scope.evDataService.getExportOptions()) {
-                            listLayout.data.export = JSON.parse(JSON.stringify(scope.evDataService.getExportOptions()));
-                        }
-
-                        delete listLayout.data.reportOptions.items;
-                        delete listLayout.data.reportOptions.item_complex_transactions;
-                        delete listLayout.data.reportOptions.item_counterparties;
-                        delete listLayout.data.reportOptions.item_responsibles;
-                        delete listLayout.data.reportOptions.item_strategies3;
-                        delete listLayout.data.reportOptions.item_strategies2;
-                        delete listLayout.data.reportOptions.item_strategies1;
-                        delete listLayout.data.reportOptions.item_portfolios;
-                        delete listLayout.data.reportOptions.item_instruments;
-                        delete listLayout.data.reportOptions.item_instrument_pricings;
-                        delete listLayout.data.reportOptions.item_instrument_accruals;
-                        delete listLayout.data.reportOptions.item_currency_fx_rates;
-                        delete listLayout.data.reportOptions.item_currencies;
-                        delete listLayout.data.reportOptions.item_accounts;
-
-                    }*/
 
                     var listLayout = scope.evDataService.getLayoutCurrentConfiguration(scope.isReport);
 
@@ -487,7 +525,9 @@
 
                         scope.evEventService.dispatchEvent(evEvents.LIST_LAYOUT_CHANGE);
 
-                        middlewareService.setData('entityActiveLayoutSwitched', true); // Give signal to update active layout name in the toolbar
+                        scope.evDataService.setActiveLayoutConfiguration();
+
+                        middlewareService.setData('entityActiveLayoutSwitched', listLayout.name); // Give signal to update active layout name in the toolbar
 
                     });
 
@@ -495,42 +535,6 @@
                 };
 
                 scope.saveAsLayoutList = function ($event) {
-
-                    /*var listLayout = scope.evDataService.getListLayout();
-
-                    console.log('save layout listLayout', listLayout);
-
-                    listLayout.data.columns = scope.evDataService.getColumns();
-                    listLayout.data.grouping = scope.evDataService.getGroups();
-                    listLayout.data.filters = scope.evDataService.getFilters();
-
-                    console.log('save layout modified listLayout', listLayout);
-
-                    if (scope.isReport) {
-
-                        listLayout.data.reportOptions = JSON.parse(JSON.stringify(scope.evDataService.getReportOptions()));
-                        listLayout.data.reportLayoutOptions = JSON.parse(JSON.stringify(scope.evDataService.getReportLayoutOptions()));
-
-                        if (scope.evDataService.getExportOptions()) {
-                            listLayout.data.export = JSON.parse(JSON.stringify(scope.evDataService.getExportOptions()));
-                        }
-
-                        delete listLayout.data.reportOptions.items;
-                        delete listLayout.data.reportOptions.item_complex_transactions;
-                        delete listLayout.data.reportOptions.item_counterparties;
-                        delete listLayout.data.reportOptions.item_responsibles;
-                        delete listLayout.data.reportOptions.item_strategies3;
-                        delete listLayout.data.reportOptions.item_strategies2;
-                        delete listLayout.data.reportOptions.item_strategies1;
-                        delete listLayout.data.reportOptions.item_portfolios;
-                        delete listLayout.data.reportOptions.item_instruments;
-                        delete listLayout.data.reportOptions.item_instrument_pricings;
-                        delete listLayout.data.reportOptions.item_instrument_accruals;
-                        delete listLayout.data.reportOptions.item_currency_fx_rates;
-                        delete listLayout.data.reportOptions.item_currencies;
-                        delete listLayout.data.reportOptions.item_accounts;
-
-                    }*/
 
                     var listLayout = scope.evDataService.getLayoutCurrentConfiguration(scope.isReport);
 
@@ -549,8 +553,8 @@
 
                             if (listLayout.id) {
 
-                                uiService.getListLayout(scope.entityType).then(function (data) {
-                                    var layouts = data.results;
+                                uiService.getActiveListLayout(scope.entityType).then(function (data) {
+                                    /*var layouts = data.results;
                                     var activeListLayout;
 
                                     var i;
@@ -560,11 +564,14 @@
                                             activeListLayout = layouts[i];
                                             break;
                                         }
-                                    }
+                                    }*/
 
-                                    console.log('save layout activeListLayout', activeListLayout);
+                                    var activeLayout = data.results[0];
+                                    activeLayout.is_default = false;
 
-                                    uiService.updateListLayout(activeListLayout.id, activeListLayout).then(function () {
+                                    console.log('save layout activeListLayout', activeLayout);
+
+                                    uiService.updateListLayout(activeLayout.id, activeLayout).then(function () {
 
                                         listLayout.name = res.data.name;
                                         listLayout.is_default = true;
@@ -573,7 +580,10 @@
                                         uiService.createListLayout(scope.entityType, listLayout).then(function () {
 
                                             scope.evEventService.dispatchEvent(evEvents.LIST_LAYOUT_CHANGE);
-                                            middlewareService.setData('entityActiveLayoutSwitched', true); // Give signal to update active layout name in the toolbar
+                                            scope.evDataService.setActiveLayoutConfiguration();
+                                            middlewareService.setData('entityActiveLayoutSwitched', listLayout.name); // Give signal to update active layout name in the toolbar
+
+                                            scope.isNewLayout = false;
 
                                         });
 
@@ -589,7 +599,10 @@
                                 uiService.createListLayout(scope.entityType, listLayout).then(function () {
 
                                     scope.evEventService.dispatchEvent(evEvents.LIST_LAYOUT_CHANGE);
-                                    middlewareService.setData('entityActiveLayoutSwitched', true); // Give signal to update active layout name in the toolbar
+                                    scope.evDataService.setActiveLayoutConfiguration();
+                                    middlewareService.setData('entityActiveLayoutSwitched', listLayout.name); // Give signal to update active layout name in the toolbar
+
+                                    scope.isNewLayout = false;
 
                                 });
                             }

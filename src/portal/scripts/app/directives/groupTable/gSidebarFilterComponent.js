@@ -29,7 +29,6 @@
                 scope.filters = scope.evDataService.getFilters();
                 scope.entityType = scope.evDataService.getEntityType();
                 scope.reportOptions = scope.evDataService.getReportOptions();
-                scope.reportLayoutOptions = scope.evDataService.getReportLayoutOptions();
 
                 if (!scope.reportLayoutOptions) {
                     scope.reportLayoutOptions = {};
@@ -38,6 +37,40 @@
                 scope.isReport = metaService.isReport(scope.evDataService.getEntityType());
 
                 scope.fields = {};
+
+                var prepareReportLayoutOptions = function () {
+
+                    scope.reportLayoutOptions = scope.evDataService.getReportLayoutOptions();
+
+                    // preparing data for complexZhDatePickerDirective
+                    if (!scope.reportLayoutOptions.hasOwnProperty('datepickerOptions')) {
+                        scope.reportLayoutOptions.datepickerOptions = {};
+                    }
+
+                    if (!scope.reportLayoutOptions.datepickerOptions.hasOwnProperty('reportLastDatepicker')) {
+                        scope.reportLayoutOptions.datepickerOptions.reportLastDatepicker = {};
+                    }
+
+                    if (!scope.reportLayoutOptions.datepickerOptions.hasOwnProperty('reportFirstDatepicker')) {
+                        scope.reportLayoutOptions.datepickerOptions.reportFirstDatepicker = {};
+                    }
+
+                    scope.datepickerFromDisplayOptions = {
+                        position: 'left',
+                        labelName: 'Date from (excl)'
+                    }
+
+                    scope.datepickerToDisplayOptions = {position: 'left'};
+
+                    if (scope.entityType === 'pnl-report' || scope.entityType === 'transaction-report') {
+                        scope.datepickerToDisplayOptions = {
+                            position: 'left',
+                            labelName: 'Date to (incl)'
+                        }
+                    }
+                    /* < preparing data for complexZhDatePickerDirective > */
+
+                };
 
                 scope.resolveFilterValue = function (field) {
                     return field.id ? field.id : field.key;
@@ -72,33 +105,7 @@
 
                     });
 
-                    // preparing data for complexZhDatePickerDirective
-                    if (!scope.reportLayoutOptions.hasOwnProperty('datepickerOptions')) {
-                        scope.reportLayoutOptions.datepickerOptions = {};
-                    }
-
-                    if (!scope.reportLayoutOptions.datepickerOptions.hasOwnProperty('reportLastDatepicker')) {
-                        scope.reportLayoutOptions.datepickerOptions.reportLastDatepicker = {};
-                    }
-
-                    if (!scope.reportLayoutOptions.datepickerOptions.hasOwnProperty('reportFirstDatepicker')) {
-                        scope.reportLayoutOptions.datepickerOptions.reportFirstDatepicker = {};
-                    }
-
-                    scope.datepickerFromDisplayOptions = {
-                        position: 'left',
-                        labelName: 'Date from (excl)'
-                    }
-
-                    scope.datepickerToDisplayOptions = {position: 'left'};
-
-                    if (scope.entityType === 'pnl-report' || scope.entityType === 'transaction-report') {
-                        scope.datepickerToDisplayOptions = {
-                            position: 'left',
-                            labelName: 'Date to (incl)'
-                        }
-                    }
-                    /* < preparing data for complexZhDatePickerDirective > */
+                    prepareReportLayoutOptions();
 
                 }
 
@@ -429,6 +436,7 @@
                     scope.evEventService.addEventListener(evEvents.REPORT_OPTIONS_CHANGE, function () {
 
                         scope.reportOptions = scope.evDataService.getReportOptions();
+                        prepareReportLayoutOptions();
 
                     });
 

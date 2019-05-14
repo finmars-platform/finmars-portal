@@ -7,7 +7,11 @@
     </md-toolbar>
     <md-dialog-content  >
 
-        <div style="padding: 20px">
+        <div style="padding: 20px" layout="column">
+
+            <div data-ng-if="vm.complexSaveAsLayoutDialog" style="margin-left: 10px">
+                <p>Write new layout name.</p>
+            </div>
 
             <md-input-container style="width: 100%">
                 <label for="">Layout name</label>
@@ -21,7 +25,7 @@
         <md-button ng-click="vm.cancel()">
             Cancel
         </md-button>
-        <md-button ng-click="vm.agree()" style="margin-right:20px;">
+        <md-button ng-click="vm.agree($event)" style="margin-right:20px;">
             OK
         </md-button>
     </md-dialog-actions>
