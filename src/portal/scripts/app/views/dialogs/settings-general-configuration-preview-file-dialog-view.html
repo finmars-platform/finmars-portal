@@ -24,17 +24,28 @@
         <div data-ng-repeat="item in vm.items | orderBy: 'order__'">
 
             <h2 data-ng-if="item.first__" data-ng-bind="item.first__"></h2>
-            <div class="cie-entity-holder">
+            <div class="cie-entity-holder" data-ng-class="{
+                      'text-warning-red': item.is_duplicate && vm.settings.mode == 'overwrite'}">
                 <md-checkbox data-ng-checked="item.active"
                              data-ng-click="vm.toggleActiveForChilds(item)"
                              data-ng-class="{'some-checkboxes-ticked': item.someChildsActive}"
                              aria-label="checkbox">
                 </md-checkbox>
                 <span data-ng-bind="vm.getEntityName(item)"
-                      data-ng-class="{'used-dynamic-attrs': item.attributeIsUsed__}"></span> <span
-                    class="cie-dependency"
-                    data-ng-bind="vm.getEntityDependenciesCaptions(item)"></span>
+                      data-ng-class="{
+                      'used-dynamic-attrs': item.attributeIsUsed__}"></span>
+                <span
+                        class="cie-dependency"
+                        data-ng-bind="vm.getEntityDependenciesCaptions(item)"></span>
                 ({{item.count}})
+
+                <span data-ng-if="item.is_duplicate && vm.settings.mode == 'overwrite'" class="cursor-pointer"><ng-md-icon
+                        icon="warning"
+                        size="18">
+                            <md-tooltip class="tooltip_2"
+                                        md-direction="top">Warning. Some items of that entity already exist in ecosystem.</md-tooltip>
+                        </ng-md-icon></span>
+
                 <md-button class="md-raised" ng-click="item.displayItems = !item.displayItems"
                            aria-label="display items button"><span
                         data-ng-if="!item.displayItems">Show</span><span data-ng-if="item.displayItems">Hide</span>
