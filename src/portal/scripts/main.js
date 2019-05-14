@@ -42,15 +42,6 @@ app.run(['$rootScope', '$transitions', '$state', function ($rootScope, $transiti
 
     document.title = metaService.getCurrentLocation($state);
 
-    // window.onerror = function (msg, url, line, col, error) {
-    //
-    //     console.trace(msg);
-    //
-    //     toastr.error(msg);
-    //
-    //     return false;
-    // };
-
     window.addEventListener('error', function (e) {
         toastr.error(e.error);
     });
@@ -75,6 +66,7 @@ app.run(['$rootScope', '$transitions', '$state', function ($rootScope, $transiti
 
 }]);
 
+// Common
 
 app.controller('ShellController', ['$scope', '$state', '$rootScope', '$mdDialog', '$transitions', require('./app/controllers/shellController')]);
 app.controller('BookmarksController', ['$scope', '$mdDialog', '$state', require('./app/controllers/bookmarksController')]);
@@ -82,33 +74,83 @@ app.controller('SideNavController', ['$scope', '$mdDialog', require('./app/contr
 app.controller('HomeController', ['$scope', '$mdDialog', require('./app/controllers/homeController')]);
 app.controller('SetupController', ['$scope', '$state', require('./app/controllers/setupController')]);
 app.controller('NotFoundPageController', ['$scope', require('./app/controllers/notFoundPageController')]);
-
 app.controller('DashboardController', ['$scope', '$mdDialog', require('./app/controllers/dashboardController')]);
-app.controller('ActionsController', ['$scope', '$mdDialog', require('./app/controllers/actionsController')]);
+app.controller('EntityDataConstructorController', ['$scope', '$stateParams', '$state', '$mdDialog', require('./app/controllers/entityDataConstructorController')]);
+app.controller('ExpressionEditorDialogController', ['$scope', '$mdDialog', 'item', 'data', require('./app/controllers/dialogs/expressionEditorDialogController')]);
+app.controller('InstrumentSelectDialogController', ['$scope', '$mdDialog', require('./app/controllers/dialogs/instrumentSelectDialogController')]);
+app.controller('EntitySearchDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/entitySearchDialogController')]);
+app.controller('TwoFieldsMultiselectDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/twoFieldsMultiselectDialogController')]);
+app.controller('LayoutChangesLossWarningDialogController', ['$scope', 'data', '$mdDialog', require('./app/controllers/dialogs/layoutChangesLossWarningDialogController')]);
+app.controller('ClassifierSelectDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/classifierSelectDialogController')]);
+app.controller('SaveLayoutDialogController', ['$scope', '$mdDialog', require('./app/controllers/dialogs/saveLayoutDialogController')]);
+app.controller('RenameDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/renameDialogController')]);
+app.controller('SaveConfigurationExportLayoutDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/saveConfigurationExportLayoutDialogController')]);
+app.controller('ActionsNotificationsSettingsDialogController', ['$scope', '$mdDialog', require('./app/controllers/dialogs/actionsNotificationsSettingsDialogController')]);
+app.controller('ExportPdfDialogController', ['$scope', '$mdDialog', 'evDataService', 'evEventService', 'data', require('./app/controllers/dialogs/exportPdfDialogController')]);
+app.controller('NotificationsController', ['$scope', '$state', '$stateParams', require('./app/controllers/system/notificationsController')]);
+app.controller('HeaderNotificationsDialogController', ['$scope', '$mdDialog', require('./app/controllers/dialogs/headerNotificationsDialogController')]);
+app.controller('ComplexTransactionSpecialRulesController', ['$scope', require('./app/controllers/special-rules/complexTransactionSpecialRulesController')]);
+app.controller('HelpDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/helpDialogController')]);
+app.controller('ValidationDialogController', ['$scope', '$mdDialog', 'validationData', require('./app/controllers/dialogs/validationDialogController')]);
 
-app.controller('ImportInstrumentDialogController', ['$scope', '$mdDialog', require('./app/controllers/dialogs/importInstrumentDialogController')]);
-app.controller('ImportTransactionDialogController', ['$scope', '$mdDialog', require('./app/controllers/dialogs/importTransactionDialogController')]);
-app.controller('ImportTransactionErrorsDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/importTransactionErrorsDialogController')]);
+// Common - unknown
+
+app.controller('FillPriceManuallyInstrumentDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/fillPriceManuallyInstrumentDialogController')]);
+app.controller('ReportCustomAttrController', ['$scope', '$stateParams', '$mdDialog', require('./app/controllers/reports/reportCustomAttrController')]);
+app.controller('BalanceReportDialogCustomAttrController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/balanceReportAddDialogCustomAttrController')]);
+app.controller('AdditionsEditorEntityEditController', ['$scope', '$state', '$mdDialog', require('./app/controllers/additionsEditorEntityEditController')]);
+app.controller('EntityViewerPermissionEditorController', ['$scope', require('./app/controllers/entityViewer/entityViewerPermissionEditorController')]);
+app.controller('FloatCustomFieldConstructorController', ['$scope', require('./app/controllers/floatCustomFieldConstructorController')]);
+app.controller('DateCustomFieldConstructorController', ['$scope', require('./app/controllers/dateCustomFieldConstructorController')]);
+app.controller('AuditController', ['$scope', require('./app/controllers/system/auditController')]);
+app.controller('SettingsFormDesignController', ['$scope', '$state', require('./app/controllers/settings/settingsFormDesignController')]);
+app.controller('SettingBloombergImportInstrumentController', ['$scope', '$state', require('./app/controllers/settings/settingBloombergImportInstrumentController')]);
+
+
+// System Dialogs
+
+app.controller('WarningDialogController', ['$scope', '$mdDialog', 'warning', require('./app/controllers/dialogs/warningDialogController')]);
+app.controller('SuccessDialogController', ['$scope', '$mdDialog', 'success', require('./app/controllers/dialogs/successDialogController')]);
+app.controller('InfoDialogController', ['$scope', '$mdDialog', 'info', require('./app/controllers/dialogs/infoDialogController')]);
+
+// Actions
+
+app.controller('ActionsController', ['$scope', '$mdDialog', require('./app/controllers/actionsController')]);
 app.controller('AutomatedUploadsHistoryDialogController', ['$scope', '$mdDialog', '$mdpTimePicker', require('./app/controllers/dialogs/automatedUploadsHistoryDialogController')]);
 app.controller('FillPriceHistoryDialogController', ['$scope', '$mdDialog', require('./app/controllers/dialogs/fillPriceHistoryDialogController')]);
 app.controller('EventScheduleConfigDialogController', ['$scope', '$mdDialog', require('./app/controllers/dialogs/eventScheduleConfigDialogController')]);
-app.controller('FillPriceManuallyInstrumentDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/fillPriceManuallyInstrumentDialogController')]);
 app.controller('PriceDownloadSchemeAddDialogController', ['$scope', '$mdDialog', require('./app/controllers/dialogs/priceDownloadSchemeAddDialogController')]);
+app.controller('DefaultPricingConfigDialogController', ['$scope', '$mdDialog', require('./app/controllers/dialogs/defaultPricingConfigDialogController')]);
 
+// Instrument Download
+
+app.controller('InstrumentDownloadDialogController', ['$scope', '$mdDialog', require('./app/controllers/dialogs/instrument-download/instrumentDownloadDialogController')]);
+app.controller('InstrumentDownloadSchemeAddDialogController', ['$scope', '$mdDialog', require('./app/controllers/dialogs/instrument-download/instrumentDownloadSchemeAddDialogController')]);
+app.controller('InstrumentDownloadSchemeEditDialogController', ['$scope', '$mdDialog', 'schemeId', require('./app/controllers/dialogs/instrument-download/instrumentDownloadSchemeEditDialogController')]);
+
+// Simple Entity Import
 
 app.controller('SimpleEntityImportDialogController', ['$scope', '$mdDialog', require('./app/controllers/dialogs/simple-entity-import/simpleEntityImportDialogController')]);
 app.controller('SimpleEntityImportErrorsDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/simple-entity-import/simpleEntityImportErrorsDialogController')]);
 app.controller('SimpleEntityImportSchemeEditDialogController', ['$scope', '$mdDialog', 'schemeId', require('./app/controllers/dialogs/simple-entity-import/simpleEntityImportSchemeEditDialogController')]);
 app.controller('SimpleEntityImportSchemeCreateDialogController', ['$scope', '$mdDialog', require('./app/controllers/dialogs/simple-entity-import/simpleEntityImportSchemeCreateDialogController')]);
 
+// Complex Import
 
 app.controller('ComplexImportDialogController', ['$scope', '$mdDialog', require('./app/controllers/dialogs/complex-import/complexImportDialogController')]);
 app.controller('ComplexImportSchemeEditDialogController', ['$scope', '$mdDialog', 'schemeId', require('./app/controllers/dialogs/complex-import/complexImportSchemeEditDialogController')]);
 app.controller('ComplexImportSchemeCreateDialogController', ['$scope', '$mdDialog', require('./app/controllers/dialogs/complex-import/complexImportSchemeCreateDialogController')]);
 app.controller('ComplexImportValidationErrorsDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/complex-import/complexImportValidationErrorsDialogController')]);
 
+// Transaction Import
 
-// events start
+app.controller('TransactionImportSchemeAddDialogController', ['$scope', '$mdDialog', require('./app/controllers/dialogs/transaction-import/transactionImportSchemeAddDialogController')]);
+app.controller('TransactionImportSchemeEditDialogController', ['$scope', '$mdDialog', 'schemeId', require('./app/controllers/dialogs/transaction-import/transactionImportSchemeEditDialogController')]);
+app.controller('TransactionImportSchemeInputsDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/transaction-import/transactionImportSchemeInputsDialogController')]);
+app.controller('TransactionImportDialogController', ['$scope', '$mdDialog', require('./app/controllers/dialogs/transaction-import/transactionImportDialogController')]);
+app.controller('TransactionImportErrorsDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/transaction-import/transactionImportErrorsDialogController')]);
+
+// Events
 
 app.controller('CheckEventsController', ['$scope', '$mdDialog', require('./app/controllers/checkEventsController')]);
 app.controller('CheckEventsDialogController', ['$scope', '$mdDialog', require('./app/controllers/dialogs/events/checkEventsDialogController')]);
@@ -117,7 +159,7 @@ app.controller('EventWithReactApplyDefaultConfirmDialogController', ['$scope', '
 app.controller('EventDoNotReactDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/events/eventDoNotReactDialogController')]);
 app.controller('EventApplyDefaultDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/events/eventApplyDefaultDialogController')]);
 
-// events end
+// Attribute Manager
 
 app.controller('AttributesManagerController', ['$scope', '$state', '$stateParams', '$mdDialog', require('./app/controllers/attributesManagerController')]);
 app.controller('AttributesManagerEditDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/attributesManagerEditDialogController')]);
@@ -125,15 +167,10 @@ app.controller('AttributesManagerAddDialogController', ['$scope', '$mdDialog', '
 app.controller('ClassificationEditorDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/classificationEditorDialogController')]);
 app.controller('CustomFieldsConfigDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/customFieldsConfigDialogController')]);
 
-app.controller('InstrumentDownloadSchemeAddDialogController', ['$scope', '$mdDialog', require('./app/controllers/dialogs/instrumentDownloadSchemeAddDialogController')]);
-app.controller('InstrumentDownloadSchemeEditDialogController', ['$scope', '$mdDialog', 'schemeId', require('./app/controllers/dialogs/instrumentDownloadSchemeEditDialogController')]);
 app.controller('EntityTypeMappingDialogController', ['$scope', '$mdDialog', 'mapItem', require('./app/controllers/dialogs/entityTypeMappingDialogController')]);
 app.controller('EntityTypeClassifierMappingDialogController', ['$scope', '$mdDialog', 'options', require('./app/controllers/dialogs/entityTypeClassifierMappingDialogController')]);
 
-app.controller('TransactionImportSchemeAddDialogController', ['$scope', '$mdDialog', require('./app/controllers/dialogs/transactionImportSchemeAddDialogController')]);
-app.controller('TransactionImportSchemeEditDialogController', ['$scope', '$mdDialog', 'schemeId', require('./app/controllers/dialogs/transactionImportSchemeEditDialogController')]);
-app.controller('TransactionImportSchemeInputsDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/transactionImportSchemeInputsDialogController')]);
-
+// Entity Viewer & Report Viewer
 
 app.controller('EntityViewer2Controller', ['$scope', '$mdDialog', '$state', '$transitions', require('./app/controllers/entityViewer/entityViewer2Controller')]);
 app.controller('ReportViewerController', ['$scope', '$mdDialog', '$transitions', require('./app/controllers/entityViewer/reportViewerController')]);
@@ -142,29 +179,30 @@ app.controller('EntityViewerEditDialogController', ['$scope', '$mdDialog', '$sta
 app.controller('EntityViewerDeleteDialogController', ['$scope', '$mdDialog', 'entity', 'entityType', require('./app/controllers/entityViewer/entityViewerDeleteDialogController')]);
 app.controller('ReportWizardController', ['$scope', require('./app/controllers/entityViewer/onBeforeLoadActions/reportWizardController')]);
 
+// Transaction type form
+
 app.controller('TransactionTypeAddDialogController', ['$scope', '$mdDialog', '$state', 'entityType', 'entity', require('./app/controllers/entityViewer/transactionTypeAddDialogController')]);
 app.controller('TransactionTypeEditDialogController', ['$scope', '$mdDialog', '$state', 'entityType', 'entityId', require('./app/controllers/entityViewer/transactionTypeEditDialogController')]);
 app.controller('TransactionTypeValidationErrorsDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/entityViewer/transactionTypeValidationErrorsDialogController')]);
 
-
-app.controller('EntityViewerPermissionEditorController', ['$scope', require('./app/controllers/entityViewer/entityViewerPermissionEditorController')]);
-
-app.controller('ComplexTransactionSpecialRulesController', ['$scope', require('./app/controllers/special-rules/complexTransactionSpecialRulesController')]);
+// Complex transaction form - tabs
 
 app.controller('BookTransactionActionsTabController', ['$scope', require('./app/controllers/tabs/complex-transaction/bookTransactionActionsTabController')]);
 app.controller('BookTransactionTransactionsTabController', ['$scope', '$mdDialog', require('./app/controllers/tabs/complex-transaction/bookTransactionTransactionsTabController')]);
 app.controller('ComplexTransactionsTransactionEditDialogController', ['$scope', '$mdDialog', 'entityId', require('./app/controllers/entityViewer/complexTransactionsTransactionEditDialogController')]);
 
-app.controller('TransactionTypeActionsTabController', ['$scope', '$mdDialog', require('./app/controllers/tabs/transaction-type/transactionTypeActionsTabController')]);
-app.controller('TransactionTypeGeneralTabController', ['$scope', '$mdDialog', require('./app/controllers/tabs/transaction-type/transactionTypeGeneralTabController')]);
-app.controller('TransactionTypeInputsTabController', ['$scope', '$mdDialog', require('./app/controllers/tabs/transaction-type/transactionTypeInputsTabController')]);
+
+// Instrument form - tabs
 
 app.controller('AccrualCalculationSchedulesTabController', ['$scope', require('./app/controllers/tabs/instrument/accrualCalculationSchedulesController')]);
 app.controller('EventSchedulesTabController', ['$scope', '$mdDialog', require('./app/controllers/tabs/instrument/eventSchedulesController')]);
 app.controller('FactorScheduleTabController', ['$scope', require('./app/controllers/tabs/instrument/factorScheduleTabController')]);
 app.controller('ManualPricingFormulasTabController', ['$scope', require('./app/controllers/tabs/instrument/manualPricingFormulasTabController')]);
+
 app.controller('InstrumentEventActionsDialogController', ['$scope', '$mdDialog', 'eventActions', require('./app/controllers/dialogs/instrumentEventActionsDialogController')]);
 app.controller('GenerateEventScheduleDialogController', ['$scope', '$mdDialog', require('./app/controllers/dialogs/generateEventScheduleDialogController')]);
+
+// Data
 
 app.controller('DataPortfolioController', ['$scope', require('./app/controllers/data/dataPortfolioController')]);
 app.controller('DataTagController', ['$scope', '$stateParams', require('./app/controllers/data/dataTagController')]);
@@ -190,68 +228,49 @@ app.controller('DataStrategySubgroupController', ['$scope', '$stateParams', requ
 app.controller('TransactionsAuditController', ['$scope', '$stateParams', require('./app/controllers/system/auditTransactionsController')]);
 app.controller('InstrumentsAuditController', ['$scope', '$stateParams', require('./app/controllers/system/auditInstrumentsController')]);
 
-app.controller('BalanceReportController', ['$scope', '$stateParams', require('./app/controllers/reports/balanceReportController')]);
-app.controller('BalanceReportControllerOld', ['$scope', '$stateParams', require('./app/controllers/reports/balanceReportController-old')]);
-app.controller('ReportCustomAttrController', ['$scope', '$stateParams', '$mdDialog', require('./app/controllers/reports/reportCustomAttrController')]);
-app.controller('BalanceReportDialogCustomAttrController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/balanceReportAddDialogCustomAttrController')]);
+// Reports
 
+app.controller('BalanceReportController', ['$scope', '$stateParams', require('./app/controllers/reports/balanceReportController')]);
 app.controller('ProfitAndLostReportController', ['$scope', '$stateParams', require('./app/controllers/reports/profitAndLostReportController')]);
 app.controller('TransactionReportController', ['$scope', '$stateParams', require('./app/controllers/reports/transactionReportController')]);
 app.controller('CashFlowProjectionReportController', ['$scope', '$stateParams', require('./app/controllers/reports/cashFlowProjectionReportController')]);
 app.controller('PerformanceReportController', ['$scope', '$stateParams', require('./app/controllers/reports/performanceReportController')]);
 
-app.controller('EntityDataConstructorController', ['$scope', '$stateParams', '$state', '$mdDialog', require('./app/controllers/entityDataConstructorController')]);
-
-app.controller('AdditionsEditorEntityEditController', ['$scope', '$state', '$mdDialog', require('./app/controllers/additionsEditorEntityEditController')]);
-
-app.controller('WarningDialogController', ['$scope', '$mdDialog', 'warning', require('./app/controllers/dialogs/warningDialogController')]);
-app.controller('HelpDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/helpDialogController')]);
-app.controller('SuccessDialogController', ['$scope', '$mdDialog', 'success', require('./app/controllers/dialogs/successDialogController')]);
-app.controller('ValidationDialogController', ['$scope', '$mdDialog', 'validationData', require('./app/controllers/dialogs/validationDialogController')]);
-app.controller('ExpressionEditorDialogController', ['$scope', '$mdDialog', 'item', 'data', require('./app/controllers/dialogs/expressionEditorDialogController')]);
-app.controller('InfoDialogController', ['$scope', '$mdDialog', 'info', require('./app/controllers/dialogs/infoDialogController')]);
-app.controller('InstrumentSelectDialogController', ['$scope', '$mdDialog', require('./app/controllers/dialogs/instrumentSelectDialogController')]);
-app.controller('EntitySearchDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/entitySearchDialogController')]);
-app.controller('TwoFieldsMultiselectDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/twoFieldsMultiselectDialogController')]);
-app.controller('LayoutChangesLossWarningDialogController', ['$scope', 'data', '$mdDialog', require('./app/controllers/dialogs/layoutChangesLossWarningDialogController')]);
-
-app.controller('ClassifierSelectDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/classifierSelectDialogController')]);
-app.controller('SaveLayoutDialogController', ['$scope', '$mdDialog', require('./app/controllers/dialogs/saveLayoutDialogController')]);
-app.controller('RenameDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/renameDialogController')]);
-app.controller('SaveConfigurationExportLayoutDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/saveConfigurationExportLayoutDialogController')]);
-app.controller('DefaultPricingConfigDialogController', ['$scope', '$mdDialog', require('./app/controllers/dialogs/defaultPricingConfigDialogController')]);
-app.controller('ActionsNotificationsSettingsDialogController', ['$scope', '$mdDialog', require('./app/controllers/dialogs/actionsNotificationsSettingsDialogController')]);
-
-app.controller('ExportPdfDialogController', ['$scope', '$mdDialog', 'evDataService', 'evEventService', 'data', require('./app/controllers/dialogs/exportPdfDialogController')]);
-
-app.controller('AuditController', ['$scope', require('./app/controllers/system/auditController')]);
-app.controller('NotificationsController', ['$scope', '$state', '$stateParams', require('./app/controllers/system/notificationsController')]);
-app.controller('HeaderNotificationsDialogController', ['$scope', '$mdDialog', require('./app/controllers/dialogs/headerNotificationsDialogController')]);
+// Settings
 
 app.controller('SettingsGeneralController', ['$scope', '$state', require('./app/controllers/settings/settingsGeneralController')]);
 app.controller('SettingsGeneralProfileController', ['$scope', require('./app/controllers/settings/general/settingsGeneralProfileController')]);
 app.controller('SettingsGeneralChangePasswordController', ['$scope', '$mdDialog', require('./app/controllers/settings/general/settingsGeneralChangePasswordController')]);
 app.controller('SettingsGeneralDataProvidersController', ['$scope', '$mdDialog', require('./app/controllers/settings/general/settingsGeneralDataProvidersController')]);
 app.controller('SettingsGeneralDataProvidersConfigController', ['$scope', '$stateParams', '$mdDialog', '$state', require('./app/controllers/settings/general/settingsGeneralDataProvidersConfigController')]);
+
+// Settings - imports
+
 app.controller('SettingsGeneralInstrumentImportController', ['$scope', '$mdDialog', require('./app/controllers/settings/general/settingsGeneralInstrumentImportController')]);
 app.controller('SettingsGeneralComplexImportController', ['$scope', '$mdDialog', require('./app/controllers/settings/general/settingsGeneralComplexImportController')]);
 app.controller('SettingsGeneralTransactionImportController', ['$scope', '$mdDialog', require('./app/controllers/settings/general/settingsGeneralTransactionImportController')]);
 app.controller('SettingsGeneralSimpleEntityImportController', ['$scope', '$mdDialog', require('./app/controllers/settings/general/settingsGeneralSimpleEntityImportController')]);
-app.controller('SettingsGeneralConfigurationController', ['$scope', '$mdDialog', require('./app/controllers/settings/general/settingsGeneralConfigurationController')]);
-app.controller('SettingsGeneralInitConfigurationController', ['$scope', '$mdDialog', require('./app/controllers/settings/general/settingsGeneralInitConfigurationController')]);
+
+// Settings - Configuration Export/Import
+
 app.controller('SettingGeneralConfigurationPreviewFileDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/settingGeneralConfigurationPreviewFileDialogController')]);
 app.controller('SettingGeneralConfigurationPreviewFileErrorsDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/settingGeneralConfigurationPreviewFileErrorsDialogController')]);
 app.controller('SettingGeneralConfigurationExportFileDialogController', ['$scope', '$mdDialog', require('./app/controllers/dialogs/settingGeneralConfigurationExportFileDialogController')]);
+app.controller('SettingsGeneralConfigurationController', ['$scope', '$mdDialog', require('./app/controllers/settings/general/settingsGeneralConfigurationController')]);
+app.controller('SettingsGeneralInitConfigurationController', ['$scope', '$mdDialog', require('./app/controllers/settings/general/settingsGeneralInitConfigurationController')]);
+
+// Settings - Mapping Export/Import
+
 app.controller('SettingGeneralMappingPreviewFileDialogController', ['$scope', '$mdDialog', 'file', require('./app/controllers/dialogs/settingGeneralMappingPreviewFileDialogController')]);
 app.controller('SettingGeneralMappingExportFileDialogController', ['$scope', '$mdDialog', require('./app/controllers/dialogs/settingGeneralMappingExportFileDialogController')]);
 app.controller('SettingGeneralMappingPreviewFileErrorsDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/settingGeneralMappingPreviewFileErrorsDialogController')]);
 
+// Configuration
 
 app.controller('CreateConfigurationDialogController', ['$scope', '$mdDialog', require('./app/controllers/dialogs/createConfigurationDialogController')]);
 app.controller('EditConfigurationDialogController', ['$scope', '$mdDialog', 'item', require('./app/controllers/dialogs/editConfigurationDialogController')]);
 
-app.controller('SettingsFormDesignController', ['$scope', '$state', require('./app/controllers/settings/settingsFormDesignController')]);
-app.controller('SettingBloombergImportInstrumentController', ['$scope', '$state', require('./app/controllers/settings/settingBloombergImportInstrumentController')]);
+// Groups & Members
 
 app.controller('SettingsMembersAndGroupsController', ['$scope', '$mdDialog', require('./app/controllers/settings/settingsMembersAndGroupsController')]);
 app.controller('CreateMemberDialogController', ['$scope', '$mdDialog', require('./app/controllers/dialogs/createMemberDialogController')]);
@@ -259,16 +278,16 @@ app.controller('ManageMemberDialogController', ['$scope', '$mdDialog', 'memberId
 app.controller('ManageGroupDialogController', ['$scope', '$mdDialog', 'groupId', require('./app/controllers/dialogs/manageGroupDialogController')]);
 app.controller('CreateGroupDialogController', ['$scope', '$mdDialog', require('./app/controllers/dialogs/createGroupDialogController')]);
 
+// Layouts
+
 app.controller('UiLayoutListDialogController', ['$scope', '$mdDialog', 'options', require('./app/controllers/dialogs/ui/uiLayoutListDialogController')]);
 app.controller('UiLayoutSaveAsDialogController', ['$scope', '$mdDialog', 'options', require('./app/controllers/dialogs/ui/uiLayoutSaveAsDialogController')]);
+
+// Bookmarks
 
 app.controller('BookmarksWizardDialogController', ['$scope', '$mdDialog', require('./app/controllers/dialogs/bookmarksWizardDialogController')]);
 app.controller('BookmarksEditSelectedDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/bookmarksEditSelectedDialogController')]);
 app.controller('BookmarksLayoutSelectDialogController', ['$scope', '$mdDialog', require('./app/controllers/dialogs/bookmarksLayoutSelectDialogController')]);
-
-
-app.controller('FloatCustomFieldConstructorController', ['$scope', require('./app/controllers/floatCustomFieldConstructorController')]);
-app.controller('DateCustomFieldConstructorController', ['$scope', require('./app/controllers/dateCustomFieldConstructorController')]);
 
 app.component('floatRangeCustomFieldControl', require('./app/components/floatRangeCustomFieldControlComponent'));
 app.component('dateRangeCustomFieldControl', require('./app/components/dateRangeCustomFieldControlComponent'));
@@ -364,4 +383,4 @@ require('./templates.min.js');
 
 String.prototype.capitalizeFirstLetter = function () {
     return this.charAt(0).toUpperCase() + this.slice(1);
-}
+};

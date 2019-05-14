@@ -186,11 +186,6 @@
                 templateUrl: 'views/reports/reports-balance-view.html',
                 controller: 'BalanceReportController as vm'
             })
-            .state('app.reports.balance-report-old', {
-                url: '/balance-old',
-                templateUrl: 'views/reports/reports-balance-view-old.html',
-                controller: 'BalanceReportControllerOld as vm'
-            })
             .state('app.reports.customAttributesManager', {
                 url: '/:entityType/customAttributes',
                 templateUrl: 'views/reports/reports-custom-attr-view.html',
