@@ -5,28 +5,28 @@
 
     'use strict';
 
-    var logService = require('../../../../../core/services/logService');
+    var logService = require('../../../../../../core/services/logService');
 
-    var metaService = require('../../services/metaService');
-    var dataProvidersService = require('../../services/import/dataProvidersService');
-    var scheduleService = require('../../services/import/scheduleService');
-    var attributeTypeService = require('../../services/attributeTypeService');
-    var instrumentSchemeService = require('../../services/import/instrumentSchemeService');
-    var instrumentService = require('../../services/instrumentService');
-    var currencyService = require('../../services/currencyService');
+    var metaService = require('../../../services/metaService');
+    var dataProvidersService = require('../../../services/import/dataProvidersService');
+    var scheduleService = require('../../../services/import/scheduleService');
+    var attributeTypeService = require('../../../services/attributeTypeService');
+    var instrumentSchemeService = require('../../../services/import/instrumentSchemeService');
+    var instrumentService = require('../../../services/instrumentService');
+    var currencyService = require('../../../services/currencyService');
 
-    var instrumentTypeService = require('../../services/instrumentTypeService');
-    var instrumentDailyPricingModelService = require('../../services/instrument/instrumentDailyPricingModelService');
-    var importPriceDownloadSchemeService = require('../../services/import/importPriceDownloadSchemeService');
+    var instrumentTypeService = require('../../../services/instrumentTypeService');
+    var instrumentDailyPricingModelService = require('../../../services/instrument/instrumentDailyPricingModelService');
+    var importPriceDownloadSchemeService = require('../../../services/import/importPriceDownloadSchemeService');
 
-    var importInstrumentService = require('../../services/import/importInstrumentService');
-    var instrumentPaymentSizeDetailService = require('../../services/instrument/instrumentPaymentSizeDetailService');
-    var instrumentAttributeTypeService = require('../../services/instrument/instrumentAttributeTypeService');
+    var importInstrumentService = require('../../../services/import/importInstrumentService');
+    var instrumentPaymentSizeDetailService = require('../../../services/instrument/instrumentPaymentSizeDetailService');
+    var instrumentAttributeTypeService = require('../../../services/instrument/instrumentAttributeTypeService');
 
 
     module.exports = function ($scope, $mdDialog) {
 
-        logService.controller('ImportInstrumentDialogController', 'initialized');
+        logService.controller('InstrumentDownloadDialogController', 'initialized');
 
         console.log('mdDialog is ', $mdDialog);
 
@@ -255,7 +255,7 @@
         vm.openSchemeManager = function ($event) {
             $mdDialog.show({
                 controller: 'InstrumentDownloadSchemeEditDialogController as vm',
-                templateUrl: 'views/dialogs/instrument-download-scheme-dialog-view.html',
+                templateUrl: 'views/dialogs/instrument-download/instrument-download-scheme-dialog-view.html',
                 targetEvent: $event,
                 multiple: true,
                 preserveScope: true,

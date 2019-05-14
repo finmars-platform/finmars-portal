@@ -36,10 +36,12 @@
       border-radius: 2px;
       cursor: pointer;
       padding: 4px 8px;
+
       &.selected {
         background: #4C334D;
         color: #fff;
       }
+
       &:hover {
         background: #4C334D;
         color: #fff;
@@ -58,6 +60,7 @@
     height: 216px;
     overflow-y: scroll;
   }
+
   .description-column-footer {
     .md-button {
       margin: 0;
@@ -89,10 +92,12 @@
     height: 32px;
     border-bottom: 1px solid #4C334D;
     margin: 0 0 8px;
+
     input {
       outline: none;
       border-color: transparent;
       border-bottom: 0;
+
       &:focus {
         outline: none;
         border-bottom: 0;
@@ -106,12 +111,48 @@
     height: 200px;
     box-shadow: 0 0 4px rgba(0, 0, 0, .54);
     padding: 0px;
+
     .help-item-description-content {
       max-height: 180px;
       height: 180px;
       max-width: 100%;
     }
   }
+
+  .eb-highlight-func {
+    font-weight: bold;
+    color: #00cc7d;
+  }
+
+  .eb-highlight-property {
+    font-weight: bold;
+    color: #363636;
+  }
+
+  .eb-highlight-input {
+    font-weight: bold;
+    color: #3E7EFF;
+  }
+
+  .eb-circle {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    display: inline-block;
+  }
+
+  .eb-circle-func {
+    background: #00cc7d;
+  }
+
+  .eb-circle-property {
+    background: #363636;
+  }
+
+  .eb-circle-input {
+    background: #3E7EFF;
+  }
+
 
 }
 

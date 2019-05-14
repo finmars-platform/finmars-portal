@@ -5,10 +5,10 @@
 
     'use strict';
 
-    var logService = require('../../../../../core/services/logService');
+    var logService = require('../../../../../../core/services/logService');
 
-    var transactionSchemeService = require('../../services/import/transactionSchemeService');
-    var transactionTypeService = require('../../services/transactionTypeService');
+    var transactionSchemeService = require('../../../services/import/transactionSchemeService');
+    var transactionTypeService = require('../../../services/transactionTypeService');
 
     module.exports = function ($scope, $mdDialog) {
 

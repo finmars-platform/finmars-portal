@@ -54,69 +54,38 @@
 
                     <div class="transaction-import-error-holder">
 
-                        <table data-ng-repeat="row in vm.validationResult.error_rows">
-                            <thead>
-                            <tr>
-                                <th>
-                                    Row number
-                                </th>
+                        <div data-ng-show="vm.validationResult.error_rows.length" style="margin-top: 24px">
+                            <table>
+                                <thead>
+                                <tr>
+                                    <th>
+                                        Row number
+                                    </th>
+                                    <th style="min-width:300px">Inputs</th>
+                                    <th>Row content</th>
+                                    <th style="min-width:300px">Message</th>
+                                    <th>Reaction</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr data-ng-repeat="item in vm.validationResult.error_rows">
+                                    <td>
+                                        <span data-ng-bind="row.original_row_index"></span>
+                                    </td>
+                                    <td>
+                                        <div data-ng-repeat="(key, val) in item.inputs">
+                                            <b data-ng-bind="key"></b>: {{val}}
+                                        </div>
+                                    </td>
+                                    <td data-ng-bind="item.original_row"></td>
+                                    <td data-ng-bind="item.error_message"></td>
+                                    <td><span data-ng-bind="row.error_reaction"></span></td>
+                                </tr>
+                                </tbody>
 
-                                <th data-ng-repeat="column in row.error_data.columns.imported_columns track by $index">
-                                    {{column}}
-                                </th>
+                            </table>
 
-                                <th data-ng-repeat="column in row.error_data.columns.converted_imported_columns track by $index">
-                                    {{column}}
-                                </th>
-
-
-                                <th data-ng-repeat="column in row.error_data.columns.transaction_type_selector track by $index">
-                                    {{column}}
-                                </th>
-
-                                <th data-ng-repeat="column in row.error_data.columns.executed_input_expressions track by $index">
-                                    {{column}}
-                                </th>
-
-                                <th>
-                                    Error message
-                                </th>
-                                <th>
-                                    Reaction
-                                </th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr>
-                                <td>
-                                    <span data-ng-bind="row.original_row_index"></span>
-                                </td>
-
-                                <td data-ng-repeat="column in row.error_data.data.imported_columns track by $index">
-                                    {{column}}
-                                </td>
-
-                                <td data-ng-repeat="column in row.error_data.data.converted_imported_columns track by $index">
-                                    {{column}}
-                                </td>
-
-                                <td data-ng-repeat="column in row.error_data.data.transaction_type_selector track by $index">
-                                    {{column}}
-                                </td>
-
-                                <td data-ng-repeat="column in row.error_data.data.executed_input_expressions track by $index">
-                                    {{column}}
-                                </td>
-
-                                <td>
-                                    <span data-ng-bind="row.error_message"></span>
-                                </td>
-                                <td>
-                                    <span data-ng-bind="row.error_reaction"></span>
-                                </td>
-                            </tr>
-                            </tbody>
-                        </table>
+                        </div>
 
                     </div>
 
