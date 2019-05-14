@@ -97,23 +97,28 @@
 
             var reportOptions = entityViewerDataService.getReportOptions();
 
-            var items = reportOptions.items.concat();
+            var groups = [];
 
-            var groupTypes = entityViewerDataService.getGroups();
+            if (reportOptions.hasOwnProperty("items") && reportOptions.items.length > 0) {
 
-            items = filterService.filterByRegularFilters(items, regularFilters);
-            items = filterService.filterByGroupsFilters(items, options, groupTypes);
+                var items = reportOptions.items.concat();
 
-            var group = options.groups_types[options.groups_types.length - 1];
+                var groupTypes = entityViewerDataService.getGroups();
 
-            var groups = getUniqueGroups(items, group);
+                items = filterService.filterByRegularFilters(items, regularFilters);
+                items = filterService.filterByGroupsFilters(items, options, groupTypes);
 
-            // console.log('getUniqueGroups groups', groups);
+                var group = options.groups_types[options.groups_types.length - 1];
 
-            if (options.groups_order === 'desc') {
-                groups = sortService.sortItems(groups, '-___group_name');
-            } else {
-                groups = sortService.sortItems(groups, '___group_name');
+                var groups = getUniqueGroups(items, group);
+
+                // console.log('getUniqueGroups groups', groups);
+
+                if (options.groups_order === 'desc') {
+                    groups = sortService.sortItems(groups, '-___group_name');
+                } else {
+                    groups = sortService.sortItems(groups, '___group_name');
+                }
             }
 
             result.count = groups.length;

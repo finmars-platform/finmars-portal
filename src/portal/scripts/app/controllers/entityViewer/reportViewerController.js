@@ -8,13 +8,11 @@
 
         var uiService = require('../../services/uiService');
         var evEvents = require('../../services/entityViewerEvents');
-        var objectComparison = require('../../services/objectsComparisonService');
+        var evHelperService = require('../../services/entityViewerHelperService');
 
 
         var EntityViewerDataService = require('../../services/entityViewerDataService');
         var EntityViewerEventService = require('../../services/entityViewerEventService');
-
-        var stringHelper = require('../../helpers/stringHelper');
 
         var rvDataProviderService = require('../../services/rv-data-provider/rv-data-provider.service');
 
@@ -25,8 +23,6 @@
             var vm = this;
 
             vm.listViewIsReady = false;
-
-            var activeLayoutConfigString = {};
 
             var entityViewerDataService = new EntityViewerDataService();
             var entityViewerEventService = new EntityViewerEventService();
@@ -157,7 +153,7 @@
 
                                 $scope.$apply();
 
-                                activeLayoutConfigString = JSON.stringify(entityViewerDataService.getListLayout());
+                                entityViewerDataService.setActiveLayoutConfiguration();
 
                             });
 
@@ -170,7 +166,7 @@
 
                             $scope.$apply();
 
-                            activeLayoutConfigString = JSON.stringify(entityViewerDataService.getListLayout());
+                            entityViewerDataService.setActiveLayoutConfiguration();
 
                         }
                     // < Check if there is need to solve report datepicker expression >
@@ -182,7 +178,7 @@
 
                         $scope.$apply();
 
-                        activeLayoutConfigString = JSON.stringify(entityViewerDataService.getListLayout());
+                        entityViewerDataService.setActiveLayoutConfiguration();
 
 
                     }
@@ -202,7 +198,7 @@
 
             vm.init();
 
-            var checkForLayoutChanges = function (savedLayoutConfiguration, currentLayoutConfiguration) {
+            /*var checkForLayoutChanges = function (savedLayoutConfiguration, currentLayoutConfiguration) {
 
                 var savedConfig = JSON.parse(JSON.stringify(savedLayoutConfiguration));
                 delete savedConfig.data.reportOptions.task_id;
@@ -236,18 +232,18 @@
 
                 }
 
-                var layoutChanged = objectComparison.compareObjects(savedConfig, currentConfig);
+                var layoutChanged = objectComparisonHelper.compareObjects(savedConfig, currentConfig);
 
                 return layoutChanged;
 
-            };
+            };*/
 
             var checkLayoutForChanges = function () {
 
-                var activeLayoutConfig = JSON.parse(activeLayoutConfigString);
+                var activeLayoutConfig = entityViewerDataService.getActiveLayoutConfiguration();
                 var currentLayoutConfig = entityViewerDataService.getLayoutCurrentConfiguration(true);
 
-                if (!checkForLayoutChanges(activeLayoutConfig, currentLayoutConfig)) {
+                if (!evHelperService.checkForLayoutConfigurationChanges(activeLayoutConfig, currentLayoutConfig, true)) {
 
                     return new Promise (function (resolve, reject) {
 
@@ -257,7 +253,13 @@
                             parent: angular.element(document.body),
                             preserveScope: true,
                             autoWrap: true,
-                            multiple: true
+                            multiple: true,
+                            locals: {
+                                data: {
+                                    evDataService: entityViewerDataService,
+                                    entityType: vm.entityType
+                                }
+                            }
                         }).then(function (res, rej) {
 
                             if (res.status === 'save_layout') {
@@ -272,13 +274,29 @@
 
                                 } else {
 
-                                    uiService.createListLayout(vm.entityType, currentLayoutConfig).then(function () {
-                                        resolve(true);
+                                    if (res.data && res.data.layoutName) {
+                                        currentLayoutConfig.name = res.data.layoutName;
+                                    }
+
+                                    uiService.getActiveListLayout(vm.entityType).then(function (data) {
+
+                                        var activeLayout = data.results[0];
+                                        activeLayout.is_default = false;
+                                        currentLayoutConfig.is_default = true;
+
+                                        uiService.updateListLayout(activeLayout.id, activeLayout).then(function () {
+
+                                            uiService.createListLayout(vm.entityType, currentLayoutConfig).then(function () {
+                                                resolve(true);
+                                            });
+
+                                        });
+
                                     });
 
                                 }
 
-                            } else if ('do_not_save_layout') {
+                            } else if (res.status === 'do_not_save_layout') {
 
                                 resolve(true);
 
@@ -297,12 +315,12 @@
 
             var warnAboutLayoutChangesLoss = function (event) {
 
-                var activeLayoutConfig = JSON.parse(activeLayoutConfigString);
+                var activeLayoutConfig = entityViewerDataService.getActiveLayoutConfiguration();
                 var currentLayoutConfig = entityViewerDataService.getLayoutCurrentConfiguration(true);
 
-                if (!checkForLayoutChanges(activeLayoutConfig, currentLayoutConfig)) {
+                if (!evHelperService.checkForLayoutConfigurationChanges(activeLayoutConfig, currentLayoutConfig, true)) {
                     event.preventDefault();
-                    (event || window.event).returnValue = 'All unsaved changes will be lost.';
+                    (event || window.event).returnValue = 'All unsaved changes of layout will be lost.';
                 }
 
             };

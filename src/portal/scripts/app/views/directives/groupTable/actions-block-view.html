@@ -16,12 +16,17 @@
                 </md-button>
                 <md-menu-content width="4">
                     <md-menu-item>
+                        <md-button ng-click="createNewLayout()" class="g-settings-option-btn">
+                            <span>Create new layout</span>
+                        </md-button>
+                    </md-menu-item>
+                    <md-menu-item>
                         <md-button ng-click="openLayoutList($event)" class="g-settings-option-btn">
                             <span>Open layout</span>
                         </md-button>
                     </md-menu-item>
                     <md-menu-item>
-                        <md-button ng-click="saveLayoutList($event)" class="g-settings-option-btn">
+                        <md-button ng-click="saveLayoutList($event)" class="g-settings-option-btn" ng-disabled="isNewLayout">
                             <span>Save</span>
                         </md-button>
                     </md-menu-item>

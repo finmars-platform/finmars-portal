@@ -102,7 +102,7 @@
         delete reportOptions.item_currencies;
         delete reportOptions.item_accounts;
 
-        reportOptions.task_id = null;
+        // reportOptions.task_id = null;
 
         entityViewerDataService.setReportOptions(reportOptions);
 

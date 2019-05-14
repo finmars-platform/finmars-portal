@@ -5,12 +5,52 @@
 
     'use strict';
 
-    module.exports = function($scope, $mdDialog){
+    module.exports = function($scope, data, $mdDialog){
 
         var vm = this;
 
-        vm.saveLayout = function () {
-            $mdDialog.hide({status: 'save_layout'});
+        var evDataService = {};
+
+        var isEmptyLayout = false;
+        var entityType = undefined;
+
+        if (data) {
+            evDataService = data.evDataService;
+            entityType = data.entityType;
+        }
+
+        vm.saveLayout = function ($event) {
+            if (data) {
+                var listLayout = evDataService.getListLayout();
+
+                if (!listLayout.hasOwnProperty('id')) {
+
+                    $mdDialog.show({
+                        controller: 'UiLayoutSaveAsDialogController as vm',
+                        templateUrl: 'views/dialogs/ui/ui-layout-save-as-view.html',
+                        parent: angular.element(document.body),
+                        targetEvent: $event,
+                        clickOutsideToClose: false,
+                        multiple: true,
+                        locals: {
+                            options: {
+                                complexSaveAsLayoutDialog: {
+                                    entityType: entityType
+                                }
+                            }
+                        }
+                    }).then(function (res) {
+
+                        if (res.status === "agree") {
+                            $mdDialog.hide({status: 'save_layout', data: {layoutName: res.data.name}});
+                        }
+
+                    });
+
+                }
+            } else {
+                $mdDialog.hide({status: 'save_layout'});
+            }
         };
 
         vm.dontSave = function () {

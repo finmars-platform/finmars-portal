@@ -82,17 +82,20 @@
 
                 }
 
-                var toggleTodayMode = function () {
+                /*var toggleTodayMode = function () {
                     scope.datepickerActiveModeTitle = 'Today';
                     scope.datepickerOptions.datepickerMode = 'today';
                     scope.datepickerOptions.expression = "now()";
 
                     input.attr('disabled', '');
-                };
+                };*/
 
-                scope.todayMode = function () {
+                var enableTodayMode = function () {
 
-                    toggleTodayMode();
+                    // toggleTodayMode();
+                    scope.datepickerActiveModeTitle = 'Today';
+                    scope.datepickerOptions.expression = "now()";
+                    input.attr('disabled', '');
 
                     var today = moment(new Date()).format('YYYY-MM-DD');
                     scope.date = today;
@@ -103,18 +106,26 @@
 
                 };
 
-                var toggleYesterdayMode = function () {
+                scope.toggleMode = function (mode) {
+                    scope.datepickerOptions.datepickerMode = mode;
+                };
+
+                /*scope.toggleYesterdayMode = function () {
 
                     scope.datepickerActiveModeTitle = 'Yesterday';
                     scope.datepickerOptions.datepickerMode = 'yesterday';
                     scope.datepickerOptions.expression = "now()-days(1)";
 
                     input.attr('disabled', '');
-                };
+                };*/
 
-                scope.yesterdayMode = function () {
+                var enableYesterdayMode = function () {
 
-                    toggleYesterdayMode();
+                    // toggleYesterdayMode();
+
+                    scope.datepickerActiveModeTitle = 'Yesterday';
+                    scope.datepickerOptions.expression = "now()-days(1)";
+                    input.attr('disabled', '');
 
                     var yesterday = moment(new Date()).subtract(1, 'day').format('YYYY-MM-DD');
 
@@ -126,9 +137,9 @@
 
                 };
 
-                scope.datepickerMode = function () {
+                var enableDatepickerMode = function () {
                     scope.datepickerActiveModeTitle = 'Datepicker';
-                    scope.datepickerOptions.datepickerMode = 'datepicker';
+                    // scope.datepickerOptions.datepickerMode = 'datepicker';
                     delete scope.datepickerOptions.expression;
 
                     setTimeout(function () {
@@ -137,9 +148,9 @@
                     input.removeAttr('disabled');
                 };
 
-                scope.expressionMode = function () {
+                var enableExpressionMode = function () {
                     scope.datepickerActiveModeTitle = 'Custom';
-                    scope.datepickerOptions.datepickerMode = 'expression';
+                    // scope.datepickerOptions.datepickerMode = 'expression';
 
                     input.attr('disabled', '');
                 };
@@ -147,7 +158,7 @@
                 scope.openEditExpressionDialog = function ($event) {
 
                     if (scope.datepickerOptions.datepickerMode !== 'expression') {
-                        scope.expressionMode();
+                        scope.datepickerOptions.datepickerMode = 'expression';
                         scope.datepickerOptions.expression = undefined;
                     }
 
@@ -204,47 +215,26 @@
                     });
                 };
 
-                switch (scope.datepickerOptions.datepickerMode) {
-                    case "today":
-                        scope.todayMode();
-                        break;
-                    case "yesterday":
-                        scope.yesterdayMode();
-                        break;
-                    case "expression":
-                        scope.expressionMode();
-                        break;
-                    default:
-                        scope.datepickerMode();
-                }
+                scope.$watch("datepickerOptions.datepickerMode", function (datepickerMode) {
 
-                /*if (scope.onReadyCallback) {
-
-                    if (scope.datepickerOptions.datepickerMode === 'expression') {
-
-                        var expressionData = {
-                            expression: scope.datepickerOptions.expression,
-                            is_eval: true
-                        };
-
-                        expressionService.getResultOfExpression(expressionData).then(function (resData) {
-
-                            scope.date = resData.result;
-                            scope.$apply();
-
-                            if (scope.callbackMethod) {
-                                scope.callbackMethod();
-                            }
-
-                            scope.onReadyCallback();
-
-                        })
-
-                    } else {
-                        scope.onReadyCallback();
+                    switch (datepickerMode) {
+                        case "today":
+                            enableTodayMode();
+                            break;
+                        case "yesterday":
+                            enableYesterdayMode();
+                            break;
+                        case "expression":
+                            enableExpressionMode();
+                            break;
+                        case "datepicker":
+                            enableDatepickerMode();
+                            break;
+                        default:
+                            scope.datepickerOptions.datepickerMode = 'datepicker';
+                            // enableDatepickerMode();
                     }
-
-                }*/
+                });
 
             }
         }
