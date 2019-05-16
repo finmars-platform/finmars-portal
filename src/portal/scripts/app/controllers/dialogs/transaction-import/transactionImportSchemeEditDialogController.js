@@ -19,7 +19,7 @@
         vm.readyStatus = {scheme: false, transactionTypes: false};
 
         vm.inputsGroup = {
-            "name": "<b>Inputs</b>",
+            "name": "<b>Imported</b>",
             "key": 'input'
         };
 

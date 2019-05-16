@@ -5,12 +5,22 @@
 (function () {
 
 
+    var success = function (message) {
+        toastr.success(message);
+    };
+
     var error = function (message) {
         toastr.error(message);
     };
 
+    var info = function (message) {
+        toastr.info(message);
+    };
+
     module.exports = {
-        error: error
+        success: success,
+        error: error,
+        info: info
     }
 
 
