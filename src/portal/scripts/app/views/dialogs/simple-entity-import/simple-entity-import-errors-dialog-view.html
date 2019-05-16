@@ -53,8 +53,8 @@
                     </div>
 
                     <div>
-                        s
-                        <div data-ng-show="vm.validationResult.error_rows.length" style="margin-top: 24px">
+
+                        <div data-ng-show="vm.validationResult.errors.length" style="margin-top: 24px">
                             <table>
                                 <thead>
                                 <tr>
@@ -68,9 +68,9 @@
                                 </tr>
                                 </thead>
                                 <tbody>
-                                <tr data-ng-repeat="item in vm.validationResult.error_rows">
+                                <tr data-ng-repeat="item in vm.validationResult.errors">
                                     <td>
-                                        <span data-ng-bind="row.original_row_index"></span>
+                                        <span data-ng-bind="item.original_row_index"></span>
                                     </td>
                                     <td>
                                         <div data-ng-repeat="(key, val) in item.inputs">

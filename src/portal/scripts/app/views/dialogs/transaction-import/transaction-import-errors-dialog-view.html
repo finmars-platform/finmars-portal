@@ -70,7 +70,7 @@
                                 <tbody>
                                 <tr data-ng-repeat="item in vm.validationResult.error_rows">
                                     <td>
-                                        <span data-ng-bind="row.original_row_index"></span>
+                                        <span data-ng-bind="item.original_row_index"></span>
                                     </td>
                                     <td>
                                         <div data-ng-repeat="(key, val) in item.inputs">
@@ -79,7 +79,7 @@
                                     </td>
                                     <td data-ng-bind="item.original_row"></td>
                                     <td data-ng-bind="item.error_message"></td>
-                                    <td><span data-ng-bind="row.error_reaction"></span></td>
+                                    <td><span data-ng-bind="item.error_reaction"></span></td>
                                 </tr>
                                 </tbody>
 
