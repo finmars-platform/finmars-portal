@@ -38,7 +38,10 @@
                                                 <input aria-label="index" type="text" data-ng-model="item.column">
                                             </md-input-container>
                                             <md-input-container flex="70">
-                                                <input aria-label="key" type="text" data-ng-model="item.name">
+                                                <input aria-label="key"
+                                                       type="text"
+                                                       data-ng-model="item.name"
+                                                       ng-blur="vm.setProviderFieldExpression(item)">
                                             </md-input-container>
                                         </div>
                                         <div>

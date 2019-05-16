@@ -24,15 +24,15 @@
         vm.inputs = [];
 
         vm.inputsGroup = {
-            "name": "<b>Inputs</b>",
+            "name": "<b>Imported</b>",
             "key": 'input'
         };
 
         vm.inputsFunctions = vm.data.fields.map(function (input) {
 
             return {
-                "name": "Add input " + input.name,
-                "description": "Imported Parameter: " + input.name + " (column #" + input.column + ") ",
+                "name": "Imported: " + input.name + " (column #" + input.column + ")",
+                "description": "Imported: " + input.name + " (column #" + input.column + ") " + input.name_expr,
                 "groups": "input",
                 "func": input.name
             }
