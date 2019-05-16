@@ -243,7 +243,9 @@
 
                     resolveRelation(item)
 
-                });
+                }).catch(function (reason) {
+                    reject(reason)
+                })
 
             } else {
 
@@ -256,6 +258,8 @@
 
                         resolveRelation(item)
 
+                    }).catch(function (reason) {
+                        reject(reason)
                     });
 
                 }
@@ -268,6 +272,8 @@
 
                         resolveRelation(item)
 
+                    }).catch(function (reason) {
+                        reject(reason)
                     });
 
                 }
