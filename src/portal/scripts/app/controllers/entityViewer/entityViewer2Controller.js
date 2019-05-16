@@ -209,7 +209,7 @@
                 var activeLayoutConfig = entityViewerDataService.getActiveLayoutConfiguration();
                 var layoutCurrentConfig = entityViewerDataService.getLayoutCurrentConfiguration(false);
 
-                if (!evHelperService.checkForLayoutConfigurationChanges(activeLayoutConfig, layoutCurrentConfig, true)) {
+                if (!evHelperService.checkForLayoutConfigurationChanges(activeLayoutConfig, layoutCurrentConfig, false)) {
                     event.preventDefault();
                     (event || window.event).returnValue = 'All unsaved changes of layout will be lost.';
                 }

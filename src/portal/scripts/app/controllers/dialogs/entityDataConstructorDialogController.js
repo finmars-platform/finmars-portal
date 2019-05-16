@@ -5,20 +5,18 @@
 
     'use strict';
 
-    var logService = require('../../../../core/services/logService');
-    var attributeTypeService = require('../services/attributeTypeService');
 
-    var uiService = require('../services/uiService');
+    var attributeTypeService = require('../../services/attributeTypeService');
 
-    var portfolioService = require('../services/portfolioService');
-    var entityResolverService = require('../services/entityResolverService');
-    var metaService = require('../services/metaService');
+    var uiService = require('../../services/uiService');
 
-    var gridHelperService = require('../services/gridHelperService');
-    var routeResolver = require('../services/routeResolverService');
-    var layoutService = require('../services/layoutService');
+    var entityResolverService = require('../../services/entityResolverService');
+    var metaService = require('../../services/metaService');
 
-    module.exports = function ($scope, $stateParams, $state, $mdDialog) {
+    var gridHelperService = require('../../services/gridHelperService');
+    var layoutService = require('../../services/layoutService');
+
+    module.exports = function ($scope, data, $stateParams, $state, $mdDialog) {
 
         var vm = this;
         vm.boxColumns = [1, 2, 3, 4, 5, 6];
@@ -31,9 +29,16 @@
 
         vm.items = [];
 
-        vm.entityType = $stateParams.entityType;
-        vm.isInstanceId = $stateParams.instanceId;
-        vm.fromEntityType = $stateParams.from;
+        vm.entityType = data.entityType;
+        vm.instanceId = undefined;
+        if (data.hasOwnProperty('instanceId')) {
+            vm.instanceId = data.instanceId;
+        }
+        vm.fromEntityType = undefined;
+        if (data.hasOwnProperty('fromEntityType')) {
+            vm.fromEntityType = data.fromEntityType;
+        }
+
         console.log('cancel button initEntityType', $stateParams);
 
         var choices = metaService.getTypeCaptions();
@@ -47,8 +52,8 @@
 
             return new Promise(function (resolve) {
 
-                if (vm.isInstanceId) {
-                    uiService.getEditLayoutByInstanceId(vm.entityType, vm.isInstanceId).then(function (data) {
+                if (vm.instanceId) {
+                    uiService.getEditLayoutByInstanceId(vm.entityType, vm.instanceId).then(function (data) {
 
                         if (data) {
                             vm.ui = data;
@@ -96,11 +101,12 @@
         };
 
         vm.cancel = function () {
-            var entityType = vm.entityType;
+            /*var entityType = vm.entityType;
             if (vm.fromEntityType) {
                 entityType = vm.fromEntityType;
             }
-            $state.go('app.data.' + entityType);
+            $state.go('app.data.' + entityType);*/
+            $mdDialog.cancel();
         };
 
         vm.checkColspan = function (tab, row, column) {
@@ -160,7 +166,7 @@
             // calculating how much rows needs creating in addition to first five
             var rowsToAdd = 5 - tab.layout.rows;
             if (rowsToAdd <= 0) {
-               rowsToAdd = 1;
+                rowsToAdd = 1;
             }
 
             var r, c;
@@ -270,48 +276,56 @@
             }
             vm.ui.data = vm.tabs;
             if (vm.uiIsDefault) {
-                if (vm.isInstanceId) {
-                    uiService.updateEditLayoutByInstanceId(vm.entityType, vm.isInstanceId, vm.ui).then(function (data) {
+                if (vm.instanceId) {
+                    uiService.updateEditLayoutByInstanceId(vm.entityType, vm.instanceId, vm.ui).then(function (data) {
                         console.log('layout saved');
-                        var route;
+                        /*var route;
                         if (vm.entityType === 'complex-transaction') {
                             route = routeResolver.findExistingState('app.data.', 'transaction-type');
                         } else {
                             route = routeResolver.findExistingState('app.data.', vm.entityType);
                         }
-                        $state.go(route.state, route.options);
+                        $state.go(route.state, route.options);*/
                         $scope.$apply();
+
+                        $mdDialog.hide({status: 'agree'});
                     });
                 } else {
                     uiService.createEditLayout(vm.entityType, vm.ui).then(function () {
                         console.log('layout saved');
 
-                        var route = routeResolver.findExistingState('app.data.', vm.entityType);
-                        $state.go(route.state, route.options);
+                        /*var route = routeResolver.findExistingState('app.data.', vm.entityType);
+                        $state.go(route.state, route.options);*/
                         $scope.$apply();
+
+                        $mdDialog.hide({status: 'agree'});
                     });
                 }
             } else {
-                if (vm.isInstanceId) {
-                    uiService.updateEditLayoutByInstanceId(vm.entityType, vm.isInstanceId, vm.ui).then(function (data) {
+                if (vm.instanceId) {
+                    uiService.updateEditLayoutByInstanceId(vm.entityType, vm.instanceId, vm.ui).then(function (data) {
                         console.log('layout saved');
 
-                        var route;
+                        /*var route;
                         if (vm.entityType === 'complex-transaction') {
                             route = routeResolver.findExistingState('app.data.', 'transaction-type');
                         } else {
                             route = routeResolver.findExistingState('app.data.', vm.entityType);
                         }
-                        $state.go(route.state, route.options);
+                         $state.go(route.state, route.options);*/
                         $scope.$apply();
+
+                        $mdDialog.hide({status: 'agree'});
                     });
                 } else {
                     uiService.updateEditLayout(vm.ui.id, vm.ui).then(function () {
                         console.log('layout saved');
 
-                        var route = routeResolver.findExistingState('app.data.', vm.entityType);
-                        $state.go(route.state, route.options);
+                        /*var route = routeResolver.findExistingState('app.data.', vm.entityType);
+                        $state.go(route.state, route.options);*/
                         $scope.$apply();
+
+                        $mdDialog.hide({status: 'agree'});
                     });
                 }
             }
@@ -448,7 +462,6 @@
                     // targetEvent: $event,
                     autoWrap: true,
                     skipHide: true,
-                    preserveScope: true,
                     multiple: true,
                     locals: {
                         warning: {
@@ -467,7 +480,7 @@
         vm.manageAttrs = function () {
             var entityAddress = {entityType: vm.entityType};
             if (vm.fromEntityType) {
-                entityAddress = {entityType: vm.fromEntityType, from: vm.fromEntityType, instanceId: vm.isInstanceId};
+                entityAddress = {entityType: vm.fromEntityType, from: vm.fromEntityType, instanceId: vm.instanceId};
             }
             $state.go('app.attributesManager', entityAddress);
         };
@@ -496,12 +509,11 @@
                     return doNotShowAttrs.indexOf(entity.key) === -1;
                 });
 
-                var doNotShowAttrs = ['code', 'date', 'status', 'text'];
                 vm.layoutAttrs = layoutService.getLayoutAttrs();
 
-                if (vm.isInstanceId && vm.entityType === 'complex-transaction') {
+                if (vm.instanceId && vm.entityType === 'complex-transaction') {
 
-                    entityResolverService.getByKey('transaction-type', vm.isInstanceId).then(function (data) {
+                    entityResolverService.getByKey('transaction-type', vm.instanceId).then(function (data) {
 
                         var inputs = data.inputs;
 
@@ -761,7 +773,7 @@
             vm.items = [];
 
             vm.items = vm.items.concat(vm.attrs);
-            // if (vm.entityType === 'complex-transaction' && !vm.isInstanceId) {
+            // if (vm.entityType === 'complex-transaction' && !vm.instanceId) {
             //    console.log('remove fields complex-transaction');
             //    var entityAttrsForCT = doNotShowAttrs.filter(function (entityAttr) {
             //        return doNotShowAttrs.indexOf(entityAttr) === -1;

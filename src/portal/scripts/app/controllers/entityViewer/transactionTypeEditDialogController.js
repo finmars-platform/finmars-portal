@@ -154,11 +154,6 @@
             $mdDialog.cancel();
         };
 
-        vm.editLayout = function (ev) {
-            $state.go('app.data-constructor', {entityType: vm.entityType});
-            $mdDialog.hide();
-        };
-
         vm.manageAttrs = function (ev) {
             var entityType = {entityType: vm.entityType};
             if (vm.fromEntityType) {
@@ -242,14 +237,14 @@
                     });
 
 
-                    vm.editLayout = function () {
+                    /*vm.editLayout = function () {
                         $state.go('app.data-constructor', {
                             entityType: 'complex-transaction',
                             from: vm.entityType,
                             instanceId: data.id
                         });
                         $mdDialog.hide();
-                    };
+                    };*/
 
                     vm.manageAttrs = function () {
                         $state.go('app.attributesManager', {
@@ -587,6 +582,42 @@
         };
 
         vm.init();
+
+        vm.editLayout = function (ev) {
+
+            $mdDialog.show({
+                controller: 'EntityDataConstructorDialogController as vm',
+                templateUrl: 'views/dialogs/entity-data-constructor-dialog-view.html',
+                targetEvent: ev,
+                preserveScope: true,
+                multiple: true,
+                locals: {
+                    data: {
+                        entityType: 'complex-transaction',
+                        fromEntityType: vm.entityType,
+                        instanceId: vm.entityId
+                    }
+                }
+            }).then(function (res) {
+
+                if (res.status === "agree") {
+
+                    vm.readyStatus.attrs = false;
+                    vm.readyStatus.entity = false;
+                    vm.readyStatus.layout = false;
+
+                    vm.getItem();
+                    vm.getAttrs();
+
+                    vm.layoutAttrs = layoutService.getLayoutAttrs();
+                    vm.entityAttrs = metaService.getEntityAttrs(vm.entityType);
+
+                }
+
+            });
+            /*$state.go('app.data-constructor', {entityType: vm.entityType});
+            $mdDialog.hide();*/
+        };
 
         // Transaction type General Controller start
 

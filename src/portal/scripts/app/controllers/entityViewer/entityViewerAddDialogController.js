@@ -44,7 +44,7 @@
         vm.entitySpecialRules = false;
         vm.specialRulesReady = true;
 
-        vm.getEditListByInstanceId = function () {
+        /*vm.getEditListByInstanceId = function () { // TODO remove because separate controllers have been created
 
             return entityResolverService.getByKey('transaction-type-book', vm.complexTransactionOptions.transactionTypeId).then(function (data) {
 
@@ -104,9 +104,9 @@
                 $scope.$apply();
             });
 
-        };
+        };*/
 
-        vm.getComplexTransactionLayout = function () {
+        /*vm.getComplexTransactionLayout = function () { // TODO remove because separate controllers have been created
 
             return entityResolverService.getByKey('transaction-type-book', vm.complexTransactionOptions.transactionTypeId).then(function (data) {
 
@@ -157,9 +157,9 @@
                 $scope.$apply();
             });
 
-        };
+        };*/
 
-        if (['complex-transaction'].indexOf(vm.entityType) !== -1) {
+        /*if (['complex-transaction'].indexOf(vm.entityType) !== -1) { // TODO remove because separate controllers have been created
             vm.editLayoutByEntityInsance = true;
             vm.entitySpecialRules = true;
             vm.complexTransactionOptions = {};
@@ -185,7 +185,7 @@
 
 
             }
-        }
+        }*/
 
         vm.attrs = [];
         vm.entityAttrs = [];
@@ -310,13 +310,40 @@
             $mdDialog.cancel();
         };
 
-        vm.editLayout = function () {
-            var entityAddress = {entityType: vm.entityType};
+        vm.editLayout = function (ev) {
+
+            $mdDialog.show({
+                controller: 'EntityDataConstructorDialogController as vm',
+                templateUrl: 'views/dialogs/entity-data-constructor-dialog-view.html',
+                targetEvent: ev,
+                preserveScope: true,
+                multiple: true,
+                locals: {
+                    data: {
+                        entityType: vm.entityType
+                    }
+                }
+            }).then(function (res) {
+
+                if (res.status === "agree") {
+
+                    // vm.readyStatus.entity = false;
+                    vm.readyStatus.content = false;
+
+                    init();
+
+                    vm.layoutAttrs = layoutService.getLayoutAttrs();
+                    vm.entityAttrs = metaService.getEntityAttrs(vm.entityType) || [];
+
+                }
+
+            });
+            /*var entityAddress = {entityType: vm.entityType};
             if (vm.entityType === 'transaction-type' || vm.entityType === 'complex-transaction') {
                 entityAddress = {entityType: 'complex-transaction', from: vm.entityType};
             }
             $state.go('app.data-constructor', entityAddress);
-            $mdDialog.hide();
+            $mdDialog.hide();*/
         };
 
         vm.manageAttrs = function (ev) {
@@ -328,7 +355,7 @@
             $mdDialog.hide();
         };
 
-        vm.recalculate = function (item) {
+        /*vm.recalculate = function (item) { // TODO remove because separate controllers have been created
 
             var values = {};
 
@@ -412,10 +439,10 @@
             };
 
             entityResolverService.create('complex-transaction', book).then(handler);
-        };
+        };*/
 
 
-        if (vm.entityType !== 'transaction-type') {
+        /*if (vm.entityType !== 'transaction-type') { // TODO remove because separate controllers have been created
 
             if (vm.editLayoutByEntityInsance === true) {
                 if (vm.editLayoutEntityInstanceId) {
@@ -432,15 +459,51 @@
                     $scope.$apply();
                 });
             }
-        }
+        }*/
 
-        attributeTypeService.getList(vm.entityType).then(function (data) {
-            vm.attrs = data.results;
-            vm.readyStatus.content = true;
-            vm.readyStatus.entity = true;
-            vm.loadPermissions();
+        /*if (vm.editLayoutByEntityInsance === true) { // TODO remove because separate controllers have been created
+            if (vm.editLayoutEntityInstanceId) {
+                vm.getEditListByInstanceId();
+            }
+        } else {
+            uiService.getEditLayout(vm.entityType).then(function (data) {
+                if (data.results.length) {
+                    vm.tabs = data.results[0].data;
+                } else {
+                    vm.tabs = uiService.getDefaultEditLayout(vm.entityType)[0].data;
+                }
 
-        });
+                $scope.$apply();
+            });
+        }*/
+
+        var getTabs = function () {
+            uiService.getEditLayout(vm.entityType).then(function (data) {
+                if (data.results.length) {
+                    vm.tabs = data.results[0].data;
+                } else {
+                    vm.tabs = uiService.getDefaultEditLayout(vm.entityType)[0].data;
+                }
+
+                $scope.$apply();
+            });
+        };
+
+        var getList = function () {
+            attributeTypeService.getList(vm.entityType).then(function (data) {
+                vm.attrs = data.results;
+                vm.readyStatus.content = true;
+                vm.readyStatus.entity = true;
+                vm.loadPermissions();
+            });
+        };
+
+        var init = function () {
+            getTabs();
+            getList();
+        };
+
+        init();
 
         vm.resolveSpecialRules = function () {
             return 'views/special-rules/' + vm.entityType + '-special-rules-view.html';
@@ -646,7 +709,7 @@
 
                 var resultEntity = entityEditorHelper.checkForNulls(vm.entity);
 
-                if (vm.entityType === 'complex-transaction') {
+                /*if (vm.entityType === 'complex-transaction') { // TODO remove because separate controllers have been created
 
                     resultEntity.values = {};
 
@@ -667,15 +730,15 @@
 
                 }
 
-                if (vm.entityType === 'transaction-type') {
+                if (vm.entityType === 'transaction-type') { // TODO remove because separate controllers have been created
                     resultEntity.book_transaction_layout = vm.entity.book_transaction_layout;
-                }
+                }*/
 
                 console.log('resultEntity', resultEntity);
 
                 entityResolverService.create(vm.entityType, resultEntity).then(function (data) {
 
-                    if (vm.entityType === 'complex-transaction') {
+                    /*if (vm.entityType === 'complex-transaction') { // TODO remove because separate controllers have been created
 
                         if (data.hasOwnProperty('has_errors') && data.has_errors === true) {
 
@@ -703,7 +766,9 @@
                     } else {
 
                         $mdDialog.hide({res: 'agree'});
-                    }
+                    }*/
+
+                    $mdDialog.hide({res: 'agree'});
 
                 }).catch(function (data) {
 
@@ -711,6 +776,7 @@
                         controller: 'ValidationDialogController as vm',
                         templateUrl: 'views/dialogs/validation-dialog-view.html',
                         targetEvent: $event,
+                        parent: angular.element(document.body),
                         locals: {
                             validationData: data
                         },

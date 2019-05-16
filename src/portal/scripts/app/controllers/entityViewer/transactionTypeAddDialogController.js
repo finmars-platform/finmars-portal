@@ -165,13 +165,45 @@
             $mdDialog.cancel();
         };
 
-        vm.editLayout = function () {
+        /*vm.editLayout = function () {
             var entityAddress = {entityType: vm.entityType};
             if (vm.entityType === 'transaction-type' || vm.entityType === 'complex-transaction') {
                 entityAddress = {entityType: 'complex-transaction', from: vm.entityType};
             }
             $state.go('app.data-constructor', entityAddress);
             $mdDialog.hide();
+        };*/
+
+        vm.editLayout = function (ev) {
+
+            $mdDialog.show({
+                controller: 'EntityDataConstructorDialogController as vm',
+                templateUrl: 'views/dialogs/entity-data-constructor-dialog-view.html',
+                targetEvent: ev,
+                preserveScope: true,
+                multiple: true,
+                locals: {
+                    data: {
+                        entityType: vm.entityType,
+                        fromEntityType: vm.entityType
+                    }
+                }
+            }).then(function (res) {
+
+                if (res.status === "agree") {
+
+                    vm.readyStatus.entity = false;
+                    vm.readyStatus.layout = false;
+
+                    vm.getList();
+
+                    vm.layoutAttrs = layoutService.getLayoutAttrs();
+                    vm.entityAttrs = metaService.getEntityAttrs(vm.entityType) || [];
+
+                }
+
+            });
+
         };
 
         vm.manageAttrs = function (ev) {
@@ -183,13 +215,16 @@
             $mdDialog.hide();
         };
 
-        attributeTypeService.getList(vm.entityType).then(function (data) {
-            vm.attrs = data.results;
-            vm.readyStatus.content = true;
-            vm.readyStatus.entity = true;
-            vm.loadPermissions();
+        vm.getList = function () {
+            attributeTypeService.getList(vm.entityType).then(function (data) {
+                vm.attrs = data.results;
+                vm.readyStatus.content = true;
+                vm.readyStatus.entity = true;
+                vm.loadPermissions();
 
-        });
+            });
+        };
+        vm.getList();
 
         vm.checkReadyStatus = function () {
             return vm.readyStatus.content && vm.readyStatus.entity && vm.readyStatus.permissions
