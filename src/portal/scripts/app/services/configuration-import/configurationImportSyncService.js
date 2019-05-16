@@ -209,6 +209,13 @@
             Promise.all(promises).then(function (data) {
 
                 resolve(data)
+            }, function (error) {
+
+                console.log('syncComplexImportScheme item', item);
+                console.log('syncComplexImportScheme error', error);
+
+                resolve(item);
+
             });
 
 
@@ -267,33 +274,42 @@
 
                 if (rule.hasOwnProperty('___transaction_type__user_code')) {
 
-                    promises.push(new Promise(function (resolveRelation, reject) {
+                    promises.push(new Promise(function (resolveRelation, rejectRelation) {
 
                         var user_code = rule.___transaction_type__user_code;
 
                         configurationImportGetService.getEntityByUserCode(user_code, 'transaction-type', cacheContainer).then(function (data) {
 
-                            rule.transaction_type = data.id;
+                            if (user_code !== '-' && data.user_code === '-') {
 
-                            rule.fields = rule.fields.map(function (field) {
+                                rejectRelation("Error. Transaction type: " + user_code + ' is not found')
 
-                                data.inputs.forEach(function (input) {
+                            } else {
 
-                                    if (field.___input__name === input.name) {
-                                        field.transaction_type_input = input.id;
-                                    }
+                                rule.transaction_type = data.id;
+
+                                rule.fields = rule.fields.map(function (field) {
+
+                                    data.inputs.forEach(function (input) {
+
+                                        if (field.___input__name === input.name) {
+                                            field.transaction_type_input = input.id;
+                                        }
+
+                                    });
+
+                                    return field;
 
                                 });
 
-                                return field;
-
-                            });
-
-
-                            resolveRelation(item)
+                                resolveRelation(item)
+                            }
 
                         }).catch(function (reason) {
-                            reject(reason);
+
+                            console.log('here? reason', reason);
+
+                            rejectRelation(reason);
                         })
 
                     }));
@@ -306,6 +322,8 @@
 
                 resolve(item);
 
+            }, function (reason) {
+                reject(reason)
             })
 
         })
@@ -359,7 +377,9 @@
 
             } catch (error) {
 
-                console.log('importItem.error', error)
+                console.log('syncItem .error', error);
+
+                reject(error);
 
             }
 
