@@ -6,7 +6,13 @@
 
 
     var error = function (message) {
-        toastr.error(message);
+
+        var searchParams = new URLSearchParams(window.location.search);
+
+        if (searchParams.get('debug') === 'true') {
+            toastr.error(message);
+        }
+
     };
 
     module.exports = {
