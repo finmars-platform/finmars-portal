@@ -1347,13 +1347,35 @@
                             break;
                     }
 
-                } catch (error) {
+                } catch (reason) {
 
-                    console.log('createItem.error', error);
+                    console.log('createItem create error reason', reason);
 
-                    errors.push(error);
+                    errors.push({
+                        item: item,
+                        error: {
+                            message: reason
+                        },
+                        mode: 'skip'
+                    });
+
+                    resolve(reason)
 
                 }
+
+            }).catch(function (reason) {
+
+                console.log('createItem sync error reason', reason);
+
+                errors.push({
+                    item: item,
+                    error: {
+                        message: reason
+                    },
+                    mode: 'skip'
+                });
+
+                resolve(reason)
 
             })
 
