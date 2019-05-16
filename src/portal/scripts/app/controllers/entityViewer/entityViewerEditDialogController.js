@@ -43,6 +43,8 @@
         vm.formIsValid = true;
         vm.TTGroupChosen = true;
 
+        vm.dataConstructorData = {};
+
         vm.loadPermissions = function () {
 
             var promises = [];
@@ -156,10 +158,12 @@
             $mdDialog.cancel();
         };
 
-        vm.editLayout = function (ev) {
+        /*vm.editLayout = function (ev) {
             $state.go('app.data-constructor', {entityType: vm.entityType});
             $mdDialog.hide();
-        };
+        };*/
+
+        vm.dataConstructorData = {entityType: vm.entityType};
 
         vm.manageAttrs = function (ev) {
             var entityType = {entityType: vm.entityType};
@@ -370,13 +374,18 @@
 
                         });
 
-                        vm.editLayout = function () {
+                        /*vm.editLayout = function () {
                             $state.go('app.data-constructor', {
                                 entityType: vm.entityType,
                                 from: vm.entityType,
                                 instanceId: vm.complexTransactionOptions.transactionTypeId
                             });
                             $mdDialog.hide();
+                        };*/
+                        vm.dataConstructorData = {
+                            entityType: vm.entityType,
+                            from: vm.entityType,
+                            instanceId: vm.complexTransactionOptions.transactionTypeId
                         };
 
                         vm.manageAttrs = function () {
@@ -402,7 +411,7 @@
 
                         vm.entity = data;
 
-                        if (vm.entityType === 'transaction-type') {
+                        if (vm.entityType === 'transaction-type') {  // TODO remove because separate controllers have been created for transaction type
 
                             vm.editLayout = function () {
                                 $state.go('app.data-constructor', {
@@ -430,7 +439,7 @@
 
                             vm.loadPermissions();
 
-                            if (vm.entityType !== 'transaction-type') {
+                            /*if (vm.entityType !== 'transaction-type') {  // TODO remove because separate controllers have been created
 
                                 vm.getLayout();
 
@@ -441,7 +450,12 @@
                                 vm.readyStatus.layout = true;
                                 $scope.$apply();
 
-                            }
+                            }*/
+
+                            vm.getLayout();
+
+                            // Resolving promise to inform child about end of editor building
+                            res();
 
                         });
                     });
@@ -670,7 +684,7 @@
 
         };
 
-        if (vm.entityType === 'transaction-type') {
+        /*if (vm.entityType === 'transaction-type') {  // TODO remove because separate controllers have been created for transaction type
 
             $scope.$watch('vm.entity.group', function () {
                 if (vm.entity.group === 14 || !vm.entity.group) {
@@ -679,7 +693,7 @@
                     vm.TTGroupChosen = true;
                 }
             });
-        }
+        }*/
 
         vm.updateItem = function () {
 
@@ -777,6 +791,37 @@
         };
 
         vm.init();
+
+        vm.editLayout = function (ev) {
+
+            $mdDialog.show({
+                controller: 'EntityDataConstructorDialogController as vm',
+                templateUrl: 'views/dialogs/entity-data-constructor-dialog-view.html',
+                targetEvent: ev,
+                preserveScope: true,
+                multiple: true,
+                locals: {
+                    data: vm.dataConstructorData
+                }
+            }).then(function (res) {
+
+                if (res.status === "agree") {
+
+                    vm.readyStatus.attrs = false;
+                    vm.readyStatus.entity = false;
+                    vm.readyStatus.layout = false;
+
+                    vm.getItem();
+                    vm.getAttrs();
+
+                    vm.layoutAttrs = layoutService.getLayoutAttrs();
+                    vm.entityAttrs = metaService.getEntityAttrs(vm.entityType);
+
+                }
+
+            });
+
+        };
     }
 
 }());
