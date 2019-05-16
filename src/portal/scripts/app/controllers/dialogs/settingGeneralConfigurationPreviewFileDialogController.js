@@ -607,6 +607,11 @@
                                     itemEntity.is_duplicate = true
                                 }
 
+                                if (itemEntity.entity === 'ui.editlayout') {
+                                    itemEntity.is_duplicate = true;
+                                    item.is_duplicate = true;
+                                }
+
                             })
 
                         })
