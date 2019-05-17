@@ -154,11 +154,6 @@
             $mdDialog.cancel();
         };
 
-        vm.editLayout = function (ev) {
-            $state.go('app.data-constructor', {entityType: vm.entityType});
-            $mdDialog.hide();
-        };
-
         vm.manageAttrs = function (ev) {
             var entityType = {entityType: vm.entityType};
             if (vm.fromEntityType) {
@@ -242,14 +237,14 @@
                     });
 
 
-                    vm.editLayout = function () {
+                    /*vm.editLayout = function () {
                         $state.go('app.data-constructor', {
                             entityType: 'complex-transaction',
                             from: vm.entityType,
                             instanceId: data.id
                         });
                         $mdDialog.hide();
-                    };
+                    };*/
 
                     vm.manageAttrs = function () {
                         $state.go('app.attributesManager', {
@@ -592,6 +587,42 @@
         };
 
         vm.init();
+
+        vm.editLayout = function (ev) {
+
+            $mdDialog.show({
+                controller: 'EntityDataConstructorDialogController as vm',
+                templateUrl: 'views/dialogs/entity-data-constructor-dialog-view.html',
+                targetEvent: ev,
+                preserveScope: true,
+                multiple: true,
+                locals: {
+                    data: {
+                        entityType: 'complex-transaction',
+                        fromEntityType: vm.entityType,
+                        instanceId: vm.entityId
+                    }
+                }
+            }).then(function (res) {
+
+                if (res.status === "agree") {
+
+                    vm.readyStatus.attrs = false;
+                    vm.readyStatus.entity = false;
+                    vm.readyStatus.layout = false;
+
+                    vm.getItem();
+                    vm.getAttrs();
+
+                    vm.layoutAttrs = layoutService.getLayoutAttrs();
+                    vm.entityAttrs = metaService.getEntityAttrs(vm.entityType);
+
+                }
+
+            });
+            /*$state.go('app.data-constructor', {entityType: vm.entityType});
+            $mdDialog.hide();*/
+        };
 
         // Transaction type General Controller start
 
@@ -1284,11 +1315,11 @@
                     'account_interim_input', 'account_position', 'account_position_input',
                     'accounting_date', 'allocation_balance', 'allocation_balance_input',
                     'allocation_balance_phantom', 'allocation_pl', 'allocation_pl_input',
-                    'allocation_pl_phantom', 'carry_amount', 'carry_with_sign', 'cash_consideration', 'cash_date',
+                    'allocation_pl_phantom', 'carry_with_sign', 'cash_consideration', 'cash_date',
                     'counterparty', 'counterparty_input', 'factor', 'instrument', 'instrument_input', 'instrument_phantom',
-                    'linked_instrument', 'linked_instrument_input', 'linked_instrument_phantom', 'notes', 'overheads',
-                    'overheads_with_sign', 'portfolio', 'portfolio_input', 'position_amount', 'position_size_with_sign',
-                    'principal_amount', 'principal_with_sign', 'reference_fx_rate', 'responsible', 'responsible_input',
+                    'linked_instrument', 'linked_instrument_input', 'linked_instrument_phantom', 'notes',
+                    'overheads_with_sign', 'portfolio', 'portfolio_input', 'position_size_with_sign',
+                    'principal_with_sign', 'reference_fx_rate', 'responsible', 'responsible_input',
                     'settlement_currency', 'settlement_currency_input', 'strategy1_cash', 'strategy1_cash_input',
                     'strategy1_position', 'strategy1_position_input', 'strategy2_cash', 'strategy2_cash_input',
                     'strategy2_position', 'strategy2_position_input', 'strategy3_cash', 'strategy3_cash_input',
@@ -1339,7 +1370,9 @@
 
             var actionCopy = JSON.parse(JSON.stringify(actionToCopy));
 
-            delete actionCopy.$$hashKey;
+            delete actionCopy.id;
+            delete actionCopy.order;
+            console.log("action copy", actionCopy, actionCopy.$$hashKey, actionCopy['"$$hashKey"']);
 
             var actionName = actionCopy.action_notes + ' (Copy)';
             var actionNameOccupied = true;
@@ -1350,7 +1383,7 @@
                 actionNameOccupied = false;
 
                 for (var a = 0; a < vm.entity.actions.length; a++) {
-
+                    console.log("make copy", vm.entity.actions[a].action_notes, actionName);
                     if (vm.entity.actions[a].action_notes === actionName) {
 
                         c = c + 1;
@@ -1358,13 +1391,22 @@
                         actionNameOccupied = true;
 
                         break;
-                        console.log("action copy c2", c);
+
                     }
 
                 }
 
                 if (!actionNameOccupied) {
                     actionCopy.action_notes = actionName;
+
+                    if (actionCopy.hasOwnProperty('transaction') && actionCopy.transaction.hasOwnProperty('action_notes')) {
+                        actionCopy.transaction.action_notes = actionName;
+                    }
+
+                    if (actionCopy.hasOwnProperty('instrument')) {
+                        actionCopy.instrument.action_notes = actionName;
+                    }
+
                 }
 
             }

@@ -219,10 +219,10 @@
     </md-dialog-content>
     <md-dialog-actions layout="row" layout-align="space-between center" class="entity-editor-dialog__footer">
         <div>
-            <md-button ng-click="vm.editLayout()" class="md-raised md-primary">
+            <md-button ng-click="vm.editLayout($event)" class="md-raised md-primary" ng-disabled="!vm.checkReadyStatus()">
                 Edit transaction form
             </md-button>
-            <md-button ng-click="vm.manageAttrs()" class="md-raised md-primary">
+            <md-button ng-click="vm.manageAttrs()" class="md-raised md-primary" ng-disabled="!vm.checkReadyStatus()">
                 Manage attributes
             </md-button>
         </div>

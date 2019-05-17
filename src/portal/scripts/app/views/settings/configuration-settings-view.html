@@ -9,7 +9,11 @@
         <div style="width: 300px; margin-right: 24px">
 
             <md-input-container flex="40" style="margin-bottom: 0" class="ng-hide">
-                <input type="file" id="configurationFileImport" input-file-directive read-file="vm.configurationFile">
+                <input type="file"
+                       id="configurationFileImport"
+                       input-file-directive
+                       read-file="vm.configurationFile"
+                       read-file-change="vm.checkExtension(vm.configurationFile, 'fcfg', $event)">
             </md-input-container>
             <div class="input-upload-file-container">
                 <p class="configurationFileImport">Select file</p>
@@ -39,7 +43,11 @@
         <div style="width: 300px; margin-right: 24px">
 
             <md-input-container flex="40" style="margin-bottom: 0" class="ng-hide">
-                <input type="file" id="mappingFileImport" input-file-directive read-file="vm.mappingFile">
+                <input type="file"
+                       id="mappingFileImport"
+                       input-file-directive
+                       read-file="vm.mappingFile"
+                       read-file-change="vm.checkExtension(vm.mappingFile, 'fmcfg', $event)">
             </md-input-container>
             <div class="input-upload-file-container">
                 <p class="mappingFileImport">Select file</p>

@@ -165,13 +165,45 @@
             $mdDialog.cancel();
         };
 
-        vm.editLayout = function () {
+        /*vm.editLayout = function () {
             var entityAddress = {entityType: vm.entityType};
             if (vm.entityType === 'transaction-type' || vm.entityType === 'complex-transaction') {
                 entityAddress = {entityType: 'complex-transaction', from: vm.entityType};
             }
             $state.go('app.data-constructor', entityAddress);
             $mdDialog.hide();
+        };*/
+
+        vm.editLayout = function (ev) {
+
+            $mdDialog.show({
+                controller: 'EntityDataConstructorDialogController as vm',
+                templateUrl: 'views/dialogs/entity-data-constructor-dialog-view.html',
+                targetEvent: ev,
+                preserveScope: true,
+                multiple: true,
+                locals: {
+                    data: {
+                        entityType: vm.entityType,
+                        fromEntityType: vm.entityType
+                    }
+                }
+            }).then(function (res) {
+
+                if (res.status === "agree") {
+
+                    vm.readyStatus.entity = false;
+                    vm.readyStatus.layout = false;
+
+                    vm.getList();
+
+                    vm.layoutAttrs = layoutService.getLayoutAttrs();
+                    vm.entityAttrs = metaService.getEntityAttrs(vm.entityType) || [];
+
+                }
+
+            });
+
         };
 
         vm.manageAttrs = function (ev) {
@@ -183,13 +215,16 @@
             $mdDialog.hide();
         };
 
-        attributeTypeService.getList(vm.entityType).then(function (data) {
-            vm.attrs = data.results;
-            vm.readyStatus.content = true;
-            vm.readyStatus.entity = true;
-            vm.loadPermissions();
+        vm.getList = function () {
+            attributeTypeService.getList(vm.entityType).then(function (data) {
+                vm.attrs = data.results;
+                vm.readyStatus.content = true;
+                vm.readyStatus.entity = true;
+                vm.loadPermissions();
 
-        });
+            });
+        };
+        vm.getList();
 
         vm.checkReadyStatus = function () {
             return vm.readyStatus.content && vm.readyStatus.entity && vm.readyStatus.permissions
@@ -765,7 +800,7 @@
             vm.inputsFunctions = vm.entity.inputs.map(function (input) {
 
                 return {
-                    "name": "Input: " + input.verbose_name + " (" + input.name + ")",
+                    "name": "Input: " + input.name + " (" + input.verbose_name + ")",
                     "description": "Transaction Type Input: " + input.name + " (" + input.verbose_name + ") ",
                     "groups": "input",
                     "func": input.name
@@ -1136,11 +1171,11 @@
                     'account_interim_input', 'account_position', 'account_position_input',
                     'accounting_date', 'allocation_balance', 'allocation_balance_input',
                     'allocation_balance_phantom', 'allocation_pl', 'allocation_pl_input',
-                    'allocation_pl_phantom', 'carry_amount', 'carry_with_sign', 'cash_consideration', 'cash_date',
+                    'allocation_pl_phantom', 'carry_with_sign', 'cash_consideration', 'cash_date',
                     'counterparty', 'counterparty_input', 'factor', 'instrument', 'instrument_input', 'instrument_phantom',
-                    'linked_instrument', 'linked_instrument_input', 'linked_instrument_phantom', 'notes', 'overheads',
-                    'overheads_with_sign', 'portfolio', 'portfolio_input', 'position_amount', 'position_size_with_sign',
-                    'principal_amount', 'principal_with_sign', 'reference_fx_rate', 'responsible', 'responsible_input',
+                    'linked_instrument', 'linked_instrument_input', 'linked_instrument_phantom', 'notes',
+                    'overheads_with_sign', 'portfolio', 'portfolio_input', 'position_size_with_sign',
+                    'principal_with_sign', 'reference_fx_rate', 'responsible', 'responsible_input',
                     'settlement_currency', 'settlement_currency_input', 'strategy1_cash', 'strategy1_cash_input',
                     'strategy1_position', 'strategy1_position_input', 'strategy2_cash', 'strategy2_cash_input',
                     'strategy2_position', 'strategy2_position_input', 'strategy3_cash', 'strategy3_cash_input',
@@ -1183,6 +1218,58 @@
             });
 
             vm.entity.actions.push(result);
+
+            vm.findPhantoms();
+        };
+
+        vm.makeCopyOfAction = function (actionToCopy, index) {
+
+            var actionCopy = JSON.parse(JSON.stringify(actionToCopy));
+
+            delete actionCopy.$$hashKey;
+
+            var actionName = actionCopy.action_notes + ' (Copy)';
+            var actionNameOccupied = true;
+
+            var c = 1;
+            while(actionNameOccupied) { // check that copy name is unique
+
+                actionNameOccupied = false;
+
+                for (var a = 0; a < vm.entity.actions.length; a++) {
+
+                    if (vm.entity.actions[a].action_notes === actionName) {
+
+                        c = c + 1;
+                        actionName = actionCopy.action_notes + ' (Copy ' + c + ')';
+                        actionNameOccupied = true;
+
+                        break;
+
+                    }
+
+                }
+
+                if (!actionNameOccupied) {
+                    actionCopy.action_notes = actionName;
+
+                    if (actionCopy.hasOwnProperty('transaction') && actionCopy.transaction.hasOwnProperty('action_notes')) {
+                        actionCopy.transaction.action_notes = actionName;
+                    }
+
+                    if (actionCopy.hasOwnProperty('instrument')) {
+                        actionCopy.instrument.action_notes = actionName;
+                    }
+
+                }
+
+            }
+
+            vm.accordion.collapseAll();
+
+            actionCopy.isPaneExpanded = true;
+
+            vm.entity.actions.splice(index + 1, 0, actionCopy);
 
             vm.findPhantoms();
         };

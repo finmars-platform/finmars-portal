@@ -2,10 +2,11 @@
     <div class="transaction-type-actions-tab-view">
         <v-accordion class="vAccordion--default" multiple control="vm.accordion">
 
-            <v-pane data-ng-repeat="item in vm.entity.actions" expanded="item.isPaneExpanded">
+            <v-pane data-ng-repeat="item in vm.entity.actions track by $index" expanded="item.isPaneExpanded">
                 <v-pane-header inactive class="transaction-type-action-pane">
                     <div layout="row" layout-align="space-between center">
                         <div layout="row">
+                            <span class="ttype-action-order"># {{$index + 1}}</span>
                             <span data-ng-if="item.isPaneExpanded">
                                 <md-input-container>
                                     <label></label>

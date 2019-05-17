@@ -26,7 +26,7 @@
         };
 
         vm.inputsGroup = {
-            "name": "<b>Inputs</b>",
+            "name": "<b>Imported</b>",
             "key": 'input'
         };
 
@@ -45,8 +45,8 @@
             return vm.scheme.csv_fields.map(function(input){
 
                 return {
-                    "name": "Add input " + input.name,
-                    "description": "Imported Parameter: " + input.name + " (column #" + input.column + ") ",
+                    "name": "Imported: " + input.name + " (column # " + input.column + ")",
+                    "description": "Imported: " + input.name + " (column #" + input.column + ") " + input.name_expr,
                     "groups": "input",
                     "func": input.name
                 }
@@ -113,12 +113,13 @@
 
                 return ['tags', 'transaction_types', 'object_permissions_user', 'object_permissions_group'].indexOf(item.key) === -1 && item.value_type !== 'mc_field'
 
-            }).map(function (item) {
+            }).map(function (item, index) {
 
                 return {
                     expression: '',
                     system_property_key: item.key,
                     name: item.name,
+                    order: index,
                     value_type: item.value_type
                 }
 
@@ -150,6 +151,7 @@
                 vm.getAttrs();
 
             }
+
         };
 
         vm.updateEntityFields();
@@ -185,11 +187,15 @@
             vm.inputsFunctions = vm.getFunctions();
         };
 
-        vm.addDynamicAttribute = function () {
+        vm.addDynamicAttribute = function (index) {
+            var lastAttributeIndex = vm.scheme.entity_fields.length - 1;
+
             vm.scheme.entity_fields.push({
                 expression: '',
-                name: ''
-            })
+                name: '',
+                order: lastAttributeIndex
+            });
+
         };
 
         vm.removeCsvField = function (item, $index) {

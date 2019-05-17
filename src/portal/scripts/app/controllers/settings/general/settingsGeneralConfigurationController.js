@@ -19,6 +19,45 @@
             return vm.mappingFile !== null && vm.mappingFile !== undefined
         };
 
+        vm.checkExtension = function (file, extension, $event) {
+            console.log('file', file);
+
+            if (file) {
+
+                var ext = file.name.split('.')[1]
+
+                if (ext !== extension) {
+
+                    $mdDialog.show({
+                        controller: 'SuccessDialogController as vm',
+                        templateUrl: 'views/dialogs/success-dialog-view.html',
+                        targetEvent: $event,
+                        locals: {
+                            success: {
+                                title: "Warning!",
+                                description: 'You are trying to load incorrect file'
+                            }
+                        },
+                        multiple: true,
+                        preserveScope: true,
+                        autoWrap: true,
+                        skipHide: true
+                    }).then(function () {
+
+                        if (file === vm.configurationFile) {
+                            vm.configurationFile = null;
+                        } else {
+                            vm.mappingFile = null;
+                        }
+
+                    });
+
+                }
+
+            }
+
+        };
+
         vm.openImportConfigurationManager = function ($event) {
 
             var reader = new FileReader();
