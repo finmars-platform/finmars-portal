@@ -44,7 +44,7 @@
         vm.entitySpecialRules = false;
         vm.specialRulesReady = true;
 
-        /*vm.getEditListByInstanceId = function () { // TODO remove because separate controllers have been created
+        vm.getEditListByInstanceId = function () { // TODO remove because separate controllers have been created
 
             return entityResolverService.getByKey('transaction-type-book', vm.complexTransactionOptions.transactionTypeId).then(function (data) {
 
@@ -103,10 +103,9 @@
 
                 $scope.$apply();
             });
+        };
 
-        };*/
-
-        /*vm.getComplexTransactionLayout = function () { // TODO remove because separate controllers have been created
+        vm.getComplexTransactionLayout = function () {
 
             return entityResolverService.getByKey('transaction-type-book', vm.complexTransactionOptions.transactionTypeId).then(function (data) {
 
@@ -157,9 +156,9 @@
                 $scope.$apply();
             });
 
-        };*/
+        };
 
-        /*if (['complex-transaction'].indexOf(vm.entityType) !== -1) { // TODO remove because separate controllers have been created
+        if (['complex-transaction'].indexOf(vm.entityType) !== -1) {
             vm.editLayoutByEntityInsance = true;
             vm.entitySpecialRules = true;
             vm.complexTransactionOptions = {};
@@ -185,7 +184,7 @@
 
 
             }
-        }*/
+        }
 
         vm.attrs = [];
         vm.entityAttrs = [];
@@ -355,7 +354,7 @@
             $mdDialog.hide();
         };
 
-        /*vm.recalculate = function (item) { // TODO remove because separate controllers have been created
+        vm.recalculate = function (item) { // TODO remove because separate controllers have been created
 
             var values = {};
 
@@ -439,10 +438,10 @@
             };
 
             entityResolverService.create('complex-transaction', book).then(handler);
-        };*/
+        };
 
 
-        /*if (vm.entityType !== 'transaction-type') { // TODO remove because separate controllers have been created
+        if (vm.entityType !== 'transaction-type') {
 
             if (vm.editLayoutByEntityInsance === true) {
                 if (vm.editLayoutEntityInstanceId) {
@@ -459,9 +458,9 @@
                     $scope.$apply();
                 });
             }
-        }*/
+        }
 
-        /*if (vm.editLayoutByEntityInsance === true) { // TODO remove because separate controllers have been created
+        if (vm.editLayoutByEntityInsance === true) {
             if (vm.editLayoutEntityInstanceId) {
                 vm.getEditListByInstanceId();
             }
@@ -475,7 +474,7 @@
 
                 $scope.$apply();
             });
-        }*/
+        }
 
         var getTabs = function () {
             uiService.getEditLayout(vm.entityType).then(function (data) {
@@ -709,7 +708,7 @@
 
                 var resultEntity = entityEditorHelper.checkForNulls(vm.entity);
 
-                /*if (vm.entityType === 'complex-transaction') { // TODO remove because separate controllers have been created
+                if (vm.entityType === 'complex-transaction') {
 
                     resultEntity.values = {};
 
@@ -730,15 +729,15 @@
 
                 }
 
-                if (vm.entityType === 'transaction-type') { // TODO remove because separate controllers have been created
+                if (vm.entityType === 'transaction-type') {
                     resultEntity.book_transaction_layout = vm.entity.book_transaction_layout;
-                }*/
+                }
 
                 console.log('resultEntity', resultEntity);
 
                 entityResolverService.create(vm.entityType, resultEntity).then(function (data) {
 
-                    /*if (vm.entityType === 'complex-transaction') { // TODO remove because separate controllers have been created
+                    if (vm.entityType === 'complex-transaction') {
 
                         if (data.hasOwnProperty('has_errors') && data.has_errors === true) {
 
@@ -766,7 +765,7 @@
                     } else {
 
                         $mdDialog.hide({res: 'agree'});
-                    }*/
+                    }
 
                     $mdDialog.hide({res: 'agree'});
 
