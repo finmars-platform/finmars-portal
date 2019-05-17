@@ -258,13 +258,13 @@
                 return false
             }
 
-            return words.indexOf(token) !== -1;
+            return words.indexOf(token.value) !== -1;
 
         }
 
         function isParameter(token, words) {
 
-            return words.indexOf(token) !== -1;
+            return words.indexOf(token.value) !== -1;
 
         }
 
@@ -274,13 +274,13 @@
                 return false
             }
 
-            return words.indexOf(token) !== -1;
+            return words.indexOf(token.value) !== -1;
 
         }
 
         vm.getHtmlExpression = function (expression) {
 
-            var result = expression.slice();
+            var result = ''
 
             var currentToken = {
                 value: '',
@@ -339,6 +339,7 @@
                     console.log("Find input", currentToken.value);
 
                     result = result + '<span class="eb-highlight-input">' + currentToken.value + '</span>';
+                    currentToken.value = '';
 
                 }
 
