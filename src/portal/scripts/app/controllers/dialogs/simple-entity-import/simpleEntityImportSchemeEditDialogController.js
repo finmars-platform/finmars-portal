@@ -32,7 +32,7 @@
         vm.dynamicAttributes = [];
 
         vm.inputsGroup = {
-            "name": "<b>Inputs</b>",
+            "name": "<b>Imported</b>",
             "key": 'input'
         };
 
@@ -52,8 +52,8 @@
             return vm.scheme.csv_fields.map(function (input) {
 
                 return {
-                    "name": "Add input " + input.name,
-                    "description": "Imported Parameter: " + input.name + " (column #" + input.column + ") ",
+                    "name": "Imported: " + input.name + " (column # " + input.column + ")",
+                    "description": "Imported: " + input.name + " (column #" + input.column + ") " + input.name_expr,
                     "groups": "input",
                     "func": input.name
                 }
@@ -260,10 +260,15 @@
         };
 
         vm.addDynamicAttribute = function () {
+            var lastAttributeIndex = vm.scheme.entity_fields.length - 1;
+
             vm.scheme.entity_fields.push({
                 expression: '',
-                name: ''
-            })
+                name: '',
+                order: lastAttributeIndex
+            });
+
+            console.log("scheme order", vm.scheme.entity_fields);
         };
 
         vm.removeCsvField = function (item, $index) {

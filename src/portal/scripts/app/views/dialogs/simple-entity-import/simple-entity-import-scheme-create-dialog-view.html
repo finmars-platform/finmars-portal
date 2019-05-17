@@ -76,7 +76,10 @@
                                                 <input aria-label="index" type="text" data-ng-model="item.column">
                                             </md-input-container>
                                             <md-input-container flex="70">
-                                                <input aria-label="key" type="text" data-ng-model="item.name">
+                                                <input aria-label="key"
+                                                       type="text"
+                                                       data-ng-model="item.name"
+                                                       ng-blur="vm.setProviderFieldExpression(item)">
                                             </md-input-container>
                                         </div>
                                         <div>
@@ -111,7 +114,7 @@
                         <md-card>
                             <md-card-content>
                                 <div layout="column">
-                                    <div data-ng-repeat="item in vm.scheme.entity_fields track by $index" flex="100">
+                                    <div data-ng-repeat="item in vm.scheme.entity_fields | orderBy: item.order as results track by $index" flex="100">
                                         <div class="fields-holder" layout="row">
                                             <div class="iscm-item width-100" layout="row">
                                                 <md-input-container flex="10" aria-label="select with filter">

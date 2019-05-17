@@ -22,7 +22,7 @@
         vm.readyStatus = {dataProviders: false, scheme: false};
 
         vm.inputsGroup = {
-            "name": "<b>Inputs</b>",
+            "name": "<b>Imported</b>",
             "key": 'input'
         };
 
@@ -33,8 +33,8 @@
             return vm.providerFields.map(function(input){
 
                 return {
-                    "name": "Add input " + input.name,
-                    "description": "Downloaded Parameter: " + input.name,
+                    "name": "Imported: " + input.name,
+                    "description": "Imported: " + input.name + " " + input.name_expr,
                     "groups": "input",
                     "func": input.name
                 }
@@ -576,7 +576,10 @@
                 skipHide: true,
                 locals: {
                     item: {expression: item.name_expr},
-                    data: {}
+                    data: {
+                        groups: [vm.inputsGroup],
+                        functions: [vm.inputsFunctions]
+                    }
                 }
             }).then(function (res) {
 

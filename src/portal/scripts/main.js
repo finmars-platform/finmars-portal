@@ -76,6 +76,7 @@ app.controller('SetupController', ['$scope', '$state', require('./app/controller
 app.controller('NotFoundPageController', ['$scope', require('./app/controllers/notFoundPageController')]);
 app.controller('DashboardController', ['$scope', '$mdDialog', require('./app/controllers/dashboardController')]);
 app.controller('EntityDataConstructorController', ['$scope', '$stateParams', '$state', '$mdDialog', require('./app/controllers/entityDataConstructorController')]);
+app.controller('EntityDataConstructorDialogController', ['$scope', 'data', '$stateParams', '$state', '$mdDialog', require('./app/controllers/dialogs/entityDataConstructorDialogController')]);
 app.controller('ExpressionEditorDialogController', ['$scope', '$mdDialog', 'item', 'data', require('./app/controllers/dialogs/expressionEditorDialogController')]);
 app.controller('InstrumentSelectDialogController', ['$scope', '$mdDialog', require('./app/controllers/dialogs/instrumentSelectDialogController')]);
 app.controller('EntitySearchDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/entitySearchDialogController')]);

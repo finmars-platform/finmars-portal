@@ -253,8 +253,12 @@
             },
 
             eventListeners: function () {
-                var that = this;
+
                 var exist = false;
+                var columnExist = false;
+                var groupExist = false;
+                var filterExist = false;
+
                 this.dragula.on('over', function (elem, container, source) {
                     $(container).addClass('active');
                     $(container).on('mouseleave', function () {
@@ -265,29 +269,46 @@
                 this.dragula.on('drop', function (elem, target) {
 
                     $(target).removeClass('active');
-                    var name = $(elem).html();
+                    // var name = $(elem).html();
+                    var identifier = $(elem).attr('data-key-identifier');
                     var i;
 
 
                     exist = false;
-                    if (target === document.querySelector('#columnsbag')) {
+                    if (target === document.querySelector('#columnsbag') ||
+                        target === document.querySelector('.g-columns-holder')) {
                         for (i = 0; i < columns.length; i = i + 1) {
-                            if (columns[i].name === name) {
+                            if (columns[i].key === identifier) {
                                 exist = true;
+                                columnExist = true;
                             }
+                            /*if (columns[i].name === name) {
+                                exist = true;
+                            }*/
                         }
                     }
-                    if (target === document.querySelector('#groupsbag')) {
+                    if (target === document.querySelector('#groupsbag') ||
+                        target === document.querySelector('.g-groups-holder')) {
                         for (i = 0; i < grouping.length; i = i + 1) {
-                            if (grouping[i].name === name) {
+                            /*if (grouping[i].name === name) {
                                 exist = true;
+                            }*/
+                            if (grouping[i].key === identifier) {
+                                exist = true;
+                                groupExist = true;
                             }
                         }
                     }
-                    if (target === document.querySelector('#filtersbag .drop-new-filter')) {
+                    if (target === document.querySelector('#filtersbag .drop-new-filter') ||
+                        target === document.querySelector('.g-filters-holder')) {
                         for (i = 0; i < filters.length; i = i + 1) {
-                            if (filters[i].name === name) {
+                            /*if (filters[i].name === name) {
                                 exist = true;
+                            }*/
+
+                            if (filters[i].key === identifier) {
+                                exist = true;
+                                filterExist = true;
                             }
                         }
                     }
@@ -302,7 +323,8 @@
                             target === document.querySelector('#columnsbag')) {
 
                             for (a = 0; a < attrsList.length; a = a + 1) {
-                                if (attrsList[a].name === name) {
+
+                                if (attrsList[a].key === identifier) {
 
                                     if (target === document.querySelector('#columnsbag')) {
                                         columns.push(attrsList[a]);
@@ -312,6 +334,17 @@
 
                                     //columns.push(attrsList[a]);
                                 }
+
+                                /*if (attrsList[a].name === name) {
+
+                                    if (target === document.querySelector('#columnsbag')) {
+                                        columns.push(attrsList[a]);
+                                    } else {
+                                        columns.splice(index, 0, attrsList[a]);
+                                    }
+
+                                    //columns.push(attrsList[a]);
+                                }*/
                             }
                             syncAttrs();
                             evDataHelper.updateColumnsIds(entityViewerDataService);
@@ -322,7 +355,8 @@
                             target === document.querySelector('.g-groups-holder')) {
 
                             for (a = 0; a < attrsList.length; a = a + 1) {
-                                if (attrsList[a].name === name) {
+
+                                if (attrsList[a].key === identifier) {
 
                                     if (target === document.querySelector('#groupsbag')) {
                                         grouping.push(attrsList[a]);
@@ -330,7 +364,18 @@
                                         grouping.splice(index, 0, attrsList[a]);
                                     }
 
+                                    //columns.push(attrsList[a]);
                                 }
+
+                                /*if (attrsList[a].name === name) {
+
+                                    if (target === document.querySelector('#groupsbag')) {
+                                        grouping.push(attrsList[a]);
+                                    } else {
+                                        grouping.splice(index, 0, attrsList[a]);
+                                    }
+
+                                }*/
                             }
                             syncAttrs();
                             evDataHelper.updateColumnsIds(entityViewerDataService);
@@ -341,7 +386,8 @@
                             target === document.querySelector('.g-filters-holder')) {
 
                             for (a = 0; a < attrsList.length; a = a + 1) {
-                                if (attrsList[a].name === name) {
+
+                                if (attrsList[a].key === identifier) {
 
                                     if (target === document.querySelector('#filtersbag .drop-new-filter')) {
                                         filters.push(attrsList[a]);
@@ -349,16 +395,54 @@
                                         filters.splice(index, 0, attrsList[a]);
                                     }
 
+                                    //columns.push(attrsList[a]);
                                 }
+
+                                /*if (attrsList[a].name === name) {
+
+                                    if (target === document.querySelector('#filtersbag .drop-new-filter')) {
+                                        filters.push(attrsList[a]);
+                                    } else {
+                                        filters.splice(index, 0, attrsList[a]);
+                                    }
+
+                                }*/
                             }
                             syncAttrs();
                             evDataHelper.updateColumnsIds(entityViewerDataService);
                             evDataHelper.setColumnsDefaultWidth(entityViewerDataService);
                             entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
                         }
-                        $scope.$apply();
-                    }
 
+                        // $scope.$apply();
+
+                    } else if (exist && target) {
+
+                        var errorMessage = 'Item should be unique'
+
+                        if (columnExist) {
+                            errorMessage = 'There is already such column in Column Area';
+                        } else if (groupExist) {
+                            errorMessage = 'There is already such group in Grouping Area';
+                        } else if (filterExist) {
+                            errorMessage = 'There is already such filter in Filter Area';
+                        }
+
+                        $mdDialog.show({
+                            controller: 'WarningDialogController as vm',
+                            templateUrl: 'views/warning-dialog-view.html',
+                            parent: angular.element(document.body),
+                            clickOutsideToClose: false,
+                            multiple: true,
+                            locals: {
+                                warning: {
+                                    title: 'Error',
+                                    description: errorMessage
+                                }
+                            }
+                        });
+
+                    }
 
                     $scope.$apply();
                 });
