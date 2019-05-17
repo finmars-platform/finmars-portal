@@ -260,10 +260,15 @@
         };
 
         vm.addDynamicAttribute = function () {
+            var lastAttributeIndex = vm.scheme.entity_fields.length - 1;
+
             vm.scheme.entity_fields.push({
                 expression: '',
-                name: ''
-            })
+                name: '',
+                order: lastAttributeIndex
+            });
+
+            console.log("scheme order", vm.scheme.entity_fields);
         };
 
         vm.removeCsvField = function (item, $index) {
