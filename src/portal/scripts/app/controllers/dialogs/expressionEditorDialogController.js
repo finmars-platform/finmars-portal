@@ -173,22 +173,29 @@
 
             var result = true;
             var container = [];
+            var indexContainer = [];
 
             for (var i = 0; i < expression.length; i = i + 1) {
 
                 if (expression[i] === leftBracket) {
-                    container.push(leftBracket)
+                    container.push(leftBracket);
+                    indexContainer.push(i)
                 } else {
 
                     if (expression[i] === rightBracket) {
 
                         if (container.length && container[container.length - 1] === leftBracket) {
 
-                            container.pop()
+                            container.pop();
+                            indexContainer.pop()
 
                         } else {
 
+                            container.push(rightBracket);
+                            indexContainer.push(i);
+
                             result = false;
+
                             break;
 
                         }
@@ -198,11 +205,22 @@
 
             }
 
+            console.log('indexContainer', indexContainer);
+            console.log('container', container);
+
             if (container.length > 0) {
                 result = false;
             }
 
-            return result
+            var resultObj = {
+                status: result
+            };
+
+            if (result === false) {
+                resultObj.errorIndex = indexContainer[container.length - 1]
+            }
+
+            return resultObj;
 
         };
 
@@ -232,6 +250,10 @@
 
         }
 
+        function insert(str, index, value) {
+            return str.substr(0, index) + value + str.substr(index);
+        }
+
         vm.getHtmlExpression = function (expression) {
 
             var result = '';
@@ -257,7 +279,7 @@
                     return item.func.split('].')[1];
                 });
 
-            var propertiesWords = []
+            var propertiesWords = [];
 
             propertiesWordsTmp.forEach(function (word) {
 
@@ -281,9 +303,12 @@
                 return item.func
             });
 
+            var strContent = false;
+            var strType;
+
             for (var i = 0; i < expression.length;) {
 
-                if (expression[i].match(new RegExp(/^[a-zA-Z0-9_-]*$/))) {
+                if (expression[i].match(new RegExp(/^[a-zA-Z0-9_-]*$/)) && strContent === false) {
                     currentToken.value = currentToken.value + expression[i];
                 } else {
                     result = result + currentToken.value;
@@ -296,25 +321,49 @@
                     currentToken.hasDot = true;
                 }
 
-                if (isFunction(currentToken, functionWords)) {
+                if (expression[i] === '"' || expression[i] === "'") {
 
-                    result = result + '<span class="eb-highlight-func">' + currentToken.value + '</span>';
-                    currentToken.value = '';
+                    if (strContent === false) {
+
+                        strType = expression[i];
+                        strContent = true
+
+                    } else {
+
+                        if (strType === expression[i]) {
+                            strType = null;
+                            strContent = false;
+                        } else {
+                            strType = expression[i];
+                        }
+
+                    }
+
                 }
 
-                if (isInput(currentToken, inputWords)) {
+                if (strContent === false) {
 
-                    result = result + '<span class="eb-highlight-input">' + currentToken.value + '</span>';
-                    currentToken.value = '';
+                    if (isFunction(currentToken, functionWords)) {
 
-                }
+                        result = result + '<span class="eb-highlight-func">' + currentToken.value + '</span>';
+                        currentToken.value = '';
+                    }
 
-                if (isParameter(currentToken, propertiesWords)) {
+                    if (isInput(currentToken, inputWords)) {
 
-                    result = result + '<span class="eb-highlight-property">' + currentToken.value + '</span>';
+                        result = result + '<span class="eb-highlight-input">' + currentToken.value + '</span>';
+                        currentToken.value = '';
 
-                    currentToken.value = '';
-                    currentToken.hasDot = false;
+                    }
+
+                    if (isParameter(currentToken, propertiesWords)) {
+
+                        result = result + '<span class="eb-highlight-property">' + currentToken.value + '</span>';
+
+                        currentToken.value = '';
+                        currentToken.hasDot = false;
+
+                    }
 
                 }
 
@@ -323,64 +372,23 @@
 
             }
 
-            console.log('result', result);
+            var parenthesisStatus = isBracketsValid(result, '(', ')');
+            var squareBracketsStatus = isBracketsValid(result, '[', ']');
 
+            if (parenthesisStatus.status === false && parenthesisStatus.errorIndex !== undefined) {
 
-            // if (vm.data.functions) {
-            //
-            //
-            //     var words = vm.data.functions[0].map(function (item) {
-            //         return item.func
-            //     });
-            //
-            //     console.log('words inputs', words);
-            //
-            //     result = wrapWords(result, words, 'span', 'eb-highlight-input')
-            //
-            //
-            // }
-            //
-            // if (isBracketsValid(expression, '(', ')')) {
-            //
-            //     console.log('vm.data.functions', vm.expressions);
-            //
-            //     var words = vm.expressions.filter(function (item) {
-            //         return item.func.indexOf('(') !== -1;
-            //     });
-            //
-            //     words = words.map(function (item) {
-            //         return item.func
-            //     });
-            //
-            //     words = words.map(function (item) {
-            //         return item.split('(')[0] + '('; // trick to change only function keywords
-            //     });
-            //
-            //     console.log('words functions', words);
-            //
-            //     result = wrapWords(result, words, 'span', 'eb-highlight-func');
-            // }
-            //
-            // if (isBracketsValid(expression, '[', ']')) {
-            //
-            //     var words = vm.expressions.filter(function (item) {
-            //         return item.func.indexOf(']') !== -1;
-            //     });
-            //
-            //     words = words.map(function (item) {
-            //         return item.func
-            //     });
-            //
-            //     words = words.map(function (item) {
-            //         return item.split('].')[1];
-            //     });
-            //
-            //     console.log('words properties', words);
-            //
-            //     result = wrapWords(result, words, 'span', 'eb-highlight-property')
-            //
-            // }
-            //
+                result = insert(result, parenthesisStatus.errorIndex + 1, '</span>');
+                result = insert(result, parenthesisStatus.errorIndex, '<span class="eb-error-bracket">')
+
+            } else {
+
+                if (squareBracketsStatus.status === false && squareBracketsStatus.errorIndex !== undefined) {
+
+                    result = insert(result, squareBracketsStatus.errorIndex + 1, '</span>');
+                    result = insert(result, squareBracketsStatus.errorIndex, '<span class="eb-error-bracket">')
+
+                }
+            }
 
             return result
 
