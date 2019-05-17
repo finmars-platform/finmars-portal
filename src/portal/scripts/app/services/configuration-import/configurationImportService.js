@@ -357,7 +357,7 @@
                         case 'instruments.instrumenttype':
                             resolve(getAndUpdate(contentType, item, cacheContainer));
                             break;
-                        case 'import.pricingautomatedschedule':
+                        case 'integrations.pricingautomatedschedule':
                             resolve(pricingAutomatedScheduleService.updateSchedule(item));
                             break;
                         case 'complex_import.compleximportscheme':
@@ -779,44 +779,22 @@
 
                 window.importConfigurationCounter = window.importConfigurationCounter + 1;
 
-                if (index === entityItem.content.length) {
-                    resolve(item);
-                } else {
+                if (index < entityItem.content.length) {
                     recursiveCreateItem(resolve, index, entityItem, settings, cacheContainer, errors)
+                } else {
+                    resolve(item);
                 }
 
             })
         } else {
 
-            if (index === entityItem.content.length) {
-                resolve(item);
-            } else {
+            if (index < entityItem.content.length) {
                 recursiveCreateItem(resolve, index, entityItem, settings, cacheContainer, errors)
+            } else {
+                resolve(item);
             }
 
         }
-
-    };
-
-    var catchError = function (promise, item, errors) {
-
-        return new Promise(function (resolve, reject) {
-
-            promise.then(function (data) {
-                resolve(data)
-            }).catch(function (reason) {
-
-                console.log('catch?');
-
-                errors.push({
-                    item: item,
-                    error: reason
-                });
-                resolve();
-
-            })
-
-        })
 
     };
 
@@ -828,7 +806,7 @@
 
                 try {
 
-                    console.log('Create item', item);
+                    console.log('entity', entity);
 
                     switch (entity) {
 
@@ -850,8 +828,27 @@
                         case 'instruments.instrumenttype':
                             resolve(createIfNotExists(entity, item, settings, cacheContainer, errors));
                             break;
-                        case 'import.pricingautomatedschedule':
-                            resolve(catchError(pricingAutomatedScheduleService.updateSchedule(item), item, errors));
+                        case 'integrations.pricingautomatedschedule':
+                            resolve(new Promise(function (resolveLocal, reject) {
+
+                                pricingAutomatedScheduleService.updateSchedule(item).then(function (data) {
+
+                                    console.log('pricingautomatedschedule here?', data);
+
+                                    resolveLocal(data)
+                                }).catch(function (reason) {
+
+                                    errors.push({
+                                        item: item,
+                                        error: reason
+                                    });
+
+                                    console.log('pricingautomatedscheduleerror ', reason);
+
+                                    resolveLocal(reason);
+                                })
+
+                            }));
                             break;
                         case 'ui.editlayout':
                             resolve(new Promise(function (resolve, reject) {

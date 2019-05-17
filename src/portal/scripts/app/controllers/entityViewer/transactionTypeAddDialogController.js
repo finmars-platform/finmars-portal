@@ -215,15 +215,38 @@
             $mdDialog.hide();
         };
 
+
+        vm.transactionUserFields = {};
+
+        vm.getTransactionUserFields = function () {
+
+            return uiService.getTransactionFieldList().then(function (data) {
+
+                data.results.forEach(function (field) {
+
+                    vm.transactionUserFields[field.key] = field.name;
+
+                })
+
+            })
+
+        };
+
         vm.getList = function () {
             attributeTypeService.getList(vm.entityType).then(function (data) {
                 vm.attrs = data.results;
                 vm.readyStatus.content = true;
-                vm.readyStatus.entity = true;
-                vm.loadPermissions();
+
+                vm.getTransactionUserFields().then(function () {
+
+                    vm.readyStatus.entity = true;
+                    vm.loadPermissions();
+
+                })
 
             });
         };
+
         vm.getList();
 
         vm.checkReadyStatus = function () {
@@ -790,7 +813,7 @@
             item.editStatus = true;
         };
 
-        vm.updateInputFunctions = function(){
+        vm.updateInputFunctions = function () {
 
             vm.inputsGroup = {
                 "name": "<b>Inputs</b>",
@@ -1232,7 +1255,7 @@
             var actionNameOccupied = true;
 
             var c = 1;
-            while(actionNameOccupied) { // check that copy name is unique
+            while (actionNameOccupied) { // check that copy name is unique
 
                 actionNameOccupied = false;
 
