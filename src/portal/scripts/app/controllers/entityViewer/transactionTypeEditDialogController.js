@@ -37,7 +37,7 @@
         vm.entityType = entityType;
         vm.entityId = entityId;
 
-        vm.entity = {$_isValid: true};
+        vm.entity = {};
         vm.complexTransactionOptions = {};
 
         vm.readyStatus = {attrs: false, permissions: false, entity: false, layout: false};
@@ -263,7 +263,6 @@
 
                     entityViewerHelperService.transformItems([vm.entity], vm.attrs).then(function (transformEntityData) {
                         vm.entity = transformEntityData[0];
-                        vm.entity.$_isValid = true;
                         vm.readyStatus.entity = true;
 
                         vm.loadPermissions();
@@ -418,9 +417,9 @@
 
                 vm.updateEntityBeforeSave();
 
-                vm.entity.$_isValid = entityEditorHelper.checkForNotNullRestriction(vm.entity, vm.entityAttrs, vm.attrs);
+                var isValid = entityEditorHelper.checkForNotNullRestriction(vm.entity, vm.entityAttrs, vm.attrs);
 
-                if (vm.entity.$_isValid) {
+                if (isValid) {
 
                     var result = entityEditorHelper.checkForNulls(vm.entity);
 
@@ -532,9 +531,9 @@
 
             vm.updateEntityBeforeSave();
 
-            vm.entity.$_isValid = entityEditorHelper.checkForNotNullRestriction(vm.entity, vm.entityAttrs, vm.attrs);
+            var isValid = entityEditorHelper.checkForNotNullRestriction(vm.entity, vm.entityAttrs, vm.attrs);
 
-            if (vm.entity.$_isValid) {
+            if (isValid) {
 
                 var result = entityEditorHelper.checkForNulls(vm.entity);
 
@@ -562,13 +561,19 @@
 
                     entityResolverService.update(vm.entityType, result.id, result).then(function (data) {
 
+                        console.log('data', data);
+
                         if (data.status === 400) {
                             vm.handleErrors($event, data);
                         } else {
                             $mdDialog.hide({res: 'agree'});
                         }
 
-                    });
+                    }).catch(function (error) {
+
+                        console.log('error', error);
+
+                    })
 
                 }
 
@@ -1340,7 +1345,7 @@
             var actionNameOccupied = true;
 
             var c = 1;
-            while(actionNameOccupied) { // check that copy name is unique
+            while (actionNameOccupied) { // check that copy name is unique
 
                 actionNameOccupied = false;
 
