@@ -37,7 +37,7 @@
         vm.entityType = entityType;
         vm.entityId = entityId;
 
-        vm.entity = {$_isValid: true};
+        vm.entity = {};
         vm.complexTransactionOptions = {};
 
         vm.readyStatus = {attrs: false, permissions: false, entity: false, layout: false};
@@ -212,6 +212,22 @@
         vm.entityAttrs = [];
         vm.range = gridHelperService.range;
 
+        vm.transactionUserFields = {};
+
+        vm.getTransactionUserFields = function () {
+
+            return uiService.getTransactionFieldList().then(function (data) {
+
+                data.results.forEach(function (field) {
+
+                    vm.transactionUserFields[field.key] = field.name;
+
+                })
+
+            })
+
+        };
+
         vm.getItem = function (fromChild) {
 
             return new Promise(function (res, rej) {
@@ -258,23 +274,28 @@
 
                     entityViewerHelperService.transformItems([vm.entity], vm.attrs).then(function (transformEntityData) {
                         vm.entity = transformEntityData[0];
-                        vm.entity.$_isValid = true;
-                        vm.readyStatus.entity = true;
 
-                        vm.loadPermissions();
 
-                        if (vm.entityType !== 'transaction-type') {
+                        vm.getTransactionUserFields().then(function () {
 
-                            vm.getLayout();
+                            vm.readyStatus.entity = true;
 
-                            // Resolving promise to inform child about end of editor building
-                            res();
+                            vm.loadPermissions();
 
-                        } else {
-                            vm.readyStatus.layout = true;
-                            $scope.$apply();
+                            if (vm.entityType !== 'transaction-type') {
 
-                        }
+                                vm.getLayout();
+
+                                // Resolving promise to inform child about end of editor building
+                                res();
+
+                            } else {
+                                vm.readyStatus.layout = true;
+                                $scope.$apply();
+
+                            }
+
+                        })
 
                     });
 
@@ -413,9 +434,9 @@
 
                 vm.updateEntityBeforeSave();
 
-                vm.entity.$_isValid = entityEditorHelper.checkForNotNullRestriction(vm.entity, vm.entityAttrs, vm.attrs);
+                var isValid = entityEditorHelper.checkForNotNullRestriction(vm.entity, vm.entityAttrs, vm.attrs);
 
-                if (vm.entity.$_isValid) {
+                if (isValid) {
 
                     var result = entityEditorHelper.checkForNulls(vm.entity);
 
@@ -527,9 +548,9 @@
 
             vm.updateEntityBeforeSave();
 
-            vm.entity.$_isValid = entityEditorHelper.checkForNotNullRestriction(vm.entity, vm.entityAttrs, vm.attrs);
+            var isValid = entityEditorHelper.checkForNotNullRestriction(vm.entity, vm.entityAttrs, vm.attrs);
 
-            if (vm.entity.$_isValid) {
+            if (isValid) {
 
                 var result = entityEditorHelper.checkForNulls(vm.entity);
 
@@ -557,13 +578,19 @@
 
                     entityResolverService.update(vm.entityType, result.id, result).then(function (data) {
 
+                        console.log('data', data);
+
                         if (data.status === 400) {
                             vm.handleErrors($event, data);
                         } else {
                             $mdDialog.hide({res: 'agree'});
                         }
 
-                    });
+                    }).catch(function (error) {
+
+                        console.log('error', error);
+
+                    })
 
                 }
 
@@ -1373,7 +1400,7 @@
             var actionNameOccupied = true;
 
             var c = 1;
-            while(actionNameOccupied) { // check that copy name is unique
+            while (actionNameOccupied) { // check that copy name is unique
 
                 actionNameOccupied = false;
 

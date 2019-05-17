@@ -252,70 +252,170 @@
 
         };
 
+        function isFunction(token, words) {
+
+            if (token.hasDot) {
+                return false
+            }
+
+            return words.indexOf(token) !== -1;
+
+        }
+
+        function isParameter(token, words) {
+
+            return words.indexOf(token) !== -1;
+
+        }
+
+        function isInput(token, words) {
+
+            if (token.hasDot) {
+                return false
+            }
+
+            return words.indexOf(token) !== -1;
+
+        }
+
         vm.getHtmlExpression = function (expression) {
 
             var result = expression.slice();
 
-            var i = 0;
+            var currentToken = {
+                value: '',
+                hasDot: false
+            };
 
-            // transactions[0].portfolio.user_code+', Book real estate balances'+', Cost size: '+format_number(transactions[0].cash_consideration,
-            // decimal_pos=2, thousand_sep=' ', use_grouping=True)+transactions[0].transaction_currency.user_code+',
-            // Object: '+transactions[0].instrument.name
-
-            if (vm.data.functions) {
-
-
-                var words = vm.data.functions[0].map(function (item) {
-                    return item.func
-                });
-
-                console.log('words inputs', words);
-
-                result = wrapWords(result, words, 'span', 'eb-highlight-input')
-
-
-            }
-
-            if (isBracketsValid(expression, '(', ')')) {
-
-                console.log('vm.data.functions', vm.expressions);
-
-                var words = vm.expressions.filter(function (item) {
+            var functionWords = vm.expressions
+                .filter(function (item) {
                     return item.func.indexOf('(') !== -1;
+                })
+                .map(function (item) {
+                    return item.func.split('(')[0]
                 });
 
-                words = words.map(function (item) {
-                    return item.func
-                });
-
-                words = words.map(function (item) {
-                    return item.split('(')[0] + '('; // trick to change only function keywords
-                });
-
-                console.log('words functions', words);
-
-                result = wrapWords(result, words, 'span', 'eb-highlight-func');
-            }
-
-            if (isBracketsValid(expression, '[', ']')) {
-
-                var words = vm.expressions.filter(function (item) {
+            var propertiesWords = vm.expressions
+                .filter(function (item) {
                     return item.func.indexOf(']') !== -1;
+                })
+                .map(function (item) {
+                    return item.func.split('].')[1];
                 });
 
-                words = words.map(function (item) {
-                    return item.func
-                });
+            var inputWords = vm.data.functions[0].map(function (item) {
+                return item.func
+            });
 
-                words = words.map(function (item) {
-                    return item.split('].')[1];
-                });
+            console.log('functionWords', functionWords);
+            console.log('propertiesWords', propertiesWords);
+            console.log('inputWords', inputWords);
 
-                console.log('words properties', words);
+            for (var i = 0; i < expression.length;) {
 
-                result = wrapWords(result, words, 'span', 'eb-highlight-property')
+                if (expression[i].match(new RegExp(/^[a-zA-Z0-9_-]*$/))) {
+                    currentToken.value = currentToken.value + expression[i];
+                } else {
+                    result = result + currentToken.value;
+                    currentToken.value = '';
+                    currentToken.hasDot = false;
+                    result = result + expression[i]
+                }
+
+                if (expression[i] === '.') {
+                    currentToken.hasDot = true;
+                }
+
+                if (isFunction(currentToken, functionWords)) {
+
+                    console.log("Find function", currentToken.value);
+
+                    result = result + '<span class="eb-highlight-func">' + currentToken.value + '</span>';
+                    currentToken.value = '';
+                }
+
+                if (isInput(currentToken, inputWords)) {
+
+                    console.log("Find input", currentToken.value);
+
+                    result = result + '<span class="eb-highlight-input">' + currentToken.value + '</span>';
+
+                }
+
+                if (isParameter(currentToken, propertiesWords)) {
+
+                    console.log("Find parameter", currentToken.value);
+
+                    result = result + '<span class="eb-highlight-property">' + currentToken.value + '</span>';
+
+                    currentToken.value = '';
+                    currentToken.hasDot = false;
+
+                }
+
+                i = i + 1;
+
 
             }
+
+            console.log('result', result);
+
+
+            // if (vm.data.functions) {
+            //
+            //
+            //     var words = vm.data.functions[0].map(function (item) {
+            //         return item.func
+            //     });
+            //
+            //     console.log('words inputs', words);
+            //
+            //     result = wrapWords(result, words, 'span', 'eb-highlight-input')
+            //
+            //
+            // }
+            //
+            // if (isBracketsValid(expression, '(', ')')) {
+            //
+            //     console.log('vm.data.functions', vm.expressions);
+            //
+            //     var words = vm.expressions.filter(function (item) {
+            //         return item.func.indexOf('(') !== -1;
+            //     });
+            //
+            //     words = words.map(function (item) {
+            //         return item.func
+            //     });
+            //
+            //     words = words.map(function (item) {
+            //         return item.split('(')[0] + '('; // trick to change only function keywords
+            //     });
+            //
+            //     console.log('words functions', words);
+            //
+            //     result = wrapWords(result, words, 'span', 'eb-highlight-func');
+            // }
+            //
+            // if (isBracketsValid(expression, '[', ']')) {
+            //
+            //     var words = vm.expressions.filter(function (item) {
+            //         return item.func.indexOf(']') !== -1;
+            //     });
+            //
+            //     words = words.map(function (item) {
+            //         return item.func
+            //     });
+            //
+            //     words = words.map(function (item) {
+            //         return item.split('].')[1];
+            //     });
+            //
+            //     console.log('words properties', words);
+            //
+            //     result = wrapWords(result, words, 'span', 'eb-highlight-property')
+            //
+            // }
+            //
 
             return result
 

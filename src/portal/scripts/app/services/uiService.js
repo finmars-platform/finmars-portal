@@ -91,6 +91,19 @@
         return uiRepository.deleteConfigurationByKey(id);
     };
 
+
+    var getTransactionFieldList = function () {
+        return uiRepository.getTransactionFieldList()
+    };
+
+    var createTransactionField = function (data) {
+        return uiRepository.createTransactionField(data);
+    };
+
+    var updateTransactionField = function (id, data) {
+        return uiRepository.updateTransactionField(id, data);
+    };
+
     module.exports = {
         getDefaultListLayout: getDefaultListLayout,
         getDefaultEditLayout: getDefaultEditLayout,
@@ -111,7 +124,12 @@
         getConfigurationList: getConfigurationList,
         createConfiguration: createConfiguration,
         updateConfiguration: updateConfiguration,
-        deleteConfigurationByKey: deleteConfigurationByKey
+        deleteConfigurationByKey: deleteConfigurationByKey,
+
+
+        getTransactionFieldList: getTransactionFieldList,
+        createTransactionField: createTransactionField,
+        updateTransactionField: updateTransactionField
     }
 
 }());
