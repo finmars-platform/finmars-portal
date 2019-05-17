@@ -27,10 +27,10 @@
                                                                                  data-ng-show="vm.sort === 'date'"
                                                                                  data-ng-class="{reverse: vm.direction}"></span>
                                 </th>
-                                <th data-ng-click="vm.setSort('accrued_price')">Accrued price<span class="sortorder"
+                                <!--<th data-ng-click="vm.setSort('accrued_price')">Accrued price<span class="sortorder"
                                                                                                    data-ng-show="vm.sort === 'accrued_price'"
                                                                                                    data-ng-class="{reverse: vm.direction}"></span>
-                                </th>
+                                </th>-->
                                 <th data-ng-click="vm.setSort('principal_price')">Principal price<span class="sortorder"
                                                                                                        data-ng-show="vm.sort === 'principal_price'"
                                                                                                        data-ng-class="{reverse: vm.direction}"></span>
@@ -60,12 +60,12 @@
                                         <input type="text" data-ng-model="vm.query.date">
                                     </md-input-container>
                                 </th>
-                                <th>
+                                <!--<th>
                                     <md-input-container>
                                         <ng-md-icon icon="search"></ng-md-icon>
                                         <input type="text" data-ng-model="vm.query.accrued_price">
                                     </md-input-container>
-                                </th>
+                                </th>-->
                                 <th>
                                     <md-input-container>
                                         <ng-md-icon icon="search"></ng-md-icon>
@@ -79,11 +79,11 @@
                                 <td data-ng-bind="vm.bindPricingPolicy(item)"></td>
                                 <td data-ng-bind="vm.bindInstrument(item)"></td>
                                 <td data-ng-bind="item.date"></td>
-                                <td>
+                                <!--<td>
                                     <md-input-container>
                                         <input type="text" data-ng-model="item.accrued_price">
                                     </md-input-container>
-                                </td>
+                                </td>-->
                                 <td>
                                     <md-input-container>
                                         <input type="text" data-ng-model="item.principal_price">
@@ -147,12 +147,12 @@
                                         <input type="text" data-ng-model="vm.query.date">
                                     </md-input-container>
                                 </th>
-                                <th>
+                                <!--<th>
                                     <md-input-container>
                                         <ng-md-icon icon="search"></ng-md-icon>
                                         <input type="text" data-ng-model="vm.query.accrued_price">
                                     </md-input-container>
-                                </th>
+                                </th>-->
                                 <th>
                                     <md-input-container>
                                         <ng-md-icon icon="search"></ng-md-icon>
