@@ -237,7 +237,7 @@
             .state('app.settings.general.transaction-field', {
                 url: '/transaction-field',
                 views: {
-                    profile: {
+                    'transaction-field': {
                         templateUrl: 'views/settings/transaction-field-settings-view.html',
                         controller: 'SettingsGeneralTransactionFieldController as vm'
                     }

@@ -47,29 +47,45 @@
                 item.entity = vm.entityType;
             });
 
-            attributeTypeService.getList(vm.entityType).then(function (data) {
+            uiService.getTransactionFieldList().then(function (data) { // only for Complex Transaction & Transaction types
 
-                vm.attrs = data.results.map(function (attribute) {
+                data.results.forEach(function (field) {
 
-                    var result = {};
+                    vm.entityAttrs.forEach(function (entityAttr) {
 
-                    result.attribute_type = Object.assign({}, attribute);
-                    result.value_type = attribute.value_type;
-                    result.content_type = vm.contentType;
-                    result.key = 'attributes.' + attribute.id;
-                    result.name = attribute.name;
+                        if (entityAttr.key === field.key) {
+                            entityAttr.name = field.name;
+                        }
 
-                    return result
+                    })
 
                 });
 
-                attrsList = attrsList.concat(vm.entityAttrs);
-                attrsList = attrsList.concat(vm.attrs);
+                attributeTypeService.getList(vm.entityType).then(function (data) {
 
-                syncAttrs();
+                    vm.attrs = data.results.map(function (attribute) {
 
-                vm.readyStatus.content = true;
-                $scope.$apply();
+                        var result = {};
+
+                        result.attribute_type = Object.assign({}, attribute);
+                        result.value_type = attribute.value_type;
+                        result.content_type = vm.contentType;
+                        result.key = 'attributes.' + attribute.id;
+                        result.name = attribute.name;
+
+                        return result
+
+                    });
+
+                    attrsList = attrsList.concat(vm.entityAttrs);
+                    attrsList = attrsList.concat(vm.attrs);
+
+                    syncAttrs();
+
+                    vm.readyStatus.content = true;
+                    $scope.$apply();
+                })
+
             })
 
         };

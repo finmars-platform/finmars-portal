@@ -212,6 +212,22 @@
         vm.entityAttrs = [];
         vm.range = gridHelperService.range;
 
+        vm.transactionUserFields = {};
+
+        vm.getTransactionUserFields = function () {
+
+            return uiService.getTransactionFieldList().then(function (data) {
+
+                data.results.forEach(function (field) {
+
+                    vm.transactionUserFields[field.key] = field.name;
+
+                })
+
+            })
+
+        };
+
         vm.getItem = function (fromChild) {
 
             return new Promise(function (res, rej) {
@@ -258,22 +274,28 @@
 
                     entityViewerHelperService.transformItems([vm.entity], vm.attrs).then(function (transformEntityData) {
                         vm.entity = transformEntityData[0];
-                        vm.readyStatus.entity = true;
 
-                        vm.loadPermissions();
 
-                        if (vm.entityType !== 'transaction-type') {
+                        vm.getTransactionUserFields().then(function () {
 
-                            vm.getLayout();
+                            vm.readyStatus.entity = true;
 
-                            // Resolving promise to inform child about end of editor building
-                            res();
+                            vm.loadPermissions();
 
-                        } else {
-                            vm.readyStatus.layout = true;
-                            $scope.$apply();
+                            if (vm.entityType !== 'transaction-type') {
 
-                        }
+                                vm.getLayout();
+
+                                // Resolving promise to inform child about end of editor building
+                                res();
+
+                            } else {
+                                vm.readyStatus.layout = true;
+                                $scope.$apply();
+
+                            }
+
+                        })
 
                     });
 

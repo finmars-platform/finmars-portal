@@ -428,6 +428,50 @@
         })
     };
 
+
+    var getTransactionFieldList = function (options) {
+
+        return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl + 'ui/transaction-user-field/', options),
+            {
+                method: 'GET',
+                credentials: 'include',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-type': 'application/json'
+                }
+            })
+
+    };
+
+    var createTransactionField = function (data) {
+
+        return xhrService.fetch(baseUrl + 'ui/transaction-user-field/',
+            {
+                method: 'POST',
+                credentials: 'include',
+                headers: {
+                    'X-CSRFToken': cookieService.getCookie('csrftoken'),
+                    Accept: 'application/json',
+                    'Content-type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+    };
+
+    var updateTransactionField = function (id, data) {
+        return xhrService.fetch(baseUrl + 'ui/transaction-user-field/' + id + '/',
+            {
+                method: 'PUT',
+                credentials: 'include',
+                headers: {
+                    'X-CSRFToken': cookieService.getCookie('csrftoken'),
+                    Accept: 'application/json',
+                    'Content-type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+    };
+
     module.exports = {
 
         getDefaultEditLayout: getDefaultEditLayout,
@@ -457,7 +501,11 @@
         getConfigurationExportLayoutList: getConfigurationExportLayoutList,
         createConfigurationExportLayout: createConfigurationExportLayout,
         updateConfigurationExportLayout: updateConfigurationExportLayout,
-        deleteConfigurationExportLayoutByKey: deleteConfigurationExportLayoutByKey
+        deleteConfigurationExportLayoutByKey: deleteConfigurationExportLayoutByKey,
+
+        getTransactionFieldList: getTransactionFieldList,
+        createTransactionField: createTransactionField,
+        updateTransactionField: updateTransactionField
 
     }
 
