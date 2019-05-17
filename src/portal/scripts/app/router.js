@@ -234,6 +234,15 @@
                     }
                 }
             })
+            .state('app.settings.general.transaction-field', {
+                url: '/transaction-field',
+                views: {
+                    profile: {
+                        templateUrl: 'views/settings/transaction-field-settings-view.html',
+                        controller: 'SettingsGeneralTransactionFieldController as vm'
+                    }
+                }
+            })
             .state('app.settings.general.change-password', {
                 url: '/change-password',
                 views: {

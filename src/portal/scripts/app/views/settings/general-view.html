@@ -19,6 +19,12 @@
                 <div data-ui-view="data-providers"></div>
             </md-content>
         </md-tab>
+        <md-tab label="Transaction Fields" data-ui-sref="app.settings.general.transaction-field"
+                md-active="$state.includes('app.settings.general.transaction-field')">
+            <md-content class="md-padding">
+                <div data-ui-view="transaction-field"></div>
+            </md-content>
+        </md-tab>
         <md-tab label="Instrument import" data-ui-sref="app.settings.general.instrument-import"
                 md-active="$state.includes('app.settings.general.instrument-import')">
             <md-content class="md-padding">
