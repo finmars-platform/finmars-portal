@@ -1,5 +1,8 @@
 # Changelog
 
+## 17.05.2019
+- New Fields for Transaction Type and Complex Transaction
+
 ## 16.04.2019
 - Complex Import
 
