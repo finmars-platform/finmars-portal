@@ -44,7 +44,7 @@
         vm.entitySpecialRules = false;
         vm.specialRulesReady = true;
 
-        vm.getEditListByInstanceId = function () { // TODO remove because separate controllers have been created
+        vm.getEditListByInstanceId = function () {
 
             return entityResolverService.getByKey('transaction-type-book', vm.complexTransactionOptions.transactionTypeId).then(function (data) {
 
@@ -354,7 +354,7 @@
             $mdDialog.hide();
         };
 
-        vm.recalculate = function (item) { // TODO remove because separate controllers have been created
+        vm.recalculate = function (item) {
 
             var values = {};
 
