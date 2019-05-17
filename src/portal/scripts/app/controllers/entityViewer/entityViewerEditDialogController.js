@@ -411,7 +411,7 @@
 
                         vm.entity = data;
 
-                        if (vm.entityType === 'transaction-type') {  // TODO remove because separate controllers have been created for transaction type
+                        if (vm.entityType === 'transaction-type') {
 
                             vm.editLayout = function () {
                                 $state.go('app.data-constructor', {
@@ -439,7 +439,7 @@
 
                             vm.loadPermissions();
 
-                            /*if (vm.entityType !== 'transaction-type') {  // TODO remove because separate controllers have been created
+                            if (vm.entityType !== 'transaction-type') {
 
                                 vm.getLayout();
 
@@ -450,12 +450,7 @@
                                 vm.readyStatus.layout = true;
                                 $scope.$apply();
 
-                            }*/
-
-                            vm.getLayout();
-
-                            // Resolving promise to inform child about end of editor building
-                            res();
+                            }
 
                         });
                     });
@@ -684,7 +679,7 @@
 
         };
 
-        /*if (vm.entityType === 'transaction-type') {  // TODO remove because separate controllers have been created for transaction type
+        if (vm.entityType === 'transaction-type') {
 
             $scope.$watch('vm.entity.group', function () {
                 if (vm.entity.group === 14 || !vm.entity.group) {
@@ -693,7 +688,7 @@
                     vm.TTGroupChosen = true;
                 }
             });
-        }*/
+        }
 
         vm.updateItem = function () {
 
