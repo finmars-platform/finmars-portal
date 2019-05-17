@@ -206,52 +206,6 @@
 
         };
 
-        var wrapWords = function (expression, words, tag, className) {
-
-            var index;
-
-            words.forEach(function (word) {
-
-                index = expression.indexOf(word);
-
-                if (index !== -1) {
-
-                    var openTag = '<' + tag + ' class="' + className + '">';
-                    var closeTag = '</' + tag + '>';
-
-                    var resultWord = word;
-                    var trailingParenthesis = false;
-
-                    // special exception for case when func keyword inside some word
-                    // example:
-                    // function - str()
-                    // it appears to be inside word inSTRument,
-                    // so if we looking for str( in Regexp it will be OK.
-                    // but, we need to highlight only str, so, when we generating resultTag
-                    // we remove parenthesis, wrap it up, and then add ) at the end.
-
-                    if (word[word.length - 1] === '(') {
-                        resultWord = resultWord.slice(0, -1);  // trick to find only func keywords, but not to color a parenthesis
-                        trailingParenthesis = true;
-                    }
-
-                    var result = openTag + resultWord + closeTag;
-
-                    if (trailingParenthesis) { // for func keywords
-                        result = result + '(';
-                    }
-
-                    expression = expression.split(word).join(result);
-
-                }
-
-
-            });
-
-            return expression;
-
-        };
-
         function isFunction(token, words) {
 
             if (token.hasDot) {
@@ -280,7 +234,7 @@
 
         vm.getHtmlExpression = function (expression) {
 
-            var result = ''
+            var result = '';
 
             var currentToken = {
                 value: '',
@@ -295,7 +249,7 @@
                     return item.func.split('(')[0]
                 });
 
-            var propertiesWords = vm.expressions
+            var propertiesWordsTmp = vm.expressions
                 .filter(function (item) {
                     return item.func.indexOf(']') !== -1;
                 })
@@ -303,13 +257,29 @@
                     return item.func.split('].')[1];
                 });
 
+            var propertiesWords = []
+
+            propertiesWordsTmp.forEach(function (word) {
+
+                if (word) {
+
+                    var pieces = word.split('.');
+
+                    pieces.forEach(function (pieceWord) {
+
+                        if (propertiesWords.indexOf(pieceWord) === -1) {
+                            propertiesWords.push(pieceWord)
+                        }
+
+                    })
+
+                }
+
+            });
+
             var inputWords = vm.data.functions[0].map(function (item) {
                 return item.func
             });
-
-            console.log('functionWords', functionWords);
-            console.log('propertiesWords', propertiesWords);
-            console.log('inputWords', inputWords);
 
             for (var i = 0; i < expression.length;) {
 
@@ -328,15 +298,11 @@
 
                 if (isFunction(currentToken, functionWords)) {
 
-                    console.log("Find function", currentToken.value);
-
                     result = result + '<span class="eb-highlight-func">' + currentToken.value + '</span>';
                     currentToken.value = '';
                 }
 
                 if (isInput(currentToken, inputWords)) {
-
-                    console.log("Find input", currentToken.value);
 
                     result = result + '<span class="eb-highlight-input">' + currentToken.value + '</span>';
                     currentToken.value = '';
@@ -344,8 +310,6 @@
                 }
 
                 if (isParameter(currentToken, propertiesWords)) {
-
-                    console.log("Find parameter", currentToken.value);
 
                     result = result + '<span class="eb-highlight-property">' + currentToken.value + '</span>';
 
