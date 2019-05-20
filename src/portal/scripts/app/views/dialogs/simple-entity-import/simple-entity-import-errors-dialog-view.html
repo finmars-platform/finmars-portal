@@ -54,7 +54,7 @@
 
                     <div>
 
-                        <div data-ng-show="vm.validationResult.errors.length" style="margin-top: 24px">
+                        <div data-ng-show="vm.validationResult.errors.length" style="margin-top: 24px; overflow: auto">
                             <table>
                                 <thead>
                                 <tr>
@@ -79,7 +79,8 @@
                                     </td>
                                     <td data-ng-bind="item.original_row"></td>
                                     <td data-ng-bind="item.error_message"></td>
-                                    <td><span data-ng-bind="row.error_reaction"></span></td>
+                                    <td><span data-ng-bind="item.error_reaction"
+                                              style="white-space: pre-wrap;"></span></td>
                                 </tr>
                                 </tbody>
 
