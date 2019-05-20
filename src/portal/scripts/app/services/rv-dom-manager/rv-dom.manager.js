@@ -259,8 +259,16 @@
 
         var interfaceLayout = evDataService.getInterfaceLayout();
 
+        var scrollSize = 17; // 17px scroll size
+        var magicNumber = 6; // Somehow we lose 6px
+
         var viewportWidth = document.body.clientWidth - interfaceLayout.sidebar.width - interfaceLayout.filterArea.width;
         var viewportHeight = Math.floor(document.body.clientHeight - interfaceLayout.columnArea.top - interfaceLayout.columnArea.height);
+
+        viewportHeight = viewportHeight - scrollSize;
+        viewportHeight = viewportHeight + magicNumber;
+
+        console.log('scrollSize', scrollSize);
 
         // console.log('calculateScroll.viewportHeight', viewportHeight);
         // console.log('calculateScroll.viewportWidth', viewportWidth);

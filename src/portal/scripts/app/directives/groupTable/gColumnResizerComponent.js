@@ -22,12 +22,17 @@
                 var evContent;
                 var minWidth = 65;
 
-                function resizeWorkarea() {
+                var interfaceLayout = scope.evDataService.getInterfaceLayout();
+
+                function resizeWorkArea() {
+
                     var workAreaElem = elem.parents('.g-workarea-wrap');
-                    workAreaElem.width($(elem).parents('.entity-viewer-holder').width() - $(elem).parents('.g-wrapper').find('.g-filter-sidebar.main-sidebar').width());
-                    var wrapperWidth = $(elem).find('.g-columns-component.g-thead').width() - $(elem).find('.g-cell-select.all').width();
-                    $(elem).find('.g-scroll-wrapper').width(wrapperWidth);
-                    $(elem).find('.g-scrollable-area').width(wrapperWidth);
+
+                    var workAreaWidth = document.body.clientWidth - interfaceLayout.sidebar.width - interfaceLayout.filterArea.width;
+
+                    workAreaElem.width(workAreaWidth);
+
+
                 }
 
                 function findColumnById(columnId) {
@@ -103,8 +108,7 @@
                 function toggleColumnNameTooltip(column) {
                     if (column.width() <= minWidth && !column.hasClass('small-width')) {
                         column.addClass('small-width');
-                    }
-                    else if (column.width() > minWidth && column.hasClass('small-width')) {
+                    } else if (column.width() > minWidth && column.hasClass('small-width')) {
                         column.removeClass('small-width');
                     }
                 }
@@ -200,14 +204,13 @@
 
                 var init = function () {
 
-                    resizeWorkarea();
-
+                    resizeWorkArea();
                     initColumnSliderListener();
 
                     resizeScrollableArea();
 
                     $(window).on('resize', function () {
-                        resizeWorkarea();
+                        resizeWorkArea();
                     });
 
                     scope.evEventService.addEventListener(evEvents.REDRAW_TABLE, function () {
