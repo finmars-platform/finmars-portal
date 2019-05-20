@@ -43,7 +43,7 @@
     }
 
     gulp.task(appName + '-HTML-to-JS', function () {
-        forumHtmlToJs();
+        return forumHtmlToJs();
     });
 
     module.exports = {
