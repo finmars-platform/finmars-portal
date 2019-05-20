@@ -57,6 +57,8 @@
 
         var requestParameters = Object.assign({}, oldRequestParameters, newRequestParameters);
 
+        console.log('requestParameters', requestParameters);
+
         evDataService.setRequestParameters(requestParameters);
         evDataService.setLastClickInfo(event);
         evDataService.setActiveRequestParametersId(requestParameters.id);
@@ -587,7 +589,7 @@
 
     };
 
-    var addScrollListener = function (elements, evDataService, evEventService)  {
+    var addScrollListener = function (elements, evDataService, evEventService) {
 
         var viewportElem = elements.viewportElem;
 

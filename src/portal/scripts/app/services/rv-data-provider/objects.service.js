@@ -44,11 +44,13 @@
 
                 items = filterService.filterByRegularFilters(items, regularFilters);
 
-                console.log('regular filters length', items.length);
+                // console.log('regular filters length', items.length);
 
                 items = filterService.filterByGroupsFilters(items, options, groupTypes);
 
-                console.log('groups filters length', items.length);
+                // console.log('groups filters length', items.length);
+
+                console.log('options', options);
 
                 if (options.ordering) {
                     items = sortService.sortItems(items, options.ordering);

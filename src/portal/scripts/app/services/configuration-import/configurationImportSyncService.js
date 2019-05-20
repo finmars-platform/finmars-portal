@@ -330,9 +330,11 @@
 
     };
 
-    var syncItem = function (item, entity, cacheContainer) {
+    var syncItem = function (item, entity, cacheContainer, errors) {
 
         return new Promise(function (resolve, reject) {
+
+            errors = errors || [];
 
             // console.log('syncItem', entity);
 
@@ -353,16 +355,16 @@
                         resolve(syncEditLayout(item, cacheContainer));
                         break;
                     case 'ui.listlayout':
-                        resolve(syncListLayout(item, cacheContainer));
+                        resolve(syncListLayout(item, cacheContainer, errors));
                         break;
                     case 'ui.reportlayout':
-                        resolve(syncReportLayout(item, cacheContainer));
+                        resolve(syncReportLayout(item, cacheContainer, errors));
                         break;
                     case 'integrations.instrumentdownloadscheme':
                         resolve(syncInstrumentDownloadScheme(item, cacheContainer));
                         break;
                     case 'complex_import.compleximportscheme':
-                        resolve(syncComplexImportScheme(item, cacheContainer));
+                        resolve(syncComplexImportScheme(item, cacheContainer, errors));
                         break;
                     case 'csv_import.csvimportscheme':
                         resolve(syncCsvImportScheme(item, cacheContainer));

@@ -769,7 +769,7 @@
 
         return new Promise(function (resolve, reject) {
 
-            configurationImportSyncService.syncItem(item, entity, cacheContainer).then(function (value) {
+            configurationImportSyncService.syncItem(item, entity, cacheContainer, errors).then(function (value) {
 
                 try {
 
