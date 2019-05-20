@@ -45,10 +45,12 @@
                 controller: 'CreateMasterUserDialogController as vm',
                 templateUrl: 'views/dialogs/create-master-user-dialog-view.html',
                 parent: angular.element(document.body),
-                targetEvent: $event,
-            }).then(function (value) {
+                targetEvent: $event
+            }).then(function (res) {
 
-                vm.getMasterUsersList();
+                if (res.status === 'agree') {
+                    vm.getMasterUsersList();
+                }
 
             })
 

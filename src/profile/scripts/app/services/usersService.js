@@ -204,7 +204,18 @@
             },
             body: JSON.stringify(user)
         }).then(function (data) {
+
+            if (data.status !== 200 && data.status !== 201) {
+                throw data
+            }
+
             return data.json();
+
+        }).catch(function (reason) {
+
+            console.log('createMasterUser reject?', reason);
+
+            throw reason
         })
     };
 

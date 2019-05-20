@@ -173,22 +173,29 @@
 
             var result = true;
             var container = [];
+            var indexContainer = [];
 
             for (var i = 0; i < expression.length; i = i + 1) {
 
                 if (expression[i] === leftBracket) {
-                    container.push(leftBracket)
+                    container.push(leftBracket);
+                    indexContainer.push(i)
                 } else {
 
                     if (expression[i] === rightBracket) {
 
                         if (container.length && container[container.length - 1] === leftBracket) {
 
-                            container.pop()
+                            container.pop();
+                            indexContainer.pop()
 
                         } else {
 
+                            container.push(rightBracket);
+                            indexContainer.push(i);
+
                             result = false;
+
                             break;
 
                         }
@@ -198,57 +205,22 @@
 
             }
 
+            console.log('indexContainer', indexContainer);
+            console.log('container', container);
+
             if (container.length > 0) {
                 result = false;
             }
 
-            return result
+            var resultObj = {
+                status: result
+            };
 
-        };
+            if (result === false) {
+                resultObj.errorIndex = indexContainer[container.length - 1]
+            }
 
-        var wrapWords = function (expression, words, tag, className) {
-
-            var index;
-
-            words.forEach(function (word) {
-
-                index = expression.indexOf(word);
-
-                if (index !== -1) {
-
-                    var openTag = '<' + tag + ' class="' + className + '">';
-                    var closeTag = '</' + tag + '>';
-
-                    var resultWord = word;
-                    var trailingParenthesis = false;
-
-                    // special exception for case when func keyword inside some word
-                    // example:
-                    // function - str()
-                    // it appears to be inside word inSTRument,
-                    // so if we looking for str( in Regexp it will be OK.
-                    // but, we need to highlight only str, so, when we generating resultTag
-                    // we remove parenthesis, wrap it up, and then add ) at the end.
-
-                    if (word[word.length - 1] === '(') {
-                        resultWord = resultWord.slice(0, -1);  // trick to find only func keywords, but not to color a parenthesis
-                        trailingParenthesis = true;
-                    }
-
-                    var result = openTag + resultWord + closeTag;
-
-                    if (trailingParenthesis) { // for func keywords
-                        result = result + '(';
-                    }
-
-                    expression = expression.split(word).join(result);
-
-                }
-
-
-            });
-
-            return expression;
+            return resultObj;
 
         };
 
@@ -258,13 +230,13 @@
                 return false
             }
 
-            return words.indexOf(token) !== -1;
+            return words.indexOf(token.value) !== -1;
 
         }
 
         function isParameter(token, words) {
 
-            return words.indexOf(token) !== -1;
+            return words.indexOf(token.value) !== -1;
 
         }
 
@@ -274,13 +246,17 @@
                 return false
             }
 
-            return words.indexOf(token) !== -1;
+            return words.indexOf(token.value) !== -1;
 
+        }
+
+        function insert(str, index, value) {
+            return str.substr(0, index) + value + str.substr(index);
         }
 
         vm.getHtmlExpression = function (expression) {
 
-            var result = expression.slice();
+            var result = '';
 
             var currentToken = {
                 value: '',
@@ -295,7 +271,7 @@
                     return item.func.split('(')[0]
                 });
 
-            var propertiesWords = vm.expressions
+            var propertiesWordsTmp = vm.expressions
                 .filter(function (item) {
                     return item.func.indexOf(']') !== -1;
                 })
@@ -303,17 +279,36 @@
                     return item.func.split('].')[1];
                 });
 
+            var propertiesWords = [];
+
+            propertiesWordsTmp.forEach(function (word) {
+
+                if (word) {
+
+                    var pieces = word.split('.');
+
+                    pieces.forEach(function (pieceWord) {
+
+                        if (propertiesWords.indexOf(pieceWord) === -1) {
+                            propertiesWords.push(pieceWord)
+                        }
+
+                    })
+
+                }
+
+            });
+
             var inputWords = vm.data.functions[0].map(function (item) {
                 return item.func
             });
 
-            console.log('functionWords', functionWords);
-            console.log('propertiesWords', propertiesWords);
-            console.log('inputWords', inputWords);
+            var strContent = false;
+            var strType;
 
             for (var i = 0; i < expression.length;) {
 
-                if (expression[i].match(new RegExp(/^[a-zA-Z0-9_-]*$/))) {
+                if (expression[i].match(new RegExp(/^[a-zA-Z0-9_-]*$/)) && strContent === false) {
                     currentToken.value = currentToken.value + expression[i];
                 } else {
                     result = result + currentToken.value;
@@ -326,30 +321,49 @@
                     currentToken.hasDot = true;
                 }
 
-                if (isFunction(currentToken, functionWords)) {
+                if (expression[i] === '"' || expression[i] === "'") {
 
-                    console.log("Find function", currentToken.value);
+                    if (strContent === false) {
 
-                    result = result + '<span class="eb-highlight-func">' + currentToken.value + '</span>';
-                    currentToken.value = '';
+                        strType = expression[i];
+                        strContent = true
+
+                    } else {
+
+                        if (strType === expression[i]) {
+                            strType = null;
+                            strContent = false;
+                        } else {
+                            strType = expression[i];
+                        }
+
+                    }
+
                 }
 
-                if (isInput(currentToken, inputWords)) {
+                if (strContent === false) {
 
-                    console.log("Find input", currentToken.value);
+                    if (isFunction(currentToken, functionWords)) {
 
-                    result = result + '<span class="eb-highlight-input">' + currentToken.value + '</span>';
+                        result = result + '<span class="eb-highlight-func">' + currentToken.value + '</span>';
+                        currentToken.value = '';
+                    }
 
-                }
+                    if (isInput(currentToken, inputWords)) {
 
-                if (isParameter(currentToken, propertiesWords)) {
+                        result = result + '<span class="eb-highlight-input">' + currentToken.value + '</span>';
+                        currentToken.value = '';
 
-                    console.log("Find parameter", currentToken.value);
+                    }
 
-                    result = result + '<span class="eb-highlight-property">' + currentToken.value + '</span>';
+                    if (isParameter(currentToken, propertiesWords)) {
 
-                    currentToken.value = '';
-                    currentToken.hasDot = false;
+                        result = result + '<span class="eb-highlight-property">' + currentToken.value + '</span>';
+
+                        currentToken.value = '';
+                        currentToken.hasDot = false;
+
+                    }
 
                 }
 
@@ -358,64 +372,23 @@
 
             }
 
-            console.log('result', result);
+            var parenthesisStatus = isBracketsValid(result, '(', ')');
+            var squareBracketsStatus = isBracketsValid(result, '[', ']');
 
+            if (parenthesisStatus.status === false && parenthesisStatus.errorIndex !== undefined) {
 
-            // if (vm.data.functions) {
-            //
-            //
-            //     var words = vm.data.functions[0].map(function (item) {
-            //         return item.func
-            //     });
-            //
-            //     console.log('words inputs', words);
-            //
-            //     result = wrapWords(result, words, 'span', 'eb-highlight-input')
-            //
-            //
-            // }
-            //
-            // if (isBracketsValid(expression, '(', ')')) {
-            //
-            //     console.log('vm.data.functions', vm.expressions);
-            //
-            //     var words = vm.expressions.filter(function (item) {
-            //         return item.func.indexOf('(') !== -1;
-            //     });
-            //
-            //     words = words.map(function (item) {
-            //         return item.func
-            //     });
-            //
-            //     words = words.map(function (item) {
-            //         return item.split('(')[0] + '('; // trick to change only function keywords
-            //     });
-            //
-            //     console.log('words functions', words);
-            //
-            //     result = wrapWords(result, words, 'span', 'eb-highlight-func');
-            // }
-            //
-            // if (isBracketsValid(expression, '[', ']')) {
-            //
-            //     var words = vm.expressions.filter(function (item) {
-            //         return item.func.indexOf(']') !== -1;
-            //     });
-            //
-            //     words = words.map(function (item) {
-            //         return item.func
-            //     });
-            //
-            //     words = words.map(function (item) {
-            //         return item.split('].')[1];
-            //     });
-            //
-            //     console.log('words properties', words);
-            //
-            //     result = wrapWords(result, words, 'span', 'eb-highlight-property')
-            //
-            // }
-            //
+                result = insert(result, parenthesisStatus.errorIndex + 1, '</span>');
+                result = insert(result, parenthesisStatus.errorIndex, '<span class="eb-error-bracket">')
+
+            } else {
+
+                if (squareBracketsStatus.status === false && squareBracketsStatus.errorIndex !== undefined) {
+
+                    result = insert(result, squareBracketsStatus.errorIndex + 1, '</span>');
+                    result = insert(result, squareBracketsStatus.errorIndex, '<span class="eb-error-bracket">')
+
+                }
+            }
 
             return result
 

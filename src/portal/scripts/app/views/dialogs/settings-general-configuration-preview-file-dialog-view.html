@@ -25,7 +25,8 @@
 
             <h2 data-ng-if="item.first__" data-ng-bind="item.first__"></h2>
             <div class="cie-entity-holder" data-ng-class="{
-                      'text-warning-red': item.is_duplicate && vm.settings.mode == 'overwrite'}">
+                      'text-warning-red': item.is_duplicate && vm.settings.mode == 'overwrite',
+                      'text-warning-blue': item.is_duplicate && vm.settings.mode == 'skip'}">
                 <md-checkbox data-ng-checked="item.active"
                              data-ng-click="vm.toggleActiveForChilds(item)"
                              data-ng-class="{'some-checkboxes-ticked': item.someChildsActive}"
@@ -39,12 +40,13 @@
                         data-ng-bind="vm.getEntityDependenciesCaptions(item)"></span>
                 ({{item.count}})
 
-                <span data-ng-if="item.is_duplicate && vm.settings.mode == 'overwrite'" class="cursor-pointer"><ng-md-icon
+                <span data-ng-if="item.is_duplicate" class="cursor-pointer"><ng-md-icon
                         icon="warning"
                         size="18">
                             <md-tooltip class="tooltip_2"
                                         md-direction="top">Warning. Some items of this entity already exist in ecosystem</md-tooltip>
                         </ng-md-icon></span>
+
 
                 <md-button class="md-raised" ng-click="item.displayItems = !item.displayItems"
                            aria-label="display items button"><span
@@ -64,7 +66,8 @@
                     <span data-ng-class="{
                     'used-dynamic-attrs': child.countOfUsages__,
                     'child-with-icon': vm.checkForTextIcon(item.entity, child),
-                    'text-warning-red': child.is_duplicate && vm.settings.mode == 'overwrite'}">
+                    'text-warning-red': child.is_duplicate && vm.settings.mode == 'overwrite',
+                    'text-warning-blue': child.is_duplicate && vm.settings.mode == 'skip'}">
                         <ng-md-icon data-ng-if="vm.checkForTextIcon(item.entity, child)" icon="folder" fill="#000"
                                     size="20"></ng-md-icon>
                         {{vm.getItemName(child)}}
@@ -75,6 +78,13 @@
                                 size="18">
                             <md-tooltip class="tooltip_2"
                                         md-direction="top">Warning. You already have this entity, it will be overwritten</md-tooltip>
+                        </ng-md-icon></span>
+
+                        <span data-ng-if="child.is_duplicate && vm.settings.mode == 'skip'" class="cursor-pointer"><ng-md-icon
+                                icon="warning"
+                                size="18">
+                            <md-tooltip class="tooltip_2"
+                                        md-direction="top">Will not be imported as it is already exists</md-tooltip>
                         </ng-md-icon></span>
                     </span>
                 </div>
