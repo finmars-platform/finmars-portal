@@ -152,7 +152,10 @@
                 skipHide: true,
                 locals: {
                     item: {expression: item.name_expr},
-                    data: {}
+                    data: {
+                        groups: [vm.inputsGroup],
+                        functions: [vm.inputsFunctions]
+                    }
                 }
             }).then(function (res) {
 
@@ -185,26 +188,71 @@
             vm.scheme.inputs = vm.providerFields;
             vm.scheme.rules = vm.mapFields;
 
-            transactionSchemeService.create(vm.scheme).then(function (data) {
+            var warningMessage = '';
 
-                $mdDialog.hide({status: 'agree'});
+            var importedColumnsNumberZero = false;
+            var importedColumnsNumberEmpty = false;
 
-            }).catch(function (reason) {
+            vm.providerFields.map(function (field) {
+
+                if (field.column === 0 && !importedColumnsNumberZero) {
+                    warningMessage = "should not have value 0 (column's count starts from 1)";
+                    importedColumnsNumberZero = true;
+                }
+
+                if (field.column === null && !importedColumnsNumberEmpty) {
+
+                    if (importedColumnsNumberZero) {
+                        warningMessage = warningMessage + ', should not be empty'
+                    } else {
+                        warningMessage = 'should not be empty'
+                    }
+
+                    importedColumnsNumberEmpty = true;
+                }
+
+            });
+
+            if (importedColumnsNumberZero || importedColumnsNumberEmpty) {
+                warningMessage = 'Imported Columns Field #: ' + warningMessage + '.';
 
                 $mdDialog.show({
-                    controller: 'ValidationDialogController as vm',
-                    templateUrl: 'views/dialogs/validation-dialog-view.html',
+                    controller: 'WarningDialogController as vm',
+                    templateUrl: 'views/warning-dialog-view.html',
                     targetEvent: $event,
+                    clickOutsideToClose: false,
                     locals: {
-                        validationData: reason.message
+                        warning: {
+                            title: 'Incorrect Imported Columns field #',
+                            description: warningMessage
+                        }
                     },
-                    preserveScope: true,
-                    autoWrap: true,
-                    multiple: true,
-                    skipHide: true
+                    multiple: true
+                })
+            } else {
+
+                transactionSchemeService.create(vm.scheme).then(function (data) {
+
+                    $mdDialog.hide({status: 'agree'});
+
+                }).catch(function (reason) {
+
+                    $mdDialog.show({
+                        controller: 'ValidationDialogController as vm',
+                        templateUrl: 'views/dialogs/validation-dialog-view.html',
+                        targetEvent: $event,
+                        locals: {
+                            validationData: reason.message
+                        },
+                        preserveScope: true,
+                        autoWrap: true,
+                        multiple: true,
+                        skipHide: true
+                    })
+
                 })
 
-            })
+            }
 
         };
 

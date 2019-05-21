@@ -76,17 +76,6 @@
                     return field.id ? field.id : field.key;
                 };
 
-                scope.datepickerReadySignal = function (status) {
-
-                    return new Promise(function(res, rej) {
-
-                        scope.updateReportOptions();
-
-                        res(status);
-                    })
-
-                };
-
                 if (scope.isReport === true) {
 
                     pricingPolicyService.getList().then(function (data) {
@@ -116,8 +105,10 @@
 
                     var newReportOptions = Object.assign({}, reportOptions, scope.reportOptions);
                     var newReportLayoutOptions = Object.assign({}, reportLayoutOptions, scope.reportLayoutOptions);
+                    // TODO Delete in future
                     delete newReportLayoutOptions.reportFirstDatepicker;
                     delete newReportLayoutOptions.reportLastDatepicker;
+                    // < Delete in future >
                     console.log('report options', newReportOptions, newReportLayoutOptions);
 
                     scope.evDataService.setReportOptions(newReportOptions);
@@ -436,7 +427,13 @@
                     scope.evEventService.addEventListener(evEvents.REPORT_OPTIONS_CHANGE, function () {
 
                         scope.reportOptions = scope.evDataService.getReportOptions();
-                        prepareReportLayoutOptions();
+                        scope.reportLayoutOptions = scope.evDataService.getReportLayoutOptions();
+
+                        setTimeout(function () {
+                            scope.$apply();
+                        }, 500);
+
+                        // prepareReportLayoutOptions();
 
                     });
 

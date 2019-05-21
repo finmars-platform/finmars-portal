@@ -244,7 +244,7 @@
                     vm.inputsFunctions = vm.entity.inputs.map(function (input) {
 
                         return {
-                            "name": "Input: " + input.verbose_name + " (" + input.name + ")",
+                            "name": "Input: " + input.name + " (" + input.verbose_name + ")",
                             "description": "Transaction Type Input: " + input.name + " (" + input.verbose_name + ") ",
                             "groups": "input",
                             "func": input.name
@@ -1012,12 +1012,12 @@
             });
         };
 
-        vm.valueTypeChanged = function () {
-            vm.newItem.content_type = null;
-            vm.newItem.is_fill_from_context = false;
+        vm.valueTypeChanged = function (item) {
+            item.content_type = null;
+            item.is_fill_from_context = false;
 
-            if (vm.newItem.value_type === 100) {
-                vm.newItem.content_type = "accounts.account";
+            if (item.value_type === 100) {
+                item.content_type = "accounts.account";
             }
         };
 
@@ -1421,11 +1421,11 @@
                 if (!actionNameOccupied) {
                     actionCopy.action_notes = actionName;
 
-                    if (actionCopy.hasOwnProperty('transaction') && actionCopy.transaction.hasOwnProperty('action_notes')) {
+                    if (actionCopy.transaction && actionCopy.transaction.hasOwnProperty('action_notes')) {
                         actionCopy.transaction.action_notes = actionName;
                     }
 
-                    if (actionCopy.hasOwnProperty('instrument')) {
+                    if (actionCopy.instrument) {
                         actionCopy.instrument.action_notes = actionName;
                     }
 

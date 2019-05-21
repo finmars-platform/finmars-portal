@@ -310,7 +310,10 @@
                 skipHide: true,
                 locals: {
                     item: {expression: item.name_expr},
-                    data: {}
+                    data: {
+                        groups: [vm.inputsGroup],
+                        functions: [vm.inputsFunctions]
+                    }
                 }
             }).then(function (res) {
 
