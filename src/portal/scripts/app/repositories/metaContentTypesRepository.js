@@ -307,6 +307,16 @@
                 name: 'Notification Class',
                 entity: 'notification-class',
                 key: 'transactions.notificationclass'
+            },
+            {
+                name: 'Complex Import Scheme',
+                entity: 'complex-import-scheme',
+                key: 'complex_import.compleximportscheme'
+            },
+            {
+                name: 'Simple Entity Import Scheme',
+                entity: 'simple-entity-import-scheme',
+                key: 'csv_import.csvimportscheme'
             }
         ]
     };

@@ -158,7 +158,14 @@
 
                             }).catch(function (reason) {
 
-                                errors.push(reason);
+                                errors.push({
+                                    content_type: contentType,
+                                    item: item,
+                                    error: {
+                                        message: reason
+                                    },
+                                    mode: 'skip'
+                                });
 
                                 resolve()
 
@@ -807,7 +814,9 @@
 
                                     errors.push({
                                         item: item,
-                                        error: reason
+                                        error: {
+                                            message: reason
+                                        }
                                     });
 
                                     console.log('pricingautomatedscheduleerror ', reason);
@@ -1473,8 +1482,8 @@
                 return item.entity === 'complex_import.compleximportscheme';
             });
 
-
-            createEntityItems(instrumentTypes, settings, cacheContainer, errors).then(function () {
+            // We do not need to store errors of first Instrument Types import
+            createEntityItems(instrumentTypes, settings, cacheContainer, []).then(function () {
 
                 console.log("Instrument type import success");
 
