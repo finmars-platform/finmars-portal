@@ -18,6 +18,18 @@
                                 <label>Scheme name</label>
                                 <input aria-label="scheme name" type="text" data-ng-model="vm.scheme.scheme_name">
                             </md-input-container>
+
+                            <div layout="row">
+                                <md-input-container class="md-block width-90">
+                                    <label>Filter Condition (line is imported if the Filter Expression returns True,
+                                        executed before the conversions)</label>
+                                    <input aria-label="scheme name" type="text" data-ng-model="vm.scheme.filter_expr">
+                                </md-input-container>
+                                <expression-editor-button data-item="vm.scheme.filter_expr"
+                                                          data-data="{groups: [vm.inputsGroup], functions: [vm.inputsFunctions]}"></expression-editor-button>
+
+                            </div>
+
                         </md-card-content>
                     </md-card>
                 </div>
@@ -53,7 +65,8 @@
                                         <div>
                                             <md-button class="md-raised"
                                                        ng-click="vm.openProviderFieldExpressionBuilder(item, $event)"
-                                                       style="min-width: 40px;">f(x)</md-button>
+                                                       style="min-width: 40px;">f(x)
+                                            </md-button>
                                         </div>
                                     </div>
                                 </div>
@@ -75,7 +88,8 @@
                         <md-card>
                             <md-card-content>
                                 <div layout="column">
-                                    <div data-ng-repeat="item in vm.scheme.entity_fields | orderBy: item.order as results track by $index" flex="100">
+                                    <div data-ng-repeat="item in vm.scheme.entity_fields | orderBy: item.order as results track by $index"
+                                         flex="100">
                                         <div class="fields-holder" layout="row">
                                             <div class="iscm-item width-100" layout="row">
                                                 <md-input-container flex="20">

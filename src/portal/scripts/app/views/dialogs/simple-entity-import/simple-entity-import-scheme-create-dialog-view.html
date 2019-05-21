@@ -18,6 +18,17 @@
                                 <label>Scheme name</label>
                                 <input aria-label="scheme name" type="text" data-ng-model="vm.scheme.scheme_name">
                             </md-input-container>
+
+
+                            <div>
+                                <md-input-container class="md-block">
+                                    <label>Filter Condition (line is imported if the Filter Expression returns True, executed before the conversions)</label>
+                                    <input aria-label="scheme name" type="text" data-ng-model="vm.scheme.filter_expr">
+                                </md-input-container>
+                                <expression-editor-button data-item="vm.scheme.filter_expr" data-data="{groups: [vm.inputsGroup], functions: [vm.inputsFunctions]}"></expression-editor-button>
+
+                            </div>
+
                             <md-input-container class="SC-entity-select-container" aria-label="select with filter">
                                 <!--<label>Data type</label>
                                 <md-select data-ng-model="vm.scheme.content_type"
