@@ -84,7 +84,8 @@
             });
             // console.log('fit layout columns', columns);
 
-            var widthLimit = pageSize - pageMargin * 2;
+            // var widthLimit = pageSize - pageMargin * 2;
+            var widthLimit = pageSize - pageMargin;
             // console.log('fit layout layoutWidth, limitWidth', layoutWidth, widthLimit);
             while (layoutWidth * scale > widthLimit) {
                 scale = (scale - 0.01).toFixed(2);

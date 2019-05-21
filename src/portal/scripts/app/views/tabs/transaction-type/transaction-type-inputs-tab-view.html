@@ -116,6 +116,7 @@
                     <md-input-container class="md-block" aria-label="select with filter">
                         <label>Value type</label>
                         <md-select ng-model="item.value_type"
+                                   ng-change="vm.valueTypeChanged(item)"
                                    md-container-class="common-select-container"
                                    md-on-close="searchTerm = ''">
 
@@ -155,7 +156,8 @@
                         <md-select ng-model="item.content_type"
                                    md-container-class="common-select-container"
                                    md-on-close="searchTerm = ''"
-                                   id="ttype-inputs-content-type">
+                                   id="ttype-inputs-content-type"
+                                   ng-disabled="item.value_type !== 100">
 
                             <md-select-header>
                                 <input data-ng-model="searchTerm"
@@ -217,7 +219,8 @@
                 </td>
                 <td data-ng-if="item.editStatus" class="edit-state-td" style="text-align: center">
                     <md-input-container>
-                        <md-checkbox data-ng-model="item.is_fill_from_context">Fill from context</md-checkbox>
+                        <md-checkbox data-ng-model="item.is_fill_from_context"
+                                     ng-disabled="item.value_type !== 100">Fill from context</md-checkbox>
                     </md-input-container>
                 </td>
                 <td data-ng-if="item.editStatus" class="edit-state-td">
@@ -258,7 +261,7 @@
                         <label for="ttype-inputs-value-type"></label>
                         <md-select ng-model="vm.newItem.value_type"
                                    md-container-class="common-select-container"
-                                   ng-change="vm.valueTypeChanged()"
+                                   ng-change="vm.valueTypeChanged(vm.newItem)"
                                    md-on-close="searchTerm = ''"
                                    id="ttype-inputs-value-type">
                             <md-select-header>
@@ -367,7 +370,8 @@
                 </td>
                 <td style="text-align: center">
                     <md-input-container>
-                        <md-checkbox data-ng-model="vm.newItem.is_fill_from_context" ng-disabled="vm.newItem.value_type !== 100"></md-checkbox>
+                        <md-checkbox data-ng-model="vm.newItem.is_fill_from_context"
+                                     ng-disabled="vm.newItem.value_type !== 100"></md-checkbox>
                     </md-input-container>
                 </td>
                 <td>

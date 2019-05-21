@@ -50,7 +50,7 @@
 	var checkForLayoutConfigurationChanges = function (activeLayoutConfig, layoutCurrentConfig, isReport) {
 
 		if (isReport) {
-			console.log("new layout reportOptions", isReport);
+
 			if (activeLayoutConfig.data.reportOptions) {
 				delete activeLayoutConfig.data.reportOptions.task_id;
 				delete activeLayoutConfig.data.reportOptions.recieved_at;
@@ -84,7 +84,7 @@
 			}
 
 		}
-		console.log("new layout", activeLayoutConfig, layoutCurrentConfig);
+
 		var layoutChanged = objectComparisonHelper.comparePropertiesOfObjects(activeLayoutConfig, layoutCurrentConfig);
 
 		return layoutChanged;

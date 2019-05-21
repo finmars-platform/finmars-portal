@@ -237,7 +237,10 @@
                 skipHide: true,
                 locals: {
                     item: {expression: item.name_expr},
-                    data: {}
+                    data: {
+                        groups: [vm.inputsGroup],
+                        functions: [vm.inputsFunctions]
+                    }
                 }
             }).then(function (res) {
 
@@ -275,7 +278,7 @@
             var importedColumnsNumberEmpty = false;
 
             vm.scheme.csv_fields.map(function (field) {
-
+                console.log('simple import field column', field.column);
                 if (field.column === 0 && !importedColumnsNumberZero) {
                     warningMessage = "should not have value 0 (column's count starts from 1)";
                     importedColumnsNumberZero = true;
@@ -293,7 +296,7 @@
                 }
 
             });
-
+            console.log('simple import invalid #', importedColumnsNumberZero, importedColumnsNumberEmpty);
             if (importedColumnsNumberZero || importedColumnsNumberEmpty) {
                 warningMessage = 'Imported Columns Field #: ' + warningMessage + '.';
 

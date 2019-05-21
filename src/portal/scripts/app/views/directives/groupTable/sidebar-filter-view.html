@@ -16,7 +16,7 @@
 
                     <div layout="column" style="padding-top: 16px">
 
-                        <div data-ng-if="entityType == 'pnl-report'">
+                        <div data-ng-if="entityType === 'pnl-report'">
                             <complex-zh-date-picker data-date="reportOptions.pl_first_date"
                                                     data-datepicker-options="reportLayoutOptions.datepickerOptions.reportFirstDatepicker"
                                                     data-display-options="datepickerFromDisplayOptions"
@@ -66,7 +66,7 @@
 
                                 <div class="select-options-holder">
 
-                                    <md-option ng-repeat="item in currencies | orderBy:'-'+field.name | filter:{name: searchTerm}" ng-value="item.id">
+                                    <md-option ng-repeat="item in currencies | orderBy:'-'+item.name | filter:{name: searchTerm}" ng-value="item.id">
                                         {{item.name}}
                                     </md-option>
 
