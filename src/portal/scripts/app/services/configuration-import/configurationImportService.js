@@ -90,39 +90,6 @@
 
                         item.id = result.id;
 
-                        // if (entityType === 'transaction-type') {
-                        //
-                        //     result.actions.forEach(function (resultAction) {
-                        //
-                        //         item.actions.forEach(function (itemAction) {
-                        //
-                        //             if (resultAction.action_notes === itemAction.action_notes) {
-                        //                 itemAction.id = resultAction.id
-                        //             }
-                        //
-                        //
-                        //         })
-                        //
-                        //
-                        //     });
-                        //
-                        //     result.inputs.forEach(function (resultInput) {
-                        //
-                        //         item.inputs.forEach(function (itemInput) {
-                        //
-                        //             if (resultInput.name === itemInput.name) {
-                        //                 itemInput.id = resultInput.id
-                        //             }
-                        //
-                        //
-                        //         })
-                        //
-                        //
-                        //     })
-                        //
-                        // }
-
-
                         resolve(entityResolverService.update(entityType, item.id, item))
 
                     } else {
@@ -191,7 +158,14 @@
 
                             }).catch(function (reason) {
 
-                                errors.push(reason);
+                                errors.push({
+                                    content_type: contentType,
+                                    item: item,
+                                    error: {
+                                        message: reason
+                                    },
+                                    mode: 'skip'
+                                });
 
                                 resolve()
 
@@ -802,7 +776,7 @@
 
         return new Promise(function (resolve, reject) {
 
-            configurationImportSyncService.syncItem(item, entity, cacheContainer).then(function (value) {
+            configurationImportSyncService.syncItem(item, entity, cacheContainer, errors).then(function (value) {
 
                 try {
 
@@ -840,7 +814,9 @@
 
                                     errors.push({
                                         item: item,
-                                        error: reason
+                                        error: {
+                                            message: reason
+                                        }
                                     });
 
                                     console.log('pricingautomatedscheduleerror ', reason);
@@ -1506,8 +1482,8 @@
                 return item.entity === 'complex_import.compleximportscheme';
             });
 
-
-            createEntityItems(instrumentTypes, settings, cacheContainer, errors).then(function () {
+            // We do not need to store errors of first Instrument Types import
+            createEntityItems(instrumentTypes, settings, cacheContainer, []).then(function () {
 
                 console.log("Instrument type import success");
 

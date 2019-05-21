@@ -125,7 +125,7 @@
         }
     };
 
-    var mapTransactionTypeInputsRelations = function (transactionType, cacheContainer) {
+    var mapTransactionTypeInputsRelations = function (transactionType, cacheContainer, errors) {
 
         return new Promise(function (resolve) {
 
@@ -193,7 +193,7 @@
 
     };
 
-    var mapTransactionTypeActionsRelations = function (transactionType, cacheContainer) {
+    var mapTransactionTypeActionsRelations = function (transactionType, cacheContainer, errors, errorOptions) {
 
         return new Promise(function (resolve) {
 
@@ -214,7 +214,7 @@
 
                     if (action[key]) {
 
-                        promises.push(mapActionRelations(action, key, cacheContainer))
+                        promises.push(mapActionRelations(action, key, cacheContainer, errors, errorOptions))
 
                     }
 
@@ -231,19 +231,42 @@
 
     };
 
-    var mapRelation = function (item, key, entity, code_type, code, cacheContainer) {
+    var mapRelation = function (options, cacheContainer, errors, errorOptions) {
+
+        errors = errors || [];
+
+        console.log('options', options);
+
+        var item = options.item;
+        var item_key = options.item_key;
+        var entity = options.entity;
+        var code_type = options.code_type;
+        var code = options.code;
 
         return new Promise(function (resolveRelation, reject) {
 
-            if (key === 'price_download_scheme' || key === 'complex_transaction_import_scheme' || key === 'csv_import_scheme') {
+            if (item_key === 'price_download_scheme' || item_key === 'complex_transaction_import_scheme' || item_key === 'csv_import_scheme') {
 
                 configurationImportGetService.getSchemeBySchemeName(code, entity).then(function (data) {
 
-                    item[key] = data.id;
+                    item[item_key] = data.id;
 
                     resolveRelation(item)
 
                 }).catch(function (reason) {
+
+                    item[item_key] = null;
+
+                    errors.push({
+                        item: errorOptions.item,
+                        content_type: errorOptions.content_type,
+                        error: {
+                            message: 'Can\'t find scheme with name ' + code
+                        },
+                        mode: 'Delete missing field'
+
+                    });
+
                     reject(reason)
                 })
 
@@ -254,11 +277,24 @@
 
                     configurationImportGetService.getEntityByUserCode(code, entity, cacheContainer).then(function (data) {
 
-                        item[key] = data.id;
+                        item[item_key] = data.id;
 
                         resolveRelation(item)
 
                     }).catch(function (reason) {
+
+                        item[item_key] = null;
+
+                        errors.push({
+                            item: errorOptions.item,
+                            content_type: errorOptions.content_type,
+                            error: {
+                                message: 'Can\'t find relation entity with name ' + code
+                            },
+                            mode: 'Delete missing field'
+
+                        });
+
                         reject(reason)
                     });
 
@@ -268,11 +304,25 @@
 
                     configurationImportGetService.getEntityBySystemCode(code, entity, cacheContainer).then(function (data) {
 
-                        item[key] = data.id;
+                        item[item_key] = data.id;
 
                         resolveRelation(item)
 
                     }).catch(function (reason) {
+
+                        item[item_key] = null;
+
+                        errors.push({
+                            item: errorOptions.item,
+                            content_type: errorOptions.content_type,
+                            error: {
+                                message: 'Can\'t find system entity with name ' + code
+                            },
+                            mode: 'Delete missing field'
+
+                        });
+
+
                         reject(reason)
                     });
 
@@ -317,7 +367,7 @@
 
     };
 
-    var mapActionRelations = function (action, key, cacheContainer) {
+    var mapActionRelations = function (action, key, cacheContainer, errors, errorOptions) {
 
         return new Promise(function (resolve) {
 
@@ -518,13 +568,15 @@
 
                 if (action[key].hasOwnProperty(code_prop)) {
 
-                    var code = action[key][code_prop];
-                    var code_type = propItem.code_type;
-                    var entity = propItem.entity;
-                    var item = action[key];
-                    var item_key = propItem.key;
+                    var options = {};
 
-                    promises.push(mapRelation(item, item_key, entity, code_type, code, cacheContainer))
+                    options['code'] = action[key][code_prop];
+                    options['code_type'] = propItem.code_type;
+                    options['entity'] = propItem.entity;
+                    options['item'] = action[key];
+                    options['item_key'] = propItem.key;
+
+                    promises.push(mapRelation(options, cacheContainer, errors, errorOptions))
 
 
                 }
@@ -542,7 +594,7 @@
 
     };
 
-    var mapReportOptions = function (layout, cacheContainer) {
+    var mapReportOptions = function (layout, cacheContainer, errors, errorOptions) {
 
         return new Promise(function (resolve) {
 
@@ -563,7 +615,23 @@
 
                             resolveRelation(layout)
 
-                        })
+                        }).catch(function (reason) {
+
+                            layout.data.reportOptions.pricing_policy = null;
+                            layout.data.reportOptions.pricing_policy_object = null;
+
+                            errors.push({
+                                item: errorOptions.item,
+                                content_type: errorOptions.content_type,
+                                error: {
+                                    message: 'Can\'t find Pricing policy with name ' + code
+                                },
+                                mode: 'Delete missing field'
+
+                            });
+
+                            resolveRelation(layout)
+                        });
 
                     }))
 
@@ -582,7 +650,23 @@
 
                             resolveRelation(layout)
 
-                        })
+                        }).catch(function (reason) {
+
+                            layout.data.reportOptions.pricing_policy = null;
+                            layout.data.reportOptions.pricing_policy_object = null;
+
+                            errors.push({
+                                item: errorOptions.item,
+                                content_type: errorOptions.content_type,
+                                error: {
+                                    message: 'Can\'t find Report Currency with name ' + code
+                                },
+                                mode: 'Delete missing field'
+
+                            });
+
+                            resolveRelation(layout)
+                        });
 
                     }))
 
@@ -601,7 +685,23 @@
 
                             resolveRelation(layout)
 
-                        })
+                        }).catch(function (reason) {
+
+                            layout.data.reportOptions.pricing_policy = null;
+                            layout.data.reportOptions.pricing_policy_object = null;
+
+                            errors.push({
+                                item: errorOptions.item,
+                                content_type: errorOptions.content_type,
+                                error: {
+                                    message: 'Can\'t find Cost Method with name ' + code
+                                },
+                                mode: 'Delete missing field'
+
+                            });
+
+                            resolveRelation(layout)
+                        });
 
                     }))
 
@@ -782,12 +882,11 @@
 
     };
 
-    var recursiveMapItemInLayout = function (resolve, items, index) {
+    var recursiveMapItemInLayout = function (resolve, items, index, errors, errorOptions) {
 
         if (items.length) {
 
             if (items[index].hasOwnProperty('attribute_type')) {
-
 
 
                 var code = items[index].attribute_type.user_code;
@@ -812,6 +911,17 @@
 
                         index = index - 1;
 
+                        errors.push({
+                            item: errorOptions.item,
+                            content_type: errorOptions.content_type,
+                            error: {
+                                message: 'Missing attribute ' + code
+                            },
+                            mode: 'The related column has been deleted from layout'
+
+                        });
+
+
                         console.log('splice items', items);
 
                         if (index < items.length - 1) {
@@ -828,6 +938,16 @@
 
                     index = index - 1;
 
+                    errors.push({
+                        item: errorOptions.item,
+                        content_type: errorOptions.content_type,
+                        error: {
+                            message: 'Missing attribute ' + code
+                        },
+                        mode: 'The related column has been deleted from layout'
+
+                    });
+
                     console.log('splice items', items);
 
                     if (index < items.length - 1) {
@@ -839,6 +959,7 @@
                 }
 
             } else {
+
                 if (index < items.length - 1) {
 
                     index = index + 1;
@@ -857,31 +978,31 @@
 
     };
 
-    var recursiveMapListLayout = function (items) {
+    var recursiveMapListLayout = function (items, errors, errorOptions) {
 
         return new Promise(function (resolve, reject) {
 
             var startIndex = 0;
 
-            recursiveMapItemInLayout(resolve, items, startIndex);
+            recursiveMapItemInLayout(resolve, items, startIndex, errors, errorOptions);
 
         })
 
     };
 
-    var mapListLayout = function (layout, cacheContainer) {
+    var mapListLayout = function (layout, cacheContainer, errors, errorOptions) {
 
         return new Promise(function (resolve, reject) {
 
             if (layout.data) {
 
-                mapReportOptions(layout, cacheContainer).then(function (layout) {
+                mapReportOptions(layout, cacheContainer, errors, errorOptions).then(function (layout) {
 
-                    recursiveMapListLayout(layout.data.columns).then(function (columns) {
+                    recursiveMapListLayout(layout.data.columns, errors, errorOptions).then(function (columns) {
 
                         layout.data.columns = columns;
 
-                        recursiveMapListLayout(layout.data.grouping).then(function (grouping) {
+                        recursiveMapListLayout(layout.data.grouping, errors, errorOptions).then(function (grouping) {
 
                             layout.data.grouping = grouping;
 
@@ -905,7 +1026,6 @@
         mapTransactionTypeActionsRelations: mapTransactionTypeActionsRelations,
         mapRelation: mapRelation,
         mapAttributeType: mapAttributeType,
-        mapActionRelations: mapActionRelations,
         mapReportOptions: mapReportOptions,
         mapFieldsInInstrumentType: mapFieldsInInstrumentType,
         mapEditLayout: mapEditLayout,

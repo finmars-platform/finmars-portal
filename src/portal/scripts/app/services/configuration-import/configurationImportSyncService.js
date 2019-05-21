@@ -12,11 +12,16 @@
     var configurationImportMapService = require('./configurationImportMapService');
 
 
-    var syncTransactionType = function (item, cacheContainer) {
+    var syncTransactionType = function (item, cacheContainer, errors) {
 
         return new Promise(function (resolve, reject) {
 
             var promises = [];
+
+            var errorOptions = {
+                item: item,
+                content_type: 'transactions.transactiontype'
+            };
 
             if (item.hasOwnProperty('___group__user_code')) {
 
@@ -38,9 +43,9 @@
 
             }
 
-            promises.push(configurationImportMapService.mapTransactionTypeInputsRelations(item, cacheContainer));
+            promises.push(configurationImportMapService.mapTransactionTypeInputsRelations(item, cacheContainer, errors));
 
-            promises.push(configurationImportMapService.mapTransactionTypeActionsRelations(item, cacheContainer));
+            promises.push(configurationImportMapService.mapTransactionTypeActionsRelations(item, cacheContainer, errors, errorOptions));
 
             Promise.all(promises).then(function (data) {
 
@@ -69,36 +74,40 @@
 
     };
 
-    var syncCurrency = function (item, cacheContainer) {
+    var syncCurrency = function (item, cacheContainer, errors) {
 
         return new Promise(function (resolve, reject) {
 
             var promises = [];
 
-            var code;
-            var code_type;
-            var entity;
-            var item_key;
+            var options = {};
+
+            var errorOptions = {
+                item: item,
+                content_type: 'currencies.currency'
+            };
 
             if (item.hasOwnProperty('___price_download_scheme__scheme_name')) {
 
-                code = item['___price_download_scheme__scheme_name'];
-                code_type = 'scheme_name';
-                entity = 'price-download-scheme';
-                item_key = 'price_download_scheme';
+                options['item'] = item;
+                options['code'] = item['___price_download_scheme__scheme_name'];
+                options['code_type'] = 'scheme_name';
+                options['entity'] = 'price-download-scheme';
+                options['item_key'] = 'price_download_scheme';
 
-                promises.push(configurationImportMapService.mapRelation(item, item_key, entity, code_type, code, cacheContainer))
+                promises.push(configurationImportMapService.mapRelation(options, cacheContainer, errors, errorOptions))
 
             }
 
             if (item.hasOwnProperty('___daily_pricing_model__system_code')) {
 
-                code = item['___daily_pricing_model__system_code'];
-                code_type = 'system_code';
-                entity = 'daily-pricing-model';
-                item_key = 'daily_pricing_model';
+                options['item'] = item;
+                options['code'] = item['___daily_pricing_model__system_code'];
+                options['code_type'] = 'system_code';
+                options['entity'] = 'daily-pricing-model';
+                options['item_key'] = 'daily_pricing_model';
 
-                promises.push(configurationImportMapService.mapRelation(item, item_key, entity, code_type, code, cacheContainer))
+                promises.push(configurationImportMapService.mapRelation(options, cacheContainer, errors, errorOptions))
 
             }
 
@@ -123,36 +132,55 @@
 
     };
 
-    var syncListLayout = function (item, cacheContainer) {
+    var syncListLayout = function (item, cacheContainer, errors) {
+
+        var errorOptions = {
+            item: item,
+            content_type: 'ui.listlayout'
+        };
 
         return new Promise(function (resolve, reject) {
-            resolve(configurationImportMapService.mapListLayout(item, cacheContainer));
+            resolve(configurationImportMapService.mapListLayout(item, cacheContainer, errors, errorOptions));
         })
 
     };
 
-    var syncReportLayout = function (item, cacheContainer) {
+    var syncReportLayout = function (item, cacheContainer, errors) {
+
+        var errorOptions = {
+            item: item,
+            content_type: 'ui.reportlayout'
+        };
+
 
         return new Promise(function (resolve, reject) {
-            resolve(configurationImportMapService.mapListLayout(item, cacheContainer));
+            resolve(configurationImportMapService.mapListLayout(item, cacheContainer, errors, errorOptions));
         })
 
     };
 
-    var syncInstrumentDownloadScheme = function (item, cacheContainer) {
+    var syncInstrumentDownloadScheme = function (item, cacheContainer, errors) {
 
         return new Promise(function (resolve) {
 
             var promises = [];
 
+            var options = {};
+
+            var errorOptions = {
+                item: item,
+                content_type: 'integrations.instrumentdownloadscheme'
+            };
+
             if (item.hasOwnProperty('___price_download_scheme__scheme_name')) {
 
-                var code = item['___price_download_scheme__scheme_name'];
-                var code_type = 'scheme_name';
-                var entity = 'price-download-scheme';
-                var item_key = 'price_download_scheme';
+                options['item'] = item;
+                options['code'] = item['___price_download_scheme__scheme_name'];
+                options['code_type'] = 'scheme_name';
+                options['entity'] = 'price-download-scheme';
+                options['item_key'] = 'price_download_scheme';
 
-                promises.push(configurationImportMapService.mapRelation(item, item_key, entity, code_type, code, cacheContainer))
+                promises.push(configurationImportMapService.mapRelation(options, cacheContainer, errors, errorOptions))
 
             }
 
@@ -166,24 +194,32 @@
 
     };
 
-    var syncComplexImportScheme = function (item, cacheContainer) {
+    var syncComplexImportScheme = function (item, cacheContainer, errors) {
 
         return new Promise(function (resolve) {
 
             var promises = [];
 
-            item.actions.forEach(function (actionItem) {
+            var errorOptions = {
+                item: item,
+                content_type: 'complex_import.compleximportscheme'
+            };
+
+            item.actions.forEach(function (actionItem, index) {
+
+                var options = {};
 
                 if (actionItem.csv_import_scheme) {
 
                     if (actionItem.csv_import_scheme.hasOwnProperty('___csv_import_scheme__scheme_name')) {
 
-                        var code = actionItem.csv_import_scheme['___csv_import_scheme__scheme_name'];
-                        var code_type = 'scheme_name';
-                        var entity = 'csv-import-scheme';
-                        var item_key = 'csv_import_scheme';
+                        options['item'] = actionItem.csv_import_scheme;
+                        options['code'] = actionItem.csv_import_scheme['___csv_import_scheme__scheme_name'];
+                        options['code_type'] = 'scheme_name';
+                        options['entity'] = 'csv-import-scheme';
+                        options['item_key'] = 'csv_import_scheme';
 
-                        promises.push(configurationImportMapService.mapRelation(actionItem.csv_import_scheme, item_key, entity, code_type, code, cacheContainer))
+                        promises.push(configurationImportMapService.mapRelation(options, cacheContainer, errors, errorOptions))
 
                     }
 
@@ -193,12 +229,13 @@
 
                     if (actionItem.complex_transaction_import_scheme.hasOwnProperty('___complex_transaction_import_scheme__scheme_name')) {
 
-                        var code = actionItem.complex_transaction_import_scheme['___complex_transaction_import_scheme__scheme_name'];
-                        var code_type = 'scheme_name';
-                        var entity = 'complex-transaction-import-scheme';
-                        var item_key = 'complex_transaction_import_scheme';
+                        options['item'] = actionItem.complex_transaction_import_scheme;
+                        options['code'] = actionItem.complex_transaction_import_scheme['___complex_transaction_import_scheme__scheme_name'];
+                        options['code_type'] = 'scheme_name';
+                        options['entity'] = 'complex-transaction-import-scheme';
+                        options['item_key'] = 'complex_transaction_import_scheme';
 
-                        promises.push(configurationImportMapService.mapRelation(actionItem.complex_transaction_import_scheme, item_key, entity, code_type, code, cacheContainer))
+                        promises.push(configurationImportMapService.mapRelation(options, cacheContainer, errors, errorOptions))
 
                     }
 
@@ -208,11 +245,13 @@
 
             Promise.all(promises).then(function (data) {
 
+                console.log("Complex Import Scheme success");
+
                 resolve(data)
+
             }, function (error) {
 
-                console.log('syncComplexImportScheme item', item);
-                console.log('syncComplexImportScheme error', error);
+                console.log("Complex Import Scheme error", error);
 
                 resolve(item);
 
@@ -330,45 +369,47 @@
 
     };
 
-    var syncItem = function (item, entity, cacheContainer) {
+    var syncItem = function (item, entity, cacheContainer, errors) {
 
         return new Promise(function (resolve, reject) {
 
-            // console.log('syncItem', entity);
+            errors = errors || [];
+
+            console.log('syncItem', entity);
 
             try {
 
                 switch (entity) {
 
                     case 'transactions.transactiontype':
-                        resolve(syncTransactionType(item, cacheContainer));
+                        resolve(syncTransactionType(item, cacheContainer, errors));
                         break;
                     case 'currencies.currency':
-                        resolve(syncCurrency(item, cacheContainer));
+                        resolve(syncCurrency(item, cacheContainer, errors));
                         break;
                     case 'instruments.instrumenttype':
-                        resolve(syncInstrumentType(item, cacheContainer));
+                        resolve(syncInstrumentType(item, cacheContainer, errors));
                         break;
                     case 'ui.editlayout':
-                        resolve(syncEditLayout(item, cacheContainer));
+                        resolve(syncEditLayout(item, cacheContainer, errors));
                         break;
                     case 'ui.listlayout':
-                        resolve(syncListLayout(item, cacheContainer));
+                        resolve(syncListLayout(item, cacheContainer, errors));
                         break;
                     case 'ui.reportlayout':
-                        resolve(syncReportLayout(item, cacheContainer));
+                        resolve(syncReportLayout(item, cacheContainer, errors));
                         break;
                     case 'integrations.instrumentdownloadscheme':
-                        resolve(syncInstrumentDownloadScheme(item, cacheContainer));
+                        resolve(syncInstrumentDownloadScheme(item, cacheContainer, errors));
                         break;
                     case 'complex_import.compleximportscheme':
-                        resolve(syncComplexImportScheme(item, cacheContainer));
+                        resolve(syncComplexImportScheme(item, cacheContainer, errors));
                         break;
                     case 'csv_import.csvimportscheme':
-                        resolve(syncCsvImportScheme(item, cacheContainer));
+                        resolve(syncCsvImportScheme(item, cacheContainer, errors));
                         break;
                     case 'integrations.complextransactionimportscheme':
-                        resolve(syncComplexTransactionImportScheme(item, cacheContainer));
+                        resolve(syncComplexTransactionImportScheme(item, cacheContainer, errors));
                         break;
                     default:
                         resolve(item);

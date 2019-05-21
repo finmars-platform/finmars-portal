@@ -135,7 +135,7 @@
                                 </md-select>
                             </md-input-container>
 
-                            <md-input-container>
+                            <md-input-container style="width: 255px;">
                                 <label>Import Rules - if object is not found</label>
                                 <md-select
                                         data-ng-model="vm.config.missing_data_handler">
@@ -145,11 +145,11 @@
                             </md-input-container>
 
                             <md-input-container style="width: 232px;">
-                                <label>Import Rules - Classifier handling</label>
+                                <label>Import Rules - If User Attribute-Classifier doesn't have such category</label>
                                 <md-select
                                         data-ng-model="vm.config.classifier_handler">
-                                    <md-option value="skip">Skip</md-option>
-                                    <md-option value="append">Append</md-option>
+                                    <md-option value="skip">Skip (assign Null)</md-option>
+                                    <md-option value="append">Append Category (assign the appended category)</md-option>
                                 </md-select>
                             </md-input-container>
 
