@@ -915,9 +915,9 @@
                             item: errorOptions.item,
                             content_type: errorOptions.content_type,
                             error: {
-                                message: 'Can\'t find Attribute Type with name ' + code
+                                message: 'Missing attribute ' + code
                             },
-                            mode: 'Delete missing field'
+                            mode: 'The related column has been deleted from layout'
 
                         });
 
@@ -942,9 +942,9 @@
                         item: errorOptions.item,
                         content_type: errorOptions.content_type,
                         error: {
-                            message: 'Can\'t find Attribute Type with name ' + code
+                            message: 'Missing attribute ' + code
                         },
-                        mode: 'Delete missing field'
+                        mode: 'The related column has been deleted from layout'
 
                     });
 
