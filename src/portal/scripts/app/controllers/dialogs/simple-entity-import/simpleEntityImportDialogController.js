@@ -68,7 +68,7 @@
             vm.getSchemeList();
         };
 
-        vm.validate = function ($event) {
+        vm.validate = function ($event, mode) {
 
             return new Promise(function (resolve, reject) {
 
@@ -107,7 +107,7 @@
 
                     } else {
 
-                        data.process_mode = 'validate';
+                        data.process_mode = mode;
 
                         $mdDialog.show({
                             controller: 'SimpleEntityImportErrorsDialogController as vm',
@@ -171,7 +171,7 @@
 
         vm.validateImport = function ($event) {
 
-            vm.validate($event).then(function (res) {
+            vm.validate($event, 'validate').then(function (res) {
                 if (res.status === 'agree') {
                     $mdDialog.show({
                         controller: 'SuccessDialogController as vm',
@@ -341,9 +341,9 @@
             $mdDialog.cancel();
         };
 
-        vm.import = function () {
+        vm.import = function ($event) {
 
-            vm.validate().then(function (res) {
+            vm.validate($event, 'import').then(function (res) {
 
                 if (res.status === 'agree') {
                     vm.load();

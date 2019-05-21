@@ -148,6 +148,16 @@
             var step = entityViewerDataService.getVirtualScrollStep();
             var i;
 
+            if (options.groups_types) {
+
+                options.groups_types = options.groups_types.map(function (groupType) {
+
+                    return groupType.key;
+
+                })
+
+            }
+
             objectsService.getList(entityType, options).then(function (data) {
 
                 var groupData = entityViewerDataService.getData(event.___id);
@@ -259,6 +269,7 @@
             var step = 40;
             var i;
 
+            console.log('getGroups.options', options);
 
             if (options.groups_types) {
 

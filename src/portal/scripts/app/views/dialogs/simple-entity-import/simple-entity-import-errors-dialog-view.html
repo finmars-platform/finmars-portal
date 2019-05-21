@@ -34,17 +34,16 @@
 
                         </div>
 
-                        <div class="float-left width-40">
+                        <div class="float-left width-40" data-ng-if="vm.validationResult.process_mode != 'validate'">
 
                             <h3 class="margin-0 m-b-8">Stats</h3>
 
-                            <div data-ng-if="vm.validationResult.process_mode != 'validate'">
+                            <div>
 
                                 <div><b>Rows total</b>: {{vm.validationResult.total}}</div>
-                                <div><b>Rows success import</b>: {{vm.validationResult.total -
-                                    vm.validationResult.errors.length}}
-                                </div>
-                                <div><b>Rows fail import</b>: {{vm.validationResult.errors.length}}</div>
+                                <div><b>Rows success import</b>: {{vm.rowsSuccessTotal}}</div>
+                                <div><b>Rows skipped</b>: {{vm.rowsSkippedCount}}</div>
+                                <div><b>Rows fail import</b>: {{vm.rowsFailedCount}}</div>
 
                             </div>
 
@@ -54,7 +53,7 @@
 
                     <div>
 
-                        <div data-ng-show="vm.validationResult.errors.length" style="margin-top: 24px">
+                        <div data-ng-show="vm.validationResult.errors.length" style="margin-top: 24px; overflow: auto">
                             <table>
                                 <thead>
                                 <tr>
@@ -79,7 +78,8 @@
                                     </td>
                                     <td data-ng-bind="item.original_row"></td>
                                     <td data-ng-bind="item.error_message"></td>
-                                    <td><span data-ng-bind="row.error_reaction"></span></td>
+                                    <td><span data-ng-bind="item.error_reaction"
+                                              style="white-space: pre-wrap;"></span></td>
                                 </tr>
                                 </tbody>
 
@@ -95,8 +95,7 @@
     </md-dialog-content>
     <md-dialog-actions layout="row">
 
-
-        <div data-ng-if="vm.validationResult.process_mode === 'validate'">
+        <div data-ng-if="vm.validationResult.process_mode != 'validate'">
 
             <md-button class="md-raised"
                        ng-click="vm.cancel()">
@@ -110,7 +109,7 @@
 
         </div>
 
-        <div data-ng-if="vm.validationResult.process_mode != 'validate'">
+        <div data-ng-if="vm.validationResult.process_mode == 'validate'">
 
             <md-button class="md-raised"
                        ng-click="vm.cancel()">

@@ -19,11 +19,12 @@
 
     var findContentTypeByEntity = function (entity, type) {
 
-        var contentTypes;
-        if (type == 'tag') {
+        var contentTypes = getList();
+
+        if (type === 'tag') {
             contentTypes = getListForTags();
         } else {
-            if (type == 'ui') {
+            if (type === 'ui') {
                 contentTypes = getListForUi();
             }
         }
@@ -31,7 +32,7 @@
         var contentType = null;
 
         contentTypes.forEach(function (item) {
-            if (item.entity == entity) {
+            if (item.entity === entity) {
                 contentType = item.key
             }
         });
@@ -248,6 +249,9 @@
                 break;
             case 'integrations.pricingpolicymapping':
                 result = 'Pricing Policy Mapping';
+                break;
+            case 'complex_import.compleximportscheme':
+                result = 'Complex Import Scheme';
                 break;
             case 'integrations.accountmapping':
                 result = 'Account Mapping';

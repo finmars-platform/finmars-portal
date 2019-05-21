@@ -23,20 +23,6 @@
 
         vm.cancelButtonText = "Ok";
 
-        vm.createErrorDataColumns = function () {
-
-            if (vm.validationResult.errors.length) {
-
-                if (vm.validationResult.errors[0].error_data) {
-
-                    vm.imported_columns = vm.validationResult.errors[0].error_data.columns.imported_columns;
-                    vm.converted_imported_columns = vm.validationResult.errors[0].error_data.columns.converted_imported_columns;
-                    vm.data_matching = vm.validationResult.errors[0].error_data.columns.data_matching;
-                }
-
-            }
-        };
-
         vm.createCsvContentSimpleEntityImport = function (validationResults) {
 
             var columns = ['Row number'];
@@ -107,7 +93,27 @@
 
         vm.init = function () {
 
-            vm.createErrorDataColumns();
+            vm.rowsSkippedCount = vm.validationResult.errors.filter(function (item) {
+                return item.error_reaction === 'Skipped';
+            }).length;
+
+            vm.rowsFailedCount = vm.validationResult.errors.filter(function (item) {
+                return item.error_reaction !== 'Skipped';
+            }).length;
+
+            console.log('vm.validationResult.error_handler', vm.validationResult.error_handler);
+
+            if (vm.config.error_handler === 'break') {
+
+                var index = vm.validationResult.errors[0].original_row_index;
+
+                vm.rowsSuccessTotal = index - 1; // get row before error
+                vm.rowsSuccessTotal = vm.rowsSuccessTotal - 1; // exclude headers
+
+            } else {
+
+                vm.rowsSuccessTotal = vm.validationResult.total - vm.rowsFailedCount - vm.rowsSkippedCount;
+            }
 
             setTimeout(function () {
                 vm.setDownloadLink();

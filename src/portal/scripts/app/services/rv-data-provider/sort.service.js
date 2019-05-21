@@ -4,10 +4,10 @@
 
         return function (a, b) {
 
-            if (a[property] === null) {
+            if (a[property] === null || a[property] === undefined) {
                 return 1 * sortOrder;
             }
-            if (b[property] === null) {
+            if (b[property] === null || b[property] === undefined) {
                 return -1 * sortOrder;
             }
 
