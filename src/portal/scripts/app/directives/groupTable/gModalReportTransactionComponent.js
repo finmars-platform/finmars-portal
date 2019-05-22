@@ -141,6 +141,56 @@
                         vm.accountCashDynamicAttrs = rvAttributesHelper.formatAttributeTypes(data['accounts.account'], 'accounts.account', 'account_cash', 'Account Cash');
                         vm.accountInterimDynamicAttrs = rvAttributesHelper.formatAttributeTypes(data['accounts.account'], 'accounts.account', 'account_interim', 'Account Interim');
 
+                        //vm.entityAttrs = metaService.getEntityAttrs(vm.entityType);
+
+                        attrsList = attrsList.concat(vm.transactionAttrs);
+                        attrsList = attrsList.concat(vm.complexTransactionAttrs);
+                        attrsList = attrsList.concat(vm.portfolioAttrs);
+                        attrsList = attrsList.concat(vm.instrumentAttrs);
+                        attrsList = attrsList.concat(vm.responsibleAttrs);
+                        attrsList = attrsList.concat(vm.counterpartyAttrs);
+
+                        attrsList = attrsList.concat(vm.portfolioDynamicAttrs);
+                        attrsList = attrsList.concat(vm.complexTransactionDynamicAttrs);
+                        attrsList = attrsList.concat(vm.responsibleDynamicAttrs);
+                        attrsList = attrsList.concat(vm.counterpartyDynmicAttrs);
+
+
+                        // instruments
+
+                        attrsList = attrsList.concat(vm.linkedInstrumentAttrs);
+                        attrsList = attrsList.concat(vm.allocationBalanceAttrs);
+                        attrsList = attrsList.concat(vm.allocationPlAttrs);
+
+                        attrsList = attrsList.concat(vm.instrumentDynamicAttrs);
+                        attrsList = attrsList.concat(vm.linkedInstrumentDynamicAttrs);
+                        attrsList = attrsList.concat(vm.allocationBalanceDynamicAttrs);
+                        attrsList = attrsList.concat(vm.allocationPlDnymaicAttrs);
+
+                        // currencies
+
+                        attrsList = attrsList.concat(vm.transactionCurrencyAttrs);
+                        attrsList = attrsList.concat(vm.settlementCurrencyAttrs);
+
+                        // accounts
+
+                        attrsList = attrsList.concat(vm.accountPositionAttrs);
+                        attrsList = attrsList.concat(vm.accountCashAttrs);
+                        attrsList = attrsList.concat(vm.accountInterimAttrs);
+
+                        attrsList = attrsList.concat(vm.accountPositionDynamicAttrs);
+                        attrsList = attrsList.concat(vm.accountCashDynamicAttrs);
+                        attrsList = attrsList.concat(vm.accountInterimDynamicAttrs);
+
+                        // strategies
+
+                        attrsList = attrsList.concat(vm.strategy1cashAttrs);
+                        attrsList = attrsList.concat(vm.strategy1positionAttrs);
+                        attrsList = attrsList.concat(vm.strategy2cashAttrs);
+                        attrsList = attrsList.concat(vm.strategy2positionAttrs);
+                        attrsList = attrsList.concat(vm.strategy3cashAttrs);
+                        attrsList = attrsList.concat(vm.strategy3positionAttrs);
+
                         syncAttrs();
 
                         vm.readyStatus.content = true;
@@ -445,6 +495,7 @@
 
         vm.cancel = function () {
             $('body').removeClass('drag-dialog');
+            dragAndDrop.destroy();
             $mdDialog.cancel();
         };
 
@@ -456,8 +507,12 @@
             },
 
             eventListeners: function () {
-                var that = this;
+
                 var exist = false;
+                var columnExist = false;
+                var groupExist = false;
+                var filterExist = false;
+
                 this.dragula.on('over', function (elem, container, source) {
                     $(container).addClass('active');
                     $(container).on('mouseleave', function () {
@@ -466,51 +521,62 @@
 
                 });
                 this.dragula.on('drop', function (elem, target) {
-                    //console.log('here?', target); //TODO fallback to ids instead of name/key
+                    // console.log('here?', target, elem); //TODO fallback to ids instead of name/key
                     $(target).removeClass('active');
                     var name = $(elem).html();
                     var i;
 
-
                     var identifier;
-                    if ($(elem).attr('data-key-identifier')) {
+                    identifier = $(elem).attr('data-key-identifier');
+
+                    /*if ($(elem).attr('data-key-identifier')) {
                         identifier = $(elem).attr('data-key-identifier');
                     } else {
                         identifier = $(elem).html();
-                    }
+                    }*/
 
                     exist = false;
-                    if (target === document.querySelector('#columnsbag')) {
+                    if (target === document.querySelector('#columnsbag') ||
+                        target === document.querySelector('.g-columns-holder')) {
                         for (i = 0; i < columns.length; i = i + 1) {
+
                             if (columns[i].key === identifier) {
                                 exist = true;
+                                columnExist = true;
                             }
 
-                            if (columns[i].name === identifier) {
+                            /*if (columns[i].name === identifier) {
                                 exist = true;
-                            }
+                                columnExist = true;
+                            }*/
                         }
                     }
-                    if (target === document.querySelector('#groupsbag')) {
+                    if (target === document.querySelector('#groupsbag') ||
+                        target === document.querySelector('.g-groups-holder')) {
                         for (i = 0; i < grouping.length; i = i + 1) {
                             if (grouping[i].key === identifier) {
                                 exist = true;
+                                groupExist = true;
                             }
 
-                            if (grouping[i].name === identifier) {
+                            /*if (grouping[i].name === identifier) {
                                 exist = true;
-                            }
+                                groupExist = true;
+                            }*/
                         }
                     }
-                    if (target === document.querySelector('#filtersbag .drop-new-filter')) {
+                    if (target === document.querySelector('#filtersbag .drop-new-filter') ||
+                        target === document.querySelector('.g-filters-holder')) {
                         for (i = 0; i < filters.length; i = i + 1) {
                             if (filters[i].key === identifier) {
                                 exist = true;
+                                filterExist = true;
                             }
 
-                            if (filters[i].name === identifier) {
+                            /*if (filters[i].name === identifier) {
                                 exist = true;
-                            }
+                                filterExist = true;
+                            }*/
                         }
                     }
 
@@ -540,7 +606,7 @@
                                     //columns.push(attrsList[a]);
                                 }
 
-                                if (attrsList[a].name === identifier) {
+                                /*if (attrsList[a].name === identifier) {
 
                                     if (target === document.querySelector('#columnsbag')) {
                                         columns.push(attrsList[a]);
@@ -549,7 +615,7 @@
                                     }
 
                                     //columns.push(attrsList[a]);
-                                }
+                                }*/
                             }
                             syncAttrs();
                             evDataHelper.updateColumnsIds(entityViewerDataService);
@@ -572,7 +638,7 @@
                                     //columns.push(attrsList[a]);
                                 }
 
-                                if (attrsList[a].name === identifier) {
+                                /*if (attrsList[a].name === identifier) {
 
                                     if (target === document.querySelector('#groupsbag')) {
                                         grouping.push(attrsList[a]);
@@ -580,7 +646,7 @@
                                         grouping.splice(index, 0, attrsList[a]);
                                     }
 
-                                }
+                                }*/
                             }
                             syncAttrs();
                             evDataHelper.updateColumnsIds(entityViewerDataService);
@@ -603,7 +669,7 @@
                                     //columns.push(attrsList[a]);
                                 }
 
-                                if (attrsList[a].name === identifier) {
+                                /*if (attrsList[a].name === identifier) {
 
                                     if (target === document.querySelector('#filtersbag .drop-new-filter')) {
                                         filters.push(attrsList[a]);
@@ -611,15 +677,44 @@
                                         filters.splice(index, 0, attrsList[a]);
                                     }
 
-                                }
+                                }*/
                             }
                             syncAttrs();
                             evDataHelper.updateColumnsIds(entityViewerDataService);
                             evDataHelper.setColumnsDefaultWidth(entityViewerDataService);
                             entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
                         }
-                        $scope.$apply();
+
+                        // $scope.$apply();
+
+                    } else if (exist && target) {
+
+                        var errorMessage = 'Item should be unique'
+
+                        if (columnExist) {
+                            errorMessage = 'There is already such column in Column Area';
+                        } else if (groupExist) {
+                            errorMessage = 'There is already such group in Grouping Area';
+                        } else if (filterExist) {
+                            errorMessage = 'There is already such filter in Filter Area';
+                        }
+
+                        $mdDialog.show({
+                            controller: 'WarningDialogController as vm',
+                            templateUrl: 'views/warning-dialog-view.html',
+                            parent: angular.element(document.body),
+                            clickOutsideToClose: false,
+                            multiple: true,
+                            locals: {
+                                warning: {
+                                    title: 'Error',
+                                    description: errorMessage
+                                }
+                            }
+                        });
+
                     }
+
                     $scope.$apply();
                 });
 
@@ -630,12 +725,6 @@
             },
 
             dragula: function () {
-                //var items = [
-                //    document.querySelector('.g-columns-holder'),
-                //    //document.querySelector('#columnsbag'),
-                //    document.querySelector('#groupsbag'),
-                //    document.querySelector('#filtersbag .drop-new-filter')
-                //];
 
                 var items = [
                     document.querySelector('.g-columns-holder'),
@@ -666,25 +755,19 @@
                         },
                         copy: true
                     });
+            },
+
+            destroy: function () {
+                // console.log('this.dragula', this.dragula);
+                this.dragula.destroy();
             }
         };
 
-        var addColumn = function () {
-
-
-            //console.log('parentScope.columns', parentScope.columns);
-
-            //if (currentColumnsWidth < parentScope.columns.length) {
-            metaService.columnsWidthGroups(true);
-            //}
-            //else {
-            //    metaService.columnsWidthGroups(false);
-            //}
+        vm.initDnD = function () {
+            setTimeout(function () {
+                dragAndDrop.init()
+            }, 500);
         };
-
-        setTimeout(function () {
-            dragAndDrop.init()
-        }, 500);
 
         vm.MABtnVisibility = function (entityType) {
             return metaService.checkRestrictedEntityTypesForAM(entityType);

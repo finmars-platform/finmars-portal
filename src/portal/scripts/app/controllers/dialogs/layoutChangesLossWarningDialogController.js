@@ -20,6 +20,7 @@
         }
 
         vm.saveLayout = function ($event) {
+            console.log("save layout");
             if (data) {
                 var listLayout = evDataService.getListLayout();
 
@@ -47,7 +48,10 @@
 
                     });
 
+                } else {
+                    $mdDialog.hide({status: 'save_layout'});
                 }
+
             } else {
                 $mdDialog.hide({status: 'save_layout'});
             }

@@ -88,6 +88,7 @@
             rootEntityViewer: false,
             additions: {},
             report: {},
+            export: {},
             data: {},
             listLayout: {},
             virtualScroll: {
@@ -101,6 +102,7 @@
                 limit: 0, // total rows
                 step: 60 // rows to render
             },
+            activeLayoutConfiguration: {},
             interfaceLayout: null,
             requestParameters: {},
             activeRequestParametersId: null,
