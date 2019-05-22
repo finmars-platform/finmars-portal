@@ -205,12 +205,54 @@ md-checkbox.checkbox-bind-field {
   //min-height: 94px;
   position: relative;
   box-sizing: border-box;
+
+  md-select {
+    margin-top: 0px;
+  }
+
   md-input-container {
     //margin: 18px 10px;
     margin: 0px 10px;
   }
+
+  md-input-container.mdc-error {
+    & .md-input {
+      border-color: rgb(221, 44, 0);
+    }
+
+    & label {
+      color: rgb(221, 44, 0);
+    }
+  }
+
   md-input-container.md-default-theme .md-input, md-input-container .md-input {
     border-color: #4C334D;
+  }
+
+  .bind-field-number-field-container {
+    position: relative;
+
+    md-input-container {
+      margin-right: 40px;
+
+      .md-error-spacer {
+        display: none;
+      }
+    }
+  }
+
+  .bind-field-number-btn {
+    position: absolute;
+    top: 0;
+    right: 0;
+
+    .md-button {
+      min-width: 29px;
+      width: 29px;
+      min-height: 29px;
+      height: 29px;
+      padding: 2px 0 0 0;
+    }
   }
 }
 
@@ -262,6 +304,45 @@ md-checkbox.checkbox-bind-field {
   }
 }
 
+.field-date-pick {
+  .md-button {
+    min-width: 29px;
+    height: 29px;
+    border-radius: 50%;
+
+    padding: 0;
+    background: #4C334D;
+    //min-width: 34px;
+    color: #fff;
+    font-size: 9px;
+    min-height: 0;
+    //height: 34px;
+    //margin: 4px;
+    margin: 0 4px 0 0;
+    line-height: initial;
+
+    &:hover {
+      background: #4C334D;
+      opacity: .9;
+    }
+  }
+
+  .field-date-pick-holder {
+    position: relative;
+    width: 100%;
+
+    zh-date-picker {
+      display: inline-block;
+      margin-right: 4px;
+      width: 100%;
+      //padding-right: 138px;
+      padding-right: 115px;
+      box-sizing: border-box;
+
+    }
+  }
+}
+
 .w-rp {
   position: relative;
   background: #fff;
@@ -295,6 +376,7 @@ md-checkbox.checkbox-bind-field {
   width: 320px;
   height: 100%;
   overflow: auto;
+  z-index: 1;
 }
 
 .form-constructor-field-wrap {

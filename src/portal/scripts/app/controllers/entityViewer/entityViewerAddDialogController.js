@@ -93,13 +93,13 @@
 
                 });
 
-                vm.editLayout = function () {
+                /*vm.editLayout = function () {
                     $state.go('app.data-constructor', {
                         entityType: vm.entityType,
                         instanceId: vm.editLayoutEntityInstanceId
                     });
                     $mdDialog.hide();
-                };
+                };*/
 
                 $scope.$apply();
             });

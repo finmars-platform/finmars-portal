@@ -396,13 +396,14 @@
 
                 });
                 this.dragula.on('drop', function (elem, target) {
-                    //console.log('here?', target); //TODO fallback to ids instead of name/key
+                    console.log('here?', target, elem); //TODO fallback to ids instead of name/key
                     $(target).removeClass('active');
                     var name = $(elem).html();
                     var i;
 
                     var identifier;
                     identifier = $(elem).attr('data-key-identifier');
+
                     /*if ($(elem).attr('data-key-identifier')) {
                         identifier = $(elem).attr('data-key-identifier');
                     } else {

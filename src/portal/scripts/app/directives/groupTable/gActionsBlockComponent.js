@@ -560,7 +560,6 @@
                         scope.evDataService.setActiveLayoutConfiguration({isReport: scope.isReport});
 
                         scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
-                        scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE);
 
                         middlewareService.setData('entityActiveLayoutSwitched', listLayout.name); // Give signal to update active layout name in the toolbar
 
@@ -583,7 +582,10 @@
                             parent: angular.element(document.body),
                             preserveScope: true,
                             autoWrap: true,
-                            multiple: true
+                            multiple: true,
+                            locals: {
+                                data: null
+                            }
                         }).then(function (res, rej) {
 
                             if (res.status === 'save_layout') {
@@ -682,10 +684,13 @@
                                         listLayout.is_default = true;
                                         delete listLayout.id;
 
-                                        uiService.createListLayout(scope.entityType, listLayout).then(function () {
+                                        uiService.createListLayout(scope.entityType, listLayout).then(function (data) {
+
+                                            listLayout.id = data.id;
 
                                             scope.evEventService.dispatchEvent(evEvents.LIST_LAYOUT_CHANGE);
 
+                                            scope.evDataService.setListLayout(listLayout);
                                             scope.evDataService.setActiveLayoutConfiguration({layoutConfig: listLayout});
 
                                             middlewareService.setData('entityActiveLayoutSwitched', listLayout.name); // Give signal to update active layout name in the toolbar
@@ -703,10 +708,13 @@
                                 listLayout.name = res.data.name;
                                 listLayout.is_default = true;
 
-                                uiService.createListLayout(scope.entityType, listLayout).then(function () {
+                                uiService.createListLayout(scope.entityType, listLayout).then(function (data) {
+
+                                    listLayout.id = data.id;
 
                                     scope.evEventService.dispatchEvent(evEvents.LIST_LAYOUT_CHANGE);
 
+                                    scope.evDataService.setListLayout(listLayout);
                                     scope.evDataService.setActiveLayoutConfiguration({layoutConfig: listLayout});
 
                                     middlewareService.setData('entityActiveLayoutSwitched', listLayout.name); // Give signal to update active layout name in the toolbar

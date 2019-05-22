@@ -40,6 +40,7 @@
                             <div class="g-modal-draggable-card">
                                 <md-card class="modal-dialog-card" data-key-identifier="{{item.key}}">
                                     {{::vm.bindReportItemName(item)}}
+                                    <md-tooltip ng-if="item.key" class="tooltip_1" md-direction="top">{{item.key}}</md-tooltip>
                                 </md-card>
                             </div>
                         </div>
@@ -67,7 +68,10 @@
                                 </md-checkbox>
                             </div>
                             <div class="g-modal-draggable-card">
-                                <md-card class="modal-dialog-card">{{::vm.bindReportItemName(item)}}</md-card>
+                                <md-card class="modal-dialog-card" data-key-identifier="{{item.key}}">
+                                    {{::vm.bindReportItemName(item)}}
+                                    <md-tooltip ng-if="item.key" class="tooltip_1" md-direction="top">{{item.key}}</md-tooltip>
+                                </md-card>
                             </div>
                         </div>
                     </md-content>
@@ -94,7 +98,10 @@
                                 </md-checkbox>
                             </div>
                             <div class="g-modal-draggable-card">
-                                <md-card class="modal-dialog-card">{{::vm.bindReportItemName(item)}}</md-card>
+                                <md-card class="modal-dialog-card" data-key-identifier="{{item.key}}">
+                                    {{::vm.bindReportItemName(item)}}
+                                    <md-tooltip ng-if="item.key" class="tooltip_1" md-direction="top">{{item.key}}</md-tooltip>
+                                </md-card>
                             </div>
                         </div>
 
@@ -115,7 +122,10 @@
                                 </md-checkbox>
                             </div>
                             <div class="g-modal-draggable-card">
-                                <md-card class="modal-dialog-card">{{::vm.bindReportItemName(item)}}</md-card>
+                                <md-card class="modal-dialog-card" data-key-identifier="{{item.key}}">
+                                    {{::vm.bindReportItemName(item)}}
+                                    <md-tooltip ng-if="item.key" class="tooltip_1" md-direction="top">{{item.key}}</md-tooltip>
+                                </md-card>
                             </div>
                         </div>
                     </md-content>
@@ -142,7 +152,10 @@
                                 </md-checkbox>
                             </div>
                             <div class="g-modal-draggable-card">
-                                <md-card class="modal-dialog-card">{{::vm.bindReportItemName(item)}}</md-card>
+                                <md-card class="modal-dialog-card" data-key-identifier="{{item.key}}">
+                                    {{::vm.bindReportItemName(item)}}
+                                    <md-tooltip ng-if="item.key" class="tooltip_1" md-direction="top">{{item.key}}</md-tooltip>
+                                </md-card>
                             </div>
                         </div>
 
@@ -163,7 +176,10 @@
                                 </md-checkbox>
                             </div>
                             <div class="g-modal-draggable-card">
-                                <md-card class="modal-dialog-card">{{::vm.bindReportItemName(item)}}</md-card>
+                                <md-card class="modal-dialog-card" data-key-identifier="{{item.key}}">
+                                    {{::vm.bindReportItemName(item)}}
+                                    <md-tooltip ng-if="item.key" class="tooltip_1" md-direction="top">{{item.key}}</md-tooltip>
+                                </md-card>
                             </div>
                         </div>
                     </md-content>
@@ -190,7 +206,10 @@
                                 </md-checkbox>
                             </div>
                             <div class="g-modal-draggable-card">
-                                <md-card class="modal-dialog-card">{{::vm.bindReportItemName(item)}}</md-card>
+                                <md-card class="modal-dialog-card" data-key-identifier="{{item.key}}">
+                                    {{::vm.bindReportItemName(item)}}
+                                    <md-tooltip ng-if="item.key" class="tooltip_1" md-direction="top">{{item.key}}</md-tooltip>
+                                </md-card>
                             </div>
                         </div>
                         <div layout="row" class="view-constructor-attributes-separator" data-ng-show="vm.portfolioDynamicAttrs.length > 0">
@@ -210,7 +229,10 @@
                                 </md-checkbox>
                             </div>
                             <div class="g-modal-draggable-card">
-                                <md-card class="modal-dialog-card">{{::vm.bindReportItemName(item)}}</md-card>
+                                <md-card class="modal-dialog-card" data-key-identifier="{{item.key}}">
+                                    {{::vm.bindReportItemName(item)}}
+                                    <md-tooltip ng-if="item.key" class="tooltip_1" md-direction="top">{{item.key}}</md-tooltip>
+                                </md-card>
                             </div>
                         </div>
                     </md-content>
@@ -237,7 +259,10 @@
                                 </md-checkbox>
                             </div>
                             <div class="g-modal-draggable-card">
-                                <md-card class="modal-dialog-card">{{::vm.bindReportItemName(item)}}</md-card>
+                                <md-card class="modal-dialog-card" data-key-identifier="{{item.key}}">
+                                    {{::vm.bindReportItemName(item)}}
+                                    <md-tooltip ng-if="item.key" class="tooltip_1" md-direction="top">{{item.key}}</md-tooltip>
+                                </md-card>
                             </div>
                         </div>
                         <div class="g-checkbox-row" data-ng-repeat="item in vm.strategy1subgroupAttrs" layout="row">
@@ -254,7 +279,10 @@
                                 </md-checkbox>
                             </div>
                             <div class="g-modal-draggable-card">
-                                <md-card class="modal-dialog-card">{{::vm.bindReportItemName(item)}}</md-card>
+                                <md-card class="modal-dialog-card" data-key-identifier="{{item.key}}">
+                                    {{::vm.bindReportItemName(item)}}
+                                    <md-tooltip ng-if="item.key" class="tooltip_1" md-direction="top">{{item.key}}</md-tooltip>
+                                </md-card>
                             </div>
                         </div>
                         <div class="g-checkbox-row" data-ng-repeat="item in vm.strategy1groupAttrs" layout="row">
@@ -271,7 +299,10 @@
                                 </md-checkbox>
                             </div>
                             <div class="g-modal-draggable-card">
-                                <md-card class="modal-dialog-card">{{::vm.bindReportItemName(item)}}</md-card>
+                                <md-card class="modal-dialog-card" data-key-identifier="{{item.key}}">
+                                    {{::vm.bindReportItemName(item)}}
+                                    <md-tooltip ng-if="item.key" class="tooltip_1" md-direction="top">{{item.key}}</md-tooltip>
+                                </md-card>
                             </div>
                         </div>
                         <div class="g-checkbox-row" data-ng-repeat="item in vm.strategy2attrs" layout="row">
@@ -288,7 +319,10 @@
                                 </md-checkbox>
                             </div>
                             <div class="g-modal-draggable-card">
-                                <md-card class="modal-dialog-card">{{::vm.bindReportItemName(item)}}</md-card>
+                                <md-card class="modal-dialog-card" data-key-identifier="{{item.key}}">
+                                    {{::vm.bindReportItemName(item)}}
+                                    <md-tooltip ng-if="item.key" class="tooltip_1" md-direction="top">{{item.key}}</md-tooltip>
+                                </md-card>
                             </div>
                         </div>
                         <div class="g-checkbox-row" data-ng-repeat="item in vm.strategy2subgroupAttrs" layout="row">
@@ -305,7 +339,10 @@
                                 </md-checkbox>
                             </div>
                             <div class="g-modal-draggable-card">
-                                <md-card class="modal-dialog-card">{{::vm.bindReportItemName(item)}}</md-card>
+                                <md-card class="modal-dialog-card" data-key-identifier="{{item.key}}">
+                                    {{::vm.bindReportItemName(item)}}
+                                    <md-tooltip ng-if="item.key" class="tooltip_1" md-direction="top">{{item.key}}</md-tooltip>
+                                </md-card>
                             </div>
                         </div>
                         <div class="g-checkbox-row" data-ng-repeat="item in vm.strategy2groupAttrs" layout="row">
@@ -322,7 +359,10 @@
                                 </md-checkbox>
                             </div>
                             <div class="g-modal-draggable-card">
-                                <md-card class="modal-dialog-card">{{::vm.bindReportItemName(item)}}</md-card>
+                                <md-card class="modal-dialog-card" data-key-identifier="{{item.key}}">
+                                    {{::vm.bindReportItemName(item)}}
+                                    <md-tooltip ng-if="item.key" class="tooltip_1" md-direction="top">{{item.key}}</md-tooltip>
+                                </md-card>
                             </div>
                         </div>
                         <div class="g-checkbox-row" data-ng-repeat="item in vm.strategy3attrs" layout="row">
@@ -339,7 +379,10 @@
                                 </md-checkbox>
                             </div>
                             <div class="g-modal-draggable-card">
-                                <md-card class="modal-dialog-card">{{::vm.bindReportItemName(item)}}</md-card>
+                                <md-card class="modal-dialog-card" data-key-identifier="{{item.key}}">
+                                    {{::vm.bindReportItemName(item)}}
+                                    <md-tooltip ng-if="item.key" class="tooltip_1" md-direction="top">{{item.key}}</md-tooltip>
+                                </md-card>
                             </div>
                         </div>
                         <div class="g-checkbox-row" data-ng-repeat="item in vm.strategy3subgroupAttrs" layout="row">
@@ -356,7 +399,10 @@
                                 </md-checkbox>
                             </div>
                             <div class="g-modal-draggable-card">
-                                <md-card class="modal-dialog-card">{{::vm.bindReportItemName(item)}}</md-card>
+                                <md-card class="modal-dialog-card" data-key-identifier="{{item.key}}">
+                                    {{::vm.bindReportItemName(item)}}
+                                    <md-tooltip ng-if="item.key" class="tooltip_1" md-direction="top">{{item.key}}</md-tooltip>
+                                </md-card>
                             </div>
                         </div>
                         <div class="g-checkbox-row" data-ng-repeat="item in vm.strategy3groupAttrs" layout="row">
@@ -373,7 +419,10 @@
                                 </md-checkbox>
                             </div>
                             <div class="g-modal-draggable-card">
-                                <md-card class="modal-dialog-card">{{::vm.bindReportItemName(item)}}</md-card>
+                                <md-card class="modal-dialog-card" data-key-identifier="{{item.key}}">
+                                    {{::vm.bindReportItemName(item)}}
+                                    <md-tooltip ng-if="item.key" class="tooltip_1" md-direction="top">{{item.key}}</md-tooltip>
+                                </md-card>
                             </div>
                         </div>
                     </md-content>
@@ -400,7 +449,10 @@
                                 </md-checkbox>
                             </div>
                             <div class="g-modal-draggable-card">
-                                <md-card class="modal-dialog-card">{{::vm.bindReportItemName(item)}}</md-card>
+                                <md-card class="modal-dialog-card" data-key-identifier="{{item.key}}">
+                                    {{::vm.bindReportItemName(item)}}
+                                    <md-tooltip ng-if="item.key" class="tooltip_1" md-direction="top">{{item.key}}</md-tooltip>
+                                </md-card>
                             </div>
                         </div>
                     </md-content>
@@ -427,7 +479,10 @@
                                 </md-checkbox>
                             </div>
                             <div class="g-modal-draggable-card">
-                                <md-card class="modal-dialog-card">{{::vm.bindReportItemName(item)}}</md-card>
+                                <md-card class="modal-dialog-card" data-key-identifier="{{item.key}}">
+                                    {{::vm.bindReportItemName(item)}}
+                                    <md-tooltip ng-if="item.key" class="tooltip_1" md-direction="top">{{item.key}}</md-tooltip>
+                                </md-card>
                             </div>
                         </div>
                     </md-content>
@@ -454,7 +509,10 @@
                                 </md-checkbox>
                             </div>
                             <div class="g-modal-draggable-card">
-                                <md-card class="modal-dialog-card">{{::vm.bindReportItemName(item)}}</md-card>
+                                <md-card class="modal-dialog-card" data-key-identifier="{{item.key}}">
+                                    {{::vm.bindReportItemName(item)}}
+                                    <md-tooltip ng-if="item.key" class="tooltip_1" md-direction="top">{{item.key}}</md-tooltip>
+                                </md-card>
                             </div>
                         </div>
 
@@ -476,7 +534,10 @@
                                 </md-checkbox>
                             </div>
                             <div class="g-modal-draggable-card">
-                                <md-card class="modal-dialog-card">{{::vm.bindReportItemName(item)}}</md-card>
+                                <md-card class="modal-dialog-card" data-key-identifier="{{item.key}}">
+                                    {{::vm.bindReportItemName(item)}}
+                                    <md-tooltip ng-if="item.key" class="tooltip_1" md-direction="top">{{item.key}}</md-tooltip>
+                                </md-card>
                             </div>
                         </div>
 

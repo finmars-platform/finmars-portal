@@ -1,7 +1,9 @@
 <md-dialog aria-label="data constructor"
-           class="entity-data-constructor-dialog">
+           class="entity-data-constructor-dialog draggable-dialog"
+           drag-dialog>
     <md-toolbar>
         <div class="md-toolbar-tools">
+            <ng-md-icon icon="dialpad" size="20" class="draggable-dialog-sign"></ng-md-icon>
             <h1 class="entity-data-constructor-title">
                 <span class="ec-entity-type">
                     {{vm.entityType}}
