@@ -8,15 +8,14 @@
 
     var cookieService = require('../../../../../core/services/cookieService');
     var xhrService = require('../../../../../core/services/xhrService');
-    // var configureRepositoryUrlService = require('../services/configureRepositoryUrlService');
+    var configureRepositoryUrlService = require('../../services/configureRepositoryUrlService');
     var baseUrlService = require('../../services/baseUrlService');
 
     var baseUrl = baseUrlService.resolve();
-    baseUrl = baseUrl + 'reports/custom-field/';
 
-    var getList = function () {
+    var getList = function (entityType, options) {
 
-        return xhrService.fetch(baseUrl,
+        return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl + 'reports/' + entityType + '/custom-field/', options),
             {
                 method: 'GET',
                 credentials: 'include',
@@ -27,8 +26,8 @@
             })
     };
 
-    var getByKey = function (id) {
-        return xhrService.fetch(baseUrl + id + '/',
+    var getByKey = function (entityType, id) {
+        return xhrService.fetch(baseUrl + 'reports/' + entityType + '/custom-field/' + id + '/',
             {
                 method: 'GET',
                 credentials: 'include',
@@ -39,8 +38,8 @@
             })
     };
 
-    var create = function (attribute) {
-        return xhrService.fetch(baseUrl,
+    var create = function (entityType, data) {
+        return xhrService.fetch(baseUrl + 'reports/' + entityType + '/custom-field/',
             {
                 method: 'POST',
                 credentials: 'include',
@@ -49,12 +48,12 @@
                     Accept: 'application/json',
                     'Content-type': 'application/json'
                 },
-                body: JSON.stringify(attribute)
+                body: JSON.stringify(data)
             })
     };
 
-    var update = function (id, attribute) {
-        return xhrService.fetch(baseUrl + id + '/',
+    var update = function (entityType, id, data) {
+        return xhrService.fetch(baseUrl + 'reports/' + entityType + '/custom-field/' + id + '/',
             {
                 method: 'PUT',
                 credentials: 'include',
@@ -63,12 +62,12 @@
                     Accept: 'application/json',
                     'Content-type': 'application/json'
                 },
-                body: JSON.stringify(attribute)
+                body: JSON.stringify(data)
             })
     };
 
-    var deleteByKey = function (id) {
-        return xhrService.fetch(baseUrl + id + '/',
+    var deleteByKey = function (entityType, id) {
+        return xhrService.fetch(baseUrl + 'reports/' + entityType + '/custom-field/' + id + '/',
             {
                 method: 'DELETE',
                 credentials: 'include',

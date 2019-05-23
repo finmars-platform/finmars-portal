@@ -4,6 +4,9 @@
             <ng-md-icon icon="dialpad" size="20" class="draggable-dialog-sign"></ng-md-icon>
             <h2>Mapping import preview</h2>
             <span flex></span>
+            <div data-ng-if="vm.activeItemTotal">
+                {{vm.counter}} / {{vm.activeItemTotal}}
+            </div>
         </div>
     </md-toolbar>
     <md-dialog-content style="background: #fff; padding: 16px">
@@ -49,6 +52,11 @@
             </div>
 
 
+        </div>
+
+        <div class="configuration-import-loader" data-ng-if="vm.processing">
+            <md-progress-circular md-mode="indeterminate"
+                                  md-diameter="48"></md-progress-circular>
         </div>
 
     </md-dialog-content>

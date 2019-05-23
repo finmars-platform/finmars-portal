@@ -45,7 +45,7 @@
                                 controllerName = 'gModalReportController as vm';
                                 templateUrl = 'views/directives/groupTable/modal-report-view.html';
                                 break;
-                            case 'pnl-report':
+                            case 'pl-report':
                                 controllerName = 'gModalReportPnlController as vm';
                                 templateUrl = 'views/directives/groupTable/modal-report-view.html';
                                 break;

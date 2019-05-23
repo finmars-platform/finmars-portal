@@ -244,7 +244,7 @@
             },
             {
                 name: "P&L report",
-                entity: 'pnl-report',
+                entity: 'pl-report',
                 key: "reports.plreport"
             },
             {
@@ -592,7 +592,7 @@
             },
             {
                 name: "P&L report",
-                entity: 'pnl-report',
+                entity: 'pl-report',
                 key: "reports.plreport"
             },
             {

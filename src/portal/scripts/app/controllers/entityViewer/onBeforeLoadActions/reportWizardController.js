@@ -36,7 +36,7 @@
             },
             {
                 caption: 'Profit & Lost report',
-                entityType: 'pnl-report'
+                entityType: 'pl-report'
             },
             {
                 caption: 'Transaction report',

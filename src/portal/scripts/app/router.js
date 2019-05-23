@@ -12,13 +12,12 @@
             abstract: true,
             templateUrl: 'views/shell-view.html',
             controller: 'ShellController as vm'
-        }).state('app.attributesManager', {
+        });
+
+        $stateProvider.state('app.attributesManager', {
             url: '/attributes/:entityType?from=?instanceId=',
             templateUrl: 'views/attributes-manager-view.html',
             controller: 'AttributesManagerController as vm'
-            // params: {
-            //     prevState: ''
-            // }
         });
 
         $stateProvider.state('app.dashboard', {
@@ -186,15 +185,15 @@
                 templateUrl: 'views/reports/reports-balance-view.html',
                 controller: 'BalanceReportController as vm'
             })
-            .state('app.reports.customAttributesManager', {
-                url: '/:entityType/customAttributes',
-                templateUrl: 'views/reports/reports-custom-attr-view.html',
-                controller: 'ReportCustomAttrController as vm',
+            .state('app.reports.customFieldManager', {
+                url: '/:entityType/custom-field',
+                templateUrl: 'views/reports/custom-field-view.html',
+                controller: 'CustomFieldController as vm',
                 params: {
                     prevState: ''
                 }
             })
-            .state('app.reports.pnl-report', {
+            .state('app.reports.pl-report', {
                 url: '/profit-and-lost',
                 templateUrl: 'views/reports/reports-profit-and-lost-view.html',
                 controller: 'ProfitAndLostReportController as vm'

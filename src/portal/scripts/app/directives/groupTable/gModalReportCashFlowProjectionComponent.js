@@ -13,7 +13,7 @@
 
     var metaService = require('../../services/metaService');
     var attributeTypeService = require('../../services/attributeTypeService');
-    var balanceReportCustomAttrService = require('../../services/reports/balanceReportCustomAttrService');
+    var customFieldService = require('../../services/reports/customFieldService');
 
     var evDataHelper = require('../../helpers/ev-data.helper');
 
@@ -335,7 +335,7 @@
                 return item;
             });
 
-            balanceReportCustomAttrService.getList().then(function (data) {
+            customFieldService.getList().then(function (data) {
                 vm.custom = data.results;
                 vm.custom.forEach(function (customItem) {
                     customItem.columnType = 'custom-field';

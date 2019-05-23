@@ -13,7 +13,7 @@
 
     var metaService = require('../../services/metaService');
     var attributeTypeService = require('../../services/attributeTypeService');
-    var balanceReportCustomAttrService = require('../../services/reports/balanceReportCustomAttrService');
+    var customFieldService = require('../../services/reports/customFieldService');
     var dynamicAttributesForReportsService = require('../../services/groupTable/dynamicAttributesForReportsService');
 
     var rvAttributesHelper = require('../../helpers/rvAttributesHelper');
@@ -69,7 +69,7 @@
 
             vm.strategy3attrs = rvAttributesHelper.getAllAttributesAsFlatList('strategies.strategy3', 'strategy3', 'Strategy 3', {maxDepth: 1});
 
-            balanceReportCustomAttrService.getList().then(function (data) {
+            customFieldService.getList(vm.entityType).then(function (data) {
                 vm.custom = data.results;
                 vm.custom.forEach(function (customItem) {
                     customItem.columnType = 'custom-field';
