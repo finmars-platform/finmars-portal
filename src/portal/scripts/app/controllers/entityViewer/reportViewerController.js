@@ -153,7 +153,7 @@
 
                                 $scope.$apply();
 
-                                entityViewerDataService.setActiveLayoutConfiguration();
+                                entityViewerDataService.setActiveLayoutConfiguration({isReport: true});
 
                             });
 
@@ -166,7 +166,7 @@
 
                             $scope.$apply();
 
-                            entityViewerDataService.setActiveLayoutConfiguration();
+                            entityViewerDataService.setActiveLayoutConfiguration({isReport: true});
 
                         }
                     // < Check if there is need to solve report datepicker expression >
@@ -178,7 +178,7 @@
 
                         $scope.$apply();
 
-                        entityViewerDataService.setActiveLayoutConfiguration();
+                        entityViewerDataService.setActiveLayoutConfiguration({isReport: true});
 
 
                     }

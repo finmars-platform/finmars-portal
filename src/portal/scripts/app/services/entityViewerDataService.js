@@ -88,6 +88,7 @@
             rootEntityViewer: false,
             additions: {},
             report: {},
+            export: {},
             data: {},
             listLayout: {},
             virtualScroll: {
@@ -101,6 +102,7 @@
                 limit: 0, // total rows
                 step: 60 // rows to render
             },
+            activeLayoutConfiguration: {},
             interfaceLayout: null,
             requestParameters: {},
             activeRequestParametersId: null,
@@ -616,12 +618,44 @@
             return data.listLayout;
         }
 
-        function setActiveLayoutConfiguration(activeLayoutConfig) {
+        function setActiveLayoutConfiguration(options) {
 
-            if (activeLayoutConfig) {
-                data.activeLayoutConfiguration = activeLayoutConfig;
+            if (options && options.layoutConfig) {
+
+                data.activeLayoutConfiguration = options.layoutConfig;
+
             } else {
-                data.activeLayoutConfiguration = JSON.parse(JSON.stringify(getListLayout()));
+
+                var listLayout = JSON.parse(JSON.stringify(getListLayout()));
+
+                if (options && options.isReport) {
+
+                    listLayout.data.reportOptions = JSON.parse(JSON.stringify(getReportOptions()));
+                    listLayout.data.reportLayoutOptions = JSON.parse(JSON.stringify(getReportLayoutOptions()));
+
+                    if (getExportOptions()) {
+                        listLayout.data.export = JSON.parse(JSON.stringify(getExportOptions()));
+                    }
+
+                    delete listLayout.data.reportOptions.items;
+                    delete listLayout.data.reportOptions.item_complex_transactions;
+                    delete listLayout.data.reportOptions.item_counterparties;
+                    delete listLayout.data.reportOptions.item_responsibles;
+                    delete listLayout.data.reportOptions.item_strategies3;
+                    delete listLayout.data.reportOptions.item_strategies2;
+                    delete listLayout.data.reportOptions.item_strategies1;
+                    delete listLayout.data.reportOptions.item_portfolios;
+                    delete listLayout.data.reportOptions.item_instruments;
+                    delete listLayout.data.reportOptions.item_instrument_pricings;
+                    delete listLayout.data.reportOptions.item_instrument_accruals;
+                    delete listLayout.data.reportOptions.item_currency_fx_rates;
+                    delete listLayout.data.reportOptions.item_currencies;
+                    delete listLayout.data.reportOptions.item_accounts;
+
+                };
+
+                data.activeLayoutConfiguration = listLayout;
+
             }
 
         }
@@ -686,8 +720,6 @@
 
             }
 
-            setListLayout(listLayout);
-
             if (isReport) {
 
                 var reportOptions = getReportOptions();
@@ -705,6 +737,8 @@
             setColumns(listLayout.data.columns);
             setGroups(listLayout.data.grouping);
             setFilters(listLayout.data.filters);
+
+            setListLayout(listLayout);
 
             listLayout.data.components = {
                 sidebar: true,
