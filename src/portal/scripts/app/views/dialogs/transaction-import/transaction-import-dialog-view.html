@@ -31,13 +31,6 @@
                             <div layout="row">
 
                                 <md-input-container aria-label="select with filter">
-                                    <!--<label for="">Import scheme</label>
-                                    <md-select style="width: 200px"
-                                               data-ng-model="vm.config.scheme">
-                                        <md-option data-ng-repeat="item in vm.transactionSchemes" ng-value="item.id">
-                                            {{item.scheme_name}}
-                                        </md-option>
-                                    </md-select>-->
 
                                     <label for="">Import scheme</label>
                                     <md-select ng-model="vm.config.scheme"
@@ -124,9 +117,6 @@
                         <div layout="row" data-ng-if="vm.finishedSuccess" layout-align="center center">
                             <h2>The data successfully imported.</h2>
                         </div>
-                        <!--<div layout="row" data-ng-if="vm.config.error_message" layout-align="center center">-->
-                        <!--Something wrong. Invalid file format.-->
-                        <!--</div>-->
                     </md-card-content>
                 </md-card>
             </div>
