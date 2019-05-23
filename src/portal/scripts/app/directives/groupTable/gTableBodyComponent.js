@@ -121,7 +121,7 @@
                     var subtotalRows = rows.filter(function(row) {
                         return row.dataset.type === 'subtotal';
                     });
-                    console.log("cell overflow subtotalRows", subtotalRows);
+                    // console.log("cell overflow subtotalRows", subtotalRows);
                     var r;
                     for (r = 0; r < subtotalRows.length; r++) {
 

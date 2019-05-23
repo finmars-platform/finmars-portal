@@ -4,8 +4,8 @@
             <ng-md-icon icon="dialpad" size="20" class="draggable-dialog-sign"></ng-md-icon>
             <h2>Configuration import manager</h2>
             <span flex></span>
-            <div data-ng-if="vm.activeItemTotal">
-                {{vm.counter}} / {{vm.activeItemTotal}}
+            <div class="toolbar-progression-indication" data-ng-if="vm.activeItemTotal">
+                <span>Import Progress:</span> <span>{{vm.counter}} / {{vm.activeItemTotal}}</span>
             </div>
         </div>
     </md-toolbar>

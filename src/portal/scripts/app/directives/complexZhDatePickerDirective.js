@@ -232,6 +232,7 @@
                             break;
                         default:
                             scope.datepickerOptions.datepickerMode = 'datepicker';
+                            // scope.date = moment(new Date()).format('YYYY-MM-DD');
                             // enableDatepickerMode();
                     }
                 });

@@ -35,7 +35,7 @@
                 scope.components = scope.evDataService.getComponents();
 
                 scope.columns = scope.evDataService.getColumns();
-
+                console.log("report key columns", scope.columns, scope.grouping);
                 function setDefaultGroupType(evDataService) {
 
                     var groups = evDataService.getGroups();
