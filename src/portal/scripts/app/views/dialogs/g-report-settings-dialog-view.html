@@ -14,13 +14,13 @@
 
                 <div data-ng-if="vm.checkReadyStatus()">
 
-                    <div data-ng-if="vm.entityType == 'balance-report' || vm.entityType == 'pnl-report' || vm.entityType == 'performance-report'">
+                    <div data-ng-if="vm.entityType == 'balance-report' || vm.entityType == 'pl-report' || vm.entityType == 'performance-report'">
 
                         <h2>General Settings</h2>
 
                         <div layout="row" style="margin-bottom: 20px">
 
-                            <md-input-container data-ng-if="vm.entityType == 'pnl-report'">
+                            <md-input-container data-ng-if="vm.entityType == 'pl-report'">
 
                                 <label for="">First Date</label>
 
@@ -424,7 +424,7 @@
 
                     </div>
 
-                    <div data-ng-if="vm.entityType == 'balance-report' || vm.entityType == 'pnl-report'">
+                    <div data-ng-if="vm.entityType == 'balance-report' || vm.entityType == 'pl-report'">
 
                         <h2>Transaction details</h2>
 

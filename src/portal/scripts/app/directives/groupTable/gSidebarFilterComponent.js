@@ -62,7 +62,7 @@
 
                     scope.datepickerToDisplayOptions = {position: 'left'};
 
-                    if (scope.entityType === 'pnl-report' || scope.entityType === 'transaction-report') {
+                    if (scope.entityType === 'pl-report' || scope.entityType === 'transaction-report') {
                         scope.datepickerToDisplayOptions = {
                             position: 'left',
                             labelName: 'Date to (incl)'

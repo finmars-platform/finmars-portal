@@ -18,6 +18,10 @@
 
         vm.items = file.body;
 
+        vm.processing = false;
+        vm.counter = 0;
+        vm.activeItemTotal = 0;
+
         vm.settings = {};
 
         vm.toggleMode = function (mode) {
@@ -362,11 +366,17 @@
 
                             entityTypeMappingResolveService.create(entityType, resultItem).then(function (data) {
 
+                                vm.counter = vm.counter + 1;
+
+                                $scope.$apply();
+
                                 resolve(data);
 
                             })
 
                         } else {
+
+                            vm.counter = vm.counter + 1;
 
                             var code = '';
 
@@ -387,6 +397,8 @@
                                 }
                             });
 
+                            $scope.$apply();
+
                             resolve(resultItem);
 
                         }
@@ -394,6 +406,8 @@
                     })
 
                 } else {
+
+                    vm.counter = vm.counter + 1;
 
                     var code = '';
 
@@ -413,6 +427,8 @@
                             message: 'Mapping: ' + item.value + ' for Content Object with user_code ' + code + ' already exists'
                         }
                     });
+
+                    $scope.$apply();
 
                     resolve(item);
                 }
@@ -509,9 +525,36 @@
 
         }
 
+        vm.calcTotalActiveItems = function () {
+
+            vm.activeItemTotal = 0;
+
+            vm.items.forEach(function (entityItem) {
+
+                if (entityItem.active) {
+
+                    entityItem.content.forEach(function (item) {
+
+                        if (item.active) {
+                            vm.activeItemTotal = vm.activeItemTotal + 1;
+                        }
+                    })
+
+                }
+
+            });
+
+        };
+
         vm.agree = function ($event) {
 
+            vm.processing = true;
+
+            vm.calcTotalActiveItems();
+
             importConfiguration(vm.items).then(function (data) {
+
+                vm.processing = false;
 
                 $mdDialog.hide({status: 'agree', data: {}});
 

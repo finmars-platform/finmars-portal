@@ -41,7 +41,7 @@
             'report-addon-performance': require('../models/reportAddonPerformancePropsModel').getAttributes(),
             'report-addon-performance-pnl': require('../models/reportAddonPerformancePnlPropsModel').getAttributes(),
             'report-mismatch': require('../models/reportMismatchPropsModel').getAttributes(),
-            "pnl-report": require('../models/pnlReportPropsModel').getAttributes(),
+            "pl-report": require('../models/pnlReportPropsModel').getAttributes(),
             "transaction-report": require('../models/transactionReportPropsModel').getAttributes(),
             "cash-flow-projection-report": require('../models/cashFlowProjectionReportPropsModel').getAttributes(),
             "performance-report": require('../models/performanceReportPropsModel').getAttributes(),

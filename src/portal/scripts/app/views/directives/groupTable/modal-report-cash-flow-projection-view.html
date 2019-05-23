@@ -474,7 +474,7 @@
                     </md-content>
                 </md-tab>
 
-                <md-tab label="Custom Attributes">
+                <md-tab label="Custom Columns">
                     <md-content class="md-padding">
                         <div class="g-th-checkbox-row">
                             <span data-ng-click="vm.toggleAll($event, 'columns')" class="g-meta-circle red">C</span>
@@ -511,14 +511,14 @@
     <md-dialog-actions layout="row" layout-align="space-between center">
         <md-button data-ng-if="vm.MABtnVisibility(vm.entityType)" class="md-raised md-primary" style="margin: 0;"
                    data-ui-sref="app.attributesManager({entityType: vm.entityType})" data-ng-click="vm.cancel()">
-            Manage attributes
+            Manage Attributes
         </md-button>
-        <!--<md-button data-ng-if="vm.entityType === 'balance-report' || vm.entityType === 'pnl-report'"-->
+        <!--<md-button data-ng-if="vm.entityType === 'balance-report' || vm.entityType === 'pl-report'"-->
         <md-button
                 class="md-raised md-primary" style="margin: 0;"
-                data-ui-sref="app.reports.customAttributesManager({entityType: vm.entityType})"
+                data-ui-sref="app.reports.customFieldManager({entityType: vm.entityType})"
                 data-ng-click="vm.cancel()">
-            Custom attributes
+            Custom Columns
         </md-button>
         <md-button class="md-raised" ng-click="vm.cancel()">
             OK

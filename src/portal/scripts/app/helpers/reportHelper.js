@@ -354,6 +354,21 @@
 
     };
 
+    var unwrapCustomFields = function (result) {
+
+        if (result.hasOwnProperty('custom_fields')) {
+            result.custom_fields.forEach(function (customField) {
+                var key = 'custom_fields.' + customField.custom_field;
+
+                result[key] = customField.value;
+
+            })
+        }
+
+        return result
+
+    };
+
     /**
      * Convert single object to a flat object.
      * @param {object} item.
@@ -405,6 +420,8 @@
 
 
         });
+
+        result = unwrapCustomFields(result)
 
         return result;
 

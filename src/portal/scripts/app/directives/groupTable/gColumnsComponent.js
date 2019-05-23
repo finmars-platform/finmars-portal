@@ -33,7 +33,7 @@
 
                 scope.isReport = ['balance-report',
                     'cash-flow-projection-report',
-                    'performance-report', 'pnl-report',
+                    'performance-report', 'pl-report',
                     'transaction-report'].indexOf(scope.entityType) !== -1;
 
                 scope.isAllSelected = scope.evDataService.getSelectAllRowsState();
