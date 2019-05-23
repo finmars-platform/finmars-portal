@@ -394,6 +394,10 @@
 
                 i = i + 1;
 
+                if (i === expression.length && result.length === 0) {
+                    result = currentToken.value;
+                }
+
 
             }
 
@@ -418,6 +422,8 @@
                 }
             }
 
+            console.log('inputsCounts', inputsCounts);
+
             if (result.length > 0 && inputsCounts === 0) {
                 vm.status = 'inputs-error';
             }
@@ -428,13 +434,13 @@
 
         vm.validate = function () {
 
-            vm.htmlExpression = vm.getHtmlExpression(vm.item.expression);
-
-            return expressionService.validate(vm.item).then(function (data) {
+            return expressionService.validate(vm.item).then(function (data) { // may be useless
 
                 // console.log('data', data);
 
                 vm.status = 'success';
+
+                vm.htmlExpression = vm.getHtmlExpression(vm.item.expression);
 
                 vm.showValidation = true;
 
@@ -445,6 +451,8 @@
                 // console.log('reason', reason);
 
                 vm.status = 'error';
+
+                vm.htmlExpression = vm.getHtmlExpression(vm.item.expression);
 
                 vm.showValidation = true;
 
