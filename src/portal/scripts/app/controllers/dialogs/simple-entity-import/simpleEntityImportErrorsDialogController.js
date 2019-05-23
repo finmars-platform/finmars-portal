@@ -112,7 +112,7 @@
 
             } else {
 
-                vm.rowsSuccessTotal = vm.validationResult.total - vm.rowsFailedCount - vm.rowsSkippedCount;
+                vm.rowsSuccessTotal = vm.validationResult.total - 1 - vm.rowsFailedCount - vm.rowsSkippedCount;
             }
 
             setTimeout(function () {
