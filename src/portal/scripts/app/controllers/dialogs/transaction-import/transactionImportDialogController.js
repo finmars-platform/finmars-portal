@@ -32,8 +32,6 @@
 
         var vm = this;
 
-        vm.closeButtonText = "Cancel";
-
         vm.readyStatus = {
             mapping: false,
             processing: false,
@@ -193,7 +191,7 @@
 
                 if (vm.validateConfig.error_rows.length) {
 
-                    vm.validateConfig.process_mode = 'validate';
+                    data.process_mode = 'validate';
 
                     var transactionScheme;
 
@@ -212,7 +210,7 @@
                             data: {
                                 validationResult: data,
                                 scheme: transactionScheme,
-                                config: vm.config
+                                config: vm.validateConfig
                             }
                         },
                         targetEvent: $event,
@@ -227,13 +225,11 @@
 
                     });
 
-                    vm.closeButtonText = "OK";
 
                 } else {
 
                     vm.validateConfig = {};
                     vm.readyStatus.processing = false;
-                    vm.closeButtonText = "OK";
 
                     $mdDialog.show({
                         controller: 'SuccessDialogController as vm',
@@ -269,8 +265,6 @@
             }).then(function (data) {
 
                 if (vm.validateConfig.error_rows.length) {
-
-                    vm.validateConfig.process_mode = 'validate';
 
                     var transactionScheme;
 
@@ -308,7 +302,6 @@
 
                     });
 
-                    vm.closeButtonText = "OK";
 
                 } else {
                     console.log("load triggered");
@@ -319,7 +312,6 @@
                 console.log("error occured");
             });
 
-            vm.closeButtonText = "OK";
 
         };
 
@@ -458,9 +450,6 @@
 
                 }
 
-                vm.closeButtonText = "OK";
-
-
             }).catch(function (reason) {
 
                 $mdDialog.show({
@@ -478,7 +467,7 @@
 
             })
 
-            vm.closeButtonText = "OK";
+
         };
 
         vm.recalculate = function () {
