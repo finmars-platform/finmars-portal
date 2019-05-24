@@ -368,6 +368,8 @@
 
                         if (i + 1 < expression.length && expression[i + 1].match(new RegExp(/^[a-zA-Z0-9_-]*$/))) {
 
+                            console.log('expression[i + 1]', expression[i + 1])
+
                             // if next letter also part of input, then continue to lookup
 
                         } else {
@@ -394,8 +396,9 @@
 
                 i = i + 1;
 
-                if (i === expression.length && result.length === 0) {
-                    result = currentToken.value;
+                if (i === expression.length && currentToken.value !== '') {
+                    result = result + currentToken.value;
+                    vm.status = 'inputs-error';
                 }
 
 
