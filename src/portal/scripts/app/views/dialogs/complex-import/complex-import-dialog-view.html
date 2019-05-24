@@ -4,6 +4,12 @@
             <ng-md-icon icon="dialpad" size="20" class="draggable-dialog-sign"></ng-md-icon>
             <h2>Complex Import Manager</h2>
             <span flex></span>
+            <div class="toolbar-progression-indication" data-ng-if="vm.readyStatus.processing && vm.state === 'validate'">
+                <span>Validate Progress:</span> <span>{{vm.counter}} / {{vm.activeItemTotal}}</span>
+            </div>
+            <div class="toolbar-progression-indication" data-ng-if="vm.readyStatus.processing && vm.state === 'import'">
+                <span>Import Progress:</span> <span>{{vm.counter}} / {{vm.activeItemTotal}}</span>
+            </div>
         </div>
     </md-toolbar>
     <md-dialog-content style="background: #E5E5E5; width: 910px">
