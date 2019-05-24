@@ -32,6 +32,8 @@
 
         var vm = this;
 
+        vm.fileLocal = null;
+
         vm.readyStatus = {
             mapping: false,
             processing: false,
@@ -203,6 +205,9 @@
 
                     });
 
+                    vm.validateConfig.file = {};
+                    vm.validateConfig.file.name = vm.fileLocal.name;
+
                     $mdDialog.show({
                         controller: 'TransactionImportErrorsDialogController as vm',
                         templateUrl: 'views/dialogs/transaction-import/transaction-import-errors-dialog-view.html',
@@ -276,6 +281,10 @@
 
                     });
 
+
+                    vm.config.file = {};
+                    vm.config.file.name = vm.fileLocal.name;
+
                     $mdDialog.show({
                         controller: 'TransactionImportErrorsDialogController as vm',
                         templateUrl: 'views/dialogs/transaction-import/transaction-import-errors-dialog-view.html',
@@ -329,6 +338,8 @@
                 formData.append('error_handling', vm.config.error_handling);
                 formData.append('delimiter', vm.config.delimiter);
                 formData.append('missing_data_handler', vm.config.missing_data_handler);
+
+                vm.fileLocal = vm.config.file;
             }
 
             importTransactionService.validateImport(formData).then(function (data) {
@@ -368,6 +379,9 @@
                 formData.append('error_handling', vm.config.error_handling);
                 formData.append('delimiter', vm.config.delimiter);
                 formData.append('missing_data_handler', vm.config.missing_data_handler);
+
+                vm.fileLocal = vm.config.local;
+
             }
 
             var transactionScheme;
