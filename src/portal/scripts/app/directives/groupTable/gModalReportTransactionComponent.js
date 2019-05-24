@@ -122,8 +122,10 @@
                 customFieldService.getList(vm.entityType).then(function (data) {
 
                     vm.custom = data.results;
+
                     vm.custom.forEach(function (customItem) {
-                        customItem.columnType = 'custom-field';
+                        customItem.key = 'custom_fields.' + customItem.id;
+                        customItem.name = 'Custom Field. ' + customItem.name;
                     });
 
                     dynamicAttributesForReportsService.getDynamicAttributes().then(function (data) {
