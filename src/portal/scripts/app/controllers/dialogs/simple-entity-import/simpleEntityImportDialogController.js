@@ -104,8 +104,10 @@
                         resolve({status: 'agree'})
 
                     } else {
-
+                        
                         data.process_mode = mode;
+
+                        console.log('data', data);
 
                         $mdDialog.show({
                             controller: 'SimpleEntityImportErrorsDialogController as vm',
