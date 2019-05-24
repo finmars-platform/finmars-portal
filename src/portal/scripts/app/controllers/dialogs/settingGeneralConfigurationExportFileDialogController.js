@@ -208,7 +208,8 @@
                             case "accounts.account":
                                 daContentType = "Account";
                                 break;
-                        };
+                        }
+                        ;
 
                         var daName = attr.name;
                         var usagesCount = 0;
@@ -380,9 +381,15 @@
 
             vm.deactivateAll();
 
+            vm.filename = vm.activeLayout.data.filename;
+
+            if (!vm.activeLayout.data.statuses) {
+                vm.activeLayout.data.statuses = {}
+            }
+
             vm.items.forEach(function (entityItem) {
 
-                var layoutData = vm.activeLayout.data[entityItem.entity];
+                var layoutData = vm.activeLayout.data.statuses[entityItem.entity];
 
                 if (layoutData && layoutData.length > 0) {
 
@@ -424,9 +431,16 @@
 
         vm.updateLayout = function ($event) {
 
+
+            if (!vm.activeLayout.data.statuses) {
+                vm.activeLayout.data.statuses = {}
+            }
+
+            vm.activeLayout.data.filename = vm.filename;
+
             vm.items.forEach(function (item) {
 
-                vm.activeLayout.data[item.entity] = [];
+                vm.activeLayout.data.statuses[item.entity] = [];
 
                 item.content.forEach(function (child) {
 
@@ -435,7 +449,7 @@
                         var name = getECProperties(child);
 
                         if (name || typeof name === "string") {
-                            vm.activeLayout.data[item.entity].push(name)
+                            vm.activeLayout.data.statuses[item.entity].push(name)
                         }
                     }
 
