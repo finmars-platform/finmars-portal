@@ -28,6 +28,10 @@
             processing: false
         };
 
+        vm.state = null; // validate or import
+        vm.counter = 0;
+        vm.activeItemTotal = 0;
+
         vm.loadIsAvailable = function () {
             if (vm.config.scheme != null && vm.config.file !== null && vm.config.file !== undefined) {
                 return true;
@@ -89,6 +93,14 @@
             $mdDialog.cancel();
         };
 
+        function updateCounter() {
+
+            vm.counter = vm.counter + 1;
+
+            $scope.$apply()
+        }
+
+
         vm.validate = function ($event) {
 
             vm.readyStatus.processing = true;
@@ -110,7 +122,11 @@
 
             });
 
-            complexImportValidateService.validateImport(vm.config.file, vm.config.delimiter, schemeObject).then(function (data) {
+            vm.state = 'validate';
+            vm.counter = 0;
+            vm.activeItemTotal = schemeObject.actions.length;
+
+            complexImportValidateService.validateImport(vm.config.file, vm.config.delimiter, schemeObject, updateCounter).then(function (data) {
 
                 console.log('data', data);
 
@@ -160,6 +176,7 @@
 
         };
 
+
         vm.import = function ($event) {
 
             vm.readyStatus.processing = true;
@@ -181,7 +198,11 @@
 
             });
 
-            complexImportValidateService.validateImport(vm.config.file, vm.config.delimiter, schemeObject).then(function (data) {
+            vm.state = 'validate';
+            vm.counter = 0;
+            vm.activeItemTotal = schemeObject.actions.length;
+
+            complexImportValidateService.validateImport(vm.config.file, vm.config.delimiter, schemeObject, updateCounter).then(function (data) {
 
                 console.log('validation data', data);
 
@@ -193,7 +214,11 @@
 
                 if (errorsCount === 0) {
 
-                    complexImportService.startImport(vm.config.file, vm.config.delimiter, schemeObject).then(function (data) {
+                    vm.state = 'import';
+                    vm.counter = 0;
+                    vm.activeItemTotal = schemeObject.actions.length;
+
+                    complexImportService.startImport(vm.config.file, vm.config.delimiter, schemeObject, updateCounter).then(function (data) {
 
                         console.log('data', data);
 
