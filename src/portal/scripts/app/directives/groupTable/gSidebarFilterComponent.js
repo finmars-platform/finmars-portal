@@ -14,6 +14,8 @@
     var attributeTypeService = require('../../services/attributeTypeService');
     var metaService = require('../../services/metaService');
 
+    var userFilterService = require('../../services/rv-data-provider/user-filter.service');
+
     module.exports = function ($mdDialog) {
         return {
             restrict: 'AE',
@@ -277,7 +279,6 @@
 
                 };
 
-
                 scope.removeFilter = function (filter) {
                     //console.log('filter to remove is ', filter);
                     scope.filters = scope.filters.map(function (item) {
@@ -417,6 +418,20 @@
                 var init = function () {
 
                     syncFilters();
+
+                    scope.evEventService.addEventListener(evEvents.DATA_LOAD_END, function () {
+
+                        if (scope.isReport) {
+
+                            var testKeyData = userFilterService.getDataByKey(scope.evDataService, 'instrument.maturity_date');
+                            var testKeyData1 = userFilterService.getDataByKey(scope.evDataService, 'portfolio.name');
+
+                            console.log('testKeyData', testKeyData);
+                            console.log('testKeyData1', testKeyData1);
+
+                        }
+
+                    })
 
                     scope.evEventService.addEventListener(evEvents.FILTERS_CHANGE, function () {
 
