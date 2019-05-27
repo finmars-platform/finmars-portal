@@ -30,8 +30,6 @@
 
         vm.expressionsHistory = [];
 
-        vm.error = false;
-
         vm.searchExpr = '';
 
         vm.getFilters = function () {
@@ -254,22 +252,25 @@
             return str.substr(0, index) + value + str.substr(index);
         }
 
-        vm.getHtmlExpression = function (expression) {
-
-            var result = '';
-
-            var currentToken = {
-                value: '',
-                hasDot: false
-            };
-
-            var functionWords = vm.expressions
+        function getFunctionWords() {
+            return vm.expressions
                 .filter(function (item) {
                     return item.func.indexOf('(') !== -1;
                 })
                 .map(function (item) {
                     return item.func.split('(')[0]
                 });
+        }
+
+        function getInputWords() {
+            return vm.data.functions[0].map(function (item) {
+                return item.func
+            });
+        }
+
+        function getPropertiesWords() {
+
+            var propertiesWords = [];
 
             var propertiesWordsTmp = vm.expressions
                 .filter(function (item) {
@@ -279,7 +280,6 @@
                     return item.func.split('].')[1];
                 });
 
-            var propertiesWords = [];
 
             propertiesWordsTmp.forEach(function (word) {
 
@@ -299,12 +299,27 @@
 
             });
 
-            var inputWords = vm.data.functions[0].map(function (item) {
-                return item.func
-            });
+            return propertiesWords;
+
+        }
+
+        vm.getHtmlExpression = function (expression) {
+
+            var result = '';
+
+            var currentToken = {
+                value: '',
+                hasDot: false
+            };
+
+            var functionWords = getFunctionWords();
+            var propertiesWords = getPropertiesWords();
+            var inputWords = getInputWords();
 
             var strContent = false;
             var strType;
+
+            var inputsCounts = 0;
 
             for (var i = 0; i < expression.length;) {
 
@@ -351,8 +366,20 @@
 
                     if (isInput(currentToken, inputWords)) {
 
-                        result = result + '<span class="eb-highlight-input">' + currentToken.value + '</span>';
-                        currentToken.value = '';
+                        if (i + 1 < expression.length && expression[i + 1].match(new RegExp(/^[a-zA-Z0-9_-]*$/))) {
+
+                            console.log('expression[i + 1]', expression[i + 1])
+
+                            // if next letter also part of input, then continue to lookup
+
+                        } else {
+
+                            result = result + '<span class="eb-highlight-input">' + currentToken.value + '</span>';
+                            currentToken.value = '';
+
+                            inputsCounts = inputsCounts + 1;
+
+                        }
 
                     }
 
@@ -369,6 +396,11 @@
 
                 i = i + 1;
 
+                if (i === expression.length && currentToken.value !== '') {
+                    result = result + currentToken.value;
+                    vm.status = 'inputs-error';
+                }
+
 
             }
 
@@ -380,6 +412,8 @@
                 result = insert(result, parenthesisStatus.errorIndex + 1, '</span>');
                 result = insert(result, parenthesisStatus.errorIndex, '<span class="eb-error-bracket">')
 
+                vm.status = 'bracket-error';
+
             } else {
 
                 if (squareBracketsStatus.status === false && squareBracketsStatus.errorIndex !== undefined) {
@@ -387,7 +421,14 @@
                     result = insert(result, squareBracketsStatus.errorIndex + 1, '</span>');
                     result = insert(result, squareBracketsStatus.errorIndex, '<span class="eb-error-bracket">')
 
+                    vm.status = 'bracket-error';
                 }
+            }
+
+            console.log('inputsCounts', inputsCounts);
+
+            if (result.length > 0 && inputsCounts === 0) {
+                vm.status = 'inputs-error';
             }
 
             return result
@@ -396,14 +437,13 @@
 
         vm.validate = function () {
 
-            vm.htmlExpression = vm.getHtmlExpression(vm.item.expression);
-
-            return expressionService.validate(vm.item).then(function (data) {
+            return expressionService.validate(vm.item).then(function (data) { // may be useless
 
                 // console.log('data', data);
 
-                vm.error = false;
-                vm.success = true;
+                vm.status = 'success';
+
+                vm.htmlExpression = vm.getHtmlExpression(vm.item.expression);
 
                 vm.showValidation = true;
 
@@ -413,8 +453,9 @@
 
                 // console.log('reason', reason);
 
-                vm.error = true;
-                vm.success = false;
+                vm.status = 'error';
+
+                vm.htmlExpression = vm.getHtmlExpression(vm.item.expression);
 
                 vm.showValidation = true;
 

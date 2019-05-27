@@ -1,0 +1,49 @@
+<md-dialog aria-label="" ng-cloak class="width-40 draggable-dialog" drag-dialog>
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            <ng-md-icon icon="dialpad" size="20" class="draggable-dialog-sign"></ng-md-icon>
+            <h2>Create Custom Column</h2>
+            <span flex></span>
+        </div>
+    </md-toolbar>
+    <md-dialog-content>
+        <div layout="row">
+
+            <div class="a-m-tab-content p-t-24 p-l-16 p-r-16">
+                <md-input-container class="md-block" flex-gt-sm>
+                    <label>Custom Column Name</label>
+                    <input data-ng-model="vm.customField.name" placeholder="{{vm.customField.name}}">
+                </md-input-container>
+
+                <md-input-container class="md-block" flex-gt-sm>
+                    <label>Custom Column User Code</label>
+                    <input data-ng-model="vm.customField.user_code" placeholder="{{vm.customField.user_code}}">
+                </md-input-container>
+
+                <div flex-gt-sm layout="row">
+                    <md-input-container class="md-block width-80">
+                        <label>Custom Column Expression</label>
+                        <input data-ng-model="vm.customField.expr">
+                    </md-input-container>
+
+                    <expression-editor-button data-item="vm.customField.expr"></expression-editor-button>
+                </div>
+
+                <md-button class="md-raised md-primary" data-ng-click="vm.setupConfig($event)">
+                    Define range
+                </md-button>
+
+            </div>
+
+
+        </div>
+    </md-dialog-content>
+    <md-dialog-actions layout="row">
+        <md-button class="md-raised" ng-click="vm.cancel()">
+            Cancel
+        </md-button>
+        <md-button class="md-raised" ng-click="vm.agree()" style="margin-right:20px;">
+            Create
+        </md-button>
+    </md-dialog-actions>
+</md-dialog>

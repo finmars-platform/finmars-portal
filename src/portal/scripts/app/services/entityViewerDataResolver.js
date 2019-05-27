@@ -128,7 +128,7 @@
             case 'balance-report':
                 return reportService.getBalanceReport(options);
                 break;
-            case 'pnl-report':
+            case 'pl-report':
                 return reportService.getPnlReport(options);
                 break;
             case 'transaction-report':

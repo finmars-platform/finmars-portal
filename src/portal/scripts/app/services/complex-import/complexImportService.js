@@ -94,7 +94,7 @@
         })
     };
 
-    var processActionOneByOne = function (resolve, result, actions, file, delimiter, index) {
+    var processActionOneByOne = function (resolve, result, actions, file, delimiter, index, updateCounter) {
 
         processAction(actions[index], file, delimiter).then(function (data) {
 
@@ -114,9 +114,11 @@
 
             index = index + 1;
 
+            updateCounter();
+
             if (index < actions.length) {
 
-                processActionOneByOne(resolve, result, actions, file, delimiter, index)
+                processActionOneByOne(resolve, result, actions, file, delimiter, index, updateCounter)
 
             } else {
 
@@ -128,7 +130,7 @@
 
     };
 
-    var startImport = function (file, delimiter, scheme) {
+    var startImport = function (file, delimiter, scheme, updateCounter) {
 
         return new Promise(function (resolve, reject) {
 
@@ -144,7 +146,7 @@
 
                 var index = 0;
 
-                processActionOneByOne(resolve, result, scheme.actions, file, delimiter, index)
+                processActionOneByOne(resolve, result, scheme.actions, file, delimiter, index, updateCounter)
 
             } else {
 

@@ -208,7 +208,7 @@
                 case 'app.reports.balance-report':
                     return true;
                     break;
-                case 'app.reports.pnl-report':
+                case 'app.reports.pl-report':
                     return true;
                     break;
                 case 'app.reports.transaction-report':

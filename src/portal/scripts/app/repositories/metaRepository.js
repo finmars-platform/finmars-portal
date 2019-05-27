@@ -37,7 +37,7 @@
     var getEntitiesWithoutBaseAttrsList = function () {
         return ['price-history', 'currency-history', 'transaction',
             'complex-transaction', 'transaction-report', 'cash-flow-projection-report', 'performance-report',
-            'balance-report', 'pnl-report', 'audit-transaction', 'audit-instrument'];
+            'balance-report', 'pl-report', 'audit-transaction', 'audit-instrument'];
     };
 
     // DEPRECATED end look at metaRestrictionRepository
@@ -83,7 +83,7 @@
             'report-addon-performance': require('../models/reportAddonPerformancePropsModel').getAttributes(),
             'report-addon-performance-pnl': require('../models/reportAddonPerformancePnlPropsModel').getAttributes(),
             'report-mismatch': require('../models/reportMismatchPropsModel').getAttributes(),
-            "pnl-report": require('../models/pnlReportPropsModel').getAttributes(),
+            "pl-report": require('../models/pnlReportPropsModel').getAttributes(),
             "transaction-report": require('../models/transactionReportPropsModel').getAttributes(),
             "cash-flow-projection-report": require('../models/cashFlowProjectionReportPropsModel').getAttributes(),
             "performance-report": require('../models/performanceReportPropsModel').getAttributes(),

@@ -51,7 +51,8 @@
                              data-ng-show="vm.complexTransactionDynamicAttrs.length > 0">
                             <p>User Attributes</p>
                         </div>
-                        <div class="g-checkbox-row" data-ng-repeat="item in vm.complexTransactionDynamicAttrs" layout="row">
+                        <div class="g-checkbox-row" data-ng-repeat="item in vm.complexTransactionDynamicAttrs"
+                             layout="row">
                             <div>
                                 <md-checkbox ng-model="item.columns" aria-label="Columns" aria="columns"
                                              data-ng-change="vm.updateAttrs(vm.complexTransactionDynamicAttrs)">
@@ -130,7 +131,8 @@
                              data-ng-show="vm.linkedInstrumentDynamicAttrs.length > 0">
                             <p>User Attributes</p>
                         </div>
-                        <div class="g-checkbox-row" data-ng-repeat="item in vm.linkedInstrumentDynamicAttrs" layout="row">
+                        <div class="g-checkbox-row" data-ng-repeat="item in vm.linkedInstrumentDynamicAttrs"
+                             layout="row">
                             <div>
                                 <md-checkbox ng-model="item.columns" aria-label="Columns" aria="columns"
                                              data-ng-change="vm.updateAttrs(vm.linkedInstrumentDynamicAttrs)">
@@ -775,7 +777,7 @@
                     </md-content>
                 </md-tab>
 
-                <md-tab label="Custom Attributes">
+                <md-tab label="Custom Columns">
                     <md-content class="md-padding">
                         <div class="g-th-checkbox-row">
                             <span class="g-meta-circle red">C</span>
@@ -813,15 +815,11 @@
         </div>
     </md-dialog-content>
     <md-dialog-actions layout="row" layout-align="space-between center">
-        <md-button data-ng-if="vm.MABtnVisibility(vm.entityType)" class="md-raised md-primary" style="margin: 0;"
-                   data-ui-sref="app.attributesManager({entityType: vm.entityType})" data-ng-click="vm.cancel()">
-            Manage attributes
-        </md-button>
-        <md-button data-ng-if="vm.entityType === 'balance-report' || vm.entityType === 'pnl-report'"
-                   class="md-raised md-primary" style="margin: 0;"
-                   data-ui-sref="app.reports.customAttributesManager({entityType: vm.entityType})"
-                   data-ng-click="vm.cancel()">
-            Custom attributes
+        <md-button
+                class="md-raised md-primary" style="margin: 0;"
+                data-ui-sref="app.reports.customFieldManager({entityType: vm.entityType})"
+                data-ng-click="vm.cancel()">
+            Custom Columns
         </md-button>
         <md-button class="md-raised" ng-click="vm.cancel()">
             OK

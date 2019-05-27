@@ -554,13 +554,12 @@
     <md-dialog-actions layout="row" layout-align="space-between center">
         <md-button data-ng-if="vm.MABtnVisibility(vm.entityType)" class="md-raised md-primary" style="margin: 0;"
                    data-ui-sref="app.attributesManager({entityType: vm.entityType})" data-ng-click="vm.cancel()">
-            Manage attributes
+            Manage Attributes
         </md-button>
-        <md-button data-ng-if="vm.entityType === 'balance-report' || vm.entityType === 'pnl-report'"
-                   class="md-raised md-primary" style="margin: 0;"
-                   data-ui-sref="app.reports.customAttributesManager({entityType: vm.entityType})"
+        <md-button class="md-raised md-primary" style="margin: 0;"
+                   data-ui-sref="app.reports.customFieldManager({entityType: vm.entityType})"
                    data-ng-click="vm.cancel()">
-            Custom attributes
+            Custom Columns
         </md-button>
         <md-button class="md-raised" ng-click="vm.cancel()">
             OK

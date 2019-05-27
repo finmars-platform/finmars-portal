@@ -32,7 +32,7 @@
 
         var vm = this;
 
-        vm.closeButtonText = "Cancel";
+        vm.fileLocal = null;
 
         vm.readyStatus = {
             mapping: false,
@@ -193,7 +193,7 @@
 
                 if (vm.validateConfig.error_rows.length) {
 
-                    vm.validateConfig.process_mode = 'validate';
+                    data.process_mode = 'validate';
 
                     var transactionScheme;
 
@@ -205,6 +205,9 @@
 
                     });
 
+                    vm.validateConfig.file = {};
+                    vm.validateConfig.file.name = vm.fileLocal.name;
+
                     $mdDialog.show({
                         controller: 'TransactionImportErrorsDialogController as vm',
                         templateUrl: 'views/dialogs/transaction-import/transaction-import-errors-dialog-view.html',
@@ -212,7 +215,7 @@
                             data: {
                                 validationResult: data,
                                 scheme: transactionScheme,
-                                config: vm.config
+                                config: vm.validateConfig
                             }
                         },
                         targetEvent: $event,
@@ -227,13 +230,11 @@
 
                     });
 
-                    vm.closeButtonText = "OK";
 
                 } else {
 
                     vm.validateConfig = {};
                     vm.readyStatus.processing = false;
-                    vm.closeButtonText = "OK";
 
                     $mdDialog.show({
                         controller: 'SuccessDialogController as vm',
@@ -270,8 +271,6 @@
 
                 if (vm.validateConfig.error_rows.length) {
 
-                    vm.validateConfig.process_mode = 'validate';
-
                     var transactionScheme;
 
                     vm.transactionSchemes.forEach(function (scheme) {
@@ -281,6 +280,10 @@
                         }
 
                     });
+
+
+                    vm.config.file = {};
+                    vm.config.file.name = vm.fileLocal.name;
 
                     $mdDialog.show({
                         controller: 'TransactionImportErrorsDialogController as vm',
@@ -308,7 +311,6 @@
 
                     });
 
-                    vm.closeButtonText = "OK";
 
                 } else {
                     console.log("load triggered");
@@ -319,7 +321,6 @@
                 console.log("error occured");
             });
 
-            vm.closeButtonText = "OK";
 
         };
 
@@ -337,6 +338,8 @@
                 formData.append('error_handling', vm.config.error_handling);
                 formData.append('delimiter', vm.config.delimiter);
                 formData.append('missing_data_handler', vm.config.missing_data_handler);
+
+                vm.fileLocal = vm.config.file;
             }
 
             importTransactionService.validateImport(formData).then(function (data) {
@@ -376,6 +379,9 @@
                 formData.append('error_handling', vm.config.error_handling);
                 formData.append('delimiter', vm.config.delimiter);
                 formData.append('missing_data_handler', vm.config.missing_data_handler);
+
+                vm.fileLocal = vm.config.local;
+
             }
 
             var transactionScheme;
@@ -458,9 +464,6 @@
 
                 }
 
-                vm.closeButtonText = "OK";
-
-
             }).catch(function (reason) {
 
                 $mdDialog.show({
@@ -478,7 +481,7 @@
 
             })
 
-            vm.closeButtonText = "OK";
+
         };
 
         vm.recalculate = function () {

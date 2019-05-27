@@ -8,7 +8,8 @@
     var logService = require('../../../../../core/services/logService');
     var metaService = require('../../services/metaService');
 
-    var balanceReportCustomAttrService = require('../../services/reports/balanceReportCustomAttrService');
+    var customFieldService = require('../../services/reports/customFieldService');
+
     module.exports = function ($scope, $mdDialog, data) {
 
         logService.controller('CustomFieldConfigDialogController', 'initialized');

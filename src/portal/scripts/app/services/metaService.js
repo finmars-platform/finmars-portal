@@ -156,7 +156,7 @@
 
         return ['balance-report',
             'cash-flow-projection-report',
-            'performance-report', 'pnl-report',
+            'performance-report', 'pl-report',
             'transaction-report'].indexOf(entityType) !== -1
 
     };
@@ -243,7 +243,7 @@
             case 'app.reports.balance-report':
                 result = "Balance report";
                 break;
-            case 'app.reports.pnl-report':
+            case 'app.reports.pl-report':
                 result = "P&L report";
                 break;
             case 'app.reports.transaction-report':

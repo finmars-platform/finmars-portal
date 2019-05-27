@@ -20,8 +20,6 @@
 
         var vm = this;
 
-        vm.closeButtonText = "Cancel";
-
         vm.readyStatus = {
             mapping: false,
             processing: false,
@@ -106,8 +104,10 @@
                         resolve({status: 'agree'})
 
                     } else {
-
+                        
                         data.process_mode = mode;
+
+                        console.log('data', data);
 
                         $mdDialog.show({
                             controller: 'SimpleEntityImportErrorsDialogController as vm',
@@ -134,7 +134,6 @@
 
                         })
 
-                        vm.closeButtonText = "OK";
 
                     }
 
@@ -142,8 +141,6 @@
                 }).catch(function (reason) {
 
                     vm.readyStatus.processing = false;
-
-                    vm.closeButtonText = "OK";
 
                     $mdDialog.show({
                         controller: 'ValidationDialogController as vm',
@@ -193,7 +190,6 @@
                 }
             });
 
-            vm.closeButtonText = "OK";
 
         };
 
@@ -251,8 +247,6 @@
 
                     });
 
-                    vm.closeButtonText = "OK";
-
                 } else {
 
                     $mdDialog.show({
@@ -268,8 +262,6 @@
                         }
                     });
 
-                    vm.closeButtonText = "OK";
-
                 }
 
 
@@ -278,8 +270,6 @@
                 console.log('here? ', reason);
 
                 vm.readyStatus.processing = false;
-
-                vm.closeButtonText = "OK";
 
                 $mdDialog.show({
                     controller: 'ValidationDialogController as vm',
