@@ -26,9 +26,16 @@
             <div class="m-t-16 overflow-hidden">
 
                 <div class="validation-status float-left m-r-16">
-                    <div class="" data-ng-if="vm.error">Status: <b class="color-danger">Invalid
+
+                    <div class="" data-ng-if="vm.status == 'error'">Status: <b class="color-danger">Invalid
                         expression</b></div>
-                    <div class="" data-ng-if="vm.success">Status: <b class="color-success">Expression is
+                    <div class="" data-ng-if="vm.status == 'inputs-error'">Status: <b class="color-warning">Not all
+                        variables are identified
+                        expression</b></div>
+                    <div class="" data-ng-if="vm.status == 'bracket-error'">Status: <b class="color-danger">Mismatch in
+                        the
+                        opening and closing braces</b></div>
+                    <div class="" data-ng-if="vm.status == 'success'">Status: <b class="color-success">Expression is
                         valid</b></div>
                 </div>
 

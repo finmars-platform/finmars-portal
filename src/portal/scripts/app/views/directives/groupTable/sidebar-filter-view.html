@@ -5,7 +5,7 @@
 
     <div data-ng-if="isReport" layout="column">
 
-        <div data-ng-if="entityType == 'balance-report' || entityType == 'pnl-report'">
+        <div data-ng-if="entityType == 'balance-report' || entityType == 'pl-report'">
             <md-card class="g-sidebar-report-card">
 
                 <md-card-content>
@@ -16,7 +16,7 @@
 
                     <div layout="column" style="padding-top: 16px">
 
-                        <div data-ng-if="entityType === 'pnl-report'">
+                        <div data-ng-if="entityType === 'pl-report'">
                             <complex-zh-date-picker data-date="reportOptions.pl_first_date"
                                                     data-datepicker-options="reportLayoutOptions.datepickerOptions.reportFirstDatepicker"
                                                     data-display-options="datepickerFromDisplayOptions"

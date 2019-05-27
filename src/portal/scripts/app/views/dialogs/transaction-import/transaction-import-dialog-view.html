@@ -31,13 +31,6 @@
                             <div layout="row">
 
                                 <md-input-container aria-label="select with filter">
-                                    <!--<label for="">Import scheme</label>
-                                    <md-select style="width: 200px"
-                                               data-ng-model="vm.config.scheme">
-                                        <md-option data-ng-repeat="item in vm.transactionSchemes" ng-value="item.id">
-                                            {{item.scheme_name}}
-                                        </md-option>
-                                    </md-select>-->
 
                                     <label for="">Import scheme</label>
                                     <md-select ng-model="vm.config.scheme"
@@ -111,7 +104,7 @@
                                 </md-select>
                             </md-input-container>
 
-                            <md-input-container>
+                            <md-input-container style="width: 245px;">
                                 <label>Import Rules - if object is not found</label>
                                 <md-select
                                         data-ng-model="vm.config.missing_data_handler">
@@ -124,9 +117,6 @@
                         <div layout="row" data-ng-if="vm.finishedSuccess" layout-align="center center">
                             <h2>The data successfully imported.</h2>
                         </div>
-                        <!--<div layout="row" data-ng-if="vm.config.error_message" layout-align="center center">-->
-                        <!--Something wrong. Invalid file format.-->
-                        <!--</div>-->
                     </md-card-content>
                 </md-card>
             </div>
@@ -138,6 +128,6 @@
         </div>
     </md-dialog-content>
     <md-dialog-actions layout="row">
-        <md-button class="md-raised" ng-click="vm.cancel()" ng-bind="vm.closeButtonText"></md-button>
+        <md-button class="md-raised" ng-click="vm.cancel()">Close</md-button>
     </md-dialog-actions>
 </md-dialog>

@@ -78,7 +78,7 @@
         };
 
         vm.checkGeneralSettings = function () {
-            return vm.entityType == 'balance-report' || vm.entityType == 'pnl-report' || vm.entityType == 'performance-report';
+            return vm.entityType == 'balance-report' || vm.entityType == 'pl-report' || vm.entityType == 'performance-report';
         };
 
         vm.getPricingPolicies = function () {

@@ -21,7 +21,7 @@
                                 <h3 class="margin-0 m-b-8">Info</h3>
 
                                 <div><b>Type</b>: Transaction Import</div>
-                                <div><b>Error handler</b>: {{vm.config.error_handler}}</div>
+                                <div><b>Error handler</b>: {{vm.config.error_handling}}</div>
                                 <div><b>Filename</b>: {{vm.config.file.name}}</div>
                                 <div><b>Import Rules - if object is not found</b>: {{vm.config.missing_data_handler}}
                                 </div>
@@ -95,13 +95,28 @@
         </md-content>
     </md-dialog-content>
     <md-dialog-actions layout="row">
-        <md-button class="md-raised"
-                   ng-click="vm.cancel()"
-                   ng-bind="vm.cancelButtonText">
-            Cancel
-        </md-button>
-        <md-button class="md-raised md-warn" data-ng-if="vm.data.process_mode == 'validate'" ng-click="vm.agree()">
-            Ok, proceed
-        </md-button>
+
+        <div data-ng-if="vm.validationResult.process_mode != 'validate'">
+
+            <md-button class="md-raised"
+                       ng-click="vm.cancel()">
+                Cancel
+            </md-button>
+
+            <md-button class="md-raised md-warn" ng-click="vm.agree()">
+                Ok, proceed
+            </md-button>
+
+
+        </div>
+
+        <div data-ng-if="vm.validationResult.process_mode == 'validate'">
+
+            <md-button class="md-raised"
+                       ng-click="vm.cancel()">
+                Ok
+            </md-button>
+
+        </div>
     </md-dialog-actions>
 </md-dialog>

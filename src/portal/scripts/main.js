@@ -97,8 +97,6 @@ app.controller('ValidationDialogController', ['$scope', '$mdDialog', 'validation
 // Common - unknown
 
 app.controller('FillPriceManuallyInstrumentDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/fillPriceManuallyInstrumentDialogController')]);
-app.controller('ReportCustomAttrController', ['$scope', '$stateParams', '$mdDialog', require('./app/controllers/reports/reportCustomAttrController')]);
-app.controller('BalanceReportDialogCustomAttrController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/balanceReportAddDialogCustomAttrController')]);
 app.controller('AdditionsEditorEntityEditController', ['$scope', '$state', '$mdDialog', require('./app/controllers/additionsEditorEntityEditController')]);
 app.controller('EntityViewerPermissionEditorController', ['$scope', require('./app/controllers/entityViewer/entityViewerPermissionEditorController')]);
 app.controller('FloatCustomFieldConstructorController', ['$scope', require('./app/controllers/floatCustomFieldConstructorController')]);
@@ -236,6 +234,11 @@ app.controller('ProfitAndLostReportController', ['$scope', '$stateParams', requi
 app.controller('TransactionReportController', ['$scope', '$stateParams', require('./app/controllers/reports/transactionReportController')]);
 app.controller('CashFlowProjectionReportController', ['$scope', '$stateParams', require('./app/controllers/reports/cashFlowProjectionReportController')]);
 app.controller('PerformanceReportController', ['$scope', '$stateParams', require('./app/controllers/reports/performanceReportController')]);
+
+app.controller('CustomFieldController', ['$scope', '$stateParams', '$mdDialog', require('./app/controllers/reports/customFieldController')]);
+app.controller('CustomFieldAddDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/customFieldAddDialogController')]);
+app.controller('CustomFieldEditDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/customFieldEditDialogController')]);
+
 
 // Settings
 

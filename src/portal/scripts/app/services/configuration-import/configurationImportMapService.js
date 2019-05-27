@@ -351,6 +351,9 @@
                 var result = pieces.join('.');
                 item[key] = result;
 
+                console.log('item[key]', item[key]);
+                console.log('item', item);
+
                 resolve(item)
 
             }).catch(function (reason) {

@@ -13,7 +13,7 @@
 
         var vm = this;
 
-        vm.entityType = 'pnl-report';
+        vm.entityType = 'pl-report';
         vm.entityRaw = [];
 
         vm.readyStatus = {content: false};
