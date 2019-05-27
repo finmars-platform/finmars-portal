@@ -11,11 +11,11 @@
 
         <div data-ng-if="item.buttons.length" class="bind-field-number-btn">
             <md-button data-ng-repeat="button in item.buttons"
-                       class="{{button.classes}} {{button.icon && button.caption == '' ? 'md-icon-button' : ''}}"
+                       class="{{button.classes}} {{button.icon && button.caption == '' ? 'md-icon-button' : ''}} bind-field-round-btn"
                        data-ng-click="button.action(item)">
                 {{button.caption}}
                 <ng-md-icon data-ng-if="button.icon" icon="{{button.icon}}"></ng-md-icon>
-                <md-tooltip data-ng-if="button.tooltip" class="tooltip_1" md-direction="bottom">{{button.tooltip}}
+                <md-tooltip data-ng-if="button.tooltip" class="tooltip_1" md-direction="top">{{button.tooltip}}
                 </md-tooltip>
             </md-button>
         </div>
@@ -46,7 +46,7 @@
                                data-ng-click="button.action(item)">
                         {{button.caption}}
                         <ng-md-icon data-ng-if="button.icon" icon="{{button.icon}}"></ng-md-icon>
-                        <md-tooltip data-ng-if="button.tooltip" class="tooltip_1" md-direction="bottom">
+                        <md-tooltip data-ng-if="button.tooltip" class="tooltip_1" md-direction="top">
                             {{button.tooltip}}
                         </md-tooltip>
                     </md-button>
@@ -67,7 +67,7 @@
 
         <div data-ng-if="item.buttons.length">
             <md-button data-ng-repeat="button in item.buttons"
-                       class="{{button.classes}} {{button.icon && button.caption == '' ? 'md-icon-button' : ''}}"
+                       class="{{button.classes}} {{button.icon && button.caption == '' ? 'md-icon-button' : ''}} bind-field-round-btn"
                        data-ng-click="button.action(item)">
                 {{button.caption}}
                 <ng-md-icon data-ng-if="button.icon" icon="{{button.icon}}"></ng-md-icon>
@@ -89,20 +89,20 @@
             <label data-ng-bind="getName()"></label>
             <zh-date-picker data-ng-change="changeWatcher()" data-date-value="entity[getModelKey()]" ng-model="entity[getModelKey()]"></zh-date-picker>
             <div class="date-pick-buttons-block">
-                <md-button data-ng-if="item.options.dateTodayMinus" data-ng-click="setDateMinus()">
+                <md-button class="bind-field-round-btn" data-ng-if="item.options.dateTodayMinus" data-ng-click="setDateMinus()">
                     T - 1
                 </md-button>
-                <md-button data-ng-if="item.options.dateToday" data-ng-click="setDateToday()">
+                <md-button class="bind-field-round-btn" data-ng-if="item.options.dateToday" data-ng-click="setDateToday()">
                     T
                 </md-button>
-                <md-button data-ng-if="item.options.dateTodayPlus" data-ng-click="setDatePlus()">
+                <md-button class="bind-field-round-btn" data-ng-if="item.options.dateTodayPlus" data-ng-click="setDatePlus()">
                     T + 1
                 </md-button>
             </div>
 
             <div data-ng-if="item.buttons.length">
                 <md-button data-ng-repeat="button in item.buttons"
-                           class="{{button.classes}} {{button.icon && button.caption == '' ? 'md-icon-button' : ''}}"
+                           class="{{button.classes}} {{button.icon && button.caption == '' ? 'md-icon-button' : ''}} bind-field-round-btn"
                            data-ng-click="button.action(item)">
                     {{button.caption}}
                     <ng-md-icon data-ng-if="button.icon" icon="{{button.icon}}"></ng-md-icon>

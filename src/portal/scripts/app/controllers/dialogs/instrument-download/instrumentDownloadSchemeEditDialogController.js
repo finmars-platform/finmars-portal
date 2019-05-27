@@ -21,6 +21,8 @@
         vm.scheme = {};
         vm.readyStatus = {dataProviders: false, scheme: false};
 
+        vm.entityType = 'instrument';
+
         vm.inputsGroup = {
             "name": "<b>Imported</b>",
             "key": 'input'
@@ -34,7 +36,7 @@
 
                 return {
                     "name": "Imported: " + input.name,
-                    "description": "Imported: " + input.name + " " + input.name_expr,
+                    "description": "Imported: " + input.name + " -> " + input.name_expr,
                     "groups": "input",
                     "func": input.name
                 }
@@ -560,7 +562,7 @@
 
             if (!item.name_expr || item.name_expr === '') {
                 item.name_expr = item.name;
-                console.log("instrument download", item);
+                vm.inputsFunctions = vm.getFunctions();
             }
 
         };
@@ -586,6 +588,7 @@
                 if (res.status === 'agree') {
 
                     item.name_expr = res.data.item.expression;
+                    vm.inputsFunctions = vm.getFunctions();
 
                 }
 
@@ -705,6 +708,46 @@
                     console.log("res", res.data);
                 }
             });
+        };
+
+        vm.checkForClassifierMapping = function (classifierId) {
+
+            var i;
+            for (i = 0; i < vm.mappedDynamic.length; i++) {
+
+                if (vm.mappedDynamic[i].id === classifierId) {
+
+                    if (vm.mappedDynamic[i].value_type === 30) {
+                        return true;
+                    }
+
+                }
+
+            }
+
+            return false;
+
+        };
+
+        vm.openClassifierMapping = function (classifierId, $event) {
+
+            $mdDialog.show({
+                controller: 'EntityTypeClassifierMappingDialogController as vm',
+                templateUrl: 'views/dialogs/entity-type-classifier-mapping-dialog-view.html',
+                parent: angular.element(document.body),
+                targetEvent: $event,
+                preserveScope: true,
+                autoWrap: true,
+                skipHide: true,
+                multiple: true,
+                locals: {
+                    options: {
+                        entityType: vm.entityType,
+                        id: classifierId
+                    }
+                }
+            })
+
         };
 
         vm.getSchedules = function () {

@@ -20,6 +20,28 @@
 
         vm.readyStatus = {dataProviders: false, scheme: true, transactionTypes: false};
 
+        vm.inputsGroup = {
+            "name": "<b>Imported</b>",
+            "key": 'input'
+        };
+
+        vm.inputsFunctions = [];
+
+        var getFunctions = function () {
+
+            return vm.providerFields.map(function (input) {
+
+                return {
+                    "name": "Imported: " + input.name + " (column #" + input.column + ")",
+                    "description": "Imported: " + input.name + " (column #" + input.column + ") " + "-> " + input.name_expr,
+                    "groups": "input",
+                    "func": input.name
+                }
+
+            });
+
+        };
+
         transactionTypeService.getList().then(function (data) {
             vm.transactionTypes = data.results;
             vm.readyStatus.transactionTypes = true;
@@ -66,28 +88,6 @@
 
         createEmptyScheme();
 
-        vm.openInputs = function (item, $event) {
-            $mdDialog.show({
-                controller: 'TransactionImportSchemeInputsDialogController as vm',
-                templateUrl: 'views/dialogs/transaction-import/transaction-import-scheme-inputs-dialog-view.html',
-                parent: angular.element(document.body),
-                targetEvent: $event,
-                preserveScope: true,
-                multiple: true,
-                autoWrap: true,
-                skipHide: true,
-                locals: {
-                    data: {
-                        item: item
-                    }
-                }
-            }).then(function (res) {
-                if (res.status === 'agree') {
-                    item.fields = res.data.item.fields;
-                }
-            });
-        };
-
         vm.mapFields = [
             {
                 value: '',
@@ -99,7 +99,8 @@
         vm.providerFields = [
             {
                 name: '',
-                column: ''
+                column: '',
+                name_expr: ''
             }
         ];
 
@@ -119,7 +120,8 @@
 
             vm.providerFields.push({
                 name: '',
-                column: nextFieldNumber
+                column: nextFieldNumber,
+                name_expr: ''
             })
         };
 
@@ -135,7 +137,7 @@
 
             if (!item.name_expr || item.name_expr === '') {
                 item.name_expr = item.name;
-                console.log("transaction import", item);
+                vm.inputsFunctions = getFunctions();
             }
 
         };
@@ -162,6 +164,7 @@
                 if (res.status === 'agree') {
 
                     item.name_expr = res.data.item.expression;
+                    vm.inputsFunctions = getFunctions();
 
                 }
 

@@ -19,14 +19,16 @@
                                 <input aria-label="scheme name" type="text" data-ng-model="vm.scheme.scheme_name">
                             </md-input-container>
 
-
-                            <div>
-                                <md-input-container class="md-block">
+                            <div layout="row">
+                                <md-input-container class="md-block" flex="95">
                                     <label>Filter Condition (line is imported if the Filter Expression returns True, executed before the conversions)</label>
                                     <input aria-label="scheme name" type="text" data-ng-model="vm.scheme.filter_expr">
                                 </md-input-container>
-                                <expression-editor-button data-item="vm.scheme.filter_expr" data-data="{groups: [vm.inputsGroup], functions: [vm.inputsFunctions]}"></expression-editor-button>
-
+                                <div flex="5">
+                                    <expression-editor-button data-item="vm.scheme.filter_expr"
+                                                              data-data="{groups: [vm.inputsGroup], functions: [vm.inputsFunctions]}"
+                                                              style="float: right"></expression-editor-button>
+                                </div>
                             </div>
 
                             <md-input-container class="SC-entity-select-container" aria-label="select with filter">
@@ -71,7 +73,7 @@
                 </div>
 
                 <div layout="row">
-                    <div layout="column" flex="25">
+                    <div layout="column" flex="33">
 
                         <div layout="row">
                             <h3 style="padding-left: 10px">Imported Columns</h3>
@@ -96,7 +98,8 @@
                                         <div>
                                             <md-button style="min-width: 40px;"
                                                        data-ng-click="vm.removeCsvField(item, $index)"
-                                                       class="md-raised">x
+                                                       class="md-raised"
+                                                       style="line-height: 1">x
                                             </md-button>
                                         </div>
 
@@ -117,7 +120,7 @@
                         </div>
 
                     </div>
-                    <div layout="column" flex="75">
+                    <div layout="column" flex="66">
                         <div layout="row">
                             <h3 style="padding-left: 10px">Data matching</h3>
                         </div>
@@ -128,7 +131,7 @@
                                     <div data-ng-repeat="item in vm.scheme.entity_fields | orderBy: item.order as results track by $index" flex="100">
                                         <div class="fields-holder" layout="row">
                                             <div class="iscm-item width-100" layout="row">
-                                                <md-input-container flex="10" aria-label="select with filter">
+                                                <md-input-container flex="30" aria-label="select with filter">
 
                                                     <div data-ng-if="item.system_property_key"
                                                          data-ng-bind="item.name"
@@ -178,26 +181,34 @@
 
                                                     </div>
                                                 </md-input-container>
-                                                <md-input-container flex="60">
+                                                <md-input-container flex="50">
                                                     <!--<label for="">Name</label>-->
                                                     <input data-ng-model="item.expression" aria-label="attribute value"
                                                            type="text">
                                                 </md-input-container>
-                                                <div flex="30">
+                                                <div flex="20" layout="row">
 
                                                     <expression-editor-button data-item="item.expression" data-data="{groups: [vm.inputsGroup], functions: [vm.inputsFunctions]}"></expression-editor-button>
 
-                                                    <md-button style="min-width: 40px;"
-                                                               data-ng-click="vm.openMapping($event, item)"
-                                                               class="md-raised md-primary"
-                                                               data-ng-if="item.value_type === 'field'">Edit
-                                                        mapping
+                                                    <md-button data-ng-click="vm.openMapping($event, item)"
+                                                               class="md-raised md-primary import-mapping-small-btn"
+                                                               data-ng-if="item.value_type === 'field'">
+                                                        <ng-md-icon icon="import_contacts" size="20"></ng-md-icon>
                                                     </md-button>
 
+                                                    <div ng-if="item.dynamic_attribute_id" style="display: inline-block">
+                                                        <md-button data-ng-click="vm.openClassifierMapping(item.dynamic_attribute_id, $event)"
+                                                                   class="md-raised md-primary import-mapping-small-btn"
+                                                                   data-ng-if="vm.checkForClassifierMapping(item.dynamic_attribute_id)">
+                                                            <ng-md-icon icon="import_contacts" size="20"></ng-md-icon>
+                                                        </md-button>
+                                                    </div>
+
                                                     <md-button data-ng-if="!item.system_property_key"
-                                                               class="custom-small-icon-btn md-raised"
+                                                               class="custom-small-icon-btn md-raised import-scheme-mapping-btn"
                                                                data-ng-click="vm.removeDynamicAttribute(item, $index)"
-                                                               class="md-raised">x
+                                                               class="md-raised"
+                                                               style="line-height: 1">x
                                                     </md-button>
 
                                                 </div>
