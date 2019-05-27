@@ -12,8 +12,9 @@
     var rvDomManager = require('../../services/rv-dom-manager/rv-dom.manager');
     var evDataHelper = require('../../helpers/ev-data.helper');
     var rvDataHelper = require('../../helpers/rv-data.helper');
+    var evRvCommonHelper = require('../../helpers/ev-rv-common.helper');
 
-    var metaService = require('../../services/metaService')
+    var metaService = require('../../services/metaService');
 
     module.exports = function ($mdDialog) {
         return {
@@ -121,7 +122,7 @@
                     var subtotalRows = rows.filter(function(row) {
                         return row.dataset.type === 'subtotal';
                     });
-                    // console.log("cell overflow subtotalRows", subtotalRows);
+
                     var r;
                     for (r = 0; r < subtotalRows.length; r++) {
 
@@ -136,10 +137,21 @@
                             var cellContentWrap = cell.querySelector('.g-cell-content-wrap');
                             var groupFoldingBtn = cellContentWrap.querySelector('.g-group-fold-button');
 
-                            if (cellContentWrap.textContent !== undefined && cellContentWrap.textContent !== '' && groupFoldingBtn) {
+                            var rowIsGrandTotal = false;
+                            var parentGroups = evRvCommonHelper.getParents(subtotalRows[r].dataset.parentGroupHashId, scope.evDataService);
+
+                            if (parentGroups[0].___level === 0 && w === 0) {
+                                rowIsGrandTotal = true;
+                            }
+
+                            if (cellContentWrap.textContent !== undefined && cellContentWrap.textContent !== '' && (groupFoldingBtn || rowIsGrandTotal)) {
 
                                 var cellContentHolder = cellContentWrap.querySelector('.g-cell-content');
-                                var cellSpaceForText = cellContentWrap.clientWidth - groupFoldingBtn.clientWidth;
+                                var cellSpaceForText = cellContentWrap.clientWidth;
+
+                                if (!rowIsGrandTotal) {
+                                    cellSpaceForText = cellContentWrap.clientWidth - groupFoldingBtn.clientWidth;
+                                }
 
                                 if (cellContentHolder.offsetWidth > cellSpaceForText) {
                                     var cellStretchWidth = cellWrap.clientWidth;

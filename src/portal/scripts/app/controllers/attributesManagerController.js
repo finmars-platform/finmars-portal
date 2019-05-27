@@ -77,7 +77,7 @@
                 delete item.id;
             }
             item.children = item.children.map(setName);
-            return item
+            return item;
         }
 
         vm.editTreeAttr = function (item, ev) {
@@ -104,7 +104,7 @@
         };
 
         vm.openClassifierMapping = function (item, $event) {
-
+            console.log("import classifier item", item);
             $mdDialog.show({
                 controller: 'EntityTypeClassifierMappingDialogController as vm',
                 templateUrl: 'views/dialogs/entity-type-classifier-mapping-dialog-view.html',

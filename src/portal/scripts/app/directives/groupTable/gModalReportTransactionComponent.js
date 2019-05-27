@@ -104,16 +104,18 @@
 
                 data.results.forEach(function (field) {
 
-                    vm.complexTransactionAttrs.forEach(function (entityAttr) {
+                    vm.complexTransactionAttrs.map(function (entityAttr, index) {
 
                         if (entityAttr.key === 'complex_transaction.' + field.key) {
                             entityAttr.name = 'Complex Transaction. ' + field.name
                         }
 
-                        if (entityAttr.key === 'complex_transaction.transaction_type.' + field.key) {
-                            entityAttr.name = 'Complex Transaction. Transaction Type. ' + field.name
+                        // if (entityAttr.key === 'complex_transaction.transaction_type.' + field.key) {
+                        //     entityAttr.name = 'Complex Transaction. Transaction Type. ' + field.name
+                        // }
+                        if (entityAttr.key.indexOf('complex_transaction.transaction_type.') !== -1) {
+                            vm.complexTransactionAttrs.splice(index, 1);
                         }
-
 
                     })
 
@@ -709,6 +711,12 @@
                                 warning: {
                                     title: 'Error',
                                     description: errorMessage
+                                },
+                                data: {
+                                    actionsButtons: [{
+                                        name: "OK",
+                                        response: false
+                                    }]
                                 }
                             }
                         });

@@ -158,7 +158,7 @@
             } else {
 
                 var entityType = metaContentTypesService.getContentTypeUIByState($state.current.name);
-
+                console.log("import entityType", entityType);
                 uiService.getActiveListLayout(entityType).then(function (data) {
 
                     var activeLayoutRes = data.results;

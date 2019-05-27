@@ -630,7 +630,7 @@
             })
     };
 
-    var getListForSimleEntityImport = function () {
+    var getListForSimpleEntityImport = function () {
 
         return [
             {
@@ -703,7 +703,7 @@
         getList: getList,
         getListForTransactionTypeInputs: getListForTransactionTypeInputs,
         getContentTypeList: getContentTypeList,
-        getListForSimleEntityImport: getListForSimleEntityImport
+        getListForSimpleEntityImport: getListForSimpleEntityImport
     }
 
 

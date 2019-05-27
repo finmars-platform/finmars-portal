@@ -19,20 +19,30 @@
 
         var layoutsNames = ["New Layout"];
 
-        if (options.complexSaveAsLayoutDialog) {
+        if (options) {
 
-            vm.complexSaveAsLayoutDialog = true;
-            vm.entityType = options.complexSaveAsLayoutDialog.entityType;
+            if (options.complexSaveAsLayoutDialog) {
 
-            uiService.getListLayout(vm.entityType).then(function (data) {
+                vm.complexSaveAsLayoutDialog = true;
+                vm.entityType = options.complexSaveAsLayoutDialog.entityType;
 
-                var layouts = data.results;
+                uiService.getListLayout(vm.entityType).then(function (data) {
 
-                layouts.map(function (layout) {
-                    layoutsNames.push(layout.name);
+                    var layouts = data.results;
+
+                    layouts.map(function (layout) {
+                        layoutsNames.push(layout.name);
+                    });
+
                 });
 
-            });
+            }
+
+            if (options.layoutName) {
+
+                vm.layoutName = options.layoutName;
+
+            }
 
         }
 

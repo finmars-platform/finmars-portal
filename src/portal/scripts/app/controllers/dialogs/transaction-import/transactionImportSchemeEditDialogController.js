@@ -25,6 +25,21 @@
 
         vm.inputsFunctions = [];
 
+        var getFunctions = function () {
+
+            return vm.providerFields.map(function (input) {
+
+                return {
+                    "name": "Imported: " + input.name + " (column #" + input.column + ")",
+                    "description": "Imported: " + input.name + " (column #" + input.column + ") " + "-> " + input.name_expr,
+                    "groups": "input",
+                    "func": input.name
+                }
+
+            });
+
+        };
+
         vm.mapFields = [
             {
                 value: '',
@@ -37,7 +52,7 @@
             {
                 name: '',
                 column: '',
-                expression: ''
+                name_expr: ''
             }
         ];
 
@@ -63,6 +78,8 @@
 
                     return 0;
                 });
+
+                vm.inputsFunctions = getFunctions();
 
             }
 
@@ -144,7 +161,7 @@
 
             if (!item.name_expr || item.name_expr === '') {
                 item.name_expr = item.name;
-                console.log("transaction import", item);
+                vm.inputsFunctions = getFunctions();
             }
 
         };
@@ -170,6 +187,7 @@
                 if (res.status === 'agree') {
 
                     item.name_expr = res.data.item.expression;
+                    vm.inputsFunctions = getFunctions();
 
                 }
 
