@@ -29,7 +29,7 @@
 
     // Overwrite handler start
 
-    var recursiveOverwriteItem = function (resolve, index, entityItem, cacheContainer) {
+    var recursiveOverwriteItem = function (resolve, index, entityItem, cacheContainer, errors) {
 
         var item = entityItem.content[index];
 
@@ -37,14 +37,14 @@
 
         if (item.active) {
 
-            overwriteItem(item, entityItem.entity, cacheContainer).then(function () {
+            overwriteItem(item, entityItem.entity, cacheContainer, errors).then(function () {
 
                 window.importConfigurationCounter = window.importConfigurationCounter + 1;
 
                 if (index === entityItem.content.length) {
                     resolve(item);
                 } else {
-                    recursiveOverwriteItem(resolve, index, entityItem, cacheContainer)
+                    recursiveOverwriteItem(resolve, index, entityItem, cacheContainer, errors)
                 }
 
             })
@@ -53,7 +53,7 @@
             if (index === entityItem.content.length) {
                 resolve(item);
             } else {
-                recursiveOverwriteItem(resolve, index, entityItem, cacheContainer)
+                recursiveOverwriteItem(resolve, index, entityItem, cacheContainer, errors)
             }
 
         }
@@ -162,7 +162,7 @@
                                     content_type: contentType,
                                     item: item,
                                     error: {
-                                        message: reason
+                                        message: 'Can\'t create item ' + item.user_code
                                     },
                                     mode: 'skip'
                                 });
@@ -204,7 +204,14 @@
 
                         }).catch(function (reason) {
 
-                            errors.push(reason);
+                            errors.push({
+                                content_type: contentType,
+                                item: item,
+                                error: {
+                                    message: 'Can\'t create item ' + item.user_code
+                                },
+                                mode: 'skip'
+                            });
 
                             resolve()
 
@@ -258,7 +265,14 @@
 
                         }).catch(function (reason) {
 
-                            errors.push(reason);
+                            errors.push({
+                                content_type: contentType,
+                                item: item,
+                                error: {
+                                    message: 'Can\'t create Attribute Type: user_code ' + item.user_code
+                                },
+                                mode: 'skip'
+                            });
 
                             resolve()
 
@@ -271,6 +285,7 @@
                         // resolve()
 
                         errors.push({
+                            content_type: contentType,
                             item: item,
                             error: {
                                 message: 'Attribute Type already exists: user_code ' + item.user_code
@@ -290,7 +305,14 @@
 
                     }).catch(function (reason) {
 
-                        errors.push(reason);
+                        errors.push({
+                            content_type: contentType,
+                            item: item,
+                            error: {
+                                message: 'Can\'t create Attribute Type: user_code ' + item.user_code
+                            },
+                            mode: 'skip'
+                        });
 
                         resolve()
 
@@ -304,7 +326,7 @@
 
     };
 
-    var overwriteItem = function (item, contentType, cacheContainer) {
+    var overwriteItem = function (item, contentType, cacheContainer, errors) {
 
         return new Promise(function (resolve, reject) {
 
@@ -668,13 +690,42 @@
 
                 }
 
+            }).catch(function (reason) {
+
+                console.log('Overwrite sync error reason', reason);
+
+                var name = '';
+
+                if (item.hasOwnProperty('scheme_name')) {
+                    name = item.scheme_name
+                }
+
+                if (item.hasOwnProperty('user_code')) {
+                    name = item.user_code
+                }
+
+                if (item.hasOwnProperty('name')) {
+                    name = item.name
+                }
+
+                errors.push({
+                    content_type: contentType,
+                    item: item,
+                    error: {
+                        message: 'Can\'t overwrite item ' + name
+                    },
+                    mode: 'overwrite'
+                });
+
+                resolve(reason)
+
             })
 
         })
 
     };
 
-    var overwriteEntityItems = function (entities, cacheContainer) {
+    var overwriteEntityItems = function (entities, cacheContainer, errors) {
 
         return new Promise(function (resolve, reject) {
 
@@ -688,7 +739,7 @@
 
                     var startIndex = 0;
 
-                    recursiveOverwriteItem(resolveItem, startIndex, entityItem, cacheContainer)
+                    recursiveOverwriteItem(resolveItem, startIndex, entityItem, cacheContainer, errors)
                 }))
 
             });
@@ -708,7 +759,7 @@
 
     };
 
-    var overwriteEntities = function (items, settings, cacheContainer) {
+    var overwriteEntities = function (items, settings, cacheContainer, errors) {
 
         return new Promise(function (resolve, reject) {
 
@@ -719,7 +770,7 @@
                     'integrations.complextransactionimportscheme', 'complex_import.compleximportscheme'].indexOf(item.entity) !== -1;
             });
 
-            overwriteEntityItems(overwriteEntities, cacheContainer).then(function (data) {
+            overwriteEntityItems(overwriteEntities, cacheContainer, errors).then(function (data) {
 
                 console.log("Overwrite success", data);
 
@@ -1340,10 +1391,26 @@
 
                 console.log('createItem sync error reason', reason);
 
+                var name = '';
+
+                if (item.hasOwnProperty('scheme_name')) {
+                    name = item.scheme_name
+                }
+
+                if (item.hasOwnProperty('user_code')) {
+                    name = item.user_code
+                }
+
+                if (item.hasOwnProperty('name')) {
+                    name = item.name
+                }
+
+
                 errors.push({
+                    content_type: entity,
                     item: item,
                     error: {
-                        message: reason
+                        message: 'Can\'t create item ' + name
                     },
                     mode: 'skip'
                 });
@@ -1574,6 +1641,8 @@
 
                             console.log('Finish import success');
 
+                            console.log('Error', errors);
+
                             resolve({
                                 errors: errors
                             })
@@ -1582,6 +1651,8 @@
                     } else {
 
                         console.log('Finish import success');
+
+                        console.log('Error', errors);
 
                         resolve({
                             errors: errors
