@@ -262,11 +262,17 @@
 
     };
 
-    var syncCsvImportScheme = function (item, cacheContainer) {
+    var syncCsvImportScheme = function (item, cacheContainer, errors) {
 
-        return new Promise(function (resolve) {
+        return new Promise(function (resolve, reject) {
 
             var promises = [];
+
+            var errorOptions = {
+                item: item,
+                content_type: 'csv_import.csvimportscheme'
+            };
+
 
             item.entity_fields.forEach(function (entityField) {
 
@@ -277,13 +283,27 @@
                     var item_key = 'dynamic_attribute_id';
 
 
-                    promises.push(new Promise(function (resolveLocal) {
+                    promises.push(new Promise(function (resolveLocal, rejectLocal) {
 
                         configurationImportGetService.getAttributeTypeByUserCode(code, entityType).then(function (data) {
 
                             entityField[item_key] = data.id;
 
                             resolveLocal(entityField)
+
+                        }).catch(function (reason) {
+
+                            errors.push({
+                                content_type: errorOptions.content_type,
+                                item: errorOptions.item,
+                                error: {
+                                    message: 'Can\'t find attribute type'
+                                },
+                                mode: 'skip'
+                            });
+
+
+                            rejectLocal(reason);
 
                         })
 
@@ -296,6 +316,11 @@
             Promise.all(promises).then(function (data) {
 
                 resolve(data)
+            }, function (reason) {
+
+                console.log('Reject sync csv import scheme');
+                reject(reason)
+
             });
 
 
@@ -303,11 +328,17 @@
 
     };
 
-    var syncComplexTransactionImportScheme = function (item, cacheContainer) {
+    var syncComplexTransactionImportScheme = function (item, cacheContainer, errors) {
 
         return new Promise(function (resolve, reject) {
 
             var promises = [];
+
+            var errorOptions = {
+                item: item,
+                content_type: 'integrations.complextransactionimportscheme'
+            };
+
 
             item.rules.forEach(function (rule) {
 
@@ -321,7 +352,17 @@
 
                             if (user_code !== '-' && data.user_code === '-') {
 
-                                rejectRelation("Error. Transaction type: " + user_code + ' is not found')
+                                errors.push({
+                                    item: errorOptions.item,
+                                    content_type: errorOptions.content_type,
+                                    error: {
+                                        message: "Error. Transaction type: " + user_code + ' is not found'
+                                    },
+                                    mode: 'The related column has been deleted from layout'
+
+                                });
+
+                                rejectRelation(item)
 
                             } else {
 
@@ -341,12 +382,48 @@
 
                                 });
 
-                                resolveRelation(item)
+
+                                var fieldsValid = true;
+                                var fieldsError = [];
+
+                                rule.fields.forEach(function (field) {
+
+                                    if (!field.transaction_type_input) {
+                                        fieldsValid = false;
+                                        fieldsError.push(field.___input__name)
+                                    }
+
+                                });
+
+                                if (fieldsValid) {
+                                    resolveRelation(item)
+                                } else {
+
+                                    errors.push({
+                                        item: errorOptions.item,
+                                        content_type: errorOptions.content_type,
+                                        error: {
+                                            message: "Can't find Transaction Type input for fields. Missing Input names: " + fieldsError.join(', ')
+                                        },
+                                        mode: 'The related column has been deleted from layout'
+
+                                    });
+
+                                    rejectRelation(item);
+                                }
                             }
 
                         }).catch(function (reason) {
 
-                            console.log('here? reason', reason);
+                            errors.push({
+                                item: errorOptions.item,
+                                content_type: errorOptions.content_type,
+                                error: {
+                                    message: "Server error."
+                                },
+                                mode: 'The related column has been deleted from layout'
+
+                            });
 
                             rejectRelation(reason);
                         })
@@ -362,6 +439,8 @@
                 resolve(item);
 
             }, function (reason) {
+
+                console.log('Reject sync transaction scheme?');
                 reject(reason)
             })
 
