@@ -99,12 +99,22 @@
                     vm.readyStatus.processing = false;
                     vm.dataIsImported = true;
 
-                    if (data.errors.length === 0) {
+                    var hasErrors = false;
+
+                    data.stats.forEach(function (item) {
+
+                        if (item.level === 'error') {
+                            hasErrors = true;
+                        }
+
+                    });
+
+                    if (!hasErrors) {
 
                         resolve({status: 'agree'})
 
                     } else {
-                        
+
                         data.process_mode = mode;
 
                         console.log('data', data);
@@ -209,60 +219,65 @@
 
             console.log('vm.config', vm.config);
 
+            var schemeObject;
+
+            vm.entitySchemes.forEach(function (scheme) {
+
+                if (scheme.id == vm.config.scheme) {
+                    schemeObject = scheme;
+                }
+
+            });
+
             importEntityService.startImport(formData).then(function (data) {
 
                 vm.readyStatus.processing = false;
                 vm.dataIsImported = true;
 
-                if (data.errors.length === 0) {
+                var hasErrors = false;
 
-                    $mdDialog.hide();
+                console.log('data', data);
 
-                    var description = '';
+                $mdDialog.hide();
 
-                    description = '<div>' +
-                        '<div>Rows total: ' + data.total + '</div>' +
-                        '<div>Rows success import: ' + (data.total - data.errors.length) + '</div>' +
-                        '<div>Rows fail import: ' + data.errors.length + '</div>' +
-                        '</div><br/>';
+                var description = '';
 
-                    console.log('description', description);
+                var errorsCount = 0;
 
-                    description = description + '<div> You have successfully imported csv file </div>';
+                data.stats.forEach(function (item) {
 
-                    $mdDialog.show({
-                        controller: 'SuccessDialogController as vm',
-                        templateUrl: 'views/dialogs/success-dialog-view.html',
-                        targetEvent: $event,
-                        preserveScope: true,
-                        multiple: true,
-                        autoWrap: true,
-                        skipHide: true,
-                        locals: {
-                            success: {
-                                title: "Success",
-                                description: description
-                            }
+                    if (item.level === 'error') {
+                        errorsCount = errorsCount + 1;
+                    }
+
+                });
+
+                description = '<div>' +
+                    '<div>Rows total: ' + (data.total - 1) + '</div>' +
+                    '<div>Rows success import: ' + (data.total - 1 - errorsCount) + '</div>' +
+                    '<div>Rows fail import: ' + errorsCount + '</div>' +
+                    '</div><br/>';
+
+                console.log('description', description);
+
+                description = description + '<div> You have successfully imported csv file </div>';
+
+                $mdDialog.show({
+                    controller: 'SuccessDialogController as vm',
+                    templateUrl: 'views/dialogs/success-dialog-view.html',
+                    targetEvent: $event,
+                    preserveScope: true,
+                    multiple: true,
+                    autoWrap: true,
+                    skipHide: true,
+                    locals: {
+                        success: {
+                            title: "Success",
+                            description: description
                         }
+                    }
 
-                    });
-
-                } else {
-
-                    $mdDialog.show({
-                        controller: 'SimpleEntityImportErrorsDialogController as vm',
-                        templateUrl: 'views/dialogs/simple-entity-import/simple-entity-import-errors-dialog-view.html',
-                        targetEvent: $event,
-                        preserveScope: true,
-                        multiple: true,
-                        autoWrap: true,
-                        skipHide: true,
-                        locals: {
-                            data: data
-                        }
-                    });
-
-                }
+                });
 
 
             }).catch(function (reason) {
