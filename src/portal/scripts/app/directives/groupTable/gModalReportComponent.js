@@ -586,6 +586,12 @@
                                 warning: {
                                     title: 'Error',
                                     description: errorMessage
+                                },
+                                data: {
+                                    actionsButtons: [{
+                                        name: "OK",
+                                        response: false
+                                    }]
                                 }
                             }
                         });

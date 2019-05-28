@@ -9,8 +9,12 @@
     <md-dialog-content data-custom-scroll class="custom-scrollbar p-24">
         <div>
 
-            <p><span data-ng-if="!vm.data.layout_name">Current</span><span data-ng-if="vm.data.layout_name">Original</span>
-                name: {{vm.data.name}}</p>
+            <p>Column Id: {{vm.data.key}}</p>
+            <p>
+                <span data-ng-if="!vm.data.layout_name">Current</span>
+                <span data-ng-if="vm.data.layout_name">Original</span>
+                name: {{vm.data.name}}
+            </p>
 
             <md-input-container>
                 <label>Name</label>

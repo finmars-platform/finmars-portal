@@ -46,7 +46,7 @@
             return false;
         };
 
-        vm.contentTypes = metaContentTypesService.getListForSimleEntityImport();
+        vm.contentTypes = metaContentTypesService.getListForSimpleEntityImport();
 
         vm.getSchemeList = function () {
 
@@ -315,10 +315,7 @@
                 preserveScope: true,
                 multiple: true,
                 autoWrap: true,
-                skipHide: true,
-                locals: {
-                    schemeId: vm.config.scheme
-                }
+                skipHide: true
             }).then(function () {
 
                 vm.getSchemeList();

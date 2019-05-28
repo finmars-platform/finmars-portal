@@ -7,7 +7,7 @@
 
     var logService = require('../../../../../core/services/logService');
 
-    module.exports = function($scope, $mdDialog, warning){
+    module.exports = function($scope, $mdDialog, warning, data){
 
         logService.controller('WarningDialogController', 'initialized');
 
@@ -15,12 +15,30 @@
 
         vm.warning = warning;
 
+        vm.actionsButtons = undefined;
+
+        if (data) {
+
+            if (data.actionsButtons && data.actionsButtons.length) {
+
+                vm.actionsButtons = data.actionsButtons;
+
+            }
+
+        }
+
         vm.cancel = function () {
             $mdDialog.cancel();
         };
 
-        vm.agree = function () {
-            $mdDialog.hide({status: 'agree'});
+        vm.agree = function (responseData) {
+
+            if (responseData) {
+                $mdDialog.hide(responseData);
+            } else {
+                $mdDialog.hide({status: 'agree'});
+            }
+
         };
     }
 

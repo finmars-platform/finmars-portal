@@ -247,10 +247,10 @@ md-checkbox.checkbox-bind-field {
     right: 0;
 
     .md-button {
-      min-width: 29px;
+      /*min-width: 29px;
       width: 29px;
       min-height: 29px;
-      height: 29px;
+      height: 29px;*/
       padding: 2px 0 0 0;
     }
   }
@@ -306,20 +306,13 @@ md-checkbox.checkbox-bind-field {
 
 .field-date-pick {
   .md-button {
-    min-width: 29px;
-    height: 29px;
-    border-radius: 50%;
-
-    padding: 0;
+    /*padding: 0;
     background: #4C334D;
-    //min-width: 34px;
     color: #fff;
     font-size: 9px;
     min-height: 0;
-    //height: 34px;
-    //margin: 4px;
     margin: 0 4px 0 0;
-    line-height: initial;
+    line-height: initial;*/
 
     &:hover {
       background: #4C334D;
@@ -402,4 +395,23 @@ md-checkbox.checkbox-bind-field {
 
 .form-constructor-draggable-card {
   cursor: pointer;
+}
+
+.md-button.bind-field-round-btn {
+  min-width: 29px;
+  width: 29px;
+  min-height: 29px;
+  height: 29px;
+  color: #fff;
+  fill: #fff;
+  font-size: 9px;
+  border-radius: 50%;
+  background: #4C334D;
+  margin: 0 4px 0 0;
+  line-height: initial;
+
+  &:not([disabled]):hover {
+    background: #4C334D;
+    opacity: 0.8;
+  }
 }

@@ -397,8 +397,12 @@
             },
 
             eventListeners: function () {
-                var that = this;
+
                 var exist = false;
+                var columnExist = false;
+                var groupExist = false;
+                var filterExist = false;
+
                 this.dragula.on('over', function (elem, container, source) {
                     $(container).addClass('active');
                     $(container).on('mouseleave', function () {
@@ -407,55 +411,62 @@
 
                 });
                 this.dragula.on('drop', function (elem, target) {
-                    //console.log('here?', target); //TODO fallback to ids instead of name/key
+                    console.log('here?', target, elem); //TODO fallback to ids instead of name/key
                     $(target).removeClass('active');
                     var name = $(elem).html();
                     var i;
 
-                    //console.log('elem111111111111111111111111111111', elem);
-                    //console.log('columns111111111111111111111111111111', columns);
-                    //console.log('grouping111111111111111111111111111111', grouping);
-                    //console.log('filters111111111111111111111111111111', filters);
-
                     var identifier;
-                    if ($(elem).attr('data-key-identifier')) {
+                    identifier = $(elem).attr('data-key-identifier');
+
+                    /*if ($(elem).attr('data-key-identifier')) {
                         identifier = $(elem).attr('data-key-identifier');
                     } else {
                         identifier = $(elem).html();
-                    }
+                    }*/
 
                     exist = false;
-                    if (target === document.querySelector('#columnsbag')) {
+                    if (target === document.querySelector('#columnsbag') ||
+                        target === document.querySelector('.g-columns-holder')) {
                         for (i = 0; i < columns.length; i = i + 1) {
+
                             if (columns[i].key === identifier) {
                                 exist = true;
+                                columnExist = true;
                             }
 
-                            if (columns[i].name === identifier) {
+                            /*if (columns[i].name === identifier) {
                                 exist = true;
-                            }
+                                columnExist = true;
+                            }*/
                         }
                     }
-                    if (target === document.querySelector('#groupsbag')) {
+                    if (target === document.querySelector('#groupsbag') ||
+                        target === document.querySelector('.g-groups-holder')) {
                         for (i = 0; i < grouping.length; i = i + 1) {
                             if (grouping[i].key === identifier) {
                                 exist = true;
+                                groupExist = true;
                             }
 
-                            if (grouping[i].name === identifier) {
+                            /*if (grouping[i].name === identifier) {
                                 exist = true;
-                            }
+                                groupExist = true;
+                            }*/
                         }
                     }
-                    if (target === document.querySelector('#filtersbag .drop-new-filter')) {
+                    if (target === document.querySelector('#filtersbag .drop-new-filter') ||
+                        target === document.querySelector('.g-filters-holder')) {
                         for (i = 0; i < filters.length; i = i + 1) {
                             if (filters[i].key === identifier) {
                                 exist = true;
+                                filterExist = true;
                             }
 
-                            if (filters[i].name === identifier) {
+                            /*if (filters[i].name === identifier) {
                                 exist = true;
-                            }
+                                filterExist = true;
+                            }*/
                         }
                     }
 
@@ -485,7 +496,7 @@
                                     //columns.push(attrsList[a]);
                                 }
 
-                                if (attrsList[a].name === identifier) {
+                                /*if (attrsList[a].name === identifier) {
 
                                     if (target === document.querySelector('#columnsbag')) {
                                         columns.push(attrsList[a]);
@@ -494,7 +505,7 @@
                                     }
 
                                     //columns.push(attrsList[a]);
-                                }
+                                }*/
                             }
                             syncAttrs();
                             evDataHelper.updateColumnsIds(entityViewerDataService);
@@ -517,7 +528,7 @@
                                     //columns.push(attrsList[a]);
                                 }
 
-                                if (attrsList[a].name === identifier) {
+                                /*if (attrsList[a].name === identifier) {
 
                                     if (target === document.querySelector('#groupsbag')) {
                                         grouping.push(attrsList[a]);
@@ -525,7 +536,7 @@
                                         grouping.splice(index, 0, attrsList[a]);
                                     }
 
-                                }
+                                }*/
                             }
                             syncAttrs();
                             evDataHelper.updateColumnsIds(entityViewerDataService);
@@ -548,7 +559,7 @@
                                     //columns.push(attrsList[a]);
                                 }
 
-                                if (attrsList[a].name === identifier) {
+                                /*if (attrsList[a].name === identifier) {
 
                                     if (target === document.querySelector('#filtersbag .drop-new-filter')) {
                                         filters.push(attrsList[a]);
@@ -556,15 +567,50 @@
                                         filters.splice(index, 0, attrsList[a]);
                                     }
 
-                                }
+                                }*/
                             }
                             syncAttrs();
                             evDataHelper.updateColumnsIds(entityViewerDataService);
                             evDataHelper.setColumnsDefaultWidth(entityViewerDataService);
                             entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
                         }
-                        $scope.$apply();
+
+                        // $scope.$apply();
+
+                    } else if (exist && target) {
+
+                        var errorMessage = 'Item should be unique'
+
+                        if (columnExist) {
+                            errorMessage = 'There is already such column in Column Area';
+                        } else if (groupExist) {
+                            errorMessage = 'There is already such group in Grouping Area';
+                        } else if (filterExist) {
+                            errorMessage = 'There is already such filter in Filter Area';
+                        }
+
+                        $mdDialog.show({
+                            controller: 'WarningDialogController as vm',
+                            templateUrl: 'views/warning-dialog-view.html',
+                            parent: angular.element(document.body),
+                            clickOutsideToClose: false,
+                            multiple: true,
+                            locals: {
+                                warning: {
+                                    title: 'Error',
+                                    description: errorMessage
+                                },
+                                data: {
+                                    actionsButtons: [{
+                                        name: "OK",
+                                        response: false
+                                    }]
+                                }
+                            }
+                        });
+
                     }
+
                     $scope.$apply();
                 });
 
@@ -614,9 +660,11 @@
             }
         };
 
-        setTimeout(function () {
-            dragAndDrop.init();
-        }, 500);
+        vm.initDnd = function () {
+            setTimeout(function () {
+                dragAndDrop.init();
+            }, 500);
+        };
 
         vm.MABtnVisibility = function (entityType) {
             return metaService.checkRestrictedEntityTypesForAM(entityType);

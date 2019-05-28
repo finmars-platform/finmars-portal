@@ -21,6 +21,8 @@
 
         vm.dataProviders = [];
 
+        vm.entityType = 'instrument';
+
         vm.inputsGroup = {
             "name": "<b>Imported</b>",
             "key": 'input'
@@ -34,7 +36,7 @@
 
                 return {
                     "name": "Imported: " + input.name,
-                    "description": "Imported: " + input.name + " " + input.name_expr,
+                    "description": "Imported: " + input.name + " -> " + input.name_expr,
                     "groups": "input",
                     "func": input.name
                 }
@@ -297,7 +299,7 @@
 
             if (!item.name_expr || item.name_expr === '') {
                 item.name_expr = item.name;
-                console.log("instrument download", item);
+                vm.inputsFunctions = vm.getFunctions();
             }
 
         };
@@ -323,6 +325,7 @@
                 if (res.status === 'agree') {
 
                     item.name_expr = res.data.item.expression;
+                    vm.inputsFunctions = vm.getFunctions();
 
                 }
 

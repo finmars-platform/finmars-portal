@@ -9,6 +9,7 @@
 
     var uiService = require('../../../services/uiService');
     var metaContentTypesService = require('../../../services/metaContentTypesService');
+    var middlewareService = require('../../../services/middlewareService');
     // var bookmarkService = require('../../../services/bookmarkService');
 
     module.exports = function ($scope, $mdDialog, options) {
@@ -64,6 +65,33 @@
         };
 
         vm.getList();
+
+        vm.renameLayout = function (layout, $event) {
+
+            $mdDialog.show({
+                controller: 'UiLayoutSaveAsDialogController as vm',
+                templateUrl: 'views/dialogs/ui/ui-layout-save-as-view.html',
+                parent: angular.element(document.body),
+                targetEvent: $event,
+                multiple: true,
+                clickOutsideToClose: false,
+                locals: {
+                    options: {
+                        layoutName: layout.name
+                    }
+                }
+
+            }).then(function (res) {
+
+                if (res.status === 'agree') {
+
+                    layout.name = res.data.name;
+
+                }
+
+            })
+
+        };
 
         vm.deleteItem = function (ev, item) {
 

@@ -15,11 +15,12 @@
                     {{item.name}}
                 </div>
                 <div>
-
+                    <md-button class="md-button ll-delete-btn" ng-click="vm.renameLayout(item, $event)">
+                        <ng-md-icon icon="title" size="24"></ng-md-icon>
+                    </md-button>
                     <md-button class="md-button ll-delete-btn" ng-click="vm.download($event, item)">
                         <ng-md-icon icon="cloud_download" size="24"></ng-md-icon>
                     </md-button>
-
                     <md-button class="md-button ll-delete-btn" ng-click="vm.deleteItem($event, item)">
                         <ng-md-icon icon="delete" size="24"></ng-md-icon>
                     </md-button>
