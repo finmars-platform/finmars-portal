@@ -26,6 +26,7 @@
 
         /** JSDOC ignores vm methods, only works for var variable. */
         var vm = this;
+        vm.entityType = undefined;
         vm.scheme = {};
         vm.readyStatus = {scheme: false, entitySchemeAttributes: false};
 
@@ -53,7 +54,7 @@
 
                 return {
                     "name": "Imported: " + input.name + " (column # " + input.column + ")",
-                    "description": "Imported: " + input.name + " (column #" + input.column + ") " + input.name_expr,
+                    "description": "Imported: " + input.name + " (column #" + input.column + ") " + "-> " + input.name_expr,
                     "groups": "input",
                     "func": input.name
                 }
@@ -64,10 +65,12 @@
 
         var findPickedDynamicAttrs = function () {
             if (vm.dynamicAttrPicked) {
-                vm.scheme.entity_fields.map(function (field) {
-                    if (field.hasOwnProperty('dynamic_attribute_id') && field.dynamic_attribute_id) {
+                pickedDynamicAttrs = [];
 
-                        if (pickedDynamicAttrs.length > 0) {
+                vm.scheme.entity_fields.map(function (field) {
+                    if (field.dynamic_attribute_id) {
+
+                        /*if (pickedDynamicAttrs.length > 0) {
                             var dynamicAttrMarked = false;
                             pickedDynamicAttrs.map(function (dynamicAttr) {
 
@@ -83,13 +86,14 @@
 
                         } else {
                             pickedDynamicAttrs.push(field.dynamic_attribute_id);
-                        }
+                        }*/
+                        pickedDynamicAttrs.push(field.dynamic_attribute_id);
 
                     }
                 });
-            }
 
-            vm.dynamicAttrPicked = false;
+                vm.dynamicAttrPicked = false;
+            }
         };
 
         csvImportSchemeService.getByKey(schemeId).then(function (data) {
@@ -130,8 +134,8 @@
 
                             } else {
 
-                                console.log('entityField', entityField);
-                                console.log('attribute', attribute);
+                                // console.log('entityField', entityField);
+                                // console.log('attribute', attribute);
 
                                 entityField.value_type = attribute.value_type;
                                 entityField.entity = attribute.value_entity;
@@ -164,6 +168,7 @@
         vm.getAttrs = function () {
 
             var entity = metaContentTypesService.findEntityByContentType(vm.scheme.content_type);
+            vm.entityType = entity;
 
             attributeTypeService.getList(entity).then(function (data) {
 
@@ -294,7 +299,7 @@
 
             if (!item.name_expr || item.name_expr === '') {
                 item.name_expr = item.name;
-                console.log("transaction import", item);
+                vm.inputsFunctions = vm.getFunctions();
             }
 
         };
@@ -320,6 +325,7 @@
                 if (res.status === 'agree') {
 
                     item.name_expr = res.data.item.expression;
+                    vm.inputsFunctions = vm.getFunctions();
 
                 }
 
@@ -427,6 +433,46 @@
                 skipHide: true,
                 locals: {
                     mapItem: {complexExpressionEntity: item.entity}
+                }
+            })
+
+        };
+
+        vm.checkForClassifierMapping = function (classifierId) {
+
+            var i;
+            for (i = 0; i < vm.dynamicAttributes.length; i++) {
+
+                if (vm.dynamicAttributes[i].id === classifierId) {
+
+                    if (vm.dynamicAttributes[i].value_type === 30) {
+                        return true;
+                    }
+
+                }
+
+            }
+
+            return false;
+
+        };
+
+        vm.openClassifierMapping = function (classifierId, $event) {
+
+            $mdDialog.show({
+                controller: 'EntityTypeClassifierMappingDialogController as vm',
+                templateUrl: 'views/dialogs/entity-type-classifier-mapping-dialog-view.html',
+                parent: angular.element(document.body),
+                targetEvent: $event,
+                preserveScope: true,
+                autoWrap: true,
+                skipHide: true,
+                multiple: true,
+                locals: {
+                    options: {
+                        entityType: vm.entityType,
+                        id: classifierId
+                    }
                 }
             })
 

@@ -32,7 +32,7 @@
 
             return {
                 "name": "Imported: " + input.name + " (column #" + input.column + ")",
-                "description": "Imported: " + input.name + " (column #" + input.column + ") " + input.name_expr,
+                "description": "Imported: " + input.name + " (column #" + input.column + ") " + "-> " + input.name_expr,
                 "groups": "input",
                 "func": input.name
             }

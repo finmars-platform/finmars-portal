@@ -347,7 +347,7 @@
             var resultValue = '';
 
             if (value_obj.html_result) {
-                resultValue = value_obj.html_result;
+                resultValue = '<span class="g-cell-content">' + value_obj.html_result + '</span>';
             }
 
             cell = '<div class="g-cell-wrap ' + getBgColor(evDataService, obj, columnNumber) + '" style="width: ' + column.style.width + '">' +

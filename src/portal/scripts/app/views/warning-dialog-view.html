@@ -12,11 +12,16 @@
         </div>
     </md-dialog-content>
     <md-dialog-actions layout="row">
-        <md-button ng-click="vm.cancel()">
-            Cancel
-        </md-button>
-        <md-button ng-click="vm.agree()" style="margin-right:20px;">
-            OK
-        </md-button>
+        <div ng-if="!vm.actionsButtons">
+            <md-button ng-click="vm.cancel()">
+                Cancel
+            </md-button>
+            <md-button ng-click="vm.agree()" style="margin-right:20px;">
+                OK
+            </md-button>
+        </div>
+        <div ng-if="vm.actionsButtons">
+            <md-button ng-repeat="button in vm.actionsButtons" ng-bind="button.name" ng-click="vm.agree(button.response)"></md-button>
+        </div>
     </md-dialog-actions>
 </md-dialog>
