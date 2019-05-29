@@ -99,7 +99,7 @@
                     attrsList = attrsList.concat(vm.strategy3attrs);
 
                     syncAttrs();
-
+                    console.log("draganddrop attrslist", attrsList);
                     vm.readyStatus.content = true;
                     $scope.$apply();
                 });
@@ -283,6 +283,7 @@
                     if (attr.entity === grouping[g].entity) {
 
                         if (attr.hasOwnProperty('key')) {
+
                             if (attr.key === grouping[g].key) {
                                 groupExist = true;
                                 if (attr.groups === false) {
@@ -497,8 +498,11 @@
                             syncAttrs();
                             evDataHelper.updateColumnsIds(entityViewerDataService);
                             evDataHelper.setColumnsDefaultWidth(entityViewerDataService);
+
+                            entityViewerEventService.dispatchEvent(evEvents.COLUMNS_CHANGE);
                             entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
                         }
+
                         if (target === document.querySelector('#groupsbag') ||
                             target === document.querySelector('.g-groups-holder')) {
 
@@ -528,8 +532,11 @@
                             syncAttrs();
                             evDataHelper.updateColumnsIds(entityViewerDataService);
                             evDataHelper.setColumnsDefaultWidth(entityViewerDataService);
+
+                            entityViewerEventService.dispatchEvent(evEvents.GROUPS_CHANGE);
                             entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
                         }
+
                         if (target === document.querySelector('#filtersbag .drop-new-filter') ||
                             target === document.querySelector('.g-filters-holder')) {
 
@@ -559,14 +566,16 @@
                             syncAttrs();
                             evDataHelper.updateColumnsIds(entityViewerDataService);
                             evDataHelper.setColumnsDefaultWidth(entityViewerDataService);
+
+                            entityViewerEventService.dispatchEvent(evEvents.FILTERS_CHANGE);
                             entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
                         }
 
-                        // $scope.$apply();
+                       $scope.$apply();
 
                     } else if (exist && target) {
 
-                        var errorMessage = 'Item should be unique'
+                        var errorMessage = 'Item should be unique';
 
                         if (columnExist) {
                             errorMessage = 'There is already such column in Column Area';
