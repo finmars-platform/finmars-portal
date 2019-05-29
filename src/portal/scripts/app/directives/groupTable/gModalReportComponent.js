@@ -375,6 +375,25 @@
 
         };
 
+        vm.openCustomFieldsManager = function () {
+
+            $mdDialog.show({
+                controller: 'CustomFieldDialogController as vm',
+                templateUrl: 'views/dialogs/custom-field-dialog-view.html',
+                parent: angular.element(document.body),
+                clickOutsideToClose: false,
+                preserveScope: true,
+                multiple: true,
+                autoWrap: true,
+                skipHide: true,
+                locals: {
+                    data: {
+                        entityType: vm.entityType
+                    }
+                }
+            })
+
+        };
 
         var dragAndDrop = {
 

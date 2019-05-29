@@ -1,4 +1,5 @@
-<md-dialog aria-label="Report fields modal" ng-cloak class="g-modal-dialog draggable-dialog view-constructor" g-dialog-draggable>
+<md-dialog aria-label="Report fields modal" ng-cloak class="g-modal-dialog draggable-dialog view-constructor"
+           g-dialog-draggable>
     <md-toolbar>
         <div class="md-toolbar-tools" layout="row" layout-align="start center">
             <ng-md-icon icon="dialpad" size="20" class="draggable-dialog-sign"></ng-md-icon>
@@ -40,7 +41,8 @@
                             <div class="g-modal-draggable-card">
                                 <md-card class="modal-dialog-card" data-key-identifier="{{item.key}}">
                                     {{::vm.bindReportItemName(item)}}
-                                    <md-tooltip ng-if="item.key" class="tooltip_1" md-direction="top">{{item.key}}</md-tooltip>
+                                    <md-tooltip ng-if="item.key" class="tooltip_1" md-direction="top">{{item.key}}
+                                    </md-tooltip>
                                 </md-card>
                             </div>
                         </div>
@@ -64,13 +66,15 @@
                                              data-ng-change="vm.updateAttrs(vm.balancePerformanceAttrs)">
                                 </md-checkbox>
                                 <md-checkbox ng-model="item.filters" aria-label="Filters" aria="filters"
-                                             class="md-primary" data-ng-change="vm.updateAttrs(vm.balancePerformanceAttrs)">
+                                             class="md-primary"
+                                             data-ng-change="vm.updateAttrs(vm.balancePerformanceAttrs)">
                                 </md-checkbox>
                             </div>
                             <div class="g-modal-draggable-card">
                                 <md-card class="modal-dialog-card" data-key-identifier="{{item.key}}">
                                     {{::vm.bindReportItemName(item)}}
-                                    <md-tooltip ng-if="item.key" class="tooltip_1" md-direction="top">{{item.key}}</md-tooltip>
+                                    <md-tooltip ng-if="item.key" class="tooltip_1" md-direction="top">{{item.key}}
+                                    </md-tooltip>
                                 </md-card>
                             </div>
                         </div>
@@ -100,12 +104,14 @@
                             <div class="g-modal-draggable-card">
                                 <md-card class="modal-dialog-card" data-key-identifier="{{item.key}}">
                                     {{::vm.bindReportItemName(item)}}
-                                    <md-tooltip ng-if="item.key" class="tooltip_1" md-direction="top">{{item.key}}</md-tooltip>
+                                    <md-tooltip ng-if="item.key" class="tooltip_1" md-direction="top">{{item.key}}
+                                    </md-tooltip>
                                 </md-card>
                             </div>
                         </div>
 
-                        <div layout="row" class="view-constructor-attributes-separator" data-ng-show="vm.instrumentDynamicAttrs.length > 0">
+                        <div layout="row" class="view-constructor-attributes-separator"
+                             data-ng-show="vm.instrumentDynamicAttrs.length > 0">
                             <p>User Attributes</p>
                         </div>
                         <div class="g-checkbox-row" data-ng-repeat="item in vm.instrumentDynamicAttrs" layout="row">
@@ -118,13 +124,15 @@
                                              data-ng-change="vm.updateAttrs(vm.instrumentDynamicAttrs)">
                                 </md-checkbox>
                                 <md-checkbox ng-model="item.filters" aria-label="Filters" aria="filters"
-                                             class="md-primary" data-ng-change="vm.updateAttrs(vm.instrumentDynamicAttrs)">
+                                             class="md-primary"
+                                             data-ng-change="vm.updateAttrs(vm.instrumentDynamicAttrs)">
                                 </md-checkbox>
                             </div>
                             <div class="g-modal-draggable-card">
                                 <md-card class="modal-dialog-card" data-key-identifier="{{item.key}}">
                                     {{::vm.bindReportItemName(item)}}
-                                    <md-tooltip ng-if="item.key" class="tooltip_1" md-direction="top">{{item.key}}</md-tooltip>
+                                    <md-tooltip ng-if="item.key" class="tooltip_1" md-direction="top">{{item.key}}
+                                    </md-tooltip>
                                 </md-card>
                             </div>
                         </div>
@@ -154,12 +162,14 @@
                             <div class="g-modal-draggable-card">
                                 <md-card class="modal-dialog-card" data-key-identifier="{{item.key}}">
                                     {{::vm.bindReportItemName(item)}}
-                                    <md-tooltip ng-if="item.key" class="tooltip_1" md-direction="top">{{item.key}}</md-tooltip>
+                                    <md-tooltip ng-if="item.key" class="tooltip_1" md-direction="top">{{item.key}}
+                                    </md-tooltip>
                                 </md-card>
                             </div>
                         </div>
 
-                        <div layout="row" class="view-constructor-attributes-separator" data-ng-show="vm.accountDynamicAttrs.length > 0">
+                        <div layout="row" class="view-constructor-attributes-separator"
+                             data-ng-show="vm.accountDynamicAttrs.length > 0">
                             <p>User Attributes</p>
                         </div>
                         <div class="g-checkbox-row" data-ng-repeat="item in vm.accountDynamicAttrs" layout="row">
@@ -178,7 +188,8 @@
                             <div class="g-modal-draggable-card">
                                 <md-card class="modal-dialog-card" data-key-identifier="{{item.key}}">
                                     {{::vm.bindReportItemName(item)}}
-                                    <md-tooltip ng-if="item.key" class="tooltip_1" md-direction="top">{{item.key}}</md-tooltip>
+                                    <md-tooltip ng-if="item.key" class="tooltip_1" md-direction="top">{{item.key}}
+                                    </md-tooltip>
                                 </md-card>
                             </div>
                         </div>
@@ -208,11 +219,13 @@
                             <div class="g-modal-draggable-card">
                                 <md-card class="modal-dialog-card" data-key-identifier="{{item.key}}">
                                     {{::vm.bindReportItemName(item)}}
-                                    <md-tooltip ng-if="item.key" class="tooltip_1" md-direction="top">{{item.key}}</md-tooltip>
+                                    <md-tooltip ng-if="item.key" class="tooltip_1" md-direction="top">{{item.key}}
+                                    </md-tooltip>
                                 </md-card>
                             </div>
                         </div>
-                        <div layout="row" class="view-constructor-attributes-separator" data-ng-show="vm.portfolioDynamicAttrs.length > 0">
+                        <div layout="row" class="view-constructor-attributes-separator"
+                             data-ng-show="vm.portfolioDynamicAttrs.length > 0">
                             <p>User Attributes</p>
                         </div>
                         <div class="g-checkbox-row" data-ng-repeat="item in vm.portfolioDynamicAttrs" layout="row">
@@ -225,13 +238,15 @@
                                              data-ng-change="vm.updateAttrs(vm.portfolioDynamicAttrs)">
                                 </md-checkbox>
                                 <md-checkbox ng-model="item.filters" aria-label="Filters" aria="filters"
-                                             class="md-primary" data-ng-change="vm.updateAttrs(vm.portfolioDynamicAttrs)">
+                                             class="md-primary"
+                                             data-ng-change="vm.updateAttrs(vm.portfolioDynamicAttrs)">
                                 </md-checkbox>
                             </div>
                             <div class="g-modal-draggable-card">
                                 <md-card class="modal-dialog-card" data-key-identifier="{{item.key}}">
                                     {{::vm.bindReportItemName(item)}}
-                                    <md-tooltip ng-if="item.key" class="tooltip_1" md-direction="top">{{item.key}}</md-tooltip>
+                                    <md-tooltip ng-if="item.key" class="tooltip_1" md-direction="top">{{item.key}}
+                                    </md-tooltip>
                                 </md-card>
                             </div>
                         </div>
@@ -261,7 +276,8 @@
                             <div class="g-modal-draggable-card">
                                 <md-card class="modal-dialog-card" data-key-identifier="{{item.key}}">
                                     {{::vm.bindReportItemName(item)}}
-                                    <md-tooltip ng-if="item.key" class="tooltip_1" md-direction="top">{{item.key}}</md-tooltip>
+                                    <md-tooltip ng-if="item.key" class="tooltip_1" md-direction="top">{{item.key}}
+                                    </md-tooltip>
                                 </md-card>
                             </div>
                         </div>
@@ -275,13 +291,15 @@
                                              data-ng-change="vm.updateAttrs(vm.strategy1subgroupAttrs)">
                                 </md-checkbox>
                                 <md-checkbox ng-model="item.filters" aria-label="Filters" aria="filters"
-                                             class="md-primary" data-ng-change="vm.updateAttrs(vm.strategy1subgroupAttrs)">
+                                             class="md-primary"
+                                             data-ng-change="vm.updateAttrs(vm.strategy1subgroupAttrs)">
                                 </md-checkbox>
                             </div>
                             <div class="g-modal-draggable-card">
                                 <md-card class="modal-dialog-card" data-key-identifier="{{item.key}}">
                                     {{::vm.bindReportItemName(item)}}
-                                    <md-tooltip ng-if="item.key" class="tooltip_1" md-direction="top">{{item.key}}</md-tooltip>
+                                    <md-tooltip ng-if="item.key" class="tooltip_1" md-direction="top">{{item.key}}
+                                    </md-tooltip>
                                 </md-card>
                             </div>
                         </div>
@@ -301,7 +319,8 @@
                             <div class="g-modal-draggable-card">
                                 <md-card class="modal-dialog-card" data-key-identifier="{{item.key}}">
                                     {{::vm.bindReportItemName(item)}}
-                                    <md-tooltip ng-if="item.key" class="tooltip_1" md-direction="top">{{item.key}}</md-tooltip>
+                                    <md-tooltip ng-if="item.key" class="tooltip_1" md-direction="top">{{item.key}}
+                                    </md-tooltip>
                                 </md-card>
                             </div>
                         </div>
@@ -321,7 +340,8 @@
                             <div class="g-modal-draggable-card">
                                 <md-card class="modal-dialog-card" data-key-identifier="{{item.key}}">
                                     {{::vm.bindReportItemName(item)}}
-                                    <md-tooltip ng-if="item.key" class="tooltip_1" md-direction="top">{{item.key}}</md-tooltip>
+                                    <md-tooltip ng-if="item.key" class="tooltip_1" md-direction="top">{{item.key}}
+                                    </md-tooltip>
                                 </md-card>
                             </div>
                         </div>
@@ -335,13 +355,15 @@
                                              data-ng-change="vm.updateAttrs(vm.strategy2subgroupAttrs)">
                                 </md-checkbox>
                                 <md-checkbox ng-model="item.filters" aria-label="Filters" aria="filters"
-                                             class="md-primary" data-ng-change="vm.updateAttrs(vm.strategy2subgroupAttrs)">
+                                             class="md-primary"
+                                             data-ng-change="vm.updateAttrs(vm.strategy2subgroupAttrs)">
                                 </md-checkbox>
                             </div>
                             <div class="g-modal-draggable-card">
                                 <md-card class="modal-dialog-card" data-key-identifier="{{item.key}}">
                                     {{::vm.bindReportItemName(item)}}
-                                    <md-tooltip ng-if="item.key" class="tooltip_1" md-direction="top">{{item.key}}</md-tooltip>
+                                    <md-tooltip ng-if="item.key" class="tooltip_1" md-direction="top">{{item.key}}
+                                    </md-tooltip>
                                 </md-card>
                             </div>
                         </div>
@@ -361,7 +383,8 @@
                             <div class="g-modal-draggable-card">
                                 <md-card class="modal-dialog-card" data-key-identifier="{{item.key}}">
                                     {{::vm.bindReportItemName(item)}}
-                                    <md-tooltip ng-if="item.key" class="tooltip_1" md-direction="top">{{item.key}}</md-tooltip>
+                                    <md-tooltip ng-if="item.key" class="tooltip_1" md-direction="top">{{item.key}}
+                                    </md-tooltip>
                                 </md-card>
                             </div>
                         </div>
@@ -381,7 +404,8 @@
                             <div class="g-modal-draggable-card">
                                 <md-card class="modal-dialog-card" data-key-identifier="{{item.key}}">
                                     {{::vm.bindReportItemName(item)}}
-                                    <md-tooltip ng-if="item.key" class="tooltip_1" md-direction="top">{{item.key}}</md-tooltip>
+                                    <md-tooltip ng-if="item.key" class="tooltip_1" md-direction="top">{{item.key}}
+                                    </md-tooltip>
                                 </md-card>
                             </div>
                         </div>
@@ -395,13 +419,15 @@
                                              data-ng-change="vm.updateAttrs(vm.strategy3subgroupAttrs)">
                                 </md-checkbox>
                                 <md-checkbox ng-model="item.filters" aria-label="Filters" aria="filters"
-                                             class="md-primary" data-ng-change="vm.updateAttrs(vm.strategy3subgroupAttrs)">
+                                             class="md-primary"
+                                             data-ng-change="vm.updateAttrs(vm.strategy3subgroupAttrs)">
                                 </md-checkbox>
                             </div>
                             <div class="g-modal-draggable-card">
                                 <md-card class="modal-dialog-card" data-key-identifier="{{item.key}}">
                                     {{::vm.bindReportItemName(item)}}
-                                    <md-tooltip ng-if="item.key" class="tooltip_1" md-direction="top">{{item.key}}</md-tooltip>
+                                    <md-tooltip ng-if="item.key" class="tooltip_1" md-direction="top">{{item.key}}
+                                    </md-tooltip>
                                 </md-card>
                             </div>
                         </div>
@@ -421,7 +447,8 @@
                             <div class="g-modal-draggable-card">
                                 <md-card class="modal-dialog-card" data-key-identifier="{{item.key}}">
                                     {{::vm.bindReportItemName(item)}}
-                                    <md-tooltip ng-if="item.key" class="tooltip_1" md-direction="top">{{item.key}}</md-tooltip>
+                                    <md-tooltip ng-if="item.key" class="tooltip_1" md-direction="top">{{item.key}}
+                                    </md-tooltip>
                                 </md-card>
                             </div>
                         </div>
@@ -451,7 +478,8 @@
                             <div class="g-modal-draggable-card">
                                 <md-card class="modal-dialog-card" data-key-identifier="{{item.key}}">
                                     {{::vm.bindReportItemName(item)}}
-                                    <md-tooltip ng-if="item.key" class="tooltip_1" md-direction="top">{{item.key}}</md-tooltip>
+                                    <md-tooltip ng-if="item.key" class="tooltip_1" md-direction="top">{{item.key}}
+                                    </md-tooltip>
                                 </md-card>
                             </div>
                         </div>
@@ -475,13 +503,15 @@
                                              data-ng-change="vm.updateAttrs(vm.balanceMismatchAttrs)">
                                 </md-checkbox>
                                 <md-checkbox ng-model="item.filters" aria-label="Filters" aria="filters"
-                                             class="md-primary" data-ng-change="vm.updateAttrs(vm.balanceMismatchAttrs)">
+                                             class="md-primary"
+                                             data-ng-change="vm.updateAttrs(vm.balanceMismatchAttrs)">
                                 </md-checkbox>
                             </div>
                             <div class="g-modal-draggable-card">
                                 <md-card class="modal-dialog-card" data-key-identifier="{{item.key}}">
                                     {{::vm.bindReportItemName(item)}}
-                                    <md-tooltip ng-if="item.key" class="tooltip_1" md-direction="top">{{item.key}}</md-tooltip>
+                                    <md-tooltip ng-if="item.key" class="tooltip_1" md-direction="top">{{item.key}}
+                                    </md-tooltip>
                                 </md-card>
                             </div>
                         </div>
@@ -511,13 +541,15 @@
                             <div class="g-modal-draggable-card">
                                 <md-card class="modal-dialog-card" data-key-identifier="{{item.key}}">
                                     {{::vm.bindReportItemName(item)}}
-                                    <md-tooltip ng-if="item.key" class="tooltip_1" md-direction="top">{{item.key}}</md-tooltip>
+                                    <md-tooltip ng-if="item.key" class="tooltip_1" md-direction="top">{{item.key}}
+                                    </md-tooltip>
                                 </md-card>
                             </div>
                         </div>
 
 
-                        <div layout="row" class="view-constructor-attributes-separator" data-ng-show="vm.allocationDynamicAttrs.length > 0">
+                        <div layout="row" class="view-constructor-attributes-separator"
+                             data-ng-show="vm.allocationDynamicAttrs.length > 0">
                             <p>User Attributes</p>
                         </div>
                         <div class="g-checkbox-row" data-ng-repeat="item in vm.allocationDynamicAttrs" layout="row">
@@ -530,13 +562,15 @@
                                              data-ng-change="vm.updateAttrs(vm.allocationDynamicAttrs)">
                                 </md-checkbox>
                                 <md-checkbox ng-model="item.filters" aria-label="Filters" aria="filters"
-                                             class="md-primary" data-ng-change="vm.updateAttrs(vm.allocationDynamicAttrs)">
+                                             class="md-primary"
+                                             data-ng-change="vm.updateAttrs(vm.allocationDynamicAttrs)">
                                 </md-checkbox>
                             </div>
                             <div class="g-modal-draggable-card">
                                 <md-card class="modal-dialog-card" data-key-identifier="{{item.key}}">
                                     {{::vm.bindReportItemName(item)}}
-                                    <md-tooltip ng-if="item.key" class="tooltip_1" md-direction="top">{{item.key}}</md-tooltip>
+                                    <md-tooltip ng-if="item.key" class="tooltip_1" md-direction="top">{{item.key}}
+                                    </md-tooltip>
                                 </md-card>
                             </div>
                         </div>
@@ -557,8 +591,7 @@
             Manage Attributes
         </md-button>
         <md-button class="md-raised md-primary" style="margin: 0;"
-                   data-ui-sref="app.reports.customFieldManager({entityType: vm.entityType})"
-                   data-ng-click="vm.cancel()">
+                   data-ng-click="vm.openCustomFieldsManager()">
             Custom Columns
         </md-button>
         <md-button class="md-raised" ng-click="vm.cancel()">
