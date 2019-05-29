@@ -20,48 +20,41 @@
                 scope.isRootEntityViewer = scope.evDataService.isRootEntityViewer();
 
                 var lastMouseMoveEvent = null;
-                var isOpened = false;
 
                 function activateHeightSlider() {
 
                     $('.g-height-slider').bind('mousedown', function (e) {
 
-                        var mouseMoveY;
-                        var spaceLeft;
-                        var headerBoxHeight = $('.header').height();
-                        var mainAreaBox = $('.g-workarea.main-area .g-table-section').first();
-                        var mainAreaSidebarBox = $('.g-filter-sidebar.main-sidebar').first();
-                        var groupingSectionBoxHeight = $('.g-wrapper .g-grouping-section').height();
+                        var interfaceLayout = scope.evDataService.getInterfaceLayout();
 
-                        var additionsBox = $('.g-additions');
-                        var additionsBoxTableSection = $('.g-additions-workarea .g-table-section').last();
-                        var additionsBoxSidebarBox = $('.g-additions-workarea .g-filter-sidebar').last();
+                        var mouseMoveY;
+                        var bodyHeight = document.body.clientHeight;
+                        var columnAreaHeight = $('.g-columns-component').height();
+                        var groupingAreaHeight = $('.g-grouping-component').height();
+
+                        var tableElem = $('.g-workarea.main-area .g-table-section').first();
+                        var sidebarElem = $('.g-filter-sidebar.main-sidebar').first();
+                        var splitPanelElem = $('.g-additions');
+
+                        var splitPanelHeight;
 
                         var handler = function (e) {
 
+                            mouseMoveY = e.clientY;
                             lastMouseMoveEvent = e;
 
-                            spaceLeft = $(window).height() - headerBoxHeight;
-                            mouseMoveY = e.clientY;
+                            splitPanelHeight = Math.abs(bodyHeight - mouseMoveY);
 
-                            $(elem).find('.mCSB_scrollTools_vertical').css({
-                                position: 'absolute',
-                                top: 0,
-                                left: 'auto'
-                            });
+                            interfaceLayout.splitPanel.height = splitPanelHeight;
 
+                            splitPanelElem.height(splitPanelHeight);
+                            tableElem.height(bodyHeight - splitPanelHeight - columnAreaHeight - groupingAreaHeight);
+                            sidebarElem.height(bodyHeight - splitPanelHeight + columnAreaHeight + groupingAreaHeight);
 
-                            // WTF IS 88???
+                            scope.evDataService.setInterfaceLayout(interfaceLayout);
 
-                            additionsBox.height(spaceLeft - mouseMoveY + 88 - 15);
-                            additionsBoxTableSection.height(spaceLeft - mouseMoveY + 88);
-                            additionsBoxSidebarBox.height(spaceLeft - mouseMoveY + 88);
-                            // $('.g-workarea.main-area .group-table-body').first().height(mouseMoveY - $('.header').height() - $('.g-columns-component.g-thead').height() - 88);
-                            // $('.g-additions-workarea .group-table-body').last().height($(window).height() - mouseMoveY - $('.g-additions-workarea .g-columns-component.g-thead').height());
-                            mainAreaBox.height(mouseMoveY - headerBoxHeight - 88);
-                            if (groupingSectionBoxHeight < (mouseMoveY + groupingSectionBoxHeight - headerBoxHeight - 88)) {
-                                mainAreaSidebarBox.height(mouseMoveY + groupingSectionBoxHeight - headerBoxHeight - 88);
-                            }
+                            scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE_VIEWPORT);
+
                         };
 
                         $(window).bind('mousemove', function (e) {
@@ -71,111 +64,71 @@
                             })
                         });
 
+
                     });
                 }
 
                 function setDefaultHeights() {
 
-                    var upperFilterSidebar = $(elem).find('.g-filter-sidebar').first();
-                    var upperTableSection = $(elem).find('.g-table-section').first();
-                    // var upperGroupTableBody = $(elem).find('.group-table-body').first();
-                    var upperGroupSection = $(elem).find('.g-grouping-section').first();
+                    var interfaceLayout = scope.evDataService.getInterfaceLayout();
+                    interfaceLayout.splitPanel.height = 0;
+                    scope.evDataService.setInterfaceLayout(interfaceLayout);
 
-                    workAreaHeight = $(elem).parents('.entity-viewer-holder').height();
-                    workAreaWithoutGrouping = workAreaHeight - upperGroupSection.height();
-
-                    upperFilterSidebar.height(workAreaHeight);
-                    // upperTableSection.height(workAreaWithoutGrouping);
-
-
-
-                    // upperGroupTableBody.height(workAreaWithoutGrouping - 76);
-
+                    scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE_VIEWPORT);
                 }
 
                 function setSplitHeights() {
 
-                    var upperGroupSection = $(elem).find('.g-grouping-section').first();
-                    var upperFilterSidebar = $(elem).find('.g-filter-sidebar').first();
-                    var upperTableSection = $(elem).find('.g-table-section').first();
-                    var additions = $(elem).find('.g-additions').first();
-                    var additionsTableSection = $(elem).find('.g-additions-workarea .g-table-section').last();
-                    var additionsAdditionsTableBody = $(elem).find('.g-additions-workarea .g-table-section').last();
+                    var bodyHeight = document.body.clientHeight;
 
-                    workAreaHeight = Math.floor($(elem).parents('.entity-viewer-holder').height() / 2);
-                    workAreaWithoutGrouping = Math.floor((workAreaHeight - upperGroupSection.height()));
+                    var interfaceLayout = scope.evDataService.getInterfaceLayout();
 
-                    upperFilterSidebar.height(workAreaHeight);
-                    upperTableSection.height(workAreaWithoutGrouping);
+                    var splitPanelElem = $('.g-additions');
+                    var splitPanelHeight = Math.floor(bodyHeight / 2);
 
-                    additions.height(workAreaHeight);
-                    additionsTableSection.height(workAreaHeight);
-                    additionsAdditionsTableBody.height(workAreaHeight);
+                    interfaceLayout.splitPanel.height = splitPanelHeight;
+
+                    splitPanelElem.height(splitPanelHeight);
+
+                    scope.evDataService.setInterfaceLayout(interfaceLayout);
+                    scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE_VIEWPORT);
 
                 }
 
-                function resolveHeight() {
+                $(window).on('resize', function () {
+                    setSplitHeights();
+                });
 
-                    var additions = scope.evDataService.getAdditions();
-
-                    // console.log('additions', additions);
-
-                    if (additions.reportWizard || additions.editor || additions.permissionEditor) {
-
-                        if (isOpened === false) {
-                            isOpened = true;
-                            setSplitHeights();
-                        }
-
-                    } else {
-
-                        isOpened = false;
-
-                        setDefaultHeights()
-                    }
-                }
-
-                if (scope.isRootEntityViewer === true) { // only root entityViewer has gHeightSlider
-
-                    var workAreaHeight;
-                    var workAreaWithoutGrouping;
-
-                    $(window).on('resize', function () {
-                        resolveHeight();
-                    });
-
-                    resolveHeight();
-
-                    scope.evEventService.addEventListener(evEvents.ADDITIONS_CHANGE, function () {
-
-                        scope.additions = scope.evDataService.getAdditions();
-
-                        resolveHeight()
-                    });
-
-                    scope.evEventService.addEventListener(evEvents.REDRAW_TABLE, function () {
-
-                        resolveHeight()
-                    });
-
-                    scope.evEventService.addEventListener(evEvents.UPDATE_TABLE, function () {
-
-                        resolveHeight()
-
-                    })
-
-                }
-
-                scope.evEventService.addEventListener(evEvents.ADDITIONS_RENDER, function () {
+                scope.evEventService.addEventListener(evEvents.ADDITIONS_CHANGE, function () {
 
                     scope.additions = scope.evDataService.getAdditions();
 
-                    if (scope.additions.additionsState === true) {
+                    setSplitHeights()
+                });
 
-                        activateHeightSlider()
-                    }
+                scope.evEventService.addEventListener(evEvents.REDRAW_TABLE, function () {
+
+                    setSplitHeights()
+                });
+
+                scope.evEventService.addEventListener(evEvents.UPDATE_TABLE, function () {
+
+                    setSplitHeights()
 
                 });
+
+                scope.init = function () {
+
+                    setSplitHeights();
+                    activateHeightSlider();
+
+                };
+
+                scope.init();
+
+                scope.$on('$destroy', function() {
+                    setDefaultHeights()
+                })
 
             }
         }

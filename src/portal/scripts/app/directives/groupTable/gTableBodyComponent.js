@@ -258,6 +258,12 @@
 
                 });
 
+                scope.evEventService.addEventListener(evEvents.UPDATE_TABLE_VIEWPORT, function () {
+
+                    evDomManager.calculateScroll(elements, scope.evDataService);
+
+                });
+
                 if (isReport) {
 
                     rvDomManager.initEventDelegation(contentElem, scope.evDataService, scope.evEventService);

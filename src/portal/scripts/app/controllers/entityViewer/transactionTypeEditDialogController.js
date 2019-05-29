@@ -1617,6 +1617,13 @@
 
         // Transaction type actions controller end
 
+
+        // Special case for split-panel
+        $scope.splitPanelInit = function (entityType, entityId) {
+            vm.entityType = entityType;
+            vm.entityId = entityId;
+        }
+
     }
 
 }());
