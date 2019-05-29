@@ -7,23 +7,86 @@
 
     var evEvents = require('../../services/entityViewerEvents');
 
-    module.exports = function ($templateCache, $compile) {
+    module.exports = function ($templateCache, $compile, $controller, $mdDialog, $state) {
         return {
             scope: {
                 evDataService: '=',
                 evEventService: '='
             },
             restrict: 'AE',
+            template: '<div class="split-panel-controller-container"></div>',
             link: function (scope, elem, attrs) {
 
+                var container = $(elem).find('.split-panel-controller-container');
 
-                var editorTemplateUrl = scope.evDataService.getEditorTemplateUrl();
+                function createController() {
 
-                console.log('editorTemplateUrl', editorTemplateUrl);
+                    var entityType = scope.evDataService.getEntityType();
+                    var activeObject = scope.evDataService.getActiveObject();
 
-                var tpl = $templateCache.get(editorTemplateUrl);
-                var ctrl = $compile(tpl)(scope);
-                $(elem).append(ctrl);
+                    var editorTemplateUrl;
+                    var tpl;
+                    var templateScope;
+                    var ctrl;
+
+                    if (activeObject) {
+
+                        $(container).html('');
+
+                        if (entityType === 'transaction-type') {
+
+                            editorTemplateUrl = 'views/entity-viewer/transaction-type-edit-split-panel-view.html';
+                            tpl = $templateCache.get(editorTemplateUrl);
+
+                            templateScope = scope.$new();
+
+                            ctrl = $controller('TransactionTypeEditDialogController as vm', {
+                                '$scope': templateScope,
+                                '$mdDialog': $mdDialog,
+                                '$state': $state,
+                                'entityType': entityType,
+                                'entityId': activeObject.id
+                            });
+
+                            container.html(tpl);
+                            container.children().data('$ngControllerController', ctrl);
+
+                            $compile(elem.contents())(templateScope);
+
+                        } else {
+
+                            editorTemplateUrl = 'views/entity-viewer/entity-viewer-edit-split-panel-view.html'
+                            tpl = $templateCache.get(editorTemplateUrl);
+
+                            templateScope = scope.$new();
+
+                            ctrl = $controller('EntityViewerEditDialogController as vm', {
+                                '$scope': templateScope,
+                                '$mdDialog': $mdDialog,
+                                '$state': $state,
+                                'entityType': entityType,
+                                'entityId': activeObject.id
+                            });
+
+                            container.html(tpl);
+                            container.children().data('$ngControllerController', ctrl);
+
+                            $compile(elem.contents())(templateScope);
+
+
+                        }
+                    }
+
+                }
+
+                scope.evEventService.addEventListener(evEvents.ACTIVE_OBJECT_CHANGE, function () {
+
+                    createController();
+
+                });
+
+
+                createController();
 
             }
         }

@@ -45,6 +45,16 @@
 
         vm.dataConstructorData = {};
 
+        vm.attrs = [];
+        vm.entityAttrs = [];
+        vm.userInputs = [];
+        vm.layoutAttrs = [];
+
+        vm.entityAttrs = [];
+        vm.range = gridHelperService.range;
+
+        vm.dataConstructorData = {entityType: vm.entityType};
+
         vm.loadPermissions = function () {
 
             var promises = [];
@@ -157,13 +167,6 @@
         vm.cancel = function () {
             $mdDialog.cancel();
         };
-
-        /*vm.editLayout = function (ev) {
-            $state.go('app.data-constructor', {entityType: vm.entityType});
-            $mdDialog.hide();
-        };*/
-
-        vm.dataConstructorData = {entityType: vm.entityType};
 
         vm.manageAttrs = function (ev) {
             var entityType = {entityType: vm.entityType};
@@ -302,14 +305,6 @@
             });
 
         };
-
-        vm.attrs = [];
-        vm.entityAttrs = [];
-        vm.userInputs = [];
-        vm.layoutAttrs = [];
-
-        vm.entityAttrs = [];
-        vm.range = gridHelperService.range;
 
         vm.getItem = function (fromChild) {
             return new Promise(function (res, rej) {
@@ -468,6 +463,7 @@
         };
 
         vm.checkReadyStatus = function () {
+
             return vm.readyStatus.attrs && vm.readyStatus.entity && vm.readyStatus.permissions && vm.readyStatus.layout;
         };
 
@@ -679,17 +675,6 @@
 
         };
 
-        if (vm.entityType === 'transaction-type') {
-
-            $scope.$watch('vm.entity.group', function () {
-                if (vm.entity.group === 14 || !vm.entity.group) {
-                    vm.TTGroupChosen = false;
-                } else {
-                    vm.TTGroupChosen = true;
-                }
-            });
-        }
-
         vm.updateItem = function () {
 
             // TMP save method for instrument
@@ -775,18 +760,6 @@
 
         };
 
-        vm.init = function () {
-
-            vm.getItem();
-            vm.getAttrs();
-
-            vm.layoutAttrs = layoutService.getLayoutAttrs();
-            vm.entityAttrs = metaService.getEntityAttrs(vm.entityType);
-
-        };
-
-        vm.init();
-
         vm.editLayout = function (ev) {
 
             $mdDialog.show({
@@ -817,6 +790,37 @@
             });
 
         };
+
+        vm.init = function () {
+
+            vm.getItem();
+            vm.getAttrs();
+
+            vm.layoutAttrs = layoutService.getLayoutAttrs();
+            vm.entityAttrs = metaService.getEntityAttrs(vm.entityType);
+
+            if (vm.entityType === 'transaction-type') {
+
+                $scope.$watch('vm.entity.group', function () {
+                    if (vm.entity.group === 14 || !vm.entity.group) {
+                        vm.TTGroupChosen = false;
+                    } else {
+                        vm.TTGroupChosen = true;
+                    }
+                });
+            }
+
+        };
+
+        vm.init();
+
+
+        // Special case for split-panel
+        $scope.splitPanelInit = function (entityType, entityId) {
+            vm.entityType = entityType;
+            vm.entityId = entityId;
+        }
+
     }
 
 }());
