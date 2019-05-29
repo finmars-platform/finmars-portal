@@ -7,12 +7,12 @@
 
     var customFieldService = require('../../services/reports/customFieldService');
 
-    module.exports = function ($scope, $stateParams, $mdDialog) {
+    module.exports = function ($scope, $mdDialog, data) {
 
         var vm = this;
 
         vm.customFields = [];
-        vm.entityType = $stateParams.entityType;
+        vm.entityType = data.entityType;
 
         vm.getList = function () {
             customFieldService.getList(vm.entityType).then(function (data) {
@@ -115,6 +115,7 @@
         };
 
 
+        // This controller could be also opened as a dialog
         vm.cancel = function () {
             $mdDialog.cancel();
         };

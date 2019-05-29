@@ -261,6 +261,12 @@
                     return "Instrument Dynamic Attributes";
                 case 'obj_attrs.instrumenttypeattributetype':
                     return "Instrument Type Dynamic Attributes";
+                case 'reports.balancereportcustomfield':
+                    return "Balance Report Custom Fields";
+                case 'reports.plreportcustomfield':
+                    return "P&L Report Custom Fields";
+                case 'reports.transactionreportcustomfield':
+                    return "Transaction Report Custom Fields";
                 default:
                     return "Unknown"
             }
