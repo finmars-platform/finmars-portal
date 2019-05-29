@@ -11,6 +11,13 @@
     </md-toolbar>
     <md-dialog-content style="background: #fff; padding: 16px">
 
+        <div class="m-t-16 m-b-20" data-ng-if="vm.file.notes">
+
+            <p class="m-t-0">Notes: </p>
+
+            <div data-ng-bind="vm.file.notes"></div>
+        </div>
+
         <div>
 
             <md-checkbox ng-checked="vm.selectAllState" data-ng-click="vm.toggleSelectAll()"

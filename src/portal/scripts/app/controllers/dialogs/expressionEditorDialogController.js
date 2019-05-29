@@ -326,10 +326,11 @@
                 if (expression[i].match(new RegExp(/^[a-zA-Z0-9_-]*$/)) && strContent === false) {
                     currentToken.value = currentToken.value + expression[i];
                 } else {
-                    result = result + currentToken.value;
+                    result = result + '<span class="eb-highlight-error">' + currentToken.value + '</span>';
                     currentToken.value = '';
                     currentToken.hasDot = false;
                     result = result + expression[i]
+                    vm.status = 'inputs-error';
                 }
 
                 if (expression[i] === '.') {
@@ -397,7 +398,7 @@
                 i = i + 1;
 
                 if (i === expression.length && currentToken.value !== '') {
-                    result = result + currentToken.value;
+                    result = result + '<span class="eb-highlight-error">' + currentToken.value + '</span>';
                     vm.status = 'inputs-error';
                 }
 

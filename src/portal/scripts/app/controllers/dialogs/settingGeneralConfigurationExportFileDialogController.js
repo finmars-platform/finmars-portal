@@ -18,6 +18,10 @@
         vm.readyStatus = {content: false, layouts: false};
         vm.layouts = [];
 
+        vm.activeLayout = {
+            data: {}
+        };
+
         vm.selectAllState = false;
 
         vm.getFile = function () {
@@ -481,7 +485,7 @@
 
         vm.createLayout = function ($event) {
 
-            var configuration = {};
+            var configuration = Object.assign({}, vm.activeLayout);
 
             vm.items.forEach(function (item) {
 
@@ -618,6 +622,12 @@
                     return "Instrument Dynamic Attributes";
                 case 'obj_attrs.instrumenttypeattributetype':
                     return "Instrument Type Dynamic Attributes";
+                case 'reports.balancereportcustomfield':
+                    return "Balance Report Custom Fields";
+                case 'reports.plreportcustomfield':
+                    return "P&L Report Custom Fields";
+                case 'reports.transactionreportcustomfield':
+                    return "Transaction Report Custom Fields";
                 default:
                     return "Unknown"
             }
@@ -825,6 +835,7 @@
 
                 });
 
+                vm.file.notes = vm.activeLayout.data.notes;
                 vm.file.body = results;
 
                 var resultFile = JSON.stringify(vm.file);

@@ -26,13 +26,13 @@
                         <input data-ng-model="vm.customField.expr">
                     </md-input-container>
 
-                    <expression-editor-button data-item="vm.customField.expr"></expression-editor-button>
+                    <expression-editor-button data-item="vm.customField.expr" data-data="{groups: [vm.inputsGroup], functions: [vm.inputsFunctions]}"></expression-editor-button>
 
                 </div>
 
-                <md-button class="md-raised md-primary" data-ng-click="vm.setupConfig($event)">
-                    Define range
-                </md-button>
+                <!--<md-button class="md-raised md-primary" data-ng-click="vm.setupConfig($event)">-->
+                    <!--Define range-->
+                <!--</md-button>-->
 
             </div>
 

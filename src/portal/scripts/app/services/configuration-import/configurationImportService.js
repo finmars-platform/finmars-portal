@@ -19,6 +19,7 @@
     var metaContentTypesService = require('../../services/metaContentTypesService');
 
     var uiRepository = require('../../repositories/uiRepository');
+    var customFieldRepository = require('../../repositories/reports/customFieldRepository');
     var bookmarkRepository = require('../../repositories/bookmarkRepository');
 
     var configurationImportCompatibilityService = require('./configurationImportCompatibilityService');
@@ -641,7 +642,7 @@
                             }));
                             break;
                         case 'ui.reportlayout':
-                            resolve(new Promise(function (resolve, reject) {
+                            resolve(new Promise(function (resolveLocal, reject) {
 
                                 uiRepository.getListLayoutDefault({
                                     filters: {
@@ -666,15 +667,135 @@
 
                                             item.id = result.id;
 
-                                            resolve(uiRepository.updateListLayout(item.id, item));
+                                            resolveLocal(uiRepository.updateListLayout(item.id, item));
 
                                         } else {
 
-                                            resolve(uiRepository.createListLayout(item));
+                                            resolveLocal(uiRepository.createListLayout(item));
                                         }
                                     } else {
 
-                                        resolve(uiRepository.createListLayout(item));
+                                        resolveLocal(uiRepository.createListLayout(item));
+
+                                    }
+
+                                });
+
+                            }));
+                            break;
+                        case 'reports.balancereportcustomfield':
+                            resolve(new Promise(function (resolveLocal, reject) {
+
+                                customFieldRepository.getList('balance-report', {
+                                    filters: {
+                                        user_code: item.user_code
+                                    }
+                                }).then(function (data) {
+
+                                    if (data.results.length) {
+
+                                        var result;
+
+                                        data.results.forEach(function (resultItem) {
+
+                                            if (resultItem.user_code === item.user_code) {
+                                                result = resultItem
+                                            }
+
+                                        });
+
+                                        if (result) {
+
+                                            item.id = result.id;
+
+                                            resolveLocal(customFieldRepository.update('balance-report', item.id, item));
+
+                                        } else {
+                                            resolveLocal(customFieldRepository.create('balance-report', item));
+                                        }
+                                    } else {
+
+                                        resolveLocal(customFieldRepository.create('balance-report', item));
+
+                                    }
+
+                                });
+
+                            }));
+                            break;
+                        case 'reports.plreportcustomfield':
+                            resolve(new Promise(function (resolveLocal, reject) {
+
+                                customFieldRepository.getList('pl-report', {
+                                    filters: {
+                                        user_code: item.user_code
+                                    }
+                                }).then(function (data) {
+
+                                    if (data.results.length) {
+
+                                        var result;
+
+                                        data.results.forEach(function (resultItem) {
+
+                                            if (resultItem.user_code === item.user_code) {
+                                                result = resultItem
+                                            }
+
+                                        });
+
+                                        if (result) {
+
+                                            item.id = result.id;
+
+                                            resolveLocal(customFieldRepository.update('pl-report', item.id, item));
+
+                                        } else {
+                                            resolveLocal(customFieldRepository.create('pl-report', item));
+                                        }
+                                    } else {
+
+                                        resolveLocal(customFieldRepository.create('pl-report', item));
+
+                                    }
+
+                                });
+
+                            }));
+                            break;
+                        case 'reports.transactionreportcustomfield':
+                            resolve(new Promise(function (resolveLocal, reject) {
+
+                                customFieldRepository.getList('transaction-report', {
+                                    filters: {
+                                        user_code: item.user_code
+                                    }
+                                }).then(function (data) {
+
+                                    if (data.results.length) {
+
+                                        var result;
+
+                                        data.results.forEach(function (resultItem) {
+
+                                            if (resultItem.user_code === item.user_code) {
+                                                result = resultItem
+                                            }
+
+                                        });
+
+                                        if (result) {
+
+                                            item.id = result.id;
+
+                                            resolveLocal(customFieldRepository.update('transaction-report', item.id, item));
+
+                                        } else {
+                                            resolveLocal(customFieldRepository.create('transaction-report', item));
+                                        }
+                                    } else {
+
+                                        resolveLocal(customFieldRepository.create('transaction-report', item));
 
                                     }
 
@@ -767,7 +888,8 @@
                 return ['instruments.instrumenttype', 'transactions.transactiontype', 'ui.listlayout', 'ui.reportlayout',
                     'accounts.accounttype', 'currencies.currency', 'instruments.pricingpolicy',
                     'csv_import.csvimportscheme', 'integrations.instrumentdownloadscheme', 'integrations.pricedownloadscheme',
-                    'integrations.complextransactionimportscheme', 'complex_import.compleximportscheme'].indexOf(item.entity) !== -1;
+                    'integrations.complextransactionimportscheme', 'complex_import.compleximportscheme',
+                    'reports.balancereportcustomfield', 'reports.plreportcustomfield', 'reports.transactionreportcustomfield'].indexOf(item.entity) !== -1;
             });
 
             overwriteEntityItems(overwriteEntities, cacheContainer, errors).then(function (data) {
@@ -1368,6 +1490,168 @@
                             break;
                         case 'obj_attrs.instrumenttypeattributetype':
                             resolve(createAttributeTypeIfNotExists('instruments.instrumenttype', item, errors));
+                            break;
+                        case 'reports.balancereportcustomfield':
+                            resolve(new Promise(function (resolveLocal, reject) {
+
+                                customFieldRepository.getList('balance-report', {
+                                    filters: {
+                                        user_code: item.user_code,
+                                    }
+                                }).then(function (data) {
+
+                                    if (data.results.length) {
+
+                                        var result;
+
+                                        data.results.forEach(function (resultItem) {
+
+                                            if (resultItem.user_code === item.user_code) {
+                                                result = resultItem
+                                            }
+
+                                        });
+
+                                        if (result) {
+
+                                            if (settings.mode !== 'overwrite') {
+
+                                                errors.push({
+                                                    content_type: 'reports.balancereportcustomfield',
+                                                    item: item,
+                                                    error: {
+                                                        message: 'Balance Report Custom Field already exists: name ' + item.name
+                                                    },
+                                                    mode: 'skip'
+                                                });
+
+                                            }
+
+                                            resolveLocal()
+
+                                        } else {
+
+                                            resolveLocal(customFieldRepository.create('balance-report', item));
+
+                                        }
+
+                                    } else {
+
+                                        resolveLocal(customFieldRepository.create('balance-report', item));
+
+                                    }
+
+                                });
+
+                            }));
+                            break;
+                        case 'reports.plreportcustomfield':
+                            resolve(new Promise(function (resolveLocal, reject) {
+
+                                customFieldRepository.getList('pl-report', {
+                                    filters: {
+                                        user_code: item.user_code,
+                                    }
+                                }).then(function (data) {
+
+                                    if (data.results.length) {
+
+                                        var result;
+
+                                        data.results.forEach(function (resultItem) {
+
+                                            if (resultItem.user_code === item.user_code) {
+                                                result = resultItem
+                                            }
+
+                                        });
+
+                                        if (result) {
+
+                                            if (settings.mode !== 'overwrite') {
+
+                                                errors.push({
+                                                    content_type: 'reports.plreportcustomfield',
+                                                    item: item,
+                                                    error: {
+                                                        message: 'P&L Report Custom Field already exists: name ' + item.name
+                                                    },
+                                                    mode: 'skip'
+                                                });
+
+                                            }
+
+                                            resolveLocal()
+
+                                        } else {
+
+                                            resolveLocal(customFieldRepository.create('pl-report', item));
+
+                                        }
+
+                                    } else {
+
+                                        resolveLocal(customFieldRepository.create('pl-report', item));
+
+                                    }
+
+                                });
+
+                            }));
+                            break;
+                        case 'reports.transactionreportcustomfield':
+                            resolve(new Promise(function (resolveLocal, reject) {
+
+                                customFieldRepository.getList('transaction-report', {
+                                    filters: {
+                                        user_code: item.user_code,
+                                    }
+                                }).then(function (data) {
+
+                                    if (data.results.length) {
+
+                                        var result;
+
+                                        data.results.forEach(function (resultItem) {
+
+                                            if (resultItem.user_code === item.user_code) {
+                                                result = resultItem
+                                            }
+
+                                        });
+
+                                        if (result) {
+
+                                            if (settings.mode !== 'overwrite') {
+
+                                                errors.push({
+                                                    content_type: 'reports.transactionreportcustomfield',
+                                                    item: item,
+                                                    error: {
+                                                        message: 'Transaction Report Custom Field already exists: name ' + item.name
+                                                    },
+                                                    mode: 'skip'
+                                                });
+
+                                            }
+
+                                            resolveLocal()
+
+                                        } else {
+
+                                            resolveLocal(customFieldRepository.create('transaction-report', item));
+
+                                        }
+
+                                    } else {
+
+                                        resolveLocal(customFieldRepository.create('transaction-report', item));
+
+                                    }
+
+                                });
+
+                            }));
                             break;
                     }
 
