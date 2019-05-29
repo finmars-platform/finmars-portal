@@ -9,8 +9,9 @@
         return {
             restrict: 'E',
             scope: {
-                getDataMethod: '&',
-                selectedItems: '=',
+                getDataMethod: '&?',
+                items: '=',
+                model: '=',
                 title: "@",
                 nameProperty: "@"
             },
@@ -22,17 +23,20 @@
                 var setInputText = function () {
 
                     var selElemNumber = 0;
-                    if (scope.selectedItems && scope.selectedItems.length > 0) {
-                        selElemNumber = scope.selectedItems.length;
+                    if (scope.model && scope.model.length > 0) {
+                        selElemNumber = scope.model.length;
                     }
 
-                    scope.inputText = selElemNumber + " " + "items have been selected";
+                    scope.inputText = selElemNumber + " " + "items selected";
 
                 };
 
                 setInputText();
 
                 $(elem).click(function (event) {
+
+                    event.preventDefault();
+                    event.stopPropagation();
 
                     $mdDialog.show({
                         controller: "TwoFieldsMultiselectDialogController as vm",
@@ -42,7 +46,8 @@
                         locals: {
                             data: {
                                 getDataMethod: scope.getDataMethod,
-                                selectedItems: scope.selectedItems,
+                                items: scope.items,
+                                model: scope.model,
                                 title: scope.title,
                                 nameProperty: scope.nameProperty
                             }
@@ -50,7 +55,7 @@
                     }).then(function (data) {
                        if (data.status === "agree") {
 
-                           scope.selectedItems = data.selectedItems;
+                           scope.model = data.selectedItems;
                            setInputText();
 
                        }

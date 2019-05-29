@@ -25,6 +25,16 @@
 
                 scope.filterValue = undefined;
 
+                scope.evEventService.addEventListener(evEvents.DATA_LOAD_END, function () {
+                    var columnRowsContent  = userFilterService.getDataByKey(scope.evDataService, scope.filter.key);
+
+                    scope.columnRowsContent = columnRowsContent.map(function (cRowsContent) {
+                        return {id: cRowsContent, name: cRowsContent}
+                    });
+
+                    scope.$apply();
+                });
+
                 if (!scope.filter.options) {
                     scope.filter.options = {};
                 }

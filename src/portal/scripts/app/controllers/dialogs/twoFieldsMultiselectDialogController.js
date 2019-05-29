@@ -14,39 +14,67 @@
         logService.controller('TwoFieldsOptionsDialogController', 'initialized');
 
         var getDataMethod = data.getDataMethod;
-        var selectedItems = data.selectedItems;
+        var selectedItems = data.model;
+
+        if (!selectedItems) {
+            selectedItems = [];
+        }
 
         vm.title = data.title;
         vm.nameProperty = data.nameProperty;
         vm.readyStatus = false;
 
         vm.selectedItems = [];
-        getDataMethod().then(function (data) {
 
-            vm.items = data.results;
+        var separateUnselectedItems = function (items, selectedItems) {
 
-            if (vm.items &&
-                vm.items.length > 0 &&
-                selectedItems &&
-                selectedItems.length > 0) {
+            selectedItems.map(function (selItem) {
 
-                selectedItems.forEach(function (selItem) {
+                items.map(function (item, itemIndex) {
 
-                    vm.items.map(function (item, itemIndex) {
+                    if (item.id === selItem) {
 
-                        if (item.id === selItem) {
+                        vm.selectedItems.push(item);
+                        items.splice(itemIndex, 1);
+                    }
 
-                            vm.selectedItems.push(item);
-                            vm.items.splice(itemIndex, 1);
-                        }
+                });
+            })
 
-                    });
-                })
+        };
+
+        if (getDataMethod) {
+
+            getDataMethod().then(function (resData) {
+
+                vm.items = resData.results;
+
+                if (vm.items && selectedItems) {
+
+                    separateUnselectedItems(vm.items, selectedItems);
+
+                }
+
+                vm.readyStatus = true;
+                $scope.$apply();
+
+            });
+
+        } else {
+
+            vm.items = data.items;
+
+            if (vm.items && selectedItems) {
+
+                separateUnselectedItems(vm.items, selectedItems);
+
             }
 
             vm.readyStatus = true;
 
-        });
+        }
+
+
 
         vm.cancel = function () {
             $mdDialog.cancel();
