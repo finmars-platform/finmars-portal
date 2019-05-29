@@ -7,19 +7,30 @@
                  class="md-primary"
                  ng-change="toggleFilterState(filter)"
                  flex="15"></md-checkbox>
-    <md-input-container flex="65">
+    <md-input-container ng-if="filter.options.filter_type !== 'multiselect'"
+                        flex="65"
+                        style="margin-top: 10px">
         <label class="uncut-text-on-focus-label">
             <span ng-bind="getFilterName()"></span>
         </label>
 
         <div>
-            <div>
+            <div ng-if="filter.options.filter_type === 'contain' || filter.options.filter_type === 'does_not_contain'">
                 <input data-ng-model="filter.options.filter_values[0]" data-ng-change="filterChange()"
                        data-ng-model-options="{debounce: 1000}">
             </div>
         </div>
 
     </md-input-container>
+
+    <div ng-if="filter.options.filter_type === 'multiselect'"
+         flex="65"
+         style="margin-top: 10px">
+        <two-fields-multiselect data-title="{{getFilterName()}}"
+                                data-items="columnRowsContent"
+                                data-model="filter.options.filter_values"
+                                data-name-property="name"></two-fields-multiselect>
+    </div>
 
     <div class="settings-btn" flex="20">
         <md-menu>
@@ -41,22 +52,34 @@
                         <md-menu-content class="dropdown-buttons-menu" width="3">
                             <md-button ng-click="changeFilterType('contain')">
                                 <ng-md-icon icon="done"
+                                            ng-show="filter.options.filter_type !== 'contain'"
                                             style="visibility: hidden;"></ng-md-icon>
+                                <ng-md-icon icon="done"
+                                            ng-show="filter.options.filter_type === 'contain'"></ng-md-icon>
                                 Contains
                             </md-button>
                             <md-button ng-click="changeFilterType('does_not_contain')">
                                 <ng-md-icon icon="done"
+                                            ng-show="filter.options.filter_type !== 'does_not_contain'"
                                             style="visibility: hidden;"></ng-md-icon>
+                                <ng-md-icon icon="done"
+                                            ng-show="filter.options.filter_type === 'does_not_contain'"></ng-md-icon>
                                 Does not contain
                             </md-button>
-                            <md-button>
+                            <md-button ng-click="changeFilterType('select')">
                                 <ng-md-icon icon="done"
+                                            ng-show="filter.options.filter_type !== 'select'"
                                             style="visibility: hidden;"></ng-md-icon>
+                                <ng-md-icon icon="done"
+                                            ng-show="filter.options.filter_type === 'select'"></ng-md-icon>
                                 Select
                             </md-button>
-                            <md-button>
+                            <md-button ng-click="changeFilterType('multiselect')">
                                 <ng-md-icon icon="done"
+                                            ng-show="filter.options.filter_type !== 'multiselect'"
                                             style="visibility: hidden;"></ng-md-icon>
+                                <ng-md-icon icon="done"
+                                            ng-show="filter.options.filter_type === 'multiselect'"></ng-md-icon>
                                 Multiple Select
                             </md-button>
                         </md-menu-content>

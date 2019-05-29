@@ -137,7 +137,7 @@
     };
 
     var getRegularFilters = function (options) {
-        console.log("filter getRegularFilters options", options);
+
         var result = {};
 
         Object.keys(options).filter(function (key) {
