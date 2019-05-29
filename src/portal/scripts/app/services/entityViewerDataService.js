@@ -43,6 +43,9 @@
                 left: filterAreaLeft,
                 top: headerToolbarHeight,
                 width: filterAreaWidth
+            },
+            splitPanel: {
+                height: 0
             }
         }
 
@@ -124,6 +127,10 @@
             return data.interfaceLayout
         }
 
+        function setInterfaceLayout(interfaceLayout) {
+            data.interfaceLayout = interfaceLayout
+        }
+
         function setRootEntityViewer(isRootEntityViewer) {
             data.rootEntityViewer = isRootEntityViewer;
         }
@@ -148,7 +155,6 @@
         function getContentType() {
             return data.contentType;
         }
-
 
 
         function setColumns(columns) {
@@ -217,14 +223,6 @@
 
         function getAdditions() {
             return data.additions
-        }
-
-        function setEditorEntityId(id) {
-            data.editorEntityId = id;
-        }
-
-        function getEditorEntityId() {
-            return data.editorEntityId;
         }
 
         function setEditorTemplateUrl(templateUrl) {
@@ -652,7 +650,8 @@
                     delete listLayout.data.reportOptions.item_currencies;
                     delete listLayout.data.reportOptions.item_accounts;
 
-                };
+                }
+                ;
 
                 data.activeLayoutConfiguration = listLayout;
 
@@ -786,9 +785,6 @@
             setAdditions: setAdditions,
             getAdditions: getAdditions,
 
-            setEditorEntityId: setEditorEntityId,
-            getEditorEntityId: getEditorEntityId,
-
             setEditorTemplateUrl: setEditorTemplateUrl,
             getEditorTemplateUrl: getEditorTemplateUrl,
 
@@ -871,6 +867,7 @@
             getVirtualScrollLimit: getVirtualScrollLimit,
 
             getInterfaceLayout: getInterfaceLayout,
+            setInterfaceLayout: setInterfaceLayout,
 
             setExportOptions: setExportOptions,
             getExportOptions: getExportOptions,

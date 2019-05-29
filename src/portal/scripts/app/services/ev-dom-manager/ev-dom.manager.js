@@ -195,11 +195,12 @@
             evDataService.setActiveObject(null);
         }
 
+        evEventService.dispatchEvent(evEvents.ACTIVE_OBJECT_CHANGE);
         evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
 
     };
 
-    var handleObjectActive = function (clickData, evDataService) {
+    var handleObjectActive = function (clickData, evDataService, evEventService) {
 
         var obj = evDataHelper.getObject(clickData.___id, clickData.___parentId, evDataService);
 
@@ -221,6 +222,7 @@
 
         if (obj.___is_activated) {
             evDataService.setActiveObject(obj);
+            evEventService.dispatchEvent(evEvents.ACTIVE_OBJECT_CHANGE);
         } else {
             evDataService.setActiveObject(null);
         }
@@ -277,14 +279,10 @@
 
         } else {
 
-            var obj = evDataHelper.getObject(clickData.___id, clickData.___parentId, evDataService);
-
-            handleObjectActive(clickData, evDataService);
-
-            evDataService.setEditorEntityId(obj.id);
-            evEventService.dispatchEvent(evEvents.ADDITIONS_EDITOR_ENTITY_ID_CHANGE);
+            handleObjectActive(clickData, evDataService, evEventService);
 
             evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+
         }
 
     };
@@ -509,7 +507,7 @@
                 var parentGroupHashId = event.target.dataset.parentGroupHashId;
                 var dropdownAction = event.target.dataset.evDropdownAction;
 
-                if (objectId && dropdownAction) {
+                if (objectId && dropdownAction && parentGroupHashId) {
 
                     var obj = evDataHelper.getObject(objectId, parentGroupHashId, evDataService);
 
@@ -574,7 +572,7 @@
         var interfaceLayout = evDataService.getInterfaceLayout();
 
         var viewportWidth = document.body.clientWidth - interfaceLayout.sidebar.width - interfaceLayout.filterArea.width;
-        var viewportHeight = Math.floor(document.body.clientHeight - interfaceLayout.columnArea.top - interfaceLayout.columnArea.height);
+        var viewportHeight = Math.floor(document.body.clientHeight - interfaceLayout.columnArea.top - interfaceLayout.columnArea.height - interfaceLayout.splitPanel.height);
 
         evScrollManager.setViewportHeight(viewportHeight);
         if (viewportWidth) {

@@ -97,7 +97,6 @@ app.controller('ValidationDialogController', ['$scope', '$mdDialog', 'validation
 // Common - unknown
 
 app.controller('FillPriceManuallyInstrumentDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/fillPriceManuallyInstrumentDialogController')]);
-app.controller('AdditionsEditorEntityEditController', ['$scope', '$state', '$mdDialog', require('./app/controllers/additionsEditorEntityEditController')]);
 app.controller('EntityViewerPermissionEditorController', ['$scope', require('./app/controllers/entityViewer/entityViewerPermissionEditorController')]);
 app.controller('FloatCustomFieldConstructorController', ['$scope', require('./app/controllers/floatCustomFieldConstructorController')]);
 app.controller('DateCustomFieldConstructorController', ['$scope', require('./app/controllers/dateCustomFieldConstructorController')]);
@@ -327,7 +326,7 @@ app.directive('groupColumnResizer', [require('./app/directives/groupTable/gColum
 app.directive('groupLayoutResizer', [require('./app/directives/groupTable/gLayoutResizerComponent')]);
 app.directive('gDialogDraggable', [require('./app/directives/groupTable/gDialogDraggableComponent')]);
 app.directive('groupHeightAligner', [require('./app/directives/groupTable/gHeightAlignerComponent')]);
-app.directive('groupEditorBinder', ['$templateCache', '$compile', require('./app/directives/groupTable/groupEditorBinderComponent')]);
+app.directive('groupEditorBinder', ['$templateCache', '$compile', '$controller', '$mdDialog', '$state', require('./app/directives/groupTable/groupEditorBinderComponent')]);
 
 app.directive('groupBindReportRow', [require('./app/directives/groupTable/gBindReportRowDirective.js')]);
 app.directive('contentTitle', ['$timeout', require('./app/directives/contentTitleDirective.js')]);
