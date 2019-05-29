@@ -53,7 +53,7 @@
 
                     <div>
 
-                        <div data-ng-show="vm.validationResult.errors.length" style="margin-top: 24px; overflow: auto">
+                        <div style="margin-top: 24px; overflow: auto">
                             <table>
                                 <thead>
                                 <tr>
@@ -67,7 +67,7 @@
                                 </tr>
                                 </thead>
                                 <tbody>
-                                <tr data-ng-repeat="item in vm.validationResult.errors">
+                                <tr data-ng-repeat="item in vm.errors track by $index">
                                     <td>
                                         <span data-ng-bind="item.original_row_index"></span>
                                     </td>

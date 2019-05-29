@@ -61,14 +61,14 @@
 
             </div>
 
-            <div data-ng-if="vm.readyStatus.layouts">
+            <div>
 
-                <div data-ng-if="vm.layouts.length" layout="row" class="m-b-16 m-t-16">
+                <div layout="row" class="m-b-16 m-t-16">
 
                     <div>
 
                         <div><label for="">Notes</label></div>
-                        <textarea name="" data-ng-model="vm.activeLayout.notes" id="" cols="60" rows="5">
+                        <textarea name="" data-ng-model="vm.activeLayout.data.notes" id="" cols="60" rows="5">
 
                         </textarea>
 

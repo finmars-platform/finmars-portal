@@ -4,6 +4,10 @@
             <ng-md-icon icon="dialpad" size="20" class="draggable-dialog-sign"></ng-md-icon>
             <h2>Transaction import manager</h2>
             <span flex></span>
+            <div class="toolbar-progression-indication"
+                 data-ng-if="vm.config.total_rows != null && vm.config.processed_rows != null">
+                <span>Import Progress:</span> <span>{{vm.config.processed_rows}} / {{vm.config.total_rows}}</span>
+            </div>
         </div>
     </md-toolbar>
     <md-dialog-content style="background: #E5E5E5;">
