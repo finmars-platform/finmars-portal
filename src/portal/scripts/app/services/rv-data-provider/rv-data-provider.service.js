@@ -65,11 +65,24 @@
 
             if (item.options && item.options.enabled) {
 
-                if (item.options.query && item.options.enabled) {
+                /*if (item.options.query && item.options.enabled) {
 
                     var key = queryParamsHelper.entityPluralToSingular(item.key);
 
                     newRequestParametersBody[key] = item.options.query
+                }*/
+                if (item.options.filter_values && item.options.enabled) {
+                    // console.log("filter injectRegularFilters", item.options.filter_values);
+                    var key = queryParamsHelper.entityPluralToSingular(item.key);
+
+                    /*if (item.options.filter_type) {
+
+
+
+                    }*/
+
+                    newRequestParametersBody[key] = item.options.filter_values[0];
+                    newRequestParametersBody['filter_type'] = item.options.filter_type;
                 }
 
             }
@@ -157,7 +170,7 @@
 
 
             objectsService.getList(entityType, options, entityViewerDataService).then(function (data) {
-
+                // console.log("filter objectsService.getList options", options);
                 var groupData = entityViewerDataService.getData(event.___id);
 
                 // console.log('groupData', groupData);
@@ -410,9 +423,8 @@
     };
 
     var getObjectsByRequestParameters = function (requestParameters, entityViewerDataService, entityViewerEventService) {
-
+        // console.log("filter getObjectsByRequestParameters", requestParameters);
         return getObjects(requestParameters, entityViewerDataService, entityViewerEventService)
-
 
     };
 
@@ -579,7 +591,7 @@
             });
 
         } else {
-
+            // console.log("filter createDataStructure", defaultRootRequestParameters);
             getObjects(defaultRootRequestParameters, evDataService, evEventService).then(function () {
 
                 evEventService.dispatchEvent(evEvents.DATA_LOAD_END);

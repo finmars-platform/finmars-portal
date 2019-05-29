@@ -263,7 +263,7 @@
 
                 scope.renameFilter = function (filter, $mdMenu, $event) {
 
-                    $mdMenu.close();
+                    $mdMenu.close($event);
 
 
                     $mdDialog.show({

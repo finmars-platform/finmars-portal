@@ -16,20 +16,34 @@
 	<div class="two-fields-buttons" layout="column" layout-align="center center">
 		<md-button class="two-fields-select-btn two-fields-btn md-raised"
 				   data-ng-click="switchOptions('select')">
-			<ng-md-icon icon="chevron_right" size="25"></ng-md-icon>
+			<ng-md-icon icon="chevron_right" size="30"></ng-md-icon>
 		</md-button>
 		<md-button class="two-fields-select-all-btn two-fields-btn md-raised"
 				   data-ng-click="selectAll()">
-			<ng-md-icon icon="chevron_right" size="35"></ng-md-icon>
+			<ng-md-icon class="two-fields-two-chevron-icons"
+						icon="chevron_right"
+						size="30"
+						style="left: 7px;"></ng-md-icon>
+			<ng-md-icon class="two-fields-two-chevron-icons"
+						icon="chevron_right"
+						size="30"
+						style="left: 15px;"></ng-md-icon>
 		</md-button>
 
 		<md-button class="two-fields-select-btn two-fields-btn md-raised"
 				   data-ng-click="switchOptions('deselect')">
-			<ng-md-icon icon="chevron_left" size="25"></ng-md-icon>
+			<ng-md-icon icon="chevron_left" size="30"></ng-md-icon>
 		</md-button>
 		<md-button class="two-fields-select-all-btn two-fields-btn md-raised"
 				   data-ng-click="deselectAll()">
-			<ng-md-icon icon="chevron_left" size="35"></ng-md-icon>
+			<ng-md-icon class="two-fields-two-chevron-icons"
+						icon="chevron_left"
+						size="30"
+						style="left: 7px;"></ng-md-icon>
+			<ng-md-icon class="two-fields-two-chevron-icons"
+						icon="chevron_left"
+						size="30"
+						style="left: 15px;"></ng-md-icon>
 	</div>
 	<div layout="column">
 			<p>Selected</p>

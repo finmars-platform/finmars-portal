@@ -625,6 +625,8 @@
                             syncAttrs();
                             evDataHelper.updateColumnsIds(entityViewerDataService);
                             evDataHelper.setColumnsDefaultWidth(entityViewerDataService);
+
+                            entityViewerEventService.dispatchEvent(evEvents.COLUMNS_CHANGE);
                             entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
                         }
                         if (target === document.querySelector('#groupsbag') ||
@@ -656,6 +658,8 @@
                             syncAttrs();
                             evDataHelper.updateColumnsIds(entityViewerDataService);
                             evDataHelper.setColumnsDefaultWidth(entityViewerDataService);
+
+                            entityViewerEventService.dispatchEvent(evEvents.GROUPS_CHANGE);
                             entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
                         }
                         if (target === document.querySelector('#filtersbag .drop-new-filter') ||
@@ -687,6 +691,8 @@
                             syncAttrs();
                             evDataHelper.updateColumnsIds(entityViewerDataService);
                             evDataHelper.setColumnsDefaultWidth(entityViewerDataService);
+
+                            entityViewerEventService.dispatchEvent(evEvents.FILTERS_CHANGE);
                             entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
                         }
 
