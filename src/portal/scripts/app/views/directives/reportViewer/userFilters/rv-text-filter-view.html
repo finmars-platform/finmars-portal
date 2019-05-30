@@ -7,32 +7,55 @@
                  class="md-primary"
                  ng-change="toggleFilterState(filter)"
                  flex="15"></md-checkbox>
-    <md-input-container ng-if="filter.options.filter_type !== 'multiselect'"
-                        flex="65"
-                        style="margin-top: 10px">
-        <label class="uncut-text-on-focus-label">
-            <span ng-bind="getFilterName()"></span>
-        </label>
 
-        <div>
-            <div ng-if="filter.options.filter_type === 'contain' || filter.options.filter_type === 'does_not_contain'">
-                <input data-ng-model="filter.options.filter_values[0]" data-ng-change="filterChange()"
+    <div ng-if="filter.options.filter_type !== 'multiselector'"
+         flex="70">
+        <div ng-if="filter.options.filter_type !== 'selector'" class="table-filter-input-container">
+            <md-input-container>
+                <label>
+                    <span ng-bind="getFilterName()"></span>
+                </label>
+
+                <input data-ng-model="filter.options.filter_values[0]"
+                       data-ng-change="filterChange()"
                        data-ng-model-options="{debounce: 1000}">
-            </div>
+            </md-input-container>
         </div>
 
-    </md-input-container>
+            <div ng-if="filter.options.filter_type === 'selector'" class="table-filter-input-container">
+                <md-input-container>
+                    <label>
+                        <span ng-bind="getFilterName()"></span>
+                    </label>
 
-    <div ng-if="filter.options.filter_type === 'multiselect'"
-         flex="65"
-         style="margin-top: 10px">
+                    <input data-ng-model="filter.options.filter_values[0]"
+                          data-ng-model-options="{debounce: 1000}"
+                          ng-click="toggleFilterSelectMenu('show')"
+                          ng-blur="toggleFilterSelectMenu('hide')">
+
+                    <div class="text-filter-input-options-holder text-filter-select-menu visibility-hidden">
+                        <md-button
+                                ng-repeat="selectOption in filterSelectOptions | filter: filter.options.filter_values[0] | limitTo: 20"
+                                ng-bind="selectOption"
+                                ng-click="selectFilterOption(selectOption)">
+                        </md-button>
+                    </div>
+                </md-input-container>
+            </div>
+
+        </md-input-container>
+    </div>
+
+    <div ng-if="filter.options.filter_type === 'multiselector'"
+         flex="70">
         <two-fields-multiselect data-title="{{getFilterName()}}"
                                 data-items="columnRowsContent"
                                 data-model="filter.options.filter_values"
-                                data-name-property="name"></two-fields-multiselect>
+                                data-name-property="name"
+                                class="table-filter-input-container"></two-fields-multiselect>
     </div>
 
-    <div class="settings-btn" flex="20">
+    <div class="settings-btn" flex="15">
         <md-menu>
             <md-button aria-label="Open phone interactions menu"
                        class="md-icon-button"
@@ -66,20 +89,20 @@
                                             ng-show="filter.options.filter_type === 'does_not_contain'"></ng-md-icon>
                                 Does not contain
                             </md-button>
-                            <md-button ng-click="changeFilterType('select')">
+                            <md-button ng-click="changeFilterType('selector')">
                                 <ng-md-icon icon="done"
-                                            ng-show="filter.options.filter_type !== 'select'"
+                                            ng-show="filter.options.filter_type !== 'selector'"
                                             style="visibility: hidden;"></ng-md-icon>
                                 <ng-md-icon icon="done"
-                                            ng-show="filter.options.filter_type === 'select'"></ng-md-icon>
+                                            ng-show="filter.options.filter_type === 'selector'"></ng-md-icon>
                                 Select
                             </md-button>
-                            <md-button ng-click="changeFilterType('multiselect')">
+                            <md-button ng-click="changeFilterType('multiselector')">
                                 <ng-md-icon icon="done"
-                                            ng-show="filter.options.filter_type !== 'multiselect'"
+                                            ng-show="filter.options.filter_type !== 'multiselector'"
                                             style="visibility: hidden;"></ng-md-icon>
                                 <ng-md-icon icon="done"
-                                            ng-show="filter.options.filter_type === 'multiselect'"></ng-md-icon>
+                                            ng-show="filter.options.filter_type === 'multiselector'"></ng-md-icon>
                                 Multiple Select
                             </md-button>
                         </md-menu-content>
@@ -87,15 +110,13 @@
                 </md-menu-item>
 
                 <md-menu-item>
-                    <md-menu>
-                        <md-button ng-click="renameFilter(filter, $mdMenu, $event)"
-                                   class="g-settings-option-btn">
-                            <ng-md-icon icon="visibility_off"
-                                        style="visibility: hidden;"></ng-md-icon>
-                            <span>Rename</span>
-                        </md-button>
-                        <md-menu-content style="display: none"></md-menu-content>
-                    </md-menu>
+                    <md-button ng-click="renameFilter(filter, $mdMenu, $event)"
+                               class="g-settings-option-btn">
+                        <ng-md-icon icon="visibility_off"
+                                    style="visibility: hidden;"></ng-md-icon>
+                        <span>Rename</span>
+                    </md-button>
+                    <md-menu-content style="display: none"></md-menu-content>
                 </md-menu-item>
 
                 <md-menu-item>

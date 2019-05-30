@@ -1,7 +1,7 @@
 (function () {
 
     var filterByText = function (items, regularFilters, filterType) {
-        // console.log("filter filter.service filterByText", items, regularFilters, filterType);
+        console.log("filter filter.service filterByText", items, regularFilters, filterType);
         var match;
 
         return items.filter(function (item) {

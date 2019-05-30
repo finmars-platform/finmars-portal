@@ -401,10 +401,14 @@
     </div>
     <!--<div dragula="'filters-bag'" dragula-model="filters" class="filters-holder">-->
     <div ng-if="isReport">
-        <div class="g-filters-holder">
+        <div class="g-filters-holder g-filters-holder-container">
             <div data-ng-repeat="filter in filters">
                 <div ng-if="filter['value_type'] === 10">
                     <rv-text-filter filter="filter" ev-data-service="evDataService" ev-event-service="evEventService"></rv-text-filter>
+                </div>
+
+                <div ng-if="filter['value_type'] === 20">
+                    <rv-number-filter filter="filter" ev-data-service="evDataService" ev-event-service="evEventService"></rv-number-filter>
                 </div>
             </div>
         </div>

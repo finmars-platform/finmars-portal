@@ -1,0 +1,227 @@
+<md-card ng-class="{'f-disabled': !filter.options.enabled}" class="g-filter-item">
+    <!--<md-tooltip data-ng-if="sideNavCollapsed" class="" md-direction="top">{{filter.name}}<span
+            data-ng-if="!getFilterType(filter['value_type'])">: {{filter.options.query}}</span></md-tooltip>-->
+
+    <div layout="row" ng-if="filter.options.filter_type === 'from_to'">
+        <span style="text-align: center;">Regime: from ... to ...</span>
+    </div>
+
+    <div layout="row" layout-align="center start">
+        <md-checkbox ng-model="filter.options.enabled"
+                     aria-label="filters"
+                     class="md-primary"
+                     ng-change="toggleFilterState(filter)"
+                     flex="15"></md-checkbox>
+
+        <div ng-if="filter.options.filter_type !== 'from_to'" flex="70">
+
+            <div class="table-filter-input-container">
+                <md-input-container>
+                    <label>
+                        <span ng-bind="getFilterName()"></span>
+                    </label>
+
+                    <input type="number"
+                           data-ng-model="filter.options.filter_values[0]"
+                           data-ng-change="filterChange(filter.options.filter_values[0])"
+                           data-ng-model-options="{debounce: 1000}"
+                           aria-label="rv number filter single input">
+                </md-input-container>
+            </div>
+
+            </md-input-container>
+        </div>
+
+        <div class="table-filter-input-container"
+             ng-if="filter.options.filter_type === 'from_to'"
+             flex="65">
+
+            <md-input-container class="md-block">
+                <label>
+                    <span>{{filter.name}}:from (incl)</span>
+                </label>
+
+                <input type="number"
+                       data-ng-model="filter.options.filter_values.min_value"
+                       data-ng-change="filterChange(filter.options.filter_values.min_value)"
+                       data-ng-model-options="{debounce: 1000}"
+                       aria-label="rv number filter single input">
+            </md-input-container>
+
+            <md-input-container class="md-block">
+                <label>
+                    <span>{{filter.name}}:to (incl)</span>
+                </label>
+
+                <input type="number"
+                       data-ng-model="filter.options.filter_values.max_value"
+                       data-ng-change="filterChange(filter.options.filter_values.max_value)"
+                       data-ng-model-options="{debounce: 1000}"
+                       aria-label="rv number filter single input">
+            </md-input-container>
+
+        </div>
+
+        <div class="settings-btn" flex="15">
+            <md-menu>
+                <md-button aria-label="Open phone interactions menu"
+                           class="md-icon-button"
+                           ng-click="$mdMenu.open($event)">
+                    <ng-md-icon icon="settings"></ng-md-icon>
+                </md-button>
+                <md-menu-content width="3">
+                    <md-menu-item>
+                        <md-menu>
+                            <md-button class="g-settings-option-btn"
+                                       ng-click="$mdOpenMenu($event)"
+                                       aria-label="show submenu with filter types">
+                                <ng-md-icon icon="arrow_drop_up"
+                                            class="z-arrow-left-icon"></ng-md-icon>
+                                <span>Filter</span>
+                            </md-button>
+                            <md-menu-content class="dropdown-buttons-menu" width="3">
+                                <md-button ng-click="changeFilterType('equal')">
+                                    <ng-md-icon icon="done"
+                                                ng-show="filter.options.filter_type !== 'equal'"
+                                                style="visibility: hidden;"></ng-md-icon>
+                                    <ng-md-icon icon="done"
+                                                ng-show="filter.options.filter_type === 'equal'"></ng-md-icon>
+                                    Equal
+                                </md-button>
+                                <md-button ng-click="changeFilterType('not_equal')">
+                                    <ng-md-icon icon="done"
+                                                ng-show="filter.options.filter_type !== 'not_equal'"
+                                                style="visibility: hidden;"></ng-md-icon>
+                                    <ng-md-icon icon="done"
+                                                ng-show="filter.options.filter_type === 'not_equal'"></ng-md-icon>
+                                    Not equal
+                                </md-button>
+                                <md-button ng-click="changeFilterType('greater_than')">
+                                    <ng-md-icon icon="done"
+                                                ng-show="filter.options.filter_type !== 'greater_than'"
+                                                style="visibility: hidden;"></ng-md-icon>
+                                    <ng-md-icon icon="done"
+                                                ng-show="filter.options.filter_type === 'greater_than'"></ng-md-icon>
+                                    Greater than
+                                </md-button>
+                                <md-button ng-click="changeFilterType('greater_equal')">
+                                    <ng-md-icon icon="done"
+                                                ng-show="filter.options.filter_type !== 'greater_equal'"
+                                                style="visibility: hidden;"></ng-md-icon>
+                                    <ng-md-icon icon="done"
+                                                ng-show="filter.options.filter_type === 'greater_equal'"></ng-md-icon>
+                                    Greater or equal to
+                                </md-button>
+                                <md-button ng-click="changeFilterType('less')">
+                                    <ng-md-icon icon="done"
+                                                ng-show="filter.options.filter_type !== 'less'"
+                                                style="visibility: hidden;"></ng-md-icon>
+                                    <ng-md-icon icon="done"
+                                                ng-show="filter.options.filter_type === 'less'"></ng-md-icon>
+                                    Less than
+                                </md-button>
+                                <md-button ng-click="changeFilterType('less_equal')">
+                                    <ng-md-icon icon="done"
+                                                ng-show="filter.options.filter_type !== 'less_equal'"
+                                                style="visibility: hidden;"></ng-md-icon>
+                                    <ng-md-icon icon="done"
+                                                ng-show="filter.options.filter_type === 'less_equal'"></ng-md-icon>
+                                    Less or equal to
+                                </md-button>
+                                <md-button ng-click="changeFilterType('from_to')">
+                                    <ng-md-icon icon="done"
+                                                ng-show="filter.options.filter_type !== 'from_to'"
+                                                style="visibility: hidden;"></ng-md-icon>
+                                    <ng-md-icon icon="done"
+                                                ng-show="filter.options.filter_type === 'from_to'"></ng-md-icon>
+                                    From ... to ... (incl)
+                                </md-button>
+                                <md-button ng-click="changeFilterType('top_n')">
+                                    <ng-md-icon icon="done"
+                                                ng-show="filter.options.filter_type !== 'top_n'"
+                                                style="visibility: hidden;"></ng-md-icon>
+                                    <ng-md-icon icon="done"
+                                                ng-show="filter.options.filter_type === 'top_n'"></ng-md-icon>
+                                    Top N items
+                                </md-button>
+                            </md-menu-content>
+                        </md-menu>
+                    </md-menu-item>
+
+                    <md-menu-item>
+                        <md-button ng-click="renameFilter(filter, $mdMenu, $event)"
+                                   class="g-settings-option-btn">
+                            <ng-md-icon icon="visibility_off"
+                                        style="visibility: hidden;"></ng-md-icon>
+                            <span>Rename</span>
+                        </md-button>
+                        <md-menu-content style="display: none"></md-menu-content>
+                    </md-menu-item>
+
+                    <md-menu-item>
+                        <md-button ng-click="removeFilter(filter)" class="g-settings-option-btn">
+                            <ng-md-icon icon="visibility_off"></ng-md-icon>
+                            <span>Remove</span>
+                        </md-button>
+                    </md-menu-item>
+                </md-menu-content>
+            </md-menu>
+
+            <!--<md-menu data-ng-if="!options.isRootEntityViewer">
+                <md-button aria-label="Open phone interactions menu" class="md-icon-button"
+                           ng-click="openFilterSettings($mdOpenMenu, $event)">
+                    <ng-md-icon icon="settings"></ng-md-icon>
+                </md-button>
+
+                <md-menu-content width="3">
+                    <md-menu-item>
+                        <md-menu>
+                            <md-button aria-label="show submenu with filter types">
+                                &lt;!&ndash;<ng-md-icon icon="visibility_off"
+                                            style="visibility: hidden;"></ng-md-icon>&ndash;&gt;
+                                <ng-md-icon icon="arrow_drop_up"
+                                            class="z-dropdown-icon"></ng-md-icon>
+                                <span>Filter</span>
+                            </md-button>
+                            <md-menu-content>
+                                <md-button>Equal</md-button>
+                                <md-button>Not equal</md-button>
+                                <md-button>Greater than</md-button>
+                                <md-button>Greater or equal to</md-button>
+                                <md-button>Lesser than</md-button>
+                                <md-button>Lesser or equal to</md-button>
+                                <md-button>From ... to ... (incl)</md-button>
+                                <md-button>Top N items</md-button>
+                            </md-menu-content>
+                        </md-menu>
+                    </md-menu-item>
+                    <md-menu-item>
+                        <md-menu>
+                            <md-button ng-click="renameFilter(filter, $mdMenu, $event)"
+                                       class="g-settings-option-btn">
+                                <ng-md-icon icon="visibility_off"
+                                            style="visibility: hidden;"></ng-md-icon>
+                                <span>Rename</span>
+                            </md-button>
+                            <md-menu-content style="display: none"></md-menu-content>
+                        </md-menu>
+                    </md-menu-item>
+                    <md-menu-item>
+                        <md-button ng-click="removeFilter(filter)" class="g-settings-option-btn">
+                            <ng-md-icon icon="visibility_off"></ng-md-icon>
+                            <span>Remove</span>
+                        </md-button>
+                    </md-menu-item>
+                    <md-menu-item>
+                        <md-button ng-click="useFromAbove(filter)" class="g-settings-option-btn">
+                            <ng-md-icon icon="done" data-ng-show="filter.options.useFromAbove"></ng-md-icon>
+                            <ng-md-icon icon="done" style="visibility: hidden;"
+                                        data-ng-show="!filter.options.useFromAbove"></ng-md-icon>
+                            <span>Link to above</span>
+                        </md-button>
+                    </md-menu-item>
+                </md-menu-content>
+            </md-menu>-->
+        </div>
+    </div>
+</md-card>

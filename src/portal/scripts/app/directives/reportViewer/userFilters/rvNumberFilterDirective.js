@@ -1,5 +1,5 @@
 /**
- * Created by mevstratov on 27.05.2019.
+ * Created by mevstratov on 30.05.2019.
  */
 (function () {
 
@@ -18,10 +18,10 @@
                 evDataService: '=',
                 evEventService: '='
             },
-            templateUrl: 'views/directives/reportViewer/userFilters/rv-text-filter-view.html',
+            templateUrl: 'views/directives/reportViewer/userFilters/rv-number-filter-view.html',
             link: function (scope, elem, attrs) {
 
-                console.log("filter filterTextData", scope.filter);
+                console.log("filter filterNumberData", scope.filter);
 
                 scope.filters = scope.evDataService.getFilters();
 
@@ -49,7 +49,7 @@
                 }
 
                 if (!scope.filter.options.filter_type) {
-                    scope.filter.options.filter_type = "contain";
+                    scope.filter.options.filter_type = "equal";
                 }
 
                 if (!scope.filter.options.filter_values) {
@@ -79,25 +79,34 @@
 
                 scope.changeFilterType = function (filterType) {
                     scope.filter.options.filter_type = filterType;
-                    scope.filter.options.filter_values = undefined;
+
+                    if (filterType === 'from_to') {
+
+                        scope.filter.options.filter_values = {}
+
+                    } else {
+
+                        scope.filter.options.filter_values = undefined;
+
+                    }
+
                     scope.filterChange();
                 };
 
-                scope.filterChange = function () {
-                    console.log("filter filterChange", scope.filter.options.filter_values);
+                scope.filterChange = function (newFilterValues) {
+                    console.log("filter filterChange", scope.filter.options.filter_values, newFilterValues);
 
-                    /*if (scope.filter.options.filter_type === "contain" || scope.filter.option.filter_type === "does_not_contain") {
-                        scope.filter.options.filter_values = scope.filter.options.filter_values.toLowerCase();
-                    }*/
+                    if (newFilterValues && !isNaN(newFilterValues)) {
 
-                    scope.evDataService.resetData();
-                    scope.evDataService.resetRequestParameters();
+                        scope.evDataService.resetData();
+                        scope.evDataService.resetRequestParameters();
 
-                    var rootGroup = scope.evDataService.getRootGroupData();
+                        var rootGroup = scope.evDataService.getRootGroupData();
 
-                    scope.evDataService.setActiveRequestParametersId(rootGroup.___id);
+                        scope.evDataService.setActiveRequestParametersId(rootGroup.___id);
 
-                    scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE)
+                        scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE);
+                    }
 
                 };
 

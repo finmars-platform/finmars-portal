@@ -549,7 +549,7 @@
 
   .g-filter-sidebar {
     background-color: #DCDCDC;
-    overflow: hidden;
+    //overflow: hidden;
   }
 }
 
@@ -1146,8 +1146,15 @@ body.md-dialog-is-showing {
   }
 }
 
+.g-filters-holder-container {
+  padding: 0 8px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
 .g-filter-item {
-  padding-top: 16px;
+  padding: 16px 5px 10px;
+  margin: 8px 0;
 
   .md-errors-spacer {
     display: none;
@@ -1162,7 +1169,11 @@ body.md-dialog-is-showing {
 
     input {
       opacity: .5;
-      pointer-events: none;
+      //pointer-events: none;
+    }
+
+    .text-filter-input-options-holder {
+      border-color: rgba(63, 81, 181, 0.7);
     }
 
     .settings-btn {
@@ -1172,18 +1183,24 @@ body.md-dialog-is-showing {
   }
 
   md-checkbox {
-    margin-left: 10px;
-    margin-top: 15px;
+    margin: 12px 0 0;
   }
 
   .settings-btn {
+    margin-right: 0;
     fill: #767676;
-    padding-top: 10px;
-    margin-right: 5px;
+    padding-top: 6px;
     opacity: .5;
 
     &:hover {
       opacity: 1;
+    }
+
+    .md-button {
+      width: 30px;
+      min-height: 30px;
+      height: 30px;
+      padding: 2px;
     }
   }
 
@@ -1192,6 +1209,48 @@ body.md-dialog-is-showing {
     height: 100%;
     margin-bottom: 10px;
   }*/
+
+}
+
+.text-filter-input-options-holder {
+  position: absolute;
+  min-width: 223px;
+  max-height: 300px;
+  background: #fff;
+  right: 109px;
+  bottom: 3px;
+  padding: 8px 0;
+  border-radius: 2px;
+  box-shadow: 0 2px 4px -1px rgba(0,0,0,.2),0 4px 5px 0 rgba(0,0,0,.14),0 1px 10px 0 rgba(0,0,0,.12);
+  z-index: 10001;
+  border-right: 2px solid;
+  border-color: rgba(63, 81, 181);
+
+  .md-button {
+    width: 100%;
+    padding: 0 16px;
+    margin: 0;
+    font-size: 12px;
+    text-align: left;
+  }
+}
+
+.table-filter-input-container {
+
+  md-input-container {
+    width: 100%;
+    margin: 0;
+
+    label, label:not(.md-no-float):not(.md-container-ignore), input {
+      box-sizing: border-box;
+    }
+
+    input[type="number"] {
+      -webkit-appearance: textfield;
+      -moz-appearance: textfield;
+      appearance: textfield;
+    }
+  }
 
 }
 
