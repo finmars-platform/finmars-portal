@@ -60,7 +60,7 @@
 
             }
 
-            console.log('resultGroup', resultGroup);
+            // console.log('resultGroup', resultGroup);
 
             if (!groupAlreadyExist(resultGroup, result)) {
 
