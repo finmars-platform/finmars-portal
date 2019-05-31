@@ -38,8 +38,19 @@
 
                     } else {
 
-                        result = result + errorItem.item.user_code;
+                        if (errorItem.item.user_code) {
+
+                            result = result + errorItem.item.user_code;
+
+                        } else {
+
+                            if (errorItem.item.name) {
+                                result = result + errorItem.item.name;
+                            }
+
+                        }
                     }
+
 
                 }
 
