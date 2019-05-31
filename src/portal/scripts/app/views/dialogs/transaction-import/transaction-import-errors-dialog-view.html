@@ -41,8 +41,7 @@
                             <div data-ng-if="vm.data.process_mode != 'validate'">
 
                                 <div>Rows total: {{vm.validationResult.total_rows}}</div>
-                                <div>Rows success import: {{vm.validationResult.total_rows -
-                                    vm.validationResult.error_rows.length}}
+                                <div>Rows success import: {{vm.rowsSuccessCount}}
                                 </div>
                                 <div>Rows fail import: {{vm.validationResult.error_rows.length}}</div>
 

@@ -105,6 +105,16 @@
 
         vm.init = function () {
 
+            if (vm.config.error_handling === 'break') {
+                vm.rowsSuccessCount = vm.validationResult.error_row_index - 1;
+            } else {
+
+                vm.rowsSuccessCount = vm.validationResult.total_rows - vm.validationResult.error_rows.length
+
+            }
+
+            console.log('vm.rowsSuccessCount', vm.rowsSuccessCount);
+
             setTimeout(function () {
                 vm.setDownloadLink();
             }, 100)
