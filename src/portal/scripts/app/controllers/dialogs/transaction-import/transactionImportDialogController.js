@@ -153,6 +153,41 @@
 
         };
 
+        vm.checkExtension = function (file, extension, $event) {
+            console.log('file', file);
+
+            if (file) {
+
+                var ext = file.name.split('.')[1]
+
+                if (ext !== extension) {
+
+                    $mdDialog.show({
+                        controller: 'SuccessDialogController as vm',
+                        templateUrl: 'views/dialogs/success-dialog-view.html',
+                        targetEvent: $event,
+                        locals: {
+                            success: {
+                                title: "Warning!",
+                                description: 'You are trying to load incorrect file'
+                            }
+                        },
+                        multiple: true,
+                        preserveScope: true,
+                        autoWrap: true,
+                        skipHide: true
+                    }).then(function () {
+
+                        vm.config.file = null;
+
+                    });
+
+                }
+
+            }
+
+        };
+
         vm.findError = function (item, type, state) {
 
             var message = '';
@@ -179,7 +214,6 @@
                 return haveError;
             }
         };
-
 
         vm.validateImport = function ($event) {
 
