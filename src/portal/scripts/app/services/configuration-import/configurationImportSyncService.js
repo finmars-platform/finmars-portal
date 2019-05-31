@@ -358,7 +358,7 @@
                                     error: {
                                         message: "Error. Transaction type: " + user_code + ' is not found'
                                     },
-                                    mode: 'The related column has been deleted from layout'
+                                    mode: 'The related Transaction Type has been deleted from layout'
 
                                 });
 
@@ -405,7 +405,7 @@
                                         error: {
                                             message: "Can't find Transaction Type input for fields. Missing Input names: " + fieldsError.join(', ')
                                         },
-                                        mode: 'The related column has been deleted from layout'
+                                        mode: 'The related Transaction Type has been deleted from layout'
 
                                     });
 
@@ -421,7 +421,7 @@
                                 error: {
                                     message: "Server error."
                                 },
-                                mode: 'The related column has been deleted from layout'
+                                mode: 'The related Transaction Type has been deleted from layout'
 
                             });
 

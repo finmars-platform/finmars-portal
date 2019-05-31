@@ -362,7 +362,7 @@
 
                 toastNotificationService.error(reason);
 
-                resolve(reason)
+                reject(reason)
 
             })
 
@@ -889,6 +889,8 @@
 
         if (items.length) {
 
+            console.log('index', index);
+
             if (items[index].hasOwnProperty('attribute_type')) {
 
 
@@ -901,8 +903,10 @@
 
                     mapAttributeType(item, item_key, entity, code).then(function () {
 
+                        index = index + 1;
+
                         if (index < items.length - 1) {
-                            index = index + 1;
+
                             recursiveMapItemInLayout(resolve, items, index);
                         } else {
                             resolve(items);
@@ -913,6 +917,10 @@
                         items.splice(index, 1);
 
                         index = index - 1;
+
+                        if(index < 0) {
+                            index = 0
+                        }
 
                         errors.push({
                             item: errorOptions.item,
@@ -928,7 +936,7 @@
                         console.log('splice items', items);
 
                         if (index < items.length - 1) {
-                            recursiveMapItemInLayout(resolve, items, index)
+                            recursiveMapItemInLayout(resolve, items, index, errors, errorOptions)
                         } else {
                             resolve(items);
                         }
@@ -940,6 +948,10 @@
                     items.splice(index, 1);
 
                     index = index - 1;
+
+                    if(index < 0) {
+                        index = 0
+                    }
 
                     errors.push({
                         item: errorOptions.item,
@@ -954,7 +966,7 @@
                     console.log('splice items', items);
 
                     if (index < items.length - 1) {
-                        recursiveMapItemInLayout(resolve, items, index)
+                        recursiveMapItemInLayout(resolve, items, index, errors, errorOptions)
                     } else {
                         resolve(items);
                     }
@@ -963,10 +975,11 @@
 
             } else {
 
+                index = index + 1;
+
                 if (index < items.length - 1) {
 
-                    index = index + 1;
-                    recursiveMapItemInLayout(resolve, items, index)
+                    recursiveMapItemInLayout(resolve, items, index, errors, errorOptions)
 
                 } else {
 

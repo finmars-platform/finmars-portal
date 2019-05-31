@@ -99,7 +99,7 @@
         vm.providerFields = [
             {
                 name: '',
-                column: '',
+                column: 1,
                 name_expr: ''
             }
         ];
