@@ -22,7 +22,7 @@
                                     <input type="file" id="importDataUploadInput"
                                            input-file-directive
                                            read-file="vm.config.file"
-                                           read-file-change="vm.checkExtension($event)">
+                                           read-file-change="vm.checkExtension(vm.config.file, 'csv', $event)">
                                 </md-input-container>
                                 <div class="input-upload-file-container">
                                     <p class="importDataUploadInput">Select file</p>
