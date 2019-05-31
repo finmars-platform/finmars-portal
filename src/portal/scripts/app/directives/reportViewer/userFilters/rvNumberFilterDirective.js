@@ -58,22 +58,35 @@
 
                 }
 
-                scope.getFilterName = function () {
+                scope.getFilterRegime = function () {
 
-                    var filterName = '';
-                    var columnName = scope.filter.name;
+                    var filterRegime = "";
 
-                    if (scope.filter.layout_name) {
-                        columnName = scope.filter.layout_name;
+                    switch (scope.filter.options.filter_type) {
+                        case "equal":
+                            filterRegime = "Equal";
+                            break;
+                        case "not_equal":
+                            filterRegime = "Not equal";
+                            break;
+                        case "greater":
+                            filterRegime = "Greater than";
+                            break;
+                        case "greater_equal":
+                            filterRegime = "Greater or equal to";
+                            break;
+                        case "less":
+                            filterRegime = "Less than";
+                            break;
+                        case "less_equal":
+                            filterRegime = "Less or equal to";
+                            break;
+                        case "top_n":
+                            filterRegime = "Top N items";
+                            break;
                     }
 
-                    var filterType = 'Regime=' + scope.filter.options.filter_type;
-
-                    filterName = columnName + ": " + filterType;
-
-                    // console.log("filter getFilterName", filterName);
-
-                    return filterName;
+                    return filterRegime;
 
                 };
 
@@ -96,7 +109,7 @@
                 scope.filterChange = function (newFilterValues) {
                     console.log("filter filterChange", scope.filter.options.filter_values, newFilterValues);
 
-                    if (newFilterValues && !isNaN(newFilterValues)) {
+                    if (newFilterValues) {
 
                         scope.evDataService.resetData();
                         scope.evDataService.resetRequestParameters();
@@ -106,28 +119,9 @@
                         scope.evDataService.setActiveRequestParametersId(rootGroup.___id);
 
                         scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE);
+
                     }
 
-                };
-
-                scope.toggleFilterSelectMenu = function (action) {
-                    console.log("filter toggleFilterSelectMenu", action);
-                    var selectMenu = elem[0].querySelector(".text-filter-select-menu");
-
-                    if (action === 'show') {
-                        selectMenu.classList.remove('visibility-hidden');
-                    } else {
-                        selectMenu.classList.add('visibility-hidden');
-                    }
-                };
-
-                scope.selectFilterOption = function (selectOption) {
-                    console.log("filter selectFilterOptions", selectOption);
-                    var selectMenu = elem[0].querySelector(".text-filter-select-menu");
-                    selectMenu.classList.add('visibility-hidden');
-
-                    scope.filter.options.filter_values[0] = selectOption;
-                    scope.filterChange();
                 };
 
                 scope.renameFilter = function (filter, $mdMenu, $event) {

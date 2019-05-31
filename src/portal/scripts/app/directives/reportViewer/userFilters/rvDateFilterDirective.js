@@ -1,5 +1,5 @@
 /**
- * Created by mevstratov on 27.05.2019.
+ * Created by mevstratov on 30.05.2019.
  */
 (function () {
 
@@ -18,10 +18,10 @@
                 evDataService: '=',
                 evEventService: '='
             },
-            templateUrl: 'views/directives/reportViewer/userFilters/rv-text-filter-view.html',
+            templateUrl: 'views/directives/reportViewer/userFilters/rv-date-filter-view.html',
             link: function (scope, elem, attrs) {
 
-                console.log("filter filterTextData", scope.filter);
+                console.log("filter filterDateData", scope.filter);
 
                 scope.filters = scope.evDataService.getFilters();
 
@@ -38,8 +38,8 @@
                         return {id: cRowsContent, name: cRowsContent}
                     });
 
-                    scope.filterSelectOptions = ["lorem", "ipsum", "dolor", "sit", "amet","lorem ipsum", "dolorsit", "ametlorem", "ipsumdolor","sitamet","loremipsum","dolor sit amet", "111111111", "2222222"]; //
-                    console.log("filter select options", scope.filterSelectOptions, columnRowsContent);
+                    scope.filterSelectOptions = columnRowsContent.slice(0, 21);
+                    console.log("filter select options", scope.filterSelectOptions);
                     scope.$apply();
 
                 });
@@ -49,7 +49,7 @@
                 }
 
                 if (!scope.filter.options.filter_type) {
-                    scope.filter.options.filter_type = "contain";
+                    scope.filter.options.filter_type = "equal";
                 }
 
                 if (!scope.filter.options.filter_values) {
@@ -63,17 +63,23 @@
                     var filterRegime = "";
 
                     switch (scope.filter.options.filter_type) {
-                        case "contain":
-                            filterRegime = "Contains";
+                        case "equal":
+                            filterRegime = "Equal";
                             break;
-                        case "does_not_contain":
-                            filterRegime = "Does not contains";
+                        case "not_equal":
+                            filterRegime = "Not equal";
                             break;
-                        case "selector":
-                            filterRegime = "Selector";
+                        case "greater":
+                            filterRegime = "Greater than";
                             break;
-                        case "multiselector":
-                            filterRegime = "Multiple selector";
+                        case "greater_equal":
+                            filterRegime = "Greater or equal to";
+                            break;
+                        case "less":
+                            filterRegime = "Less than";
+                            break;
+                        case "less_equal":
+                            filterRegime = "Less or equal to";
                             break;
                     }
 
@@ -81,24 +87,24 @@
 
                 };
 
-                scope.getMultiselectorName = function () {
-                    var multiselectorName = scope.filter.name + ". " + "Regime = " + scope.filter.filter_type;
-
-                    return multiselectorName;
-                };
-
                 scope.changeFilterType = function (filterType) {
                     scope.filter.options.filter_type = filterType;
-                    scope.filter.options.filter_values = undefined;
+
+                    if (filterType === 'from_to') {
+
+                        scope.filter.options.filter_values = {}
+
+                    } else {
+
+                        scope.filter.options.filter_values = undefined;
+
+                    }
+
                     scope.filterChange();
                 };
 
-                scope.filterChange = function () {
-                    console.log("filter filterChange", scope.filter.options.filter_values);
-
-                    /*if (scope.filter.options.filter_type === "contain" || scope.filter.option.filter_type === "does_not_contain") {
-                        scope.filter.options.filter_values = scope.filter.options.filter_values.toLowerCase();
-                    }*/
+                scope.filterChange = function (newFilterValues) {
+                    console.log("filter filterChange", scope.filter.options.filter_values, newFilterValues);
 
                     scope.evDataService.resetData();
                     scope.evDataService.resetRequestParameters();
@@ -107,60 +113,28 @@
 
                     scope.evDataService.setActiveRequestParametersId(rootGroup.___id);
 
-                    scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE)
+                    scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE);
 
                 };
 
                 scope.toggleFilterSelectMenu = function (action) {
                     console.log("filter toggleFilterSelectMenu", action);
                     var selectMenu = elem[0].querySelector(".text-filter-select-menu");
-                    var selectFilterContainer = elem[0].querySelector(".text-filter-select");
 
                     if (action === 'show') {
-
-                        selectMenu.classList.remove("visibility-hidden");
-                        selectFilterContainer.classList.add("select-menu-visible");
-
-                        setTimeout(function () {
-                            window.addEventListener('click', selectClickOutsideToClose);
-                        }, 100);
-
+                        selectMenu.classList.remove('visibility-hidden');
                     } else {
-                        selectMenu.classList.add("visibility-hidden");
-                        selectFilterContainer.classList.remove("select-menu-visible");
+                        selectMenu.classList.add('visibility-hidden');
                     }
                 };
 
                 scope.selectFilterOption = function (selectOption) {
-
+                    console.log("filter selectFilterOptions", selectOption);
                     var selectMenu = elem[0].querySelector(".text-filter-select-menu");
                     selectMenu.classList.add('visibility-hidden');
-                    window.removeEventListener('click', selectClickOutsideToClose);
 
                     scope.filter.options.filter_values[0] = selectOption;
                     scope.filterChange();
-                };
-
-                var selectClickOutsideToClose = function (event) {
-                    console.log("filter clicked");
-                    var clickedElement = event.target;
-
-                    var i;
-                    for (i = 0; i < 7; i++) {
-
-                        clickedElement = clickedElement.parentNode;
-
-                        if (clickedElement.classList.contains("text-filter-select")) {
-                            return;
-                        } else if (clickedElement.tagName === "HTML") {
-                            break;
-                        }
-
-                    }
-
-                    var selectMenu = elem[0].querySelector(".text-filter-select-menu");
-                    selectMenu.classList.add('visibility-hidden');
-                    window.removeEventListener('click', selectClickOutsideToClose);
                 };
 
                 scope.renameFilter = function (filter, $mdMenu, $event) {
