@@ -410,6 +410,10 @@
                 <div ng-if="filter['value_type'] === 20">
                     <rv-number-filter filter="filter" ev-data-service="evDataService" ev-event-service="evEventService"></rv-number-filter>
                 </div>
+
+                <div ng-if="filter['value_type'] === 40">
+                    <rv-date-filter filter="filter" ev-data-service="evDataService" ev-event-service="evEventService"></rv-date-filter>
+                </div>
             </div>
         </div>
     </div>

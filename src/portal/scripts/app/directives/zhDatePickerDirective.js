@@ -11,7 +11,7 @@
             restrict: 'AE',
             scope: {
                 position: '@',
-                defaultDate: '@',
+                defaultDate: '=',
                 dateValue: '='
             },
             require: '?ngModel',
