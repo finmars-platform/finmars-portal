@@ -52,45 +52,69 @@
             </button>
         </div>
 
-        <div layout="row" class="filters-control-btn s-f-expanded-btns layout-row" data-ng-if="!isReport">
+        <div layout="row" class="filters-control-btn s-f-expanded-btns layout-row" >
             <md-menu class="full-width" layout="row">
                 <md-button class="md-raised clear-all full-width md-button md-ink-ripple" type="button"
                            ng-click="openActions($mdOpenMenu, $event)">
                     Split Panel
                 </md-button>
                 <md-menu-content width="4">
-                    <md-menu-item>
-                        <md-button ng-click="openPermissionEditor($event)" class="g-settings-option-btn">
+                    <md-menu-item data-ng-if="!isReport">
+                        <md-button ng-click="toggleSplitPanel($event, 'balance-report')" class="g-settings-option-btn">
                             <ng-md-icon icon="done"
-                                        data-ng-show="!currentAdditions.permissionEditor"
+                                        data-ng-show="!currentAdditions.type == 'permissionEditor'"
                                         class="z-menu-icon"
                                         style="visibility: hidden;"></ng-md-icon>
                             <ng-md-icon icon="done"
-                                        data-ng-show="currentAdditions.permissionEditor"
+                                        data-ng-show="currentAdditions.type == 'permissionEditor'"
                                         class="z-menu-icon"></ng-md-icon>
                             <span>Open permission editor</span>
                         </md-button>
                     </md-menu-item>
                     <md-menu-item>
-                        <md-button ng-click="openDataViewPanel($event)" class="g-settings-option-btn">
+                        <md-button ng-click="toggleSplitPanel($event, 'balance-report')" class="g-settings-option-btn">
                             <ng-md-icon icon="done"
-                                        data-ng-show="!currentAdditions.reportWizard"
+                                        data-ng-show="!currentAdditions.type == 'balance-report'"
                                         class="z-menu-icon"
                                         style="visibility: hidden;"></ng-md-icon>
                             <ng-md-icon icon="done"
-                                        data-ng-show="currentAdditions.reportWizard"
+                                        data-ng-show="currentAdditions.type == 'balance-report'"
                                         class="z-menu-icon"></ng-md-icon>
-                            <span>Open data view panel</span>
+                            <span>Open Balance Report view panel</span>
                         </md-button>
                     </md-menu-item>
                     <md-menu-item>
-                        <md-button ng-click="openEditorViewPanel($event)" class="g-settings-option-btn">
+                        <md-button ng-click="toggleSplitPanel($event, 'pl-report')" class="g-settings-option-btn">
                             <ng-md-icon icon="done"
-                                        data-ng-show="!currentAdditions.editor"
+                                        data-ng-show="!currentAdditions.type == 'pl-report'"
                                         class="z-menu-icon"
                                         style="visibility: hidden;"></ng-md-icon>
                             <ng-md-icon icon="done"
-                                        data-ng-show="currentAdditions.editor"
+                                        data-ng-show="currentAdditions.type == 'pl-report'"
+                                        class="z-menu-icon"></ng-md-icon>
+                            <span>Open P&L Report view panel</span>
+                        </md-button>
+                    </md-menu-item>
+                    <md-menu-item>
+                        <md-button ng-click="toggleSplitPanel($event, 'transaction-report')" class="g-settings-option-btn">
+                            <ng-md-icon icon="done"
+                                        data-ng-show="!currentAdditions.type == 'transaction-report'"
+                                        class="z-menu-icon"
+                                        style="visibility: hidden;"></ng-md-icon>
+                            <ng-md-icon icon="done"
+                                        data-ng-show="currentAdditions.type == 'transaction-report'"
+                                        class="z-menu-icon"></ng-md-icon>
+                            <span>Open Transaction Report view panel</span>
+                        </md-button>
+                    </md-menu-item>
+                    <md-menu-item data-ng-if="!isReport">
+                        <md-button ng-click="toggleSplitPanel($event, 'editor')" class="g-settings-option-btn">
+                            <ng-md-icon icon="done"
+                                        data-ng-show="!currentAdditions.type == 'editor'"
+                                        class="z-menu-icon"
+                                        style="visibility: hidden;"></ng-md-icon>
+                            <ng-md-icon icon="done"
+                                        data-ng-show="currentAdditions.type == 'editor'"
                                         class="z-menu-icon"></ng-md-icon>
                             <span>Open editor split panel</span>
                         </md-button>

@@ -1,0 +1,15 @@
+<div data-ng-controller="SplitPanelReportViewerController as vm" class="entity-viewer-holder">
+    <div>
+        <div data-ng-if="vm.listViewIsReady" class="g-group-table-holder">
+            <group-table
+                    ev-data-service="vm.entityViewerDataService"
+                    ev-event-service="vm.entityViewerEventService"
+            ></group-table>
+        </div>
+        <div data-ng-if="!vm.listViewIsReady">
+            <div class="e-data-loader" layout="row" layout-sm="column" layout-align="space-around">
+                <md-progress-circular md-diameter="100" md-mode="indeterminate"></md-progress-circular>
+            </div>
+        </div>
+    </div>
+</div>

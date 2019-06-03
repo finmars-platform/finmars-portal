@@ -670,6 +670,7 @@
             listLayout.data.columns = getColumns();
             listLayout.data.grouping = getGroups();
             listLayout.data.filters = getFilters();
+            listLayout.data.additions = getAdditions();
 
             if (isReport) {
 
@@ -736,6 +737,7 @@
             setColumns(listLayout.data.columns);
             setGroups(listLayout.data.grouping);
             setFilters(listLayout.data.filters);
+            setAdditions(listLayout.data.additions);
 
             setListLayout(listLayout);
 
