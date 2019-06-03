@@ -29,12 +29,13 @@
 
                         var mouseMoveY;
                         var bodyHeight = document.body.clientHeight;
-                        var columnAreaHeight = $('.g-columns-component').height();
-                        var groupingAreaHeight = $('.g-grouping-component').height();
 
-                        var tableElem = $('.g-workarea.main-area .g-table-section').first();
+                        var wrapperElem = $('.g-wrapper');
                         var sidebarElem = $('.g-filter-sidebar.main-sidebar').first();
                         var splitPanelElem = $('.g-additions');
+                        var workAreaElem = $('.g-workarea-wrap').first();
+
+                        var headerHeight = interfaceLayout.headerToolbar.height;
 
                         var splitPanelHeight;
 
@@ -43,13 +44,15 @@
                             mouseMoveY = e.clientY;
                             lastMouseMoveEvent = e;
 
-                            splitPanelHeight = Math.abs(bodyHeight - mouseMoveY);
+                            splitPanelHeight = bodyHeight - mouseMoveY;
 
                             interfaceLayout.splitPanel.height = splitPanelHeight;
 
                             splitPanelElem.height(splitPanelHeight);
-                            tableElem.height(bodyHeight - splitPanelHeight - columnAreaHeight - groupingAreaHeight);
-                            sidebarElem.height(bodyHeight - splitPanelHeight + columnAreaHeight + groupingAreaHeight);
+
+                            workAreaElem.height(bodyHeight - splitPanelHeight - headerHeight);
+                            sidebarElem.height(bodyHeight - splitPanelHeight - headerHeight);
+                            wrapperElem.height(bodyHeight - headerHeight - headerHeight);
 
                             scope.evDataService.setInterfaceLayout(interfaceLayout);
 
@@ -126,7 +129,7 @@
 
                 scope.init();
 
-                scope.$on('$destroy', function() {
+                scope.$on('$destroy', function () {
                     setDefaultHeights()
                 })
 

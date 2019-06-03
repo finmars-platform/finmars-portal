@@ -22,13 +22,7 @@
                 scope.entityType = scope.evDataService.getEntityType();
                 scope.activebject = scope.evDataService.getActiveObject();
 
-                scope.checkAdditions = function () {
-
-                    if (scope.additions && scope.additions.additionsState === true && scope.components && scope.components.splitPanel === true) {
-                        return true;
-                    }
-                    return false;
-                };
+                console.log('scope.additions', scope.additions);
 
                 scope.evEventService.addEventListener(evEvents.ADDITIONS_CHANGE, function () {
 
@@ -42,6 +36,13 @@
                     scope.activebject = scope.evDataService.getActiveObject();
 
                 });
+
+                scope.evEventService.addEventListener(evEvents.DATA_LOAD_END, function () {
+
+                    scope.additions = scope.evDataService.getAdditions();
+                    scope.activebject = scope.evDataService.getActiveObject();
+
+                })
 
             }
         }
