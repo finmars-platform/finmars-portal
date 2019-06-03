@@ -25,11 +25,15 @@
                         <span ng-bind="getFilterRegime()"></span>
                     </label>
 
-                    <input type="number"
+                    <!--<input type="number"
                            data-ng-model="filter.options.filter_values[0]"
                            data-ng-change="filterChange(filter.options.filter_values[0])"
                            data-ng-model-options="{debounce: 1000}"
-                           aria-label="rv number filter single input">
+                           aria-label="rv number filter single input">-->
+                    <zh-date-picker ng-change="filterChange(filter.options.filter_values[0])"
+                                    ng-model="filter.options.filter_values[0]"
+                                    data-date-value="filter.options.filter_values[0]"
+                                    data-position="left"></zh-date-picker>
                 </md-input-container>
             </div>
 
@@ -45,11 +49,10 @@
                     <span>From (incl)</span>
                 </label>
 
-                <input type="number"
-                       data-ng-model="filter.options.filter_values.min_value"
-                       data-ng-change="filterChange(filter.options.filter_values.min_value)"
-                       data-ng-model-options="{debounce: 1000}"
-                       aria-label="rv number filter single input">
+                <zh-date-picker ng-change="filterChange(filter.options.filter_values.min_value)"
+                                ng-model="filter.options.filter_values.min_value"
+                                data-date-value="filter.options.filter_values.min_value"
+                                data-position="left" ></zh-date-picker>
             </md-input-container>
 
             <md-input-container class="md-block">
@@ -57,11 +60,10 @@
                     <span>To (incl)</span>
                 </label>
 
-                <input type="number"
-                       data-ng-model="filter.options.filter_values.max_value"
-                       data-ng-change="filterChange(filter.options.filter_values.max_value)"
-                       data-ng-model-options="{debounce: 1000}"
-                       aria-label="rv number filter single input">
+                <zh-date-picker ng-change="filterChange(filter.options.filter_values.max_value)"
+                                ng-model="filter.options.filter_values.max_value"
+                                data-date-value="filter.options.filter_values.min_value"
+                                data-position="left" ></zh-date-picker>
             </md-input-container>
 
         </div>
@@ -140,13 +142,13 @@
                                                 ng-show="filter.options.filter_type === 'from_to'"></ng-md-icon>
                                     From ... to ... (incl)
                                 </md-button>
-                                <md-button ng-click="changeFilterType('top_n')">
+                                <md-button ng-click="changeFilterType('date_tree')">
                                     <ng-md-icon icon="done"
-                                                ng-show="filter.options.filter_type !== 'top_n'"
+                                                ng-show="filter.options.filter_type !== 'date_tree'"
                                                 style="visibility: hidden;"></ng-md-icon>
                                     <ng-md-icon icon="done"
-                                                ng-show="filter.options.filter_type === 'top_n'"></ng-md-icon>
-                                    Top N items
+                                                ng-show="filter.options.filter_type === 'date_tree'"></ng-md-icon>
+                                    Date tree
                                 </md-button>
                             </md-menu-content>
                         </md-menu>
@@ -227,5 +229,6 @@
                 </md-menu-content>
             </md-menu>-->
         </div>
+
     </div>
 </md-card>

@@ -1153,7 +1153,7 @@ body.md-dialog-is-showing {
 }
 
 .g-filter-item {
-  padding: 16px 5px 10px;
+  padding: 16px 10px 0;
   margin: 8px 0;
 
   .md-errors-spacer {
@@ -1163,7 +1163,7 @@ body.md-dialog-is-showing {
   &.f-disabled {
     background-color: rgba(255, 255, 255, .3);
 
-    md-checkbox .md-icon {
+    .table-filter-activity-checkbox .md-icon {
       background: #fff;
     }
 
@@ -1183,7 +1183,7 @@ body.md-dialog-is-showing {
   }
 
   md-checkbox {
-    margin: 12px 0 0;
+    margin: 10px 0 0;
   }
 
   .settings-btn {
@@ -1212,34 +1212,11 @@ body.md-dialog-is-showing {
 
 }
 
-.text-filter-input-options-holder {
-  position: absolute;
-  min-width: 223px;
-  max-height: 300px;
-  background: #fff;
-  right: 109px;
-  bottom: 3px;
-  padding: 8px 0;
-  border-radius: 2px;
-  box-shadow: 0 2px 4px -1px rgba(0,0,0,.2),0 4px 5px 0 rgba(0,0,0,.14),0 1px 10px 0 rgba(0,0,0,.12);
-  z-index: 10001;
-  border-right: 2px solid;
-  border-color: rgba(63, 81, 181);
-
-  .md-button {
-    width: 100%;
-    padding: 0 16px;
-    margin: 0;
-    font-size: 12px;
-    text-align: left;
-  }
-}
-
 .table-filter-input-container {
 
   md-input-container {
     width: 100%;
-    margin: 0;
+    margin: 0 0 10px;
 
     label, label:not(.md-no-float):not(.md-container-ignore), input {
       box-sizing: border-box;
@@ -1252,6 +1229,58 @@ body.md-dialog-is-showing {
     }
   }
 
+}
+
+.table-filter-select-options {
+  position: absolute;
+  min-width: 230px;
+  max-height: 325px;
+  background: #fff;
+  right: 140px;
+  bottom: 13px;
+  padding: 8px 0;
+  border-radius: 2px;
+  box-shadow: 0 2px 4px -1px rgba(0,0,0,.2),0 4px 5px 0 rgba(0,0,0,.14),0 1px 10px 0 rgba(0,0,0,.12);
+  z-index: 10001;
+  border-right: 2px solid;
+  border-color: rgba(63, 81, 181);
+
+  md-input-container {
+    height: 35px;
+    padding: 0 5px;
+    margin: 0 0 5px;
+    box-sizing: border-box;
+
+    input {
+      opacity: 1;
+      border-bottom: solid 1px #a6a6a6;
+    }
+  }
+
+  .table-filter-select-options-holder {
+    max-height: 292px;
+    overflow: auto;
+  }
+
+  .md-button {
+    min-height: 30px;
+    height: 30px;
+    width: 100%;
+    padding: 0 16px;
+    margin: 0;
+    font-size: 12px;
+    text-align: left;
+  }
+}
+
+.table-filter-input-container.text-filter-select {
+  position: relative;
+}
+
+.select-menu-visible {
+  label, label:not(.md-no-float):not(.md-container-ignore), input {
+    padding-left: 15px;
+  }
 }
 
 .complex-date-picker-wrapper {
