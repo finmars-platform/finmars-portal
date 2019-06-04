@@ -60,11 +60,12 @@
 
                 var pieces = column.key.split('.');
 
-                var id = parseInt(pieces[pieces.length - 1], 10);
+                // var id = parseInt(pieces[pieces.length - 1], 10);
+                var user_code = pieces[pieces.length - 1];
 
                 obj.attributes.forEach(function (item) {
 
-                    if (item.attribute_type === id) {
+                    if (item.attribute_type_object.user_code === user_code) {
 
                         if (column.value_type === 20 && item.value_float) {
 

@@ -138,7 +138,7 @@
             }).then(function (res) {
                 if (res.status === 'agree') {
                     console.log("res", res.data);
-                    attributeTypeService.update(vm.entityType, res.data.attribute.id, res.data.attribute).then(getList);
+                    getList();
                 }
             });
         };

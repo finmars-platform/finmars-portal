@@ -231,15 +231,6 @@
 
                 scope.openActions = function ($mdOpenMenu, $event) {
 
-                    scope.currentAdditions = scope.evDataService.getAdditions();
-
-                    if (!Object.keys(scope.currentAdditions).length) {
-
-                        clearAdditions();
-
-                        scope.currentAdditions = scope.evDataService.getAdditions();
-                    }
-
                     $mdOpenMenu($event);
 
                 };
