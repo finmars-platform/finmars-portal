@@ -107,7 +107,7 @@ app.controller('SettingBloombergImportInstrumentController', ['$scope', '$state'
 
 // System Dialogs
 
-app.controller('WarningDialogController', ['$scope', '$mdDialog', 'warning', 'data', require('./app/controllers/dialogs/warningDialogController')]);
+app.controller('WarningDialogController', ['$scope', '$mdDialog', 'warning', require('./app/controllers/dialogs/warningDialogController')]);
 app.controller('SuccessDialogController', ['$scope', '$mdDialog', 'success', require('./app/controllers/dialogs/successDialogController')]);
 app.controller('InfoDialogController', ['$scope', '$mdDialog', 'info', require('./app/controllers/dialogs/infoDialogController')]);
 

@@ -604,9 +604,7 @@
                             locals: {
                                 warning: {
                                     title: 'Error',
-                                    description: errorMessage
-                                },
-                                data: {
+                                    description: errorMessage,
                                     actionsButtons: [{
                                         name: "OK",
                                         response: false

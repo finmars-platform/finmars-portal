@@ -25,6 +25,9 @@
 
         vm.editRestriction = false;
         vm.setUserCode = true;
+
+        vm.userCodeError = false;
+
         console.log('vm.attribute', vm.attribute);
 
 
@@ -46,6 +49,19 @@
                 value: 30
             }
         ];
+
+        vm.validateUserCode = function () {
+
+            var expression = /^\w+$/;
+
+            if (expression.test(vm.attribute.user_code)) {
+                vm.userCodeError = false;
+            } else {
+                vm.userCodeError = true;
+
+            }
+
+        };
 
         vm.loadPermissions = function () {
 

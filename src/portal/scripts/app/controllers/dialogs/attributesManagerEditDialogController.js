@@ -24,6 +24,10 @@
         vm.entityType = data.entityType;
         vm.attributeId = data.attributeId;
 
+        vm.userCodeError = false;
+
+        vm.originalUserCode = null;
+
         vm.valueTypes = [
             {
                 name: 'Number',
@@ -46,10 +50,26 @@
         //attributeTypeService.getByKey("generic", vm.attributeId).then(function (data) {
         attributeTypeService.getByKey(vm.entityType, vm.attributeId).then(function (data) {
             vm.attribute = data;
+
+            vm.originalUserCode = vm.attribute.user_code.slice();
+
             vm.readyStatus.attribute = true;
             vm.loadPermissions();
             $scope.$apply();
         });
+
+        vm.validateUserCode = function () {
+
+            var expression = /^\w+$/;
+
+            if (expression.test(vm.attribute.user_code)) {
+                vm.userCodeError = false;
+            } else {
+                vm.userCodeError = true;
+
+            }
+
+        };
 
         vm.loadPermissions = function () {
 
@@ -149,7 +169,7 @@
 
         // vm.valueTypes = metaService.getDynamicAttrsValueTypesCaptions();
 
-        vm.agree = function () {
+        vm.agree = function ($event) {
             console.log('vm.attr', vm.attribute);
 
             vm.attribute["user_object_permissions"] = [];
@@ -193,7 +213,48 @@
             });
 
 
-            $mdDialog.hide({status: 'agree', data: {attribute: vm.attribute}});
+            if (vm.originalUserCode !== vm.attribute.user_code) {
+
+                $mdDialog.show({
+                    controller: 'WarningDialogController as vm',
+                    templateUrl: 'views/warning-dialog-view.html',
+                    parent: angular.element(document.body),
+                    targetEvent: $event,
+                    clickOutsideToClose: false,
+                    locals: {
+                        warning: {
+                            title: 'Warning',
+                            description: 'Changing user code affects on Report Viewer Layouts, Entity Viewer Layouts, Custom Fields.'
+                        }
+                    },
+                    preserveScope: true,
+                    autoWrap: true,
+                    skipHide: true,
+                    multiple: true
+                }).then(function (res) {
+
+                    if (res.status === 'agree') {
+
+                        attributeTypeService.update(vm.entityType, vm.attribute.id, vm.attribute).then(function (value) {
+
+                            $mdDialog.hide({status: 'agree'});
+
+                        })
+
+                    }
+
+                })
+
+            } else {
+
+                attributeTypeService.update(vm.entityType, vm.attribute.id, vm.attribute).then(function (value) {
+
+                    $mdDialog.hide({status: 'agree'});
+
+                })
+
+            }
+
         };
 
         vm.cancel = function () {

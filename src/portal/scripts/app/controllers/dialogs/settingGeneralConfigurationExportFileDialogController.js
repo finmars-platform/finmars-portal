@@ -310,9 +310,9 @@
                 result.name = item.name
             }
 
-            if (item.hasOwnProperty('content_type')) {
-                result.content_type = item.content_type
-            }
+            // if (item.hasOwnProperty('content_type')) {
+            //     result.content_type = item.content_type
+            // }
 
             if (item.hasOwnProperty('user_code')) {
                 result.user_code = item.user_code
@@ -397,9 +397,6 @@
 
                 if (layoutData && layoutData.length > 0) {
 
-                    if (entityItem.content.length) {
-                        entityItem.active = true;
-                    }
 
                     entityItem.content.forEach(function (childItem) {
 
@@ -423,6 +420,15 @@
                         })
 
 
+                    });
+
+
+                    entityItem.active = true;
+                    entityItem.content.forEach(function (item) {
+
+                        if (!item.active) {
+                            entityItem.active = false;
+                        }
                     })
 
                 }
@@ -460,6 +466,8 @@
                 });
 
             });
+
+            console.log('vm.activeLayout', vm.activeLayout);
 
             $mdDialog.show({
                 controller: 'SaveConfigurationExportLayoutDialogController as vm',
@@ -771,38 +779,6 @@
             return result;
 
         };
-
-        /*function isEntitySelected(entity) {
-
-            var result = false;
-
-            entity.content.forEach(function (item) {
-
-                if (item.active) {
-                    result = true;
-                }
-
-            });
-
-            return result;
-
-        }
-
-        function findEntity(items, entityName) {
-
-            var result;
-
-            items.forEach(function (item) {
-
-                if (item.entity === entityName) {
-                    result = item;
-                }
-
-            });
-
-            return result;
-
-        }*/
 
         function exportConfiguration(items) {
 
