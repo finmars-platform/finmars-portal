@@ -14,7 +14,6 @@
             restrict: 'E',
             scope: {
                 filter: '=',
-                filterObject: '=',
                 evDataService: '=',
                 evEventService: '='
             },
@@ -28,18 +27,15 @@
                 scope.filterValue = undefined;
                 scope.filterSelectOptions = [];
                 scope.columnRowsContent = [];
-                scope.showSelectMenu = false;
 
                 scope.evEventService.addEventListener(evEvents.DATA_LOAD_END, function () {
 
                     var columnRowsContent  = userFilterService.getDataByKey(scope.evDataService, scope.filter.key);
 
                     scope.columnRowsContent = columnRowsContent.map(function (cRowsContent) {
-                        return {id: cRowsContent, name: cRowsContent}
+                        return cRowsContent;
                     });
 
-                    scope.filterSelectOptions = columnRowsContent.slice(0, 21);
-                    console.log("filter select options", scope.filterSelectOptions);
                     scope.$apply();
 
                 });

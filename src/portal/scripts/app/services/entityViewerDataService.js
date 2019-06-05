@@ -12,6 +12,7 @@
         var headerToolbarWidth = document.body.clientWidth - sidebarWidth;
 
         var groupingAreaHeight = 88;
+        var groupingAreaHeight = 98;
         var columnAreaHeight = 70;
         var filterAreaWidth = 239;
         var filterAreaLeft = document.body.clientWidth - filterAreaWidth;

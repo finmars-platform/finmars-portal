@@ -17,9 +17,10 @@
                      ng-change="toggleFilterState(filter)"
                      flex="15"></md-checkbox>
 
-        <div ng-if="filter.options.filter_type !== 'from_to'" flex="70">
+        <div ng-if="filter.options.filter_type !== 'from_to' && filter.options.filter_type !== 'date_tree'"
+             flex="70">
 
-            <div class="table-filter-input-container">
+            <div class="table-filter-input-container" >
                 <md-input-container>
                     <label>
                         <span ng-bind="getFilterRegime()"></span>
@@ -37,35 +38,48 @@
                 </md-input-container>
             </div>
 
-            </md-input-container>
         </div>
 
-        <div class="table-filter-input-container"
-             ng-if="filter.options.filter_type === 'from_to'"
+        <div ng-if="filter.options.filter_type === 'from_to'"
              flex="70">
 
-            <md-input-container class="md-block">
-                <label>
-                    <span>From (incl)</span>
-                </label>
+            <div class="table-filter-input-container">
+                <md-input-container class="md-block">
+                    <label>
+                        <span>From (incl)</span>
+                    </label>
 
-                <zh-date-picker ng-change="filterChange(filter.options.filter_values.min_value)"
-                                ng-model="filter.options.filter_values.min_value"
-                                data-date-value="filter.options.filter_values.min_value"
-                                data-position="left" ></zh-date-picker>
-            </md-input-container>
+                    <zh-date-picker ng-change="filterChange(filter.options.filter_values.min_value)"
+                                    ng-model="filter.options.filter_values.min_value"
+                                    data-date-value="filter.options.filter_values.min_value"
+                                    data-position="left"></zh-date-picker>
+                </md-input-container>
+            </div>
 
-            <md-input-container class="md-block">
-                <label>
-                    <span>To (incl)</span>
-                </label>
+            <div class="table-filter-input-container">
+                <md-input-container class="md-block">
+                    <label>
+                        <span>To (incl)</span>
+                    </label>
 
-                <zh-date-picker ng-change="filterChange(filter.options.filter_values.max_value)"
-                                ng-model="filter.options.filter_values.max_value"
-                                data-date-value="filter.options.filter_values.min_value"
-                                data-position="left" ></zh-date-picker>
-            </md-input-container>
+                    <zh-date-picker ng-change="filterChange(filter.options.filter_values.max_value)"
+                                    ng-model="filter.options.filter_values.max_value"
+                                    data-date-value="filter.options.filter_values.min_value"
+                                    data-position="left"></zh-date-picker>
+                </md-input-container>
+            </div>
 
+        </div>
+        
+        <div ng-if="filter.options.filter_type === 'date_tree'" 
+             class="table-filter-input-container" 
+             flex="70">
+
+            <date-tree-input data-title="{{getFilterRegime()}}"
+                             data-dates-list="columnRowsContent"
+                             data-dates-tree="filter.options.dates_tree"
+                             data-callback-method="filterChange(filter.options.filter_values)"></date-tree-input>
+            
         </div>
 
         <div class="settings-btn" flex="15">

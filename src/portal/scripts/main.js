@@ -337,6 +337,7 @@ app.directive('valueTitle', ['$timeout', require('./app/directives/valueTitleDir
 
 app.controller('GReportSettingsDialogController', ['$scope', '$mdDialog', 'reportOptions', 'options', require('./app/controllers/dialogs/gReportSettingsDialogController')]);
 app.controller('PeriodsEditorDialogController', ['$scope', '$mdDialog', 'options', require('./app/controllers/dialogs/periodsEditorDialogController')]);
+app.controller('DateTreeDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/dateTreeDialogController')]);
 
 
 app.controller('gModalController', ['$scope', '$mdDialog', 'entityViewerDataService', 'entityViewerEventService', require('./app/directives/groupTable/gModalComponent')]);
@@ -364,6 +365,7 @@ app.directive('instrumentEventActionResolver', ['$mdDialog', require('./app/dire
 app.directive('classifierModalResolver', ['$mdDialog', require('./app/directives/classifierModalResolverDirective')]);
 app.directive('zhDatePicker', ['$mdDialog', require('./app/directives/zhDatePickerDirective')]);
 app.directive('complexZhDatePicker', ['$mdDialog', require('./app/directives/complexZhDatePickerDirective')]);
+app.directive('dateTreeInput', ['$mdDialog', require('./app/directives/dateTreeInputDirective')]);
 app.directive('customScroll', [require('./app/directives/customScrollDirective')]);
 app.directive('dragDialog', [require('./app/directives/dragDialogDirective')]);
 app.directive('membersGroupsTable', [require('./app/directives/membersGroupsTableDirective')]);

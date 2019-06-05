@@ -18,6 +18,7 @@
   }
 
   .g-grouping-component {
+    height: 98px;
     .ev-loader {
       float: right;
       margin-right: 10px;
@@ -306,8 +307,10 @@
   }
 
   .g-columns-component.g-thead {
+    height: 70px;
     padding-top: 4px;
     background: #4C334D;
+    box-sizing: border-box;
   }
 
   .g-second-line {
@@ -549,7 +552,7 @@
 
   .g-filter-sidebar {
     background-color: #DCDCDC;
-    //overflow: hidden;
+    overflow: auto;
   }
 }
 
@@ -1229,6 +1232,19 @@ body.md-dialog-is-showing {
     }
   }
 
+}
+
+.text-filter-select-menu {
+  max-height: 390px;
+
+  .md-button {
+    min-height: 30px;
+    height: 30px;
+    line-height: initial;
+    text-align: left;
+    text-transform: initial;
+    margin: 3px 8px;
+  }
 }
 
 .table-filter-select-options {
