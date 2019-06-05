@@ -14,7 +14,6 @@
             restrict: 'E',
             scope: {
                 filter: '=',
-                filterObject: '=',
                 evDataService: '=',
                 evEventService: '='
             },
@@ -26,7 +25,6 @@
                 scope.filters = scope.evDataService.getFilters();
 
                 scope.filterValue = undefined;
-                scope.filterSelectOptions = [];
                 scope.columnRowsContent = [];
                 scope.showSelectMenu = false;
 
@@ -38,8 +36,8 @@
                         return {id: cRowsContent, name: cRowsContent}
                     });
 
-                    scope.filterSelectOptions = ["lorem", "ipsum", "dolor", "sit", "amet","lorem ipsum", "dolorsit", "ametlorem", "ipsumdolor","sitamet","loremipsum","dolor sit amet", "111111111", "2222222"]; //
-                    console.log("filter select options", scope.filterSelectOptions, columnRowsContent);
+                    // scope.columnRowsContent = [{name: "lorem"}, {name: "ipsum"}, {name: "dolor"}, {name: "sit"}, {name: "amet"}, {name: "lorem ipsum"}, {name: "dolorsit"}, {name: "ametlorem"}, {name: "ipsumdolor"}, {name: "sitamet"}, {name: "loremipsum"}, {name: "dolor sit amet"}, {name: "111111111"}, {name: "2222222"}]; //
+                    // console.log("filter select options", scope.filterSelectOptions, columnRowsContent);
                     scope.$apply();
 
                 });
@@ -111,7 +109,7 @@
 
                 };
 
-                scope.toggleFilterSelectMenu = function (action) {
+                /*scope.toggleFilterSelectMenu = function (action) {
                     console.log("filter toggleFilterSelectMenu", action);
                     var selectMenu = elem[0].querySelector(".text-filter-select-menu");
                     var selectFilterContainer = elem[0].querySelector(".text-filter-select");
@@ -129,13 +127,13 @@
                         selectMenu.classList.add("visibility-hidden");
                         selectFilterContainer.classList.remove("select-menu-visible");
                     }
-                };
+                };*/
 
                 scope.selectFilterOption = function (selectOption) {
 
-                    var selectMenu = elem[0].querySelector(".text-filter-select-menu");
+                    /*var selectMenu = elem[0].querySelector(".text-filter-select-menu");
                     selectMenu.classList.add('visibility-hidden');
-                    window.removeEventListener('click', selectClickOutsideToClose);
+                    window.removeEventListener('click', selectClickOutsideToClose);*/
 
                     scope.filter.options.filter_values[0] = selectOption;
                     scope.filterChange();

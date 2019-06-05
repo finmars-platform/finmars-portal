@@ -14,7 +14,6 @@
             restrict: 'E',
             scope: {
                 filter: '=',
-                filterObject: '=',
                 evDataService: '=',
                 evEventService: '='
             },
@@ -28,18 +27,43 @@
                 scope.filterValue = undefined;
                 scope.filterSelectOptions = [];
                 scope.columnRowsContent = [];
-                scope.showSelectMenu = false;
 
                 scope.evEventService.addEventListener(evEvents.DATA_LOAD_END, function () {
 
                     var columnRowsContent  = userFilterService.getDataByKey(scope.evDataService, scope.filter.key);
 
                     scope.columnRowsContent = columnRowsContent.map(function (cRowsContent) {
-                        return {id: cRowsContent, name: cRowsContent}
+                        return {
+                            name: cRowsContent,
+                            active: false
+                        }
                     });
 
-                    scope.filterSelectOptions = columnRowsContent.slice(0, 21);
-                    console.log("filter select options", scope.filterSelectOptions);
+                    /*scope.columnRowsContent = [
+                        new Date('2019-05-20'),
+                        new Date('2019-05-23'),
+                        new Date('2019-05-01'),
+                        new Date('2019-05-05'),
+                        new Date('2019-05-13'),
+                        new Date('2019-02-21'),
+                        new Date('2019-02-28'),
+                        new Date('2019-02-20'),
+                        new Date('2019-03-24'),
+                        new Date('2019-03-11'),
+                        new Date('2018-11-20'),
+                        new Date('2018-11-11'),
+                        new Date('2018-11-18'),
+                        new Date('2018-06-21'),
+                        new Date('2018-06-22'),
+                        new Date('2018-06-23'),
+                        new Date('2018-06-24'),
+                        new Date('2016-05-20'),
+                        new Date('2016-05-21'),
+                        new Date('2016-05-22'),
+                        new Date('2016-05-23')
+                    ];*/
+
+                    console.log("date tree columnRows", scope.columnRowsContent);
                     scope.$apply();
 
                 });
@@ -53,9 +77,7 @@
                 }
 
                 if (!scope.filter.options.filter_values) {
-
                     scope.filter.options.filter_values = [];
-
                 }
 
                 scope.getFilterRegime = function () {
@@ -63,6 +85,7 @@
                     var filterRegime = "";
 
                     switch (scope.filter.options.filter_type) {
+
                         case "equal":
                             filterRegime = "Equal";
                             break;
@@ -81,6 +104,10 @@
                         case "less_equal":
                             filterRegime = "Less or equal to";
                             break;
+                        case "date_tree":
+                            filterRegime = "Date tree";
+                            break;
+
                     }
 
                     return filterRegime;
@@ -103,8 +130,40 @@
                     scope.filterChange();
                 };
 
+                var convertDatesTreeToFlatList = function () {
+
+                    var datesList = [];
+
+                    scope.filter.options.dates_tree.map(function (yearGroup) {
+
+                        yearGroup.items.map(function (monthGroup) {
+
+                            monthGroup.items.map(function (date) {
+
+                                delete date.dayNumber;
+                                delete date.available;
+
+                                date = JSON.parse(angular.toJson(date));
+
+                                if (date.active) {
+                                    datesList.push(date.value);
+                                }
+
+                            });
+
+                        });
+
+                    });
+                    console.log("date tree date to save", datesList);
+                    return datesList;
+
+                };
+
                 scope.filterChange = function (newFilterValues) {
-                    console.log("filter filterChange", scope.filter.options.filter_values, newFilterValues);
+
+                    if (scope.filter.options.filter_type === 'date_tree') {
+                        scope.filter.options.filter_values = convertDatesTreeToFlatList();
+                    }
 
                     scope.evDataService.resetData();
                     scope.evDataService.resetRequestParameters();
@@ -115,26 +174,6 @@
 
                     scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE);
 
-                };
-
-                scope.toggleFilterSelectMenu = function (action) {
-                    console.log("filter toggleFilterSelectMenu", action);
-                    var selectMenu = elem[0].querySelector(".text-filter-select-menu");
-
-                    if (action === 'show') {
-                        selectMenu.classList.remove('visibility-hidden');
-                    } else {
-                        selectMenu.classList.add('visibility-hidden');
-                    }
-                };
-
-                scope.selectFilterOption = function (selectOption) {
-                    console.log("filter selectFilterOptions", selectOption);
-                    var selectMenu = elem[0].querySelector(".text-filter-select-menu");
-                    selectMenu.classList.add('visibility-hidden');
-
-                    scope.filter.options.filter_values[0] = selectOption;
-                    scope.filterChange();
                 };
 
                 scope.renameFilter = function (filter, $mdMenu, $event) {
