@@ -10,19 +10,35 @@
 
     var handleCsvImportAction = function (action, file, delimiter) {
 
+        var config = {
+            file: file,
+            scheme: action.csv_import_scheme,
+            error_handler: action.error_handler,
+            missing_data_handler:  action.missing_data_handler,
+            classifier_handler: action.classifier_handler,
+            delimiter: delimiter,
+            mode: action.mode
+        };
+
         var formData = new FormData();
 
-        formData.append('file', file);
-        formData.append('scheme', action.csv_import_scheme);
-        formData.append('error_handler', action.error_handler);
-        formData.append('missing_data_handler', action.missing_data_handler);
-        formData.append('classifier_handler', action.classifier_handler);
-        formData.append('delimiter', delimiter);
-        formData.append('mode', action.mode);
+        formData.append('file', config.file);
+        formData.append('scheme', config.scheme);
+        formData.append('error_handler', config.error_handler);
+        formData.append('missing_data_handler', config.missing_data_handler);
+        formData.append('classifier_handler', config.classifier_handler);
+        formData.append('delimiter', config.delimiter);
+        formData.append('mode', config.mode);
 
         console.log('action', action);
 
-        return importEntityService.startImport(formData)
+        return importEntityService.startImport(formData).then(function (data) {
+
+            return {
+                config: config,
+                data: data
+            }
+        })
 
     };
 
@@ -46,7 +62,10 @@
             config = data;
 
             if (config.task_status === 'SUCCESS') {
-                resolve(data);
+                resolve({
+                    config: config,
+                    data: data
+                });
             } else {
                 setTimeout(function () {
                     importComplexTransactions(resolve, config);
@@ -71,7 +90,7 @@
                 delimiter: delimiter
             };
 
-            console.log('handleComplexTransactionImportAction.config', config)
+            console.log('handleComplexTransactionImportAction.config', config);
 
             importComplexTransactions(resolve, config);
 
@@ -96,21 +115,31 @@
 
     var processActionOneByOne = function (resolve, result, actions, file, delimiter, index, updateCounter) {
 
-        processAction(actions[index], file, delimiter).then(function (data) {
+        processAction(actions[index], file, delimiter).then(function (res) {
 
-            console.log('processAction.data', data);
+            console.log('processAction.res', res);
 
+            result.configs[index] = res.config;
             result.errors[index] = [];
 
-            if (data.hasOwnProperty('error_rows') && data.error_rows.length) {
-                result.errors[index] = data.error_rows;
+            if (res.data.hasOwnProperty('error_rows') && res.data.error_rows.length) {
+                result.errors[index] = res.data.error_rows;
             }
 
-            if (data.hasOwnProperty('errors') && data.errors.length) {
-                result.errors[index] = data.errors
+            if (res.data.hasOwnProperty('stats') && res.data.stats.length) {
+
+                var errors = res.data.stats.filter(function (item) {
+                    return item.level === 'error';
+                });
+
+                if (errors.length) {
+
+                    result.errors[index] = errors
+
+                }
             }
 
-            result.import_results.push(data);
+            result.import_results.push(res.data);
 
             index = index + 1;
 
@@ -139,7 +168,8 @@
 
             var result = {
                 import_results: [],
-                errors: []
+                errors: [],
+                configs: []
             };
 
             if (scheme.actions.length) {

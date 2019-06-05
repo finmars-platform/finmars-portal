@@ -47,7 +47,8 @@
         vm.config = {
             delimiter: ',',
             mode: 1,
-            missing_data_handler: 'throw_error'
+            missing_data_handler: 'throw_error',
+            error_handling: 'break'
         };
 
         vm.validateConfig = {

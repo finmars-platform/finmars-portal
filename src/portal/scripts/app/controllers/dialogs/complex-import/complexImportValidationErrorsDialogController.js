@@ -67,28 +67,30 @@
 
         };
 
-        vm.createCsvContentSimpleEntityImport = function (validationResults) {
+        vm.createCsvContentSimpleEntityImport = function (validationResult, config) {
+
+            console.log('validationResults', validationResult);
 
             var columns = ['Row number'];
 
-            columns = columns.concat(validationResults[0].error_data.columns.imported_columns);
-            columns = columns.concat(validationResults[0].error_data.columns.data_matching);
+            columns = columns.concat(validationResult.stats[0].error_data.columns.imported_columns);
+            columns = columns.concat(validationResult.stats[0].error_data.columns.data_matching);
 
             columns.push('Error Message');
             columns.push('Reaction');
 
             var content = [];
 
-            validationResults.forEach(function (errorRow) {
+            validationResult.stats.forEach(function (errorRow) {
 
                 var result = [];
 
                 result.push(errorRow.original_row_index);
 
-                result = result.concat(errorRow.error_data.data.imported_columns)
-                result = result.concat(errorRow.error_data.data.data_matching)
+                result = result.concat(errorRow.error_data.data.imported_columns);
+                result = result.concat(errorRow.error_data.data.data_matching);
 
-                result.push(errorRow.error_message);
+                result.push('"' + errorRow.error_message + '"');
                 result.push(errorRow.error_reaction);
 
                 content.push(result)
@@ -97,9 +99,50 @@
 
             var columnRow = columns.join(',');
 
-            var result = [
-                columnRow
-            ];
+            var result = [];
+
+            result.push('Type, ' + 'Transaction Import');
+            result.push('Error handler, ' + config.error_handler);
+            result.push('Filename, ' + config.file.name);
+            result.push('Mode, ' + config.mode);
+            result.push('Import Rules - if object is not found, ' + config.missing_data_handler);
+            // result.push('Entity, ' + vm.scheme.content_type);
+
+            result.push('Rows total, ' + (validationResult.total - 1));
+
+            var rowsSuccessTotal;
+
+            var rowsSkippedCount = validationResult.stats.filter(function (item) {
+                return item.error_reaction === 'Skipped';
+            }).length;
+
+            var rowsFailedCount = validationResult.stats.filter(function (item) {
+                return item.error_reaction !== 'Skipped';
+            }).length;
+
+            if (config.error_handler === 'break') {
+
+                var index = validationResult.stats[0].original_row_index;
+
+                rowsSuccessTotal = index - 1; // get row before error
+                rowsSuccessTotal = vm.rowsSuccessTotal - 1; // exclude headers
+
+            } else {
+
+                rowsSuccessTotal = validationResult.total - 1 - rowsFailedCount - rowsSkippedCount;
+            }
+
+            if (rowsSuccessTotal < 0) {
+                rowsSuccessTotal = 0;
+            }
+
+            result.push('Rows success import, ' + (rowsSuccessTotal));
+            result.push('Rows omitted, ' + (rowsSkippedCount));
+            result.push('Rows fail import, ' + (rowsFailedCount));
+
+
+            result.push('\n');
+            result.push(columnRow);
 
             content.forEach(function (contentRow) {
 
@@ -126,11 +169,11 @@
                 var text = '';
 
                 if (action.csv_import_scheme) {
-                    text = vm.createCsvContentSimpleEntityImport(vm.validationResults.errors[index]);
+                    text = vm.createCsvContentSimpleEntityImport(vm.validationResults.import_results[index], vm.validationResults.configs[index]);
                 }
 
                 if (action.complex_transaction_import_scheme) {
-                    text = vm.createCsvContentTransactionImport(vm.validationResults.errors[index]);
+                    text = vm.createCsvContentTransactionImport(vm.validationResults.import_results[index], vm.validationResults.configs[index]);
                 }
 
                 var file = new Blob([text], {type: 'text/plain'});
