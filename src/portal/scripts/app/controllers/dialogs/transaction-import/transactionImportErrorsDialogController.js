@@ -69,7 +69,6 @@
 
         };
 
-
         vm.generateColumnsDataForFile = function (validationResult, config, errorRow) {
 
             var result = [];
