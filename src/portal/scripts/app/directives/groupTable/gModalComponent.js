@@ -70,7 +70,7 @@
                         result.attribute_type = Object.assign({}, attribute);
                         result.value_type = attribute.value_type;
                         result.content_type = vm.contentType;
-                        result.key = 'attributes.' + attribute.id;
+                        result.key = 'attributes.' + attribute.user_code;
                         result.name = attribute.name;
 
                         return result
