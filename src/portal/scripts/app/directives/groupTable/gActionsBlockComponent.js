@@ -231,15 +231,6 @@
 
                 scope.openActions = function ($mdOpenMenu, $event) {
 
-                    scope.currentAdditions = scope.evDataService.getAdditions();
-
-                    if (!Object.keys(scope.currentAdditions).length) {
-
-                        clearAdditions();
-
-                        scope.currentAdditions = scope.evDataService.getAdditions();
-                    }
-
                     $mdOpenMenu($event);
 
                 };
@@ -251,10 +242,9 @@
                 function clearAdditions() {
 
                     var additions = {
-                        additionsState: false,
-                        reportWizard: false,
-                        editor: false,
-                        permissionEditor: false
+                        isOpen: false,
+                        type: ''
+
                     };
 
                     scope.evDataService.setAdditions(additions);
@@ -262,72 +252,23 @@
 
                 }
 
-                scope.openDataViewPanel = function () {
 
-                    if (scope.currentAdditions.reportWizard === false) {
+                scope.toggleSplitPanel = function ($event, type) {
+
+                    if(scope.currentAdditions.type === type) {
+
+                        clearAdditions()
+
+                    } else {
 
                         var additions = {
-                            additionsState: true,
-                            reportWizard: true,
-                            editor: false,
-                            permissionEditor: false
+                            isOpen: true,
+                            type: type
                         };
 
                         scope.evDataService.setAdditions(additions);
                         scope.evEventService.dispatchEvent(evEvents.ADDITIONS_CHANGE);
-
-                    } else {
-
-                        clearAdditions();
-
                     }
-
-                };
-
-                scope.openPermissionEditor = function () {
-
-                    console.log('scope.currentAdditions', scope.currentAdditions);
-
-                    if (scope.currentAdditions.permissionEditor === false) {
-
-                        var additions = {
-                            additionsState: true,
-                            reportWizard: false,
-                            editor: false,
-                            permissionEditor: true
-                        };
-
-                        scope.evDataService.setAdditions(additions);
-                        scope.evEventService.dispatchEvent(evEvents.ADDITIONS_CHANGE);
-
-                    } else {
-
-                        clearAdditions();
-
-                    }
-
-                };
-
-                scope.openEditorViewPanel = function () {
-
-                    if (scope.currentAdditions.editor === false) {
-
-                        var additions = {
-                            additionsState: true,
-                            reportWizard: false,
-                            editor: true,
-                            permissionEditor: false
-                        };
-
-                        scope.evDataService.setAdditions(additions);
-                        scope.evEventService.dispatchEvent(evEvents.ADDITIONS_CHANGE);
-
-                    } else {
-
-                        clearAdditions();
-
-                    }
-
 
                 };
 
@@ -368,7 +309,6 @@
 
                 scope.openLayoutList = function ($event) {
 
-                    var entityType = metaContentTypesService.getContentTypeUIByState($state.current.name);
 
                     $mdDialog.show({
                         controller: 'UiLayoutListDialogController as vm',
@@ -377,13 +317,17 @@
                         targetEvent: $event,
                         locals: {
                             options: {
-                                entityType: entityType
+                                entityType: scope.entityType
                             }
                         }
                     }).then(function (res) {
-                        if (res.status == 'agree') {
+
+                        if (res.status === 'agree') {
+
                             middlewareService.setData('entityActiveLayoutSwitched', true); // Give signal to update active layout name in the toolbar
-                            $state.reload($state.current.name);
+                            scope.evEventService.dispatchEvent(evEvents.LIST_LAYOUT_CHANGE);
+
+                            // $state.reload($state.current.name);
                             // $state.reload();
                         }
 
@@ -488,7 +432,7 @@
                             };
 
 
-                            var getPricingPolicy = function() {
+                            var getPricingPolicy = function () {
 
                                 pricingPolicyService.getList().then(function (data) {
 

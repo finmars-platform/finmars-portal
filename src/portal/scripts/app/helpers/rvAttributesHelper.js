@@ -127,7 +127,7 @@
             result.attribute_type = Object.assign({}, attribute);
             result.value_type = attribute.value_type;
             result.content_type = contentType;
-            result.key = rootKey + '.attributes.' + attribute.id;
+            result.key = rootKey + '.attributes.' + attribute.user_code;
             result.name = rootName + '. ' + attribute.name;
 
             return result

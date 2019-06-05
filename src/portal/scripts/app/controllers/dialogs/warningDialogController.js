@@ -7,7 +7,7 @@
 
     var logService = require('../../../../../core/services/logService');
 
-    module.exports = function($scope, $mdDialog, warning, data){
+    module.exports = function($scope, $mdDialog, warning){
 
         logService.controller('WarningDialogController', 'initialized');
 
@@ -17,13 +17,9 @@
 
         vm.actionsButtons = undefined;
 
-        if (data) {
+        if (warning.actionsButtons && warning.actionsButtons.length) {
 
-            if (data.actionsButtons && data.actionsButtons.length) {
-
-                vm.actionsButtons = data.actionsButtons;
-
-            }
+            vm.actionsButtons = warning.actionsButtons;
 
         }
 

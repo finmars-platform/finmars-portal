@@ -24,39 +24,54 @@
 
             vm.listViewIsReady = false;
 
-            var entityViewerDataService = new EntityViewerDataService();
-            var entityViewerEventService = new EntityViewerEventService();
+            vm.setEventListeners = function(){
 
-            vm.entityViewerDataService = entityViewerDataService;
-            vm.entityViewerEventService = entityViewerEventService;
+                vm.entityViewerEventService.addEventListener(evEvents.UPDATE_TABLE, function () {
 
+                    rvDataProviderService.createDataStructure(vm.entityViewerDataService, vm.entityViewerEventService);
 
-            entityViewerEventService.addEventListener(evEvents.UPDATE_TABLE, function () {
+                });
 
-                rvDataProviderService.createDataStructure(entityViewerDataService, entityViewerEventService);
+                vm.entityViewerEventService.addEventListener(evEvents.COLUMN_SORT_CHANGE, function () {
 
-            });
+                    rvDataProviderService.sortObjects(vm.entityViewerDataService, vm.entityViewerEventService);
 
-            entityViewerEventService.addEventListener(evEvents.COLUMN_SORT_CHANGE, function () {
+                });
 
-                rvDataProviderService.sortObjects(entityViewerDataService, entityViewerEventService);
+                vm.entityViewerEventService.addEventListener(evEvents.GROUP_TYPE_SORT_CHANGE, function () {
 
-            });
+                    rvDataProviderService.sortGroupType(vm.entityViewerDataService, vm.entityViewerEventService);
 
-            entityViewerEventService.addEventListener(evEvents.GROUP_TYPE_SORT_CHANGE, function () {
+                });
 
-                rvDataProviderService.sortGroupType(entityViewerDataService, entityViewerEventService);
+                vm.entityViewerEventService.addEventListener(evEvents.REQUEST_REPORT, function () {
 
-            });
+                    rvDataProviderService.requestReport(vm.entityViewerDataService, vm.entityViewerEventService);
 
-            entityViewerEventService.addEventListener(evEvents.REQUEST_REPORT, function () {
+                });
 
-                rvDataProviderService.requestReport(entityViewerDataService, entityViewerEventService);
+                vm.entityViewerEventService.addEventListener(evEvents.LIST_LAYOUT_CHANGE, function () {
 
-            });
+                    vm.getView();
+
+                });
+
+            };
 
 
             vm.getView = function () {
+
+                console.log('here?');
+
+                vm.listViewIsReady = false;
+
+                vm.entityViewerDataService = new EntityViewerDataService();;
+                vm.entityViewerEventService = new EntityViewerEventService();;
+
+                vm.entityType = $scope.$parent.vm.entityType;
+                vm.entityViewerDataService.setEntityType($scope.$parent.vm.entityType);
+
+                vm.setEventListeners();
 
                 uiService.getActiveListLayout(vm.entityType).then(function (res) {
 
@@ -108,10 +123,10 @@
                     entityViewerDataService.setEditorTemplateUrl('views/additions-editor-view.html');
                     entityViewerDataService.setRootEntityViewer(true);*/
 
-                    entityViewerDataService.setLayoutCurrentConfiguration(res, uiService, true);
+                    vm.entityViewerDataService.setLayoutCurrentConfiguration(res, uiService, true);
 
-                    var reportOptions = entityViewerDataService.getReportOptions();
-                    var reportLayoutOptions = entityViewerDataService.getReportLayoutOptions();
+                    var reportOptions = vm.entityViewerDataService.getReportOptions();
+                    var reportLayoutOptions = vm.entityViewerDataService.getReportLayoutOptions();
 
                     // Check if there is need to solve report datepicker expression
                     if (reportLayoutOptions && reportLayoutOptions.datepickerOptions) {
@@ -149,11 +164,11 @@
 
                                 vm.listViewIsReady = true;
 
-                                rvDataProviderService.requestReport(entityViewerDataService, entityViewerEventService);
+                                rvDataProviderService.requestReport(vm.entityViewerDataService, vm.entityViewerEventService);
 
                                 $scope.$apply();
 
-                                entityViewerDataService.setActiveLayoutConfiguration({isReport: true});
+                                vm.entityViewerDataService.setActiveLayoutConfiguration({isReport: true});
 
                             });
 
@@ -162,11 +177,11 @@
 
                             vm.listViewIsReady = true;
 
-                            rvDataProviderService.requestReport(entityViewerDataService, entityViewerEventService);
+                            rvDataProviderService.requestReport(vm.entityViewerDataService, vm.entityViewerEventService);
 
                             $scope.$apply();
 
-                            entityViewerDataService.setActiveLayoutConfiguration({isReport: true});
+                            vm.entityViewerDataService.setActiveLayoutConfiguration({isReport: true});
 
                         }
                     // < Check if there is need to solve report datepicker expression >
@@ -174,7 +189,7 @@
 
                         vm.listViewIsReady = true;
 
-                        rvDataProviderService.requestReport(entityViewerDataService, entityViewerEventService);
+                        rvDataProviderService.requestReport(vm.entityViewerDataService, vm.entityViewerEventService);
 
                         $scope.$apply();
 
@@ -189,8 +204,7 @@
 
             vm.init = function () {
 
-                vm.entityType = $scope.$parent.vm.entityType;
-                entityViewerDataService.setEntityType($scope.$parent.vm.entityType);
+
 
                 vm.getView();
 
@@ -240,8 +254,8 @@
 
             var checkLayoutForChanges = function () {
 
-                var activeLayoutConfig = entityViewerDataService.getActiveLayoutConfiguration();
-                var currentLayoutConfig = entityViewerDataService.getLayoutCurrentConfiguration(true);
+                var activeLayoutConfig = vm.entityViewerDataService.getActiveLayoutConfiguration();
+                var currentLayoutConfig = vm.entityViewerDataService.getLayoutCurrentConfiguration(true);
 
                 if (!evHelperService.checkForLayoutConfigurationChanges(activeLayoutConfig, currentLayoutConfig, true)) {
 
@@ -256,7 +270,7 @@
                             multiple: true,
                             locals: {
                                 data: {
-                                    evDataService: entityViewerDataService,
+                                    evDataService: vm.entityViewerDataService,
                                     entityType: vm.entityType
                                 }
                             }
@@ -315,8 +329,8 @@
 
             var warnAboutLayoutChangesLoss = function (event) {
 
-                var activeLayoutConfig = entityViewerDataService.getActiveLayoutConfiguration();
-                var currentLayoutConfig = entityViewerDataService.getLayoutCurrentConfiguration(true);
+                var activeLayoutConfig = vm.entityViewerDataService.getActiveLayoutConfiguration();
+                var currentLayoutConfig = vm.entityViewerDataService.getLayoutCurrentConfiguration(true);
 
                 if (!evHelperService.checkForLayoutConfigurationChanges(activeLayoutConfig, currentLayoutConfig, true)) {
                     event.preventDefault();

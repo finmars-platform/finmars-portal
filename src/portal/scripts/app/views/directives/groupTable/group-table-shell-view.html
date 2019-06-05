@@ -29,7 +29,7 @@
         </div>
     </div>
     <div class="g-filter-sidebar main-sidebar" data-ng-if="components.sidebar">
-        <div  >
+        <div>
             <div class="g-filter" id="filtersbag">
                 <group-sidebar-filter options="options" report-options="reportOptions" ev-data-service="evDataService"
                                       ev-event-service="evEventService"></group-sidebar-filter>
@@ -37,7 +37,7 @@
         </div>
     </div>
 
-    <div class="g-additions" data-ng-if="checkAdditions()">
+    <div class="g-additions" data-ng-if="additions.isOpen">
 
         <div group-height-aligner
              ev-data-service="evDataService"
@@ -46,7 +46,7 @@
         <div class="g-height-slider"></div>
 
 
-        <div class="g-additions-data-editor min-height" data-ng-show="additions.editor">
+        <div class="g-additions-data-editor min-height" data-ng-show="additions.type === 'form-editor'">
             <div data-ng-show="!activebject">
                 <div class="g-additions-editor-caption">
                     Select row to start
@@ -57,11 +57,13 @@
                                      ev-event-service="evEventService"></group-editor-binder>
             </div>
         </div>
-        <div class="g-additions-workarea" data-ng-if="additions.permissionEditor">
+        <div class="g-additions-workarea" data-ng-if="additions.type == 'permission-editor'">
             <div data-ng-include="'views/entity-viewer/permission-editor-view.html'" class="min-height"></div>
         </div>
-        <div class="g-additions-workarea" data-ng-if="additions.reportWizard">
-            <div data-ng-include="'views/entity-viewer/entity-viewer-view.html'" class="min-height"></div>
+        <div class="g-additions-workarea"
+             data-ng-if="additions.type == 'balance-report' || additions.type == 'pl-report' || additions.type == 'transaction-report'">
+            <group-split-panel-report-binder ev-data-service="evDataService"
+                                             ev-event-service="evEventService"></group-split-panel-report-binder>
         </div>
     </div>
     <div group-layout-resizer ev-data-service="evDataService"
