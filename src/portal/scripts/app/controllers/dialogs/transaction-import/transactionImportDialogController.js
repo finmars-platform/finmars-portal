@@ -384,9 +384,13 @@
 
                 vm.validateConfig = data;
 
+                $scope.$apply();
+
+                console.log('VALIDATE IMPORT data', data);
+
                 if (vm.validateConfig.task_status === 'SUCCESS') {
 
-                    console.log('VALIDATE IMPORT data', data);
+                    // console.log('VALIDATE IMPORT data', data);
 
                     resolve(data)
 
@@ -397,6 +401,7 @@
                     }, 1000)
 
                 }
+
 
             })
 
@@ -436,6 +441,8 @@
             importTransactionService.startImport(formData).then(function (data) {
 
                 vm.config = data;
+
+                $scope.$apply();
 
                 if (vm.config.task_status === 'SUCCESS') {
 
