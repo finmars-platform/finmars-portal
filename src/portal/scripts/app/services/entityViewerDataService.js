@@ -222,6 +222,11 @@
         }
 
         function getAdditions() {
+
+            if (!data.additions) {
+                return {};
+            }
+            
             return data.additions
         }
 
