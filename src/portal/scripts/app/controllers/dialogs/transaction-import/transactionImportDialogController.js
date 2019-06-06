@@ -317,8 +317,11 @@
                     });
 
 
-                    vm.config.file = {};
-                    vm.config.file.name = vm.fileLocal.name;
+                    var config = Object.assign({}, vm.config);
+
+
+                    config.file = {};
+                    config.file.name = vm.fileLocal.name;
 
                     $mdDialog.show({
                         controller: 'TransactionImportErrorsDialogController as vm',
@@ -327,7 +330,7 @@
                             data: {
                                 validationResult: data,
                                 scheme: transactionScheme,
-                                config: vm.config
+                                config: config
                             }
                         },
                         targetEvent: $event,
@@ -352,8 +355,8 @@
                     vm.load($event);
                 }
 
-            }).catch(function () {
-                console.log("error occured");
+            }).catch(function (error) {
+                console.log("error occured", error);
             });
 
 
@@ -436,8 +439,6 @@
 
                 if (vm.config.task_status === 'SUCCESS') {
 
-                    if (vm.config.error_rows.length === 0) {
-
                         // vm.finishedSuccess = true;
 
                         var description = '';
@@ -467,26 +468,7 @@
 
                         });
 
-                    } else {
 
-                        $mdDialog.show({
-                            controller: 'TransactionImportErrorsDialogController as vm',
-                            templateUrl: 'views/dialogs/transaction-import/transaction-import-errors-dialog-view.html',
-                            locals: {
-                                data: {
-                                    validationResult: data,
-                                    scheme: transactionScheme,
-                                    config: vm.config
-                                }
-                            },
-                            targetEvent: $event,
-                            preserveScope: true,
-                            multiple: true,
-                            autoWrap: true,
-                            skipHide: true,
-                        });
-
-                    }
 
                     vm.readyStatus.processing = false;
                     vm.dataIsImported = true;
@@ -553,46 +535,6 @@
             $mdDialog.cancel();
         };
 
-        /*vm.agree = function ($event) {
-            instrumentService.create(vm.config.instrument).then(function (data) {
-
-                $mdDialog.show({
-                    controller: 'SuccessDialogController as vm',
-                    templateUrl: 'views/dialogs/success-dialog-view.html',
-                    locals: {
-                        success: {
-                            title: "",
-                            description: "You have successfully add instrument " + vm.config.instrument.user_code + " (user code)."
-                        }
-                    },
-                    targetEvent: $event,
-                    preserveScope: true,
-                    multiple: true,
-                    autoWrap: true,
-                    skipHide: true
-                }).then(function () {
-                    $mdDialog.hide({res: 'agree'});
-                });
-
-            }).catch(function (reason) {
-
-                $mdDialog.show({
-                    controller: 'ValidationDialogController as vm',
-                    templateUrl: 'views/dialogs/validation-dialog-view.html',
-                    locals: {
-                        validationData: reason.message
-                    },
-                    targetEvent: $event,
-                    preserveScope: true,
-                    multiple: true,
-                    autoWrap: true,
-                    skipHide: true
-                })
-
-
-            })
-
-        };*/
 
     };
 
