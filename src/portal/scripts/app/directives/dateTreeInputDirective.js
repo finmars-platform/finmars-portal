@@ -44,7 +44,7 @@
                         if (res.status === 'agree') {
 
                             scope.datesTree = res.data.datesTree;
-
+                            console.log("filter dateTreeInputDirective", scope.datesTree);
                             setTimeout(function () {
                                 scope.callbackMethod();
                             }, 500);

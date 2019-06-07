@@ -15,8 +15,9 @@
                 title: "@",
                 nameProperty: "@"
             },
+            require: '?ngModel',
             templateUrl: "views/directives/two-fields-multiselect-view.html",
-            link: function (scope, elem, attr) {
+            link: function (scope, elem, attr, ngModel) {
 
                 scope.inputText = '';
 
@@ -34,7 +35,7 @@
                 setInputText();
 
                 $(elem).click(function (event) {
-
+                    console.log("filter twoFieldsMultiselect scope", scope.items, scope.model);
                     event.preventDefault();
                     event.stopPropagation();
 
@@ -52,10 +53,12 @@
                                 nameProperty: scope.nameProperty
                             }
                         }
-                    }).then(function (data) {
-                       if (data.status === "agree") {
+                    }).then(function (res) {
+                       if (res.status === "agree") {
 
-                           scope.model = data.selectedItems;
+                           scope.model = res.selectedItems;
+                           ngModel.$setViewValue(res.selectedItems);
+                           console.log("filter twoFiieldsMutliselect", res);
                            setInputText();
 
                        }

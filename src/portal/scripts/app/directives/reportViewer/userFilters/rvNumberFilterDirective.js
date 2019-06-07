@@ -80,9 +80,26 @@
                         case "top_n":
                             filterRegime = "Top N items";
                             break;
+                        case "bottom_n":
+                            filterRegime = "Bottom N items";
+                            break;
                     }
 
                     return filterRegime;
+
+                };
+
+                scope.filterSettingsChange = function () {
+                    console.log("filter filterSettingsChange", scope.filter.options.filter_values);
+
+                    scope.evDataService.resetData();
+                    scope.evDataService.resetRequestParameters();
+
+                    var rootGroup = scope.evDataService.getRootGroupData();
+
+                    scope.evDataService.setActiveRequestParametersId(rootGroup.___id);
+
+                    scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE);
 
                 };
 
@@ -95,29 +112,11 @@
 
                     } else {
 
-                        scope.filter.options.filter_values = undefined;
+                        scope.filter.options.filter_values = [];
 
                     }
 
-                    scope.filterChange();
-                };
-
-                scope.filterChange = function (newFilterValues) {
-                    console.log("filter filterChange", scope.filter.options.filter_values, newFilterValues);
-
-                    if (newFilterValues) {
-
-                        scope.evDataService.resetData();
-                        scope.evDataService.resetRequestParameters();
-
-                        var rootGroup = scope.evDataService.getRootGroupData();
-
-                        scope.evDataService.setActiveRequestParametersId(rootGroup.___id);
-
-                        scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE);
-
-                    }
-
+                    scope.filterSettingsChange();
                 };
 
                 scope.renameFilter = function (filter, $mdMenu, $event) {
@@ -137,17 +136,23 @@
                 };
 
                 scope.removeFilter = function (filter) {
-                    console.log('filter scope.filters', scope.filters);
+                    scope.filters = scope.evDataService.getFilters();
+                    /*console.log('filter scope.filters', scope.filters);
                     scope.filters = scope.filters.map(function (item) {
                         // if (item.id === filter.id || item.name === filter.name) {
-                        if (item.name === filter.name) {
+                        if (item.key === filter.key) {
                             // return undefined;
                             item = undefined;
                         }
-                        //console.log('filter in filters list', item);
+
                         return item;
                     }).filter(function (item) {
                         return !!item;
+                    });*/
+                    scope.filters.map(function (item, index) {
+                        if (item.key === filter.key) {
+                            scope.filters.splice(index, 1);
+                        }
                     });
 
                     scope.evDataService.setFilters(scope.filters);

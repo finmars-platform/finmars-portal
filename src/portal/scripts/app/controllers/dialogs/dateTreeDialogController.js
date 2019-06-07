@@ -8,12 +8,13 @@
     module.exports = function ($scope, $mdDialog, data) {
 
         var vm = this;
-
+        console.log("filter dateTree data", data);
         vm.title = data.title;
-        vm.datesTree = JSON.parse(JSON.stringify(data.datesTree));
 
         if (!vm.datesTree) {
             vm.datesTree = [];
+        } else {
+            vm.datesTree = JSON.parse(JSON.stringify(data.datesTree));
         }
 
         var datesList = data.datesList;
@@ -30,7 +31,7 @@
         var formatDatesList = function () {
             datesList = datesList.map(function (date) {
                 return {
-                    value: new Date(date),
+                    value: new Date(date.value),
                     available: true,
                     active: false
                 };

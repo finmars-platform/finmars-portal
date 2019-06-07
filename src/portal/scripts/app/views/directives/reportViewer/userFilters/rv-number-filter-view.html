@@ -14,7 +14,7 @@
         <md-checkbox ng-model="filter.options.enabled"
                      aria-label="filters"
                      class="md-primary table-filter-activity-checkbox"
-                     ng-change="toggleFilterState(filter)"
+                     ng-change="filterSettingsChange()"
                      flex="15"></md-checkbox>
 
         <div ng-if="filter.options.filter_type !== 'from_to'" flex="70">
@@ -27,7 +27,7 @@
 
                     <input type="number"
                            data-ng-model="filter.options.filter_values[0]"
-                           data-ng-change="filterChange(filter.options.filter_values[0])"
+                           data-ng-change="filterSettingsChange(filter.options.filter_values[0])"
                            data-ng-model-options="{debounce: 1000}"
                            aria-label="rv number filter single input">
                 </md-input-container>
@@ -47,7 +47,7 @@
 
                 <input type="number"
                        data-ng-model="filter.options.filter_values.min_value"
-                       data-ng-change="filterChange(filter.options.filter_values.min_value)"
+                       data-ng-change="filterSettingsChange(filter.options.filter_values.min_value)"
                        data-ng-model-options="{debounce: 1000}"
                        aria-label="rv number filter single input">
             </md-input-container>
@@ -59,7 +59,7 @@
 
                 <input type="number"
                        data-ng-model="filter.options.filter_values.max_value"
-                       data-ng-change="filterChange(filter.options.filter_values.max_value)"
+                       data-ng-change="filterSettingsChange(filter.options.filter_values.max_value)"
                        data-ng-model-options="{debounce: 1000}"
                        aria-label="rv number filter single input">
             </md-input-container>
@@ -147,6 +147,14 @@
                                     <ng-md-icon icon="done"
                                                 ng-show="filter.options.filter_type === 'top_n'"></ng-md-icon>
                                     Top N items
+                                </md-button>
+                                <md-button ng-click="changeFilterType('bottom_n')">
+                                    <ng-md-icon icon="done"
+                                                ng-show="filter.options.filter_type !== 'bottom_n'"
+                                                style="visibility: hidden;"></ng-md-icon>
+                                    <ng-md-icon icon="done"
+                                                ng-show="filter.options.filter_type === 'bottom_n'"></ng-md-icon>
+                                    Bottom N items
                                 </md-button>
                             </md-menu-content>
                         </md-menu>
