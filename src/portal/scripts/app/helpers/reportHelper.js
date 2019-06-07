@@ -320,7 +320,8 @@
 
             source.attributes.forEach(function (attribute) {
 
-                localResultKey = resultKey + '.' + attribute.attribute_type;
+                // localResultKey = resultKey + '.' + attribute.attribute_type;
+                localResultKey = resultKey + '.' + attribute.attribute_type_object.user_code;
 
                 result[localResultKey] = null;
 

@@ -310,9 +310,9 @@
                 result.name = item.name
             }
 
-            // if (item.hasOwnProperty('content_type')) {
-            //     result.content_type = item.content_type
-            // }
+            if (item.hasOwnProperty('content_type')) {
+                result.content_type = item.content_type
+            }
 
             if (item.hasOwnProperty('user_code')) {
                 result.user_code = item.user_code
@@ -402,18 +402,29 @@
 
                         var searchItem = getECProperties(childItem);
 
+                        // console.log('searchItem', searchItem);
+
                         layoutData.forEach(function (layoutDataItem) {
+
+                            // console.log('layoutDataItem', layoutDataItem);
+
 
                             if (layoutDataItem) {
 
+                                var active = true;
+
                                 Object.keys(searchItem).forEach(function (key) {
 
-                                    if (layoutDataItem[key] === searchItem[key]) {
-                                        childItem.active = true;
-                                        entityItem.someChildsActive = true;
+                                    if (layoutDataItem[key] !== searchItem[key]) {
+                                        active = false;
                                     }
 
                                 });
+
+                                if(active) {
+                                    childItem.active = true;
+                                    entityItem.someChildsActive = true;
+                                }
 
                             }
 
@@ -456,10 +467,10 @@
 
                     if (child.active) {
 
-                        var name = getECProperties(child);
+                        var result = getECProperties(child);
 
-                        if (name || typeof name === "string") {
-                            vm.activeLayout.data.statuses[item.entity].push(name)
+                        if (result || typeof result === "string") {
+                            vm.activeLayout.data.statuses[item.entity].push(result)
                         }
                     }
 
