@@ -87,12 +87,12 @@
 
                 scope.changeFilterType = function (filterType) {
                     scope.filter.options.filter_type = filterType;
-                    scope.filter.options.filter_values = undefined;
-                    scope.filterChange();
+                    scope.filter.options.filter_values = [];
+                    scope.filterSettingsChange();
                 };
 
-                scope.filterChange = function () {
-                    console.log("filter filterChange", scope.filter.options.filter_values);
+                scope.filterSettingsChange = function () {
+                    console.log("filter filterSettingsChange", scope.filter.options.filter_values);
 
                     /*if (scope.filter.options.filter_type === "contain" || scope.filter.option.filter_type === "does_not_contain") {
                         scope.filter.options.filter_values = scope.filter.options.filter_values.toLowerCase();
@@ -136,7 +136,7 @@
                     window.removeEventListener('click', selectClickOutsideToClose);*/
 
                     scope.filter.options.filter_values[0] = selectOption;
-                    scope.filterChange();
+                    scope.filterSettingsChange();
                 };
 
                 var selectClickOutsideToClose = function (event) {
@@ -178,7 +178,8 @@
                 };
 
                 scope.removeFilter = function (filter) {
-                    console.log('filter scope.filters', scope.filters);
+                    scope.filters = scope.evDataService.getFilters();
+                    /*console.log('filter scope.filters', scope.filters);
                     scope.filters = scope.filters.map(function (item) {
                         // if (item.id === filter.id || item.name === filter.name) {
                         if (item.name === filter.name) {
@@ -189,6 +190,11 @@
                         return item;
                     }).filter(function (item) {
                         return !!item;
+                    });*/
+                    scope.filters.map(function (item, index) {
+                        if (item.key === filter.key) {
+                            scope.filters.splice(index, 1);
+                        }
                     });
 
                     scope.evDataService.setFilters(scope.filters);

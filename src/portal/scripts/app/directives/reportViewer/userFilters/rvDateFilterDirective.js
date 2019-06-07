@@ -34,7 +34,7 @@
 
                     scope.columnRowsContent = columnRowsContent.map(function (cRowsContent) {
                         return {
-                            name: cRowsContent,
+                            value: cRowsContent,
                             active: false
                         }
                     });
@@ -115,19 +115,26 @@
                 };
 
                 scope.changeFilterType = function (filterType) {
+
                     scope.filter.options.filter_type = filterType;
 
-                    if (filterType === 'from_to') {
+                    if (filterType === 'date_tree') {
 
-                        scope.filter.options.filter_values = {}
-
-                    } else {
-
-                        scope.filter.options.filter_values = undefined;
+                        scope.filter.options.dates_tree = [];
 
                     }
 
-                    scope.filterChange();
+                    if (filterType === 'from_to') {
+
+                        scope.filter.options.filter_values = {};
+
+                    } else {
+
+                        scope.filter.options.filter_values = [];
+
+                    }
+
+                    scope.filterSettingsChange();
                 };
 
                 var convertDatesTreeToFlatList = function () {
@@ -159,12 +166,7 @@
 
                 };
 
-                scope.filterChange = function (newFilterValues) {
-
-                    if (scope.filter.options.filter_type === 'date_tree') {
-                        scope.filter.options.filter_values = convertDatesTreeToFlatList();
-                    }
-
+                scope.applyFilter = function () {
                     scope.evDataService.resetData();
                     scope.evDataService.resetRequestParameters();
 
@@ -173,6 +175,15 @@
                     scope.evDataService.setActiveRequestParametersId(rootGroup.___id);
 
                     scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE);
+                };
+
+                scope.filterSettingsChange = function () {
+                    console.log("filter filterSettingsChange", scope.filter.options.filter_values);
+                    if (scope.filter.options.filter_type === 'date_tree') {
+                        scope.filter.options.filter_values = convertDatesTreeToFlatList();
+                    }
+
+                    scope.applyFilter();
 
                 };
 
@@ -193,10 +204,11 @@
                 };
 
                 scope.removeFilter = function (filter) {
-                    console.log('filter scope.filters', scope.filters);
+                    scope.filters = scope.evDataService.getFilters();
+                    /*console.log('filter scope.filters', scope.filters);
                     scope.filters = scope.filters.map(function (item) {
                         // if (item.id === filter.id || item.name === filter.name) {
-                        if (item.name === filter.name) {
+                        if (item.key === filter.key) {
                             // return undefined;
                             item = undefined;
                         }
@@ -204,6 +216,11 @@
                         return item;
                     }).filter(function (item) {
                         return !!item;
+                    });*/
+                    scope.filters.map(function (item, index) {
+                        if (item.key === filter.key) {
+                            scope.filters.splice(index, 1)
+                        }
                     });
 
                     scope.evDataService.setFilters(scope.filters);

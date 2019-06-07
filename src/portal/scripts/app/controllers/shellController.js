@@ -8,6 +8,8 @@
     var logService = require('../../../../core/services/logService');
     var cookiesService = require('../../../../core/services/cookieService');
 
+    var entityViwerDataService = require('../services/entityViewerDataService');
+
     var usersService = require('../services/usersService');
     var metaContentTypesService = require('../services/metaContentTypesService');
     var notificationsService = require('../services/notificationsService');
@@ -177,6 +179,18 @@
         vm.showBookmarks = false;
         vm.toggleBookmarkPanel = function () {
             vm.showBookmarks = !vm.showBookmarks;
+
+            /*var interfaceLayout = entityViwerDataService.getInterfaceLayout();
+            console.log("viewport bookmarks", interfaceLayout);
+            if (vm.showBookmarks) {
+                interfaceLayout.headerToolbar.height = 134;
+            } else {
+                interfaceLayout.headerToolbar.height = 64;
+            }
+
+            setTimeout(function () {
+                $(window).trigger('resize');
+            }, 400);*/
         };
 
         vm.openHelp = function ($event) {
