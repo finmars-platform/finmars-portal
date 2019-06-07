@@ -9,7 +9,7 @@
                 <span>Import Progress:</span> <span>{{vm.config.processed_rows}} / {{vm.config.total_rows}}</span>
             </div>
             <div class="toolbar-progression-indication"
-                 data-ng-if="vm.validateConfig.total_rows != null && vm.validateConfig.processed_rows != null">
+                 data-ng-if="vm.validateConfig.total_rows != null && vm.validateConfig.processed_rows != null && vm.config.total_rows == null">
                 <span>Validate Progress:</span> <span>{{vm.validateConfig.processed_rows}} / {{vm.validateConfig.total_rows}}</span>
             </div>
         </div>

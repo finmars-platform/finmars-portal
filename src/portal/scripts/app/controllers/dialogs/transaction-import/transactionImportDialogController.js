@@ -446,9 +446,30 @@
 
                 if (vm.config.task_status === 'SUCCESS') {
 
-                        // vm.finishedSuccess = true;
+                    // vm.finishedSuccess = true;
 
-                        var description = '';
+                    var description = '';
+
+                    if (!data.total_rows && data.error_rows.length === 0) {
+
+                        $mdDialog.show({
+                            controller: 'SuccessDialogController as vm',
+                            templateUrl: 'views/dialogs/success-dialog-view.html',
+                            targetEvent: $event,
+                            preserveScope: true,
+                            multiple: true,
+                            autoWrap: true,
+                            skipHide: true,
+                            locals: {
+                                success: {
+                                    title: "Warning",
+                                    description: 'Nothing to import, check file format!'
+                                }
+                            }
+
+                        });
+
+                    } else {
 
                         description = '<div>' +
                             '<div>Rows total: ' + data.total_rows + '</div>' +
@@ -475,6 +496,7 @@
 
                         });
 
+                    }
 
 
                     vm.readyStatus.processing = false;
