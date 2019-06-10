@@ -22,9 +22,7 @@
             var regularFilters = filterService.getRegularFilters(options);
 
             var reportOptions = entityViewerDataService.getReportOptions();
-
-            var filterType = options.filter_type;
-
+            // console.log("filter objects.service reportOptions", reportOptions);
             if (reportOptions.hasOwnProperty("items") && reportOptions.items.length > 0) {
 
                 if (reportRecievedAt == null) {
@@ -43,12 +41,9 @@
                 });
 
                 var groupTypes = entityViewerDataService.getGroups();
+                // console.log("filter objects.service options", options);
 
-                if (options.filter_type) {
-                    items = filterService.filterByText(items, regularFilters, filterType);
-                } else {
-                    items = filterService.filterByRegularFilters(items, regularFilters);
-                }
+                items = filterService.filterTableRows(items, regularFilters, options.filter_type, options.value_type);
 
                 /*items = filterService.filterByRegularFilters(items, regularFilters);
 

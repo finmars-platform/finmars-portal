@@ -35,6 +35,10 @@ md-toolbar {
   .md-button.md-default-theme {
     border-radius: 99%; // round toolbar buttons
   }
+
+  .toolbar-wrapper {
+    height: 64px;
+  }
 }
 
 h2 {
@@ -872,9 +876,9 @@ md-menu-bar.header-logout-menu {
   .g-table-dial {
     left: 80px;
   }
-  .bookmarks-list {
-    padding-left: 80px;
-  }
+  //.bookmarks-list {
+  //  padding-left: 80px;
+  //}
 
   .sidenav-logo-wrapper {
     width: 40px;
@@ -948,9 +952,9 @@ md-menu-bar.header-logout-menu {
     left: 70px;
   }
 
-  .bookmarks-list {
+  /*.bookmarks-list {
     padding-left: 70px;
-  }
+  }*/
 
   /* < Old sidemenu styles > */
 
@@ -2168,6 +2172,43 @@ md-menu-content.dropdown-buttons-menu {
 .two-fields-select-all-btn {
   padding-top: 7px;
   padding-bottom: 7px;
+}
+
+.date-tree-dialog {
+  height: 80%;
+
+  md-dialog-content {
+    height: 100%;
+    min-width: 330px;
+    padding: 30px 15px;
+  }
+
+  md-dialog-actions {
+    padding: 0 16px;
+
+    .md-button {
+      margin: 8px;
+    }
+  }
+
+}
+
+.date-tree-input-container {
+  cursor: pointer;
+
+  label {
+    cursor: pointer;
+  }
+}
+
+.date-tree-folding-btn {
+  min-height: 20px;
+  height: 20px;
+  min-width: 20px;
+  width: 20px;
+  line-height: initial;
+  padding: 0;
+  margin-top: 0;
 }
 
 

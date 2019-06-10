@@ -14,7 +14,6 @@
             restrict: 'E',
             scope: {
                 filter: '=',
-                filterObject: '=',
                 evDataService: '=',
                 evEventService: '='
             },
@@ -26,10 +25,10 @@
                 scope.filters = scope.evDataService.getFilters();
 
                 scope.filterValue = undefined;
-                scope.filterSelectOptions = [];
                 scope.columnRowsContent = [];
                 scope.showSelectMenu = false;
 
+                scope.isRootEntityViewer = scope.evDataService.isRootEntityViewer();
                 scope.attributesFromAbove = [];
 
                 scope.evEventService.addEventListener(evEvents.DATA_LOAD_END, function () {
@@ -40,16 +39,12 @@
                         return {id: cRowsContent, name: cRowsContent}
                     });
 
-                    scope.filterSelectOptions = ["lorem", "ipsum", "dolor", "sit", "amet", "lorem ipsum", "dolorsit", "ametlorem", "ipsumdolor", "sitamet", "loremipsum", "dolor sit amet", "111111111", "2222222"]; //
-                    console.log("filter select options", scope.filterSelectOptions, columnRowsContent);
+                    // scope.columnRowsContent = [{name: "lorem"}, {name: "ipsum"}, {name: "dolor"}, {name: "sit"}, {name: "amet"}, {name: "lorem ipsum"}, {name: "dolorsit"}, {name: "ametlorem"}, {name: "ipsumdolor"}, {name: "sitamet"}, {name: "loremipsum"}, {name: "dolor sit amet"}, {name: "111111111"}, {name: "2222222"}]; //
+                    // console.log("filter select options", scope.filterSelectOptions, columnRowsContent);
 
                     if (!scope.isRootEntityViewer) {
-
                         scope.attributesFromAbove = scope.evDataService.getAttributesFromAbove();
-
-                        console.log('scope.attributesFromAbove', scope.attributesFromAbove);
                     }
-
 
                     scope.$apply();
 
@@ -100,12 +95,12 @@
 
                 scope.changeFilterType = function (filterType) {
                     scope.filter.options.filter_type = filterType;
-                    scope.filter.options.filter_values = undefined;
-                    scope.filterChange();
+                    scope.filter.options.filter_values = [];
+                    scope.filterSettingsChange();
                 };
 
-                scope.filterChange = function () {
-                    console.log("filter filterChange", scope.filter.options.filter_values);
+                scope.filterSettingsChange = function () {
+                    console.log("filter filterSettingsChange", scope.filter.options.filter_values);
 
                     /*if (scope.filter.options.filter_type === "contain" || scope.filter.option.filter_type === "does_not_contain") {
                         scope.filter.options.filter_values = scope.filter.options.filter_values.toLowerCase();
@@ -122,7 +117,7 @@
 
                 };
 
-                scope.toggleFilterSelectMenu = function (action) {
+                /*scope.toggleFilterSelectMenu = function (action) {
                     console.log("filter toggleFilterSelectMenu", action);
                     var selectMenu = elem[0].querySelector(".text-filter-select-menu");
                     var selectFilterContainer = elem[0].querySelector(".text-filter-select");
@@ -140,16 +135,16 @@
                         selectMenu.classList.add("visibility-hidden");
                         selectFilterContainer.classList.remove("select-menu-visible");
                     }
-                };
+                };*/
 
                 scope.selectFilterOption = function (selectOption) {
 
-                    var selectMenu = elem[0].querySelector(".text-filter-select-menu");
+                    /*var selectMenu = elem[0].querySelector(".text-filter-select-menu");
                     selectMenu.classList.add('visibility-hidden');
-                    window.removeEventListener('click', selectClickOutsideToClose);
+                    window.removeEventListener('click', selectClickOutsideToClose);*/
 
                     scope.filter.options.filter_values[0] = selectOption;
-                    scope.filterChange();
+                    scope.filterSettingsChange();
                 };
 
                 var selectClickOutsideToClose = function (event) {
@@ -191,7 +186,8 @@
                 };
 
                 scope.removeFilter = function (filter) {
-                    console.log('filter scope.filters', scope.filters);
+                    scope.filters = scope.evDataService.getFilters();
+                    /*console.log('filter scope.filters', scope.filters);
                     scope.filters = scope.filters.map(function (item) {
                         // if (item.id === filter.id || item.name === filter.name) {
                         if (item.name === filter.name) {
@@ -202,6 +198,11 @@
                         return item;
                     }).filter(function (item) {
                         return !!item;
+                    });*/
+                    scope.filters.map(function (item, index) {
+                        if (item.key === filter.key) {
+                            scope.filters.splice(index, 1);
+                        }
                     });
 
                     scope.evDataService.setFilters(scope.filters);
@@ -209,20 +210,62 @@
                     scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE)
                 };
 
-                scope.getAttributesFromAbove = function () {
-                    return scope.attributesFromAbove;
-                }
 
-                scope.evEventService.addEventListener(evEvents.ACTIVE_OBJECT_FROM_ABOVE_CHANGE, function () {
+                scope.updateFilters = function(){
 
-                    var activeObjectFromAbove = scope.evDataService.getActiveObjectFromAbove();
+                    var filters = scope.evDataService.getFilters();
 
-                    scope.attributesFromAbove = scope.evDataService.getAttributesFromAbove();
+                    filters.forEach(function (item) {
 
-                    console.log('activeObjectFromAbove', activeObjectFromAbove);
-                    console.log('scope.attributesFromAbove', scope.attributesFromAbove);
+                        if (scope.filter.key === item.key || scope.filter.id === item.id) {
+                            item = Object.assign({}, scope.filter)
+                        }
 
-                })
+                    });
+
+                    scope.evDataService.setFilters(scope.filters);
+
+                };
+
+
+                scope.initSplitPanelMode = function () {
+
+                    if (!scope.isRootEntityViewer) {
+
+                        scope.evEventService.addEventListener(evEvents.ACTIVE_OBJECT_FROM_ABOVE_CHANGE, function () {
+
+                            if (['multiselector', 'date_tree', 'from_to'].indexOf(scope.filter.filter_type) === -1) {
+
+                                var activeObjectFromAbove = scope.evDataService.getActiveObjectFromAbove();
+
+                                scope.attributesFromAbove = scope.evDataService.getAttributesFromAbove();
+
+                                var key = scope.filter.options.use_from_above;
+                                var value = activeObjectFromAbove[key];
+
+                                scope.filter.options.filter_values = [value]; // example value 'Bank 1 Notes 4% USD'
+
+                                scope.updateFilters();
+
+                                scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE);
+
+                            }
+
+                        })
+
+                    }
+
+                };
+
+
+                scope.init = function () {
+
+                    scope.initSplitPanelMode();
+
+
+                };
+
+                scope.init()
 
             }
         }

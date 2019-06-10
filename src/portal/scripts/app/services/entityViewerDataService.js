@@ -11,8 +11,10 @@
         var headerToolbarHeight = 64;
         var headerToolbarWidth = document.body.clientWidth - sidebarWidth;
 
-        var groupingAreaHeight = 88;
+        // var groupingAreaHeight = 88;
+        var groupingAreaHeight = 98;
         var columnAreaHeight = 70;
+        var progressBarHeight = 4;
         var filterAreaWidth = 239;
         var filterAreaLeft = document.body.clientWidth - filterAreaWidth;
 
@@ -38,6 +40,9 @@
                 left: sidebarWidth,
                 top: headerToolbarHeight + groupingAreaHeight,
                 height: columnAreaHeight
+            },
+            progressBar: {
+                height: progressBarHeight
             },
             filterArea: {
                 left: filterAreaLeft,

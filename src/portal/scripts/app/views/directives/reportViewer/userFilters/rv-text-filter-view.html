@@ -14,7 +14,7 @@
         <md-checkbox ng-model="filter.options.enabled"
                      aria-label="filters"
                      class="md-primary table-filter-activity-checkbox"
-                     ng-change="toggleFilterState(filter)"
+                     ng-change="filterSettingsChange()"
                      flex="15"></md-checkbox>
 
         <div ng-if="filter.options.filter_type !== 'multiselector'"
@@ -26,7 +26,7 @@
                     </label>
 
                     <input data-ng-model="filter.options.filter_values[0]"
-                           data-ng-change="filterChange()"
+                           data-ng-change="filterSettingsChange()"
                            data-ng-model-options="{debounce: 1000}">
                 </md-input-container>
             </div>
@@ -34,18 +34,38 @@
             <div ng-if="filter.options.filter_type === 'selector'"
                  class="table-filter-input-container text-filter-select">
 
-                <md-input-container>
-                    <label>
-                        <span ng-bind="getFilterRegime()"></span>
-                    </label>
+                <md-menu>
+                    <md-input-container>
+                        <label>
+                            <span ng-bind="getFilterRegime()"></span>
+                        </label>
 
-                    <input ng-model="filter.options.filter_values[0]"
-                           ng-change="filterChange()"
-                           ng-model-options="{debounce: 1000}"
-                           ng-click="toggleFilterSelectMenu('show')">
-                </md-input-container>
+                        <input ng-model="filter.options.filter_values[0]"
+                               ng-change="filterSettingsChange()"
+                               ng-model-options="{debounce: 1000}"
+                               ng-click="$mdOpenMenu($event)">
+                        <!--<input ng-model="filter.options.filter_values[0]"
+                               ng-change="filterSettingsChange()"
+                               ng-model-options="{debounce: 1000}"
+                               ng-click="toggleFilterSelectMenu('show')">-->
+                    </md-input-container>
 
-                <div class="table-filter-select-options text-filter-select-menu visibility-hidden">
+                    <md-menu-content class="text-filter-select-menu">
+                        <md-input-container md-no-float class="no-error-spacer">
+                            <input type="search"
+                                   ng-model="searchTerm"
+                                   placeholder="Search for a ..."
+                                   class="md-text md-select-search-pattern simple-search-filter-input"
+                                   ng-keydown="$event.stopPropagation()">
+                        </md-input-container>
+                            <md-button ng-repeat="rowContent in columnRowsContent | filter: searchTerm as results track by $index"  ng-bind="rowContent.name"
+                                       ng-click="selectFilterOption(rowContent.name)">
+                            </md-button>
+
+                    </md-menu-content>
+                </md-menu>
+
+                <!--<div class="table-filter-select-options text-filter-select-menu visibility-hidden">
                     <md-input-container md-no-float>
                         <input type="search"
                                ng-model="searchTerm"
@@ -55,12 +75,12 @@
                     </md-input-container>
                     <div class="table-filter-select-options-holder">
                         <md-button
-                                ng-repeat="selectOption in filterSelectOptions | filter: searchTerm as results track by $index"
-                                ng-bind="selectOption"
-                                ng-click="selectFilterOption(selectOption)">
+                                ng-repeat="rowContent in columnRowsContent | filter: searchTerm as results track by $index"
+                                ng-bind="rowContent"
+                                ng-click="selectFilterOption(rowContent)">
                         </md-button>
                     </div>
-                </div>
+                </div>-->
 
             </div>
 
@@ -68,7 +88,9 @@
 
         <div ng-if="filter.options.filter_type === 'multiselector'"
              flex="70">
-            <two-fields-multiselect data-title="{{getMultiselectorName()}}"
+            <two-fields-multiselect ng-model="filter.options.filter_values"
+                                    ng-change="filterSettingsChange()"
+                                    data-title="{{getMultiselectorName()}}"
                                     data-items="columnRowsContent"
                                     data-model="filter.options.filter_values"
                                     data-name-property="name"
@@ -145,6 +167,15 @@
                             <span>Remove</span>
                         </md-button>
                     </md-menu-item>
+
+                    <md-menu-item ng-if="!isRootEntityViewer">
+
+                        <div>
+                            <use-from-above-button item="filter.options.use_from_above" data="{attributes: attributesFromAbove}"></use-from-above-button>
+                        </div>
+
+                    </md-menu-item>
+
                 </md-menu-content>
             </md-menu>
 
@@ -205,10 +236,8 @@
             </md-menu>-->
         </div>
 
-        <div ng-if="!isRootEntityViewer" flex="15">
-            <use-from-above-button item="filter.options.use_from_above"
-                                   data="{attributes: getAttributesFromAbove()}"></use-from-above-button>
-        </div>
+
+
 
     </div>
 
