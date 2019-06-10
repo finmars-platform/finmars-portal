@@ -58,6 +58,7 @@
         // console.log('injectRegularFilters.requestParameters', requestParameters);
 
         var newRequestParametersBody = Object.assign({}, requestParameters.body);
+        newRequestParametersBody['filter_settings'] = [];
 
         var filters = entityViewerDataService.getFilters();
         // console.log("filter injectRegularFilters", filters, requestParameters);
@@ -74,16 +75,24 @@
                 if (item.options.filter_values) {
 
                     var key = queryParamsHelper.entityPluralToSingular(item.key);
-                    // console.log("filter injectRegularFilters", item.options.filter_values, key);
+
+                    var filterSettings = {
+                        key: key,
+                        filter_type: item.options.filter_type,
+                        value_type: item.value_type,
+                        value: item.options.filter_values
+                    };
+
                     /*if (item.options.filter_type) {
 
 
 
                     }*/
 
-                    newRequestParametersBody[key] = item.options.filter_values;
-                    newRequestParametersBody['value_type'] = item.value_type;
-                    newRequestParametersBody['filter_type'] = item.options.filter_type;
+                    // newRequestParametersBody[key] = item.options.filter_values;
+
+                    newRequestParametersBody['filter_settings'].push(filterSettings);
+
                 }
 
             }
@@ -136,7 +145,8 @@
 
                 reportOptions.items = reportHelper.injectIntoItems(reportOptions.items, reportOptions);
                 reportOptions.items = reportHelper.convertItemsToFlat(reportOptions.items);
-
+                entityViewerDataService.setUnfilteredFlatList(reportOptions.items),
+                // Report options.items - origin table without filtering and grouping. Save to entityViewerDataService.
                 reportOptions.items = reportHelper.calculateMarketValueAndExposurePercents(reportOptions.items, reportOptions);
 
             }

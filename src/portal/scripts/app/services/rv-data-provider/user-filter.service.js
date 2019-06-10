@@ -2,7 +2,7 @@
 
     var getDataByKey = function (entityViewerDataService, key) {
 
-        var data = entityViewerDataService.getFlatList();
+        var data = entityViewerDataService.getUnfilteredFlatList();
         var result = [];
 
         data.forEach(function (item) {

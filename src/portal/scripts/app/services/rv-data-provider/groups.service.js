@@ -105,7 +105,8 @@
 
                 var groupTypes = entityViewerDataService.getGroups();
 
-                items = filterService.filterByRegularFilters(items, regularFilters);
+                // items = filterService.filterByRegularFilters(items, regularFilters);
+                items = filterService.filterTableRows(items, regularFilters);
                 items = filterService.filterByGroupsFilters(items, options, groupTypes);
 
                 var group = options.groups_types[options.groups_types.length - 1];

@@ -21,6 +21,26 @@
                     scope.title = 'Date tree'
                 }
 
+                var setInputText = function () {
+
+                    var datesSelected = 0;
+
+                    scope.datesTree.map(function (yearGroup) {
+
+                        yearGroup.items.map(function (monthGroup) {
+
+                            datesSelected = datesSelected + monthGroup.items.length;
+
+                        });
+
+                    });
+
+                    scope.inputText = datesSelected + " " + "dates selected";
+
+                };
+
+                setInputText();
+
                 $(elem).click(function (event) {
 
                     event.preventDefault();
@@ -44,7 +64,8 @@
                         if (res.status === 'agree') {
 
                             scope.datesTree = res.data.datesTree;
-                            console.log("filter dateTreeInputDirective", scope.datesTree);
+                            setInputText();
+
                             setTimeout(function () {
                                 scope.callbackMethod();
                             }, 500);
