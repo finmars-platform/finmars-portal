@@ -14,7 +14,6 @@
             restrict: 'E',
             scope: {
                 filter: '=',
-                filterObject: '=',
                 evDataService: '=',
                 evEventService: '='
             },
@@ -28,8 +27,8 @@
                 scope.filterValue = undefined;
                 scope.filterSelectOptions = [];
                 scope.columnRowsContent = [];
-                scope.showSelectMenu = false;
 
+                scope.isRootEntityViewer = scope.evDataService.isRootEntityViewer();
                 scope.attributesFromAbove = [];
 
                 scope.evEventService.addEventListener(evEvents.DATA_LOAD_END, function () {
@@ -37,11 +36,8 @@
                     var columnRowsContent  = userFilterService.getDataByKey(scope.evDataService, scope.filter.key);
 
                     scope.columnRowsContent = columnRowsContent.map(function (cRowsContent) {
-                        return {id: cRowsContent, name: cRowsContent}
+                        return cRowsContent;
                     });
-
-                    scope.filterSelectOptions = columnRowsContent.slice(0, 21);
-                    console.log("filter select options", scope.filterSelectOptions);
 
                     if(!scope.isRootEntityViewer) {
                         scope.attributesFromAbove = scope.evDataService.getAttributesFromAbove();
@@ -91,9 +87,26 @@
                         case "top_n":
                             filterRegime = "Top N items";
                             break;
+                        case "bottom_n":
+                            filterRegime = "Bottom N items";
+                            break;
                     }
 
                     return filterRegime;
+
+                };
+
+                scope.filterSettingsChange = function () {
+                    console.log("filter filterSettingsChange", scope.filter.options.filter_values);
+
+                    scope.evDataService.resetData();
+                    scope.evDataService.resetRequestParameters();
+
+                    var rootGroup = scope.evDataService.getRootGroupData();
+
+                    scope.evDataService.setActiveRequestParametersId(rootGroup.___id);
+
+                    scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE);
 
                 };
 
@@ -106,29 +119,11 @@
 
                     } else {
 
-                        scope.filter.options.filter_values = undefined;
+                        scope.filter.options.filter_values = [];
 
                     }
 
-                    scope.filterChange();
-                };
-
-                scope.filterChange = function (newFilterValues) {
-                    console.log("filter filterChange", scope.filter.options.filter_values, newFilterValues);
-
-                    if (newFilterValues) {
-
-                        scope.evDataService.resetData();
-                        scope.evDataService.resetRequestParameters();
-
-                        var rootGroup = scope.evDataService.getRootGroupData();
-
-                        scope.evDataService.setActiveRequestParametersId(rootGroup.___id);
-
-                        scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE);
-
-                    }
-
+                    scope.filterSettingsChange();
                 };
 
                 scope.renameFilter = function (filter, $mdMenu, $event) {
@@ -148,17 +143,23 @@
                 };
 
                 scope.removeFilter = function (filter) {
-                    console.log('filter scope.filters', scope.filters);
+                    scope.filters = scope.evDataService.getFilters();
+                    /*console.log('filter scope.filters', scope.filters);
                     scope.filters = scope.filters.map(function (item) {
                         // if (item.id === filter.id || item.name === filter.name) {
-                        if (item.name === filter.name) {
+                        if (item.key === filter.key) {
                             // return undefined;
                             item = undefined;
                         }
-                        //console.log('filter in filters list', item);
+
                         return item;
                     }).filter(function (item) {
                         return !!item;
+                    });*/
+                    scope.filters.map(function (item, index) {
+                        if (item.key === filter.key) {
+                            scope.filters.splice(index, 1);
+                        }
                     });
 
                     scope.evDataService.setFilters(scope.filters);
@@ -166,15 +167,61 @@
                     scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE)
                 };
 
-                scope.evEventService.addEventListener(evEvents.ACTIVE_OBJECT_FROM_ABOVE_CHANGE, function () {
+                scope.updateFilters = function(){
 
-                    var activeObjectFromAbove = scope.evDataService.getActiveObjectFromAbove();
+                    var filters = scope.evDataService.getFilters();
 
-                    scope.attributesFromAbove = scope.evDataService.getAttributesFromAbove();
+                    filters.forEach(function (item) {
 
-                    console.log('activeObjectFromAbove', activeObjectFromAbove);
+                        if (scope.filter.key === item.key || scope.filter.id === item.id) {
+                            item = Object.assign({}, scope.filter)
+                        }
 
-                })
+                    });
+
+                    scope.evDataService.setFilters(scope.filters);
+
+                };
+
+
+                scope.initSplitPanelMode = function () {
+
+                    if (!scope.isRootEntityViewer) {
+
+                        scope.evEventService.addEventListener(evEvents.ACTIVE_OBJECT_FROM_ABOVE_CHANGE, function () {
+
+                            if (['multiselector', 'date_tree', 'from_to'].indexOf(scope.filter.filter_type) === -1) {
+
+                                var activeObjectFromAbove = scope.evDataService.getActiveObjectFromAbove();
+
+                                scope.attributesFromAbove = scope.evDataService.getAttributesFromAbove();
+
+                                var key = scope.filter.options.use_from_above;
+                                var value = activeObjectFromAbove[key];
+
+                                scope.filter.options.filter_values = [value]; // example value 'Bank 1 Notes 4% USD'
+
+                                scope.updateFilters();
+
+                                scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE);
+
+                            }
+
+                        })
+
+                    }
+
+                };
+
+
+                scope.init = function () {
+
+                    scope.initSplitPanelMode();
+
+
+                };
+
+                scope.init()
 
             }
         }

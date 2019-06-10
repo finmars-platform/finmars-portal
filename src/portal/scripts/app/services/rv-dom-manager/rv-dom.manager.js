@@ -316,17 +316,19 @@
         rvScrollManager.setContentElem(elements.contentElem);
 
         var interfaceLayout = evDataService.getInterfaceLayout();
+        // interfaceLayout.headerToolbar.height = $('md-toolbar.header').height();
+        // console.log("viewport interfaceLayout", interfaceLayout);
+        /*var scrollSize = 17; // 17px scroll size
+        var magicNumber = 6; // Somehow we lose 6px*/
 
-        var scrollSize = 17; // 17px scroll size
-        var magicNumber = 6; // Somehow we lose 6px
+        var viewportTop = interfaceLayout.headerToolbar.height + interfaceLayout.groupingArea.height + interfaceLayout.columnArea.height + interfaceLayout.progressBar.height;
 
         var viewportWidth = document.body.clientWidth - interfaceLayout.sidebar.width - interfaceLayout.filterArea.width;
-        var viewportHeight = Math.floor(document.body.clientHeight - interfaceLayout.columnArea.top - interfaceLayout.columnArea.height);
-
-        viewportHeight = viewportHeight - scrollSize;
-        viewportHeight = viewportHeight + magicNumber;
-
-        console.log('scrollSize', scrollSize);
+        // var viewportHeight = Math.floor(document.body.clientHeight - interfaceLayout.columnArea.top - interfaceLayout.columnArea.height);
+        var viewportHeight = Math.floor(document.body.clientHeight - viewportTop);
+        // console.log("viewport height", viewportHeight, document.body.clientHeight);
+        /*viewportHeight = viewportHeight - scrollSize;
+        viewportHeight = viewportHeight + magicNumber;*/
 
         // console.log('calculateScroll.viewportHeight', viewportHeight);
         // console.log('calculateScroll.viewportWidth', viewportWidth);
