@@ -22,7 +22,7 @@
             var regularFilters = filterService.getRegularFilters(options);
 
             var reportOptions = entityViewerDataService.getReportOptions();
-            // console.log("filter objects.service reportOptions", reportOptions);
+
             if (reportOptions.hasOwnProperty("items") && reportOptions.items.length > 0) {
 
                 if (reportRecievedAt == null) {
@@ -41,7 +41,6 @@
                 });
 
                 var groupTypes = entityViewerDataService.getGroups();
-                // console.log("filter objects.service options", options);
 
                 items = filterService.filterTableRows(items, regularFilters);
                 /*items = filterService.filterByRegularFilters(items, regularFilters);

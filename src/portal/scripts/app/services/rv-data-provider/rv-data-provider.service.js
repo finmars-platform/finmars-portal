@@ -61,7 +61,7 @@
         newRequestParametersBody['filter_settings'] = [];
 
         var filters = entityViewerDataService.getFilters();
-        // console.log("filter injectRegularFilters", filters, requestParameters);
+
         filters.forEach(function (item) {
 
             if (item.options && item.options.enabled) {
@@ -602,6 +602,8 @@
             });
 
         } else {
+
+            injectRegularFilters(defaultRootRequestParameters, evDataService);
 
             getObjects(defaultRootRequestParameters, evDataService, evEventService).then(function () {
 
