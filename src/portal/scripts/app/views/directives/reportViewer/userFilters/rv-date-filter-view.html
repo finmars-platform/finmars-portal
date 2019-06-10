@@ -52,7 +52,7 @@
                 <zh-date-picker ng-change="filterChange(filter.options.filter_values.min_value)"
                                 ng-model="filter.options.filter_values.min_value"
                                 data-date-value="filter.options.filter_values.min_value"
-                                data-position="left" ></zh-date-picker>
+                                data-position="left"></zh-date-picker>
             </md-input-container>
 
             <md-input-container class="md-block">
@@ -63,7 +63,7 @@
                 <zh-date-picker ng-change="filterChange(filter.options.filter_values.max_value)"
                                 ng-model="filter.options.filter_values.max_value"
                                 data-date-value="filter.options.filter_values.min_value"
-                                data-position="left" ></zh-date-picker>
+                                data-position="left"></zh-date-picker>
             </md-input-container>
 
         </div>
@@ -228,6 +228,10 @@
                     </md-menu-item>
                 </md-menu-content>
             </md-menu>-->
+        </div>
+
+        <div ng-if="!isRootEntityViewer" flex="15">
+            <use-from-above-button item="filter.options.use_from_above" data="{attributes: attributesFromAbove}"></use-from-above-button>
         </div>
 
     </div>

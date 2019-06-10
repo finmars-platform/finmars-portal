@@ -25,14 +25,18 @@
 
                 scope.filters = scope.evDataService.getFilters();
 
+                scope.isRootEntityViewer = scope.evDataService.isRootEntityViewer();
+
                 scope.filterValue = undefined;
                 scope.filterSelectOptions = [];
                 scope.columnRowsContent = [];
                 scope.showSelectMenu = false;
 
+                scope.attributesFromAbove = [];
+
                 scope.evEventService.addEventListener(evEvents.DATA_LOAD_END, function () {
 
-                    var columnRowsContent  = userFilterService.getDataByKey(scope.evDataService, scope.filter.key);
+                    var columnRowsContent = userFilterService.getDataByKey(scope.evDataService, scope.filter.key);
 
                     scope.columnRowsContent = columnRowsContent.map(function (cRowsContent) {
                         return {id: cRowsContent, name: cRowsContent}
@@ -40,6 +44,12 @@
 
                     scope.filterSelectOptions = columnRowsContent.slice(0, 21);
                     console.log("filter select options", scope.filterSelectOptions);
+
+
+                    if(!scope.isRootEntityViewer) {
+                        scope.attributesFromAbove = scope.evDataService.getAttributesFromAbove();
+                    }
+
                     scope.$apply();
 
                 });
@@ -171,6 +181,18 @@
                     scope.evEventService.dispatchEvent(evEvents.FILTERS_CHANGE);
                     scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE)
                 };
+
+
+                scope.evEventService.addEventListener(evEvents.ACTIVE_OBJECT_FROM_ABOVE_CHANGE, function () {
+
+                    var activeObjectFromAbove = scope.evDataService.getActiveObjectFromAbove();
+
+                    scope.attributesFromAbove = scope.evDataService.getAttributesFromAbove();
+
+                    console.log('activeObjectFromAbove', activeObjectFromAbove);
+
+
+                })
 
             }
         }

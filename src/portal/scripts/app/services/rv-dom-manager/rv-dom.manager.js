@@ -129,6 +129,21 @@
                 clickData.___id = event.target.dataset.objectId;
                 clickData.___parentId = event.target.dataset.parentGroupHashId;
                 break;
+            case clickTargets.ROW_SELECTION_OBJECT_BUTTON:
+                clickData.___type = event.target.offsetParent.dataset.type;
+                clickData.___id = event.target.offsetParent.dataset.objectId;
+                clickData.___parentId = event.target.offsetParent.dataset.parentGroupHashId;
+                break;
+            case clickTargets.ROW_CELL:
+                clickData.___type = event.target.offsetParent.dataset.type;
+                clickData.___id = event.target.offsetParent.dataset.objectId;
+                clickData.___parentId = event.target.offsetParent.dataset.parentGroupHashId;
+                break;
+            case clickTargets.ROW_OBJECT:
+                clickData.___type = event.target.dataset.type;
+                clickData.___id = event.target.dataset.objectId;
+                clickData.___parentId = event.target.dataset.parentGroupHashId;
+                break;
         }
 
         clickData.target = clickTarget;
@@ -212,6 +227,43 @@
 
     };
 
+    var handleObjectActive = function (clickData, evDataService, evEventService) {
+
+        var obj = evDataHelper.getObject(clickData.___id, clickData.___parentId, evDataService);
+
+        var activeObject = evDataService.getActiveObject();
+
+        if (activeObject) {
+            activeObject.___is_activated = false;
+            evDataService.setObject(activeObject);
+        }
+
+        if (!activeObject || activeObject && activeObject.___id !== obj.___id) {
+            obj.___is_activated = true;
+        }
+
+
+        console.log('handleObjectActive.obj', obj);
+
+        evDataService.setObject(obj);
+
+        if (obj.___is_activated) {
+            evDataService.setActiveObject(obj);
+            evEventService.dispatchEvent(evEvents.ACTIVE_OBJECT_CHANGE);
+        } else {
+            evDataService.setActiveObject(null);
+        }
+
+    };
+
+    var handleObjectClick = function (clickData, evDataService, evEventService) {
+
+        handleObjectActive(clickData, evDataService, evEventService);
+
+        evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+
+    };
+
     var initEventDelegation = function (elem, evDataService, evEventService) {
 
         elem.addEventListener('click', function (event) {
@@ -223,6 +275,12 @@
             if (clickData.___type === 'foldbutton') {
 
                 handleFoldButtonClick(clickData, evDataService, evEventService);
+
+            }
+
+            if (clickData.___type === 'object') {
+
+                handleObjectClick(clickData, evDataService, evEventService);
 
             }
 

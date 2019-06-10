@@ -25,14 +25,21 @@
         return complexTransactionRepository.deleteByKey(id);
     };
 
-    var getBookComplexTransaction = function (id) {
-        return complexTransactionRepository.getBookComplexTransaction(id);
+    var initRebookComplexTransaction = function (id) {
+        return complexTransactionRepository.initRebookComplexTransaction(id);
     };
 
-    var bookComplexTransaction = function (id, transaction) {
-        return complexTransactionRepository.bookComplexTransaction(id, transaction);
+    var rebookComplexTransaction = function (id, transaction) {
+        return complexTransactionRepository.rebookComplexTransaction(id, transaction);
     };
 
+    var initRebookPendingComplexTransaction = function (id) {
+        return complexTransactionRepository.initRebookPendingComplexTransaction(id);
+    };
+
+    var rebookPendingComplexTransaction = function (id, transaction) {
+        return complexTransactionRepository.rebookPendingComplexTransaction(id, transaction);
+    };
 
     module.exports = {
         getList: getList,
@@ -40,8 +47,11 @@
         create: create,
         update: update,
         deleteByKey: deleteByKey,
-        getBookComplexTransaction: getBookComplexTransaction,
-        bookComplexTransaction: bookComplexTransaction
+        initRebookComplexTransaction: initRebookComplexTransaction,
+        rebookComplexTransaction: rebookComplexTransaction,
+
+        initRebookPendingComplexTransaction: initRebookPendingComplexTransaction,
+        rebookPendingComplexTransaction: rebookPendingComplexTransaction
     }
 
 

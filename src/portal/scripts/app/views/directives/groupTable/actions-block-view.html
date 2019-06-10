@@ -26,7 +26,8 @@
                         </md-button>
                     </md-menu-item>
                     <md-menu-item>
-                        <md-button ng-click="saveLayoutList($event)" class="g-settings-option-btn" ng-disabled="isNewLayout">
+                        <md-button ng-click="saveLayoutList($event)" class="g-settings-option-btn"
+                                   ng-disabled="isNewLayout">
                             <span>Save</span>
                         </md-button>
                     </md-menu-item>
@@ -52,7 +53,7 @@
             </button>
         </div>
 
-        <div layout="row" class="filters-control-btn s-f-expanded-btns layout-row" >
+        <div layout="row" class="filters-control-btn s-f-expanded-btns layout-row" data-ng-if="isRootEntityViewer">
             <md-menu class="full-width" layout="row">
                 <md-button class="md-raised clear-all full-width md-button md-ink-ripple" type="button"
                            ng-click="openActions($mdOpenMenu, $event)">
@@ -96,7 +97,8 @@
                         </md-button>
                     </md-menu-item>
                     <md-menu-item>
-                        <md-button ng-click="toggleSplitPanel($event, 'transaction-report')" class="g-settings-option-btn">
+                        <md-button ng-click="toggleSplitPanel($event, 'transaction-report')"
+                                   class="g-settings-option-btn">
                             <ng-md-icon icon="done"
                                         data-ng-show="!currentAdditions.type == 'transaction-report'"
                                         class="z-menu-icon"
@@ -162,7 +164,7 @@
                             </md-menu-item>
                             <md-menu-item>
                                 <md-button ng-click="copyReport($event)" class="g-settings-option-btn">
-                                <!--<ng-md-icon icon="content_copy" size="24"></ng-md-icon>-->
+                                    <!--<ng-md-icon icon="content_copy" size="24"></ng-md-icon>-->
                                     <span>Copy to buffer</span>
                                 </md-button>
                             </md-menu-item>

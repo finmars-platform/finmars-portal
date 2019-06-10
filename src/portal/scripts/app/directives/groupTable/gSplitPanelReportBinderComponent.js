@@ -43,11 +43,15 @@
                     ctrl = $controller('SplitPanelReportViewerController as vm', {
                         '$scope': templateScope,
                         '$mdDialog': $mdDialog,
-                        '$transitions': $transitions
+                        '$transitions': $transitions,
+                        'parentEntityViewerDataService': scope.evDataService,
+                        'parentEntityViewerEventService': scope.evEventService
                     });
 
                     container.html(tpl);
                     container.children().data('$ngControllerController', ctrl);
+
+                    console.log('container', container);
 
                     $compile(elem.contents())(templateScope);
 

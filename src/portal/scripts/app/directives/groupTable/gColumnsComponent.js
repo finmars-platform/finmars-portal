@@ -14,17 +14,11 @@
         return {
             restrict: 'AE',
             scope: {
-                items: '=',
-                options: '=',
                 evDataService: '=',
                 evEventService: '='
             },
             templateUrl: 'views/directives/groupTable/columns-view.html',
             link: function (scope, elem, attrs) {
-
-                if (scope.options) {
-                    scope.sorting = scope.options.sorting;
-                }
 
                 scope.columns = scope.evDataService.getColumns();
                 scope.entityType = scope.evDataService.getEntityType();

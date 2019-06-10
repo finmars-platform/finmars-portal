@@ -25,18 +25,25 @@
         return transactionTypeRepository.deleteByKey(id);
     };
 
-    var getBookTransaction = function (id) {
-        return transactionTypeRepository.getBookTransaction(id);
-    };
-
-    var bookTransaction = function (id, transaction) {
-        return transactionTypeRepository.bookTransaction(id, transaction);
-    };
-
     var updateBulk = function(entities){
         return transactionTypeRepository.updateBulk(entities);
     };
 
+    var initBookComplexTransaction = function (id) {
+        return transactionTypeRepository.initBookComplexTransaction(id);
+    };
+
+    var bookComplexTransaction = function (id, transaction) {
+        return transactionTypeRepository.bookComplexTransaction(id, transaction);
+    };
+
+    var initBookPendingComplexTransaction = function (id) {
+        return transactionTypeRepository.initBookPendingComplexTransaction(id);
+    };
+
+    var bookPendingComplexTransaction = function (id, transaction) {
+        return transactionTypeRepository.bookPendingComplexTransaction(id, transaction);
+    };
 
     module.exports = {
         getList: getList,
@@ -44,9 +51,14 @@
         create: create,
         update: update,
         deleteByKey: deleteByKey,
-        getBookTransaction: getBookTransaction,
-        bookTransaction: bookTransaction,
-        updateBulk: updateBulk
+        updateBulk: updateBulk,
+
+        initBookComplexTransaction: initBookComplexTransaction,
+        bookComplexTransaction: bookComplexTransaction,
+
+        initBookPendingComplexTransaction: initBookPendingComplexTransaction,
+        bookPendingComplexTransaction: bookPendingComplexTransaction
+
     }
 
 

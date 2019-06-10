@@ -18,7 +18,6 @@
         return {
             restrict: 'AE',
             scope: {
-                options: '=',
                 evDataService: '=',
                 evEventService: '='
             },
@@ -74,12 +73,6 @@
 
                 };
 
-                if (scope.options) {
-
-                    scope.sorting = scope.options.sorting;
-                    scope.folding = scope.options.folding;
-
-                }
 
                 scope.sortHandler = function (group, sort) {
 

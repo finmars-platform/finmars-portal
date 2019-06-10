@@ -163,7 +163,6 @@
                     }
 
                     var datepickerOptionsCopy = JSON.parse(JSON.stringify(scope.datepickerOptions));
-                    console.log("!!!!!!!!!!!!!!!", datepickerOptionsCopy);
 
                     $mdDialog.show({
                         controller: 'ExpressionEditorDialogController as vm',

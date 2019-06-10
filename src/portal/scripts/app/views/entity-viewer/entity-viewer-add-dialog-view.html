@@ -22,7 +22,8 @@
                             </md-tab-label>
                             <md-tab-body>
                                 <md-content class="md-padding p-t-26">
-                                    <div layout="row" data-ng-repeat="row in vm.range(tab.layout.rows)" class="entity-editor-row">
+                                    <div layout="row" data-ng-repeat="row in vm.range(tab.layout.rows)"
+                                         class="entity-editor-row">
                                         <div class="ev-data-field
 								{{field.attribute['value_type'] === 'decoration' ? 'decoration-label-line' : ''}}"
                                              data-ng-repeat="field in tab.layout.fields"
@@ -220,21 +221,41 @@
     <md-dialog-actions layout="row" layout-align="space-between center" class="entity-editor-dialog__footer">
         <div>
             <md-button ng-click="vm.editLayout()" class="md-raised md-primary" ng-disabled="!vm.checkReadyStatus()">
-<!--                <span data-ng-if="vm.entityType == 'transaction-type'">Edit transaction form</span>-->
+                <!--                <span data-ng-if="vm.entityType == 'transaction-type'">Edit transaction form</span>-->
                 <span data-ng-if="vm.entityType != 'transaction-type'">Edit Form</span>
             </md-button>
             <md-button ng-click="vm.manageAttrs()" class="md-raised md-primary" ng-disabled="!vm.checkReadyStatus()">
                 Manage attributes
             </md-button>
         </div>
-        <div>
+        <div data-ng-if="vm.entityType != 'complex-transaction'">
             <md-button class="md-raised" ng-click="vm.cancel()">
                 Cancel
             </md-button>
-            <md-button class="md-raised" data-ng-class="{'disabled-btn': !vm.formIsValid, 'disabled-btn': !vm.TTGroupChosen}" ng-click="vm.save()"
+            <md-button class="md-raised"
+                       data-ng-class="{'disabled-btn': !vm.formIsValid, 'disabled-btn': !vm.TTGroupChosen}"
+                       ng-click="vm.save()"
                        style="margin-right:20px;">
-                <span data-ng-if="vm.entityType != 'complex-transaction'">Add</span>
-                <span data-ng-if="vm.entityType == 'complex-transaction'">Book</span>
+                Add
+            </md-button>
+        </div>
+
+        <div data-ng-if="vm.entityType == 'complex-transaction'">
+            <md-button class="md-raised" ng-click="vm.cancel()">
+                Cancel
+            </md-button>
+
+            <md-button class="md-raised"
+                       data-ng-class="{'disabled-btn': !vm.formIsValid, 'disabled-btn': !vm.TTGroupChosen}"
+                       ng-click="vm.bookAsPending()"
+                       style="margin-right:20px;">
+                Book as pending
+            </md-button>
+            <md-button class="md-raised"
+                       data-ng-class="{'disabled-btn': !vm.formIsValid, 'disabled-btn': !vm.TTGroupChosen}"
+                       ng-click="vm.save()"
+                       style="margin-right:20px;">
+                Book
             </md-button>
         </div>
     </md-dialog-actions>

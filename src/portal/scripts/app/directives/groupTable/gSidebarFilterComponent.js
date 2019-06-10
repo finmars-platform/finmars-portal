@@ -20,8 +20,6 @@
         return {
             restrict: 'AE',
             scope: {
-                options: '=',
-                reportOptions: '=',
                 evDataService: '=',
                 evEventService: '='
             },
@@ -228,27 +226,6 @@
                     scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE)
 
                 };
-
-                if (scope.options && scope.options.isRootEntityViewer === false) {
-
-                    scope.$on('rootEditorEntityIdDown', function (event, data) {
-
-                        scope.filters.forEach(function (item) {
-                            //console.log('item', item);
-                            if (item.hasOwnProperty('options') && item.options.useFromAbove == true) {
-
-                                if (item.key == data.entityType) {
-                                    item.options.query = [data.editorEntityId]
-                                }
-
-                            }
-
-                        });
-
-                        scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE)
-
-                    });
-                }
 
                 scope.useFromAbove = function (filter) {
 
