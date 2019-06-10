@@ -195,6 +195,15 @@
                             <span>Remove</span>
                         </md-button>
                     </md-menu-item>
+
+                    <md-menu-item ng-if="!isRootEntityViewer">
+
+                        <div>
+                            <use-from-above-button item="filter.options.use_from_above" data="{attributes: attributesFromAbove}"></use-from-above-button>
+                        </div>
+
+                    </md-menu-item>
+
                 </md-menu-content>
             </md-menu>
 
@@ -254,6 +263,7 @@
                 </md-menu-content>
             </md-menu>-->
         </div>
+
 
     </div>
 </md-card>

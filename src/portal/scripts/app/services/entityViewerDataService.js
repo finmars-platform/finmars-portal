@@ -177,6 +177,14 @@
             return data.columns;
         }
 
+        function setAttributesFromAbove(attributes) {
+            return data.attributesFromAbove = attributes
+        }
+
+        function getAttributesFromAbove() {
+            return data.attributesFromAbove
+        }
+
         function setGroups(groups) {
 
             if (groups) {
@@ -527,6 +535,10 @@
             data.activeObject = obj
         }
 
+        function setActiveObjectFromAbove(obj) {
+            data.activeObjectFromAbove = obj
+        }
+
         function clearActiveObject() {
 
             var activeObject = getActiveObject();
@@ -564,6 +576,10 @@
 
         function getActiveObject() {
             return data.activeObject;
+        }
+
+        function getActiveObjectFromAbove() {
+            return data.activeObjectFromAbove;
         }
 
         function getRowHeight() {
@@ -772,7 +788,7 @@
 
             setComponents(listLayout.data.components);
             setEditorTemplateUrl('views/additions-editor-view.html');
-            setRootEntityViewer(true);
+            // setRootEntityViewer(true); // TODO what?
 
         }
 
@@ -798,6 +814,9 @@
 
             setFilters: setFilters,
             getFilters: getFilters,
+
+            setAttributesFromAbove: setAttributesFromAbove,
+            getAttributesFromAbove: getAttributesFromAbove,
 
             getPagination: getPagination,
             setPagination: setPagination,
@@ -856,6 +875,9 @@
 
             resetRequestParameters: resetRequestParameters,
             getAllRequestParameters: getAllRequestParameters,
+
+            setActiveObjectFromAbove: setActiveObjectFromAbove,
+            getActiveObjectFromAbove: getActiveObjectFromAbove,
 
             setActiveObject: setActiveObject,
             getActiveObject: getActiveObject,

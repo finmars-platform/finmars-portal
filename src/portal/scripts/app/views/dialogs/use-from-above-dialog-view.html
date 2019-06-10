@@ -1,0 +1,54 @@
+<md-dialog aria-label="" ng-cloak class="expression-editor-dialog draggable-dialog" drag-dialog style="width: 75%">
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            <ng-md-icon icon="dialpad" size="20" class="draggable-dialog-sign"></ng-md-icon>
+            <h2>Use from above manager</h2>
+        </div>
+    </md-toolbar>
+    <md-dialog-content>
+
+        <div class="p-20">
+
+            <md-input-container>
+                <label>Select field</label>
+                <div>
+                    <md-select ng-model="vm.item"
+                               md-container-class="common-select-container"
+                               md-on-close="searchTerm = ''">
+                        <md-select-header>
+                            <input data-ng-model="searchTerm"
+                                   type="search"
+                                   placeholder="Search for a ..."
+                                   class="md-text md-select-search-pattern select-input-filter"
+                                   ng-keydown="$event.stopPropagation()">
+                        </md-select-header>
+
+                        <div class="select-options-holder">
+
+                            <md-option data-ng-repeat="item in vm.data.attributes | filter:{name: searchTerm}"
+                                       ng-value="item.key">
+                                {{item.name}} ({{item.key}})
+                            </md-option>
+
+                        </div>
+
+                    </md-select>
+                </div>
+            </md-input-container>
+
+
+        </div>
+
+    </md-dialog-content>
+    <md-dialog-actions layout="row" layout-align="space-between">
+
+        <div>
+            <md-button ng-click="vm.cancel()">
+                Cancel
+            </md-button>
+            <md-button ng-click="vm.agree()" class="md-raised md-primary m-r-24">
+                OK
+            </md-button>
+        </div>
+    </md-dialog-actions>
+</md-dialog>

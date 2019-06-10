@@ -22,6 +22,8 @@ module.exports = {
 
     'ACTIVE_OBJECT_CHANGE': 'ACTIVE_OBJECT_CHANGE', // right click on object info
 
+    'ACTIVE_OBJECT_FROM_ABOVE_CHANGE': 'ACTIVE_OBJECT_FROM_ABOVE_CHANGE', // for active object for split panel from root entity viewer
+
 
     'COLUMN_SORT_CHANGE': 'COLUMN_SORT_CHANGE',
     'GROUP_TYPE_SORT_CHANGE': 'GROUP_TYPE_SORT_CHANGE',

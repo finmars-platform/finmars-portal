@@ -20,11 +20,13 @@
 
         module.exports = function ($scope, $mdDialog, $transitions) {
 
+            console.log("Report Viewer Controller init");
+
             var vm = this;
 
             vm.listViewIsReady = false;
 
-            vm.setEventListeners = function(){
+            vm.setEventListeners = function () {
 
                 vm.entityViewerEventService.addEventListener(evEvents.UPDATE_TABLE, function () {
 
@@ -65,11 +67,14 @@
 
                 vm.listViewIsReady = false;
 
-                vm.entityViewerDataService = new EntityViewerDataService();;
-                vm.entityViewerEventService = new EntityViewerEventService();;
+                vm.entityViewerDataService = new EntityViewerDataService();
+                ;
+                vm.entityViewerEventService = new EntityViewerEventService();
+                ;
 
                 vm.entityType = $scope.$parent.vm.entityType;
                 vm.entityViewerDataService.setEntityType($scope.$parent.vm.entityType);
+                vm.entityViewerDataService.setRootEntityViewer(true);
 
                 vm.setEventListeners();
 
@@ -184,7 +189,7 @@
                             vm.entityViewerDataService.setActiveLayoutConfiguration({isReport: true});
 
                         }
-                    // < Check if there is need to solve report datepicker expression >
+                        // < Check if there is need to solve report datepicker expression >
                     } else {
 
                         vm.listViewIsReady = true;
@@ -203,7 +208,6 @@
             };
 
             vm.init = function () {
-
 
 
                 vm.getView();
@@ -259,7 +263,7 @@
 
                 if (!evHelperService.checkForLayoutConfigurationChanges(activeLayoutConfig, currentLayoutConfig, true)) {
 
-                    return new Promise (function (resolve, reject) {
+                    return new Promise(function (resolve, reject) {
 
                         $mdDialog.show({
                             controller: 'LayoutChangesLossWarningDialogController as vm',

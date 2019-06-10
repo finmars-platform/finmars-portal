@@ -29,6 +29,9 @@
                 scope.columnRowsContent = [];
                 scope.nItemsValue = null;
 
+                scope.isRootEntityViewer = scope.evDataService.isRootEntityViewer();
+                scope.attributesFromAbove = [];
+
                 scope.evEventService.addEventListener(evEvents.DATA_LOAD_END, function () {
 
                     var columnRowsContent  = userFilterService.getDataByKey(scope.evDataService, scope.filter.key);
@@ -36,6 +39,10 @@
                     scope.columnRowsContent = columnRowsContent.map(function (cRowsContent) {
                         return cRowsContent;
                     });
+
+                    if(!scope.isRootEntityViewer) {
+                        scope.attributesFromAbove = scope.evDataService.getAttributesFromAbove();
+                    }
 
                     scope.$apply();
 
@@ -165,6 +172,62 @@
                     scope.evEventService.dispatchEvent(evEvents.FILTERS_CHANGE);
                     scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE)
                 };
+
+                scope.updateFilters = function(){
+
+                    var filters = scope.evDataService.getFilters();
+
+                    filters.forEach(function (item) {
+
+                        if (scope.filter.key === item.key || scope.filter.id === item.id) {
+                            item = Object.assign({}, scope.filter)
+                        }
+
+                    });
+
+                    scope.evDataService.setFilters(scope.filters);
+
+                };
+
+
+                scope.initSplitPanelMode = function () {
+
+                    if (!scope.isRootEntityViewer) {
+
+                        scope.evEventService.addEventListener(evEvents.ACTIVE_OBJECT_FROM_ABOVE_CHANGE, function () {
+
+                            if (['multiselector', 'date_tree', 'from_to'].indexOf(scope.filter.filter_type) === -1) {
+
+                                var activeObjectFromAbove = scope.evDataService.getActiveObjectFromAbove();
+
+                                scope.attributesFromAbove = scope.evDataService.getAttributesFromAbove();
+
+                                var key = scope.filter.options.use_from_above;
+                                var value = activeObjectFromAbove[key];
+
+                                scope.filter.options.filter_values = [value]; // example value 'Bank 1 Notes 4% USD'
+
+                                scope.updateFilters();
+
+                                scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE);
+
+                            }
+
+                        })
+
+                    }
+
+                };
+
+
+                scope.init = function () {
+
+                    scope.initSplitPanelMode();
+
+
+                };
+
+                scope.init()
 
             }
         }
