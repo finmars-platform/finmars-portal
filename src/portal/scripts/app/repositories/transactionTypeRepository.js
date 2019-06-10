@@ -97,7 +97,7 @@
         })
     };
 
-    var getBookTransaction = function (id) {
+    var initBookComplexTransaction = function (id) {
         return xhrService.fetch(baseUrl + 'transactions/transaction-type/' + id + '/book/',
             {
                 method: 'GET',
@@ -110,8 +110,35 @@
             })
     };
 
-    var bookTransaction = function (id, transaction) {
+    var bookComplexTransaction = function (id, transaction) {
         return xhrService.fetch(baseUrl + 'transactions/transaction-type/' + id + '/book/',
+            {
+                method: 'PUT',
+                credentials: 'include',
+                headers: {
+                    'X-CSRFToken': cookieService.getCookie('csrftoken'),
+                    Accept: 'application/json',
+                    'Content-type': 'application/json'
+                },
+                body: JSON.stringify(transaction)
+            })
+    };
+
+    var initBookPendingComplexTransaction = function (id) {
+        return xhrService.fetch(baseUrl + 'transactions/transaction-type/' + id + '/book-pending/',
+            {
+                method: 'GET',
+                credentials: 'include',
+                headers: {
+                    'X-CSRFToken': cookieService.getCookie('csrftoken'),
+                    Accept: 'application/json',
+                    'Content-type': 'application/json'
+                }
+            })
+    };
+
+    var bookPendingComplexTransaction = function (id, transaction) {
+        return xhrService.fetch(baseUrl + 'transactions/transaction-type/' + id + '/book-pending/',
             {
                 method: 'PUT',
                 credentials: 'include',
@@ -130,9 +157,13 @@
         create: create,
         update: update,
         deleteByKey: deleteByKey,
-        getBookTransaction: getBookTransaction,
-        bookTransaction: bookTransaction,
-        updateBulk: updateBulk
+        updateBulk: updateBulk,
+
+        initBookComplexTransaction: initBookComplexTransaction,
+        bookComplexTransaction: bookComplexTransaction,
+
+        initBookPendingComplexTransaction: initBookPendingComplexTransaction,
+        bookPendingComplexTransaction: bookPendingComplexTransaction
     }
 
 }());

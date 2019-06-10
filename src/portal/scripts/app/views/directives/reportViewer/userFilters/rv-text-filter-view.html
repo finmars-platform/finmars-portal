@@ -204,6 +204,12 @@
                 </md-menu-content>
             </md-menu>-->
         </div>
+
+        <div ng-if="!isRootEntityViewer" flex="15">
+            <use-from-above-button item="filter.options.use_from_above"
+                                   data="{attributes: getAttributesFromAbove()}"></use-from-above-button>
+        </div>
+
     </div>
 
 </md-card>

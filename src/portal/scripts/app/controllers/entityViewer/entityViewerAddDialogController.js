@@ -21,6 +21,8 @@
 
     var uiService = require('../../services/uiService');
 
+    var transactionTypeService = require('../../services/transactionTypeService');
+
     var entityEditorHelper = require('../../helpers/entity-editor.helper');
 
     module.exports = function ($scope, $mdDialog, $state, entityType, entity) {
@@ -688,8 +690,7 @@
             $scope.$watch('vm.entity.group', function () {
                 if (vm.entity.group === 14 || !vm.entity.group) {
                     vm.TTGroupChosen = false;
-                }
-                else {
+                } else {
                     vm.TTGroupChosen = true;
                 }
             });
@@ -762,6 +763,98 @@
 
                             $mdDialog.hide({res: 'agree'});
                         }
+                    } else {
+
+                        $mdDialog.hide({res: 'agree'});
+                    }
+
+                    $mdDialog.hide({res: 'agree'});
+
+                }).catch(function (data) {
+
+                    $mdDialog.show({
+                        controller: 'ValidationDialogController as vm',
+                        templateUrl: 'views/dialogs/validation-dialog-view.html',
+                        targetEvent: $event,
+                        parent: angular.element(document.body),
+                        locals: {
+                            validationData: data
+                        },
+                        preserveScope: true,
+                        multiple: true,
+                        autoWrap: true,
+                        skipHide: true
+                    })
+
+                })
+
+            }
+
+        };
+
+        vm.bookAsPending = function ($event) {
+
+            vm.updateEntityBeforeSave();
+
+            vm.entity.$_isValid = entityEditorHelper.checkForNotNullRestriction(vm.entity, vm.entityAttrs, vm.attrs);
+
+            console.log('vm.entity before save', vm.entity);
+
+            if (vm.entity.$_isValid) {
+
+                var resultEntity = entityEditorHelper.checkForNulls(vm.entity);
+
+                resultEntity.values = {};
+
+                vm.userInputs.forEach(function (userInput) {
+
+                    if (userInput !== null) {
+                        var keys = Object.keys(vm.entity);
+                        keys.forEach(function (key) {
+                            if (key === userInput.name) {
+                                resultEntity.values[userInput.name] = vm.entity[userInput.name];
+                            }
+                        });
+                    }
+                });
+
+                resultEntity.store = true;
+                resultEntity.calculate = true;
+
+                console.log('resultEntity', resultEntity);
+
+                new Promise(function (resolve, reject) {
+
+                    transactionTypeService.initBookPendingComplexTransaction(resultEntity.transaction_type).then(function (data) {
+
+                        var res = Object.assign(data, resultEntity);
+
+                        transactionTypeService.bookPendingComplexTransaction(resultEntity.transaction_type, res).then(function (data) {
+                            resolve(data);
+                        });
+                    });
+
+                }).then(function (data) {
+
+                    if (data.hasOwnProperty('has_errors') && data.has_errors === true) {
+
+                        $mdDialog.show({
+                            controller: 'ValidationDialogController as vm',
+                            templateUrl: 'views/dialogs/validation-dialog-view.html',
+                            targetEvent: $event,
+                            locals: {
+                                validationData: {
+                                    complex_transaction_errors: data.complex_transaction_errors,
+                                    instruments_errors: data.instruments_errors,
+                                    transactions_errors: data.transactions_errors
+                                }
+                            },
+                            multiple: true,
+                            preserveScope: true,
+                            autoWrap: true,
+                            skipHide: true
+                        })
+
                     } else {
 
                         $mdDialog.hide({res: 'agree'});

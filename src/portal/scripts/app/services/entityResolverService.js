@@ -137,7 +137,7 @@
                 return currencyService.getByKey(id);
                 break;
             case 'complex-transaction':
-                return complexTransactionService.getBookComplexTransaction(id);
+                return complexTransactionService.initRebookComplexTransaction(id);
                 break;
             case 'pricing-policy':
                 return pricingPolicyService.getByKey(id);
@@ -149,7 +149,7 @@
                 return transactionTypeService.getByKey(id);
                 break;
             case 'transaction-type-book':
-                return transactionTypeService.getBookTransaction(id);
+                return transactionTypeService.initBookComplexTransaction(id);
                 break;
             case 'transaction-type-group':
                 return transactionTypeGroupService.getByKey(id);
@@ -278,11 +278,11 @@
             case 'complex-transaction':
 
                 return new Promise(function (resolve, reject) {
-                    transactionTypeService.getBookTransaction(entity.transaction_type).then(function (data) {
+                    transactionTypeService.initBookComplexTransaction(entity.transaction_type).then(function (data) {
 
                         var res = Object.assign(data, entity);
 
-                        transactionTypeService.bookTransaction(entity.transaction_type, res).then(function (data) {
+                        transactionTypeService.bookComplexTransaction(entity.transaction_type, res).then(function (data) {
                             resolve(data);
                         });
                     });
@@ -334,7 +334,7 @@
             case 'complex-transaction':
                 // return complexTransactionService.bookComplexTransaction(entity.id, entity);
                 return new Promise(function (resolve, reject) {
-                    return complexTransactionService.getBookComplexTransaction(id).then(function (data) {
+                    return complexTransactionService.initRebookComplexTransaction(id).then(function (data) {
 
                         var originValues = JSON.parse(JSON.stringify(entity.values));
 
@@ -355,7 +355,7 @@
                             })
                         });
 
-                        complexTransactionService.bookComplexTransaction(id, entity).then(function (data) {
+                        complexTransactionService.rebookComplexTransaction(id, entity).then(function (data) {
                             resolve(data);
                         });
                     });

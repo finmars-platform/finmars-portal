@@ -33,8 +33,11 @@
 
                 scope.entityType = scope.evDataService.getEntityType();
                 scope.isReport = metaService.isReport(scope.entityType);
+                scope.isRootEntityViewer = scope.evDataService.isRootEntityViewer();
                 scope.currentAdditions = scope.evDataService.getAdditions();
                 scope.isNewLayout = false;
+
+                console.log('isRootEntityViewer', scope.isRootEntityViewer);
 
                 scope.openViewConstructor = function (ev) {
 
@@ -255,7 +258,7 @@
 
                 scope.toggleSplitPanel = function ($event, type) {
 
-                    if(scope.currentAdditions.type === type) {
+                    if (scope.currentAdditions.type === type) {
 
                         clearAdditions()
 

@@ -4,21 +4,18 @@
              ev-data-service="evDataService"
              ev-event-service="evEventService">
             <div class="g-grouping-section" data-ng-if="components.groupingArea">
-                <group-grouping options="options" ev-data-service="evDataService"
+                <group-grouping ev-data-service="evDataService"
                                 ev-event-service="evEventService"></group-grouping>
             </div>
             <div class="g-table-section">
                 <div>
                     <div class="g-table-wrap">
 
-                        <group-columns options="options"
-                                       items="items"
-                                       ev-data-service="evDataService"
+                        <group-columns ev-data-service="evDataService"
                                        ev-event-service="evEventService"
                         ></group-columns>
 
                         <group-table-body class="group-table-body"
-                                          options="options"
                                           ev-data-service="evDataService"
                                           ev-event-service="evEventService"
                         ></group-table-body>
@@ -31,7 +28,7 @@
     <div class="g-filter-sidebar main-sidebar" data-ng-if="components.sidebar">
         <div>
             <div class="g-filter" id="filtersbag">
-                <group-sidebar-filter options="options" report-options="reportOptions" ev-data-service="evDataService"
+                <group-sidebar-filter ev-data-service="evDataService"
                                       ev-event-service="evEventService"></group-sidebar-filter>
             </div>
         </div>
@@ -46,7 +43,7 @@
         <div class="g-height-slider"></div>
 
 
-        <div class="g-additions-data-editor min-height" data-ng-show="additions.type === 'form-editor'">
+        <div class="g-additions-data-editor min-height" data-ng-if="additions.type === 'form-editor'">
             <div data-ng-show="!activebject">
                 <div class="g-additions-editor-caption">
                     Select row to start

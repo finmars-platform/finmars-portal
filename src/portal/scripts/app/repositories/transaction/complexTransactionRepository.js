@@ -82,8 +82,8 @@
         })
     };
 
-    var getBookComplexTransaction = function (id, transaction) {
-        return xhrService.fetch(baseUrl + 'transactions/complex-transaction/' + id + '/book/',
+    var initRebookComplexTransaction = function (id, transaction) {
+        return xhrService.fetch(baseUrl + 'transactions/complex-transaction/' + id + '/rebook/',
             {
                 method: 'GET',
                 credentials: 'include',
@@ -95,8 +95,8 @@
             })
     };
 
-    var bookComplexTransaction = function (id, transaction) {
-        return xhrService.fetch(baseUrl + 'transactions/complex-transaction/' + id + '/book/',
+    var rebookComplexTransaction = function (id, transaction) {
+        return xhrService.fetch(baseUrl + 'transactions/complex-transaction/' + id + '/rebook/',
             {
                 method: 'PUT',
                 credentials: 'include',
@@ -110,14 +110,44 @@
     };
 
 
+    var initRebookPendingComplexTransaction = function (id, transaction) {
+        return xhrService.fetch(baseUrl + 'transactions/complex-transaction/' + id + '/rebook-pending/',
+            {
+                method: 'GET',
+                credentials: 'include',
+                headers: {
+                    'X-CSRFToken': cookieService.getCookie('csrftoken'),
+                    Accept: 'application/json',
+                    'Content-type': 'application/json'
+                }
+            })
+    };
+
+    var rebookPendingComplexTransaction = function (id, transaction) {
+        return xhrService.fetch(baseUrl + 'transactions/complex-transaction/' + id + '/rebook-pending/',
+            {
+                method: 'PUT',
+                credentials: 'include',
+                headers: {
+                    'X-CSRFToken': cookieService.getCookie('csrftoken'),
+                    Accept: 'application/json',
+                    'Content-type': 'application/json'
+                },
+                body: JSON.stringify(transaction)
+            })
+    };
+
     module.exports = {
         getList: getList,
         getByKey: getByKey,
         create: create,
         update: update,
         deleteByKey: deleteByKey,
-        getBookComplexTransaction: getBookComplexTransaction,
-        bookComplexTransaction: bookComplexTransaction
+        initRebookComplexTransaction: initRebookComplexTransaction,
+        rebookComplexTransaction: rebookComplexTransaction,
+
+        initRebookPendingComplexTransaction: initRebookPendingComplexTransaction,
+        rebookPendingComplexTransaction: rebookPendingComplexTransaction
     }
 
 }());
