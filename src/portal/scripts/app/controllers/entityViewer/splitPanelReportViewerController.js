@@ -17,13 +17,35 @@
 
         var expressionService = require('../../services/expression.service');
 
-        module.exports = function ($scope, $mdDialog, $transitions) {
+        module.exports = function ($scope, $mdDialog, $transitions, parentEntityViewerDataService, parentEntityViewerEventService) {
 
             var vm = this;
 
+            console.log("Split Panel Report Viewer Controller init");
+
+            console.log('parentEntityViewerDataService', parentEntityViewerDataService);
+            console.log('parentEntityViewerEventService', parentEntityViewerEventService);
+
+
             vm.listViewIsReady = false;
 
-            vm.setEventListeners = function(){
+            vm.entityViewerDataService = null;
+            vm.entityViewerEventService = null;
+
+            vm.setEventListeners = function () {
+
+                parentEntityViewerEventService.addEventListener(evEvents.ACTIVE_OBJECT_CHANGE, function () {
+
+                    var activeObject = parentEntityViewerDataService.getActiveObject();
+                    var columns = parentEntityViewerDataService.getColumns();
+
+                    vm.entityViewerDataService.setActiveObjectFromAbove(activeObject);
+                    vm.entityViewerDataService.setAttributesFromAbove(columns);
+
+
+                    vm.entityViewerEventService.dispatchEvent(evEvents.ACTIVE_OBJECT_FROM_ABOVE_CHANGE);
+
+                });
 
                 vm.entityViewerEventService.addEventListener(evEvents.UPDATE_TABLE, function () {
 
@@ -66,6 +88,15 @@
 
                 vm.entityType = $scope.$parent.vm.entityType;
                 vm.entityViewerDataService.setEntityType($scope.$parent.vm.entityType);
+                vm.entityViewerDataService.setRootEntityViewer(false);
+
+                console.log('here? 1231232', vm.entityViewerDataService.isRootEntityViewer());
+
+                var columns = parentEntityViewerDataService.getColumns();
+
+                console.log('parent columns', columns);
+
+                vm.entityViewerDataService.setAttributesFromAbove(columns);
 
                 vm.setEventListeners();
 
@@ -132,7 +163,7 @@
                             vm.entityViewerDataService.setActiveLayoutConfiguration({isReport: true});
 
                         }
-                    // < Check if there is need to solve report datepicker expression >
+                        // < Check if there is need to solve report datepicker expression >
                     } else {
 
                         vm.listViewIsReady = true;

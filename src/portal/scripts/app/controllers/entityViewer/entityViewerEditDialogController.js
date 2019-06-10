@@ -16,6 +16,8 @@
     var gridHelperService = require('../../services/gridHelperService');
     var entityViewerHelperService = require('../../services/entityViewerHelperService');
 
+    var complexTransactionService = require('../../services/transaction/complexTransactionService');
+
     var attributeTypeService = require('../../services/attributeTypeService');
     var metaPermissionsService = require('../../services/metaPermissionsService');
 
@@ -753,6 +755,77 @@
                         }
 
                     }
+
+                });
+
+            }
+
+        };
+
+        vm.rebookAsPending = function ($event) {
+
+            vm.updateEntityBeforeSave();
+
+            vm.entity.$_isValid = entityEditorHelper.checkForNotNullRestriction(vm.entity, vm.entityAttrs, vm.attrs);
+
+            if (vm.entity.$_isValid) {
+
+                var result = entityEditorHelper.checkForNulls(vm.entity);
+
+
+                result.values = {};
+
+                vm.userInputs.forEach(function (userInput) {
+
+                    if (userInput !== null) {
+                        var keys = Object.keys(vm.entity);
+                        keys.forEach(function (key) {
+                            if (key === userInput.name) {
+                                result.values[userInput.name] = vm.entity[userInput.name];
+                            }
+                        });
+                    }
+                });
+
+                result.store = true;
+                result.calculate = true;
+
+                new Promise(function (resolve, reject) {
+                    return complexTransactionService.initRebookPendingComplexTransaction(result.id).then(function (data) {
+
+                        var originValues = JSON.parse(JSON.stringify(result.values));
+
+                        // entity.transactions = data.transactions;
+                        result.values = data.values;
+                        result.complex_transaction = data.complex_transaction; // ?
+
+                        var originValuesKeys = Object.keys(originValues);
+                        var defaultValuesKeys = Object.keys(result.values);
+
+                        originValuesKeys.forEach(function (originVal) {
+                            defaultValuesKeys.forEach(function (defaultVal) {
+
+                                if (originVal === defaultVal) {
+                                    result.values[defaultVal] = originValues[originVal];
+                                }
+
+                            })
+                        });
+
+                        complexTransactionService.rebookPendingComplexTransaction(result.id, result).then(function (data) {
+                            resolve(data);
+                        });
+                    });
+                }).then(function (data) {
+
+                    if (data.hasOwnProperty('has_errors') && data.has_errors === true) {
+
+                        vm.handleComplexTransactionErrors($event, data);
+
+                    } else {
+                        $mdDialog.hide({res: 'agree'});
+                    }
+
 
                 });
 
