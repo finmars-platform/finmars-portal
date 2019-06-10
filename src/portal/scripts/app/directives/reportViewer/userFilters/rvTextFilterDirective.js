@@ -73,6 +73,9 @@
                         case "multiselector":
                             filterRegime = "Multiple selector";
                             break;
+                        case "empty":
+                            filterRegime = "Show empty cells";
+                            break;
                     }
 
                     return filterRegime;

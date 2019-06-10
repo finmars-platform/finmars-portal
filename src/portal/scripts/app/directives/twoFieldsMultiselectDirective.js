@@ -39,6 +39,11 @@
                     event.preventDefault();
                     event.stopPropagation();
 
+                    var items = [];
+                    if (scope.items) {
+                        items = JSON.parse(JSON.stringify(scope.items));
+                    }
+
                     $mdDialog.show({
                         controller: "TwoFieldsMultiselectDialogController as vm",
                         templateUrl: "views/two-fields-multiselect-dialog-view.html",
@@ -47,21 +52,26 @@
                         locals: {
                             data: {
                                 getDataMethod: scope.getDataMethod,
-                                items: scope.items,
+                                items: items,
                                 model: scope.model,
                                 title: scope.title,
                                 nameProperty: scope.nameProperty
                             }
                         }
                     }).then(function (res) {
-                       if (res.status === "agree") {
+
+                        if (res.status === "agree") {
 
                            scope.model = res.selectedItems;
-                           ngModel.$setViewValue(res.selectedItems);
-                           console.log("filter twoFiieldsMutliselect", res);
+
+                           if (ngModel) {
+                               ngModel.$setViewValue(res.selectedItems);
+                           }
+
                            setInputText();
 
                        }
+
                     });
                 });
             }

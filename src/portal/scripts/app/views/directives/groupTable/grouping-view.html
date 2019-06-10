@@ -61,11 +61,11 @@
             </div>
         </md-card>
     </div>
-    <div class="g-second-line" layout="row">
+    <div class="g-second-line" style="overflow: auto">
 
         <div class="groups-holder" layout="row">
 
-            <div class="g-groups-holder" layout="row">
+            <div class="g-groups-holder">
 
                 <md-card data-ng-repeat="item in grouping track by $index" class="group-item card"
                          data-group-type-id="{{item.___group_type_id}}">

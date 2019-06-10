@@ -116,6 +116,7 @@
             activeRequestParametersId: null,
             lastClickInfo: {},
             activeLayoutConfiguration: {},
+            unfilteredFlatList: [],
             flatList: [],
             projection: []
         };
@@ -297,6 +298,14 @@
 
         function getFlatList() {
             return data.flatList;
+        }
+
+        function setUnfilteredFlatList(unfilteredFlatList) {
+            data.unfilteredFlatList = unfilteredFlatList;
+        }
+
+        function getUnfilteredFlatList() {
+            return data.unfilteredFlatList;
         }
 
         function updateItemInFlatList(item) {
@@ -660,8 +669,7 @@
                     delete listLayout.data.reportOptions.item_currencies;
                     delete listLayout.data.reportOptions.item_accounts;
 
-                }
-                ;
+                };
 
                 data.activeLayoutConfiguration = listLayout;
 
@@ -816,6 +824,8 @@
 
             setFlatList: setFlatList,
             getFlatList: getFlatList,
+            setUnfilteredFlatList: setUnfilteredFlatList,
+            getUnfilteredFlatList: getUnfilteredFlatList,
 
             updateItemInFlatList: updateItemInFlatList,
 

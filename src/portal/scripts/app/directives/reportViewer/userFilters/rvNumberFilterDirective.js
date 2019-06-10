@@ -27,6 +27,7 @@
                 scope.filterValue = undefined;
                 scope.filterSelectOptions = [];
                 scope.columnRowsContent = [];
+                scope.nItemsValue = null;
 
                 scope.evEventService.addEventListener(evEvents.DATA_LOAD_END, function () {
 
@@ -77,6 +78,9 @@
                         case "less_equal":
                             filterRegime = "Less or equal to";
                             break;
+                        case "empty":
+                            filterRegime = "Show empty cells";
+                            break;
                         case "top_n":
                             filterRegime = "Top N items";
                             break;
@@ -88,6 +92,8 @@
                     return filterRegime;
 
                 };
+
+
 
                 scope.filterSettingsChange = function () {
                     console.log("filter filterSettingsChange", scope.filter.options.filter_values);

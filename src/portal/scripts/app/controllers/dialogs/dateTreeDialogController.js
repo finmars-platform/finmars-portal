@@ -8,10 +8,10 @@
     module.exports = function ($scope, $mdDialog, data) {
 
         var vm = this;
-        console.log("filter dateTree data", data);
+        console.log("filter datesTree data", data);
         vm.title = data.title;
 
-        if (!vm.datesTree) {
+        if (!data.datesTree) {
             vm.datesTree = [];
         } else {
             vm.datesTree = JSON.parse(JSON.stringify(data.datesTree));
@@ -25,7 +25,7 @@
 
         vm.readyStatus = false;
 
-        vm.allItemsSelected = true;
+        vm.allItemsSelected = false;
         vm.allGroupsExpanded = false;
 
         var formatDatesList = function () {
@@ -75,20 +75,31 @@
         };*/
 
         var checkForInactiveYears = function () {
+            console.log("filter datesTree checkForinactiveYears", JSON.parse(JSON.stringify(vm.datesTree)));
+
+            var allItemsSelected = false;
 
             var i;
             for (i = 0; i < vm.datesTree.length; i++) {
 
-                if (vm.datesTree[i].available) {
+                if (!vm.datesTree[i].available) {
 
                     if (!vm.datesTree[i].active) {
-                        vm.allItemsSelected = false;
+                        allItemsSelected = false;
                         break;
+                    }
+
+                } else {
+
+                    if (vm.datesTree[i].active) {
+                        allItemsSelected = true;
                     }
 
                 }
 
             }
+
+            vm.allItemsSelected = allItemsSelected;
 
         };
 
@@ -476,7 +487,7 @@
             }*/
 
             createDatesTree();
-
+            vm.readyStatus = true;
         };
 
         init();

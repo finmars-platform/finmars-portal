@@ -104,6 +104,9 @@
                         case "less_equal":
                             filterRegime = "Less or equal to";
                             break;
+                        case "empty":
+                            filterRegime = "Show empty cells";
+                            break;
                         case "date_tree":
                             filterRegime = "Date tree";
                             break;

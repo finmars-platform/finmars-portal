@@ -43,8 +43,7 @@
                 var groupTypes = entityViewerDataService.getGroups();
                 // console.log("filter objects.service options", options);
 
-                items = filterService.filterTableRows(items, regularFilters, options.filter_type, options.value_type);
-
+                items = filterService.filterTableRows(items, regularFilters);
                 /*items = filterService.filterByRegularFilters(items, regularFilters);
 
                 // console.log('regular filters length', items.length);*/

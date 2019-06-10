@@ -1,19 +1,23 @@
 (function () {
 
-    var checkForEmptyRegularFilter = function (regularFilter, filterType) {
+    var checkForEmptyRegularFilter = function (regularFilterValue, filterType) {
         // Need null's checks for filters of data type number
         if (filterType === 'from_to') {
-            // console.log('filter checkForEmpty', regularFilter);
-            if (regularFilter.min_value !== undefined &&
-                regularFilter.max_value !== undefined &&
-                regularFilter.min_value !== null &&
-                regularFilter.max_value !== null) {
+
+            if (regularFilterValue.min_value !== undefined &&
+                regularFilterValue.max_value !== undefined &&
+                regularFilterValue.min_value !== null &&
+                regularFilterValue.max_value !== null) {
                 return true;
             }
 
-        } else if (Array.isArray(regularFilter)) {
+        } else if (filterType === 'empty') {
 
-            if (regularFilter && regularFilter.length > 0 && regularFilter[0] !== null) {
+            return true;
+
+        } else if (Array.isArray(regularFilterValue)) {
+
+            if (regularFilterValue[0] && regularFilterValue[0] !== null) {
                 return true;
             }
 
@@ -23,26 +27,37 @@
 
     };
 
-    var filterTableRows = function (items, regularFilters, filterType, valueType) {
-        // console.log("filter filter.service filterByDate", items, regularFilters, filterType, valueType);
+    var filterTableRows = function (items, regularFilters) {
+        // console.log("filter filter.service filterTableRows", items, regularFilters);
         var match;
 
         return items.filter(function (item, tableRowIndex) {
 
             match = true;
 
-            Object.keys(regularFilters).forEach(function (key) {
+            var k;
+            for (k = 0; k < regularFilters.length; k++) {
 
-                if (key !== 'ordering') {
-                    // console.log("filter data key", key, item);
-                    if (checkForEmptyRegularFilter(regularFilters[key], filterType)) {
+                var keyProperty = regularFilters[k].key;
+                var valueType = regularFilters[k].value_type;
+                var filterType = regularFilters[k].filter_type;
+                var filterValue = regularFilters[k].value;
 
-                        if (item.hasOwnProperty(key) && item[key]) {
+                // console.log("filter filter settings", valueType, filterType);
+                if (keyProperty !== 'ordering') {
+                    // console.log("filter data key", keyProperty, item);
 
-                            // console.log("filter data type", item[key], typeof item[key] + '\n' + regularFilters[key], typeof regularFilters[key]);
+                    if (item.hasOwnProperty(keyProperty) && item[keyProperty]) {
 
-                            var valueFromTable = JSON.parse(JSON.stringify(item[key]));
-                            var filterArgument = JSON.parse(JSON.stringify(regularFilters[key]));
+                        if (checkForEmptyRegularFilter(filterValue, filterType)) {
+
+                            if (filterType === 'empty') { // empty cells will pass before this step
+                                match = false;
+                                break;
+                            }
+
+                            var valueFromTable = JSON.parse(JSON.stringify(item[keyProperty]));
+                            var filterArgument = JSON.parse(JSON.stringify(filterValue));
 
                             if (valueType === 10) {
 
@@ -81,16 +96,16 @@
                                         filterArgument = new Date(filterArgument[0]).toDateString();
                                         break;
                                     case 'from_to':
-                                        valueFromTable = new Date(item[key]);
+                                        valueFromTable = new Date(item[keyProperty]);
                                         filterArgument.min_value = new Date(filterArgument.min_value);
                                         filterArgument.max_value = new Date(filterArgument.max_value);
                                         break;
                                     case 'date_tree':
-                                        valueFromTable = new Date(item[key]);
-                                        // filterArgument is array of string
+                                        valueFromTable = new Date(item[keyProperty]);
+                                        // filterArgument is array of strings
                                         break;
                                     default:
-                                        valueFromTable = new Date(item[key]);
+                                        valueFromTable = new Date(item[keyProperty]);
                                         filterArgument = new Date(filterArgument[0]);
                                         break;
                                 }
@@ -99,17 +114,19 @@
 
                             match = filterValueFromTable(valueFromTable, filterArgument, filterType);
 
-                        } else {
-                            match = false;
+                            if (!match) {
+                                break;
+                            }
                         }
 
                     } else {
-                        // console.log("filter wrong regularFilter !!!!!");
+                        match = true;
                     }
+
                 }
 
-            });
-            // console.log("filter filter.service match", match);
+            }
+            // console.log("filter filter.service match", keyProperty, item[keyProperty], match);
             return match;
 
         });
@@ -192,7 +209,7 @@
                 break;
 
             case 'multiselector':
-                // console.log("filter date multiselector data", filterBy, valueToFilter);
+
                 if (filterBy.indexOf(valueToFilter) !== -1) {
                     return true;
                 }
@@ -200,10 +217,10 @@
 
             case 'date_tree':
 
-                var i;
-                for (i = 0; i < filterBy.length; i++) {
-                    // console.log("filter date tree item", filterBy[i], new Date(filterBy[i]).toDateString());
-                    if (valueToFilter.toDateString() === new Date(filterBy[i]).toDateString()) {
+                var d;
+                for (d = 0; d < filterBy.length; d++) {
+
+                    if (valueToFilter.toDateString() === new Date(filterBy[d]).toDateString()) {
                         return true;
                     }
 
@@ -318,16 +335,25 @@
 
         var result = {};
 
-        Object.keys(options).filter(function (key) {
+        if (options.hasOwnProperty('filter_settings')) {
 
-            if (['groups_order', 'groups_types', 'groups_values', 'page', 'page_size', 'filter_type', 'value_type'].indexOf(key) === -1) {
+            result = options.filter_settings;
 
-                result[key] = options[key];
+        } else {
 
-            }
+            Object.keys(options).filter(function (key) {
 
-        });
+                if (['groups_order', 'groups_types', 'groups_values', 'page', 'page_size'].indexOf(key) === -1) {
 
+                    result[key] = options[key];
+
+                }
+
+            });
+
+        }
+
+        // console.log("filter getRegularFilters result", result);
         return result;
 
     };
