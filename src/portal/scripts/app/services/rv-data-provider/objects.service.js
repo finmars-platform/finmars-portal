@@ -9,7 +9,7 @@
     var itemsCache = [];
 
     var getList = function (entityType, options, entityViewerDataService) {
-
+        console.log("filter object.service options", JSON.parse(JSON.stringify(options)));
         return new Promise(function (resolve, reject) {
 
             var result = {
