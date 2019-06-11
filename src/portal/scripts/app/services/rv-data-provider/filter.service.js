@@ -28,7 +28,7 @@
     };
 
     var filterTableRows = function (items, regularFilters) {
-        // console.log("filter filter.service filterTableRows", items, regularFilters);
+        console.log("filter filter.service filterTableRows", items, regularFilters);
         var match;
 
         return items.filter(function (item, tableRowIndex) {
@@ -43,9 +43,9 @@
                 var filterType = regularFilters[k].filter_type;
                 var filterValue = regularFilters[k].value;
 
-                // console.log("filter filter settings", valueType, filterType);
+                console.log("filter filter settings", valueType, filterType);
                 if (keyProperty !== 'ordering') {
-                    // console.log("filter data key", keyProperty, item);
+                    console.log("filter data key", keyProperty, item);
 
                     if (item.hasOwnProperty(keyProperty) && item[keyProperty]) {
 
@@ -126,7 +126,7 @@
                 }
 
             }
-            // console.log("filter filter.service match", keyProperty, item[keyProperty], match);
+            console.log("filter filter.service match", keyProperty, item[keyProperty], match);
             return match;
 
         });
@@ -134,7 +134,7 @@
     };
 
     var filterValueFromTable = function (valueToFilter, filterBy, operationType) {
-        // console.log("filter filterValueFromTable", valueToFilter, filterBy);
+        console.log("filter filterValueFromTable", valueToFilter, filterBy);
         switch (operationType) {
 
             case 'contain':
@@ -202,7 +202,7 @@
             case 'from_to':
                 var minValue = filterBy.min_value;
                 var maxValue = filterBy.max_value;
-                // console.log("filter from_to values", minValue, maxValue);
+                console.log("filter from_to values", minValue, maxValue);
                 if (valueToFilter >= minValue && valueToFilter <= maxValue) {
                     return true;
                 }
@@ -353,7 +353,7 @@
 
         }
 
-        // console.log("filter getRegularFilters result", result);
+        console.log("filter getRegularFilters result", result);
         return result;
 
     };
