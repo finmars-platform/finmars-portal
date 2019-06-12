@@ -105,6 +105,8 @@ app.controller('AuditController', ['$scope', require('./app/controllers/system/a
 app.controller('SettingsFormDesignController', ['$scope', '$state', require('./app/controllers/settings/settingsFormDesignController')]);
 app.controller('SettingBloombergImportInstrumentController', ['$scope', '$state', require('./app/controllers/settings/settingBloombergImportInstrumentController')]);
 
+app.controller('ClassifierImportDialogController', ['$scope', '$mdDialog', require('./app/controllers/dialogs/classifierImportDialogController')]);
+
 
 // System Dialogs
 
