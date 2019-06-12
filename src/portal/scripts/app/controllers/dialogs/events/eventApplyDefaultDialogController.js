@@ -31,7 +31,7 @@
 
         console.log('vm.event', vm.event);
 
-        vm.recursiveHandleEvent = function (index, actions, resolve) {
+        vm.recursiveHandleEvent = function (index, actions, resolve, $event) {
 
             var action = actions[index];
 
@@ -51,7 +51,7 @@
 
                     if (index < actions.length) {
 
-                        vm.recursiveHandleEvent(index, actions, resolve);
+                        vm.recursiveHandleEvent(index, actions, resolve, $event);
 
                     } else {
 
@@ -60,11 +60,13 @@
 
                 }).catch(function (reason) {
 
+                    console.log('reason', reason);
+
                     $mdDialog.show({
                         controller: 'InfoDialogController as vm',
                         templateUrl: 'views/info-dialog-view.html',
                         parent: angular.element(document.body),
-                        targetEvent: ev,
+                        targetEvent: $event,
                         clickOutsideToClose: false,
                         locals: {
                             info: {
@@ -84,7 +86,7 @@
 
         };
 
-        vm.applyDefault = function () {
+        vm.applyDefault = function ($event) {
 
             var actions = vm.event.event_schedule_object.actions.filter(function (action) {
                 return action.is_book_automatic === true;
@@ -96,7 +98,7 @@
 
                     var index = 0;
 
-                    vm.recursiveHandleEvent(index, actions, resolve)
+                    vm.recursiveHandleEvent(index, actions, resolve, $event)
 
                 }).then(function (value) {
 
