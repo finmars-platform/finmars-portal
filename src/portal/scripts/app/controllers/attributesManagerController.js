@@ -132,7 +132,13 @@
                 targetEvent: $event,
                 preserveScope: true,
                 autoWrap: true,
-                skipHide: true
+                skipHide: true,
+                locals: {
+                    data: {
+                        entityType: vm.entityType,
+                        item: item
+                    }
+                }
             })
 
 
