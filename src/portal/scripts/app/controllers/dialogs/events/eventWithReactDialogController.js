@@ -44,11 +44,13 @@
 
                 }).catch(function (reason) {
 
+                    console.log('reason', reason);
+
                     $mdDialog.show({
                         controller: 'InfoDialogController as vm',
                         templateUrl: 'views/info-dialog-view.html',
                         parent: angular.element(document.body),
-                        targetEvent: ev,
+                        targetEvent: $event,
                         clickOutsideToClose: false,
                         locals: {
                             info: {
