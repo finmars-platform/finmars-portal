@@ -42,8 +42,26 @@
 
                     $mdDialog.hide({status: 'agree'});
 
-                }).catch(function () {
-                    // vm.cancel();
+                }).catch(function (reason) {
+
+                    $mdDialog.show({
+                        controller: 'InfoDialogController as vm',
+                        templateUrl: 'views/info-dialog-view.html',
+                        parent: angular.element(document.body),
+                        targetEvent: ev,
+                        clickOutsideToClose: false,
+                        locals: {
+                            info: {
+                                title: 'Error',
+                                description: "Can't process event"
+                            }
+                        },
+                        preserveScope: true,
+                        autoWrap: true,
+                        skipHide: true,
+                        multiple: true
+                    })
+
                 })
 
             });
