@@ -46,6 +46,35 @@
 
                     console.log('reason', reason);
 
+                    var description = "<p>Can't process event</p>";
+
+                    if (reason.hasOwnProperty('message')) {
+
+                        if (reason.message.hasOwnProperty('values')) {
+
+                            description = description + '<p>Errors: </p>'
+
+                            description = description + '<table>';
+
+                            Object.keys(reason.message.values).forEach(function (key) {
+
+                                var tr = '<tr>';
+
+                                tr = tr + '<td><b>' + key + '</b></td>';
+                                tr = tr + '<td>' + reason.message.values[key] + '</td>';
+
+                                tr = tr + '</tr>';
+
+                                description = description + tr;
+                            });
+
+
+                            description = description + '</table>';
+
+                        }
+
+                    }
+
                     $mdDialog.show({
                         controller: 'InfoDialogController as vm',
                         templateUrl: 'views/info-dialog-view.html',
@@ -55,13 +84,17 @@
                         locals: {
                             info: {
                                 title: 'Error',
-                                description: "Can't process event"
+                                description: description
                             }
                         },
                         preserveScope: true,
                         autoWrap: true,
                         skipHide: true,
                         multiple: true
+                    }).then(function (value) {
+
+                        $mdDialog.hide({status: 'agree'});
+
                     })
 
                 })
