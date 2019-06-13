@@ -31,7 +31,7 @@
 
         console.log('vm.event', vm.event);
 
-        vm.recursiveHandleEvent = function (index, actions, resolve) {
+        vm.recursiveHandleEvent = function (index, actions, resolve, $event) {
 
             var action = actions[index];
 
@@ -51,12 +51,76 @@
 
                     if (index < actions.length) {
 
-                        vm.recursiveHandleEvent(index, actions, resolve);
+                        vm.recursiveHandleEvent(index, actions, resolve, $event);
 
                     } else {
 
                         resolve(action);
                     }
+
+                }).catch(function (reason) {
+
+                    console.log('reason', reason);
+
+                    var description = "<p>Can't process event</p>";
+
+                    if (reason.hasOwnProperty('message')) {
+
+                        if (reason.message.hasOwnProperty('values')) {
+
+                            description = description + '<p>Errors: </p>'
+
+                            description = description + '<table>';
+
+                            Object.keys(reason.message.values).forEach(function (key) {
+
+                                var tr = '<tr>';
+
+                                tr = tr + '<td><b>' + key + '</b></td>';
+                                tr = tr + '<td>' + reason.message.values[key] + '</td>';
+
+                                tr = tr + '</tr>';
+
+                                description = description + tr;
+                            });
+
+
+                            description = description + '</table>';
+
+                        }
+
+                    }
+
+                    $mdDialog.show({
+                        controller: 'InfoDialogController as vm',
+                        templateUrl: 'views/info-dialog-view.html',
+                        parent: angular.element(document.body),
+                        targetEvent: $event,
+                        clickOutsideToClose: false,
+                        locals: {
+                            info: {
+                                title: 'Error',
+                                description: description
+                            }
+                        },
+                        preserveScope: true,
+                        autoWrap: true,
+                        skipHide: true,
+                        multiple: true
+                    }).then(function (value) {
+
+                        index = index + 1;
+
+                        if (index < actions.length) {
+
+                            vm.recursiveHandleEvent(index, actions, resolve, $event);
+
+                        } else {
+
+                            resolve(action);
+                        }
+
+                    })
 
                 })
 
@@ -64,7 +128,7 @@
 
         };
 
-        vm.applyDefault = function () {
+        vm.applyDefault = function ($event) {
 
             var actions = vm.event.event_schedule_object.actions.filter(function (action) {
                 return action.is_book_automatic === true;
@@ -76,7 +140,7 @@
 
                     var index = 0;
 
-                    vm.recursiveHandleEvent(index, actions, resolve)
+                    vm.recursiveHandleEvent(index, actions, resolve, $event)
 
                 }).then(function (value) {
 
