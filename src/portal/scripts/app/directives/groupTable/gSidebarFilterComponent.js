@@ -157,7 +157,7 @@
                         interfaceLayout.filterArea.width = 239;
                     }
 
-                    // scope.evDataService.setInterfaceLayout(interfaceLayout);
+                    scope.evDataService.setInterfaceLayout(interfaceLayout);
 
                     var interval = setInterval(function () {
                         $(window).trigger('resize');

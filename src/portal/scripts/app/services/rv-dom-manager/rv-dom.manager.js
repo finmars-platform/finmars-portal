@@ -316,7 +316,6 @@
         var contentWrapElementHeight = document.body.clientHeight - interfaceLayout.headerToolbar.height - interfaceLayout.splitPanel.height;
 
         contentWrapElement.style.height = contentWrapElementHeight + "px";
-        console.log("viewport calculateContentWrapHeight", contentWrapElement, contentWrapElementHeight);
 
     };
 

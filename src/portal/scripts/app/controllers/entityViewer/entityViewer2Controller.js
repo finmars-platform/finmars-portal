@@ -30,6 +30,8 @@
             vm.entityViewerDataService = entityViewerDataService;
             vm.entityViewerEventService = entityViewerEventService;
 
+            vm.entityViewerDataService.setRootEntityViewer(true);
+
             vm.getView = function () {
 
                 uiService.getActiveListLayout(vm.entityType).then(function (res) {
