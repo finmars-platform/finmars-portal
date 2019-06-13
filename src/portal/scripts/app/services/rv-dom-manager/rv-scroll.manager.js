@@ -12,6 +12,9 @@
         var contentElemHeight;
         var contentElemPaddingTop;
 
+        var contentWrapElem;
+        var contentWrapElemHeight;
+
         function setViewportElem(elem) {
             viewportElem = elem
         }
@@ -40,11 +43,11 @@
         }
 
         function setContentElem(elem) {
-            contentElem = elem
+            contentElem = elem;
         }
 
         function getContentElem() {
-            return contentElem
+            return contentElem;
         }
 
         function setContentElemHeight(height) {
@@ -65,6 +68,25 @@
 
         function getContentElemPaddingTop() {
             return contentElemPaddingTop;
+        }
+
+        function setContentWrapElem(elem) {
+            contentWrapElem = elem;
+            contentWrapElemHeight = elem.clientHeight;
+        }
+
+        function getContentWrapElem() {
+            return contentWrapElem;
+        }
+
+        function setContentWrapElemHeight(height) {
+
+            contentWrapElemHeight = height;
+            contentWrapElem.style.height = height + 'px';
+        }
+
+        function getContentWrapElemHeight() {
+            return contentWrapElemHeight;
         }
 
         return {
@@ -90,8 +112,15 @@
             getContentElemHeight: getContentElemHeight,
 
             setContentElemPaddingTop: setContentElemPaddingTop,
-            getContentElemPaddingTop: getContentElemPaddingTop
+            getContentElemPaddingTop: getContentElemPaddingTop,
 
+            // content wrap elem
+
+            setContentWrapElem: setContentWrapElem,
+            getContentWrapElem: getContentWrapElem,
+
+            setContentWrapElemHeight: setContentWrapElemHeight,
+            getContentWrapElemHeight: getContentWrapElemHeight
 
         }
 

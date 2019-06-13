@@ -160,7 +160,7 @@
             } else {
 
                 var entityType = metaContentTypesService.getContentTypeUIByState($state.current.name);
-                console.log("import entityType", entityType);
+
                 uiService.getActiveListLayout(entityType).then(function (data) {
 
                     var activeLayoutRes = data.results;
@@ -177,20 +177,17 @@
         // < Get name of active layout in the toolbar >
 
         vm.showBookmarks = false;
-        vm.toggleBookmarkPanel = function () {
+        vm.toggleBookmarksPanel = function () {
+
+            var mdContent = document.querySelector('md-content');
+            mdContent.classList.add('overflow-hidden');
+
             vm.showBookmarks = !vm.showBookmarks;
 
-            /*var interfaceLayout = entityViwerDataService.getInterfaceLayout();
-            console.log("viewport bookmarks", interfaceLayout);
-            if (vm.showBookmarks) {
-                interfaceLayout.headerToolbar.height = 134;
-            } else {
-                interfaceLayout.headerToolbar.height = 64;
-            }
-
             setTimeout(function () {
-                $(window).trigger('resize');
-            }, 400);*/
+                mdContent.classList.remove('overflow-hidden');
+            },100);
+
         };
 
         vm.openHelp = function ($event) {

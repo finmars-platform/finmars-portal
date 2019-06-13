@@ -68,9 +68,7 @@
                 vm.listViewIsReady = false;
 
                 vm.entityViewerDataService = new EntityViewerDataService();
-                ;
                 vm.entityViewerEventService = new EntityViewerEventService();
-                ;
 
                 vm.entityType = $scope.$parent.vm.entityType;
                 vm.entityViewerDataService.setEntityType($scope.$parent.vm.entityType);

@@ -242,7 +242,7 @@
 
                 if (vm.datesTree.length > 0) { // if there are already groups by year, check if date belong to one of existing groups
 
-                    vm.datesTree.map(function (yearGroup) {
+                    vm.datesTree.forEach(function (yearGroup) {
 
                         if (yearGroup.yearNumber === dateYear) {
 
@@ -250,18 +250,19 @@
 
                             if (yearGroup.items && yearGroup.items.length > 0) { // if there are already groups by month, check if date belong to one of existing groups
 
-                                yearGroup.items.map(function (monthGroup) {
+                                yearGroup.items.forEach(function (monthGroup) {
 
                                     if (monthGroup.number === dateMonth) {
 
                                         noMatchingMonthGroup = false;
 
-                                        monthGroup.items.map(function (treeDate) {
+                                        monthGroup.items.forEach(function (treeDate) {
 
                                             if (new Date(treeDate.value).toDateString() === listDate.value.toDateString()) {
 
                                                 treeDate.available = true;
                                                 noMatchingDay = false;
+                                                treeDate.dayNumber = dateDay;
 
                                             }
 
@@ -287,7 +288,7 @@
 
                         }
 
-                    })
+                    });
 
                 }
 
@@ -302,7 +303,7 @@
             checkDatesTreeForUnavailableGroups();
             checkForInactiveYears();
             // setDateGroupsCheckboxesState();
-
+            // console.log("filter datestree datesTree", JSON.parse(JSON.stringify(vm.datesTree)));
         };
 
         vm.expandCollapseAll = function () {

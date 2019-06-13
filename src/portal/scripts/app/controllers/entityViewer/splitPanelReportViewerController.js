@@ -34,6 +34,12 @@
 
             vm.setEventListeners = function () {
 
+                parentEntityViewerEventService.addEventListener(evEvents.UPDATE_SPLIT_PANEL_TABLE_VIEWPORT, function () {
+
+                    vm.entityViewerEventService.dispatchEvent(evEvents.UPDATE_TABLE_VIEWPORT);
+
+                });
+
                 parentEntityViewerEventService.addEventListener(evEvents.ACTIVE_OBJECT_CHANGE, function () {
 
                     var activeObject = parentEntityViewerDataService.getActiveObject();

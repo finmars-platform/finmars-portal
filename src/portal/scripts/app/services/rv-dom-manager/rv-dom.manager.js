@@ -310,25 +310,42 @@
 
     };
 
+    var calculateContentWrapHeight = function (contentWrapElement, evDataService) { // Works only for contentWrap that is not from split panel
+
+        var interfaceLayout = evDataService.getInterfaceLayout();
+        var contentWrapElementHeight = document.body.clientHeight - interfaceLayout.headerToolbar.height - interfaceLayout.splitPanel.height;
+
+        contentWrapElement.style.height = contentWrapElementHeight + "px";
+        console.log("viewport calculateContentWrapHeight", contentWrapElement, contentWrapElementHeight);
+
+    };
+
     var calculateScroll = function (elements, evDataService) {
 
         rvScrollManager.setViewportElem(elements.viewportElem);
         rvScrollManager.setContentElem(elements.contentElem);
+        rvScrollManager.setContentWrapElem(elements.contentWrapElem);
+
+        var isRootEntityViewer = evDataService.isRootEntityViewer();
 
         var interfaceLayout = evDataService.getInterfaceLayout();
-        // interfaceLayout.headerToolbar.height = $('md-toolbar.header').height();
-        // console.log("viewport interfaceLayout", interfaceLayout);
-        /*var scrollSize = 17; // 17px scroll size
-        var magicNumber = 6; // Somehow we lose 6px*/
 
+        var contentWrapElemHeight = rvScrollManager.getContentWrapElemHeight();
         var viewportTop = interfaceLayout.headerToolbar.height + interfaceLayout.groupingArea.height + interfaceLayout.columnArea.height + interfaceLayout.progressBar.height;
-
         var viewportWidth = document.body.clientWidth - interfaceLayout.sidebar.width - interfaceLayout.filterArea.width;
         // var viewportHeight = Math.floor(document.body.clientHeight - interfaceLayout.columnArea.top - interfaceLayout.columnArea.height);
-        var viewportHeight = Math.floor(document.body.clientHeight - viewportTop);
-        // console.log("viewport height", viewportHeight, document.body.clientHeight);
-        /*viewportHeight = viewportHeight - scrollSize;
-        viewportHeight = viewportHeight + magicNumber;*/
+        var viewportHeight;
+
+        if (!isRootEntityViewer) {
+
+            viewportTop = interfaceLayout.groupingArea.height + interfaceLayout.columnArea.height + interfaceLayout.progressBar.height;
+            viewportHeight = Math.floor(contentWrapElemHeight - viewportTop);
+
+        } else {
+
+            var viewportHeight = Math.floor(document.body.clientHeight - viewportTop - interfaceLayout.splitPanel.height);
+
+        }
 
         // console.log('calculateScroll.viewportHeight', viewportHeight);
         // console.log('calculateScroll.viewportWidth', viewportWidth);
@@ -350,6 +367,7 @@
         initEventDelegation: initEventDelegation,
         addScrollListener: addScrollListener,
         calculateTotalHeight: calculateTotalHeight,
+        calculateContentWrapHeight: calculateContentWrapHeight,
         calculateScroll: calculateScroll
     }
 
