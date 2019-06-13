@@ -123,6 +123,27 @@
 
         };
 
+        vm.importClassifiers = function (item, $event) {
+
+            $mdDialog.show({
+                controller: 'ClassifierImportDialogController as vm',
+                templateUrl: 'views/dialogs/classifier-import-dialog-view.html',
+                parent: angular.element(document.body),
+                targetEvent: $event,
+                preserveScope: true,
+                autoWrap: true,
+                skipHide: true,
+                locals: {
+                    data: {
+                        entityType: vm.entityType,
+                        item: item
+                    }
+                }
+            })
+
+
+        };
+
         vm.editAttr = function (item, ev) {
             $mdDialog.show({
                 controller: 'AttributesManagerEditDialogController as vm',
