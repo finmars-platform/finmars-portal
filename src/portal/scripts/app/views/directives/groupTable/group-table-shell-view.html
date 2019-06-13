@@ -1,37 +1,46 @@
 <div class="g-wrapper">
-    <div class="g-workarea-wrap">
-        <div class="g-workarea main-area" data-group-clipboard-handler
-             ev-data-service="evDataService"
-             ev-event-service="evEventService">
-            <div class="g-grouping-section" data-ng-if="components.groupingArea">
-                <group-grouping ev-data-service="evDataService"
-                                ev-event-service="evEventService"></group-grouping>
-            </div>
-            <div class="g-table-section">
-                <div>
-                    <div class="g-table-wrap">
 
-                        <group-columns ev-data-service="evDataService"
-                                       ev-event-service="evEventService"
-                        ></group-columns>
+    <div class="g-content-wrap">
 
-                        <group-table-body class="group-table-body"
-                                          ev-data-service="evDataService"
-                                          ev-event-service="evEventService"
-                        ></group-table-body>
+        <div class="g-workarea-wrap">
+            <div class="g-workarea main-area" data-group-clipboard-handler
+                 ev-data-service="evDataService"
+                 ev-event-service="evEventService">
+                <div class="g-grouping-section" data-ng-if="components.groupingArea">
+                    <group-grouping ev-data-service="evDataService"
+                                    ev-event-service="evEventService"></group-grouping>
+                </div>
+                <div class="g-table-section">
+                    <div>
+                        <div class="g-table-wrap">
 
+                            <group-columns ev-data-service="evDataService"
+                                           ev-event-service="evEventService"
+                            ></group-columns>
+
+                            <group-table-body ng-if="contentWrapElem"
+                                              class="group-table-body"
+                                              ev-data-service="evDataService"
+                                              ev-event-service="evEventService"
+                                              content-wrap-element="contentWrapElem"
+                            ></group-table-body>
+
+
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-    <div class="g-filter-sidebar main-sidebar" data-ng-if="components.sidebar">
-        <div>
-            <div class="g-filter" id="filtersbag">
-                <group-sidebar-filter ev-data-service="evDataService"
-                                      ev-event-service="evEventService"></group-sidebar-filter>
+
+        <div class="g-filter-sidebar main-sidebar" ng-if="components.sidebar">
+            <div>
+                <div class="g-filter" id="filtersbag">
+                    <group-sidebar-filter ev-data-service="evDataService"
+                                          ev-event-service="evEventService"></group-sidebar-filter>
+                </div>
             </div>
         </div>
+
     </div>
 
     <div class="g-additions" data-ng-if="additions.isOpen">

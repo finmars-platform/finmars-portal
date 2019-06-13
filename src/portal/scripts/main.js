@@ -318,7 +318,7 @@ app.directive('useFromAboveButton', ['$mdDialog', require('./app/controls/use-fr
 // GROUP TABLE START
 
 app.directive('groupTable', [require('./app/directives/groupTable/gTableComponent')]);
-app.directive('groupTableBody', ['$mdDialog', require('./app/directives/groupTable/gTableBodyComponent')]);
+app.directive('groupTableBody', [require('./app/directives/groupTable/gTableBodyComponent')]);
 app.directive('groupSidebarFilter', ['$mdDialog', require('./app/directives/groupTable/gSidebarFilterComponent')]);
 app.directive('rvTextFilter', ['$mdDialog', require('./app/directives/reportViewer/userFilters/rvTextFilterDirective')]);
 app.directive('rvNumberFilter', ['$mdDialog', require('./app/directives/reportViewer/userFilters/rvNumberFilterDirective')]);

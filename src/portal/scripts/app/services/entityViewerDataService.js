@@ -31,6 +31,9 @@
                 width: headerToolbarWidth,
                 height: headerToolbarHeight
             },
+            mainContent: {
+                height: 0
+            },
             groupingArea: {
                 left: sidebarWidth,
                 top: headerToolbarHeight,
@@ -94,6 +97,7 @@
             },
             allRowsSelected: false,
             rootEntityViewer: false,
+            isSplitPanelActive: false,
             additions: {},
             report: {},
             export: {},
@@ -142,9 +146,16 @@
         }
 
         function isRootEntityViewer() {
-            return data.rootEntityViewer
+            return data.rootEntityViewer;
         }
 
+        function setSplitPanelStatus(status) {
+            data.isSplitPanelActive = status;
+        }
+
+        function isSplitPanelActive() {
+            return data.isSplitPanelActive;
+        }
 
         function setEntityType(entityType) {
             data.entityType = entityType;
@@ -923,7 +934,10 @@
             setActiveLayoutConfiguration: setActiveLayoutConfiguration,
 
             getLayoutCurrentConfiguration: getLayoutCurrentConfiguration,
-            setLayoutCurrentConfiguration: setLayoutCurrentConfiguration
+            setLayoutCurrentConfiguration: setLayoutCurrentConfiguration,
+
+            setSplitPanelStatus: setSplitPanelStatus,
+            isSplitPanelActive: isSplitPanelActive
 
         }
     }

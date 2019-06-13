@@ -144,13 +144,21 @@
                 };
 
                 scope.resizeFilterSideNav = function (actionType) {
+
+                    var interfaceLayout = scope.evDataService.getInterfaceLayout();
+
                     if (actionType === 'collapse') {
                         $('body').addClass('filter-side-nav-collapsed');
                         scope.sideNavCollapsed = true;
+                        interfaceLayout.filterArea.width = 55;
                     } else {
                         $('body').removeClass('filter-side-nav-collapsed');
                         scope.sideNavCollapsed = false;
+                        interfaceLayout.filterArea.width = 239;
                     }
+
+                    // scope.evDataService.setInterfaceLayout(interfaceLayout);
+
                     var interval = setInterval(function () {
                         $(window).trigger('resize');
                     }, 50);

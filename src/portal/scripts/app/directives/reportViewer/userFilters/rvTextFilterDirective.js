@@ -103,7 +103,6 @@
                 };
 
                 scope.filterSettingsChange = function () {
-                    console.log("filter filterSettingsChange", scope.filter.options.filter_values);
 
                     /*if (scope.filter.options.filter_type === "contain" || scope.filter.option.filter_type === "does_not_contain") {
                         scope.filter.options.filter_values = scope.filter.options.filter_values.toLowerCase();

@@ -16,12 +16,13 @@
 
     var metaService = require('../../services/metaService');
 
-    module.exports = function ($mdDialog) {
+    module.exports = function () {
         return {
             restrict: 'AE',
             scope: {
                 evDataService: '=',
-                evEventService: '='
+                evEventService: '=',
+                contentWrapElement: '='
             },
             template: '<div>' +
             '<div class="ev-progressbar-holder" layout="row" layout-sm="column">\n' +
@@ -32,20 +33,25 @@
             '</div>' +
             '</div>',
             link: function (scope, elem) {
-                console.log("overflow elem", elem);
-                var viewportElem = elem[0].querySelector('.ev-viewport');
+
                 var contentElem = elem[0].querySelector('.ev-content');
+                var viewportElem = elem[0].querySelector('.ev-viewport');
                 var progressBar = elem[0].querySelector('.ev-progressbar');
+                var contentWrapElem = scope.contentWrapElement;
+
+                var toggleBookmarksBtn = document.querySelector('.toggle-bookmarks-panel-btn');
 
                 var elements = {
                     viewportElem: viewportElem,
-                    contentElem: contentElem
+                    contentElem: contentElem,
+                    contentWrapElem: contentWrapElem
                 };
 
                 var projection;
                 var entityType = scope.evDataService.getEntityType();
 
                 var isReport = metaService.isReport(entityType);
+                var isRootEntityViewer = scope.evDataService.isRootEntityViewer();
 
                 function renderReportViewer() {
 
@@ -214,6 +220,28 @@
                     });
                 }
 
+                toggleBookmarksBtn.addEventListener('click', function () {
+
+                    var interfaceLayout = scope.evDataService.getInterfaceLayout();
+
+                    var headerToolbar = document.querySelector('md-toolbar.header');
+
+                    interfaceLayout.headerToolbar.height = headerToolbar.clientHeight;
+
+                    scope.evDataService.setInterfaceLayout(interfaceLayout);
+
+                    var splitPanelIsActive = scope.evDataService.isSplitPanelActive();
+
+                    if (isRootEntityViewer && splitPanelIsActive) {
+
+                        scope.evEventService.dispatchEvent(evEvents.UPDATE_ENTITY_VIEWER_CONTENT_WRAP_SIZE);
+
+                    }
+
+                    scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE_VIEWPORT);
+
+                });
+
                 scope.evEventService.addEventListener(evEvents.UPDATE_PROJECTION, function () {
 
                     var flatList = scope.evDataService.getFlatList();
@@ -258,11 +286,26 @@
 
                 });
 
-                scope.evEventService.addEventListener(evEvents.UPDATE_TABLE_VIEWPORT, function () {
+                scope.evEventService.addEventListener(evEvents.UPDATE_ENTITY_VIEWER_CONTENT_WRAP_SIZE, function () {
 
-                    evDomManager.calculateScroll(elements, scope.evDataService);
+                    if (isReport) {
+                        rvDomManager.calculateContentWrapHeight(elements.contentWrapElem, scope.evDataService);
+                    } else {
+                        evDomManager.calculateContentWrapHeight(elements.contentWrapElem, scope.evDataService);
+                    }
 
                 });
+
+                scope.evEventService.addEventListener(evEvents.UPDATE_TABLE_VIEWPORT, function () {
+
+                    if (isReport) {
+                        rvDomManager.calculateScroll(elements, scope.evDataService);
+                    } else {
+                        evDomManager.calculateScroll(elements, scope.evDataService);
+                    }
+
+                });
+
 
                 if (isReport) {
 
@@ -285,6 +328,16 @@
 
                     evDomManager.addScrollListener(elements, scope.evDataService, scope.evEventService);
                 }
+
+                $(window).on('resize', function () {
+
+                    if (isReport) {
+                        rvDomManager.calculateScroll(elements, scope.evDataService);
+                    } else {
+                        evDomManager.calculateScroll(elements, scope.evDataService);
+                    }
+
+                });
 
                 window.addEventListener('resize', function () {
 

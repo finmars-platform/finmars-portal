@@ -260,6 +260,7 @@
 
                     if (scope.currentAdditions.type === type) {
 
+                        scope.evDataService.setSplitPanelStatus(false);
                         clearAdditions()
 
                     } else {
@@ -269,6 +270,7 @@
                             type: type
                         };
 
+                        scope.evDataService.setSplitPanelStatus(true);
                         scope.evDataService.setAdditions(additions);
                         scope.evEventService.dispatchEvent(evEvents.ADDITIONS_CHANGE);
                     }

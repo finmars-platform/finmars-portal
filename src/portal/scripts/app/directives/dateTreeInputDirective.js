@@ -29,7 +29,13 @@
 
                         yearGroup.items.map(function (monthGroup) {
 
-                            datesSelected = datesSelected + monthGroup.items.length;
+                            monthGroup.items.map(function (day) {
+
+                                if (day.active) {
+                                    datesSelected = datesSelected + 1;
+                                }
+
+                            });
 
                         });
 
