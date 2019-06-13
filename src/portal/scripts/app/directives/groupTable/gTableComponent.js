@@ -23,11 +23,11 @@
                 scope.activebject = scope.evDataService.getActiveObject();
 
                 scope.splitPanelIsActive = scope.evDataService.isSplitPanelActive();
-                var isNotSplitPanel = !scope.evDataService.isRootEntityViewer();
+                var isRootEntityViewer = scope.evDataService.isRootEntityViewer();
 
                 scope.contentWrapElem = elem[0].querySelector('.g-content-wrap');
 
-                if (isNotSplitPanel) { // if this component inside split panel, set .g-content-wrap height
+                if (!isRootEntityViewer) { // if this component inside split panel, set .g-content-wrap height
                     var splitPanelHeight = elem.parents(".g-additions").height();
                     scope.contentWrapElem.style.height = splitPanelHeight + 'px';
                 }

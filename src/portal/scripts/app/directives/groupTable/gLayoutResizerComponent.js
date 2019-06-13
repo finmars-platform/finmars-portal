@@ -20,7 +20,11 @@
 
                     var workAreaElem = elem.parents('.g-wrapper').find('.g-workarea-wrap').first();
 
-                    workAreaElem.width(elem.parents('.entity-viewer-holder').width() - $(elem).parents('.g-wrapper').find('.g-filter-sidebar.main-sidebar').width());
+                    var interfaceLayout = scope.evDataService.getInterfaceLayout();
+
+                    // workAreaElem.width(elem.parents('.entity-viewer-holder').width() - $(elem).parents('.g-wrapper').find('.g-filter-sidebar.main-sidebar').width());
+                    var width = document.body.clientWidth - $(document).find(".sidenav-wrapper") - interfaceLayout.filterArea.width;
+                    workAreaElem.width(width);
                     var wrapperWidth = elem.find('.g-columns-component.g-thead').width() - $(elem).find('.g-cell-select.all').width();
                     elem.find('.g-scroll-wrapper').width(wrapperWidth);
                     elem.find('.g-scrollable-area').width(wrapperWidth);

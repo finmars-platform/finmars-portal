@@ -220,28 +220,6 @@
                     });
                 }
 
-                toggleBookmarksBtn.addEventListener('click', function () {
-
-                    var interfaceLayout = scope.evDataService.getInterfaceLayout();
-
-                    var headerToolbar = document.querySelector('md-toolbar.header');
-
-                    interfaceLayout.headerToolbar.height = headerToolbar.clientHeight;
-
-                    scope.evDataService.setInterfaceLayout(interfaceLayout);
-
-                    var splitPanelIsActive = scope.evDataService.isSplitPanelActive();
-
-                    if (isRootEntityViewer && splitPanelIsActive) {
-
-                        scope.evEventService.dispatchEvent(evEvents.UPDATE_ENTITY_VIEWER_CONTENT_WRAP_SIZE);
-
-                    }
-
-                    scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE_VIEWPORT);
-
-                });
-
                 scope.evEventService.addEventListener(evEvents.UPDATE_PROJECTION, function () {
 
                     var flatList = scope.evDataService.getFlatList();
@@ -306,28 +284,59 @@
 
                 });
 
+                var init = function () {
 
-                if (isReport) {
+                    if (isReport) {
 
-                    rvDomManager.initEventDelegation(contentElem, scope.evDataService, scope.evEventService);
+                        rvDomManager.calculateScroll(elements, scope.evDataService);
 
-                    rvDomManager.addScrollListener(elements, scope.evDataService, scope.evEventService);
+                        rvDomManager.initEventDelegation(contentElem, scope.evDataService, scope.evEventService);
 
-                    scope.evEventService.addEventListener(evEvents.RESIZE_COLUMNS, function () {
-                        clearOverflowingCells();
+                        rvDomManager.addScrollListener(elements, scope.evDataService, scope.evEventService);
+
+                        scope.evEventService.addEventListener(evEvents.RESIZE_COLUMNS, function () {
+                            clearOverflowingCells();
+                        });
+
+                        scope.evEventService.addEventListener(evEvents.START_CELLS_OVERFLOW, function () {
+                            cellContentOverflow();
+                        });
+
+                    } else {
+
+                        evDomManager.calculateScroll(elements, scope.evDataService);
+
+                        evDomManager.initEventDelegation(contentElem, scope.evDataService, scope.evEventService);
+                        evDomManager.initContextMenuEventDelegation(contentElem, scope.evDataService, scope.evEventService);
+
+                        evDomManager.addScrollListener(elements, scope.evDataService, scope.evEventService);
+
+                    }
+
+                    toggleBookmarksBtn.addEventListener('click', function () {
+
+                        var interfaceLayout = scope.evDataService.getInterfaceLayout();
+
+                        var headerToolbar = document.querySelector('md-toolbar.header');
+
+                        interfaceLayout.headerToolbar.height = headerToolbar.clientHeight;
+
+                        scope.evDataService.setInterfaceLayout(interfaceLayout);
+
+                        var splitPanelIsActive = scope.evDataService.isSplitPanelActive();
+
+                        if (isRootEntityViewer && splitPanelIsActive) {
+
+                            scope.evEventService.dispatchEvent(evEvents.UPDATE_ENTITY_VIEWER_CONTENT_WRAP_SIZE);
+
+                        }
+
+                        scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE_VIEWPORT);
+
                     });
+                };
 
-                    scope.evEventService.addEventListener(evEvents.START_CELLS_OVERFLOW, function () {
-                        cellContentOverflow();
-                    });
-
-                } else {
-
-                    evDomManager.initEventDelegation(contentElem, scope.evDataService, scope.evEventService);
-                    evDomManager.initContextMenuEventDelegation(contentElem, scope.evDataService, scope.evEventService);
-
-                    evDomManager.addScrollListener(elements, scope.evDataService, scope.evEventService);
-                }
+                init();
 
                 $(window).on('resize', function () {
 
