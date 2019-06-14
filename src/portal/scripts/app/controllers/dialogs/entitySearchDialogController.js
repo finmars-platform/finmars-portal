@@ -13,10 +13,12 @@
         var vm = this;
 
         vm.entityType = data.entityType;
+        vm.itemsCount = null;
 
         vm.readyStatus = false;
 
-        vm.itemsCount = null;
+        var selectedRow = data.selectedItem;
+
         var page = 1;
         var pageSize = 40;
         // var lastPageReached = false;
@@ -323,7 +325,7 @@
                // Call function when scroll reaches specified position
                if (elemScrollHeight - scrollElem.scrollTop() < scrollPositionToLoadItems && !scrollAtTheEnd) {
                    scrollAtTheEnd = true;
-
+                   console.log("smart search loadOnScroll works", vm.itemsCount);
                    if (vm.itemsCount && vm.itemsCount > vm.items.length) {
                        page = page + 1;
 
@@ -363,9 +365,21 @@
 
             if (data.hasOwnProperty('count')) {
                 vm.itemsCount = data.count;
-            }
+            };
 
             vm.items = data.results;
+
+            if (selectedRow) {
+                vm.items = vm.items.map(function (item) {
+
+                    if (item.id === selectedRow) {
+                        item.active = true;
+                    }
+
+                    return item;
+                });
+            };
+
             $scope.$apply();
             vm.loadOnScroll();
 

@@ -1,8 +1,8 @@
 <div>
 
-    <div data-ng-if="vm.readyStatus.content">
+    <div data-ng-if="vm.readyStatus.content" layout="row">
 
-        <div>
+        <div layout="column" flex="33">
 
             <h4>
                 Text Fields
@@ -21,7 +21,7 @@
 
         </div>
 
-        <div>
+        <div layout="column" flex="33">
 
             <h4>
                 Number Fields
@@ -40,7 +40,7 @@
 
         </div>
 
-        <div>
+        <div layout="column" flex="33">
 
             <h4>
                 Date Fields
@@ -59,18 +59,16 @@
 
         </div>
 
+    </div>
 
-        <div layout="row" class="m-t-16">
+    <div layout="row" class="m-t-16">
 
-            <md-button class="md-raised md-primary" data-ng-click="vm.save()">Save</md-button>
+        <md-button class="md-raised md-primary" data-ng-click="vm.save()">Save</md-button>
 
-            <div data-ng-if="vm.readyStatus.processing" class="m-l-16 m-t-8">
-                <md-progress-circular md-mode="indeterminate"
-                                      md-diameter="24"></md-progress-circular>
-            </div>
-
+        <div data-ng-if="vm.readyStatus.processing" class="m-l-16 m-t-8">
+            <md-progress-circular md-mode="indeterminate"
+                                  md-diameter="24"></md-progress-circular>
         </div>
-
 
     </div>
 

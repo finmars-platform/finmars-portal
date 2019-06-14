@@ -419,7 +419,7 @@
 
                         if (scope.entityType !== 'transaction-report') {
 
-                            if (scope.entityType === 'pnl-report') {
+                            if (scope.entityType === 'pl-report') {
 
                                 reportOptions.pl_first_date = todaysDate;
 

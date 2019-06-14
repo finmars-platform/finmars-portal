@@ -15,9 +15,7 @@
                 inputText: '<',
                 entityType: '='
             },
-            link: function (scope, elem, attrs, ngModelCtrl) {
-
-                scope.textValue = scope.inputText;
+            link: function (scope, elem, attrs) {
 
                 $(elem).on('click', function (event) {
 
@@ -36,14 +34,15 @@
                         clickOutsideToClose: false,
                         locals: {
                             data: {
-                                entityType: scope.entityType
+                                entityType: scope.entityType,
+                                selectedItem: scope.item
                             }
                         }
                     }).then(function (res) {
 
                         if (res.status === 'agree') {
                             scope.item = res.data.item.id;
-                            scope.textValue = res.data.item.name;
+                            scope.inputText = res.data.item.name;
 
                             console.log('res', res);
 

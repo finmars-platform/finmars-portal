@@ -116,16 +116,31 @@
 
                     <div layout="column" style="padding-top: 16px">
 
-                        <!--<md-input-container>
+                        <!--<div>
+                            <md-input-container>
+                                <label class="uncut-text-on-focus-label">Date to calculate report by</label>
+                                <md-select ng-model="reportOptions.report_currency"
+                                           md-container-class="common-select-container"
+                                           md-on-close="searchTerm = ''"
+                                           ng-change="updateReportOptions()">
+                                    <md-select-header>
+                                        <input data-ng-model="searchTerm"
+                                               type="search"
+                                               placeholder="Search for a ..."
+                                               class="md-text md-select-search-pattern select-input-filter" ng-keydown="$event.stopPropagation()">
+                                    </md-select-header>
 
-                            <label for="">Begin date</label>
+                                    <div class="select-options-holder">
 
-                            <zh-date-picker data-date-value="reportOptions.begin_date"
-                                            data-ng-model="reportOptions.begin_date"
-                                            position="left"
-                                            ng-change="updateReportOptions()"></zh-date-picker>
+                                        <md-option ng-repeat="item in currencies | orderBy:'-'+field.name | filter:{name: searchTerm}" ng-value="item.id">
+                                            {{item.name}}
+                                        </md-option>
 
-                        </md-input-container>-->
+                                    </div>
+
+                                </md-select>
+                            </md-input-container>
+                        </div>-->
 
                         <div>
                             <complex-zh-date-picker data-date="reportOptions.pl_first_date"
