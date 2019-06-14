@@ -36,7 +36,11 @@
                     data: {
                         entityType: vm.entityType
                     }
-                }
+                },
+                preserveScope: true,
+                autoWrap: true,
+                skipHide: true,
+                multiple: true
             }).then(function (res) {
                 if (res.status === 'agree') {
                     vm.getList()
@@ -55,7 +59,11 @@
                         entityType: vm.entityType,
                         customField: Object.assign({}, item)
                     }
-                }
+                },
+                preserveScope: true,
+                autoWrap: true,
+                skipHide: true,
+                multiple: true
             }).then(function (res) {
                 if (res.status === 'agree') {
                     vm.getList()
