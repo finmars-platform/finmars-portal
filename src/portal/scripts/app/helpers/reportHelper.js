@@ -359,7 +359,7 @@
 
         if (result.hasOwnProperty('custom_fields')) {
             result.custom_fields.forEach(function (customField) {
-                var key = 'custom_fields.' + customField.custom_field;
+                var key = 'custom_fields.' + customField.user_code;
 
                 result[key] = customField.value;
 

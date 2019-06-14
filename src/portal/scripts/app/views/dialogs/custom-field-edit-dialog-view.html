@@ -1,24 +1,48 @@
 <md-dialog aria-label="" ng-cloak class="width-40 draggable-dialog" drag-dialog>
     <md-toolbar>
-        <div class="md-toolbar-tools">
+        <div class="md-toolbar-tools" style="height: 64px;">
             <ng-md-icon icon="dialpad" size="20" class="draggable-dialog-sign"></ng-md-icon>
             <h2>Edit Custom Column</h2>
             <span flex></span>
         </div>
     </md-toolbar>
     <md-dialog-content>
-        <div layout="row">
+        <div layout="column">
 
-            <div class="a-m-tab-content p-t-24 p-l-16 p-r-16">
+            <div class="a-m-tab-content p-t-24 p-l-16 p-r-16 width-50">
+
                 <md-input-container class="md-block" flex-gt-sm>
                     <label>Custom Column Name</label>
-                    <input data-ng-model="vm.customField.name" placeholder="{{vm.customField.name}}">
+                    <input data-ng-model="vm.customField.name">
                 </md-input-container>
 
                 <md-input-container class="md-block" flex-gt-sm>
                     <label>Custom Column User Code</label>
-                    <input data-ng-model="vm.customField.user_code" disabled placeholder="{{vm.customField.user_code}}">
+                    <input data-ng-model="vm.customField.user_code" data-ng-keyup="vm.validateUserCode()">
                 </md-input-container>
+
+                <div class="color-danger m-l-16 m-b-24" data-ng-if="vm.userCodeError">Only alphabet, numbers and underscores allowed</div>
+
+                <div flex-gt-sm>
+                    <md-input-container class="md-block">
+                        <label>Value type</label>
+                        <md-select ng-model="vm.customField.value_type">
+                            <md-option ng-repeat="item in vm.valueTypes"
+                                       value="{{item.value}}">
+                                {{item['name']}}
+                            </md-option>
+                        </md-select>
+                    </md-input-container>
+                </div>
+
+
+                <!--<md-button class="md-raised md-primary" data-ng-click="vm.setupConfig($event)">-->
+                <!--Define range-->
+                <!--</md-button>-->
+
+            </div>
+
+            <div class="a-m-tab-content p-t-24 p-l-16 p-r-16 width-80">
 
                 <div flex-gt-sm layout="row">
                     <md-input-container class="md-block width-80">
@@ -26,13 +50,10 @@
                         <input data-ng-model="vm.customField.expr">
                     </md-input-container>
 
-                    <expression-editor-button data-item="vm.customField.expr" data-data="{groups: [vm.inputsGroup], functions: [vm.inputsFunctions]}"></expression-editor-button>
+                    <expression-editor-button data-item="vm.customField.expr"
+                                              data-data="{groups: [vm.inputsGroup], functions: [vm.inputsFunctions]}"></expression-editor-button>
 
                 </div>
-
-                <!--<md-button class="md-raised md-primary" data-ng-click="vm.setupConfig($event)">-->
-                    <!--Define range-->
-                <!--</md-button>-->
 
             </div>
 
@@ -42,7 +63,8 @@
         <md-button class="md-raised" ng-click="vm.cancel()">
             Cancel
         </md-button>
-        <md-button class="md-raised" ng-click="vm.agree()" style="margin-right:20px;">
+        <md-button class="md-raised md-primary {{vm.userCodeError ? 'disabled-btn': ''}}" ng-click="vm.agree()"
+                   style="margin-right:20px;">
             Save
         </md-button>
     </md-dialog-actions>
