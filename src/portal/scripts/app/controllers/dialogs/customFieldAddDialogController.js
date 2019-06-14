@@ -22,6 +22,34 @@
 
         vm.inputsFunctions = [];
 
+        vm.valueTypes = [
+            {
+                name: 'Number',
+                value: 20
+            },
+            {
+                name: 'Text',
+                value: 10
+            },
+            {
+                name: 'Date',
+                value: 40
+            }
+        ];
+
+        vm.validateUserCode = function () {
+
+            var expression = /^\w+$/;
+
+            if (expression.test(vm.customField.user_code)) {
+                vm.userCodeError = false;
+            } else {
+                vm.userCodeError = true;
+
+            }
+
+        };
+
         vm.setupConfig = function ($event) {
             $mdDialog.show({
                 controller: 'CustomFieldsConfigDialogController as vm',
