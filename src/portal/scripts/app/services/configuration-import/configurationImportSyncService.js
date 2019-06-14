@@ -356,9 +356,9 @@
                                     item: errorOptions.item,
                                     content_type: errorOptions.content_type,
                                     error: {
-                                        message: "Error. Transaction type: " + user_code + ' is not found'
+                                        message: "Missing Transaction Type: " + user_code + ' is not found'
                                     },
-                                    mode: 'The related Transaction Type has been deleted from layout'
+                                    mode: 'Transaction Import Scheme has not been imported'
 
                                 });
 

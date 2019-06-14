@@ -66,7 +66,7 @@
                 vm.custom = data.results;
 
                 vm.custom.forEach(function (customItem) {
-                    customItem.key = 'custom_fields.' + customItem.id;
+                    customItem.key = 'custom_fields.' + customItem.user_code;
                     customItem.name = 'Custom Field. ' + customItem.name;
                 });
 
@@ -590,7 +590,7 @@
                             entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
                         }
 
-                       $scope.$apply();
+                        $scope.$apply();
 
                     } else if (exist && target) {
 
