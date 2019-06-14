@@ -6,6 +6,7 @@
     'use strict';
 
     var entityResolverService = require('../../services/entityResolverService');
+    var fieldResolverService = require('../../services/fieldResolverService');
 
     var usersGroupService = require('../../services/usersGroupService');
     var usersService = require('../../services/usersService');
@@ -943,6 +944,37 @@
 
         };
 
+        vm.getActionTypeName = function (action) {
+
+            if (action.instrument) {
+                return "Create Instrument";
+            };
+
+            if (action.transaction) {
+                return "Create Transaction";
+            };
+
+            if (action.instrument_factor_schedule) {
+                return "Create Factor Schedule";
+            };
+
+            if (action.instrument_manual_pricing_formula) {
+                return "Create Manual Pricing Formula";
+            };
+
+            if (action.instrument_accrual_calculation_schedules) {
+                return "Create Accrual Calculation Schedules";
+            };
+
+            if (action.instrument_event_schedule) {
+                return "Create Event Schedule";
+            };
+
+            if (action.instrument_event_schedule_action) {
+                return "Create Event Schedule Action"
+            };
+        };
+
         vm.preventSpace = function ($event) {
 
             $event.stopPropagation();
@@ -1113,6 +1145,9 @@
 
                         if (relation[defaultPropertyName] === "-" || relation[defaultPropertyName] === 'Default') {
                             item[propertyName][fieldName] = relation.id;
+
+                            item[propertyName][fieldName + '_object'] = {};
+                            item[propertyName][fieldName + '_object']['name'] = relation[defaultPropertyName];
                         }
 
                     });

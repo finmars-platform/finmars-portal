@@ -34,7 +34,7 @@
                 scope.components = scope.evDataService.getComponents();
 
                 scope.columns = scope.evDataService.getColumns();
-                console.log("report key columns", scope.columns, scope.grouping);
+
                 function setDefaultGroupType(evDataService) {
 
                     var groups = evDataService.getGroups();
@@ -314,6 +314,10 @@
                             if (newColumn.hasOwnProperty('key') && newColumn.key === column.key) {
                                 newColumn.___column_id = column.___column_id;
                                 newColumn.style = column.style;
+
+                                if (column.hasOwnProperty('layout_name')) {
+                                    newColumn.layout_name = column.layout_name;
+                                }
                             }
 
                             if (newColumn.hasOwnProperty('id') && newColumn.id === column.id) {
@@ -402,7 +406,6 @@
                                 if (resultItem.___group_type_id !== groups[index].___group_type_id) {
                                     isChanged = true;
                                 }
-
 
                             });
 

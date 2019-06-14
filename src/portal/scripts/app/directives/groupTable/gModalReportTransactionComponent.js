@@ -63,7 +63,6 @@
 
             vm.counterpartyAttrs = rvAttributesHelper.getAllAttributesAsFlatList('counterparties.counterparty', 'counterparty', 'Counterparty', {maxDepth: 1});
 
-
             // instruments
 
             vm.linkedInstrumentAttrs = rvAttributesHelper.getAllAttributesAsFlatList('instruments.instrument', 'linked_instrument', 'Linked Instrument', {maxDepth: 1});
@@ -104,21 +103,21 @@
 
                 data.results.forEach(function (field) {
 
-                    vm.complexTransactionAttrs.map(function (entityAttr, index) {
+                    vm.complexTransactionAttrs = vm.complexTransactionAttrs.map(function (entityAttr, index) {
 
                         if (entityAttr.key === 'complex_transaction.' + field.key) {
-                            entityAttr.name = 'Complex Transaction. ' + field.name
+                            entityAttr.name = 'Complex Transaction. ' + field.name;
                         }
 
-                        // if (entityAttr.key === 'complex_transaction.transaction_type.' + field.key) {
-                        //     entityAttr.name = 'Complex Transaction. Transaction Type. ' + field.name
-                        // }
-                        if (entityAttr.key.indexOf('complex_transaction.transaction_type.') !== -1) {
-                            vm.complexTransactionAttrs.splice(index, 1);
-                        }
+                        return entityAttr;
 
-                    })
+                    });
 
+                });
+
+
+                vm.complexTransactionAttrs = vm.complexTransactionAttrs.filter(function (entityAttr) {
+                    return entityAttr.key.indexOf('complex_transaction.transaction_type.') === -1
                 });
 
                 customFieldService.getList(vm.entityType).then(function (data) {

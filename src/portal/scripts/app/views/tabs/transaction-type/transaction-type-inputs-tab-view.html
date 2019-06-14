@@ -58,13 +58,13 @@
                 <td data-ng-bind="vm.bindValueType(item)" data-ng-if="!item.editStatus"></td>
                 <td data-ng-bind="vm.bindContentType(item)" data-ng-if="!item.editStatus"></td>
                 <td data-ng-bind="vm.resolveDefaultValue(item)" data-ng-if="!item.editStatus"></td>
-                <td data-ng-bind="item.value_expr" data-ng-if="!item.editStatus"></td>
                 <td data-ng-if="!item.editStatus">
                     <span class="bool-table-view" data-ng-if="item.is_fill_from_context">
                                 <ng-md-icon icon="check_circle"
                                             size="16"
                                             style="fill:rgb(0,0,0);"></ng-md-icon></span>
                 </td>
+                <td data-ng-bind="item.value_expr" data-ng-if="!item.editStatus"></td>
                 <td data-ng-if="!item.editStatus" class="table-misc-cell">
                     <md-menu>
                         <!-- Trigger element is a md-button with an icon -->

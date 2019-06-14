@@ -5,7 +5,7 @@
 
     var uiService = require('../../../services/uiService');
 
-    module.exports = function ($scope) {
+    module.exports = function ($scope, $mdDialog) {
 
         console.log('here?');
 
@@ -212,8 +212,34 @@
 
                 vm.getData();
 
-            });
+                $mdDialog.show({
+                    controller: 'SuccessDialogController as vm',
+                    templateUrl: 'views/dialogs/success-dialog-view.html',
+                    locals: {
+                        success: {
+                            title: 'Success',
+                            description: 'Changes have been saved'
+                        }
+                    },
+                    autoWrap: true,
+                    skipHide: true
+                });
 
+            }).catch(function (error) {
+
+                $mdDialog({
+                    controller: 'WarningDialogController as vm',
+                    templateUrl: 'views/warning-dialog-view.html',
+                    clickOutsideToClose: false,
+                    locals: {
+                        warning: {
+                            title: 'Error',
+                            description: 'Error occured while trying to save fields'
+                        }
+                    }
+                });
+
+            });
 
         };
 

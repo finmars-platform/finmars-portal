@@ -26,8 +26,8 @@ div.h-instrument-select {
   left: 0;
   z-index: 2;
   padding-top: 16px;
-  margin-left: 20px;
-  margin-right: 37px;
+  margin-left: 18px;
+  margin-right: 35px;
 
   table {
     table-layout: fixed;
@@ -39,7 +39,7 @@ div.h-instrument-select {
 }
 
 .entity-search-table-container {
-  padding: 20px 20px 0 20px;
+  padding: 20px 20px 3px 20px;
   overflow-y: auto;
 }
 
@@ -69,8 +69,11 @@ table.entity-search-table {
   }
 
   tbody {
-    tr {
+    tr.entity-search-row {
       height: 37px;
+    }
+    tr.entity-search-row.active {
+      outline: solid rgb(63,81,181) 2px;
     }
     td {
       overflow: hidden;

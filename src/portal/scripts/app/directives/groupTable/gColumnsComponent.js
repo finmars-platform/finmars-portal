@@ -180,7 +180,6 @@
                         }
                     })
 
-
                 };
 
                 scope.selectRoundFormat = function (column, type) {

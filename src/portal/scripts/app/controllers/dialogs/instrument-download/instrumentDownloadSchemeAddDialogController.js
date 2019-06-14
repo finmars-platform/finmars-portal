@@ -24,7 +24,7 @@
         vm.entityType = 'instrument';
 
         vm.inputsGroup = {
-            "name": "<b>Imported</b>",
+            "name": "<b>Downloaded</b>",
             "key": 'input'
         };
 

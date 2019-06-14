@@ -67,7 +67,8 @@
                     <tr data-ng-click="vm.selectRow(item)"
                         ng-dblclick="vm.selectAndSave(item)"
                         data-ng-repeat="item in vm.items track by item.id"
-                        class="{{item.active ? 'active' : ''}}">
+                        ng-class="{'active': item.active}"
+                        class="entity-search-row">
                         <td data-ng-repeat="column in vm.columns[vm.entityType]"
                             data-ng-bind="vm.getTdValue(item, column.key)">
                         </td>

@@ -75,14 +75,14 @@
                                 }
 
                                 // Compare position number of item with maximum allowed
-                                if (filterType === 'top_n') {
+                                /*if (filterType === 'top_n') {
                                     valueFromTable = tableRowIndex;
                                 }
 
                                 if (filterType === 'bottom_n') {
                                     valueFromTable = tableRowIndex;
                                     filterArgument = items.length - 1 - filterArgument // calculate how much items from beginning should be skipped
-                                }
+                                }*/
                                 // < Compare position number of item with maximum allowed >
 
                             }
@@ -187,7 +187,7 @@
                 }
                 break;
 
-            case 'top_n':
+            /*case 'top_n':
                 if (valueToFilter < filterBy) {
                     return true;
                 }
@@ -197,7 +197,7 @@
                 if (valueToFilter > filterBy) {
                     return true;
                 }
-                break;
+                break;*/
 
             case 'from_to':
                 var minValue = filterBy.min_value;
