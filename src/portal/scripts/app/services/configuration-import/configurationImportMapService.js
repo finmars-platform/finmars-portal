@@ -926,7 +926,7 @@
                             item: errorOptions.item,
                             content_type: errorOptions.content_type,
                             error: {
-                                message: 'Missing attribute ' + code
+                                message: 'Missing attribute: ' + code
                             },
                             mode: 'The related column has been deleted from layout'
 
@@ -957,7 +957,7 @@
                         item: errorOptions.item,
                         content_type: errorOptions.content_type,
                         error: {
-                            message: 'Missing attribute ' + code
+                            message: 'Missing attribute: ' + code
                         },
                         mode: 'The related column has been deleted from layout'
 
