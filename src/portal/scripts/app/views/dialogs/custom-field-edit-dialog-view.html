@@ -21,7 +21,9 @@
                     <input data-ng-model="vm.customField.user_code" data-ng-keyup="vm.validateUserCode()">
                 </md-input-container>
 
-                <div class="color-danger m-l-16 m-b-24" data-ng-if="vm.userCodeError">Only alphabet, numbers and underscores allowed</div>
+                <div class="color-danger m-l-16 m-b-24" data-ng-if="vm.userCodeError">Only alphabet, numbers and
+                    underscores allowed
+                </div>
 
                 <div flex-gt-sm>
                     <md-input-container class="md-block">
@@ -33,6 +35,18 @@
                             </md-option>
                         </md-select>
                     </md-input-container>
+                </div>
+
+                <div class="m-t-16 m-b-16 p-l-16">
+
+                    <div>
+
+                        <div><label for="">Notes</label></div>
+                        <textarea name="" data-ng-model="vm.customField.notes" id="" cols="60" rows="5">
+
+                        </textarea>
+
+                    </div>
                 </div>
 
 
@@ -50,8 +64,8 @@
                         <input data-ng-model="vm.customField.expr">
                     </md-input-container>
 
-                    <expression-editor-button data-item="vm.customField.expr"
-                                              data-data="{groups: [vm.inputsGroup], functions: [vm.inputsFunctions]}"></expression-editor-button>
+                    <expression-editor-button data-item="vm.customField.expr" data-ng-if="vm.readyStatus.content"
+                                              data-data="{groups: vm.inputsGroups, functions: vm.inputsFunctions}"></expression-editor-button>
 
                 </div>
 
