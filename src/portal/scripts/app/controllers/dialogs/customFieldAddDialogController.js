@@ -24,7 +24,7 @@
 
         vm.inputsGroups = [
             {
-                "name": "<b>Report Columns</b>",
+                "name": "<b>Columns</b>",
                 "key": 'input'
             },
             {
@@ -157,11 +157,18 @@
                     attrsList = attrsList.concat(strategy2attrs);
                     attrsList = attrsList.concat(strategy3attrs);
 
+                    var captions = {
+                        10: 'String',
+                        20: 'Number',
+                        40: 'Date'
+                    };
+
+
                     result = attrsList.map(function (attr) {
 
                         return {
-                            "name": "Column: " + attr.name,
-                            "description": "Column: " + attr.name + ". Reference: " + attr.key,
+                            "name": "Column: " + attr.name + ' (' + attr.key + ')',
+                            "description": "Column Name: " + attr.name + "\nReference (key ID): " + attr.key + '\nValue Type: ' + captions[attr.value_type],
                             "groups": "input",
                             "func": attr.key
                         }
@@ -298,11 +305,18 @@
                     attrsList = attrsList.concat(strategy3positionAttrs);
 
 
+                    var captions = {
+                        10: 'String',
+                        20: 'Number',
+                        40: 'Date'
+                    };
+
+
                     result = attrsList.map(function (attr) {
 
                         return {
-                            "name": "Column: " + attr.name,
-                            "description": "Column: " + attr.name + ". Reference: " + attr.key,
+                            "name": "Column: " + attr.name + ' (' + attr.key + ')',
+                            "description": "Column Name: " + attr.name + "\nReference (key ID): " + attr.key + '\nValue Type: ' + captions[attr.value_type],
                             "groups": "input",
                             "func": attr.key
                         }
