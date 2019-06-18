@@ -224,7 +224,18 @@
                     locals: {
                         warning: {
                             title: 'Warning',
-                            description: 'Changing user code affects on Report Viewer Layouts, Entity Viewer Layouts, Custom Fields.'
+                            description: 'Changing the Reference Name may affect the Custom Columns and the Layouts which are linked﻿ to this User Attribute. Please type the new Reference Name should you wish to proceed (use programming language naming rules)',
+                            actionsButtons: [
+                                {
+                                    name: "CANCEL",
+                                    response: {}
+                                },
+                                {
+                                    name: "OK, RENAME",
+                                    response: {status: 'agree'}
+                                }
+                            ]
+
                         }
                     },
                     preserveScope: true,
