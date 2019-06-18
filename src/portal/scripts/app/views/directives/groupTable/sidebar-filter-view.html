@@ -116,31 +116,30 @@
 
                     <div layout="column" style="padding-top: 16px">
 
-                        <!--<div>
-                            <md-input-container>
-                                <label class="uncut-text-on-focus-label">Date to calculate report by</label>
-                                <md-select ng-model="reportOptions.report_currency"
-                                           md-container-class="common-select-container"
-                                           md-on-close="searchTerm = ''"
-                                           ng-change="updateReportOptions()">
-                                    <md-select-header>
-                                        <input data-ng-model="searchTerm"
-                                               type="search"
-                                               placeholder="Search for a ..."
-                                               class="md-text md-select-search-pattern select-input-filter" ng-keydown="$event.stopPropagation()">
-                                    </md-select-header>
+                        <md-input-container style="margin-bottom: 24px;">
+                            <label class="uncut-text-on-focus-label" for="transaction-report-date-type">Date type</label>
+                            <md-select ng-model="reportOptions.date_field"
+                                       md-container-class="common-select-container"
+                                       md-on-close="searchTerm = ''"
+                                       ng-change="updateReportOptions()" id="transaction-report-date-type">
+                                <md-select-header>
+                                    <input data-ng-model="searchTerm"
+                                           type="search"
+                                           placeholder="Search for a ..."
+                                           class="md-text md-select-search-pattern select-input-filter" ng-keydown="$event.stopPropagation()">
+                                </md-select-header>
 
-                                    <div class="select-options-holder">
+                                <div class="select-options-holder">
+                                    <md-option ng-hide="filterItemsOutsideNgrepeat('Report date', searchTerm)" ng-value="null">Report date</md-option>
+                                    <md-option ng-repeat="userDate in transactionsUserDates | orderBy: userDate.name | filter:{name: searchTerm}"
+                                               ng-value="userDate.key">
+                                        {{userDate.name}}
+                                    </md-option>
 
-                                        <md-option ng-repeat="item in currencies | orderBy:'-'+field.name | filter:{name: searchTerm}" ng-value="item.id">
-                                            {{item.name}}
-                                        </md-option>
+                                </div>
 
-                                    </div>
-
-                                </md-select>
-                            </md-input-container>
-                        </div>-->
+                            </md-select>
+                        </md-input-container>
 
                         <div>
                             <complex-zh-date-picker data-date="reportOptions.pl_first_date"

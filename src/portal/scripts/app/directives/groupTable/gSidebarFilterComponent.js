@@ -14,7 +14,7 @@
     var attributeTypeService = require('../../services/attributeTypeService');
     var metaService = require('../../services/metaService');
 
-    var userFilterService = require('../../services/rv-data-provider/user-filter.service');
+    var uiService = require('../../services/uiService');
 
     module.exports = function ($mdDialog) {
         return {
@@ -35,6 +35,8 @@
                 }
 
                 scope.isReport = metaService.isReport(scope.evDataService.getEntityType());
+
+                var isRootEntityViewer = scope.evDataService.isRootEntityViewer();
 
                 scope.fields = {};
 
@@ -158,6 +160,10 @@
                     }
 
                     scope.evDataService.setInterfaceLayout(interfaceLayout);
+
+                    if (isRootEntityViewer) {
+                        scope.evEventService.dispatchEvent(evEvents.TOGGLE_SPLIT_PANEL_FILTER_AREA);
+                    }
 
                     var interval = setInterval(function () {
                         $(window).trigger('resize');
@@ -400,7 +406,25 @@
 
                 };
 
+                scope.filterItemsOutsideNgrepeat = function (itemValue, filterValue) {
+
+                    if (filterValue && itemValue.indexOf(filterValue) === -1) {
+                        return true;
+                    }
+
+                    return false;
+                };
+
                 var init = function () {
+
+                    uiService.getTransactionFieldList().then(function (data) {
+
+                        var transactionFields = data.results;
+                        scope.transactionsUserDates = transactionFields.filter(function (field) {
+                            return field.key.indexOf('user_date') !== -1;
+                        });
+
+                    });
 
                     syncFilters();
 
@@ -435,6 +459,27 @@
                         // prepareReportLayoutOptions();
 
                     });
+
+                    if (!isRootEntityViewer) {
+
+                        scope.evEventService.addEventListener(evEvents.TOGGLE_SPLIT_PANEL_FILTER_AREA, function () {
+
+                            var interfaceLayout = scope.evDataService.getInterfaceLayout();
+
+                            if (scope.sideNavCollapsed) {
+                                interfaceLayout.filterArea.width = 239;
+                            } else {
+                                interfaceLayout.filterArea.width = 55;
+                            }
+
+                            scope.sideNavCollapsed = !scope.sideNavCollapsed;
+
+                            scope.evDataService.setInterfaceLayout(interfaceLayout);
+
+                            scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE_VIEWPORT);
+
+                        });
+                    }
 
                     scope.evEventService.dispatchEvent(evEvents.UPDATE_EV_UI);
 

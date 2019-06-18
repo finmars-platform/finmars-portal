@@ -247,11 +247,16 @@
                     var additions = {
                         isOpen: false,
                         type: ''
-
                     };
 
+                    scope.evDataService.setSplitPanelStatus(false);
                     scope.evDataService.setAdditions(additions);
+
+                    scope.currentAdditions = scope.evDataService.getAdditions();
+
                     scope.evEventService.dispatchEvent(evEvents.ADDITIONS_CHANGE);
+                    scope.evEventService.dispatchEvent(evEvents.UPDATE_ENTITY_VIEWER_CONTENT_WRAP_SIZE);
+                    scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE_VIEWPORT);
 
                 }
 
@@ -260,7 +265,6 @@
 
                     if (scope.currentAdditions.type === type) {
 
-                        scope.evDataService.setSplitPanelStatus(false);
                         clearAdditions()
 
                     } else {
@@ -273,6 +277,8 @@
                         scope.evDataService.setSplitPanelStatus(true);
                         scope.evDataService.setAdditions(additions);
                         scope.evEventService.dispatchEvent(evEvents.ADDITIONS_CHANGE);
+                        scope.currentAdditions = scope.evDataService.getAdditions();
+
                     }
 
                 };
@@ -339,7 +345,7 @@
                     })
                 };
 
-                var createNewLayout = function () {
+                var createNewLayoutMethod = function () {
 
                     scope.evDataService.resetData();
 
@@ -488,6 +494,8 @@
 
                         } else { // For transaction report
 
+                            reportOptions.date_field = null;
+
                             reportOptions.pl_first_date = todaysDate;
 
                             reportLayoutOptions.datepickerOptions.reportFirstDatepicker = {
@@ -542,25 +550,25 @@
                                 if (layoutCurrentConfig.hasOwnProperty('id')) {
 
                                     uiService.updateListLayout(layoutCurrentConfig.id, layoutCurrentConfig).then(function () {
-                                        createNewLayout();
+                                        createNewLayoutMethod();
                                     });
 
                                 } else {
 
                                     uiService.createListLayout(scope.entityType, layoutCurrentConfig).then(function () {
-                                        createNewLayout();
+                                        createNewLayoutMethod();
                                     });
 
                                 }
 
                             } else if ('do_not_save_layout') {
-                                createNewLayout();
+                                createNewLayoutMethod();
                             }
 
                         });
 
                     } else {
-                        createNewLayout();
+                        createNewLayoutMethod();
                     }
                 };
 

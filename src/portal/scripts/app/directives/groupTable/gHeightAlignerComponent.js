@@ -22,11 +22,15 @@
                 var lastMouseMoveEvent = null;
 
                 var contentWrapElem = $('.g-content-wrap').first();
-                // var workAreaElem = $('.g-workarea-wrap').first();
 
                 function activateHeightSlider() {
 
-                    $('.g-height-slider').bind('mousedown', function (e) {
+                    var splitPanelResizer = $('.g-height-slider')
+
+                    $(splitPanelResizer).bind('mousedown', function (e) {
+
+                        e.stopPropagation();
+                        e.preventDefault();
 
                         var interfaceLayout = scope.evDataService.getInterfaceLayout();
 
@@ -94,50 +98,49 @@
 
                     var headerToolbarHeight = interfaceLayout.headerToolbar.height;
                     var bodyHeight = document.body.clientHeight;
-                    var splitPanelHeight = Math.floor((bodyHeight - headerToolbarHeight) / 2);
+                    var splitPanelHeight = interfaceLayout.splitPanel.height;
+                    if (!splitPanelHeight || splitPanelHeight === 0) {
+                        splitPanelHeight = Math.floor((bodyHeight - headerToolbarHeight) / 2);
+                    }
 
                     var splitPanelElem = $('.g-additions');
-                    var splitPanelWrapperElem = splitPanelElem.find('.g-content-wrap');
 
                     interfaceLayout.splitPanel.height = splitPanelHeight;
 
-
                     contentWrapElem.height(bodyHeight - headerToolbarHeight - splitPanelHeight);
-
                     splitPanelElem.height(splitPanelHeight);
-                    // splitPanelWrapperElem.height(splitPanelHeight);
 
                     scope.evDataService.setInterfaceLayout(interfaceLayout);
-                    scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE_VIEWPORT);
 
                 };
 
-                $(window).on('resize', function () {
-                    // setSplitHeights();
+                function gHeightAlignerMethodToTriggerOnWindowResize() {
                     scope.evEventService.dispatchEvent(evEvents.UPDATE_ENTITY_VIEWER_CONTENT_WRAP_SIZE);
-                });
+                }
 
-                scope.evEventService.addEventListener(evEvents.ADDITIONS_CHANGE, function () {
+                $(window).on('resize', gHeightAlignerMethodToTriggerOnWindowResize);
 
+                var additionsChangeCallbackIndex = scope.evEventService.addEventListener(evEvents.ADDITIONS_CHANGE, function () {
                     scope.additions = scope.evDataService.getAdditions();
 
                     setSplitHeights()
                 });
 
-                scope.evEventService.addEventListener(evEvents.REDRAW_TABLE, function () {
+                /*var redrawTableCallbackIndex = scope.evEventService.addEventListener(evEvents.REDRAW_TABLE, function () {
 
                     setSplitHeights()
                 });
 
-                scope.evEventService.addEventListener(evEvents.UPDATE_TABLE, function () {
+                var updateTableCallbackIndex = scope.evEventService.addEventListener(evEvents.UPDATE_TABLE, function () {
 
                     setSplitHeights()
 
-                });
+                });*/
 
                 scope.init = function () {
 
                     setSplitHeights();
+                    scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE_VIEWPORT);
                     activateHeightSlider();
 
                 };
@@ -145,7 +148,12 @@
                 scope.init();
 
                 scope.$on('$destroy', function () {
-                    setDefaultHeights()
+
+                    $(window).off('resize', gHeightAlignerMethodToTriggerOnWindowResize);
+                    scope.evEventService.removeEventListener(evEvents.ADDITIONS_CHANGE, additionsChangeCallbackIndex);
+                    /*scope.evEventService.removeEventListener(evEvents.REDRAW_TABLE, redrawTableCallbackIndex);
+                    scope.evEventService.removeEventListener(evEvents.UPDATE_TABLE, updateTableCallbackIndex);*/
+                    setDefaultHeights();
                 })
 
             }

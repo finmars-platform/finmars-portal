@@ -227,7 +227,6 @@
                 data.filters = [];
             }
 
-
         }
 
         function getFilters() {
@@ -764,6 +763,12 @@
                 listLayout.data = Object.assign({}, defaultList[0].data);
 
             }
+
+            /*var interfaceLayout = getInterfaceLayout();
+            console.log("split panel setLayoutCurrentConfig interfaceLayout", interfaceLayout);
+            if (activeListLayout.interfaceLayout) {
+                interfaceLayout = Object.assign(interfaceLayout, activeListLayout.interfaceLayout)
+            }*/
 
             if (isReport) {
 

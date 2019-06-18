@@ -26,19 +26,12 @@
             console.log('parentEntityViewerDataService', parentEntityViewerDataService);
             console.log('parentEntityViewerEventService', parentEntityViewerEventService);
 
-
             vm.listViewIsReady = false;
 
             vm.entityViewerDataService = null;
             vm.entityViewerEventService = null;
 
             vm.setEventListeners = function () {
-
-                parentEntityViewerEventService.addEventListener(evEvents.UPDATE_SPLIT_PANEL_TABLE_VIEWPORT, function () {
-
-                    vm.entityViewerEventService.dispatchEvent(evEvents.UPDATE_TABLE_VIEWPORT);
-
-                });
 
                 parentEntityViewerEventService.addEventListener(evEvents.ACTIVE_OBJECT_CHANGE, function () {
 
@@ -50,6 +43,18 @@
 
 
                     vm.entityViewerEventService.dispatchEvent(evEvents.ACTIVE_OBJECT_FROM_ABOVE_CHANGE);
+
+                });
+
+                parentEntityViewerEventService.addEventListener(evEvents.UPDATE_SPLIT_PANEL_TABLE_VIEWPORT, function () {
+
+                    vm.entityViewerEventService.dispatchEvent(evEvents.UPDATE_TABLE_VIEWPORT);
+
+                });
+
+                parentEntityViewerEventService.addEventListener(evEvents.TOGGLE_SPLIT_PANEL_FILTER_AREA, function () {
+
+                    vm.entityViewerEventService.dispatchEvent(evEvents.TOGGLE_SPLIT_PANEL_FILTER_AREA);
 
                 });
 
