@@ -129,44 +129,66 @@
 
                     if (vm.mode === 'overwrite') {
 
-                        vm.classifier.classifiers = [];
-                        vm.classifier.classifiers_flat = [];
-
-                        attributeTypeService.update(vm.entityType, vm.classifier.id, vm.classifier).then(function () {
-
-                            vm.classifier.classifiers = lines.map(function (line) {
-                                return {
-                                    name: line
+                        $mdDialog.show({
+                            controller: 'WarningDialogController as vm',
+                            templateUrl: 'views/warning-dialog-view.html',
+                            parent: angular.element(document.body),
+                            targetEvent: $event,
+                            clickOutsideToClose: false,
+                            locals: {
+                                warning: {
+                                    title: 'Warning',
+                                    description: 'All classifier tree will be overwritten with file content.'
                                 }
-                            });
+                            },
+                            preserveScope: true,
+                            autoWrap: true,
+                            skipHide: true,
+                            multiple: true
+                        }).then(function (res) {
+                            console.log('res', res);
+                            if (res.status === 'agree') {
 
-                            vm.classifier.classifiers_flat = [];
 
-                            attributeTypeService.update(vm.entityType, vm.classifier.id, vm.classifier).then(function () {
+                                vm.classifier.classifiers = [];
+                                vm.classifier.classifiers_flat = [];
 
-                                $mdDialog.show({
-                                    controller: 'SuccessDialogController as vm',
-                                    templateUrl: 'views/dialogs/success-dialog-view.html',
-                                    targetEvent: $event,
-                                    locals: {
-                                        success: {
-                                            title: "Success!",
-                                            description: 'You are successfully import classifiers'
+                                attributeTypeService.update(vm.entityType, vm.classifier.id, vm.classifier).then(function () {
+
+                                    vm.classifier.classifiers = lines.map(function (line) {
+                                        return {
+                                            name: line
                                         }
-                                    },
-                                    multiple: true,
-                                    preserveScope: true,
-                                    autoWrap: true,
-                                    skipHide: true
-                                }).then(function (value) {
-                                    $mdDialog.hide({status: 'agree'});
-                                });
+                                    });
 
-                            })
+                                    vm.classifier.classifiers_flat = [];
 
-                        })
+                                    attributeTypeService.update(vm.entityType, vm.classifier.id, vm.classifier).then(function () {
 
+                                        $mdDialog.show({
+                                            controller: 'SuccessDialogController as vm',
+                                            templateUrl: 'views/dialogs/success-dialog-view.html',
+                                            targetEvent: $event,
+                                            locals: {
+                                                success: {
+                                                    title: "Success!",
+                                                    description: 'You are successfully import classifiers'
+                                                }
+                                            },
+                                            multiple: true,
+                                            preserveScope: true,
+                                            autoWrap: true,
+                                            skipHide: true
+                                        }).then(function (value) {
+                                            $mdDialog.hide({status: 'agree'});
+                                        });
 
+                                    })
+
+                                })
+
+                            }
+                        });
                     }
 
 

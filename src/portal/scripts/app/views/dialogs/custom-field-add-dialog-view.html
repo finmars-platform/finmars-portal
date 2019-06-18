@@ -34,6 +34,18 @@
                     </md-input-container>
                 </div>
 
+                <div class="m-t-16 m-b-16 p-l-16">
+
+                    <div>
+
+                        <div><label for="">Notes</label></div>
+                        <textarea name="" data-ng-model="vm.customField.notes" id="" cols="60" rows="5">
+
+                        </textarea>
+
+                    </div>
+                </div>
+
 
                 <!--<md-button class="md-raised md-primary" data-ng-click="vm.setupConfig($event)">-->
                 <!--Define range-->
@@ -49,8 +61,8 @@
                         <input data-ng-model="vm.customField.expr">
                     </md-input-container>
 
-                    <expression-editor-button data-item="vm.customField.expr"
-                                              data-data="{groups: [vm.inputsGroup], functions: [vm.inputsFunctions]}"></expression-editor-button>
+                    <expression-editor-button data-item="vm.customField.expr" data-ng-if="vm.readyStatus.content"
+                                              data-data="{groups: vm.inputsGroups, functions: vm.inputsFunctions}"></expression-editor-button>
                 </div>
 
             </div>
