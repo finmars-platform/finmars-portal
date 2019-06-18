@@ -75,7 +75,7 @@
                     <md-menu-item>
                         <md-button ng-click="toggleSplitPanel($event, 'balance-report')" class="g-settings-option-btn">
                             <ng-md-icon icon="done"
-                                        data-ng-show="!currentAdditions.type == 'balance-report'"
+                                        data-ng-show="currentAdditions.type !== 'balance-report'"
                                         class="z-menu-icon"
                                         style="visibility: hidden;"></ng-md-icon>
                             <ng-md-icon icon="done"
@@ -87,11 +87,11 @@
                     <md-menu-item>
                         <md-button ng-click="toggleSplitPanel($event, 'pl-report')" class="g-settings-option-btn">
                             <ng-md-icon icon="done"
-                                        data-ng-show="!currentAdditions.type == 'pl-report'"
+                                        data-ng-show="currentAdditions.type !== 'pl-report'"
                                         class="z-menu-icon"
                                         style="visibility: hidden;"></ng-md-icon>
                             <ng-md-icon icon="done"
-                                        data-ng-show="currentAdditions.type == 'pl-report'"
+                                        data-ng-show="currentAdditions.type === 'pl-report'"
                                         class="z-menu-icon"></ng-md-icon>
                             <span>Open P&L Report view panel</span>
                         </md-button>
@@ -100,11 +100,11 @@
                         <md-button ng-click="toggleSplitPanel($event, 'transaction-report')"
                                    class="g-settings-option-btn">
                             <ng-md-icon icon="done"
-                                        data-ng-show="!currentAdditions.type == 'transaction-report'"
+                                        data-ng-show="currentAdditions.type !== 'transaction-report'"
                                         class="z-menu-icon"
                                         style="visibility: hidden;"></ng-md-icon>
                             <ng-md-icon icon="done"
-                                        data-ng-show="currentAdditions.type == 'transaction-report'"
+                                        data-ng-show="currentAdditions.type === 'transaction-report'"
                                         class="z-menu-icon"></ng-md-icon>
                             <span>Open Transaction Report view panel</span>
                         </md-button>
@@ -112,11 +112,11 @@
                     <md-menu-item data-ng-if="!isReport">
                         <md-button ng-click="toggleSplitPanel($event, 'editor')" class="g-settings-option-btn">
                             <ng-md-icon icon="done"
-                                        data-ng-show="!currentAdditions.type == 'editor'"
+                                        data-ng-show="currentAdditions.type !== 'editor'"
                                         class="z-menu-icon"
                                         style="visibility: hidden;"></ng-md-icon>
                             <ng-md-icon icon="done"
-                                        data-ng-show="currentAdditions.type == 'editor'"
+                                        data-ng-show="currentAdditions.type === 'editor'"
                                         class="z-menu-icon"></ng-md-icon>
                             <span>Open editor split panel</span>
                         </md-button>

@@ -617,6 +617,7 @@
     var addScrollListener = function (elements, evDataService, evEventService) {
 
         var viewportElem = elements.viewportElem;
+        var contentWrapElem = elements.contentWrapElem;
 
         var columnBottomRow;
 
@@ -633,7 +634,7 @@
         var scrollXHandler = function () {
 
             if (!columnBottomRow) {
-                columnBottomRow = document.querySelector('.g-column-bottom-row');
+                columnBottomRow = contentWrapElem.querySelector('.g-column-bottom-row');
             }
 
             columnBottomRow.style.left = -viewportElem.scrollLeft + 'px';

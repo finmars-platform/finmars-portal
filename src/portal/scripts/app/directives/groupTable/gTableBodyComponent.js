@@ -260,6 +260,12 @@
 
                 scope.evEventService.addEventListener(evEvents.REDRAW_TABLE, function () {
 
+                    if (isReport) {
+                        rvDomManager.calculateContentWrapHeight(elements.contentWrapElem, scope.evDataService);
+                    } else {
+                        evDomManager.calculateContentWrapHeight(elements.contentWrapElem, scope.evDataService);
+                    };
+
                     updateTableContent();
 
                 });
@@ -369,6 +375,5 @@
             }
         }
     }
-
 
 }());

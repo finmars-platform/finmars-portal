@@ -46,6 +46,7 @@
         var offset;
         var rowHeight = evDataService.getRowHeight();
         var viewportElem = elements.viewportElem;
+        var contentWrapElem = elements.contentWrapElem;
 
         var columnBottomRow;
 
@@ -64,7 +65,7 @@
         var scrollXHandler = function () {
 
             if (!columnBottomRow) {
-                columnBottomRow = document.querySelector('.g-column-bottom-row');
+                columnBottomRow = contentWrapElem.querySelector('.g-column-bottom-row');
             }
 
             columnBottomRow.style.left = -viewportElem.scrollLeft + 'px';
@@ -312,10 +313,16 @@
 
     var calculateContentWrapHeight = function (contentWrapElement, evDataService) { // Works only for contentWrap that is not from split panel
 
-        var interfaceLayout = evDataService.getInterfaceLayout();
-        var contentWrapElementHeight = document.body.clientHeight - interfaceLayout.headerToolbar.height - interfaceLayout.splitPanel.height;
+        var splitPanelIsActive = evDataService.isSplitPanelActive();
 
-        contentWrapElement.style.height = contentWrapElementHeight + "px";
+        if (splitPanelIsActive) {
+            var interfaceLayout = evDataService.getInterfaceLayout();
+            var contentWrapElementHeight = document.body.clientHeight - interfaceLayout.headerToolbar.height - interfaceLayout.splitPanel.height;
+
+            contentWrapElement.style.height = contentWrapElementHeight + "px";
+        } else {
+            contentWrapElement.style.height = "";
+        }
 
     };
 

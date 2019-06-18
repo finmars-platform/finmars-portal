@@ -63,11 +63,23 @@
                                      ev-event-service="evEventService"></group-editor-binder>
             </div>
         </div>
-        <div class="g-additions-workarea" data-ng-if="additions.type == 'permission-editor'">
+        <div class="g-additions-workarea" data-ng-if="additions.type === 'permission-editor'">
             <div data-ng-include="'views/entity-viewer/permission-editor-view.html'" class="min-height"></div>
         </div>
         <div class="g-additions-workarea"
-             data-ng-if="additions.type == 'balance-report' || additions.type == 'pl-report' || additions.type == 'transaction-report'">
+             data-ng-if="additions.type == 'balance-report'">
+            <group-split-panel-report-binder ev-data-service="evDataService"
+                                             ev-event-service="evEventService"></group-split-panel-report-binder>
+        </div>
+
+        <div class="g-additions-workarea"
+             data-ng-if="additions.type === 'pl-report'">
+            <group-split-panel-report-binder ev-data-service="evDataService"
+                                             ev-event-service="evEventService"></group-split-panel-report-binder>
+        </div>
+
+        <div class="g-additions-workarea"
+             data-ng-if="additions.type === 'transaction-report'">
             <group-split-panel-report-binder ev-data-service="evDataService"
                                              ev-event-service="evEventService"></group-split-panel-report-binder>
         </div>

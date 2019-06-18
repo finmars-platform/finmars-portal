@@ -465,3 +465,15 @@ md-input-container.no-error-spacer {
   }
 
 }
+
+md-input-container.md-input-focused, md-input-container.md-input-has-value {
+  label.uncut-text-on-focus-label {
+    text-overflow: initial;
+  }
+}
+
+md-input-container:not(.md-input-focused):not(.md-input-has-value) {
+  label.uncut-text-on-focus-label {
+    font-size: 14px;
+  }
+}
