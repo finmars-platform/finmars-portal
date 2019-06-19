@@ -26,14 +26,15 @@
         vm.isInstanceId = $stateParams.instanceId;
         console.log('cancel button instanceId', vm.isInstanceId, $stateParams);
 
-        var getList = function () {
+        vm.getList = function () {
             attributeTypeService.getList(vm.entityType).then(function (data) {
+
                 vm.attrs = data.results;
+
                 $scope.$apply();
+
             });
         };
-
-        getList();
 
         vm.addAttribute = function (ev) {
             $mdDialog.show({
@@ -144,6 +145,27 @@
 
         };
 
+        vm.exportClassifiers = function (item, $event) {
+
+            $mdDialog.show({
+                controller: 'ClassifierExportDialogController as vm',
+                templateUrl: 'views/dialogs/classifier-export-dialog-view.html',
+                parent: angular.element(document.body),
+                targetEvent: $event,
+                preserveScope: true,
+                autoWrap: true,
+                skipHide: true,
+                locals: {
+                    data: {
+                        entityType: vm.entityType,
+                        item: item
+                    }
+                }
+            })
+
+
+        };
+
         vm.editAttr = function (item, ev) {
             $mdDialog.show({
                 controller: 'AttributesManagerEditDialogController as vm',
@@ -237,6 +259,14 @@
 
             });
         };
+
+        vm.init = function () {
+
+            vm.getList();
+
+        };
+
+        vm.init();
 
     }
 

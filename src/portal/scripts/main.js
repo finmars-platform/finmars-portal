@@ -6,8 +6,6 @@
 require('../../forum/scripts/main.js');
 require('../../profile/scripts/main.js');
 
-require('../../core/context-menu/index.js')
-
 var app = angular.module('portal', [
     'ngAria',
     'ngMaterial',
@@ -16,12 +14,10 @@ var app = angular.module('portal', [
     'ngResource',
     'ngSanitize',
     'vAccordion',
-    'mdPickers',
     'ui.router',
     'bw.paging',
     'ui.select',
-    'ui.scroll',
-    'io.dennis.contextmenu',
+
     angularDragula(angular),
 
     'forum',
@@ -106,6 +102,7 @@ app.controller('SettingsFormDesignController', ['$scope', '$state', require('./a
 app.controller('SettingBloombergImportInstrumentController', ['$scope', '$state', require('./app/controllers/settings/settingBloombergImportInstrumentController')]);
 
 app.controller('ClassifierImportDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/classifierImportDialogController')]);
+app.controller('ClassifierExportDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/classifierExportDialogController')]);
 
 
 // System Dialogs

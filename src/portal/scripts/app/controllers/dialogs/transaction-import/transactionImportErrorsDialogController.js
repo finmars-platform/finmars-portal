@@ -180,7 +180,89 @@
         };
 
         vm.agree = function () {
-            $mdDialog.hide({status: 'agree'});
+            if (vm.config.process_mode !== 'validate') {
+
+                if (vm.config.error_handling === 'break') {
+
+                    $mdDialog.show({
+                        controller: 'WarningDialogController as vm',
+                        templateUrl: 'views/warning-dialog-view.html',
+                        parent: angular.element(document.body),
+                        targetEvent: $event,
+                        clickOutsideToClose: false,
+                        locals: {
+                            warning: {
+                                title: 'Warning',
+                                description: 'Please note that only valid rows until the first invalid row will be imported. The invalid row and the further rows, whether valid or not, will be excluded from the imported transactions',
+                                actionsButtons: [
+                                    {
+                                        name: "CANCEL",
+                                        response: {}
+                                    },
+                                    {
+                                        name: "OK, PROCEED",
+                                        response: {status: 'agree'}
+                                    }
+                                ]
+
+                            }
+                        },
+                        preserveScope: true,
+                        autoWrap: true,
+                        skipHide: true,
+                        multiple: true
+                    }).then(function (res) {
+
+                        if (res.status === 'agree') {
+                            $mdDialog.hide({status: 'agree'});
+                        }
+                    })
+
+                }
+
+                if (vm.config.error_handling === 'continue') {
+
+                    $mdDialog.show({
+                        controller: 'WarningDialogController as vm',
+                        templateUrl: 'views/warning-dialog-view.html',
+                        parent: angular.element(document.body),
+                        targetEvent: $event,
+                        clickOutsideToClose: false,
+                        locals: {
+                            warning: {
+                                title: 'Warning',
+                                description: 'Please note that only valid rows will be imported. The invalid rows will be excluded from the imported transactions.',
+                                actionsButtons: [
+                                    {
+                                        name: "CANCEL",
+                                        response: {}
+                                    },
+                                    {
+                                        name: "OK, PROCEED",
+                                        response: {status: 'agree'}
+                                    }
+                                ]
+
+                            }
+                        },
+                        preserveScope: true,
+                        autoWrap: true,
+                        skipHide: true,
+                        multiple: true
+                    }).then(function (res) {
+
+                        if (res.status === 'agree') {
+                            $mdDialog.hide({status: 'agree'});
+                        }
+                    })
+
+                }
+
+            } else {
+
+                $mdDialog.hide({status: 'agree'});
+
+            }
         };
 
 
