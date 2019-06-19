@@ -13,6 +13,67 @@
 
     var appName = 'core';
 
+    gulp.task(appName + '-copy-libs-js', function () {
+
+        var pathToJS = [
+            'node_modules/angular/angular.js',
+            'node_modules/angular-animate/angular-animate.js',
+            'node_modules/angular-aria/angular-aria.js',
+            'node_modules/angular-messages/angular-messages.js',
+            'node_modules/angular-touch/angular-touch.js',
+            'node_modules/angular-resource/angular-resource.js',
+            'node_modules/angular-sanitize/angular-sanitize.js',
+            'node_modules/v-accordion/dist/v-accordion.js',
+            'node_modules/angular-paging/dist/paging.js',
+            'node_modules/angular-material/angular-material.js',
+            'node_modules/angular-material-icons/angular-material-icons.js',
+
+            'node_modules/angular-ui-router/release/angular-ui-router.js',
+            'node_modules/ui-select/dist/select.js',
+
+            'node_modules/core-js/client/core.js',
+
+            'node_modules/jquery/dist/jquery.js',
+
+            'node_modules/whatwg-fetch/fetch.js',
+
+            'node_modules/moment/moment.js',
+
+            'node_modules/dragula/dist/dragula.js',
+            'node_modules/angular-dragula/dist/angular-dragula.js',
+
+            'node_modules/fancy-logger/dist/js/fancy-logger.js',
+            'node_modules/jstree/dist/jstree.js',
+            'node_modules/toastr/build/toastr.min.js',
+            'src/core/datepicker/pickmeup.js'
+        ];
+
+        return gulp.src(pathToJS)
+            .pipe(gulp.dest('libs/js'));
+
+
+    });
+
+    gulp.task(appName + '-copy-libs-css', function () {
+
+        var pathToJS = [
+            'node_modules/angular-material/angular-material.css',
+            'node_modules/ui-select/dist/select.css',
+            'node_modules/v-accordion/dist/v-accordion.css',
+
+            'node_modules/dragula/dist/dragula.css',
+
+            'node_modules/jstree/dist/themes/default/style.css',
+            'node_modules/toastr/build/toastr.css',
+            'node_modules/pickmeup/css/pickmeup.css'
+        ];
+
+        return gulp.src(pathToJS)
+            .pipe(gulp.dest('libs/css'));
+
+
+    });
+
     gulp.task(appName + '-angular-js-min', function () {
 
         var pathToJS = [
@@ -26,8 +87,6 @@
             'node_modules/v-accordion/dist/v-accordion.js',
             'node_modules/angular-paging/dist/paging.js',
             'node_modules/angular-material/angular-material.js',
-            'node_modules/angular-carousel/dist/angular-carousel.js',
-            'node_modules/mdPickers/dist/mdPickers.js',
             'node_modules/angular-material-icons/angular-material-icons.js'
         ];
 
@@ -42,7 +101,6 @@
 
         var pathToJS = [
             'node_modules/angular-ui-router/release/angular-ui-router.js',
-            'node_modules/angular-ui-scroll/dist/ui-scroll.js',
             'node_modules/ui-select/dist/select.js'
         ];
 
@@ -56,10 +114,8 @@
 
         var pathToCSS = [
             'node_modules/angular-material/angular-material.css',
-            'node_modules/mdPickers/dist/mdPickers.css',
             'node_modules/ui-select/dist/select.css',
             'node_modules/v-accordion/dist/v-accordion.css',
-            'node_modules/angular-carousel/dist/angular-carousel.css'
         ];
 
         return gulp.src(pathToCSS)
@@ -149,9 +205,6 @@
     gulp.task(appName + '-plugins-js-min', function () {
 
         var pathToJS = [
-            //'node_modules/malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.js',
-            //'node_modules/nanoscroller/bin/javascripts/jquery.nanoscroller.js',
-            'node_modules/perfect-scrollbar/dist/perfect-scrollbar.js',
             'node_modules/fancy-logger/dist/js/fancy-logger.js',
             'node_modules/jstree/dist/jstree.js',
             'node_modules/toastr/build/toastr.min.js',
@@ -169,8 +222,6 @@
     gulp.task(appName + '-plugins-css-min', function () {
 
         var pathToCSS = [
-            //'node_modules/nanoscroller/bin/css/nanoscroller.css',
-            'node_modules/perfect-scrollbar/css/perfect-scrollbar.css',
             'node_modules/jstree/dist/themes/default/style.css',
             'node_modules/toastr/build/toastr.css',
             'node_modules/pickmeup/css/pickmeup.css'
