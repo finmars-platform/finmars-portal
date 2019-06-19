@@ -35,7 +35,7 @@
         vm.entity = {$_isValid: true};
         vm.complexTransactionOptions = {};
 
-        vm.readyStatus = {attrs: false, permissions: false, entity: false, layout: false};
+        vm.readyStatus = {attrs: false, permissions: false, entity: false, layout: false, userFields: false};
 
         vm.entityTabs = metaService.getEntityTabs(vm.entityType);
 
@@ -303,6 +303,12 @@
 
                 vm.readyStatus.layout = true;
 
+                if (vm.entityType === 'instrument') {
+                    vm.getInstrumentUserFields();
+                } else {
+                    vm.readyStatus.userFields = true;
+                }
+
                 $scope.$apply();
             });
 
@@ -466,7 +472,7 @@
 
         vm.checkReadyStatus = function () {
 
-            return vm.readyStatus.attrs && vm.readyStatus.entity && vm.readyStatus.permissions && vm.readyStatus.layout;
+            return vm.readyStatus.attrs && vm.readyStatus.entity && vm.readyStatus.permissions && vm.readyStatus.layout && vm.readyStatus.userFields;
         };
 
         vm.bindFlex = function (tab, row, field) {
@@ -861,6 +867,50 @@
                 }
 
             });
+
+        };
+
+        vm.getInstrumentUserFields = function () {
+
+            console.log('getInstrumentUserFields');
+
+            uiService.getInstrumentFieldList().then(function (data) {
+
+                console.log('data', data);
+                console.log('vm.tabs', vm.tabs);
+
+                data.results.forEach(function (userField) {
+
+                    vm.tabs.forEach(function (tab) {
+
+                        tab.layout.fields.forEach(function (field) {
+
+                            if (field.attribute && field.attribute.key) {
+
+                                if (field.attribute.key === userField.key) {
+
+                                    console.log('here?', field);
+
+                                    if (!field.options) {
+                                        field.options = {};
+                                    }
+
+                                    field.options.fieldName = userField.name;
+                                }
+
+                            }
+
+                        })
+
+                    })
+
+                });
+
+                vm.readyStatus.userFields = true;
+
+                $scope.$apply();
+
+            })
 
         };
 
