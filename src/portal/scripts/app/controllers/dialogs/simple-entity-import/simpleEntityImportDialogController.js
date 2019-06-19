@@ -286,11 +286,25 @@
 
                 });
 
-                description = '<div>' +
-                    '<div>Rows total: ' + (data.total - 1) + '</div>' +
-                    '<div>Rows success import: ' + (data.total - 1 - errorsCount) + '</div>' +
-                    '<div>Rows fail import: ' + errorsCount + '</div>' +
-                    '</div><br/>';
+                if (vm.config.error_handler === 'continue') {
+
+                    description = '<div>' +
+                        '<div>Rows total: ' + (data.total - 1) + '</div>' +
+                        '<div>Rows success import: ' + (data.stats - errorsCount) + '</div>' +
+                        '<div>Rows fail import: ' + errorsCount + '</div>' +
+                        '</div><br/>';
+
+                }
+
+                if (vm.config.error_handler === 'break') {
+
+                    description = '<div>' +
+                        '<div>Rows total: ' + (data.total - 1) + '</div>' +
+                        '<div>Rows success import: ' + (data.stats.length - errorsCount) + '</div>' +
+                        '<div>Rows fail import: ' + errorsCount + '</div>' +
+                        '</div><br/>';
+
+                }
 
                 console.log('description', description);
 
