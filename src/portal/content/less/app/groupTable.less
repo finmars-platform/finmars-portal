@@ -21,6 +21,7 @@
 
   .g-grouping-component {
     height: 98px;
+    transition: height ease .25s;
     .ev-loader {
       float: right;
       margin-right: 10px;
@@ -322,6 +323,7 @@
     padding-top: 4px;
     background: #4C334D;
     box-sizing: border-box;
+    transition: height ease .25s;
   }
 
   .g-second-line {
@@ -492,7 +494,40 @@
     //width: calc(~"100% - 40px");
     width: 100%;
     height: 100%;
-    float: left;
+    //float: left;
+  }
+
+  .g-column-area-wrap {
+    position: relative;
+  }
+
+  .toggle-group-column-area-btn {
+    position: absolute;
+    min-width: 30px;
+    width: 30px;
+    min-height: 30px;
+    height: 30px;
+    background-color: #AD725D;
+    fill: #fff;
+    line-height: initial;
+    right: 0;
+    bottom: 0;
+    opacity: 0.5;
+
+    &:not([disabled]).md-focused {
+      background-color: #AD725D;
+    }
+
+    &:hover {
+      background-color: #F4AF8B;
+      opacity: 1;
+    }
+
+    ng-md-icon {
+      position: absolute;
+      top: 4px;
+      left: 3px;
+    }
   }
 
   .g-columns-holder {
@@ -864,6 +899,19 @@
   // 		opacity: 1;
   // 	}
   // }
+}
+
+.g-workarea.main-area.column-group-areas-collapsed {
+  .g-grouping-component {
+    height: 2px;
+    overflow: hidden;
+  }
+  .g-columns-component.g-thead {
+    height: 37px;
+  }
+  .g-column-title-row {
+    display: none;
+  }
 }
 
 .drag-dialog {
