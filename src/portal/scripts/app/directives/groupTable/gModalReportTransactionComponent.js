@@ -67,7 +67,7 @@
 
             vm.linkedInstrumentAttrs = rvAttributesHelper.getAllAttributesAsFlatList('instruments.instrument', 'linked_instrument', 'Linked Instrument', {maxDepth: 1});
 
-            vm.allocationBalanceAttrs = rvAttributesHelper.getAllAttributesAsFlatList('instruments.instrument', 'allocation_balance', 'Allocation balance', {maxDepth: 1});
+            vm.allocationBalanceAttrs = rvAttributesHelper.getAllAttributesAsFlatList('instruments.instrument', 'allocation_balance', 'Allocation Balance', {maxDepth: 1});
 
             vm.allocationPlAttrs = rvAttributesHelper.getAllAttributesAsFlatList('instruments.instrument', 'allocation_pl', 'Allocation P&L', {maxDepth: 1});
 
@@ -99,9 +99,9 @@
 
             vm.strategy3positionAttrs = rvAttributesHelper.getAllAttributesAsFlatList('strategies.strategy3', 'strategy3_position', 'Strategy 3 Position', {maxDepth: 1});
 
-            uiService.getTransactionFieldList().then(function (data) {
+            uiService.getTransactionFieldList().then(function (transactionData) {
 
-                data.results.forEach(function (field) {
+                transactionData.results.forEach(function (field) {
 
                     vm.complexTransactionAttrs = vm.complexTransactionAttrs.map(function (entityAttr, index) {
 
@@ -115,94 +115,142 @@
 
                 });
 
+                uiService.getInstrumentFieldList().then(function (instrumentData) {
 
-                vm.complexTransactionAttrs = vm.complexTransactionAttrs.filter(function (entityAttr) {
-                    return entityAttr.key.indexOf('complex_transaction.transaction_type.') === -1
-                });
+                    instrumentData.results.forEach(function (field) {
 
-                customFieldService.getList(vm.entityType).then(function (data) {
+                        vm.instrumentAttrs = vm.instrumentAttrs.map(function (entityAttr, index) {
 
-                    vm.custom = data.results;
+                            if (entityAttr.key === 'instrument.' + field.key) {
+                                entityAttr.name = 'Instrument. ' + field.name;
+                            }
 
-                    vm.custom.forEach(function (customItem) {
-                        customItem.key = 'custom_fields.' + customItem.user_code;
-                        customItem.name = 'Custom Field. ' + customItem.name;
-                    });
+                            return entityAttr;
 
-                    dynamicAttributesForReportsService.getDynamicAttributes().then(function (data) {
+                        });
 
-                        vm.portfolioDynamicAttrs = rvAttributesHelper.formatAttributeTypes(data['portfolios.portfolio'], 'portfolios.portfolio', 'portfolio', 'Portfolio');
-                        vm.complexTransactionDynamicAttrs = rvAttributesHelper.formatAttributeTypes(data['transactions.complextransaction'], 'transactions.complextransaction', 'complex_transaction', 'Complex Transaction');
-                        vm.responsibleDynamicAttrs = rvAttributesHelper.formatAttributeTypes(data['counterparties.responsible'], 'counterparties.responsible', 'responsible', 'Responsible');
-                        vm.counterpartyDynmicAttrs = rvAttributesHelper.formatAttributeTypes(data['counterparties.counterparty'], 'counterparties.counterparty', 'counterparty', 'Counterparty');
+                        vm.linkedInstrumentAttrs = vm.linkedInstrumentAttrs.map(function (entityAttr, index) {
 
-                        vm.instrumentDynamicAttrs = rvAttributesHelper.formatAttributeTypes(data['instruments.instrument'], 'instruments.instrument', 'instrument', 'Instrument');
-                        vm.linkedInstrumentDynamicAttrs = rvAttributesHelper.formatAttributeTypes(data['instruments.instrument'], 'instruments.instrument', 'linked_instrument', 'Linked Instrument');
-                        vm.allocationBalanceDynamicAttrs = rvAttributesHelper.formatAttributeTypes(data['instruments.instrument'], 'instruments.instrument', 'allocation_balance', 'Allocation Balance');
-                        vm.allocationPlDnymaicAttrs = rvAttributesHelper.formatAttributeTypes(data['instruments.instrument'], 'instruments.instrument', 'allocation_pl', 'Allocation PL');
+                            if (entityAttr.key === 'linked_instrument.' + field.key) {
+                                entityAttr.name = 'Linked Instrument. ' + field.name;
+                            }
 
-                        vm.accountPositionDynamicAttrs = rvAttributesHelper.formatAttributeTypes(data['accounts.account'], 'accounts.account', 'account_position', 'Account Position');
-                        vm.accountCashDynamicAttrs = rvAttributesHelper.formatAttributeTypes(data['accounts.account'], 'accounts.account', 'account_cash', 'Account Cash');
-                        vm.accountInterimDynamicAttrs = rvAttributesHelper.formatAttributeTypes(data['accounts.account'], 'accounts.account', 'account_interim', 'Account Interim');
+                            return entityAttr;
 
-                        //vm.entityAttrs = metaService.getEntityAttrs(vm.entityType);
+                        });
 
-                        attrsList = attrsList.concat(vm.transactionAttrs);
-                        attrsList = attrsList.concat(vm.complexTransactionAttrs);
-                        attrsList = attrsList.concat(vm.portfolioAttrs);
-                        attrsList = attrsList.concat(vm.instrumentAttrs);
-                        attrsList = attrsList.concat(vm.responsibleAttrs);
-                        attrsList = attrsList.concat(vm.counterpartyAttrs);
+                        vm.allocationBalanceAttrs = vm.allocationBalanceAttrs.map(function (entityAttr, index) {
 
-                        attrsList = attrsList.concat(vm.portfolioDynamicAttrs);
-                        attrsList = attrsList.concat(vm.complexTransactionDynamicAttrs);
-                        attrsList = attrsList.concat(vm.responsibleDynamicAttrs);
-                        attrsList = attrsList.concat(vm.counterpartyDynmicAttrs);
+                            if (entityAttr.key === 'allocation_balance.' + field.key) {
+                                entityAttr.name = 'Allocation Balance. ' + field.name;
+                            }
 
+                            return entityAttr;
 
-                        // instruments
+                        });
 
-                        attrsList = attrsList.concat(vm.linkedInstrumentAttrs);
-                        attrsList = attrsList.concat(vm.allocationBalanceAttrs);
-                        attrsList = attrsList.concat(vm.allocationPlAttrs);
+                        vm.allocationPlAttrs = vm.allocationPlAttrs.map(function (entityAttr, index) {
 
-                        attrsList = attrsList.concat(vm.instrumentDynamicAttrs);
-                        attrsList = attrsList.concat(vm.linkedInstrumentDynamicAttrs);
-                        attrsList = attrsList.concat(vm.allocationBalanceDynamicAttrs);
-                        attrsList = attrsList.concat(vm.allocationPlDnymaicAttrs);
+                            if (entityAttr.key === 'allocation_pl.' + field.key) {
+                                entityAttr.name = 'Allocation P&L. ' + field.name;
+                            }
 
-                        // currencies
+                            return entityAttr;
 
-                        attrsList = attrsList.concat(vm.transactionCurrencyAttrs);
-                        attrsList = attrsList.concat(vm.settlementCurrencyAttrs);
-
-                        // accounts
-
-                        attrsList = attrsList.concat(vm.accountPositionAttrs);
-                        attrsList = attrsList.concat(vm.accountCashAttrs);
-                        attrsList = attrsList.concat(vm.accountInterimAttrs);
-
-                        attrsList = attrsList.concat(vm.accountPositionDynamicAttrs);
-                        attrsList = attrsList.concat(vm.accountCashDynamicAttrs);
-                        attrsList = attrsList.concat(vm.accountInterimDynamicAttrs);
-
-                        // strategies
-
-                        attrsList = attrsList.concat(vm.strategy1cashAttrs);
-                        attrsList = attrsList.concat(vm.strategy1positionAttrs);
-                        attrsList = attrsList.concat(vm.strategy2cashAttrs);
-                        attrsList = attrsList.concat(vm.strategy2positionAttrs);
-                        attrsList = attrsList.concat(vm.strategy3cashAttrs);
-                        attrsList = attrsList.concat(vm.strategy3positionAttrs);
-
-                        syncAttrs();
-
-                        vm.readyStatus.content = true;
-                        $scope.$apply();
+                        });
 
                     });
 
-                });
+
+                    vm.complexTransactionAttrs = vm.complexTransactionAttrs.filter(function (entityAttr) {
+                        return entityAttr.key.indexOf('complex_transaction.transaction_type.') === -1
+                    });
+
+                    customFieldService.getList(vm.entityType).then(function (data) {
+
+                        vm.custom = data.results;
+
+                        vm.custom.forEach(function (customItem) {
+                            customItem.key = 'custom_fields.' + customItem.user_code;
+                            customItem.name = 'Custom Field. ' + customItem.name;
+                        });
+
+                        dynamicAttributesForReportsService.getDynamicAttributes().then(function (data) {
+
+                            vm.portfolioDynamicAttrs = rvAttributesHelper.formatAttributeTypes(data['portfolios.portfolio'], 'portfolios.portfolio', 'portfolio', 'Portfolio');
+                            vm.complexTransactionDynamicAttrs = rvAttributesHelper.formatAttributeTypes(data['transactions.complextransaction'], 'transactions.complextransaction', 'complex_transaction', 'Complex Transaction');
+                            vm.responsibleDynamicAttrs = rvAttributesHelper.formatAttributeTypes(data['counterparties.responsible'], 'counterparties.responsible', 'responsible', 'Responsible');
+                            vm.counterpartyDynmicAttrs = rvAttributesHelper.formatAttributeTypes(data['counterparties.counterparty'], 'counterparties.counterparty', 'counterparty', 'Counterparty');
+
+                            vm.instrumentDynamicAttrs = rvAttributesHelper.formatAttributeTypes(data['instruments.instrument'], 'instruments.instrument', 'instrument', 'Instrument');
+                            vm.linkedInstrumentDynamicAttrs = rvAttributesHelper.formatAttributeTypes(data['instruments.instrument'], 'instruments.instrument', 'linked_instrument', 'Linked Instrument');
+                            vm.allocationBalanceDynamicAttrs = rvAttributesHelper.formatAttributeTypes(data['instruments.instrument'], 'instruments.instrument', 'allocation_balance', 'Allocation Balance');
+                            vm.allocationPlDnymaicAttrs = rvAttributesHelper.formatAttributeTypes(data['instruments.instrument'], 'instruments.instrument', 'allocation_pl', 'Allocation PL');
+
+                            vm.accountPositionDynamicAttrs = rvAttributesHelper.formatAttributeTypes(data['accounts.account'], 'accounts.account', 'account_position', 'Account Position');
+                            vm.accountCashDynamicAttrs = rvAttributesHelper.formatAttributeTypes(data['accounts.account'], 'accounts.account', 'account_cash', 'Account Cash');
+                            vm.accountInterimDynamicAttrs = rvAttributesHelper.formatAttributeTypes(data['accounts.account'], 'accounts.account', 'account_interim', 'Account Interim');
+
+                            //vm.entityAttrs = metaService.getEntityAttrs(vm.entityType);
+
+                            attrsList = attrsList.concat(vm.transactionAttrs);
+                            attrsList = attrsList.concat(vm.complexTransactionAttrs);
+                            attrsList = attrsList.concat(vm.portfolioAttrs);
+                            attrsList = attrsList.concat(vm.instrumentAttrs);
+                            attrsList = attrsList.concat(vm.responsibleAttrs);
+                            attrsList = attrsList.concat(vm.counterpartyAttrs);
+
+                            attrsList = attrsList.concat(vm.portfolioDynamicAttrs);
+                            attrsList = attrsList.concat(vm.complexTransactionDynamicAttrs);
+                            attrsList = attrsList.concat(vm.responsibleDynamicAttrs);
+                            attrsList = attrsList.concat(vm.counterpartyDynmicAttrs);
+
+
+                            // instruments
+
+                            attrsList = attrsList.concat(vm.linkedInstrumentAttrs);
+                            attrsList = attrsList.concat(vm.allocationBalanceAttrs);
+                            attrsList = attrsList.concat(vm.allocationPlAttrs);
+
+                            attrsList = attrsList.concat(vm.instrumentDynamicAttrs);
+                            attrsList = attrsList.concat(vm.linkedInstrumentDynamicAttrs);
+                            attrsList = attrsList.concat(vm.allocationBalanceDynamicAttrs);
+                            attrsList = attrsList.concat(vm.allocationPlDnymaicAttrs);
+
+                            // currencies
+
+                            attrsList = attrsList.concat(vm.transactionCurrencyAttrs);
+                            attrsList = attrsList.concat(vm.settlementCurrencyAttrs);
+
+                            // accounts
+
+                            attrsList = attrsList.concat(vm.accountPositionAttrs);
+                            attrsList = attrsList.concat(vm.accountCashAttrs);
+                            attrsList = attrsList.concat(vm.accountInterimAttrs);
+
+                            attrsList = attrsList.concat(vm.accountPositionDynamicAttrs);
+                            attrsList = attrsList.concat(vm.accountCashDynamicAttrs);
+                            attrsList = attrsList.concat(vm.accountInterimDynamicAttrs);
+
+                            // strategies
+
+                            attrsList = attrsList.concat(vm.strategy1cashAttrs);
+                            attrsList = attrsList.concat(vm.strategy1positionAttrs);
+                            attrsList = attrsList.concat(vm.strategy2cashAttrs);
+                            attrsList = attrsList.concat(vm.strategy2positionAttrs);
+                            attrsList = attrsList.concat(vm.strategy3cashAttrs);
+                            attrsList = attrsList.concat(vm.strategy3positionAttrs);
+
+                            syncAttrs();
+
+                            vm.readyStatus.content = true;
+                            $scope.$apply();
+
+                        });
+
+                    });
+
+                })
 
             });
 

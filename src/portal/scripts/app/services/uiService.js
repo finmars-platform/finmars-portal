@@ -104,6 +104,18 @@
         return uiRepository.updateTransactionField(id, data);
     };
 
+    var getInstrumentFieldList = function () {
+        return uiRepository.getInstrumentFieldList()
+    };
+
+    var createInstrumentField = function (data) {
+        return uiRepository.createInstrumentField(data);
+    };
+
+    var updateInstrumentField = function (id, data) {
+        return uiRepository.updateInstrumentField(id, data);
+    };
+
     module.exports = {
         getDefaultListLayout: getDefaultListLayout,
         getDefaultEditLayout: getDefaultEditLayout,
@@ -129,7 +141,12 @@
 
         getTransactionFieldList: getTransactionFieldList,
         createTransactionField: createTransactionField,
-        updateTransactionField: updateTransactionField
+        updateTransactionField: updateTransactionField,
+
+
+        getInstrumentFieldList: getInstrumentFieldList,
+        createInstrumentField: createInstrumentField,
+        updateInstrumentField: updateInstrumentField
     }
 
 }());
