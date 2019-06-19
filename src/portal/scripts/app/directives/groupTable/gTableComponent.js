@@ -22,17 +22,49 @@
                 scope.entityType = scope.evDataService.getEntityType();
                 scope.activebject = scope.evDataService.getActiveObject();
 
+                var interfaceLayout = scope.evDataService.getInterfaceLayout();
+
+                scope.groupingAndColumnAreaCollapsed = interfaceLayout.groupingArea.collapsed;
+
                 scope.splitPanelIsActive = scope.evDataService.isSplitPanelActive();
-                var isRootEntityViewer = scope.evDataService.isRootEntityViewer();
+                scope.isRootEntityViewer = scope.evDataService.isRootEntityViewer();
 
                 scope.contentWrapElem = elem[0].querySelector('.g-content-wrap');
 
-                if (!isRootEntityViewer) { // if this component inside split panel, set .g-content-wrap height
+                if (!scope.isRootEntityViewer) { // if this component inside split panel, set .g-content-wrap height
                     var splitPanelHeight = elem.parents(".g-additions").height();
                     scope.contentWrapElem.style.height = splitPanelHeight + 'px';
                 }
 
                 console.log('scope.additions', scope.additions);
+
+                scope.toggleGroupAndColumnArea = function () {
+
+                    interfaceLayout = scope.evDataService.getInterfaceLayout();
+
+                    var groupingAndColumnAreaCollapsed = !scope.groupingAndColumnAreaCollapsed;
+
+                    if (groupingAndColumnAreaCollapsed) {
+
+                        interfaceLayout.groupingArea.collapsed = true;
+                        interfaceLayout.groupingArea.height = 2;
+                        interfaceLayout.columnArea.collapsed = true;
+                        interfaceLayout.columnArea.height = 37;
+
+                    } else {
+
+                        interfaceLayout.groupingArea.collapsed = false;
+                        interfaceLayout.groupingArea.height = 98;
+                        interfaceLayout.columnArea.collapsed = false;
+                        interfaceLayout.columnArea.height = 70;
+
+                    }
+
+                    scope.groupingAndColumnAreaCollapsed = groupingAndColumnAreaCollapsed;
+
+                    scope.evDataService.setInterfaceLayout(interfaceLayout);
+                    scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE_VIEWPORT);
+                };
 
                 scope.evEventService.addEventListener(evEvents.ADDITIONS_CHANGE, function () {
 
@@ -52,7 +84,7 @@
                     scope.additions = scope.evDataService.getAdditions();
                     scope.activebject = scope.evDataService.getActiveObject();
 
-                })
+                });
 
             }
         }

@@ -35,11 +35,13 @@
                 height: 0
             },
             groupingArea: {
+                collapsed: false,
                 left: sidebarWidth,
                 top: headerToolbarHeight,
                 height: groupingAreaHeight
             },
             columnArea: {
+                collapsed: false,
                 left: sidebarWidth,
                 top: headerToolbarHeight + groupingAreaHeight,
                 height: columnAreaHeight
@@ -716,6 +718,20 @@
             listLayout.data.filters = getFilters();
             listLayout.data.additions = getAdditions();
 
+            var interfaceLayout = getInterfaceLayout();
+
+            var interfaceLayoutToSave = {};
+            interfaceLayoutToSave.groupingArea = {};
+            interfaceLayoutToSave.groupingArea.collapsed = interfaceLayout.groupingArea.collapsed;
+            interfaceLayoutToSave.groupingArea.height = interfaceLayout.groupingArea.height;
+            interfaceLayoutToSave.columnArea = {};
+            interfaceLayoutToSave.columnArea.collapsed = interfaceLayout.columnArea.collapsed;
+            interfaceLayoutToSave.columnArea.height = interfaceLayout.columnArea.height;
+
+            interfaceLayoutToSave.splitPanel = interfaceLayout.splitPanel;
+
+            listLayout.data.interfaceLayout = interfaceLayoutToSave;
+
             if (isReport) {
 
                 listLayout.data.reportOptions = JSON.parse(JSON.stringify(getReportOptions()));
@@ -764,11 +780,13 @@
 
             }
 
-            /*var interfaceLayout = getInterfaceLayout();
-            console.log("split panel setLayoutCurrentConfig interfaceLayout", interfaceLayout);
-            if (activeListLayout.interfaceLayout) {
-                interfaceLayout = Object.assign(interfaceLayout, activeListLayout.interfaceLayout)
-            }*/
+            if (listLayout.data.interfaceLayout) {
+
+                var interfaceLayout = getInterfaceLayout();
+                interfaceLayout = Object.assign(interfaceLayout, listLayout.data.interfaceLayout);
+                setInterfaceLayout(interfaceLayout);
+
+            }
 
             if (isReport) {
 
@@ -787,7 +805,11 @@
             setColumns(listLayout.data.columns);
             setGroups(listLayout.data.grouping);
             setFilters(listLayout.data.filters);
-            setAdditions(listLayout.data.additions);
+            // setAdditions(listLayout.data.additions);
+
+            if (isRootEntityViewer()) {
+                setAdditions(listLayout.data.additions);
+            }
 
             setListLayout(listLayout);
 

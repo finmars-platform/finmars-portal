@@ -52,9 +52,9 @@
 
                 });
 
-                parentEntityViewerEventService.addEventListener(evEvents.TOGGLE_SPLIT_PANEL_FILTER_AREA, function () {
+                parentEntityViewerEventService.addEventListener(evEvents.TOGGLE_FILTER_AREA, function () {
 
-                    vm.entityViewerEventService.dispatchEvent(evEvents.TOGGLE_SPLIT_PANEL_FILTER_AREA);
+                    vm.entityViewerEventService.dispatchEvent(evEvents.UPDATE_FILTER_AREA_SIZE);
 
                 });
 
@@ -85,6 +85,13 @@
                 vm.entityViewerEventService.addEventListener(evEvents.LIST_LAYOUT_CHANGE, function () {
 
                     vm.getView();
+
+                });
+
+                // Events that dispatch events inside parent
+                vm.entityViewerEventService.addEventListener(evEvents.TOGGLE_FILTER_AREA, function () {
+
+                    parentEntityViewerEventService.dispatchEvent(evEvents.UPDATE_FILTER_AREA_SIZE);
 
                 });
 
