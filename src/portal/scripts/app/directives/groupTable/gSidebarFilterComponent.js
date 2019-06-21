@@ -151,19 +151,17 @@
 
                     if (actionType === 'collapse') {
                         $('body').addClass('filter-side-nav-collapsed');
-                        scope.sideNavCollapsed = true;
-                        interfaceLayout.filterArea.width = 55;
+                        /*scope.sideNavCollapsed = true;
+                        interfaceLayout.filterArea.width = 55;*/
                     } else {
                         $('body').removeClass('filter-side-nav-collapsed');
-                        scope.sideNavCollapsed = false;
-                        interfaceLayout.filterArea.width = 239;
+                        /*scope.sideNavCollapsed = false;
+                        interfaceLayout.filterArea.width = 239;*/
                     }
 
                     scope.evDataService.setInterfaceLayout(interfaceLayout);
 
-                    if (isRootEntityViewer) {
-                        scope.evEventService.dispatchEvent(evEvents.TOGGLE_SPLIT_PANEL_FILTER_AREA);
-                    }
+                    scope.evEventService.dispatchEvent(evEvents.TOGGLE_FILTER_AREA);
 
                     var interval = setInterval(function () {
                         $(window).trigger('resize');
@@ -460,26 +458,27 @@
 
                     });
 
-                    if (!isRootEntityViewer) {
+                    scope.evEventService.addEventListener(evEvents.UPDATE_FILTER_AREA_SIZE, function () {
 
-                        scope.evEventService.addEventListener(evEvents.TOGGLE_SPLIT_PANEL_FILTER_AREA, function () {
+                        var interfaceLayout = scope.evDataService.getInterfaceLayout();
 
-                            var interfaceLayout = scope.evDataService.getInterfaceLayout();
+                        if (scope.sideNavCollapsed) {
+                            interfaceLayout.filterArea.width = 239;
+                        } else {
+                            interfaceLayout.filterArea.width = 55;
+                        }
 
-                            if (scope.sideNavCollapsed) {
-                                interfaceLayout.filterArea.width = 239;
-                            } else {
-                                interfaceLayout.filterArea.width = 55;
-                            }
+                        scope.sideNavCollapsed = !scope.sideNavCollapsed;
 
-                            scope.sideNavCollapsed = !scope.sideNavCollapsed;
+                        scope.evDataService.setInterfaceLayout(interfaceLayout);
 
-                            scope.evDataService.setInterfaceLayout(interfaceLayout);
+                        scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE_VIEWPORT);
 
-                            scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE_VIEWPORT);
+                    });
 
-                        });
-                    }
+                    scope.evEventService.addEventListener(evEvents.TOGGLE_FILTER_AREA, function () {
+                        scope.evEventService.dispatchEvent(evEvents.UPDATE_FILTER_AREA_SIZE);
+                    });
 
                     scope.evEventService.dispatchEvent(evEvents.UPDATE_EV_UI);
 
