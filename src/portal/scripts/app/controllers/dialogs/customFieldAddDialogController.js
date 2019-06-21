@@ -367,7 +367,7 @@
                             "name": "Custom Column: " + item.name,
                             "description": "Custom Column: " + item.name + " (" + item.user_code + ") :: " + captions[item.value_type] + '\n' + item.notes + '\nExpression: \n' + item.expr,
                             "groups": "custom_field",
-                            "func": item.user_code
+                            "func": 'custom_fields.' + item.user_code
                         }
 
                     });
