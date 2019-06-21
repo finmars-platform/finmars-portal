@@ -242,6 +242,15 @@
                     }
                 }
             })
+            .state('app.settings.general.instrument-field', {
+                url: '/instrument-field',
+                views: {
+                    'instrument-field': {
+                        templateUrl: 'views/settings/instrument-field-settings-view.html',
+                        controller: 'SettingsGeneralInstrumentFieldController as vm'
+                    }
+                }
+            })
             .state('app.settings.general.change-password', {
                 url: '/change-password',
                 views: {

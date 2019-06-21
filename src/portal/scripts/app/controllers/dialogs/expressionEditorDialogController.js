@@ -263,9 +263,18 @@
         }
 
         function getInputWords() {
-            return vm.data.functions[0].map(function (item) {
-                return item.func
+
+            var result = [];
+
+            vm.data.functions.forEach(function (funcGroup) {
+
+                funcGroup.map(function (item) {
+                    result.push(item.func)
+                });
+
             });
+
+            return result;
         }
 
         function getPropertiesWords() {
@@ -327,7 +336,7 @@
                     currentToken.value = currentToken.value + expression[i];
                 } else {
 
-                    if(currentToken.value !== '') {
+                    if (currentToken.value !== '') {
                         result = result + '<span class="eb-highlight-error">' + currentToken.value + '</span>';
                         vm.status = 'inputs-error';
                     }

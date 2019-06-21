@@ -7,6 +7,7 @@
 
     var entityResolverService = require('../../services/entityResolverService');
     var attributeTypeService = require('../../services/attributeTypeService');
+    var customFieldService = require('../../services/reports/customFieldService');
 
     var getEntityByUserCode = function (user_code, entity, cacheContainer) {
 
@@ -146,6 +147,33 @@
 
     };
 
+    var getCustomFieldByUserCode = function (user_code, entity) {
+
+        return new Promise(function (resolve, reject) {
+
+            customFieldService.getList(entity, {
+                filters: {
+                    "user_code": user_code
+                }
+            }).then(function (data) {
+
+                if (data.results.length) {
+
+                    resolve(data.results[0])
+
+                } else {
+
+                    reject(new Error("Custom Field with user code " + user_code + " does not exist"))
+
+                }
+
+            })
+
+        })
+
+
+    };
+
     var getSchemeBySchemeName = function (scheme_name, entity) {
 
         return new Promise(function (resolve, reject) {
@@ -230,6 +258,7 @@
         getEntityByUserCode: getEntityByUserCode,
         getEntityBySystemCode: getEntityBySystemCode,
         getAttributeTypeByUserCode: getAttributeTypeByUserCode,
+        getCustomFieldByUserCode: getCustomFieldByUserCode,
         getSchemeBySchemeName: getSchemeBySchemeName,
         getInstrumentsTypesWithIds: getInstrumentsTypesWithIds
     }

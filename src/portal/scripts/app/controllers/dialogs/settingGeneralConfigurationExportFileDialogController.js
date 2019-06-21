@@ -647,6 +647,10 @@
                     return "P&L Report Custom Fields";
                 case 'reports.transactionreportcustomfield':
                     return "Transaction Report Custom Fields";
+                case 'ui.instrumentuserfieldmodel':
+                    return 'Instrument User Fields';
+                case 'ui.transactionuserfieldmodel':
+                    return 'Transaction User Fields';
                 default:
                     return "Unknown"
             }

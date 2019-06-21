@@ -179,7 +179,7 @@
             $mdDialog.hide({});
         };
 
-        vm.agree = function () {
+        vm.agree = function ($event) {
             if (vm.config.process_mode !== 'validate') {
 
                 if (vm.config.error_handling === 'break') {
