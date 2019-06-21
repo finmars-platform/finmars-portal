@@ -95,7 +95,7 @@
             }).then(function (res) {
                 console.log('res', res);
                 if (res.status === 'agree') {
-                    customFieldService.deleteByKey(item.id).then(function (data) {
+                    customFieldService.deleteByKey(vm.entityType, item.id).then(function (data) {
                         if (data.status === 'conflict') {
                             $mdDialog.show({
                                 controller: 'InfoDialogController as vm',
