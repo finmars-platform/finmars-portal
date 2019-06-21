@@ -17,6 +17,7 @@ var app = angular.module('portal', [
     'ui.router',
     'bw.paging',
     'ui.select',
+    'ui.scroll',
 
     angularDragula(angular),
 
