@@ -1,6 +1,6 @@
 <div class="complex-date-picker-wrapper">
     <!--<div data-ng-class="{'ng-hide' : datepickerOptions.datepickerMode === 'expression'}">-->
-    <div>
+    <div ng-hide="datepickerOptions.datepickerMode === 'inception'">
         <md-input-container>
             <label class="uncut-text-on-focus-label">{{ getDatepickerName() }}</label>
             <div class="pick-me-up">
@@ -11,17 +11,13 @@
         </md-input-container>
     </div>
 
-    <!--<div data-ng-if="datepickerOptions.datepickerMode === 'expression'">
+    <div ng-hide="datepickerOptions.datepickerMode !== 'inception'">
         <md-input-container>
-            <label for="complex-datepicker-expressions-input">{{ getDatepickerName() }}</label>
-            <input data-ng-model="date"
-                   id="complex-datepicker-expressions-input"
-                   data-ng-click="openEditExpressionDialog($event)"
-                   type="text"
-                   style="cursor:pointer"
+            <label class="uncut-text-on-focus-label">Date: Inception Date</label>
+            <input type="text"
                    readonly>
         </md-input-container>
-    </div>-->
+    </div>
 
     <md-menu class="complex-date-picker-settings">
         <md-button data-ng-click="$mdOpenMenu($event)"
@@ -42,6 +38,12 @@
             </md-menu-item>
             <md-menu-item>
                 <md-button data-ng-click="toggleMode('datepicker')">Datepicker</md-button>
+            </md-menu-item>
+            <md-menu-item>
+                <md-button data-ng-click="toggleMode('inception')">Inception Date</md-button>
+            </md-menu-item>
+            <md-menu-item ng-hide="isRootEntityViewer">
+                <md-button data-ng-click="chooseEntityToUseFromAbove($event)">Link To Above</md-button>
             </md-menu-item>
         </md-menu-content>
     </md-menu>

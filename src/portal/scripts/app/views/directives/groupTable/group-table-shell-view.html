@@ -2,7 +2,7 @@
 
     <div class="g-content-wrap">
 
-        <div class="g-workarea-wrap">
+        <div class="g-workarea-wrap" ng-if="contentWrapElem">
             <div class="g-workarea main-area"
                  ng-class="{'column-group-areas-collapsed': groupingAndColumnAreaCollapsed}"
                  data-group-clipboard-handler
@@ -10,7 +10,8 @@
                  ev-event-service="evEventService">
                 <div class="g-grouping-section" data-ng-if="components.groupingArea">
                     <group-grouping ev-data-service="evDataService"
-                                    ev-event-service="evEventService"></group-grouping>
+                                    ev-event-service="evEventService"
+                                    content-wrap-element="contentWrapElem"></group-grouping>
                 </div>
                 <div class="g-table-section">
                     <div>
@@ -19,6 +20,7 @@
                             <div class="g-column-area-wrap">
                                 <group-columns ev-data-service="evDataService"
                                                ev-event-service="evEventService"
+                                               content-wrap-element="contentWrapElem"
                                 ></group-columns>
 
                                 <md-button class="toggle-group-column-area-btn" ng-click="toggleGroupAndColumnArea()">
@@ -27,14 +29,18 @@
                                 </md-button>
                             </div>
 
-                            <group-table-body ng-if="contentWrapElem"
-                                              class="group-table-body"
+                            <group-table-body class="group-table-body"
                                               ev-data-service="evDataService"
                                               ev-event-service="evEventService"
                                               content-wrap-element="contentWrapElem"
                             ></group-table-body>
 
-
+                            <div ng-if="isReport">
+                                <div grouping-and-column-area-drag-and-drop
+                                     ev-data-service="evDataService"
+                                     ev-event-service="evEventService"
+                                     content-wrap-element="contentWrapElem"></div>
+                            </div>
                         </div>
                     </div>
                 </div>

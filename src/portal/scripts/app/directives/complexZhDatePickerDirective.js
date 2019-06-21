@@ -6,6 +6,7 @@
     'use strict';
 
     var expressionService = require('../services/expression.service');
+    var evEvents = require('../services/entityViewerEvents');
 
     module.exports = function ($mdDialog) {
 
@@ -15,14 +16,20 @@
                 displayOptions: '<',
                 callbackMethod: '&',
                 datepickerOptions: '=',
-                date: '='
+                date: '=',
+                evDataService: '=',
+                evEventService: '='
             },
-            templateUrl: 'views/directives/zh-date-picker-complex-view.html',
+            templateUrl: 'views/directives/complex-zh-date-picker-view.html',
             link: function (scope, elem, attrs) {
 
-                // console.log('complex datepicker', scope.displayOptions, scope.date, scope.datepickerOptions, scope.callbackMethod);
+                scope.isRootEntityViewer = scope.evDataService.isRootEntityViewer();
 
                 var input = $(elem).find('.complex-datepicker-input');
+
+                var linkToAboveEventIndex;
+                var attributesFromAbove;
+                var columnKey;
 
                 // TIPS
                 // scope.displayOptions is an object that may contain next properties:
@@ -82,17 +89,12 @@
 
                 }
 
-                /*var toggleTodayMode = function () {
-                    scope.datepickerActiveModeTitle = 'Today';
-                    scope.datepickerOptions.datepickerMode = 'today';
-                    scope.datepickerOptions.expression = "now()";
-
-                    input.attr('disabled', '');
-                };*/
+                scope.toggleMode = function (mode) {
+                    scope.datepickerOptions.datepickerMode = mode;
+                };
 
                 var enableTodayMode = function () {
 
-                    // toggleTodayMode();
                     scope.datepickerActiveModeTitle = 'Today';
                     scope.datepickerOptions.expression = "now()";
                     input.attr('disabled', '');
@@ -100,28 +102,19 @@
                     var today = moment(new Date()).format('YYYY-MM-DD');
                     scope.date = today;
 
+                    if (linkToAboveEventIndex) {
+                        scope.evEventService.removeEventListener(evEvents.ACTIVE_OBJECT_FROM_ABOVE_CHANGE, linkToAboveEventIndex);
+                        linkToAboveEventIndex = null;
+                        columnKey = null;
+                    }
+
                     setTimeout(function () {
                         scope.callbackMethod()
                     }, 500);
 
                 };
 
-                scope.toggleMode = function (mode) {
-                    scope.datepickerOptions.datepickerMode = mode;
-                };
-
-                /*scope.toggleYesterdayMode = function () {
-
-                    scope.datepickerActiveModeTitle = 'Yesterday';
-                    scope.datepickerOptions.datepickerMode = 'yesterday';
-                    scope.datepickerOptions.expression = "now()-days(1)";
-
-                    input.attr('disabled', '');
-                };*/
-
                 var enableYesterdayMode = function () {
-
-                    // toggleYesterdayMode();
 
                     scope.datepickerActiveModeTitle = 'Yesterday';
                     scope.datepickerOptions.expression = "now()-days(1)";
@@ -130,6 +123,12 @@
                     var yesterday = moment(new Date()).subtract(1, 'day').format('YYYY-MM-DD');
 
                     scope.date = yesterday;
+
+                    if (linkToAboveEventIndex) {
+                        scope.evEventService.removeEventListener(evEvents.ACTIVE_OBJECT_FROM_ABOVE_CHANGE, linkToAboveEventIndex);
+                        linkToAboveEventIndex = null;
+                        columnKey = null;
+                    }
 
                     setTimeout(function () {
                         scope.callbackMethod()
@@ -146,13 +145,23 @@
                         scope.callbackMethod()
                     }, 500);
                     input.removeAttr('disabled');
+
+                    if (linkToAboveEventIndex) {
+                        scope.evEventService.removeEventListener(evEvents.ACTIVE_OBJECT_FROM_ABOVE_CHANGE, linkToAboveEventIndex);
+                        linkToAboveEventIndex = null;
+                        columnKey = null;
+                    }
                 };
 
                 var enableExpressionMode = function () {
                     scope.datepickerActiveModeTitle = 'Custom';
-                    // scope.datepickerOptions.datepickerMode = 'expression';
 
                     input.attr('disabled', '');
+
+                    if (linkToAboveEventIndex) {
+                        scope.evEventService.removeEventListener(evEvents.ACTIVE_OBJECT_FROM_ABOVE_CHANGE, linkToAboveEventIndex);
+                        linkToAboveEventIndex = null;
+                    }
                 };
 
                 scope.openEditExpressionDialog = function ($event) {
@@ -214,6 +223,87 @@
                     });
                 };
 
+                var enableInceptionDateMode = function () {
+                    // scope.datepickerOptions.datepickerMode = 'datepicker';
+                    delete scope.datepickerOptions.expression;
+
+                    setTimeout(function () {
+                        scope.callbackMethod()
+                    }, 500);
+
+                    if (linkToAboveEventIndex) {
+                        scope.evEventService.removeEventListener(evEvents.ACTIVE_OBJECT_FROM_ABOVE_CHANGE, linkToAboveEventIndex);
+                        linkToAboveEventIndex = null;
+                        columnKey = null;
+                    }
+                };
+
+                scope.chooseEntityToUseFromAbove = function ($event) {
+
+                    attributesFromAbove = scope.evDataService.getAttributesFromAbove().filter(function(attribute) {
+                        return attribute.value_type === 40;
+                    });
+
+                    if (scope.datepickerOptions.datepickerMode !== 'link_to_above') {
+                        scope.datepickerOptions.datepickerMode = 'link_to_above';
+                    }
+
+                    $mdDialog.show({
+                        controller: 'UseFromAboveDialogController as vm',
+                        templateUrl: 'views/dialogs/use-from-above-dialog-view.html',
+                        parent: angular.element(document.body),
+                        targetEvent: $event,
+                        preserveScope: true,
+                        multiple: true,
+                        autoWrap: true,
+                        skipHide: true,
+                        locals: {
+                            item: columnKey,
+                            data: {attributes: attributesFromAbove}
+                        }
+                    }).then(function (res) {
+
+                        if (res.status === 'agree' && res.data.item) {
+
+                            columnKey = res.data.item;
+
+                        }
+                    })
+
+                };
+
+                var enableLinkToAboveMode = function () {
+
+                    scope.datepickerActiveModeTitle = 'Link To Above';
+
+                    delete scope.datepickerOptions.expression;
+                    input.attr('disabled', '');
+
+                    linkToAboveEventIndex = scope.evEventService.addEventListener(evEvents.ACTIVE_OBJECT_FROM_ABOVE_CHANGE, function () {
+
+                        if (columnKey) {
+
+                            var activeObjectFromAbove = scope.evDataService.getActiveObjectFromAbove();
+
+                            var key = columnKey;
+                            var value = activeObjectFromAbove[key];
+
+                            scope.date = [value];
+
+                            if (scope.callbackMethod) {
+                                setTimeout(function() {
+                                    scope.callbackMethod();
+                                }, 500)
+                            }
+
+                            scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE);
+
+                        }
+
+                    });
+
+                };
+
                 scope.$watch("datepickerOptions.datepickerMode", function (datepickerMode) {
 
                     switch (datepickerMode) {
@@ -228,6 +318,16 @@
                             break;
                         case "datepicker":
                             enableDatepickerMode();
+                            break;
+                        case "inception":
+                            enableInceptionDateMode();
+                            break;
+                        case "link_to_above":
+                            if (!scope.isRootEntityViewer) {
+                                enableLinkToAboveMode();
+                            } else {
+                                enableDatepickerMode();
+                            }
                             break;
                         default:
                             scope.datepickerOptions.datepickerMode = 'datepicker';

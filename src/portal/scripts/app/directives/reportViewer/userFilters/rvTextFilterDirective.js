@@ -264,7 +264,6 @@
 
                     scope.initSplitPanelMode();
 
-
                 };
 
                 scope.init()

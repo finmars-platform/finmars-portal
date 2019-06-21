@@ -585,17 +585,21 @@
             </div>
         </div>
     </md-dialog-content>
-    <md-dialog-actions layout="row" layout-align="space-between center">
-        <md-button data-ng-if="vm.MABtnVisibility(vm.entityType)" class="md-raised md-primary" style="margin: 0;"
-                   data-ui-sref="app.attributesManager({entityType: vm.entityType})" data-ng-click="vm.cancel()">
-            Manage Attributes
-        </md-button>
-        <md-button class="md-raised md-primary" style="margin: 0;"
+    <md-dialog-actions>
+        <div layout="row" layout-align="start center">
+            <md-button data-ng-if="vm.MABtnVisibility(vm.entityType)" class="md-raised md-primary" style="margin: 0;"
+                       data-ui-sref="app.attributesManager({entityType: vm.entityType})" data-ng-click="vm.cancel()">
+                Manage Attributes
+            </md-button>
+        </div>
+        <!--<md-button class="md-raised md-primary" style="margin: 0;"
                    data-ng-click="vm.openCustomFieldsManager()">
             Custom Columns
-        </md-button>
-        <md-button class="md-raised" ng-click="vm.cancel()">
-            OK
-        </md-button>
+        </md-button>-->
+        <div layout="row" layout-align="end center">
+            <md-button class="md-raised" ng-click="vm.cancel()">
+                OK
+            </md-button>
+        </div>
     </md-dialog-actions>
 </md-dialog>

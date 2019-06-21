@@ -19,7 +19,8 @@
             restrict: 'AE',
             scope: {
                 evDataService: '=',
-                evEventService: '='
+                evEventService: '=',
+                contentWrapElement: '='
             },
             templateUrl: 'views/directives/groupTable/grouping-view.html',
             link: function (scope, elem, attrs) {
@@ -433,9 +434,11 @@
                     }
                 };
 
-                setTimeout(function () {
-                    dragAndDrop.init();
-                }, 500);
+                if (!scope.isReport) {
+                    setTimeout(function () {
+                        dragAndDrop.init();
+                    }, 500);
+                }
 
                 var init = function () {
 

@@ -333,6 +333,7 @@ app.directive('gDialogDraggable', [require('./app/directives/groupTable/gDialogD
 app.directive('groupHeightAligner', [require('./app/directives/groupTable/gHeightAlignerComponent')]);
 app.directive('groupEditorBinder', ['$templateCache', '$compile', '$controller', '$mdDialog', '$state', require('./app/directives/groupTable/groupEditorBinderComponent')]);
 app.directive('groupSplitPanelReportBinder', ['$templateCache', '$compile', '$controller', '$mdDialog', '$state', '$transitions', require('./app/directives/groupTable/gSplitPanelReportBinderComponent')]);
+app.directive('groupingAndColumnAreaDragAndDrop', ['$mdDialog', require('./app/directives/groupTable/gGroupingAndColumnAreaDragAndDrop')]);
 
 app.directive('groupBindReportRow', [require('./app/directives/groupTable/gBindReportRowDirective.js')]);
 app.directive('contentTitle', ['$timeout', require('./app/directives/contentTitleDirective.js')]);
