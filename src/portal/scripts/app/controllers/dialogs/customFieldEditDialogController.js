@@ -62,12 +62,30 @@
 
         };
 
-        vm.agree = function () {
+        vm.agree = function ($event) {
 
             customFieldService.update(vm.entityType, vm.customField.id, vm.customField).then(function (data) {
 
                 $mdDialog.hide({status: 'agree', data: {attribute: vm.attribute}});
 
+            }).catch(function (reason) {
+                $mdDialog.show({
+                    controller: 'InfoDialogController as vm',
+                    templateUrl: 'views/info-dialog-view.html',
+                    parent: angular.element(document.body),
+                    targetEvent: $event,
+                    clickOutsideToClose: true,
+                    locals: {
+                        info: {
+                            title: 'Warning',
+                            description: "Attribute with <b>" + vm.attribute.user_code + "</b> already exist."
+                        }
+                    },
+                    preserveScope: true,
+                    autoWrap: true,
+                    skipHide: true,
+                    multiple: true
+                })
             })
         };
 
