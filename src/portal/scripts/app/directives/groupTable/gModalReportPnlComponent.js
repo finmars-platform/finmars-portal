@@ -97,9 +97,15 @@
                 });
 
                 customFieldService.getList(vm.entityType).then(function (data) {
+
                     vm.custom = data.results;
+
                     vm.custom.forEach(function (customItem) {
-                        customItem.columnType = 'custom-field';
+
+                        customItem.custom_field = Object.assign({}, customItem);
+
+                        customItem.key = 'custom_fields.' + customItem.user_code;
+                        customItem.name = 'Custom Field. ' + customItem.name;
                     });
 
                     dynamicAttributesForReportsService.getDynamicAttributes().then(function (data) {

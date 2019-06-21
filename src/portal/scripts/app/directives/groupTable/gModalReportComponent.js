@@ -93,8 +93,12 @@
                     vm.custom = data.results;
 
                     vm.custom.forEach(function (customItem) {
+
+                        customItem.custom_field = Object.assign({}, customItem);
+
                         customItem.key = 'custom_fields.' + customItem.user_code;
                         customItem.name = 'Custom Field. ' + customItem.name;
+
                     });
 
                     dynamicAttributesForReportsService.getDynamicAttributes().then(function (data) {
