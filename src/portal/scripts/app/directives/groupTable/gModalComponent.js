@@ -48,12 +48,17 @@
                     uiService.getTransactionFieldList().then(function (data) {
                         resolve(data);
                     })
-                }
+                } else {
 
-                if (vm.entityType === 'instrument') {
-                    uiService.getInstrumentFieldList().then(function (data) {
-                        resolve(data);
-                    })
+                    if (vm.entityType === 'instrument') {
+                        uiService.getInstrumentFieldList().then(function (data) {
+                            resolve(data);
+                        })
+
+                    } else {
+                        resolve({results: []})
+                    }
+
                 }
 
             })
