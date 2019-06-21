@@ -3,7 +3,9 @@
     <div class="g-content-wrap">
 
         <div class="g-workarea-wrap">
-            <div class="g-workarea main-area" data-group-clipboard-handler
+            <div class="g-workarea main-area"
+                 ng-class="{'column-group-areas-collapsed': groupingAndColumnAreaCollapsed}"
+                 data-group-clipboard-handler
                  ev-data-service="evDataService"
                  ev-event-service="evEventService">
                 <div class="g-grouping-section" data-ng-if="components.groupingArea">
@@ -14,9 +16,16 @@
                     <div>
                         <div class="g-table-wrap">
 
-                            <group-columns ev-data-service="evDataService"
-                                           ev-event-service="evEventService"
-                            ></group-columns>
+                            <div class="g-column-area-wrap">
+                                <group-columns ev-data-service="evDataService"
+                                               ev-event-service="evEventService"
+                                ></group-columns>
+
+                                <md-button class="toggle-group-column-area-btn" ng-click="toggleGroupAndColumnArea()">
+                                    <ng-md-icon ng-hide="groupingAndColumnAreaCollapsed" icon="keyboard_arrow_up"></ng-md-icon>
+                                    <ng-md-icon ng-hide="!groupingAndColumnAreaCollapsed" icon="keyboard_arrow_down"></ng-md-icon>
+                                </md-button>
+                            </div>
 
                             <group-table-body ng-if="contentWrapElem"
                                               class="group-table-body"
@@ -43,14 +52,13 @@
 
     </div>
 
-    <div class="g-additions" data-ng-if="additions.isOpen">
+    <div class="g-additions" data-ng-if="isRootEntityViewer && additions.isOpen">
 
         <div group-height-aligner
              ev-data-service="evDataService"
              ev-event-service="evEventService"></div>
 
         <div class="g-height-slider"></div>
-
 
         <div class="g-additions-data-editor min-height" data-ng-if="additions.type === 'form-editor'">
             <div data-ng-show="!activebject">
@@ -67,7 +75,7 @@
             <div data-ng-include="'views/entity-viewer/permission-editor-view.html'" class="min-height"></div>
         </div>
         <div class="g-additions-workarea"
-             data-ng-if="additions.type == 'balance-report'">
+             data-ng-if="additions.type === 'balance-report'">
             <group-split-panel-report-binder ev-data-service="evDataService"
                                              ev-event-service="evEventService"></group-split-panel-report-binder>
         </div>
