@@ -334,6 +334,42 @@
 
     };
 
+    var mapCustomField = function (item, key, entity, code) {
+
+        console.log('code', code);
+        console.log('entity', entity);
+        console.log('item', item);
+        console.log('key', key);
+
+        return new Promise(function (resolve, reject) {
+
+            configurationImportGetService.getCustomFieldByUserCode(code, entity).then(function (data) {
+
+                var pieces = item[key].split('.');
+                pieces.splice(-1, 1);
+                pieces.push(data.id);
+                var result = pieces.join('.');
+                item[key] = result;
+
+                console.log('item[key]', item[key]);
+                console.log('item', item);
+
+                resolve(item)
+
+            }).catch(function (reason) {
+
+                console.error(reason);
+
+                toastNotificationService.error(reason);
+
+                reject(reason)
+
+            })
+
+        })
+
+    };
+
     var mapAttributeType = function (item, key, entity, code) {
 
         console.log('code', code);
@@ -918,7 +954,7 @@
 
                         index = index - 1;
 
-                        if(index < 0) {
+                        if (index < 0) {
                             index = 0
                         }
 
@@ -949,7 +985,7 @@
 
                     index = index - 1;
 
-                    if(index < 0) {
+                    if (index < 0) {
                         index = 0
                     }
 
@@ -994,6 +1030,115 @@
 
     };
 
+    var recursiveMapCustomFieldItemInLayout = function (resolve, items, index, errors, errorOptions) {
+
+        if (items.length) {
+
+            console.log('index', index);
+
+            if (items[index].hasOwnProperty('custom_field')) {
+
+
+                var code = items[index].custom_field.user_code;
+                var entity = metaContentTypesService.findEntityByContentType(items[index].content_type, 'ui');
+                var item = items[index];
+                var item_key = 'key';
+
+                if (entity) {
+
+                    mapCustomField(item, item_key, entity, code).then(function () {
+
+                        index = index + 1;
+
+                        if (index < items.length - 1) {
+
+                            recursiveMapCustomFieldItemInLayout(resolve, items, index);
+                        } else {
+                            resolve(items);
+                        }
+
+                    }).catch(function (error) {
+
+                        items.splice(index, 1);
+
+                        index = index - 1;
+
+                        if (index < 0) {
+                            index = 0
+                        }
+
+                        errors.push({
+                            item: errorOptions.item,
+                            content_type: errorOptions.content_type,
+                            error: {
+                                message: 'Missing Custom Field: ' + code
+                            },
+                            mode: 'The related column has been deleted from layout'
+
+                        });
+
+
+                        console.log('splice items', items);
+
+                        if (index < items.length - 1) {
+                            recursiveMapCustomFieldItemInLayout(resolve, items, index, errors, errorOptions)
+                        } else {
+                            resolve(items);
+                        }
+
+                    })
+
+                } else {
+
+                    items.splice(index, 1);
+
+                    index = index - 1;
+
+                    if (index < 0) {
+                        index = 0
+                    }
+
+                    errors.push({
+                        item: errorOptions.item,
+                        content_type: errorOptions.content_type,
+                        error: {
+                            message: 'Missing Custom Field: ' + code
+                        },
+                        mode: 'The related column has been deleted from layout'
+
+                    });
+
+                    console.log('splice items', items);
+
+                    if (index < items.length - 1) {
+                        recursiveMapCustomFieldItemInLayout(resolve, items, index, errors, errorOptions)
+                    } else {
+                        resolve(items);
+                    }
+
+                }
+
+            } else {
+
+                index = index + 1;
+
+                if (index < items.length - 1) {
+
+                    recursiveMapCustomFieldItemInLayout(resolve, items, index, errors, errorOptions)
+
+                } else {
+
+                    resolve(items)
+
+                }
+            }
+
+        } else {
+            resolve(items)
+        }
+
+    };
+
     var recursiveMapListLayout = function (items, errors, errorOptions) {
 
         return new Promise(function (resolve, reject) {
@@ -1001,6 +1146,18 @@
             var startIndex = 0;
 
             recursiveMapItemInLayout(resolve, items, startIndex, errors, errorOptions);
+
+        })
+
+    };
+
+    var recursiveMapCustomFieldListLayout = function (items, errors, errorOptions) {
+
+        return new Promise(function (resolve, reject) {
+
+            var startIndex = 0;
+
+            recursiveMapCustomFieldItemInLayout(resolve, items, startIndex, errors, errorOptions);
 
         })
 
@@ -1022,7 +1179,19 @@
 
                             layout.data.grouping = grouping;
 
-                            resolve(layout)
+                            recursiveMapCustomFieldListLayout(layout.data.columns, errors, errorOptions).then(function (columns) {
+
+                                layout.data.columns = columns;
+
+                                recursiveMapCustomFieldListLayout(layout.data.grouping, errors, errorOptions).then(function (grouping) {
+
+                                    layout.data.grouping = grouping;
+
+                                    resolve(layout)
+
+                                })
+
+                            })
 
                         })
 
