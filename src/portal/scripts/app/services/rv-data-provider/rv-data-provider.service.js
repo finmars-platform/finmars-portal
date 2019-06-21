@@ -111,6 +111,8 @@
 
         var reportOptions = entityViewerDataService.getReportOptions();
         delete reportOptions.items;
+        delete reportOptions.custom_fields;
+        delete reportOptions.custom_fields_object;
         delete reportOptions.item_complex_transactions;
         delete reportOptions.item_counterparties;
         delete reportOptions.item_responsibles;

@@ -29,6 +29,7 @@
             'node_modules/angular-material-icons/angular-material-icons.js',
 
             'node_modules/angular-ui-router/release/angular-ui-router.js',
+            'node_modules/angular-ui-scroll/dist/ui-scroll.js',
             'node_modules/ui-select/dist/select.js',
 
             'node_modules/core-js/client/core.js',
@@ -101,6 +102,7 @@
 
         var pathToJS = [
             'node_modules/angular-ui-router/release/angular-ui-router.js',
+            'node_modules/angular-ui-scroll/dist/ui-scroll.js',
             'node_modules/ui-select/dist/select.js'
         ];
 

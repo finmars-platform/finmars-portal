@@ -39,6 +39,32 @@
         var attrsList = [];
 
         $('body').addClass('drag-dialog'); // hide backdrop
+
+        vm.getUserFields = function () {
+
+            return new Promise(function (resolve) {
+
+                if (vm.entityType === 'complex-transaction') {
+                    uiService.getTransactionFieldList().then(function (data) {
+                        resolve(data);
+                    })
+                } else {
+
+                    if (vm.entityType === 'instrument') {
+                        uiService.getInstrumentFieldList().then(function (data) {
+                            resolve(data);
+                        })
+
+                    } else {
+                        resolve({results: []})
+                    }
+
+                }
+
+            })
+
+        };
+
         vm.getAttributes = function () {
 
             vm.entityAttrs = metaService.getEntityAttrs(vm.entityType);
@@ -47,7 +73,7 @@
                 item.entity = vm.entityType;
             });
 
-            uiService.getTransactionFieldList().then(function (data) { // only for Complex Transaction & Transaction types
+            vm.getUserFields().then(function (data) { // only for Complex Transaction & Transaction types
 
                 data.results.forEach(function (field) {
 

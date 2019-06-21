@@ -69,46 +69,80 @@
 
             vm.strategy3attrs = rvAttributesHelper.getAllAttributesAsFlatList('strategies.strategy3', 'strategy3', 'Strategy 3', {maxDepth: 1});
 
-            customFieldService.getList(vm.entityType).then(function (data) {
-                vm.custom = data.results;
-                vm.custom.forEach(function (customItem) {
-                    customItem.columnType = 'custom-field';
+            uiService.getInstrumentFieldList().then(function (instrumentData) {
+
+                instrumentData.results.forEach(function (field) {
+
+                    vm.instrumentAttrs = vm.instrumentAttrs.map(function (entityAttr, index) {
+
+                        if (entityAttr.key === 'instrument.' + field.key) {
+                            entityAttr.name = 'Instrument. ' + field.name;
+                        }
+
+                        return entityAttr;
+
+                    });
+
+                    vm.allocationAttrs = vm.allocationAttrs.map(function (entityAttr, index) {
+
+                        if (entityAttr.key === 'allocation.' + field.key) {
+                            entityAttr.name = 'Allocation. ' + field.name;
+                        }
+
+                        return entityAttr;
+
+                    });
+
+
                 });
 
-                dynamicAttributesForReportsService.getDynamicAttributes().then(function (data) {
+                customFieldService.getList(vm.entityType).then(function (data) {
 
-                    vm.portfolioDynamicAttrs = rvAttributesHelper.formatAttributeTypes(data['portfolios.portfolio'], 'portfolios.portfolio', 'portfolio', 'Portfolio');
-                    vm.accountDynamicAttrs = rvAttributesHelper.formatAttributeTypes(data['accounts.account'], 'accounts.account', 'account', 'Account');
-                    vm.instrumentDynamicAttrs = rvAttributesHelper.formatAttributeTypes(data['instruments.instrument'], 'instruments.instrument', 'instrument', 'Instrument');
-                    vm.allocationDynamicAttrs = rvAttributesHelper.formatAttributeTypes(data['instruments.instrument'], 'instruments.instrument', 'allocation', 'Allocation');
+                    vm.custom = data.results;
 
-                    attrsList = attrsList.concat(vm.balanceAttrs);
-                    attrsList = attrsList.concat(vm.allocationAttrs);
-                    attrsList = attrsList.concat(vm.allocationDynamicAttrs);
+                    vm.custom.forEach(function (customItem) {
 
-                    attrsList = attrsList.concat(vm.balancePerformanceAttrs);
-                    attrsList = attrsList.concat(vm.balanceMismatchAttrs);
-                    attrsList = attrsList.concat(vm.custom);
+                        customItem.custom_field = Object.assign({}, customItem);
 
-                    attrsList = attrsList.concat(vm.instrumentAttrs);
-                    attrsList = attrsList.concat(vm.instrumentDynamicAttrs);
+                        customItem.key = 'custom_fields.' + customItem.user_code;
+                        customItem.name = 'Custom Field. ' + customItem.name;
+                    });
 
-                    attrsList = attrsList.concat(vm.accountAttrs);
-                    attrsList = attrsList.concat(vm.accountDynamicAttrs);
+                    dynamicAttributesForReportsService.getDynamicAttributes().then(function (data) {
 
-                    attrsList = attrsList.concat(vm.portfolioAttrs);
-                    attrsList = attrsList.concat(vm.portfolioDynamicAttrs);
+                        vm.portfolioDynamicAttrs = rvAttributesHelper.formatAttributeTypes(data['portfolios.portfolio'], 'portfolios.portfolio', 'portfolio', 'Portfolio');
+                        vm.accountDynamicAttrs = rvAttributesHelper.formatAttributeTypes(data['accounts.account'], 'accounts.account', 'account', 'Account');
+                        vm.instrumentDynamicAttrs = rvAttributesHelper.formatAttributeTypes(data['instruments.instrument'], 'instruments.instrument', 'instrument', 'Instrument');
+                        vm.allocationDynamicAttrs = rvAttributesHelper.formatAttributeTypes(data['instruments.instrument'], 'instruments.instrument', 'allocation', 'Allocation');
 
-                    attrsList = attrsList.concat(vm.strategy1attrs);
-                    attrsList = attrsList.concat(vm.strategy2attrs);
-                    attrsList = attrsList.concat(vm.strategy3attrs);
+                        attrsList = attrsList.concat(vm.balanceAttrs);
+                        attrsList = attrsList.concat(vm.allocationAttrs);
+                        attrsList = attrsList.concat(vm.allocationDynamicAttrs);
+
+                        attrsList = attrsList.concat(vm.balancePerformanceAttrs);
+                        attrsList = attrsList.concat(vm.balanceMismatchAttrs);
+                        attrsList = attrsList.concat(vm.custom);
+
+                        attrsList = attrsList.concat(vm.instrumentAttrs);
+                        attrsList = attrsList.concat(vm.instrumentDynamicAttrs);
+
+                        attrsList = attrsList.concat(vm.accountAttrs);
+                        attrsList = attrsList.concat(vm.accountDynamicAttrs);
+
+                        attrsList = attrsList.concat(vm.portfolioAttrs);
+                        attrsList = attrsList.concat(vm.portfolioDynamicAttrs);
+
+                        attrsList = attrsList.concat(vm.strategy1attrs);
+                        attrsList = attrsList.concat(vm.strategy2attrs);
+                        attrsList = attrsList.concat(vm.strategy3attrs);
 
 
-                    syncAttrs();
+                        syncAttrs();
 
 
-                    vm.readyStatus.content = true;
-                    $scope.$apply();
+                        vm.readyStatus.content = true;
+                        $scope.$apply();
+                    });
                 });
             });
 
@@ -122,8 +156,7 @@
                     return true;
                 }
                 return false;
-            }
-            else {
+            } else {
                 if (['notes'].indexOf(item.key) !== -1) {
                     return true;
                 }

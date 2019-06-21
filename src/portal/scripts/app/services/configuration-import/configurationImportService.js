@@ -803,6 +803,86 @@
 
                             }));
                             break;
+                        case 'ui.instrumentuserfieldmodel':
+                            resolve(new Promise(function (resolve, reject) {
+
+                                uiRepository.getInstrumentFieldList({
+                                    filters: {
+                                        key: item.key
+                                    }
+                                }).then(function (data) {
+
+                                    if (data.results.length) {
+
+                                        var result;
+
+                                        data.results.forEach(function (resultItem) {
+
+                                            if (resultItem.key === item.key) {
+                                                result = resultItem
+                                            }
+
+                                        });
+
+                                        if (result) {
+
+                                            item.id = result.id;
+
+                                            resolve(uiRepository.updateInstrumentField(item.id, item));
+
+                                        } else {
+                                            resolve(uiRepository.createInstrumentField(item));
+                                        }
+                                    } else {
+
+                                        resolve(uiRepository.createInstrumentField(item));
+
+                                    }
+
+                                });
+
+                            }));
+                            break;
+                        case 'ui.transactionuserfieldmodel':
+                            resolve(new Promise(function (resolve, reject) {
+
+                                uiRepository.getTransactionFieldList({
+                                    filters: {
+                                        key: item.key
+                                    }
+                                }).then(function (data) {
+
+                                    if (data.results.length) {
+
+                                        var result;
+
+                                        data.results.forEach(function (resultItem) {
+
+                                            if (resultItem.key === item.key) {
+                                                result = resultItem
+                                            }
+
+                                        });
+
+                                        if (result) {
+
+                                            item.id = result.id;
+
+                                            resolve(uiRepository.updateTransactionField(item.id, item));
+
+                                        } else {
+                                            resolve(uiRepository.createTransactionField(item));
+                                        }
+                                    } else {
+
+                                        resolve(uiRepository.createTransactionField(item));
+
+                                    }
+
+                                });
+
+                            }));
+                            break;
                     }
 
                 } catch (error) {
@@ -889,7 +969,8 @@
                     'accounts.accounttype', 'currencies.currency', 'instruments.pricingpolicy',
                     'csv_import.csvimportscheme', 'integrations.instrumentdownloadscheme', 'integrations.pricedownloadscheme',
                     'integrations.complextransactionimportscheme', 'complex_import.compleximportscheme',
-                    'reports.balancereportcustomfield', 'reports.plreportcustomfield', 'reports.transactionreportcustomfield'].indexOf(item.entity) !== -1;
+                    'reports.balancereportcustomfield', 'reports.plreportcustomfield', 'reports.transactionreportcustomfield',
+                    'ui.instrumentuserfieldmodel', 'ui.transactionuserfieldmodel'].indexOf(item.entity) !== -1;
             });
 
             overwriteEntityItems(overwriteEntities, cacheContainer, errors).then(function (data) {
@@ -1184,6 +1265,114 @@
                                     });
 
                                 })
+
+                            }));
+                            break;
+                        case 'ui.instrumentuserfieldmodel':
+                            resolve(new Promise(function (resolveLocal, reject) {
+
+                                uiRepository.getInstrumentFieldList({
+                                    filters: {
+                                        key: item.key
+                                    }
+                                }).then(function (data) {
+
+                                    if (data.results.length) {
+
+                                        var result;
+
+                                        data.results.forEach(function (resultItem) {
+
+                                            if (resultItem.key === item.key) {
+                                                result = resultItem
+                                            }
+
+                                        });
+
+                                        if (result) {
+
+                                            if (settings.mode !== 'overwrite') {
+
+                                                errors.push({
+                                                    content_type: 'ui.instrumentuserfieldmodel',
+                                                    item: item,
+                                                    error: {
+                                                        message: 'Instrument Field already exists: key ' + item.key
+                                                    },
+                                                    mode: 'skip'
+                                                });
+
+                                            }
+
+                                            resolveLocal()
+
+                                        } else {
+
+                                            resolveLocal(uiRepository.createInstrumentField(item));
+
+                                        }
+
+                                    } else {
+
+                                        resolveLocal(uiRepository.createInstrumentField(item));
+
+                                    }
+
+                                });
+
+                            }));
+                            break;
+                        case 'ui.transactionuserfieldmodel':
+                            resolve(new Promise(function (resolveLocal, reject) {
+
+                                uiRepository.getTransactionFieldList({
+                                    filters: {
+                                        key: item.key,
+                                    }
+                                }).then(function (data) {
+
+                                    if (data.results.length) {
+
+                                        var result;
+
+                                        data.results.forEach(function (resultItem) {
+
+                                            if (resultItem.key === item.key) {
+                                                result = resultItem
+                                            }
+
+                                        });
+
+                                        if (result) {
+
+                                            if (settings.mode !== 'overwrite') {
+
+                                                errors.push({
+                                                    content_type: 'ui.transactionuserfieldmodel',
+                                                    item: item,
+                                                    error: {
+                                                        message: 'Transaction Field already exists: key ' + item.key
+                                                    },
+                                                    mode: 'skip'
+                                                });
+
+                                            }
+
+                                            resolveLocal()
+
+                                        } else {
+
+                                            resolveLocal(uiRepository.createTransactionField(item));
+
+                                        }
+
+                                    } else {
+
+                                        resolveLocal(uiRepository.createTransactionField(item));
+
+                                    }
+
+                                });
 
                             }));
                             break;

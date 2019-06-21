@@ -89,12 +89,30 @@
             });
         };
 
-        vm.agree = function () {
+        vm.agree = function ($event) {
 
             customFieldService.create(vm.entityType, vm.customField).then(function (value) {
 
                 $mdDialog.hide({status: 'agree'});
 
+            }).catch(function (reason) {
+                $mdDialog.show({
+                    controller: 'InfoDialogController as vm',
+                    templateUrl: 'views/info-dialog-view.html',
+                    parent: angular.element(document.body),
+                    targetEvent: $event,
+                    clickOutsideToClose: true,
+                    locals: {
+                        info: {
+                            title: 'Warning',
+                            description: "Custom Field with <b>" + vm.customField.user_code + "</b> already exist."
+                        }
+                    },
+                    preserveScope: true,
+                    autoWrap: true,
+                    skipHide: true,
+                    multiple: true
+                })
             })
 
         };
@@ -349,7 +367,7 @@
                             "name": "Custom Column: " + item.name,
                             "description": "Custom Column: " + item.name + " (" + item.user_code + ") :: " + captions[item.value_type] + '\n' + item.notes + '\nExpression: \n' + item.expr,
                             "groups": "custom_field",
-                            "func": item.user_code
+                            "func": 'custom_fields.' + item.user_code
                         }
 
                     });
