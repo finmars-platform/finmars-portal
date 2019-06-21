@@ -779,7 +779,7 @@
             }
         };
 
-        vm.openCustomFieldsManager = function () {
+        /*vm.openCustomFieldsManager = function () {
 
             $mdDialog.show({
                 controller: 'CustomFieldDialogController as vm',
@@ -797,7 +797,7 @@
                 }
             })
 
-        };
+        };*/
 
         vm.initDnD = function () {
             setTimeout(function () {

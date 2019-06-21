@@ -99,7 +99,7 @@
                     attrsList = attrsList.concat(vm.strategy3attrs);
 
                     syncAttrs();
-                    console.log("draganddrop attrslist", attrsList);
+
                     vm.readyStatus.content = true;
                     $scope.$apply();
                 });
@@ -376,7 +376,7 @@
 
         };
 
-        vm.openCustomFieldsManager = function () {
+        /*vm.openCustomFieldsManager = function () {
 
             $mdDialog.show({
                 controller: 'CustomFieldDialogController as vm',
@@ -394,7 +394,7 @@
                 }
             })
 
-        };
+        };*/
 
         var dragAndDrop = {
 
@@ -417,6 +417,7 @@
                     })
 
                 });
+
                 this.dragula.on('drop', function (elem, target) {
                     console.log('here?', target, elem); //TODO fallback to ids instead of name/key
                     $(target).removeClass('active');
@@ -613,9 +614,7 @@
                             locals: {
                                 warning: {
                                     title: 'Error',
-                                    description: errorMessage
-                                },
-                                data: {
+                                    description: errorMessage,
                                     actionsButtons: [{
                                         name: "OK",
                                         response: false
@@ -632,7 +631,9 @@
                 this.dragula.on('dragend', function (el) {
                     $scope.$apply();
                     $(el).remove();
-                })
+                });
+
+
             },
 
             dragula: function () {

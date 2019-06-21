@@ -270,7 +270,7 @@
                             if (inputWithCalc.can_recalculate === true) {
                                 userInput.buttons = [
                                     {
-                                        icon: 'functions',
+                                        icon: 'iso',
                                         tooltip: 'Recalculate',
                                         caption: '',
                                         classes: 'md-raised',
@@ -358,7 +358,7 @@
                                     if (inputWithCalc.can_recalculate === true) {
                                         userInput.buttons = [
                                             {
-                                                icon: 'functions',
+                                                icon: 'iso',
                                                 tooltip: 'Recalculate',
                                                 caption: '',
                                                 classes: 'md-raised',

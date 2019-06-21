@@ -268,7 +268,7 @@
                 var result = new File([resultFile], {type: 'text/json;charset=utf-8'});
 
                 a.href = URL.createObjectURL(result);
-                a.download = vm.filename ? vm.filename + '.fmcfg' : "mapping.fmcfg";
+                a.download = vm.filename ? vm.filename + '.fmpg' : "mapping.fmpg";
 
                 resolve(vm.file);
 

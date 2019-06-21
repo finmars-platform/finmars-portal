@@ -36,29 +36,6 @@
 
         var deleteLayout = function (layoutId) {
 
-            // bookmarkService.getList().then(function (data){
-            //    if (data.results) {
-            //
-            //        var bookmarks = data.results;
-            //        var deleteBookmarksPromise = [];
-            //
-            //        bookmarks.forEach(function (bookmark){
-            //
-            //            if (bookmark.list_layout === layoutId) {
-            //                deleteBookmarksPromise.push(bookmarkService.deleteByKey(bookmark.id));
-            //            }
-            //
-            //        });
-            //
-            //        Promise.all(deleteBookmarksPromise).then(function (delBookmarksData) {
-            //
-            //            uiService.deleteListLayoutByKey(layoutId).then(function (data) {
-            //                vm.getList();
-            //
-            //            });
-            //        });
-            //    };
-            // });
             uiService.deleteListLayoutByKey(layoutId).then(function (data) {
                 vm.getList();
             });
@@ -86,6 +63,9 @@
                 if (res.status === 'agree') {
 
                     layout.name = res.data.name;
+                    uiService.updateListLayout(layout.id, layout).then(function () {
+                        middlewareService.setData('entityActiveLayoutSwitched', true); // Give signal to update active layout name in the toolbar
+                    });
 
                 }
 
@@ -113,20 +93,39 @@
                 multiple: true
             }).then(function (res) {
                 if (res.status === 'agree') {
-                    // uiService.deleteListLayoutByKey(item.id).then(function (data) {
-                    //     vm.getList();
-                    // });
-                    deleteLayout(item.id);
+
+                    uiService.deleteListLayoutByKey(item.id).then(function (data) {
+                        vm.getList();
+                    });
+                    // deleteLayout(item.id);
                 }
             })
         };
 
-        vm.selectLayout = function (item) {
+        /*vm.selectLayout = function (item) {
             vm.items.forEach(function (item) {
                 item.is_default = false;
             });
 
             item.is_default = true;
+        };*/
+
+        vm.setAsDefault = function (item) {
+            if (!item.is_default) {
+
+                vm.items.forEach(function (layout) {
+
+                    if (layout.is_default) {
+                        layout.is_default = false;
+                        uiService.updateListLayout(layout.id, layout);
+                    }
+
+                });
+
+                item.is_default = true;
+
+                uiService.updateListLayout(item.id, item);
+            }
         };
 
 
@@ -136,7 +135,7 @@
 
         vm.agree = function () {
 
-            var promises = [];
+            /*var promises = [];
 
             vm.items.forEach(function (item) {
 
@@ -148,7 +147,9 @@
 
                 $mdDialog.hide({status: 'agree'});
 
-            });
+            });*/
+
+            $mdDialog.hide({status: 'agree'});
         };
 
     }
