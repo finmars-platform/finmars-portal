@@ -76,6 +76,21 @@
 
     };
 
+    var errorEventAction = function (id) {
+
+        return xhrService.fetch(baseUrl + 'instruments/generated-event/' + id + '/error/',
+            {
+                method: 'PUT',
+                credentials: 'include',
+                headers: {
+                    'X-CSRFToken': cookieService.getCookie('csrftoken'),
+                    Accept: 'application/json',
+                    'Content-type': 'application/json'
+                }
+            })
+
+    };
+
     var generateEvents = function () {
         return xhrService.fetch(baseUrl + 'instruments/instrument/generate-events/',
             {
@@ -102,10 +117,6 @@
             })
     };
 
-    var sortEventsBy = function (options) {
-        return
-    };
-
     var generateAndProcessAsSystem = function () {
         return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl + 'instruments/instrument/system-generate-and-process/'),
             {
@@ -124,6 +135,7 @@
         getEventAction: getEventAction,
         putEventAction: putEventAction,
         informedEventAction: informedEventAction,
+        errorEventAction: errorEventAction,
         generateEvents: generateEvents,
         generateEventsRange: generateEventsRange,
         generateAndProcessAsSystem: generateAndProcessAsSystem

@@ -11,7 +11,8 @@
         <div style="min-width: 1450px">
             <div data-ng-if="vm.checkReadyStatus()">
 
-                <div data-ng-if="vm.entityType === 'complex-transaction'" class="m-8 f-s-18 p-8" style="background: #ffeee8">
+                <div data-ng-if="vm.entityType === 'complex-transaction'" class="m-8 f-s-18 p-8"
+                     style="background: #ffeee8">
                     Transaction type: <b>{{vm.entity.transaction_type_object.name}}</b>
                 </div>
 
@@ -22,7 +23,8 @@
                         </md-tab-label>
                         <md-tab-body>
                             <md-content class="md-padding p-t-26">
-                                <div layout="row" data-ng-repeat="row in vm.range(tab.layout.rows)" class="entity-editor-row">
+                                <div layout="row" data-ng-repeat="row in vm.range(tab.layout.rows)"
+                                     class="entity-editor-row">
                                     <div class="ev-data-field
 								{{field.attribute['value_type'] === 'decoration' ? 'decoration-label-line' : ''}}"
                                          data-ng-repeat="field in tab.layout.fields"
@@ -225,7 +227,9 @@
             <md-button class="md-raised" ng-click="vm.cancel()">
                 Cancel
             </md-button>
-            <md-button class="md-raised m-r-24" data-ng-class="{'disabled-btn': !vm.formIsValid, 'disabled-btn': !vm.TTGroupChosen}" ng-click="vm.save()">
+            <md-button class="md-raised m-r-24"
+                       data-ng-class="{'disabled-btn': !vm.formIsValid, 'disabled-btn': !vm.TTGroupChosen}"
+                       ng-click="vm.save()">
                 Save
             </md-button>
         </div>
@@ -237,10 +241,14 @@
             <md-button class="md-raised" ng-click="vm.cancel()">
                 Cancel
             </md-button>
-            <md-button class="md-raised m-r-24" data-ng-class="{'disabled-btn': !vm.formIsValid, 'disabled-btn': !vm.TTGroupChosen}" ng-click="vm.rebookAsPending()">
+            <md-button class="md-raised m-r-24" data-ng-if="vm.entity.complex_transaction == 2"
+                       data-ng-class="{'disabled-btn': !vm.formIsValid, 'disabled-btn': !vm.TTGroupChosen}"
+                       ng-click="vm.rebookAsPending()">
                 Rebook as pending
             </md-button>
-            <md-button class="md-raised m-r-24" data-ng-class="{'disabled-btn': !vm.formIsValid, 'disabled-btn': !vm.TTGroupChosen}" ng-click="vm.save()">
+            <md-button class="md-raised m-r-24"
+                       data-ng-class="{'disabled-btn': !vm.formIsValid, 'disabled-btn': !vm.TTGroupChosen}"
+                       ng-click="vm.save()">
                 Rebook
             </md-button>
         </div>
