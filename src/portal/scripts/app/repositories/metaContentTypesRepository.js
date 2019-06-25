@@ -614,6 +614,21 @@
                 name: "Transaction",
                 entity: 'complex-transaction',
                 key: "transactions.complextransaction"
+            },
+            {
+                name: "Balance Report Custom Field",
+                entity: 'balance-report-custom-field',
+                key: "reports.balancereportcustomfield"
+            },
+            {
+                name: "PL Report Custom Field",
+                entity: 'pl-report-custom-field',
+                key: "reports.plreportcustomfield"
+            },
+            {
+                name: "Transaction Report Custom Field",
+                entity: 'transaction-report-custom-field',
+                key: "reports.transactionreportcustomfield"
             }
         ]
     };

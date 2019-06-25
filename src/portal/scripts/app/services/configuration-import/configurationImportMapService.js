@@ -943,7 +943,7 @@
 
                         if (index < items.length - 1) {
 
-                            recursiveMapItemInLayout(resolve, items, index);
+                            recursiveMapItemInLayout(resolve, items, index, errors, errorOptions);
                         } else {
                             resolve(items);
                         }
@@ -1030,7 +1030,7 @@
 
     };
 
-    var recursiveMapCustomFieldItemInLayout = function (resolve, items, index, errors, errorOptions) {
+    var recursiveMapCustomFieldItemInLayout = function (resolve, items, index, errors, errorOptions, layoutContentType) {
 
         if (items.length) {
 
@@ -1040,55 +1040,29 @@
 
 
                 var code = items[index].custom_field.user_code;
-                var entity = metaContentTypesService.findEntityByContentType(items[index].content_type, 'ui');
+                var entity = metaContentTypesService.findEntityByContentType(layoutContentType, 'ui');
                 var item = items[index];
                 var item_key = 'key';
 
-                if (entity) {
-
-                    mapCustomField(item, item_key, entity, code).then(function () {
-
-                        index = index + 1;
-
-                        if (index < items.length - 1) {
-
-                            recursiveMapCustomFieldItemInLayout(resolve, items, index);
-                        } else {
-                            resolve(items);
-                        }
-
-                    }).catch(function (error) {
-
-                        items.splice(index, 1);
-
-                        index = index - 1;
-
-                        if (index < 0) {
-                            index = 0
-                        }
-
-                        errors.push({
-                            item: errorOptions.item,
-                            content_type: errorOptions.content_type,
-                            error: {
-                                message: 'Missing Custom Field: ' + code
-                            },
-                            mode: 'The related column has been deleted from layout'
-
-                        });
+                console.log('layoutContentType', layoutContentType);
+                console.log('items[index].content_type', items[index]);
+                console.log('entity', entity);
 
 
-                        console.log('splice items', items);
+                mapCustomField(item, item_key, entity, code).then(function () {
 
-                        if (index < items.length - 1) {
-                            recursiveMapCustomFieldItemInLayout(resolve, items, index, errors, errorOptions)
-                        } else {
-                            resolve(items);
-                        }
+                    index = index + 1;
 
-                    })
+                    if (index < items.length - 1) {
 
-                } else {
+                        recursiveMapCustomFieldItemInLayout(resolve, items, index, errors, errorOptions, layoutContentType);
+                    } else {
+                        resolve(items);
+                    }
+
+                }).catch(function (error) {
+
+                    console.log('error', error);
 
                     items.splice(index, 1);
 
@@ -1108,15 +1082,17 @@
 
                     });
 
+
                     console.log('splice items', items);
 
                     if (index < items.length - 1) {
-                        recursiveMapCustomFieldItemInLayout(resolve, items, index, errors, errorOptions)
+                        recursiveMapCustomFieldItemInLayout(resolve, items, index, errors, errorOptions, layoutContentType)
                     } else {
                         resolve(items);
                     }
 
-                }
+                })
+
 
             } else {
 
@@ -1124,7 +1100,7 @@
 
                 if (index < items.length - 1) {
 
-                    recursiveMapCustomFieldItemInLayout(resolve, items, index, errors, errorOptions)
+                    recursiveMapCustomFieldItemInLayout(resolve, items, index, errors, errorOptions, layoutContentType)
 
                 } else {
 
@@ -1151,13 +1127,13 @@
 
     };
 
-    var recursiveMapCustomFieldListLayout = function (items, errors, errorOptions) {
+    var recursiveMapCustomFieldListLayout = function (items, errors, errorOptions, layoutContentType) {
 
         return new Promise(function (resolve, reject) {
 
             var startIndex = 0;
 
-            recursiveMapCustomFieldItemInLayout(resolve, items, startIndex, errors, errorOptions);
+            recursiveMapCustomFieldItemInLayout(resolve, items, startIndex, errors, errorOptions, layoutContentType);
 
         })
 
@@ -1179,11 +1155,11 @@
 
                             layout.data.grouping = grouping;
 
-                            recursiveMapCustomFieldListLayout(layout.data.columns, errors, errorOptions).then(function (columns) {
+                            recursiveMapCustomFieldListLayout(layout.data.columns, errors, errorOptions, layout.content_type).then(function (columns) {
 
                                 layout.data.columns = columns;
 
-                                recursiveMapCustomFieldListLayout(layout.data.grouping, errors, errorOptions).then(function (grouping) {
+                                recursiveMapCustomFieldListLayout(layout.data.grouping, errors, errorOptions, layout.content_type).then(function (grouping) {
 
                                     layout.data.grouping = grouping;
 
