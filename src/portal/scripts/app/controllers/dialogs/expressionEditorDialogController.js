@@ -332,7 +332,10 @@
 
             for (var i = 0; i < expression.length;) {
 
-                if (expression[i].match(new RegExp(/^[a-zA-Z0-9_-]*$/)) && strContent === false) {
+                if (expression[i].match(new RegExp(/^[a-zA-Z0-9_]*$/)) && strContent === false) {
+
+                    console.log('here?', currentToken.value);
+
                     currentToken.value = currentToken.value + expression[i];
                 } else {
 
