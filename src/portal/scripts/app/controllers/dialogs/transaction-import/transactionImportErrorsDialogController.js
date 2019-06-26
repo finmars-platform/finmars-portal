@@ -22,6 +22,13 @@
         }
 
         vm.validationResult = data.validationResult;
+
+        vm.error_rows = vm.validationResult.error_rows.filter(function (item) {
+
+            return item.level === 'error';
+
+        });
+
         vm.scheme = data.scheme;
         vm.config = data.config;
 
@@ -101,6 +108,12 @@
 
             var result = [];
 
+            var error_rows = validationResult.error_rows.filter(function (item) {
+
+                return item.level === 'error';
+
+            });
+
             result.push('Type, ' + 'Transaction Import');
             result.push('Error handle, ' + config.error_handling);
             result.push('Filename, ' + config.file.name);
@@ -111,12 +124,12 @@
             if (config.error_handling === 'break') {
                 rowsSuccessCount = validationResult.error_row_index - 1;
             } else {
-                rowsSuccessCount = validationResult.total_rows - validationResult.error_rows.length
+                rowsSuccessCount = validationResult.total_rows - error_rows.length
             }
 
             result.push('Rows total, ' + validationResult.total_rows);
             result.push('Rows success import, ' + rowsSuccessCount);
-            result.push('Rows fail import, ' + validationResult.error_rows.length);
+            result.push('Rows fail import, ' + error_rows.length);
 
 
             var columns = vm.generateColumnsForFile(validationResult, config);
@@ -272,7 +285,7 @@
                 vm.rowsSuccessCount = vm.validationResult.error_row_index - 1;
             } else {
 
-                vm.rowsSuccessCount = vm.validationResult.total_rows - vm.validationResult.error_rows.length
+                vm.rowsSuccessCount = vm.validationResult.total_rows - vm.error_rows.length
 
             }
 
