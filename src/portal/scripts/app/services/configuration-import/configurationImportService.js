@@ -1221,6 +1221,8 @@
                                     }
                                 }).then(function (data) {
 
+                                    console.log('BOOKMARK', data);
+
                                     if (data.results.length) {
 
                                         item.list_layout = data.results[0].id;
@@ -1261,7 +1263,37 @@
                                     }
 
                                     Promise.all(promises).then(function (value) {
-                                        resolve(bookmarkRepository.create(item));
+
+                                        var itemName = item.name.split(' (')[0];
+
+                                        bookmarkRepository.getList({
+                                            filters: {
+                                                name: itemName
+                                            }
+                                        }).then(function (data) {
+
+                                            var index = 0;
+
+                                            data.results.forEach(function (resultItem) {
+
+                                                var resultItemName = resultItem.name.split(' (')[0];
+
+                                                if (itemName === resultItemName) {
+                                                    index = index + 1;
+                                                }
+
+
+                                            });
+
+                                            if (index > 0) {
+                                                item.name = itemName + ' (' + index + ')';
+                                            }
+
+                                            resolve(bookmarkRepository.create(item));
+
+                                        });
+
+
                                     });
 
                                 })
