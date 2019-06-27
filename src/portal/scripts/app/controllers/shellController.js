@@ -21,7 +21,8 @@
     var middlewareService = require('../services/middlewareService');
 
     var crossTabEvents = {
-        'MASTER_USER_CHANGED': 'MASTER_USER_CHANGED'
+        'MASTER_USER_CHANGED': 'MASTER_USER_CHANGED',
+        'LOGOUT': 'LOGOUT'
     };
 
     module.exports = function ($scope, $state, $rootScope, $mdDialog, $transitions) {
@@ -37,7 +38,13 @@
 
         vm.logout = function () {
             console.log('Logged out');
+
             usersService.logout();
+
+            if (vm.broadcastManager) {
+                vm.broadcastManager.postMessage({event: crossTabEvents.LOGOUT});
+            }
+
             window.location.pathname = '/';
             cookiesService.deleteCookie();
             //usersService.logout();
@@ -102,6 +109,10 @@
                 if (event.data.event === crossTabEvents.MASTER_USER_CHANGED) {
                     $state.go('app.home');
                     vm.getMasterUsersList();
+                }
+
+                if (event.data.event === crossTabEvents.LOGOUT) {
+                    window.location.href = '/';
                 }
 
 

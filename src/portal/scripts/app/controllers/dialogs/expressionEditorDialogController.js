@@ -312,6 +312,12 @@
 
         }
 
+        function isNumber(currentToken) {
+
+            return /^\d+$/.test(currentToken.value);
+
+        }
+
         vm.getHtmlExpression = function (expression) {
 
             var result = '';
@@ -329,17 +335,19 @@
             var strType;
 
             var inputsCounts = 0;
+            var isNum;
 
             for (var i = 0; i < expression.length;) {
 
+
                 if (expression[i].match(new RegExp(/^[a-zA-Z0-9_]*$/)) && strContent === false) {
 
-                    console.log('here?', currentToken.value);
-
                     currentToken.value = currentToken.value + expression[i];
+
                 } else {
 
                     if (currentToken.value !== '') {
+
                         result = result + '<span class="eb-highlight-error">' + currentToken.value + '</span>';
                         vm.status = 'inputs-error';
                     }
@@ -385,7 +393,7 @@
 
                         if (i + 1 < expression.length && expression[i + 1].match(new RegExp(/^[a-zA-Z0-9_-]*$/))) {
 
-                            console.log('expression[i + 1]', expression[i + 1])
+                            // console.log('expression[i + 1]', expression[i + 1])
 
                             // if next letter also part of input, then continue to lookup
 
@@ -409,13 +417,27 @@
 
                     }
 
+                    if (isNumber(currentToken)) {
+                        result = result + currentToken.value;
+                        currentToken.value = '';
+                        currentToken.hasDot = false;
+                    }
+
                 }
 
                 i = i + 1;
 
                 if (i === expression.length && currentToken.value !== '') {
-                    result = result + '<span class="eb-highlight-error">' + currentToken.value + '</span>';
-                    vm.status = 'inputs-error';
+
+                    isNum = /^\d+$/.test(currentToken.value);
+
+                    if (!isNum) {
+
+                        // console.log('end', currentToken.value);
+
+                        result = result + '<span class="eb-highlight-error">' + currentToken.value + '</span>';
+                        vm.status = 'inputs-error';
+                    }
                 }
 
 
@@ -442,11 +464,13 @@
                 }
             }
 
-            console.log('inputsCounts', inputsCounts);
+            // console.log('inputsCounts', inputsCounts);
 
-            if (result.length > 0 && inputsCounts === 0) {
-                vm.status = 'inputs-error';
-            }
+            // if (result.length > 0 && inputsCounts === 0) {
+            //
+            //     vm.status = 'inputs-error';
+            //
+            // }
 
             return result
 
