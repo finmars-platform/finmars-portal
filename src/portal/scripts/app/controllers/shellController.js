@@ -20,6 +20,10 @@
     var uiService = require('../services/uiService');
     var middlewareService = require('../services/middlewareService');
 
+    var crossTabEvents = {
+        'MASTER_USER_CHANGED': 'MASTER_USER_CHANGED'
+    };
+
     module.exports = function ($scope, $state, $rootScope, $mdDialog, $transitions) {
 
         var vm = this;
@@ -28,6 +32,8 @@
 
         vm.currentState = 'portal';
         vm.currentMasterUser = '';
+
+        vm.broadcastManager = null;
 
         vm.logout = function () {
             console.log('Logged out');
@@ -85,11 +91,32 @@
             $scope.$apply();
         });
 
+        vm.initCrossTabBroadcast = function () {
+
+            vm.broadcastManager = new BroadcastChannel('finmars_broadcast');
+
+            vm.broadcastManager.onmessage = function (ev) {
+
+                console.log(ev);
+
+                if (event.data.event === crossTabEvents.MASTER_USER_CHANGED) {
+                    $state.go('app.home');
+                    vm.getMasterUsersList();
+                }
+
+
+            }
+        };
+
         vm.selectMaster = function (master) {
 
             usersService.setMasterUser(master.id).then(function (value) {
 
                 $state.go('app.home');
+
+                if (vm.broadcastManager) {
+                    vm.broadcastManager.postMessage({event: crossTabEvents.MASTER_USER_CHANGED});
+                }
 
                 vm.getMasterUsersList();
 
@@ -186,7 +213,7 @@
 
             setTimeout(function () {
                 mdContent.classList.remove('overflow-hidden');
-            },100);
+            }, 100);
 
         };
 
@@ -305,7 +332,10 @@
                 if (vm.masters.length) {
                     vm.getNotifications();
                 }
-            })
+
+            });
+
+            vm.initCrossTabBroadcast();
 
         };
 
