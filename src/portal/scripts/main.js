@@ -13,13 +13,14 @@ var app = angular.module('portal', [
     'ngMdIcons',
     'ngResource',
     'ngSanitize',
-    'vAccordion',
+    'mdPickers',  // Time picker in Automated upload schedule history
+    'vAccordion', // Accordion in Transaction Type Actions
     'ui.router',
-    'bw.paging',
-    'ui.select',
-    'ui.scroll',
+    'bw.paging', // Pagination in Forum
+    'ui.select', // Tags control in Transaction Type
+    'ui.scroll', // Infinite scroll in Mapping Dialog
 
-    angularDragula(angular),
+    angularDragula(angular), // Drag in Drop in Entity Viewer / Report Viewer/ View Constructor/ Form Editor
 
     'forum',
     'profile'
