@@ -347,7 +347,7 @@
 
                 var pieces = item[key].split('.');
                 pieces.splice(-1, 1);
-                pieces.push(data.id);
+                pieces.push(data.user_code);
                 var result = pieces.join('.');
                 item[key] = result;
 
@@ -383,7 +383,7 @@
 
                 var pieces = item[key].split('.');
                 pieces.splice(-1, 1);
-                pieces.push(data.id);
+                pieces.push(data.user_code);
                 var result = pieces.join('.');
                 item[key] = result;
 
