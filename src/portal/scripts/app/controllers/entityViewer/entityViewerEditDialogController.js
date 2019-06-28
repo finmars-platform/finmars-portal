@@ -403,6 +403,7 @@
                         vm.readyStatus.entity = true;
                         vm.readyStatus.permissions = true;
                         vm.readyStatus.layout = true;
+                        vm.readyStatus.userFields = true;
 
                         $scope.$apply();
 
@@ -450,6 +451,7 @@
                                 res();
 
                             } else {
+                                vm.readyStatus.userFields = true;
                                 vm.readyStatus.layout = true;
                                 $scope.$apply();
 

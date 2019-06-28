@@ -18,6 +18,9 @@
         logService.controller('AttributesAddDialogManagerController', 'initialized');
 
         var vm = this;
+
+        vm.entityType = data.entityType;
+
         vm.attribute = {name: '', 'value_type': ''};
         vm.readyStatus = {attribute: true, permissions: false};
 
@@ -31,7 +34,7 @@
         console.log('vm.attribute', vm.attribute);
 
 
-            vm.valueTypes = [
+        vm.valueTypes = [
             {
                 name: 'Number',
                 value: 20
@@ -207,7 +210,29 @@
                 vm.attribute["value_type"] = 20;
             }
 
-            $mdDialog.hide({status: 'agree', data: {attribute: vm.attribute}});
+            attributeTypeService.create(vm.entityType, vm.attribute).then(function () {
+                $mdDialog.hide({status: 'agree'});
+            }).catch(function (reason) {
+                $mdDialog.show({
+                    controller: 'InfoDialogController as vm',
+                    templateUrl: 'views/info-dialog-view.html',
+                    parent: angular.element(document.body),
+                    targetEvent: $event,
+                    clickOutsideToClose: true,
+                    locals: {
+                        info: {
+                            title: 'Warning',
+                            description: "Attribute with <b>" + vm.attribute.user_code + "</b> already exist."
+                        }
+                    },
+                    preserveScope: true,
+                    autoWrap: true,
+                    skipHide: true,
+                    multiple: true
+                })
+            })
+
+
         };
 
         vm.cancel = function () {

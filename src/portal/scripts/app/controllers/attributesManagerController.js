@@ -49,9 +49,7 @@
                 }
             }).then(function (res) {
                 if (res.status === 'agree') {
-                    console.log(res.data.attribute['value_type']);
-                    console.log("res", res.data);
-                    attributeTypeService.create(vm.entityType, res.data.attribute).then(getList);
+                    vm.getList();
                 }
             });
         };

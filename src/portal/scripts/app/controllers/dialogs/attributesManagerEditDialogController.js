@@ -224,7 +224,7 @@
                     locals: {
                         warning: {
                             title: 'Warning',
-                            description: 'Changing the Reference Name may affect the Custom Columns and the Layouts which are linked﻿ to this User Attribute. Please type the new Reference Name should you wish to proceed (use programming language naming rules)',
+                            description: 'Changing the Reference Name may affect the Custom Columns and the Layouts which are linked﻿ to this User Attribute.<br/> Please type the new Reference Name should you wish to proceed (use programming language naming rules)',
                             actionsButtons: [
                                 {
                                     name: "CANCEL",

@@ -448,9 +448,13 @@
 
                     // vm.finishedSuccess = true;
 
+                    var error_rows = data.error_rows.filter(function (item) {
+                        return item.level === 'error';
+                    });
+
                     var description = '';
 
-                    if (!data.total_rows && data.error_rows.length === 0) {
+                    if (!data.total_rows && error_rows.length === 0) {
 
                         $mdDialog.show({
                             controller: 'SuccessDialogController as vm',
@@ -471,11 +475,26 @@
 
                     } else {
 
-                        description = '<div>' +
-                            '<div>Rows total: ' + data.total_rows + '</div>' +
-                            '<div>Rows success import: ' + (data.total_rows - data.error_rows.length) + '</div>' +
-                            '<div>Rows fail import: ' + data.error_rows.length + '</div>' +
-                            '</div><br/>';
+                        if (vm.config.error_handling === 'break') {
+
+                            description = '<div>' +
+                                '<div>Rows total: ' + data.total_rows + '</div>' +
+                                '<div>Rows success import: ' + (data.error_row_index - 1) + '</div>' +
+                                '<div>Rows fail import: ' + error_rows.length + '</div>' +
+                                '</div><br/>';
+
+                        }
+
+                        if (vm.config.error_handling === 'continue') {
+
+                            description = '<div>' +
+                                '<div>Rows total: ' + data.total_rows + '</div>' +
+                                '<div>Rows success import: ' + (data.total_rows - error_rows.length) + '</div>' +
+                                '<div>Rows fail import: ' + error_rows.length + '</div>' +
+                                '</div><br/>';
+
+                        }
+
 
                         description = description + '<div> You have successfully imported transactions file </div>';
 

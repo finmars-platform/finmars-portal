@@ -18,6 +18,10 @@
         return eventsRepository.informedEventAction(id);
     };
 
+    var errorEventAction = function (id) {
+        return eventsRepository.errorEventAction(id);
+    };
+
     var generateEvents = function () {
         return eventsRepository.generateEvents();
     };
@@ -35,6 +39,7 @@
         getEventAction: getEventAction,
         putEventAction: putEventAction,
         informedEventAction: informedEventAction,
+        errorEventAction: errorEventAction,
         generateEvents: generateEvents,
         generateEventsRange: generateEventsRange,
         generateAndProcessAsSystem: generateAndProcessAsSystem

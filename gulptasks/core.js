@@ -46,6 +46,7 @@
             'node_modules/fancy-logger/dist/js/fancy-logger.js',
             'node_modules/jstree/dist/jstree.js',
             'node_modules/toastr/build/toastr.min.js',
+            'node_modules/mdPickers/dist/mdPickers.js',
             'src/core/datepicker/pickmeup.js'
         ];
 
@@ -59,6 +60,7 @@
 
         var pathToJS = [
             'node_modules/angular-material/angular-material.css',
+            'node_modules/mdPickers/dist/mdPickers.css',
             'node_modules/ui-select/dist/select.css',
             'node_modules/v-accordion/dist/v-accordion.css',
 
@@ -88,6 +90,7 @@
             'node_modules/v-accordion/dist/v-accordion.js',
             'node_modules/angular-paging/dist/paging.js',
             'node_modules/angular-material/angular-material.js',
+            'node_modules/mdPickers/dist/mdPickers.js',
             'node_modules/angular-material-icons/angular-material-icons.js'
         ];
 
@@ -116,6 +119,7 @@
 
         var pathToCSS = [
             'node_modules/angular-material/angular-material.css',
+            'node_modules/mdPickers/dist/mdPickers.css',
             'node_modules/ui-select/dist/select.css',
             'node_modules/v-accordion/dist/v-accordion.css',
         ];
