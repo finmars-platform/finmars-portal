@@ -123,7 +123,17 @@
             result.errors[index] = [];
 
             if (res.data.hasOwnProperty('error_rows') && res.data.error_rows.length) {
-                result.errors[index] = res.data.error_rows;
+
+                var errors = res.data.error_rows.filter(function (item) {
+                    return item.level === 'error';
+                });
+
+                if (errors.length) {
+
+                    result.errors[index] = errors
+
+                }
+
             }
 
             if (res.data.hasOwnProperty('stats') && res.data.stats.length) {

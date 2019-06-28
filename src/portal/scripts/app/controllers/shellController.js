@@ -20,6 +20,11 @@
     var uiService = require('../services/uiService');
     var middlewareService = require('../services/middlewareService');
 
+    var crossTabEvents = {
+        'MASTER_USER_CHANGED': 'MASTER_USER_CHANGED',
+        'LOGOUT': 'LOGOUT'
+    };
+
     module.exports = function ($scope, $state, $rootScope, $mdDialog, $transitions) {
 
         var vm = this;
@@ -29,9 +34,17 @@
         vm.currentState = 'portal';
         vm.currentMasterUser = '';
 
+        vm.broadcastManager = null;
+
         vm.logout = function () {
             console.log('Logged out');
+
             usersService.logout();
+
+            if (vm.broadcastManager) {
+                vm.broadcastManager.postMessage({event: crossTabEvents.LOGOUT});
+            }
+
             window.location.pathname = '/';
             cookiesService.deleteCookie();
             //usersService.logout();
@@ -85,11 +98,36 @@
             $scope.$apply();
         });
 
+        vm.initCrossTabBroadcast = function () {
+
+            vm.broadcastManager = new BroadcastChannel('finmars_broadcast');
+
+            vm.broadcastManager.onmessage = function (ev) {
+
+                console.log(ev);
+
+                if (event.data.event === crossTabEvents.MASTER_USER_CHANGED) {
+                    $state.go('app.home');
+                    vm.getMasterUsersList();
+                }
+
+                if (event.data.event === crossTabEvents.LOGOUT) {
+                    window.location.href = '/';
+                }
+
+
+            }
+        };
+
         vm.selectMaster = function (master) {
 
             usersService.setMasterUser(master.id).then(function (value) {
 
                 $state.go('app.home');
+
+                if (vm.broadcastManager) {
+                    vm.broadcastManager.postMessage({event: crossTabEvents.MASTER_USER_CHANGED});
+                }
 
                 vm.getMasterUsersList();
 
@@ -186,7 +224,7 @@
 
             setTimeout(function () {
                 mdContent.classList.remove('overflow-hidden');
-            },100);
+            }, 100);
 
         };
 
@@ -305,7 +343,10 @@
                 if (vm.masters.length) {
                     vm.getNotifications();
                 }
-            })
+
+            });
+
+            vm.initCrossTabBroadcast();
 
         };
 

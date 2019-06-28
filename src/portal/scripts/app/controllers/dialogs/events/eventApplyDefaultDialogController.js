@@ -109,16 +109,20 @@
                         multiple: true
                     }).then(function (value) {
 
-                        index = index + 1;
+                        eventsService.errorEventAction(vm.event.id).then(function () {
 
-                        if (index < actions.length) {
+                            index = index + 1;
 
-                            vm.recursiveHandleEvent(index, actions, resolve, $event);
+                            if (index < actions.length) {
 
-                        } else {
+                                vm.recursiveHandleEvent(index, actions, resolve, $event);
 
-                            resolve(action);
-                        }
+                            } else {
+
+                                resolve(action);
+                            }
+
+                        })
 
                     })
 

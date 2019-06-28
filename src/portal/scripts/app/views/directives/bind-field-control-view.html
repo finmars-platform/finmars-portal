@@ -79,6 +79,16 @@
     <div data-ng-if="fieldType['display_name'] === 'Field'">
         <ev-field-resolver data-item="item" data-entity="entity" data-options="options"
                            data-entity-type="entityType"></ev-field-resolver>
+        <div data-ng-if="item.buttons.length" class="bind-field-number-btn">
+            <md-button data-ng-repeat="button in item.buttons"
+                       class="{{button.classes}} {{button.icon && button.caption == '' ? 'md-icon-button' : ''}} bind-field-round-btn"
+                       data-ng-click="button.action(item)">
+                {{button.caption}}
+                <ng-md-icon data-ng-if="button.icon" icon="{{button.icon}}"></ng-md-icon>
+                <md-tooltip data-ng-if="button.tooltip" class="tooltip_1" md-direction="top">{{button.tooltip}}
+                </md-tooltip>
+            </md-button>
+        </div>
     </div>
     <div data-ng-if="fieldType['display_name'] === 'Multiple choice field'">
         <ev-field-resolver data-item="item" data-entity="entity" data-options="options"></ev-field-resolver>
