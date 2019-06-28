@@ -1,0 +1,21 @@
+<div style="padding: 0 20px">
+
+    <h2 class="m-b-35">Layouts</h2>
+
+    <div class="forms-data-constructor-block"
+         layout="column">
+
+        <input type="text"
+               aria-label="entities filter"
+               ng-model="entitiesSearchTerms"
+               placeholder="(o) Search by name"
+               class="forms-data-constructor-filter-input">
+        <div ng-repeat="entity in vm.entities | filter: {name: entitiesSearchTerms}">
+            <md-button ng-bind="entity.name"
+                       ng-click="vm.openLayoutsList($event, entity.entityType)"
+                       class="md-raised common-buttons-in-column"
+                       style="width: 200px;"
+                       aria-label="edit entity input form"></md-button>
+        </div>
+    </div>
+</div>

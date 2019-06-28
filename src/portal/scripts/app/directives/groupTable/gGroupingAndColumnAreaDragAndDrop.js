@@ -85,7 +85,7 @@
                             if (source === columnsHolder) {
 
                                 // If column's card dragged to grouping area
-                                if (target === groupsHolder || target === groupsBag) {
+                                if (target === groupsBag) {
 
                                     var groupExist = false;
                                     var identifier = elem.dataset.columnKey;
@@ -109,14 +109,16 @@
 
                                         var groupToAdd = createTableItemFromAnotherItem(activeColumn);
 
-                                        var nodes = Array.prototype.slice.call(target.children);
+                                        /*var nodes = Array.prototype.slice.call(target.children);
                                         var index = nodes.indexOf(elem);
 
                                         if (target === groupsBag) {
                                             groups.push(groupToAdd);
                                         } else {
                                             groups.splice(index, 0, groupToAdd);
-                                        }
+                                        }*/
+
+                                        groups.push(groupToAdd);
 
                                         drake.remove();
                                         areaItemsChanged = true;
@@ -150,6 +152,9 @@
                                         });
 
                                     }
+
+                                } else if (target === groupsHolder) {
+                                    drake.cancel();
                                 // < If column's card dragged to grouping area >
 
                                 // If column's cards order changed

@@ -1,0 +1,97 @@
+<div data-ng-if="vm.readyStatus.scheme"
+     layout="column"
+     style="padding: 0 20px">
+    <h2 class="m-b-35">Complex Import Manager</h2>
+
+    <div layout="row" style="margin-bottom: 20px">
+
+        <md-input-container flex="40" style="margin-bottom: 0" class="ng-hide">
+            <input type="file" id="importDataUploadInput" input-file-directive
+                   read-file="vm.config.file">
+        </md-input-container>
+        <div class="input-upload-file-container">
+            <p class="importDataUploadInput">Select file</p>
+            <label for="importDataUploadInput" class="md-button md-raised md-primary IFUlabel">
+                <ng-md-icon icon="file_upload"></ng-md-icon>
+                <span>BROWSE</span></label>
+        </div>
+
+        <div layout="row">
+
+            <md-input-container>
+
+                <label for="">Import scheme</label>
+                <md-select ng-model="vm.config.scheme"
+                           md-container-class="common-select-container"
+                           md-on-close="searchTerm = ''"
+                           style="width: 200px">
+                    <div>
+                        <md-select-header>
+                            <input data-ng-model="searchTerm"
+                                   type="search"
+                                   placeholder="Search for a ..."
+                                   class="md-text md-select-search-pattern select-input-filter"
+                                   ng-keydown="$event.stopPropagation()">
+                        </md-select-header>
+
+                        <div class="select-options-holder">
+
+                            <md-option
+                                    data-ng-repeat="item in vm.schemes | filter: {scheme_name: searchTerm}"
+                                    ng-value="item.id"
+                                    ng-bind="item.scheme_name">
+                            </md-option>
+                            <md-option data-ng-click="vm.createScheme($event)">Add scheme
+                            </md-option>
+                        </div>
+                    </div>
+                </md-select>
+            </md-input-container>
+            <md-button
+                    class="instrument-mapping-btn md-fab {{vm.config.scheme ? '' : 'disabled-btn' }}"
+                    data-ng-click="vm.editScheme($event)">
+                <ng-md-icon icon="functions" size="24" style="fill:rgb(63,81,181);"></ng-md-icon>
+                <md-tooltip class="tooltip_1" md-direction="top">Edit mapping</md-tooltip>
+            </md-button>
+        </div>
+        <div layout="row">
+
+            <md-button
+                    class="md-raised m-r-16 instrument-load-btn {{vm.loadIsAvailable() ? '' : 'disabled-btn' }}"
+                    data-ng-click="vm.validate($event)">
+                Validate
+            </md-button>
+
+
+            <md-button
+                    class="md-raised colored-btn instrument-load-btn {{vm.loadIsAvailable() ? '' : 'disabled-btn' }}"
+                    data-ng-click="vm.import($event)">
+                Load
+            </md-button>
+            <div data-ng-if="vm.readyStatus.processing" class="m-l-16 m-t-8">
+                <md-progress-circular md-mode="indeterminate"
+                                      md-diameter="24"></md-progress-circular>
+            </div>
+        </div>
+    </div>
+
+    <div layout="row">
+        <md-input-container class="m-l-0">
+            <label>Separator</label>
+            <md-select data-ng-model="vm.config.delimiter">
+                <md-option value=",">Comma (,)</md-option>
+                <md-option value=";">Semicolon (;)</md-option>
+                <md-option value="\t">Tab</md-option>
+            </md-select>
+        </md-input-container>
+    </div>
+
+    <div layout="row" data-ng-if="vm.finishedSuccess" layout-align="center center">
+        <h2>The data successfully imported.</h2>
+    </div>
+</div>
+<div data-ng-if="!vm.readyStatus.scheme">
+    <div layout="row" layout-sm="column" layout-align="space-around" class="m-large">
+        <md-progress-circular md-mode="indeterminate" md-diameter="96"></md-progress-circular>
+    </div>
+</div>

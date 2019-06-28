@@ -28,7 +28,12 @@ md-content {
   position: absolute;
   overflow: visible;
   height: 100%;
-  width: 100%
+  width: 100%;
+
+  .md-button[disabled] {
+    color: #fff;
+    opacity: 0.5;
+  }
 }
 
 md-toolbar {
@@ -236,7 +241,7 @@ md-sidenav {
   }
 
   /* Fixes for old sidemenu styles */
-  overflow: hidden;
+  /*overflow: hidden;
 
   menu-toggle {
     ul {
@@ -283,7 +288,7 @@ md-sidenav {
     fill: #fff;
     margin-right: 20px;
     display: inline-block;
-  }
+  }*/
 
   /* < Fixes for old sidemenu styles > */
 
@@ -300,7 +305,7 @@ md-sidenav {
 }
 
 /* Old sidemenu styles */
-.sidemenu-btn {
+/*.sidemenu-btn {
   width: 100%;
   display: block;
   text-align: left;
@@ -311,12 +316,12 @@ md-sidenav {
     float: right;
     fill: #fff;
   }
-}
+}*/
 
 /* < Old sidemenu styles > */
 
 /* New sidemenu styles */
-/*.sidemenu-btn {
+.sidemenu-btn {
   width: 100%;
   height: 35px;
   display: block;
@@ -337,7 +342,7 @@ md-sidenav {
     float: right;
     fill: #fff;
   }
-}*/
+}
 /* < New sidemenu styles > */
 
 .side-menu-bottom-menu {
@@ -497,6 +502,8 @@ md-backdrop.md-select-backdrop {
 
 .e-data-loader {
   padding-top: 10em;
+  padding-bottom: 10px;
+  overflow: hidden;
 }
 
 .zh-loader {
@@ -870,7 +877,7 @@ md-menu-bar.header-logout-menu {
 
   /* New sidemenu styles */
 
-  /*.space-for-sidenav {
+  .space-for-sidenav {
     padding-left: 65px;
   }
   .g-table-dial {
@@ -924,13 +931,13 @@ md-menu-bar.header-logout-menu {
 
   .side-menu-main-buttons .sidemenu-btn .side-nav-title {
     display: none;
-  }*/
+  }
 
 /* < New sidemenu styles > */
 
 /* Old sidemenu styles */
 
-  .sidenav-wrapper {
+  /*.sidenav-wrapper {
     width: 55px;
     position: absolute;
     height: 100%;
@@ -950,10 +957,6 @@ md-menu-bar.header-logout-menu {
 
   .g-table-dial {
     left: 70px;
-  }
-
-  /*.bookmarks-list {
-    padding-left: 70px;
   }*/
 
   /* < Old sidemenu styles > */
@@ -961,11 +964,11 @@ md-menu-bar.header-logout-menu {
 }
 
 .separate-side-menu {
-  margin-top: 30px;
+  margin-top: 20px;
 }
 
-.sidenav-settings-toggle-btn.settings-menu-opened {
-  background-color: #59365a;
+.sidenav-settings-toggle-btn.settings-menu-opened, .sidenav-settings-toggle-btn.settings-menu-opened.md-button:not([disabled]).md-focused {
+  background-color: #69476a;
 }
 
 .side-menu-settings-menu.settings-menu-opened {
@@ -1037,10 +1040,10 @@ md-menu-bar.header-logout-menu {
 /* < Legacy sidemenu > */
 
 /* New sidemenu styles */
-/*.side-nav-btn-resize-holder {
+.side-nav-btn-resize-holder {
   position: absolute;
   right: 0;
-}*/
+}
 /* < New sidemenu styles > */
 
 .sidenav-logo-wrapper {
@@ -1051,9 +1054,9 @@ md-menu-bar.header-logout-menu {
 }
 
 // Old sidemenu styles
-.side-nav-btn-resize-holder {
+/*.side-nav-btn-resize-holder {
   width: 100%;
-}
+}*/
 // < Old sidemenu styles >
 
 .sidenav-logo {
@@ -1062,16 +1065,16 @@ md-menu-bar.header-logout-menu {
 }
 
 /* Old sidemenu styles */
-.md-button.md-raised.side-nav-btn {
+/*.md-button.md-raised.side-nav-btn {
   left: 3px;
   float: right;
-}
+}*/
 /* < Old sidemenu styles > */
 
 /* New sidemenu styles */
-/*.md-button.md-raised.side-nav-btn {
+.md-button.md-raised.side-nav-btn {
   left: 3px;
-}*/
+}
 /* < New sidemenu styles > */
 
 .md-button.md-raised.to-small-btn, .md-button.md-raised.expand-sidenav-btn {
@@ -2200,4 +2203,62 @@ md-menu-content.dropdown-buttons-menu {
   margin-top: 0;
 }
 
+.mapping-tables-import-export {
+  .mapping-tables-column-fieldset {
+    width: 70%;
+    padding: 20px 40px;
+  }
+}
 
+.forms-data-constructor-block {
+  margin-bottom: 40px;
+}
+
+.forms-data-constructor-folding-btn {
+  min-width: 20px;
+  width: 20px;
+  min-height: 20px;
+  height: 20px;
+  line-height: 1;
+  margin-top: 22px;
+}
+
+.forms-data-constructor-filter-input {
+  width: 300px;
+  border: none;
+  border-bottom: 2px solid #666666;
+  margin-bottom: 25px;
+  margin-left: 7px;
+  background-color: transparent;
+  padding: 0px 0px 5px 10px;
+}
+
+.common-buttons-in-column {
+  width: 200px;
+  margin-bottom: 15px;
+}
+
+.layouts-list-dialog {
+
+  md-dialog-content {
+    min-width: 350px;
+  }
+
+  .layouts-list-row {
+    padding: 10px 0;
+    border-bottom: 1px solid #000;
+
+    &:first-child {
+      border-top: 1px solid #000;
+    }
+  }
+
+}
+
+.automated-uploads-history-input-container {
+
+  md-input-container {
+    width: 210px;
+  }
+
+}

@@ -60,9 +60,10 @@
     };
 
     var getEditLayoutByInstanceId = function (entityType, id) {
+        console.log("forms getEditLayoutByInstanceId", entityType, id);
         return uiRepository.getEditLayoutByInstanceId(entityType, id).then(function (data) {
             if (entityType == 'complex-transaction') {
-                return data.book_transaction_layout
+                return data.book_transaction_layout;
             }
         });
     };

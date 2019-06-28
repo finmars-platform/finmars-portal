@@ -14,12 +14,18 @@
             <md-tabs md-dynamic-height md-border-bottom id="dialogbag">
                 <md-tab label="System">
                     <md-content class="md-padding">
+
+                        <input type="text"
+                               ng-model="entitySearchTerms"
+                               placeholder="Search for a ..."
+                               class="view-constructor-card-search">
+
                         <div class="g-th-checkbox-row">
                             <span class="g-meta-circle red">C</span>
                             <span class="g-meta-circle green">G</span>
                             <span class="g-meta-circle blue">F</span>
                         </div>
-                        <div class="g-checkbox-row" data-ng-repeat="item in vm.entityAttrs" layout="row">
+                        <div class="g-checkbox-row" data-ng-repeat="item in vm.entityAttrs | filter: {name: entitySearchTerms}" layout="row">
                             <div>
                                 <md-checkbox ng-model="item.columns" aria="columns" data-ng-change="vm.updateAttrs()">
                                 </md-checkbox>
@@ -43,12 +49,18 @@
 
                 <md-tab label="User Attributes" data-ng-if="vm.MABtnVisibility(vm.entityType)">
                     <md-content class="md-padding">
+
+                        <input type="text"
+                               ng-model="userAttrSearchTerms"
+                               placeholder="Search for a ..."
+                               class="view-constructor-card-search">
+
                         <div class="g-th-checkbox-row">
                             <span class="g-meta-circle red">C</span>
                             <span class="g-meta-circle green">G</span>
                             <span class="g-meta-circle blue">F</span>
                         </div>
-                        <div class="g-checkbox-row" data-ng-repeat="item in vm.attrs" layout="row">
+                        <div class="g-checkbox-row" data-ng-repeat="item in vm.attrs | filter: {name: userAttrSearchTerms}" layout="row">
                             <div>
                                 <md-checkbox ng-model="item.columns" aria="columns" data-ng-change="vm.updateAttrs()">
                                 </md-checkbox>
