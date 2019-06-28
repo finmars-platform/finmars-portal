@@ -1,32 +1,28 @@
 /**
- * Created by szhitenev on 17.08.2016.
+ * Created by mevstratov on 24.06.2019.
  */
 (function () {
 
+    'use strict';
 
     module.exports = function ($scope, $mdDialog) {
 
         var vm = this;
 
-        vm.configurationFile = null;
         vm.mappingFile = null;
 
-        vm.configurationFileIsAvailable = function () {
-            return vm.configurationFile !== null && vm.configurationFile !== undefined
-        };
-
         vm.mappingFileIsAvailable = function () {
-            return vm.mappingFile !== null && vm.mappingFile !== undefined
+            return vm.mappingFile !== null && vm.mappingFile !== undefined;
         };
 
-        vm.checkExtension = function (file, extension, $event) {
+        vm.checkExtension = function (file, $event) {
             console.log('file', file);
 
             if (file) {
 
                 var ext = file.name.split('.')[1]
 
-                if (ext !== extension) {
+                if (ext !== 'fmpg') {
 
                     $mdDialog.show({
                         controller: 'SuccessDialogController as vm',
@@ -51,70 +47,6 @@
                         }
 
                     });
-
-                }
-
-            }
-
-        };
-
-        vm.openImportConfigurationManager = function ($event) {
-
-            var reader = new FileReader();
-
-            reader.readAsText(vm.configurationFile);
-
-            reader.onload = function (evt) {
-
-                try {
-
-                    var file = JSON.parse(evt.target.result);
-
-                    $mdDialog.show({
-                        controller: 'SettingGeneralConfigurationPreviewFileDialogController as vm',
-                        templateUrl: 'views/dialogs/settings-general-configuration-preview-file-dialog-view.html',
-                        parent: angular.element(document.body),
-                        targetEvent: $event,
-                        preserveScope: true,
-                        autoWrap: true,
-                        skipHide: true,
-                        locals: {
-                            data: {
-                                file: file,
-                                rawFile: vm.configurationFile
-                            }
-                        }
-                    }).then(function (res) {
-
-                        vm.configurationFile = null;
-
-                    }).catch(function (reason) {
-
-                        vm.configurationFile = null;
-
-                    })
-
-                } catch (error) {
-
-                    $mdDialog.show({
-                        controller: 'WarningDialogController as vm',
-                        templateUrl: 'views/warning-dialog-view.html',
-                        parent: angular.element(document.body),
-                        targetEvent: $event,
-                        clickOutsideToClose: false,
-                        locals: {
-                            warning: {
-                                title: 'Error',
-                                description: 'Unable to read it. This file is corrupted.'
-                            }
-                        },
-                        preserveScope: true,
-                        autoWrap: true,
-                        skipHide: true
-                    });
-
-                    vm.configurationFile = null;
-
 
                 }
 
@@ -178,21 +110,6 @@
 
         };
 
-        vm.openExportConfigurationManager = function ($event) {
-
-            $mdDialog.show({
-                controller: 'SettingGeneralConfigurationExportFileDialogController as vm',
-                templateUrl: 'views/dialogs/settings-general-configuration-export-file-dialog-view.html',
-                parent: angular.element(document.body),
-                targetEvent: $event,
-                preserveScope: true,
-                autoWrap: true,
-                skipHide: true,
-
-            })
-
-        };
-
         vm.openExportMappingManager = function ($event) {
 
             $mdDialog.show({
@@ -209,6 +126,21 @@
 
         };
 
+        vm.openMapping = function ($event, mapItem) {
+
+            $mdDialog.show({
+                controller: 'EntityTypeMappingDialogController as vm',
+                templateUrl: 'views/dialogs/entity-type-mapping-dialog-view.html',
+                parent: angular.element(document.body),
+                targetEvent: $event,
+                preserveScope: true,
+                autoWrap: true,
+                skipHide: true,
+                locals: {
+                    mapItem: mapItem
+                }
+            })
+        };
 
     }
 

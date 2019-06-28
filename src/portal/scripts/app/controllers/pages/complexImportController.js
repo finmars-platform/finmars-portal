@@ -1,21 +1,20 @@
 /**
- * Created by szhitenev on 14.03.2018.
+ * Created by mevstratov on 24.06.2019.
  */
 (function () {
 
     'use strict';
 
-    var logService = require('../../../../../../core/services/logService');
+    var logService = require('../../../../../core/services/logService');
 
-    var metaContentTypesService = require('../../../services/metaContentTypesService');
-    var complexImportSchemeService = require('../../../services/import/complexImportSchemeService');
+    var complexImportSchemeService = require('../../services/import/complexImportSchemeService');
 
-    var complexImportService = require('../../../services/complex-import/complexImportService');
-    var complexImportValidateService = require('../../../services/complex-import/complexImportValidateService');
+    var complexImportService = require('../../services/complex-import/complexImportService');
+    var complexImportValidateService = require('../../services/complex-import/complexImportValidateService');
 
     module.exports = function ($scope, $mdDialog) {
 
-        logService.controller('ComplexImportDialogController', 'initialized');
+        logService.controller('ComplexImport', 'initialized');
 
         var vm = this;
 

@@ -278,6 +278,114 @@
 
     };
 
+    var getHeaderNameForCurrentLocation = function ($state) {
+
+        var name = '';
+
+        switch ($state.current.name) {
+            case 'app.reports.balance-report':
+                name = 'REPORT > BALANCE';
+                break;
+            case 'app.reports.pl-report':
+                name = 'REPORT > P&L';
+                break;
+            case 'app.reports.transaction-report':
+                name = 'REPORT > TRANSACTION';
+                break;
+            case 'app.reports.check-for-events':
+                name = 'REPORT > EVENTS';
+                break;
+            case 'app.import.simple-entity':
+                name = 'IMPORT > DATA';
+                break;
+            case 'app.import.transaction':
+                name = 'IMPORT > TRANSACTIONS';
+                break;
+            case 'app.import.complex-import':
+                name = 'IMPORT > DATA AND TRANSACTIONS';
+                break;
+            case 'app.import.instrument':
+                name = 'IMPORT > INSTRUMENT';
+                break;
+            case 'app.import.price':
+                name = 'IMPORT > PRICES/FX';
+                break;
+            case 'app.import.mapping-tables':
+                name = 'IMPORT > MAPPING TABLES';
+                break;
+            case 'app.forum':
+                name = 'FORUM';
+                break;
+            case 'app.system.instruments':
+                name = 'JOURNAL > INSTRUMENTS AUDIT';
+                break;
+            case 'app.system.transactions':
+                name = 'JOURNAL > TRANSACTIONS AUDIT';
+                break;
+            case 'app.developer-panel':
+                name = 'DEVELOPER PANEL';
+                break;
+            case 'app.dashboard':
+                name = 'SETTINGS > DASHBOARD';
+                break;
+            case 'app.settings.forms':
+                name = 'SETTINGS > FORMS';
+                break;
+            case 'app.settings.layouts':
+                name = 'SETTINGS > LAYOUTS';
+                break;
+            case 'app.settings.notifications':
+                name = 'SETTINGS > NOTIFICATIONS';
+                break;
+
+            case 'app.data.account-type':
+                name = 'SETTINGS > DATA TYPES > ACCOUNT TYPES';
+                break;
+            case 'app.data.instrument-type':
+                name = 'SETTINGS > DATA TYPES > INSTRUMENT TYPES';
+                break;
+            case 'app.data.transaction-type':
+                name = 'SETTINGS > DATA TYPES > TRANSACTION TYPES';
+                break;
+            case 'app.data.pricing-policy':
+                name = 'SETTINGS > DATA TYPES > PRICING TYPES';
+                break;
+            case 'app.settings.entities-custom-attributes':
+                name = 'SETTINGS > DATA TYPES > USER ATTRIBUTES';
+                break;
+            case 'app.settings.price-download-scheme':
+                name = 'SETTINGS > IMPORT FROM PROVIDERS > PRICE SCHEMES';
+                break;
+            case 'app.settings.instrument-import':
+                name = 'SETTINGS > IMPORT FROM PROVIDERS > INSTRUMENT IMPORT';
+                break;
+            case 'app.settings.automated-uploads-history':
+                name = 'SETTINGS > IMPORT FROM PROVIDERS > AUTOMATED PRICE SCHEDULE';
+                break;
+            case 'app.settings.simple-entity-import':
+                name = 'SETTINGS > IMPORT FROM FILES > DATA IMPORT';
+                break;
+            case 'app.settings.transaction-import':
+                name = 'SETTINGS > IMPORT FROM FILES > TRANSACTION IMPORT';
+                break;
+            case 'app.settings.complex-import':
+                name = 'SETTINGS > IMPORT FROM FILES > COMPLEX IMPORT';
+                break;
+            case 'app.settings.template-fields':
+                name = 'SETTINGS > ALIASES';
+                break;
+            case 'app.settings.import-configuration':
+                name = 'SETTINGS > CONFIGURATION > IMPORT';
+                break;
+            case 'app.settings.export-configuration':
+                name = 'SETTINGS > CONFIGURATION > EXPORT';
+                break;
+        }
+
+        return name;
+
+    };
+
     var getContentGroups = function (typeOfGroups) {
 
         return metaRepository.getContentGroups(typeOfGroups);
@@ -302,6 +410,7 @@
         checkRestrictedEntityTypesForAM: checkRestrictedEntityTypesForAM,
         getFieldsWithTagGrouping: getFieldsWithTagGrouping,
         getCurrentLocation: getCurrentLocation,
+        getHeaderNameForCurrentLocation: getHeaderNameForCurrentLocation,
         getContentGroups: getContentGroups
     }
 
