@@ -91,7 +91,9 @@
 
                     if (column === uniqueColumn) {
 
-                        result[index] = errorRow.error_data.data.executed_input_expressions[itemColumnIndex];
+                        if (errorRow.error_data.data.executed_input_expressions[itemColumnIndex]) {
+                            result[index] = errorRow.error_data.data.executed_input_expressions[itemColumnIndex];
+                        }
                     }
 
 
