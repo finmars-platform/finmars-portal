@@ -606,18 +606,15 @@
                             }*/
                         }
                     }
-                    if (target === document.querySelector('#groupsbag') ||
-                        target === document.querySelector('.g-groups-holder')) {
+                    /*if (target === document.querySelector('#groupsbag') ||
+                        target === document.querySelector('.g-groups-holder')) {*/
+                    if (target === document.querySelector('#groupsbag')) {
                         for (i = 0; i < grouping.length; i = i + 1) {
                             if (grouping[i].key === identifier) {
                                 exist = true;
                                 groupExist = true;
                             }
 
-                            /*if (grouping[i].name === identifier) {
-                                exist = true;
-                                groupExist = true;
-                            }*/
                         }
                     }
                     if (target === document.querySelector('#filtersbag .drop-new-filter') ||
@@ -679,31 +676,23 @@
                             entityViewerEventService.dispatchEvent(evEvents.COLUMNS_CHANGE);
                             entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
                         }
-                        if (target === document.querySelector('#groupsbag') ||
-                            target === document.querySelector('.g-groups-holder')) {
-
+                        /*if (target === document.querySelector('#groupsbag') ||
+                            target === document.querySelector('.g-groups-holder')) {*/
+                        if (target === document.querySelector('#groupsbag')) {
                             for (a = 0; a < attrsList.length; a = a + 1) {
 
                                 if (attrsList[a].key === identifier) {
 
-                                    if (target === document.querySelector('#groupsbag')) {
+                                    /*if (target === document.querySelector('#groupsbag')) {
                                         grouping.push(attrsList[a]);
                                     } else {
                                         grouping.splice(index, 0, attrsList[a]);
-                                    }
+                                    }*/
+                                    grouping.push(attrsList[a]);
 
                                     //columns.push(attrsList[a]);
                                 }
 
-                                /*if (attrsList[a].name === identifier) {
-
-                                    if (target === document.querySelector('#groupsbag')) {
-                                        grouping.push(attrsList[a]);
-                                    } else {
-                                        grouping.splice(index, 0, attrsList[a]);
-                                    }
-
-                                }*/
                             }
                             syncAttrs();
                             evDataHelper.updateColumnsIds(entityViewerDataService);
@@ -796,7 +785,7 @@
                 var items = [
                     document.querySelector('.g-columns-holder'),
                     document.querySelector('#columnsbag'),
-                    document.querySelector('.g-groups-holder'),
+                    // document.querySelector('.g-groups-holder'),
                     document.querySelector('#groupsbag'),
                     document.querySelector('.g-filters-holder'),
                     document.querySelector('#filtersbag .drop-new-filter')
@@ -830,7 +819,7 @@
             }
         };
 
-        vm.openCustomFieldsManager = function () {
+        /*vm.openCustomFieldsManager = function () {
 
             $mdDialog.show({
                 controller: 'CustomFieldDialogController as vm',
@@ -848,7 +837,7 @@
                 }
             })
 
-        };
+        };*/
 
         vm.initDnD = function () {
             setTimeout(function () {

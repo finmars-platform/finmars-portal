@@ -180,7 +180,6 @@
 
         vm.openExportConfigurationManager = function ($event) {
 
-
             $mdDialog.show({
                 controller: 'SettingGeneralConfigurationExportFileDialogController as vm',
                 templateUrl: 'views/dialogs/settings-general-configuration-export-file-dialog-view.html',
@@ -191,7 +190,6 @@
                 skipHide: true,
 
             })
-
 
         };
 

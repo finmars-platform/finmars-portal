@@ -1,5 +1,4 @@
-.attributes-manager-view {
-  padding-left: 10px;
+.attribute-manager-mixin() {
   .am-attr-card {
     padding: 14px;
 
@@ -50,6 +49,51 @@
       width: 20px;
       height: 20px;
     }
+  }
+}
+
+.attributes-manager-view {
+  padding-left: 10px;
+  .attribute-manager-mixin();
+}
+
+.all-am-container {
+  margin-bottom: 50px;
+  transition: margin-bottom ease-out 0.35s;
+}
+
+.all-custom-attributes-manager {
+  .attribute-manager-mixin();
+}
+
+.all-am-attributes-group-toggle {
+  height: 50px;
+  margin-bottom: 20px;
+  border-bottom: 2px solid #AAA;
+  cursor: pointer;
+  transition: color ease 0.25s, border-color ease 0.25s;
+
+  &:hover {
+    color: #2196F3;
+    border-color: #2196F3;
+  }
+}
+
+.all-am-attributes-group-title {
+  margin-top: 15px;
+}
+
+.all-am-manager-wrap {
+  overflow: hidden;
+  opacity: 1;
+  transition: height ease-out 0.35s, opacity ease-out 0.35s;
+}
+
+.all-am-attributes-group-collapse {
+  margin-bottom: 0;
+  .all-am-manager-wrap {
+    height: 0 !important;
+    opacity: 0;
   }
 }
 

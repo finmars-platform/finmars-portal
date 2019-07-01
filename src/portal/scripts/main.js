@@ -312,6 +312,28 @@ app.directive('addTabEc', ['$compile', require('./app/directives/addTabEcDirecti
 
 app.directive('onFinishRender', [require('./app/directives/onFinishRenderDirective')]);
 
+// Pages
+
+app.controller('DeveloperPanelController', ['$scope', '$mdDialog', require('./app/controllers/pages/developerPanelController')]);
+
+app.controller('SimpleEntityImportController', ['$scope', '$mdDialog', require('./app/controllers/pages/simpleEntityImportController')]);
+app.controller('TransactionImportController', ['$scope', '$mdDialog', require('./app/controllers/pages/transactionImportController')]);
+app.controller('ComplexImportController', ['$scope', '$mdDialog', require('./app/controllers/pages/complexImportController')]);
+app.controller('InstrumentDownloadController', ['$scope', '$mdDialog', require('./app/controllers/pages/instrumentDownloadController')]);
+app.controller('FillPriceHistoryController', ['$scope', '$mdDialog', require('./app/controllers/pages/fillPriceHistoryController')]);
+app.controller('MappingTablesController', ['$scope', '$mdDialog', require('./app/controllers/pages/mappingTablesController')]);
+
+app.controller('FormsDataConstructor', ['$scope', '$mdDialog', require('./app/controllers/pages/formsDataConstructorController')]);
+app.controller('LayoutsController', ['$scope', '$mdDialog', require('./app/controllers/pages/layoutsController')]);
+
+app.controller('LayoutsListDialogController', ['$scope', '$mdDialog', '$state', 'data', require('./app/controllers/dialogs/layoutsListDialogController')]);
+app.controller('EntitiesCustomAttributesController', ['$scope', '$mdDialog', require('./app/controllers/pages/entitiesCustomAttributesController')]);
+app.controller('PriceDownloadSchemeController', ['$scope', require('./app/controllers/pages/priceDownloadSchemeController')]);
+app.controller('AutomatedUploadsHistoryController', ['$scope', '$mdDialog', require('./app/controllers/pages/automatedUploadsHistoryController')]);
+app.controller('TemplateFieldsController', ['$scope', '$mdDialog', require('./app/controllers/pages/templateFieldsController')]);
+app.controller('ImportConfigurationsController', ['$scope', '$mdDialog', require('./app/controllers/pages/importConfigurationsController')]);
+app.controller('ExportConfigurationsController', ['$scope', '$mdDialog', require('./app/controllers/pages/exportConfigurationsController')]);
+
 // Controls
 
 app.directive('expressionEditorButton', ['$mdDialog', require('./app/controls/expression-editor-button/expression-editor-button')]);
@@ -336,6 +358,7 @@ app.directive('gDialogDraggable', [require('./app/directives/groupTable/gDialogD
 app.directive('groupHeightAligner', [require('./app/directives/groupTable/gHeightAlignerComponent')]);
 app.directive('groupEditorBinder', ['$templateCache', '$compile', '$controller', '$mdDialog', '$state', require('./app/directives/groupTable/groupEditorBinderComponent')]);
 app.directive('groupSplitPanelReportBinder', ['$templateCache', '$compile', '$controller', '$mdDialog', '$state', '$transitions', require('./app/directives/groupTable/gSplitPanelReportBinderComponent')]);
+app.directive('groupingAndColumnAreaDragAndDrop', ['$mdDialog', require('./app/directives/groupTable/gGroupingAndColumnAreaDragAndDrop')]);
 
 app.directive('groupBindReportRow', [require('./app/directives/groupTable/gBindReportRowDirective.js')]);
 app.directive('contentTitle', ['$timeout', require('./app/directives/contentTitleDirective.js')]);

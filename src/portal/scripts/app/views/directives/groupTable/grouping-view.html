@@ -67,7 +67,9 @@
 
             <div class="g-groups-holder">
 
-                <md-card data-ng-repeat="item in grouping track by $index" class="group-item card"
+                <md-card data-ng-repeat="item in grouping track by item.key"
+                         class="group-item card"
+                         data-group-key="{{item.key}}"
                          data-group-type-id="{{item.___group_type_id}}">
 
                     <div class="sort">

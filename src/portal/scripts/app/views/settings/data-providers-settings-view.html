@@ -1,5 +1,6 @@
-<div>
+<div style="padding: 20px 20px 0">
     <div data-ng-if="vm.readyStatus.dataProviders && vm.readyStatus.configs">
+        <h2 class="m-b-35">Data Providers</h2>
         <md-card data-ng-repeat="dataProvider in vm.dataProviders">
             <md-card-content>
                 <div layout="row" layout-align="space-between">
@@ -20,7 +21,7 @@
                     <div layout="row" layout-align="end center">
                         <md-button
                                 class="md-raised data-provider-btn-sref"
-                                data-ui-sref="app.settings.general.data-providers-config({dataProviderId: dataProvider.id})">
+                                data-ui-sref="app.settings.data-providers-config({dataProviderId: dataProvider.id})">
                             <ng-md-icon icon="keyboard_arrow_right"></ng-md-icon>
                         </md-button>
                     </div>

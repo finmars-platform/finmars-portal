@@ -20,12 +20,17 @@
                 <md-tab label="Complex Transaction">
                     <md-content class="md-padding">
 
+                        <input type="text"
+                               ng-model="complexTransactionSearchTerms"
+                               placeholder="Search for a ..."
+                               class="view-constructor-card-search">
+
                         <div class="g-th-checkbox-row">
                             <span class="g-meta-circle red">C</span>
                             <span class="g-meta-circle green">G</span>
                             <span class="g-meta-circle blue">F</span>
                         </div>
-                        <div class="g-checkbox-row" data-ng-repeat="item in vm.complexTransactionAttrs" layout="row">
+                        <div class="g-checkbox-row" data-ng-repeat="item in vm.complexTransactionAttrs | filter: {name: complexTransactionSearchTerms}" layout="row">
                             <div>
                                 <md-checkbox ng-model="item.columns" aria-label="Columns" aria="columns"
                                              data-ng-change="vm.updateAttrs(vm.complexTransactionAttrs)">
@@ -51,7 +56,7 @@
                              data-ng-show="vm.complexTransactionDynamicAttrs.length > 0">
                             <p>User Attributes</p>
                         </div>
-                        <div class="g-checkbox-row" data-ng-repeat="item in vm.complexTransactionDynamicAttrs"
+                        <div class="g-checkbox-row" data-ng-repeat="item in vm.complexTransactionDynamicAttrs | filter: {name: complexTransactionSearchTerms}"
                              layout="row">
                             <div>
                                 <md-checkbox ng-model="item.columns" aria-label="Columns" aria="columns"
@@ -79,12 +84,19 @@
 
                 <md-tab label="Transaction">
                     <md-content class="md-padding">
+
+                        <input type="text"
+                               ng-model="transactionSearchTerms"
+                               placeholder="Search for a ..."
+                               class="view-constructor-card-search">
+
                         <div class="g-th-checkbox-row">
                             <span class="g-meta-circle red">C</span>
                             <span class="g-meta-circle green">G</span>
                             <span class="g-meta-circle blue">F</span>
                         </div>
-                        <div class="g-checkbox-row" data-ng-repeat="item in vm.transactionAttrs" layout="row">
+
+                        <div class="g-checkbox-row" data-ng-repeat="item in vm.transactionAttrs | filter: {name: transactionSearchTerms}" layout="row">
                             <div>
                                 <md-checkbox ng-model="item.columns" aria-label="Columns" aria="columns"
                                              data-ng-change="vm.updateAttrs(vm.transactionAttrs)">
@@ -105,7 +117,7 @@
                             </div>
                         </div>
 
-                        <div class="g-checkbox-row" data-ng-repeat="item in vm.linkedInstrumentAttrs" layout="row">
+                        <div class="g-checkbox-row" data-ng-repeat="item in vm.linkedInstrumentAttrs | filter: {name: transactionSearchTerms}" layout="row">
                             <div>
                                 <md-checkbox ng-model="item.columns" aria-label="Columns" aria="columns"
                                              data-ng-change="vm.updateAttrs(vm.linkedInstrumentAttrs)">
@@ -131,7 +143,7 @@
                              data-ng-show="vm.linkedInstrumentDynamicAttrs.length > 0">
                             <p>User Attributes</p>
                         </div>
-                        <div class="g-checkbox-row" data-ng-repeat="item in vm.linkedInstrumentDynamicAttrs"
+                        <div class="g-checkbox-row" data-ng-repeat="item in vm.linkedInstrumentDynamicAttrs | filter: {name: transactionSearchTerms}"
                              layout="row">
                             <div>
                                 <md-checkbox ng-model="item.columns" aria-label="Columns" aria="columns"
@@ -160,12 +172,19 @@
 
                 <md-tab label="Portfolio">
                     <md-content class="md-padding">
+
+                        <input type="text"
+                               ng-model="portfolioSearchTerms"
+                               placeholder="Search for a ..."
+                               class="view-constructor-card-search">
+
                         <div class="g-th-checkbox-row">
                             <span class="g-meta-circle red">C</span>
                             <span class="g-meta-circle green">G</span>
                             <span class="g-meta-circle blue">F</span>
                         </div>
-                        <div class="g-checkbox-row" data-ng-repeat="item in vm.portfolioAttrs" layout="row">
+
+                        <div class="g-checkbox-row" data-ng-repeat="item in vm.portfolioAttrs | filter: {name: portfolioSearchTerms}" layout="row">
                             <div>
                                 <md-checkbox ng-model="item.columns" aria-label="Columns" aria="columns"
                                              data-ng-change="vm.updateAttrs(vm.portfolioAttrs)">
@@ -190,7 +209,7 @@
                              data-ng-show="vm.portfolioDynamicAttrs.length > 0">
                             <p>User Attributes</p>
                         </div>
-                        <div class="g-checkbox-row" data-ng-repeat="item in vm.portfolioDynamicAttrs" layout="row">
+                        <div class="g-checkbox-row" data-ng-repeat="item in vm.portfolioDynamicAttrs | filter: {name: portfolioSearchTerms}" layout="row">
                             <div>
                                 <md-checkbox ng-model="item.columns" aria-label="Columns" aria="columns"
                                              data-ng-change="vm.updateAttrs(vm.portfolioDynamicAttrs)">
@@ -217,12 +236,19 @@
 
                 <md-tab label="Instrument">
                     <md-content class="md-padding">
+
+                        <input type="text"
+                               ng-model="instrumentSearchTerms"
+                               placeholder="Search for a ..."
+                               class="view-constructor-card-search">
+
                         <div class="g-th-checkbox-row">
                             <span class="g-meta-circle red">C</span>
                             <span class="g-meta-circle green">G</span>
                             <span class="g-meta-circle blue">F</span>
                         </div>
-                        <div class="g-checkbox-row" data-ng-repeat="item in vm.instrumentAttrs" layout="row">
+
+                        <div class="g-checkbox-row" data-ng-repeat="item in vm.instrumentAttrs | filter: {name: instrumentSearchTerms}" layout="row">
                             <div>
                                 <md-checkbox ng-model="item.columns" aria-label="Columns" aria="columns"
                                              data-ng-change="vm.updateAttrs(vm.instrumentAttrs)">
@@ -247,7 +273,7 @@
                              data-ng-show="vm.instrumentDynamicAttrs.length > 0">
                             <p>User Attributes</p>
                         </div>
-                        <div class="g-checkbox-row" data-ng-repeat="item in vm.instrumentDynamicAttrs" layout="row">
+                        <div class="g-checkbox-row" data-ng-repeat="item in vm.instrumentDynamicAttrs | filter: {name: instrumentSearchTerms}" layout="row">
                             <div>
                                 <md-checkbox ng-model="item.columns" aria-label="Columns" aria="columns"
                                              data-ng-change="vm.updateAttrs(vm.instrumentDynamicAttrs)">
@@ -274,12 +300,19 @@
 
                 <md-tab label="Responsible">
                     <md-content class="md-padding">
+
+                        <input type="text"
+                               ng-model="responsibleSearchTerms"
+                               placeholder="Search for a ..."
+                               class="view-constructor-card-search">
+
                         <div class="g-th-checkbox-row">
                             <span class="g-meta-circle red">C</span>
                             <span class="g-meta-circle green">G</span>
                             <span class="g-meta-circle blue">F</span>
                         </div>
-                        <div class="g-checkbox-row" data-ng-repeat="item in vm.responsibleAttrs" layout="row">
+
+                        <div class="g-checkbox-row" data-ng-repeat="item in vm.responsibleAttrs | filter: {name: responsibleSearchTerms}" layout="row">
                             <div>
                                 <md-checkbox ng-model="item.columns" aria-label="Columns" aria="columns"
                                              data-ng-change="vm.updateAttrs(vm.responsibleAttrs)">
@@ -304,7 +337,7 @@
                              data-ng-show="vm.responsibleDynamicAttrs.length > 0">
                             <p>User Attributes</p>
                         </div>
-                        <div class="g-checkbox-row" data-ng-repeat="item in vm.responsibleDynamicAttrs" layout="row">
+                        <div class="g-checkbox-row" data-ng-repeat="item in vm.responsibleDynamicAttrs | filter: {name: responsibleSearchTerms}" layout="row">
                             <div>
                                 <md-checkbox ng-model="item.columns" aria-label="Columns" aria="columns"
                                              data-ng-change="vm.updateAttrs(vm.responsibleDynamicAttrs)">
@@ -331,12 +364,19 @@
 
                 <md-tab label="Counterparty">
                     <md-content class="md-padding">
+
+                        <input type="text"
+                               ng-model="counterpartySearchTerms"
+                               placeholder="Search for a ..."
+                               class="view-constructor-card-search">
+
                         <div class="g-th-checkbox-row">
                             <span class="g-meta-circle red">C</span>
                             <span class="g-meta-circle green">G</span>
                             <span class="g-meta-circle blue">F</span>
                         </div>
-                        <div class="g-checkbox-row" data-ng-repeat="item in vm.counterpartyAttrs" layout="row">
+
+                        <div class="g-checkbox-row" data-ng-repeat="item in vm.counterpartyAttrs | filter: {name: counterpartySearchTerms}" layout="row">
                             <div>
                                 <md-checkbox ng-model="item.columns" aria-label="Columns" aria="columns"
                                              data-ng-change="vm.updateAttrs(vm.counterpartyAttrs)">
@@ -361,7 +401,7 @@
                              data-ng-show="vm.counterpartyDynmicAttrs.length > 0">
                             <p>User Attributes</p>
                         </div>
-                        <div class="g-checkbox-row" data-ng-repeat="item in vm.counterpartyDynmicAttrs" layout="row">
+                        <div class="g-checkbox-row" data-ng-repeat="item in vm.counterpartyDynmicAttrs | filter: {name: counterpartySearchTerms}" layout="row">
                             <div>
                                 <md-checkbox ng-model="item.columns" aria-label="Columns" aria="columns"
                                              data-ng-change="vm.updateAttrs(vm.counterpartyDynmicAttrs)">
@@ -440,12 +480,19 @@
 
                 <md-tab label="Accounts">
                     <md-content class="md-padding">
+
+                        <input type="text"
+                               ng-model="accountSearchTerms"
+                               placeholder="Search for a ..."
+                               class="view-constructor-card-search">
+
                         <div class="g-th-checkbox-row">
                             <span class="g-meta-circle red">C</span>
                             <span class="g-meta-circle green">G</span>
                             <span class="g-meta-circle blue">F</span>
                         </div>
-                        <div class="g-checkbox-row" data-ng-repeat="item in vm.accountPositionAttrs" layout="row">
+
+                        <div class="g-checkbox-row" data-ng-repeat="item in vm.accountPositionAttrs | filter: {name: accountSearchTerms}" layout="row">
                             <div>
                                 <md-checkbox ng-model="item.columns" aria-label="Columns" aria="columns"
                                              data-ng-change="vm.updateAttrs(vm.accountPositionAttrs)">
@@ -467,7 +514,7 @@
                             </div>
                         </div>
 
-                        <div class="g-checkbox-row" data-ng-repeat="item in vm.accountCashAttrs" layout="row">
+                        <div class="g-checkbox-row" data-ng-repeat="item in vm.accountCashAttrs | filter: {name: accountSearchTerms}" layout="row">
                             <div>
                                 <md-checkbox ng-model="item.columns" aria-label="Columns" aria="columns"
                                              data-ng-change="vm.updateAttrs(vm.accountCashAttrs)">
@@ -488,7 +535,7 @@
                             </div>
                         </div>
 
-                        <div class="g-checkbox-row" data-ng-repeat="item in vm.accountInterimAttrs" layout="row">
+                        <div class="g-checkbox-row" data-ng-repeat="item in vm.accountInterimAttrs | filter: {name: accountSearchTerms}" layout="row">
                             <div>
                                 <md-checkbox ng-model="item.columns" aria-label="Columns" aria="columns"
                                              data-ng-change="vm.updateAttrs(vm.accountInterimAttrs)">
@@ -514,7 +561,7 @@
                             <p>User Attributes</p>
                         </div>
 
-                        <div class="g-checkbox-row" data-ng-repeat="item in vm.accountPositionDynamicAttrs"
+                        <div class="g-checkbox-row" data-ng-repeat="item in vm.accountPositionDynamicAttrs | filter: {name: accountSearchTerms}"
                              layout="row">
                             <div>
                                 <md-checkbox ng-model="item.columns" aria-label="Columns" aria="columns"
@@ -537,7 +584,7 @@
                             </div>
                         </div>
 
-                        <div class="g-checkbox-row" data-ng-repeat="item in vm.accountCashDynamicAttrs" layout="row">
+                        <div class="g-checkbox-row" data-ng-repeat="item in vm.accountCashDynamicAttrs | filter: {name: accountSearchTerms}" layout="row">
                             <div>
                                 <md-checkbox ng-model="item.columns" aria-label="Columns" aria="columns"
                                              data-ng-change="vm.updateAttrs(vm.accountCashDynamicAttrs)">
@@ -559,7 +606,7 @@
                             </div>
                         </div>
 
-                        <div class="g-checkbox-row" data-ng-repeat="item in vm.accountInterimDynamicAttrs" layout="row">
+                        <div class="g-checkbox-row" data-ng-repeat="item in vm.accountInterimDynamicAttrs | filter: {name: accountSearchTerms}" layout="row">
                             <div>
                                 <md-checkbox ng-model="item.columns" aria-label="Columns" aria="columns"
                                              data-ng-change="vm.updateAttrs(vm.accountInterimDynamicAttrs)">
@@ -586,12 +633,19 @@
 
                 <md-tab label="Currencies">
                     <md-content class="md-padding">
+
+                        <input type="text"
+                               ng-model="currenciesSearchTerms"
+                               placeholder="Search for a ..."
+                               class="view-constructor-card-search">
+
                         <div class="g-th-checkbox-row">
                             <span class="g-meta-circle red">C</span>
                             <span class="g-meta-circle green">G</span>
                             <span class="g-meta-circle blue">F</span>
                         </div>
-                        <div class="g-checkbox-row" data-ng-repeat="item in vm.transactionCurrencyAttrs" layout="row">
+
+                        <div class="g-checkbox-row" data-ng-repeat="item in vm.transactionCurrencyAttrs | filter: {name: currenciesSearchTerms}" layout="row">
                             <div>
                                 <md-checkbox ng-model="item.columns" aria-label="Columns" aria="columns"
                                              data-ng-change="vm.updateAttrs(vm.transactionCurrencyAttrs)">
@@ -613,7 +667,7 @@
                             </div>
                         </div>
 
-                        <div class="g-checkbox-row" data-ng-repeat="item in vm.settlementCurrencyAttrs" layout="row">
+                        <div class="g-checkbox-row" data-ng-repeat="item in vm.settlementCurrencyAttrs | filter: {name: currenciesSearchTerms}" layout="row">
                             <div>
                                 <md-checkbox ng-model="item.columns" aria-label="Columns" aria="columns"
                                              data-ng-change="vm.updateAttrs(vm.settlementCurrencyAttrs)">
@@ -640,12 +694,18 @@
 
                 <md-tab label="Strategies">
                     <md-content class="md-padding">
+
+                        <input type="text"
+                               ng-model="strategiesSearchTerms"
+                               placeholder="Search for a ..."
+                               class="view-constructor-card-search">
+
                         <div class="g-th-checkbox-row">
                             <span class="g-meta-circle red">C</span>
                             <span class="g-meta-circle green">G</span>
                             <span class="g-meta-circle blue">F</span>
                         </div>
-                        <div class="g-checkbox-row" data-ng-repeat="item in vm.strategy1cashAttrs" layout="row">
+                        <div class="g-checkbox-row" data-ng-repeat="item in vm.strategy1cashAttrs | filter: {name: strategiesSearchTerms}" layout="row">
                             <div>
                                 <md-checkbox ng-model="item.columns" aria-label="Columns" aria="columns"
                                              data-ng-change="vm.updateAttrs(vm.strategy1cashAttrs)">
@@ -666,7 +726,7 @@
                             </div>
                         </div>
 
-                        <div class="g-checkbox-row" data-ng-repeat="item in vm.strategy1positionAttrs" layout="row">
+                        <div class="g-checkbox-row" data-ng-repeat="item in vm.strategy1positionAttrs | filter: {name: strategiesSearchTerms}" layout="row">
                             <div>
                                 <md-checkbox ng-model="item.columns" aria-label="Columns" aria="columns"
                                              data-ng-change="vm.updateAttrs(vm.strategy1positionAttrs)">
@@ -688,7 +748,7 @@
                             </div>
                         </div>
 
-                        <div class="g-checkbox-row" data-ng-repeat="item in vm.strategy2cashAttrs" layout="row">
+                        <div class="g-checkbox-row" data-ng-repeat="item in vm.strategy2cashAttrs | filter: {name: strategiesSearchTerms}" layout="row">
                             <div>
                                 <md-checkbox ng-model="item.columns" aria-label="Columns" aria="columns"
                                              data-ng-change="vm.updateAttrs(vm.strategy2cashAttrs)">
@@ -709,7 +769,7 @@
                             </div>
                         </div>
 
-                        <div class="g-checkbox-row" data-ng-repeat="item in vm.strategy2positionAttrs" layout="row">
+                        <div class="g-checkbox-row" data-ng-repeat="item in vm.strategy2positionAttrs | filter: {name: strategiesSearchTerms}" layout="row">
                             <div>
                                 <md-checkbox ng-model="item.columns" aria-label="Columns" aria="columns"
                                              data-ng-change="vm.updateAttrs(vm.strategy2positionAttrs)">
@@ -731,7 +791,7 @@
                             </div>
                         </div>
 
-                        <div class="g-checkbox-row" data-ng-repeat="item in vm.strategy3cashAttrs" layout="row">
+                        <div class="g-checkbox-row" data-ng-repeat="item in vm.strategy3cashAttrs | filter: {name: strategiesSearchTerms}" layout="row">
                             <div>
                                 <md-checkbox ng-model="item.columns" aria-label="Columns" aria="columns"
                                              data-ng-change="vm.updateAttrs(vm.strategy3cashAttrs)">
@@ -752,7 +812,7 @@
                             </div>
                         </div>
 
-                        <div class="g-checkbox-row" data-ng-repeat="item in vm.strategy3positionAttrs" layout="row">
+                        <div class="g-checkbox-row" data-ng-repeat="item in vm.strategy3positionAttrs | filter: {name: strategiesSearchTerms}" layout="row">
                             <div>
                                 <md-checkbox ng-model="item.columns" aria-label="Columns" aria="columns"
                                              data-ng-change="vm.updateAttrs(vm.strategy3positionAttrs)">
@@ -779,12 +839,18 @@
 
                 <md-tab label="Custom Columns">
                     <md-content class="md-padding">
+
+                        <input type="text"
+                               ng-model="customSearchTerms"
+                               placeholder="Search for a ..."
+                               class="view-constructor-card-search">
+
                         <div class="g-th-checkbox-row">
                             <span class="g-meta-circle red">C</span>
                             <span class="g-meta-circle green">G</span>
                             <span class="g-meta-circle blue">F</span>
                         </div>
-                        <div class="g-checkbox-row" data-ng-repeat="item in vm.custom" layout="row">
+                        <div class="g-checkbox-row" data-ng-repeat="item in vm.custom | filter: {name: customSearchTerms}" layout="row">
                             <div>
                                 <md-checkbox ng-model="item.columns" aria-label="Columns" aria="columns"
                                              data-ng-change="vm.updateAttrs(vm.custom)">
@@ -815,11 +881,11 @@
         </div>
     </md-dialog-content>
     <md-dialog-actions layout="row" layout-align="space-between center">
-        <md-button
+        <!--<md-button
                 class="md-raised md-primary" style="margin: 0;"
                 data-ng-click="vm.openCustomFieldsManager()">
             Custom Columns
-        </md-button>
+        </md-button>-->
         <md-button class="md-raised" ng-click="vm.cancel()">
             OK
         </md-button>

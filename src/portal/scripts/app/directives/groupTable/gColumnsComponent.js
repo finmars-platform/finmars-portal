@@ -15,7 +15,8 @@
             restrict: 'AE',
             scope: {
                 evDataService: '=',
-                evEventService: '='
+                evEventService: '=',
+                contentWrapElement: '='
             },
             templateUrl: 'views/directives/groupTable/columns-view.html',
             link: function (scope, elem, attrs) {
@@ -307,6 +308,29 @@
                     return false
                 };
 
+                var createGroupFromColumn = function (column) {
+
+                    var groupToAdd = {};
+
+                    if (column.hasOwnProperty('key')) {
+                        groupToAdd.key = column.key;
+                    }
+
+                    if (column.hasOwnProperty('entity')) {
+                        groupToAdd.entity = column.entity;
+                    }
+
+                    if (column.hasOwnProperty('id')) {
+                        groupToAdd.id = column.id;
+                    }
+
+                    groupToAdd.name = column.name;
+                    groupToAdd.value_type = column.value_type;
+
+                    return groupToAdd;
+
+                };
+
                 var dragAndDrop = {
 
                     init: function () {
@@ -393,9 +417,11 @@
                     }
                 };
 
-                setTimeout(function () {
-                    dragAndDrop.init();
-                }, 500);
+                if (!scope.isReport) {
+                    setTimeout(function () {
+                        dragAndDrop.init();
+                    }, 500);
+                }
 
                 scope.isSortable = function (column) {
 
@@ -423,22 +449,7 @@
                 scope.addColumnEntityToGrouping = function (column) {
 
                     var groups = scope.evDataService.getGroups();
-                    var groupToAdd = {};
-
-                    if (column.hasOwnProperty('key')) {
-                        groupToAdd.key = column.key;
-                    }
-
-                    if (column.hasOwnProperty('entity')) {
-                        groupToAdd.entity = column.entity;
-                    }
-
-                    if (column.hasOwnProperty('id')) {
-                        groupToAdd.id = column.id;
-                    }
-
-                    groupToAdd.name = column.name;
-                    groupToAdd.value_type = column.value_type;
+                    var groupToAdd = createGroupFromColumn(column);
 
                     groups.push(groupToAdd);
                     scope.evDataService.setGroups(groups);
