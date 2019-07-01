@@ -11,6 +11,10 @@
         return dataProvidersRepository.getList();
     };
 
+    var getConfigs = function () {
+        return dataProvidersRepository.getConfigs();
+    };
+
     var getConfig = function (providerId) {
         return dataProvidersRepository.getConfig(providerId);
     };
@@ -25,6 +29,7 @@
 
     module.exports = {
         getList: getList,
+        getConfigs: getConfigs,
         getConfig: getConfig,
         setConfig: setConfig,
         createConfig: createConfig
