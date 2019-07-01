@@ -21,21 +21,17 @@
                 options: '=',
                 entityType: '='
             },
-            templateUrl: 'views/entity-viewer/field-resolver-view.html',
+            templateUrl: 'views/directives/ev-field-resolver-view.html',
             link: function (scope, elem, attrs) {
 
                 scope.readyStatus = {content: false, tags: false};
                 scope.type = 'id';
                 scope.fields = [];
 
-                // console.log('scope.item.name', scope.item);
-                // console.log('scope.entity', scope.entity);
-
                 if (['counterparties', 'accounts', 'responsibles', 'transaction_types', 'tags'].indexOf(scope.item.key) !== -1) {
                     scope.type = 'multiple-ids';
                 }
 
-                // console.log('scope.type', scope.type);
 
                 scope.isSpecialSearchRelation = function () {
 
@@ -206,8 +202,7 @@
                 scope.bindMCField = function (model) {
                     if (scope.entity[scope.getModelKey()] && scope.entity[scope.getModelKey()].length > 0) {
                         return '[' + scope.entity[scope.getModelKey()].length + '] selected';
-                    }
-                    else {
+                    } else {
                         return scope.getName();
                     }
                 };

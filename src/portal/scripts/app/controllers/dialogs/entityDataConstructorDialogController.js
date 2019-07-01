@@ -822,6 +822,26 @@
 
             });
 
+            console.log('vm.entityType', vm.entityType);
+
+            if (vm.entityType === 'instrument') {
+
+                vm.items = vm.items.filter(function (item) {
+
+                    if(['accrued_currency', 'payment_size_detail',
+                        'accrued_multiplier', 'default_accrued',
+                        'pricing_currency', 'price_multiplier',
+                        'default_price', 'daily_pricing_model',
+                        'price_download_scheme', 'reference_for_pricing'].indexOf(item.key) === -1){
+                        return true
+                    }
+
+                    return false;
+
+                });
+
+            }
+
             vm.updateDrakeContainers();
 
             console.log('syncItems.items', vm.items);

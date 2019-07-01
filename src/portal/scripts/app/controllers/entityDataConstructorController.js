@@ -34,6 +34,11 @@
         vm.entityType = $stateParams.entityType;
         vm.isInstanceId = $stateParams.instanceId;
         vm.fromEntityType = $stateParams.from;
+
+        if (vm.fromEntityType) {
+            vm.entityType = vm.fromEntityType;
+        }
+
         console.log('cancel button initEntityType', $stateParams);
 
         var choices = metaService.getTypeCaptions();
@@ -160,12 +165,12 @@
             // calculating how much rows needs creating in addition to first five
             var rowsToAdd = 5 - tab.layout.rows;
             if (rowsToAdd <= 0) {
-               rowsToAdd = 1;
+                rowsToAdd = 1;
             }
 
             var r, c;
             var field = {};
-            for(r = 0; r < rowsToAdd; r = r + 1) {
+            for (r = 0; r < rowsToAdd; r = r + 1) {
 
                 tab.layout.rows = tab.layout.rows + 1;
 
@@ -779,6 +784,7 @@
 
             console.log('syncItems.items before', JSON.parse(JSON.stringify(vm.items)));
 
+
             vm.items = vm.items.filter(function (item) {
 
                 var result = true;
@@ -809,6 +815,26 @@
                 return result;
 
             });
+
+            console.log('vm.entityType', vm.entityType);
+
+            if (vm.entityType === 'instrument') {
+
+                vm.items = vm.items.filter(function (item) {
+
+                    if(['accrued_currency', 'payment_size_detail',
+                        'accrued_multiplier', 'default_accrued',
+                        'pricing_currency', 'price_multiplier',
+                        'default_price', 'daily_pricing_model',
+                        'price_download_scheme', 'reference_for_pricing'].indexOf(item.key) === -1){
+                        return true
+                    }
+
+                    return false;
+
+                });
+
+            }
 
             vm.updateDrakeContainers();
 
