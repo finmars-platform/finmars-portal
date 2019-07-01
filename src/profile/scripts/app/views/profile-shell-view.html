@@ -9,6 +9,7 @@
 
         </md-content>
     </md-tab>
+
     <md-tab label="Databases">
         <md-content class="md-padding min-height">
 
@@ -19,11 +20,21 @@
 
         </md-content>
     </md-tab>
+
     <md-tab label="Billing">
         <md-content class="md-padding">
 
             Coming soon
 
+        </md-content>
+    </md-tab>
+
+    <md-tab label="Password">
+        <md-content class="md-padding">
+            <div ng-include="'views/settings/change-password-settings-view.html'"
+                 ng-controller="SettingsGeneralChangePasswordController as vm">
+
+            </div>
         </md-content>
     </md-tab>
 </md-tabs>

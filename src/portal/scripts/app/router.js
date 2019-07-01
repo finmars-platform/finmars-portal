@@ -391,6 +391,11 @@
                 templateUrl: 'views/settings/users-and-groups-view.html',
                 controller: 'SettingsMembersAndGroupsController as vm'
             })
+            .state('app.settings.ecosystem-default-settings', {
+                url: '/default-settings',
+                templateUrl: 'views/pages/ecosystem-default-settings-view.html',
+                controller: 'SettingsMembersAndGroupsController as vm'
+            })
 
             .state('app.settings.forms', {
                 url: '/forms',
@@ -456,6 +461,21 @@
                 url: '/export-configuration',
                 templateUrl: 'views/pages/export-configurations-view.html',
                 controller: 'ExportConfigurationsController as vm'
+            })
+            .state('app.settings.data-providers', {
+                url: '/data-providers',
+                templateUrl: 'views/settings/data-providers-settings-view.html',
+                controller: 'SettingsGeneralDataProvidersController as vm'
+            })
+            .state('app.settings.init-configuration', {
+                url: '/init-configuration',
+                templateUrl: 'views/settings/init-configuration-settings-view.html',
+                controller: 'SettingsGeneralInitConfigurationController as vm'
+            })
+            .state('app.settings.users-and-groups', {
+                url: '/data-providers',
+                templateUrl: 'views/settings/data-providers-settings-view.html',
+                controller: 'SettingsGeneralDataProvidersController as vm'
             })
 
             .state('app.system', {
