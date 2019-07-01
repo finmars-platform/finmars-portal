@@ -81,7 +81,7 @@
                     <div>
                         <div class="{{item.isSelected ? 'selected' : ''}} help-item-menu-item"
                              data-ng-repeat="item in vm.expressions | filter: vm.getFilters()"
-                             data-ng-click="vm.selectHelpItem(item)">
+                             data-ng-click="vm.selectHelpItem(item)" ng-dblclick="vm.appendFunction(item)">
                             {{item.name}}
                         </div>
                     </div>

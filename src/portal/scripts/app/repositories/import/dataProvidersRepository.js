@@ -24,6 +24,18 @@
             })
     };
 
+    var getConfigs = function () {
+        return xhrService.fetch(baseUrl + 'import/config',
+            {
+                method: 'GET',
+                credentials: 'include',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-type': 'application/json'
+                }
+            })
+    };
+
     var getConfig = function (providerId) {
         return xhrService.fetch(baseUrl + 'import/config/?provider=' + providerId,
             {
@@ -68,6 +80,7 @@
 
     module.exports = {
         getList: getList,
+        getConfigs: getConfigs,
         getConfig: getConfig,
         setConfig: setConfig,
         createConfig: createConfig
