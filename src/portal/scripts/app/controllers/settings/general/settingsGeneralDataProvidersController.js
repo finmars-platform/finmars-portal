@@ -15,13 +15,57 @@
 
         vm.dataProviders = [];
 
-        vm.readyStatus = {dataProviders: false};
+        vm.readyStatus = {dataProviders: false, configs: false};
 
-        dataProvidersService.getList().then(function(data){
-            vm.dataProviders = data;
-            vm.readyStatus.dataProviders = true;
-            $scope.$apply();
-        });
+        vm.getProviders = function () {
+
+            dataProvidersService.getList().then(function (data) {
+                vm.dataProviders = data;
+                vm.readyStatus.dataProviders = true;
+
+                vm.getConfigs();
+
+                $scope.$apply();
+            });
+
+        };
+
+        vm.getConfigs = function () {
+
+            dataProvidersService.getConfigs().then(function (data) {
+                vm.configs = data.results;
+                vm.readyStatus.configs = true;
+
+
+                vm.dataProviders.forEach(function (provider) {
+
+                    provider.has_p12cert = false;
+
+                    vm.configs.forEach(function (config) {
+
+                        if (provider.id === config.provider) {
+                            provider.has_p12cert = config.has_p12cert;
+                        }
+
+                    })
+
+                });
+
+
+                $scope.$apply();
+            });
+
+
+        };
+
+        vm.init = function () {
+
+            vm.getProviders();
+
+        };
+
+        vm.init();
+
 
         /*$mdDialog.show({
             controller: 'WarningDialogController as vm',

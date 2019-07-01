@@ -138,7 +138,17 @@
                             locals: {
                                 warning: {
                                     title: 'Warning',
-                                    description: 'All classifier tree will be overwritten with file content.'
+                                    description: 'The current classifications will be permanently deleted and all the assigned classification for this User Attribute will be lost.<br/> Do you want to proceed?',
+                                    actionsButtons: [
+                                        {
+                                            name: "CANCEL",
+                                            response: {}
+                                        },
+                                        {
+                                            name: "OK, PROCEED",
+                                            response: {status: 'agree'}
+                                        }
+                                    ]
                                 }
                             },
                             preserveScope: true,

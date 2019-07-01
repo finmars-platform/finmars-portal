@@ -1,18 +1,27 @@
 <div style="padding: 20px 20px 0">
-
-    <h2 class="m-b-35">Data Providers</h2>
-
-    <div data-ng-if="vm.readyStatus.dataProviders">
-        <md-card class="m-l-0" data-ng-repeat="dataProvider in vm.dataProviders">
+    <div data-ng-if="vm.readyStatus.dataProviders && vm.readyStatus.configs">
+        <h2 class="m-b-35">Data Providers</h2>
+        <md-card data-ng-repeat="dataProvider in vm.dataProviders">
             <md-card-content>
                 <div layout="row" layout-align="space-between">
                     <div layout="row" layout-align="begin center">
+
+                        <div class="float-left m-r-8" style="width: 24px">
+                            <ng-md-icon icon="check_circle" class="color-success" data-ng-if="dataProvider.has_p12cert">
+                                <md-tooltip md-direction="top">Certificate is imported</md-tooltip>
+                            </ng-md-icon>
+                            <ng-md-icon icon="radio_button_unchecked" class="color-grey"
+                                        data-ng-if="!dataProvider.has_p12cert">
+                                <md-tooltip md-direction="top">Certificate is not imported</md-tooltip>
+                            </ng-md-icon>
+                        </div>
+
                         {{dataProvider.name}}
                     </div>
                     <div layout="row" layout-align="end center">
                         <md-button
                                 class="md-raised data-provider-btn-sref"
-                                data-ui-sref="app.settings.general.data-providers-config({dataProviderId: dataProvider.id})">
+                                data-ui-sref="app.settings.data-providers-config({dataProviderId: dataProvider.id})">
                             <ng-md-icon icon="keyboard_arrow_right"></ng-md-icon>
                         </md-button>
                     </div>
@@ -20,7 +29,7 @@
             </md-card-content>
         </md-card>
     </div>
-    <div data-ng-if="!vm.readyStatus.dataProviders">
+    <div data-ng-if="!vm.readyStatus.dataProviders && !vm.readyStatus.configs">
         <div layout="row" layout-sm="column" layout-align="space-around" class="m-large">
             <md-progress-circular md-mode="indeterminate" md-diameter="96"></md-progress-circular>
         </div>

@@ -426,6 +426,9 @@
                 case 'app.settings.data-providers':
                     name = 'SETTINGS > DATA PROVIDERS';
                     break;
+                case 'app.settings.data-providers-config':
+                    name = 'SETTINGS > DATA PROVIDERS';
+                    break;
                 case 'app.settings.init-configuration':
                     name = 'SETTINGS > NEW USER SETUP';
                     break;
