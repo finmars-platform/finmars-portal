@@ -467,6 +467,11 @@
                 templateUrl: 'views/settings/data-providers-settings-view.html',
                 controller: 'SettingsGeneralDataProvidersController as vm'
             })
+            .state('app.settings.data-providers-config', {
+                url: '/data-providers/:dataProviderId',
+                templateUrl: 'views/settings/data-providers-config-settings-view.html',
+                controller: 'SettingsGeneralDataProvidersConfigController as vm'
+            })
             .state('app.settings.init-configuration', {
                 url: '/init-configuration',
                 templateUrl: 'views/settings/init-configuration-settings-view.html',
