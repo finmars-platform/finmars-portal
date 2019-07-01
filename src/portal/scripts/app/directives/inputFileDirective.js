@@ -25,10 +25,6 @@
                         $inputPlaceHolder.text('Select file');
                     }
 
-                    if (scope.readFileChange) {
-                        scope.readFileChange();
-                    }
-
                 });
 
                 $(elem).bind('change', function () {
@@ -59,9 +55,8 @@
 
                     }
 
-                    scope.readFileChange();
                     scope.$apply();
-
+                    scope.readFileChange();
 
                 });
             }

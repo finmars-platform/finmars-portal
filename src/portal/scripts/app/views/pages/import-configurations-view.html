@@ -1,18 +1,23 @@
 <div style="padding: 20px 20px 0">
 
-    <h2 class="m-b-35">Import Configuration from File</h2>
+    <h2>Import Configuration from File</h2>
 
-    <div style="min-height: 200px; padding-top: 16px;" layout="row">
+    <div ng-class="{'visibility-hidden': !vm.configFileNotes}" class="ie-configuration-file-notes-block">
+        <h3 class="configuration-file-notes">File description</h3>
+        <p ng-bind="vm.configFileNotes"></p>
+    </div>
 
-        <div style="width: 300px; margin-right: 24px">
+    <div class="manage-import-export-file-block" layout="row">
 
-            <md-input-container flex="40" style="margin-bottom: 0" class="ng-hide">
+        <div class="import-export-input-wra">
+
+            <md-input-container flex="40" class="ng-hide m-0">
                 <input type="file"
                        accept=".fcfg"
                        id="configurationFileImport"
                        input-file-directive
                        read-file="vm.configurationFile"
-                       read-file-change="vm.checkExtension(vm.configurationFile, $event)">
+                       read-file-change="vm.onFileLoad(vm.configurationFile, $event)">
             </md-input-container>
             <div class="input-upload-file-container">
                 <p class="configurationFileImport">Select file</p>

@@ -642,7 +642,7 @@
         vm.init = function () {
 
             vm.items = vm.file.body;
-
+            console.log("file to import", vm.items, vm.file, data);
             vm.items.forEach(function (item) {
 
                 item.active = false;

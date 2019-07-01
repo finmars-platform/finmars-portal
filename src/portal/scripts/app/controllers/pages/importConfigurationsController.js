@@ -12,15 +12,14 @@
         vm.configurationFile = null;
 
         vm.configurationFileIsAvailable = function () {
-            return vm.configurationFile !== null && vm.configurationFile !== undefined
+            return vm.configurationFile !== null && vm.configurationFile !== undefined;
         };
 
-        vm.checkExtension = function (file, $event) {
-            console.log('file', file);
+        var checkExtension = function (file, $event) {
 
-            if (file) {
+            return new Promise(function (resolve, reject) {
 
-                var ext = file.name.split('.')[1]
+                var ext = file.name.split('.')[1];
 
                 if (ext !== 'fcfg') {
 
@@ -41,16 +40,49 @@
 
                     }).then(function () {
 
-                        if (file === vm.configurationFile) {
-                            vm.configurationFile = null;
-                        } else {
-                            vm.mappingFile = null;
-                        }
+                        vm.configurationFile = null;
+                        reject('wrong file extension');
 
                     });
 
+                } else {
+                    resolve(true);
                 }
 
+            })
+
+
+        };
+
+        vm.onFileLoad = function (file, $event) {
+
+            vm.configFileNotes = null;
+
+            if (file) {
+
+                checkExtension(file, $event).then(function () {
+
+                    var reader = new FileReader();
+                    reader.readAsText(vm.configurationFile);
+                    reader.onload = function (evt) {
+
+                        if (evt.target.result) {
+                            var parsedFile = JSON.parse(evt.target.result);
+
+                            if (parsedFile.notes) {
+                                vm.configFileNotes = parsedFile.notes;
+                            }
+
+                        }
+
+                        $scope.$apply();
+
+                    };
+
+                });
+
+            } else {
+                $scope.$apply();
             }
 
         };
@@ -66,7 +98,7 @@
                 try {
 
                     var file = JSON.parse(evt.target.result);
-                    console.log("import config file", file);
+
                     $mdDialog.show({
                         controller: 'SettingGeneralConfigurationPreviewFileDialogController as vm',
                         templateUrl: 'views/dialogs/settings-general-configuration-preview-file-dialog-view.html',

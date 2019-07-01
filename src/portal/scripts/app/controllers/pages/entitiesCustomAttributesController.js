@@ -98,14 +98,12 @@
                     entity = 'transactionTypeAttrs';
                     break;
             }
-            console.log("manage attrs entity", entity);
+
             return attributeTypeService.getList(entityType).then(function (data) {
 
                 if (entity) {
                     vm[entity] = data.results;
                 }
-
-                console.log("manage attrs", entityType, data, vm[entity]);
 
             }).catch(function (error) {
                 return error;
@@ -166,8 +164,7 @@
                 }
             }).then(function (res) {
                 if (res.status === 'agree') {
-                    console.log(res.data.attribute['value_type']);
-                    console.log("res", res.data);
+
                     attributeTypeService.create(entityType, res.data.attribute).then(function () {
 
                         getEntityAttributes(entityType).then(function () {
@@ -219,7 +216,6 @@
                 }
             }).then(function (res) {
                 if (res.status === 'agree') {
-                    console.log("res", res.data);
 
                     res.data.classifier.classifiers = res.data.classifier.children.map(setName);
 
@@ -229,7 +225,7 @@
         };
 
         vm.openClassifierMapping = function (item, entityType, $event) {
-            console.log("import classifier item", item);
+
             $mdDialog.show({
                 controller: 'EntityTypeClassifierMappingDialogController as vm',
                 templateUrl: 'views/dialogs/entity-type-classifier-mapping-dialog-view.html',
@@ -311,7 +307,7 @@
                 skipHide: true,
                 multiple: true
             }).then(function (res) {
-                console.log('res', res);
+
                 if (res.status === 'agree') {
 
                     attributeTypeService.deleteByKey(entityType, item.id).then(function (data) {
