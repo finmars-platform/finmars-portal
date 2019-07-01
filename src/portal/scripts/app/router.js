@@ -44,6 +44,12 @@
             controller: 'ActionsController as vm'
         });
 
+        $stateProvider.state('app.developer-panel', {
+            url: '/developer-panel',
+            templateUrl: 'views/pages/developer-panel-view.html',
+            controller: 'DeveloperPanelController as vm'
+        });
+
         $stateProvider.state('app.data-constructor', {
             url: '/layout/:entityType/:instanceId?from=',
             templateUrl: 'views/entity-data-constructor-view.html',
@@ -175,6 +181,7 @@
                 templateUrl: 'views/data/data-strategy-view.html',
                 controller: 'DataStrategyController as vm'
             })
+
             .state('app.reports', {
                 url: '/reports',
                 abstract: true,
@@ -213,6 +220,48 @@
                 templateUrl: 'views/reports/reports-performance-view.html',
                 controller: 'PerformanceReportController as vm'
             })
+            .state('app.reports.check-for-events', {
+                url: '/check-for-events',
+                templateUrl: 'views/pages/check-for-events-view.html',
+                controller: 'CheckEventsController as vm'
+            })
+
+            .state('app.import', {
+                url: '/import',
+                abstract: true,
+                template: '<div data-ui-view></div>'
+            })
+            .state('app.import.simple-entity', {
+                url: '/simple-entity-import',
+                templateUrl: 'views/pages/simple-entity-import-view.html',
+                controller: 'SimpleEntityImportController as vm'
+            })
+            .state('app.import.transaction', {
+                url: '/transaction-import',
+                templateUrl: 'views/pages/transaction-import-view.html',
+                controller: 'TransactionImportController as vm'
+            })
+            .state('app.import.complex-import', {
+                url: '/complex-import',
+                templateUrl: 'views/pages/complex-import-view.html',
+                controller: 'ComplexImportController as vm'
+            })
+            .state('app.import.instrument', {
+                url: '/instrument-import',
+                templateUrl: 'views/pages/instrument-download-view.html',
+                controller: 'InstrumentDownloadController as vm'
+            })
+            .state('app.import.prices', {
+                url: '/prices-import',
+                templateUrl: 'views/pages/fill-price-history-view.html',
+                controller: 'FillPriceHistoryController as vm'
+            })
+            .state('app.import.mapping-tables', {
+                url: '/mapping-tables-import',
+                templateUrl: 'views/pages/mapping-table-view.html',
+                controller: 'MappingTablesController as vm'
+            })
+
             .state('app.settings', {
                 abstract: true,
                 url: '/settings',
@@ -342,6 +391,98 @@
                 templateUrl: 'views/settings/users-and-groups-view.html',
                 controller: 'SettingsMembersAndGroupsController as vm'
             })
+            .state('app.settings.ecosystem-default-settings', {
+                url: '/default-settings',
+                templateUrl: 'views/pages/ecosystem-default-settings-view.html',
+                controller: 'SettingsMembersAndGroupsController as vm'
+            })
+
+            .state('app.settings.forms', {
+                url: '/forms',
+                templateUrl: 'views/pages/forms-data-constructor-view.html',
+                controller: 'FormsDataConstructor as vm'
+            })
+            .state('app.settings.layouts', {
+                url: '/layouts',
+                templateUrl: 'views/pages/layouts-view.html',
+                controller: 'LayoutsController as vm'
+            })
+            .state('app.settings.notifications', {
+                url: '/notifications',
+                templateUrl: 'views/settings/profile-settings-view.html',
+                controller: 'SettingsGeneralProfileController as vm'
+            })
+            .state('app.settings.entities-custom-attributes', {
+                url: '/entities-custom-attributes',
+                templateUrl: 'views/pages/entities-custom-attributes-view.html',
+                controller: 'EntitiesCustomAttributesController as vm'
+            })
+            .state('app.settings.price-download-scheme', {
+                url: '/price-download-scheme',
+                templateUrl: 'views/pages/price-download-scheme-view.html',
+                controller: 'PriceDownloadSchemeController as vm'
+            })
+            .state('app.settings.instrument-import', {
+                url: '/instrument-import',
+                templateUrl: 'views/settings/instrument-import-settings-view.html',
+                controller: 'SettingsGeneralInstrumentImportController as vm'
+            })
+            .state('app.settings.automated-uploads-history', {
+                url: '/automated-price-schedule',
+                templateUrl: 'views/pages/automated-uploads-history-view.html',
+                controller: 'AutomatedUploadsHistoryController as vm'
+            })
+            .state('app.settings.simple-entity-import', {
+                url: '/data-import',
+                templateUrl: 'views/settings/simple-entity-import-settings-view.html',
+                controller: 'SettingsGeneralSimpleEntityImportController as vm'
+            })
+            .state('app.settings.transaction-import', {
+                url: '/transaction-import',
+                templateUrl: 'views/settings/transaction-import-settings-view.html',
+                controller: 'SettingsGeneralTransactionImportController as vm'
+            })
+            .state('app.settings.complex-import', {
+                url: '/complex-import',
+                templateUrl: 'views/settings/complex-import-settings-view.html',
+                controller: 'SettingsGeneralComplexImportController as vm'
+            })
+            .state('app.settings.template-fields', {
+                url: '/aliases',
+                templateUrl: 'views/pages/template-fields-view.html',
+                controller: 'TemplateFieldsController as vm'
+            })
+            .state('app.settings.import-configuration', {
+                url: '/import-configuration',
+                templateUrl: 'views/pages/import-configurations-view.html',
+                controller: 'ImportConfigurationsController as vm'
+            })
+            .state('app.settings.export-configuration', {
+                url: '/export-configuration',
+                templateUrl: 'views/pages/export-configurations-view.html',
+                controller: 'ExportConfigurationsController as vm'
+            })
+            .state('app.settings.data-providers', {
+                url: '/data-providers',
+                templateUrl: 'views/settings/data-providers-settings-view.html',
+                controller: 'SettingsGeneralDataProvidersController as vm'
+            })
+            .state('app.settings.data-providers-config', {
+                url: '/data-providers/:dataProviderId',
+                templateUrl: 'views/settings/data-providers-config-settings-view.html',
+                controller: 'SettingsGeneralDataProvidersConfigController as vm'
+            })
+            .state('app.settings.init-configuration', {
+                url: '/init-configuration',
+                templateUrl: 'views/settings/init-configuration-settings-view.html',
+                controller: 'SettingsGeneralInitConfigurationController as vm'
+            })
+            .state('app.settings.users-and-groups', {
+                url: '/data-providers',
+                templateUrl: 'views/settings/data-providers-settings-view.html',
+                controller: 'SettingsGeneralDataProvidersController as vm'
+            })
+
             .state('app.system', {
                 abstract: true,
                 url: '/system',

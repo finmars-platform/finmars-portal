@@ -151,8 +151,11 @@
 
         };
 
-        vm.currentLocation = function () {
+        /*vm.currentLocation = function () {
             return metaService.getCurrentLocation($state).toUpperCase();
+        };*/
+        vm.currentLocation = function () {
+            return metaService.getHeaderTitleForCurrentLocation($state);
         };
 
         // Get name of active layout in the toolbar

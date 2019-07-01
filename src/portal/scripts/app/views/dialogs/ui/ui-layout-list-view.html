@@ -6,22 +6,27 @@
             <span flex></span>
         </div>
     </md-toolbar>
-    <md-dialog-content  >
+    <md-dialog-content>
 
         <div data-ng-if="vm.readyStatus.items">
             <div data-ng-repeat="item in vm.items" class="ll-layout-item {{item.is_default ? 'active' : ''}}"
                  style="padding: 10px" layout="row" layout-align="space-between center">
-                <div layout="row" class="ll-name" data-ng-click="vm.selectLayout(item)">
+<!--                <div layout="row" class="ll-name" data-ng-click="vm.selectLayout(item)">-->
+                <div layout="row" class="ll-name">
                     {{item.name}}
                 </div>
                 <div>
                     <md-button class="md-button ll-delete-btn" ng-click="vm.renameLayout(item, $event)">
+                        <md-tooltip md-direction="top">Rename</md-tooltip>
                         <ng-md-icon icon="title" size="24"></ng-md-icon>
                     </md-button>
-                    <md-button class="md-button ll-delete-btn" ng-click="vm.download($event, item)">
-                        <ng-md-icon icon="cloud_download" size="24"></ng-md-icon>
+                    <md-button class="md-button ll-delete-btn" ng-click="vm.setAsDefault(item)">
+                        <md-tooltip md-direction="top">Set as default</md-tooltip>
+                        <ng-md-icon ng-hide="item.is_default" icon="star_border" size="24"></ng-md-icon>
+                        <ng-md-icon ng-hide="!item.is_default" icon="star" size="24"></ng-md-icon>
                     </md-button>
                     <md-button class="md-button ll-delete-btn" ng-click="vm.deleteItem($event, item)">
+                        <md-tooltip md-direction="top">Delete</md-tooltip>
                         <ng-md-icon icon="delete" size="24"></ng-md-icon>
                     </md-button>
                 </div>
@@ -35,21 +40,12 @@
         </div>
 
     </md-dialog-content>
-    <md-dialog-actions layout="row" layout-align="space-between center">
-
-        <div>
-            <md-button class="md-raised md-primary" ng-click="vm.uploadLayout($event)">
-                Upload
-            </md-button>
-        </div>
-
-        <div>
-            <md-button ng-click="vm.cancel()">
-                Cancel
-            </md-button>
-            <md-button ng-click="vm.agree()" style="margin-right:20px;">
-                OK
-            </md-button>
-        </div>
+    <md-dialog-actions layout="row" layout-align="end center">
+        <md-button ng-click="vm.cancel()">
+            Cancel
+        </md-button>
+        <md-button ng-click="vm.agree()" style="margin-right:20px;">
+            Open
+        </md-button>
     </md-dialog-actions>
 </md-dialog>

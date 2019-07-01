@@ -177,11 +177,9 @@
                     </md-menu-item>
 
                     <md-menu-item ng-if="!isRootEntityViewer">
-
-                        <div>
-                            <use-from-above-button item="filter.options.use_from_above" data="{attributes: attributesFromAbove}"></use-from-above-button>
-                        </div>
-
+                            <use-from-above-button item="filter.options.use_from_above"
+                                                   data="{attributes: attributesFromAbove}"
+                                                   class="rv-filter-link-to-above-btn"></use-from-above-button>
                     </md-menu-item>
 
                 </md-menu-content>

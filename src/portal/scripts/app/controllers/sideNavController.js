@@ -14,7 +14,8 @@
 
         vm.sideNavStatus = 'expand';
 
-        vm.resizeSideNav = function (status) {
+        /* Old sidemenu */
+        /*vm.resizeSideNav = function (status) {
             vm.sideNavStatus = status;
             if (status == 'expand') {
                 $('body').removeClass('sidenav-collapsed');
@@ -54,9 +55,10 @@
             }
 
 
-        };
+        };*/
+        /* < Old sidemenu > */
 
-        /*vm.resizeSideNav = function (status) {
+        vm.resizeSideNav = function (status) {
             vm.sideNavStatus = status;
             if (status == 'expand') {
 
@@ -98,7 +100,7 @@
             }
 
             sideMenuSettingsMenuOpened = !sideMenuSettingsMenuOpened;
-        };*/
+        };
 
         metaService.getMenu().then(function (data) {
             vm.sections = data;

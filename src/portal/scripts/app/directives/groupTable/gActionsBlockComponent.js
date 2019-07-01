@@ -335,7 +335,6 @@
 
                         if (res.status === 'agree') {
 
-                            middlewareService.setData('entityActiveLayoutSwitched', true); // Give signal to update active layout name in the toolbar
                             scope.evEventService.dispatchEvent(evEvents.LIST_LAYOUT_CHANGE);
 
                             // $state.reload($state.current.name);
@@ -711,6 +710,26 @@
                 scope.copyReport = function ($event) {
                     console.log('copy report');
                     reportCopyHelper.copy();
+                };
+
+                scope.openCustomFieldsManager = function () {
+
+                    $mdDialog.show({
+                        controller: 'CustomFieldDialogController as vm',
+                        templateUrl: 'views/dialogs/custom-field-dialog-view.html',
+                        parent: angular.element(document.body),
+                        clickOutsideToClose: false,
+                        preserveScope: true,
+                        multiple: true,
+                        autoWrap: true,
+                        skipHide: true,
+                        locals: {
+                            data: {
+                                entityType: scope.entityType
+                            }
+                        }
+                    })
+
                 };
 
             }

@@ -17,7 +17,7 @@
     var layoutService = require('../../services/layoutService');
 
     module.exports = function ($scope, data, $stateParams, $state, $mdDialog) {
-
+        console.log("forms entityDataConstructor", data);
         var vm = this;
         vm.boxColumns = [1, 2, 3, 4, 5, 6];
         vm.readyStatus = {constructor: false};
@@ -30,13 +30,20 @@
         vm.items = [];
 
         vm.entityType = data.entityType;
+
         vm.instanceId = undefined;
         if (data.hasOwnProperty('instanceId')) {
             vm.instanceId = data.instanceId;
         }
+
         vm.fromEntityType = undefined;
         if (data.hasOwnProperty('fromEntityType')) {
             vm.fromEntityType = data.fromEntityType;
+        }
+
+        var hideManageAttributesButton = false;
+        if (data.hasOwnProperty('hideManageAttributesButton')) {
+            hideManageAttributesButton = data.hideManageAttributesButton;
         }
 
         console.log('cancel button initEntityType', $stateParams);
@@ -474,7 +481,11 @@
         };
 
         vm.attributesAvailable = function (entityType) {
-            return metaService.checkRestrictedEntityTypesForAM(entityType);
+            if (!metaService.checkRestrictedEntityTypesForAM(entityType) || hideManageAttributesButton) {
+                return false;
+            }
+
+            return true;
         };
 
         vm.manageAttrs = function () {

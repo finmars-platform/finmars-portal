@@ -15,7 +15,7 @@
 
     module.exports = function ($scope, $mdDialog) {
 
-        logService.controller('ComplexImport', 'initialized');
+        logService.controller('ComplexImportDialogController', 'initialized');
 
         var vm = this;
 

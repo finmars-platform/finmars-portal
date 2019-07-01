@@ -7,6 +7,8 @@
 
     var evEvents = require('../../services/entityViewerEvents');
 
+    var metaService = require('../../services/metaService');
+
     module.exports = function () {
         return {
             restrict: 'AE',
@@ -21,6 +23,7 @@
                 scope.components = scope.evDataService.getComponents();
                 scope.entityType = scope.evDataService.getEntityType();
                 scope.activebject = scope.evDataService.getActiveObject();
+                scope.isReport = metaService.isReport(scope.entityType);
 
                 var interfaceLayout = scope.evDataService.getInterfaceLayout();
 
