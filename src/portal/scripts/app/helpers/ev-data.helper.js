@@ -286,10 +286,6 @@
             items.push(data[key])
         });
 
-        // console.log('getGroupsByLevel.items', items);
-        // console.log('getGroupsByLevel.items.length', items.length);
-        // console.log('getGroupsByLevel.level', level);
-
         return items.filter(function (group) {
             return group.___level === level;
         })
@@ -328,7 +324,7 @@
 
         var tree = utilsHelper.convertToTree(data, rootGroup);
 
-        console.log('getFlatStructure.tree', tree);
+        // console.log('getFlatStructure.tree', tree);
 
         var list = utilsHelper.convertTreeToList(tree);
 
@@ -350,7 +346,17 @@
         var offsetPx = evDataService.getVirtualScrollOffsetPx();
         var from = Math.ceil(offsetPx / rowHeight);
         var step = evDataService.getVirtualScrollStep();
-        var to = from + step;
+
+        var topThreshold = 10;
+        var bottomThreshold = 10;
+
+        var to = from + step + bottomThreshold;
+
+        from = from - topThreshold;
+
+        if (from < 0) {
+            from = 0;
+        }
 
         console.timeEnd('Creating projection');
 
@@ -491,42 +497,60 @@
 
     var calculatePageFromOffset = function (requestParameters, evDataService) {
 
-        // console.log('calculatePageFromOffset.requestParameters', requestParameters);
-
         var group = evDataService.getGroup(requestParameters.id);
+        var resultPage;
 
-        if (group && group.results.length) {
-
-            var rowHeight = evDataService.getRowHeight();
-
-            var offsetPx = evDataService.getVirtualScrollOffsetPx();
-            var offset = offsetPx / rowHeight;
-
-            var step = evDataService.getVirtualScrollStep();
-            var maxPage = Math.ceil(group.results.length / step);
-            var resultPage;
-            var newPageOffset;
-            resultPage = Math.ceil(offset / step);
-
-            newPageOffset = resultPage * step;
-
-            if (newPageOffset - offset < step / 2) {
-                resultPage = resultPage + 1;
-            }
-
-            if (resultPage === 0) {
-                resultPage = 1;
-            }
-
-            if (resultPage > maxPage) {
-                resultPage = maxPage;
-            }
-
-            return resultPage;
-
-        } else {
-            return 1;
+        if (!group) {
+            resultPage = 1;
+            return resultPage
         }
+
+        console.log('group', group);
+
+        var rowHeight = evDataService.getRowHeight();
+
+        var previousOffsetPx = evDataService.getVirtualScrollPreviousOffsetPx();
+        var offsetPx = evDataService.getVirtualScrollOffsetPx();
+        var scrollDirection = evDataService.getVirtualScrollDirection();
+        var offset = Math.floor(offsetPx / rowHeight);
+
+        var pagination = evDataService.getPagination();
+        var step = pagination.items_per_page;
+
+        var maxPage = Math.ceil(group.count / step);
+
+        resultPage = Math.ceil(offset / step);
+
+        if (Math.abs(offsetPx - previousOffsetPx) < 100) {
+
+            if (scrollDirection === 'top') {
+                resultPage = Math.ceil(offset / step) - 1;
+            }
+
+            if (scrollDirection === 'bottom') {
+
+                if (offset - resultPage * step < 5) {
+                    resultPage = Math.ceil(offset / step) + 1
+                }
+            }
+
+        }
+
+
+        if (resultPage === 0 || resultPage < 0) {
+            resultPage = 1;
+        }
+
+        if (resultPage > maxPage) {
+            resultPage = maxPage;
+        }
+
+        // console.log('direction', scrollDirection);
+        // console.log('offset px', offsetPx);
+        // console.log('offset', offset);
+        // console.log('page', resultPage);
+
+        return resultPage;
 
 
     };
