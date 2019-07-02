@@ -172,17 +172,25 @@
 
                                         uiService.getActiveListLayout(vm.entityType).then(function (data) {
 
-                                            var activeLayout = data.results[0];
-                                            activeLayout.is_default = false;
                                             layoutCurrentConfig.is_default = true;
 
-                                            uiService.updateListLayout(activeLayout.id, activeLayout).then(function () {
+                                            if (data.count > 0 && data.results) {
+                                                var activeLayout = data.results[0];
+                                                activeLayout.is_default = false;
 
+                                                uiService.updateListLayout(activeLayout.id, activeLayout).then(function () {
+
+                                                    uiService.createListLayout(vm.entityType, layoutCurrentConfig).then(function () {
+                                                        resolve(true);
+                                                    });
+
+                                                });
+
+                                            } else {
                                                 uiService.createListLayout(vm.entityType, layoutCurrentConfig).then(function () {
                                                     resolve(true);
                                                 });
-
-                                            });
+                                            }
 
                                         });
 

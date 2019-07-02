@@ -58,56 +58,87 @@
 
         var getEntityAttributes = function (entityType) {
 
-            var entity = null;
+            var variableName = null;
 
             switch (entityType) {
                 case 'portfolio':
-                    entity = 'portfolioAttrs';
+                    variableName = 'portfolioAttrs';
                     break;
                 case 'account':
-                    entity = 'accountAttrs';
+                    variableName = 'accountAttrs';
                     break;
                 case 'instrument':
-                    entity = 'instrumentAttrs';
+                    variableName = 'instrumentAttrs';
                     break;
                 case 'responsible':
-                    entity = 'responsibleAttrs';
+                    variableName = 'responsibleAttrs';
                     break;
                 case 'counterparty':
-                    entity = 'counterpartyAttrs';
+                    variableName = 'counterpartyAttrs';
                     break;
                 case 'currency':
-                    entity = 'currencyAttrs';
+                    variableName = 'currencyAttrs';
                     break;
                 case 'strategy-1':
-                    entity = 'strategy1Attrs';
+                    variableName = 'strategy1Attrs';
                     break;
                 case 'strategy-2':
-                    entity = 'strategy2Attrs';
+                    variableName = 'strategy2Attrs';
                     break;
                 case 'strategy-3':
-                    entity = 'strategy3Attrs';
+                    variableName = 'strategy3Attrs';
                     break;
                 case 'account-type':
-                    entity = 'accountTypeAttrs';
+                    variableName = 'accountTypeAttrs';
                     break;
                 case 'instrument-type':
-                    entity = 'instrumentTypeAttrs';
+                    variableName = 'instrumentTypeAttrs';
                     break;
                 case 'transaction-type':
-                    entity = 'transactionTypeAttrs';
+                    variableName = 'transactionTypeAttrs';
                     break;
             }
 
-            return attributeTypeService.getList(entityType).then(function (data) {
 
-                if (entity) {
-                    vm[entity] = data.results;
+            var attributes = [];
+            var options = {
+                pageSize: 1000,
+                page: 1
+            };
+
+            var getEntityAttributesMethod = function (resolve, reject) {
+
+                attributeTypeService.getList(entityType, options).then(function (data) {
+
+                    attributes = attributes.concat(data.results);
+
+                    if (data.next) {
+
+                        options.page = options.page + 1;
+                        getEntityAttributesMethod(resolve, reject);
+
+                    } else {
+                        vm[variableName] = attributes;
+                        resolve(true);
+                    }
+
+                }).catch(function (error) {
+                    reject(error);
+                });
+
+            };
+
+            return new Promise (function (resolve, reject) {
+
+                if (variableName) {
+                    getEntityAttributesMethod(resolve, reject);
+                } else {
+                    reject('wrong variable name');
                 }
 
             }).catch(function (error) {
                 return error;
-            });
+            })
 
         };
 
@@ -138,11 +169,11 @@
 
         var setAttributeManagerContainersHeight = function () { // for collapse animation
 
-            var resizableAMWrapsList = document.querySelectorAll('.all-am-manager-wrap');
+            var resizableCBWrapsList = document.querySelectorAll('.cb1-resizing-wrap');
 
-            for (var i = 0; i < resizableAMWrapsList.length; i++) {
+            for (var i = 0; i < resizableCBWrapsList.length; i++) {
 
-                var amWrap = resizableAMWrapsList[i];
+                var amWrap = resizableCBWrapsList[i];
                 var amContainer = amWrap.querySelector('.all-am-manager-container');
 
                 var amContainerHeight = amContainer.clientHeight + 'px';
@@ -165,14 +196,19 @@
             }).then(function (res) {
                 if (res.status === 'agree') {
 
-                    attributeTypeService.create(entityType, res.data.attribute).then(function () {
+                    /*attributeTypeService.create(entityType, res.data.attribute).then(function () {
 
                         getEntityAttributes(entityType).then(function () {
                             $scope.$apply();
                             setAttributeManagerContainersHeight();
                         });
 
+                    });*/
+                    getEntityAttributes(entityType).then(function () {
+                        $scope.$apply();
+                        setAttributeManagerContainersHeight();
                     });
+
                 }
             });
         };
@@ -284,6 +320,28 @@
             })
 
 
+        };
+
+        vm.editAttr = function (item, entityType, ev) {
+            $mdDialog.show({
+                controller: 'AttributesManagerEditDialogController as vm',
+                templateUrl: 'views/attribute-manager-dialog-view.html',
+                parent: angular.element(document.body),
+                targetEvent: ev,
+                locals: {
+                    data: {
+                        attributeId: item.id,
+                        entityType: entityType
+                    }
+                }
+            }).then(function (res) {
+                if (res.status === 'agree') {
+
+                    getEntityAttributes(entityType).then(function () {
+                        $scope.$apply();
+                    });
+                }
+            });
         };
 
         vm.deleteAttr = function (item, entityType, ev) {
