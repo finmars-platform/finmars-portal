@@ -163,7 +163,7 @@
         // vm.valueTypes = metaService.getDynamicAttrsValueTypesCaptions();
         console.log("Value type is ", vm.valueTypes);
 
-        vm.agree = function () {
+        vm.agree = function ($event) {
 
             vm.attribute["user_object_permissions"] = [];
 

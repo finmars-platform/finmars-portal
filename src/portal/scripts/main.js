@@ -324,7 +324,7 @@ app.controller('FillPriceHistoryController', ['$scope', '$mdDialog', require('./
 app.controller('MappingTablesController', ['$scope', '$mdDialog', require('./app/controllers/pages/mappingTablesController')]);
 
 app.controller('FormsDataConstructor', ['$scope', '$mdDialog', require('./app/controllers/pages/formsDataConstructorController')]);
-app.controller('LayoutsController', ['$scope', '$mdDialog', require('./app/controllers/pages/layoutsController')]);
+app.controller('LayoutsController', ['$scope', '$mdDialog', '$state', require('./app/controllers/pages/layoutsController')]);
 
 app.controller('LayoutsListDialogController', ['$scope', '$mdDialog', '$state', 'data', require('./app/controllers/dialogs/layoutsListDialogController')]);
 app.controller('EntitiesCustomAttributesController', ['$scope', '$mdDialog', require('./app/controllers/pages/entitiesCustomAttributesController')]);
