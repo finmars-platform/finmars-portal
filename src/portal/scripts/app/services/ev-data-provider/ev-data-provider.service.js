@@ -96,11 +96,15 @@
 
         var currentPage = evDataHelper.calculatePageFromOffset(requestParameters, entityViewerDataService);
 
+        console.log('requestParameters', JSON.parse(JSON.stringify(requestParameters)));
+        console.log('currentPage', currentPage);
+
         if (evDataHelper.ifFirstRequestForRootGroup(event, entityViewerDataService) || evDataHelper.isFirstRequestForObjects(event, entityViewerDataService)) {
 
             requestParameters.body = options;
 
             requestParameters.requestedPages = [1];
+            requestParameters.processedPages = [];
 
             entityViewerDataService.setRequestParameters(requestParameters);
 
@@ -111,6 +115,7 @@
             if (requestParameters.requestedPages.indexOf(currentPage) === -1) {
 
                 options.page = currentPage;
+
                 requestParameters.requestedPages.push(currentPage);
 
                 requestParameters.body = options;
@@ -121,9 +126,17 @@
 
             } else {
 
-                console.log('fromMemoryDecorator: From memory');
+                // console.log('requestParameters.processedPages', requestParameters.processedPages);
+                // console.log('requestParameters.currentPage', currentPage);
 
-                entityViewerEventService.dispatchEvent(evEvents.DATA_LOAD_END);
+                if (requestParameters.processedPages.indexOf(currentPage) !== -1) {
+
+                    console.log('fromMemoryDecorator: From memory');
+
+                    entityViewerEventService.dispatchEvent(evEvents.DATA_LOAD_END);
+
+                }
+
 
             }
 
@@ -140,12 +153,19 @@
 
             var entityType = entityViewerDataService.getEntityType();
 
-            var options = requestParameters.body;
-            var event = requestParameters.event;
+            var _requestParameters = JSON.parse(JSON.stringify(requestParameters));
+            // console.log('_requestParameters', _requestParameters);
 
-            var page = new Number(options.page) - 1;
-            // var pagination = entityViewerDataService.getPagination();
-            var step = entityViewerDataService.getVirtualScrollStep();
+            var options = _requestParameters.body;
+            var event = _requestParameters.event;
+
+            // var page = new Number(options.page) - 1;
+            var page = options.page;
+
+            console.log('getObjects.page', page);
+
+            var pagination = entityViewerDataService.getPagination();
+            var step = pagination.items_per_page;
             var i;
 
             if (options.groups_types) {
@@ -158,10 +178,14 @@
 
             }
 
+            console.log('options', options);
+
             objectsService.getList(entityType, options).then(function (data) {
 
-                var groupData = entityViewerDataService.getData(event.___id);
+                // console.log('getObjects.page', page);
 
+
+                var pageAsIndex = parseInt(page, 10) - 1;
                 var obj;
 
                 if (!event.___id) {
@@ -174,17 +198,25 @@
                     obj.next = data.next;
                     obj.previous = data.previous;
 
+                    // console.log('pageAsIndex * step', pageAsIndex * step)
+                    // console.log('obj.count', obj.count)
+
                     for (i = 0; i < step; i = i + 1) {
-                        if (page * step + i < obj.count) {
-                            obj.results[page * step + i] = data.results[i];
+                        if (pageAsIndex * step + i < obj.count) {
+                            obj.results[pageAsIndex * step + i] = data.results[i];
                         }
                     }
 
                 } else {
 
+                    var groupData = entityViewerDataService.getData(event.___id);
+
+                    console.log('groupData', groupData);
+
                     if (groupData) {
 
                         obj = Object.assign({}, groupData);
+
 
                         obj.___group_name = groupData.___group_name ? groupData.___group_name : '-';
                         obj.___group_id = groupData.___group_id ? groupData.___group_id : '-';
@@ -195,8 +227,8 @@
                         obj.previous = data.previous;
 
                         for (i = 0; i < step; i = i + 1) {
-                            if (page * step + i < obj.count) {
-                                obj.results[page * step + i] = data.results[i];
+                            if (pageAsIndex * step + i < obj.count) {
+                                obj.results[pageAsIndex * step + i] = data.results[i];
                             }
                         }
 
@@ -215,6 +247,8 @@
                         obj.___level = evRvCommonHelper.getParents(event.parentGroupId, entityViewerDataService).length;
 
                     }
+
+
 
                 }
 
@@ -241,6 +275,9 @@
 
                 entityViewerDataService.setData(obj);
 
+                requestParameters.processedPages.push(page);
+                entityViewerDataService.setRequestParameters(requestParameters);
+
                 resolve(obj);
 
             })
@@ -264,9 +301,9 @@
             var options = JSON.parse(JSON.stringify(requestParameters.body));
             var event = requestParameters.event;
 
-            var page = new Number(options.page) - 1;
-            // var pagination = entityViewerDataService.getPagination();
-            var step = 40;
+            var page = options.page;
+            var pagination = entityViewerDataService.getPagination();
+            var step = pagination.items_per_page;
             var i;
 
             console.log('getGroups.options', options);
@@ -284,6 +321,8 @@
             groupsService.getList(entityType, options).then(function (data) {
 
                 if (data.status !== 404) {
+
+                    var pageAsIndex = parseInt(page, 10) - 1;
 
                     data.results = data.results.map(function (item) {
 
@@ -309,8 +348,8 @@
                         obj.next = data.next;
                         obj.previous = data.previous;
                         for (i = 0; i < step; i = i + 1) {
-                            if (page * step + i < obj.count) {
-                                obj.results[page * step + i] = data.results[i];
+                            if (pageAsIndex * step + i < obj.count) {
+                                obj.results[pageAsIndex * step + i] = data.results[i];
                             }
                         }
 
@@ -334,8 +373,8 @@
                             obj.previous = data.previous;
 
                             for (i = 0; i < step; i = i + 1) {
-                                if (page * step + i < obj.count) {
-                                    obj.results[page * step + i] = data.results[i];
+                                if (pageAsIndex * step + i < obj.count) {
+                                    obj.results[pageAsIndex * step + i] = data.results[i];
                                 }
                             }
 
@@ -399,6 +438,7 @@
                     entityViewerDataService.setData(obj);
 
                     requestParameters.status = 'loaded';
+                    requestParameters.processedPages.push(page);
 
                     entityViewerDataService.setRequestParameters(requestParameters);
 

@@ -10,6 +10,9 @@
     var accrualCalculationModelService = require('../../../services/accrualCalculationModelService');
     var instrumentPeriodicityService = require('../../../services/instrumentPeriodicityService');
 
+    var fieldResolverService = require('../../../services/fieldResolverService');
+
+
     module.exports = function ($scope) {
 
         logService.controller('AccrualCalculationSchedulesController', 'initialized');
@@ -17,6 +20,9 @@
         var vm = this;
 
         vm.entity = $scope.$parent.vm.entity;
+
+        vm.currencyFields = [];
+        vm.dailyPricingModelFields = [];
 
         vm.readyStatus = {accrualModals: false, periodicityItems: false};
 
@@ -113,7 +119,76 @@
                 "periodicity_n": '',
                 "notes": ""
             };
-        }
+        };
+
+        vm.getCurrencyFields = function () {
+
+            fieldResolverService.getFields('accrued_currency', {
+                entityType: 'instrument',
+                key: 'accrued_currency'
+            }).then(function (res) {
+
+                vm.currencyFields = res.data;
+
+                $scope.$apply();
+
+            });
+
+        };
+
+        vm.getPaymentSizeDetailFields = function () {
+
+            fieldResolverService.getFields('payment_size_detail', {
+                entityType: 'instrument',
+                key: 'payment_size_detail'
+            }).then(function (res) {
+
+                vm.dailyPricingModelFields = res.data;
+
+                $scope.$apply();
+
+            });
+
+        };
+
+        vm.setDefaultCurrencyFields = function () {
+
+            var item_object = vm.entity.accrued_currency_object;
+
+            if (item_object) {
+
+                if (Array.isArray(item_object)) {
+                    vm.currencyFields = item_object;
+                } else {
+                    vm.currencyFields.push(item_object);
+                }
+            }
+
+        };
+
+        vm.setDefaultPaymentSizeDetailFields = function () {
+
+            var item_object = vm.entity.payment_size_detail_object;
+
+            if (item_object) {
+
+                if (Array.isArray(item_object)) {
+                    vm.dailyPricingModelFields = item_object;
+                } else {
+                    vm.dailyPricingModelFields.push(item_object);
+                }
+            }
+
+        };
+
+        vm.init = function () {
+
+            vm.setDefaultCurrencyFields();
+            vm.setDefaultPaymentSizeDetailFields();
+
+        };
+
+        vm.init();
 
     }
 

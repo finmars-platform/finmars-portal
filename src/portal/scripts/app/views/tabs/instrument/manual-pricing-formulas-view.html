@@ -1,21 +1,120 @@
 <div data-ng-controller="ManualPricingFormulasTabController as vm">
     <div>
         <div data-ng-if="vm.readyStatus.content">
+
+            <div layout="row">
+
+                <md-input-container class="md-block" style="width: 200px;">
+                    <label>Pricing Currency </label>
+                    <md-select md-on-close="vm.searchTermCurrency = ''"
+                               data-ng-model="vm.entity.pricing_currency"
+                               md-on-open="vm.getCurrencyFields()"
+                               md-container-class="common-select-container">
+                        <md-select-header>
+                            <input data-ng-model="vm.searchTermCurrency"
+                                   type="search"
+                                   placeholder="Search for a ..."
+                                   class="md-text md-select-search-pattern select-input-filter"
+                                   ng-keydown="$event.stopPropagation()">
+                        </md-select-header>
+                        <div class="select-options-holder">
+                            <md-option
+                                    data-ng-repeat="field in vm.currencyFields | orderBy:'-'+field.name | filter:{name: vm.searchTermCurrency} as results track by field.id "
+                                    ng-value="field.id">
+                                {{field.name}}
+                            </md-option>
+                        </div>
+                    </md-select>
+                </md-input-container>
+
+                <md-input-container style="width: 200px;">
+                    <label for="">Pricing Multiplier</label>
+                    <input type="text" data-ng-model="vm.entity.price_multiplier">
+                </md-input-container>
+
+                <md-input-container style="width: 200px;">
+                    <label for="">Default Price</label>
+                    <input type="text" data-ng-model="vm.entity.default_price">
+                </md-input-container>
+
+            </div>
+
+            <div layout="row">
+
+                <md-input-container class="md-block" style="width: 200px;">
+                    <label>Daily pricing model</label>
+                    <md-select md-on-close="vm.searchTermDailyPricingModel = ''"
+                               data-ng-model="vm.entity.daily_pricing_model"
+                               md-on-open="vm.getDailyPricingModelFields()"
+                               md-container-class="common-select-container">
+                        <md-select-header>
+                            <input data-ng-model="vm.searchTermDailyPricingModel"
+                                   type="search"
+                                   placeholder="Search for a ..."
+                                   class="md-text md-select-search-pattern select-input-filter"
+                                   ng-keydown="$event.stopPropagation()">
+                        </md-select-header>
+                        <div class="select-options-holder">
+                            <md-option
+                                    data-ng-repeat="field in vm.dailyPricingModelFields | orderBy:'-'+field.name | filter:{name: vm.searchTermDailyPricingModel} as results track by field.id "
+                                    ng-value="field.id">
+                                {{field.name}}
+                            </md-option>
+                        </div>
+                    </md-select>
+                </md-input-container>
+
+                <md-input-container class="md-block" style="width: 200px;">
+                    <label>Price Download Scheme</label>
+                    <md-select md-on-close="vm.searchTermScheme = ''"
+                               data-ng-model="vm.entity.price_download_scheme"
+                               md-on-open="vm.getPriceDownloadSchemeFields()"
+                               md-container-class="common-select-container">
+                        <md-select-header>
+                            <input data-ng-model="vm.searchTermScheme"
+                                   type="search"
+                                   placeholder="Search for a ..."
+                                   class="md-text md-select-search-pattern select-input-filter"
+                                   ng-keydown="$event.stopPropagation()">
+                        </md-select-header>
+                        <div class="select-options-holder">
+                            <md-option
+                                    data-ng-repeat="field in vm.priceDownloadSchemeFields | orderBy:'-'+field.scheme_name | filter:{scheme_name: vm.searchTermScheme} as results track by field.id "
+                                    ng-value="field.id">
+                                {{field.scheme_name}}
+                            </md-option>
+                        </div>
+                    </md-select>
+                </md-input-container>
+
+                <md-input-container style="width: 200px;">
+                    <label for="">Reference for Pricing</label>
+                    <input type="text" data-ng-model="vm.entity.reference_for_pricing">
+                </md-input-container>
+
+            </div>
+
+            <div style="font-size: 18px; padding-left: 6px; margin-bottom: 24px;
+                        font-weight: bold; border-top: 1px solid #ddd; padding-top: 16px;
+                        margin-top: 8px;">
+                Formulas to Override Pricing Policy
+            </div>
+
             <table class="bordered">
                 <thead>
 
                 <tr>
                     <th data-ng-click="vm.setSort('policy_name')">Pricing policy<span class="sortorder"
-                                                                                       data-ng-show="vm.sort === 'policy_name'"
-                                                                                       data-ng-class="{reverse: vm.direction}"></span>
+                                                                                      data-ng-show="vm.sort === 'policy_name'"
+                                                                                      data-ng-class="{reverse: vm.direction}"></span>
                     </th>
                     <th data-ng-click="vm.setSort('expr')">Expression<span class="sortorder"
-                                                                                   data-ng-show="vm.sort === 'expr'"
-                                                                                   data-ng-class="{reverse: vm.direction}"></span>
+                                                                           data-ng-show="vm.sort === 'expr'"
+                                                                           data-ng-class="{reverse: vm.direction}"></span>
                     </th>
                     <th data-ng-click="vm.setSort('notes')">Notes<span class="sortorder"
-                                                                              data-ng-show="vm.sort === 'notes'"
-                                                                              data-ng-class="{reverse: vm.direction}"></span>
+                                                                       data-ng-show="vm.sort === 'notes'"
+                                                                       data-ng-class="{reverse: vm.direction}"></span>
                     </th>
                     <th>
                         <md-button class="md-icon-button">
@@ -116,23 +215,23 @@
                                        md-container-class="common-select-container"
                                        md-on-close="searchTerm = ''">
 
-                                    <md-select-header>
-                                        <input data-ng-model="searchTerm"
-                                               type="search"
-                                               placeholder="Search for a ..."
-                                               class="md-text md-select-search-pattern select-input-filter"
-                                               ng-keydown="$event.stopPropagation()">
-                                    </md-select-header>
+                                <md-select-header>
+                                    <input data-ng-model="searchTerm"
+                                           type="search"
+                                           placeholder="Search for a ..."
+                                           class="md-text md-select-search-pattern select-input-filter"
+                                           ng-keydown="$event.stopPropagation()">
+                                </md-select-header>
 
-                                    <div class="select-options-holder">
+                                <div class="select-options-holder">
 
-                                        <md-option
-                                                data-ng-repeat="policy in vm.policies | filter: {name: searchTerm}"
-                                                ng-value="policy.id"
-                                                ng-bind="policy.name">
-                                        </md-option>
+                                    <md-option
+                                            data-ng-repeat="policy in vm.policies | filter: {name: searchTerm}"
+                                            ng-value="policy.id"
+                                            ng-bind="policy.name">
+                                    </md-option>
 
-                                    </div>
+                                </div>
 
                             </md-select>
                         </md-input-container>

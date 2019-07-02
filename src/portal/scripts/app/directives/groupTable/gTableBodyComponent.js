@@ -25,13 +25,13 @@
                 contentWrapElement: '='
             },
             template: '<div>' +
-            '<div class="ev-progressbar-holder" layout="row" layout-sm="column">\n' +
-            '            <md-progress-linear class="ev-progressbar" md-mode="indeterminate"></md-progress-linear>\n' +
-            '        </div>' +
-            '<div class="ev-viewport">' +
-            '<div class="ev-content"></div>' +
-            '</div>' +
-            '</div>',
+                '<div class="ev-progressbar-holder" layout="row" layout-sm="column">\n' +
+                '            <md-progress-linear class="ev-progressbar" md-mode="indeterminate"></md-progress-linear>\n' +
+                '        </div>' +
+                '<div class="ev-viewport">' +
+                '<div class="ev-content"></div>' +
+                '</div>' +
+                '</div>',
             link: function (scope, elem) {
 
                 var contentElem = elem[0].querySelector('.ev-content');
@@ -52,6 +52,8 @@
 
                 var isReport = metaService.isReport(entityType);
                 var isRootEntityViewer = scope.evDataService.isRootEntityViewer();
+
+                var evFirstCalculateScroll = false;
 
                 function renderReportViewer() {
 
@@ -99,12 +101,16 @@
 
                     scope.evDataService.setFlatList(flatList);
 
+                    evDomManager.calculateVirtualStep(elements, scope.evDataService);
+
                     projection = evDataHelper.calculateProjection(flatList, scope.evDataService);
 
                     scope.evDataService.setProjection(projection);
 
-                    evDomManager.calculateScroll(elements, scope.evDataService);
-
+                    if (evFirstCalculateScroll === false) {
+                        evFirstCalculateScroll = true;
+                        evDomManager.calculateScroll(elements, scope.evDataService); // should trigger only once
+                    }
                     // console.log('projection', projection);
 
                     evRenderer.render(contentElem, projection, scope.evDataService, scope.evEventService);
@@ -125,7 +131,7 @@
                     var rows = contentElem.querySelectorAll('.g-row');
                     rows = Array.from(rows);
 
-                    var subtotalRows = rows.filter(function(row) {
+                    var subtotalRows = rows.filter(function (row) {
                         return row.dataset.type === 'subtotal';
                     });
 
@@ -245,15 +251,17 @@
                 scope.evEventService.addEventListener(evEvents.DATA_LOAD_START, function () {
 
                     progressBar.style.display = 'block';
-                    contentElem.style.opacity = '0.7';
-
+                    if (isReport) {
+                        contentElem.style.opacity = '0.7';
+                    }
                 });
 
                 scope.evEventService.addEventListener(evEvents.DATA_LOAD_END, function () {
 
                     progressBar.style.display = 'none';
-                    contentElem.style.opacity = '1';
-
+                    if (isReport) {
+                        contentElem.style.opacity = '1';
+                    }
                     updateTableContent();
 
                 });
@@ -264,7 +272,7 @@
                         rvDomManager.calculateContentWrapHeight(elements.contentWrapElem, scope.evDataService);
                     } else {
                         evDomManager.calculateContentWrapHeight(elements.contentWrapElem, scope.evDataService);
-                    };
+                    }
 
                     updateTableContent();
 
@@ -344,19 +352,18 @@
 
                 init();
 
-                $(window).on('resize', function () {
-
-                    if (isReport) {
-                        rvDomManager.calculateScroll(elements, scope.evDataService);
-                    } else {
-                        evDomManager.calculateScroll(elements, scope.evDataService);
-                    }
-
-                });
+                // $(window).on('resize', function () { // TODO what?
+                //
+                //     if (isReport) {
+                //         rvDomManager.calculateScroll(elements, scope.evDataService);
+                //     } else {
+                //         evDomManager.calculateScroll(elements, scope.evDataService);
+                //         evDomManager.calculateVirtualStep(elements, scope.evDataService);
+                //     }
+                //
+                // });
 
                 window.addEventListener('resize', function () {
-
-                    console.log('projection', projection);
 
                     if (projection) {
 
@@ -365,6 +372,7 @@
                             rvRenderer.render(contentElem, projection, scope.evDataService, scope.evEventService);
                         } else {
                             evDomManager.calculateScroll(elements, scope.evDataService);
+                            evDomManager.calculateVirtualStep(elements, scope.evDataService);
                             evRenderer.render(contentElem, projection, scope.evDataService, scope.evEventService);
                         }
 
