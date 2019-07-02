@@ -30,6 +30,8 @@
         var currentGroupName = evDataHelper.getGroupNameFromParent(groupHashId, parentGroupHashId, evDataService);
         var currentGroupIdentifier = evDataHelper.getGroupIdentifierFromParent(groupHashId, parentGroupHashId, evDataService);
 
+        var pagination = evDataService.getPagination();
+
         var event = {
             parentGroupId: parentGroupHashId,
             groupId: groupHashId,
@@ -51,7 +53,8 @@
             },
             body: {
                 groups_types: evDataHelper.getGroupTypes(groupHashId, parentGroupHashId, evDataService),
-                groups_values: evDataHelper.getGroupsValues(groupHashId, parentGroupHashId, evDataService)
+                groups_values: evDataHelper.getGroupsValues(groupHashId, parentGroupHashId, evDataService),
+                page_size: pagination.items_per_page
             }
         };
 
@@ -75,6 +78,8 @@
 
         var groupTypes = evDataHelper.getGroupTypes(groupHashId, parentGroupHashId, evDataService);
         var groupValues = evDataHelper.getGroupsValues(groupHashId, parentGroupHashId, evDataService);
+        var pagination = evDataService.getPagination();
+
 
         var currentGroupName = evDataHelper.getGroupNameFromParent(groupHashId, parentGroupHashId, evDataService);
         var currentGroupIdentifier = evDataHelper.getGroupIdentifierFromParent(groupHashId, parentGroupHashId, evDataService);
@@ -97,7 +102,8 @@
 
         requestParameters.body = {
             groups_types: groupTypes,
-            groups_values: groupValues
+            groups_values: groupValues,
+            page_size: pagination.items_per_page
         };
 
         evDataService.setRequestParameters(requestParameters);
@@ -540,7 +546,18 @@
 
     var calculatePaddingTop = function (evDataService) {
 
-        return evDataService.getVirtualScrollOffsetPx();
+        // return evDataService.getVirtualScrollOffsetPx();
+
+        var rowHeight = evDataService.getRowHeight();
+        var threshold = rowHeight * 10;
+
+        var result = evDataService.getVirtualScrollOffsetPx() - threshold;
+
+        if (result < 0) {
+            result = 0
+        }
+
+        return result;
 
     };
 
@@ -614,6 +631,31 @@
 
     };
 
+    var calculateVirtualStep = function (elements, evDataService) {
+
+        var viewportHeight;
+        var isRootEntityViewer = evDataService.isRootEntityViewer();
+        var contentWrapElemHeight = evScrollManager.getContentWrapElemHeight();
+        var rowHeight = evDataService.getRowHeight();
+        var interfaceLayout = evDataService.getInterfaceLayout();
+
+        var viewportTop = interfaceLayout.headerToolbar.height + interfaceLayout.groupingArea.height + interfaceLayout.columnArea.height + interfaceLayout.progressBar.height;
+
+
+        if (!isRootEntityViewer) {
+            viewportTop = interfaceLayout.groupingArea.height + interfaceLayout.columnArea.height + interfaceLayout.progressBar.height;
+            viewportHeight = Math.floor(contentWrapElemHeight - viewportTop);
+        } else {
+            viewportHeight = Math.floor(document.body.clientHeight - viewportTop - interfaceLayout.splitPanel.height);
+        }
+
+        var step = Math.round(viewportHeight / rowHeight);
+
+        evDataService.setVirtualScrollStep(step);
+
+
+    };
+
     var addScrollListener = function (elements, evDataService, evEventService) {
 
         var viewportElem = elements.viewportElem;
@@ -621,15 +663,30 @@
 
         var columnBottomRow;
 
-        var scrollYHandler = utilsHelper.debounce(function () {
+        var lastScrollTop = 0;
+        var direction;
 
+        var scrollYHandler = utilsHelper.throttle(function () {
+
+            if (lastScrollTop && lastScrollTop > viewportElem.scrollTop) {
+                direction = 'top'
+            }
+
+            if (lastScrollTop && lastScrollTop < viewportElem.scrollTop) {
+                direction = 'bottom'
+            }
+
+            evDataService.setVirtualScrollDirection(direction);
+            evDataService.setVirtualScrollPreviousOffsetPx(lastScrollTop);
             evDataService.setVirtualScrollOffsetPx(viewportElem.scrollTop);
             evEventService.dispatchEvent(evEvents.UPDATE_TABLE);
 
-            calculateScroll(elements, evDataService)
+            calculateScroll(elements, evDataService);
+
+            lastScrollTop = viewportElem.scrollTop;
 
 
-        }, 25);
+        }, 100);
 
         var scrollXHandler = function () {
 
@@ -650,6 +707,7 @@
         initEventDelegation: initEventDelegation,
         initContextMenuEventDelegation: initContextMenuEventDelegation,
         calculateContentWrapHeight: calculateContentWrapHeight,
+        calculateVirtualStep: calculateVirtualStep,
         calculateScroll: calculateScroll,
         addScrollListener: addScrollListener
     }

@@ -91,7 +91,7 @@
             filters: [],
             pagination: {
                 page: 1,
-                items_per_page: 15,
+                items_per_page: 60,
                 total_items: 1
             },
             status: {
@@ -114,7 +114,8 @@
                 offset: 0, // current position
                 offsetPx: 0,
                 limit: 0, // total rows
-                step: 60 // rows to render
+                step: 60, // rows to render
+                direction: null
             },
             activeLayoutConfiguration: {},
             interfaceLayout: null,
@@ -497,7 +498,8 @@
                             groups_types: [groups[0]],
                             page: 1,
                             groups_values: [],
-                            groups_order: 'asc'
+                            groups_order: 'asc',
+                            page_size: 60
                         }
                     };
 
@@ -614,6 +616,18 @@
             return data.virtualScroll.step;
         }
 
+        function setVirtualScrollStep(step) {
+            return data.virtualScroll.step = step;
+        }
+
+        function getVirtualScrollDirection() {
+            return data.virtualScroll.direction;
+        }
+
+        function setVirtualScrollDirection(direction) {
+            return data.virtualScroll.direction = direction;
+        }
+
         function setVirtualScrollOffset(offset) {
             data.virtualScroll.offset = offset;
         }
@@ -621,6 +635,15 @@
         function getVirtualScrollOffset() {
             return data.virtualScroll.offset;
         }
+
+        function setVirtualScrollPreviousOffsetPx(offset) {
+            data.virtualScroll.previosOffsetPx = offset
+        }
+
+        function getVirtualScrollPreviousOffsetPx() {
+            return data.virtualScroll.previosOffsetPx;
+        }
+
 
         function setVirtualScrollOffsetPx(offset) {
             data.virtualScroll.offsetPx = offset
@@ -697,7 +720,8 @@
                     delete listLayout.data.reportOptions.item_currencies;
                     delete listLayout.data.reportOptions.item_accounts;
 
-                };
+                }
+                ;
 
                 data.activeLayoutConfiguration = listLayout;
 
@@ -926,12 +950,16 @@
             getRowHeight: getRowHeight,
             getRequestThreshold: getRequestThreshold,
             getVirtualScrollStep: getVirtualScrollStep,
+            setVirtualScrollStep: setVirtualScrollStep,
 
             setLastRequestOffset: setLastRequestOffset,
             getLastRequestOffset: getLastRequestOffset,
 
             setVirtualScrollOffsetPx: setVirtualScrollOffsetPx,
             getVirtualScrollOffsetPx: getVirtualScrollOffsetPx,
+
+            setVirtualScrollPreviousOffsetPx: setVirtualScrollPreviousOffsetPx,
+            getVirtualScrollPreviousOffsetPx: getVirtualScrollPreviousOffsetPx,
 
             setActiveColumnSort: setActiveColumnSort,
             getActiveColumnSort: getActiveColumnSort,
@@ -947,6 +975,9 @@
 
             setVirtualScrollLimit: setVirtualScrollLimit,
             getVirtualScrollLimit: getVirtualScrollLimit,
+
+            getVirtualScrollDirection: getVirtualScrollDirection,
+            setVirtualScrollDirection: setVirtualScrollDirection,
 
             getInterfaceLayout: getInterfaceLayout,
             setInterfaceLayout: setInterfaceLayout,

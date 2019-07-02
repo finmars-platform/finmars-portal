@@ -30,6 +30,16 @@
 
     }
 
+    function throttle(fn, wait) {
+        var time = Date.now();
+        return function() {
+            if ((time + wait - Date.now()) < 0) {
+                fn();
+                time = Date.now();
+            }
+        }
+    }
+
     function floor10(value, exp) {
         return decimalAdjust('floor', value, exp);
     }
@@ -215,6 +225,7 @@
     module.exports = {
         floor10: floor10,
         debounce: debounce,
+        throttle: throttle,
         convertToTree: convertToTree,
         convertTreeToList: convertTreeToList,
         convertTreeToTreeList: convertTreeToTreeList

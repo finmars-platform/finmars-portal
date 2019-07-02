@@ -4,6 +4,7 @@
 
     var groupRender = require('./group.renderer');
     var objectRender = require('./object.renderer');
+    var placeholderRender = require('./placeholder.renderer');
     var evEvents = require('../../services/entityViewerEvents');
 
     var render = function (elem, projection, evDataService, evEventService) {
@@ -17,7 +18,7 @@
         var rows = projection.map(function (item) {
 
             if (item.___type === 'placeholder_group' || item.___type === 'placeholder_object') {
-                return '<div class="placeholder-row"></div>'
+                return placeholderRender.render(item, columns)
             }
 
             if (item.___type === 'group') {

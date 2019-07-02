@@ -142,8 +142,26 @@
 
 .placeholder-row {
   height: 24px;
-  background: rgba(0, 0, 0, 0.1);
+  background-color: #fff;
 }
+
+.placeholder-text {
+  display: inline-block;
+  background-color: #444;
+  height: 12px;
+  border-radius: 100px;
+  margin: 3px 0;
+  opacity: .1;
+  animation: fading 1.5s infinite;
+}
+
+@keyframes fading {
+  0% {
+    opacity: .1; }
+  50% {
+    opacity: .2; }
+  100% {
+    opacity: .1; } }
 
 .g-wrapper .group-table-body {
   background: #d6d6d6;
