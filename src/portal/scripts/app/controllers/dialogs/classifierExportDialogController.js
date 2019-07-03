@@ -28,7 +28,7 @@
 
             var link = document.querySelector('.export-classifier-link');
 
-            var text = '';
+            var text = 'User Attribute: ' + vm.item.user_code + ' (' + vm.item.name + ')\n';
 
             vm.classifier.classifiers.forEach(function (item) {
 

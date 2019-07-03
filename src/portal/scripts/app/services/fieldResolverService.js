@@ -268,6 +268,40 @@
                         resolve({type: 'id', key: 'strategy3_cash', data: data.results});
                     });
                     break;
+
+                case 'strategy1_group':
+                    strategyGroupRepository.getList(1).then(function (data) {
+                        resolve({type: 'id', key: 'strategy1_group', data: data.results});
+                    });
+                    break;
+                case 'strategy2_group':
+                    strategyGroupRepository.getList(2).then(function (data) {
+                        resolve({type: 'id', key: 'strategy2_group', data: data.results});
+                    });
+                    break;
+                case 'strategy3_group':
+                    strategyGroupRepository.getList(3).then(function (data) {
+                        resolve({type: 'id', key: 'strategy3_group', data: data.results});
+                    });
+                    break;
+
+                case 'strategy1_subgroup':
+                    strategySubgroupRepository.getList(1).then(function (data) {
+                        resolve({type: 'id', key: 'strategy1_subgroup', data: data.results});
+                    });
+                    break;
+                case 'strategy2_subgroup':
+                    strategySubgroupRepository.getList(2).then(function (data) {
+                        resolve({type: 'id', key: 'strategy2_subgroup', data: data.results});
+                    });
+                    break;
+                case 'strategy3_subgroup':
+                    strategySubgroupRepository.getList(3).then(function (data) {
+                        resolve({type: 'id', key: 'strategy3_subgroup', data: data.results});
+                    });
+                    break;
+
+
                 case 'portfolios':
                     portfolioRepository.getList({pageSize: 1000}).then(function (data) {
                         resolve({type: 'multiple-ids', key: 'portfolios', data: data.results});

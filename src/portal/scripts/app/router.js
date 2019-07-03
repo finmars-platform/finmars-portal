@@ -394,7 +394,7 @@
             .state('app.settings.ecosystem-default-settings', {
                 url: '/default-settings',
                 templateUrl: 'views/pages/ecosystem-default-settings-view.html',
-                controller: 'SettingsMembersAndGroupsController as vm'
+                controller: 'EcosystemDefaultSettingsController as vm'
             })
 
             .state('app.settings.forms', {
