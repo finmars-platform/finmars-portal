@@ -404,8 +404,8 @@
             })
             .state('app.settings.layouts', {
                 url: '/layouts',
-                templateUrl: 'views/pages/layouts-view.html',
-                controller: 'LayoutsController as vm'
+                templateUrl: 'views/pages/layouts-settings-view.html',
+                controller: 'LayoutsSettingsController as vm'
             })
             .state('app.settings.notifications', {
                 url: '/notifications',
