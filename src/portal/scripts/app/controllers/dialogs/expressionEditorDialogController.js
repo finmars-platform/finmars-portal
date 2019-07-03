@@ -153,6 +153,11 @@
             var val = $('#editorExpressionInput')[0].value;
             var cursorPosition = val.slice(0, ($('#editorExpressionInput')[0].selectionStart + '')).length;
 
+
+            if (!vm.item.expression) {
+                vm.item.expression = '';
+            }
+
             if (cursorPosition == 0) {
                 vm.item.expression = vm.item.expression + item.func;
             } else {
@@ -222,10 +227,14 @@
 
         };
 
-        function isFunction(token, words) {
+        function isFunction(token, words, nextLetter) {
 
             if (token.hasDot) {
                 return false
+            }
+
+            if (nextLetter !== '(') {
+                return false;
             }
 
             return words.indexOf(token.value) !== -1;
@@ -383,7 +392,7 @@
 
                 if (strContent === false) {
 
-                    if (isFunction(currentToken, functionWords)) {
+                    if (isFunction(currentToken, functionWords, expression[i + 1])) {
 
                         result = result + '<span class="eb-highlight-func">' + currentToken.value + '</span>';
                         currentToken.value = '';

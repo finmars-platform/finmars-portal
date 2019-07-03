@@ -58,7 +58,7 @@
                                 </md-select-header>
                                 <div class="select-options-holder">
                                     <md-option
-                                            data-ng-repeat="field in vm.currencyFields | orderBy:'-'+resolveSort(field) | filter:{name: searchTerm} as results track by field.id "
+                                            data-ng-repeat="field in fields | orderBy:'-'+resolveSort(field) | filter:{name: searchTerm} as results track by field.id "
                                             ng-value="field.id">
                                         {{bindListFields(field)}}
                                     </md-option>

@@ -369,9 +369,154 @@
 
     };
 
+    var clearDropdowns = function () {
+
+        var dropdowns = document.querySelectorAll('.ev-dropdown');
+
+        for (var i = 0; i < dropdowns.length; i = i + 1) {
+            dropdowns[i].remove();
+        }
+
+    };
+
+    var initContextMenuEventDelegation = function (elem, evDataService, evEventService) {
+
+        elem.addEventListener('contextmenu', function (ev) {
+
+            var objectId;
+            var parentGroupHashId;
+
+            if (event.target.offsetParent.classList.contains('ev-viewport')) {
+
+                objectId = event.target.dataset.objectId;
+                parentGroupHashId = event.target.dataset.parentGroupHashId;
+
+            } else {
+
+                if (event.target.offsetParent.classList.contains('g-row')) {
+
+                    objectId = event.target.offsetParent.dataset.objectId;
+                    parentGroupHashId = event.target.offsetParent.dataset.parentGroupHashId;
+
+                }
+
+            }
+
+            console.log('initContextMenuEventDelegation.event', event);
+
+            console.log('initContextMenuEventDelegation.objectId', objectId);
+
+            if (objectId) {
+
+                ev.preventDefault();
+                ev.stopPropagation();
+
+                clearDropdowns();
+
+                var popup = document.createElement('div');
+
+                var obj = evDataHelper.getObject(objectId, parentGroupHashId, evDataService);
+
+                popup.id = 'dropdown-' + objectId;
+                popup.classList.add('ev-dropdown');
+
+                popup.innerHTML = '<div>';
+
+
+                if (obj['instrument.id']) {
+                    popup.innerHTML = popup.innerHTML + '<div>' +
+                        '<div class="ev-dropdown-option"' +
+                        ' data-ev-dropdown-action="edit_instrument"' +
+                        ' data-object-id="' + objectId + '"' +
+                        ' data-parent-group-hash-id="' + parentGroupHashId + '">Edit Instrument</div>'
+                }
+
+                if (obj['account.id']) {
+                    popup.innerHTML = popup.innerHTML +
+                        '<div class="ev-dropdown-option"' +
+                        ' data-ev-dropdown-action="edit_account"' +
+                        ' data-object-id="' + objectId + '"' +
+                        ' data-parent-group-hash-id="' + parentGroupHashId + '">Edit Account</div>'
+                }
+
+                if (obj['portfolio.id']) {
+                    popup.innerHTML = popup.innerHTML +
+                        '<div class="ev-dropdown-option"' +
+                        ' data-ev-dropdown-action="edit_portfolio"' +
+                        ' data-object-id="' + objectId + '"' +
+                        ' data-parent-group-hash-id="' + parentGroupHashId + '">Edit Portfolio</div>';
+                }
+
+                if (obj['instrument.id']) {
+                    popup.innerHTML = popup.innerHTML +
+                        '<div class="ev-dropdown-option"' +
+                        ' data-ev-dropdown-action="edit_price"' +
+                        ' data-object-id="' + objectId + '"' +
+                        ' data-parent-group-hash-id="' + parentGroupHashId + '">Edit Price</div>'
+                }
+
+                popup.innerHTML = popup.innerHTML + '<div class="ev-dropdown-option"' +
+                    ' data-ev-dropdown-action="book_transaction"' +
+                    ' data-object-id="' + objectId + '"' +
+                    ' data-parent-group-hash-id="' + parentGroupHashId + '">Book Transaction</div>' +
+                    '</div>';
+
+                popup.style.position = 'absolute';
+                popup.style.left = event.pageX + 'px';
+                popup.style.top = event.pageY + 'px';
+
+                document.body.appendChild(popup);
+
+                return false;
+
+            }
+
+        }, false);
+
+        window.addEventListener('contextmenu', function () {
+            clearDropdowns();
+        });
+
+        window.addEventListener('click', function (event) {
+
+            var objectId = event.target.dataset.objectId;
+            var parentGroupHashId = event.target.dataset.parentGroupHashId;
+            var dropdownAction = event.target.dataset.evDropdownAction;
+
+            if (objectId && dropdownAction && parentGroupHashId) {
+
+                var obj = evDataHelper.getObject(objectId, parentGroupHashId, evDataService);
+
+                if (!obj) {
+                    obj = {}
+                }
+
+                obj.event = event;
+
+                evDataService.setActiveObject(obj);
+                evDataService.setActiveObjectAction(dropdownAction);
+
+                evEventService.dispatchEvent(evEvents.ACTIVE_OBJECT_CHANGE);
+
+                clearDropdowns();
+
+            } else {
+
+                if (!event.target.classList.contains('ev-dropdown-option')) {
+                    clearDropdowns();
+                }
+
+            }
+
+        });
+
+    };
+
+
     module.exports = {
         initEventDelegation: initEventDelegation,
         addScrollListener: addScrollListener,
+        initContextMenuEventDelegation: initContextMenuEventDelegation,
         calculateTotalHeight: calculateTotalHeight,
         calculateContentWrapHeight: calculateContentWrapHeight,
         calculateScroll: calculateScroll

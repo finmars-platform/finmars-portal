@@ -413,6 +413,8 @@
 
             if (keysToUnwrap.hasOwnProperty(key) && item[key]) {
 
+                result[key + '.id'] = item[key];
+
                 recursiveUnwrapRelation(result, key, keysToUnwrap[key], item[key + '_object']);
 
             } else {
