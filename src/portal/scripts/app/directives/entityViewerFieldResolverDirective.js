@@ -28,10 +28,14 @@
                 scope.type = 'id';
                 scope.fields = [];
 
+                // console.log('scope.item.name', scope.item);
+                // console.log('scope.entity', scope.entity);
+
                 if (['counterparties', 'accounts', 'responsibles', 'transaction_types', 'tags'].indexOf(scope.item.key) !== -1) {
                     scope.type = 'multiple-ids';
                 }
 
+                // console.log('scope.type', scope.type);
 
                 scope.isSpecialSearchRelation = function () {
 
@@ -232,6 +236,8 @@
                         scope.type = res.type;
                         scope.fields = res.data;
                         scope.readyStatus.content = true;
+
+                        console.log('scope.fields', scope.fields);
 
                         scope.getFieldsGrouped();
 
