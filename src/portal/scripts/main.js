@@ -93,6 +93,9 @@ app.controller('ComplexTransactionSpecialRulesController', ['$scope', require('.
 app.controller('HelpDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/helpDialogController')]);
 app.controller('ValidationDialogController', ['$scope', '$mdDialog', 'validationData', require('./app/controllers/dialogs/validationDialogController')]);
 
+
+app.controller('EcosystemDefaultSettingsController', ['$scope', '$mdDialog', require('./app/controllers/pages/ecosystemDefaultSettingsController')]);
+
 // Common - unknown
 
 app.controller('FillPriceManuallyInstrumentDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/fillPriceManuallyInstrumentDialogController')]);
