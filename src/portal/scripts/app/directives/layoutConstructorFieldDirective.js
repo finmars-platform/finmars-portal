@@ -75,8 +75,8 @@
                             colspan: 1,
                             type: 'empty'
                         });
-                        console.log('tab', scope.tab);
                     }
+
                 }
 
                 scope.cancel = function () {
@@ -150,15 +150,15 @@
                 function findEmptyRows() {
                     var i, r, columnsIsEmpty;
                     var emptyRows = [];
-                    // checking all rows below first 5
-                    for (r = 6; r <= scope.tab.layout.rows; r = r + 1) {
+                    // checking all rows except first 4
+                    rowsLoop: for (r = scope.tab.layout.rows; r >= 5; r = r - 1) {
                         columnsIsEmpty = true;
                         console.log('target r', r);
                         for (i = 0; i < scope.tab.layout.fields.length; i = i + 1) {
                             if (scope.tab.layout.fields[i].row == r) {
                                 if (scope.tab.layout.fields[i].type === 'field') {
                                     columnsIsEmpty = false;
-                                    break;
+                                    break rowsLoop;
                                 }
                             }
                         }
@@ -167,7 +167,7 @@
                         }
                     }
 
-                    if (emptyRows.length > 0) {
+                    if (emptyRows.length > 1) {
                         deleteEmptyRows(emptyRows);
                     }
                 }
@@ -176,27 +176,29 @@
 
                     var i, e;
                     //console.log('emptyRows', emptyRows);
-                    for (i = scope.tab.layout.rows; i > 0; i = i - 1) {
-                        for (e = emptyRows.length; e > 0; e = e - 1) {
+                    for (i = scope.tab.layout.rows; i > 5; i = i - 1) { // Delete all empty rows except first 5
+
+                        for (e = 0; e < emptyRows.length - 1; e = e + 1) { // {emptyRows.length - 1} is needed to prevent deleting of last empty row
+
+                            var emptyRowOrderNumber = emptyRows[e];
                             //console.log('e', e);
                             //console.log('emptyRows[e]', emptyRows[e]);
                             //console.log('i', i);
                             //console.log('------------------------------------------');
-                            if (i === emptyRows[e]) {
-                                if (i - 1 === emptyRows[e - 1] && i !== emptyRows[0]) {
-                                    var f;
-                                    for (f = 0; f < scope.tab.layout.fields.length; f = f + 1) {
+                            if (i === emptyRowOrderNumber) {
+                                var f;
+                                for (f = 0; f < scope.tab.layout.fields.length; f = f + 1) {
 
-                                        if (scope.tab.layout.fields[f].row == scope.tab.layout.rows) {
-                                            scope.tab.layout.fields.splice(f, 1);
-                                            f = f - 1;
-                                        }
+                                    if (scope.tab.layout.fields[f].row == scope.tab.layout.rows) {
+                                        scope.tab.layout.fields.splice(f, 1);
+                                        f = f - 1;
                                     }
-                                    //console.log('scope.tab.layout', scope.tab.layout);
-                                    scope.tab.layout.rows = scope.tab.layout.rows - 1;
                                 }
+                                //console.log('scope.tab.layout', scope.tab.layout);
+                                scope.tab.layout.rows = scope.tab.layout.rows - 1;
                             }
                         }
+
                     }
 
                 }
