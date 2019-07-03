@@ -201,32 +201,66 @@
 
                     } else {
 
-                        $mdDialog.show({
-                            controller: 'EntityViewerAddDialogController as vm',
-                            templateUrl: 'views/entity-viewer/entity-viewer-add-dialog-view.html',
-                            parent: angular.element(document.body),
-                            targetEvent: ev,
-                            locals: {
-                                entityType: scope.entityType,
-                                entity: {}
-                            }
-                        }).then(function (res) {
+                        if (scope.entityType === 'complex-transaction') {
 
-                            if (res && res.res === 'agree') {
+                            $mdDialog.show({
+                                controller: 'ComplexTransactionAddDialogController as vm',
+                                templateUrl: 'views/entity-viewer/complex-transaction-add-dialog-view.html',
+                                parent: angular.element(document.body),
+                                targetEvent: ev,
+                                locals: {
+                                    entityType: scope.entityType,
+                                    entity: {}
+                                }
+                            }).then(function (res) {
 
-                                scope.evDataService.resetData();
-                                scope.evDataService.resetRequestParameters();
+                                if (res && res.res === 'agree') {
 
-                                var rootGroup = scope.evDataService.getRootGroupData();
+                                    scope.evDataService.resetData();
+                                    scope.evDataService.resetRequestParameters();
 
-                                scope.evDataService.setActiveRequestParametersId(rootGroup.___id);
+                                    var rootGroup = scope.evDataService.getRootGroupData();
 
-                                scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
-                                scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE);
+                                    scope.evDataService.setActiveRequestParametersId(rootGroup.___id);
 
-                            }
+                                    scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+                                    scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE);
 
-                        })
+                                }
+
+                            })
+
+
+                        } else {
+
+                            $mdDialog.show({
+                                controller: 'EntityViewerAddDialogController as vm',
+                                templateUrl: 'views/entity-viewer/entity-viewer-add-dialog-view.html',
+                                parent: angular.element(document.body),
+                                targetEvent: ev,
+                                locals: {
+                                    entityType: scope.entityType,
+                                    entity: {}
+                                }
+                            }).then(function (res) {
+
+                                if (res && res.res === 'agree') {
+
+                                    scope.evDataService.resetData();
+                                    scope.evDataService.resetRequestParameters();
+
+                                    var rootGroup = scope.evDataService.getRootGroupData();
+
+                                    scope.evDataService.setActiveRequestParametersId(rootGroup.___id);
+
+                                    scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+                                    scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE);
+
+                                }
+
+                            })
+
+                        }
 
                     }
 

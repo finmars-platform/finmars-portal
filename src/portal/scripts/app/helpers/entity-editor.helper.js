@@ -1,9 +1,11 @@
 (function () {
 
     var checkForNulls = function (item) {
+
         var i;
         var keys = Object.keys(item);
         var result = {};
+
         for (i = 0; i < keys.length; i = i + 1) {
             if (item[keys[i]] && item[keys[i]].length) {
                 result[keys[i]] = item[keys[i]];
