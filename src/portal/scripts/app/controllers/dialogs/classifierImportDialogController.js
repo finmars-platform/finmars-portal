@@ -79,6 +79,10 @@
 
                     console.log('lines', lines);
 
+                    lines.splice(0, 1);
+
+                    console.log('lines', lines);
+
 
                     if (vm.mode === 'skip') {
 
