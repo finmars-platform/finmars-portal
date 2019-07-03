@@ -58,6 +58,147 @@
 
                 });
 
+                vm.entityViewerEventService.addEventListener(evEvents.ACTIVE_OBJECT_CHANGE, function () {
+
+                    var activeObject = vm.entityViewerDataService.getActiveObject();
+                    var action = vm.entityViewerDataService.getActiveObjectAction();
+                    var entitytype = vm.entityViewerDataService.getEntityType();
+
+                    console.log('activeObject', activeObject);
+
+                    if (action === 'edit_instrument' && activeObject.id) {
+
+                        $mdDialog.show({
+                            controller: 'EntityViewerEditDialogController as vm',
+                            templateUrl: 'views/entity-viewer/entity-viewer-edit-dialog-view.html',
+                            parent: angular.element(document.body),
+                            targetEvent: activeObject.event,
+                            locals: {
+                                entityType: 'instrument',
+                                entityId: activeObject['instrument.id']
+                            }
+                        }).then(function (res) {
+                            if (res && res.res === 'agree') {
+                                vm.entityViewerDataService.resetData();
+                                vm.entityViewerDataService.resetRequestParameters();
+
+                                var rootGroup = vm.entityViewerDataService.getRootGroupData();
+
+                                vm.entityViewerDataService.setActiveRequestParametersId(rootGroup.___id);
+
+                                vm.entityViewerEventService.dispatchEvent(evEvents.UPDATE_TABLE);
+                            }
+                        });
+
+                    }
+
+                    if (action === 'edit_account' && activeObject.id) {
+
+                        $mdDialog.show({
+                            controller: 'EntityViewerEditDialogController as vm',
+                            templateUrl: 'views/entity-viewer/entity-viewer-edit-dialog-view.html',
+                            parent: angular.element(document.body),
+                            targetEvent: activeObject.event,
+                            locals: {
+                                entityType: 'account',
+                                entityId: activeObject['account.id']
+                            }
+                        }).then(function (res) {
+                            if (res && res.res === 'agree') {
+                                vm.entityViewerDataService.resetData();
+                                vm.entityViewerDataService.resetRequestParameters();
+
+                                var rootGroup = vm.entityViewerDataService.getRootGroupData();
+
+                                vm.entityViewerDataService.setActiveRequestParametersId(rootGroup.___id);
+
+                                vm.entityViewerEventService.dispatchEvent(evEvents.UPDATE_TABLE);
+                            }
+                        });
+
+                    }
+
+                    if (action === 'edit_portfolio' && activeObject.id) {
+
+                        $mdDialog.show({
+                            controller: 'EntityViewerEditDialogController as vm',
+                            templateUrl: 'views/entity-viewer/entity-viewer-edit-dialog-view.html',
+                            parent: angular.element(document.body),
+                            targetEvent: activeObject.event,
+                            locals: {
+                                entityType: 'portfolio',
+                                entityId: activeObject['portfolio.id']
+                            }
+                        }).then(function (res) {
+                            if (res && res.res === 'agree') {
+                                vm.entityViewerDataService.resetData();
+                                vm.entityViewerDataService.resetRequestParameters();
+
+                                var rootGroup = vm.entityViewerDataService.getRootGroupData();
+
+                                vm.entityViewerDataService.setActiveRequestParametersId(rootGroup.___id);
+
+                                vm.entityViewerEventService.dispatchEvent(evEvents.UPDATE_TABLE);
+                            }
+                        });
+
+                    }
+
+                    if (action === 'edit_price' && activeObject.id) {
+
+                        $mdDialog.show({
+                            controller: 'EntityViewerEditDialogController as vm',
+                            templateUrl: 'views/entity-viewer/entity-viewer-edit-dialog-view.html',
+                            parent: angular.element(document.body),
+                            targetEvent: activeObject.event,
+                            locals: {
+                                entityType: 'instrument',
+                                entityId: activeObject['instrument.id']
+                            }
+                        }).then(function (res) {
+                            if (res && res.res === 'agree') {
+                                vm.entityViewerDataService.resetData();
+                                vm.entityViewerDataService.resetRequestParameters();
+
+                                var rootGroup = vm.entityViewerDataService.getRootGroupData();
+
+                                vm.entityViewerDataService.setActiveRequestParametersId(rootGroup.___id);
+
+                                vm.entityViewerEventService.dispatchEvent(evEvents.UPDATE_TABLE);
+                            }
+                        });
+
+                    }
+
+                    if (action === 'book_transaction' && activeObject.id) {
+
+                        $mdDialog.show({
+                            controller: 'EntityViewerAddDialogController as vm',
+                            templateUrl: 'views/entity-viewer/entity-viewer-edit-dialog-view.html',
+                            parent: angular.element(document.body),
+                            targetEvent: activeObject.event,
+                            locals: {
+                                entityType: 'complex-transaction',
+                            }
+                        }).then(function (res) {
+                            if (res && res.res === 'agree') {
+                                vm.entityViewerDataService.resetData();
+                                vm.entityViewerDataService.resetRequestParameters();
+
+                                var rootGroup = vm.entityViewerDataService.getRootGroupData();
+
+                                vm.entityViewerDataService.setActiveRequestParametersId(rootGroup.___id);
+
+                                vm.entityViewerEventService.dispatchEvent(evEvents.UPDATE_TABLE);
+                            }
+                        });
+
+                    }
+
+
+                });
+
+
             };
 
 
