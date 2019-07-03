@@ -13,7 +13,7 @@
         var vm = this;
         vm.entity = $scope.$parent.vm.entity;
 
-        vm.transactionTypeId = $scope.$parent.vm.complexTransactionOptions.transactionTypeId;
+        vm.transactionTypeId = $scope.$parent.vm.transactionTypeId;
         vm.readyStatus = {transactionType: false};
 
         vm.beatufier = function (key) {

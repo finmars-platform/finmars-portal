@@ -55,23 +55,47 @@
 
                         } else {
 
-                            editorTemplateUrl = 'views/entity-viewer/entity-viewer-edit-split-panel-view.html'
-                            tpl = $templateCache.get(editorTemplateUrl);
+                            if (entityType === 'transaction-type') {
 
-                            templateScope = scope.$new();
+                                editorTemplateUrl = 'views/entity-viewer/complex-transaction-edit-split-panel-view.html';
+                                tpl = $templateCache.get(editorTemplateUrl);
 
-                            ctrl = $controller('EntityViewerEditDialogController as vm', {
-                                '$scope': templateScope,
-                                '$mdDialog': $mdDialog,
-                                '$state': $state,
-                                'entityType': entityType,
-                                'entityId': activeObject.id
-                            });
+                                templateScope = scope.$new();
 
-                            container.html(tpl);
-                            container.children().data('$ngControllerController', ctrl);
+                                ctrl = $controller('ComplexTransactionEditDialogController as vm', {
+                                    '$scope': templateScope,
+                                    '$mdDialog': $mdDialog,
+                                    '$state': $state,
+                                    'entityType': entityType,
+                                    'entityId': activeObject.id
+                                });
 
-                            $compile(elem.contents())(templateScope);
+                                container.html(tpl);
+                                container.children().data('$ngControllerController', ctrl);
+
+                                $compile(elem.contents())(templateScope);
+
+                            } else {
+
+                                editorTemplateUrl = 'views/entity-viewer/entity-viewer-edit-split-panel-view.html'
+                                tpl = $templateCache.get(editorTemplateUrl);
+
+                                templateScope = scope.$new();
+
+                                ctrl = $controller('EntityViewerEditDialogController as vm', {
+                                    '$scope': templateScope,
+                                    '$mdDialog': $mdDialog,
+                                    '$state': $state,
+                                    'entityType': entityType,
+                                    'entityId': activeObject.id
+                                });
+
+                                container.html(tpl);
+                                container.children().data('$ngControllerController', ctrl);
+
+                                $compile(elem.contents())(templateScope);
+
+                            }
 
 
                         }
