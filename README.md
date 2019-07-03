@@ -35,6 +35,3 @@ Finmars frontend
 3) Run server
 
 `npm run server`
-
-
-test push
