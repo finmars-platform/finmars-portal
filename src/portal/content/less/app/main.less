@@ -2241,3 +2241,45 @@ md-menu-content.dropdown-buttons-menu {
   }
 
 }
+
+.ALS-group-toggle {
+  height: 50px;
+  margin-bottom: 20px;
+  border-bottom: 2px solid #AAA;
+  cursor: pointer;
+  transition: color ease 0.25s, border-color ease 0.25s;
+
+  &:hover {
+    color: #2196F3;
+    border-color: #2196F3;
+  }
+
+  .ALS-group-title {
+    margin-top: 15px;
+  }
+}
+
+.ALS-card-right {
+  .md-button {
+    min-width: 40px;
+    line-height: 1;
+  }
+}
+
+.cb1-resizing-wrap {
+  overflow: hidden;
+  opacity: 1;
+  transition: height ease-out 0.35s, opacity ease-out 0.35s;
+}
+
+.cb1-block-collapsed {
+  margin-bottom: 0;
+  .cb1-resizing-wrap {
+    height: 0 !important;
+    opacity: 0;
+  }
+}
+
+.ALS-card {
+  padding: 14px;
+}

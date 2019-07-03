@@ -34,13 +34,6 @@
 
         };
 
-        var deleteLayout = function (layoutId) {
-
-            uiService.deleteListLayoutByKey(layoutId).then(function (data) {
-                vm.getList();
-            });
-        };
-
         vm.getList();
 
         vm.renameLayout = function (layout, $event) {
@@ -97,7 +90,6 @@
                     uiService.deleteListLayoutByKey(item.id).then(function (data) {
                         vm.getList();
                     });
-                    // deleteLayout(item.id);
                 }
             })
         };
