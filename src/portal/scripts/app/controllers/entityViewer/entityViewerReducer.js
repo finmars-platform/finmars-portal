@@ -105,28 +105,57 @@
 
                 } else {
 
-                    $mdDialog.show({
-                        controller: 'EntityViewerEditDialogController as vm',
-                        templateUrl: 'views/entity-viewer/entity-viewer-edit-dialog-view.html',
-                        parent: angular.element(document.body),
-                        targetEvent: activeObject.event,
-                        //clickOutsideToClose: false,
-                        locals: {
-                            entityType: entitytype,
-                            entityId: activeObject.id
-                        }
-                    }).then(function (res) {
-                        if (res && res.res === 'agree') {
-                            entityViewerDataService.resetData();
-                            entityViewerDataService.resetRequestParameters();
+                    if (entitytype === 'complex-transaction') {
 
-                            var rootGroup = entityViewerDataService.getRootGroupData();
+                        $mdDialog.show({
+                            controller: 'ComplexTransactionEditDialogController as vm',
+                            templateUrl: 'views/entity-viewer/complex-transaction-edit-dialog-view.html',
+                            parent: angular.element(document.body),
+                            targetEvent: activeObject.event,
+                            //clickOutsideToClose: false,
+                            locals: {
+                                entityType: entitytype,
+                                entityId: activeObject.id
+                            }
+                        }).then(function (res) {
+                            if (res && res.res === 'agree') {
+                                entityViewerDataService.resetData();
+                                entityViewerDataService.resetRequestParameters();
 
-                            entityViewerDataService.setActiveRequestParametersId(rootGroup.___id);
+                                var rootGroup = entityViewerDataService.getRootGroupData();
 
-                            entityViewerEventService.dispatchEvent(evEvents.UPDATE_TABLE);
-                        }
-                    });
+                                entityViewerDataService.setActiveRequestParametersId(rootGroup.___id);
+
+                                entityViewerEventService.dispatchEvent(evEvents.UPDATE_TABLE);
+                            }
+                        });
+
+                    } else {
+
+                        $mdDialog.show({
+                            controller: 'EntityViewerEditDialogController as vm',
+                            templateUrl: 'views/entity-viewer/entity-viewer-edit-dialog-view.html',
+                            parent: angular.element(document.body),
+                            targetEvent: activeObject.event,
+                            //clickOutsideToClose: false,
+                            locals: {
+                                entityType: entitytype,
+                                entityId: activeObject.id
+                            }
+                        }).then(function (res) {
+                            if (res && res.res === 'agree') {
+                                entityViewerDataService.resetData();
+                                entityViewerDataService.resetRequestParameters();
+
+                                var rootGroup = entityViewerDataService.getRootGroupData();
+
+                                entityViewerDataService.setActiveRequestParametersId(rootGroup.___id);
+
+                                entityViewerEventService.dispatchEvent(evEvents.UPDATE_TABLE);
+                            }
+                        });
+
+                    }
 
                 }
 

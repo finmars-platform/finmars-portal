@@ -172,13 +172,18 @@
 
                     if (action === 'book_transaction' && activeObject.id) {
 
+                        var entity = {
+                            reportItem: activeObject
+                        };
+
                         $mdDialog.show({
-                            controller: 'EntityViewerAddDialogController as vm',
-                            templateUrl: 'views/entity-viewer/entity-viewer-edit-dialog-view.html',
+                            controller: 'ComplexTransactionAddDialogController as vm',
+                            templateUrl: 'views/entity-viewer/complex-transaction-add-dialog-view.html',
                             parent: angular.element(document.body),
                             targetEvent: activeObject.event,
                             locals: {
                                 entityType: 'complex-transaction',
+                                entity: entity
                             }
                         }).then(function (res) {
                             if (res && res.res === 'agree') {

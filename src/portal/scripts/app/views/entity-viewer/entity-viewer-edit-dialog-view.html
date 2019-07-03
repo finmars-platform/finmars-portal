@@ -10,12 +10,6 @@
 
         <div style="min-width: 1450px">
             <div data-ng-if="vm.checkReadyStatus()">
-
-                <div data-ng-if="vm.entityType === 'complex-transaction'" class="m-8 f-s-18 p-8"
-                     style="background: #ffeee8">
-                    Transaction type: <b>{{vm.entity.transaction_type_object.name}}</b>
-                </div>
-
                 <md-tabs md-dynamic-height md-border-bottom class="tabs-colored">
                     <md-tab data-ng-repeat="tab in vm.tabs">
                         <md-tab-label>
@@ -213,14 +207,13 @@
     <md-dialog-actions layout="row" layout-align="space-between center" class="entity-editor-dialog__footer">
         <div>
             <md-button ng-click="vm.editLayout($event)" class="md-raised md-primary">
-                <span data-ng-if="vm.entityType == 'transaction-type'">Edit transaction form</span>
-                <span data-ng-if="vm.entityType != 'transaction-type'">Edit Form</span>
+               Edit Form
             </md-button>
             <md-button ng-click="vm.manageAttrs()" class="md-raised md-primary">
                 Manage attributes
             </md-button>
         </div>
-        <div data-ng-if="vm.entityType != 'complex-transaction'">
+        <div >
             <md-button class="md-raised m-r-24" ng-click="vm.copy()" ng-disabled="!vm.checkReadyStatus()">
                 Make a copy
             </md-button>
@@ -233,25 +226,5 @@
                 Save
             </md-button>
         </div>
-
-        <div data-ng-if="vm.entityType == 'complex-transaction'">
-            <md-button class="md-raised m-r-24" ng-click="vm.copy()" ng-disabled="!vm.checkReadyStatus()">
-                Make a copy
-            </md-button>
-            <md-button class="md-raised" ng-click="vm.cancel()">
-                Cancel
-            </md-button>
-            <md-button class="md-raised m-r-24" data-ng-if="vm.entity.status == 2"
-                       data-ng-class="{'disabled-btn': !vm.formIsValid, 'disabled-btn': !vm.TTGroupChosen}"
-                       ng-click="vm.rebookAsPending()">
-                Rebook as pending
-            </md-button>
-            <md-button class="md-raised m-r-24"
-                       data-ng-class="{'disabled-btn': !vm.formIsValid, 'disabled-btn': !vm.TTGroupChosen}"
-                       ng-click="vm.save()">
-                Rebook
-            </md-button>
-        </div>
-
     </md-dialog-actions>
 </md-dialog>
