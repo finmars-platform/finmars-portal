@@ -796,11 +796,13 @@
 
         function exportConfiguration(items) {
 
-            return new Promise(function (resolve, reject) {
+            /*return new Promise(function (resolve, reject) {
 
                 var results = [];
 
-                vm.items.forEach(function (item) {
+                console.log("export items", items);
+
+                items.forEach(function (item) {
 
                     var result = {
                         entity: item.entity,
@@ -827,7 +829,7 @@
 
                 vm.file.notes = vm.activeLayout.data.notes;
                 vm.file.body = results;
-
+                console.log("export vm.file", vm.file);
                 var resultFile = JSON.stringify(vm.file);
 
                 var a = document.getElementById("exportButton");
@@ -838,27 +840,77 @@
 
                 resolve(vm.file);
 
-            })
+            })*/
 
+            var results = [];
+
+            items.forEach(function (item) {
+
+                var result = {
+                    entity: item.entity,
+                    content: [],
+                    dependencies: item.dependencies,
+                    count: 0
+                };
+
+                item.content.forEach(function (child) {
+
+                    if (child.active) {
+                        result.content.push(child)
+                    }
+
+                });
+
+                result.count = result.content.length;
+
+                if (result.count > 0) {
+                    results.push(result)
+                }
+
+            });
+
+            vm.file.notes = vm.activeLayout.data.notes;
+            vm.file.body = results;
+
+            var resultFile = JSON.stringify(vm.file);
+
+            var a = document.createElement('a');
+            var result = new File([resultFile], {type: 'text/json;charset=utf-8'});
+
+            a.href = URL.createObjectURL(result);
+            a.download = vm.filename ? vm.filename + '.fcfg' : "configuration.fcfg";
+
+            document.body.appendChild(a); // For Mozilla Firefox
+            a.click();
+
+            setTimeout(function(){
+                document.body.removeChild(a);
+            }, 100);
         }
 
         vm.export = function () {
 
-            // removing properties created for data rendering
-            vm.items.forEach(function (entity) {
-                delete entity.order__;
-                delete entity.first__;
-                delete entity.attributeIsUsed__;
+            var items = [];
+            if (vm.items) {
+                items = JSON.parse(JSON.stringify(vm.items));
 
-                entity.content.forEach(function (item) {
-                    delete item.order__;
-                    delete item.first__;
-                    delete item.countOfUsages__;
+                // removing properties created for data rendering
+                items.forEach(function (entity) {
+                    delete entity.order__;
+                    delete entity.first__;
+                    delete entity.attributeIsUsed__;
+
+                    entity.content.forEach(function (item) {
+                        delete item.order__;
+                        delete item.first__;
+                        delete item.countOfUsages__;
+                    });
+
+                    return entity;
                 });
 
-            });
-
-            exportConfiguration(vm.items);
+                exportConfiguration(items);
+            }
 
         };
 

@@ -172,7 +172,7 @@
                             <span class="g-meta-circle blue">F</span>
                         </div>
 
-                        <div class="g-checkbox-row" data-ng-repeat="item in vm.accountAttrs | filter {name: accountSearchTerms}" layout="row">
+                        <div class="g-checkbox-row" data-ng-repeat="item in vm.accountAttrs | filter: {name: accountSearchTerms}" layout="row">
                             <div>
                                 <md-checkbox ng-model="item.columns" aria-label="Columns" aria="columns"
                                              data-ng-change="vm.updateAttrs(vm.accountAttrs)">
@@ -235,7 +235,7 @@
                             <span class="g-meta-circle blue">F</span>
                         </div>
 
-                        <div class="g-checkbox-row" data-ng-repeat="item in vm.portfolioAttrs | filter {name: portfolioSearchTerms}" layout="row">
+                        <div class="g-checkbox-row" data-ng-repeat="item in vm.portfolioAttrs | filter: {name: portfolioSearchTerms}" layout="row">
                             <div>
                                 <md-checkbox ng-model="item.columns" aria-label="Columns" aria="columns"
                                              data-ng-change="vm.updateAttrs(vm.portfolioAttrs)">
@@ -260,7 +260,7 @@
                              data-ng-show="vm.portfolioDynamicAttrs.length > 0">
                             <p>User Attributes</p>
                         </div>
-                        <div class="g-checkbox-row" data-ng-repeat="item in vm.portfolioDynamicAttrs | filter {name: portfolioSearchTerms}" layout="row">
+                        <div class="g-checkbox-row" data-ng-repeat="item in vm.portfolioDynamicAttrs | filter: {name: portfolioSearchTerms}" layout="row">
                             <div>
                                 <md-checkbox ng-model="item.columns" aria-label="Columns" aria="columns"
                                              data-ng-change="vm.updateAttrs(vm.portfolioDynamicAttrs)">
