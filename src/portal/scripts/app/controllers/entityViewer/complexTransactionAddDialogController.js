@@ -30,6 +30,7 @@
         vm.entityType = entityType;
 
         vm.entity = {$_isValid: true};
+        vm.transactionType = null;
 
         vm.transactionTypes = [];
 
@@ -38,23 +39,33 @@
             instrument_type: null
         };
 
+        vm.contextData = null; // data source when we book from report
+
         if (Object.keys(entity).length) { // if copy
-            vm.entity = entity;
 
-            var copy = JSON.parse(JSON.stringify(vm.entity));
+            if (!entity.hasOwnProperty('contextData')) {
 
-            vm.transactionTypeId = vm.entity.transaction_type;
+                vm.entity = entity;
 
-            vm.getFormLayout().then(function (value) {
+                var copy = JSON.parse(JSON.stringify(vm.entity));
 
-                Object.keys(copy).forEach(function (key) {
-                    vm.entity[key] = copy[key];
+                vm.transactionTypeId = vm.entity.transaction_type;
+
+                vm.getFormLayout().then(function (value) {
+
+                    Object.keys(copy).forEach(function (key) {
+                        vm.entity[key] = copy[key];
+                    });
+
+                    delete vm.entity.id;
+
+                    $scope.$apply();
                 });
 
-                delete vm.entity.id;
-
-                $scope.$apply();
-            });
+            } else {
+                vm.contextData = Object.assign({}, entity.contextData);
+                delete entity.contextData;
+            }
         }
 
         vm.entityTabs = metaService.getEntityTabs(vm.entityType);
@@ -68,6 +79,8 @@
             return transactionTypeService.initBookComplexTransaction(vm.transactionTypeId).then(function (data) {
 
                 var inputsWithCalculations = data.transaction_type_object.inputs;
+
+                vm.transactionType = data.transaction_type_object;
 
                 vm.specialRulesReady = true;
                 vm.readyStatus.entity = true;
@@ -113,6 +126,39 @@
                     $mdDialog.hide();
                 };
 
+                if (vm.contextData) {
+
+                    console.log('vm.userInputs', vm.userInputs);
+
+                    console.log('vm.contextData', vm.contextData);
+
+                    vm.userInputs.forEach(function (input) {
+
+                        vm.transactionType.inputs.forEach(function (ttypeInput) {
+
+                            if (input.name === ttypeInput.name) {
+
+                                input.is_fill_from_context = ttypeInput.is_fill_from_context;
+
+                            }
+
+                        })
+
+                    });
+
+                    vm.userInputs.forEach(function (input) {
+
+                        if (vm.contextData.hasOwnProperty(input.name)) {
+                            vm.entity[input.name] = vm.contextData[input.name];
+                            if (vm.contextData[input.name + '_object']) {
+                                vm.entity[input.name + '_object'] = vm.contextData[input.name + '_object']
+                            }
+                        }
+
+                    })
+
+                }
+
                 $scope.$apply();
             });
 
@@ -122,6 +168,7 @@
         vm.userInputs = [];
         vm.layoutAttrs = layoutService.getLayoutAttrs();
         vm.entityAttrs = metaService.getEntityAttrs(vm.entityType) || [];
+
 
         vm.formIsValid = true;
 
@@ -226,7 +273,7 @@
         };
 
         vm.cancel = function () {
-            $mdDialog.cancel();
+            $mdDialog.hide();
         };
 
         vm.editLayout = function (ev) {
@@ -297,6 +344,8 @@
                 vm.entity = data.complex_transaction;
 
                 var inputsWithCalculations = data.transaction_type_object.inputs;
+
+                vm.transactionType = data.transaction_type_object;
 
                 vm.specialRulesReady = true;
                 vm.readyStatus.entity = true;

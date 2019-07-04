@@ -18,8 +18,6 @@
             },
             link: function (scope, elem, attr) {
 
-                console.log('item', scope.item);
-
                 scope.entityType = scope.$parent.vm.entityType;
                 scope.readyStatus = {classifier: false};
                 scope.entity = scope.$parent.vm.entity;
