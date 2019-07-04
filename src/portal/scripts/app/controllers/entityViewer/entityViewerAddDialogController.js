@@ -40,8 +40,6 @@
         vm.entityTabs = metaService.getEntityTabs(vm.entityType);
 
         vm.attrs = [];
-        vm.entityAttrs = [];
-        vm.userInputs = [];
         vm.layoutAttrs = layoutService.getLayoutAttrs();
         vm.entityAttrs = metaService.getEntityAttrs(vm.entityType) || [];
 
@@ -234,7 +232,7 @@
         };
 
         vm.bindField = function (tab, field) {
-            var i, l, e, u;
+            var i, l, e;
             if (field && field.type === 'field') {
                 if (field.hasOwnProperty('id') && field.id !== null) {
                     for (i = 0; i < vm.attrs.length; i = i + 1) {
@@ -254,15 +252,6 @@
                         if (field.name === vm.layoutAttrs[l].name) {
                             vm.layoutAttrs[l].options = field.options;
                             return vm.layoutAttrs[l];
-                        }
-                    }
-
-                    //console.log('vm.userInputs', vm.userInputs);
-                    for (u = 0; u < vm.userInputs.length; u = u + 1) {
-                        //console.log('vm.userInputs[u]', vm.userInputs[u]);
-                        if (field.name === vm.userInputs[u].name) {
-                            vm.userInputs[u].options = field.options;
-                            return vm.userInputs[u];
                         }
                     }
                 }

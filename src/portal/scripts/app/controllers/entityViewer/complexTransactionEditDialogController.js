@@ -38,14 +38,11 @@
 
         vm.formIsValid = true;
 
-        vm.dataConstructorData = {};
-
         vm.attrs = [];
-        vm.entityAttrs = [];
         vm.userInputs = [];
-        vm.layoutAttrs = [];
+        vm.layoutAttrs = layoutService.getLayoutAttrs();
+        vm.entityAttrs = metaService.getEntityAttrs(vm.entityType) || [];
 
-        vm.entityAttrs = [];
         vm.range = gridHelperService.range;
 
         vm.dataConstructorData = {entityType: vm.entityType};
@@ -777,8 +774,7 @@
             vm.getItem();
             vm.getAttrs();
 
-            vm.layoutAttrs = layoutService.getLayoutAttrs();
-            vm.entityAttrs = metaService.getEntityAttrs(vm.entityType);
+
 
         };
 

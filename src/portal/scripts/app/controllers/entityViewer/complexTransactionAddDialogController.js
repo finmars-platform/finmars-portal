@@ -119,10 +119,8 @@
         };
 
         vm.attrs = [];
-        vm.entityAttrs = [];
         vm.userInputs = [];
         vm.layoutAttrs = layoutService.getLayoutAttrs();
-
         vm.entityAttrs = metaService.getEntityAttrs(vm.entityType) || [];
 
         vm.formIsValid = true;

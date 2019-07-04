@@ -18,6 +18,8 @@
             },
             link: function (scope, elem, attr) {
 
+                console.log('item', scope.item);
+
                 scope.entityType = scope.$parent.vm.entityType;
                 scope.readyStatus = {classifier: false};
                 scope.entity = scope.$parent.vm.entity;
@@ -112,7 +114,7 @@
                         if (scope.item.hasOwnProperty('id') && scope.item.id !== null) {
                             return scope.item.name
                         } else {
-                            var  l, e, u;
+                            var l, e, u;
 
                             for (l = 0; l < scope.layoutAttrs.length; l = l + 1) {
                                 if (scope.item.name === scope.layoutAttrs[l].name) {
