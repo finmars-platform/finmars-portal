@@ -151,7 +151,7 @@
         };
 
         vm.cancel = function () {
-            $mdDialog.cancel();
+            $mdDialog.hide();
         };
 
         vm.manageAttrs = function (ev) {
@@ -173,8 +173,8 @@
             console.log('copy entity', entity);
 
             $mdDialog.show({
-                controller: 'EntityViewerAddDialogController as vm',
-                templateUrl: 'views/entity-viewer/entity-viewer-add-dialog-view.html',
+                controller: 'TransactionTypeAddDialogController as vm',
+                templateUrl: 'views/entity-viewer/transaction-type-add-dialog-view.html',
                 parent: angular.element(document.body),
                 targetEvent: $event,
                 locals: {
@@ -1089,31 +1089,38 @@
 
             if (action.instrument) {
                 return "Create Instrument";
-            };
+            }
+            ;
 
             if (action.transaction) {
                 return "Create Transaction";
-            };
+            }
+            ;
 
             if (action.instrument_factor_schedule) {
                 return "Create Factor Schedule";
-            };
+            }
+            ;
 
             if (action.instrument_manual_pricing_formula) {
                 return "Create Manual Pricing Formula";
-            };
+            }
+            ;
 
             if (action.instrument_accrual_calculation_schedules) {
                 return "Create Accrual Calculation Schedules";
-            };
+            }
+            ;
 
             if (action.instrument_event_schedule) {
                 return "Create Event Schedule";
-            };
+            }
+            ;
 
             if (action.instrument_event_schedule_action) {
                 return "Create Event Schedule Action"
-            };
+            }
+            ;
         };
 
         vm.preventSpace = function ($event) {
