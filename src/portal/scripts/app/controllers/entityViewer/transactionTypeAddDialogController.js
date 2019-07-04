@@ -216,7 +216,6 @@
             $mdDialog.hide();
         };
 
-
         vm.transactionUserFields = {};
 
         vm.getTransactionUserFields = function () {
@@ -233,7 +232,7 @@
 
         };
 
-        vm.getList = function () {
+        vm.getAttributeTypes = function () {
             attributeTypeService.getList(vm.entityType).then(function (data) {
                 vm.attrs = data.results;
                 vm.readyStatus.content = true;
@@ -247,8 +246,6 @@
 
             });
         };
-
-        vm.getList();
 
         vm.checkReadyStatus = function () {
             return vm.readyStatus.content && vm.readyStatus.entity && vm.readyStatus.permissions
@@ -335,14 +332,6 @@
             }
 
         };
-
-        $scope.$watch('vm.entity.group', function () {
-            if (vm.entity.group === 14 || !vm.entity.group) {
-                vm.TTGroupChosen = false;
-            } else {
-                vm.TTGroupChosen = true;
-            }
-        });
 
         var checkActionsForEmptyFields = function (actions) {
 
@@ -504,7 +493,6 @@
 
         };
 
-
         // Transaction type General Controller start
 
         vm.entity.book_transaction_layout = vm.entity.book_transaction_layout || '';
@@ -552,7 +540,6 @@
 
                 if (vm.entity.is_valid_for_all_instruments) {
                     vm.entity.instrument_types = [];
-                    ;
                 }
 
             } else if (entity === 'portfolios') {
@@ -589,7 +576,6 @@
 
         vm.openExpressionDialog = function ($event, item, options) {
 
-
             $mdDialog.show({
                 controller: 'ExpressionEditorDialogController as vm',
                 templateUrl: 'views/dialogs/expression-editor-dialog-view.html',
@@ -610,11 +596,6 @@
             });
         };
 
-        vm.getTransactionTypeGroups();
-        vm.getPortfolios();
-        vm.getInstrumentTypes();
-        vm.getTags();
-
         vm.tagTransform = function (newTag) {
             //console.log('newTag', newTag);
             var item = {
@@ -625,29 +606,6 @@
             return item;
         };
 
-        $scope.$watch('vm.entity.tags', function () {
-
-            if (vm.entity.tags) {
-                vm.entity.tags.forEach(function (item) {
-                    if (item.id == null) {
-                        tagService.create({
-                            name: item.name,
-                            content_types: ['transactions.transactiontype']
-                        })
-                    }
-                })
-
-            }
-        });
-
-        $scope.$watch('vm.entity.group', function () {
-            if (vm.entity.group && vm.entity.group.name != null) {
-                transactionTypeGroupService.create({
-                    name: vm.entity.group.name
-                })
-            }
-        });
-
         vm.checkReadyStatus = function () {
             if (vm.readyStatus.transactionTypeGroups == true &&
                 vm.readyStatus.portfolios == true &&
@@ -656,7 +614,7 @@
                 return true;
             }
             return false;
-        }
+        };
 
 
         // Transaction Type General Controller end
@@ -834,7 +792,6 @@
 
         };
 
-
         vm.saveItem = function (item) {
 
             vm.updateInputFunctions();
@@ -948,31 +905,32 @@
 
             if (action.instrument) {
                 return "Create Instrument";
-            };
+            }
 
             if (action.transaction) {
                 return "Create Transaction";
-            };
+            }
 
             if (action.instrument_factor_schedule) {
                 return "Create Factor Schedule";
-            };
+            }
 
             if (action.instrument_manual_pricing_formula) {
                 return "Create Manual Pricing Formula";
-            };
+            }
 
             if (action.instrument_accrual_calculation_schedules) {
                 return "Create Accrual Calculation Schedules";
-            };
+            }
 
             if (action.instrument_event_schedule) {
                 return "Create Event Schedule";
-            };
+            }
 
             if (action.instrument_event_schedule_action) {
                 return "Create Event Schedule Action"
-            };
+            }
+
         };
 
         vm.preventSpace = function ($event) {
@@ -1507,6 +1465,48 @@
 
         // Transaction type actions controller end
 
+        vm.init = function () {
+
+            vm.getAttributeTypes();
+            vm.getTransactionTypeGroups();
+            vm.getPortfolios();
+            vm.getInstrumentTypes();
+            vm.getTags();
+
+            $scope.$watch('vm.entity.tags', function () {
+
+                if (vm.entity.tags) {
+                    vm.entity.tags.forEach(function (item) {
+                        if (item.id == null) {
+                            tagService.create({
+                                name: item.name,
+                                content_types: ['transactions.transactiontype']
+                            })
+                        }
+                    })
+
+                }
+            });
+
+            $scope.$watch('vm.entity.group', function () {
+                if (vm.entity.group && vm.entity.group.name != null) {
+                    transactionTypeGroupService.create({
+                        name: vm.entity.group.name
+                    })
+                }
+            });
+
+            $scope.$watch('vm.entity.group', function () {
+                if (vm.entity.group === 14 || !vm.entity.group) {
+                    vm.TTGroupChosen = false;
+                } else {
+                    vm.TTGroupChosen = true;
+                }
+            });
+
+        };
+
+        vm.init();
 
     }
 
