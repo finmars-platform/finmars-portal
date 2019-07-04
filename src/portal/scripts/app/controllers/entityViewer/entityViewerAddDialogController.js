@@ -33,7 +33,7 @@
 
         vm.entity = {$_isValid: true};
 
-        if (Object.keys(entity).length) {
+        if (Object.keys(entity).length) { // make copy option
             vm.entity = entity;
         }
 
