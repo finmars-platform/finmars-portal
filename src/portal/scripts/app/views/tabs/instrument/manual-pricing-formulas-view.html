@@ -5,7 +5,7 @@
             <div layout="row">
 
                 <md-input-container class="md-block" style="width: 200px;">
-                    <label>Pricing Currency </label>
+                    <label>Pricing Currency</label>
                     <md-select md-on-close="vm.searchTermCurrency = ''"
                                data-ng-model="vm.entity.pricing_currency"
                                md-on-open="vm.getCurrencyFields()"
@@ -41,8 +41,8 @@
 
             <div layout="row">
 
-                <md-input-container class="md-block" style="width: 200px;">
-                    <label>Daily pricing model</label>
+                <md-input-container class="md-block" style="width: 550px;">
+                    <label>Pricing Algorithm</label>
                     <md-select md-on-close="vm.searchTermDailyPricingModel = ''"
                                data-ng-model="vm.entity.daily_pricing_model"
                                md-on-open="vm.getDailyPricingModelFields()"
@@ -88,7 +88,7 @@
                 </md-input-container>
 
                 <md-input-container style="width: 200px;">
-                    <label for="">Reference for Pricing</label>
+                    <label for="">ID for Price Downloading</label>
                     <input type="text" data-ng-model="vm.entity.reference_for_pricing">
                 </md-input-container>
 
