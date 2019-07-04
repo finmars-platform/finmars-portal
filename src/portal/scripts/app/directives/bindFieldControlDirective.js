@@ -112,7 +112,7 @@
                         if (scope.item.hasOwnProperty('id') && scope.item.id !== null) {
                             return scope.item.name
                         } else {
-                            var  l, e, u;
+                            var l, e, u;
 
                             for (l = 0; l < scope.layoutAttrs.length; l = l + 1) {
                                 if (scope.item.name === scope.layoutAttrs[l].name) {

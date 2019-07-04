@@ -170,8 +170,45 @@
 
                     if (action === 'book_transaction' && activeObject.id) {
 
+                        var reportOptions = vm.entityViewerDataService.getReportOptions();
+
+                        var contextData = {
+                            effective_date: reportOptions.report_date,
+                            instrument: null,
+                            portfolio: null,
+                            account: null
+                        };
+
+                        if (activeObject['instrument.id']) {
+                            contextData.instrument = activeObject['instrument.id'];
+                            contextData.instrument_object = {
+                                id: activeObject['instrument.id'],
+                                name: activeObject['instrument.name'],
+                                user_code: activeObject['instrument.user_code']
+                            };
+                        }
+
+                        if (activeObject['portfolio.id']) {
+                            contextData.portfolio = activeObject['portfolio.id'];
+                            contextData.portfolio_object = {
+                                id: activeObject['portfolio.id'],
+                                name: activeObject['portfolio.name'],
+                                user_code: activeObject['portfolio.user_code']
+                            };
+                        }
+
+                        if (activeObject['account.id']) {
+                            contextData.account = activeObject['account.id'];
+                            contextData.account_object = {
+                                id: activeObject['account.id'],
+                                name: activeObject['account.name'],
+                                user_code: activeObject['account.user_code']
+                            };
+                        }
+
+
                         var entity = {
-                            reportItem: activeObject
+                            contextData: contextData
                         };
 
                         $mdDialog.show({
