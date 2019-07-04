@@ -140,15 +140,19 @@
 
         var parent = evDataService.getData(parentGroupHashId);
 
-        var result;
+        var result = null;
 
-        parent.results.forEach(function (item) {
+        if (parent) {
 
-            if (item.___id === objectId) {
-                result = item;
-            }
+            parent.results.forEach(function (item) {
 
-        });
+                if (item.___id === objectId) {
+                    result = item;
+                }
+
+            });
+
+        }
 
         return result
 
