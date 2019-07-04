@@ -97,6 +97,19 @@
         }
     };
 
+    var getListLayoutByKey = function (uiLayoutId) {
+        return xhrService.fetch(baseUrl + 'ui/list-layout/' + uiLayoutId + '/',
+            {
+                method: 'GET',
+                credentials: 'include',
+                headers: {
+                    'X-CSRFToken': cookieService.getCookie('csrftoken'),
+                    Accept: 'application/json',
+                    'Content-type': 'application/json'
+                }
+            })
+    };
+
     var getListLayoutDefault = function (options) {
 
         return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl + 'ui/list-layout/', options),
@@ -111,8 +124,11 @@
 
     };
 
-    var getListLayoutByKey = function (uiLayoutId) {
-        return xhrService.fetch(baseUrl + 'ui/list-layout/' + uiLayoutId + '/',
+    var getActiveListLayout = function (entity) {
+
+        var contentType = metaContentTypesService.findContentTypeByEntity(entity, 'ui');
+
+        return xhrService.fetch(baseUrl + 'ui/list-layout/?is_active=2&content_type=' + contentType,
             {
                 method: 'GET',
                 credentials: 'include',
@@ -124,7 +140,7 @@
             })
     };
 
-    var getActiveListLayout = function (entity) {
+    var getDefaultListLayout = function (entity) {
 
         var contentType = metaContentTypesService.findContentTypeByEntity(entity, 'ui');
 
@@ -234,7 +250,7 @@
         ]
     };
 
-    var getDefaultListLayout = function () {
+    var getListLayoutTemplate = function () {
         return [{
             "name": "default",
             "data": {
@@ -521,6 +537,10 @@
         getDefaultEditLayout: getDefaultEditLayout,
         getDefaultListLayout: getDefaultListLayout,
 
+        getActiveListLayout: getActiveListLayout,
+
+        getListLayoutTemplate: getListLayoutTemplate,
+
         getEditLayout: getEditLayout,
         createEditLayout: createEditLayout,
         updateEditLayout: updateEditLayout,
@@ -534,8 +554,6 @@
 
         getEditLayoutByInstanceId: getEditLayoutByInstanceId,
         updateEditLayoutByInstanceId: updateEditLayoutByInstanceId,
-
-        getActiveListLayout: getActiveListLayout,
 
         getConfigurationList: getConfigurationList,
         createConfiguration: createConfiguration,

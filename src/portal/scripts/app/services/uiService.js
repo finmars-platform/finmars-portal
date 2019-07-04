@@ -32,10 +32,6 @@
         return uiRepository.getListLayoutByKey(key);
     };
 
-    var getActiveListLayout = function (entity) {
-        return uiRepository.getActiveListLayout(entity);
-    };
-
     var createListLayout = function (entity, ui) {
 
         ui.content_type = metaContentTypesService.findContentTypeByEntity(entity, 'ui');
@@ -51,8 +47,16 @@
         return uiRepository.deleteListLayoutByKey(id);
     };
 
-    var getDefaultListLayout = function () {
-        return uiRepository.getDefaultListLayout();
+    var getListLayoutTemplate = function () {
+        return uiRepository.getListLayoutTemplate();
+    };
+
+    var getDefaultListLayout = function (entityType) {
+        return uiRepository.getDefaultListLayout(entityType);
+    };
+
+    var getActiveListLayout = function (entity) {
+        return uiRepository.getActiveListLayout(entity);
     };
 
     var getDefaultEditLayout = function (entityType) {
@@ -118,7 +122,9 @@
     };
 
     module.exports = {
+        getListLayoutTemplate: getListLayoutTemplate,
         getDefaultListLayout: getDefaultListLayout,
+        getActiveListLayout: getActiveListLayout,
         getDefaultEditLayout: getDefaultEditLayout,
         getEditLayout: getEditLayout,
         createEditLayout: createEditLayout,
@@ -129,7 +135,6 @@
         updateListLayout: updateListLayout,
         getEditLayoutByInstanceId: getEditLayoutByInstanceId,
         updateEditLayoutByInstanceId: updateEditLayoutByInstanceId,
-        getActiveListLayout: getActiveListLayout,
 
         deleteListLayoutByKey: deleteListLayoutByKey,
 

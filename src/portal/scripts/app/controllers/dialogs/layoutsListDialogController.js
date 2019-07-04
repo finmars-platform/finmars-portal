@@ -22,7 +22,7 @@
         vm.openLayout = function (layoutToOpen) {
 
             if (!layoutToOpen.is_default) {
-                uiService.getActiveListLayout(entityType).then(function (data) {
+                uiService.getDefaultListLayout(entityType).then(function (data) {
 
                     var promises = [];
                     var activeLayout = data.results[0];

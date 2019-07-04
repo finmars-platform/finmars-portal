@@ -174,7 +174,7 @@ app.controller('EntityTypeClassifierMappingDialogController', ['$scope', '$mdDia
 
 // Entity Viewer & Report Viewer
 
-app.controller('EntityViewer2Controller', ['$scope', '$mdDialog', '$state', '$transitions', require('./app/controllers/entityViewer/entityViewer2Controller')]);
+app.controller('EntityViewerController', ['$scope', '$mdDialog', '$state', '$transitions', require('./app/controllers/entityViewer/entityViewerController')]);
 app.controller('ReportViewerController', ['$scope', '$mdDialog', '$transitions', require('./app/controllers/entityViewer/reportViewerController')]);
 app.controller('SplitPanelReportViewerController', ['$scope', '$mdDialog', '$transitions', 'parentEntityViewerDataService', 'parentEntityViewerEventService', require('./app/controllers/entityViewer/splitPanelReportViewerController')]);
 app.controller('EntityViewerAddDialogController', ['$scope', '$mdDialog', '$state', 'entityType', 'entity', require('./app/controllers/entityViewer/entityViewerAddDialogController')]);

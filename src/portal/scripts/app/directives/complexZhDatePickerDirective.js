@@ -227,6 +227,8 @@
                     // scope.datepickerOptions.datepickerMode = 'datepicker';
                     delete scope.datepickerOptions.expression;
 
+                    scope.date = '0000-00-00';
+
                     setTimeout(function () {
                         scope.callbackMethod()
                     }, 500);

@@ -8,9 +8,8 @@
     var logService = require('../../../../../../core/services/logService');
 
     var uiService = require('../../../services/uiService');
-    var metaContentTypesService = require('../../../services/metaContentTypesService');
+
     var middlewareService = require('../../../services/middlewareService');
-    // var bookmarkService = require('../../../services/bookmarkService');
 
     module.exports = function ($scope, $mdDialog, options) {
 
@@ -19,6 +18,7 @@
         var vm = this;
 
         vm.readyStatus = {items: false};
+        var selectedLayout = null;
 
         //var contentType = metaContentTypesService.getContentTypeUIByEntity(options.entityType);
 
@@ -37,6 +37,8 @@
         vm.getList();
 
         vm.renameLayout = function (layout, $event) {
+
+            $event.stopPropagation();
 
             $mdDialog.show({
                 controller: 'UiLayoutSaveAsDialogController as vm',
@@ -66,7 +68,9 @@
 
         };
 
-        vm.deleteItem = function (ev, item) {
+        vm.deleteItem = function (ev, item, $event) {
+
+            $event.stopPropagation();
 
             $mdDialog.show({
                 controller: 'WarningDialogController as vm',
@@ -94,15 +98,31 @@
             })
         };
 
-        /*vm.selectLayout = function (item) {
-            vm.items.forEach(function (item) {
-                item.is_default = false;
-            });
+        vm.selectLayout = function (layout, $event) {
+            $event.stopPropagation();
 
-            item.is_default = true;
-        };*/
+            if (!selectedLayout || layout.id !== selectedLayout.id) {
 
-        vm.setAsDefault = function (item) {
+                var selectedElem = $event.currentTarget;
+                var layoutsItemsList = document.querySelectorAll('.ll-layout-item');
+
+                layoutsItemsList.forEach(function (layoutItem) {
+                    if (layoutItem.classList.contains('active')) {
+                        layoutItem.classList.remove('active');
+                    };
+
+                });
+
+                selectedElem.classList.add('active');
+                selectedLayout = layout;
+            }
+
+        };
+
+        vm.setAsDefault = function (item, $event) {
+
+            $event.stopPropagation();
+
             if (!item.is_default) {
 
                 vm.items.forEach(function (layout) {
@@ -127,21 +147,16 @@
 
         vm.agree = function () {
 
-            /*var promises = [];
+            if (selectedLayout) {
+                selectedLayout.is_active = true;
+                uiService.updateListLayout(selectedLayout.id, selectedLayout).then(function () {
+                    $mdDialog.hide({status: 'agree', data: {layoutName: selectedLayout.name}});
+                });
 
-            vm.items.forEach(function (item) {
+            } else {
+                $mdDialog.cancel();
+            }
 
-                promises.push(uiService.updateListLayout(item.id, item));
-
-            });
-
-            Promise.all(promises).then(function () {
-
-                $mdDialog.hide({status: 'agree'});
-
-            });*/
-
-            $mdDialog.hide({status: 'agree'});
         };
 
     }
