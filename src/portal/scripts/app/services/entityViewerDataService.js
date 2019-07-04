@@ -104,6 +104,7 @@
             report: {},
             export: {},
             data: {},
+            layoutToOpen: null,
             listLayout: {},
             virtualScroll: {
                 reserveTop: 10,
@@ -789,15 +790,15 @@
 
             var listLayout = {};
 
-            if (activeListLayout.results.length) {
+            if (activeListLayout) {
 
-                listLayout = Object.assign({}, activeListLayout.results[0]);
+                listLayout = Object.assign({}, activeListLayout);
 
             } else {
 
                 console.log('default triggered');
 
-                var defaultList = uiService.getDefaultListLayout();
+                var defaultList = uiService.getListLayoutTemplate();
 
                 listLayout = {};
                 listLayout.data = Object.assign({}, defaultList[0].data);
@@ -995,7 +996,7 @@
             setLayoutCurrentConfiguration: setLayoutCurrentConfiguration,
 
             setSplitPanelStatus: setSplitPanelStatus,
-            isSplitPanelActive: isSplitPanelActive
+            isSplitPanelActive: isSplitPanelActive,
 
         }
     }

@@ -37,8 +37,6 @@
                 scope.currentAdditions = scope.evDataService.getAdditions();
                 scope.isNewLayout = false;
 
-                console.log('isRootEntityViewer', scope.isRootEntityViewer);
-
                 scope.openViewConstructor = function (ev) {
 
                     if (scope.isReport) {
@@ -370,9 +368,7 @@
                         if (res.status === 'agree') {
 
                             scope.evEventService.dispatchEvent(evEvents.LIST_LAYOUT_CHANGE);
-
-                            // $state.reload($state.current.name);
-                            // $state.reload();
+                            middlewareService.setData('entityActiveLayoutSwitched', res.data.layoutName); // Give signal to update active layout name in the toolbar
                         }
 
                     })
@@ -385,7 +381,7 @@
                     var rootGroup = scope.evDataService.getRootGroupData();
                     scope.evDataService.setActiveRequestParametersId(rootGroup.___id);
 
-                    var defaultList = uiService.getDefaultListLayout();
+                    var defaultList = uiService.getListLayoutTemplate();
 
                     var listLayout = {};
                     listLayout.data = Object.assign({}, defaultList[0].data);
@@ -652,7 +648,7 @@
 
                             if (listLayout.id) {
 
-                                uiService.getActiveListLayout(scope.entityType).then(function (data) {
+                                uiService.getDefaultListLayout(scope.entityType).then(function (data) {
                                     /*var layouts = data.results;
                                     var activeListLayout;
 
@@ -694,7 +690,7 @@
                                 });
 
                             } else {
-                                console.log('save layout no id');
+
                                 listLayout.name = res.data.name;
                                 listLayout.is_default = true;
 

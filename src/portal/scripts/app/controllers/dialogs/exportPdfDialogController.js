@@ -153,7 +153,7 @@
             console.log('export pdf content', vm.settings.data.content);
             console.log('vm.settings.zoom', vm.settings.zoom);
 
-            uiService.getActiveListLayout(vm.entityType).then(function (res) {
+            uiService.getDefaultListLayout(vm.entityType).then(function (res) {
 
                 if (res.results.length) {
 
