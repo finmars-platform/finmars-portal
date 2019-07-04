@@ -30,9 +30,6 @@
         vm.entityType = entityType;
         vm.entityId = entityId;
 
-        vm.layoutAttrs = layoutService.getLayoutAttrs();
-        vm.entityAttrs = metaService.getEntityAttrs(vm.entityType);
-
         vm.entity = {$_isValid: true};
 
         vm.readyStatus = {attrs: false, permissions: false, entity: false, layout: false, userFields: false};
@@ -44,11 +41,9 @@
         vm.dataConstructorData = {};
 
         vm.attrs = [];
-        vm.entityAttrs = [];
-        vm.userInputs = [];
-        vm.layoutAttrs = [];
+        vm.layoutAttrs = layoutService.getLayoutAttrs();
+        vm.entityAttrs = metaService.getEntityAttrs(vm.entityType) || [];
 
-        vm.entityAttrs = [];
         vm.range = gridHelperService.range;
 
         vm.dataConstructorData = {entityType: vm.entityType};
@@ -271,7 +266,7 @@
         };
 
         vm.bindField = function (tab, field) {
-            var i, l, e, u;
+            var i, l, e;
             if (field && field.type === 'field') {
                 if (field.hasOwnProperty('id') && field.id !== null) {
                     for (i = 0; i < vm.attrs.length; i = i + 1) {
@@ -295,14 +290,6 @@
                         }
                     }
 
-                    //console.log('vm.userInputs', vm.userInputs);
-                    for (u = 0; u < vm.userInputs.length; u = u + 1) {
-                        //console.log('vm.userInputs[u]', vm.userInputs[u]);
-                        if (field.name === vm.userInputs[u].name) {
-                            vm.userInputs[u].options = field.options;
-                            return vm.userInputs[u];
-                        }
-                    }
                 }
             }
         };
