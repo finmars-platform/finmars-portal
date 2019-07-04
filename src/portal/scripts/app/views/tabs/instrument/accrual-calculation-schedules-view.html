@@ -26,8 +26,8 @@
                 </md-select>
             </md-input-container>
 
-            <md-input-container class="md-block" style="width: 200px;">
-                <label>Payment Size Details</label>
+            <md-input-container class="md-block" style="width: 230px;">
+                <label>Accrual Size Clarification</label>
                 <md-select md-on-close="vm.searchTermPaymentSizeDetail = ''"
                            data-ng-model="vm.entity.payment_size_detail"
                            md-on-open="vm.getPaymentSizeDetailFields()"
@@ -59,6 +59,12 @@
                 <input type="text" data-ng-model="vm.entity.default_accrued">
             </md-input-container>
 
+        </div>
+
+        <div style="font-size: 18px; padding-left: 6px; margin-bottom: 24px;
+                        font-weight: bold; border-top: 1px solid #ddd; padding-top: 16px;
+                        margin-top: 8px;">
+            Accrued Interest Calculation Schedules
         </div>
 
         <table class="bordered">
