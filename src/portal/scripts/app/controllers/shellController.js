@@ -202,7 +202,7 @@
 
                 var entityType = metaContentTypesService.getContentTypeUIByState($state.current.name);
 
-                uiService.getActiveListLayout(entityType).then(function (data) {
+                uiService.getDefaultListLayout(entityType).then(function (data) {
 
                     var activeLayoutRes = data.results;
                     if (activeLayoutRes && activeLayoutRes.length) {

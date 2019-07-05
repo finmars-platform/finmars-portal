@@ -6,9 +6,9 @@
     'use strict';
 
     var uiService = require('../../services/uiService');
-    var metaContentTypesService = require('../../services/metaContentTypesService');
 
     var middlewareService = require('../../services/middlewareService');
+
     module.exports = function ($scope, $mdDialog, $state) {
 
         var vm = this;
@@ -433,8 +433,12 @@
         };
 
         vm.openLayout = function (layout) {
-            vm.setAsDefault(layout).then(function () {
+
+            layout.is_active = true;
+
+            uiService.updateListLayout(layout.id, layout).then(function () {
                 var stateToGo = getLayoutDataByContentType(layout.content_type, 'state');
+                middlewareService.setData('entityActiveLayoutSwitched', layout.name); // Give signal to update active layout name in the toolbar
                 $state.go(stateToGo);
             });
 
