@@ -79,13 +79,13 @@
 
                     dataList.forEach(function (item) {
 
-                        item.___is_selected = scope.isAllSelected;
+                        item.___is_activated = scope.isAllSelected;
 
                         if (item.results && item.results.length) {
 
                             item.results.forEach(function (childItem) {
 
-                                childItem.___is_selected = scope.isAllSelected;
+                                childItem.___is_activated = scope.isAllSelected;
 
                             })
 

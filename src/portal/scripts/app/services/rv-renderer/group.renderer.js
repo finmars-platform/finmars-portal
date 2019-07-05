@@ -18,7 +18,7 @@
 
         var rowSelection;
 
-        if (group.___is_selected) {
+        if (group.___is_activated) {
             classList.push('selected');
             rowSelection = '<div class="g-row-selection">' + checkIcon + '</div>';
         } else {
