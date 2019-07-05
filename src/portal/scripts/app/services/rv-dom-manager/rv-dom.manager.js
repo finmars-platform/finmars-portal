@@ -19,6 +19,7 @@
         'ROW_OBJECT': 'ROW_OBJECT',
         'ROW_CELL': 'ROW_CELL',
         'ROW_CELL_CONTENT': 'ROW_CELL_CONTENT',
+        'ROW_CELL_CONTENT_WRAP': 'ROW_CELL_CONTENT_WRAP',
         'ROW_GROUP': 'ROW_GROUP'
     };
 
@@ -103,6 +104,10 @@
             result = clickTargets.ROW_CELL_CONTENT;
         }
 
+        if (event.target.classList.contains('g-cell-content-wrap')) {
+            result = clickTargets.ROW_CELL_CONTENT_WRAP;
+        }
+
         if (event.target.classList.contains('g-row-selection') && event.target.parentElement.classList.contains('g-row')) {
             result = clickTargets.ROW_SELECTION_OBJECT_BUTTON;
         }
@@ -149,6 +154,11 @@
                 clickData.___parentId = event.target.offsetParent.dataset.parentGroupHashId;
                 break;
             case clickTargets.ROW_CELL_CONTENT:
+                clickData.___type = event.target.offsetParent.dataset.type;
+                clickData.___id = event.target.offsetParent.dataset.objectId;
+                clickData.___parentId = event.target.offsetParent.dataset.parentGroupHashId;
+                break;
+            case clickTargets.ROW_CELL_CONTENT_WRAP:
                 clickData.___type = event.target.offsetParent.dataset.type;
                 clickData.___id = event.target.offsetParent.dataset.objectId;
                 clickData.___parentId = event.target.offsetParent.dataset.parentGroupHashId;
