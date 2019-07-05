@@ -20,8 +20,6 @@
 
         module.exports = function ($scope, $mdDialog, $transitions) {
 
-            console.log("Report Viewer Controller init");
-
             var vm = this;
 
             vm.listViewIsReady = false;
@@ -259,57 +257,9 @@
 
                 vm.setEventListeners();
 
-                uiService.getActiveListLayout(vm.entityType).then(function (res) {
+                var setLayout = function (layout) {
 
-                    /*var listLayout = {};
-
-                    if (res.results.length) {
-
-                        listLayout = Object.assign({}, res.results[0]);
-
-                    } else {
-
-                        console.log('default triggered');
-
-                        var defaultList = uiService.getDefaultListLayout();
-
-                        listLayout = {};
-                        listLayout.data = Object.assign({}, defaultList[0].data);
-
-                    }
-
-                    entityViewerDataService.setListLayout(listLayout);
-
-                    var reportOptions = getReportOptions();
-                    var reportLayoutOptions = getReportLayoutOptions();
-                    var newReportOptions = Object.assign({}, reportOptions, listLayout.data.reportOptions);
-                    var newReportLayoutOptions = Object.assign({}, reportLayoutOptions, listLayout.data.reportLayoutOptions);
-
-                    setReportOptions(newReportOptions);
-                    setReportLayoutOptions(newReportLayoutOptions);
-
-                    entityViewerDataService.setColumns(listLayout.data.columns);
-                    entityViewerDataService.setGroups(listLayout.data.grouping);
-                    entityViewerDataService.setFilters(listLayout.data.filters);
-
-                    entityViewerDataService.setListLayout(listLayout);
-
-                    listLayout.data.components = {
-                        sidebar: true,
-                        groupingArea: true,
-                        columnAreaHeader: true,
-                        splitPanel: true,
-                        addEntityBtn: true,
-                        fieldManagerBtn: true,
-                        layoutManager: true,
-                        autoReportRequest: false
-                    };
-
-                    entityViewerDataService.setComponents(listLayout.data.components);
-                    entityViewerDataService.setEditorTemplateUrl('views/additions-editor-view.html');
-                    entityViewerDataService.setRootEntityViewer(true);*/
-
-                    vm.entityViewerDataService.setLayoutCurrentConfiguration(res, uiService, true);
+                    vm.entityViewerDataService.setLayoutCurrentConfiguration(layout, uiService, true);
 
                     var reportOptions = vm.entityViewerDataService.getReportOptions();
                     var reportLayoutOptions = vm.entityViewerDataService.getReportLayoutOptions();
@@ -384,6 +334,32 @@
 
                     }
 
+                };
+
+                uiService.getActiveListLayout(vm.entityType).then(function (activeLayoutData) {
+
+                    if (activeLayoutData.hasOwnProperty('results') && activeLayoutData.results.length > 0) {
+
+                        var activeLayout = activeLayoutData.results[0];
+                        activeLayout.is_active = false;
+                        uiService.updateListLayout(activeLayout.id, activeLayout);
+
+                        setLayout(activeLayout);
+
+                    } else {
+
+                        uiService.getDefaultListLayout(vm.entityType).then(function (defaultLayoutData) {
+                            var defaultLayout = null;
+                            if (defaultLayoutData.results && defaultLayoutData.results.length > 0) {
+                                defaultLayout = defaultLayoutData.results[0];
+                            }
+
+                            setLayout(defaultLayout);
+
+                        });
+
+                    }
+
                 });
 
             };
@@ -396,46 +372,6 @@
             };
 
             vm.init();
-
-            /*var checkForLayoutChanges = function (savedLayoutConfiguration, currentLayoutConfiguration) {
-
-                var savedConfig = JSON.parse(JSON.stringify(savedLayoutConfiguration));
-                delete savedConfig.data.reportOptions.task_id;
-                delete savedConfig.data.reportOptions.recieved_at;
-
-                if (savedConfig.data.hasOwnProperty('reportLayoutOptions')) {
-
-                    if (savedConfig.data.reportLayoutOptions.datepickerOptions.reportFirstDatepicker.datepickerMode !== 'datepicker') {
-                        delete savedConfig.data.reportOptions.pl_first_date;
-                    }
-
-                    if (savedConfig.data.reportLayoutOptions.datepickerOptions.reportLastDatepicker.datepickerMode !== 'datepicker') {
-                        delete savedConfig.data.reportOptions.report_date;
-                    }
-
-                }
-
-                var currentConfig = JSON.parse(JSON.stringify(currentLayoutConfiguration));
-                delete currentConfig.data.reportOptions.task_id;
-                delete currentConfig.data.reportOptions.recieved_at;
-
-                if (currentConfig.data.hasOwnProperty('reportLayoutOptions')) {
-
-                    if (currentConfig.data.reportLayoutOptions.datepickerOptions.reportFirstDatepicker.datepickerMode !== 'datepicker') {
-                        delete currentConfig.data.reportOptions.pl_first_date;
-                    }
-
-                    if (currentConfig.data.reportLayoutOptions.datepickerOptions.reportLastDatepicker.datepickerMode !== 'datepicker') {
-                        delete currentConfig.data.reportOptions.report_date;
-                    }
-
-                }
-
-                var layoutChanged = objectComparisonHelper.compareObjects(savedConfig, currentConfig);
-
-                return layoutChanged;
-
-            };*/
 
             var checkLayoutForChanges = function () {
 
@@ -477,7 +413,7 @@
                                         currentLayoutConfig.name = res.data.layoutName;
                                     }
 
-                                    uiService.getActiveListLayout(vm.entityType).then(function (data) {
+                                    uiService.getDefaultListLayout(vm.entityType).then(function (data) {
 
                                         var activeLayout = data.results[0];
                                         activeLayout.is_default = false;

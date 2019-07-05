@@ -75,7 +75,7 @@
 
             vm.readyStatus.entityListLayout = false;
 
-            uiService.getActiveListLayout(vm.entityType).then(function (data) {
+            uiService.getDefaultListLayout(vm.entityType).then(function (data) {
 
                 if (data.results.length) {
 

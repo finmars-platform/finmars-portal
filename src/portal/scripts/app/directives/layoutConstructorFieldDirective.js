@@ -64,7 +64,7 @@
                 });
 
                 var tabs = scope.$parent.vm.tabs;
-
+                console.log("data constructor tabs", tabs);
                 function addRow() {
                     var c;
                     scope.tab.layout.rows = scope.tab.layout.rows + 1;
@@ -90,6 +90,8 @@
                     }
 
                     scope.item.editMode = false;
+
+                    console.log("data constructor tabs", tabs);
 
                 };
 

@@ -73,13 +73,13 @@
 
                                         <div class="ec-layout">
                                             <div layout="row"  data-ng-repeat="row in vm.range(tab.layout.rows)">
-                                                <div class="form-constructor-field-wrap" data-ng-repeat="column in vm.range(tab.layout.columns)"
+                                                <div data-ng-repeat="column in vm.range(tab.layout.columns)"
+                                                     class="form-constructor-field-wrap"
                                                      flex="{{vm.bindFlex(tab, row, column)}}"
                                                      data-ng-if="vm.checkColspan(tab, row, column)">
                                                     <layout-constructor-field tab="tab"
                                                                               row="row"
-                                                                              column="column"
-                                                    ></layout-constructor-field>
+                                                                              column="column"></layout-constructor-field>
                                                 </div>
                                             </div>
                                         </div>

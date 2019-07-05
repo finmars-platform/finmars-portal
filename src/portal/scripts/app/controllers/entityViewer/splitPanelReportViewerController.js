@@ -118,9 +118,9 @@
 
                 vm.setEventListeners();
 
-                uiService.getActiveListLayout(vm.entityType).then(function (res) {
+                uiService.getDefaultListLayout(vm.entityType).then(function (res) {
 
-                    vm.entityViewerDataService.setLayoutCurrentConfiguration(res, uiService, true);
+                    vm.entityViewerDataService.setLayoutCurrentConfiguration(res.results[0], uiService, true);
 
                     var reportOptions = vm.entityViewerDataService.getReportOptions();
                     var reportLayoutOptions = vm.entityViewerDataService.getReportLayoutOptions();
