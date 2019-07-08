@@ -32,7 +32,7 @@
 
     function throttle(fn, wait) {
         var time = Date.now();
-        return function() {
+        return function () {
             if ((time + wait - Date.now()) < 0) {
                 fn();
                 time = Date.now();
@@ -138,7 +138,7 @@
                     insertItemInNode(list, map, node, _dataOrderReference)
                 }
 
-                if (node.___type === 'object' || node.___type === 'placeholder_object') {
+                if (node.___type === 'object' || node.___type === 'placeholder_object' || node.___type === 'control') {
                     list[map[node.___parentId]].results.push(node)
                 }
 

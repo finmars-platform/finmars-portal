@@ -92,7 +92,7 @@
             pagination: {
                 page: 1,
                 items_per_page: 60,
-                total_items: 1
+                count: 1
             },
             status: {
                 data: null
