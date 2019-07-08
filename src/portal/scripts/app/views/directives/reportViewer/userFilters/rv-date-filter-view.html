@@ -78,10 +78,11 @@
              class="table-filter-input-container" 
              flex="70">
 
-            <date-tree-input data-title="{{getFilterRegime()}}"
-                             data-dates-list="columnRowsContent"
-                             data-dates-tree="filter.options.dates_tree"
-                             data-callback-method="filterSettingsChange(filter.options.filter_values)"></date-tree-input>
+            <date-tree-input title="{{getFilterRegime()}}"
+                             dates-list="columnRowsContent"
+                             dates-tree="filter.options.dates_tree"
+                             nothing-selected-text="Off"
+                             callback-method="filterSettingsChange(filter.options.filter_values)"></date-tree-input>
             
         </div>
 

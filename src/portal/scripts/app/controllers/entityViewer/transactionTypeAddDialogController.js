@@ -894,10 +894,14 @@
 
         vm.contentTypes = metaContentTypesService.getListForTransactionTypeInputs();
 
-        vm.toggleItem = function (pane, item) {
-            pane.toggle();
+        vm.toggleItem = function (pane, item, $event) {
 
-            item.isPaneExpanded = !item.isPaneExpanded;
+            $event.stopPropagation();
+
+            if (!$event.target.classList.contains('ttype-action-notes-input')) {
+                pane.toggle();
+                item.isPaneExpanded = !item.isPaneExpanded;
+            }
 
         };
 
@@ -993,7 +997,7 @@
                 id: 3
             },
             {
-                name: "If book: Clear & Append. If rebook: Clear & Append",
+                name: "If book: Clear & Append. If rebook: Skip",
                 id: null
             },
             {

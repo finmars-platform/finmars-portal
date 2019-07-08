@@ -1078,10 +1078,14 @@
 
         vm.contentTypes = metaContentTypesService.getListForTransactionTypeInputs();
 
-        vm.toggleItem = function (pane, item) {
-            pane.toggle();
+        vm.toggleItem = function (pane, item, $event) {
 
-            item.isPaneExpanded = !item.isPaneExpanded;
+            $event.stopPropagation();
+
+            if (!$event.target.classList.contains('ttype-action-notes-input')) {
+                pane.toggle();
+                item.isPaneExpanded = !item.isPaneExpanded;
+            }
 
         };
 
@@ -1158,7 +1162,7 @@
                 id: 6
             },
             {
-                name: "If book: Clear & Append. If rebook: Clear & Append",
+                name: "If book: Clear & Append. If rebook: Skip",
                 id: 3
             },
             {
@@ -1314,6 +1318,7 @@
 
         vm.deletePane = function (item, $index, $event) {
 
+            $event.stopPropagation();
             var description = 'Are you sure to delete this action?';
 
             $mdDialog.show({
@@ -1405,8 +1410,9 @@
             vm.findPhantoms();
         };
 
-        vm.makeCopyOfAction = function (actionToCopy, index) {
+        vm.makeCopyOfAction = function (actionToCopy, index, $event) {
 
+            $event.stopPropagation();
             var actionCopy = JSON.parse(JSON.stringify(actionToCopy));
 
             delete actionCopy.id;
@@ -1459,7 +1465,9 @@
             vm.findPhantoms();
         };
 
-        vm.moveDown = function (item, $index) {
+        vm.moveDown = function (item, $index, $event) {
+
+            $event.stopPropagation();
 
             var swap = JSON.parse(JSON.stringify(item));
             vm.entity.actions[$index] = vm.entity.actions[$index + 1];
@@ -1468,7 +1476,9 @@
 
         };
 
-        vm.moveUp = function (item, $index) {
+        vm.moveUp = function (item, $index, $event) {
+
+            $event.stopPropagation();
 
             var swap = JSON.parse(JSON.stringify(item));
             vm.entity.actions[$index] = vm.entity.actions[$index - 1];

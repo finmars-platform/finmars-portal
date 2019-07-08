@@ -13,6 +13,7 @@
                 items: '=',
                 model: '=',
                 title: "@",
+                nothingSelectedText: "@",
                 nameProperty: "@"
             },
             require: '?ngModel',
@@ -28,14 +29,18 @@
                         selElemNumber = scope.model.length;
                     }
 
-                    scope.inputText = selElemNumber + " " + "items selected";
+                    if (selElemNumber === 0 && scope.nothingSelectedText) {
+                        scope.inputText = scope.nothingSelectedText;
+                    } else {
+                        scope.inputText = selElemNumber + " " + "items selected";
+                    }
 
                 };
 
                 setInputText();
 
                 $(elem).click(function (event) {
-                    console.log("filter twoFieldsMultiselect scope", scope.items, scope.model);
+
                     event.preventDefault();
                     event.stopPropagation();
 

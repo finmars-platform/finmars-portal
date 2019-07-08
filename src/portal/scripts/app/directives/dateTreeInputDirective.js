@@ -12,6 +12,7 @@
                 title: '@',
                 datesList: '=',
                 datesTree: '=',
+                nothingSelectedText: "@",
                 callbackMethod: '&'
             },
             templateUrl: 'views/directives/date-tree-input-view.html',
@@ -41,7 +42,11 @@
 
                     });
 
-                    scope.inputText = datesSelected + " " + "dates selected";
+                    if (datesSelected === 0 && scope.nothingSelectedText) {
+                        scope.inputText = scope.nothingSelectedText;
+                    } else {
+                        scope.inputText = datesSelected + " " + "dates selected";
+                    }
 
                 };
 

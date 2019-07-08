@@ -67,7 +67,10 @@
                     if (scope.entityType === 'pl-report' || scope.entityType === 'transaction-report') {
                         scope.datepickerToDisplayOptions = {
                             position: 'left',
-                            labelName: 'Date to (incl)'
+                            labelName: 'Date to (incl)',
+                            modes: {
+                                inception: false
+                            }
                         }
                     }
                     /* < preparing data for complexZhDatePickerDirective > */

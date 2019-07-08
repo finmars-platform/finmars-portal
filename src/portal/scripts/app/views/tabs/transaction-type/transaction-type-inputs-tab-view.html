@@ -32,13 +32,13 @@
             </tr>
             <tr style="border: 0" data-ng-if="vm.queryStatus" class="filter-row-holder">
                 <th>
-                    <md-input-container>
+                    <md-input-container class="no-error-spacer">
                         <ng-md-icon icon="search"></ng-md-icon>
                         <input type="text" data-ng-model="vm.query.name">
                     </md-input-container>
                 </th>
                 <th>
-                    <md-input-container>
+                    <md-input-container class="no-error-spacer">
                         <ng-md-icon icon="search"></ng-md-icon>
                         <input type="text" data-ng-model="vm.query.verbose_name">
                     </md-input-container>
@@ -53,7 +53,7 @@
             </thead>
             <tbody>
             <tr data-ng-repeat="item in vm.entity.inputs | filter:vm.query | orderBy:vm.sort:vm.direction">
-                <td data-ng-bind="item.name" data-ng-if="!item.editStatus"></td>
+                <!--<td data-ng-bind="item.name" data-ng-if="!item.editStatus"></td>
                 <td data-ng-bind="item.verbose_name" data-ng-if="!item.editStatus"></td>
                 <td data-ng-bind="vm.bindValueType(item)" data-ng-if="!item.editStatus"></td>
                 <td data-ng-bind="vm.bindContentType(item)" data-ng-if="!item.editStatus"></td>
@@ -67,7 +67,7 @@
                 <td data-ng-bind="item.value_expr" data-ng-if="!item.editStatus"></td>
                 <td data-ng-if="!item.editStatus" class="table-misc-cell">
                     <md-menu>
-                        <!-- Trigger element is a md-button with an icon -->
+
                         <md-button ng-click="$mdOpenMenu($event)" class="md-icon-button" aria-label="Open sample menu">
                             <ng-md-icon icon="settings"></ng-md-icon>
                         </md-button>
@@ -90,20 +90,20 @@
                             </md-menu-item>
                         </md-menu-content>
                     </md-menu>
-                </td>
-                <td data-ng-if="item.editStatus" class="edit-state-td">
-                    <md-input-container>
+                </td>-->
+                <td class="edit-state-td">
+                    <md-input-container class="no-error-spacer">
                         <label for="">Name</label>
                         <input type="text" data-ng-model="item.name">
                     </md-input-container>
                 </td>
-                <td data-ng-if="item.editStatus" class="edit-state-td">
-                    <md-input-container>
+                <td class="edit-state-td">
+                    <md-input-container class="no-error-spacer">
                         <label for="">Verbose name</label>
                         <input type="text" data-ng-model="item.verbose_name">
                     </md-input-container>
                 </td>
-                <td data-ng-if="item.editStatus" class="edit-state-td" style="padding-top: 12px">
+                <td class="edit-state-td">
                     <!--<md-input-container>
                         <label for="">Value type</label>
                         <md-select data-ng-model="item.value_type">
@@ -141,7 +141,7 @@
                         </md-select>
                     </md-input-container>
                 </td>
-                <td data-ng-if="item.editStatus" class="edit-state-td" style="padding-top: 12px">
+                <td class="edit-state-td">
                     <!--<md-input-container>
                         <label for="">Content type</label>
                         <md-select data-ng-model="item.content_type">
@@ -180,8 +180,8 @@
                         </md-select>
                     </md-input-container>
                 </td>
-                <td data-ng-if="item.editStatus" class="edit-state-td">
-                    <md-input-container data-ng-if="item.value_type != 100">
+                <td class="edit-state-td">
+                    <md-input-container class="no-error-spacer" data-ng-if="item.value_type != 100">
                         <label for="">Default value</label>
                         <input type="text" data-ng-model="item.value">
                     </md-input-container>
@@ -189,8 +189,8 @@
                     <expression-editor-button data-ng-if="item.value_type != 100" data-item="item.value"></expression-editor-button>
 
                     <md-input-container data-ng-if="item.value_type == 100"
-                                        style="margin-top: -25px"
-                                        aria-label="select with filter">
+                                        aria-label="select with filter"
+                                        class="no-error-spacer">
                         <label for="ttype-relation-item-input">Default value</label>
                         <md-select ng-model="item[vm.resolveRelation(item)]"
                                    md-container-class="common-select-container"
@@ -217,14 +217,16 @@
                         </md-select>
                     </md-input-container>
                 </td>
-                <td data-ng-if="item.editStatus" class="edit-state-td" style="text-align: center">
-                    <md-input-container>
+                <td class="edit-state-td ttype-inputs-checkbox-td">
+                    <md-input-container class="no-error-spacer">
                         <md-checkbox data-ng-model="item.is_fill_from_context"
-                                     ng-disabled="item.value_type !== 100">Fill from context</md-checkbox>
+                                     ng-disabled="item.value_type !== 100">
+                            Fill from context
+                        </md-checkbox>
                     </md-input-container>
                 </td>
-                <td data-ng-if="item.editStatus" class="edit-state-td">
-                    <md-input-container>
+                <td class="edit-state-td">
+                    <md-input-container class="no-error-spacer">
                         <label for="">Input expr</label>
                         <input type="text" data-ng-model="item.value_expr">
                     </md-input-container>
@@ -232,25 +234,30 @@
                     <expression-editor-button data-item="item.value_expr"></expression-editor-button>
 
                 </td>
-                <td data-ng-if="item.editStatus" class="edit-state-td">
+                <!--<td class="edit-state-td">
                     <md-button data-ng-click="vm.saveItem(item)">
                         Ok
+                    </md-button>
+                </td>-->
+                <td class="edit-state-td">
+                    <md-button data-ng-click="vm.deleteItem(item, $index)">
+                        Delete
                     </md-button>
                 </td>
             </tr>
             <tr class="tab-input-row">
                 <td>
-                    <md-input-container>
+                    <md-input-container class="no-error-spacer">
                         <input type="text" data-ng-model="vm.newItem.name">
                     </md-input-container>
                 </td>
                 <td>
-                    <md-input-container>
+                    <md-input-container class="no-error-spacer">
                         <input type="text" data-ng-model="vm.newItem.verbose_name">
                     </md-input-container>
                 </td>
-                <td style="padding-top: 12px">
-                    <!--<md-input-container>
+                <td>
+                    <!--<md-input-container class="no-error-spacer">
                         <md-select data-ng-model="vm.newItem.value_type">
                             <md-option data-ng-repeat="item in vm.valueTypes" ng-value="item.value">
                                 {{item.display_name}}
@@ -284,7 +291,7 @@
                         </md-select>
                     </md-input-container>
                 </td>
-                <td style="padding-top: 12px">
+                <td>
                     <!--<md-input-container>
                         <md-select data-ng-model="vm.newItem.content_type"
                                    md-container-class="simple-search-select">
@@ -324,13 +331,13 @@
                     </md-input-container>
                 </td>
                 <td>
-                    <md-input-container data-ng-if="vm.newItem.value_type != 100">
+                    <md-input-container data-ng-if="vm.newItem.value_type != 100" class="no-error-spacer">
                         <input type="text" data-ng-model="vm.newItem.value">
                     </md-input-container>
 
                     <expression-editor-button data-ng-if="vm.newItem.value_type != 100" data-item="vm.newItem.value"></expression-editor-button>
 
-                    <!--<md-input-container data-ng-if="vm.newItem.value_type == 100" style="margin-top: -25px">
+                    <!--<md-input-container data-ng-if="vm.newItem.value_type == 100">
                         <md-select data-ng-model="vm.newItem[vm.resolveRelation(vm.newItem)]"
                                    md-on-open="vm.loadRelation(vm.resolveRelation(vm.newItem))">
                             <md-option data-ng-repeat="item in vm.relationItems[vm.resolveRelation(vm.newItem)]"
@@ -340,7 +347,7 @@
                         </md-select>
                     </md-input-container>-->
 
-                    <md-input-container data-ng-if="vm.newItem.value_type == 100" style="margin-top: -25px">
+                    <md-input-container data-ng-if="vm.newItem.value_type == 100">
                         <label></label>
                         <md-select ng-model="vm.newItem[vm.resolveRelation(vm.newItem)]"
                                    md-container-class="common-select-container"
@@ -368,15 +375,15 @@
                         </md-select>
                     </md-input-container>
                 </td>
-                <td style="text-align: center">
-                    <md-input-container>
+                <td class="ttype-inputs-checkbox-td">
+                    <md-input-container class="no-error-spacer">
                         <md-checkbox data-ng-model="vm.newItem.is_fill_from_context"
                                      ng-disabled="vm.newItem.value_type !== 100"></md-checkbox>
                     </md-input-container>
                 </td>
                 <td>
 
-                    <md-input-container>
+                    <md-input-container class="no-error-spacer">
                         <label for="">Input expr</label>
                         <input type="text" data-ng-model="vm.newItem.value_expr">
                     </md-input-container>
